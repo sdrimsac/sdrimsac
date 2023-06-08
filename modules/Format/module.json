@@ -1,0 +1,13 @@
+{
+    "name": "Format",
+    "alias": "format",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Format\\Providers\\FormatServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

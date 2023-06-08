@@ -1,0 +1,13 @@
+{
+    "name": "LotItem",
+    "alias": "lotitem",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\LotItem\\Providers\\LotItemServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

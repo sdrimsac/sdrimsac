@@ -1,0 +1,222 @@
+<?php
+
+namespace App\Http\Controllers\Tenant;
+
+use App\Http\Controllers\Controller;
+use App\Models\Tenant\Document;
+use App\Models\Tenant\SaleNote;
+use App\Models\Tenant\Quotation;
+use App\Models\Tenant\Kardex;
+use App\Models\Tenant\Purchase;
+use App\Models\Tenant\Retention;
+use App\Models\Tenant\Perception;
+use App\Models\Tenant\Summary;
+use App\Models\Tenant\Receipt;
+use App\Models\Tenant\SaleNotePayment;
+use App\Models\Tenant\Payment;
+use App\Models\Tenant\Voided;
+use App\Models\Tenant\Box;
+use Illuminate\Http\Request;
+use App\Models\Tenant\Configuration;
+use BoxesDetail;
+use Illuminate\Support\Facades\DB;
+use Modules\Expense\Models\Expense;
+use Modules\Purchase\Models\PurchaseOrder;
+use Modules\Finance\Models\GlobalPayment;
+use Modules\Finance\Models\Income;
+use Modules\Purchase\Models\PurchaseQuotation;
+use Modules\Order\Models\OrderNote;
+use Modules\Inventory\Models\{
+    ItemWarehouse,
+    InventoryKardex
+};
+use Modules\Sale\Models\Contract;
+use Modules\Purchase\Models\FixedAssetPurchase;
+use Modules\Restaurant\Models\Orden;
+use Modules\Restaurant\Models\OrdenItem;
+
+class OptionController extends Controller
+{
+
+    protected $delete_quantity;
+
+    public function create()
+    {
+        return view('tenant.options.form');
+    }
+    public function deleteItems(Request $request)
+    {
+
+        $this->delete_quantity = 0;
+        Document::where('id', '<>', null)->update(['orden_id' => null]);
+        SaleNote::where('id', '<>', null)->update(['orden_id' => null]);
+
+        DB::table('invoices')->delete();
+        DB::table('kardex')->delete();
+        DB::table('item_lots')->delete();
+        DB::table('item_warehouse')->delete();
+        DB::table('item_unit_types')->delete();
+        DB::table('item_lots_group')->delete();
+        DB::table('boxes_detail')->delete();
+        DB::table('boxes')->delete();
+        DB::table('orden_item')->delete();
+
+        DB::table('cash')->delete();
+        DB::table('ordens')->delete();
+        DB::table('sale_note_items')->delete();
+        DB::table('inventory_kardex')->delete();
+        DB::table('sale_note_payments')->delete();
+        DB::table('document_items')->delete();
+        DB::table('document_payments')->delete();
+        DB::table('documents')->delete();
+        DB::table('sale_notes')->delete();
+
+        DB::table('purchase_items')->delete();
+        DB::table('purchase_payments')->delete();
+        DB::table('purchases')->delete();
+
+        DB::table('foods')->delete();
+        DB::table('items')->delete();
+        DB::table('brands')->delete();
+        DB::table('categories')->delete();
+        DB::table('tables')->delete();
+        DB::table('global_payments')->delete();
+        DB::table('social_media_clients')->delete();
+        DB::table('vip_clients')->delete();
+        DB::table('vips')->delete();
+        Summary::where('soap_type_id', '01')->delete();
+        Voided::where('soap_type_id', '01')->delete();
+        // DB::table('persons')->delete();
+        $this->deleteInventoryKardex(Purchase::class);
+        Purchase::where('soap_type_id', '01')->delete();
+        $this->deleteInventoryKardex(Document::class);
+        Document::where('soap_type_id', '01')
+            ->whereIn('document_type_id', ['07', '08'])->delete();
+        Document::where('soap_type_id', '01')->delete();
+        $sale_notes = SaleNote::where('soap_type_id', '01')->get();
+        foreach ($sale_notes as $key => $row) {
+            Receipt::where('sale_note_id', $row->id)->delete();
+        }
+        SaleNote::where('soap_type_id', '01')->delete();
+        GlobalPayment::where('soap_type_id', '01')->delete();
+
+
+
+
+        return [
+            'success' => true,
+            'message' => 'Productos  eliminados',
+            'delete_quantity' => $this->delete_quantity,
+        ];
+    }
+    public function deleteDocuments(Request $request)
+    {
+        
+        $this->delete_quantity = 0;
+        Document::where('id', '<>', null)->update(['orden_id' => null]);
+        SaleNote::where('id', '<>', null)->update(['orden_id' => null]);
+
+        DB::table('invoices')->delete();
+        DB::table('tables')->update(['status_table_id' => 1]);
+        DB::table('kardex')->delete();
+        DB::table('receipts')->delete();
+        DB::table('summary_documents')->delete();
+
+        DB::table('internet_item')->delete();
+        DB::table('internet_payment_month')->delete();
+        DB::table('internet_payments')->delete();
+        DB::table('internet_plan_operation')->delete();
+        DB::table('internet_concept_operation')->delete();
+        DB::table('internet_operations')->delete();
+        DB::table('internet_register')->delete();
+        // DB::table('item_lots')->delete();
+        // DB::table('item_warehouse')->delete();
+        // DB::table('item_unit_types')->delete();
+        DB::table('boxes_detail')->delete();
+        DB::table('boxes')->delete();
+        DB::table('orden_item')->delete();
+
+        DB::table('cash')->delete();
+        DB::table('ordens')->delete();
+        DB::table('sale_note_items')->delete();
+        DB::table('inventory_kardex')->delete();
+        DB::table('sale_note_payments')->delete();
+        DB::table('document_items')->delete();
+        DB::table('document_payments')->delete();
+        DB::table('voided_documents')->delete();
+        DB::table('notes')->delete();
+        DB::table('sale_notes')->delete();
+        DB::table('documents')->delete();
+
+        DB::table('purchase_items')->delete();
+        DB::table('purchase_payments')->delete();
+        DB::table('purchases')->delete();
+
+        // DB::table('foods')->delete();
+        // DB::table('items')->delete();
+        // DB::table('brands')->delete();
+        // DB::table('categories')->delete();
+        // DB::table('tables')->delete();
+        DB::table('global_payments')->delete();
+        DB::table('social_media_clients')->delete();
+        DB::table('vip_clients')->delete();
+        DB::table('vips')->delete();
+        Summary::where('soap_type_id', '01')->delete();
+        Voided::where('soap_type_id', '01')->delete();
+        // DB::table('persons')->delete();
+        $this->deleteInventoryKardex(Purchase::class);
+        Purchase::where('soap_type_id', '01')->delete();
+        $this->deleteInventoryKardex(Document::class);
+        Document::where('soap_type_id', '01')
+            ->whereIn('document_type_id', ['07', '08'])->delete();
+        Document::where('soap_type_id', '01')->delete();
+        $sale_notes = SaleNote::where('soap_type_id', '01')->get();
+        foreach ($sale_notes as $key => $row) {
+            Receipt::where('sale_note_id', $row->id)->delete();
+        }
+        SaleNote::where('soap_type_id', '01')->delete();
+        GlobalPayment::where('soap_type_id', '01')->delete();
+        Box::where('soap_type_id', '01')->delete();
+
+
+
+        return [
+            'success' => true,
+            'message' => 'Documentos de prueba eliminados',
+            'delete_quantity' => $this->delete_quantity,
+        ];
+    }
+
+    private function deleteInventoryKardex($model, $records = null)
+    {
+
+        if (!$records) {
+            $records = $model::where('soap_type_id', '01')->get();
+        }
+
+        $this->delete_quantity += $records->count();
+
+        foreach ($records as $record) {
+
+            $record->inventory_kardex()->delete();
+        }
+    }
+
+    private function updateStockAfterDelete()
+    {
+
+        if ($this->delete_quantity > 0) {
+
+            ItemWarehouse::latest()->update([
+                'stock' => 0
+            ]);
+        }
+    }
+
+    private function update_quantity_documents($quantity)
+    {
+        $configuration = Configuration::first();
+        $configuration->quantity_documents -= $quantity;
+        $configuration->save();
+    }
+}

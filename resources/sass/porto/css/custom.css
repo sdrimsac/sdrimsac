@@ -1,0 +1,25 @@
+ul.nav-main > li.nav-active > a {
+    -webkit-box-shadow: 4px 0 0 #409EFF inset;
+    box-shadow: 4px 0 0 #409EFF inset;
+}
+
+.bg-info {
+    background: #409EFF !important;
+}
+
+.btn-custom {
+    background-color: #409EFF;
+    color: #fff;
+    
+}
+
+.btn-custom:hover, .btn-custom.hover {
+    background-color: #0A7CB5;
+    border-color: #0477B0 #0477B0 #CCC;
+    color: #FFF;
+    transition: none;
+}
+
+.btn:focus, .btn.focus {
+    box-shadow: none;
+}

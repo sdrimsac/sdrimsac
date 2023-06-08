@@ -1,0 +1,165 @@
+<template>
+    <div>
+        <div class="container-fluid p-l-0 p-r-0">
+            <div class="page-header">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <h6>
+                            <span>{{ title }}</span>
+                        </h6>
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item">
+                                <a href="/dashboard">Dashboard</a>
+                            </li>
+                            <li class="breadcrumb-item active">
+                                <span class="text-muted">{{ title }}</span>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid p-l-0 p-r-0">
+            <div class="card mb-0">
+                <div class="card-header bg-primary">
+                    <h6 class="my-0 text-white">Listado de {{ title }}</h6>
+                </div>
+                <div class="card-body">
+                    <data-table :resource="resource">
+                        <tr slot="heading">
+                            <th class="text-center">#</th>
+                            <th class="text-left">Producto</th>
+                            <th class="text-left">Almacén</th>
+                            <th class="text-center">Stock</th>
+                            <th class="text-center">Precio Compra</th>
+                            <th class="text-center">Precio Venta</th>
+                            <th class="text-center">Capital</th>
+                            <th class="text-center">Utilidad</th>
+                        </tr>
+
+                        <tr></tr>
+                        <tr slot-scope="{ index, row }">
+                            <td class="text-center">{{ index }}</td>
+                            <td class="text-left">
+                                {{ row.item_fulldescription }}
+                                <template
+                                    v-if="
+                                        row.series_enabled &&
+                                            row.series.length != 0
+                                    "
+                                >
+                                    <table class="table table-responsive ">
+                                        <thead>
+                                            <tr>
+                                                <th>
+                                                    SERIE
+                                                </th>
+                                                <th>
+                                                    FECHA
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr
+                                                v-for="(serie,
+                                                idx) in row.series"
+                                                :key="idx"
+                                            >
+                                                <td>
+                                                    {{ serie.series }}
+                                                </td>
+                                                <td>
+                                                    {{ serie.date }}
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <!-- <small>SERIES: </small>
+                                    <span v-for="(serie,idx) in row.series" :key="idx">
+                                        {{idx == 0 ? '':'-'}} 
+                                        <small
+                                        style="font-weight: bold;"
+                                        >{{serie.series}}</small> 
+                                    </span> -->
+                                </template>
+                            </td>
+                            <td class="text-left">
+                                {{ row.warehouse_description }}
+                            </td>
+                            <td class="text-center">
+                                {{ parseFloat(row.stock).toFixed(2) }}
+                            </td>
+                            <td class="text-center">
+                                {{
+                                    parseFloat(row.purchase_unit_price).toFixed(
+                                        2
+                                    )
+                                }}
+                            </td>
+                            <td class="text-center">
+                                {{ parseFloat(row.sale_unit_price).toFixed(2) }}
+                            </td>
+                            <td class="text-center">
+                                <template v-if="row.stock > 0">
+                                    {{ row.purchase_unit_price * row.stock }}
+                                </template>
+                            </td>
+                            <td class="text-center">
+                                <template v-if="row.stock > 0">
+                                    {{
+                                        (row.sale_unit_price -
+                                            row.purchase_unit_price) *
+                                            row.stock
+                                    }}
+                                </template>
+                            </td>
+                        </tr>
+                    </data-table>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+import DataTable from "../../../assets/components/DataTableValuedInventory";
+
+export default {
+    props: ["type", "typeUser"],
+    components: { DataTable },
+    data() {
+        return {
+            title: null,
+            showDialog: false,
+            showDialogMove: false,
+            showDialogRemove: false,
+            showDialogOutput: false,
+            resource: "reports/inventory",
+            recordId: null,
+            typeTransaction: null
+        };
+    },
+    created() {
+        this.title = "Inventario";
+    },
+    methods: {
+        clickMove(recordId) {
+            this.recordId = recordId;
+            this.showDialogMove = true;
+        },
+        clickCreate(type) {
+            this.recordId = null;
+            this.typeTransaction = type;
+            this.showDialog = true;
+        },
+        clickRemove(recordId) {
+            this.recordId = recordId;
+            this.showDialogRemove = true;
+        },
+        clickOutput() {
+            this.recordId = null;
+            this.showDialogOutput = true;
+        }
+    }
+};
+</script>

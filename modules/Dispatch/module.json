@@ -1,0 +1,13 @@
+{
+    "name": "Dispatch",
+    "alias": "dispatch",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Dispatch\\Providers\\DispatchServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

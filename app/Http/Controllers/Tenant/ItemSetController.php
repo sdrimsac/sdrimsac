@@ -1,0 +1,294 @@
+<?php
+namespace App\Http\Controllers\Tenant;
+
+use Exception;
+use App\Models\Tenant\Item;
+use App\Models\Tenant\User;
+use App\Models\Tenant\Warehouse;
+use Illuminate\Support\Str;
+use App\Imports\ItemsImport;
+use App\Models\Tenant\ItemUnitType;
+use Illuminate\Http\Request;
+use Maatwebsite\Excel\Excel;
+use App\Models\Tenant\Catalogs\UnitType;
+use App\Http\Requests\Tenant\ItemRequest;
+use Illuminate\Support\Facades\DB;
+use Modules\Format\Models\Account;
+use Modules\Restaurant\Models\Area;
+use Modules\Restaurant\Models\Food;
+use App\Http\Controllers\Controller;
+use App\Http\Resources\Tenant\ItemResource;
+use App\Models\Tenant\Catalogs\CurrencyType;
+use Modules\Item\Models\CategoryItem;
+use App\Http\Resources\Tenant\ItemCollection;
+use App\Models\Tenant\Catalogs\AttributeType;
+use App\Models\Tenant\Catalogs\SystemIscType;
+use Illuminate\Support\Facades\Storage;
+use App\Models\Tenant\Catalogs\AffectationIgvType;
+
+
+
+class ItemSetController extends Controller
+{
+    public function index()
+    {
+        return view('tenant.item_sets.index');
+    }
+
+
+    public function columns()
+    {
+        return [
+            'description' => 'Nombre',
+            'internal_id' => 'Código interno',
+        ];
+    }
+
+    public function records(Request $request)
+    {
+        $records = Item::whereTypeUser()
+                        ->whereIsSet()
+                        ->where($request->column, 'like', "%{$request->value}%")
+                        ->orderBy('description');
+
+        return new ItemCollection($records->paginate(config('tenant.items_per_page')));
+    }
+
+    public function create()
+    {
+        return view('tenant.items.form');
+    }
+
+    public function tables()
+    {
+        $unit_types = UnitType::whereActive()->orderByDescription()->get();
+        $currency_types = CurrencyType::whereActive()->orderByDescription()->get();
+        $attribute_types = AttributeType::whereActive()->orderByDescription()->get();
+        $system_isc_types = SystemIscType::whereActive()->orderByDescription()->get();
+        $affectation_igv_types = AffectationIgvType::whereActive()->get();
+        $areas=Area::where('active',1)->get();
+        $categories = CategoryItem::all();
+         $individual_items = Item::whereWarehouse()->whereTypeUser()->whereNotIsSet()->whereIsActive()->get()->transform(function($row) {
+            $full_description = ($row->internal_id)?$row->internal_id.' - '.$row->description:$row->description;
+            return [
+                'id' => $row->id,
+                'full_description' => $full_description,
+                'internal_id' => $row->internal_id,
+                'description' => $row->description,
+                'sale_unit_price' => $row->sale_unit_price,
+            ];
+        });
+
+        return compact('unit_types', 'currency_types', 'attribute_types','areas','categories', 'system_isc_types', 'affectation_igv_types', 'individual_items');
+    }
+
+    public function record($id)
+    {
+        $record = new ItemResource(Item::findOrFail($id));
+
+        return $record;
+    }
+    public function item_tables()
+    {
+
+        $individual_items = Item::whereWarehouse()->whereTypeUser()->whereNotIsSet()->whereIsActive()->get()->transform(function($row) {
+            $full_description = ($row->internal_id)?$row->internal_id.' - '.$row->description:$row->description;
+            return [
+                'id' => $row->id,
+                'full_description' => $full_description,
+                'internal_id' => $row->internal_id,
+                'description' => $row->description,
+                'sale_unit_price' => $row->sale_unit_price,
+            ];
+        });
+
+        return compact('individual_items');
+    }
+
+    public function store(ItemRequest $request) {
+
+        $id = $request->input('id');
+    //    dd($request->all());
+        $record = DB::transaction(function () use ($request, $id) {
+
+            $item = Item::firstOrNew(['id' => $id]);
+            $item->item_type_id = '01';
+            $item->fill($request->all());
+
+            $temp_path = $request->input('temp_path');
+            $id = $request->input('id');
+            $food = Food::firstOrNew(['item_id' => $id]);
+            $food->fill($request->all());
+            $food->price=$request->sale_unit_price;
+            $food->category_food_id=$request->category_id;
+            $food->code=$request->internal_id;
+
+            if($temp_path) {
+
+                $directory = 'public'.DIRECTORY_SEPARATOR.'uploads'.DIRECTORY_SEPARATOR.'items'.DIRECTORY_SEPARATOR;
+                $file_name_old = $request->input('image');
+                $file_name_old_array = explode('.', $file_name_old);
+                $file_content = file_get_contents($temp_path);
+                $datenow = date('YmdHis');
+                $file_name = Str::slug($item->description).'-'.$datenow.'.'.$file_name_old_array[1];
+                Storage::put($directory.$file_name, $file_content);
+                $item->image = $file_name;
+                $food->image = $file_name;
+            }else if(!$request->input('image') && !$request->input('temp_path') && !$request->input('image_url')){
+                $item->image = 'imagen-no-disponible.jpg';
+                $food->image = 'imagen-no-disponible.jpg';
+            }
+
+
+            $item->save();
+            $item_id =  $item->id;
+            if ($item_id != 0) {
+                $food->item_id = $item_id;
+            }
+            $food->save();
+            $item->sets()->delete();
+            foreach ($request->individual_items as $row) {
+                $item->sets()->create([
+                    'individual_item_id' => $row['individual_item_id'],
+                    'sale_unit_price' => $row['sale_unit_price'],
+                    'quantity' => $row['quantity'],
+                ]);
+            }
+            $item->update();
+
+            return $item;
+        });
+
+        return [
+            'success' => true,
+            'message' => ($id)?'Producto compuesto editado con éxito':'Producto compuesto registrado con éxito',
+            'id' => $record->id
+        ];
+
+    }
+
+    public function destroy($id)
+    {
+        try {
+
+            $item = Item::findOrFail($id);
+            $this->deleteRecordInitialKardex($item);
+            $item->delete();
+
+            return [
+                'success' => true,
+                'message' => 'Producto compuesto eliminado con éxito'
+            ];
+
+        } catch (Exception $e) {
+
+            return ($e->getCode() == '23000') ? ['success' => false,'message' => 'El producto compuesto esta siendo usado por otros registros, no puede eliminar'] : ['success' => false,'message' => 'Error inesperado, no se pudo eliminar el producto compuesto'];
+
+        }
+
+
+    }
+
+    public function destroyItemUnitType($id)
+    {
+        $item_unit_type = ItemUnitType::findOrFail($id);
+        $item_unit_type->delete();
+
+        return [
+            'success' => true,
+            'message' => 'Registro eliminado con éxito'
+        ];
+    }
+
+
+    public function import(Request $request)
+    {
+        if ($request->hasFile('file')) {
+            try {
+                $import = new ItemsImport();
+                $import->import($request->file('file'), null, Excel::XLSX);
+                $data = $import->getData();
+                return [
+                    'success' => true,
+                    'message' =>  __('app.actions.upload.success'),
+                    'data' => $data
+                ];
+            } catch (Exception $e) {
+                return [
+                    'success' => false,
+                    'message' =>  $e->getMessage()
+                ];
+            }
+        }
+        return [
+            'success' => false,
+            'message' =>  __('app.actions.upload.error'),
+        ];
+    }
+
+    public function upload(Request $request)
+    {
+        if ($request->hasFile('file')) {
+            $new_request = [
+                'file' => $request->file('file'),
+                'type' => $request->input('type'),
+            ];
+
+            return $this->upload_image($new_request);
+        }
+        return [
+            'success' => false,
+            'message' =>  __('app.actions.upload.error'),
+        ];
+    }
+
+    function upload_image($request)
+    {
+        $file = $request['file'];
+        $type = $request['type'];
+
+        $temp = tempnam(sys_get_temp_dir(), $type);
+        file_put_contents($temp, file_get_contents($file));
+
+        $mime = mime_content_type($temp);
+        $data = file_get_contents($temp);
+
+        return [
+            'success' => true,
+            'data' => [
+                'filename' => $file->getClientOriginalName(),
+                'temp_path' => $temp,
+                'temp_image' => 'data:' . $mime . ';base64,' . base64_encode($data)
+            ]
+        ];
+    }
+
+    private function deleteRecordInitialKardex($item){
+
+        if($item->kardex->count() == 1){
+            ($item->kardex[0]->type == null) ? $item->kardex[0]->delete() : false;
+        }
+
+    }
+
+
+    public function visibleStore(Request $request)
+    {
+        $item = Item::find($request->id);
+        $visible = $request->apply_store == true ? 1 : 0 ;
+        $item->apply_store = $visible;
+        $item->save();
+
+        return [
+            'success' => true,
+            'message' => ($visible > 0 )?'El Producto ya es visible en tienda virtual' : 'El Producto ya no es visible en tienda virtual',
+            'id' => $request->id
+        ];
+
+    }
+
+
+
+
+
+}
