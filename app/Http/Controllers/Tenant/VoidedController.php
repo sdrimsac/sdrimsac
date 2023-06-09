@@ -47,7 +47,7 @@ class VoidedController extends Controller
 
     public function store(Request $request)
     {
-        $fact = DB::transaction(function () use($request) {
+        $fact = DB::connection('tenant')->transaction(function () use($request) {
             $facturalo = new Facturalo();
             $facturalo->save($request->all());
             $facturalo->createXmlUnsigned();
@@ -70,7 +70,7 @@ class VoidedController extends Controller
     {
         $document = Voided::find($voided_id);
 
-        $fact = DB::transaction(function () use($document) {
+        $fact = DB::connection('tenant')->transaction(function () use($document) {
             $facturalo = new Facturalo();
             $facturalo->setDocument($document);
             $facturalo->setType('voided');
@@ -91,7 +91,7 @@ class VoidedController extends Controller
 
         $records = Voided::where('state_type_id', '03')->get();
 
-        $fact = DB::transaction(function () use($records) {
+        $fact = DB::connection('tenant')->transaction(function () use($records) {
 
             foreach ($records as $document) {
 

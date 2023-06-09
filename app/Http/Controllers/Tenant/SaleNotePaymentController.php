@@ -89,7 +89,7 @@ class SaleNotePaymentController extends Controller
         $id = $request->input('id');
         $document_save = SaleNote::where('id', $request->sale_note_id)->first();
         $credit_discount = $request->input('creditDiscount');
-        // DB::transaction(function () use ($id, $request) {
+        // DB::connection('tenant')->transaction(function () use ($id, $request) {
         $record = SaleNotePayment::firstOrNew(['id' => $id]);
         $record->fill($request->all());
         $record->save();

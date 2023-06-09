@@ -115,7 +115,7 @@ class PurchaseController extends Controller
 
         $data = self::convert($request);
 
-        $purchase = DB::transaction(function () use ($data) {
+        $purchase = DB::connection('tenant')->transaction(function () use ($data) {
 
             $doc = Purchase::create($data);
 

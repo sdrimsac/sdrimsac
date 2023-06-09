@@ -44,7 +44,7 @@ class RecurrencySaleNoteCommand extends Command
     public function handle()
     { 
 
-        DB::transaction(function () {
+        DB::connection('tenant')->transaction(function () {
 
             $today = Carbon::now()->format('Y-m-d');
 
@@ -75,7 +75,7 @@ class RecurrencySaleNoteCommand extends Command
     public function createSaleNote($sale_note)
     {   
 
-        $record = DB::transaction(function () use ($sale_note) {
+        $record = DB::connection('tenant')->transaction(function () use ($sale_note) {
 
             // dd($sale_note->establishment);
             // nota base

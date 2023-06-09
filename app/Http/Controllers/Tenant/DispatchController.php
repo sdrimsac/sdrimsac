@@ -315,7 +315,7 @@ class DispatchController extends Controller
         $res = [];
         if ($request->series[0] == 'T') {
             /** @var Facturalo $fact */
-            $fact = DB::transaction(function () use ($request, $configuration) {
+            $fact = DB::connection('tenant')->transaction(function () use ($request, $configuration) {
                 $facturalo = new Facturalo();
                 $facturalo->save($request->all());
                 $document = $facturalo->getDocument();
@@ -340,7 +340,7 @@ class DispatchController extends Controller
             // $response = $fact->getResponse();
         } else {
             /** @var Facturalo $fact */
-            $fact = DB::transaction(function () use ($request) {
+            $fact = DB::connection('tenant')->transaction(function () use ($request) {
                 $facturalo = new Facturalo();
                 $facturalo->save($request->all());
                 $facturalo->createPdf();

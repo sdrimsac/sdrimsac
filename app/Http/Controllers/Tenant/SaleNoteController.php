@@ -317,7 +317,7 @@ class SaleNoteController extends Controller
     public function store(SaleNoteRequest $request)
     {
 
-        DB::transaction(function () use ($request) {
+        DB::connection('tenant')->transaction(function () use ($request) {
 
 
             $request["user_id"] = Functions::valueKeyInArray($request->all(), "user_id", auth()->id());
@@ -1148,7 +1148,7 @@ class SaleNoteController extends Controller
     public function anulate($id)
     {
 
-        DB::transaction(function () use ($id) {
+        DB::connection('tenant')->transaction(function () use ($id) {
 
             $obj =  SaleNote::find($id);
             $obj->state_type_id = 11;

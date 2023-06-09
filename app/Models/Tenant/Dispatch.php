@@ -639,7 +639,7 @@ class Dispatch extends ModelTenant
     {
 
         $model = $this;
-        return DB::transaction(function () use ($model) {
+        return DB::connection('tenant')->transaction(function () use ($model) {
             $facturalo = new Facturalo();
             return $facturalo->loadDocument($model->id, 'dispatch');
         });

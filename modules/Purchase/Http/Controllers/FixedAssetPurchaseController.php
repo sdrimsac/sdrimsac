@@ -122,7 +122,7 @@ class FixedAssetPurchaseController extends Controller
  
         $data = self::convert($request);
 
-        $purchase = DB::transaction(function () use ($data, $request) {
+        $purchase = DB::connection('tenant')->transaction(function () use ($data, $request) {
 
             $doc =  FixedAssetPurchase::updateOrCreate( ['id' => $request->input('id')], $data);
             $doc->items()->delete();
@@ -232,7 +232,7 @@ class FixedAssetPurchaseController extends Controller
 
         try {
 
-            DB::transaction(function () use ($id) {
+            DB::connection('tenant')->transaction(function () use ($id) {
 
                 $row = FixedAssetPurchase::findOrFail($id);
                 $row->delete();

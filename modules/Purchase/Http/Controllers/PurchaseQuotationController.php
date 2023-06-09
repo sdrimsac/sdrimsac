@@ -104,7 +104,7 @@ class PurchaseQuotationController extends Controller
 
     public function store(Request $request) {
 
-        DB::transaction(function () use ($request) {
+        DB::connection('tenant')->transaction(function () use ($request) {
             $data = $this->mergeData($request);
 
             $this->purchase_quotation =  PurchaseQuotation::updateOrCreate(

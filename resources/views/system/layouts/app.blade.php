@@ -77,15 +77,16 @@
         <!-- start: header -->
         @include('system.layouts.partials.header')
         <!-- end: header -->
-        <div class="inner-wrapper" id="main">
+        <div class="inner-wrapper">
             <!-- start: sidebar -->
             @include('system.layouts.partials.sidebar')
             <!-- end: sidebar -->
-            <main class="py-4">
+            <section role="main" class="content-body" id="main">
               @yield('content')
-            </main>
+            </section>
         </div>
     </section>
+
 
     <!-- Vendor -->
     <script src="{{ asset('porto-light/vendor/jquery/jquery.js')}}"></script>

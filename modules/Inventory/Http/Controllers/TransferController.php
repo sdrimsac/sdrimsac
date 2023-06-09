@@ -122,7 +122,7 @@ class TransferController extends Controller
     /* public function store(Request $request)
     {
 
-        $result = DB::transaction(function () use ($request) {
+        $result = DB::connection('tenant')->transaction(function () use ($request) {
 
             $id = $request->input('id');
             $item_id = $request->input('item_id');
@@ -206,7 +206,7 @@ class TransferController extends Controller
     public function destroy($id)
     {
 
-        DB::transaction(function () use ($id) {
+        DB::connection('tenant')->transaction(function () use ($id) {
 
             $record = Inventory::findOrFail($id);
 
@@ -282,7 +282,7 @@ class TransferController extends Controller
         $transfer->status = 2;
         $transfer->save();
 
-        $result = DB::transaction(function () use ($transfer) {
+        $result = DB::connection('tenant')->transaction(function () use ($transfer) {
 
             $details = TransferPlaceDetail::where('transfers_place_id', $transfer->id)->get();
             $row = InventoryTransfer::create([
@@ -450,7 +450,7 @@ class TransferController extends Controller
     public function store(TransferRequest $request)
     {
 
-        $result = DB::transaction(function () use ($request) {
+        $result = DB::connection('tenant')->transaction(function () use ($request) {
 
             $row = InventoryTransfer::create([
                 'description' => $request->description,

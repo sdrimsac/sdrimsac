@@ -312,7 +312,7 @@ class PurchaseController extends Controller
     public function store(PurchaseRequest $request)
     {
         $data = self::convert($request);
-        $purchase = DB::transaction(function () use ($data) {
+        $purchase = DB::connection('tenant')->transaction(function () use ($data) {
             $doc = Purchase::create($data);
             foreach ($data['items'] as $row) {
                 $p_item = new PurchaseItem;
@@ -377,7 +377,7 @@ class PurchaseController extends Controller
     public function update(PurchaseRequest $request)
     {
         //dd();
-        $purchase = DB::transaction(function () use ($request) {
+        $purchase = DB::connection('tenant')->transaction(function () use ($request) {
             $doc = Purchase::firstOrNew(['id' => $request['id']]);
             // return json_encode($doc);
             $doc->fill($request->all());
@@ -628,7 +628,7 @@ class PurchaseController extends Controller
 
         try {
 
-            DB::transaction(function () use ($id) {
+            DB::connection('tenant')->transaction(function () use ($id) {
 
                 $row = Purchase::findOrFail($id);
                 $this->deleteAllPayments($row->purchase_payments);
@@ -745,7 +745,7 @@ class PurchaseController extends Controller
 
             $data = array_merge($model, $values);
 
-            $purchase = DB::transaction(function () use ($data) {
+            $purchase = DB::connection('tenant')->transaction(function () use ($data) {
                 $doc = Purchase::create($data);
                 foreach ($data['items'] as $row) {
                     $doc->items()->create($row);

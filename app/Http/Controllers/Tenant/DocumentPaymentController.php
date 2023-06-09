@@ -65,7 +65,7 @@ class DocumentPaymentController extends Controller
         // dd($request->all());
 
         $id = $request->input('id');
-        DB::transaction(function () use ($id, $request) {
+        DB::connection('tenant')->transaction(function () use ($id, $request) {
 
         if($request->payment_method_type_id=="01" || $request->payment_method_type_id=="04" || $request->payment_method_type_id=="11"){
             $record = DocumentPayment::firstOrNew(['id' => $id]);
@@ -138,7 +138,7 @@ class DocumentPaymentController extends Controller
     public function initialize_balance()
     {
 
-        DB::transaction(function (){
+        DB::connection('tenant')->transaction(function (){
 
             $documents = Document::get();
 

@@ -109,7 +109,7 @@ class ItemSetController extends Controller
 
         $id = $request->input('id');
     //    dd($request->all());
-        $record = DB::transaction(function () use ($request, $id) {
+        $record = DB::connection('tenant')->transaction(function () use ($request, $id) {
 
             $item = Item::firstOrNew(['id' => $id]);
             $item->item_type_id = '01';

@@ -620,7 +620,7 @@ class DocumentController extends Controller
     public function store2(DocumentRequest $request)
     {
 
-        $fact = DB::transaction(function () use ($request) {
+        $fact = DB::connection('tenant')->transaction(function () use ($request) {
             $facturalo = new Facturalo();
 
 
@@ -708,7 +708,7 @@ class DocumentController extends Controller
 
             Orden::where('document_id', $document_id)->update(["document_id" => null]);
         }
-        $fact = DB::transaction(function () use ($request) {
+        $fact = DB::connection('tenant')->transaction(function () use ($request) {
             $facturalo = new Facturalo();
             $facturalo->save($request->all());
             $facturalo->createXmlUnsigned();
@@ -853,7 +853,7 @@ class DocumentController extends Controller
 
     public function reStore($document_id)
     {
-        $fact = DB::transaction(function () use ($document_id) {
+        $fact = DB::connection('tenant')->transaction(function () use ($document_id) {
             $document = Document::find($document_id);
 
             $type = 'invoice';
@@ -951,7 +951,7 @@ class DocumentController extends Controller
     {
         $document = Document::find($document_id);
 
-        $fact = DB::transaction(function () use ($document) {
+        $fact = DB::connection('tenant')->transaction(function () use ($document) {
             $facturalo = new Facturalo();
             $facturalo->setDocument($document);
             $facturalo->loadXmlSigned();
@@ -971,7 +971,7 @@ class DocumentController extends Controller
     {
         $document = Document::find($document_id);
 
-        $fact = DB::transaction(function () use ($document) {
+        $fact = DB::connection('tenant')->transaction(function () use ($document) {
             $facturalo = new Facturalo();
             $facturalo->setDocument($document);
             $facturalo->consultCdr();
@@ -1491,7 +1491,7 @@ class DocumentController extends Controller
         try {
             $date_now = Carbon::now()->format('Y-m-d');
 
-            $deleted = DB::transaction(function () use ($document_id, $date_now) {
+            $deleted = DB::connection('tenant')->transaction(function () use ($document_id, $date_now) {
 
                 $record = Document::findOrFail($document_id);
 

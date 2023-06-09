@@ -387,7 +387,7 @@ class ValidateApiDocumentController extends Controller
 
         $records = $this->getRecords($request)->get();
 
-        DB::transaction(function () use ($records, $document_state) {
+        DB::connection('tenant')->transaction(function () use ($records, $document_state) {
 
             foreach ($records as $document) {
                 reValidate:

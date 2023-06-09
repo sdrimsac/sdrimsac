@@ -9,7 +9,7 @@ use DB;
 trait SummaryTrait
 {
     public function save($request) {
-        $fact = DB::transaction(function () use($request) {
+        $fact = DB::connection('tenant')->transaction(function () use($request) {
             $facturalo = new Facturalo();
             $facturalo->save($request->all());
             $facturalo->createXmlUnsigned();
@@ -30,7 +30,7 @@ trait SummaryTrait
     public function query($id) {
         $document = Summary::find($id);
         
-        $fact = DB::transaction(function () use($document) {
+        $fact = DB::connection('tenant')->transaction(function () use($document) {
             $facturalo = new Facturalo();
             $facturalo->setDocument($document);
             $facturalo->setType('summary');

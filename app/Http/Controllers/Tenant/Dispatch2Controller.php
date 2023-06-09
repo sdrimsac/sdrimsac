@@ -57,7 +57,7 @@ class Dispatch2Controller extends Controller
     }
     
     public function store(Request $request) {
-        $fact = DB::transaction(function () use($request) {
+        $fact = DB::connection('tenant')->transaction(function () use($request) {
             $facturalo = new Facturalo();
             $facturalo->save($request->all());
             $facturalo->createXmlUnsigned();

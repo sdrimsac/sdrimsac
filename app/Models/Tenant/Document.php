@@ -5,7 +5,7 @@ namespace App\Models\Tenant;
 use App\Models\Tenant\Catalogs\CurrencyType;
 use App\Models\Tenant\Catalogs\DocumentType;
 use App\Traits\RegisterMovementTrait;
-use Illuminate\Database\Eloquent\Model;
+use Hyn\Tenancy\Traits\UsesTenantConnection;
 use Illuminate\Http\Request;
 
 //use Modules\BusinessTurn\Models\DocumentHotel;
@@ -13,7 +13,7 @@ use Illuminate\Http\Request;
 
 class Document extends ModelTenant
 {
-    use RegisterMovementTrait;
+    use RegisterMovementTrait, UsesTenantConnection;
 
     protected $with = ['user', 'establecimientos', 'soap_type', 'user', 'state_type', 'document_type', 'currency_type', 'group', 'items', 'invoice', 'payments'];
     public $timestamps = true;

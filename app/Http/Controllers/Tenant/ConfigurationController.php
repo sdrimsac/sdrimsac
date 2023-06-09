@@ -103,7 +103,7 @@ class ConfigurationController extends Controller
     {
 
 
-        DB::transaction(function () use ($request) {
+        DB::connection('tenant')->transaction(function () use ($request) {
 
             $id = $request->input('id');
             $configuration = Configuration::find($id);

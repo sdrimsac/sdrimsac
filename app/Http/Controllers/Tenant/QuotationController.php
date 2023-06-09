@@ -217,7 +217,7 @@ class QuotationController extends Controller
     public function store(QuotationRequest $request)
     {
 
-        DB::transaction(function () use ($request) {
+        DB::connection('tenant')->transaction(function () use ($request) {
 
             $data = $this->mergeData($request);
             $data['terms_condition'] = $this->getTermsCondition();
@@ -247,7 +247,7 @@ class QuotationController extends Controller
     public function update(QuotationRequest $request)
     {
 
-        DB::transaction(function () use ($request) {
+        DB::connection('tenant')->transaction(function () use ($request) {
             // $data = $this->mergeData($request);
             // return $request['id'];
             $configuration = Configuration::select('terms_condition')->first();

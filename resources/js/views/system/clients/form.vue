@@ -10,6 +10,15 @@
             @submit.prevent="submit">
             <div class="form-body">
                 <div class="row">
+                    <div class="col-12">
+                        <el-checkbox
+                        v-model="form.migration"
+                        >
+                            Migración
+                        </el-checkbox>
+                    </div>
+                </div>
+                <div class="row">
                     <div class="col-md-6">
                         <div
                             :class="{'has-danger': errors.number}"

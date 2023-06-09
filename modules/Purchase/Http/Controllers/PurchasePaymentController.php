@@ -56,7 +56,7 @@ class PurchasePaymentController extends Controller
     {
         $id = $request->input('id');
 
-        DB::transaction(function () use ($id, $request) {
+        DB::connection('tenant')->transaction(function () use ($id, $request) {
             //dd($request->all());
             $record = PurchasePayment::firstOrNew(['id' => $id]);
             $record->fill($request->all());

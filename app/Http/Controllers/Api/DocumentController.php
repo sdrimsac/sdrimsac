@@ -71,7 +71,7 @@ use Facades\App\Http\Controllers\DocumentController as DocumentControllerSend;
    
     public function store(Request $request)
     {
-        $fact = DB::transaction(function () use($request) {
+        $fact = DB::connection('tenant')->transaction(function () use($request) {
             $facturalo = new Facturalo();
             $facturalo->save($request->all());
             $facturalo->createXmlUnsigned();
@@ -143,7 +143,7 @@ use Facades\App\Http\Controllers\DocumentController as DocumentControllerSend;
     }
 
     public function storeServer(Request $request) {
-        $fact = DB::transaction(function() use($request) {
+        $fact = DB::connection('tenant')->transaction(function() use($request) {
             $facturalo = new Facturalo();
             $facturalo->save($request->all());
 

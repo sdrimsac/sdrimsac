@@ -83,7 +83,7 @@ class TransferPlaceController extends Controller
     public function destroy($id)
     {
 
-        DB::transaction(function () use ($id) {
+        DB::connection('tenant')->transaction(function () use ($id) {
 
             $record = Inventory::findOrFail($id);
 
@@ -158,7 +158,7 @@ class TransferPlaceController extends Controller
         $transfer->status = 2;
         $transfer->save();
 
-        $result = DB::transaction(function () use ($transfer) {
+        $result = DB::connection('tenant')->transaction(function () use ($transfer) {
 
             $details = TransferPlaceDetail::where('transfers_place_id', $transfer->id)->get();
             $row = InventoryTransfer::create([

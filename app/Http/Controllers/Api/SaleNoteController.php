@@ -60,7 +60,7 @@ class SaleNoteController extends Controller
     public function store(SaleNoteRequest $request)
     {
 
-        DB::transaction(function () use ($request) {
+        DB::connection('tenant')->transaction(function () use ($request) {
 
             $request['establishment_id'] = $request['establishment_id'] ? $request['establishment_id'] : auth()->user()->establishment_id;
 

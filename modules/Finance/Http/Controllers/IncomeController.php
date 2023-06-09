@@ -84,7 +84,7 @@ class IncomeController extends Controller
 
         $data = self::merge_inputs($request);
 
-        $income = DB::transaction(function () use ($data) {
+        $income = DB::connection('tenant')->transaction(function () use ($data) {
 
             $doc = Income::create($data);
 

@@ -51,7 +51,7 @@ class InventoryController extends Controller
 
     public function store(Request $request)
     {
-        $result = DB::transaction(function () use ($request) {
+        $result = DB::connection('tenant')->transaction(function () use ($request) {
             $item_id = $request->input('item_id');
             $warehouse_id = $request->input('warehouse_id');
             $quantity = $request->input('quantity');
@@ -87,7 +87,7 @@ class InventoryController extends Controller
 
     public function move(Request $request)
     {
-        $result = DB::transaction(function () use ($request) {
+        $result = DB::connection('tenant')->transaction(function () use ($request) {
             $id = $request->input('id');
             $item_id = $request->input('item_id');
             $warehouse_id = $request->input('warehouse_id');
@@ -140,7 +140,7 @@ class InventoryController extends Controller
 
     public function remove(Request $request)
     {
-        $result = DB::transaction(function () use ($request) {
+        $result = DB::connection('tenant')->transaction(function () use ($request) {
             $item_id = $request->input('item_id');
             $warehouse_id = $request->input('warehouse_id');
             $quantity = $request->input('quantity');

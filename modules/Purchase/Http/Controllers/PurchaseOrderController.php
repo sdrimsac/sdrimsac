@@ -142,7 +142,7 @@ class PurchaseOrderController extends Controller
 
     public function store(PurchaseOrderRequest $request) {
 
-        DB::transaction(function () use ($request) {
+        DB::connection('tenant')->transaction(function () use ($request) {
 
             $data = $this->mergeData($request);
 
