@@ -771,17 +771,17 @@ class ClientController extends Controller
      * @param  int $user_id
      * @return void
      */
-    private function insertAppModules($user_id)
-    {
-        $all_app_modules = AppModule::get()->map(function ($row) use ($user_id) {
-            return [
-                'app_module_id' => $row->id,
-                'user_id' => $user_id,
-            ];
-        })->toArray();
+    // private function insertAppModules($user_id)
+    // {
+    //     $all_app_modules = AppModule::get()->map(function ($row) use ($user_id) {
+    //         return [
+    //             'app_module_id' => $row->id,
+    //             'user_id' => $user_id,
+    //         ];
+    //     })->toArray();
 
-        DB::connection('tenant')->table('app_module_user')->insert($all_app_modules);
-    }
+    //     DB::connection('tenant')->table('app_module_user')->insert($all_app_modules);
+    // }
 
 
     public function renewPlan(Request $request)
