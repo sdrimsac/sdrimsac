@@ -169,13 +169,85 @@ class TenantSeeder extends Seeder
             ['id' => 2, 'type' => 'suppliers', 'identity_document_type_id' =>    0, 'number' =>    99999999, 'name' =>    'PROVEEDOR - Varios', 'trade_name' => 'Inicio de stock', 'country_id' =>  'PE',    'department_id'    => null,     'province_id' => null, 'district_id' => NULL,    'perception_agent' => 0, 'percentage_perception' => 0, 'enabled' =>    1, 'seller_id' =>    1, 'created_at' =>    '2022-06-07 16:43:09', 'updated_at' => '2022-06-07 16:43:09', 'status' =>    1]
         ]);
 
-
-
-        $this->call([
-            TurnsSeeder::class,
-            StatusOrdenVoidedSeeder::class,
-            AddClientVariation::class,
-            CollegeSeeder::class,
+        DB::table('turns')-> insert([
+            ['turn_desc' => 'MAÑANA' , 'turn_active' => 1 ],
+            ['turn_desc' => 'TARDE' , 'turn_active' => 1],
+            ['turn_desc' => 'NOCHE' , 'turn_active' => 1]
+                        
         ]);
+        DB::table('status_orden')->insert([
+
+            ['id' => 5, 'description' => 'Anulado',  'active' => 1],
+        ]);
+        DB::table('persons')->insert(
+            [[
+                'type' => 'customers',
+                'identity_document_type_id' => 1,
+                'number' => 88888888,
+                'name' => 'CLIENTES VARIOS-MODIFICADO',
+                'country_id' => 'PE',
+                'perception_agent' => 0,
+                'enabled' => 1,
+                'status' => 1,
+
+
+            ]]
+        );
+        DB::table('college_degrees')->insert([
+            ['description' => '1RO', 'active' => 1],
+            ['description' => '2DO', 'active' => 1],
+            ['description' => '3RO', 'active' => 1],
+            ['description' => '4TO', 'active' => 1],
+            ['description' => '5TO', 'active' => 1],
+            ['description' => '6TO', 'active' => 1],
+            ['description' => '7MO', 'active' => 1]
+        ]);
+
+        DB::table('college_sections')->insert([
+            ['description' => 'A', 'active' => 1],
+            ['description' => 'B', 'active' => 1],
+            ['description' => 'C', 'active' => 1],
+            ['description' => 'D', 'active' => 1],
+            ['description' => 'E', 'active' => 1],
+            ['description' => 'F', 'active' => 1],
+            ['description' => 'G', 'active' => 1],
+            ['description' => 'H', 'active' => 1]
+        ]);
+
+
+        DB::table('college_levels')->insert([
+            ['description' => 'INICIAL', 'active' => 1],
+            ['description' => 'PRIMARIA', 'active' => 1],
+            ['description' => 'SECUNDARIA', 'active' => 1],
+        ]);
+
+
+        DB::table('college_turns')->insert([
+            ['description' => 'MAÑANA', 'active' => 1],
+            ['description' => 'TARDE', 'active' => 1],
+            ['description' => 'NOCHE', 'active' => 1],
+        ]);
+
+        DB::table('college_plan_types')->insert([
+            ['description' => 'MATRICULA', 'active' => 1],
+            ['description' => 'MENSUALIDAD', 'active' => 1],
+            ['description' => 'OTROS', 'active' => 1],
+        ]);
+
+        DB::table('college_periods')->insert([
+            ['description' => 'ANUAL', 'default_count' => 1, 'active' => 1],
+            ['description' => 'MENSUAL', 'default_count' => 12, 'active' => 1],
+        ]);
+
+        DB::table('college_plans')->insert([
+            ['name' => 'OTROS', 'description' => 'ADQUISICION', 'period_id' => 1, 'type_id' => 3, 'count' => 1, 'days_extension' => 0, 'active' => 1],
+        ]);
+        // $this->call([
+            // TurnsSeeder::class,
+            // StatusOrdenVoidedSeeder::class,
+            // AddClientVariation::class,
+            // CollegeSeeder::class,
+            
+        // ]);
     }
 }
