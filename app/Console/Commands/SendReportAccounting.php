@@ -108,7 +108,7 @@ class SendReportAccounting extends Command
                         );
                         $file = new File($file->getFile());
                         $directory = 'public' . DIRECTORY_SEPARATOR . 'reportes';
-                        Storage::disk('local')->put($directory . DIRECTORY_SEPARATOR . $file_name, $file->getContent());
+                        Storage::disk('tenant')->put($directory . DIRECTORY_SEPARATOR . $file_name, $file->getContent());
                     }
                 }
             }

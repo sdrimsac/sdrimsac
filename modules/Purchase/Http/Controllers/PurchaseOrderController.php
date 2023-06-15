@@ -165,7 +165,7 @@ class PurchaseOrderController extends Controller
                 $file_name_old_array = explode('.', $file_name_old);
                 $file_name = Str::slug($this->purchase_order->id).'-'.$datenow.'.'.$file_name_old_array[1];
                 $file_content = file_get_contents($temp_path);
-                Storage::disk('local')->put('purchase_order_attached'.DIRECTORY_SEPARATOR.$file_name, $file_content);
+                Storage::disk('tenant')->put('purchase_order_attached'.DIRECTORY_SEPARATOR.$file_name, $file_content);
                 $this->purchase_order->upload_filename = $file_name;
                 $this->purchase_order->save();
 
@@ -300,7 +300,7 @@ class PurchaseOrderController extends Controller
 
         if (!$purchase_order) throw new Exception("El código {$external_id} es inválido, no se encontro la orden de compra relacionada");
 
-        return Storage::disk('local')->download('purchase_order_attached'.DIRECTORY_SEPARATOR.$purchase_order->upload_filename);
+        return Storage::disk('tenant')->download('purchase_order_attached'.DIRECTORY_SEPARATOR.$purchase_order->upload_filename);
         
     }
 

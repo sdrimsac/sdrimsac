@@ -30,7 +30,7 @@ trait FilePaymentTrait
                 'filename' => $file_name
             ]);
 
-            Storage::disk('local')->put('payment_files'.DIRECTORY_SEPARATOR.$type.DIRECTORY_SEPARATOR.$file_name, $file_content);
+            Storage::disk('tenant')->put('payment_files'.DIRECTORY_SEPARATOR.$type.DIRECTORY_SEPARATOR.$file_name, $file_content);
 
 
         }

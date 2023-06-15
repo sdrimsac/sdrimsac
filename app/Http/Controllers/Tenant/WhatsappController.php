@@ -150,11 +150,11 @@ class WhatsappController extends Controller
 
         $xml = null;
         $pdf =  file_get_contents($url);
-        // $pdf = ($request->document_type_id == "80")  ? file_get_contents(Storage::disk('local')->path("sale_note" . DIRECTORY_SEPARATOR . $document_filename . ".pdf")) :  file_get_contents(Storage::disk('local')->path("pdf" . DIRECTORY_SEPARATOR . $document_filename . ".pdf"));
+        // $pdf = ($request->document_type_id == "80")  ? file_get_contents(Storage::disk('tenant')->path("sale_note" . DIRECTORY_SEPARATOR . $document_filename . ".pdf")) :  file_get_contents(Storage::disk('tenant')->path("pdf" . DIRECTORY_SEPARATOR . $document_filename . ".pdf"));
         $pdf = base64_encode($pdf);
         if ($request->document_type_id != "80") {
 
-            $xml = file_get_contents(Storage::disk('local')->path("signed" . DIRECTORY_SEPARATOR . $document_filename . ".xml"));
+            $xml = file_get_contents(Storage::disk('tenant')->path("signed" . DIRECTORY_SEPARATOR . $document_filename . ".xml"));
             $xml = base64_encode($xml);
         }
 
@@ -203,9 +203,9 @@ class WhatsappController extends Controller
 
         if (!$xml) {
             $content_file = file_get_contents($url1);
-            // $content_file = ($request->document_type_id == "80")  ? file_get_contents(Storage::disk('local')->path("sale_note" . DIRECTORY_SEPARATOR . $document_filename . ".pdf")) :   file_get_contents(Storage::disk('local')->path("pdf" . DIRECTORY_SEPARATOR . $document_filename . ".pdf"));
+            // $content_file = ($request->document_type_id == "80")  ? file_get_contents(Storage::disk('tenant')->path("sale_note" . DIRECTORY_SEPARATOR . $document_filename . ".pdf")) :   file_get_contents(Storage::disk('tenant')->path("pdf" . DIRECTORY_SEPARATOR . $document_filename . ".pdf"));
         } else {
-            $content_file = file_get_contents(Storage::disk('local')->path("signed" . DIRECTORY_SEPARATOR . $document_filename . ".xml"));
+            $content_file = file_get_contents(Storage::disk('tenant')->path("signed" . DIRECTORY_SEPARATOR . $document_filename . ".xml"));
         }
         $this->client = new Client([
             'verify' => false,

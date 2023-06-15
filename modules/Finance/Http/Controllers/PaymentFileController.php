@@ -13,7 +13,7 @@ class PaymentFileController extends Controller
 { 
 
     public function download($filename, $type) { 
-        return Storage::disk('local')->download('payment_files'.DIRECTORY_SEPARATOR.$type.DIRECTORY_SEPARATOR.$filename);
+        return Storage::disk('tenant')->download('payment_files'.DIRECTORY_SEPARATOR.$type.DIRECTORY_SEPARATOR.$filename);
     }
 
     public function uploadAttached(Request $request)

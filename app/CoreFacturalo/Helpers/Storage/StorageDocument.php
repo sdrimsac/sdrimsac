@@ -12,7 +12,7 @@ trait StorageDocument
     public function uploadStorage($filename, $file_content, $file_type, $root = null)
     {
         $this->setData($filename, $file_type, $root);
-        Storage::disk('local')->put($this->_folder.DIRECTORY_SEPARATOR.$this->_filename, $file_content);
+        Storage::disk('tenant')->put($this->_folder.DIRECTORY_SEPARATOR.$this->_filename, $file_content);
     }
 
     public function downloadStorage($filename, $file_type, $root = null)
@@ -20,13 +20,13 @@ trait StorageDocument
         $this->setData($filename, $file_type, $root);
       //dd($this->_folder.DIRECTORY_SEPARATOR.$this->_filename,$filename, $file_type);
 
-        return Storage::disk('local')->download($this->_folder.DIRECTORY_SEPARATOR.$this->_filename);
+        return Storage::disk('tenant')->download($this->_folder.DIRECTORY_SEPARATOR.$this->_filename);
     }
 
     public function getStorage($filename, $file_type, $root = null)
     {
         $this->setData($filename, $file_type, $root);
-        return Storage::disk('local')->get($this->_folder.DIRECTORY_SEPARATOR.$this->_filename);
+        return Storage::disk('tenant')->get($this->_folder.DIRECTORY_SEPARATOR.$this->_filename);
     }
 
     private function setData($filename, $file_type, $root)
