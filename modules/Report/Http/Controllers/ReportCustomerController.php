@@ -96,21 +96,21 @@ class ReportCustomerController extends Controller
 
     private function dataCustomers_documents($document_type_id, $establishment_id, $date_start, $date_end, $person_id, $type_person, $model,$model_sale)
     {
-        $data = DB::table('document_payments')
+        $data = DB::connection('tenant')->table('document_payments')
                         ->join('documents', 'documents.id', '=', 'document_payments.document_id')
                         ->whereBetween('document_payments.date_of_payment', [$date_start, $date_end])
                         ->select('documents.id','documents.soap_type_id',DB::raw("document_payments.date_of_payment as date_of_issue"),'documents.customer','documents.state_type_id','documents.document_type_id','documents.series','documents.number','documents.total_prepayment','documents.total_charge','documents.total_discount','documents.total_exportation','documents.total_free','documents.total_taxed','documents.total_unaffected','documents.total_exonerated','documents.total_igv','documents.total_base_isc','documents.total_isc','documents.total_base_other_taxes','documents.total_other_taxes','documents.total_taxes','documents.total_value',"documents.total",DB::raw("document_payments.id as payment_id"))
                         ->where('customer_id', $person_id)
                         ->whereIn('document_type_id', ['01','03']);
 
-        $data_saleNote = DB::table('sale_note_payments')
+        $data_saleNote = DB::connection('tenant')->table('sale_note_payments')
                         ->join('sale_notes', 'sale_notes.id', '=', 'sale_note_payments.sale_note_id')
                          ->whereBetween('sale_note_payments.date_of_payment', [$date_start, $date_end])
                          ->select('sale_notes.id','sale_notes.soap_type_id',DB::raw("sale_note_payments.date_of_payment as date_of_issue"),'sale_notes.customer','sale_notes.state_type_id','sale_notes.document_type_id','sale_notes.series','sale_notes.number','sale_notes.total_prepayment','sale_notes.total_charge','sale_notes.total_discount','sale_notes.total_exportation','sale_notes.total_free','sale_notes.total_taxed','sale_notes.total_unaffected','sale_notes.total_exonerated','sale_notes.total_igv','sale_notes.total_base_isc','sale_notes.total_isc','sale_notes.total_base_other_taxes','sale_notes.total_other_taxes','sale_notes.total_taxes','sale_notes.total_value',"sale_notes.total",DB::raw("sale_note_payments.id as payment_id"))
                         ->where('customer_id', $person_id)
                        ->where('total','>','0.00');
 
-        $document_pendiente = DB::table('documents')
+        $document_pendiente = DB::connection('tenant')->table('documents')
                         ->whereBetween('documents.date_of_issue', [$date_start, $date_end])
                        ->select('documents.id','documents.soap_type_id','documents.date_of_issue','documents.customer','documents.state_type_id','documents.document_type_id','documents.series','documents.number','documents.total_prepayment','documents.total_charge','documents.total_discount','documents.total_exportation','documents.total_free','documents.total_taxed','documents.total_unaffected','documents.total_exonerated','documents.total_igv','documents.total_base_isc','documents.total_isc','documents.total_base_other_taxes','documents.total_other_taxes','documents.total_taxes','documents.total_value','documents.total')
                         ->addSelect(DB::raw("'payment_id'"))
@@ -118,7 +118,7 @@ class ReportCustomerController extends Controller
                        ->where('notpayment',1)
                        ->whereIn('document_type_id', ['01','03']);
 
-        $data_saleNote_notpayment = DB::table('sale_notes')
+        $data_saleNote_notpayment = DB::connection('tenant')->table('sale_notes')
                         ->whereBetween('sale_notes.date_of_issue', [$date_start, $date_end])
                        ->select('sale_notes.id','sale_notes.soap_type_id','sale_notes.date_of_issue','sale_notes.customer','sale_notes.state_type_id','sale_notes.document_type_id','sale_notes.series','sale_notes.number','sale_notes.total_prepayment','sale_notes.total_charge','sale_notes.total_discount','sale_notes.total_exportation','sale_notes.total_free','sale_notes.total_taxed','sale_notes.total_unaffected','sale_notes.total_exonerated','sale_notes.total_igv','sale_notes.total_base_isc','sale_notes.total_isc','sale_notes.total_base_other_taxes','sale_notes.total_other_taxes','sale_notes.total_taxes','sale_notes.total_value','sale_notes.total')
                         ->addSelect(DB::raw("'payment_id'"))

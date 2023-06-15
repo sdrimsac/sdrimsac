@@ -519,7 +519,7 @@ class BoxesController extends Controller
     {
         // $items=$this->list_food_sales($request);
 
-        $data_item = DB::table('orden_item')->select(DB::raw("DISTINCT(orden_item.food_id) as food_id"))->where('date', $date)->get();
+        $data_item = DB::connection('tenant')->table('orden_item')->select(DB::raw("DISTINCT(orden_item.food_id) as food_id"))->where('date', $date)->get();
         $items = [];
         foreach ($data_item as $key => $data) {
             $orden_item = OrdenItem::where('food_id', $data->food_id)->where('date', $date);
@@ -1347,7 +1347,7 @@ class BoxesController extends Controller
     public function list_food_sales(Request $request)
     {
 
-        $data_item = DB::table('orden_item')->select(DB::raw("DISTINCT(orden_item.food_id) as food_id"))->where('date', $request['date_start'])->get();
+        $data_item = DB::connection('tenant')->table('orden_item')->select(DB::raw("DISTINCT(orden_item.food_id) as food_id"))->where('date', $request['date_start'])->get();
 
         $items = [];
         foreach ($data_item as $key => $data) {

@@ -18,7 +18,7 @@ class ToPayAllExport implements FromView
 
         $records =  ToPay::getToPayNoFilter();
         
-        $company = DB::table('companies')->select('name', 'number')->get();
+        $company = DB::connection('tenant')->table('companies')->select('name', 'number')->get();
 
         return view('finance::to_pay.reportall_excel',['records' => $records,
             'companies' => $company ]);

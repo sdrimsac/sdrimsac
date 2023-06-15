@@ -21,7 +21,7 @@ class ReportStockMinController extends Controller
 {
     public function index() {
         $stablecimientos = Establishment::all();
-        $categoriaFoods = DB::select('select * from categories');
+        $categoriaFoods = DB::connection('tenant')->select('select * from categories');
         //$resultArraycategoriaFoods = json_decode(json_encode($categoriaFoods), true);
 
 
@@ -61,7 +61,7 @@ class ReportStockMinController extends Controller
 
     public function recordsProveedor(Request $request){
 
-        $records = DB::select('SELECT purchase_items.unit_price, purchase_items.item_id, items.description, persons.id persona_id,     purchases.date_of_issue,    persons.NAME     FROM purchases INNER JOIN purchase_items ON purchases.id = purchase_items.purchase_id INNER JOIN persons ON persons.id = purchases.supplier_id INNER JOIN items ON purchase_items.item_id = items.id     WHERE item_id = ?    ORDER BY item_id, unit_price',[$request->id]) ;
+        $records = DB::connection('tenant')->select('SELECT purchase_items.unit_price, purchase_items.item_id, items.description, persons.id persona_id,     purchases.date_of_issue,    persons.NAME     FROM purchases INNER JOIN purchase_items ON purchases.id = purchase_items.purchase_id INNER JOIN persons ON persons.id = purchases.supplier_id INNER JOIN items ON purchase_items.item_id = items.id     WHERE item_id = ?    ORDER BY item_id, unit_price',[$request->id]) ;
         
         return  $records;
     }
@@ -89,7 +89,7 @@ class ReportStockMinController extends Controller
         return ; 
     }
     public function recordsOrden(){
-        $records = DB::select('SELECT list_orden_compras.id, persons.`name`, list_orden_compras.unit_price, items.description , item_id,id_orden_compra FROM list_orden_compras INNER JOIN persons ON list_orden_compras.id_persons = persons.id INNER JOIN items ON list_orden_compras.item_id = items.id WHERE ISNULL(id_orden_compra)  ORDER BY persons.NAME, list_orden_compras.id');
+        $records = DB::connection('tenant')->select('SELECT list_orden_compras.id, persons.`name`, list_orden_compras.unit_price, items.description , item_id,id_orden_compra FROM list_orden_compras INNER JOIN persons ON list_orden_compras.id_persons = persons.id INNER JOIN items ON list_orden_compras.item_id = items.id WHERE ISNULL(id_orden_compra)  ORDER BY persons.NAME, list_orden_compras.id');
 
          return $records;
     }
@@ -122,7 +122,7 @@ class ReportStockMinController extends Controller
             ]);
             
 
-            $numOrdengen  =  DB::select('select id from orden_compras  order by 1 DESC limit 1');
+            $numOrdengen  =  DB::connection('tenant')->select('select id from orden_compras  order by 1 DESC limit 1');
             DB::update('update list_orden_compras set id_orden_compra = ? WHERE ISNULL(id_orden_compra) ', [$numOrdengen[0]->id ] );
 
             foreach($ordenesCompra as $key => $value){
@@ -181,14 +181,14 @@ class ReportStockMinController extends Controller
     
     public function getListProv(){
         
-       $data = DB::select('select * from persons where type = ?', ['suppliers']);
+       $data = DB::connection('tenant')->select('select * from persons where type = ?', ['suppliers']);
        
         
        return response()->json(['data' => $data]);
     }
     public function genOrdenCompraMasiva(Request $request){
         $data = $request->all();
-        $distinc = DB::select('	
+        $distinc = DB::connection('tenant')->select('	
         SELECT
             DISTINCT(purchase_items.item_id)
         FROM
@@ -203,7 +203,7 @@ class ReportStockMinController extends Controller
             ORDER BY 1 desc ', [$data['prov_id']]);
 
 
-        $datos = DB::select('	
+        $datos = DB::connection('tenant')->select('	
         SELECT
             purchase_items.id,
             purchase_items.unit_price,

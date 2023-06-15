@@ -31,7 +31,7 @@ class MarginCollection extends ResourceCollection
                         $relation_item = $item->relation_item;
                         if (strtolower($relation_item->is_stock) === 'si') {
                             $price_unit_salenote = $item->unit_price;
-                       $purchase_item = DB::table('purchase_items')
+                       $purchase_item = DB::connection('tenant')->table('purchase_items')
                        ->join('purchases', 'purchases.id', '=', 'purchase_items.purchase_id')   
                        ->select('purchase_items.item_id','purchase_items.unit_price','purchases.includes')
                        ->whereMonth('purchases.date_of_issue', $this->month)
@@ -44,7 +44,7 @@ class MarginCollection extends ResourceCollection
                                 $price_unit_purchase = round(($purchase_item->unit_price),2);
                            }
                       }else{
-                        $purchase_itemss = DB::table('purchase_items')
+                        $purchase_itemss = DB::connection('tenant')->table('purchase_items')
                        ->join('purchases', 'purchases.id', '=', 'purchase_items.purchase_id')   
                        ->select('item_id','unit_price','includes')
                        ->whereMonth('purchases.date_of_issue', str_pad($this->month-1, 2, "0", STR_PAD_LEFT))

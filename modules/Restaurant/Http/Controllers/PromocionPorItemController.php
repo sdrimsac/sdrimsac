@@ -29,7 +29,7 @@ class PromocionPorItemController extends Controller
                 $cantidadComprada  = $value['quantity'];
                 $catidadHabilitarPromocion = $value['promotion_count'];
                 //consultar de la base de datos cuantos elementeos tiene ya acumulados 
-                $DBconsulta = DB::select('select * from promociones where prom_clie_id = ? and prom_items_id = ? ', [$how_is['id'],$value['id']]) ; 
+                $DBconsulta = DB::connection('tenant')->select('select * from promociones where prom_clie_id = ? and prom_items_id = ? ', [$how_is['id'],$value['id']]) ; 
                 $DBconsulta = json_decode(json_encode($DBconsulta), true);
 
                 if(count($DBconsulta) == 0){
@@ -39,7 +39,7 @@ class PromocionPorItemController extends Controller
                     $gifts_earned = floor($items_purchased / $catidadHabilitarPromocion); // Número de artículos de regalo obtenidos
                     $items_left = $items_purchased % $catidadHabilitarPromocion; // Número de artículos restantes
 
-                    DB::select('insert into promociones (prom_clie_id,  prom_items_id,  prom_cumulative_purchase,  prom_to_redeem, prom_redeemed, created_at  , updated_at   ) values (?,?,?,?,0,?,?)',[$how_is['id'], $productId ,$items_left, $gifts_earned ,$date ,$date  ]);
+                    DB::connection('tenant')->select('insert into promociones (prom_clie_id,  prom_items_id,  prom_cumulative_purchase,  prom_to_redeem, prom_redeemed, created_at  , updated_at   ) values (?,?,?,?,0,?,?)',[$how_is['id'], $productId ,$items_left, $gifts_earned ,$date ,$date  ]);
                 }else if(count($DBconsulta) == 1){// por iteracion solo  se permite la actualizacion de un item unico de resto el sistema debera arrojar un error
                         $totalComprado = $DBconsulta[0]['prom_cumulative_purchase']  + $cantidadComprada ; 
                         $porReclamar = $DBconsulta[0]['prom_to_redeem']  ; 
@@ -49,7 +49,7 @@ class PromocionPorItemController extends Controller
                         $gifts_earned += $porReclamar; // Número de artículos de regalo obtenidos
                         $items_left = $totalComprado % $catidadHabilitarPromocion; //articulos restantes 
 
-                    DB::select('update promociones  set   prom_cumulative_purchase = ? ,  prom_to_redeem = ? , updated_at = ?   where id = ? ',[$items_left , $gifts_earned, $date, $promocionId  ]);
+                    DB::connection('tenant')->select('update promociones  set   prom_cumulative_purchase = ? ,  prom_to_redeem = ? , updated_at = ?   where id = ? ',[$items_left , $gifts_earned, $date, $promocionId  ]);
                 }
             }
         }
@@ -59,14 +59,14 @@ class PromocionPorItemController extends Controller
 
     public function showCliePromos(Request $request){ 
 
-        $dataPersons = DB::select('SELECT persons.id , persons.name FROM  promociones  INNER JOIN persons ON promociones.prom_clie_id = persons.id GROUP BY persons.id , persons.name');
+        $dataPersons = DB::connection('tenant')->select('SELECT persons.id , persons.name FROM  promociones  INNER JOIN persons ON promociones.prom_clie_id = persons.id GROUP BY persons.id , persons.name');
        
         return response()->json(['data' => $dataPersons]);
     }
 
     public function getPrductosPromo(Request $request){
         //buscar que productos tenesmos disponibles para hacer cambio por clientes 
-        $dataProductDisp = DB::select('SELECT  promociones.*,  items.description , items.promotion_count FROM promociones INNER JOIN items ON promociones.prom_items_id = items.id where prom_clie_id = ? ', [$request->id ] );
+        $dataProductDisp = DB::connection('tenant')->select('SELECT  promociones.*,  items.description , items.promotion_count FROM promociones INNER JOIN items ON promociones.prom_items_id = items.id where prom_clie_id = ? ', [$request->id ] );
 
         return $dataProductDisp ;
     }
@@ -83,7 +83,7 @@ class PromocionPorItemController extends Controller
         $totalReclamar  = $request->TotalReclamar;
         //buscar el registro en la db (validar)
         try {
-            $registro = DB::select('select * from promociones where prom_clie_id  = ? and id = ? and prom_to_redeem = ? ', [$clieId,$promocionId, $PromoDisp]);
+            $registro = DB::connection('tenant')->select('select * from promociones where prom_clie_id  = ? and id = ? and prom_to_redeem = ? ', [$clieId,$promocionId, $PromoDisp]);
             $registro = json_decode(json_encode($registro), true);
             
             $itemId = $registro[0]['prom_items_id'] ; 
@@ -93,7 +93,7 @@ class PromocionPorItemController extends Controller
             }else{
                 
                 $restante = $PromoDisp - $totalReclamar ; 
-                DB::select('update promociones set prom_to_redeem = ? , prom_redeemed = ?    where id  = ?', [$restante, $totalReclamar,$promocionId ]); 
+                DB::connection('tenant')->select('update promociones set prom_to_redeem = ? , prom_redeemed = ?    where id  = ?', [$restante, $totalReclamar,$promocionId ]); 
                 DB::insert('insert into listado_canje_promotion (fecha_cambio, clie_id , items_id, cantidad, created_at , updated_at ) values (?,?,?,?,?,?)', [$date,$clieId,$itemId,$totalReclamar,$date,$date]);
 
             }
@@ -106,9 +106,9 @@ class PromocionPorItemController extends Controller
 
     public function HistCanje(Request $request){
          
-        /* $histcanje = DB::select('SELECT        listado_canje_promotion.id,        listado_canje_promotion.fecha_cambio,        items.description,        persons.`name`,        listado_canje_promotion.cantidad,        listado_canje_promotion.clie_id     FROM        listado_canje_promotion        INNER JOIN persons ON listado_canje_promotion.clie_id = persons.id        INNER JOIN items ON listado_canje_promotion.items_id = items.id    WHERE        listado_canje_promotion.clie_id = ? order by 1 desc ', [$request->id]);
+        /* $histcanje = DB::connection('tenant')->select('SELECT        listado_canje_promotion.id,        listado_canje_promotion.fecha_cambio,        items.description,        persons.`name`,        listado_canje_promotion.cantidad,        listado_canje_promotion.clie_id     FROM        listado_canje_promotion        INNER JOIN persons ON listado_canje_promotion.clie_id = persons.id        INNER JOIN items ON listado_canje_promotion.items_id = items.id    WHERE        listado_canje_promotion.clie_id = ? order by 1 desc ', [$request->id]);
          */
-        $histcanje = DB::table('listado_canje_promotion')
+        $histcanje = DB::connection('tenant')->table('listado_canje_promotion')
         ->select('listado_canje_promotion.id', 'listado_canje_promotion.fecha_cambio', 'items.description', 'persons.name', 'listado_canje_promotion.cantidad', 'listado_canje_promotion.clie_id')
         ->join('persons', 'listado_canje_promotion.clie_id', '=', 'persons.id')
         ->join('items', 'listado_canje_promotion.items_id', '=', 'items.id')

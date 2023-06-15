@@ -26,7 +26,7 @@ class ConfigurationController extends Controller
 
     public function addSeeder()
     {
-        $reiniciar =  DB::table('format_templates')
+        $reiniciar =  DB::connection('tenant')->table('format_templates')
             ->truncate();
         $archivos = Storage::disk('core')->allDirectories('Templates/pdf');
         $colection = array();
@@ -39,7 +39,7 @@ class ConfigurationController extends Controller
         }
 
         foreach ($colection as $insertar) {
-            $insertar =  DB::table('format_templates')
+            $insertar =  DB::connection('tenant')->table('format_templates')
                 ->insert(['formats' => $insertar[2]]);
         }
 
@@ -67,7 +67,7 @@ class ConfigurationController extends Controller
 
     public function getFormats()
     {
-        $formats = DB::table('format_templates')->get();
+        $formats = DB::connection('tenant')->table('format_templates')->get();
         return $formats;
     }
 

@@ -47,13 +47,13 @@ class ToPay
         /*
          * Purchases
          */
-        $purchase_payments = DB::table('purchase_payments')
+        $purchase_payments = DB::connection('tenant')->table('purchase_payments')
             ->select('purchase_id', DB::raw('SUM(payment) as total_payment'))
             ->groupBy('purchase_id');
 
         if($d_start && $d_end){
 
-            $purchases = DB::table('purchases')
+            $purchases = DB::connection('tenant')->table('purchases')
                 ->where('supplier_id', $supplier_id)
                 ->join('persons', 'persons.id', '=', 'purchases.supplier_id')
                 ->leftJoinSub($purchase_payments, 'payments', function ($join) {
@@ -74,7 +74,7 @@ class ToPay
 
         }else{
 
-            $purchases = DB::table('purchases')
+            $purchases = DB::connection('tenant')->table('purchases')
                 ->where('supplier_id', $supplier_id)
                 ->join('persons', 'persons.id', '=', 'purchases.supplier_id')
                 ->leftJoinSub($purchase_payments, 'payments', function ($join) {
@@ -97,13 +97,13 @@ class ToPay
         /*
          * Sale Notes
          */
-        $expense_payments = DB::table('expense_payments')
+        $expense_payments = DB::connection('tenant')->table('expense_payments')
             ->select('expense_id', DB::raw('SUM(payment) as total_payment'))
             ->groupBy('expense_id');
 
         if($d_start && $d_end){
 
-            $expenses = DB::table('expenses')
+            $expenses = DB::connection('tenant')->table('expenses')
                 ->where('supplier_id', $supplier_id)
                 ->join('persons', 'persons.id', '=', 'expenses.supplier_id')
                 ->leftJoinSub($expense_payments, 'payments', function ($join) {
@@ -125,7 +125,7 @@ class ToPay
 
         }else{
 
-            $expenses = DB::table('expenses')
+            $expenses = DB::connection('tenant')->table('expenses')
                 ->where('supplier_id', $supplier_id)
                 ->join('persons', 'persons.id', '=', 'expenses.supplier_id')
                 ->leftJoinSub($expense_payments, 'payments', function ($join) {
@@ -203,12 +203,12 @@ class ToPay
     public static function getToPayNoFilter()
     {  
 
-        $purchase_payments = DB::table('purchase_payments')
+        $purchase_payments = DB::connection('tenant')->table('purchase_payments')
             ->select('purchase_id', DB::raw('SUM(payment) as total_payment'))
             ->groupBy('purchase_id');
  
 
-            $purchases = DB::table('purchases')
+            $purchases = DB::connection('tenant')->table('purchases')
                 ->join('persons', 'persons.id', '=', 'purchases.supplier_id')
                 ->leftJoinSub($purchase_payments, 'payments', function ($join) {
                     $join->on('purchases.id', '=', 'payments.purchase_id');
@@ -225,11 +225,11 @@ class ToPay
                                     "'purchase' AS 'type', ". "purchases.currency_type_id, " . "purchases.exchange_rate_sale"));
 
  
-        $expense_payments = DB::table('expense_payments')
+        $expense_payments = DB::connection('tenant')->table('expense_payments')
             ->select('expense_id', DB::raw('SUM(payment) as total_payment'))
             ->groupBy('expense_id');
  
-            $expenses = DB::table('expenses')
+            $expenses = DB::connection('tenant')->table('expenses')
                 ->join('persons', 'persons.id', '=', 'expenses.supplier_id')
                 ->leftJoinSub($expense_payments, 'payments', function ($join) {
                     $join->on('expenses.id', '=', 'payments.expense_id');

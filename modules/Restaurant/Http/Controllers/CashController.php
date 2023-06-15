@@ -1182,7 +1182,7 @@ class CashController extends Controller
     {
         $userid = auth()->user()->id;
 
-        $cajaOpen = DB::table('cash')
+        $cajaOpen = DB::connection('tenant')->table('cash')
             ->where('user_id', '=', $userid)
             ->where('state', '=', 1) // 1 indica que la caja esta en estatus abierta
             ->first();

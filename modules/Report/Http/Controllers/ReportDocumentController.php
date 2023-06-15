@@ -110,45 +110,45 @@ class ReportDocumentController extends Controller
         if($document_type_id!=null){
 
             if($document_type_id=="01" || $document_type_id=="03"){
-                $documents = DB::table('documents')
+                $documents = DB::connection('tenant')->table('documents')
                 ->select(DB::raw("id,user_id, soap_type_id,document_type_id,state_type_id,date_of_issue,total_exonerated,total_unaffected,total_free,total_taxed,total_igv,total,customer, currency_type_id,documents.series,documents.number, concat(documents.number,' ',documents.series) as 'number_full', total_exportation"))
                 ->whereBetween('date_of_issue', [$d_start, $d_end])
                 ->where('document_type_id', 'like', '%' . $document_type_id . '%')->OrderBy("documents.date_of_issue","asc")->latest();
               
             }else{
-                $sale_notes = DB::table('sale_notes')
+                $sale_notes = DB::connection('tenant')->table('sale_notes')
                 ->select(DB::raw("user_id, soap_type_id,document_type_id,state_type_id,date_of_issue,total_exonerated,total_unaffected,total_free,total_taxed,total_igv,total,customer, currency_type_id,sale_notes.series,sale_notes.number, concat(sale_notes.number,' ',sale_notes.series) as 'number_full', total_exportation"))
                  ->whereBetween('date_of_issue', [$d_start, $d_end])->OrderBy("sale_notes.date_of_issue","asc")->latest();             
             }
            
         }elseif($establishment_id){
           
-            $documents = DB::table('documents')
+            $documents = DB::connection('tenant')->table('documents')
             ->select(DB::raw("user_id, soap_type_id,document_type_id,state_type_id,date_of_issue,total_exonerated,total_unaffected,total_free,total_taxed,total_igv,total,customer, currency_type_id,documents.series,documents.number, concat(documents.number,' ',documents.series) as 'number_full', total_exportation"))
             ->whereBetween('date_of_issue', [$d_start, $d_end])
             ->where('establishment_id', 'like', '%' . $establishment_id . '%')->OrderBy("documents.date_of_issue","asc")->latest();
 
-            $sale_notes = DB::table('sale_notes')
+            $sale_notes = DB::connection('tenant')->table('sale_notes')
             ->select(DB::raw("user_id, soap_type_id,document_type_id,state_type_id,date_of_issue,total_exonerated,total_unaffected,total_free,total_taxed,total_igv,total,customer, currency_type_id,sale_notes.series,sale_notes.number, concat(sale_notes.number,' ',sale_notes.series) as 'number_full', total_exportation"))
             ->whereBetween('date_of_issue', [$d_start, $d_end]) 
             ->where('establishment_id', 'like', '%' . $establishment_id . '%')->OrderBy("sale_notes.date_of_issue","asc")->latest();
         }else{
           
             if($document_type_id!=null){
-                $documents = DB::table('documents')
+                $documents = DB::connection('tenant')->table('documents')
                 ->select(DB::raw("user_id, soap_type_id,document_type_id,state_type_id,date_of_issue,total_exonerated,total_unaffected,total_free,total_taxed,total_igv,total,customer, currency_type_id,documents.series,documents.number, concat(documents.number,' ',documents.series) as 'number_full', total_exportation"))
                 ->where('document_type_id', 'like', '%' . $document_type_id . '%')
                 ->whereBetween('date_of_issue', [$d_start, $date_end])->OrderBy("sale_notes.date_of_issue","asc")->latest();
-                $sale_notes = DB::table('sale_notes')
+                $sale_notes = DB::connection('tenant')->table('sale_notes')
                 ->select(DB::raw("user_id, soap_type_id,document_type_id,state_type_id,date_of_issue,total_exonerated,total_unaffected,total_free,total_taxed,total_igv,total,customer, currency_type_id,sale_notes.series,sale_notes.number, concat(sale_notes.number,' ',sale_notes.series) as 'number_full', total_exportation"))
                 ->whereBetween('date_of_issue', [$d_start, $d_end])->OrderBy("sale_notes.date_of_issue","asc")->latest();
                
             }else{
              //  dd($document_type_id);
-                $documents = DB::table('documents')
+                $documents = DB::connection('tenant')->table('documents')
                 ->select(DB::raw("user_id, soap_type_id,document_type_id,state_type_id,date_of_issue,total_exonerated,total_unaffected,total_free,total_taxed,total_igv,total,customer, currency_type_id,documents.series,documents.number, concat(documents.number,' ',documents.series) as 'number_full', total_exportation"))
                 ->whereBetween('date_of_issue', [$d_start, $d_end])->OrderBy("documents.date_of_issue","asc")->latest();
-                $sale_notes = DB::table('sale_notes')
+                $sale_notes = DB::connection('tenant')->table('sale_notes')
                 ->select(DB::raw("user_id, soap_type_id,document_type_id,state_type_id,date_of_issue,total_exonerated,total_unaffected,total_free,total_taxed,total_igv,total,customer, currency_type_id,sale_notes.series,sale_notes.number, concat(sale_notes.number,' ',sale_notes.series) as 'number_full', total_exportation"))
                 ->whereBetween('date_of_issue', [$d_start, $d_end])->OrderBy("sale_notes.date_of_issue","asc")->latest();
               
@@ -357,7 +357,7 @@ class ReportDocumentController extends Controller
                     $relation_item = $item->relation_item;
                     if (strtolower($relation_item->is_stock) === 'si') {
                         $price_unit_salenote = $item->unit_price;
-                       $purchase_item = DB::table('purchase_items')
+                       $purchase_item = DB::connection('tenant')->table('purchase_items')
                        ->join('purchases', 'purchases.id', '=', 'purchase_items.purchase_id')   
                        ->select('purchase_items.item_id','purchase_items.unit_price','purchases.includes')
                        ->whereMonth('purchases.date_of_issue',$month)
@@ -370,7 +370,7 @@ class ReportDocumentController extends Controller
                                 $price_unit_purchase = round(($purchase_item->unit_price),2);
                            }
                       }else{
-                        $purchase_itemss = DB::table('purchase_items')
+                        $purchase_itemss = DB::connection('tenant')->table('purchase_items')
                        ->join('purchases', 'purchases.id', '=', 'purchase_items.purchase_id')   
                        ->select('item_id','unit_price','includes')
                        ->whereMonth('purchases.date_of_issue', str_pad($month-1, 2, "0", STR_PAD_LEFT))
@@ -509,13 +509,13 @@ class ReportDocumentController extends Controller
         if($document_type_id!=null){
            
             if($document_type_id=="01" || $document_type_id=="03"){
-               $documents = DB::table('documents')
+               $documents = DB::connection('tenant')->table('documents')
                ->join('users', 'users.id', '=', 'documents.user_id')         
                ->select("users.name","documents.soap_type_id","documents.document_type_id","documents.state_type_id","documents.date_of_issue","documents.total_exonerated","documents.total_unaffected","documents.total_free","documents.total_taxed","documents.total_igv","documents.total","documents.customer","documents.currency_type_id","documents.series","documents.number",DB::raw("concat(documents.number,' ',documents.series) as number_full"),"total_exportation")
                ->where('document_type_id', 'like', '%' . $document_type_id . '%')
                ->whereBetween('date_of_issue', [$d_start, $d_end])->OrderBy("documents.date_of_issue","asc");
            }else{
-               $sale_notes = DB::table('sale_notes')
+               $sale_notes = DB::connection('tenant')->table('sale_notes')
                ->join('users', 'users.id', '=', 'sale_notes.user_id')   
                ->select("users.name","sale_notes.user_id","sale_notes.soap_type_id","sale_notes.document_type_id","sale_notes.state_type_id","sale_notes.date_of_issue","sale_notes.total_exonerated","sale_notes.total_unaffected","sale_notes.total_free","sale_notes.total_taxed","sale_notes.total_igv","sale_notes.total","sale_notes.customer","sale_notes.currency_type_id","sale_notes.series","sale_notes.number",DB::raw("concat(sale_notes.number,' ',sale_notes.series) as number_full"),"sale_notes.total_exportation")
                ->whereBetween('date_of_issue', [$d_start, $d_end])->OrderBy("sale_notes.date_of_issue","asc");
@@ -523,13 +523,13 @@ class ReportDocumentController extends Controller
  
            }elseif($establishment_id){
                
-           $documents = DB::table('documents')
+           $documents = DB::connection('tenant')->table('documents')
             ->join('users', 'users.id', '=', 'documents.user_id')          
              ->select("users.name","documents.user_id","documents.soap_type_id","documents.document_type_id","documents.state_type_id","documents.date_of_issue","documents.total_exonerated","documents.total_unaffected","documents.total_free","documents.total_taxed","documents.total_igv","documents.total","documents.customer","documents.currency_type_id","documents.series","documents.number",DB::raw("concat(documents.number,' ',documents.series) as number_full"),"total_exportation")
            ->whereBetween('date_of_issue', [$d_start, $d_end]) 
            ->where('establishment_id', 'like', '%' . $establishment_id . '%')->OrderBy("documents.date_of_issue","asc");
 
-           $sale_notes = DB::table('sale_notes')
+           $sale_notes = DB::connection('tenant')->table('sale_notes')
            ->join('users', 'users.id', '=', 'sale_notes.user_id')   
            ->select("users.name","sale_notes.user_id","sale_notes.user_id","sale_notes.soap_type_id","sale_notes.document_type_id",
            "sale_notes.state_type_id","sale_notes.date_of_issue","sale_notes.total_exonerated","sale_notes.total_unaffected","sale_notes.total_free",
@@ -545,7 +545,7 @@ class ReportDocumentController extends Controller
            DB::raw("concat(documents.number,' ',documents.series) as number_full"),"total_exportation")
            ->whereBetween('date_of_issue', [$d_start, $d_end])->OrderBy("documents.date_of_issue","asc");
        
-           $sale_notes = DB::table('sale_notes')
+           $sale_notes = DB::connection('tenant')->table('sale_notes')
            ->join('users', 'users.id', '=', 'sale_notes.user_id')   
            ->select("users.name","sale_notes.user_id","sale_notes.soap_type_id","sale_notes.document_type_id","sale_notes.state_type_id","sale_notes.date_of_issue",
            "sale_notes.total_exonerated","sale_notes.total_unaffected","sale_notes.total_free","sale_notes.total_taxed","sale_notes.total_igv","sale_notes.total",
@@ -721,13 +721,13 @@ class ReportDocumentController extends Controller
         if($document_type_id!=null){
            
             if($document_type_id=="01" || $document_type_id=="03"){
-               $documents = DB::table('documents')
+               $documents = DB::connection('tenant')->table('documents')
                ->join('users', 'users.id', '=', 'documents.user_id')          
                ->select("users.name","documents.soap_type_id","documents.document_type_id","documents.state_type_id","documents.date_of_issue","documents.total_exonerated","documents.total_unaffected","documents.total_free","documents.total_taxed","documents.total_igv","documents.total","documents.customer","documents.currency_type_id","documents.series","documents.number",DB::raw("concat(documents.number,' ',documents.series) as number_full"),"total_exportation")
                ->where('document_type_id', 'like', '%' . $document_type_id . '%')
                ->whereBetween('date_of_issue', [$date_start, $date_end])->OrderBy("documents.date_of_issue","asc");
            }else{
-               $sale_notes = DB::table('sale_notes')
+               $sale_notes = DB::connection('tenant')->table('sale_notes')
                ->join('users', 'users.id', '=', 'sale_notes.user_id')   
                ->select("users.name","sale_notes.user_id","sale_notes.soap_type_id","sale_notes.document_type_id","sale_notes.state_type_id","sale_notes.date_of_issue","sale_notes.total_exonerated","sale_notes.total_unaffected","sale_notes.total_free","sale_notes.total_taxed","sale_notes.total_igv","sale_notes.total","sale_notes.customer","sale_notes.currency_type_id","sale_notes.series","sale_notes.number",DB::raw("concat(sale_notes.number,' ',sale_notes.series) as number_full"),"sale_notes.total_exportation")
                ->whereBetween('date_of_issue', [$date_start, $date_end])->OrderBy("sale_notes.date_of_issue","asc");
@@ -735,13 +735,13 @@ class ReportDocumentController extends Controller
  
            }elseif($establishment_id){
                
-           $documents = DB::table('documents')
+           $documents = DB::connection('tenant')->table('documents')
             ->join('users', 'users.id', '=', 'documents.user_id')          
              ->select("users.name","documents.user_id","documents.soap_type_id","documents.document_type_id","documents.state_type_id","documents.date_of_issue","documents.total_exonerated","documents.total_unaffected","documents.total_free","documents.total_taxed","documents.total_igv","documents.total","documents.customer","documents.currency_type_id","documents.series","documents.number",DB::raw("concat(documents.number,' ',documents.series) as number_full"),"total_exportation")
            ->whereBetween('date_of_issue', [$date_start, $date_end]) 
            ->where('establishment_id', 'like', '%' . $establishment_id . '%')->OrderBy("documents.date_of_issue","asc");
 
-           $sale_notes = DB::table('sale_notes')
+           $sale_notes = DB::connection('tenant')->table('sale_notes')
            ->join('users', 'users.id', '=', 'sale_notes.user_id')   
            ->select("users.name","sale_notes.user_id","sale_notes.user_id","sale_notes.soap_type_id","sale_notes.document_type_id",
            "sale_notes.state_type_id","sale_notes.date_of_issue","sale_notes.total_exonerated","sale_notes.total_unaffected","sale_notes.total_free",
@@ -750,7 +750,7 @@ class ReportDocumentController extends Controller
            ->whereBetween('date_of_issue', [$date_start, $date_end])
            ->where('establishment_id', 'like', '%' . $establishment_id . '%')->OrderBy("sale_notes.date_of_issue","asc");
        }else{
-            $documents = DB::table('documents')
+            $documents = DB::connection('tenant')->table('documents')
            ->join('users', 'users.id', '=', 'documents.user_id')          
            ->select("users.name","documents.user_id","documents.soap_type_id","documents.document_type_id","documents.state_type_id",
            "documents.date_of_issue","documents.total_exonerated","documents.total_unaffected","documents.total_free","documents.total_taxed",
@@ -758,7 +758,7 @@ class ReportDocumentController extends Controller
            DB::raw("concat(documents.number,' ',documents.series) as number_full"),"total_exportation")
            ->whereBetween('date_of_issue', [$date_start, $date_end])->OrderBy("documents.date_of_issue","asc");
        
-           $sale_notes = DB::table('sale_notes')
+           $sale_notes = DB::connection('tenant')->table('sale_notes')
            ->join('users', 'users.id', '=', 'sale_notes.user_id')   
            ->select("users.name","sale_notes.user_id","sale_notes.soap_type_id","sale_notes.document_type_id","sale_notes.state_type_id","sale_notes.date_of_issue",
            "sale_notes.total_exonerated","sale_notes.total_unaffected","sale_notes.total_free","sale_notes.total_taxed","sale_notes.total_igv","sale_notes.total",

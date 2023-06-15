@@ -40,11 +40,11 @@ class InventoryController extends Controller
     {
         //
         try {
-            DB::table('inventories')->update(['date_of_issue' => $request->date_of_issue]);
+            DB::connection('tenant')->table('inventories')->update(['date_of_issue' => $request->date_of_issue]);
             $documents = InventoryKardex::where('inventory_kardexable_type', "App\Models\Tenant\Document")->get();
             $purchases = InventoryKardex::where('inventory_kardexable_type', "App\Models\Tenant\Purchase")->get();
             $saleNotes = InventoryKardex::where('inventory_kardexable_type', "App\Models\Tenant\SaleNote")->get();
-            DB::table('inventory_kardex')
+            DB::connection('tenant')->table('inventory_kardex')
                 ->where('inventory_kardexable_type', "Modules\Inventory\Models\Inventory")
                 ->update(['date_of_issue' => $request->date_of_issue]);
             foreach ($purchases as $key => $row_purchases) {

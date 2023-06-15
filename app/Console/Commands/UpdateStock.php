@@ -69,7 +69,7 @@ class UpdateStock extends Command
                  $compras=floatval(PurchaseItem::where('item_id',$row_item->id)->sum('quantity'));
                  //Nota de Venta
                   $array_sales_id=[];
-                $sale_note = DB::table('sale_note_items')
+                $sale_note = DB::connection('tenant')->table('sale_note_items')
                 ->join('sale_notes', 'sale_notes.id', '=', 'sale_note_items.sale_note_id')
                 ->select('sale_note_items.quantity','sale_note_items.sale_note_id')
                 ->where('item_id',$row_item->id)
@@ -78,7 +78,7 @@ class UpdateStock extends Command
                 ->get();
                  $sale_note=$sale_note->sum('quantity');
 
-                 $document = DB::table('document_items')
+                 $document = DB::connection('tenant')->table('document_items')
                  //->select(DB::raw("sum(document_items.quantity) as quantity"))
                  ->select('document_items.quantity','document_items.document_id')
                  ->join('documents', 'documents.id', '=', 'document_items.document_id')
@@ -109,8 +109,8 @@ class UpdateStock extends Command
                         $sale_note=0;
                     }
                   $saldo_stock=($saldo_inicial+$compras)-($sale_note+$document);
-                    DB::table('items')->where('id',$row_item->id)->update(['stock' => $saldo_stock]);
-                    DB::table('item_warehouse')->where('item_id',$row_item->id)->update(['stock' => $saldo_stock]);
+                    DB::connection('tenant')->table('items')->where('id',$row_item->id)->update(['stock' => $saldo_stock]);
+                    DB::connection('tenant')->table('item_warehouse')->where('item_id',$row_item->id)->update(['stock' => $saldo_stock]);
 
              }
              Log::debug('Se actualizo el Stock');

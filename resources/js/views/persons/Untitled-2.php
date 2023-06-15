@@ -3,7 +3,7 @@ $ordenItem=OrdenItem::where('orden_id',$row->id)->first();
 $total="0.00";
 
 if($ordenItem!=null){
-$totalizar = DB::table('orden_item')
+$totalizar = DB::connection('tenant')->table('orden_item')
 ->select(DB::raw('SUM(quantity*price) as total'))->where('orden_id',$row->id)->first();
 $total=$totalizar->total;
 }

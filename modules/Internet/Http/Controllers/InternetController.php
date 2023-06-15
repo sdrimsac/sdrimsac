@@ -463,7 +463,7 @@ class InternetController extends Controller
                         ];
                         $current_month->addMonth();
                     }
-                    DB::table("internet_payment_month")->insert($payment_months);
+                    DB::connection('tenant')->table("internet_payment_month")->insert($payment_months);
                 }
             }
 

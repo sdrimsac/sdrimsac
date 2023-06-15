@@ -149,7 +149,7 @@ class CollegeListSchoolSuppliesController extends Controller
            
                 DB::beginTransaction();
                
-                DB::select('update college_list_supplies set list_supp_cantidad = ? where list_supp_id = ?  ', [$newcantidadStock,$data['list_supp_id'] ]);
+                DB::connection('tenant')->select('update college_list_supplies set list_supp_cantidad = ? where list_supp_id = ?  ', [$newcantidadStock,$data['list_supp_id'] ]);
             
                 CollegeKardexSuppliesMov::create([
                     'k_supp_id_list' => $data['list_supp_id'] ,
@@ -295,7 +295,7 @@ class CollegeListSchoolSuppliesController extends Controller
         return $data ; 
     }
     public function listadoSalones(){
-        $salones = DB::select('SELECT
+        $salones = DB::connection('tenant')->select('SELECT
                 college_classrooms.id,
                 college_degrees.description AS degres_desc,
                 college_levels.description AS lvl_desc,
@@ -308,12 +308,12 @@ class CollegeListSchoolSuppliesController extends Controller
                 INNER JOIN college_sections ON college_classrooms.section_id = college_sections.id
                 INNER JOIN college_turns ON college_classrooms.turn_id = college_turns.id'
         );
-        $dataProfesores = DB::select('SELECT        *     FROM        college_teachers        INNER JOIN persons ON college_teachers.teach_pers_id = persons.id'); 
+        $dataProfesores = DB::connection('tenant')->select('SELECT        *     FROM        college_teachers        INNER JOIN persons ON college_teachers.teach_pers_id = persons.id'); 
 
         return response()->json(['salones' => $salones , 'dataProfesores'=> $dataProfesores  ]);
     }
     public function utilesPorSalonDeClases(Request $request){
-        $data = DB::select('SELECT
+        $data = DB::connection('tenant')->select('SELECT
                 college_classrooms.id classrooms_id,
                 college_degrees.description AS degres_desc,
                 college_levels.description AS lvl_desc,
@@ -352,7 +352,7 @@ class CollegeListSchoolSuppliesController extends Controller
            
                 DB::beginTransaction();
                
-                DB::select('update college_list_supplies set list_supp_cantidad = ? where list_supp_id = ?  ', [$newcantidadStock,$data['list_supp_id'] ]);
+                DB::connection('tenant')->select('update college_list_supplies set list_supp_cantidad = ? where list_supp_id = ?  ', [$newcantidadStock,$data['list_supp_id'] ]);
             
                 CollegeKardexSuppliesMov::create([
                     'k_supp_id_list' => $data['list_supp_id'] ,

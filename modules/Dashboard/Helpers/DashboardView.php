@@ -58,13 +58,13 @@ class DashboardView
         /*
          * Documents
          */
-        $document_payments = DB::table('document_payments')
+        $document_payments = DB::connection('tenant')->table('document_payments')
             ->select('document_id', DB::raw('SUM(payment) as total_payment'))
             ->groupBy('document_id');
 
         if($d_start && $d_end){
             if($request['customer_id']!=null){
-                $documents = DB::table('documents')
+                $documents = DB::connection('tenant')->table('documents')
                 ->where('customer_id', $customer_id)
                 ->join('persons', 'persons.id', '=', 'documents.customer_id')
                 ->leftJoinSub($document_payments, 'payments', function ($join) {
@@ -84,7 +84,7 @@ class DashboardView
                 ->orderBy('documents.date_of_issue','asc');
             }else{
 
-                $documents = DB::table('documents')
+                $documents = DB::connection('tenant')->table('documents')
                 ->join('persons', 'persons.id', '=', 'documents.customer_id')
                 ->leftJoinSub($document_payments, 'payments', function ($join) {
                     $join->on('documents.id', '=', 'payments.document_id');
@@ -104,7 +104,7 @@ class DashboardView
             }
         }else{
 
-            $documents = DB::table('documents')
+            $documents = DB::connection('tenant')->table('documents')
                 // ->where('customer_id', $customer_id)
                  ->join('persons', 'persons.id', '=', 'documents.customer_id')
                 ->leftJoinSub($document_payments, 'payments', function ($join) {
@@ -127,13 +127,13 @@ class DashboardView
         /*
          * Sale Notes
          */
-        $sale_note_payments = DB::table('sale_note_payments')
+        $sale_note_payments = DB::connection('tenant')->table('sale_note_payments')
             ->select('sale_note_id', DB::raw('SUM(payment) as total_payment'))
             ->groupBy('sale_note_id');
 
         if($d_start && $d_end){
             if($request['customer_id']!=null){
-                $sale_notes = DB::table('sale_notes')
+                $sale_notes = DB::connection('tenant')->table('sale_notes')
                 ->where('customer_id', $customer_id)
                 ->join('persons', 'persons.id', '=', 'sale_notes.customer_id')
                 ->leftJoinSub($sale_note_payments, 'payments', function ($join) {
@@ -154,7 +154,7 @@ class DashboardView
                 ->where('sale_notes.total_canceled', false)
                 ->orderBy('sale_notes.date_of_issue','asc');
             }else{
-                $sale_notes = DB::table('sale_notes')
+                $sale_notes = DB::connection('tenant')->table('sale_notes')
                 ->join('persons', 'persons.id', '=', 'sale_notes.customer_id')
                 ->leftJoinSub($sale_note_payments, 'payments', function ($join) {
                     $join->on('sale_notes.id', '=', 'payments.sale_note_id');
@@ -176,7 +176,7 @@ class DashboardView
             }
         }else{
 
-            $sale_notes = DB::table('sale_notes')
+            $sale_notes = DB::connection('tenant')->table('sale_notes')
                 ->leftJoinSub($sale_note_payments, 'payments', function ($join) {
                     $join->on('sale_notes.id', '=', 'payments.sale_note_id');
                 })

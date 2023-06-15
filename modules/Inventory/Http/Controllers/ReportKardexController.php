@@ -54,7 +54,7 @@ class ReportKardexController extends Controller
     public function index()
     {
 
-        $establecimiento =  DB::select('select * from establishments');
+        $establecimiento =  DB::connection('tenant')->select('select * from establishments');
 
         return view('inventory::reports.kardex.index')->with('establecimiento', $establecimiento);
     }

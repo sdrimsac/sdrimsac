@@ -58,7 +58,7 @@ class CheckDocumentsStatus extends Command
         
 
         try {
-            $results = DB::select("            SHOW DATABASES;            ");
+            $results = DB::connection('tenant')->select("            SHOW DATABASES;            ");
             
             foreach ($results as $result) {
                 //$this->line($result->Database);
@@ -66,7 +66,7 @@ class CheckDocumentsStatus extends Command
                     
 
                     
-                    $resultsPorDB = DB::select('
+                    $resultsPorDB = DB::connection('tenant')->select('
                     SELECT documents.id as document_id, 
                     state_types.description statusDoc,
                     soap_types.description modo,
@@ -80,7 +80,7 @@ class CheckDocumentsStatus extends Command
                      where soap_type_id = "02" and documents.state_type_id in  ("01","03") and documents.date_of_issue >= "'.$primerDiaDelMes.'"  and documents.date_of_issue < "'.$fechaHoy.'" 	ORDER BY 4,5 ');
                         $resultsPorDB = json_decode(json_encode($resultsPorDB), true);
                         
-                    $companies = DB::select('select soap_type_id from '.$result->Database.'.companies  ') ;
+                    $companies = DB::connection('tenant')->select('select soap_type_id from '.$result->Database.'.companies  ') ;
                     $companies = json_decode(json_encode($companies), true);
                     
                         if(count($resultsPorDB) > 0) {

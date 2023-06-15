@@ -23,11 +23,11 @@ class AccountsReceivable implements FromView
     {
     /**/
 
-     $document_payments = DB::table('document_payments')
+     $document_payments = DB::connection('tenant')->table('document_payments')
             ->select('document_id', DB::raw('SUM(payment) as total_payment'))
             ->groupBy('document_id');
 
-           $documents = DB::table('documents')
+           $documents = DB::connection('tenant')->table('documents')
                 ->join('persons', 'persons.id', '=', 'documents.customer_id')
                 ->leftJoinSub($document_payments, 'payments', function ($join) {
                     $join->on('documents.id', '=', 'payments.document_id');
@@ -42,13 +42,13 @@ class AccountsReceivable implements FromView
                                     "IFNULL(payments.total_payment, 0) as total_payment, ".
                                     "'document' AS 'type', ". "documents.currency_type_id, " . "documents.exchange_rate_sale", "companies.trade_name"))
                 ->where('total_canceled', 0);
-                  $sale_note_payments = DB::table('sale_note_payments')
+                  $sale_note_payments = DB::connection('tenant')->table('sale_note_payments')
             ->select('sale_note_id', DB::raw('SUM(payment) as total_payment'))
             ->groupBy('sale_note_id');
-   $company = DB::table('companies')
+   $company = DB::connection('tenant')->table('companies')
                             ->select('name', 'number')->get();
 
-            $sale_notes = DB::table('sale_notes')
+            $sale_notes = DB::connection('tenant')->table('sale_notes')
                 ->join('persons', 'persons.id', '=', 'sale_notes.customer_id')
                 ->leftJoinSub($sale_note_payments, 'payments', function ($join) {
                     $join->on('sale_notes.id', '=', 'payments.sale_note_id');

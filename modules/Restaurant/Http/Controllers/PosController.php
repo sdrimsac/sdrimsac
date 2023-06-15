@@ -642,7 +642,7 @@ class PosController extends Controller
             $message = 'Eliminado con éxito';
 
             // $boxDetalle = BoxesDetail::findOrFail($box->id); 
-            DB::select('delete from boxes_detail where boxes_id = ?', [$box->id]);
+            DB::connection('tenant')->select('delete from boxes_detail where boxes_id = ?', [$box->id]);
             $box->delete();
         }
 

@@ -71,7 +71,7 @@ class ReportItemController extends Controller
                 break;
         }
 
-        $records = DB::table('items')
+        $records = DB::connection('tenant')->table('items')
         ->where('stock','>','0')
         ->whereBetween('date_of_due', [$d_start, $d_end])
         ->orderBy('description','asc');
@@ -112,7 +112,7 @@ class ReportItemController extends Controller
                 $d_end = $date_end;
                 break;
         }
-        $records = DB::table('items')
+        $records = DB::connection('tenant')->table('items')
         ->where('stock','>','0')
         ->whereBetween('date_of_due', [$d_start, $d_end])->orderBy('description','asc')->get();
         $pdf = PDF::loadView('report::items.report_pdf', compact("company", "establishment","records"));
@@ -151,7 +151,7 @@ class ReportItemController extends Controller
                 $d_end = $date_end;
                 break;
         }
-        $records = DB::table('items')
+        $records = DB::connection('tenant')->table('items')
         ->whereBetween('date_of_due', [$d_start, $d_end])->get();
       //  return $records;
         return (new ItemExport_defeated)
