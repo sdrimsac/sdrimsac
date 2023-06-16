@@ -18,24 +18,24 @@ class TenantSeeder extends Seeder
      */
     public function run()
     {
-        $establishment_id = DB::table('establishments')->insertGetId([
-            'description' => 'Oficina Principal',
-            'country_id' => 'PE',
-            'department_id' => '15',
-            'province_id' => '1501',
-            'district_id' => '150101',
-            'address' => '-',
-            'email' => "admin@gmail.com",
-            'telephone' => '-',
-            'code' => '0000',
-            'printer' => '',
-            'format_printer' => '1',
-            'direct_printing' => false
-        ]);
-        DB::table('warehouses')->insertGetId([
-            'establishment_id' => $establishment_id,
-            'description' => 'Almacén - ' . 'Oficina Principal',
-        ]);
+        // $establishment_id = DB::table('establishments')->insertGetId([
+        //     'description' => 'Oficina Principal',
+        //     'country_id' => 'PE',
+        //     'department_id' => '15',
+        //     'province_id' => '1501',
+        //     'district_id' => '150101',
+        //     'address' => '-',
+        //     'email' => "admin@gmail.com",
+        //     'telephone' => '-',
+        //     'code' => '0000',
+        //     'printer' => '',
+        //     'format_printer' => '1',
+        //     'direct_printing' => false
+        // ]);
+        // DB::table('warehouses')->insertGetId([
+        //     'establishment_id' => $establishment_id,
+        //     'description' => 'Almacén - ' . 'Oficina Principal',
+        // ]);
 
         DB::table('series')->insert([
             ['establishment_id' => 1, 'document_type_id' => '01', 'number' => 'F001'],
@@ -66,9 +66,9 @@ class TenantSeeder extends Seeder
         $token = str_random(50);
         DB::table('users')->delete();
         $user_id = DB::table('users')->insert([
-            ['name' => 'Soporte',    'email' => "admin@sdrimsac.xyz",    'password' => bcrypt("Sdr147258369"),       'api_token' => str_random(50), 'establishment_id' => $establishment_id,  'locked' => true, 'number' => null,       'pin' => 205687,    'type' => 'superadmin', 'worker_type_id' => null, 'area_id' =>    null, 'active' =>    1],
-            ['name' => 'Administrador', 'email' => "admin@gmail.xyz",       'password' => bcrypt("teros"),              'api_token' => str_random(50), 'establishment_id' => $establishment_id,  'locked' => true, 'number' => null,          'pin' => 159357, 'type' => 'admin', 'worker_type_id' => null, 'area_id' =>    null, 'active' =>    1],
-            ['name' => 'Contador',      'email' => "contador@sdrimsac.xyz", 'password' => bcrypt("12345"),              'api_token' => str_random(50), 'establishment_id' => $establishment_id,      'locked' => true, 'number' => null,       'pin' => 12345, 'type' => 'seller', 'worker_type_id' => 5, 'area_id' =>    null, 'active' =>    1],
+            ['name' => 'Soporte',    'email' => "admin@sdrimsac.xyz",    'password' => bcrypt("Sdr147258369"),       'api_token' => str_random(50), 'establishment_id' =>1,  'locked' => true, 'number' => null,       'pin' => 205687,    'type' => 'superadmin', 'worker_type_id' => null, 'area_id' =>    null, 'active' =>    1],
+            ['name' => 'Administrador', 'email' => "admin@gmail.xyz",       'password' => bcrypt("teros"),              'api_token' => str_random(50), 'establishment_id' => 1,  'locked' => true, 'number' => null,          'pin' => 159357, 'type' => 'admin', 'worker_type_id' => null, 'area_id' =>    null, 'active' =>    1],
+            ['name' => 'Contador',      'email' => "contador@sdrimsac.xyz", 'password' => bcrypt("12345"),              'api_token' => str_random(50), 'establishment_id' => 1,      'locked' => true, 'number' => null,       'pin' => 12345, 'type' => 'seller', 'worker_type_id' => 5, 'area_id' =>    null, 'active' =>    1],
             ['name' =>     'CAJA',    'email' => null, 'password' => null,   'api_token' => null,     'establishment_id' =>    1, 'locked' =>    0,                                                                      'number' =>        1,     'pin' => 8800, 'type'    => 'seller', 'worker_type_id' =>    1, 'area_id' =>    2, 'active' =>    1],
             ['name' =>     'BARRA',        'email' => null, 'password' => null,   'api_token' => null,     'establishment_id' =>    1, 'locked' =>    0,                                                                      'number' =>        2,     'pin' => 5822, 'type'    => 'seller', 'worker_type_id' =>    4, 'area_id' =>    1, 'active' =>    1],
             ['name' =>     'COCINA',        'email' => null, 'password' => null,   'api_token' => null,     'establishment_id' =>    1, 'locked' =>    0,                                                                      'number' =>        3,     'pin' => 5725, 'type'    => 'seller', 'worker_type_id' =>    3, 'area_id' =>    3, 'active' =>    1],
@@ -147,7 +147,10 @@ class TenantSeeder extends Seeder
             'subcategory' => "Ventas",
             'type'        => 1
         ], ['id']);
+      
 
+
+        
         DB::table('companies')->insert([
             'identity_document_type_id' => '6',
             'number' => "12345678901",
