@@ -978,6 +978,48 @@
                                             ></el-switch>
                                         </div>
                                     </div>
+                                    <div class="col-md-6 mt-4">
+                                        <div class="form-group">
+                                            <label class="control-label w-100"
+                                                >Bloquear stock inicial
+                                                <el-tooltip
+                                                    content="Stock inicial 0 en formulario de producto"
+                                                >
+                                                    <i
+                                                        class="fa fa-info-circle"
+                                                    ></i>
+                                                </el-tooltip>
+                                            </label>
+                                            <el-switch
+                                                v-model="form.init_stock"
+                                                active-text="Si"
+                                                inactive-text="No"
+                                                @change="submit"
+                                            ></el-switch>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mt-4">
+                                        <div class="form-group">
+                                            <label class="control-label w-100"
+                                                >Observación al hacer traslado
+                                                <el-tooltip
+                                                    content="Obligar a dar razón del traslado"
+                                                >
+                                                    <i
+                                                        class="fa fa-info-circle"
+                                                    ></i>
+                                                </el-tooltip>
+                                            </label>
+                                            <el-switch
+                                                v-model="
+                                                    form.observation_translate
+                                                "
+                                                active-text="Si"
+                                                inactive-text="No"
+                                                @change="submit"
+                                            ></el-switch>
+                                        </div>
+                                    </div>
                                 </div>
                             </el-tab-pane>
                             <el-tab-pane label="Impresion">

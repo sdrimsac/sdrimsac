@@ -18,7 +18,7 @@
                         <th>
                             Cliente
                         </th>
-                        <th v-if="type == 'documents'">
+                        <th>
                             Estado
                         </th>
                         <th>
@@ -27,8 +27,9 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="(data, idx) in records" :key="idx">
-                        <td v-if="type == 'documents'">
+              <tr v-for="(data, idx) in records" :key="idx" :class="`${data.state_type_id == '11' ?'bg-danger text-white' :''}`">
+                        <td :class="`${data.state_type_id == '11' && 'text-white'}`" v-if="type == 'documents'">
+
                             <div
                                 class="dropdown-as-select d-inline-block"
                                 data-childselector="span"
@@ -106,8 +107,9 @@
                                 </div>
                             </div>
                         </td>
-                        <td>
+                       <td  :class="`${data.state_type_id == '11' && 'text-white'}`">
                             <el-button
+                               v-if="data.state_type_id != '11'"
                                 size="mini"
                                 type="success"
                                 style="margin-bottom:3px;"
@@ -120,6 +122,7 @@
                             </el-button>
 
                             <el-button
+                                  v-if="data.state_type_id != '11'"
                                 size="mini"
                                 plain
                                 @click="
@@ -132,7 +135,7 @@
                                 <i class="fas fa-print"></i>
                             </el-button>
                         </td>
-                        <td>
+                          <td  :class="`${data.state_type_id == '11' && 'text-white'}`">
                             <template v-if="type == 'saleNotes'">
                                 {{ data.full_number }}
                             </template>
@@ -143,8 +146,9 @@
                                 {{ data.identifier }}
                             </template>
                         </td>
-                        <td>{{ data.date_of_issue }}</td>
-                        <td>
+                             <td  :class="`${data.state_type_id == '11' && 'text-white'}`">{{ data.date_of_issue }}</td>
+                        <td  :class="`${data.state_type_id == '11' && 'text-white'}`">
+
                             {{ data.customer_name }} <br />
                             <span class="text-muted">{{
                                 data.customer_number
@@ -172,14 +176,14 @@
                             </template>
                         </td>
                         <td
-                            v-if="type == 'documents'"
+                          
                             :class="
                                 `${
                                     data.state_type_description == 'Aceptado'
                                         ? 'text-success'
                                         : data.state_type_description ==
                                           'Anulado'
-                                        ? 'text-danger'
+                                        ? 'text-white'
                                         : data.state_type_description ==
                                           'Enviado'
                                         ? 'text-primary'
@@ -188,8 +192,9 @@
                             "
                         >
                             <b> {{ data.state_type_description }}</b>
-                        </td>
-                        <td>
+                            </td >
+                        <td  :class="`${data.state_type_id == '11' && 'text-white'}`">
+
                             {{ data.total }}
                         </td>
                     </tr>

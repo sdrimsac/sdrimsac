@@ -219,6 +219,11 @@
                 </td>
             </tr>
         @endif
+        <tr>
+            <td height="18px"><b>OBSERVACION:</b></td>
+            <td colspan="3" class="align-top">{{ trim($document->observation) }}</td>
+        </tr>
+
     </table>
 
     <table class="full-width mt-10 mb-10">
@@ -264,6 +269,12 @@
                         @if (!empty($row->item->presentation))
                             {!! $row->item->presentation->description !!}
                         @endif
+                        @if (isset($row->item->lots))
+                        @foreach ($row->item->lots as $lot)
+                            <br />{!! $lot->series !!}
+                        @endforeach
+                    @endif
+
                         @if ($row->attributes)
                             @foreach ($row->attributes as $attr)
                                 <br />{!! $attr->description !!} : {{ $attr->value }}
@@ -395,9 +406,9 @@
                     {{ number_format(Session::get('difference'), 2) }}</td>
             </tr>
         @endif
-        <tr>
+        {{-- <tr>
             <td class="desc pt-3"><b>OBSERVACION:</b>{{ $document->observation }}</td>
-        </tr>
+        </tr> --}}
         <tr>
             <td class="desc pt-3">
                 <b>Vendedor</b>: {{ $document->user->name }} <br>

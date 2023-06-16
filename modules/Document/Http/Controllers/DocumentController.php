@@ -323,7 +323,7 @@ class DocumentController extends Controller
 
 
                 ];
-            });
+            })->take(20);
 
         return compact('items');
 

@@ -4,6 +4,7 @@ use App\Http\Controllers\Tenant\ClientZoneController;
 use App\Http\Controllers\Tenant\DispatchController;
 use App\Http\Controllers\Tenant\TollController;
 use App\Http\Controllers\Tenant\WhatsappController;
+use App\Http\Controllers\Tenant\PurchaseController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Modules\Restaurant\Events\OrdenEvent;
@@ -270,6 +271,8 @@ if ($hostname) {
                 Route::post('client_zones', [ClientZoneController::class, 'store']);
                 Route::get('client_zones/active/{id}', [ClientZoneController::class, 'active_desactive']);
                 Route::delete('client_zones/delete/{id}', [ClientZoneController::class, 'destroy']);
+                Route::get('purchases/search-items', [PurchaseController::class,'searchItems']);
+
                 //Persons
                 Route::get('filtrar_distritos/records', [App\Http\Controllers\Tenant\PersonController::class, 'distritos']);
                 Route::get('persons/columns', [App\Http\Controllers\Tenant\PersonController::class, 'columns']);

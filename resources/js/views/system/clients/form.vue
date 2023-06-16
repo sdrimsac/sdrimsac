@@ -190,7 +190,7 @@
                             </small>
                         </div>
                     </div>
-                    <div class="col-md-6 center-el-checkbox mt-4">
+                    <!-- <div class="col-md-6 center-el-checkbox mt-4">
                         <div :class="{'has-danger': errors.locked_emission}"
                              class="form-group">
                             <el-checkbox
@@ -205,9 +205,9 @@
                                 v-text="errors.locked_emission[0]">
                             </small>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
-                <el-collapse
+                <!-- <el-collapse
                     v-model="collapse">
                     <el-collapse-item
                         name="1"
@@ -460,7 +460,6 @@
                             </div>
                         </div>
                     </el-collapse-item>
-                    <!-- Configuracion de correo -->
 
                     <el-collapse-item name="3"
                                       title="Configuracion de correo">
@@ -561,10 +560,9 @@
                             </div>
                         </div>
                     </el-collapse-item>
-                    <!-- Configuracion de correo -->
 
-                </el-collapse>
-
+                </el-collapse> -->
+<!-- 
                 <div class="row">
                     <div class="col-md-6 center-el-checkbox mt-4">
                         <div class="form-group">
@@ -575,7 +573,7 @@
                             <br>
                         </div>
                     </div>
-                </div>
+                </div> -->
             </div>
             <div class="form-actions text-right pt-2">
                 <el-button

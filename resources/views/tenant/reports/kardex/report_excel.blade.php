@@ -54,6 +54,7 @@
                             <th>#</th>
                             <th>Fecha y hora</th>
                             <th>Tipo transacción</th>
+                            <th>Detalle</th>
                             <th>Número</th>
                             <th>Entrada</th>
                             <th>Salida</th>
@@ -96,11 +97,15 @@
                                     @endswitch
                                 </td>
                                 <td class="celda">
+                                    {{$value->inventory_kardexable->detail ?? '-'}}
+                                </td>
+                                <td class="celda">
                                     {{ $value->type == 'purchase' || !$value->type ? number_format($value->quantity, 4) : number_format(0, 4) }}
                                 </td>
                                 <td class="celda">
                                     {{ $value->type == 'sale' ? number_format($value->quantity, 4) : number_format(0, 4) }}
                                 </td>
+
                                 @php
                                     if ($value->type == 'purchase' || !$value->type) {
                                         $balance += $value->quantity;

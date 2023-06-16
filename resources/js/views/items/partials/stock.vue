@@ -77,6 +77,16 @@
                             >[&#10004; Seleccionar lotes]</a
                         >
                     </div>
+                      <div class="col-12" v-if="config.observation_translate">
+                         <div class="form-group">
+                            <label class="control-label">Comentario</label>
+                            <el-input 
+                              type="textarea"
+                              maxlength="191"
+                            v-model="form.detail"></el-input>
+                        </div>
+                    </div>
+
                 </div>
             </div>
             <div class="form-actions text-end mt-4">
@@ -120,7 +130,8 @@ import OutputLotsGroupForm from "../../../../js/views/documents/partials/lots.vu
 
 export default {
     components: { OutputLotsForm, OutputLotsGroupForm },
-    props: ["showDialog", "recordId"],
+    props: ["showDialog", "recordId","config"],
+
     data() {
         return {
             loading_submit: false,
@@ -170,7 +181,7 @@ export default {
             };
         },
         async create() {
-            this.titleDialog = "Ajuste de stock 3";
+            this.titleDialog = "Ajuste de stock";
             await this.$http
                 .get(`/${this.resource}/record/${this.recordId}`)
                 .then(response => {
@@ -186,6 +197,10 @@ export default {
                 });
         },
         async submit() {
+             if(this.config.observation_translate && !this.form.detail){
+                return this.$toast.error("El comentario es obligatorio");
+            }
+
             if (this.form.series_enabled) {
                 //let select_lots = await _.filter(this.form.lots, {'has_sale': true})
                 if (

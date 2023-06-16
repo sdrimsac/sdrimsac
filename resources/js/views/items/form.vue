@@ -402,7 +402,11 @@
                                     <label v-else class="control-label">
                                         Stock Inicial en cada establecimiento
                                     </label>
-                                    <el-input v-model="form.stock">
+                          <el-input 
+                                    
+                                    :disabled="configuration.init_stock == 1"
+                                    v-model="form.stock">
+
                                         <i
                                             slot="prefix"
                                             class="el-icon-edit-outline"
@@ -2077,6 +2081,11 @@ export default {
                     100;
         },
         async submit() {
+             if(!this.form.category_id){
+                this.$toast.warning("Seleccione una categoria");
+                return false;
+            }
+
             if (this.form.internal_id == null || this.form.internal_id == "") {
                 this.$refs.internal_id.$el.querySelector("input").focus();
                 return this.$toast.warning(

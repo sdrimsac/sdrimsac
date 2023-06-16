@@ -45,25 +45,25 @@ use Modules\Restaurant\Events\PrintEvent;
 
 class PosController extends Controller
 {
-    public function check_pin(Request $request){
+    public function check_pin(Request $request)
+    {
         $pin = $request->pin;
         $user_pin = auth()->user()->pin;
 
-        if($pin == $user_pin){
+        if ($pin == $user_pin) {
             return [
                 'success' => true,
                 'message' => 'Pin correcto'
             ];
-        }else{
+        } else {
             return [
                 'success' => false,
                 'message' => 'Pin incorrecto'
             ];
         }
-
     }
 
-    
+
     public function updateItemWithWarehouse()
     {
         $counter = 0;
@@ -149,9 +149,10 @@ class PosController extends Controller
         $foods = Food::query()->whereHas(
             "item",
             function ($query) use ($establishment_id) {
-                $query->whereHas('warehouses', function ($query) use ($establishment_id) {
-                    $query->where('warehouse_id', $establishment_id);
-                });
+                $query
+                    ->where('active', 1)->whereHas('warehouses', function ($query) use ($establishment_id) {
+                        $query->where('warehouse_id', $establishment_id);
+                    });
             }
         );
 
@@ -327,10 +328,8 @@ class PosController extends Controller
             if ($configuration->send_whatsapp_daily_cash && $configuration->number_activity && $send) {
                 $user_name = auth()->user()->name;
                 $number = $configuration->number_activity;
-                $message="Usuario *$user_name* ha solicitado consulta para visualización en Ventas del Dìa";
+                $message = "Usuario *$user_name* ha solicitado consulta para visualización en Ventas del Dìa";
                 (new WhatsappController)->sendMessage($message, $number);
-              
-              
             }
             return compact('total_sales');
         } else {
@@ -459,7 +458,7 @@ class PosController extends Controller
                 $detail->save();
             }
         }
-        if($configuration->print_incomes_expenses){
+        if ($configuration->print_incomes_expenses) {
             event(new PrintEvent($box->id, "box", true, 0));
         }
         return [

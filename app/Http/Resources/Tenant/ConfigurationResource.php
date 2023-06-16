@@ -89,6 +89,9 @@ class ConfigurationResource extends JsonResource
             'view_daily_cash' => (bool)  $this->view_daily_cash,
             'view_daily_cash_pin' => (bool) $this->view_daily_cash_pin,
             'send_whatsapp_daily_cash' => (bool) $this->send_whatsapp_daily_cash,
+            'init_stock' => (bool) $this->init_stock,
+            'observation_translate' => (bool) $this->observation_translate,
+
         ];
     }
 }

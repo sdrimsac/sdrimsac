@@ -25,6 +25,7 @@ use App\Models\Tenant\PaymentMethodType;
 use Modules\Finance\Traits\FinanceTrait;
 use App\Models\Tenant\Catalogs\PriceType;
 use Modules\Purchase\Models\PurchaseOrder;
+use Modules\Item\Models\ItemLot;
 
 use App\Models\Tenant\Catalogs\CurrencyType;
 use App\Models\Tenant\Catalogs\DocumentType;
@@ -311,53 +312,78 @@ class PurchaseController extends Controller
 
     public function store(PurchaseRequest $request)
     {
+        $has_error = false;
+        $message = '';
         $data = self::convert($request);
-        $purchase = DB::connection('tenant')->transaction(function () use ($data) {
-            $doc = Purchase::create($data);
-            foreach ($data['items'] as $row) {
-                $p_item = new PurchaseItem;
-                $p_item->fill($row);
-                $p_item->purchase_id = $doc->id;
-                $p_item->save();
-                if (array_key_exists('lots', $row)) {
-                    foreach ($row['lots'] as $lot) {
-                        $p_item->lots()->create([
-                            'date' => $lot['date'],
-                            'series' => $lot['series'],
-                            'item_id' => $row['item_id'],
-                            'warehouse_id' => $row['warehouse_id'],
-                            'has_sale' => false,
-                            'state' => $lot['state']
-                        ]);
+        $purchase = DB::connection('tenant')->transaction(function () use ($data, &$has_error, &$message) {
+            try {
+                $doc = Purchase::create($data);
+                foreach ($data['items'] as $row) {
+                    $p_item = new PurchaseItem;
+                    $p_item->fill($row);
+                    $p_item->purchase_id = $doc->id;
+                    $p_item->save();
+
+                    if (array_key_exists('lots', $row)) {
+                        foreach ($row['lots'] as $lot) {
+                            // Verificar si el lote existe en la tabla item_lots
+                            $item_lot = ItemLot::where('series', $lot['series'])
+                                ->where('item_id', $row['item_id'])
+                                ->first();
+
+                            if ($item_lot) {
+                                $message = "El lote {$lot['series']} ya existe en el sistema";
+                                $has_error = true;
+                                DB::rollBack();
+                                break 2; // Salir de ambos bucles y terminar la transacción
+                            }
+
+                            $p_item->lots()->create([
+                                'date' => $lot['date'],
+                                'series' => $lot['series'],
+                                'item_id' => $row['item_id'],
+                                'warehouse_id' => $row['warehouse_id'],
+                                'has_sale' => false,
+                                'state' => $lot['state']
+                            ]);
+                        }
+                    }
+
+                    if (array_key_exists('item', $row)) {
+                        if ($row['item']['lots_enabled'] == true) {
+                            ItemLotsGroup::create([
+                                'code' => $row['lot_code'],
+                                'quantity' => $row['quantity'],
+                                'date_of_due' => $row['date_of_due'],
+                                'item_id' => $row['item_id'],
+                                'warehouse_id' => $row['warehouse_id'],
+                            ]);
+                        }
                     }
                 }
 
-                if (array_key_exists('item', $row)) {
-                    if ($row['item']['lots_enabled'] == true) {
+                foreach ($data['payments'] as $payment) {
+                    $record_payment = $doc->purchase_payments()->create($payment);
 
-                        ItemLotsGroup::create([
-                            'code'  => $row['lot_code'],
-                            'quantity'  => $row['quantity'],
-                            'date_of_due'  => $row['date_of_due'],
-                            'item_id' => $row['item_id'],
-                            'warehouse_id' => $row['warehouse_id'],
-                        ]);
+                    if (isset($payment['payment_destination_id'])) {
+                        $this->createGlobalPayment($record_payment, $payment);
                     }
                 }
+
+                return $doc;
+            } catch (Exception $e) {
+                $has_error = true;
+                $message = $e->getMessage();
+                throw $e; // Lanza la excepción nuevamente para que se maneje externamente.
             }
-
-
-            foreach ($data['payments'] as $payment) {
-
-                $record_payment = $doc->purchase_payments()->create($payment);
-
-                if (isset($payment['payment_destination_id'])) {
-                    $this->createGlobalPayment($record_payment, $payment);
-                }
-            }
-
-            return $doc;
         });
+
+        if ($has_error) {
+            return [
+                'success' => false,
+                'message' => $message,
+            ];
+        }
 
         if ($request->number_guia != null || $request->series_guia != null) {
             $number_full = $request->series_guia . "-" . $request->number_guia;

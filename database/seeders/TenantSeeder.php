@@ -63,19 +63,19 @@ class TenantSeeder extends Seeder
             ['id' => 4, 'description' => 'MESA',            'copies' => 0,            'printer' => null,            'active' => 1]
         ], ['id']);
 
-        $token = str_random(50);
-        DB::table('users')->delete();
-        $user_id = DB::table('users')->insert([
-            ['name' => 'Soporte',    'email' => "admin@sdrimsac.xyz",    'password' => bcrypt("Sdr147258369"),       'api_token' => str_random(50), 'establishment_id' =>1,  'locked' => true, 'number' => null,       'pin' => 205687,    'type' => 'superadmin', 'worker_type_id' => null, 'area_id' =>    null, 'active' =>    1],
-            ['name' => 'Administrador', 'email' => "admin@gmail.xyz",       'password' => bcrypt("teros"),              'api_token' => str_random(50), 'establishment_id' => 1,  'locked' => true, 'number' => null,          'pin' => 159357, 'type' => 'admin', 'worker_type_id' => null, 'area_id' =>    null, 'active' =>    1],
-            ['name' => 'Contador',      'email' => "contador@sdrimsac.xyz", 'password' => bcrypt("12345"),              'api_token' => str_random(50), 'establishment_id' => 1,      'locked' => true, 'number' => null,       'pin' => 12345, 'type' => 'seller', 'worker_type_id' => 5, 'area_id' =>    null, 'active' =>    1],
-            ['name' =>     'CAJA',    'email' => null, 'password' => null,   'api_token' => null,     'establishment_id' =>    1, 'locked' =>    0,                                                                      'number' =>        1,     'pin' => 8800, 'type'    => 'seller', 'worker_type_id' =>    1, 'area_id' =>    2, 'active' =>    1],
-            ['name' =>     'BARRA',        'email' => null, 'password' => null,   'api_token' => null,     'establishment_id' =>    1, 'locked' =>    0,                                                                      'number' =>        2,     'pin' => 5822, 'type'    => 'seller', 'worker_type_id' =>    4, 'area_id' =>    1, 'active' =>    1],
-            ['name' =>     'COCINA',        'email' => null, 'password' => null,   'api_token' => null,     'establishment_id' =>    1, 'locked' =>    0,                                                                      'number' =>        3,     'pin' => 5725, 'type'    => 'seller', 'worker_type_id' =>    3, 'area_id' =>    3, 'active' =>    1],
-            ['name' =>     'MOZO',    'email' => null, 'password' => null,   'api_token' => null,     'establishment_id' =>    1, 'locked' =>    0,                                                                      'number' =>        4,     'pin' => 7808, 'type'    => 'seller', 'worker_type_id' =>    2, 'area_id' =>    4, 'active' =>    1]
+        // $token = str_random(50);
+        // DB::table('users')->delete();
+        DB::table('users')->upsert([
+            ['id' => 1, 'name' => 'Administrador', 'email' => "admin@gmail.xyz",       'password' => bcrypt("teros"),              'api_token' => str_random(50), 'establishment_id' => 1,  'locked' => true, 'number' => null,          'pin' => 159357, 'type' => 'admin', 'worker_type_id' => null, 'area_id' =>    null, 'active' =>    1],
+            ['id' => 2, 'name' => 'Soporte',    'email' => "admin@sdrimsac.xyz",    'password' => bcrypt("Sdr147258369"),       'api_token' => str_random(50), 'establishment_id' => 1,  'locked' => true, 'number' => null,       'pin' => 205687,    'type' => 'superadmin', 'worker_type_id' => null, 'area_id' =>    null, 'active' =>    1],
+            ['id' => 3, 'name' => 'Contador',      'email' => "contador@sdrimsac.xyz", 'password' => bcrypt("12345"),              'api_token' => str_random(50), 'establishment_id' => 1,      'locked' => true, 'number' => null,       'pin' => 12345, 'type' => 'seller', 'worker_type_id' => 5, 'area_id' =>    null, 'active' =>    1],
+            ['id' => 4, 'name' =>     'CAJA',    'email' => null, 'password' => null,   'api_token' => null,     'establishment_id' =>    1, 'locked' =>    0,                                                                      'number' =>        1,     'pin' => 8800, 'type'    => 'seller', 'worker_type_id' =>    1, 'area_id' =>    2, 'active' =>    1],
+            ['id' => 5, 'name' =>     'BARRA',        'email' => null, 'password' => null,   'api_token' => null,     'establishment_id' =>    1, 'locked' =>    0,                                                                      'number' =>        2,     'pin' => 5822, 'type'    => 'seller', 'worker_type_id' =>    4, 'area_id' =>    1, 'active' =>    1],
+            ['id' => 6, 'name' =>     'COCINA',        'email' => null, 'password' => null,   'api_token' => null,     'establishment_id' =>    1, 'locked' =>    0,                                                                      'number' =>        3,     'pin' => 5725, 'type'    => 'seller', 'worker_type_id' =>    3, 'area_id' =>    3, 'active' =>    1],
+            ['id' => 7, 'name' =>     'MOZO',    'email' => null, 'password' => null,   'api_token' => null,     'establishment_id' =>    1, 'locked' =>    0,                                                                      'number' =>        4,     'pin' => 7808, 'type'    => 'seller', 'worker_type_id' =>    2, 'area_id' =>    4, 'active' =>    1]
 
 
-        ]);
+        ], ['id']);
 
         DB::table('status_table')->upsert([
             [
@@ -93,7 +93,7 @@ class TenantSeeder extends Seeder
                 'description' => "En mantenimiento",
                 'active' => true
             ]
-        ],'id');
+        ], 'id');
 
 
 
@@ -147,10 +147,10 @@ class TenantSeeder extends Seeder
             'subcategory' => "Ventas",
             'type'        => 1
         ], ['id']);
-      
 
 
-        
+
+
         DB::table('companies')->insert([
             'identity_document_type_id' => '6',
             'number' => "12345678901",
@@ -172,11 +172,11 @@ class TenantSeeder extends Seeder
             ['id' => 2, 'type' => 'suppliers', 'identity_document_type_id' =>    0, 'number' =>    99999999, 'name' =>    'PROVEEDOR - Varios', 'trade_name' => 'Inicio de stock', 'country_id' =>  'PE',    'department_id'    => null,     'province_id' => null, 'district_id' => NULL,    'perception_agent' => 0, 'percentage_perception' => 0, 'enabled' =>    1, 'seller_id' =>    1, 'created_at' =>    '2022-06-07 16:43:09', 'updated_at' => '2022-06-07 16:43:09', 'status' =>    1]
         ]);
 
-        DB::table('turns')-> insert([
-            ['turn_desc' => 'MAÑANA' , 'turn_active' => 1 ],
-            ['turn_desc' => 'TARDE' , 'turn_active' => 1],
-            ['turn_desc' => 'NOCHE' , 'turn_active' => 1]
-                        
+        DB::table('turns')->insert([
+            ['turn_desc' => 'MAÑANA', 'turn_active' => 1],
+            ['turn_desc' => 'TARDE', 'turn_active' => 1],
+            ['turn_desc' => 'NOCHE', 'turn_active' => 1]
+
         ]);
         DB::table('status_orden')->insert([
 
@@ -246,11 +246,11 @@ class TenantSeeder extends Seeder
             ['name' => 'OTROS', 'description' => 'ADQUISICION', 'period_id' => 1, 'type_id' => 3, 'count' => 1, 'days_extension' => 0, 'active' => 1],
         ]);
         // $this->call([
-            // TurnsSeeder::class,
-            // StatusOrdenVoidedSeeder::class,
-            // AddClientVariation::class,
-            // CollegeSeeder::class,
-            
+        // TurnsSeeder::class,
+        // StatusOrdenVoidedSeeder::class,
+        // AddClientVariation::class,
+        // CollegeSeeder::class,
+
         // ]);
     }
 }

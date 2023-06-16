@@ -161,6 +161,8 @@ class InventoryController extends Controller
         $id = $request->input('id');
         $item_id = $request->input('item_id');
         $warehouse_id = $request->input('warehouse_id');
+        $detail = $request->input('detail');
+
         $quantity = $request->input('quantity');
         $quantity_real = $request->input('quantity_real');
         $lots = ($request->has('lots')) ? $request->input('lots') : [];
@@ -184,6 +186,7 @@ class InventoryController extends Controller
         $inventory->description = 'Stock Real';
         $inventory->item_id = $item_id;
         $inventory->warehouse_id = $warehouse_id;
+        $inventory->detail = $detail;
         $inventory->quantity = $quantity_new;
         if ($quantity_real < $quantity) {
             $inventory->inventory_transaction_id = 28;

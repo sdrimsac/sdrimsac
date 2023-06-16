@@ -197,7 +197,18 @@
     @endforeach
 </table>
 @endif
- 
+<div class="mt-2">
+    <strong>Observación:</strong>
+    @foreach ($document->additional_information as $information)
+        @if ($information)
+            @if ($loop->first)
+            @endif
+            {{ $information }}
+        @endif
+    @endforeach
+    {{ trim($document->observation) }}
+</div>
+
 <table class="full-width mt-3">
     @if ($document->prepayments)
         @foreach($document->prepayments as $p)
@@ -411,14 +422,14 @@
                 </div>
                 <br/>
             @endif
-            @foreach($document->additional_information as $information)
+            {{-- @foreach($document->additional_information as $information)
                 @if ($information)
                     @if ($loop->first)
                         <strong>Observacion</strong>
                     @endif
                     <p>{{ $information }}</p>
                 @endif
-            @endforeach
+            @endforeach --}}
             <br>
             @if(in_array($document->document_type->id,['01','03']))
                 @foreach($accounts as $account)

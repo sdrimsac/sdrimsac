@@ -27,10 +27,15 @@ class LotItemController extends Controller
     {
         $description = $request->description;
         $item_id = $request->item_id;
+        $warehouse_id = $request->warehouse_id;
+
         $records = ItemLot::where('item_id', $item_id)->where('has_sale', 0)->where('state', 'Activo');
 
         if ($description) {
             $records = $records->where('series', 'like', '%' . $description . '%');
+        }
+        if($warehouse_id) {
+            $records = $records->where('warehouse_id', $warehouse_id);
         }
 
         return new LotItemCollection($records->paginate(10));

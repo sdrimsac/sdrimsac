@@ -7,6 +7,7 @@ use App\Models\Tenant\ItemWarehouse;
 use App\Models\Tenant\Warehouse;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Support\Facades\Storage;
+use Modules\Item\Models\ItemLot;
 
 class FoodCollection extends ResourceCollection
 {
@@ -42,13 +43,20 @@ class FoodCollection extends ResourceCollection
                     $q->where('warehouse_id', $user->establishment_id)->orWhereNull('warehouse_id');
                 })->get();
             }
+            if($item->series_enabled){
+                $lots = ItemLot::where('item_id',$item->id)->where('warehouse_id', $user->establishment_id)
+                ->where('has_sale', false)
+                ->get();
+                $stock = count($lots);
+                $item->stock = $stock;
+            }
             return [
                 'id'                => $row->id,
                 'description'  => $row->description,
                 'code'        => $row->code,
                 'category'     => $row->category,
                 'image'          => $row->image,
-                // 'stock' => $stock,
+                'stock' => $stock,
                 'item' => $item,
                 'price' => $price,
                 'area_id' => $row->area_id,

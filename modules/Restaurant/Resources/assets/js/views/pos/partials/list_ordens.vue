@@ -1571,6 +1571,7 @@
             :showDialog.sync="showSeries"
             :seriesSelected.sync="currentSeries"
             @updateSeries="updateSeries"
+             :establishments="establishments"
         >
         </show-series-product>
 

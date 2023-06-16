@@ -147,6 +147,7 @@ class ReportKardexCollection extends ResourceCollection
                     }
                     $user = auth()->user();
                     $return = [
+                        'detail' => $row->inventory_kardexable->detail,
                         'id' => $row->id,
                         'item_name' => $row->item->description,
                         'unit_type_id' => $row->item->unit_type_id,

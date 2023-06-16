@@ -23,8 +23,12 @@
                             </label>
                             <el-select
                                 v-model="form.item_id"
-                                @change="changeItem"
+                                :loading="loading_search"
+                                :remote-method="searchRemoteItems"
                                 filterable
+                                placeholder="Buscar"
+                                remote
+                                @change="changeItem"
                             >
                                 <el-option
                                     v-for="option in items"
@@ -468,7 +472,7 @@ export default {
         return {
             unids: 0,
             noIsUnid: false,
-            titleDialog: "Agregar Producto o Sedrvicio",
+            titleDialog: "Agregar Producto o Servicio",
             showDialogLots: false,
             resource: "purchases",
             showDialogNewItem: false,
@@ -484,7 +488,9 @@ export default {
             attribute_types: [],
             use_price: 1,
             lot_code: null,
-            change_affectation_igv_type_id: false
+            change_affectation_igv_type_id: false,
+            activeName: "first",
+            loading_search: false
         };
     },
     created() {
@@ -505,6 +511,36 @@ export default {
         });
     },
     methods: {
+        initFilterItems() {
+            this.activeName = "first";
+            this.items = this.all_items;
+        },
+        async searchRemoteItems(input) {
+            // console.log(input)
+
+            if (input.length > 2) {
+                this.loading_search = true;
+                let parameters = `input=${input}`;
+
+                await this.$http
+                    .get(`/documents/search-items/?${parameters}`)
+                    .then(response => {
+                        this.items_select = response.data.items[0];
+                        this.items = response.data.items;
+
+                        this.loading_search = false;
+
+                        // this.enabledSearchItemsBarcode();
+
+                        if (this.items.length == 0) {
+                            this.filterItems();
+                        }
+                    });
+            } else {
+                await this.filterItems();
+            }
+        },
+
         addRowLot(lots) {
             this.lots = lots;
         },

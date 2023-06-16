@@ -1481,6 +1481,14 @@ export default {
             }
         },
         async submit() {
+            if (this.form.total == null || isNaN(this.form.total)) {
+                this.form.total = 0;
+            }
+            if (this.form.items.length == 0) {
+                this.$toast.error("Debe agregar al menos un item");
+                return;
+            }
+
             let validate = await this.validate_payments();
             if (!validate.success) {
                 return this.$toast.error(validate.message);

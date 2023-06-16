@@ -423,6 +423,7 @@ class DispatchController extends Controller
         $items = Item::query()
             ->with('lots_group')
             ->where('item_type_id', '01')
+            ->where('active', 1)
             ->orderBy('description')
             ->take(20)
             ->get()

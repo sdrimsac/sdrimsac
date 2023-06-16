@@ -271,6 +271,18 @@
         @endif
 
 
+        <tr>
+            <td class="align-top">
+                <b>Observación:</b> {{ trim($document->observation) }}
+                @isset($document->additional_information)
+                    @foreach ($document->additional_information as $information)
+                        @if ($information)
+                            {{ $information }}<br />
+                        @endif
+                    @endforeach
+                @endisset
+            </td>
+        </tr>
 
         @if ($document->detraction)
             {{-- <strong>Operación sujeta a detracción</strong> --}}
@@ -446,6 +458,11 @@
                             @else
                                 {!! $row->item->description !!}
                             @endif
+                            @if (isset($row->item->lots))
+                            @foreach ($row->item->lots as $lot)
+                                <br />{!! $lot->series !!}
+                            @endforeach
+                        @endif
 
                             @if (isset($row->item->second_name))
                                 - {!! $row->item->second_name !!}
@@ -629,7 +646,7 @@
         </tr>
         @endif
         </tr>
-        <tr>
+        {{-- <tr>
             <td class="desc pt-3"><b>OBSERVACION:</b> {{ trim($document->observation) }}
             @isset($document->additional_information)
                 @foreach ($document->additional_information as $information)
@@ -639,7 +656,7 @@
                 @endforeach
             @endisset
             </td>
-        </tr>
+        </tr> --}}
         @if ($document->detraction)
             <tr>
                 <td class="desc pt-3 font-bold">

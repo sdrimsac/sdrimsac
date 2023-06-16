@@ -70,7 +70,14 @@
 <script>
 import queryString from "query-string";
 export default {
-    props: ["showDialog", "limitQty", "item", "idx", "seriesSelected"],
+    props: [
+        "showDialog",
+        "limitQty",
+        "item",
+        "idx",
+        "seriesSelected",
+        "establishments"
+    ],
     data() {
         return {
             loading: false,
@@ -134,6 +141,8 @@ export default {
         },
         getQueryParameters() {
             return queryString.stringify({
+                warehouse_id: this.establishments.id,
+
                 page: this.pagination.current_page,
                 item_id: this.item.id,
                 description: this.inputSearch

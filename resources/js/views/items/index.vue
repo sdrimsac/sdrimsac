@@ -178,9 +178,9 @@
                                     </button>
 
                                     <!-- <button type="button" class="btn waves-effect waves-light btn-sm btn-warning" @click.prevent="duplicate(row.id)">Duplicar</button> -->
-                                    <!--
                                 <button type="button" class="btn waves-effect waves-light btn-sm btn-danger" @click.prevent="clickDisable(row.id)" v-if="row.active">Inhabilitar</button>
                                 <button type="button" class="btn waves-effect waves-light btn-sm btn-primary" @click.prevent="clickEnable(row.id)" v-else>Habilitar</button>
+                                    <!--
 
                                 <button type="button" class="btn waves-effect waves-light btn-sm btn-primary" @click.prevent="clickBarcode(row)">Cod. Barras</button>
                                 <button

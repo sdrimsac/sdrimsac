@@ -136,6 +136,8 @@
         <inventories-stock
             :showDialog.sync="showDialogStock"
             :recordId="recordId"
+                        :config="config"
+
         ></inventories-stock>
     </el-dialog>
 </template>

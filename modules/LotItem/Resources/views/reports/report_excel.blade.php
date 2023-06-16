@@ -63,7 +63,7 @@
             @foreach ($records as $record)
                 <tr>
                     <td class="celda">{{ $loop->iteration }}</td>
-                    <td class="celda">{{ $record->series }}</td>
+                    <td class="celda">&nbsp;{{$record->series}}</td>
                     <td class="celda">{{ $record->item->description }}</td>
                     <td class="celda">{{ $record->date }}</td>
                     <td class="celda">{{ $record->warehouse->description }}</td>

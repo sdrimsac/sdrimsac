@@ -207,6 +207,13 @@ class RegisterEvent implements ShouldBroadcast
     }
     function document_description()
     {
+        if($this->model == null){
+            return [
+                "number" => null,
+                "total" => 0,
+            ];
+        }
+
         return [
             "number" => $this->model->getNumberFullAttribute(),
             "total" => $this->model->total,

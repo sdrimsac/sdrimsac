@@ -77,7 +77,10 @@ trait InventoryTrait
 
         $records = Item::whereHas('warehouses', function ($query) use ($warehouse_id) {
             $query->where('warehouse_id', $warehouse_id);
-        })->where([['item_type_id', '01'], ['unit_type_id', '!=', 'ZZ']])->whereNotIsSet();
+        })
+
+            ->where([['item_type_id', '01'], ['unit_type_id', '!=', 'ZZ'], ['active', 1]])->whereNotIsSet();
+
         //$establishment_id = auth()->user()->establishment_id;
         //$current_warehouse = Warehouse::where('establishment_id', $establishment_id)->first();
         switch ($type) {

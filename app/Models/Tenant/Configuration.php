@@ -94,7 +94,10 @@ class Configuration extends ModelTenant
         "send_whatsapp_activity",
         "pin_orden_delete",
         "number_activity",
-        'pos_drag_category'
+        'pos_drag_category',
+        'init_stock',
+        'observation_translate',
+        
     ];
     protected $casts = [
         'commands_fisico' => 'boolean',
@@ -115,6 +118,7 @@ class Configuration extends ModelTenant
         'send_whatsapp_activity' => 'boolean',
         'pin_orden_delete' => 'boolean',
         'edit_product_pos' => 'boolean',
+        
         'print_incomes_expenses' => 'boolean',
     ];
     public function scopeGetUnitPriceDispatchRelatedRecord($query)
@@ -351,8 +355,16 @@ class Configuration extends ModelTenant
             'view_daily_cash' => (bool) $this->view_daily_cash,
             'view_daily_cash_pin' => (bool) $this->view_daily_cash_pin,
             'send_whatsapp_daily_cash' => (bool) $this->send_whatsapp_daily_cash,
+            'init_stock' =>(bool) $this->init_stock,
+            'observation_translate' => (bool)$this->observation_translate,
+
         ];
     }
+    public function isSearchItemBySeries(): ?bool
+    {
+        return (bool)$this->search_item_by_series;
+    }
+
     public function getNewValidatorPagination(): ?int
     {
         $val = (int)$this->new_validator_pagination;

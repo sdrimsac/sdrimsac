@@ -24,7 +24,7 @@ use Illuminate\Support\Facades\DB;
 use Modules\Document\Helpers\DocumentHelper;
 use Modules\MobileApp\Models\System\AppModule;
 use App\CoreFacturalo\ClientHelper;
-
+use Illuminate\Support\Facades\Artisan;
 
 class ClientController extends Controller
 {
@@ -747,10 +747,24 @@ class ClientController extends Controller
                 ['module_id' => 5, 'user_id' => $user_id],
             ]);
         }
-
+        $exitCode = Artisan::call('tenancy:db:seed', [
+            '--class' => 'TenantSeeder',
+            '--website_id' => $website->id,
+        ]);
+        $seed = false;
+        if ($exitCode === 0) {
+            $seed = true;
+            // El comando se ejecutó correctamente
+            // return response()->json(['message' => 'Comando ejecutado con éxito']);
+            // dump("Todo ok");
+        }
+        $message = 'Cliente Registrado satisfactoriamente';
+        if (!$seed) {
+            $message = 'Cliente Registrado satisfactoriamente, pero no se pudo ejecutar el comando de seed';
+        }
         return [
             'success' => true,
-            'message' => 'Cliente Registrado satisfactoriamente'
+            'message' => $message
         ];
     }
 

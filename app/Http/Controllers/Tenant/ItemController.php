@@ -197,7 +197,10 @@ class ItemController extends Controller
         $categories = CategoryItem::all();
 
         $brands = Brand::all();
-        $configuration = Configuration::select('affectation_igv_type_id', 'restaurant','promotions_sell')->firstOrFail();
+  $configuration = Configuration::select(
+            'init_stock',
+            'affectation_igv_type_id', 'restaurant','promotions_sell')->firstOrFail();
+
 
         return compact(
             'unit_types',

@@ -123,10 +123,10 @@
                 <td colspan="3">PENDIENTE DE PAGO</td>
             </tr>
         @endif
-        {{-- <tr>
+        <tr>
             <td height="18px"><b>OBSERVACION:</b></td>
             <td colspan="3" class="align-top">{{ trim($document->observation) }}</td>
-        </tr> --}}
+        </tr>
     </table>
 
     <table class="full-width mt-10 mb-10">
@@ -174,6 +174,12 @@
                         @if (isset($row->unit_desc))
                             {!! $row->unit_desc !!}
                         @endif
+                        @if (isset($row->item->lots))
+                            @foreach ($row->item->lots as $lot)
+                                <br />{!! $lot->series !!}
+                            @endforeach
+                        @endif
+
                         @if (!empty($row->item->presentation))
                             {!! $row->item->presentation->description !!}
                         @endif
@@ -293,9 +299,9 @@
                     {{ $document->currency_type->symbol }}</td>
                 <td class="text-right font-bold border_detalles">{{ number_format($document->total_payment, 2) }}</td>
             </tr>
-            <tr>
+            {{-- <tr>
                 <td colspan="7" height="18px"><b>OBSERVACION: </b>{{ trim($document->observation) }}</td>
-            </tr>
+            </tr> --}}
         </tbody>
     </table>
 

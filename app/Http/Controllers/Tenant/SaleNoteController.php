@@ -1158,7 +1158,8 @@ class SaleNoteController extends Controller
             $warehouse = Warehouse::where('establishment_id', $establishment->id)->first();
 
             foreach ($obj->items as $item) {
-                $lots = $item->item->lots;
+                $lots = isset($item->item->lots) ? $item->item->lots : [];
+
                 foreach ($lots as $lot) {
                     ItemLot::find($lot->id)->update(["has_sale" => 0]);
                 }

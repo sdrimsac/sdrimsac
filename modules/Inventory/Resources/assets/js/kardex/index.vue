@@ -11,7 +11,9 @@
                             <th v-if="!item_id">Producto</th>
                             <th>Fecha y hora transacción</th>
                             <th>Tipo transacción</th>
+                                                        <th>Comentario</th>
                             <th>Número</th>
+
                             <th>NV. Asociada</th>
                             <th>Feha emisión</th>
                             <th>Entrada</th>
@@ -24,6 +26,7 @@
                             <td v-if="!item_id">{{row.item_name}}</td>
                             <td>{{row.date_time}}</td>
                             <td>{{row.type_transaction}}</td>
+                              <td>{{row.detail}}</td>
                             <td>{{row.number}}</td>
                             <td>{{row.sale_note_asoc}}</td>
                             <td>{{row.date_of_issue}}</td>

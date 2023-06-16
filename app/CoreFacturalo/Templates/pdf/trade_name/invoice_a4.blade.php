@@ -262,12 +262,11 @@
             @foreach ($document->additional_information as $information)
                 @if ($information)
                     @if ($loop->first)
-                        
                     @endif
                     {{ $information }}
                 @endif
-                @endforeach
-                 {{ trim($document->observation) }}
+            @endforeach
+            {{ trim($document->observation) }}
         </div>
 
 
@@ -382,6 +381,12 @@
                                     @if (isset($row->item->has_unit_type))
                                         - {!! $row->item->has_unit_type !!}
                                     @endif
+                                    @if (isset($row->item->lots))
+                                        @foreach ($row->item->lots as $lot)
+                                            <br />{!! $lot->series !!}
+                                        @endforeach
+                                    @endif
+
                                     @if (isset($row->item->second_name))
                                         - {!! $row->item->second_name !!}
                                     @endif
@@ -593,9 +598,9 @@
                                         {{ number_format($document->total_discount, 2) }}</td>
                                 </tr>
                             @endif
-                            
-            {{-- @if($document->total_charge > 0)
-            @if($document->charges)
+
+                            {{-- @if ($document->total_charge > 0)
+            @if ($document->charges)
             @php
             $total_factor = 0;
             foreach($document->charges as $charge) {
@@ -686,7 +691,7 @@
                     </div>
                 </td>
             <tr>
-            {{-- <tr>
+                {{-- <tr>
                 <td colspan="7" height="18px"><b>OBSERVACION: </b>{{ trim($document->observation) }}
                     @isset($document->additional_information)
                     @foreach ($document->additional_information as $information)
