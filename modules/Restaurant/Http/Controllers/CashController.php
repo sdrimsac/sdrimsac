@@ -823,8 +823,9 @@ class CashController extends Controller
                 $model = Quotation::class;
                 break;
         }
+        $company = Company::active();
         $documents = $model::where('establishment_id', $establishment_id)
-        ->where('soap_type_id', '02')
+        ->where('soap_type_id', $company->soap_type_id)
         ;
         // $documents = $is_note_sale ?  SaleNote::where('establishment_id', $establishment_id) : Document::where('establishment_id', $establishment_id);
         $column = $request->column ?? "description";
