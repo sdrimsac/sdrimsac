@@ -1001,7 +1001,8 @@
                                     <div class="col-md-6 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
-                                                >Observación al hacer traslado
+                                                                                      >Observación al hacer ajuste de stock
+
                                                 <el-tooltip
                                                     content="Obligar a dar razón del traslado"
                                                 >

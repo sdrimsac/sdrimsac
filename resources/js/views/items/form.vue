@@ -587,7 +587,8 @@
                                         class="col-md-4 d-flex align-items-end"
                                         v-if="
                                             form.unit_type_id != 'ZZ' &&
-                                                form.series_enabled
+                                                                                                form.series_enabled && recordId == null
+
                                         "
                                     >
                                         <div

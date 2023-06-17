@@ -134,6 +134,7 @@
         </form>
 
         <inventories-stock
+        :user="user"
             :showDialog.sync="showDialogStock"
             :recordId="recordId"
                         :config="config"
@@ -148,6 +149,7 @@ import InventoriesStock from "./stock.vue";
 export default {
     components: { InventoriesStock },
     props: [
+             'user',
         "showDialog",
         "warehouses",
         "unit_type",

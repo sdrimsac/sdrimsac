@@ -1262,11 +1262,28 @@ export default {
     },
     mounted() {},
     methods: {
+        checkLimitReceipt() {
+            let { customer_id, document_type_id, total } = this.form;
+            if (total > 699 && document_type_id == "03") {
+                let customer = this.customers.find(c => c.id == customer_id);
+                if (customer) {
+                    if (
+                        customer.number == "99999999" ||
+                        (customer.identity_document_type_id != "6" &&
+                            customer.identity_document_type_id != "1")
+                    ) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        },
+
         isClientesVarios() {
             let id = this.value;
             if (id != null) {
                 let customer = this.customers.find(c => c.id == id);
-                if (customer.number == "99999999") {
+                if (customer && customer.number == "99999999") {
                     return true;
                 }
             }
@@ -1552,15 +1569,17 @@ export default {
             if (customer != null) {
                 this.students = customer.students || [];
                 this.customer = customer;
-                if (this.form.document_type_id != "80") {
+                if (this.form.document_type_id == "01") {
                     if (
                         customer.identity_document_type_id == "1" ||
-                        customer.identity_document_type_id == "4"
+                        customer.identity_document_type_id == "4" ||
+                        customer.identity_document_type_id == "-"
                     ) {
                         this.form.document_type_id = "03";
-                    } else {
-                        this.form.document_type_id = "01";
                     }
+                    //  else {
+                    //     this.form.document_type_id = "01";
+                    // }
                 }
 
                 this.form.customer_telephone = customer.phone;
@@ -1639,13 +1658,18 @@ export default {
                 n => n.number != "88888888"
             );
             this.customers = [
-                ...this.customers.filter(c => c.id != this.customer_default.id),
-                this.customer_default
+                ...this.customers.filter(c => c.id != this.customer_default.id)
             ];
+            if (this.form.document_type_id != "01") {
+                this.customers = [...this.customers, this.customer_default];
+            }
 
             if (this.establishments.customer_id) {
-                this.value = this.establishments.customer_id;
-                this.form.customer_id = this.establishments.customer_id;
+                let isRuc = this.checkCustomerDocument("6");
+                if (isRuc && this.form.document_type_id != "01") {
+                    this.value = this.establishments.customer_id;
+                    this.form.customer_id = this.establishments.customer_id;
+                }
             }
 
             let form_efectivo = {
@@ -1658,6 +1682,15 @@ export default {
             // );
             this.checkTotal("01");
         },
+        checkCustomerDocument(type) {
+            let { customer_id } = this.form;
+            let customer = this.customers.find(c => c.id == customer_id);
+            if (customer) {
+                return customer.identity_document_type_id == type;
+            }
+            return false;
+        },
+
         async Printer(
             Printer,
             linkpdf,
@@ -2492,6 +2525,12 @@ export default {
             form.cash_id = this.cash_id;
             form.boxes = this.currentPayments;
             this.addPayment();
+            if (this.checkLimitReceipt()) {
+                this.$toast.error(
+                    "Las boletas mayores a 699 deben tener un dni o ruc válido."
+                );
+                return;
+            }
 
             this.loading_submit = true;
 
@@ -2833,45 +2872,50 @@ export default {
                     this.value = this.customers[0].id;
                     this.form.customer_telephone = this.customers[0].phone;
                 }
-            } else if (
-                this.form.document_type_id == "03" ||
-                this.form.document_type_id == "80"
-            ) {
-                this.customers = this.all_customers.filter(
-                    f => f.identity_document_type_id != "6"
-                );
-                if (this.form.total > 300) {
-                    this.customers = this.customers.filter(
-                        c => c.identity_document_type_id == "1"
-                    );
-                }
+            }
+            // else if (
+            //     this.form.document_type_id == "03" ||
+            //     this.form.document_type_id == "80"
+            // ) {
+            //     this.customers = this.all_customers.filter(
+            //         f => f.identity_document_type_id != "6"
+            //     );
+            //     if (this.form.total > 300) {
+            //         this.customers = this.customers.filter(
+            //             c => c.identity_document_type_id == "1"
+            //         );
+            //     }
 
-                if (
-                    currentClient &&
-                    this.customers.some(c => c.id == currentClient.id)
-                ) {
-                    this.form.customer_telephone = currentClient.phone;
-                    return;
-                }
-                let client = this.customers.find(c => {
-                    return c.name.toLowerCase().includes("varios");
-                });
-                if (client) {
-                    this.value = client.id;
-                    this.form.customer_telephone = client.phone;
-                } else {
-                    this.value = this.customers[0].id;
-                    this.form.customer_telephone = this.customers[0].phone;
-                }
-            } else {
+            //     if (
+            //         currentClient &&
+            //         this.customers.some(c => c.id == currentClient.id)
+            //     ) {
+            //         this.form.customer_telephone = currentClient.phone;
+            //         return;
+            //     }
+            //     let client = this.customers.find(c => {
+            //         return c.name.toLowerCase().includes("varios");
+            //     });
+            //     if (client) {
+            //         this.value = client.id;
+            //         this.form.customer_telephone = client.phone;
+            //     } else {
+            //         this.value = this.customers[0].id;
+            //         this.form.customer_telephone = this.customers[0].phone;
+            //     }
+            // }
+            else {
                 this.customers = this.all_customers;
             }
 
             this.customers = this.customers.filter(n => n.number != "88888888");
             this.customers = [
-                ...this.customers.filter(n => n.id != this.customer_default.id),
-                this.customer_default
+                ...this.customers.filter(n => n.id != this.customer_default.id)
             ];
+            if (this.form.document_type_id != "01") {
+                this.customers = [...this.customers, this.customer_default];
+            }
+
             this.changeCustomer();
         }
     }

@@ -213,6 +213,8 @@
                     :itemId="itemId"
                     :item="currentItem"
                     :config="config"
+                                        :user="user"
+
                 >
                 </warehouses-detail>
 
@@ -237,7 +239,7 @@ import { deletable } from "../../mixins/deletable";
 //const  DataTable = () =>  import(/* webpackChunkName:"js/components/DataTable.vue"*/"../../components/DataTable.vue");
 
 export default {
-    props: ["typeUser"],
+    props: ["typeUser","user"],
     mixins: [deletable],
     components: {
         ItemsForm,

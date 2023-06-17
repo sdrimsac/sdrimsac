@@ -77,16 +77,16 @@
                             >[&#10004; Seleccionar lotes]</a
                         >
                     </div>
-                      <div class="col-12" v-if="config.observation_translate">
-                         <div class="form-group">
+                    <div class="col-12" v-if="config.observation_translate">
+                        <div class="form-group">
                             <label class="control-label">Comentario</label>
-                            <el-input 
-                              type="textarea"
-                              maxlength="191"
-                            v-model="form.detail"></el-input>
+                            <el-input
+                                type="textarea"
+                                maxlength="191"
+                                v-model="form.detail"
+                            ></el-input>
                         </div>
                     </div>
-
                 </div>
             </div>
             <div class="form-actions text-end mt-4">
@@ -130,7 +130,7 @@ import OutputLotsGroupForm from "../../../../js/views/documents/partials/lots.vu
 
 export default {
     components: { OutputLotsForm, OutputLotsGroupForm },
-    props: ["showDialog", "recordId","config"],
+    props: ["showDialog", "recordId", "config", "user"],
 
     data() {
         return {
@@ -143,16 +143,56 @@ export default {
             form: {},
             warehouses: [],
             lotsAll: [],
-            lotsGroupAll: []
+            lotsGroupAll: [],
+            sender: null
         };
     },
     async created() {
         this.initForm();
+        this.socketWhatsappConfig();
         // await this.$http.get(`/${this.resource}/tables`).then(response => {
         //     this.warehouses = response.data.warehouses;
         // });
     },
     methods: {
+        socketWhatsappConfig() {
+            let hostName = window.location.hostname;
+            let url = `https://${hostName}`;
+            this.sender = hostName
+                .replace(/https?\:\/\//, "")
+                .replace("/", "")
+                .split(".")
+                .join("");
+            try {
+                this.socket = io.connect(this.$socketUrl);
+            } catch (e) {
+                console.log(e);
+            }
+
+            this.socket.on("connected", ({ message }) => {
+                this.$toast.success(message);
+
+                this.socket.emit("getStatus", url);
+            });
+            this.socket.on("setStatus", ({ status, sender }) => {
+                if (!status) {
+                    this.sender = "sdrimsac";
+                    this.$toast.warning("Sesión iniciada con SDRIMSAC");
+                } else {
+                    this.sender = sender;
+                    this.$toast.success("Whatsapp Listo!");
+                }
+            });
+            //MessageResponse
+            this.socket.on("MessageResponse", ({ success, message }) => {
+                if (success) {
+                    this.$toast.success(message);
+                } else {
+                    this.$toast.error(message);
+                }
+            });
+        },
+
         addRowOutputLot(lots) {
             this.form.lots = lots;
         },
@@ -197,7 +237,7 @@ export default {
                 });
         },
         async submit() {
-             if(this.config.observation_translate && !this.form.detail){
+            if (this.config.observation_translate && !this.form.detail) {
                 return this.$toast.error("El comentario es obligatorio");
             }
 
@@ -219,6 +259,18 @@ export default {
                     if (response.data.success) {
                         this.$toast.success(response.data.message);
                         this.$eventHub.$emit("reloadData");
+                        if (
+                            this.config.number_activity &&
+                            this.config.personal_phone
+                        ) {
+                            let message = this.createMessage();
+                            this.socket.emit("basicMessage", {
+                                message,
+                                sender: this.sender,
+                                number: `51${this.config.number_activity}`
+                            });
+                        }
+
                         this.close();
                     } else {
                         this.$toast.error(response.data.message);
@@ -234,6 +286,17 @@ export default {
                 .then(() => {
                     this.loading_submit = false;
                 });
+        },
+        createMessage() {
+            let message = `El usuario *${
+                this.user.name
+            }* ha actualizado el stock del producto *${this.form.item_description.trim()}* a ${
+                this.form.quantity_real
+            } en el almacén *${this.form.warehouse_description.trim()}*`;
+            if (this.form.detail) {
+                message += ` con el comentario: *${this.form.detail.trim()}*`;
+            }
+            return message;
         },
         close() {
             this.$emit("update:showDialog", false);

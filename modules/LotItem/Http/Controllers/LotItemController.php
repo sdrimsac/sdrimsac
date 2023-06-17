@@ -2,6 +2,8 @@
 
 namespace Modules\LotItem\Http\Controllers;
 
+use App\Models\Tenant\Item;
+use App\Models\Tenant\ItemWarehouse;
 use App\Models\Tenant\Company;
 use App\Models\Tenant\Establishment;
 use App\Models\Tenant\Warehouse;
@@ -9,12 +11,51 @@ use Carbon\Carbon;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
 use Modules\Item\Models\ItemLot;
 use Modules\LotItem\Exports\ItemLotExport;
 use Modules\LotItem\Http\Resources\LotItemCollection;
 
 class LotItemController extends Controller
 {
+
+
+    public function deleteDuplicate()
+    {
+        $duplicateRecords = ItemLot::select('series', 'item_id', 'warehouse_id', DB::raw('count(*) as total'))
+            ->groupBy('series', 'item_id', 'warehouse_id')
+            ->havingRaw('count(*) > 1')
+            ->get();
+        $deleted = 0;
+        $result = [];
+        foreach ($duplicateRecords as $duplicate) {
+            $to_delete = $duplicate->total - 1;
+            $result[] = [
+                'serie' => $duplicate->series,
+                'item_id' => $duplicate->item_id,
+                'warehouse_id' => $duplicate->warehouse_id,
+                'total' => $to_delete,
+            ];
+            ItemWarehouse::where('id', $duplicate->warehouse_id)
+                ->where('item_id', $duplicate->item_id)
+                ->update(['stock' => DB::raw('stock - ' . $to_delete)]);
+            Item::where('id', $duplicate->item_id)
+                ->update(['stock' => DB::raw('stock - ' . $to_delete)]);
+            ItemLot::where('series', $duplicate->series)
+                ->where('item_id', $duplicate->item_id)
+                ->take($to_delete)
+                ->delete();
+
+            $deleted += $to_delete;
+        }
+
+        return [
+            'success' => true,
+            'productos eliminados' =>  $deleted,
+            'data' => $result
+        ];
+    }
+
     /**
      * Display a listing of the resource.
      * @return Renderable
@@ -34,7 +75,7 @@ class LotItemController extends Controller
         if ($description) {
             $records = $records->where('series', 'like', '%' . $description . '%');
         }
-        if($warehouse_id) {
+        if ($warehouse_id) {
             $records = $records->where('warehouse_id', $warehouse_id);
         }
 
@@ -46,8 +87,11 @@ class LotItemController extends Controller
         $warehouses = Warehouse::all();
         return compact('warehouses');
     }
-    public function pdf(Request $request) {}
-    public function excel(Request $request) {
+    public function pdf(Request $request)
+    {
+    }
+    public function excel(Request $request)
+    {
         $company = Company::first();
         $establishment = Establishment::first();
         $series = $request->series;
@@ -79,7 +123,7 @@ class LotItemController extends Controller
             ->records($records)
             ->company($company)
             ->establishment($establishment)
-            ->download('Reporte_Serie_'.Carbon::now().'.xlsx');
+            ->download('Reporte_Serie_' . Carbon::now() . '.xlsx');
     }
     public function records(Request $request)
     {

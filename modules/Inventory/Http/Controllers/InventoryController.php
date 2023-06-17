@@ -22,6 +22,7 @@ use Modules\Inventory\Models\InventoryTransaction;
 use Modules\Inventory\Http\Requests\InventoryRequest;
 use Modules\Inventory\Http\Resources\InventoryResource;
 use Modules\Inventory\Http\Resources\InventoryCollection;
+use App\Http\Controllers\Tenant\WhatsappController;
 
 
 class InventoryController extends Controller
@@ -158,6 +159,8 @@ class InventoryController extends Controller
 
     public function stock(Request $request)
     {
+        $configuration = DB::connection('tenant')->table('configurations')->first();
+
         $id = $request->input('id');
         $item_id = $request->input('item_id');
         $warehouse_id = $request->input('warehouse_id');
@@ -196,6 +199,18 @@ class InventoryController extends Controller
         $inventory->system_stock = $request->quantity;
 
         $inventory->save();
+        $item = Item::findOrFail($item_id);
+        $item->stock = $item->stock - $quantity + $quantity_real;
+        $item->save();
+        $user = auth()->user();
+        if($configuration->number_activity && $configuration->personal_phone == 0){
+            $message = 'El usuario '.$user->name.' ha actualizado el stock del producto '.$item->description.' a '.$quantity_real.' en el almacén '.$inventory->warehouse->description;
+            if($inventory->detail != null){
+                $message = $message.' con el comentario '.$inventory->detail;
+            }
+            (new WhatsappController)->sendMessage($message);
+        }
+
 
         return [
             'success' => true,

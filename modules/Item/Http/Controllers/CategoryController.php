@@ -214,6 +214,9 @@ class CategoryController extends Controller
         } else if (!$request->input('image') && !$request->input('temp_path') && !$request->input('image_url')) {
             $category->icono = 'imagen-no-disponible.jpg';
         }
+        $user_id = auth()->id();
+        $category->user_id = $user_id;
+
         $category->save();
         return [
             'success' => true,

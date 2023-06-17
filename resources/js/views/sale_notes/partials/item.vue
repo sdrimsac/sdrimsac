@@ -535,6 +535,7 @@
                                                 <tr
                                                     v-for="(row,
                                                     index) in form.discounts"
+                                                    :key="index"
                                                 >
                                                     <td>
                                                         <el-select
@@ -629,6 +630,7 @@
                                                 <tr
                                                     v-for="(row,
                                                     index) in form.charges"
+                                                    :key="index"
                                                 >
                                                     <td>
                                                         <el-select
@@ -717,6 +719,7 @@
                                                 <tr
                                                     v-for="(row,
                                                     index) in form.attributes"
+                                                    :key="index"
                                                 >
                                                     <td>
                                                         <el-select

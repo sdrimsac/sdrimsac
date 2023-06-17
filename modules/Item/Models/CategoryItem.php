@@ -3,6 +3,7 @@
 namespace Modules\Item\Models;
 
 use App\Models\Tenant\Item;
+use App\Models\Tenant\User;
 
 use App\Models\Tenant\ModelTenant;
 
@@ -15,7 +16,16 @@ class CategoryItem extends ModelTenant
     protected $fillable = [
         'name',
         'icono',
+        'pos_drag',
+        'user_id'
+
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+
 
     public function items()
     {

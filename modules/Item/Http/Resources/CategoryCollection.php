@@ -25,6 +25,7 @@ class CategoryCollection extends ResourceCollection
                 'icono' => ($row->icono !== 'imagen-no-disponible.jpg') ? asset('storage/uploads/category/'.$row->icono) : asset("/logo/{$row->icono}"),
                 'created_at' => Carbon::parse($row->created_at)->format('Y-m-d'),
                 'updated_at' => $row->updated_at,
+                'user_name' => $row->user ? $row->user->name : '',
             ];
         });
 

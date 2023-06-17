@@ -59,7 +59,7 @@
                         <tr slot="heading">
                             <th>#</th>
                             <th>Nombre</th>
-                            <th>Imagen</th>
+                                     <th>Creado por</th>
                             <th>Fecha creación</th>
                             <th v-if="configuration.pos_drag_category"> Caja arrastre</th>
                             <th class="text-right">Acciones</th>
@@ -70,7 +70,7 @@
                             <td>{{ index }}</td>
                             <td>{{ row.name }}</td>
                             <td>
-                                <img :src="row.icono" height="30" width="30" />
+                                {{row.user_name}}
                             </td>
                             <td>{{ row.created_at }}</td>
                             <td v-if="configuration.pos_drag_category">

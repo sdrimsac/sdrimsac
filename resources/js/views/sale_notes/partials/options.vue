@@ -279,35 +279,49 @@ export default {
                 view_schedule: null
             };
         },
-        async clickPrintPos(printerName, formatoPdf) {
-            try {
-                this.message =
-                    "Espere imprimiendo el Comprobante " + this.form.number;
-                this.loading_print = true;
-                let config = qz.configs.create(
-                    printerName,
-                    { scaleContent: false },
-                    { jobName: this.form.number }
-                );
-                if (!qz.websocket.isActive()) {
-                    await qz.websocket.connect(config);
-                }
-                let data = [
-                    {
-                        type: "pdf",
-                        format: "file",
-                        data: formatoPdf
-                    }
-                ];
-                qz.print(config, data).catch(e => {
-                    this.$toast.error(e.message);
-                });
+            async clickPrintPos(printerName, formatoPdf) {
+            this.$confirm("Elija una de las opciones", "Imprimir", {
+                confirmButtonText: "Impresión directa",
+                cancelButtonText: "Descargar PDF",
+                type: "warning"
+            })
+                .then(async () => {
+                    try {
+                        this.message =
+                            "Espere imprimiendo el Comprobante " +
+                            this.form.number;
+                        this.loading_print = true;
+                        let config = qz.configs.create(
+                            printerName,
+                            { scaleContent: false },
+                            { jobName: this.form.number }
+                        );
+                        if (!qz.websocket.isActive()) {
+                            await qz.websocket.connect(config);
+                        }
+                        let data = [
+                            {
+                                type: "pdf",
+                                format: "file",
+                                data: formatoPdf
+                            }
+                        ];
+                        qz.print(config, data).catch(e => {
+                            this.$toast.error(e.message);
+                        });
 
-                this.loading_print = false;
-                this.clickClose();
-            } catch (e) {
-                this.$toast.error(e.message);
-            }
+                        this.loading_print = false;
+                        this.clickClose();
+                    } catch (e) {
+                        this.$toast.error(e.message);
+                    }
+                })
+                .catch(() => {
+                    window.open(formatoPdf, "_blank");
+                    this.clickClose();
+                })
+                
+                ;
         },
         clickPrint(format) {
             if (this.configuration.print_direct == 1) {
