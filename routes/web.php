@@ -8,9 +8,9 @@ use App\Http\Controllers\Tenant\PurchaseController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Modules\Restaurant\Events\OrdenEvent;
-use Modules\Restaurant\Http\Controllers\Tenat\CashController;
-use Modules\Inventory\Http\Controllers\Tenat\TransferPlaceController;
-use Modules\Restaurant\Http\Controllers\Tenat\IncomesController;
+use Modules\Restaurant\Http\Controllers\CashController;
+use Modules\Inventory\Http\Controllers\TransferPlaceController;
+use Modules\Restaurant\Http\Controllers\IncomesController;
 
 $hostname = app(Hyn\Tenancy\Contracts\CurrentHostname::class);
 // Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home']);
