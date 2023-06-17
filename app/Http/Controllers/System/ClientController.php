@@ -747,17 +747,15 @@ class ClientController extends Controller
                 ['module_id' => 5, 'user_id' => $user_id],
             ]);
         }
-        $exitCode = Artisan::call('tenancy:db:seed', [
-            '--class' => 'TenantSeeder',
-            '--website_id' => $website->id,
-        ]);
         $seed = false;
-        if ($exitCode === 0) {
-            $seed = true;
-            // El comando se ejecutó correctamente
-            // return response()->json(['message' => 'Comando ejecutado con éxito']);
-            // dump("Todo ok");
-        }
+        // $exitCode = Artisan::call('tenancy:db:seed', [
+        //     '--class' => 'TenantSeeder',
+        //     '--website_id' => $website->id,
+        // ]);
+        // if ($exitCode === 0) {
+        //     $seed = true;
+           
+        // }
         $message = 'Cliente Registrado satisfactoriamente';
         if (!$seed) {
             $message = 'Cliente Registrado satisfactoriamente, pero no se pudo ejecutar el comando de seed';
