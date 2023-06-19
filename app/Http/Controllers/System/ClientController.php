@@ -641,6 +641,7 @@ class ClientController extends Controller
         }
 
         $id = Website::where('uuid', $uuid)->first()->id;
+        Log::info('id: ' . $id);
         try {
             $exitCode = Artisan::call('tenancy:migrate', [
                 '--path' => 'migrations/tenant',
