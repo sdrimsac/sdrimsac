@@ -1,0 +1,226 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\DB;
+
+class AddUserToCategories extends Migration
+{
+
+    public function up()
+    {
+        DB::table('series')->insert([
+            ['establishment_id' => 1, 'document_type_id' => '01', 'number' => 'F001'],
+            ['establishment_id' => 1, 'document_type_id' => '03', 'number' => 'B001'],
+            ['establishment_id' => 1, 'document_type_id' => '07', 'number' => 'FC01'],
+            ['establishment_id' => 1, 'document_type_id' => '07', 'number' => 'BC01'],
+            ['establishment_id' => 1, 'document_type_id' => '08', 'number' => 'FD01'],
+            ['establishment_id' => 1, 'document_type_id' => '08', 'number' => 'BD01'],
+            ['establishment_id' => 1, 'document_type_id' => '20', 'number' => 'R001'],
+            ['establishment_id' => 1, 'document_type_id' => '09', 'number' => 'T001'],
+            ['establishment_id' => 1, 'document_type_id' => '40', 'number' => 'P001'],
+            ['establishment_id' => 1, 'document_type_id' => '80', 'number' => 'NV01'],
+        ]);
+        DB::table('workers_type')->upsert([
+            ['id' => 1, 'description' => 'CAJA', 'active' => 1],
+            ['id' => 2, 'description' => 'MOZO', 'active' => 1],
+            ['id' => 3, 'description' => 'COCINA', 'active' => 1],
+            ['id' => 4, 'description' => 'BARMAN', 'active' => 1],
+            ['id' => 5, 'description' => 'CONTADOR', 'active' => 1]
+        ], ['id'], ['description', 'active']);
+        DB::table('areas')->upsert([
+            ['id' => 1, 'description' => 'BARRA',            'copies' => 0,            'printer' => null,            'active' => 1],
+            ['id' => 2, 'description' => 'CAJA',            'copies' => 0,            'printer' => "POS-80-Series",            'active' => 1],
+            ['id' => 3, 'description' => 'COCINA',            'copies' => 0,            'printer' => null,            'active' => 1],
+            ['id' => 4, 'description' => 'MESA',            'copies' => 0,            'printer' => null,            'active' => 1]
+        ], ['id']);
+
+        // $token = str_random(50);
+        // DB::table('users')->delete();
+        DB::table('users')->upsert([
+            ['id' => 1, 'name' => 'Administrador', 'email' => "admin@gmail.xyz",       'password' => bcrypt("teros"),              'api_token' => str_random(50), 'establishment_id' => 1,  'locked' => true, 'number' => null,          'pin' => 159357, 'type' => 'admin', 'worker_type_id' => null, 'area_id' =>    null, 'active' =>    1],
+            ['id' => 2, 'name' => 'Soporte',    'email' => "admin@sdrimsac.xyz",    'password' => bcrypt("Sdr147258369"),       'api_token' => str_random(50), 'establishment_id' => 1,  'locked' => true, 'number' => null,       'pin' => 205687,    'type' => 'superadmin', 'worker_type_id' => null, 'area_id' =>    null, 'active' =>    1],
+            ['id' => 3, 'name' => 'Contador',      'email' => "contador@sdrimsac.xyz", 'password' => bcrypt("12345"),              'api_token' => str_random(50), 'establishment_id' => 1,      'locked' => true, 'number' => null,       'pin' => 12345, 'type' => 'seller', 'worker_type_id' => 5, 'area_id' =>    null, 'active' =>    1],
+            ['id' => 4, 'name' =>     'CAJA',    'email' => null, 'password' => null,   'api_token' => null,     'establishment_id' =>    1, 'locked' =>    0,                                                                      'number' =>        1,     'pin' => 8800, 'type'    => 'seller', 'worker_type_id' =>    1, 'area_id' =>    2, 'active' =>    1],
+            ['id' => 5, 'name' =>     'BARRA',        'email' => null, 'password' => null,   'api_token' => null,     'establishment_id' =>    1, 'locked' =>    0,                                                                      'number' =>        2,     'pin' => 5822, 'type'    => 'seller', 'worker_type_id' =>    4, 'area_id' =>    1, 'active' =>    1],
+            ['id' => 6, 'name' =>     'COCINA',        'email' => null, 'password' => null,   'api_token' => null,     'establishment_id' =>    1, 'locked' =>    0,                                                                      'number' =>        3,     'pin' => 5725, 'type'    => 'seller', 'worker_type_id' =>    3, 'area_id' =>    3, 'active' =>    1],
+            ['id' => 7, 'name' =>     'MOZO',    'email' => null, 'password' => null,   'api_token' => null,     'establishment_id' =>    1, 'locked' =>    0,                                                                      'number' =>        4,     'pin' => 7808, 'type'    => 'seller', 'worker_type_id' =>    2, 'area_id' =>    4, 'active' =>    1]
+
+
+        ], ['id']);
+
+        DB::table('status_table')->upsert([
+            [
+                'id' => '1',
+                'description' => "Libre",
+                'active' => true
+            ],
+            [
+                'id' => '2',
+                'description' => "Ocupado",
+                'active' => true
+            ],
+            [
+                'id' => '3',
+                'description' => "En mantenimiento",
+                'active' => true
+            ]
+        ], 'id');
+
+
+
+        DB::table('status_orden')->upsert([
+            [
+                'id' => '1',
+                'description' => "Solicitado"
+            ],
+            [
+                'id' => '2',
+                'description' => "Preparando"
+            ],
+            [
+                'id' => '3',
+                'description' => "Listo"
+            ],
+            [
+                'id' => '4',
+                'description' => "Atendido"
+            ]
+        ], ['id']);
+
+
+        DB::table('group')->upsert([
+            'id' => '1',
+            'group' => "Ingresos",
+            'type'        => 1
+        ], ['id']);
+
+
+        DB::table('group')->upsert([
+            'id' => '2',
+            'group' => "Egresos",
+            'type'        => 2
+        ], ['id']);
+
+        DB::table('category')->upsert([
+            'id' => '1',
+            'category' => "Ventas",
+            'type'        => 1
+        ], ['id']);
+
+        DB::table('category')->upsert([
+            'id' => '2',
+            'category' => "Egresos",
+            'type'        => 2
+        ], ['id']);
+
+        DB::table('subcategories')->upsert([
+            'id' => '1',
+            'subcategory' => "Ventas",
+            'type'        => 1
+        ], ['id']);
+
+
+
+
+        DB::table('companies')->insert([
+            'identity_document_type_id' => '6',
+            'number' => "12345678901",
+            'name' => "COMPANY DEMO",
+            'trade_name' => "",
+            'soap_type_id' => "01",
+            'soap_send_id' => "01",
+            'soap_username' => "",
+            'soap_password' => "",
+            'soap_url' => "",
+            'certificate' => "",
+        ]);
+
+
+
+        DB::table('persons')->delete();
+        DB::table('persons')->insert([
+            ['id' => 1, 'type' => 'customers', 'identity_document_type_id' =>    1, 'number' =>    99999999, 'name' =>    'CLIENTES VARIOS', 'trade_name' => null,                 'country_id' =>  'PE', 'department_id' => 12, 'province_id' => 1203, 'district_id' => 120303,    'perception_agent' => 0, 'percentage_perception' => 0, 'enabled' =>    1, 'seller_id' =>    1, 'created_at' =>    '2022-06-02 22:48:07', 'updated_at' => '2022-06-02 22:48:07', 'status' =>    1],
+            ['id' => 2, 'type' => 'suppliers', 'identity_document_type_id' =>    0, 'number' =>    99999999, 'name' =>    'PROVEEDOR - Varios', 'trade_name' => 'Inicio de stock', 'country_id' =>  'PE',    'department_id'    => null,     'province_id' => null, 'district_id' => NULL,    'perception_agent' => 0, 'percentage_perception' => 0, 'enabled' =>    1, 'seller_id' =>    1, 'created_at' =>    '2022-06-07 16:43:09', 'updated_at' => '2022-06-07 16:43:09', 'status' =>    1]
+        ]);
+
+        DB::table('turns')->insert([
+            ['turn_desc' => 'MAÑANA', 'turn_active' => 1],
+            ['turn_desc' => 'TARDE', 'turn_active' => 1],
+            ['turn_desc' => 'NOCHE', 'turn_active' => 1]
+
+        ]);
+        DB::table('status_orden')->insert([
+
+            ['id' => 5, 'description' => 'Anulado',  'active' => 1],
+        ]);
+        DB::table('persons')->insert(
+            [[
+                'type' => 'customers',
+                'identity_document_type_id' => 1,
+                'number' => 88888888,
+                'name' => 'CLIENTES VARIOS-MODIFICADO',
+                'country_id' => 'PE',
+                'perception_agent' => 0,
+                'enabled' => 1,
+                'status' => 1,
+
+
+            ]]
+        );
+        DB::table('college_degrees')->insert([
+            ['description' => '1RO', 'active' => 1],
+            ['description' => '2DO', 'active' => 1],
+            ['description' => '3RO', 'active' => 1],
+            ['description' => '4TO', 'active' => 1],
+            ['description' => '5TO', 'active' => 1],
+            ['description' => '6TO', 'active' => 1],
+            ['description' => '7MO', 'active' => 1]
+        ]);
+
+        DB::table('college_sections')->insert([
+            ['description' => 'A', 'active' => 1],
+            ['description' => 'B', 'active' => 1],
+            ['description' => 'C', 'active' => 1],
+            ['description' => 'D', 'active' => 1],
+            ['description' => 'E', 'active' => 1],
+            ['description' => 'F', 'active' => 1],
+            ['description' => 'G', 'active' => 1],
+            ['description' => 'H', 'active' => 1]
+        ]);
+
+
+        DB::table('college_levels')->insert([
+            ['description' => 'INICIAL', 'active' => 1],
+            ['description' => 'PRIMARIA', 'active' => 1],
+            ['description' => 'SECUNDARIA', 'active' => 1],
+        ]);
+
+
+        DB::table('college_turns')->insert([
+            ['description' => 'MAÑANA', 'active' => 1],
+            ['description' => 'TARDE', 'active' => 1],
+            ['description' => 'NOCHE', 'active' => 1],
+        ]);
+
+        DB::table('college_plan_types')->insert([
+            ['description' => 'MATRICULA', 'active' => 1],
+            ['description' => 'MENSUALIDAD', 'active' => 1],
+            ['description' => 'OTROS', 'active' => 1],
+        ]);
+
+        DB::table('college_periods')->insert([
+            ['description' => 'ANUAL', 'default_count' => 1, 'active' => 1],
+            ['description' => 'MENSUAL', 'default_count' => 12, 'active' => 1],
+        ]);
+
+        DB::table('college_plans')->insert([
+            ['name' => 'OTROS', 'description' => 'ADQUISICION', 'period_id' => 1, 'type_id' => 3, 'count' => 1, 'days_extension' => 0, 'active' => 1],
+        ]);
+    }
+
+
+    public function down()
+    {
+       
+    }
+}
