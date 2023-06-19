@@ -3,7 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
 
-class AddUserToCategories extends Migration
+class InsertDataSeeder extends Migration
 {
 
     public function up()
