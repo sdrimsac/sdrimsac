@@ -25,6 +25,7 @@ use Modules\Document\Helpers\DocumentHelper;
 use Modules\MobileApp\Models\System\AppModule;
 use App\CoreFacturalo\ClientHelper;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Log;
 
 class ClientController extends Controller
 {
@@ -639,6 +640,20 @@ class ClientController extends Controller
             ];
         }
 
+        $id = Website::where('uuid', $uuid)->first()->id;
+        try {
+            $exitCode = Artisan::call('tenancy:migrate', [
+                '--path' => 'migrations/tenant',
+                '--website_id' => $id,
+            ]);
+            if ($exitCode === 0) {
+                $seed = true;
+            }
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            $seed = false;
+        }
+
         DB::connection('tenant')->table('companies')->insert([
             'identity_document_type_id' => '6',
             'number' => $request->input('number'),
@@ -748,14 +763,19 @@ class ClientController extends Controller
             ]);
         }
         $seed = false;
-        // $exitCode = Artisan::call('tenancy:db:seed', [
-        //     '--class' => 'TenantSeeder',
-        //     '--website_id' => $website->id,
-        // ]);
-        // if ($exitCode === 0) {
-        //     $seed = true;
-           
-        // }
+        try {
+            $exitCode = Artisan::call('tenancy:db:seed', [
+                '--class' => 'TenantSeeder',
+                '--website_id' => $id,
+            ]);
+            if ($exitCode === 0) {
+                $seed = true;
+            }
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            $seed = false;
+        }
+
         $message = 'Cliente Registrado satisfactoriamente';
         if (!$seed) {
             $message = 'Cliente Registrado satisfactoriamente, pero no se pudo ejecutar el comando de seed';
