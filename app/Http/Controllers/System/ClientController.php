@@ -765,19 +765,19 @@ class ClientController extends Controller
             ]);
         }
         $seed = false;
-        try {
-            $exitCode = Artisan::call('tenancy:db:seed', [
-                '--class' => 'TenantSeeder',
-                '--website_id' => $id,
-                '--quiet' => true,
-            ]);
-            if ($exitCode === 0) {
-                $seed = true;
-            }
-        } catch (Exception $e) {
-            Log::error($e->getMessage());
-            $seed = false;
-        }
+        // try {
+        //     $exitCode = Artisan::call('tenancy:db:seed', [
+        //         '--class' => 'TenantSeeder',
+        //         '--website_id' => $id,
+        //         '--quiet' => true,
+        //     ]);
+        //     if ($exitCode === 0) {
+        //         $seed = true;
+        //     }
+        // } catch (Exception $e) {
+        //     Log::error($e->getMessage());
+        //     $seed = false;
+        // }
 
         $message = 'Cliente Registrado satisfactoriamente';
         if (!$seed) {
