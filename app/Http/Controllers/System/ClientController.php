@@ -641,20 +641,20 @@ class ClientController extends Controller
         }
 
         $id = Website::where('uuid', $uuid)->first()->id;
-        Log::info('id: ' . $id);
-        try {
-            $exitCode = Artisan::call('tenancy:migrate', [
-                '--path' => 'migrations/tenant',
-                '--website_id' => $id,
-                '--quiet' => true,
-            ]);
-            if ($exitCode === 0) {
-                $seed = true;
-            }
-        } catch (Exception $e) {
-            Log::error($e->getMessage());
-            $seed = false;
-        }
+        // Log::info('id: ' . $id);
+        // try {
+        //     $exitCode = Artisan::call('tenancy:migrate', [
+        //         '--path' => 'migrations/tenant',
+        //         '--website_id' => $id,
+        //         '--quiet' => true,
+        //     ]);
+        //     if ($exitCode === 0) {
+        //         $seed = true;
+        //     }
+        // } catch (Exception $e) {
+        //     Log::error($e->getMessage());
+        //     $seed = false;
+        // }
 
         DB::connection('tenant')->table('companies')->insert([
             'identity_document_type_id' => '6',
