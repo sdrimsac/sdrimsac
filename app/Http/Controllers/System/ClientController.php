@@ -646,6 +646,7 @@ class ClientController extends Controller
             $exitCode = Artisan::call('tenancy:migrate', [
                 '--path' => 'migrations/tenant',
                 '--website_id' => $id,
+                '--quiet' => true,
             ]);
             if ($exitCode === 0) {
                 $seed = true;
@@ -768,6 +769,7 @@ class ClientController extends Controller
             $exitCode = Artisan::call('tenancy:db:seed', [
                 '--class' => 'TenantSeeder',
                 '--website_id' => $id,
+                '--quiet' => true,
             ]);
             if ($exitCode === 0) {
                 $seed = true;
