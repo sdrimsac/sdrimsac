@@ -15,13 +15,10 @@ class HomeController extends Controller
         $clients = Client::get();
         $delete_permission = config('tenant.admin_delete_client');
 
-        $command = ['df', '-h', '/', '|', 'awk', '\'{print $5}\'', '|', 'tail', '-n', '1'];
-        $df = new Process($command);
+       
+        $storage_size = exec("df -h / | awk '{print $5}' | tail -n 1");
         
-        $df->run();
-        $storage_size = $df->getOutput();
-        
-        $storage_size = $storage_size != "" ? substr($storage_size, 0, -1) : 0;
+        $storage_size = $storage_size != "" ? substr($storage_size, 0 ) : 0;
 
 
          return view('system.dashboard')->with('clients', count($clients))
