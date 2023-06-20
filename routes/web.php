@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Tenant\ClientZoneController;
 use App\Http\Controllers\Tenant\DispatchController;
+use App\Http\Controllers\Tenant\InventoryController;
 use App\Http\Controllers\Tenant\TollController;
 use App\Http\Controllers\Tenant\WhatsappController;
 use App\Http\Controllers\Tenant\PurchaseController;
@@ -48,6 +49,7 @@ if ($hostname) {
                     Route::delete('/delete/{id}', [App\Http\Controllers\Tenant\RegisterController::class, 'destroy']);
                 });
 
+                Route::get('fix_models', [InventoryController::class, 'fix_models']);
                 Route::get('toll', [TollController::class, 'index'])->name('toll.index');
                 Route::get('toll/records', [TollController::class, 'records']);
                 Route::get('toll/items/{warehouse_id}', [TollController::class, 'items']);

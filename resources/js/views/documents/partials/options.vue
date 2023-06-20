@@ -345,7 +345,7 @@ export default {
                 .then(response => {
                     this.form = response.data.data;
 
-                    this.titleDialog = "Comprobante: " + this.form.number;
+                    this.titleDialog = "xd Comprobante: " + this.form.number;
                     this.loading_print = false;
                     // }
                     if (this.generatDispatch)
@@ -403,7 +403,7 @@ export default {
                 });
         },
    clickPrint(format) {
-            if (this.configuration.print_direct == 1) {
+   
                 if (format == "a4") {
                     this.clickPrintPos(this.form.printer, this.form.print_a4);
                 }
@@ -411,12 +411,12 @@ export default {
                     this.clickPrintPos(this.form.printer, this.form.print_a4);
                 }
                 if (format == "ticket") {
+                    console.log(this.form);
                     this.clickPrintPos(this.form.printer, this.form.ticket);
                 }
                 if (format == "ticket_50") {
                     this.clickPrintPos(this.form.printer, this.form.ticket_50);
                 }
-            }
         },
         clickDownloadImage() {
             window.open(`${this.form.image_detraction}`, "_blank");
