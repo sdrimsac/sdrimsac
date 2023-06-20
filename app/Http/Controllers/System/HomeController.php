@@ -14,9 +14,18 @@ class HomeController extends Controller
     {
         $clients = Client::get();
         $delete_permission = config('tenant.admin_delete_client');
+
+        
+        $df = new Process("df -h / | awk '{print $5}' | tail -n 1");
+        
+        $df->run();
+        $storage_size = $df->getOutput();
+        $storage_size = $storage_size != "" ? substr($storage_size, 0, -1) : 0;
+
+
          return view('system.dashboard')->with('clients', count($clients))
                 ->with('delete_permission', $delete_permission)
-                ->with('disc_used',0)
+                ->with('disc_used',$storage_size)
                 ->with('i_used', 0)
                 ->with('storage_size',0)
                 ->with('version', 0);
