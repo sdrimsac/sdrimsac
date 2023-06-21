@@ -9,6 +9,7 @@ use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 use Modules\Restaurant\Http\Resources\OrdenItemCollection;
 use Modules\Restaurant\Models\Food;
 use Modules\Restaurant\Models\Orden;
@@ -65,7 +66,7 @@ class OrdenEvent implements ShouldBroadcast
             $configuration->save();
             $event_name = $configuration->socket_channel;
         }
-
+        Log::info('order-request-' . $event_name);
         return 'order-request-' . $event_name;
     }
 }
