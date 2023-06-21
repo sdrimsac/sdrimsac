@@ -40,7 +40,7 @@ return [
                 'useTLS' => false,
                 'encrypted' => false,
                 //aqui
-                'host' => "66.94.115.173",
+                'host' => "127.0.0.1",
                 'port' => 6001,
                 'scheme' => 'http',
                 'curl_options' => [
