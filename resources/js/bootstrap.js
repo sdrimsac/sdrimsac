@@ -69,12 +69,7 @@ if (token) {
 import Echo from "laravel-echo";
 window.Pusher = require("pusher-js");
 console.log("window.location.hostname", window.location.hostname);
-console.log(window.location.hostname);
-//en la palabra "restobar.sdrimsac-tenant.oo" deseo obtener solo "sdrimsac-tenant.oo"
-let hostname = window.location.hostname;
- hostname = hostname.split(".");
- hostname = hostname[1] + "." + hostname[2];
-console.log("hostname", hostname);
+
 
 
 try {
@@ -84,7 +79,7 @@ try {
         cluster: process.env.MIX_PUSHER_APP_CLUSTER,
         forceTLS: false,
         encrypted: false,
-        wsHost: hostname,
+        wsHost: window.location.hostname,
         wsPort: 6001,
         disableStats: false
         // enabledTransports: ['ws', 'wss']
