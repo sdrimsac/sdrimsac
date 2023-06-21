@@ -1329,6 +1329,8 @@ export default {
     },
 
     async created() {
+                console.log(this.configuration);
+
         // console.log(this.establishments, " xdl");
         this.conf = this.establishments.conf ?? {};
         this.cashId = this.cash_id;
