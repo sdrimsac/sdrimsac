@@ -83,7 +83,6 @@ class DashboardController extends Controller
         $establishments = Establishment::where('id', auth()->user()->establishment_id)->first();
         $auth_login = auth()->user()->id;
         $cash_id = $cash ? $cash->id : 0;
-
         $pending_order = Orden::where('status_orden_id', '<>', 4)->count();
         return view('restaurant::pos.dashboard', compact('pending_order', 'area_id', 'cash_id', 'worker', 'establishments', 'configuration', 'auth_login', 'company', 'desarrollador'));
     }

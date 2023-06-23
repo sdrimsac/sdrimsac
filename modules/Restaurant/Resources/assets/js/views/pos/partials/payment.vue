@@ -1083,6 +1083,7 @@ export default {
     },
 
     props: [
+        "printer",
         "printing",
         "customer_default",
         "customer_variation",
@@ -1691,12 +1692,10 @@ export default {
             return false;
         },
 
-        async Printer(
+        async printerDocument(
             Printer,
             linkpdf,
-            copies,
-            auth = null,
-            multiple_boxes = false
+           
         ) {
             qz.security.setCertificatePromise((resolve, reject) => {
                 this.$http
@@ -1724,16 +1723,13 @@ export default {
                         });
                 };
             });
-            if (this.printerOn == 1) {
-                if (multiple_boxes == true) {
-                    if (this.auth_login == auth) {
-                        let config = qz.configs.create(Printer, {
+             let config = qz.configs.create(Printer, {
                             scaleContent: false
                         });
                         if (!qz.websocket.isActive()) {
                             await qz.websocket.connect(config);
                         }
-                        let data = [
+                          let data = [
                             {
                                 type: "pdf",
                                 format: "file",
@@ -1743,38 +1739,57 @@ export default {
                         qz.print(config, data).catch(e => {
                             this.$toast.error(e.message);
                         });
-                        for (let index = 0; index < copies; index++) {
-                            qz.print(config, data).catch(e => {
-                                this.$toast.error(e.message);
-                            });
-                        }
-                    }
-                }
-                if (multiple_boxes == false) {
-                    let config = qz.configs.create(Printer, {
-                        scaleContent: false
-                    });
-                    if (!qz.websocket.isActive()) {
-                        await qz.websocket.connect(config);
-                    }
-                    let data = [
-                        {
-                            type: "pdf",
-                            format: "file",
-                            data: linkpdf
-                        }
-                    ];
+            // if (this.printerOn == 1) {
+            //     if (multiple_boxes == true) {
+            //         if (this.auth_login == auth) {
+            //             let config = qz.configs.create(Printer, {
+            //                 scaleContent: false
+            //             });
+            //             if (!qz.websocket.isActive()) {
+            //                 await qz.websocket.connect(config);
+            //             }
+            //             let data = [
+            //                 {
+            //                     type: "pdf",
+            //                     format: "file",
+            //                     data: linkpdf
+            //                 }
+            //             ];
+            //             qz.print(config, data).catch(e => {
+            //                 this.$toast.error(e.message);
+            //             });
+            //             for (let index = 0; index < copies; index++) {
+            //                 qz.print(config, data).catch(e => {
+            //                     this.$toast.error(e.message);
+            //                 });
+            //             }
+            //         }
+            //     }
+            //     if (multiple_boxes == false) {
+            //         let config = qz.configs.create(Printer, {
+            //             scaleContent: false
+            //         });
+            //         if (!qz.websocket.isActive()) {
+            //             await qz.websocket.connect(config);
+            //         }
+            //         let data = [
+            //             {
+            //                 type: "pdf",
+            //                 format: "file",
+            //                 data: linkpdf
+            //             }
+            //         ];
 
-                    qz.print(config, data).catch(e => {
-                        this.$toast.error(e.message);
-                    });
-                    for (let index = 0; index < copies; index++) {
-                        qz.print(config, data).catch(e => {
-                            this.$toast.error(e.message);
-                        });
-                    }
-                }
-            }
+            //         qz.print(config, data).catch(e => {
+            //             this.$toast.error(e.message);
+            //         });
+            //         for (let index = 0; index < copies; index++) {
+            //             qz.print(config, data).catch(e => {
+            //                 this.$toast.error(e.message);
+            //             });
+            //         }
+            //     }
+            // }
         },
         async clickSendWhatsapp(
             document_type_id,
@@ -2564,6 +2579,25 @@ export default {
                 );
 
                 if (response.status == 200) {
+                    console.log(response);
+                    console.log(this.printer);
+                    let format = null;
+                    let data = response.data.data;
+                    switch (data.format_printer) {
+                        case 1:
+                            format = data.print_a4; 
+                            break;
+                     case 2:
+                            format = data.print_a5;
+                            break;
+                        default:
+                            format = data.print_ticket;
+                            break;
+                    }
+                    if(this.printer && format){
+
+                        this.printerDocument(this.printer,format)
+                    }
                     if (response.data.success == true) {
                         let document_id = 0;
                         if (form.document_type_id === "80") {

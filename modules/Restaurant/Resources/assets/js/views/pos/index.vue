@@ -965,6 +965,7 @@
 
         <template>
             <payment-form
+                :printer="printer"
                 :personalWhatsapp="personalWhatsapp"
                 @getFile="getFile"
                 :customer_default="customer_default"
@@ -1187,7 +1188,8 @@ export default {
         "auth_login",
         "desarrollador",
         "company",
-        "area_id"
+        "area_id",
+        "area"
     ],
     components: {
         EditProduct,
@@ -1214,6 +1216,7 @@ export default {
 
     data() {
         return {
+            printer:null,
             showDailyCashLoading: false,
             pin: "",
             showPinRequest: false,
@@ -1337,6 +1340,7 @@ export default {
         this.ordensPending = this.pending_order;
         this.loading = true;
         this.socketWhatsappConfig();
+        this.getPrinter();
         await this.getTables();
         await this.getSeries();
         await this.initForm(this.customer_default.id);
@@ -1384,7 +1388,15 @@ export default {
     computed: {},
     methods: {
 
-        
+        async getPrinter(){
+                const response = await this.$http.get(`/restaurant/worker/cash/get_printer/${this.area_id}`);
+                if(response.status == 200){
+                    const {printer} = response.data;
+                    
+                        this.printer = printer;
+                    
+                }
+        },
 
         generatePin(num) {
             if (this.pin.length == 4) {
