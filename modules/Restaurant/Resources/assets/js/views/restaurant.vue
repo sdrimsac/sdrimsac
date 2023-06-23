@@ -93,6 +93,7 @@ export default {
     Echo.channel("receive_order").listen(
       `.receive-${this.configuration.socket_channel}`,
       (e) => {
+        console.log(e);
         const {
           order: { table },
           order: { state },

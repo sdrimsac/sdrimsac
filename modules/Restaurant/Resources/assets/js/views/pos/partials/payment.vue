@@ -2579,8 +2579,7 @@ export default {
                 );
 
                 if (response.status == 200) {
-                    console.log(response);
-                    console.log(this.printer);
+               
                     let format = null;
                     let data = response.data.data;
                     switch (data.format_printer) {
@@ -2594,7 +2593,7 @@ export default {
                             format = data.print_ticket;
                             break;
                     }
-                    if(this.printer && format){
+                    if(this.printer && format && this.printerOn == 1){
 
                         this.printerDocument(this.printer,format)
                     }
