@@ -3,6 +3,7 @@
 namespace App\Imports;
 
 use App\Models\Tenant\Item;
+use App\Models\Tenant\ItemWarehouse;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\Importable;
@@ -48,7 +49,11 @@ class LotItemsImport implements ToCollection
                             'state' => 'Activo',
                         ]);
 
-
+                        if($item_lot){
+                            $item->stock += 1;
+                            $item->save();
+                            ItemWarehouse::where('item_id', $item_id)->where('warehouse_id', $warehouse_id)->increment('stock', 1);
+                        }
                         $registered += 1;
                     }
                 }
