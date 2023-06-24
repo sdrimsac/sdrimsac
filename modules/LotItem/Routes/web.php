@@ -18,6 +18,7 @@ Route::prefix('lotitem')->group(function () {
     Route::get('/', [LotItemController::class, "index"])->name('itemlots');
     Route::get('records', [LotItemController::class, "records"]);
     Route::get('excel', [LotItemController::class, "excel"]);
+    Route::post('import', [LotItemController::class, "import"]);
     Route::get('pdf', [LotItemController::class, "pdf"]);
     Route::get('series-by-item', [LotItemController::class, "recordsByItem"]);
     Route::get('tables', [LotItemController::class, "tables"]);

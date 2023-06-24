@@ -2,16 +2,19 @@
 
 namespace Modules\LotItem\Http\Controllers;
 
+use App\Imports\LotItemsImport;
 use App\Models\Tenant\Item;
 use App\Models\Tenant\ItemWarehouse;
 use App\Models\Tenant\Company;
 use App\Models\Tenant\Establishment;
 use App\Models\Tenant\Warehouse;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Excel;
 use Modules\Item\Models\ItemLot;
 use Modules\LotItem\Exports\ItemLotExport;
 use Modules\LotItem\Http\Resources\LotItemCollection;
@@ -19,7 +22,30 @@ use Modules\LotItem\Http\Resources\LotItemCollection;
 class LotItemController extends Controller
 {
 
-
+    public function import(Request $request)
+    {
+        if ($request->hasFile('file')) {
+            try {
+                $import = new LotItemsImport();
+                $import->import($request->file('file'), null, Excel::XLSX);
+                $data = $import->getData();
+                return [
+                    'success' => true,
+                    'message' =>  __('app.actions.upload.success'),
+                    'data' => $data
+                ];
+            } catch (Exception $e) {
+                return [
+                    'success' => false,
+                    'message' =>  $e->getMessage()
+                ];
+            }
+        }
+        return [
+            'success' => false,
+            'message' =>  __('app.actions.upload.error'),
+        ];
+    }
     public function deleteDuplicate()
     {
         $duplicateRecords = ItemLot::select('series', 'item_id', 'warehouse_id', DB::raw('count(*) as total'))

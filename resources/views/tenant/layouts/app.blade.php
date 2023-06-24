@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="{{ asset('acorn/css/vendor/select2.min.css') }}" />
     <link rel="stylesheet" href="{{ asset('acorn/css/vendor/select2-bootstrap4.min.css') }}" />
     <link rel="stylesheet" href="{{ asset('acorn/css/vendor/datatables.min.css') }}" />
-    <script src="https://cdn.jsdelivr.net/npm/socket.io-client@4.5.1/dist/socket.io.min.js"></script>
+    <script src="{{asset('socket/socket_io.js')}}"></script>
 
     <link rel="stylesheet" href="{{ asset('acorn/css/styles.css') }}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('css/style_header.css') }}">
