@@ -667,7 +667,6 @@ class ClientController extends Controller
             'soap_password' => $request->soap_password,
             'soap_url' => $request->soap_url,
             'certificate' => $name_certificate,
-            'formats' => 'trade_name'
         ]);
 
         $plan = Plan::findOrFail($request->input('plan_id'));
