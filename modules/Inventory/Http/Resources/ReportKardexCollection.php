@@ -35,9 +35,9 @@ class ReportKardexCollection extends ResourceCollection
     {
 
         $models = [
-            "App\Models\Document",
-            "App\Models\Purchase",
-            "App\Models\SaleNote",
+            "App\Models\Tenant\Document",
+            "App\Models\Tenant\Purchase",
+            "App\Models\Tenant\SaleNote",
             "Modules\Inventory\Models\Inventory",
             "Modules\Order\Models\OrderNote",
             Devolution::class

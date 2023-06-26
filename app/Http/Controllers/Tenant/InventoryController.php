@@ -1,10 +1,12 @@
 <?php
+
 namespace App\Http\Controllers\Tenant;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Tenant\InventoryCollection;
 use App\Http\Resources\Tenant\InventoryResource;
 use App\Models\Tenant\Inventory;
+use App\Models\Tenant\InventoryKardex;
 use App\Models\Tenant\Item;
 use App\Models\Tenant\ItemWarehouse;
 use App\Models\Tenant\Warehouse;
@@ -13,29 +15,53 @@ use Illuminate\Support\Facades\DB;
 
 class InventoryController extends Controller
 {
-    public function index() {
+    public function fix_models()
+    {
+
+        $pattern = '^App\\\\Models\\\\(.*?)$';
+        $replacement = 'App\\\\Models\\\\Tenant\\\\$1';
+
+        $records = DB::connection('tenant')->table('inventory_kardex')
+        ->where('inventory_kardexable_type', 'REGEXP', $pattern)
+        ->get();
+    
+    foreach ($records as $record) {
+        $newColumnName = preg_replace("/".$pattern."/",$replacement, $record->inventory_kardexable_type);
+        
+        DB::connection('tenant')->table('inventory_kardex')
+            ->where('id', $record->id)
+            ->update(['inventory_kardexable_type' => $newColumnName]);
+    }
+
+        return compact('records');
+    }
+    public function index()
+    {
         return view('tenant.inventories.index');
     }
-    
-    public function columns() {
+
+    public function columns()
+    {
         return [
             'item_id' => 'Producto'
         ];
     }
-    
-    public function records(Request $request) {
+
+    public function records(Request $request)
+    {
 
         $item_description = $request->input('value');
         $records = ItemWarehouse::with(['item', 'warehouse'])
-                                ->whereHas('item', function($query) use($item_description) {
-                                    $query->where('description', 'like', '%' . $item_description . '%');
-                                })->orderBy('item_id');
+            ->whereHas('item', function ($query) use ($item_description) {
+                $query->where('description', 'like', '%' . $item_description . '%');
+            })->orderBy('item_id');
 
-//        dd($records);
+        //        dd($records);
         return new InventoryCollection($records->paginate(config('tenant.items_per_page')));
     }
 
-    public function tables() {
+    public function tables()
+    {
         return [
             'items' => Item::where('item_type_id', '01')->get(),
             'warehouses' => Warehouse::all()
@@ -56,9 +82,11 @@ class InventoryController extends Controller
             $warehouse_id = $request->input('warehouse_id');
             $quantity = $request->input('quantity');
 
-            $item_warehouse = ItemWarehouse::firstOrNew(['item_id' => $item_id,
-                                                         'warehouse_id' => $warehouse_id]);
-            if($item_warehouse->id) {
+            $item_warehouse = ItemWarehouse::firstOrNew([
+                'item_id' => $item_id,
+                'warehouse_id' => $warehouse_id
+            ]);
+            if ($item_warehouse->id) {
                 return [
                     'success' => false,
                     'message' => 'El producto ya se encuentra registrado en el almacén indicado.'
@@ -95,19 +123,19 @@ class InventoryController extends Controller
             $quantity = $request->input('quantity');
             $quantity_move = $request->input('quantity_move');
 
-            if($warehouse_id === $warehouse_new_id) {
+            if ($warehouse_id === $warehouse_new_id) {
                 return  [
                     'success' => false,
                     'message' => 'El almacén destino no puede ser igual al de origen'
                 ];
             }
-            if($quantity < $quantity_move) {
+            if ($quantity < $quantity_move) {
                 return  [
                     'success' => false,
                     'message' => 'La cantidad a trasladar no puede ser mayor al que se tiene en el almacén.'
                 ];
             }
-            
+
             //Transaction
             // $item_warehouse_new = ItemWarehouse::firstOrNew(['item_id' => $item_id,
             //                                                  'warehouse_id' => $warehouse_new_id]);
@@ -148,16 +176,16 @@ class InventoryController extends Controller
 
             //Transaction
             $item_warehouse = ItemWarehouse::where('item_id', $item_id)
-                                           ->where('warehouse_id', $warehouse_id)
-                                           ->first();
-            if(!$item_warehouse) {
+                ->where('warehouse_id', $warehouse_id)
+                ->first();
+            if (!$item_warehouse) {
                 return [
                     'success' => false,
                     'message' => 'El producto no se encuentra en el almacén indicado'
                 ];
             }
 
-            if($quantity < $quantity_remove) {
+            if ($quantity < $quantity_remove) {
                 return  [
                     'success' => false,
                     'message' => 'La cantidad a retirar no puede ser mayor al que se tiene en el almacén.'

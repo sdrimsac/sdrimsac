@@ -54,7 +54,7 @@
     <!-- Responsive css-->
     <link rel="stylesheet" type="text/css" href="{{ asset('viho/assets/css/responsive.css') }}">
     <link rel="stylesheet" href="{{ asset('porto-light/vendor/font-awesome/5.11/css/all.min.css') }}" />
-    <script src="https://cdn.jsdelivr.net/npm/socket.io-client@4.5.1/dist/socket.io.min.js"></script>
+    <script src="{{asset('socket/socket_io.js')}}"></script>
 
    <style>
     .font-roboto,.pull-right,span,th,td,tr,.el-input__inner::placeholder,.el-input__inner,.footer-copyright,.el-collapse-item__header,.el-dialog__title,.el-tabs__item, .is-top,.is-active ,h1,h2,h3,h4,h5,h6,p a, a:link,a:hover{

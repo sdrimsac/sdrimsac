@@ -530,7 +530,7 @@ class PurchaseController extends Controller
 
         $establishment = Establishment::where('id', auth()->user()->establishment_id)->first();
         // $warehouse = Warehouse::where('establishment_id', $establishment->id)->first();
-        $type = "App\Models\Purchase";
+        $type = "App\Models\Tenant\Purchase";
         //proceso para eliminar los actualizar el stock de proiductos
         // $quantity = 0;
         foreach ($obj->items as $item) {

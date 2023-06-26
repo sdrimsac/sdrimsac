@@ -667,12 +667,14 @@ class ClientController extends Controller
             'soap_password' => $request->soap_password,
             'soap_url' => $request->soap_url,
             'certificate' => $name_certificate,
+            'formats' => 'trade_name'
         ]);
 
         $plan = Plan::findOrFail($request->input('plan_id'));
         $http = config('tenant.force_https') == true ? 'https://' : 'http://';
 
-        DB::connection('tenant')->table('configurations')->insert([
+        DB::connection('tenant')->table('configurations')->upsert([
+            'id' => 1,
             'send_auto' => true,
             'locked_emission' => $request->input('locked_emission'),
             'locked_tenant' => false,
@@ -691,7 +693,7 @@ class ClientController extends Controller
                 'sidebar_theme' => 'white'
             ]),
 
-        ]);
+        ],['id']);
 
 
      $establishment_id =  DB::connection('tenant')->table('establishments')->insertGetId([
@@ -901,18 +903,18 @@ class ClientController extends Controller
 
 
 
-        DB::connection('tenant')->table('companies')->insert([
-            'identity_document_type_id' => '6',
-            'number' => "12345678901",
-            'name' => "COMPANY DEMO",
-            'trade_name' => "",
-            'soap_type_id' => "01",
-            'soap_send_id' => "01",
-            'soap_username' => "",
-            'soap_password' => "",
-            'soap_url' => "",
-            'certificate' => "",
-        ]);
+        // DB::connection('tenant')->table('companies')->insert([
+        //     'identity_document_type_id' => '6',
+        //     'number' => "12345678901",
+        //     'name' => "COMPANY DEMO",
+        //     'trade_name' => "",
+        //     'soap_type_id' => "01",
+        //     'soap_send_id' => "01",
+        //     'soap_username' => "",
+        //     'soap_password' => "",
+        //     'soap_url' => "",
+        //     'certificate' => "",
+        // ]);
 
 
 

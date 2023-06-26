@@ -16,6 +16,56 @@
                             </li>
                         </ol>
                     </div>
+                    <div
+                        class="col-12 col-md-6 d-flex align-items-start justify-content-end"
+                    >
+                        <!-- Contact Button Start -->
+                        <!-- <button
+                            type="button"
+                            class="btn btn-outline-primary btn-icon btn-icon-start btn-sm"
+                        >
+                            <i data-cs-icon="plus"></i>
+                            <span>Nuevo</span>
+                        </button> -->
+                        <button
+                            class="btn btn-sm btn-icon btn-icon-only btn-outline-primary align-top float-end"
+                            type="button"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false"
+                            aria-haspopup="true"
+                        >
+                            <i data-cs-icon="more-horizontal"></i>
+                        </button>
+                        <div
+                            class="dropdown-menu dropdown-menu-sm dropdown-menu-end"
+                        >
+                            <a
+                                class="dropdown-item"
+                                href="javascript:void(0)"
+                                    @click.prevent="clickImport()"
+                            >
+                                <i class="fa fa-upload"></i> Importar</a
+                            >
+                            <!-- <a
+                                class="dropdown-item"
+                                href="javascript:void(0)"
+                            >
+                                <i class="fa fa-upload"></i> Importar lista de
+                                precios</a
+                            > -->
+                        </div>
+                        <!-- <button type="button" class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto" @click.prevent="clickCreate()">
+                        <i class="icofont-plus-circle"></i>
+                        <span>Nuevo</span>
+                    </button>
+
+                    <div class="btn-group flex-wrap">
+                    <button type="button" class="btn btn-custom btn-sm  mt-2 mr-2 dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-upload"></i> Importar <span class="caret"></span></button>
+                    <div class="dropdown-menu dropdown-menu-sm dropdown-menu-end">
+                        <a class="dropdown-item" href="#" @click.prevent="clickImport()">Importar Productos</a>
+                    </div>
+                 </div> -->
+                    </div>
                 </div>
             </div>
         </div>
@@ -91,20 +141,31 @@
                         </div>
                     </div>
                 </div>
+                
             </div>
         </div>
+          <series-import
+                    :showDialog.sync="showImportDialog"
+                ></series-import>
     </div>
 </template>
 
 <script>
 import DataTable from "../components/Datatable.vue";
+import SeriesImport from "./series_import.vue";
 export default {
-    components: { DataTable },
+    components: { DataTable,SeriesImport },
     data() {
         return {
             resource: "lotitem",
-            columns: {}
+            columns: {},
+            showImportDialog:false,
         };
+    },
+    methods:{
+         clickImport() {
+            this.showImportDialog = true;
+        },
     }
 };
 </script>

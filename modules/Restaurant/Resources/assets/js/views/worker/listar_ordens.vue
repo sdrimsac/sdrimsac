@@ -111,6 +111,7 @@ export default {
         );
     },
     async created() {
+        console.log(this.configuration);
         //this.getOrdens();
         try {
             if (this.load == false) {
