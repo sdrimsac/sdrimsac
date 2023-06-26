@@ -9,7 +9,7 @@ $path[2] = array_key_exists(2, $path) > 0 ? $path[2] : '';
                     <ul id="menu" class="menu">
                       
                         <li >
-                          <h1 style=" color: white; font-size: 300%; font-weight: bold; margin-top: 12px ">MODULO DE CAJA </h1>
+                          <h1 style=" color: white; font-size: 250%; font-weight: bold; margin-top: 21px ">MODULO DE CAJA </h1>
                         </li>
                      
                       

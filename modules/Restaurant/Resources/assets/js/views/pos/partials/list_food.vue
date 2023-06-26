@@ -11,7 +11,7 @@
             <template v-else>
                 <div class="d-flex flex-wrap">
                     <div
-                        class="col-12 col-lg-4 col-xl-4 col-xxl-4 p-1"
+                        class="col-12 col-lg-6 col-xl-4 col-xxl-4 p-1"
                         v-for="(data, index) in foods"
                         :key="index"
                     >
@@ -70,18 +70,27 @@
                                         justify-content-between
                                         p-1
                                         "
+                                style="height: 112px;"
                             >
                                 <div @click="addFood(index)">
                                     <div>
-                                        <span class="lead-font-weight-700 h5">
-                                            {{ data.description.toUpperCase() }}
+                                        <span class="lead-font-weight-700 ">
+                                            {{ data.description.toUpperCase().substring(0, 20) + "  " }}
                                         </span>
+                                        <el-tooltip
+                                            class="item"
+                                            effect="dark"
+                                            :content=data.description.toUpperCase()
+                                            placement="top-start"
+                                            >
+                                            <i class="fas fa-ellipsis-h"></i>
+                                        </el-tooltip>
                                     </div>
                                     <div
                                         class="d-flex align-items-end justify-content-between"
                                     >
-                                        <div class="p-1">
-                                            <div class="icon-container">
+                                        <div class="p-1" >
+                                            <div class="icon-container" style="  height: 64px;  width: 64px;">
                                                 <div class="icon-container_box">
                                                     <template
                                                         v-if="
@@ -90,7 +99,7 @@
                                                         "
                                                     >
                                                         <img
-                                                            hidden
+                                                            
                                                             src="/images/imagen-no-disponible.jpg"
                                                             alt="User Img"
                                                             class="thumbail"

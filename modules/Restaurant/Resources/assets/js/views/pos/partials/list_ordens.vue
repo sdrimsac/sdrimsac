@@ -3,52 +3,76 @@
         <div>
             <div
                 v-if="screenWidth > 678"
-                class="d-flex flex-wrap justify-content-between"
+                class="d-md-flex  flex-wrap justify-content-between"
+                
             >
-                <div
-                    v-for="(option, idx) in optionsMenu"
-                    :key="idx"
-                    v-show="option.visible"
-                >
-                    <div
-                        v-if="option.visible"
-                        @click="trigerFunction(option.id)"
-                        class="
-              m-1
-              btn btn-light
-              rounded
-              d-flex
-              flex-column
-              align-items-center
-              justify-content-center
-            "
-                        style="min-width: 120px; min-height: 75px"
-                    >
-                        <div class="text-center" style="margin-bottom: 2px">
-                            <p
-                                style="margin: 0 !important; padding: 0 !important"
-                                v-for="(title, idx2) in option.title"
-                                :key="idx2"
+                    <div class="dropdown-as-select d-inline-block mb-1" data-childselector="span"  >
+                        <button
+                            class="btn p-0"
+                            type="button"
+                            data-bs-toggle="dropdown"
+                            aria-haspopup="true"
+                            aria-expanded="false"
+                        >
+                            <span
+                                class="btn btn-primary dropdown-toggle"
+                                data-bs-toggle="tooltip"
+                                data-bs-placement="top"
+                                data-bs-delay="0"
+                                title=""
+                                data-bs-original-title="Item Count"
+                                aria-label="Item Count"
+                                >Menu De Acciones </span>
+                        </button>
+
+                        <div
+                            class="dropdown-menu dropdown-menu-end col-md-2 col-1 " style="width: 153px;"
+                        >
+                            <div
+                                class="col-12"
+                                v-for="(option, idx) in optionsMenu"
+                                :key="idx"
+                                v-show="option.visible"
                             >
-                                {{ title }}
-                            </p>
-                        </div>
-                        <div>
-                            <label
-                                v-if="option.id == 4"
-                                style="margin-left: 2px"
-                                >{{ ordenInBox.length }}</label
-                            >
-                            <label
-                                v-if="option.id == 5"
-                                style="margin-left: 2px"
-                                >{{ ordensPending }}</label
-                            >
-                            <i :class="option.icon"> </i>
+                                <el-button
+                                    v-if="
+                                        option.visible 
+                                            
+                                    "
+                                    @click="trigerFunction(option.id)"
+                                    class="
+                                            btn btn-light
+                                            m-1
+                                            rounded
+                                            d-flex
+                                            flex-column
+                                            align-items-center
+                                            justify-content-center
+                                            col-12
+                                            "
+                                    style="max-width: 150px;"
+                                >
+                                    <div
+                                        class="text-center"
+                                        style="margin-bottom: 2px"
+                                    >
+                                        <p
+                                            style="margin: 0 !important; padding: 0 !important"
+                                            v-for="(title,
+                                            idx2) in option.title"
+                                            :key="idx2"
+                                        >
+                                            {{ title }}
+                                        </p>
+                                        <i :class="[option.icon, 'fa-1x']"></i>
+                                    </div>
+                                    <div></div>
+                                </el-button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+                
             <div v-if="screenWidth < 600" class="d-flex flex-wrap">
                 <div
                     v-for="(option, idx) in optionsMenu"
@@ -90,7 +114,7 @@
                 style="padding-top: 12px"
             >
                 <div class="row col-12" v-if="clientTableData.table">
-                    <div>
+                    <div  class="col-6">
                         <h3 class="text-white">
                             <strong style="padding-left: 20px">
                                 {{
@@ -106,7 +130,14 @@
                             </strong>
                         </h3>
                     </div>
+                    <div class="col-6">
+                        <h3  class="text-white" style="text-align: right">
+                            Total S/. {{ (total + totalOrdenItems).toFixed(2) }}
+                        </h3>
+                    </div>
                 </div>
+                
+
                 <div
                     class="row h5 text-white col-12"
                     style="padding-left: 25px"
@@ -125,7 +156,7 @@
                     </div>
 
                     <div class="col-6">
-                        <h3 class="text-white" style="text-align: right">
+                        <h3 v-if="!clientTableData.table" class="text-white" style="text-align: right">
                             Total S/. {{ (total + totalOrdenItems).toFixed(2) }}
                         </h3>
                     </div>
@@ -152,71 +183,43 @@
                         <button
                             alt="Cobrar La venta "
                             v-if="isCreatingOrden == false"
-                            class="btn btn-light"
+                            class="btn btn-light mt-2"
                             type="button"
                             @click="payOrden()"
+                            style="max-height: 45px ; max-width: 80px;"
                         >
-                            <i class="fas fa-money-bill-wave"></i> Cobrar
+                            <i class="fas fa-money-bill-wave" style="color: var(--primary) !important"></i> <br> Cobrar
                         </button>
-                        <button
-                            v-if="
-                                isCreatingOrden == false &&
-                                    clientTableData.table == undefined &&
-                                    !configuration.college
-                            "
-                            @click="openApart"
-                            class="btn btn-light"
-                            type="button"
-                        >
-                            <i class="fas fa-cart-arrow-down"></i>
-                            Aparcar
-                        </button>
+                        
+                        
                         <button
                             v-if="
                                 isCreatingOrden == true ||
                                     clientTableData.table == undefined
                             "
-                            class="btn btn-light"
+                            class="btn btn-light mt-2"
                             type="button"
                             @click="cancelOrden"
+                            style="max-height: 45px ; max-width: 80px;"
                         >
-                            <i class="fas fa-trash"></i>
+                            <i class="fas fa-trash" style="color: var(--primary) !important"></i>
+                            <br>
                             Limpiar
                         </button>
-                        <button
-                            v-if="
-                                configuration.quotation &&
-                                    localOrden.length != 0
-                            "
-                            class="btn btn-light"
-                            type="button"
-                            @click="openQuotation"
-                        >
-                            <i class="fas fa-dollar-sign"></i>
-                            Cotizar
-                        </button>
-                        <button
-                            v-if="
-                                configuration.credits && localOrden.length != 0
-                            "
-                            class="btn btn-light"
-                            type="button"
-                            @click="openCredit"
-                        >
-                            <i class="fas fa-dollar-sign"></i>
-                            A crédito
-                        </button>
+                        
+                        
                         <button
                             v-if="
                                 (isCreatingOrden == true ||
                                     clientTableData.orden_id) &&
                                     localOrden.length != 0
                             "
-                            class="btn btn-light"
+                            class="btn btn-light mt-2"
                             type="button"
                             @click="sendOrden()"
+                            style="max-height: 45px ; max-width: 80px;"
                         >
-                            <i class="fas fa-paper-plane"></i>
+                            <i class="fas fa-paper-plane" style="color: var(--primary) !important"></i><br>
                             Enviar
                         </button>
                         <button
@@ -225,11 +228,12 @@
                                     clientTableData.table != undefined &&
                                     ordens.length != 0
                             "
-                            class="btn btn-light"
+                            class="btn btn-light mt-2"
                             type="button"
                             @click="printOrden()"
+                            style="max-height: 45px ; max-width: 80px;"
                         >
-                            <i class="fas fa-print"></i>
+                            <i class="fas fa-print" style="color: var(--primary) !important"></i><br>
                             Imprimir
                         </button>
 
@@ -239,21 +243,141 @@
                                     clientTableData.table != undefined &&
                                     ordens.length != 0
                             "
-                            class="btn btn-light"
+                            class="btn btn-light mt-2"
                             type="button"
+                            style="max-height: 45px ;  max-width: 80px;"
                             @click="
                                 cancelGeneralOrden(clientTableData.orden_id)
                             "
                         >
-                            <i class="fas fa-window-close"></i>
+                            <i class="fas fa-window-close" style="color: var(--primary) !important" ></i><br>
                             Cancelar
                         </button>
+                        <div class="dropdown-as-select d-inline-block mt-2" data-childselector="span" >
+                        <button
+                            class="btn p-0"
+                            type="button"
+                            data-bs-toggle="dropdown"
+                            aria-haspopup="true"
+                            aria-expanded="false"
+                            style="max-height: 45px ;max-width: 150px;"
+                        >
+                            <span
+                                class="btn btn-light dropdown-toggle"
+                                data-bs-toggle="tooltip"
+                                data-bs-placement="top"
+                                data-bs-delay="0"
+                                title=""
+                                data-bs-original-title="Item Count"
+                                aria-label="Item Count"
+                                > Mas Opciones..<i class="fas fa-list" style="color: var(--primary) !important"></i>
+                            </span>
+                            
+                        </button>
+
+                        <div
+                            class="dropdown-menu dropdown-menu-start col-md-2 col-1" style="max-width: 154px;"
+                        >
+                            <div class="col-12">
+                                <el-button v-if="isCreatingOrden == false && clientTableData.table == undefined && !configuration.college " 
+                                    @click="openApart"
+                                    class="
+                                            btn btn-light
+                                            m-1
+                                            rounded
+                                            d-flex
+                                            flex-column
+                                            align-items-center
+                                            justify-content-center
+                                            col-12
+                                            "
+                                            style="max-width: 150px;"
+                                >
+                                    <div class="text-center"  style="margin-bottom: 2px" >
+                                        <span style="margin: 0 !important; padding: 0 !important" >
+                                            Aparcar
+                                        </span>
+                                        <i class="fas fa-cart-arrow-down" style="color: var(--primary) !important"></i>
+                                    </div>
+                                    <div></div>
+                                </el-button>
+                                  <div></div>
+                                
+                            </div>
+                            <div class="col-12">
+                                <el-button v-if="configuration.quotation &&
+                                            localOrden.length != 0
+                                            "
+                                        class="btn btn-light
+                                            m-1
+                                            rounded
+                                            d-flex
+                                            flex-column
+                                            align-items-center
+                                            justify-content-center
+                                            col-12
+                                            "
+                                        type="button"
+                                        @click="openQuotation"
+                                        style="max-height: 45px ;max-width: 150px;"
+                                    
+                                >
+                                    <div
+                                        class="text-center"
+                                        style="margin-bottom: 2px"
+                                    >
+                                        <span
+                                            style="margin: 0 !important; padding: 0 !important"
+                                            
+                                        >
+                                        Cotizar
+                                        </span><i class="fas fa-clipboard-list" style="color: var(--primary) !important"></i>
+                                        
+                                    </div>
+                                    <div></div>
+                                </el-button>
+                            </div>
+                            <div class="col-12">
+                                <el-button v-if="configuration.credits && localOrden.length != 0"
+                                @click="openCredit"
+                                    class="
+                                            btn btn-light
+                                            m-1
+                                            rounded
+                                            d-flex
+                                            flex-column
+                                            align-items-center
+                                            justify-content-center
+                                            col-12
+                                            "
+                                    style="max-width: 150px;"
+                                >
+                                    <div
+                                        class="text-center"
+                                        style="margin-bottom: 2px"
+                                    >
+                                        <span
+                                            style="margin: 0 !important; padding: 0 !important"
+                                           
+                                        >
+                                        Crédito 
+                                        </span>
+                                        <i class="fas fa-credit-card" style="color: var(--primary) !important"></i>
+                                        
+                                    </div>
+                                    <div></div>
+                                </el-button>
+                            </div>
+                        </div>
+                        </div>
                     </div>
+                    
                     <div v-if="clientTableData.table" class="col-md-3">
                         <button
                             @click="directSale"
-                            class="btn btn-warning"
+                            class="btn btn-warning mt-2"
                             type="button"
+                            style="max-height: 45px ;"
                         >
                             Venta Directa
                         </button>
@@ -297,7 +421,7 @@
                     </div> -->
                 </div>
                 <div class="d-flex align-items-center p-1 m-2">
-                    <div class="col-md-6">
+                    <div class="col-12">
                         <template
                             v-if="
                                 configuration.restaurant &&

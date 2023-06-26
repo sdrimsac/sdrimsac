@@ -86,7 +86,7 @@
                                     @if ($vc_company->logo)
                                         <img src="{{ asset('storage/uploads/logos/' . $vc_company->logo) }}" />
                                     @else
-                                        <img style="max-width: 80%  ; max-height: 80% "
+                                        <img style="max-width: 180px  ; max-height: 75px "
                                             src="{{ asset('acorn/img/logo/logo-light.svg') }}" class="icono" />
                                     @endif
                                 @endif
@@ -97,23 +97,24 @@
                 <!-- Logo End -->
 
                 <!-- User Menu Start -->
-                <div class="user-container d-flex" style="max-width: 200px ;max-height: 120px;">
+                <div class="user-container d-flex" style="max-width: 250px ;max-height: 120px;">
+                    <div class="name " style="color: var(--light-text);                    line-height: 1;">
+                        {{ $vc_user->name }} <br>
+
+                        @if ($vc_company->soap_type_id == '01')
+                            <span style="margin-top:10px !important;font-weight: 900;">DEMO</span>
+                        @elseif($vc_company->soap_type_id == '02')
+                            <span
+                                style="margin-top:10px !important;color: #28a745 !important;font-weight: 900;">PRODUCCIÓN</span>
+                        @else
+                            <span style="margin-top:10px !important;">INTERNO</span>
+                        @endif
+                    </div>
                     <a href="#" class="d-flex user position-relative" data-bs-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="false">
                         <img style="width:90%;height:90%" class="profile" alt="profile"
                             src="{{ asset('acorn/img/profile/store.png') }}" />
-                        <div class="name">
-                            {{ $vc_user->name }} <br>
-
-                            @if ($vc_company->soap_type_id == '01')
-                                <span style="margin-top:10px !important;font-weight: 900;">DEMO</span>
-                            @elseif($vc_company->soap_type_id == '02')
-                                <span
-                                    style="margin-top:10px !important;color: #28a745 !important;font-weight: 900;">PRODUCCIÓN</span>
-                            @else
-                                <span style="margin-top:10px !important;">INTERNO</span>
-                            @endif
-                        </div>
+                        
                     </a>
                     <div class="dropdown-menu dropdown-menu-end user-menu wide">
 
@@ -178,9 +179,32 @@
                     <!-- Scrollspy Mobile Dropdown End -->
 
                     <!-- Menu Button Start -->
-                    <a href="#" id="mobileMenuButton" class="menu-button">
+                    <a href="#" class="d-flex user position-relative" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    {{-- <a href="#" id="mobileMenuButton" class="menu-button" aria-haspopup="true" data-bs-toggle="dropdown"> --}}
                         <i data-cs-icon="menu"></i>
                     </a>
+                    <div class="dropdown-menu dropdown-menu-end user-menu wide">
+
+                        <div class="row  ms-0 me-0">
+                            <div class="col-12 pe-1 ps-1">
+                                <ul class="list-unstyled">
+                                    <li>
+                                        <a href="{{ route('logout') }}"
+                                            onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                            <i data-cs-icon="logout" class="me-2" data-cs-size="17"></i>
+                                            <span class="align-middle">Cerrar Sesión</span>
+                                        </a>
+                                        <form id="logout-form" action="{{ route('logout') }}" method="POST"
+                                            style="display: none;">
+                                            @csrf
+                                        </form>
+
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
                     <!-- Menu Button End -->
                 </div>
                 <!-- Mobile Buttons End -->
@@ -475,7 +499,7 @@
                 <i data-cs-icon="paint-roller" class="position-relative"></i>
             </button>
             <!-- Theme Settings Modal End -->
-        @endif
+            @endif
         <!-- Layout Footer Start -->
         <footer>
             <div class="footer-content">
