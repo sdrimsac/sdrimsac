@@ -1788,13 +1788,13 @@
             append-to-body
         >
             <div class="row mt-1">
-                <h5>
+                <p class="h5" style="word-break: break-word;"> 
                     Para poder eliminar la orden debe ingresar un motivo y su
                     PIN de usuario.
-                </h5>
+                </p>
             </div>
             <div class="row mt-1">
-                <div class="col-12">
+                <div class="col-12 " >
                     <el-input
                         v-model="reasonToDelete"
                         placeholder="Ingrese un motivo"
@@ -1804,8 +1804,8 @@
                     ></el-input>
                 </div>
             </div>
-            <div class="row mt-2 d-flex justify-content-center">
-                <div class="col-8 ">
+            <div class="row mt-2 ">
+                <div class="col-12 ">
                     <el-input
                         v-model="pin"
                         placeholder="Ingrese su PIN"
@@ -1814,23 +1814,63 @@
                         readonly
                     ></el-input>
                 </div>
-                <div class="col-12 d-flex flex-wrap justify-content-center">
-                    <el-button
-                        v-for="num in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]"
-                        :key="num"
-                        class="m-2"
-                        @click="generatePin(num)"
-                        >{{ num }}</el-button
-                    >
-                    <el-button
-                        @click="pin = ''"
-                        class="m-2"
-                        type="danger"
-                        icon="el-icon-delete"
-                    ></el-button>
+                <div class="col-12 card " style="max-width: 218px;margin-left: 104px;margin-top: 14px;" >
+                    <div class="row" style="  margin-left: 20px;">
+                        
+                            <el-button
+                            v-for="num in [1, 2, 3 ]"
+                            :key="num"
+                            class="m-2 col-md-4 btn-rounded2 btn-primary"
+                            @click="generatePin(num)"
+                            style="border-radius: 50% !important ; width: 42px; color:white"
+                            >{{ num }}
+                        </el-button>
+                    </div>
+                    <div class="row" style="  margin-left: 20px;">
+                            <el-button
+                            v-for="num in [ 4, 5, 6 ]"
+                            :key="num"
+                            class="m-2 col-md-4 btn-primary"
+                            @click="generatePin(num)"
+                            style="border-radius: 50% !important ; width: 42px; color:white"
+                            >{{ num }}
+                        </el-button>
+                    </div>
+                    <div class="row" style="  margin-left: 20px;">
+                            <el-button
+                            v-for="num in [ 7, 8, 9 ]"
+                            :key="num"
+                            class="m-2 col-md-4 btn-primary"
+                            @click="generatePin(num)"
+                            style="border-radius: 50% !important ; width: 42px; color:white" 
+                            >{{ num }}
+                        </el-button>
+                    </div>
+                    <div class="row" style="  margin-left: 20px;">
+                        <el-button
+                            @click="pin = ''"
+                            class="m-2 col-md-4 "
+                            type="danger"
+                            icon="el-icon-delete"
+                            style="border-radius: 50% !important ; width: 42px;">
+                        </el-button>
+                        
+                        <el-button
+                            v-for="num in [0 ]"
+                            :key="num"
+                            class="m-2 col-md-4 btn-primary"
+                            @click="generatePin(num)"
+                            style="border-radius: 50% !important ; width: 42px; color:white"
+                            >{{ num }}
+                        </el-button>
+                        <div class="col-md-4"></div>
+                        
+                    </div>
+                    
+                    
                 </div>
             </div>
-            <div slot="footer" class="dialog-footer">
+            <div slot="footer" class="dialog-footer" style="text-align: center !important ; ">
                 <el-button @click="showPinRequest = false">Cancelar</el-button>
                 <el-button type="primary" @click="cancelOrdenaPin"
                     >Eliminar</el-button
@@ -1870,6 +1910,7 @@
 .input-new-tag1 .el-input__inner {
     height: 30px !important;
 }
+
 </style>
 <script>
 const QuotationForm = () => import("./quotation_modal.vue");

@@ -97,8 +97,8 @@
     "/js/js/warehouses-index.1fcc24affbfce5096aa0.js.map": "/js/js/warehouses-index.1fcc24affbfce5096aa0.js.map?id=af5edabc9f3fd3381491",
     "/js/js/tenant-finance-income-index.6ca456daf03ad94b7082.js": "/js/js/tenant-finance-income-index.6ca456daf03ad94b7082.js?id=807c05dc1038651e337b",
     "/js/js/tenant-finance-income-index.6ca456daf03ad94b7082.js.map": "/js/js/tenant-finance-income-index.6ca456daf03ad94b7082.js.map?id=7191b38a3be3dc37cefa",
-    "/js/js/tenant-restaurant-pos.431d8bfdc869137da494.js": "/js/js/tenant-restaurant-pos.431d8bfdc869137da494.js?id=607eaff90f9bda9ab252",
-    "/js/js/tenant-restaurant-pos.431d8bfdc869137da494.js.map": "/js/js/tenant-restaurant-pos.431d8bfdc869137da494.js.map?id=c5297c03ae06a3c90508",
+    "/js/js/tenant-restaurant-pos.c3557468fa00d6d39e8b.js": "/js/js/tenant-restaurant-pos.c3557468fa00d6d39e8b.js?id=67e9829cdcba1bac0d58",
+    "/js/js/tenant-restaurant-pos.c3557468fa00d6d39e8b.js.map": "/js/js/tenant-restaurant-pos.c3557468fa00d6d39e8b.js.map?id=2ebd9da077905ccb4070",
     "/js/js/tenant-internet-pos.450018f3edd4800a70e3.js": "/js/js/tenant-internet-pos.450018f3edd4800a70e3.js?id=988e2386d6e0931bd37e",
     "/js/js/tenant-internet-pos.450018f3edd4800a70e3.js.map": "/js/js/tenant-internet-pos.450018f3edd4800a70e3.js.map?id=f5dfcbaf5fa945509d5a",
     "/js/js/inventory-index.8179727fd46961677586.js": "/js/js/inventory-index.8179727fd46961677586.js?id=aabd5bd725c352019c2c",
@@ -253,8 +253,8 @@
     "/js/js/nuevoUtil.vue.b5d79ba85020fbde7078.js.map": "/js/js/nuevoUtil.vue.b5d79ba85020fbde7078.js.map?id=9e046aa46db626cf9672",
     "/js/js/ingresarUtil.vue.9ada1724ba5014ffc803.js": "/js/js/ingresarUtil.vue.9ada1724ba5014ffc803.js?id=e4171c4cf131b94a5e9e",
     "/js/js/ingresarUtil.vue.9ada1724ba5014ffc803.js.map": "/js/js/ingresarUtil.vue.9ada1724ba5014ffc803.js.map?id=5b39861318f4b3e54fc4",
-    "/js/app.js": "/js/app.js?id=8340ea036fa5072791bf",
+    "/js/app.js": "/js/app.js?id=436d67149c6d1556634a",
     "/css/app.css": "/css/app.css?id=39bdcdc15a1d498cc4e0",
-    "/js/app.js.map": "/js/app.js.map?id=8a56d4d55c00c0677129",
+    "/js/app.js.map": "/js/app.js.map?id=0bf74f583b11410ee65f",
     "/css/app.css.map": "/css/app.css.map?id=9e820f3e41c9108e3a49"
 }

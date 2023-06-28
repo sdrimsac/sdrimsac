@@ -862,7 +862,7 @@
                     
                     <button type="button" class="btn settings-button btn-gradient-primary" data-bs-toggle="modal"
                         data-bs-target="#settings" id="settingsButton">
-                        <i data-cs-icon="paint-roller" class="position-relative"></i>
+                        <i class="fas fa-inventory"></i>
                     </button>
                     <div
                         class="modal fade modal-right scroll-out-negative"
