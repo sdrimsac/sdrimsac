@@ -228,11 +228,11 @@
                     </div>
                 </div>
                 <div class="table-responsive">
-                    <table class="table">
+                    <table class="table table-hover table-striped table-condensed  table-responsive" style="width: 100%; white-space: nowrap;">
                         <thead>
                         <tr>
-                            <th>#</th>
-                            <th>Hostname</th>
+                            <th class="">#</th>
+                            <th class="">Hostname</th>
                             <th>Nombre</th>
                             <th>RUC</th>
                             <th>Plan</th>
@@ -281,14 +281,14 @@
                         <tbody>
                         <tr v-for="(row, index) in records"
                             :key="index">
-                            <td>{{ index + 1 }}</td>
-                            <td>
+                            <td class="">{{ index + 1 }}</td>
+                            <td class="">
                                 <!-- {{ row.hostname }} -->
                                 <a :href="`http://${row.hostname}`"
                                    style="color:black"
                                    target="_blank">{{ row.hostname }}</a>
                             </td>
-                            <td>{{ row.name }}</td>
+                            <td >{{ row.name }}</td>
                             <td>{{ row.number }}</td>
                             <td>{{ row.plan }}</td>
                             <td>{{ row.email }}</td>
@@ -540,6 +540,10 @@
                         :showDialog.sync="showDialogDelete"></client-delete>
     </div>
 </template>
+<style>
+
+
+</style>
 
 <script>
 import CompaniesForm from "./form.vue";
