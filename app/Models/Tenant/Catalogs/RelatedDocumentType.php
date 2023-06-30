@@ -2,9 +2,8 @@
 
 namespace App\Models\Tenant\Catalogs;
 
-use Illuminate\Database\Eloquent\Model;
 
-class RelatedDocumentType extends ModelTenant
+class RelatedDocumentType extends ModelCatalog
 {
 
 
