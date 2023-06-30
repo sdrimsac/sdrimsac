@@ -1,7 +1,7 @@
 <template>
     <div class="card mb-0 pt-2 pt-md-0">
         <div class="card-header bg-primary">
-            <h6 class="my-0 text-white">Nueva Guía de Remisión</h6>
+            <h6 class="my-0 text-white">Nueva Guía de Remisión {{correlative}}</h6>
         </div>
         <div class="card-body">
             <form autocomplete="off" @submit.prevent="submit">
@@ -47,6 +47,7 @@
                                 >
                                 <el-select
                                     v-model="form.series"
+                                    @change="getCorrelative"
                                     :disabled="generalDisabledSeries()"
                                 >
                                     <el-option
@@ -1058,7 +1059,7 @@ export default {
         ...mapState(["config", "item", "items", "all_items"])
     },
     data() {
-        return {
+        return {correlative:null,
             can_add_new_product: false,
             showDialogNewItem: false,
             showDialogAddItems: false,
@@ -1176,6 +1177,17 @@ export default {
         });
     },
     methods: {
+        async getCorrelative(){
+            let {series} = this.form;
+            const response = await this.$http(`/dispatches/correlative/${series}`);
+            if(response.status == 200){
+                let number = response.data;
+
+                let serie = `${series}-${number}`;
+                this.correlative = serie;
+
+            }
+        },
         ...mapActions(["loadItems", "loadConfiguration"]),
         initForm() {
             this.errors = {};
@@ -1734,6 +1746,7 @@ export default {
                 .post(`/${this.resource}`, this.form)
                 .then(response => {
                     if (response.data.success) {
+                        this.correlative = null;
                         this.initForm();
                         this.recordId = response.data.data.id;
                         this.send_sunat = response.data.data.send_sunat;

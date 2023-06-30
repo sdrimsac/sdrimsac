@@ -75,7 +75,7 @@
                             ></small>
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         <div
                             class="form-group"
                             :class="{ 'has-danger': errors.quantity }"
@@ -97,13 +97,16 @@
                         </div>
                     </div>
 
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         <div
                             class="form-group"
                             :class="{ 'has-danger': errors.unit_price }"
                         >
                             <label class="control-label">Costo Unitario</label>
-                            <el-input v-model="form.unit_price">
+                            <el-input
+                                v-model="form.unit_price"
+                                @input="updatePriceTotal"
+                            >
                                 <template
                                     slot="prepend"
                                     v-if="form.item.currency_type_symbol"
@@ -123,7 +126,36 @@
                             ></small>
                         </div>
                     </div>
-
+                    <div class="col-md-4">
+                        <div
+                            class="form-group"
+                            :class="{ 'has-danger': errors.unit_price }"
+                        >
+                            <label class="control-label">Costo total</label>
+                            <el-input
+                                :disabled="!insertTotalPrice"
+                                @input="updateUnitPrice"
+                                v-model="form.total_price"
+                            >
+                                <template
+                                    slot="prepend"
+                                    v-if="form.item.currency_type_symbol"
+                                    >{{
+                                        form.item.currency_type_symbol
+                                    }}</template
+                                >
+                                <i
+                                    slot="prefix"
+                                    class="el-icon-edit-outline"
+                                ></i
+                            ></el-input>
+                            <small>
+                                <el-checkbox v-model="insertTotalPrice"
+                                    >Precio total</el-checkbox
+                                >
+                            </small>
+                        </div>
+                    </div>
                     <div class="col-md-6">
                         <div
                             class="form-group"
@@ -147,12 +179,12 @@
                             ></small>
                         </div>
                     </div>
-                    <div class="col-md-3 d-flex align-items-end">
+                    <!-- <div class="col-md-3 d-flex align-items-end">
                         <el-checkbox v-model="noIsUnid"
                             >No son unidades</el-checkbox
                         >
-                    </div>
-                    <br />
+                    </div> -->
+
                     <div class="col-md-3">
                         <label class="control-label"
                             >Cantidad por embalaje</label
@@ -166,6 +198,11 @@
                             v-model="unids"
                         >
                         </el-input-number>
+                        <small>
+                            <el-checkbox v-model="noIsUnid"
+                                >No son unidades</el-checkbox
+                            >
+                        </small>
                     </div>
                     <div class="col-md-3 " v-if="noIsUnid">
                         <label class="control-label">Cantidad total</label>
@@ -470,6 +507,7 @@ export default {
     components: { itemForm, LotsForm },
     data() {
         return {
+            insertTotalPrice: false,
             unids: 0,
             noIsUnid: false,
             titleDialog: "Agregar Producto o Servicio",
@@ -567,9 +605,17 @@ export default {
             //this.changeItem();
             //})
         },
+        updatePriceTotal() {
+            this.form.total_price = this.form.unit_price * this.form.quantity;
+        },
+        updateUnitPrice() {
+            this.form.unit_price = this.form.total_price / this.form.quantity;
+        },
+
         initForm() {
             this.errors = {};
             this.form = {
+                total_price: 0,
                 item_id: null,
                 real_quantity: 0,
                 warehouse_id: 1,
@@ -698,6 +744,7 @@ export default {
         async updateRealQuantity() {
             this.form.real_quantity =
                 Number(this.unids) * Number(this.form.quantity);
+            this.form.total_price = this.form.unit_price * this.form.quantity;
         },
         changeItem() {
             this.form.item = _.find(this.items, { id: this.form.item_id });
@@ -709,6 +756,7 @@ export default {
             }).item_unit_types;
         },
         async clickAddItem() {
+            this.insertTotalPrice = false;
             if (this.form.item.lots_enabled) {
                 if (!this.lot_code)
                     return this.$toast.error("Código de lote es requerido");

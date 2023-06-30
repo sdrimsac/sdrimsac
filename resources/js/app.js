@@ -767,6 +767,11 @@ const app = new Vue({
                 /* webpackChunkName:"js/tenant-internet-planes" */
                 "../../modules/Internet/Resources/assets/js/view/planes/index.vue"
             ),
+            "items-stock" : () =>
+            import(
+                /*webpackChunkName:"tenant-registers-index"*/
+                "./views/items/check_stock.vue"
+            ),
 
         "tenant-quotations-index": () =>
             import(
@@ -804,6 +809,11 @@ const app = new Vue({
                 "./views/registers/index.vue"
             ),
             
+            "tenant-consignment-index" : ()=>
+            import(
+                /*webpackChunkName:"tenant-consigment-index"*/
+                "@viewsModuleConsignment/index.vue"
+            ),
 
 
     }

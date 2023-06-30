@@ -2595,7 +2595,7 @@ export default {
                     }
                     if(this.printer && format && this.printerOn == 1){
 
-                        this.printerDocument(this.printer,format)
+                        // this.printerDocument(this.printer,format)
                     }
                     if (response.data.success == true) {
                         let document_id = 0;

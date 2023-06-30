@@ -35,6 +35,7 @@ use Modules\Format\Models\Account;
 use Modules\Restaurant\Models\Area;
 use Modules\Restaurant\Models\Food;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Tenant\ItemStockCollection;
 use App\Http\Resources\Tenant\ItemResource;
 use App\Models\Tenant\Catalogs\CurrencyType;
 use App\Http\Resources\Tenant\ItemCollection;
@@ -47,6 +48,7 @@ use App\Models\Tenant\Catalogs\AffectationIgvType;
 use App\Models\Tenant\InventoryKardex;
 use App\Models\Tenant\ItemWarehousePrice;
 use App\Models\Tenant\Kardex;
+use Illuminate\Support\Facades\DB;
 use Modules\Inventory\Models\Warehouse as WarehouseModule;
 
 
@@ -180,6 +182,35 @@ class ItemController extends Controller
     public function create()
     {
         return view('tenant.items.form');
+    }
+    public function check_all_stock(){
+        return view('tenant.items.index_check_stock');
+    }
+    public function check_stock(Request $request)
+    {
+        // $items = Item::whereRaw('(SELECT SUM(stock) FROM item_warehouse WHERE item_warehouse.item_id = items.id) != items.stock');
+        $items = Item::where(function ($query) {
+            $query->whereExists(function ($existsQuery) {
+                $existsQuery->select(DB::raw(1))
+                    ->from('item_lots')
+                    ->whereColumn('item_lots.item_id', 'items.id')
+                    ->where('item_lots.has_sale', 0)
+                    ->where('item_lots.state', 'Activo');
+            })
+            ->whereRaw('(SELECT COUNT(*) FROM item_lots WHERE item_lots.item_id = items.id AND item_lots.has_sale = 0 AND item_lots.state = "Activo") != items.stock');
+
+           
+        
+            $query->orWhere(function ($subquery) {
+                $subquery->whereRaw('(SELECT SUM(stock) FROM item_warehouse WHERE item_warehouse.item_id = items.id) != items.stock');
+            });
+        });
+        
+        
+
+
+
+        return new ItemStockCollection($items->paginate(config('tenant.items_per_page')));
     }
 
     public function tables()

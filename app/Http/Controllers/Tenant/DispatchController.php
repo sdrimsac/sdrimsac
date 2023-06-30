@@ -59,6 +59,13 @@ class DispatchController extends Controller
     {
         $this->middleware('input.request:dispatch,web', ['only' => ['store']]);
     }
+    public function getCorrelative($serie){
+        $correlative = Dispatch::where('series', $serie)->max('number');
+        if($correlative == null){
+            return 1;
+        }
+        return $correlative + 1;
+    }
     public function statusTicket(Request $request)
     {
         $external_id = $request->input('external_id');

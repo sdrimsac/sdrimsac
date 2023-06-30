@@ -27,5 +27,6 @@
     "Internet": true,
     "Dispatch": true,
     "Store": true,
-    "ApiPeruDev": true
+    "ApiPeruDev": true,
+    "Consignment": true
 }

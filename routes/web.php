@@ -3,9 +3,11 @@
 use App\Http\Controllers\Tenant\ClientZoneController;
 use App\Http\Controllers\Tenant\DispatchController;
 use App\Http\Controllers\Tenant\InventoryController;
+use App\Http\Controllers\Tenant\ItemController;
 use App\Http\Controllers\Tenant\TollController;
 use App\Http\Controllers\Tenant\WhatsappController;
 use App\Http\Controllers\Tenant\PurchaseController;
+use App\Models\Tenant\Dispatch;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Modules\Restaurant\Events\OrdenEvent;
@@ -249,6 +251,7 @@ if ($hostname) {
                 Route::get('items/columns', [App\Http\Controllers\Tenant\ItemController::class, 'columns']);
                 Route::get('items/records', [App\Http\Controllers\Tenant\ItemController::class, 'records']);
                 Route::post('items/updateprice', [App\Http\Controllers\Tenant\ItemController::class, 'updateprice']);
+                Route::get('items/check_stock', [ItemController::class, 'check_stock']);
 
                 Route::get('items/record/{item}', [App\Http\Controllers\Tenant\ItemController::class, 'record']);
                 Route::post('items', [App\Http\Controllers\Tenant\ItemController::class, 'store']);
@@ -267,7 +270,7 @@ if ($hostname) {
                 Route::get('items/export/barcode', [App\Http\Controllers\Tenant\ItemController::class, 'exportBarCode'])->name('tenant.items.export.barcode')->middleware('just.admin');
                 Route::get('items/export/barcode/print', [App\Http\Controllers\Tenant\ItemController::class, 'printBarCode'])->name('tenant.items.export.barcode.print')->middleware('just.admin');
                 Route::get('items/export/barcode/last', [App\Http\Controllers\Tenant\ItemController::class, 'itemLast'])->name('tenant.items.last')->middleware('just.admin');
-
+                Route::get('items/check_all_stock', [App\Http\Controllers\Tenant\ItemController::class, 'check_all_stock'])->name('tenant.items.check_stock')->middleware('just.admin');
                 //ClientZone
                 Route::get('client_zones/records', [ClientZoneController::class, 'records']);
                 Route::post('client_zones', [ClientZoneController::class, 'store']);
@@ -399,6 +402,7 @@ if ($hostname) {
                     Route::post('/tables', [App\Http\Controllers\Tenant\DispatchController::class, 'tables']);
                     Route::post('/', [App\Http\Controllers\Tenant\DispatchController::class, 'store']);
                     Route::get('/record/{id}', [DispatchController::class, 'record']);
+                    Route::get('/correlative/{serie}',[DispatchController::class, 'getCorrelative']);
                     Route::post('/sendSunat/{document}', [DispatchController::class, 'sendDispatchToSunat']);
                     Route::post('/email', [DispatchController::class, 'email']);
                     Route::get('/generate/{sale_note}', [DispatchController::class, 'generate']);
