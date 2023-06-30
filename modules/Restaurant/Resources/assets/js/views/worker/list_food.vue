@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="row p-2">
+        <div v-if="screenWidth > 678" class="row p-2">
             <h2 class="small-title">Productos</h2>
             <template v-if="listFoods.length == 0">
                 <div class="col-12 text-center font-weight-bold">
@@ -133,6 +133,7 @@
                 </div>
             </template>
         </div>
+        
         <view-image
             :image="currentImage"
             :showDialog.sync="showImage"
@@ -163,6 +164,9 @@ export default {
     components: { ViewImage },
     data() {
         return {
+             input_item: '',
+            category: null ,
+            screenWidth: 0,
             selectCategory: 0,
             activeName: "menu",
             ordenItems: [],
@@ -285,6 +289,10 @@ export default {
             this.listFoods = newFoods;
         }
     },
+    mounted(){
+        this.screenWidth = window.innerWidth;
+        window.addEventListener("resize", this.handleResize);
+    }, 
     methods: {
         getDefaultPrice(type) {
             let listPricesDescription = ["price1", "price2", "price3"];

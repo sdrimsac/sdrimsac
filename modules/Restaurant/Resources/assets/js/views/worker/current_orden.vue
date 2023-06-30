@@ -26,87 +26,48 @@
                 </button>
             </span>
         </el-dialog> -->
-        <observation-form
-            :current="current"
-            :observations.sync="tags"
-            :showDialog.sync="showObservations"
-            @addObservation="addObservation"
-        >
+        <observation-form :current="current" :observations.sync="tags" :showDialog.sync="showObservations"
+            @addObservation="addObservation">
         </observation-form>
-        <el-dialog
-            key="db"
-            v-loading="loadingObservation"
-            @close="closeLocalObservationDialog"
-            :visible="dialogObservation"
-            append-to-body
-            title="Editando observación"
-        >
+        <el-dialog key="db" v-loading="loadingObservation" @close="closeLocalObservationDialog" :visible="dialogObservation"
+            append-to-body title="Editando observación">
             <label class="control-label"> Observación </label>
             <el-input v-model="observation"></el-input>
             <div class="row mt-1 d-flex flex-row justify-content-end">
-                <button
-                    class="btn btn-sm btn-primary"
-                    @click="changeObservation"
-                >
+                <button class="btn btn-sm btn-primary" @click="changeObservation">
                     Cambiar
                 </button>
             </div>
         </el-dialog>
 
         <template>
-            <Pinform
-                @sendOrden="sendOrden"
-                :showDialogPing.sync="showDialogPing"
-                :to_carry.sync="to_carry"
-                :configuration.sync="configuration"
-                :ordenSelectedId.sync="ordenSelectedId"
-                :tableId.sync="tableId"
-                :localOrden.sync="localOrden"
-                @add="closeDialog"
-                :referencia="referenciaInput"
-            >
+            <Pinform @sendOrden="sendOrden" :showDialogPing.sync="showDialogPing" :to_carry.sync="to_carry"
+                :configuration.sync="configuration" :ordenSelectedId.sync="ordenSelectedId" :tableId.sync="tableId"
+                :localOrden.sync="localOrden" @add="closeDialog" :referencia="referenciaInput">
             </Pinform>
         </template>
         <div id="ordens " class="border-dark rounded-top">
             <div class="bg-primary rounded-top p-2">
-                <span class="el-dialog__title text-white"
-                    >Lista de Ordenes
+                <span class="el-dialog__title text-white">Lista de Ordenes
                 </span>
             </div>
-            <div
-                v-if="ordens.length == 0 && localOrden.length == 0"
-                style="min-height:150px;"
-                class="d-flex flex-column align-items-center justify-content-center "
-            >
+            <div v-if="ordens.length == 0 && localOrden.length == 0" style="min-height:300px;"
+                class="d-flex flex-column align-items-center justify-content-center ">
                 Sin productos <br />
             </div>
-            <div
-                v-if="ordens.length > 0 || localOrden.length > 0"
-                class="d-flex justify-content-center p-1"
-            >
-                <el-input
-                    v-model="referenciaInput"
-                    placeholder="Referencia (DNI)"
-                >
+            <div v-if="ordens.length > 0 || localOrden.length > 0" class="d-flex justify-content-center p-1">
+                <el-input v-model="referenciaInput" placeholder="Referencia (DNI)">
                 </el-input>
             </div>
-            <div
-                class="product-wrapper-grid list-view p-2"
-                style="height:calc(100vh - 27rem);overflow-y: auto;overflow-x:hidden;margin-bottom:15px;"
-            >
+            <div class="product-wrapper-grid list-view p-2"
+                style="height:calc(100vh - 27rem);overflow-y: auto;overflow-x:hidden;margin-bottom:15px;">
                 <div class="row" v-if="ordens.length != 0">
                     <div class="col-12">
                         <p class="h4 txt-info p-10 txt-primary f-w-700">
                             <i class="icofont icofont-fork-and-knife"></i>
-                            <a
-                                class="badge badge bg-dark text-white"
-                                href="javascript:void(0)"
-                            >
-                                <template
-                                    v-if="
-                                        ordens.length > 0 && ordens.length <= 9
-                                    "
-                                >
+                            <a class="badge badge bg-dark text-white" href="javascript:void(0)">
+                                <template v-if="ordens.length > 0 && ordens.length <= 9
+                                    ">
                                     0{{ ordens.length }}
                                 </template>
                                 <template v-else>
@@ -116,50 +77,29 @@
                             Orden de Pedido Nº {{ ordenSelectedId }}
                         </p>
                     </div>
-                    <div
-                        class="col-md-12"
-                        v-for="(ord_row, idxx) in ordens"
-                        :key="idxx"
-                    >
+                    <div class="col-md-12" v-for="(ord_row, idxx) in ordens" :key="idxx">
                         <div class="card mb-2" id="card">
                             <div class="row">
                                 <div class="col-auto">
-                                    <template
-                                        v-if="
-                                            ord_row.food.image ==
-                                                'imagen-no-disponible.jpg'
-                                        "
-                                    >
-                                        <img
-                                            src="/images/comida.png"
-                                            alt="User Img"
-                                            class="card-img card-img-horizontal h-100 thumbail"
-                                        />
+                                    <template v-if="ord_row.food.image ==
+                                        'imagen-no-disponible.jpg'
+                                        ">
+                                        <img src="/images/imagen-no-disponible.jpg" alt="User Img"
+                                            class="card-img card-img-horizontal h-100 thumbail" />
                                     </template>
                                     <template v-else>
-                                        <img
-                                            :src="
-                                                formatUrlImage(
-                                                    ord_row.food.image
-                                                )
-                                            "
-                                            class="card-img card-img-horizontal h-100 thumbail"
-                                        />
+                                        <img :src="formatUrlImage(
+                                            ord_row.food.image
+                                        )
+                                            " class="card-img card-img-horizontal h-100 thumbail" />
                                     </template>
                                 </div>
-                                <div
-                                    class="col position-relative h-100 p-0 m-0"
-                                >
+                                <div class="col position-relative h-100 p-0 m-0">
                                     <div class="card-body p-2">
                                         <div class="row h-100">
-                                            <div
-                                                class="col-12 mb-md-0 d-flex align-items-center p-1"
-                                            >
+                                            <div class="col-12 mb-md-0 d-flex align-items-center p-1">
                                                 <div class="pt-0 pb-0 pe-2">
-                                                    <div
-                                                        class="h6 mb-0 clamp-line"
-                                                        data-line="1"
-                                                    >
+                                                    <div class="h6 mb-0 clamp-line" data-line="1">
                                                         {{
                                                             ord_row.food.description.toUpperCase()
                                                         }}
@@ -169,68 +109,42 @@
                                         </div>
 
                                         <div class="row h-100">
-                                            <div
-                                                class="col-5 mb-md-0 d-flex align-items-center p-1"
-                                            >
+                                            <div class="col-5 mb-md-0 d-flex align-items-center p-1">
                                                 {{ ord_row.quantity }} x
                                                 {{ ord_row.food.price }}
                                             </div>
 
                                             <div
-                                                class="col-5 d-flex justify-content-start justify-content-md-start align-items-center p-1"
-                                            >
+                                                class="col-5 d-flex justify-content-start justify-content-md-start align-items-center p-1">
                                                 <el-button-group>
-                                                    <el-tooltip
-                                                        v-if="
-                                                            ord_row.status_orden_id !=
-                                                                3
-                                                        "
-                                                        effect="dark"
-                                                        content="Pedido listo"
-                                                        placement="top-start"
-                                                    >
-                                                        <el-button
-                                                            @click="
-                                                                ordenReady(
-                                                                    ord_row.id
-                                                                )
-                                                            "
-                                                            type="success"
-                                                            icon="el-icon-check"
-                                                            size="mini"
-                                                            circle
-                                                        ></el-button>
+                                                    <el-tooltip v-if="ord_row.status_orden_id !=
+                                                        3
+                                                        " effect="dark" content="Pedido listo" placement="top-start">
+                                                        <el-button @click="
+                                                            ordenReady(
+                                                                ord_row.id
+                                                            )
+                                                            " type="success" icon="el-icon-check" size="mini"
+                                                            style="width: 58px;"></el-button>
                                                     </el-tooltip>
-                                                    <el-tooltip
-                                                        effect="dark"
-                                                        content="Cancelar pedido"
-                                                        placement="top-start"
-                                                    >
-                                                        <el-button
-                                                            type="danger"
-                                                            icon="el-icon-delete"
-                                                            @click="
-                                                                cancelOrden(
-                                                                    ord_row.id
-                                                                )
-                                                            "
-                                                            circle
-                                                            size="mini"
-                                                        >
+                                                </el-button-group>
+                                                <el-button-group>
+                                                    <el-tooltip effect="dark" content="Cancelar pedido"
+                                                        placement="top-start">
+                                                        <el-button type="danger" icon="el-icon-delete" @click="
+                                                            cancelOrden(
+                                                                ord_row.id
+                                                            )
+                                                            " style="width: 58px;" size="mini">
                                                         </el-button>
                                                     </el-tooltip>
                                                 </el-button-group>
                                             </div>
-                                            <div
-                                                class="col-md-12"
-                                                v-if="ord_row.observations"
-                                            >
-                                                <small
-                                                    >OBS:
+                                            <div class="col-md-12" v-if="ord_row.observations">
+                                                <small>OBS:
                                                     {{
                                                         ord_row.observations
-                                                    }}</small
-                                                >
+                                                    }}</small>
                                             </div>
                                         </div>
                                     </div>
@@ -239,20 +153,14 @@
                         </div>
                     </div>
 
-                    <div
-                        v-if="ordens.length > 0"
-                        class="row d-flex flex-row p-2"
-                    >
+                    <div v-if="ordens.length > 0" class="row d-flex flex-row p-2">
                         <div class="col-12 d-flex justify-content-end">
                             <el-button-group>
                                 <el-button type="success" @click="printTicket">
                                     <i class="icofont-printer"></i> Imprimir
                                     ticket
                                 </el-button>
-                                <el-button
-                                    type="danger"
-                                    @click="cancelGeneralOrden"
-                                >
+                                <el-button type="danger" @click="cancelGeneralOrden">
                                     <i class="icofont-close-line"></i> Cancelar
                                 </el-button>
                             </el-button-group>
@@ -264,16 +172,10 @@
                     <div class="col-12">
                         <p class="h4 txt-info p-10 txt-primary f-w-700">
                             <i class="icofont icofont-fork-and-knife"></i>
-                            <a
-                                class="badge badge bg-dark text-white"
-                                href="javascript:void(0)"
-                            >
-                                <template
-                                    v-if="
-                                        localOrden.length > 0 &&
-                                            localOrden.length <= 9
-                                    "
-                                >
+                            <a class="badge badge bg-dark text-white" href="javascript:void(0)">
+                                <template v-if="localOrden.length > 0 &&
+                                    localOrden.length <= 9
+                                    ">
                                     0{{ localOrden.length }}
                                 </template>
                                 <template v-else>
@@ -283,65 +185,37 @@
                             Ordenes Pendiente
                         </p>
                     </div>
-                    <div
-                        class="col-md-12"
-                        v-for="(order_pend, idx) in localOrden"
-                        :key="idx"
-                    >
+                    <div class="col-md-12" v-for="(order_pend, idx) in localOrden" :key="idx">
                         <div class="card mb-2" id="card">
                             <div class="row">
                                 <div class="col-auto">
-                                    <template
-                                        v-if="
-                                            order_pend.food.image ==
-                                                'imagen-no-disponible.jpg'
-                                        "
-                                    >
-                                        <img
-                                            src="/images/comida.png"
-                                            alt="User Img"
-                                            class="card-img card-img-horizontal h-100 thumbail"
-                                        />
+                                    <template v-if="order_pend.food.image ==
+                                        'imagen-no-disponible.jpg'
+                                        ">
+                                        <img src="/images/imagen-no-disponible.jpg" alt="User Img"
+                                            class="card-img card-img-horizontal h-100 thumbail" />
                                     </template>
                                     <template v-else>
-                                        <img
-                                            :src="
-                                                formatUrlImage(
-                                                    order_pend.food.image
-                                                )
-                                            "
-                                            class="card-img card-img-horizontal h-100 thumbail"
-                                        />
+                                        <img :src="formatUrlImage(
+                                            order_pend.food.image
+                                        )
+                                            " class="card-img card-img-horizontal h-100 thumbail" />
                                     </template>
                                 </div>
-                                <div
-                                    class="col position-relative h-100 p-0 m-0"
-                                >
+                                <div class="col position-relative h-100 p-0 m-0">
                                     <div class="card-body p-1">
                                         <div class="row h-100">
-                                            <div
-                                                class="col-12 mb-md-0 d-flex align-items-center"
-                                            >
+                                            <div class="col-12 mb-md-0 d-flex align-items-center">
                                                 <div class="pt-0 pb-0 pe-2">
-                                                    <div
-                                                        class="h6 mb-0 clamp-line"
-                                                        data-line="1"
-                                                    >
+                                                    <div class="h6 mb-0 clamp-line" data-line="1">
                                                         {{
                                                             order_pend.food.description.toUpperCase()
                                                         }}
-                                                        <span
-                                                            v-if="
-                                                                order_pend.type_id
-                                                            "
-                                                            class="text-primary"
-                                                        >
-                                                            <small
-                                                                ><strong
-                                                                    >*{{
-                                                                        order_pend.type_description
-                                                                    }}</strong
-                                                                >
+                                                        <span v-if="order_pend.type_id
+                                                                " class="text-primary">
+                                                            <small><strong>*{{
+                                                                order_pend.type_description
+                                                            }}</strong>
                                                             </small>
                                                         </span>
                                                     </div>
@@ -350,133 +224,82 @@
                                         </div>
 
                                         <div class="row h-100">
-                                            <div
-                                                class="col-5 mb-md-0 d-flex align-items-center"
-                                            >
-                                                <div
-                                                    class="input-group spinner"
-                                                    data-trigger="spinner"
-                                                >
-                                                    <input
-                                                        type="text"
-                                                        :disabled="true"
-                                                        class="form-control text-center"
-                                                        v-model="
-                                                            order_pend.quantity
-                                                        "
-                                                        data-rule="currency"
-                                                        @change="
-                                                            verifyStock(
-                                                                order_pend,
+                                            <div class="col-5 mb-md-0 d-flex align-items-center">
+                                                <div class="input-group spinner" data-trigger="spinner">
+                                                    <input type="text" :disabled="true" class="form-control text-center"
+                                                        v-model="order_pend.quantity
+                                                            " data-rule="currency" @change="
+                                                                    verifyStock(
+                                                                        order_pend,
+                                                                        idx
+                                                                    )
+                                                                    " />
+                                                    <div class="input-group-text">
+                                                        <button type="button" class="spin-up" data-spin="up" @click="
+                                                            sumar_orden(
+                                                                idx,
+                                                                parseInt(
+                                                                    order_pend
+                                                                        .food
+                                                                        .item
+                                                                        .stock
+                                                                )
+                                                            )
+                                                            ">
+                                                            <span class="arrow"></span>
+                                                        </button>
+                                                        <button type="button" class="spin-down" data-spin="down" @click="
+                                                            restar_orden(
                                                                 idx
                                                             )
-                                                        "
-                                                    />
-                                                    <div
-                                                        class="input-group-text"
-                                                    >
-                                                        <button
-                                                            type="button"
-                                                            class="spin-up"
-                                                            data-spin="up"
-                                                            @click="
-                                                                sumar_orden(
-                                                                    idx,
-                                                                    parseInt(
-                                                                        order_pend
-                                                                            .food
-                                                                            .item
-                                                                            .stock
-                                                                    )
-                                                                )
-                                                            "
-                                                        >
-                                                            <span
-                                                                class="arrow"
-                                                            ></span>
-                                                        </button>
-                                                        <button
-                                                            type="button"
-                                                            class="spin-down"
-                                                            data-spin="down"
-                                                            @click="
-                                                                restar_orden(
-                                                                    idx
-                                                                )
-                                                            "
-                                                        >
-                                                            <span
-                                                                class="arrow"
-                                                            ></span>
+                                                            ">
+                                                            <span class="arrow"></span>
                                                         </button>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div
-                                                class="col-4 d-flex justify-content-start justify-content-md-start align-items-center p-1"
-                                            >
-                                                <div
-                                                    class="h6 mb-0"
-                                                    style="margin-right:3px;"
-                                                >
+                                                class="col-4 d-flex justify-content-start justify-content-md-start align-items-center p-1">
+                                                <div class="h6 mb-0" style="margin-right:3px;">
                                                     S/
                                                     {{ order_pend.price }}
                                                 </div>
-                                                <el-tag
-                                                    v-if="
-                                                        configuration.restaurant
-                                                    "
-                                                    @click="toCarry(idx)"
-                                                    size="medium"
-                                                    role="button"
-                                                    :type="
-                                                        order_pend.to_carry
-                                                            ? 'success'
-                                                            : 'info'
-                                                    "
-                                                >
-                                                    Para llevar
-                                                </el-tag>
+                                                
                                             </div>
                                             <div
-                                                class="col-3 d-flex justify-content-start justify-content-md-start align-items-center p-1"
-                                            >
-                                                <el-button-group>
-                                                    <el-button
-                                                        class="text-white"
-                                                        type="danger"
-                                                        icon="el-icon-delete"
-                                                        circle
-                                                        @click="deleteFood(idx)"
-                                                    >
-                                                    </el-button>
-                                                    <el-button
-                                                        class="text-white"
-                                                        type="info"
-                                                        icon="el-icon-s-order"
-                                                        circle
-                                                        @click="
-                                                            openLocalObservationDialog(
-                                                                idx,
-                                                                order_pend.observation
-                                                            )
-                                                        "
-                                                    >
-                                                    </el-button>
-                                                </el-button-group>
+                                                class="row mt-2"> 
+                                                <div class="col-4  ">
+                                                    <el-tag v-if="configuration.restaurant
+                                                        " @click="toCarry(idx)" size="medium" role="button" :type="order_pend.to_carry
+                                                                                        ? 'success'
+                                                                                        : 'info'
+                                                                                    ">
+                                                        Para llevar
+                                                    </el-tag>
+                                                </div>
+                                                <div class="col-4">
+                                                    <el-button-group>
+                                                        <el-button class="text-white" type="danger" size="small" icon="el-icon-delete" 
+                                                            @click="deleteFood(idx)" style="width: 58px;">
+                                                        </el-button>
+                                                        <el-button class="text-white" size="small"  type="info" icon="el-icon-s-order" 
+                                                            @click="
+                                                                openLocalObservationDialog(
+                                                                    idx,
+                                                                    order_pend.observation
+                                                                )
+                                                                " style="width: 58px;">
+                                                        </el-button>
+                                                    </el-button-group>
+                                                </div>
                                             </div>
                                         </div>
-                                        <div
-                                            class="row mt-1"
-                                            v-if="order_pend.observation"
-                                        >
+                                        <div class="row mt-1" v-if="order_pend.observation">
                                             <div class="col-md-12">
-                                                <small
-                                                    >OBS.:
+                                                <small>OBS.:
                                                     {{
                                                         order_pend.observation
-                                                    }}</small
-                                                >
+                                                    }}</small>
                                             </div>
                                         </div>
                                     </div>
@@ -490,12 +313,7 @@
             <div class="row p-2" v-if="localOrden.length != 0">
                 <div class="col-12 f-w-700 text-end pt-2 pb-2">
                     <label class="control-label w-100">Todo para llevar </label>
-                    <el-switch
-                        v-model="to_carry"
-                        active-text="Si"
-                        inactive-text="No"
-                        @change="allToCarry"
-                    ></el-switch>
+                    <el-switch v-model="to_carry" active-text="Si" inactive-text="No" @change="allToCarry"></el-switch>
                 </div>
                 <div class="col-12 d-flex justify-content-end">
                     <button @click="submit" class="btn btn-success btn-sm">
@@ -504,10 +322,7 @@
                 </div>
             </div>
 
-            <div
-                v-if="ordens.length > 0 || localOrden.length > 0"
-                class="d-flex flex-column p-2 text-black"
-            >
+            <div v-if="ordens.length > 0 || localOrden.length > 0" class="d-flex flex-column p-2 text-black">
                 <div class="row p-r-10 ">
                     <div class="col-12 f-w-700 text-end p-t-5">
                         POR ATENDER S/ {{ totalOrden.toFixed(2) }}
@@ -523,13 +338,8 @@
                 </div>
             </div>
         </div>
-        <el-dialog
-            v-loading="deleteOrdenLoading"
-            width="450px"
-            :visible.sync="showPinRequest"
-            title="Ingrese su PIN"
-            append-to-body
-        >
+        <el-dialog v-loading="deleteOrdenLoading" width="450px" :visible.sync="showPinRequest" title="Ingrese su PIN"
+            append-to-body>
             <div class="row mt-1">
                 <h5>
                     Para poder eliminar la orden debe ingresar un motivo y su
@@ -538,46 +348,23 @@
             </div>
             <div class="row mt-1">
                 <div class="col-12">
-                    <el-input
-                        v-model="reasonToDelete"
-                        placeholder="Ingrese un motivo"
-                        type="textarea"
-                        maxlength="200"
-                        show-word-limit
-                    ></el-input>
+                    <el-input v-model="reasonToDelete" placeholder="Ingrese un motivo" type="textarea" maxlength="200"
+                        show-word-limit></el-input>
                 </div>
             </div>
             <div class="row mt-2 d-flex justify-content-center">
                 <div class="col-8 ">
-                    <el-input
-                        v-model="pin"
-                        placeholder="Ingrese su PIN"
-                        type="password"
-                        maxlength="4"
-                        readonly
-                    ></el-input>
+                    <el-input v-model="pin" placeholder="Ingrese su PIN" type="password" maxlength="4" readonly></el-input>
                 </div>
                 <div class="col-12 d-flex flex-wrap justify-content-center">
-                    <el-button
-                        v-for="num in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]"
-                        :key="num"
-                        class="m-2"
-                        @click="generatePin(num)"
-                        >{{ num }}</el-button
-                    >
-                    <el-button
-                        @click="pin = ''"
-                        class="m-2"
-                        type="danger"
-                        icon="el-icon-delete"
-                    ></el-button>
+                    <el-button v-for="num in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]" :key="num" class="m-2"
+                        @click="generatePin(num)">{{ num }}</el-button>
+                    <el-button @click="pin = ''" class="m-2" type="danger" icon="el-icon-delete"></el-button>
                 </div>
             </div>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="showPinRequest = false">Cancelar</el-button>
-                <el-button type="primary" @click="cancelOrdenaPin"
-                    >Eliminar</el-button
-                >
+                <el-button type="primary" @click="cancelOrdenaPin">Eliminar</el-button>
             </div>
         </el-dialog>
     </div>
@@ -648,7 +435,7 @@ export default {
             this.calculateTotal(newOrdens);
         }
     },
-    mounted() {},
+    mounted() { },
     methods: {
         addNumberPin(number) {
             if (this.pin.length >= 4) {
@@ -718,7 +505,7 @@ export default {
                     localOrden_quantity[index].quantity = 1;
                     this.$alert(
                         "Stock Insuficiente..... <br> Stock Disponible: " +
-                            parseInt(stock_disp),
+                        parseInt(stock_disp),
                         "Aviso de Advertencia",
                         {
                             dangerouslyUseHTMLString: true,
@@ -851,21 +638,21 @@ export default {
         open_orders() {
             $(".style-switcher").hasClass("active")
                 ? $(".style-switcher")
-                      .animate(
-                          {
-                              right: "-" + $(".style-switcher").width() + "px"
-                          },
-                          300
-                      )
-                      .removeClass("active")
+                    .animate(
+                        {
+                            right: "-" + $(".style-switcher").width() + "px"
+                        },
+                        300
+                    )
+                    .removeClass("active")
                 : $(".style-switcher")
-                      .animate(
-                          {
-                              right: "0"
-                          },
-                          300
-                      )
-                      .addClass("active");
+                    .animate(
+                        {
+                            right: "0"
+                        },
+                        300
+                    )
+                    .addClass("active");
         },
         view_orders() {
             $(".style-switcher")
@@ -962,15 +749,15 @@ export default {
                 };
                 const response = await this.$http.post("cancel-orden", form);
                 if (response.status == 200) {
-                    const { message,success } = response.data;
-                    if(success){
-                    this.$toast.success(message);
-                    this.$eventHub.$emit("reloadData");
-                    this.$emit("ordenDeleted");
-                    this.deleteGeneralOrden = false;
-                    this.showPinRequest = false;
-                    this.reasonToDelete = null;
-                    }else{
+                    const { message, success } = response.data;
+                    if (success) {
+                        this.$toast.success(message);
+                        this.$eventHub.$emit("reloadData");
+                        this.$emit("ordenDeleted");
+                        this.deleteGeneralOrden = false;
+                        this.showPinRequest = false;
+                        this.reasonToDelete = null;
+                    } else {
                         this.$toast.error(message);
                     }
                 }
@@ -989,7 +776,7 @@ export default {
                 this.cancelGeneralOrdenPin();
             } else {
                 try {
-                  
+
 
                     let res = await this.$confirm(
                         "Desea cancelar toda la orden?",
@@ -1001,7 +788,7 @@ export default {
                         }
                     );
                     if (res) {
-                          this.loading = true;
+                        this.loading = true;
                         let form = {
                             id: this.ordens[0].orden_id
                         };
@@ -1032,14 +819,14 @@ export default {
             this.totalOrden = 0.0;
             let OrdenPen = 0;
             let OrdenPenAtendidos = 0;
-            let nTotal_poratendidos = _.forEach(this.localOrden, function(
+            let nTotal_poratendidos = _.forEach(this.localOrden, function (
                 value
             ) {
                 OrdenPen =
                     parseFloat(OrdenPen) + value.quantity * value.food.price;
             });
             this.totalOrden = _.round(OrdenPen, 2);
-            let nTotal_atendidos = _.forEach(this.ordens, function(values) {
+            let nTotal_atendidos = _.forEach(this.ordens, function (values) {
                 OrdenPenAtendidos =
                     parseFloat(OrdenPenAtendidos) +
                     values.quantity * values.food.price;

@@ -4231,12 +4231,7 @@ export default {
                 icon: "fas fa-history ",
                 visible: true
             },
-            {
-                id: 8,
-                title: ["Listar Productos "],
-                icon: "fas fa-cart-plus",
-                visible: true
-            },
+            
             {
                 id: 9,
                 title: ["Matriculas", "Mensualidades"],
@@ -4407,12 +4402,7 @@ export default {
                 icon: "fas fa-history ",
                 visible: true
             },
-            {
-                id: 8,
-                title: ["Listar Productos "],
-                icon: "fas fa-cart-plus",
-                visible: true
-            },
+            
             {
                 id: 9,
                 title: ["Matriculas", "Mensualidades"],

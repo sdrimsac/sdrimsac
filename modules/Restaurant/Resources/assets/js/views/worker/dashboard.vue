@@ -3,7 +3,7 @@
         <!-- Title and Top Buttons Start -->
         <div class="page-title-container mb-0">
             <div class="row">
-                <div class="col-12 col-sm-2">
+                <div class="col-12 col-sm-5">
                     <h1 class="mb-1 pb-0 display-4 user_online">
                         <div class="btn-group">
                             <div class="dropdown">
@@ -67,12 +67,12 @@
                         </ul>
                     </nav>
                 </div>
-                <div class="col-12 col-sm-4 pt-2 pb-2" v-if="show == 'create'">
+                <div class="col-12 col-sm-6 pt-2 pb-2" v-if="show == 'create'&& screenWidth > 678">
                     <template>
                         <span slot="label">
                             <i class="fas fa-list"></i>
                             <template v-if="optionsSelected == 0">
-                                Buscar por Nombre del Producto
+                                Buscar por Nombre del Productoooo
                             </template>
                             <template v-else>
                                 Buscar por Codigo Interno Producto
@@ -94,7 +94,7 @@
                         </el-input>
                     </template>
                 </div>
-                <div class="col-12 col-sm-4 pt-2 pb-2" v-if="show == 'create'">
+                <div class="col-12 col-sm-6 pt-2 pb-2" v-if="show == 'create' && screenWidth > 678">
                     <template>
                         <span slot="label">
                             <i class="fas fa-list"></i> Categoria de
@@ -138,7 +138,7 @@
             <detail-orden ref="detailRef" :configuration="configuration" :table.sync="currentTable"
                 :categories="categories" :showMenu.sync="showMenu" :tables_row_select.sync="tables_row_select"
                 :foods.sync="foods" :pagination="pagination" @addenfoque="focus" @add="tablesrowselect"
-                @changePage="changePage">
+                @changePage="changePage" @searchOrden="searchitem_modal" :category.sync="category">
             </detail-orden>
         </template>
     </div>
@@ -204,6 +204,7 @@ export default {
     ],
     data() {
         return {
+            screenWidth: 0,
             allFoods: [],
             listFoods: [],
             pagination: {},
@@ -257,6 +258,10 @@ export default {
     },
 
     mounted() {
+        
+        this.screenWidth = window.innerWidth;
+        window.addEventListener("resize", this.handleResize);
+    
         Echo.channel("orden_delete").listen(
             `.order-delete-${this.configuration.socket_channel}`,
             e => {
@@ -357,10 +362,26 @@ export default {
         });
     },
     methods: {
+        handleResize() {
+            this.screenWidth = window.innerWidth;
+            
+        },
         async changePage(currentPage) {
             this.pagination.current_page = currentPage;
             await this.search_items();
         },
+        async searchitem_modal(item){
+            
+            if(item==null) {item = ''}
+            let inputitem = item.toLowerCase();
+            let form = {
+                value: inputitem,
+                category: this.category
+            };
+
+            await this.getFoods(this.getQueryParameters(form));
+        },
+
         async search_items() {
             
             if(this.item==null) {this.item = ''}

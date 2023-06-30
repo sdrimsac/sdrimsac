@@ -5,6 +5,8 @@
         @close="close"
         @open="open"
         :visible="showDialog"
+        title="Agregar Observacion"
+        style="min-width: 500px;"
     >
         <div class="d-flex flex-column" style="margin-top:15px">
             <el-input readonly v-model="observation"> </el-input>
@@ -23,7 +25,7 @@
                 <template v-if="tags.length == 0">
                     <el-tag type="danger" :disable-transitions="true">
                         <span
-                            >NO EXISTE SU OBSERVACIÓN, PULSE
+                            > PRECIONE
                             <b>+ AGREGAR</b> PARA GUARDARLA
                         </span>
                     </el-tag>
