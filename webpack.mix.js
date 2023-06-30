@@ -24,6 +24,10 @@ mix.webpackConfig({
             // '@viewsModuleAccount': path.resolve(__dirname, 'modules/Account/Resources/assets/js/views'),
             "@helpers": path.resolve(__dirname, "resources/js/helpers"),
             "@mixins": path.resolve(__dirname, "resources/js/mixins"),
+            "@viewsModuleConsignment" : path.resolve(
+                __dirname,
+                "modules/Consignment/Resources/assets/js/views"
+            ),
             "@viewsModuleSale": path.resolve(
                 __dirname,
                 "modules/Sale/Resources/assets/js/views"

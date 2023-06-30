@@ -1356,7 +1356,10 @@ export default {
                         this.form.includes == 0 ||
                         this.form.includes == false
                     ) {
-                        if (row.unit_price_igv === 0) {
+                        if (
+                            row.unit_price_igv === 0 ||
+                            row.unit_price_igv === undefined
+                        ) {
                             let igv_item = row.unit_price * row.quantity;
                             row.unit_price_igv =
                                 igv_item * (this.percentage_igv / 100);

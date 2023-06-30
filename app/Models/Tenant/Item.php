@@ -13,7 +13,7 @@ use Modules\Item\Models\CategoryItem;
 use Modules\Item\Models\Brand;
 use Modules\Item\Models\ItemLot;
 use Modules\Item\Models\ItemLotsGroup;
-
+use Modules\Restaurant\Models\Food;
 
 class Item extends ModelTenant
 {
@@ -81,6 +81,11 @@ class Item extends ModelTenant
             $builder->where('active', 1);
         });
     }*/
+
+    public function food(){
+        return $this->hasOne(Food::class);
+    }
+
     public function getDataWarehouses()
     {
         return collect($this->warehouses)->transform(function ($row) {
@@ -88,6 +93,7 @@ class Item extends ModelTenant
                 'warehouse_description' => $row->warehouse->description,
                 'stock' => $row->stock,
                 'warehouse_id' => $row->warehouse_id,
+                'id' => $row->id,
             ];
         });
     }

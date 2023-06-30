@@ -322,6 +322,27 @@
                 </li>
             @endif
         @endif
+        {{-- consignación --}}
+        {{-- <li>
+            <a href="#consignment" data-bs-toggle="collapse" data-role="button"
+                aria-expanded="{{ $path[0] === 'consignment' ? true : false }}{{ $path[0] === 'summaries' ? true : false }}{{ $path[0] === 'voided' ? true : false }}{{ $path[0] === 'sale-notes' ? true : false }}{{ $path[0] === 'brands' ? true : false }}{{ $path[0] === 'order-notes' ? true : false }}"
+                class="{{ $path[0] === 'consignment' ? 'active' : '' }}{{ $path[0] === 'summaries' ? 'active' : '' }}{{ $path[0] === 'voided' ? 'active' : '' }}{{ $path[0] === 'sale-notes' ? 'active' : '' }}{{ $path[0] === 'brands' ? 'active' : '' }}{{ $path[0] === 'order-notes' ? 'active' : '' }}"
+                data-clicked="{{ $path[0] === 'consignment' ? true : false }}{{ $path[0] === 'items' ? true : false }}{{ $path[0] === 'persons' && $path[1] === 'customers' ? true : false }}{{ $path[0] === 'summaries' ? true : false }}{{ $path[0] === 'voided' ? true : false }}{{ $path[0] === 'sale-notes' ? true : false }}{{ $path[0] === 'brands' ? true : false }}{{ $path[0] === 'order-notes' ? true : false }}">
+                <i class="icofont-files-stack icon-parent"></i>
+                <span class="label">Consignación</span>
+            </a>
+            <ul id="consigment" class="collapse ">
+                 <li>
+                        <a class="{{ $path[0] === 'consigment' && $path[1] != 'create' && $path[1] != 'not-sent' ? 'active' : '' }}"
+                            href="{{ route('tenant.consignment.index') }}">
+                            <i class="icofont-list"></i> Listado
+                        </a>
+                    </li>
+            
+
+            </ul>
+        </li> --}}
+        {{-- ***************** --}}
         <li>
             <a href="#documents" data-bs-toggle="collapse" data-role="button"
                 aria-expanded="{{ $path[0] === 'documents' ? true : false }}{{ $path[0] === 'summaries' ? true : false }}{{ $path[0] === 'voided' ? true : false }}{{ $path[0] === 'sale-notes' ? true : false }}{{ $path[0] === 'brands' ? true : false }}{{ $path[0] === 'order-notes' ? true : false }}"
@@ -679,6 +700,12 @@
                         <a class="{{ $path[0] === 'restaurant' && $path[1] === 'status-tables' ? 'active' : '' }}"
                             href="{{ route('restaurant.status_table') }}">
                             <i class="icofont-dining-table"></i> Estados de mesas
+                        </a>
+                    </li>
+                    <li>
+                        <a class="{{ $path[0] === 'restaurant' && $path[1] === 'status-tables' ? 'active' : '' }}"
+                            href="{{ route('tenant.items.check_stock') }}">
+                            <i class="icofont-search-stock"></i> Verificar Stock
                         </a>
                     </li>
 
