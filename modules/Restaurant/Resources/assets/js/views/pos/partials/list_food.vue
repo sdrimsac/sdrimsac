@@ -70,7 +70,7 @@
                                         justify-content-between
                                         p-1
                                         "
-                                style="height: 112px;"
+                                style="height: 130px;"
                             >
                                 <div @click="addFood(index)">
                                     <div>
