@@ -138,6 +138,8 @@ class PosController extends Controller
     }
     public function foods(Request $request)
     {
+        
+        $datafoods = $request->all();
 
         $category_id = $request->category;
         $value = $request->value;
@@ -173,8 +175,14 @@ class PosController extends Controller
                 });
             }
         }
+        if (empty($datafoods)){
+            
+            return new FoodCollection($foods->paginate(50));
+        }else{
+            return new FoodCollection($foods->paginate(100));
+        }
 
-        return new FoodCollection($foods->paginate(18));
+        
 
         //  return Food::all();
         //     return new InventoryCollection($reports->paginate(config('tenant.items_per_page')));
