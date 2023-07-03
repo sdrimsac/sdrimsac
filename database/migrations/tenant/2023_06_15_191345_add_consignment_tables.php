@@ -21,6 +21,7 @@ class AddConsignmentTables extends Migration
             $table->increments('id');
             $table->unsignedInteger('person_id');
             $table->date('date_of_issue');
+            $table->date('date_of_end');
             $table->unsignedInteger('penalty_id')->nullable();
             $table->boolean('active')->default(true);
             $table->timestamps();
@@ -30,14 +31,17 @@ class AddConsignmentTables extends Migration
         Schema::create('consignment_items', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('consignment_id');
+            $table->unsignedInteger('establishment_id');
             $table->unsignedInteger('item_id');
             $table->decimal('original_quantity');
+            $table->decimal('price');
             $table->decimal('selled_quantity')->nullable();
             $table->decimal('return_quantity')->nullable();
             $table->decimal('lost_quantity')->nullable();
             $table->boolean('active')->default(true);
             $table->timestamps();
             $table->foreign('consignment_id')->references('id')->on('consignments')->onDelete('cascade');
+            $table->foreign('establishment_id')->references('id')->on('establishments')->onDelete('cascade');
             $table->foreign('item_id')->references('id')->on('items')->onDelete('cascade');
         });
         Schema::create('consigment_item_lots', function(Blueprint $table){
