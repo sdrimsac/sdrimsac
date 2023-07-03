@@ -1,8 +1,8 @@
 <header class="header" style="left:0;">
     <div class="logo-container">
         <a href="{{route('system.dashboard')}}" class="logo pt-2 pt-md-0">
-            @if (file_exists(public_path('theme/logo.svg')))
-                <img class="uk-logo-inverse" width="100" height="auto" src="{{asset('theme/logo.svg')}}" alt="Logo"/>
+            @if (file_exists(public_path('acorn/img/profile/store.png')))
+                <img class="uk-logo-inverse" width="100" height="auto" src="{{asset('acorn/img/profile/store.png')}}" alt="Logo"/>
             @else
                 <i class="fa fa-circle fa-3x"></i>
             @endif

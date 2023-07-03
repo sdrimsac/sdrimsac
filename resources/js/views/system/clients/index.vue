@@ -232,15 +232,17 @@
                         <thead>
                         <tr>
                             <th class="">#</th>
+                            <th class="text-center">Bloquear cuenta</th>
                             <th class="">Hostname</th>
                             <th>Nombre</th>
                             <th>RUC</th>
+                            <th class="text-right">Inicio Ciclo Facturacion</th>
                             <th>Plan</th>
                             <th>Correo</th>
                             <th>Entorno</th>
                             <th class="text-center">Total de Comprobantes</th>
                             <th class="text-center">Notificaciones</th>
-                            <th class="text-right">Inicio Ciclo Facturacion</th>
+                            
                             <th class="text-center">Comprobantes Ciclo Facturacion</th>
                             <th class="text-center">Usuarios</th>
 
@@ -255,22 +257,7 @@
                             <th class="text-center">Cant.Notas de venta</th>
                             <th class="text-center">Total<br>(Comprobantes <br>y <br>notas de venta)</th>
 
-                            <th class="text-center">Bloquear cuenta</th>
-
-                            <th class="text-right">Limitar Doc.</th>
-                            <th class="text-center">Limitar Usuarios</th>
-
-                            <th class="text-center">Limitar Establecimientos</th>
-
-                            <th class="text-center">
-                                <el-tooltip class="item"
-                                    content="Límite de ventas mensual asociado al ciclo de facturación"
-                                    effect="dark"
-                                    placement="top">
-                                    <label>Limitar Ventas (Mes)</label>
-                                </el-tooltip>
-                            </th>
-
+                            
 
                             <th class="text-right">Acciones</th>
                             <th class="text-right">Pagos</th>
@@ -282,6 +269,15 @@
                         <tr v-for="(row, index) in records"
                             :key="index">
                             <td class="">{{ index + 1 }}</td>
+                            <td class="text-center">
+                                <template v-if="!row.locked">
+                                    <el-switch
+                                        v-model="row.locked_tenant"
+                                        style="display: block"
+                                        @change="changeLockedTenant(row)"
+                                    ></el-switch>
+                                </template>
+                            </td>
                             <td class="">
                                 <!-- {{ row.hostname }} -->
                                 <a :href="`http://${row.hostname}`"
@@ -290,6 +286,21 @@
                             </td>
                             <td >{{ row.name }}</td>
                             <td>{{ row.number }}</td>
+                            <td>
+                                <template v-if="row.start_billing_cycle">
+                                    <span></span>
+                                    <span>{{ row.start_billing_cycle }}</span>
+                                </template>
+                                <template v-else>
+                                    <el-date-picker
+                                        v-model="row.select_date_billing"
+                                        placeholder="..."
+                                        type="date"
+                                        value-format="yyyy-MM-dd"
+                                        @change="setStartBillingCycle($event, row.id)"
+                                    ></el-date-picker>
+                                </template>
+                            </td>
                             <td>{{ row.plan }}</td>
                             <td>{{ row.email }}</td>
                             <td>
@@ -342,21 +353,7 @@
                                 </el-tooltip>
 
                             </td>
-                            <td>
-                                <template v-if="row.start_billing_cycle">
-                                    <span></span>
-                                    <span>{{ row.start_billing_cycle }}</span>
-                                </template>
-                                <template v-else>
-                                    <el-date-picker
-                                        v-model="row.select_date_billing"
-                                        placeholder="..."
-                                        type="date"
-                                        value-format="yyyy-MM-dd"
-                                        @change="setStartBillingCycle($event, row.id)"
-                                    ></el-date-picker>
-                                </template>
-                            </td>
+                            
                             <td class="text-center">
                                 <strong>
                                     {{ row.count_doc_month ? row.count_doc_month : 0 }} /
@@ -429,48 +426,7 @@
                             <td class="text-center"><strong>{{ row.count_sales_notes }}</strong></td>
                             <td class="text-center"><strong>{{ row.count_doc_month + row.count_sales_notes_month }}</strong></td>
 
-                            <td class="text-center">
-                                <template v-if="!row.locked">
-                                    <el-switch
-                                        v-model="row.locked_tenant"
-                                        style="display: block"
-                                        @change="changeLockedTenant(row)"
-                                    ></el-switch>
-                                </template>
-                            </td>
-
-                            <td class="text-center">
-                                <el-switch
-                                    v-model="row.locked_emission"
-                                    style="display: block"
-                                    @change="changeLockedEmission(row)"
-                                ></el-switch>
-                            </td>
-
-                            <td class="text-center">
-                                <el-switch
-                                    v-model="row.locked_users"
-                                    style="display: block"
-                                    @change="changeLockedUser(row)"
-                                ></el-switch>
-                            </td>
-
-                            <td class="text-center">
-                                <el-switch
-                                    v-model="row.locked_create_establishments"
-                                    style="display: block"
-                                    @change="changeLockedByColumn(row, 'locked_create_establishments')"
-                                ></el-switch>
-                            </td>
-
-                            <td class="text-center">
-                                <el-switch
-                                    v-model="row.restrict_sales_limit"
-                                    style="display: block"
-                                    @change="changeLockedByColumn(row, 'restrict_sales_limit')"
-                                ></el-switch>
-                            </td>
-
+                            
                             <td class="text-right">
                                 <template v-if="!row.locked">
                                     <el-tooltip content="Se ingresa con el RUC"
