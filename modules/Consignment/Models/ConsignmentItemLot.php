@@ -5,8 +5,9 @@ namespace Modules\Consignment\Models;
 
 use App\Models\Tenant\ModelTenant;
 
-class ConsignmentItem extends ModelTenant
+class ConsignmentItemLot extends ModelTenant
 {
+    public $timestamps = false;
     protected $table = 'consigment_item_lots'; 
     protected $fillable = [
         'consignment_item_id',

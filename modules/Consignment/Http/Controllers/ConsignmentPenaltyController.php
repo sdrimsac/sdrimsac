@@ -36,6 +36,7 @@ class ConsignmentPenaltyController extends Controller
         $consignment->save();
         return [
             'success' => true,
+            'id' => $consignment->id,
             'message' => $id ? 'Penalidad editada con éxito' : 'Penalidad registrada con éxito'
         ];
     }

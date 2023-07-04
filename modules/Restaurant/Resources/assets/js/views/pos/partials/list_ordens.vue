@@ -337,6 +337,39 @@
                                     <div></div>
                                 </el-button>
                             </div>
+                             <div class="col-12">
+                                <el-button v-if="configuration.consignment &&
+                                            localOrden.length != 0
+                                            "
+                                        class="btn btn-light
+                                            m-1
+                                            rounded
+                                            d-flex
+                                            flex-column
+                                            align-items-center
+                                            justify-content-center
+                                            col-12
+                                            "
+                                        type="button"
+                                        @click="openConsignment"
+                                        style="max-height: 45px ;max-width: 150px;"
+                                    
+                                >
+                                    <div
+                                        class="text-center"
+                                        style="margin-bottom: 2px"
+                                    >
+                                        <span
+                                            style="margin: 0 !important; padding: 0 !important"
+                                            
+                                        >
+                                        Consignar
+                                        </span><i class="fas fa-clipboard-list" style="color: var(--primary) !important"></i>
+                                        
+                                    </div>
+                                    <div></div>
+                                </el-button>
+                            </div>
                             <div class="col-12">
                                 <el-button v-if="configuration.credits && localOrden.length != 0"
                                 @click="openCredit"
@@ -1876,7 +1909,17 @@
                     >Eliminar</el-button
                 >
             </div>
+         
         </el-dialog>
+           <consignment-form
+            :showDialog.sync="showConsignmentForm"
+            :items="localOrden"
+            :all_customers="customers"
+            :establishments="establishments"
+            @limpiarForm="limpiarForm"
+            >
+
+            </consignment-form>
     </div>
 </template>
 <style>
@@ -1913,6 +1956,7 @@
 
 </style>
 <script>
+const ConsignmentForm = () => import("./consignment_modal.vue");
 const QuotationForm = () => import("./quotation_modal.vue");
 const CreditForm = () => import("./credit_modal.vue");
 const CashForm = () => import("../../cash/form.vue");
@@ -1926,6 +1970,7 @@ const ShowLotesProduct = () => import("../partials/show_lotes_product.vue");
 const TransfersModal = () => import("../partials/transfer_modal.vue");
 export default {
     components: {
+        ConsignmentForm,
         CreditForm,
         CashForm,
         CloseCash,
@@ -1962,6 +2007,7 @@ export default {
 
     data() {
         return {
+            showConsignmentForm: false,
             deleteGeneralOrden: false,
             deleteOrdenLoading: false,
             reasonToDelete: null,
@@ -2135,6 +2181,10 @@ export default {
         await this.getTags();
     },
     methods: {
+        openConsignment(){
+            console.log("xd");
+            this.showConsignmentForm = true;
+        },
         async changeQuickSale() {
             let { conf } = this.establishments;
             try {

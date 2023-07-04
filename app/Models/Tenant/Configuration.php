@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Config;
 class Configuration extends ModelTenant
 {
     protected $fillable = [
+        'consignment',
         'view_daily_cash',
         'view_daily_cash_pin',
         'send_whatsapp_daily_cash',
@@ -100,6 +101,7 @@ class Configuration extends ModelTenant
         
     ];
     protected $casts = [
+        'consignment' => 'boolean',
         'commands_fisico' => 'boolean',
         'print_commands'  => 'boolean',
         'restaurant'      => 'boolean',
@@ -357,6 +359,7 @@ class Configuration extends ModelTenant
             'send_whatsapp_daily_cash' => (bool) $this->send_whatsapp_daily_cash,
             'init_stock' =>(bool) $this->init_stock,
             'observation_translate' => (bool)$this->observation_translate,
+            'consignment' => (bool)$this->consignment,
 
         ];
     }

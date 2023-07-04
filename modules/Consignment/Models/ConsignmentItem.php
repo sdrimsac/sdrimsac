@@ -1,8 +1,8 @@
 <?php
 
 namespace Modules\Consignment\Models;
- 
 
+use App\Models\Tenant\Item;
 use App\Models\Tenant\ModelTenant;
 
 class ConsignmentItem extends ModelTenant
@@ -17,5 +17,10 @@ class ConsignmentItem extends ModelTenant
         'lost_quantity',
         'active'
     ];
+
+    
+    public function item(){
+        return $this->belongsTo(Item::class);
+    }
 
 }

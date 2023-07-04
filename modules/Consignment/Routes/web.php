@@ -19,7 +19,7 @@ Route::prefix('consignment')->group(function() {
     Route::get('/', [ConsignmentController::class,'index'])->name('tenant.consignment.index');
     Route::get('/records', [ConsignmentController::class,'records']);
     Route::post('/', [ConsignmentController::class,'store']);
-    Route::get('/items', [ConsignmentController::class,'items']);
+    Route::get('/items/{consignment_id}', [ConsignmentController::class,'items']);
     Route::get('/columns', [ConsignmentController::class,'columns']);
     Route::get('/tables', [ConsignmentController::class,'tables']);
     Route::get('/stock', [ConsignmentController::class,'stock']);

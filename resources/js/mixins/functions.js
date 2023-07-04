@@ -119,8 +119,11 @@ export const functions = {
                 })
                 .then(response => {
                     let data = response.data;
+                   if(data){
+                    data = data.toString();
                     data = data.replace(",", ".");
                     this.percentage_igv = Number(data);
+                   }
                 });
         },
         async getPercentageIgvWithParams(establishment_id, date_of_issue) {
@@ -131,6 +134,7 @@ export const functions = {
                 })
                 .then(response => {
                     let data = response.data;
+                    data = data.toString();
                     data = data.replace(",", ".");
                     this.percentage_igv = Number(data);
                 });
