@@ -105,7 +105,7 @@ class ServiceDispatch
             ));
             $response = curl_exec($curl);
             curl_close($curl);
-
+            Log::info($response . ' getToken_response');
             $data = json_decode($response, true);
 
             if (array_key_exists('access_token', $data)) {
