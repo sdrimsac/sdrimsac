@@ -69,7 +69,7 @@ class StorageHelper
     public function getXmlSigned($filename)
     {
         $folder = $this->getFolder('signed', $filename . '.xml');
-        return Storage::disk()->get($folder);
+        return Storage::disk('tenant')->get($folder);
     }
 
     /*
