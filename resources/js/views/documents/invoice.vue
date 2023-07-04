@@ -2620,9 +2620,13 @@ export default {
                 );
                 if (response.status == 200) {
                     let data = response.data;
-                    data = data.replace(",", ".");
+                    if(data){
+                        data = data.toString();
+                        data = data.replace(",", ".");
+                           this.form.exchange_rate_sale = Number(data);
+                    }
 
-                    this.form.exchange_rate_sale = Number(data);
+                 
                     this.loader = false;
                 }
             } catch (e) {

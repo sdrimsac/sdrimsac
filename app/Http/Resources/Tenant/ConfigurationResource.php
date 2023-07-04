@@ -91,6 +91,7 @@ class ConfigurationResource extends JsonResource
             'send_whatsapp_daily_cash' => (bool) $this->send_whatsapp_daily_cash,
             'init_stock' => (bool) $this->init_stock,
             'observation_translate' => (bool) $this->observation_translate,
+            'consignment' => (bool) $this->consignment,
 
         ];
     }

@@ -47,12 +47,25 @@
                         <tr></tr>
                         <tr slot-scope="{ index, row }">
                             <td>{{ index }}</td>
-                            <td class="text-center"></td>
-                            <td class="text-center"></td>
-                            <td class="text-center"></td>
-                            <td class="text-center"></td>
-                            <td class="text-center"></td>
-                            <td class="text-center"></td>
+                            <td class="text-center">{{row.date_of_issue}}</td>
+                            <td class="text-center">{{row.date_of_end}}</td>
+                            <td class="text-center">{{row.person.name}}
+                                <br>
+                                <small>{{row.person.number}}</small>
+                            </td>
+                            <td class="text-center">
+                                <el-button
+                                @click="clickDetail(row)"
+                                size="mini"
+                                >
+                                    <i class="icofont-eye-alt">
+                                        {{row.stock}}
+                                    </i>
+                                </el-button>
+
+                            </td>
+                            <td class="text-center">{{row.total}}</td>
+                            <td class="text-center">{{row.active ? 'Activo' : 'Desactivado'}}</td>
                         </tr>
                     </data-table>
                 </div>
@@ -61,6 +74,10 @@
     <consignment-form
     :showDialog.sync="showDialog"
     ></consignment-form>
+    <consignment-items
+    :recordId="recordId"
+    :showDialog.sync="showDialogDetail"
+    ></consignment-items>
     </div>
 </template>
 <style>
@@ -72,6 +89,7 @@ td {
 // import DataTable from "./partials/DataTable.vue";
 import DataTable from "./partials/datatable.vue";
 import ConsignmentForm from "./partials/form.vue"
+import ConsignmentItems from "./partials/items.vue"
 import { deletable } from "../../../../../../resources/js/mixins/deletable";
 
 export default {
@@ -79,10 +97,13 @@ export default {
     mixins: [deletable],
     components: {
         DataTable,
-        ConsignmentForm
+        ConsignmentForm,
+        ConsignmentItems
     },
     data() {
         return {
+            showDialogDetail:false,
+            recordId:null,
             showDialog:false,
             resource: "consignment",
             showDialogDetail: false,
@@ -104,7 +125,10 @@ export default {
         
     },
     methods: {
-     
+     clickDetail(row){
+        this.recordId = row.id;
+        this.showDialogDetail = true;
+     },
         clickDownload(external_id) {
             window.open(
                 `/sale-notes/downloadExternal/${external_id}`,

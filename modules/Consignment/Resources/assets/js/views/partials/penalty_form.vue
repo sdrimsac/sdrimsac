@@ -6,6 +6,7 @@
     title="Creación de penalización"
     append-to-body
     width="500px"
+    v-loading="loading"
     >
     <div class="row m-2">
         <div class="col-md-12">
@@ -46,15 +47,24 @@
                 dusk="amount"
             ></el-input>
         </div>
-        <div class="col-md-12 mt-2">
+              
+        <!-- <div class="col-md-12 mt-2">
             <el-button
             type="primary"
             @click="create"
             >
                 Crear
             </el-button>
-        </div>
+        </div> -->
     </div>
+     <div slot="footer" class="dialog-footer">
+            <el-button @click="close">Cancelar</el-button>
+            <el-button
+                type="primary"
+                @click="create"
+                >Guardar</el-button
+            >
+        </div>
     </el-dialog>
 </template>
 
@@ -94,6 +104,9 @@ export default {
                     type:'success',
                     message:'Penalización creada correctamente'
                 })
+                this.$emit('reloadPenalties', response.data.id )
+                this.close();
+
                }
                
             }catch(e){

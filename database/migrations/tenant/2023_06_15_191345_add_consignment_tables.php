@@ -53,6 +53,11 @@ class AddConsignmentTables extends Migration
             $table->boolean('has_lost')->default(false);
             $table->foreign('consignment_item_id')->references('id')->on('consignment_items')->onDelete('cascade');
         });
+
+        Schema::table('configurations', function (Blueprint $table) {
+            $table->boolean('consignment')->default(false);
+
+        });
     }
 
 
@@ -62,5 +67,8 @@ class AddConsignmentTables extends Migration
         Schema::dropIfExists('consignment_items');
         Schema::dropIfExists('consignments');
         Schema::dropIfExists('consignment_penalties');
+        Schema::table('configurations', function (Blueprint $table) {
+            $table->dropColumn('consignment');
+        });
     }
 }

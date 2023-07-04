@@ -192,5 +192,24 @@ class ConsignmentController extends Controller
             ];
         }
     }
-    public function items(){}
+    public function items($consigment_id){
+        $items = ConsignmentItem::where('consignment_id',$consigment_id)->get()
+        ->transform(function ($row){
+
+            return [
+                'id' => $row->id,
+                'name' => $row->item->description,
+                'quantity' => $row->original_quantity,
+                'price' => $row->price,
+                'total' => $row->original_quantity * $row->price,
+                'has_lots' => (bool)$row->item->series_enabled,
+            ];
+        })
+        ;
+        
+        return [
+            'success' => true,
+            'items' => $items
+        ];
+    }
 }
