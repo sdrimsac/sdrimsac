@@ -113,19 +113,19 @@ class StorageHelper
     public function uploadCdr($filename, $file_content)
     {
         $folder = $this->getFolder('cdr', 'R-' . $filename . '.xml');
-        Storage::disk()->put($folder, $file_content);
+        Storage::disk('tenant')->put($folder, $file_content);
     }
 
     public function downloadCdr($filename)
     {
         $folder = $this->getFolder('cdr', 'R-' . $filename . '.xml');
-        return Storage::disk()->download($folder);
+        return Storage::disk('tenant')->download($folder);
     }
 
     public function getCdr($filename)
     {
         $folder = $this->getFolder('cdr', 'R-' . $filename . '.xml');
-        return Storage::disk()->get($folder);
+        return Storage::disk('tenant')->get($folder);
     }
 
     /*
