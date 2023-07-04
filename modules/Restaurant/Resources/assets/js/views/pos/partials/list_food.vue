@@ -74,8 +74,8 @@
                             >
                                 <div @click="addFood(index)">
                                     <div>
-                                        <span class="lead-font-weight-700 ">
-                                            {{ data.description.toUpperCase().substring(0, 20) + "  " }}
+                                        <span class="lead-font-weight-700 d-inline-block text-truncate">
+                                            {{ data.description.toUpperCase()}}
                                         </span>
                                         <el-tooltip
                                             class="item"

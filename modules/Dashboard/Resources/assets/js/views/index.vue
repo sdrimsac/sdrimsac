@@ -197,8 +197,8 @@
                             class="custom-legend-container mb-3 pb-3 d-flex flex-row"
                         ></div>
                         <div class="sh-25">
-                            <x-graph-line :all-data="general.graph">
-                            </x-graph-line>
+                            <graphline :all-data="general.graph">
+                            </graphline>
                         </div>
                     </div>
                 </div>
@@ -220,10 +220,10 @@
                             class="custom-legend-container mb-3 pb-3 d-flex flex-row"
                         ></div>
 
-                        <div class="sh-25">
-                            <x-graph-line :all-data="purchase.graph">
-                            </x-graph-line>
-                        </div>
+                        <!-- <div class="sh-25">
+                            <graphApex :all-data="purchase.graph">
+                            </graphApex>
+                        </div> -->
                     </div>
                 </div>
             </div>
@@ -671,7 +671,7 @@ main {
 import DashboardStock from "./partials/dashboard_stock.vue";
 import queryString from "query-string";
 import VueApexCharts from "vue-apexcharts";
-
+import graphline from "../components/graphline.vue"
 import graphApex from "../components/GraphApexcharts.vue";
 import LoaderGraph from "../components/loaders/l-graph.vue";
 export default {
@@ -680,7 +680,8 @@ export default {
         DashboardStock,
         LoaderGraph,
         graphApex,
-        apexchart: VueApexCharts
+        apexchart: VueApexCharts,
+        graphline
     },
     data() {
         return {
