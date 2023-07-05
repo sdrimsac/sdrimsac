@@ -67,8 +67,10 @@ class AddConsignmentTables extends Migration
         Schema::dropIfExists('consignment_items');
         Schema::dropIfExists('consignments');
         Schema::dropIfExists('consignment_penalties');
-        Schema::table('configurations', function (Blueprint $table) {
-            $table->dropColumn('consignment');
-        });
+        if(Schema::hasColumn('configurations','consignment'))
+            Schema::table('configurations', function (Blueprint $table) {
+                $table->dropColumn('consignment');
+            });
+            
     }
 }
