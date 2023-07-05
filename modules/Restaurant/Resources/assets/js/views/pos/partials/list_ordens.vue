@@ -57,7 +57,7 @@
                                         style="margin-bottom: 2px"
                                     >
                                         <p
-                                            style="margin: 0 !important; padding: 0 !important"
+                                            style="margin: 0 !important; padding: 0 !important; font-size: 15px;"
                                             v-for="(title,
                                             idx2) in option.title"
                                             :key="idx2"
