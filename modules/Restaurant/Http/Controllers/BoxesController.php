@@ -652,6 +652,9 @@ class BoxesController extends Controller
                 "amount" => $row->amount
             ];
         });
+        
+
+        
 
         $cash = Cash::find($cash_id);
         $counter = $cash->counter ?? [];
@@ -783,6 +786,19 @@ class BoxesController extends Controller
             $difference = $total_sales["total_sales"];
         }
         $establishment = Establishment::find($user->establishment_id);
+
+        $seriesDocs = DB::connection('tenant')->select('SELECT document_items.*    FROM      boxes      INNER JOIN ordens ON boxes.orden_id = ordens.id      INNER JOIN documents ON ordens.document_id = documents.id       AND ordens.id = documents.orden_id      INNER JOIN document_items ON documents.id = document_items.document_id   WHERE      cash_id = ?', [$cash_id]);      
+
+        $datosSeries = [] ; 
+        if (!empty($seriesDocs)) {
+            foreach ($seriesDocs as $key => $value) {
+                $detalleSell =  json_decode($value->item, true);
+                foreach ($detalleSell['lots'] as $key => $valueDetalle) {
+                    $datosSeries[] =  [$detalleSell['description'] , $valueDetalle['series']]; 
+                }
+            }
+        }
+
         try {
             $pdf = PDF::loadView('report::boxes.report_resumen_pdf_pos', compact(
                 "user",
@@ -806,7 +822,8 @@ class BoxesController extends Controller
                 "expenses_records",
                 "incomes_records",
                 "difference",
-                "total_discount"
+                "total_discount",
+                "datosSeries"
             ))
                 ->setPaper('a4');
         } catch (Exception $e) {
