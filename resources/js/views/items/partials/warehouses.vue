@@ -44,7 +44,7 @@
                                         </template>
                                     </th>
                                     <th>
-                                        <button
+                                        <button v-if="!hasSerie"
                                             type="button"
                                             class="btn waves-effect waves-light btn-sm btn-warning"
                                             @click.prevent="clickStock(row)"
@@ -175,6 +175,8 @@ export default {
         this.$eventHub.$on("reloadData", () => {
             this.close();
         });
+
+      
         //console.log(this.typeUser)
     },
     methods: {
