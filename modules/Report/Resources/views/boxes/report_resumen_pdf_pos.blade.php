@@ -559,7 +559,10 @@
         <table style="margin-top: 10px;">
             <tr>
                 <td width="35%" style="vertical-align: top">
-                    <table class="border">
+                    <div >
+                        <br>
+                    </div>
+                    <table class="border" style="margin-top:4px;">
                         <thead>
                             <tr>
                                 <th class="thead" colspan="3">
@@ -689,7 +692,55 @@
                 </td>
             </tr>
         </table>
+        @if (!empty($datosSeries))
+        
+            <table style="margin-top: 10px;"> {{-- visualizacion de ventas por series  --}}
+                <tr>
+                    <td width="50%" style="vertical-align: top">
+                        <div >
+                            <br>
+                           
+                        </div>
+                        <table class="border" style="margin-top:4px;">
+                            <thead>
+                                <tr>
+                                    <th class="thead" colspan="3">
+                                        <span class="f12">DETALLE SERIES VENDIDAS</span>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th class="thead" >
+                                        <span class="f12">#</span>
+                                    </th>
+                                    <th class="thead" >
+                                        <span class="f12">PRODUCTO</span>
+                                    </th>
+                                    <th class="thead" >
+                                        <span class="f12">SERIE</span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                
+                                @foreach ($datosSeries as $index => $detailseries)
+                                    
+                                        <tr>
+                                            <td width="10%" class="f12 center">{{$index + 1}}</td>
+                                            <td width="70%" class="f12">{{ strtoupper($detailseries[0]) }}</td>
+                                            <td width="35%" class="f12 right">{{ $detailseries[1] }}</td>
+                                        </tr>
+                                    
+                                @endforeach
 
+
+                            </tbody>
+                        </table>
+                    </td>
+                    
+                </tr>
+            </table>
+        @endif
+        
         <table style="margin-top:10px;">
             <td width="50%">
                 <div style="text-align:center;">
