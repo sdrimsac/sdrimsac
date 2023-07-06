@@ -1984,6 +1984,7 @@ export default {
         QuotationForm
     },
     props: [
+        "affectation_igv_types",
         "all_series",
         "areas",
         "customers",

@@ -1044,6 +1044,30 @@
                                             ></el-switch>
                                         </div>
                                     </div>
+                                    
+                                     <div class="col-md-6 mt-4">
+                                        <div class="form-group">
+                                            <label class="control-label w-100"
+                                                                                      >Cambiar afectación IGV en caja
+
+                                                <el-tooltip
+                                                    content="Permite cambiar la afectación de IGV en caja"
+                                                >
+                                                    <i
+                                                        class="fa fa-info-circle"
+                                                    ></i>
+                                                </el-tooltip>
+                                            </label>
+                                            <el-switch
+                                                v-model="
+                                                    form.affectation_optional
+                                                "
+                                                active-text="Si"
+                                                inactive-text="No"
+                                                @change="submit"
+                                            ></el-switch>
+                                        </div>
+                                    </div>
                                 </div>
                             </el-tab-pane>
                             <el-tab-pane label="Impresion">
@@ -1207,7 +1231,6 @@ export default {
         await this.$http.get(`/${this.resource}/record`).then(response => {
             if (response.data !== "") {
                 this.form = response.data.data;
-                console.log(this.form);
             }
             // console.log(this.placeholder)
         });

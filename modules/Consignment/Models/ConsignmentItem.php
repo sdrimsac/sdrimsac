@@ -22,5 +22,8 @@ class ConsignmentItem extends ModelTenant
     public function item(){
         return $this->belongsTo(Item::class);
     }
+    public function lots(){
+        return $this->hasMany(ConsignmentItemLot::class);
+    }
 
 }

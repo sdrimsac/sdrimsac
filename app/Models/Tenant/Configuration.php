@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Config;
 class Configuration extends ModelTenant
 {
     protected $fillable = [
+        'affectation_optional',
+        'affectation_optional_id',
         'consignment',
         'view_daily_cash',
         'view_daily_cash_pin',
@@ -360,6 +362,8 @@ class Configuration extends ModelTenant
             'init_stock' =>(bool) $this->init_stock,
             'observation_translate' => (bool)$this->observation_translate,
             'consignment' => (bool)$this->consignment,
+            'affectation_optional' => (bool)$this->affectation_optional,
+            'affectation_optional_id' => $this->affectation_optional_id,
 
         ];
     }

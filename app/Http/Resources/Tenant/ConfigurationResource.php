@@ -92,6 +92,8 @@ class ConfigurationResource extends JsonResource
             'init_stock' => (bool) $this->init_stock,
             'observation_translate' => (bool) $this->observation_translate,
             'consignment' => (bool) $this->consignment,
+            'afectation_optional' => (bool) $this->affectation_optional,
+            'affectation_optional_id' => $this->affectation_optional_id,
 
         ];
     }

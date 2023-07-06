@@ -1,5 +1,6 @@
 <template>
     <el-dialog
+        v-loading="loading"
         :visible="showDialog"
         @open="open"
         @close="close"
@@ -108,6 +109,7 @@ export default {
 
     data() {
         return {
+            loading: false,
             showDialogNewPenalty: false,
             showDialogNewPerson: false,
             form: {},
@@ -152,12 +154,56 @@ export default {
             }
             return formatted;
         },
+        validate() {
+            let hasError = false;
+            let { person_id, date_of_issue, date_of_end } = this.form;
+            if (!person_id) {
+                this.$toast.error("Debe seleccionar un cliente/vendedor");
+                hasError = true;
+            }
+            if (!date_of_issue) {
+                this.$toast.error(
+                    "Debe seleccionar una fecha de consignación"
+                );
+                hasError = true;
+            }
+            if (!date_of_end) {
+                this.$toast.error(
+                    "Debe seleccionar una fecha de liquidación"
+                );
+                hasError = true;
+            }
+            return hasError;
+        },
         async submit() {
-            let items = this.formatedItems();
-            this.form.items = items;
+            if (this.validate()) {
+                return;
+            }
+            try {
+                this.loading = true;
+                let items = this.formatedItems();
+                this.form.items = items;
 
-            const response = await this.$http.post(`/consignment`, this.form);
-            console.log(response);
+                const response = await this.$http.post(
+                    `/consignment`,
+                    this.form
+                );
+                if (response.status == 200) {
+                    let { success, message } = response.data;
+                    if (success) {
+                        this.$toast.success(message);
+                        this.$emit("update:showDialog", false);
+                    } else {
+                        this.$toast.error(message);
+                    }
+                }
+                console.log(response);
+            } catch (e) {
+                this.$message.error("Ocurrió un error al crear la consignación");
+                console.log(e);
+            } finally {
+                this.loading = false;
+            }
         },
         clickNewPenalty() {
             this.showDialogNewPenalty = true;

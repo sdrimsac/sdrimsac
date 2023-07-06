@@ -955,7 +955,7 @@
                     </div>
                 </div>
                 <div class="p-3">
-                    <div class="row ">
+                    <div class="d-flex align-items-end  ">
                         <div class="col-lg-4">
                             <div
                                 class="btn-group btn-group-square"
@@ -977,6 +977,29 @@
                                 </button>
                             </div>
                         </div>
+                        <template v-if="configuration.affectation_optional">
+                            <div class="col-lg-6">
+                                <label>
+                                    Afectación IGV para el documento
+                                </label>
+                                <el-select
+                                    v-model="affectation_optional_id"
+                                    clearable
+                                    filterable
+                                >
+                                    <el-option
+                                        v-for="option in affectation_igv_types.filter(
+                                            affectation =>
+                                                affectation.id == '10' 
+                                        )"
+                                        :key="option.id"
+                                        :label="option.description"
+                                        :value="option.id"
+                                    >
+                                    </el-option>
+                                </el-select>
+                            </div>
+                        </template>
                     </div>
                 </div>
             </div>
@@ -1083,6 +1106,7 @@ export default {
     },
 
     props: [
+        "affectation_igv_types",
         "printer",
         "printing",
         "customer_default",
@@ -1119,6 +1143,7 @@ export default {
     },
     data() {
         return {
+            affectation_optional_id: null,
             hasCreditCardCharge: false,
             chargeCredit: {
                 credit_type: "1",
@@ -1305,28 +1330,30 @@ export default {
                 this.hasExceedBank = false;
             }
         },
-        formatItems(items = []) {
+        formatItems(items = [], affectation = null) {
             items = items.map(i => {
+                let affectation_igv_type_id =
+                    affectation!= null && affectation != undefined ? affectation : i.sale_affectation_igv_type_id;
                 return {
                     ...i,
                     warehouse_id: null,
                     item: i,
                     item_id: i.id,
                     unit_value:
-                        i.sale_affectation_igv_type_id == 10
+                        affectation_igv_type_id == 10
                             ? i.sale_unit_price /
                               (1 + this.percentage_igv / 100)
                             : i.sale_unit_price,
                     quantity: i.quantity,
                     aux_quantity: i.quantity,
                     total_base_igv:
-                        i.sale_affectation_igv_type_id == 10
+                        affectation_igv_type_id == 10
                             ? (i.sale_unit_price * i.quantity) /
                               (1 + this.percentage_igv / 100)
                             : i.sale_unit_price * i.quantity,
                     percentage_igv: this.percentage_igv,
                     total_igv:
-                        i.sale_affectation_igv_type_id == 10
+                        affectation_igv_type_id == 10
                             ? ((i.sale_unit_price * i.quantity) /
                                   (1 + this.percentage_igv / 100)) *
                               (this.percentage_igv / 100)
@@ -1338,13 +1365,13 @@ export default {
                     percentage_other_taxes: 0.0,
                     total_other_taxes: 0.0,
                     total_taxes:
-                        i.sale_affectation_igv_type_id == 10
+                        affectation_igv_type_id == 10
                             ? ((i.sale_unit_price * i.quantity) /
                                   (1 + this.percentage_igv / 100)) *
                               (this.percentage_igv / 100)
                             : 0,
                     total_value:
-                        i.sale_affectation_igv_type_id == 10
+                        affectation_igv_type_id == 10
                             ? (i.sale_unit_price * i.quantity) /
                               (1 + this.percentage_igv / 100)
                             : i.quantity * i.sale_unit_price,
@@ -1355,13 +1382,13 @@ export default {
                     unit_price: i.sale_unit_price,
                     unit_price_value: i.sale_unit_price,
                     has_igv: i.has_igv,
-                    affectation_igv_type_id: i.sale_affectation_igv_type_id,
+                    affectation_igv_type_id: affectation_igv_type_id,
                     unit_price: i.sale_unit_price,
                     presentation: null,
                     charges: [],
                     discounts: [],
                     attributes: [],
-                    affectation_igv_type: i.sale_affectation_igv_type_id
+                    affectation_igv_type: affectation_igv_type_id
                 };
             });
             return items;
@@ -1692,11 +1719,7 @@ export default {
             return false;
         },
 
-        async printerDocument(
-            Printer,
-            linkpdf,
-           
-        ) {
+        async printerDocument(Printer, linkpdf) {
             qz.security.setCertificatePromise((resolve, reject) => {
                 this.$http
                     .get("/api/qz/crt/override", {
@@ -1723,22 +1746,22 @@ export default {
                         });
                 };
             });
-             let config = qz.configs.create(Printer, {
-                            scaleContent: false
-                        });
-                        if (!qz.websocket.isActive()) {
-                            await qz.websocket.connect(config);
-                        }
-                          let data = [
-                            {
-                                type: "pdf",
-                                format: "file",
-                                data: linkpdf
-                            }
-                        ];
-                        qz.print(config, data).catch(e => {
-                            this.$toast.error(e.message);
-                        });
+            let config = qz.configs.create(Printer, {
+                scaleContent: false
+            });
+            if (!qz.websocket.isActive()) {
+                await qz.websocket.connect(config);
+            }
+            let data = [
+                {
+                    type: "pdf",
+                    format: "file",
+                    data: linkpdf
+                }
+            ];
+            qz.print(config, data).catch(e => {
+                this.$toast.error(e.message);
+            });
             // if (this.printerOn == 1) {
             //     if (multiple_boxes == true) {
             //         if (this.auth_login == auth) {
@@ -2075,6 +2098,13 @@ export default {
             let total_value = 0;
             let total = 0;
             let total_plastic_bag_taxes = 0;
+            if (this.affectation_optional_id != null && this.affectation_optional_id != undefined && this.affectation_optional_id != "") {
+          
+                this.form.items = this.formatItems(
+                    this.form.items,
+                    this.affectation_optional_id
+                );
+            }
 
             this.form.items.forEach(row => {
                 total_discount += parseFloat(row.total_discount);
@@ -2468,6 +2498,8 @@ export default {
         },
         async clickPayment(form) {
             let how_is;
+            this.reCalculateTotal();
+            // return;
             if (!this.form.series_id && this.conf.pos_quick_sale) {
                 this.setSeries();
             }
@@ -2579,22 +2611,20 @@ export default {
                 );
 
                 if (response.status == 200) {
-               
                     let format = null;
                     let data = response.data.data;
                     switch (data.format_printer) {
                         case 1:
-                            format = data.print_a4; 
+                            format = data.print_a4;
                             break;
-                     case 2:
+                        case 2:
                             format = data.print_a5;
                             break;
                         default:
                             format = data.print_ticket;
                             break;
                     }
-                    if(this.printer && format && this.printerOn == 1){
-
+                    if (this.printer && format && this.printerOn == 1) {
                         // this.printerDocument(this.printer,format)
                     }
                     if (response.data.success == true) {
