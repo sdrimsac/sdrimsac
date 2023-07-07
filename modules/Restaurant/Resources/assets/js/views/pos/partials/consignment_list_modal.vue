@@ -81,8 +81,12 @@ export default {
 
         const response = await this.$http(`${this.resource}/liquidate/${consignment.id}`);
         let {foods } = response.data;
-        console.log(foods);
-        this.$emit('setItemsToLiquidate',foods)
+        foods = foods.map(food => {
+            food.toWarehouse = 0;
+            return food;
+        });
+        this.$emit('setItemsToLiquidate',foods,consignment)
+        this.close();
             
         },
         clickShowProducts(consignment){

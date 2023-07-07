@@ -554,6 +554,30 @@
                             >
                                 <div class="form-group">
                                     <label class="control-label"
+                                        >Contenedor
+                                        <el-tooltip
+                                            class="item"
+                                            effect="dark"
+                                            content="Nombre del contenedor de la cantidad máxima Ej. Botella, Caja, Saco"
+                                            placement="top"
+                                        >
+                                            <i class="fa fa-info-circle"></i>
+                                        </el-tooltip>
+                                    </label>
+                                    <el-input
+                                        :disabled="
+                                            !form.max_quantity
+                                        "
+                                        v-model="form.max_quantity_description"
+                                    ></el-input>
+                                </div>
+                            </div>
+                            <div
+                                class="col-md-3"
+                                v-show="form.unit_type_id != 'ZZ'"
+                            >
+                                <div class="form-group">
+                                    <label class="control-label"
                                         >Add. Delivery
                                         <el-tooltip
                                             class="item"

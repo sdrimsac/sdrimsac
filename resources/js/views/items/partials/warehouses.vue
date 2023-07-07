@@ -30,18 +30,19 @@
                                                     row.stock /
                                                     item.max_quantity
                                                 ).toFixed(2)
-                                            }}
+                                            }} 
                                         </template>
                                         <template v-else>
                                             <template
                                                 v-if="config && config.college"
                                             >
-                                                {{ parseInt(row.stock) }}
+                                                {{ parseInt(row.stock) }} 
                                             </template>
                                             <template v-else>
-                                                {{ row.stock }}
+                                                {{ row.stock }}  
                                             </template>
                                         </template>
+                                        {{ maxDescription }}
                                     </th>
                                     <th>
                                         <button v-if="!hasSerie"
@@ -72,10 +73,10 @@
                                         template
                                         v-if="config && config.college"
                                     >
-                                        {{ parseInt(total) }}
+                                        {{ parseInt(total) }} {{ maxDescription }}
                                     </td>
                                     <td class="text-end" template v-else>
-                                        {{ total.toFixed(2) }}
+                                        {{ total.toFixed(2) }}  {{ maxDescription }}
                                     </td>
                                     <td></td>
                                 </tr>
@@ -168,7 +169,8 @@ export default {
             recordId: null,
             titleDialog: "Stock de producto",
             series: null,
-            loading: false
+            loading: false,
+            maxDescription: ''
         };
     },
     created() {
@@ -189,9 +191,13 @@ export default {
                 (a, b) => a + Number(b.stock),
                 0
             );
-
             if (this.item.max_quantity) {
                 this.total = this.total / this.item.max_quantity;
+            }
+            if(this.item.max_quantity_description){
+                this.maxDescription = this.item.max_quantity_description
+            }else{
+                this.maxDescription = this.item.unit_type_description
             }
 
             if (this.hasSerie) {

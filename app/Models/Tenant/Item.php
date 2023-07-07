@@ -19,6 +19,7 @@ class Item extends ModelTenant
 {
     protected $with = ['item_warehouse_prices', 'item_type', 'unit_type', 'currency_type', 'warehouses', 'item_unit_types', 'category', 'lots_group'];
     protected $fillable = [
+        'max_quantity_description',
         'delivery_cost',
         'warehouse_id',
         'name',

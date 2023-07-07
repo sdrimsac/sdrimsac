@@ -2,6 +2,7 @@
 
 namespace Modules\Inventory\Http\Controllers;
 
+use App\CoreFacturalo\Requests\Inputs\Functions;
 use Carbon\Carbon;
 use App\Models\Tenant\Item;
 use Illuminate\Http\Request;
@@ -66,7 +67,7 @@ class ReportKardexController extends Controller
         $items = Item::query()->whereNotIsSet()
             ->where([['item_type_id', '01'], ['unit_type_id', '!=', 'ZZ']])
             ->latest()
-            ->get()->transform(function ($row) {
+            ->get()->take(20)->transform(function ($row) {
                 $full_description = $this->getFullDescription($row);
                 return [
                     'id' => $row->id,
@@ -108,7 +109,7 @@ class ReportKardexController extends Controller
         $item_id = $request['item_id'];
         $date_start = $request['date_start'];
         $date_end = $request['date_end'];
-        $establish = $request['establish'];
+        $establish = Functions::valueKeyInArray($request, 'establish', null);
 
         $records = $this->data($item_id, $date_start, $date_end, $note, $establish);
 
@@ -119,8 +120,12 @@ class ReportKardexController extends Controller
     private function data($item_id = null, $date_start, $date_end, $note = true, $establish)
     {
 
-        //$warehouse = Warehouse::where('establishment_id', auth()->user()->establishment_id)->first();
-        $warehouse = $establish;
+        if (!$establish) {
+            $warehouse = Warehouse::where('establishment_id', auth()->user()->establishment_id)->first();
+        } else {
+
+            $warehouse = $establish;
+        }
 
         if ($date_start && $date_end) {
 
@@ -184,7 +189,9 @@ class ReportKardexController extends Controller
      */
     public function pdf(Request $request)
     {
+       
         $balance = 0;
+        $max_quantity = $request->max_quantity ? ($request->max_quantity == "true" ? true : false) : false;
         $company = Company::first();
         $establishment = Establishment::first();
         $d = $request->date_start;
@@ -200,7 +207,7 @@ class ReportKardexController extends Controller
         $reports = new ReportKardexCollection($records->get());
         //$reports=$this->records($request);
 
-        $pdf = PDF::loadView('inventory::reports.kardex.report_pdf', compact("reports", "company", "establishment", "balance", "models", 'a', 'd', "item_id"))->setPaper('a4', 'landscape');
+        $pdf = PDF::loadView('inventory::reports.kardex.report_pdf', compact("reports", "company", "establishment", "balance", "models", 'a', 'd', "item_id", "max_quantity"))->setPaper('a4', 'landscape');
         $filename = 'Reporte_Kardex' . date('YmdHis');
 
         return $pdf->stream($filename . '.pdf');
@@ -208,11 +215,14 @@ class ReportKardexController extends Controller
     public function excel(Request $request)
     {
 
+
         $balance = 0;
         $company = Company::first();
         $establishment = Establishment::first();
         $d = $request->date_start;
         $a = $request->date_end;
+        $max_quantity = $request->max_quantity ? ($request->max_quantity == "true" ? true : false) : false;
+
         $item_id = $request->item_id;
         $warehouse = Warehouse::where('establishment_id', auth()->user()->establishment_id)->first();
         if ($d && $a) {
@@ -245,6 +255,7 @@ class ReportKardexController extends Controller
             ->records($reports)
             ->models($models)
             ->company($company)
+            ->max_quantity($max_quantity)
             ->establishment($establishment)
             ->download('ReporteKar' . Carbon::now() . '.xlsx');
     }

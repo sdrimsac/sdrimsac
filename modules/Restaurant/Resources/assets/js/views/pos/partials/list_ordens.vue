@@ -4,43 +4,44 @@
             <div
                 v-if="screenWidth > 678"
                 class="d-md-flex  flex-wrap justify-content-between"
-                
             >
-                    <div class="dropdown-as-select d-inline-block mb-1" data-childselector="span"  >
-                        <button
-                            class="btn p-0"
-                            type="button"
-                            data-bs-toggle="dropdown"
-                            aria-haspopup="true"
-                            aria-expanded="false"
-                        >
-                            <span
-                                class="btn btn-primary dropdown-toggle"
-                                data-bs-toggle="tooltip"
-                                data-bs-placement="top"
-                                data-bs-delay="0"
-                                title=""
-                                data-bs-original-title="Item Count"
-                                aria-label="Item Count"
-                                >Menu De Acciones </span>
-                        </button>
+                <div
+                    class="dropdown-as-select d-inline-block mb-1"
+                    data-childselector="span"
+                >
+                    <button
+                        class="btn p-0"
+                        type="button"
+                        data-bs-toggle="dropdown"
+                        aria-haspopup="true"
+                        aria-expanded="false"
+                    >
+                        <span
+                            class="btn btn-primary dropdown-toggle"
+                            data-bs-toggle="tooltip"
+                            data-bs-placement="top"
+                            data-bs-delay="0"
+                            title=""
+                            data-bs-original-title="Item Count"
+                            aria-label="Item Count"
+                            >Menu De Acciones
+                        </span>
+                    </button>
 
+                    <div
+                        class="dropdown-menu dropdown-menu-end col-md-2 col-1 "
+                        style="width: 153px;"
+                    >
                         <div
-                            class="dropdown-menu dropdown-menu-end col-md-2 col-1 " style="width: 153px;"
+                            class="col-12"
+                            v-for="(option, idx) in optionsMenu"
+                            :key="idx"
+                            v-show="option.visible"
                         >
-                            <div
-                                class="col-12"
-                                v-for="(option, idx) in optionsMenu"
-                                :key="idx"
-                                v-show="option.visible"
-                            >
-                                <el-button
-                                    v-if="
-                                        option.visible 
-                                            
-                                    "
-                                    @click="trigerFunction(option.id)"
-                                    class="
+                            <el-button
+                                v-if="option.visible"
+                                @click="trigerFunction(option.id)"
+                                class="
                                             btn btn-light
                                             m-1
                                             rounded
@@ -50,29 +51,28 @@
                                             justify-content-center
                                             col-12
                                             "
-                                    style="max-width: 150px;"
+                                style="max-width: 150px;"
+                            >
+                                <div
+                                    class="text-center"
+                                    style="margin-bottom: 2px"
                                 >
-                                    <div
-                                        class="text-center"
-                                        style="margin-bottom: 2px"
+                                    <p
+                                        style="margin: 0 !important; padding: 0 !important; font-size: 15px;"
+                                        v-for="(title, idx2) in option.title"
+                                        :key="idx2"
                                     >
-                                        <p
-                                            style="margin: 0 !important; padding: 0 !important; font-size: 15px;"
-                                            v-for="(title,
-                                            idx2) in option.title"
-                                            :key="idx2"
-                                        >
-                                            {{ title }}
-                                        </p>
-                                        <i :class="[option.icon, 'fa-1x']"></i>
-                                    </div>
-                                    <div></div>
-                                </el-button>
-                            </div>
+                                        {{ title }}
+                                    </p>
+                                    <i :class="[option.icon, 'fa-1x']"></i>
+                                </div>
+                                <div></div>
+                            </el-button>
                         </div>
                     </div>
                 </div>
-                
+            </div>
+
             <div v-if="screenWidth < 600" class="d-flex flex-wrap">
                 <div
                     v-for="(option, idx) in optionsMenu"
@@ -114,7 +114,7 @@
                 style="padding-top: 12px"
             >
                 <div class="row col-12" v-if="clientTableData.table">
-                    <div  class="col-6">
+                    <div class="col-6">
                         <h3 class="text-white">
                             <strong style="padding-left: 20px">
                                 {{
@@ -131,12 +131,11 @@
                         </h3>
                     </div>
                     <div class="col-6">
-                        <h3  class="text-white" style="text-align: right">
+                        <h3 class="text-white" style="text-align: right">
                             Total S/. {{ (total + totalOrdenItems).toFixed(2) }}
                         </h3>
                     </div>
                 </div>
-                
 
                 <div
                     class="row h5 text-white col-12"
@@ -151,12 +150,21 @@
                 <div class="row col-12">
                     <div class="h5 text-white col-6" style="padding-left: 25px">
                         <strong v-if="!clientTableData.table">
-                            VENTA DIRECTA</strong
-                        >
+                            <template v-if="!isConsignment">
+                                VENTA DIRECTA
+                            </template>
+                            <template v-else>
+                                LIQUIDACIÓN DE CONSIGNACIÓN
+                            </template>
+                        </strong>
                     </div>
 
                     <div class="col-6">
-                        <h3 v-if="!clientTableData.table" class="text-white" style="text-align: right">
+                        <h3
+                            v-if="!clientTableData.table"
+                            class="text-white"
+                            style="text-align: right"
+                        >
                             Total S/. {{ (total + totalOrdenItems).toFixed(2) }}
                         </h3>
                     </div>
@@ -188,10 +196,14 @@
                             @click="payOrden()"
                             style="max-height: 45px ; max-width: 80px;"
                         >
-                            <i class="fas fa-money-bill-wave" style="color: var(--primary) !important"></i> <br> Cobrar
+                            <i
+                                class="fas fa-money-bill-wave"
+                                style="color: var(--primary) !important"
+                            ></i>
+                            <br />
+                            Cobrar
                         </button>
-                        
-                        
+
                         <button
                             v-if="
                                 isCreatingOrden == true ||
@@ -202,12 +214,14 @@
                             @click="cancelOrden"
                             style="max-height: 45px ; max-width: 80px;"
                         >
-                            <i class="fas fa-trash" style="color: var(--primary) !important"></i>
-                            <br>
+                            <i
+                                class="fas fa-trash"
+                                style="color: var(--primary) !important"
+                            ></i>
+                            <br />
                             Limpiar
                         </button>
-                        
-                        
+
                         <button
                             v-if="
                                 (isCreatingOrden == true ||
@@ -219,7 +233,11 @@
                             @click="sendOrden()"
                             style="max-height: 45px ; max-width: 80px;"
                         >
-                            <i class="fas fa-paper-plane" style="color: var(--primary) !important"></i><br>
+                            <i
+                                class="fas fa-paper-plane"
+                                style="color: var(--primary) !important"
+                            ></i
+                            ><br />
                             Enviar
                         </button>
                         <button
@@ -233,7 +251,11 @@
                             @click="printOrden()"
                             style="max-height: 45px ; max-width: 80px;"
                         >
-                            <i class="fas fa-print" style="color: var(--primary) !important"></i><br>
+                            <i
+                                class="fas fa-print"
+                                style="color: var(--primary) !important"
+                            ></i
+                            ><br />
                             Imprimir
                         </button>
 
@@ -250,38 +272,55 @@
                                 cancelGeneralOrden(clientTableData.orden_id)
                             "
                         >
-                            <i class="fas fa-window-close" style="color: var(--primary) !important" ></i><br>
+                            <i
+                                class="fas fa-window-close"
+                                style="color: var(--primary) !important"
+                            ></i
+                            ><br />
                             Cancelar
                         </button>
-                        <div class="dropdown-as-select d-inline-block mt-2" data-childselector="span" >
-                        <button
-                            class="btn p-0"
-                            type="button"
-                            data-bs-toggle="dropdown"
-                            aria-haspopup="true"
-                            aria-expanded="false"
-                            style="max-height: 45px ;max-width: 150px;"
-                        >
-                            <span
-                                class="btn btn-light dropdown-toggle"
-                                data-bs-toggle="tooltip"
-                                data-bs-placement="top"
-                                data-bs-delay="0"
-                                title=""
-                                data-bs-original-title="Item Count"
-                                aria-label="Item Count"
-                                > Mas Opciones..<i class="fas fa-list" style="color: var(--primary) !important"></i>
-                            </span>
-                            
-                        </button>
-
                         <div
-                            class="dropdown-menu dropdown-menu-start col-md-2 col-1" style="max-width: 154px;"
+                            class="dropdown-as-select d-inline-block mt-2"
+                            data-childselector="span"
                         >
-                            <div class="col-12">
-                                <el-button v-if="isCreatingOrden == false && clientTableData.table == undefined && !configuration.college " 
-                                    @click="openApart"
-                                    class="
+                            <button
+                                class="btn p-0"
+                                type="button"
+                                data-bs-toggle="dropdown"
+                                aria-haspopup="true"
+                                aria-expanded="false"
+                                style="max-height: 45px ;max-width: 150px;"
+                            >
+                                <span
+                                    class="btn btn-light dropdown-toggle"
+                                    data-bs-toggle="tooltip"
+                                    data-bs-placement="top"
+                                    data-bs-delay="0"
+                                    title=""
+                                    data-bs-original-title="Item Count"
+                                    aria-label="Item Count"
+                                >
+                                    Mas Opciones..<i
+                                        class="fas fa-list"
+                                        style="color: var(--primary) !important"
+                                    ></i>
+                                </span>
+                            </button>
+
+                            <div
+                                class="dropdown-menu dropdown-menu-start col-md-2 col-1"
+                                style="max-width: 154px;"
+                            >
+                                <div class="col-12">
+                                    <el-button
+                                        v-if="
+                                            isCreatingOrden == false &&
+                                                clientTableData.table ==
+                                                    undefined &&
+                                                !configuration.college
+                                        "
+                                        @click="openApart"
+                                        class="
                                             btn btn-light
                                             m-1
                                             rounded
@@ -291,23 +330,32 @@
                                             justify-content-center
                                             col-12
                                             "
-                                            style="max-width: 150px;"
-                                >
-                                    <div class="text-center"  style="margin-bottom: 2px" >
-                                        <span style="margin: 0 !important; padding: 0 !important" >
-                                            Aparcar
-                                        </span>
-                                        <i class="fas fa-cart-arrow-down" style="color: var(--primary) !important"></i>
-                                    </div>
+                                        style="max-width: 150px;"
+                                    >
+                                        <div
+                                            class="text-center"
+                                            style="margin-bottom: 2px"
+                                        >
+                                            <span
+                                                style="margin: 0 !important; padding: 0 !important"
+                                            >
+                                                Aparcar
+                                            </span>
+                                            <i
+                                                class="fas fa-cart-arrow-down"
+                                                style="color: var(--primary) !important"
+                                            ></i>
+                                        </div>
+                                        <div></div>
+                                    </el-button>
                                     <div></div>
-                                </el-button>
-                                  <div></div>
-                                
-                            </div>
-                            <div class="col-12">
-                                <el-button v-if="configuration.quotation &&
-                                            localOrden.length != 0
-                                            "
+                                </div>
+                                <div class="col-12">
+                                    <el-button
+                                        v-if="
+                                            configuration.quotation &&
+                                                localOrden.length != 0
+                                        "
                                         class="btn btn-light
                                             m-1
                                             rounded
@@ -320,27 +368,29 @@
                                         type="button"
                                         @click="openQuotation"
                                         style="max-height: 45px ;max-width: 150px;"
-                                    
-                                >
-                                    <div
-                                        class="text-center"
-                                        style="margin-bottom: 2px"
                                     >
-                                        <span
-                                            style="margin: 0 !important; padding: 0 !important"
-                                            
+                                        <div
+                                            class="text-center"
+                                            style="margin-bottom: 2px"
                                         >
-                                        Cotizar
-                                        </span><i class="fas fa-clipboard-list" style="color: var(--primary) !important"></i>
-                                        
-                                    </div>
-                                    <div></div>
-                                </el-button>
-                            </div>
-                             <div class="col-12">
-                                <el-button v-if="configuration.consignment &&
-                                            localOrden.length != 0
-                                            "
+                                            <span
+                                                style="margin: 0 !important; padding: 0 !important"
+                                            >
+                                                Cotizar </span
+                                            ><i
+                                                class="fas fa-clipboard-list"
+                                                style="color: var(--primary) !important"
+                                            ></i>
+                                        </div>
+                                        <div></div>
+                                    </el-button>
+                                </div>
+                                <div class="col-12">
+                                    <el-button
+                                        v-if="
+                                            configuration.consignment &&
+                                                localOrden.length != 0
+                                        "
                                         class="btn btn-light
                                             m-1
                                             rounded
@@ -353,27 +403,31 @@
                                         type="button"
                                         @click="openConsignment"
                                         style="max-height: 45px ;max-width: 150px;"
-                                    
-                                >
-                                    <div
-                                        class="text-center"
-                                        style="margin-bottom: 2px"
                                     >
-                                        <span
-                                            style="margin: 0 !important; padding: 0 !important"
-                                            
+                                        <div
+                                            class="text-center"
+                                            style="margin-bottom: 2px"
                                         >
-                                        Consignar
-                                        </span><i class="fas fa-clipboard-list" style="color: var(--primary) !important"></i>
-                                        
-                                    </div>
-                                    <div></div>
-                                </el-button>
-                            </div>
-                            <div class="col-12">
-                                <el-button v-if="configuration.credits && localOrden.length != 0"
-                                @click="openCredit"
-                                    class="
+                                            <span
+                                                style="margin: 0 !important; padding: 0 !important"
+                                            >
+                                                Consignar </span
+                                            ><i
+                                                class="fas fa-clipboard-list"
+                                                style="color: var(--primary) !important"
+                                            ></i>
+                                        </div>
+                                        <div></div>
+                                    </el-button>
+                                </div>
+                                <div class="col-12">
+                                    <el-button
+                                        v-if="
+                                            configuration.credits &&
+                                                localOrden.length != 0
+                                        "
+                                        @click="openCredit"
+                                        class="
                                             btn btn-light
                                             m-1
                                             rounded
@@ -383,28 +437,29 @@
                                             justify-content-center
                                             col-12
                                             "
-                                    style="max-width: 150px;"
-                                >
-                                    <div
-                                        class="text-center"
-                                        style="margin-bottom: 2px"
+                                        style="max-width: 150px;"
                                     >
-                                        <span
-                                            style="margin: 0 !important; padding: 0 !important"
-                                           
+                                        <div
+                                            class="text-center"
+                                            style="margin-bottom: 2px"
                                         >
-                                        Crédito 
-                                        </span>
-                                        <i class="fas fa-credit-card" style="color: var(--primary) !important"></i>
-                                        
-                                    </div>
-                                    <div></div>
-                                </el-button>
+                                            <span
+                                                style="margin: 0 !important; padding: 0 !important"
+                                            >
+                                                Crédito
+                                            </span>
+                                            <i
+                                                class="fas fa-credit-card"
+                                                style="color: var(--primary) !important"
+                                            ></i>
+                                        </div>
+                                        <div></div>
+                                    </el-button>
+                                </div>
                             </div>
                         </div>
-                        </div>
                     </div>
-                    
+
                     <div v-if="clientTableData.table" class="col-md-3">
                         <button
                             @click="directSale"
@@ -1216,6 +1271,7 @@
                                                                         <input
                                                                             type="text"
                                                                             :readonly="
+                                                                            isConsignment ||
                                                                                 !configuration.quantity_cash ||
                                                                                     order_pend
                                                                                         .food
@@ -1254,6 +1310,7 @@
                                                                                 class="spin-up"
                                                                                 data-spin="up"
                                                                                 :disabled="
+                                                                                isConsignment ||
                                                                                     order_pend
                                                                                         .food
                                                                                         .item
@@ -1286,6 +1343,7 @@
                                                                                 class="spin-down"
                                                                                 data-spin="down"
                                                                                 :disabled="
+                                                                                 isConsignment ||
                                                                                     order_pend
                                                                                         .food
                                                                                         .item
@@ -1629,6 +1687,19 @@
                                                                 }}</small
                                                             >
                                                         </div>
+                                                        <div class="row" v-if="isConsignment">
+                                                            <div class="col-md-4">
+                                                                <label for="warehouse">Para el almacen</label>
+                                                                     <el-input-number
+                                                                     @change="updateWarehouse(order_pend, indexx)"
+                                                                     class="w-100"
+                                                                     controls-position="right"
+                                                                v-model="order_pend.toWarehouse"
+                                                                >
+
+                                                                </el-input-number>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                                 <hr />
@@ -1728,7 +1799,7 @@
             :showDialog.sync="showSeries"
             :seriesSelected.sync="currentSeries"
             @updateSeries="updateSeries"
-             :establishments="establishments"
+            :establishments="establishments"
         >
         </show-series-product>
 
@@ -1747,14 +1818,13 @@
             :showDialog.sync="showDialogCash"
             :recordId="cash_id"
             :fromBox="true"
-         
             @updateCashId="updateCashId"
         ></cash-form>
         <close-cash
             :recordId.sync="cash_id"
             :showDialogClose.sync="showDialogClose"
             :fromBox="true"
-               :configuration="configuration"
+            :configuration="configuration"
             @updateCashId="updateCashId"
         >
         </close-cash>
@@ -1762,7 +1832,7 @@
             :showDialog.sync="showExpensesIncomes"
             :company="company"
             :cash_id="cash_id"
-          :establishments="establishments"
+            :establishments="establishments"
         >
         </expenses-incomes>
         <observation-form
@@ -1821,13 +1891,13 @@
             append-to-body
         >
             <div class="row mt-1">
-                <p class="h5" style="word-break: break-word;"> 
+                <p class="h5" style="word-break: break-word;">
                     Para poder eliminar la orden debe ingresar un motivo y su
                     PIN de usuario.
                 </p>
             </div>
             <div class="row mt-1">
-                <div class="col-12 " >
+                <div class="col-12 ">
                     <el-input
                         v-model="reasonToDelete"
                         placeholder="Ingrese un motivo"
@@ -1847,11 +1917,13 @@
                         readonly
                     ></el-input>
                 </div>
-                <div class="col-12 card " style="max-width: 218px;margin-left: 104px;margin-top: 14px;" >
+                <div
+                    class="col-12 card "
+                    style="max-width: 218px;margin-left: 104px;margin-top: 14px;"
+                >
                     <div class="row" style="  margin-left: 20px;">
-                        
-                            <el-button
-                            v-for="num in [1, 2, 3 ]"
+                        <el-button
+                            v-for="num in [1, 2, 3]"
                             :key="num"
                             class="m-2 col-md-4 btn-rounded2 btn-primary"
                             @click="generatePin(num)"
@@ -1860,8 +1932,8 @@
                         </el-button>
                     </div>
                     <div class="row" style="  margin-left: 20px;">
-                            <el-button
-                            v-for="num in [ 4, 5, 6 ]"
+                        <el-button
+                            v-for="num in [4, 5, 6]"
                             :key="num"
                             class="m-2 col-md-4 btn-primary"
                             @click="generatePin(num)"
@@ -1870,12 +1942,12 @@
                         </el-button>
                     </div>
                     <div class="row" style="  margin-left: 20px;">
-                            <el-button
-                            v-for="num in [ 7, 8, 9 ]"
+                        <el-button
+                            v-for="num in [7, 8, 9]"
                             :key="num"
                             class="m-2 col-md-4 btn-primary"
                             @click="generatePin(num)"
-                            style="border-radius: 50% !important ; width: 42px; color:white" 
+                            style="border-radius: 50% !important ; width: 42px; color:white"
                             >{{ num }}
                         </el-button>
                     </div>
@@ -1885,11 +1957,12 @@
                             class="m-2 col-md-4 "
                             type="danger"
                             icon="el-icon-delete"
-                            style="border-radius: 50% !important ; width: 42px;">
+                            style="border-radius: 50% !important ; width: 42px;"
+                        >
                         </el-button>
-                        
+
                         <el-button
-                            v-for="num in [0 ]"
+                            v-for="num in [0]"
                             :key="num"
                             class="m-2 col-md-4 btn-primary"
                             @click="generatePin(num)"
@@ -1897,29 +1970,28 @@
                             >{{ num }}
                         </el-button>
                         <div class="col-md-4"></div>
-                        
                     </div>
-                    
-                    
                 </div>
             </div>
-            <div slot="footer" class="dialog-footer" style="text-align: center !important ; ">
+            <div
+                slot="footer"
+                class="dialog-footer"
+                style="text-align: center !important ; "
+            >
                 <el-button @click="showPinRequest = false">Cancelar</el-button>
                 <el-button type="primary" @click="cancelOrdenaPin"
                     >Eliminar</el-button
                 >
             </div>
-         
         </el-dialog>
-           <consignment-form
+        <consignment-form
             :showDialog.sync="showConsignmentForm"
             :items="localOrden"
             :all_customers="customers"
             :establishments="establishments"
             @limpiarForm="limpiarForm"
-            >
-
-            </consignment-form>
+        >
+        </consignment-form>
     </div>
 </template>
 <style>
@@ -1953,7 +2025,6 @@
 .input-new-tag1 .el-input__inner {
     height: 30px !important;
 }
-
 </style>
 <script>
 const ConsignmentForm = () => import("./consignment_modal.vue");
@@ -2008,6 +2079,7 @@ export default {
 
     data() {
         return {
+            isConsignment: false,
             showConsignmentForm: false,
             deleteGeneralOrden: false,
             deleteOrdenLoading: false,
@@ -2093,13 +2165,12 @@ export default {
             this.calculateTotal(this.ordens);
         }
     },
-  
-  mounted() {
-    
-    this.screenWidth = window.innerWidth;
-    window.addEventListener("resize", this.handleResize);
-    this.foodDefault = this.itemDefault;
-    this.boxOperation = this.cash_id ? "Cerrar" : "Abrir";
+
+    mounted() {
+        this.screenWidth = window.innerWidth;
+        window.addEventListener("resize", this.handleResize);
+        this.foodDefault = this.itemDefault;
+        this.boxOperation = this.cash_id ? "Cerrar" : "Abrir";
 
         this.optionsMenu = [
             {
@@ -2182,7 +2253,19 @@ export default {
         await this.getTags();
     },
     methods: {
-        openConsignment(){
+        updateWarehouse(order, index) {
+            // console.log(index);
+            // let ordens = [...this.localOrden];
+            // console.log(ordens[index]);
+            // ordens[index].toWarehouse = order.toWarehouse;
+            // ordens[index].quantity = ordens[index].quantity - order.toWarehouse;
+            // this.$emit("update:localOrden", ordens);
+        },
+        setConsignment(consigment) {
+            
+            this.isConsignment = true;
+        },
+        openConsignment() {
             console.log("xd");
             this.showConsignmentForm = true;
         },

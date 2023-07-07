@@ -5,18 +5,26 @@
                 <div class="row mt-2">
                     <div class="col-md-6">
                         <label class="control-label">Producto</label>
-                        <el-select v-model="form.item_id" filterable clearable>
+                        <el-select
+                            v-model="form.item_id"
+                            filterable
+                            remote
+                            clearable
+                            @change="hasMaxQuantity"
+                            :remote-method="searchRemoteItems"
+                        >
                             <el-option
                                 v-for="option in items"
                                 :key="option.id"
                                 :value="option.id"
-                                :label="option.full_description"
+                                :label="option.description"
                             ></el-option>
                         </el-select>
                     </div>
                     <div class="col-md-3">
                         <label class="control-label">Fecha inicio</label>
                         <el-date-picker
+                            class="w-100"
                             v-model="form.date_start"
                             type="date"
                             @change="changeDisabledDates"
@@ -28,6 +36,7 @@
                     <div class="col-md-3">
                         <label class="control-label">Fecha término</label>
                         <el-date-picker
+                            class="w-100"
                             v-model="form.date_end"
                             type="date"
                             :picker-options="pickerOptionsDates"
@@ -53,8 +62,21 @@
                             ></el-option>
                         </el-select>
                     </div>
+                    <div
+                        class="col-3"
+                        v-if="unitTypeDescription && records.length > 0"
+                    >
+                        <br />
+                        <el-switch
+                            @change="parsedMaxQuantity"
+                            v-model="max_quantity"
+                            :active-text="unitTypeDescription.max"
+                            :inactive-text="unitTypeDescription.min"
+                        >
+                        </el-switch>
+                    </div>
                 </div>
-                <div class="row">
+                <div class="row mt-2">
                     <div class="col-md-12">
                         <el-button
                             class="submit"
@@ -65,7 +87,7 @@
                             >Buscar</el-button
                         >
                     </div>
-                    <div class="col-md-6 m-t-10">
+                    <div class="col-md-6 col-12 mt-2">
                         <template v-if="records.length > 0">
                             <div class="form-group">
                                 <label class="control-label w-100"
@@ -142,6 +164,8 @@ export default {
     props: ["establecimiento", "resource"],
     data() {
         return {
+            max_quantity: false,
+            unitTypeDescription: null,
             loading_submit: false,
             columns: [],
             records: [],
@@ -149,6 +173,7 @@ export default {
             document_types: [],
             pagination: {},
             search: {},
+            timer: null,
             totals: {},
             establishment: null,
             items: [],
@@ -169,13 +194,102 @@ export default {
         });
     },
     async mounted() {
-        await this.$http.get(`/${this.resource}/filter`).then(response => {
-            this.items = response.data.items;
-        });
-
+        // await this.$http.get(`/${this.resource}/filter`).then(response => {
+        //     this.items = response.data.items;
+        // });
         // await this.getRecords()
     },
     methods: {
+        parsedMaxQuantity() {
+            let item = this.items.find(item => item.id == this.form.item_id);
+
+            this.records = this.records.map(record => {
+                if (this.max_quantity) {
+                    record.input =
+                        record.input == "-"
+                            ? "-"
+                            : Number(record.input) / item.max_quantity;
+                    record.output =
+                        record.output == "-"
+                            ? "-"
+                            : Number(record.output) / item.max_quantity;
+                    record.balance =
+                        record.balance == "-"
+                            ? "-"
+                            : Number(record.balance) / item.max_quantity;
+                } else {
+                    record.input =
+                        record.input == "-"
+                            ? "-"
+                            : Number(record.input) * item.max_quantity;
+                    record.output =
+                        record.output == "-"
+                            ? "-"
+                            : Number(record.output) * item.max_quantity;
+                    record.balance =
+                        record.balance == "-"
+                            ? "-"
+                            : Number(record.balance) * item.max_quantity;
+                }
+                //limitar a 2 decimales input output balance
+                if (record.input != "-" && record.input != 0) {
+                    if (this.max_quantity) {
+                        record.input = Number(record.input).toFixed(2);
+                    } else {
+                        record.input = Number(record.input).toFixed(0);
+                    }
+                }
+                if (record.output != "-" && record.output != 0) {
+                    if (this.max_quantity) {
+                        record.output = Number(record.output).toFixed(2);
+                    } else {
+                        record.output = Number(record.output).toFixed(0);
+                    }
+                }
+                if (record.balance != "-" && record.balance != 0) {
+                    if (this.max_quantity) {
+                        record.balance = Number(record.balance).toFixed(2);
+                    } else {
+                        record.balance = Number(record.balance).toFixed(0);
+                    }
+                }
+                return record;
+            });
+        },
+        searchRemoteItems(input) {
+            this.unitTypeDescription = null;
+            if (input.length > 2) {
+                if (this.timer) {
+                    clearTimeout(this.timer);
+                }
+                this.timer = setTimeout(async () => {
+                    try {
+                        let parameters = `input=${input}`;
+                        this.loading_search = true;
+                        const response = await this.$http.get(
+                            `/documents/data-table/items?${parameters}`
+                        );
+
+                        this.items = response.data;
+                    } catch (e) {
+                        console.log(e);
+                    } finally {
+                        this.loading_search = false;
+                    }
+                }, 250);
+            }
+        },
+        hasMaxQuantity() {
+            this.unitTypeDescription = null;
+            this.records = [];
+            let item = this.items.find(item => item.id == this.form.item_id);
+            if (item.max_quantity && item.max_quantity_description) {
+                this.unitTypeDescription = {
+                    max: item.max_quantity_description,
+                    min: item.unit_type_description
+                };
+            }
+        },
         changeDisabledDates() {
             if (this.form.date_end < this.form.date_start) {
                 this.form.date_end = this.form.date_start;
@@ -183,6 +297,7 @@ export default {
             // this.loadAll();
         },
         clickDownload(type) {
+            this.form.max_quantity = this.max_quantity;
             let query = queryString.stringify({
                 ...this.form
             });

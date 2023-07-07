@@ -1,5 +1,18 @@
 <!DOCTYPE html>
 <html lang="es">
+@php
+    $max_quantity_description = null;
+    $max_quantity_und = 1;
+    if ($item_id) {
+        $item = \App\Models\Tenant\Item::find($item_id);
+        $max_quantity_description = $item->unit_type->description;
+        if($max_quantity){
+            $max_quantity_description = $item->max_quantity_description ??$item->unit_type->description;
+            $max_quantity_und = $item->max_quantity;
+        }
+    }
+    
+@endphp
 
 <head>
     <meta charset="UTF-8">
@@ -42,6 +55,15 @@
                 <td align="center">{{ $establishment->address }} - {{ $establishment->department->description }} -
                     {{ $establishment->district->description }}</td>
             </tr>
+            @if ($max_quantity_description)
+                <tr>
+                    <td>
+                        <p><strong>Unidad de medida: </strong></p>
+                    </td>
+                    <td align="center">{{ $max_quantity_description }}</td>
+                </tr>
+                
+            @endif
         </table>
     </div>
     <br>
@@ -70,6 +92,15 @@
                     </thead>
                     <tbody>
                         @foreach ($records as $key => $value)
+                        @php
+                               $quantity = $value->quantity;
+                                    if ($max_quantity) {
+                                        if($quantity != null && $quantity != 0 && $quantity != '-'){
+                                            $quantity = $quantity / $max_quantity_und;
+                                            $quantity = number_format($quantity, 2, '.', '');
+                                        }
+                                    }
+                        @endphp
                             <tr>
                                 <td class="celda">{{ $loop->iteration }}</td>
                                 @if (!$item_id)
@@ -80,7 +111,7 @@
 
                                     @switch($value->inventory_kardexable_type)
                                         @case($models[0])
-                                            {{ $value->quantity < 0 ? 'Venta' : 'Anulación' }}
+                                            {{ $quantity < 0 ? 'Venta' : 'Anulación' }}
                                         @break
 
                                         @case($models[1])
@@ -96,7 +127,7 @@
                                         @break
 
                                         @case($models[4])
-                                            {{ $value->quantity < 0 ? 'Pedido' : 'Anulación pedido' }}
+                                            {{ $quantity < 0 ? 'Pedido' : 'Anulación pedido' }}
                                         @break
                                     @endswitch
 
@@ -172,28 +203,29 @@
                                             $transaction = Modules\Inventory\Models\InventoryTransaction::findOrFail($value->inventory_kardexable->inventory_transaction_id);
                                         }
                                     }
+                                 
                                 @endphp
 
                                 <td class="celda">
                                     @switch($value->inventory_kardexable_type)
                                         @case($models[0])
-                                            {{ $value->quantity > 0 ? $value->quantity : '-' }}
+                                            {{ $quantity > 0 ? $quantity : '-' }}
                                         @break
 
                                         @case($models[1])
-                                            {{ $value->quantity > 0 ? $value->quantity : '-' }}
+                                            {{ $quantity > 0 ? $quantity : '-' }}
                                         @break
 
                                         @case($models[3])
                                             @if ($value->inventory_kardexable->type != null)
-                                                {{ $value->inventory_kardexable->type == 1 ? $value->quantity : '-' }}
+                                                {{ $value->inventory_kardexable->type == 1 ? $quantity : '-' }}
                                             @else
-                                                {{ $transaction->type == 'input' ? $value->quantity : '-' }}
+                                                {{ $transaction->type == 'input' ? $quantity : '-' }}
                                             @endif
                                         @break
 
                                         @case($models[4])
-                                            {{ $value->quantity > 0 ? $value->quantity : '-' }}
+                                            {{ $quantity > 0 ? $quantity : '-' }}
                                         @break
 
                                         @default
@@ -205,31 +237,31 @@
 
                                     @switch($value->inventory_kardexable_type)
                                         @case($models[0])
-                                            {{ $value->quantity < 0 ? (isset($value->inventory_kardexable->sale_note_id) ? '-' : $value->quantity) : '-' }}
+                                            {{ $quantity < 0 ? (isset($value->inventory_kardexable->sale_note_id) ? '-' : $quantity) : '-' }}
 
-                                            @php($value->quantity < 0) ? (isset($value->inventory_kardexable->sale_note_id) ?
-                                            $value->quantity = 0:$value->quantity):"-";
+                                            @php($quantity < 0) ? (isset($value->inventory_kardexable->sale_note_id) ?
+                                            $quantity = 0:$quantity):"-";
                                             @endphp
                                         @break
 
                                         @case($models[1])
-                                            {{ $value->quantity < 0 ? $value->quantity : '-' }}
+                                            {{ $quantity < 0 ? $quantity : '-' }}
                                         @break
 
                                         @case($models[2])
-                                            {{ $value->quantity }}
+                                            {{ $quantity }}
                                         @break
 
                                         @case($models[3])
                                             @if ($value->inventory_kardexable->type != null)
-                                                {{ $value->inventory_kardexable->type == 2 || $value->inventory_kardexable->type == 3 ? $value->quantity : '-' }}
+                                                {{ $value->inventory_kardexable->type == 2 || $value->inventory_kardexable->type == 3 ? $quantity : '-' }}
                                             @else
-                                                {{ $transaction->type == 'output' ? $value->quantity : '-' }}
+                                                {{ $transaction->type == 'output' ? $quantity : '-' }}
                                             @endif
                                         @break
 
                                         @case($models[4])
-                                            {{ $value->quantity < 0 ? $value->quantity : '-' }}
+                                            {{ $quantity < 0 ? $quantity : '-' }}
                                         @break
 
                                         @default
@@ -239,7 +271,7 @@
 
                                 </td>
                                 @php
-                                    $balance += $value->quantity;
+                                    $balance += $quantity;
                                 @endphp
 
                                 @if ($item_id)

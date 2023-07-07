@@ -45,6 +45,7 @@ class ItemCollection extends ResourceCollection
                 });
             }
             return [
+                'max_quantity_description' => $row->max_quantity_description,
                 'id' => $row->id,
                 'unit_type_id' => $row->unit_type_id,
                 'description' => $row->description,
@@ -76,6 +77,7 @@ class ItemCollection extends ResourceCollection
                 //  'category' => [
                 //  'description' =>$row->category->name,
                 //  ],
+                'unit_type_description' => ($row->unit_type) ? $row->unit_type->description : '',
                 'unit_type' => $item_unit_types,
                 'warehouses' => collect($row->warehouses)->transform(function ($row) use ($decimal) {
                     return [ //

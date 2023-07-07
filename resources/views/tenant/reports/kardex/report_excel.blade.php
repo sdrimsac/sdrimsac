@@ -99,6 +99,7 @@
                                 <td class="celda">
                                     {{$value->inventory_kardexable->detail ?? '-'}}
                                 </td>
+                               
                                 <td class="celda">
                                     {{ $value->type == 'purchase' || !$value->type ? number_format($value->quantity, 4) : number_format(0, 4) }}
                                 </td>

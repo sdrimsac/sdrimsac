@@ -17,6 +17,11 @@ class KardexExport implements  FromView, ShouldAutoSize
         
         return $this;
     }
+    public function max_quantity($max_quantity){
+        $this->max_quantity = $max_quantity;
+        
+        return $this;
+    }
 
     public function item_id($item_id) {
         $this->item_id = $item_id;
@@ -54,6 +59,7 @@ class KardexExport implements  FromView, ShouldAutoSize
             'balance'=> $this->balance,
             'records'=> $this->records,
             'models'=> $this->models,
+            'max_quantity'=> $this->max_quantity,
             'company' => $this->company,
             'establishment'=>$this->establishment
         ]);

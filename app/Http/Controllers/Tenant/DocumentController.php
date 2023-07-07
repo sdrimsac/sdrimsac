@@ -1388,7 +1388,6 @@ class DocumentController extends Controller
         return $items;
     }
 
-
     public function getDataTableItem(Request $request)
     {
 
@@ -1407,6 +1406,9 @@ class DocumentController extends Controller
             ->get()->transform(function ($row) {
                 return [
                     'id' => $row->id,
+                    'max_quantity' => $row->max_quantity,
+                    'max_quantity_description' => $row->max_quantity_description,
+                    'unit_type_description' => $row->unit_type->description,
                     'series_enabled' => $row->series_enabled,
                     'description' => ($row->internal_id) ? "{$row->internal_id} - {$row->description}" : $row->description,
                     'sale_unit_price' => $row->sale_unit_price,

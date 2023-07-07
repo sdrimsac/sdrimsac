@@ -830,6 +830,7 @@
                 <div class="col-5 col-sm-7 col-lg-6 col-md-7 col-xl-5">
                     <div class="card-body p-2">
                         <list-orden
+                        ref="list_orden"
                         :affectation_igv_types="affectation_igv_types"
                             :all_series.sync="all_series"
                             @resetOrden="resetOrden"
@@ -1816,9 +1817,10 @@ export default {
     sockets: {},
     computed: {},
     methods: {
-        setItemsToLiquidate(items){
+        setItemsToLiquidate(items,consignment){
+            console.log(consignment);
             this.localOrden = items;
-            console.log(this.localOrden, " local");
+            this.$refs.list_orden.setConsignment(consignment);
         },
         async getPrinter() {
             const response = await this.$http.get(

@@ -74,23 +74,30 @@
                             >
                                 <div @click="addFood(index)">
                                     <div>
-                                        <span class="lead-font-weight-700 d-inline-block text-truncate">
-                                            {{ data.description.toUpperCase()}}
+                                        <span
+                                            class="lead-font-weight-700 d-inline-block text-truncate"
+                                        >
+                                            {{ data.description.toUpperCase() }}
                                         </span>
                                         <el-tooltip
                                             class="item"
                                             effect="dark"
-                                            :content=data.description.toUpperCase()
+                                            :content="
+                                                data.description.toUpperCase()
+                                            "
                                             placement="top-start"
-                                            >
+                                        >
                                             <i class="fas fa-ellipsis-h"></i>
                                         </el-tooltip>
                                     </div>
                                     <div
                                         class="d-flex align-items-end justify-content-between"
                                     >
-                                        <div class="p-1" >
-                                            <div class="icon-container" style="  height: 64px;  width: 64px;">
+                                        <div class="p-1">
+                                            <div
+                                                class="icon-container"
+                                                style="  height: 64px;  width: 64px;"
+                                            >
                                                 <div class="icon-container_box">
                                                     <template
                                                         v-if="
@@ -99,7 +106,6 @@
                                                         "
                                                     >
                                                         <img
-                                                            
                                                             src="/images/imagen-no-disponible.jpg"
                                                             alt="User Img"
                                                             class="thumbail"
@@ -408,22 +414,36 @@ export default {
             {
                 max_quantity,
                 item_unit_types,
-
+                max_quantity_description,
                 unit_type
             },
             stock
         ) {
-            let general = Math.trunc(stock / max_quantity);
+            let item_unit = item_unit_types.find(
+                i => Number(i.quantity_unit) == Number(max_quantity)
+            );
+            let general = 0;
+            if (item_unit) {
+                general = Math.trunc(stock / max_quantity);
+            } else {
+                general = stock / max_quantity;
+            }
             let part = ((stock / max_quantity) % 1).toFixed(2);
+            let part_general = general.toString().split(".");
 
+            if (part_general.length > 1 && part_general[1].length > 2) {
+                general = general.toFixed(2);
+            }
             let text = `${general} ${unit_type.id}`;
             if (part != 0) {
-                let item_unit = item_unit_types.find(
-                    i => Number(i.quantity_unit) == Number(max_quantity)
-                );
                 if (item_unit) {
                     text += ` ${part * max_quantity} ${item_unit.unit_type.id}`;
+                } else {
+                    text = `${general} ${max_quantity_description ||
+                        unit_type.id}`;
                 }
+            } else {
+                text = `${general} ${max_quantity_description || unit_type.id}`;
             }
 
             return text;

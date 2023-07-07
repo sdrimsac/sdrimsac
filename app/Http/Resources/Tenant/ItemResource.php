@@ -18,6 +18,7 @@ class ItemResource extends JsonResource
         $foods = Food::where('item_id', $this->id)->first();
 
         return [
+            'max_quantity_description' => $this->max_quantity_description,
             'id' => $this->id,
             'max_quantity' => $this->max_quantity,
             'delivery_cost' => $this->delivery_cost,

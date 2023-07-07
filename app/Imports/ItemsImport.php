@@ -48,7 +48,8 @@ class ItemsImport implements ToCollection
             $category_name = strtoupper($row[14]);
             $brand_name = strtoupper($row[15]);
             $area_description = strtoupper($row[16]);
-
+            $max_quantity = $row[30];
+            $max_quantity_description = $row[31];
             $establishment_id = 1;
 
             $warehouse = Warehouse::where('establishment_id',  request('warehouse_id'))->first();
@@ -67,6 +68,7 @@ class ItemsImport implements ToCollection
             $stock_min = $row[13];
             $has_series = (strtoupper($row[17]) === 'SI') ? 1 : 0;
             $prices = [];
+            //30 31
 
             for ($i = 1; $i <= 4; $i++) {
                 $descIndex = 18 + (($i - 1) * 3);
@@ -101,6 +103,8 @@ class ItemsImport implements ToCollection
                     //dd($item,"aqui...");
                     $brand = Brand::updateOrCreate(['name' => $brand_name]);
                     $item = Item::create([
+'max_quantity'=>$max_quantity,
+'max_quantity_description'=>$max_quantity_description,
                         'description' => $description,
                         'second_name' => $second_name,
                         'item_type_id' => $item_type_id,
@@ -144,6 +148,8 @@ class ItemsImport implements ToCollection
                 } else {
 
                     $item->update([
+                        'max_quantity'=>$max_quantity,
+                        'max_quantity_description'=>$max_quantity_description,
                         'description' => $description,
                         'second_name' => $second_name,
                         'item_type_id' => $item_type_id,
