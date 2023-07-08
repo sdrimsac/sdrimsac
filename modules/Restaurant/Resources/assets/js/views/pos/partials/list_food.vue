@@ -460,7 +460,9 @@ export default {
                 }
                 if(max_quantity && max_quantity_description){
                     text = `${general} ${max_quantity_description}`;
-                    text += ` ${part * max_quantity} ${unit_type.id}`;
+                    let new_part = part * max_quantity;
+                    new_part = new_part.toFixed(2);
+                    text += ` ${new_part} ${unit_type.id}`;
                 }
             }
 
