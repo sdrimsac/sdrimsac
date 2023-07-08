@@ -22,7 +22,7 @@
                     <div class="col-md-4">
                         <div class="form-group" :class="{'has-danger': errors.quantity}">
                             <label class="control-label">Cantidad</label>
-                            <el-input-number v-model="form.quantity" :min="0.01"></el-input-number>
+                            <el-input-number class="w-100" v-model="form.quantity" :min="0.01"></el-input-number>
                             <small class="form-control-feedback" v-if="errors.quantity" v-text="errors.quantity[0]"></small>
                         </div>
                     </div>  
@@ -62,7 +62,7 @@
             this.$http.get(`/${this.resource}/item/tables`).then(response => {
 
                 this.individual_items = response.data.individual_items
-
+console.log(this.individual_items);
             })
         },
         methods: {
@@ -71,6 +71,7 @@
                 this.errors = {}
 
                 this.form = {
+                    unit_type_description: null,
                     individual_item_id: null,
                     sale_unit_price: 0,
                     quantity: 1,
@@ -89,6 +90,7 @@
                 let item = _.find(this.individual_items, {'id': this.form.individual_item_id})
                 this.form.sale_unit_price = item.sale_unit_price
                 this.form.full_description = item.full_description
+                this.form.unit_type_description = item.unit_type_description
             
             }, 
             async clickAddItem() {

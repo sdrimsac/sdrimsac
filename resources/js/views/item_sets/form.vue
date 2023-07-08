@@ -308,7 +308,8 @@
                                             {{ row.sale_unit_price }}
                                         </td>
                                         <td class="text-right">
-                                            {{ row.quantity }}
+                                            {{ row.quantity }} 
+                                            {{row.unit_type_description}}
                                         </td>
                                         <td class="text-right">
                                             <button
@@ -820,7 +821,7 @@ export default {
                 }
             },
             changeAffectationIgvType(){
-
+                let is_exonerated = false
             if (is_exonerated) {
                 this.show_has_igv = false;
                 this.form.has_igv = true;
@@ -848,6 +849,7 @@ export default {
                     .get(`/${this.resource}/record/${this.recordId}`)
                     .then(response => {
                         this.form = response.data.data;
+                        console.log(this.form);
                         this.changeAffectationIgvType();
                     });
             }

@@ -17,8 +17,8 @@ class InventoryController extends Controller
 {
     public function fix_models()
     {
-
-        $pattern = '^App\\\\Models\\\\(.*?)$';
+        $pattern = '^App\\\\Models\\\\(?!.*?Tenant)(.*?)$';
+        // $pattern = '^App\\\\Models\\\\(.*?)$';
         $replacement = 'App\\\\Models\\\\Tenant\\\\$1';
 
         $records = DB::connection('tenant')->table('inventory_kardex')

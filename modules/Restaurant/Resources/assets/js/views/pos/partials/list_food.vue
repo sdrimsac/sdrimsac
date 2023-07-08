@@ -419,31 +419,49 @@ export default {
             },
             stock
         ) {
-            let item_unit = item_unit_types.find(
-                i => Number(i.quantity_unit) == Number(max_quantity)
-            );
-            let general = 0;
-            if (item_unit) {
-                general = Math.trunc(stock / max_quantity);
-            } else {
-                general = stock / max_quantity;
-            }
-            let part = ((stock / max_quantity) % 1).toFixed(2);
-            let part_general = general.toString().split(".");
+            // let item_unit = item_unit_types.find(
+            //     i => Number(i.quantity_unit) == Number(max_quantity)
+            // );
+            // let general = 0;
+            // if (item_unit) {
+            //     general = Math.trunc(stock / max_quantity);
+            // } else {
+            //     general = stock / max_quantity;
+            // }
+            // let part = ((stock / max_quantity) % 1).toFixed(2);
+            // let part_general = general.toString().split(".");
 
-            if (part_general.length > 1 && part_general[1].length > 2) {
-                general = general.toFixed(2);
-            }
+            // if (part_general.length > 1 && part_general[1].length > 2) {
+            //     general = general.toFixed(2);
+            // }
+            // let text = `${general} ${unit_type.id}`;
+            // if (part != 0) {
+            //     if (item_unit) {
+            //         text += ` ${part * max_quantity} ${item_unit.unit_type.id}`;
+            //     } else {
+            //         text = `${general} ${max_quantity_description ||
+            //             unit_type.id}`;
+            //     }
+            // } else {
+            //     text = `${general} ${max_quantity_description || unit_type.id}`;
+            // }
+
+            // return text;
+             let general = Math.trunc(stock / max_quantity);
+            let part = ((stock / max_quantity) % 1).toFixed(2);
+
             let text = `${general} ${unit_type.id}`;
             if (part != 0) {
+                let item_unit = item_unit_types.find(
+                    i => Number(i.quantity_unit) == Number(max_quantity)
+                );
                 if (item_unit) {
                     text += ` ${part * max_quantity} ${item_unit.unit_type.id}`;
-                } else {
-                    text = `${general} ${max_quantity_description ||
-                        unit_type.id}`;
                 }
-            } else {
-                text = `${general} ${max_quantity_description || unit_type.id}`;
+                if(max_quantity && max_quantity_description){
+                    text = `${general} ${max_quantity_description}`;
+                    text += ` ${part * max_quantity} ${unit_type.id}`;
+                }
             }
 
             return text;

@@ -93,12 +93,17 @@ class ItemSetController extends Controller
 
         $individual_items = Item::whereWarehouse()->whereTypeUser()->whereNotIsSet()->whereIsActive()->get()->transform(function($row) {
             $full_description = ($row->internal_id)?$row->internal_id.' - '.$row->description:$row->description;
+            $unit_type_description = $row->unit_type->description; 
+            // if($row->max_quantity && $row->max_quantity_description){
+            //     $unit_type_description = $row->max_quantity_description;
+            // }
             return [
                 'id' => $row->id,
                 'full_description' => $full_description,
                 'internal_id' => $row->internal_id,
                 'description' => $row->description,
                 'sale_unit_price' => $row->sale_unit_price,
+                'unit_type_description' => $unit_type_description,
             ];
         });
 

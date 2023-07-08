@@ -65,6 +65,7 @@ class ItemResource extends JsonResource
                     'full_description' => $full_description,
                     'sale_unit_price' => (float) $row->individual_item->sale_unit_price,
                     'quantity' => (float) $row->quantity,
+                    'unit_type_description' => $row->individual_item->unit_type->description,
                 ];
             }),
             'area_id' => ($foods == null) ? null : $foods->area_id,
