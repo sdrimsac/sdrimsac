@@ -456,7 +456,9 @@ export default {
                     i => Number(i.quantity_unit) == Number(max_quantity)
                 );
                 if (item_unit) {
-                    text += ` ${part * max_quantity} ${item_unit.unit_type.id}`;
+                    let new_part = part * max_quantity;
+                    new_part = new_part.toFixed(2);
+                    text += ` ${new_part} ${item_unit.unit_type.id}`;
                 }
                 if(max_quantity && max_quantity_description){
                     text = `${general} ${max_quantity_description}`;
