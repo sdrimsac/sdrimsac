@@ -3585,7 +3585,7 @@ export default {
                 paperConfig.orientation = "portrait";
                 paperConfig.margins = { left: 2 };
             } else if (!isTicket && tipoBandejaImpresora == 0) {
-                paperConfig.density = 350;
+                paperConfig.density = 600;
                 paperConfig.orientation = "portrait";
             }
             let config = qz.configs.create(Printer, paperConfig);
