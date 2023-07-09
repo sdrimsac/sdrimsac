@@ -92,6 +92,8 @@ Route::middleware(['auth', 'redirect.module', 'locked.tenant'])->group(function 
 
         Route::get('series/', 'VentaSeriesController@index')->name('reports.series.index');
         Route::post('series/getDataSeries', 'VentaSeriesController@getDataSeries');
+        Route::get('series/getPersonas', 'VentaSeriesController@getPersonas');
+        
     });
 
 

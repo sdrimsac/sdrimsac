@@ -66,6 +66,24 @@
                   </el-date-picker>
                 </div>
               </div>
+              <div class="col-md-2">
+                <div class="form-group">
+                  <label class="control-label">Cliente</label>
+                  <el-select
+                        v-model="form.personas"
+                        clearable
+                        filterable>
+                        <el-option
+                            v-for="option in ListPersonas"
+                            :key="option.id"
+                            :value="option.id"
+                            :label="option.degres_desc"
+                        ></el-option>
+                    </el-select>
+                  
+                  
+                </div>
+              </div>
 
               <div
                 class="
@@ -117,21 +135,29 @@
                 <thead>
                   <tr slot="heading">
                     <th>#</th>
-                    <th>CODIGO INTERNO</th>
+                    <th>Almacen</th>
+                    <th>COD. INTERNO</th>
                     <th>PRODUCTO</th>
                     <th>SERIE</th>
-                    <th>DOCUMENTO</th>
-                    <th>FECHA DE VENTA</th>
-                    <th>PRECIO DE VENTA</th>
+                    <th>CLIENTE</th>
+                    <th>NR. DOC.</th>
+                    <th>F. VENTA</th>
+                    <th>P. VENTA</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr v-for="(row, index) in records" :key="index">
                     <td>{{ index + 1 }}</td>
                     <td>
+                      
+                        {{ row.establish_description }}
+                      
+                    </td>
+                    <td>
                       {{ row.codigoInterno }}
                       
                     </td>
+                    
                     <td>
                       
                         {{ row.descripcion }}
@@ -143,8 +169,12 @@
                       }}
                     </td>
                     <td>
+                      {{row.pers_name  }}
+                    </td>
+                    <td>
                       {{ row.docSeries }}
                     </td>
+                    
                     <td>
                       {{
                         row.docDate
@@ -197,6 +227,7 @@ export default {
       categories: [],
       pagination: {},
       showWhatsappForm: false,
+      ListPersonas: []
     };
   },
   async created() {
@@ -206,7 +237,40 @@ export default {
       
     });
   },
+  mounted(){
+    this.getPersonas();
+  },
   methods: {
+    async getPersonas(){
+            
+            try {
+                const response = await this.$http.get(`${this.resource}/getPersonas`)
+                const{data , status} = response
+                console.log(data); 
+                if(status == 200) {
+                    this.ListPersonas = [...data.personas.map(s =>{
+                            s.degres_desc = `${s.name} - ${s.number} `
+                             
+                            return {
+                             ...s              
+                              };
+                    })];
+                    
+                    
+                   // this.ListPersonas = data.ListPersonas
+                    
+                        
+                }else{
+                    console.log(response)
+                }
+                
+                
+                this.loadingData = false 
+            } catch (error) {
+                console.log(error);
+                
+            }
+        },
     async getRecordsByFilter(){
         console.log('obtneiendo records ');
         try {
