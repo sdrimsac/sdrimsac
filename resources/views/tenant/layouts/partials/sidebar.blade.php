@@ -489,6 +489,12 @@
                         <i class="icofont-chart-bar-graph"></i> Kardex
                     </a>
                 </li>
+                <li>
+                    <a class="{{ $path[0] === 'reports' && $path[1] === 'series' ? 'active' : '' }}"
+                        href="{{ route('reports.series.index') }}">
+                        <i class="fas fa-fingerprint"></i> Venta de Series
+                    </a>
+                </li>
 
             </ul>
         </li>

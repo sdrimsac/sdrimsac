@@ -89,6 +89,11 @@ Route::middleware(['auth', 'redirect.module', 'locked.tenant'])->group(function 
         Route::get('stockmin/getListProv', 'ReportStockMinController@getListProv');
         Route::post('stockmin/genOrdenCompraMasiva', 'ReportStockMinController@genOrdenCompraMasiva');
 
+
+        Route::get('series/', 'VentaSeriesController@index')->name('reports.series.index');
+        Route::post('series/getDataSeries', 'VentaSeriesController@getDataSeries');
+        Route::get('series/getPersonas', 'VentaSeriesController@getPersonas');
+        
     });
 
 

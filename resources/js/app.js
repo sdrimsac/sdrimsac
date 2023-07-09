@@ -814,6 +814,11 @@ const app = new Vue({
                 /*webpackChunkName:"tenant-consigment-index"*/
                 "@viewsModuleConsignment/index.vue"
             ),
+            "report-series-vendidas" : ()=>
+            import(
+                /*webpackChunkName:"reporte-series-vendidas"*/
+                "../../modules/Inventory/Resources/assets/js/series/reporteSeriesSell.vue"
+            ),
 
 
     }
