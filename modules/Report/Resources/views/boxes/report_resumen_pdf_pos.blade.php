@@ -704,13 +704,16 @@
                         <table class="border" style="margin-top:4px;">
                             <thead>
                                 <tr>
-                                    <th class="thead" colspan="3">
+                                    <th class="thead" colspan="4">
                                         <span class="f12">DETALLE SERIES VENDIDAS</span>
                                     </th>
                                 </tr>
                                 <tr>
                                     <th class="thead" >
                                         <span class="f12">#</span>
+                                    </th>
+                                    <th class="thead" >
+                                        <span class="f12">DOCUMENTO</span>
                                     </th>
                                     <th class="thead" >
                                         <span class="f12">PRODUCTO</span>
@@ -726,8 +729,9 @@
                                     
                                         <tr>
                                             <td width="10%" class="f12 center">{{$index + 1}}</td>
-                                            <td width="70%" class="f12">{{ strtoupper($detailseries[0]) }}</td>
-                                            <td width="35%" class="f12 right">{{ $detailseries[1] }}</td>
+                                            <td width="10%" class="f12 center">{{$detailseries[0]}}</td>
+                                            <td width="70%" class="f12">{{ strtoupper($detailseries[1]) }}</td>
+                                            <td width="35%" class="f12 right">{{ $detailseries[2] }}</td>
                                         </tr>
                                     
                                 @endforeach

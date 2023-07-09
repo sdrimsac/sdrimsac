@@ -787,10 +787,15 @@ class BoxesController extends Controller
         }
         $establishment = Establishment::find($user->establishment_id);
 
-        $seriesDocs = DB::connection('tenant')->select('SELECT document_items.*    FROM      boxes      INNER JOIN ordens ON boxes.orden_id = ordens.id      INNER JOIN documents ON ordens.document_id = documents.id       AND ordens.id = documents.orden_id      INNER JOIN document_items ON documents.id = document_items.document_id   WHERE      cash_id = ?', [$cash_id]);    
+        $seriesDocs = DB::connection('tenant')->select('SELECT document_items.* ,
+            documents.series as  doc_series, 
+            documents.number as  doc_number   
+            FROM      boxes      INNER JOIN ordens ON boxes.orden_id = ordens.id      
+            INNER JOIN documents ON ordens.document_id = documents.id       AND ordens.id = documents.orden_id      INNER JOIN document_items ON documents.id = document_items.document_id   WHERE      cash_id = ?', [$cash_id]);    
         
         $seriesSalesNotes = DB::connection('tenant')->select('SELECT
-                        sale_note_items.* 
+                        sale_note_items.* ,sale_notes.series as salenotes_series,
+	                    sale_notes.number as salenotes_number
                     FROM
                         boxes
                         INNER JOIN ordens ON boxes.orden_id = ordens.id
@@ -803,7 +808,7 @@ class BoxesController extends Controller
             foreach ($seriesDocs as $key => $value) {
                 $detalleSell =  json_decode($value->item, true);
                 foreach ($detalleSell['lots'] as $key => $valueDetalle) {
-                    $datosSeries[] =  [$detalleSell['description'] , $valueDetalle['series']]; 
+                    $datosSeries[] =  [ $value->doc_series.'-'. $value->doc_number , $detalleSell['description'] , $valueDetalle['series']]; 
                 }
             }
         }
@@ -812,7 +817,7 @@ class BoxesController extends Controller
             foreach ($seriesSalesNotes as $key => $value) {
                 $detalleSalesNotes =  json_decode($value->item, true);
                 foreach ($detalleSalesNotes['lots'] as $key => $valueDetalle) {
-                    $datosSeries[] =  [$detalleSalesNotes['description'] , $valueDetalle['series']]; 
+                    $datosSeries[] =  [$value->salenotes_series.'-'. $value->salenotes_number , $detalleSalesNotes['description'] , $valueDetalle['series']]; 
                 }
             }
         }
