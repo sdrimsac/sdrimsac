@@ -100,7 +100,7 @@
                   icon="el-icon-search"
                   >Buscar</el-button
                 >
-                <template v-if="records.length > 0">
+                <template v-if="records.length > 0 || NotasDeventas.length > 0 ">
                  
                   <el-button
                   style="background-color: #217346;"
@@ -119,77 +119,149 @@
               </div>
             </div>
           </div>
+
           <div class="col-md-12">
-            <div class="row">
-                <el-pagination
-                        @current-change="getRecordsByFilter"
-                        layout="total, prev, pager, next"
-                        :total="pagination.total"
-                        :current-page.sync="pagination.current_page"
-                        :page-size="pagination.per_page">
-                </el-pagination>
+            <el-tabs v-model="activeName" type="card" tab-position="top">
+              <el-tab-pane
+                        label="Facturas - Boletas"
+                        name="documents"
+                    >
+                    <div class="row">
+                      <el-pagination
+                              @current-change="getRecordsByFilter"
+                              layout="total, prev, pager, next"
+                              :total="pagination.documents.total"
+                              :current-page.sync="pagination.documents.current_page"
+                              :page-size="pagination.documents.per_page">
+                      </el-pagination>
                 
-            </div>
-            <div class="table-responsive">
-                <table class="table table-hover table-striped table-condensed  table-responsive" style="width: 100%; white-space: nowrap;">
-                <thead>
-                  <tr slot="heading">
-                    <th>#</th>
-                    <th>Almacen</th>
-                    <th>COD. INTERNO</th>
-                    <th>PRODUCTO</th>
-                    <th>SERIE</th>
-                    <th>CLIENTE</th>
-                    <th>NR. DOC.</th>
-                    <th>F. VENTA</th>
-                    <th>P. VENTA</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="(row, index) in records" :key="index">
-                    <td>{{ index + 1 }}</td>
-                    <td>
-                      
-                        {{ row.establish_description }}
-                      
-                    </td>
-                    <td>
-                      {{ row.codigoInterno }}
-                      
-                    </td>
-                    
-                    <td>
-                      
-                        {{ row.descripcion }}
-                      
-                    </td>
-                    <td>
-                      {{
-                        row.series
-                      }}
-                    </td>
-                    <td>
-                      {{row.pers_name  }}
-                    </td>
-                    <td>
-                      {{ row.docSeries }}
-                    </td>
-                    
-                    <td>
-                      {{
-                        row.docDate
-                      }}
-                    </td>
-                    <td class="text-center">
-                      {{
-                        Number(row.itemValue).toFixed(2)
-                      }}
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-              <div></div>
-            </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover table-striped table-condensed  table-responsive" style="width: 100%; white-space: nowrap;">
+                        <thead>
+                          <tr slot="heading">
+                            <th>#</th>
+                            <th>Almacen</th>
+                            <th>COD. INTERNO</th>
+                            <th>PRODUCTO</th>
+                            <th>SERIE</th>
+                            <th>CLIENTE</th>
+                            <th>NR. DOC.</th>
+                            <th>F. VENTA</th>
+                            <th>P. VENTA</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr v-for="(row, index) in records" :key="index">
+                            <td>{{ index + 1 }}</td>
+                            <td>
+                              
+                                {{ row.establish_description }}
+                              
+                            </td>
+                            <td>
+                              {{ row.codigoInterno }}
+                              
+                            </td>
+                            
+                            <td>
+                              
+                                {{ row.descripcion }}
+                              
+                            </td>
+                            <td>
+                              {{
+                                row.series
+                              }}
+                            </td>
+                            <td>
+                              {{row.pers_name  }}
+                            </td>
+                            <td>
+                              {{ row.docSeries }}
+                            </td>
+                            
+                            <td>
+                              {{
+                                row.docDate
+                              }}
+                            </td>
+                            <td class="text-center">
+                              {{
+                                Number(row.itemValue).toFixed(2)
+                              }}
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                      <div></div>
+                    </div>  
+              </el-tab-pane>
+              <el-tab-pane
+                        label="Notas De ventas "
+                        name="SalesNotes"
+                    >
+                    <div class="row">
+                      <el-pagination
+                              @current-change="getRecordsByFilter"
+                              layout="total, prev, pager, next"
+                              :total="pagination.saleNotes.total"
+                              :current-page.sync="pagination.saleNotes.current_page"
+                              :page-size="pagination.saleNotes.per_page">
+                      </el-pagination>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover table-striped table-condensed  table-responsive" style="width: 100%; white-space: nowrap;">
+                        <thead>
+                          <tr slot="heading">
+                            <th>#</th>
+                            <th>Almacen</th>
+                            <th>COD. INTERNO</th>
+                            <th>PRODUCTO</th>
+                            <th>SERIE</th>
+                            <th>CLIENTE</th>
+                            <th>NR. DOC.</th>
+                            <th>F. VENTA</th>
+                            <th>P. VENTA</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr v-for="(row, index) in NotasDeventas" :key="index">
+                            <td>{{ index + 1 }}</td>
+                            <td>
+                              {{ row.establish_description }}
+                            </td>
+                            <td>
+                              {{ row.codigoInterno }}
+                            </td>
+                            <td>
+                              {{ row.descripcion }}
+                            </td>
+                            <td>
+                              {{ row.series }}
+                            </td>
+                            <td>
+                              {{ row.pers_name }}
+                            </td>
+                            <td>
+                             {{  row.sale_notes_series }}
+                            </td>
+                            <td>
+                              {{ row.docDate }}
+                            </td>
+                            <td class="text-center">
+                              {{ Number(row.itemValue).toFixed(2) }}
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                      <div></div>
+                    </div> 
+              </el-tab-pane>
+            </el-tabs>
+            
+            
+            
           </div>
         </div>
       </div>
@@ -206,6 +278,7 @@ export default {
   props: [],
   data() {
     return {
+      activeName: documents, 
       totalGeneral: null,
       totalGain: 0,
       warehouses: [],
@@ -225,9 +298,13 @@ export default {
       form: {},
       records: [],
       categories: [],
-      pagination: {},
+      pagination: { 
+        saleNotes: {},
+        documents: {},
+      },
       showWhatsappForm: false,
-      ListPersonas: []
+      ListPersonas: [],
+      NotasDeventas: [],
     };
   },
   async created() {
@@ -246,7 +323,7 @@ export default {
             try {
                 const response = await this.$http.get(`${this.resource}/getPersonas`)
                 const{data , status} = response
-                console.log(data); 
+                 
                 if(status == 200) {
                     this.ListPersonas = [...data.personas.map(s =>{
                             s.degres_desc = `${s.name} - ${s.number} `
@@ -254,45 +331,93 @@ export default {
                             return {
                              ...s              
                               };
-                    })];
-                    
-                    
-                   // this.ListPersonas = data.ListPersonas
-                    
-                        
+                    })];         
                 }else{
                     console.log(response)
                 }
                 
-                
-                this.loadingData = false 
             } catch (error) {
                 console.log(error);
-                
             }
         },
     async getRecordsByFilter(){
-        console.log('obtneiendo records ');
+        
         try {
-            
-            const response = await axios.post(`${this.resource}/getDataSeries?page=${this.pagination.current_page}`,{
+            if(this.activeName === 'documents'){
+              const response = await axios.post(`${this.resource}/getDataSeries?page=${this.pagination.documents.current_page}`,{
                 form : this.form
                 });
 
                 const {data , status } = response; 
                 if (status == 200) {
+                  
                     this.records = data.datosSeries 
-                    this.pagination.total = data.dataPaginated.total
-                    this.pagination.current_page = data.dataPaginated.current_page
-                    this.pagination.per_page = data.dataPaginated.per_page
+                    this.pagination.documents.total = data.dataPaginated.total
+                    this.pagination.documents.current_page = data.dataPaginated.current_page
+                    this.pagination.documents.per_page = data.dataPaginated.per_page
                 }
 
-                console.log(response);
-            
+                
+            }
+            if(this.activeName === 'SalesNotes'){
+              const response = await axios.post(`${this.resource}/getDataSeriesSalesnotes?page=${this.pagination.saleNotes.current_page}`,{
+                form : this.form
+                });
+
+                const {data , status } = response; 
+                if (status == 200) {
+                  this.NotasDeventas = data.datosSeries;
+                  this.pagination.saleNotes.total = data.dataPaginated.total
+                    this.pagination.saleNotes.current_page = data.dataPaginated.current_page
+                    this.pagination.saleNotes.per_page = data.dataPaginated.per_page
+                }
+
+                
+            }
+                  
         } catch (error) {
             console.log(error)
             
         }
+    },
+    async clickDownload(){
+
+      
+/* 
+      try {
+            if(this.activeName === 'documents'){
+              const response = await axios.post(`${this.resource}reporteexcel`,{
+                form : this.form
+                });
+
+                const {data , status } = response; 
+                if (status == 200) {
+                  
+                    
+                }
+
+                
+            }
+            if(this.activeName === 'SalesNotes'){
+              const response = await axios.post(`${this.resource}/getDataSeriesSalesnotes?page=${this.pagination.saleNotes.current_page}`,{
+                form : this.form
+                });
+
+                const {data , status } = response; 
+                if (status == 200) {
+                  this.NotasDeventas = data.datosSeries;
+                  this.pagination.saleNotes.total = data.dataPaginated.total
+                    this.pagination.saleNotes.current_page = data.dataPaginated.current_page
+                    this.pagination.saleNotes.per_page = data.dataPaginated.per_page
+                }
+
+                
+            }
+                  
+        } catch (error) {
+            console.log(error)
+            
+        } */
     }
   },
 };
