@@ -14,14 +14,12 @@
     }
     $formatQuantity = function ($quantity) use ($max_quantity_und, $max_quantity_description, $unit_type_description) {
         $general = intval($quantity / $max_quantity_und);
-        $q = $quantity / $max_quantity_und;
-        // $q = number_format($q, 2, '.', '');
-        $part = fmod($q, 1);
+        $part = fmod($quantity / $max_quantity_und,  1);
         $text = $general . ' ' . $max_quantity_description;
         if ($part != 0) {
             $new_part = $part * $max_quantity_und;
             $new_part = number_format($new_part, 2, '.', '');
-            $text += $new_part . ' ' . $unit_type_description;
+            $text .=' '. $new_part . ' ' . $unit_type_description;
         }
     
         return $text;
@@ -250,7 +248,7 @@
 
                                     @switch($value->inventory_kardexable_type)
                                         @case($models[0])
-                                            {{ $quantity < 0 ? (isset($value->inventory_kardexable->sale_note_id) ? '-' : $quantity) : '-' }}
+                                            {{ $quantity < 0 ? (isset($value->inventory_kardexable->sale_note_id) ? '-' : $formatQuantity($quantity)) : '-' }}
 
                                             @php($quantity < 0) ? (isset($value->inventory_kardexable->sale_note_id) ?
                                             $quantity = 0:$quantity):"-";
@@ -288,7 +286,8 @@
                                 @endphp
 
                                 @if ($item_id)
-                                    <td class="celda">{{ number_format($balance, 4, '.', '') }}</td>
+                                    {{-- <td class="celda">{{ number_format($balance, 4, '.', '') }}</td> --}}
+                                    <td class="celda">{{$formatQuantity($balance) }}</td>
                                 @endif
                             </tr>
                         @endforeach
