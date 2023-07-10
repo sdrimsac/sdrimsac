@@ -11,7 +11,7 @@
         <form autocomplete="off" @submit.prevent="submit">
             <div class="form-body">
                 <div class="row">
-                    <div class="col-md-12" v-if="warehouses">
+                    <div class="col-md-12" v-if="warehouses && item">
                         <table class="table">
                             <thead>
                                 <tr>
@@ -26,26 +26,24 @@
                                     <th class="text-end">
                                         <template v-if="item.max_quantity">
                                             {{
-                                                (
-                                                    row.stock /
-                                                    item.max_quantity
-                                                ).toFixed(2)
-                                            }} 
+                                                stockMaxQuantity(row.stock,item)
+                                                
+                                            }}
                                         </template>
                                         <template v-else>
                                             <template
                                                 v-if="config && config.college"
                                             >
-                                                {{ parseInt(row.stock) }} 
+                                                {{ parseInt(row.stock) }}
                                             </template>
                                             <template v-else>
-                                                {{ row.stock }}  
+                                                {{ row.stock }}
                                             </template>
                                         </template>
-                                        {{ maxDescription }}
                                     </th>
                                     <th>
-                                        <button v-if="!hasSerie"
+                                        <button
+                                            v-if="!hasSerie"
                                             type="button"
                                             class="btn waves-effect waves-light btn-sm btn-warning"
                                             @click.prevent="clickStock(row)"
@@ -73,10 +71,15 @@
                                         template
                                         v-if="config && config.college"
                                     >
-                                        {{ parseInt(total) }} {{ maxDescription }}
+                                        {{ parseInt(total) }}
                                     </td>
-                                    <td class="text-end" template v-else>
-                                        {{ total.toFixed(2) }}  {{ maxDescription }}
+                                    <td class="text-end"  v-else>
+                                        <template v-if="item && item.max_quantity">
+                                        {{ stockMaxQuantity(total,item) }}
+                                        </template>
+                                        <template v-else>
+                                        {{ total.toFixed(2) }}
+                                        </template>
                                     </td>
                                     <td></td>
                                 </tr>
@@ -135,11 +138,10 @@
         </form>
 
         <inventories-stock
-        :user="user"
+            :user="user"
             :showDialog.sync="showDialogStock"
             :recordId="recordId"
-                        :config="config"
-
+            :config="config"
         ></inventories-stock>
     </el-dialog>
 </template>
@@ -150,7 +152,7 @@ import InventoriesStock from "./stock.vue";
 export default {
     components: { InventoriesStock },
     props: [
-             'user',
+        "user",
         "showDialog",
         "warehouses",
         "unit_type",
@@ -170,7 +172,7 @@ export default {
             titleDialog: "Stock de producto",
             series: null,
             loading: false,
-            maxDescription: ''
+            maxDescription: ""
         };
     },
     created() {
@@ -178,10 +180,27 @@ export default {
             this.close();
         });
 
-      
         //console.log(this.typeUser)
     },
     methods: {
+        stockMaxQuantity(stock = 0, item) {
+            let {
+                max_quantity,
+                unit_type_description,
+                max_quantity_description,
+            } = item;
+                stock = Number(stock);
+                let general = Math.trunc(stock / max_quantity);
+                let part = (stock / max_quantity) % 1;
+                let text = `${general} ${max_quantity_description}`;
+                if (part != 0) {
+                    let new_part = part * max_quantity;
+                    new_part = new_part.toFixed(2);
+                    text += ` ${new_part} ${unit_type_description}`;
+                }
+
+                return text;
+        },
         clickStock(record) {
             this.recordId = record.id;
             this.showDialogStock = true;
@@ -191,15 +210,7 @@ export default {
                 (a, b) => a + Number(b.stock),
                 0
             );
-            if (this.item.max_quantity) {
-                this.total = this.total / this.item.max_quantity;
-            }
-            if(this.item.max_quantity_description){
-                this.maxDescription = this.item.max_quantity_description
-            }else{
-                this.maxDescription = this.item.unit_type_description
-            }
-
+        
             if (this.hasSerie) {
                 this.getSeries();
             }

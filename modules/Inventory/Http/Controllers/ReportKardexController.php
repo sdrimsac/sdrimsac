@@ -45,9 +45,9 @@ class ReportKardexController extends Controller
         ini_set('memory_limit', '-1');
     }
     protected $models = [
-        "App\Models\Document",
-        "App\Models\Purchase",
-        "App\Models\SaleNote",
+        "App\Models\Tenant\Document",
+        "App\Models\Tenant\Purchase",
+        "App\Models\Tenant\SaleNote",
         "Modules\Inventory\Models\Inventory",
         "Modules\Order\Models\OrderNote"
     ];

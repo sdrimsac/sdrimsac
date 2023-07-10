@@ -447,7 +447,7 @@ export default {
             // }
 
             // return text;
-             let general = Math.trunc(stock / max_quantity);
+            let general = Math.trunc(stock / max_quantity);
             let part = ((stock / max_quantity) % 1).toFixed(2);
 
             let text = `${general} ${unit_type.id}`;
@@ -455,12 +455,13 @@ export default {
                 let item_unit = item_unit_types.find(
                     i => Number(i.quantity_unit) == Number(max_quantity)
                 );
+                let part = (stock / max_quantity) % 1;
                 if (item_unit) {
                     let new_part = part * max_quantity;
                     new_part = new_part.toFixed(2);
                     text += ` ${new_part} ${item_unit.unit_type.id}`;
                 }
-                if(max_quantity && max_quantity_description){
+                if (max_quantity && max_quantity_description) {
                     text = `${general} ${max_quantity_description}`;
                     let new_part = part * max_quantity;
                     new_part = new_part.toFixed(2);

@@ -3583,7 +3583,7 @@ export default {
                 //opciones que permiten hacer una impresion correcta en impresoras nuevas
                 paperConfig.density = 600;
                 paperConfig.orientation = "portrait";
-                paperConfig.margins = { left: 2 };
+                // paperConfig.margins = { left: 2 };
             } else if (!isTicket && tipoBandejaImpresora == 0) {
                 paperConfig.density = 600;
                 paperConfig.orientation = "portrait";
