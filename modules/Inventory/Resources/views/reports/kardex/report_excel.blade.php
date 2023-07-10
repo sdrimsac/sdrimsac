@@ -6,12 +6,26 @@
     if ($item_id) {
         $item = \App\Models\Tenant\Item::find($item_id);
         $max_quantity_description = $item->unit_type->description;
-        if($max_quantity){
-            $max_quantity_description = $item->max_quantity_description ??$item->unit_type->description;
+        $unit_type_description = $item->unit_type->description;
+        if ($max_quantity) {
+            $max_quantity_description = $item->max_quantity_description ?? $item->unit_type->description;
             $max_quantity_und = $item->max_quantity;
         }
     }
+    $formatQuantity = function ($quantity) use ($max_quantity_und, $max_quantity_description, $unit_type_description) {
+        $general = intval($quantity / $max_quantity_und);
+        $q = $quantity / $max_quantity_und;
+        // $q = number_format($q, 2, '.', '');
+        $part = fmod($q, 1);
+        $text = $general . ' ' . $max_quantity_description;
+        if ($part != 0) {
+            $new_part = $part * $max_quantity_und;
+            $new_part = number_format($new_part, 2, '.', '');
+            $text += $new_part . ' ' . $unit_type_description;
+        }
     
+        return $text;
+    };
 @endphp
 
 <head>
@@ -62,7 +76,6 @@
                     </td>
                     <td align="center">{{ $max_quantity_description }}</td>
                 </tr>
-                
             @endif
         </table>
     </div>
@@ -92,15 +105,15 @@
                     </thead>
                     <tbody>
                         @foreach ($records as $key => $value)
-                        @php
-                               $quantity = $value->quantity;
-                                    if ($max_quantity) {
-                                        if($quantity != null && $quantity != 0 && $quantity != '-'){
-                                            $quantity = $quantity / $max_quantity_und;
-                                            $quantity = number_format($quantity, 2, '.', '');
-                                        }
-                                    }
-                        @endphp
+                            @php
+                                $quantity = $value->quantity;
+                                // if ($max_quantity) {
+                                //     if ($quantity != null && $quantity != 0 && $quantity != '-') {
+                                //         $quantity = $quantity / $max_quantity_und;
+                                //         $quantity = number_format($quantity, 2, '.', '');
+                                //     }
+                                // }
+                            @endphp
                             <tr>
                                 <td class="celda">{{ $loop->iteration }}</td>
                                 @if (!$item_id)
@@ -203,29 +216,29 @@
                                             $transaction = Modules\Inventory\Models\InventoryTransaction::findOrFail($value->inventory_kardexable->inventory_transaction_id);
                                         }
                                     }
-                                 
+                                    
                                 @endphp
 
                                 <td class="celda">
                                     @switch($value->inventory_kardexable_type)
                                         @case($models[0])
-                                            {{ $quantity > 0 ? $quantity : '-' }}
+                                            {{ $quantity > 0 ? ($max_quantity ? $formatQuantity($quantity) : $quantity) : '-' }}
                                         @break
 
                                         @case($models[1])
-                                            {{ $quantity > 0 ? $quantity : '-' }}
+                                            {{ $quantity > 0 ? ($max_quantity ? $formatQuantity($quantity) : $quantity) : '-' }}
                                         @break
 
                                         @case($models[3])
                                             @if ($value->inventory_kardexable->type != null)
-                                                {{ $value->inventory_kardexable->type == 1 ? $quantity : '-' }}
+                                                {{ $value->inventory_kardexable->type == 1 ? ($max_quantity ? $formatQuantity($quantity) : $quantity) : '-' }}
                                             @else
-                                                {{ $transaction->type == 'input' ? $quantity : '-' }}
+                                                {{ $transaction->type == 'input' ? ($max_quantity ? $formatQuantity($quantity) : $quantity) : '-' }}
                                             @endif
                                         @break
 
                                         @case($models[4])
-                                            {{ $quantity > 0 ? $quantity : '-' }}
+                                            {{ $quantity > 0 ? ($max_quantity ? $formatQuantity($quantity) : $quantity) : '-' }}
                                         @break
 
                                         @default
@@ -245,7 +258,7 @@
                                         @break
 
                                         @case($models[1])
-                                            {{ $quantity < 0 ? $quantity : '-' }}
+                                            {{ $quantity < 0 ? ($max_quantity ? $formatQuantity($quantity) : $quantity) : '-' }}
                                         @break
 
                                         @case($models[2])
@@ -254,14 +267,14 @@
 
                                         @case($models[3])
                                             @if ($value->inventory_kardexable->type != null)
-                                                {{ $value->inventory_kardexable->type == 2 || $value->inventory_kardexable->type == 3 ? $quantity : '-' }}
+                                                {{ $value->inventory_kardexable->type == 2 || $value->inventory_kardexable->type == 3 ? ($max_quantity ? $formatQuantity($quantity) : $quantity) : '-' }}
                                             @else
-                                                {{ $transaction->type == 'output' ? $quantity : '-' }}
+                                                {{ $transaction->type == 'output' ? ($max_quantity ? $formatQuantity($quantity) : $quantity) : '-' }}
                                             @endif
                                         @break
 
                                         @case($models[4])
-                                            {{ $quantity < 0 ? $quantity : '-' }}
+                                            {{ $quantity < 0 ? ($max_quantity ? $formatQuantity($quantity) : $quantity) : '-' }}
                                         @break
 
                                         @default

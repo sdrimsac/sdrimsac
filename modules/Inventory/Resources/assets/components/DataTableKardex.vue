@@ -165,6 +165,7 @@ export default {
     data() {
         return {
             max_quantity: false,
+            original_records: [],
             unitTypeDescription: null,
             loading_submit: false,
             columns: [],
@@ -199,60 +200,70 @@ export default {
         // });
         // await this.getRecords()
     },
+
     methods: {
+        maxQuantityFormat(
+            qty,
+            max_quantity,
+            { max_quantity_description, unit_type_description }
+        ) {
+            let stock = Number(qty);
+            let general = Math.trunc(stock / max_quantity);
+            let part = (stock / max_quantity) % 1;
+            let text = `${general} ${max_quantity_description}`;
+            if (part != 0) {
+                let new_part = part * max_quantity;
+                new_part = new_part.toFixed(2);
+                text += ` ${new_part} ${unit_type_description}`;
+            }
+
+            return text;
+        },
         parsedMaxQuantity() {
             let item = this.items.find(item => item.id == this.form.item_id);
-
-            this.records = this.records.map(record => {
+            let records = JSON.parse(JSON.stringify(this.original_records));
+            this.records = records.map(record => {
                 if (this.max_quantity) {
                     record.input =
                         record.input == "-"
                             ? "-"
-                            : Number(record.input) / item.max_quantity;
+                            : this.maxQuantityFormat(
+                                  record.input,
+                                  item.max_quantity,
+                                  item
+                              );
                     record.output =
                         record.output == "-"
                             ? "-"
-                            : Number(record.output) / item.max_quantity;
+                            : this.maxQuantityFormat(
+                                  record.output,
+                                  item.max_quantity,
+                                  item
+                              );
                     record.balance =
                         record.balance == "-"
                             ? "-"
-                            : Number(record.balance) / item.max_quantity;
+                            : this.maxQuantityFormat(
+                                  record.balance,
+                                  item.max_quantity,
+                                  item
+                              );
                 } else {
                     record.input =
                         record.input == "-"
                             ? "-"
-                            : Number(record.input) * item.max_quantity;
+                            : `${record.input} ${item.unit_type_description}`;
                     record.output =
                         record.output == "-"
                             ? "-"
-                            : Number(record.output) * item.max_quantity;
+                            : `${record.output} ${item.unit_type_description}`;
                     record.balance =
                         record.balance == "-"
                             ? "-"
-                            : Number(record.balance) * item.max_quantity;
+                            : `${record.balance} ${item.unit_type_description}`;
                 }
                 //limitar a 2 decimales input output balance
-                if (record.input != "-" && record.input != 0) {
-                    if (this.max_quantity) {
-                        record.input = Number(record.input).toFixed(2);
-                    } else {
-                        record.input = Number(record.input).toFixed(0);
-                    }
-                }
-                if (record.output != "-" && record.output != 0) {
-                    if (this.max_quantity) {
-                        record.output = Number(record.output).toFixed(2);
-                    } else {
-                        record.output = Number(record.output).toFixed(0);
-                    }
-                }
-                if (record.balance != "-" && record.balance != 0) {
-                    if (this.max_quantity) {
-                        record.balance = Number(record.balance).toFixed(2);
-                    } else {
-                        record.balance = Number(record.balance).toFixed(0);
-                    }
-                }
+
                 return record;
             });
         },
@@ -344,7 +355,8 @@ export default {
                 if (status == 200) {
                     let data = response.data.data;
                     let records_data = _.filter(data, { view: true });
-                    this.records = records_data;
+                    this.original_records = records_data;
+                    this.parsedMaxQuantity();
                     //********************************************
                     this.pagination = response.data.meta;
                     this.pagination.per_page = parseInt(
