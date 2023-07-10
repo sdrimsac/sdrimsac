@@ -5,13 +5,25 @@
     $max_quantity_und = 1;
     if ($item_id) {
         $item = \App\Models\Tenant\Item::find($item_id);
-        $max_quantity_description =  $item->unit_type->description;
-        if($max_quantity){
+        $max_quantity_description = $item->unit_type->description;
+        $unit_type_description = $item->unit_type->description;
+        if ($max_quantity) {
             $max_quantity_description = $item->max_quantity_description ?? $item->unit_type->description;
             $max_quantity_und = $item->max_quantity;
         }
     }
+    $formatQuantity = function ($quantity) use ($max_quantity_und, $max_quantity_description, $unit_type_description) {
+        $general = intval($quantity / $max_quantity_und);
+        $part = fmod($quantity / $max_quantity_und,  1);
+        $text = $general . ' ' . $max_quantity_description;
+        if ($part != 0) {
+            $new_part = $part * $max_quantity_und;
+            $new_part = number_format($new_part, 2, '.', '');
+            $text .=' '. $new_part . ' ' . $unit_type_description;
+        }
     
+        return $text;
+    };
 @endphp
     <head>
         <meta charset="UTF-8">
@@ -123,12 +135,7 @@
                             @foreach($reports as $key => $value)
                             @php
                                $quantity = $value->quantity;
-                                    if ($max_quantity) {
-                                        if($quantity != null && $quantity != 0 && $quantity != '-'){
-                                            $quantity = $quantity / $max_quantity_und;
-                                            $quantity = number_format($quantity, 2, '.', '');
-                                        }
-                                    }
+                                  
                         @endphp
                                 <tr>
                                     <td class="celda">{{$loop->iteration}}</td>
@@ -230,27 +237,27 @@
                                         @switch($value->inventory_kardexable_type) 
 
                                             @case($models[0])
-                                                {{ ($quantity > 0) ?  $quantity:"-"}}
+                                                {{ ($quantity > 0) ? $formatQuantity($quantity):"-"}}
                                                 @break
                                             @case($models[1])
-                                                {{ ($quantity > 0) ?  $quantity:"-"}}                                                    
+                                                {{ ($quantity > 0) ? $formatQuantity($quantity):"-"}}                                                    
                                                 @break 
                                                 
                                             @case($models[3])
 
                                                 @if($value->inventory_kardexable->type != null)
 
-                                                    {{ ($value->inventory_kardexable->type == 1) ? $quantity : "-" }}                                                    
+                                                    {{ ($value->inventory_kardexable->type == 1) ? $formatQuantity($quantity) : "-" }}                                                    
 
                                                 @else
 
-                                                    {{($transaction->type == 'input') ? $quantity : "-" }} 
+                                                    {{($transaction->type == 'input') ?$formatQuantity($quantity) : "-" }} 
 
                                                 @endif
                                                 @break  
 
                                             @case($models[4])
-                                                {{ ($quantity > 0) ?  $quantity:"-"}}
+                                                {{ ($quantity > 0) ? $formatQuantity($quantity):"-"}}
                                                 @break
 
                                             @default
@@ -262,33 +269,33 @@
                                     
                                         @switch($value->inventory_kardexable_type) 
                                             @case($models[0])
-                                                {{ ($quantity < 0) ?  (isset($value->inventory_kardexable->sale_note_id) ? "-":$quantity):"-" }}
+                                                {{ ($quantity < 0) ?  (isset($value->inventory_kardexable->sale_note_id) ? "-" : $formatQuantity($quantity)):"-" }}
 
                                                 @php
-                                                ($quantity < 0) ?  (isset($value->inventory_kardexable->sale_note_id) ? $quantity = 0:$quantity):"-";       
+                                                ($quantity < 0) ?  (isset($value->inventory_kardexable->sale_note_id) ? $quantity == 0 : $formatQuantity($quantity)):"-";       
                                                 @endphp                                                   
                                                 @break
                                             @case($models[1])
-                                                {{ ($quantity < 0) ?  $quantity:"-"}}                                                    
+                                                {{ ($quantity < 0) ? $formatQuantity($quantity):"-"}}                                                    
                                                 @break
                                             @case($models[2])
-                                                {{  $quantity }}                                                    
+                                                {{ $formatQuantity($quantity) }}                                                    
                                                 @break      
                                             @case($models[3])
 
                                                 @if($value->inventory_kardexable->type != null)
 
-                                                    {{($value->inventory_kardexable->type == 2 || $value->inventory_kardexable->type == 3) ? $quantity : "-" }} 
+                                                    {{($value->inventory_kardexable->type == 2 || $value->inventory_kardexable->type == 3) ? $formatQuantity($quantity) : "-" }} 
 
                                                 @else
 
-                                                    {{($transaction->type == 'output') ? $quantity : "-" }}  
+                                                    {{($transaction->type == 'output')? $formatQuantity($quantity) : "-" }}  
 
                                                 @endif
                                                 @break  
 
                                             @case($models[4])
-                                                {{ ($quantity < 0) ?  $quantity:"-"}}                                                    
+                                                {{ ($quantity < 0) ? $formatQuantity($quantity):"-"}}                                                    
                                                 @break     
                                                 
                                             @default
@@ -298,11 +305,13 @@
                                     
                                     </td>
                                     @php                        
-                                        $balance += $quantity;     
+                                        $balance +=$quantity;     
                                     @endphp
 
                                     @if($item_id)
-                                        <td class="celda">{{number_format($balance, 4)}}</td>
+                                        <td class="celda">{{
+                                            $formatQuantity($balance)
+                                            }}</td>
                                     @endif
                                 </tr>
                             @endforeach
