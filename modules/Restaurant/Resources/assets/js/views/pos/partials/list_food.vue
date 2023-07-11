@@ -70,7 +70,7 @@
                                         justify-content-between
                                         p-1
                                         "
-                                style="height: 130px;"
+                                style="height: 182px;"
                             >
                                 <div @click="addFood(index)">
                                     <div>
@@ -127,12 +127,21 @@
                                         <div>
                                             {{ data.code }}
                                         </div>
-                                        <div
+                                        
+                                    </div>
+                                </div>
+                                
+                                <div
+                                    
+                                    class="d-flex justify-content-between"
+                                    style="padding-right: 10px; margin-top: 5px"
+                                >
+                                    <div
                                             class="d-flex flex-column align-items-end"
                                         >
                                             <!-- <div class="text-uppercase font-weight-light h5">
-                        {{ data.category.name }}
-                      </div> -->
+                                                {{ data.category.name }}
+                                            </div> -->
                                             <div class="block mb-2">
                                                 <span
                                                     class="time font-weight-light"
@@ -146,82 +155,82 @@
                                                 </span>
                                             </div>
                                             <div>
-                                                <template
-                                                    v-if="data.item.stock > 0"
-                                                >
-                                                    <span
-                                                        class="badge rounded-pill bg-primary m-l-0"
-                                                        >Stock
-                                                        <template
-                                                            v-if="
-                                                                data.item
-                                                                    .max_quantity
-                                                            "
-                                                        >
-                                                            {{
-                                                                formatedStockPresentation(
-                                                                    data.item,
-                                                                    data.item
-                                                                        .stock
-                                                                )
-                                                            }}
-                                                            <!-- {{
-                                                                parseFloat(
-                                                                    data.item
-                                                                        .stock /
-                                                                        data
-                                                                            .item
-                                                                            .max_quantity
-                                                                )
-                                                            }} -->
-                                                        </template>
-                                                        <template v-else>
-                                                            {{
-                                                                parseFloat(
-                                                                    data.item
-                                                                        .stock
-                                                                )
-                                                            }}
-                                                        </template>
-                                                    </span>
-                                                </template>
-                                                <template v-else>
-                                                    <span
-                                                        class="badge rounded-pill bg-danger m-l-0"
-                                                    >
-                                                        Agotado
-                                                    </span>
-                                                </template>
+                                                
                                             </div>
                                         </div>
-                                    </div>
+                                        <div @click="nthing"
+                                         v-if="data.types.length > 0">
+                                            <el-dropdown @command="clickCommand">
+                                                <span class="el-dropdown-link">
+                                                    Precios<i
+                                                        class="el-icon-arrow-down el-icon--right"
+                                                    ></i>
+                                                </span>
+                                                <el-dropdown-menu slot="dropdown">
+                                                    <el-dropdown-item
+                                                        v-for="(type,
+                                                        idx) in data.types"
+                                                        :key="idx"
+                                                        :command="type"
+                                                    >
+                                                        {{
+                                                            formatDescriptionType(type)
+                                                        }}
+                                                    </el-dropdown-item>
+                                                </el-dropdown-menu>
+                                            </el-dropdown>
+                                        </div>
+                                    
                                 </div>
-                                <div
-                                    @click="nthing"
-                                    v-if="data.types.length > 0"
-                                    class="d-flex justify-content-end"
-                                    style="padding-right: 10px; margin-top: 5px"
-                                >
-                                    <el-dropdown @command="clickCommand">
-                                        <span class="el-dropdown-link">
-                                            Precios<i
-                                                class="el-icon-arrow-down el-icon--right"
-                                            ></i>
-                                        </span>
-                                        <el-dropdown-menu slot="dropdown">
-                                            <el-dropdown-item
-                                                v-for="(type,
-                                                idx) in data.types"
-                                                :key="idx"
-                                                :command="type"
+                                <div class="row justify-content-end " style="margin-left: 2px; margin-right: 2px; margin-bottom: 2px;">
+                                    
+                                    <template
+                                        v-if="data.item.stock > 0"
+                                    >
+                                        <span
+                                            class="badge rounded-pill bg-primary m-l-0" style="text-align: center !important"
+                                            >Stock
+                                            <template
+                                                v-if="
+                                                    data.item
+                                                        .max_quantity
+                                                "
                                             >
                                                 {{
-                                                    formatDescriptionType(type)
+                                                    formatedStockPresentation(
+                                                        data.item,
+                                                        data.item
+                                                            .stock
+                                                    )
                                                 }}
-                                            </el-dropdown-item>
-                                        </el-dropdown-menu>
-                                    </el-dropdown>
-                                </div>
+                                                <!-- {{
+                                                    parseFloat(
+                                                        data.item
+                                                            .stock /
+                                                            data
+                                                                .item
+                                                                .max_quantity
+                                                    )
+                                                }} -->
+                                            </template>
+                                            <template v-else>
+                                                {{
+                                                    parseFloat(
+                                                        data.item
+                                                            .stock
+                                                    )
+                                                }}
+                                            </template>
+                                        </span>
+                                    </template>
+                                    <template v-else>
+                                        <span
+                                            class="badge rounded-pill bg-danger m-l-0" style="text-align: center !important"
+                                        >
+                                            Agotado
+                                        </span>
+                                    </template>
+                    </div>
                             </div>
                         </el-tooltip>
                     </div>
