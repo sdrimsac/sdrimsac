@@ -193,6 +193,7 @@ export default {
                     if (success) {
                         this.$toast.success(message);
                         this.$emit("update:showDialog", false);
+                        this.$emit("limpiarForm");
                     } else {
                         this.$toast.error(message);
                     }

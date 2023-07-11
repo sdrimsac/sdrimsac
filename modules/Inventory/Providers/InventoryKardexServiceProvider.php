@@ -55,10 +55,9 @@ class InventoryKardexServiceProvider extends ServiceProvider
     private function sale()
     {
         DocumentItem::created(function ($document_item) {
-
             $warehouse = ($document_item->warehouse_id) ? $this->findWarehouse($this->findWarehouseById($document_item->warehouse_id)->establishment_id) : $this->findWarehouse();
             $presentationQuantity = (!empty($document_item->item->presentation)) ? $document_item->item->presentation->quantity_unit : 1;
-            
+
             if (!$document_item->item->is_set) {
                 $quantity = $document_item->quantity;
 
@@ -75,7 +74,6 @@ class InventoryKardexServiceProvider extends ServiceProvider
                 $this->createInventoryKardex($document_item->document, $document_item->item_id, ($factor * ($quantity * $presentationQuantity)), $warehouse->id);
                 if (!$document_item->document->sale_note_id && !$document_item->document->order_note_id)
                     $this->updateStock($document_item->item_id, ($factor * ($quantity * $presentationQuantity)), $warehouse->id);
-                   
             } else {
                 $item = Item::findOrFail($document_item->item_id);
                 $document = $document_item->document;
@@ -84,7 +82,7 @@ class InventoryKardexServiceProvider extends ServiceProvider
                 foreach ($item->sets as $it) {
                     $ind_item  = $it->individual_item;
                     $presentationQuantity = $it->quantity;
-                    
+
                     $document = $document_item->document;
                     $factor = ($document->document_type_id === '07') ? 1 : -1;
                     $warehouse = $this->findWarehouse();
@@ -93,7 +91,6 @@ class InventoryKardexServiceProvider extends ServiceProvider
                         $this->updateStock($ind_item->id, ($factor * ($document_item->quantity * $presentationQuantity)), $warehouse->id);
                     }
                 }
-                
             }
 
             if (isset($document_item->item->IdLoteSelected)) {
@@ -136,6 +133,7 @@ class InventoryKardexServiceProvider extends ServiceProvider
     private function sale_note()
     {
         SaleNoteItem::created(function ($sale_note_item) {
+
             if (isset($sale_note_item->item->lotes)) {
                 foreach ($sale_note_item->item->lotes as $it) {
                     $lot_found = ItemLotsGroup::find($it->id);
@@ -163,7 +161,7 @@ class InventoryKardexServiceProvider extends ServiceProvider
                     }
                 }
             }
-            if ($sale_note_item->item->is_stock == 'Si') {
+            if ($sale_note_item->item->is_stock == 'Si' && !$sale_note_item->sale_note->from_consignment) {
 
                 if (!$sale_note_item->item->is_set) {
                     $quantity = $sale_note_item->quantity;
@@ -179,7 +177,9 @@ class InventoryKardexServiceProvider extends ServiceProvider
                     $presentationQuantity = (!empty($sale_note_item->item->presentation)) ? $sale_note_item->item->presentation->quantity_unit : 1;
                     $warehouse = $this->findWarehouse($sale_note_item->sale_note->establishment_id);
                     $this->createInventoryKardexSaleNote($sale_note_item->sale_note, $sale_note_item->item_id, (-1 * ($quantity * $presentationQuantity)), $warehouse->id, $sale_note_item->id);
-                    if (!$sale_note_item->sale_note->order_note_id) $this->updateStock($sale_note_item->item_id, (-1 * ($quantity * $presentationQuantity)), $warehouse->id);
+                    if (!$sale_note_item->sale_note->order_note_id) {
+                        $this->updateStock($sale_note_item->item_id, (-1 * ($quantity * $presentationQuantity)), $warehouse->id);
+                    }
                 } else {
 
                     $item = Item::findOrFail($sale_note_item->item_id);

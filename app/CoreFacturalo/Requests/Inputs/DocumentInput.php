@@ -29,7 +29,7 @@ class DocumentInput
         $document_type_id = $inputs['document_type_id'];
         $series = $inputs['series'];
         $number = $inputs['number'];
-
+        $from_consignment = array_key_exists('consignment', $inputs);
         $company = Company::active();
         $soap_type_id = $company->soap_type_id;
 
@@ -108,6 +108,7 @@ class DocumentInput
             'boxes' => Functions::valueKeyInArray($inputs, 'boxes'),
             'cash_id' => Functions::valueKeyInArray($inputs, 'cash_id'),
             'id' => $id,
+            'from_consignment' => $from_consignment,
             'type' => $inputs['type'],
             'group_id' => $inputs['group_id'],
             'quotation_id' => Functions::valueKeyInArray($inputs, 'quotation_id', null),
@@ -220,6 +221,7 @@ class DocumentInput
                 }
 
                 $items[] = [
+                    'toWarehouse' => Functions::valueKeyInArray($row, 'toWarehouse', 0),
                     'item_id' => $item->id,
                     'item' => [
                         'college' =>   Functions::valueKeyInArray($inputs, 'college', false),

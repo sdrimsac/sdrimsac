@@ -830,8 +830,8 @@
                 <div class="col-5 col-sm-7 col-lg-6 col-md-7 col-xl-5">
                     <div class="card-body p-2">
                         <list-orden
-                        ref="list_orden"
-                        :affectation_igv_types="affectation_igv_types"
+                            ref="list_orden"
+                            :affectation_igv_types="affectation_igv_types"
                             :all_series.sync="all_series"
                             @resetOrden="resetOrden"
                             :areas="areas"
@@ -1384,6 +1384,9 @@
 
         <template>
             <payment-form
+            :consignment_id="consignment_id"
+            @removeConsignment="removeConsignment"
+                :isConsignment.sync="isConsignment"
                 :printer="printer"
                 :personalWhatsapp="personalWhatsapp"
                 @getFile="getFile"
@@ -1532,8 +1535,8 @@
             </div>
         </el-dialog>
         <consignment-list
-        @setItemsToLiquidate="setItemsToLiquidate"
-        :showDialog.sync="showDialogConsignment"
+            @setItemsToLiquidate="setItemsToLiquidate"
+            :showDialog.sync="showDialogConsignment"
         ></consignment-list>
     </div>
 </template>
@@ -1592,7 +1595,7 @@ const ListOrden = () => import("./partials/list_ordens.vue");
 const ListFoodMobiles = () => import("./partials/list_food_mobiles.vue");
 const College = () => import("./partials/college.vue");
 const CreditsList = () => import("./partials/credits_list.vue");
-const ConsignmentList = ()=> import("./partials/consignment_list_modal.vue")
+const ConsignmentList = () => import("./partials/consignment_list_modal.vue");
 const CollegeParents = () =>
     import(
         "../../../../../../College/Resources/assets/js/views/persons/form.vue"
@@ -1643,7 +1646,9 @@ export default {
 
     data() {
         return {
-            showDialogConsignment:false,
+            consignment_id: null,
+            isConsignment: false,
+            showDialogConsignment: false,
             establishmentId: this.worker.establishment_id,
             input_itemMobil: "",
             showcustomModal: false,
@@ -1763,7 +1768,6 @@ export default {
     },
 
     async created() {
-
         // console.log(this.establishments, " xdl");
         this.conf = this.establishments.conf ?? {};
         this.cashId = this.cash_id;
@@ -1817,10 +1821,15 @@ export default {
     sockets: {},
     computed: {},
     methods: {
-        setItemsToLiquidate(items,consignment){
-            console.log(consignment);
+        setItemsToLiquidate(items, consignment_id) {
+            this.consignment_id = consignment_id;
             this.localOrden = items;
-            this.$refs.list_orden.setConsignment(consignment);
+            this.isConsignment = true;
+            this.$refs.list_orden.setConsignment(consignment_id);
+        },
+        removeConsignment() {
+            this.isConsignment = false;
+            this.$refs.list_orden.removeConsignment();
         },
         async getPrinter() {
             const response = await this.$http.get(
@@ -2125,6 +2134,7 @@ export default {
             this.showDialogViewItems = true;
         },
         cancelOrden() {
+            this.isConsignment = false;
             this.localOrden = [];
             this.ordensItems = [];
             this.clientTableData = {};
@@ -2243,6 +2253,9 @@ export default {
                 this.ordens[i].food.item.lots = item.series;
                 this.ordens[i].food.item.sale_unit_price = item.price;
                 this.ordens[i].food.price = item.price;
+                // this.ordens[i].food.item.price = item.price;
+                this.ordens[i].food.item.toWarehouse = item.toWarehouse;
+                this.ordens[i].food.item.consignment_item_id = item.consignment_item_id;
             }
             if (variationItem.length > 0) {
                 this.variation = true;
@@ -2301,7 +2314,7 @@ export default {
                 if (this.variation) {
                     this.isNoteIsDefault();
                 }
-
+console.log(this.form.items);
                 this.is_payment = true;
             }
         },
@@ -3371,6 +3384,8 @@ export default {
             this.form.items = this.form.items.map(i => {
                 return {
                     ...i,
+                    toWarehouse: i.toWarehouse || 0,
+                    consignment_item_id: i.consignment_item_id,
                     warehouse_id: null,
                     item: i,
                     item_id: i.id,
@@ -4021,6 +4036,7 @@ export default {
             });
         },
         async limpiarForm() {
+            this.isConsignment = false;
             this.selectOption = 4;
             this.blockCart = false;
             this.variation = false;
@@ -4397,192 +4413,182 @@ export default {
             //this.setFalse();
             //this.$emit("buscarnuevo");
             //this.$forceUpdate();
-        },
-
-        
+        }
     },
-mounted() {
-            this.optionsMenu = [
-                {
-                    id: 1,
-                    title: ["Reimprimir"],
-                    icon: "fas fa-print ",
-                    visible: true
-                },
-                /* {
+    mounted() {
+        this.optionsMenu = [
+            {
+                id: 1,
+                title: ["Reimprimir"],
+                icon: "fas fa-print ",
+                visible: true
+            },
+            /* {
                     id: 2,
                     title: ["Abrir", "cajon"],
                     icon: "fas fa-cash-register",
                     visible: true
                 }, */
-                // {
-                //     id: 3,
-                //     title: ["Reabrir", "tickets"],
-                //     icon: "fas fa-folder-open",
-                //     visible: true
-                // },
-                {
-                    id: 3,
-                    title: ["Productos"],
-                    icon: "fas fa-box-open",
-                    visible: true
-                },
-                {
-                    id: 4,
-                    title: ["Clientes"],
-                    //icon: "fas fa-hand-holding-water"
-                    icon: "fas fa-user ",
-                    visible: true
-                },
-                {
-                    id: 5,
-                    title: [" Zona "],
-                    icon: "fas fa-map-pin ",
-                    visible:
-                        this.configuration.restaurant &&
-                        !this.configuration.college
-                },
-                {
-                    id: 6,
-                    title: ["Venta", "del Dia"],
-                    icon: "icofont-money-bag",
-                    visible:
-                        this.configuration.view_daily_cash ||
-                        this.configuration.view_daily_cash_pin
-                },
+            // {
+            //     id: 3,
+            //     title: ["Reabrir", "tickets"],
+            //     icon: "fas fa-folder-open",
+            //     visible: true
+            // },
+            {
+                id: 3,
+                title: ["Productos"],
+                icon: "fas fa-box-open",
+                visible: true
+            },
+            {
+                id: 4,
+                title: ["Clientes"],
+                //icon: "fas fa-hand-holding-water"
+                icon: "fas fa-user ",
+                visible: true
+            },
+            {
+                id: 5,
+                title: [" Zona "],
+                icon: "fas fa-map-pin ",
+                visible:
+                    this.configuration.restaurant && !this.configuration.college
+            },
+            {
+                id: 6,
+                title: ["Venta", "del Dia"],
+                icon: "icofont-money-bag",
+                visible:
+                    this.configuration.view_daily_cash ||
+                    this.configuration.view_daily_cash_pin
+            },
 
-                {
-                    id: 7,
-                    title: ["Historial", ""],
-                    icon: "fas fa-history ",
-                    visible: true
-                },
+            {
+                id: 7,
+                title: ["Historial", ""],
+                icon: "fas fa-history ",
+                visible: true
+            },
 
-                {
-                    id: 9,
-                    title: ["Matriculas", "Mensualidades"],
-                    icon: "fas fa-user-edit",
-                    visible: this.configuration.college
-                },
-                {
-                    id: 10,
-                    title: ["Canjear", "Promocion"],
-                    icon: "fas fa-user-tag",
-                    visible: this.configuration.promotions_sell
-                },
-                {
-                    id: 33,
-                    title: ["Créditos"],
-                    icon: "fas fa-credit-card",
-                    visible: this.configuration.credits
-                },
-                {
-                    id: 25,
-                    title: ["Guías", "Remisión"],
-                    icon: "fas fa-file",
-                    visible: this.configuration.dispatch
-                },
-                {
-                    id: 102,
-                    title: ["Cambiar", "Categorías"],
-                    icon: "fa fa-bars",
-                    visible: this.configuration.pos_drag_category
-                },
-                {
-                    id: 103,
-                    title: ["Editar", "Productos"],
-                    icon: "fa fa-edit",
-                    visible: this.configuration.edit_product_pos
-                },
-                    {
-                    id: 109,
-                    title: ["Ver", "Consignaciones"],
-                    icon: "fa fa-edit",
-                    visible: this.configuration.consignment
-                }
+            {
+                id: 9,
+                title: ["Matriculas", "Mensualidades"],
+                icon: "fas fa-user-edit",
+                visible: this.configuration.college
+            },
+            {
+                id: 10,
+                title: ["Canjear", "Promocion"],
+                icon: "fas fa-user-tag",
+                visible: this.configuration.promotions_sell
+            },
+            {
+                id: 33,
+                title: ["Créditos"],
+                icon: "fas fa-credit-card",
+                visible: this.configuration.credits
+            },
+            {
+                id: 25,
+                title: ["Guías", "Remisión"],
+                icon: "fas fa-file",
+                visible: this.configuration.dispatch
+            },
+            {
+                id: 102,
+                title: ["Cambiar", "Categorías"],
+                icon: "fa fa-bars",
+                visible: this.configuration.pos_drag_category
+            },
+            {
+                id: 103,
+                title: ["Editar", "Productos"],
+                icon: "fa fa-edit",
+                visible: this.configuration.edit_product_pos
+            },
+            {
+                id: 109,
+                title: ["Ver", "Consignaciones"],
+                icon: "fa fa-edit",
+                visible: this.configuration.consignment
+            }
 
-                // {
-                //     title: ["Configuración"],
-                //     icon: "fas fa-printer"
-                // },
-                // {
-                //     title: ["Movimiento ", "efectivo"],
-                //     icon: "fas fa-printer"
-                // },
-                // {
-                //     title: ["Abrir / Cerrar", " Caja"],
-                //     icon: "fas fa-printer"
-                // }
-            ];
-            this.screenWidth = window.innerWidth;
-            window.addEventListener("resize", this.handleResize);
+            // {
+            //     title: ["Configuración"],
+            //     icon: "fas fa-printer"
+            // },
+            // {
+            //     title: ["Movimiento ", "efectivo"],
+            //     icon: "fas fa-printer"
+            // },
+            // {
+            //     title: ["Abrir / Cerrar", " Caja"],
+            //     icon: "fas fa-printer"
+            // }
+        ];
+        this.screenWidth = window.innerWidth;
+        window.addEventListener("resize", this.handleResize);
 
-            // this.teclasInit();
-            Echo.channel("orden_pending").listen(
-                `.orden-pending-${this.configuration.socket_channel}`,
-                e => {
-                    let num = Number(e.amount);
-                    this.ordensPending = this.ordensPending + num;
+        // this.teclasInit();
+        Echo.channel("orden_pending").listen(
+            `.orden-pending-${this.configuration.socket_channel}`,
+            e => {
+                let num = Number(e.amount);
+                this.ordensPending = this.ordensPending + num;
 
-                    this.$notify({
-                        title: "Aviso",
-                        duration: 1500,
-                        iconClass:
-                            num > 0
-                                ? "el-icon-star-on"
-                                : "el-icon-delete-solid",
-                        message:
-                            num > 0 ? "Nueva orden" : "Una orden fue anulada",
-                        position: "bottom-left"
+                this.$notify({
+                    title: "Aviso",
+                    duration: 1500,
+                    iconClass:
+                        num > 0 ? "el-icon-star-on" : "el-icon-delete-solid",
+                    message: num > 0 ? "Nueva orden" : "Una orden fue anulada",
+                    position: "bottom-left"
+                });
+            }
+        );
+        Echo.channel("stock_orden").listen(
+            `.stock-order-${this.configuration.socket_channel}`,
+            e => {
+                for (let index = 0; index < e.data.order_item.length; index++) {
+                    let xFind = _.find(this.listFoods, {
+                        id: e.data.order_item[index].food_id
                     });
-                }
-            );
-            Echo.channel("stock_orden").listen(
-                `.stock-order-${this.configuration.socket_channel}`,
-                e => {
-                    for (
-                        let index = 0;
-                        index < e.data.order_item.length;
-                        index++
-                    ) {
-                        let xFind = _.find(this.listFoods, {
-                            id: e.data.order_item[index].food_id
+                    if (xFind) {
+                        let index_find = _.findIndex(this.listFoods, {
+                            id: xFind.id
                         });
-                        if (xFind) {
-                            let index_find = _.findIndex(this.listFoods, {
-                                id: xFind.id
-                            });
-                            if (index_find !== -1) {
-                                let nSaldo =
-                                    parseInt(
-                                        this.listFoods[index_find].item.stock
-                                    ) - e.data.order_item[index].quantity;
-                                this.listFoods[index_find].item.stock = nSaldo;
-                            }
+                        if (index_find !== -1) {
+                            let nSaldo =
+                                parseInt(
+                                    this.listFoods[index_find].item.stock
+                                ) - e.data.order_item[index].quantity;
+                            this.listFoods[index_find].item.stock = nSaldo;
                         }
                     }
                 }
-            );
-            Echo.channel("print_orden").listen(
-                `.print-order-${this.configuration.socket_channel}`,
-                e => {
-                    console.log("imprimiendo", e);
-                    if (e.data.direct_printing == true) {
-                        if (e.data.printing == true) {
-                            this.Printer(
-                                e.data.printer,
-                                e.data.print,
-                                e.data.copies,
-                                e.data.user_id,
-                                e.data.multiple_boxes,
-                                e.data.typeuser,
-                                e.data.printing
-                            );
-                        }
+            }
+        );
+        Echo.channel("print_orden").listen(
+            `.print-order-${this.configuration.socket_channel}`,
+            e => {
+                console.log("imprimiendo", e);
+                if (e.data.direct_printing == true) {
+                    if (e.data.printing == true) {
+                        this.Printer(
+                            e.data.printer,
+                            e.data.print,
+                            e.data.copies,
+                            e.data.user_id,
+                            e.data.multiple_boxes,
+                            e.data.typeuser,
+                            e.data.printing
+                        );
                     }
                 }
-            );
-        }
+            }
+        );
+    }
     // mounted() {
     //     this.optionsMenu = [
     //         {

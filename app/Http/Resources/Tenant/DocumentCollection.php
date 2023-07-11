@@ -103,6 +103,7 @@ class DocumentCollection extends ResourceCollection
                 'soap_type_id' => $row->soap_type_id,
                 'soap_type_description' => $row->soap_type->description,
                 'date_of_issue' => $row->date_of_issue,
+                'from_consignment' => (bool) $row->from_consignment,
                 //    'date_of_due' => (in_array($row->document_type_id, ['01', '03'])) ? $row->invoice->date_of_due->format('Y-m-d') : null,
                 'number' => $row->number_full,
                 'payment' => $row->payments,

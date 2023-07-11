@@ -42,6 +42,7 @@ class DocumentResource extends JsonResource
 
 
         return [
+            'from_consignment' => (bool) $this->from_consignment,
             'id' => $this->id,
             'external_id' => $this->external_id,
             'afectar_caja' => false,

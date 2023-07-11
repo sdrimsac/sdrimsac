@@ -23,6 +23,7 @@ class ConsignmentCollection extends ResourceCollection
             ->first();
             return [
                 'id' => $row->id,
+                'liquidated' => (bool)$row->liquidated,
                 'date_of_issue' => Carbon::parse($row->date_of_issue)->format('Y-m-d'),
                 'date_of_end' => Carbon::parse($row->date_of_end)->format('Y-m-d'),
                 'person' => [

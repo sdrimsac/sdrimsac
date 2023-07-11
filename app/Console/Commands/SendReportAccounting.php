@@ -155,7 +155,6 @@ class SendReportAccounting extends Command
 
     function isFirstDayOfMonth($date)
     {
-        // dump(date('Y-m-01', strtotime($date)),$date);
         return date('Y-m-01', strtotime($date)) == $date;
     }
     function createStartAndEndofMonth()

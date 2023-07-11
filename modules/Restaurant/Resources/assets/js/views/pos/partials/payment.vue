@@ -1106,6 +1106,8 @@ export default {
     },
 
     props: [
+        "consignment_id",
+        "isConsignment",
         "affectation_igv_types",
         "printer",
         "printing",
@@ -2580,7 +2582,13 @@ export default {
             }
 
             this.loading_submit = true;
+            this.form.items = this.form.items.filter(
+                item => Number(item.quantity) > 0
+            );
+            if(this.isConsignment){
 
+                this.form.from_consignment =true;
+            }
             try {
                 let form_efectivo = {
                     enter_amount: form.enter_amount,
@@ -2667,6 +2675,26 @@ export default {
                                         }
                                     );
                                 }
+
+                                if(this.configuration.consignment
+                                &&  this.consignment_id && this.isConsignment
+                                ){
+                                    const consigmentLiquidate = await this.$http.post(
+                                        `/consignment/liquidated`,
+                                        {
+                                            id: this.consignment_id,
+                                            items: this.form.items.map(i=>({
+                                                consignment_item_id : i.consignment_item_id,
+                                                toWarehouse:i.toWarehouse,
+                                                quantity:i.quantity,
+                                            })),
+                                        }
+                                    );
+                                    if(consigmentLiquidate.status == 200){
+                                        this.$toast.success("Liquidación de consignación realizada.");
+                                    }
+
+                                }
                                 const response2 = await this.$http.post(
                                     "pos/orden_payment",
                                     {
@@ -2715,10 +2743,13 @@ export default {
                                         }
                                         this.$emit("limpiarForm");
                                         this.loading_submit = false;
+                                        this.$emit('removeConsignment');
+
                                         this.back(true);
                                     } else {
                                         this.$emit("limpiarForm");
                                         this.loading_submit = false;
+                                        this.$emit('removeConsignment');
                                         this.back(true);
                                     }
                                 } else {
@@ -2729,6 +2760,7 @@ export default {
                                     this.$toast.success("Venta realizada.");
                                 }
                                 this.$emit("limpiarForm");
+                                this.$emit('removeConsignment');
                                 this.loading_submit = false;
 
                                 this.back(true);

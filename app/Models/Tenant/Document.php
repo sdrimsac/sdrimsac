@@ -18,6 +18,7 @@ class Document extends ModelTenant
     protected $with = ['user', 'establecimientos', 'soap_type', 'user', 'state_type', 'document_type', 'currency_type', 'group', 'items', 'invoice', 'payments'];
     public $timestamps = true;
     protected $fillable = [
+        'from_consignment',
         'id',
         'user_id',
         'external_id',
@@ -98,6 +99,7 @@ class Document extends ModelTenant
     ];
 
     protected $casts = [
+        'from_consignment' => 'boolean',
         //  'date_of_issue' => 'date',
     ];
     protected static function boot()

@@ -91,7 +91,6 @@ class SummaryQueryCommand extends Command
                     'base_uri' => config('tenant.force_https') ? "https://{$hostname}" : "https://{$hostname}",
                     'verify' => false
                 ];
-                //dump($constructor_params);
 
                 $clientGuzzleHttp = new ClientGuzzleHttp($constructor_params);
 
