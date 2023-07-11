@@ -2252,7 +2252,8 @@ export default {
                 this.ordens[i].food.item.lotes = item.lotes;
                 this.ordens[i].food.item.lots = item.series;
                 this.ordens[i].food.item.sale_unit_price = item.price;
-                this.ordens[i].food.item.price = item.price;
+                this.ordens[i].food.price = item.price;
+                // this.ordens[i].food.item.price = item.price;
                 this.ordens[i].food.item.toWarehouse = item.toWarehouse;
                 this.ordens[i].food.item.consignment_item_id = item.consignment_item_id;
             }
