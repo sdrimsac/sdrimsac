@@ -467,6 +467,10 @@ export default {
                     new_part = new_part.toFixed(2);
                     text += ` ${new_part} ${unit_type.id}`;
                 }
+            }else{
+                if (max_quantity && max_quantity_description) {
+                    text = `${general} ${max_quantity_description}`;
+                }
             }
 
             return text;
