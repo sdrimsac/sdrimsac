@@ -15,6 +15,7 @@ class SaleNote extends ModelTenant
     protected $with = ['user', 'soap_type', 'state_type', 'currency_type', 'items', 'document_type'];
 
     protected $fillable = [
+        'from_consignment',
         'user_id',
         'external_id',
         'establishment_id',
@@ -78,6 +79,7 @@ class SaleNote extends ModelTenant
     ];
 
     protected $casts = [
+        'from_consignment' => 'boolean',
         'date_of_issue' => 'date',
         'automatic_date_of_issue' => 'date',
     ];

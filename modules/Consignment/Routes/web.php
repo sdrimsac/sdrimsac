@@ -20,6 +20,7 @@ Route::prefix('consignment')->group(function() {
     Route::get('/records', [ConsignmentController::class,'records']);
     Route::post('/', [ConsignmentController::class,'store']);
     Route::get('/liquidate/{consignment_id}', [ConsignmentController::class,'liquidate']);
+    Route::post('/liquidated', [ConsignmentController::class,'liquidated']);
     Route::get('/items/{consignment_id}', [ConsignmentController::class,'items']);
     Route::get('/items_lot/{consignment_item_id}', [ConsignmentController::class,'items_lot']);
     Route::get('/columns', [ConsignmentController::class,'columns']);

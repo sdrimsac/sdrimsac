@@ -314,6 +314,14 @@ class SaleNoteController extends Controller
         $recibo = PDF::loadView('tenant.contract.index', ['company' => $company, 'sale' => $sale, 'payment' => $payment, 'establishment' => $establishment]);
         return $recibo->setPaper('a4', 'portrait')->stream();
     }
+    function restoreStock($qty,$item_id,$warehouse_id){
+        $item = Item::find($item_id);
+        $item->stock = $item->stock + $qty;
+        $item->save();
+        $item_warehouse = ItemWarehouse::where('warehouse_id',$warehouse_id)->where('item_id',$item_id)->first();
+        $item_warehouse->stock = $item_warehouse->stock + $qty;
+        $item_warehouse->save();
+    }
     public function store(SaleNoteRequest $request)
     {
 
@@ -343,6 +351,14 @@ class SaleNoteController extends Controller
                 $sale_note_item->name_product_pdf = (isset($row['name_product_pdf'])) ? $row['name_product_pdf'] : "";
                 $sale_note_item->sale_note_id = $this->sale_note->id;
                 $sale_note_item->save();
+                if(array_key_exists('toWarehouse',$row)){
+                    $quantity_to_restore = $row['toWarehouse'];
+                    if($quantity_to_restore > 0){
+                        $item_id = $row['item_id'];
+                        $warehouse_id = $row['item']['warehouse_id'];
+                        $this->restoreStock($quantity_to_restore,$item_id,$warehouse_id);
+                    }
+                }
                 // $item = Item::find($item_id);
                 //  $item->stock = $item->stock - $row['quantity'];
                 // $item->save();

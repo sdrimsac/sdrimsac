@@ -50,6 +50,7 @@ class KardexServiceProvider extends ServiceProvider
                     $kardex = $this->saveKardex('sale', $document_item->item_id, $document_item->document_id, $quantity, 'document', $document_item->is_stock);
 
                     if ($document->state_type_id != 11) {
+                        if(!$document_item->document->from_consignment)
                         $this->updateStock($document_item->item_id, $quantity, true);
                     }
                     $itemSet = ItemSet::where("item_id", $document_item->item_id)->get();
@@ -85,6 +86,8 @@ class KardexServiceProvider extends ServiceProvider
                 }
             }
             $kardex = $this->saveKardex('sale', $sale_note_item->item_id, $sale_note_item->sale_note_id, $quantity, 'sale_note', $sale_note_item->is_stock);
+           
+           if(!$sale_note_item->sale_note->from_consignment)
             $this->updateStock($sale_note_item->item_id, $quantity, true);
         });
     }

@@ -61,8 +61,8 @@
     "/js/js/tenant-dispatches-form.9731684db25937c0c0b7.js.map": "/js/js/tenant-dispatches-form.9731684db25937c0c0b7.js.map?id=055eb2aebd6b30947392",
     "/js/js/tenant-purchases-edit.f271d2094aac490ce09f.js": "/js/js/tenant-purchases-edit.f271d2094aac490ce09f.js?id=a77842539f5b2e4bd1eb",
     "/js/js/tenant-purchases-edit.f271d2094aac490ce09f.js.map": "/js/js/tenant-purchases-edit.f271d2094aac490ce09f.js.map?id=890a646e99543865326a",
-    "/js/tenant-consigment-index.737e48604ce819e5b7be.js": "/js/tenant-consigment-index.737e48604ce819e5b7be.js?id=86ed61bbfbbdb3e0487b",
-    "/js/tenant-consigment-index.737e48604ce819e5b7be.js.map": "/js/tenant-consigment-index.737e48604ce819e5b7be.js.map?id=3f0857d007f03471e344",
+    "/js/tenant-consigment-index.3a25c993b66d38c362d3.js": "/js/tenant-consigment-index.3a25c993b66d38c362d3.js?id=d64d2e936702e83c367b",
+    "/js/tenant-consigment-index.3a25c993b66d38c362d3.js.map": "/js/tenant-consigment-index.3a25c993b66d38c362d3.js.map?id=803c8d911117789e45bf",
     "/js/js/tenant-boxes-index.a9ee672e687aac353132.js": "/js/js/tenant-boxes-index.a9ee672e687aac353132.js?id=e22922956429f54316b3",
     "/js/js/tenant-boxes-index.a9ee672e687aac353132.js.map": "/js/js/tenant-boxes-index.a9ee672e687aac353132.js.map?id=cc1c3e4b62975e3aa1ab",
     "/js/js/tenant-boxes-expenses-index.11fe3e904b06669ec737.js": "/js/js/tenant-boxes-expenses-index.11fe3e904b06669ec737.js?id=66b6c5162c51cad0132f",
@@ -101,8 +101,8 @@
     "/js/js/warehouses-index.1fcc24affbfce5096aa0.js.map": "/js/js/warehouses-index.1fcc24affbfce5096aa0.js.map?id=90ac6231b395a52be7f3",
     "/js/js/tenant-finance-income-index.6ca456daf03ad94b7082.js": "/js/js/tenant-finance-income-index.6ca456daf03ad94b7082.js?id=52c2f63a247f14737262",
     "/js/js/tenant-finance-income-index.6ca456daf03ad94b7082.js.map": "/js/js/tenant-finance-income-index.6ca456daf03ad94b7082.js.map?id=65ef0ecafc4b06b5f773",
-    "/js/js/tenant-restaurant-pos.a69cbd66d96ec88c8aa0.js": "/js/js/tenant-restaurant-pos.a69cbd66d96ec88c8aa0.js?id=d2c728be45a557758d40",
-    "/js/js/tenant-restaurant-pos.a69cbd66d96ec88c8aa0.js.map": "/js/js/tenant-restaurant-pos.a69cbd66d96ec88c8aa0.js.map?id=a7db07b1cf4bd5fb85a7",
+    "/js/js/tenant-restaurant-pos.e1286eda847d9d5bcf6f.js": "/js/js/tenant-restaurant-pos.e1286eda847d9d5bcf6f.js?id=e8ee9e01221e7038cf38",
+    "/js/js/tenant-restaurant-pos.e1286eda847d9d5bcf6f.js.map": "/js/js/tenant-restaurant-pos.e1286eda847d9d5bcf6f.js.map?id=498c8ae633e00ec4c8fe",
     "/js/js/tenant-internet-pos.450018f3edd4800a70e3.js": "/js/js/tenant-internet-pos.450018f3edd4800a70e3.js?id=f2470f53b1ed15012228",
     "/js/js/tenant-internet-pos.450018f3edd4800a70e3.js.map": "/js/js/tenant-internet-pos.450018f3edd4800a70e3.js.map?id=56ecc39b4da48481bfb8",
     "/js/js/inventory-index.8179727fd46961677586.js": "/js/js/inventory-index.8179727fd46961677586.js?id=53350fc7483b9728bd2f",
@@ -257,8 +257,8 @@
     "/js/js/nuevoUtil.vue.b5d79ba85020fbde7078.js.map": "/js/js/nuevoUtil.vue.b5d79ba85020fbde7078.js.map?id=df48f9f836bcefb8b6ee",
     "/js/js/ingresarUtil.vue.9ada1724ba5014ffc803.js": "/js/js/ingresarUtil.vue.9ada1724ba5014ffc803.js?id=9ec21cfd89d080a868b3",
     "/js/js/ingresarUtil.vue.9ada1724ba5014ffc803.js.map": "/js/js/ingresarUtil.vue.9ada1724ba5014ffc803.js.map?id=26f907218deeeb3eb13a",
-    "/js/app.js": "/js/app.js?id=4ab84d9cf7bebaff8e0b",
+    "/js/app.js": "/js/app.js?id=09409c734e46a38215d9",
     "/css/app.css": "/css/app.css?id=39bdcdc15a1d498cc4e0",
-    "/js/app.js.map": "/js/app.js.map?id=225ddf606f769fddef65",
-    "/css/app.css.map": "/css/app.css.map?id=9e820f3e41c9108e3a49"
+    "/js/app.js.map": "/js/app.js.map?id=c4f3e8b4519e33ecc4ad",
+    "/css/app.css.map": "/css/app.css.map?id=1727c0e8ce3c3c9d0b0b"
 }

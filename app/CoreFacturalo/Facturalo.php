@@ -132,6 +132,14 @@ class Facturalo
     {
         return $this->response;
     }
+    function restoreStock($qty,$item_id,$warehouse_id){
+        $item = Item::find($item_id);
+        $item->stock = $item->stock + $qty;
+        $item->save();
+        $item_warehouse = ItemWarehouse::where('warehouse_id',$warehouse_id)->where('item_id',$item_id)->first();
+        $item_warehouse->stock = $item_warehouse->stock + $qty;
+        $item_warehouse->save();
+    }
 
     public function save($inputs)
     {
@@ -163,6 +171,15 @@ class Facturalo
                 $this->saveFee($document, $inputs['fee']);
                 foreach ($inputs['items'] as $row) {
                     $document->items()->create($row);
+                    if(array_key_exists('toWarehouse',$row)){
+                        $quantity_to_restore = $row['toWarehouse'];
+                        if($quantity_to_restore > 0){
+                            $item_id = $row['item_id'];
+                            $warehouse_id = $row['item']['warehouse_id'];
+                            $this->restoreStock($quantity_to_restore,$item_id,$warehouse_id);
+                        }
+                    }
+
                 }
                 $this->updatePrepaymentDocuments($inputs);
                 // if ($inputs['hotel']) $document->hotel()->create($inputs['hotel']);

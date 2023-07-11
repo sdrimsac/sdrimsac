@@ -23,6 +23,7 @@ class SaleNoteResource extends JsonResource
         $establishment = Establishment::where('id', $this->establishment_id)->first();
         // $schedule=Payment::where('id', $this->id)->first();
         return [
+            'from_consignment' => (bool) $this->from_consignment,
             'id' => $this->id,
             'external_id' => $this->external_id,
             'format_printer' => $establishment->format_printer,

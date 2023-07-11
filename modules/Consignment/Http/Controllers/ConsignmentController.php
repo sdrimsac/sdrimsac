@@ -36,6 +36,31 @@ class ConsignmentController extends Controller
 
         );
     }
+    public function liquidated(Request $request)
+    {
+        $consigment_id = $request->input('id');
+        $items = $request->input('items');
+        if ($items && is_array($items)) {
+            foreach ($items as $item) {
+                $consigment_item_id = $item['consignment_item_id'];
+                $selled_quantity = $item['quantity'];
+                $return_quantity = $item['toWarehouse'];
+                $consigment_item = ConsignmentItem::find($consigment_item_id);
+                if ($consigment_item) {
+                    $consigment_item->selled_quantity = $selled_quantity;
+                    $consigment_item->return_quantity = $return_quantity;
+                    $consigment_item->save();
+                }
+            }
+        }
+        $consigment = Consignment::find($consigment_id);
+        $consigment->liquidated = true;
+        $consigment->save();
+        return [
+            'success' => true,
+            'message' => 'Consignación liquidada con éxito'
+        ];
+    }
     public function liquidate($consigment)
     {
         $consigment = Consignment::find($consigment);
@@ -49,15 +74,14 @@ class ConsignmentController extends Controller
             $newItem['quantity'] = $item->original_quantity;
             $newItem['price'] = $item->price;
             $newItem["id"] = $food_id;
+            $newItem["consignment_item_id"] = $item->id;
             $newItem["series"] =  $item->lots->transform(function ($row)  use ($item) {
                 $item_lot = ItemLot::where('item_id', $item->item->id)
                     ->where('series', $row->series)
                     ->first();
-                return $item_lot
-                ;
+                return $item_lot;
             });
             $foods[] = $newItem;
-
         }
         return [
             'success' => true,
@@ -127,7 +151,8 @@ class ConsignmentController extends Controller
     }
     public function records()
     {
-        $consigments = Consignment::query();
+        $consigments = Consignment::query()->orderBy('liquidated', 'asc')->orderBy('id', 'desc')
+            ;
 
         return new ConsignmentCollection($consigments->paginate(config('tenant.items_per_page')));
     }
@@ -172,7 +197,6 @@ class ConsignmentController extends Controller
     public function store(Request $request)
     {
 
-        // dump($request->all());
         try {
             DB::connection('tenant')->beginTransaction();
             $id = $request->input('id');
@@ -210,7 +234,6 @@ class ConsignmentController extends Controller
                 $warehouse->stock -= $original_quantity;
                 $warehouse->save();
                 $has_lots = $item['has_lots'];
-                // dump($item);
                 if ($has_lots) {
                     $lots = $item['lots'];
                     foreach ($lots as $lot) {
@@ -247,20 +270,25 @@ class ConsignmentController extends Controller
     }
     public function items($consigment_id)
     {
+        $consignment = Consignment::find($consigment_id);
+        $liquidated = $consignment->liquidated;
         $items = ConsignmentItem::where('consignment_id', $consigment_id)->get()
-            ->transform(function ($row) {
+            ->transform(function ($row)  use ($liquidated) {
 
                 return [
                     'id' => $row->id,
                     'name' => $row->item->description,
                     'quantity' => $row->original_quantity,
+                    'selled' => $row->selled_quantity ?? 0.0,
+                    'returned' => $row->return_quantity ?? 0.0,
                     'price' => $row->price,
-                    'total' => $row->original_quantity * $row->price,
+                    'total' => $liquidated ? $row->selled_quantity * $row->price  : $row->original_quantity * $row->price,
                     'has_lots' => (bool)$row->item->series_enabled,
                 ];
             });
 
         return [
+            'liquidated' => (bool) $liquidated,
             'success' => true,
             'items' => $items
         ];

@@ -14,6 +14,7 @@ class Consignment extends ModelTenant
         'date_of_end',
         'penalty_id',
         'active',
+        'liquidated',
     ];
     
 

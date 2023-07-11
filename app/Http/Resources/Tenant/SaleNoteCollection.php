@@ -77,6 +77,7 @@ class SaleNoteCollection extends ResourceCollection
                 ];
             });
             return [
+                'from_consignment' => (bool) $row->from_consignment,
                 'pending' => $pending,
                 'advances' => $row->advances,
                 'paid_amount' => $paid,

@@ -1691,6 +1691,7 @@
                                                             <div class="col-md-4">
                                                                 <label for="warehouse">Para el almacen</label>
                                                                      <el-input-number
+                                                                        :min="0"
                                                                      @change="updateWarehouse(order_pend, indexx)"
                                                                      class="w-100"
                                                                      controls-position="right"
@@ -2254,16 +2255,24 @@ export default {
     },
     methods: {
         updateWarehouse(order, index) {
-            // console.log(index);
-            // let ordens = [...this.localOrden];
-            // console.log(ordens[index]);
-            // ordens[index].toWarehouse = order.toWarehouse;
-            // ordens[index].quantity = ordens[index].quantity - order.toWarehouse;
-            // this.$emit("update:localOrden", ordens);
+            let ordens = [...this.localOrden];
+            ordens[index].toWarehouse = order.toWarehouse;
+            let newQuantity = ordens[index].originalQuantity - order.toWarehouse;
+            if(newQuantity < 0){
+                this.$toast.error("No puede ser mayor a la cantidad original");
+                ordens[index].toWarehouse = 0;
+                ordens[index].quantity = ordens[index].originalQuantity;
+            }else{
+                ordens[index].quantity = ordens[index].originalQuantity - order.toWarehouse;
+            }
+            this.$emit("update:localOrden", ordens);
         },
         setConsignment(consigment) {
             
             this.isConsignment = true;
+        },
+        removeConsignment() {
+            this.isConsignment = false;
         },
         openConsignment() {
             console.log("xd");
@@ -2785,7 +2794,8 @@ export default {
             }
         },
         async cancelOrden() {
-            let res = await this.$confirm(
+            try{
+                  let res = await this.$confirm(
                 "Desea cancelar este pedido?",
                 "Cancelar",
                 {
@@ -2795,7 +2805,11 @@ export default {
                 }
             );
             if (res) {
+                this.isConsignment = false;
                 this.$emit("cancelOrden");
+            }
+            }catch(e){
+                
             }
         },
         addNumberPin(number) {

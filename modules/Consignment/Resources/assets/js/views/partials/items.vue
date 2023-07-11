@@ -14,6 +14,8 @@
                         <th>#</th>
                         <th>Producto</th>
                         <th>Cantidad</th>
+                        <th v-if="isLiquidated">Vendido</th>
+                        <th v-if="isLiquidated">Regresado</th>
                         <th>Precio</th>
                         <th>Total</th>
                     </tr>
@@ -33,8 +35,10 @@
                             </template>
                         </td>
                         <td>{{ item.quantity }}</td>
+                        <td v-if="isLiquidated">{{ item.selled }}</td>
+                        <td v-if="isLiquidated">{{ item.returned }}</td>
                         <td>{{ item.price }}</td>
-                        <td>{{ item.total }}</td>
+                        <td>{{ item.total.toFixed(2) }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -59,7 +63,8 @@ export default {
             items: [],
             loading: false,
             showDialogItemsLot: false,
-            itemId: null
+            itemId: null,
+            isLiquidated:false,
         };
     },
     methods: {
@@ -76,6 +81,7 @@ export default {
                 console.log(response);
                 if (response.status == 200) {
                     this.items = response.data.items;
+                    this.isLiquidated= response.data.liquidated;
                 }
             } catch (e) {
                 console.log(e);
