@@ -100,15 +100,15 @@
                   icon="el-icon-search"
                   >Buscar</el-button
                 >
-                <template v-if="records.length > 0 || NotasDeventas.length > 0 ">
+                <template v-if="(records.length > 0 || NotasDeventas.length > 0)  && (form.date_start != undefined || form.date_start != null )">
                  
-                  <el-button
+                  <el-button 
                   style="background-color: #217346;"
                     class="submit"
                     
                     @click.prevent="clickDownload('excel')"
-                    ><i class="fa fa-file-excel" style="color: white;" ></i> <span style="color: white;">EXCEL</span></el-button
-                  >
+                    ><i class="fa fa-file-excel" style="color: white;" ></i> <span style="color: white;">EXCEL</span>
+                    </el-button>
                   <el-button
                     class="submit"
                     type="success"
@@ -260,6 +260,20 @@
               </el-tab-pane>
             </el-tabs>
             
+            <el-dialog
+              title="Enviar Reporte Por Whastapp"
+              :visible.sync="showWhatsappForm"
+              width="30%"
+              @close="showWhatsappForm = false">
+              <div class="row col-12">
+                <el-input class="mt-3" v-model="numeroWhatsapp" placeholder="ingrese numero para enviar " size="small" clearable>Numero a enviar </el-input>
+                
+              </div>
+              <span slot="footer">
+                <el-button @click=" showWhatsappForm = false">Cancel</el-button>
+                <el-button :loading="loadbuttonwhats"  type="primary" @click="SendReportWhasapp()">Enviar</el-button>
+              </span>
+            </el-dialog>
             
             
           </div>
@@ -295,7 +309,7 @@ export default {
       month_start: moment().format("YYYY-MM"),
       cash: null,
       otroNombre: false,
-      form: {},
+      form: {date_start: null},
       records: [],
       categories: [],
       pagination: { 
@@ -305,6 +319,8 @@ export default {
       showWhatsappForm: false,
       ListPersonas: [],
       NotasDeventas: [],
+      numeroWhatsapp: '',
+      loadbuttonwhats: null 
     };
   },
   async created() {
@@ -380,35 +396,72 @@ export default {
             
         }
     },
-    async clickDownload(){
+    async clickDownload(type){
 
+      console.log(type)
+
+      //
       
-/* 
+            const query= queryString.stringify({
+              activeTab : this.activeName,
+                ...this.form
+            });
+            console.log(query);
+        
+
+      try {  
+          window.open(
+                      `${this.resource}/reporteexcel?${query}`, 
+                      "_blank"
+                  );
+               
+        } catch (error) {
+            console.log(error)
+            this.$toast.error(error.response.data.error)
+            
+        }
+    },
+    openWhastappForm(){
+      this.showWhatsappForm = true;
+      this.loadbuttonwhats = false
+    },
+    async SendReportWhasapp(){
+      console.log("enviando por whatsapp ");
+      this.loadbuttonwhats = true;
+      if(this.numeroWhatsapp === '' ){
+        this.$toast.warning('El numero para enviar no puede estar vacio ')
+        return 
+      }
       try {
             if(this.activeName === 'documents'){
-              const response = await axios.post(`${this.resource}reporteexcel`,{
-                form : this.form
+              const response = await axios.post(`${this.resource}/envioReportWhastap`,{
+                form : this.form,
+                activeTab : this.activeName,
+                numeroWhatsapp : this.numeroWhatsapp
                 });
 
                 const {data , status } = response; 
                 if (status == 200) {
                   
-                    
+                  this.$toast.success('Reporte enviado correctamente')
+                  this.loadbuttonwhats = false;
+                  this.showWhatsappForm = false; 
                 }
 
                 
             }
             if(this.activeName === 'SalesNotes'){
-              const response = await axios.post(`${this.resource}/getDataSeriesSalesnotes?page=${this.pagination.saleNotes.current_page}`,{
-                form : this.form
+              const response = await axios.post(`${this.resource}/envioReportWhastap`,{
+                form : this.form,
+                activeTab : this.activeName,
+                numeroWhatsapp : this.numeroWhatsapp
                 });
 
                 const {data , status } = response; 
                 if (status == 200) {
-                  this.NotasDeventas = data.datosSeries;
-                  this.pagination.saleNotes.total = data.dataPaginated.total
-                    this.pagination.saleNotes.current_page = data.dataPaginated.current_page
-                    this.pagination.saleNotes.per_page = data.dataPaginated.per_page
+                  this.$toast.success('Reporte enviado correctamente')
+                  this.loadbuttonwhats = false;
+                  this.showWhatsappForm = false; 
                 }
 
                 
@@ -417,7 +470,8 @@ export default {
         } catch (error) {
             console.log(error)
             
-        } */
+        }
+
     }
   },
 };

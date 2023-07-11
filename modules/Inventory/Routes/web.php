@@ -94,7 +94,9 @@ Route::middleware(['auth', 'redirect.module', 'locked.tenant'])->group(function 
         Route::post('series/getDataSeries', 'VentaSeriesController@getDataSeries');
         Route::post('series/getDataSeriesSalesnotes', 'VentaSeriesController@getDataSeriesSalesnotes');
         Route::get('series/getPersonas', 'VentaSeriesController@getPersonas');
-        Route::post('series/reporteexcel', 'VentaSeriesController@reporteexcel');
+        Route::get('series/reporteexcel', 'VentaSeriesController@reporteexcel');
+        Route::post('series/envioReportWhastap', 'VentaSeriesController@envioReportWhastap');
+
         
     });
 
