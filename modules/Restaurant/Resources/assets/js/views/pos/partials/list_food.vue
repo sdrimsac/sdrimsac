@@ -119,7 +119,7 @@
                                                                 )
                                                             "
                                                             class="thumbail"
-                                                        />
+                                                            style="  max-height: 69px;  max-width: 69px;" />
                                                     </template>
                                                 </div>
                                             </div>
