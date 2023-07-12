@@ -2,12 +2,14 @@
 
 namespace Modules\Consignment\Http\Controllers;
 
+use App\Models\Tenant\Company;
 use App\Models\Tenant\Configuration;
 use App\Models\Tenant\Establishment;
 use App\Models\Tenant\Item;
 use App\Models\Tenant\ItemWarehouse;
 use App\Models\Tenant\Person;
 use Carbon\Carbon;
+use Barryvdh\DomPDF\Facade as PDF;
 use Exception;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
@@ -36,20 +38,54 @@ class ConsignmentController extends Controller
 
         );
     }
+
+    public function consignment_document($id)
+    {
+        $consignment = Consignment::find($id);
+        $items = $consignment->items;
+        $establishment = Establishment::where('id', auth()->user()->establishment_id)->first();
+        $company = Company::active();
+        $customer = $consignment->person;
+
+        // return view('consignment::consignment', compact(
+        //     'consignment',
+        //     'items',
+        //     'company',
+        //     'establishment',
+        //     'customer'
+        // ));
+        try {
+            $pdf = PDf::loadView("consignment::consignment", compact(
+                'consignment',
+                'items',
+                'company',
+                'establishment',
+                'customer'
+            ))
+                ->setPaper('a4', 'portrait');
+        } catch (Exception $e) {
+            return ['m' => $e->getMessage()];
+        }
+
+        return $pdf->stream('pdf_file.pdf');
+    }
     public function liquidated(Request $request)
     {
         $consigment_id = $request->input('id');
+      
         $items = $request->input('items');
         if ($items && is_array($items)) {
             foreach ($items as $item) {
                 $consigment_item_id = $item['consignment_item_id'];
-                $selled_quantity = $item['quantity'];
-                $return_quantity = $item['toWarehouse'];
-                $consigment_item = ConsignmentItem::find($consigment_item_id);
-                if ($consigment_item) {
-                    $consigment_item->selled_quantity = $selled_quantity;
-                    $consigment_item->return_quantity = $return_quantity;
-                    $consigment_item->save();
+                if ($consigment_item_id) {
+                    $selled_quantity = $item['quantity'];
+                    $return_quantity = $item['toWarehouse'];
+                    $consigment_item = ConsignmentItem::find($consigment_item_id);
+                    if ($consigment_item) {
+                        $consigment_item->selled_quantity = $selled_quantity;
+                        $consigment_item->return_quantity = $return_quantity;
+                        $consigment_item->save();
+                    }
                 }
             }
         }
@@ -61,11 +97,21 @@ class ConsignmentController extends Controller
             'message' => 'Consignación liquidada con éxito'
         ];
     }
-    public function liquidate($consigment)
+
+    public function liquidate($consigment_id)
     {
-        $consigment = Consignment::find($consigment);
+        $consigment = Consignment::find($consigment_id);
+        $penalty = $consigment->penalty;
+        $configuration = Configuration::first();
+        if($penalty && $configuration->item_consignment_id==null){
+            return [
+                'success' => false,
+                'message' => 'No se ha configurado el producto de penalidad'
+            ];
+        }
         $items = $consigment->items;
         $foods = [];
+        $total = 0;
         foreach ($items as $item) {
             $food_id = $item->item->food->id;
             $food = Food::find($food_id);
@@ -73,8 +119,10 @@ class ConsignmentController extends Controller
             $newItem['food'] = $food;
             $newItem['quantity'] = $item->original_quantity;
             $newItem['price'] = $item->price;
+            $total += $item->original_quantity * $item->price;
             $newItem["id"] = $food_id;
             $newItem["consignment_item_id"] = $item->id;
+            $newItem["is_penalty"] = false;
             $newItem["series"] =  $item->lots->transform(function ($row)  use ($item) {
                 $item_lot = ItemLot::where('item_id', $item->item->id)
                     ->where('series', $row->series)
@@ -82,6 +130,25 @@ class ConsignmentController extends Controller
                 return $item_lot;
             });
             $foods[] = $newItem;
+        }
+        $is_over_time = Carbon::now()->gt(Carbon::parse($consigment->date_of_end));
+        if ($consigment->penalty && $is_over_time) {
+            //insertar un elemento en $foods en primera posicion
+            $penalty = $consigment->penalty;
+            $penalty_item = Item::find($configuration->item_consignment_id);
+            $penalty_food = Food::where('item_id', $penalty_item->id)->first();
+            $newItem = [];
+            $newItem['food'] = $penalty_food;
+            $newItem['quantity'] = 1;
+            //el "price" dependerá si es porcentaje o monto, si es porcentaje se calculará el monto de $total
+            $newItem['price'] = $penalty->type == 'percentage' ? $penalty->amount * $total / 100 : $penalty->amount;
+            $newItem["id"] = $penalty_food->id;
+            $newItem["consignment_item_id"] = null;
+            $newItem["is_penalty"] = true;
+
+            $newItem["series"] =  null;
+            array_unshift($foods, $newItem);
+
         }
         return [
             'success' => true,
@@ -151,8 +218,7 @@ class ConsignmentController extends Controller
     }
     public function records()
     {
-        $consigments = Consignment::query()->orderBy('liquidated', 'asc')->orderBy('id', 'desc')
-            ;
+        $consigments = Consignment::query()->orderBy('liquidated', 'asc')->orderBy('id', 'desc');
 
         return new ConsignmentCollection($consigments->paginate(config('tenant.items_per_page')));
     }

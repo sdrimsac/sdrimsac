@@ -15,6 +15,7 @@ class ConfigurationResource extends JsonResource
     public function toArray($request)
     {
         return [
+            'item_consignment_id'      => $this->item_consignment_id,
             'id'                        => $this->id,
             'socket_channel'            => $this->socket_channel,
             'send_auto'                 => (bool) $this->send_auto,

@@ -66,7 +66,7 @@ class OrdenEvent implements ShouldBroadcast
             $configuration->save();
             $event_name = $configuration->socket_channel;
         }
-        Log::info('order-request-' . $event_name);
+        // Log::info('order-request-' . $event_name);
         return 'order-request-' . $event_name;
     }
 }
