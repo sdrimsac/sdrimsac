@@ -4602,6 +4602,9 @@ console.log(this.form.items);
                             e.data.printing
                         );
                     }
+                }else{
+                    console.log(e.data.print)
+                    window.open(e.data.print , "_blank");
                 }
             }
         );
