@@ -6,12 +6,14 @@ use App\Http\Controllers\Tenant\WhatsappController;
 use App\Models\Tenant\Company;
 use App\Models\Tenant\Configuration;
 use App\Models\Tenant\Document;
+use App\Models\Tenant\Item;
 use App\Models\Tenant\User;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Http\File;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
 use Modules\Format\Http\Controllers\FormatController;
@@ -50,6 +52,7 @@ class SendReportAccounting extends Command
     public function handle()
     {
         Auth::login(User::firstOrFail());
+
         if ($this->isFirstDayOfMonth(date('Y-m-d'))) {
             $range_date = $this->createStartAndEndofMonth();
             $documents = Document::whereBetween('date_of_issue', $range_date);
