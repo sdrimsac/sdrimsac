@@ -1044,7 +1044,53 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                    
+                                            <div class="col-md-6 mt-4">
+                                        <template id="select-append">
+                                            <label class="control-label w-100"
+                                                >Producto penalidad - Consignación
+                                            </label>
+                                            <div
+                                                class="el-input el-input-group el-input-group--append"
+                                            >
+                                                <el-select
+                                                    :disabled="
+                                                        !form.consignment
+                                                    "
+                                                    @focus="
+                                                        $event.target.select()
+                                                    "
+                                                    ref="producto"
+                                                    v-model="
+                                                        form.item_consignment_id
+                                                    "
+                                                    @change="changeItem"
+                                                    filterable
+                                                    remote
+                                                    placeholder="Buscar......"
+                                                    popper-class="el-select-items"
+                                                    @visible-change="
+                                                        focusTotalItem
+                                                    "
+                                                    slot="prepend"
+                                                    id="select-width"
+                                                    :remote-method="
+                                                        searchRemoteItems
+                                                    "
+                                                    :loading="loading_search"
+                                                >
+                                                    <el-option
+                                                        v-for="option in items"
+                                                        :key="option.id"
+                                                        :value="option.id"
+                                                        :label="
+                                                            option.full_description ||
+                                                                option.description
+                                                        "
+                                                    ></el-option>
+                                                </el-select>
+                                            </div>
+                                        </template>
+                                    </div>
                                      <div class="col-md-6 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"

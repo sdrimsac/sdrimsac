@@ -5,6 +5,7 @@
         @close="close"
         :visible="showDialog"
         title="Lista de Consignaciones"
+        width="80%"
     >
         <div class="row mt-2"></div>
         <div class="row mt-2">
@@ -17,6 +18,8 @@
                         <th>Fecha de liquidación</th>
                         <th>Productos</th>
                         <th>Total</th>
+                        <th>Penalidad</th>
+                        <th></th>
                         <th></th>
                     </tr>
                 </thead>
@@ -35,6 +38,17 @@
                             >
                         </td>
                         <td>{{ consignment.total }}</td>
+                        <td>
+                            {{ consignment.penalty }}
+                        </td>
+                        <td>
+                            <el-button
+                                @click="clickFormat(consignment.id)"
+                                type="primary"
+                            >
+                                <i class="el-icon-s-order"></i>
+                            </el-button>
+                        </td>
                         <td>
                             <el-button
                                 v-if="!consignment.liquidated"
@@ -84,6 +98,9 @@ export default {
         };
     },
     methods: {
+        clickFormat(id) {
+            window.open(`/consignment/format/${id}`, "_blank");
+        },
         async clickDetail(consignment) {
             this.recordId = consignment.id;
             this.showDialogDetail = true;
@@ -92,15 +109,23 @@ export default {
             const response = await this.$http(
                 `${this.resource}/liquidate/${consignment.id}`
             );
-            let { foods } = response.data;
-            foods = foods.map(food => {
-                food.toWarehouse = 0;
-                food.originalQuantity = food.quantity;
-
-                return food;
-            });
-            this.$emit("setItemsToLiquidate", foods, consignment.id);
-            this.close();
+            if (response.status == 200) {
+                if (response.data.success) {
+                    let { foods } = response.data;
+                    foods = foods.map(food => {
+                        food.toWarehouse = 0;
+                        food.originalQuantity = food.quantity;
+                        
+                        return food;
+                    });
+                    this.$emit("setItemsToLiquidate", foods, consignment.id);
+                    this.close();
+                } else {
+                    this.$toast.error(response.data.message);
+                }
+            }else{
+                this.$toast.error("Ocurrió un error al liquidar la consignación");
+            }
         },
         clickShowProducts(consignment) {
             this.recordId = consignment.id;

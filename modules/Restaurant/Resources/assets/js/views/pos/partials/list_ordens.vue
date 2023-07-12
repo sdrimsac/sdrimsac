@@ -1688,7 +1688,7 @@
                                                             >
                                                         </div>
                                                         <div class="row" v-if="isConsignment">
-                                                            <div class="col-md-4">
+                                                            <div class="col-md-4" v-if="!order_pend.is_penalty">
                                                                 <label for="warehouse">Para el almacen</label>
                                                                      <el-input-number
                                                                         :min="0"
