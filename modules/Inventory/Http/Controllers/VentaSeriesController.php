@@ -100,7 +100,7 @@ class VentaSeriesController extends Controller
 
         $dataSalesnotes = DB::connection('tenant')->table('boxes')
             ->join('ordens', 'boxes.orden_id', '=', 'ordens.id')
-            ->join('sale_notes', 'ordens.id', '=', 'sale_notes.id')
+            ->join('sale_notes', 'ordens.id', '=', 'sale_notes.orden_id')
             ->join('sale_note_items', 'sale_notes.id', '=', 'sale_note_items.sale_note_id')
             ->join('items', 'sale_note_items.item_id', '=', 'items.id')
             ->join('establishments', 'boxes.establishment_id', '=', 'establishments.id')
@@ -223,7 +223,7 @@ class VentaSeriesController extends Controller
             }else{
                 $dataSalesnotes = DB::connection('tenant')->table('boxes')
                 ->join('ordens', 'boxes.orden_id', '=', 'ordens.id')
-                ->join('sale_notes', 'ordens.id', '=', 'sale_notes.id')
+                ->join('sale_notes', 'ordens.id', '=', 'sale_notes.orden_id')
                 ->join('sale_note_items', 'sale_notes.id', '=', 'sale_note_items.sale_note_id')
                 ->join('items', 'sale_note_items.item_id', '=', 'items.id')
                 ->join('establishments', 'boxes.establishment_id', '=', 'establishments.id')
@@ -369,7 +369,7 @@ class VentaSeriesController extends Controller
         }else{
             $dataSalesnotes = DB::connection('tenant')->table('boxes')
                 ->join('ordens', 'boxes.orden_id', '=', 'ordens.id')
-                ->join('sale_notes', 'ordens.id', '=', 'sale_notes.id')
+                ->join('sale_notes', 'ordens.id', '=', 'sale_notes.orden_id')
                 ->join('sale_note_items', 'sale_notes.id', '=', 'sale_note_items.sale_note_id')
                 ->join('items', 'sale_note_items.item_id', '=', 'items.id')
                 ->join('establishments', 'boxes.establishment_id', '=', 'establishments.id')
