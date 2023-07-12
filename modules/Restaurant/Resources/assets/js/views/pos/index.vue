@@ -1106,7 +1106,7 @@
                                                                                         )
                                                                                     "
                                                                                     class="thumbail"
-                                                                                />
+                                                                                    style="  max-height: 69px;  max-width: 69px;" />
                                                                             </template>
                                                                         </div>
                                                                     </div>
@@ -3591,18 +3591,35 @@ console.log(this.form.items);
             let partsUrl = linkpdf.split("/");
             let document = partsUrl[partsUrl.length - 1];
             let isTicket = document.toLowerCase().includes("ticket");
+            let isA4 = document.toLowerCase().includes("a4");
 
             let tipoBandejaImpresora = this.config.new_old_printer;
 
-            if (!isTicket && tipoBandejaImpresora == 1) {
-                //opciones que permiten hacer una impresion correcta en impresoras nuevas
-                paperConfig.density = 600;
-                paperConfig.orientation = "portrait";
-                // paperConfig.margins = { left: 2 };
-            } else if (!isTicket && tipoBandejaImpresora == 0) {
-                paperConfig.density = 600;
-                paperConfig.orientation = "portrait";
+           
+
+            if(isA4){
+                if(tipoBandejaImpresora == 1){
+                    paperConfig.density = 700;
+                    paperConfig.orientation = "portrait";
+                }
+                
+            }else{
+                if (!isTicket && tipoBandejaImpresora == 1) {
+                    //opciones que permiten hacer una impresion correcta en impresoras nuevas
+                    paperConfig.density = 600;
+                    paperConfig.orientation = "portrait";
+                    paperConfig.margins = { left: 2 };
+                } else if (!isTicket && tipoBandejaImpresora == 0) {
+                    paperConfig.density = 600;
+                    paperConfig.orientation = "portrait";
+                }
             }
+            //NO MOVER ESTA CONFIGURACION ESTA PARA IMPRESION DIRECTA EN A5
+            
+
+            
+            //FIN IMPRESION DIRECTA A5 
+
             let config = qz.configs.create(Printer, paperConfig);
 
             if (!qz.websocket.isActive()) {
