@@ -160,6 +160,7 @@ class ClientController extends Controller
     {
         $records = Client::latest()
             ->get();
+
         foreach ($records as &$row) {
             $tenancy = app(Environment::class);
             $tenancy->tenant($row->hostname->website);
@@ -215,8 +216,12 @@ class ClientController extends Controller
 
                 $client_helper = new ClientHelper();
                 $row->monthly_sales_total = $client_helper->getSalesTotal($init->format('Y-m-d'), $end->format('Y-m-d'), $row->plan);
-            }
 
+                
+            }
+            $row->imgClient = DB::connection('tenant')
+                ->table('companies')->select('logo')
+                ->first()->logo;
             $row->quantity_establishments = $this->getQuantityRecordsFromTable('establishments');
         }
 
