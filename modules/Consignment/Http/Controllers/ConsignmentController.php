@@ -2,6 +2,7 @@
 
 namespace Modules\Consignment\Http\Controllers;
 
+use App\Http\Controllers\Tenant\WhatsappController;
 use App\Models\Tenant\Company;
 use App\Models\Tenant\Configuration;
 use App\Models\Tenant\Establishment;
@@ -21,6 +22,7 @@ use Modules\Consignment\Models\ConsignmentItem;
 use Modules\Consignment\Models\ConsignmentItemLot;
 use Modules\Consignment\Models\ConsignmentPenalty;
 use Modules\Item\Models\ItemLot;
+use Modules\Restaurant\Events\PrintEvent;
 use Modules\Restaurant\Models\Food;
 
 class ConsignmentController extends Controller
@@ -38,7 +40,98 @@ class ConsignmentController extends Controller
 
         );
     }
+    function getCompanyName()
+    {
+        $company = Company::first();
+        $company_name = null;
+        if ($company->trade_name) {
+            $company_name = $company->trade_name;
+        } else {
+            $company_name = $company->name;
+        }
 
+        return $company_name;
+    }
+
+    public function consignment_message($id)
+    {
+        $consignment = Consignment::find($id);
+        $person = $consignment->person;
+        $person_telephone = $person->telephone;
+        if ($person_telephone == null) {
+            return [
+                'success' => false,
+                'message' => 'El cliente no tiene un número de teléfono registrado'
+            ];
+        }
+        $person_name = $person->name;
+        $items = $consignment->items;
+        $total = 0;
+        foreach ($items as $item) {
+            $total += $item->original_quantity * $item->price;
+        }
+        $penalty = null;
+        if ($consignment->penalty) {
+            $consignment_penalty = $consignment->penalty;
+            $amount = $consignment_penalty->amount;
+            if ($consignment_penalty->type == 'percentage') {
+                $penalty = $amount . '%';
+            } else {
+                $penalty = 'S/ ' . $amount;
+            }
+        }
+
+        $message = "Se le comunica que la consignación N° " . $consignment->id . " del cliente " . $person_name . " por el monto de S/ " . $total . " con fecha de vencimiento " . Carbon::parse($consignment->date_of_end)->format('d/m/Y') . " se encuentra pendiente de liquidación.\n";
+        if ($penalty) {
+            $message .= "Se le recuerda que tiene una penalidad de " . $penalty . ".\n";
+        }
+        $message .= "Por favor, acercarse a nuestras oficinas para regularizar su situación. Gracias.\n Atte. " . $this->getCompanyName() . "\n";
+        $response =  (new WhatsappController)->sendMessage($message, $person_telephone);
+        if(!isset($response['success']) && $response['success'] == false){
+            return [
+                'success' => false,
+                'message' => 'Ocurrió un error al enviar el mensaje',
+                'error' => $response['message']
+            ];
+        }
+        return [
+            'success' => true,
+            'message' => 'Mensaje enviado con éxito'
+        ];
+        // return $response;
+    }
+    public function consignment_document_ticket($id){
+        $consignment = Consignment::find($id);
+        $items = $consignment->items;
+        
+        $establishment = Establishment::first();
+        $company = Company::active();
+        $customer = $consignment->person;
+        $height = 8  * 40;
+        $height += $items->count() * 40;
+        // return view('consignment::consignment', compact(
+        //     'consignment',
+        //     'items',
+        //     'company',
+        //     'establishment',
+        //     'customer'
+        // ));
+        try {
+            $pdf = PDf::loadView("consignment::consignment_ticket", compact(
+                'consignment',
+                'items',
+                'company',
+                'establishment',
+                'customer'
+            ))
+            ->setPaper(array(0, 0, 249.45, $height));
+        } catch (Exception $e) {
+            return ['m' => $e->getMessage()];
+        }
+
+        return $pdf->stream('pdf_file.pdf');
+      
+    }
     public function consignment_document($id)
     {
         $consignment = Consignment::find($id);
@@ -72,7 +165,7 @@ class ConsignmentController extends Controller
     public function liquidated(Request $request)
     {
         $consigment_id = $request->input('id');
-      
+
         $items = $request->input('items');
         if ($items && is_array($items)) {
             foreach ($items as $item) {
@@ -103,7 +196,7 @@ class ConsignmentController extends Controller
         $consigment = Consignment::find($consigment_id);
         $penalty = $consigment->penalty;
         $configuration = Configuration::first();
-        if($penalty && $configuration->item_consignment_id==null){
+        if ($penalty && $configuration->item_consignment_id == null) {
             return [
                 'success' => false,
                 'message' => 'No se ha configurado el producto de penalidad'
@@ -148,7 +241,6 @@ class ConsignmentController extends Controller
 
             $newItem["series"] =  null;
             array_unshift($foods, $newItem);
-
         }
         return [
             'success' => true,
@@ -320,9 +412,10 @@ class ConsignmentController extends Controller
             }
 
             DB::connection('tenant')->commit();
-
+            event(new PrintEvent($consigment->id, "CO", true, 0));
             return [
                 'success' => true,
+                'id' => $consigment->id,
                 'message' => 'Consignación registrada con éxito'
             ];
         } catch (Exception $e) {

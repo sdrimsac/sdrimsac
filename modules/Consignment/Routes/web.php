@@ -17,6 +17,7 @@ use Modules\Consignment\Http\Controllers\ConsignmentPenaltyController;
 
 Route::prefix('consignment')->group(function() {
     Route::get('/', [ConsignmentController::class,'index'])->name('tenant.consignment.index');
+    Route::get('/format_ticket/{id}', [ConsignmentController::class,'consignment_document_ticket']);
     Route::get('/records', [ConsignmentController::class,'records']);
     Route::get('/format/{id}', [ConsignmentController::class,'consignment_document']);
     Route::post('/', [ConsignmentController::class,'store']);
@@ -27,6 +28,7 @@ Route::prefix('consignment')->group(function() {
     Route::get('/columns', [ConsignmentController::class,'columns']);
     Route::get('/tables', [ConsignmentController::class,'tables']);
     Route::get('/stock', [ConsignmentController::class,'stock']);
+    Route::get('/message/{id}', [ConsignmentController::class,'consignment_message']);
 
     Route::prefix('penalty')->group(function (){
         Route::get('/', [ConsignmentPenaltyController::class,'penalties']);

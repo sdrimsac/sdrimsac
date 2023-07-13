@@ -189,7 +189,7 @@ export default {
                     this.form
                 );
                 if (response.status == 200) {
-                    let { success, message } = response.data;
+                    let { success, message,id } = response.data;
                     if (success) {
                         this.$toast.success(message);
                         this.$emit("update:showDialog", false);

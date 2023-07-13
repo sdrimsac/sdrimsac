@@ -41,7 +41,6 @@ class TenantCommand extends Command
     public function handle() {
         // Log::debug('Aqui se ejecuta tarea Progrmada '. Carbon::now()->format('H:i').':00');
        
-    
         foreach (Task::where('execution_time', Carbon::now()->format('H:i').':00')->get() as $task) {
             try {
                 Artisan::call($task->class);

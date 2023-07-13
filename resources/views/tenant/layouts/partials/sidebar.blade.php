@@ -455,7 +455,14 @@
                 <span class="label">Reporte </span>
             </a>
             <ul id="reporte" class="collapse ">
+                <li>
+                    <a class="{{ $path[0] === 'reports' && $path[1] === 'consignment' ? 'active' : '' }}"
+                        href="{{ route('reports.consignment.index') }}">
+                        <i class="icofont-file-excel"></i>
 
+                        Consignamiento
+                    </a>
+                </li>
                 <li>
                     <a class="{{ $path[0] === 'reports' && $path[1] === 'inventory' ? 'active' : '' }}"
                         href="{{ route('reports.credits.index') }}">

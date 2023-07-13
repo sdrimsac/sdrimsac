@@ -42,6 +42,17 @@
                             {{ consignment.penalty }}
                         </td>
                         <td>
+                            <el-tooltip
+                                v-if="consignment.expired"
+                                content="Enviar mensaje de vencimiento al número de contacto del cliente"
+                            >
+                                <el-button
+                                    @click="clickSendMessage(consignment.id)"
+                                    type="success"
+                                >
+                                    <i class="el-icon-message"></i>
+                                </el-button>
+                            </el-tooltip>
                             <el-button
                                 @click="clickFormat(consignment.id)"
                                 type="primary"
@@ -98,6 +109,27 @@ export default {
         };
     },
     methods: {
+        async clickSendMessage(id) {
+            try {
+                this.loading = true;
+                const response = await this.$http(
+                    `${this.resource}/message/${id}`
+                );
+                if (response.status == 200) {
+                    if (response.data.success) {
+                        this.$toast.success(response.data.message);
+                    } else {
+                        this.$toast.error(response.data.message);
+                    }
+                } else {
+                    this.$toast.error("Ocurrió un error al enviar el mensaje");
+                }
+            } catch (e) {
+                this.$toast.error(e.message);
+            } finally {
+                this.loading = false;
+            }
+        },
         clickFormat(id) {
             window.open(`/consignment/format/${id}`, "_blank");
         },
@@ -115,7 +147,7 @@ export default {
                     foods = foods.map(food => {
                         food.toWarehouse = 0;
                         food.originalQuantity = food.quantity;
-                        
+
                         return food;
                     });
                     this.$emit("setItemsToLiquidate", foods, consignment.id);
@@ -123,8 +155,10 @@ export default {
                 } else {
                     this.$toast.error(response.data.message);
                 }
-            }else{
-                this.$toast.error("Ocurrió un error al liquidar la consignación");
+            } else {
+                this.$toast.error(
+                    "Ocurrió un error al liquidar la consignación"
+                );
             }
         },
         clickShowProducts(consignment) {

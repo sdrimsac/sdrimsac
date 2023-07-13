@@ -1,9 +1,11 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Modules\Report\Http\Controllers\ReportConsignmentController;
 use Modules\Report\Http\Controllers\ReportCreditController;
 
 Route::get('reports/credits/pdf', [ReportCreditController::class, 'pdf'])->name('tenant.reports.credits.pdf');
+Route::get('reports/consignment/pdf', [ReportConsignmentController::class, 'pdf']);
 Route::middleware(['auth', 'redirect.module', 'locked.tenant'])->group(function () {
 
 
@@ -13,9 +15,13 @@ Route::middleware(['auth', 'redirect.module', 'locked.tenant'])->group(function 
         Route::get('credits', [ReportCreditController::class, 'index'])->name('reports.credits.index');
         Route::get('credits/records', [ReportCreditController::class, 'records']);
         Route::get('credits/filter', [ReportCreditController::class, 'filter']);
-
         Route::get('credits/excel', [ReportCreditController::class, 'excel'])->name('tenant.reports.credits.excel');
-
+        
+        Route::get('consignment', [ReportConsignmentController::class, 'index'])->name('reports.consignment.index');
+        Route::get('consignment/records', [ReportConsignmentController::class, 'records']);
+        Route::get('consignment/filter', [ReportConsignmentController::class, 'filter']);
+        Route::get('consignment/excel', [ReportConsignmentController::class, 'excel']);
+        // Route::get('consignment/pdf', [ReportConsignmentController::class, 'pdf']);
 
 
         Route::get('data-table/persons/{type}', 'ReportController@dataTablePerson');

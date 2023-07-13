@@ -28,8 +28,13 @@ class ConsignmentCollection extends ResourceCollection
 
                 $penalty = $consignment_penalty->type == 'percentage' ? $consignment_penalty->amount . '%' : 'S/' . $consignment_penalty->amount;
             }
+            $expired = Carbon::parse($row->date_of_end)->lte(Carbon::now()->startOfDay());
+            
+
+            $liquidated = (bool)$row->liquidated;
 
             return [
+                'expired' => $expired && !$liquidated,
                 'id' => $row->id,
                 'penalty' => $penalty,
                 'liquidated' => (bool)$row->liquidated,

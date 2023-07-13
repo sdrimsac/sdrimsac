@@ -790,7 +790,12 @@ const app = new Vue({
                 /*webpackChunkName:"tenant-quotations-edit"*/
                 "./views/quotations/form_edit.vue"
             ),
-
+//report-consignment-index
+"report-consignment-index": () =>
+import(
+    /*webpackChunkName:"report-credit-index"*/
+    "../../modules/Report/Resources/assets/js/views/consignment/index.vue"
+),
         "report-credit-index": () =>
             import(
                 /*webpackChunkName:"report-credit-index"*/

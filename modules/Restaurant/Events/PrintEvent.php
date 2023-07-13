@@ -93,6 +93,10 @@ class PrintEvent implements ShouldBroadcast
                 $doc = SaleNote::where('id', $id)->first();
                 $documentLink = url('') . "/sale-notes/print/{$doc->external_id}/{$format}";
                 break;
+            case "CO":
+                $doc = $id;
+                $documentLink = url('') . $format == "a4" ? "/consignment/format/{$doc}" : "/consignment/format_ticket/{$doc}";
+                break;
         }
         $printer = $area_printer->printer;
         if ($printer == null) {
