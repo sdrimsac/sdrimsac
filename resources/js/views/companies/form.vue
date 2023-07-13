@@ -177,134 +177,12 @@
                                         ></small>
                                     </div>
                                 </div>
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label class="control-label"
-                                            >Logo</label
-                                        >
-                                        <el-input
-                                            v-model="form.logo"
-                                            :readonly="true"
-                                        >
-                                            <el-upload
-                                                slot="append"
-                                                :headers="headers"
-                                                :data="{ type: 'logo' }"
-                                                action="/companies/uploads"
-                                                :show-file-list="false"
-                                                :on-success="successUpload"
-                                            >
-                                                <el-button
-                                                    type="primary"
-                                                    icon="el-icon-upload"
-                                                ></el-button>
-                                            </el-upload>
-                                        </el-input>
-                                        <div class="badge text-danger">
-                                            <small
-                                                >Se recomienda resoluciones
-                                                700x300</small
-                                            >
-                                        </div>
-                                    </div>
-                                </div>
+                                
+                                
 
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label class="control-label"
-                                            >Logo Documento</label
-                                        >
-                                        <el-input
-                                            v-model="form.document_logo"
-                                            :readonly="true"
-                                        >
-                                            <el-upload
-                                                slot="append"
-                                                :headers="headers"
-                                                :data="{
-                                                    type: 'document_logo'
-                                                }"
-                                                action="/companies/uploads"
-                                                :show-file-list="false"
-                                                :on-success="successUpload"
-                                            >
-                                                <el-button
-                                                    type="primary"
-                                                    icon="el-icon-upload"
-                                                ></el-button>
-                                            </el-upload>
-                                        </el-input>
-                                        <div class="badge text-danger">
-                                            <small
-                                                >Se recomienda resoluciones
-                                                700x300</small
-                                            >
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label class="control-label"
-                                            >Imagen Fondo</label
-                                        >
-                                        <el-input
-                                            v-model="form.img_bg"
-                                            :readonly="true"
-                                        >
-                                            <el-upload
-                                                slot="append"
-                                                :headers="headers"
-                                                :data="{ type: 'img_bg' }"
-                                                action="/companies/img_bg"
-                                                :show-file-list="false"
-                                                :on-success="successUpload"
-                                            >
-                                                <el-button
-                                                    type="primary"
-                                                    icon="el-icon-upload"
-                                                ></el-button>
-                                            </el-upload>
-                                        </el-input>
-                                        <div class="badge text-danger">
-                                            <small
-                                                >Se recomienda resoluciones
-                                                700x300</small
-                                            >
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label class="control-label"
-                                            >Favicon</label
-                                        >
-                                        <el-input
-                                            v-model="form.favicon"
-                                            :readonly="true"
-                                        >
-                                            <el-upload
-                                                slot="append"
-                                                :headers="headers"
-                                                :data="{ type: 'favicon' }"
-                                                action="/companies/favicon"
-                                                :show-file-list="false"
-                                                :on-success="successUpload"
-                                            >
-                                                <el-button
-                                                    type="primary"
-                                                    icon="el-icon-upload"
-                                                ></el-button>
-                                            </el-upload>
-                                        </el-input>
-                                        <div class="badge text-danger">
-                                            <small
-                                                >Se recomienda resoluciones
-                                                32x32</small
-                                            >
-                                        </div>
-                                    </div>
-                                </div>
+                                
                             </div>
+                            
                             <div class="col-md-6 mt-4" v-show="false">
                                 <div
                                     class="form-group"
@@ -319,15 +197,187 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="card mb-3" >
+                                    <div class="card-header bg-primary">
+                                        <h6 class="text-white my-0 card-tittle"> Imagenes del Sistema</h6>
 
-                        <div class="row">
-                            <div class="col-md-12 mt-2">
-                                <h6 class="border-bottom">
-                                    Entorno del sistema
-                                </h6>
+                                        <div class="card-tools">
+                                            <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                                                <i class="fas fa-plus"></i>
+                                            </button>
+                                        </div>
+                                        
+                                    </div>
+                                    <div class="card-body collapse" id="collapseExample">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="control-label"
+                                                        >Logo</label
+                                                    >
+                                                    <el-input
+                                                        v-model="form.logo"
+                                                        :readonly="true"
+                                                    >
+                                                        <el-upload
+                                                            slot="append"
+                                                            :headers="headers"
+                                                            :data="{ type: 'logo' }"
+                                                            action="/companies/uploads"
+                                                            :show-file-list="false"
+                                                            :on-success="successUpload"
+                                                        >
+                                                            <el-button
+                                                                type="primary"
+                                                                icon="el-icon-upload"
+                                                            ></el-button>
+                                                        </el-upload>
+                                                    </el-input>
+                                                    <div class="badge text-danger">
+                                                        <small
+                                                            >Se recomienda resoluciones
+                                                            700x300</small
+                                                        >
+                                                    </div>
+                                                </div>
+                                                
+                                            </div>
+                                            <div class="col-md-6">
+                                                    <img class="img-thumbnail" :src="`/storage/uploads/logos/${form.logo}`"  style="  max-height: 100px;">
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                            
+                                            <div class="form-group">
+                                                <label class="control-label"
+                                                    >Logo Documento</label
+                                                >
+                                                <el-input
+                                                    v-model="form.document_logo"
+                                                    :readonly="true"
+                                                >
+                                                    <el-upload
+                                                        slot="append"
+                                                        :headers="headers"
+                                                        :data="{
+                                                            type: 'document_logo'
+                                                        }"
+                                                        action="/companies/uploads"
+                                                        :show-file-list="false"
+                                                        :on-success="successUpload"
+                                                    >
+                                                        <el-button
+                                                            type="primary"
+                                                            icon="el-icon-upload"
+                                                        ></el-button>
+                                                    </el-upload>
+                                                </el-input>
+                                                <div class="badge text-danger">
+                                                    <small
+                                                        >Se recomienda resoluciones
+                                                        700x300</small
+                                                    >
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                            <div class="col-md-6">
+                                                    <img class="img-thumbnail" :src="`/storage/uploads/logos/${form.document_logo}`"  style="  max-height: 100px;">
+                                            </div>
+                                        </div>
+                                 <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="control-label"
+                                                >Imagen Fondo</label
+                                            >
+                                            <el-input
+                                                v-model="form.img_bg"
+                                                :readonly="true"
+                                            >
+                                                <el-upload
+                                                    slot="append"
+                                                    :headers="headers"
+                                                    :data="{ type: 'img_bg' }"
+                                                    action="/companies/img_bg"
+                                                    :show-file-list="false"
+                                                    :on-success="successUpload"
+                                                >
+                                                    <el-button
+                                                        type="primary"
+                                                        icon="el-icon-upload"
+                                                    ></el-button>
+                                                </el-upload>
+                                            </el-input>
+                                            <div class="badge text-danger">
+                                                <small
+                                                    >Se recomienda resoluciones
+                                                    700x300</small
+                                                >
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                                    <img class="img-thumbnail" :src="`/storage/uploads/img_bg/${form.img_bg}`"  style="  max-height: 100px;">
+                                            </div>
+                                 </div>       
+                               
+                                 <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="control-label"
+                                                >Favicon</label
+                                            >
+                                            <el-input
+                                                v-model="form.favicon"
+                                                :readonly="true"
+                                            >
+                                                <el-upload
+                                                    slot="append"
+                                                    :headers="headers"
+                                                    :data="{ type: 'favicon' }"
+                                                    action="/companies/favicon"
+                                                    :show-file-list="false"
+                                                    :on-success="successUpload"
+                                                >
+                                                    <el-button
+                                                        type="primary"
+                                                        icon="el-icon-upload"
+                                                    ></el-button>
+                                                </el-upload>
+                                            </el-input>
+                                            <div class="badge text-danger">
+                                                <small
+                                                    >Se recomienda resoluciones
+                                                    32x32</small
+                                                >
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                            <img class="img-thumbnail" :src="`/storage/uploads/favicon/${form.favicon}`"  style="  max-height: 100px;">
+                                    </div>
+                                 </div>
+                                
+
+
+                                    </div>
+
+                                </div>
+                        
+                        
+                    <div class="card">
+                            <div class="card-header bg-primary">
+                                
+                                    <h6 class="text-white my-0">
+                                        Entorno del sistema
+                                    </h6>
+                                
                             </div>
-                        </div>
-                        <div class="row">
+                            <div class="row">
                             <div class="col-md-3">
                                 <div
                                     class="form-group"
@@ -409,7 +459,7 @@
                                 </div>
                             </div>
                         </div>
-                        <template
+                            <template
                             v-if="form.soap_type_id == '02' || toggle == true"
                         >
                             <div class="row">
@@ -499,6 +549,8 @@
                                 >Guardar</el-button
                             >
                         </div>
+                    </div>
+                        
                     </form>
                 </div>
                 <div class="card">

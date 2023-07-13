@@ -3595,11 +3595,14 @@ console.log(this.form.items);
 
             let tipoBandejaImpresora = this.config.new_old_printer;
 
-           
+            
 
             if(isA4){
                 if(tipoBandejaImpresora == 1){
                     paperConfig.density = 700;
+                    paperConfig.orientation = "portrait";
+                }else{
+                    paperConfig.density = 350;
                     paperConfig.orientation = "portrait";
                 }
                 
@@ -3610,7 +3613,7 @@ console.log(this.form.items);
                     paperConfig.orientation = "portrait";
                     paperConfig.margins = { left: 2 };
                 } else if (!isTicket && tipoBandejaImpresora == 0) {
-                    paperConfig.density = 600;
+                    paperConfig.density = 350;
                     paperConfig.orientation = "portrait";
                 }
             }
