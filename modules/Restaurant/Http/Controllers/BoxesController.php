@@ -816,8 +816,10 @@ class BoxesController extends Controller
         if (!empty($seriesSalesNotes)) {
             foreach ($seriesSalesNotes as $key => $value) {
                 $detalleSalesNotes =  json_decode($value->item, true);
-                foreach ($detalleSalesNotes['lots'] as $key => $valueDetalle) {
-                    $datosSeries[] =  [$value->salenotes_series.'-'. $value->salenotes_number , $detalleSalesNotes['description'] , $valueDetalle['series']]; 
+                if(isset($detalleSalesNotes['lots'])){
+                    foreach ($detalleSalesNotes['lots'] as $key => $valueDetalle) {
+                        $datosSeries[] =  [$value->salenotes_series.'-'. $value->salenotes_number , $detalleSalesNotes['description'] , $valueDetalle['series']]; 
+                    }
                 }
             }
         }
