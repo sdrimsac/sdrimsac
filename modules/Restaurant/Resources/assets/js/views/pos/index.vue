@@ -3606,7 +3606,7 @@ console.log(this.form.items);
                     paperConfig.orientation = "portrait";
                 }
                 
-            }else{
+            }else{//NO MOVER ESTA CONFIGURACION ESTA PARA IMPRESION DIRECTA EN A5
                 if (!isTicket && tipoBandejaImpresora == 1) {
                     //opciones que permiten hacer una impresion correcta en impresoras nuevas
                     paperConfig.density = 600;
@@ -3616,12 +3616,12 @@ console.log(this.form.items);
                     paperConfig.density = 350;
                     paperConfig.orientation = "portrait";
                 }
-            }
-            //NO MOVER ESTA CONFIGURACION ESTA PARA IMPRESION DIRECTA EN A5
+            }//FIN IMPRESION DIRECTA A5 
+            
             
 
             
-            //FIN IMPRESION DIRECTA A5 
+            
 
             let config = qz.configs.create(Printer, paperConfig);
 
