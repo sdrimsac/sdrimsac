@@ -232,7 +232,9 @@
                         <thead>
                         <tr>
                             <th class="">#</th>
+                            <th>Logo</th>
                             <th class="text-center">Bloquear cuenta</th>
+                            <th class="text-center">Notificaciones</th>
                             <th class="">Hostname</th>
                             <th>Nombre</th>
                             <th>RUC</th>
@@ -241,7 +243,7 @@
                             <th>Correo</th>
                             <th>Entorno</th>
                             <th class="text-center">Total de Comprobantes</th>
-                            <th class="text-center">Notificaciones</th>
+                            
                             
                             <th class="text-center">Comprobantes Ciclo Facturacion</th>
                             <th class="text-center">Usuarios</th>
@@ -269,6 +271,7 @@
                         <tr v-for="(row, index) in records"
                             :key="index">
                             <td class="">{{ index + 1 }}</td>
+                            <td class=""><img  :src="`/storage/uploads/logos/${row.imgClient}`" alt="" style="  max-width: 70px;  max-height: 70px;"></td>
                             <td class="text-center">
                                 <template v-if="!row.locked">
                                     <el-switch
@@ -277,6 +280,42 @@
                                         @change="changeLockedTenant(row)"
                                     ></el-switch>
                                 </template>
+                            </td>
+                            <td class="text-center">
+
+                                <el-tooltip class="item"
+                                            content="Comprobantes enviados / por enviar"
+                                            effect="dark"
+                                            placement="top-start">
+                                    <el-badge :value="row.document_not_sent"
+                                            class="item"
+                                            :type="row.document_not_sent == 0 ? 'primary' : 'danger'">
+                                        <i class="far fa-bell text-secondary"></i>
+                                    </el-badge>
+                                </el-tooltip>
+
+                                <el-tooltip class="item"
+                                            content="Comprobantes pendientes de rectificación"
+                                            effect="dark"
+                                            placement="top-start">
+                                    <el-badge :value="row.document_regularize_shipping"
+                                            class="item  ml-4"
+                                            :type="row.document_regularize_shipping == 0 ? 'primary' : 'danger'">
+                                        <i class="fas fa-exclamation-triangle text-secondary"></i>
+                                    </el-badge>
+                                </el-tooltip>
+
+                                <el-tooltip class="item"
+                                            content="Comprobantes por anular"
+                                            effect="dark"
+                                            placement="top-start">
+                                    <el-badge :value="row.document_to_be_canceled"
+                                            class="item  ml-4"
+                                            :type="row.document_to_be_canceled == 0 ? 'primary' : 'danger'">
+                                        <i class="fas fa-exclamation-circle text-secondary"></i>
+                                    </el-badge>
+                                </el-tooltip>
+
                             </td>
                             <td class="">
                                 <!-- {{ row.hostname }} -->
@@ -317,42 +356,7 @@
                                 </label>
                             </td>
 
-                            <td class="text-center">
-
-                                <el-tooltip class="item"
-                                            content="Comprobantes enviados / por enviar"
-                                            effect="dark"
-                                            placement="top-start">
-                                    <el-badge :value="row.document_not_sent"
-                                              class="item"
-                                              :type="row.document_not_sent == 0 ? 'primary' : 'danger'">
-                                        <i class="far fa-bell text-secondary"></i>
-                                    </el-badge>
-                                </el-tooltip>
-
-                                <el-tooltip class="item"
-                                            content="Comprobantes pendientes de rectificación"
-                                            effect="dark"
-                                            placement="top-start">
-                                    <el-badge :value="row.document_regularize_shipping"
-                                              class="item  ml-4"
-                                              :type="row.document_regularize_shipping == 0 ? 'primary' : 'danger'">
-                                        <i class="fas fa-exclamation-triangle text-secondary"></i>
-                                    </el-badge>
-                                </el-tooltip>
-
-                                <el-tooltip class="item"
-                                            content="Comprobantes por anular"
-                                            effect="dark"
-                                            placement="top-start">
-                                    <el-badge :value="row.document_to_be_canceled"
-                                              class="item  ml-4"
-                                              :type="row.document_to_be_canceled == 0 ? 'primary' : 'danger'">
-                                        <i class="fas fa-exclamation-circle text-secondary"></i>
-                                    </el-badge>
-                                </el-tooltip>
-
-                            </td>
+                            
                             
                             <td class="text-center">
                                 <strong>
@@ -707,6 +711,7 @@ export default {
         getData() {
             this.$http.get(`/${this.resource}/records`).then(response => {
                 this.records = response.data.data;
+                console.log(this.records);
             });
         },
         clickCreate(recordId = null) {

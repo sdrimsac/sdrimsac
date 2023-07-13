@@ -69,6 +69,7 @@ class ClientCollection extends ResourceCollection
                 'monthly_sales_total' => number_format($row->monthly_sales_total, 2, '.', ''),
                 'max_sales_limit' => number_format($row->plan->sales_limit, 2, '.', ''),
                 'sales_unlimited' => $row->plan->sales_unlimited,
+                'imgClient' => $row->imgClient
             ];
         });
     }
