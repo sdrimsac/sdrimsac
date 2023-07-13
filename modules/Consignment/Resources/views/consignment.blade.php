@@ -850,7 +850,7 @@
                         {{-- Un anunció sobre la penalidad --}}
                         @php
                             $penalty = $consignment->penalty;
-                            $type = $consignment->type;
+                            $type = $penalty->type;
                             $description = $type == 'fixed' ? 'de S/. ' . $penalty->amount : 'del ' . $penalty->amount . '%';
                         @endphp
                         La consignación tiene una penalidad {{ $description }}, si se vence la fecha de liquidación.
