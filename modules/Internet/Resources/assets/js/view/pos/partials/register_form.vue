@@ -69,7 +69,7 @@
 
                 <div v-show="showRegister" class="card-body">
                     <div class="d-flex justify-content-end">
-                        <el-checkbox v-model="oldClient">
+                        <el-checkbox v-model="oldClient" @change="setStartDate">
                             <h4>Migrar cliente</h4>
                         </el-checkbox>
                     </div>
@@ -464,19 +464,17 @@
                             </table>
                         </div>
                         <div class="col-md-6">
-                            <label class="w-100" for="date"
-                                >Fecha de instalación</label
-                            >
-                            <el-date-picker
-                                class="w-100"
-                                v-model="start_date"
-                                @change="updateEndOptions"
-                                format="dd/MM/yyyy"
-                                value-format="yyyy-MM-dd"
-                                :picker-options="
-                                    !oldClient && pickerStartOptions
-                                "
-                            ></el-date-picker>
+                           
+                                <label class="w-100" for="date"
+                                    >Fecha de instalación</label
+                                >
+                                <el-date-picker
+                                    class="w-100"
+                                    v-model="start_date"
+                                    @change="updateEndOptions"
+                                    format="dd/MM/yyyy"
+                                    value-format="yyyy-MM-dd"
+                                ></el-date-picker>
                         </div>
                         <div class="col-md-6">
                             <label class="w-100" for="date"
@@ -940,6 +938,7 @@ export default {
             showModalSeries: false,
             itemsSelected: [],
             start_date: moment().format("YYYY-MM-DD"),
+            start_date_migration: moment().format("YYYY-MM-DD"),
             start_end: null,
             seriesDocument: [],
 
@@ -1057,6 +1056,11 @@ export default {
         });
     },
     methods: {
+        setStartDate(){
+            if(this.oldClient == false){
+                this.start_date = moment().format("YYYY-MM-DD");
+            }
+        },
         trigerFunction(id) {
             switch (id) {
                 case 7:
@@ -1411,13 +1415,16 @@ export default {
         },
         updateEndOptions() {
             if (this.start_date) {
-                let startDate = new Date(this.start_date);
-                startDate.setDate(startDate.getDate() + 1);
-                this.pickerEndOptions = {
-                    disabledDate(time) {
-                        return time.getTime() < startDate;
+                if(!this.oldClient){
+                 let startDate = new Date(this.start_date);
+                    if (startDate.getTime() < new Date().getTime() - 86400000) {
+                        this.$toast.error(
+                            "La fecha de inicio no puede ser anterior al día actual"
+                        );
+                        this.start_date = moment().format("YYYY-MM-DD");
                     }
-                };
+                }
+              
             }
         },
         validEndDate(time) {
@@ -1795,7 +1802,7 @@ export default {
         async printTicket(id) {
             try {
                 const response = await this.$http.get(
-                    `/caja/worker/record/${id}`
+                    `/restaurant/worker/record/${id}`
                 );
                 let url = response.data.print;
 
@@ -1915,7 +1922,7 @@ export default {
             }
             this.loading = true;
             // const responses = await this.$http.post(
-            //     "/caja/worker/send-orden",
+            //     "/restaurant/worker/send-orden",
             //     form_submit
             // );
 
