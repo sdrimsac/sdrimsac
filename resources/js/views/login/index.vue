@@ -122,7 +122,6 @@ export default {
         };
     },
     created() {
-        console.log(this.company, " comp");
         this.initForm();
         this.getOption("delete");
     },

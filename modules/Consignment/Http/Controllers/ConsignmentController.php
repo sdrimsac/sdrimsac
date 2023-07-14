@@ -100,6 +100,30 @@ class ConsignmentController extends Controller
         ];
         // return $response;
     }
+    public function consignment_document_ticket_liquidated($id){
+        $consignment = Consignment::find($id);
+        $items = $consignment->items;
+        
+        $establishment = Establishment::first();
+        $company = Company::active();
+        $customer = $consignment->person;
+        $height = 8  * 40;
+        $height += $items->count() * 40;
+        try {
+            $pdf = PDf::loadView("consignment::consignment_ticket_liquidated", compact(
+                'consignment',
+                'items',
+                'company',
+                'establishment',
+                'customer'
+            ))
+            ->setPaper(array(0, 0, 249.45, $height));
+        } catch (Exception $e) {
+            return ['m' => $e->getMessage()];
+        }
+
+        return $pdf->stream('pdf_file.pdf');
+    }
     public function consignment_document_ticket($id){
         $consignment = Consignment::find($id);
         $items = $consignment->items;
@@ -185,6 +209,7 @@ class ConsignmentController extends Controller
         $consigment = Consignment::find($consigment_id);
         $consigment->liquidated = true;
         $consigment->save();
+        event(new PrintEvent($consigment->id, "COL", true, 0));
         return [
             'success' => true,
             'message' => 'Consignación liquidada con éxito'

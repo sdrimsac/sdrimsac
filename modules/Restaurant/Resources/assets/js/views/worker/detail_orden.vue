@@ -280,7 +280,21 @@ export default {
         window.addEventListener("resize", this.handleResize);
     }, 
     methods: {
-
+          clickCommand(type) {
+            let idxFood = this.listFoods.findIndex(
+                food => food.item.id == type.item_id
+            );
+            if (idxFood >= 0) {
+                this.addFood(idxFood, type);
+            }
+        },
+             nthing() {},
+    formatDescriptionType(type) {
+            let price = this.getDefaultPrice(type);
+            return `${type.description} (${Number(
+                type.quantity_unit
+            )}) - S/ ${price}`;
+        },
         addFood(index = 0, type = null) {
 
             

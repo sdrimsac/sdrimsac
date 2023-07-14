@@ -7,7 +7,9 @@
         title="Lista de Consignaciones"
         width="80%"
     >
-        <div class="row mt-2"></div>
+        <div class="row mt-2">
+
+        </div>
         <div class="row mt-2">
             <table class="table table-responsive table-striped table-hover">
                 <thead>
@@ -25,7 +27,7 @@
                 </thead>
                 <tbody>
                     <tr v-for="(consignment, idx) in records" :key="idx">
-                        <td>{{ idx + 1 }}</td>
+                        <td>{{ customIndex(idx) }}</td>
                         <td>{{ consignment.person.name }}</td>
                         <td>{{ consignment.date_of_issue }}</td>
                         <td>{{ consignment.date_of_end }}</td>
@@ -81,6 +83,18 @@
                 :recordId="recordId"
             >
             </items-modal>
+        </div>
+        <div>
+                <!-- <el-pagination
+                                            @current-change="getRecords()"
+                                            layout="total, prev, pager, next"
+                                            :total="pagination.total"
+                                            :current-page.sync="
+                                                pagination.current_page
+                                            "
+                                            :page-size="pagination.per_page"
+                                        >
+                                        </el-pagination> -->
         </div>
     </el-dialog>
 </template>
@@ -165,12 +179,20 @@ export default {
             this.recordId = consignment.id;
             this.showDialogItems = true;
         },
+            customIndex(index) {
+            return (
+                this.pagination.per_page * (this.pagination.current_page - 1) +
+                index +
+                1
+            );
+        },
         async getRecords() {
             try {
                 this.loading = true;
                 const response = await this.$http(`${this.resource}/records`);
                 console.log(response);
                 this.records = response.data.data;
+                this.pagination = response.data.meta;
             } catch (e) {
                 this.$toast.error(e.message);
             } finally {

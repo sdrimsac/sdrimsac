@@ -389,7 +389,6 @@ use App\Models\Tenant\Turned;
             <tr>
                 <td align="center">
                     <small>
-                        {{-- Un anunció sobre la penalidad --}}
                         @php
                             $penalty = $consignment->penalty;
                             $type = $penalty->type;
