@@ -333,9 +333,25 @@ class ConsignmentController extends Controller
             'date_of_end' => 'Fecha de liquidación'
         ];
     }
-    public function records()
+    public function records(Request $request)
     {
-        $consigments = Consignment::query()->orderBy('liquidated', 'asc')->orderBy('id', 'desc');
+        $column = $request->input('column');
+        $value = $request->input('value');
+        if($column && $value){
+            if($column == 'person_id'){
+                $consigments = Consignment::whereHas('person', function($query) use($value){
+                    $query->where('name', 'like', "%{$value}%")
+                    ->orWhere('number', 'like', "%{$value}%");
+                    ;
+                })->orderBy('liquidated', 'asc')->orderBy('id', 'desc');
+            }else{
+                $consigments = Consignment::where($column, 'like', "%{$value}%")->orderBy('liquidated', 'asc')->orderBy('id', 'desc');
+            }
+        }
+            else{
+
+                $consigments = Consignment::query()->orderBy('liquidated', 'asc')->orderBy('id', 'desc');
+            }
 
         return new ConsignmentCollection($consigments->paginate(config('tenant.items_per_page')));
     }

@@ -12,8 +12,7 @@
                 <label for="filter" class="w-100">Filtrar por:</label>
                 <el-select
                     v-model="search.column"
-                    placeholder="Select"
-                    @change="getRecords"
+                    placeholder="Selecccionar"
                 >
                     <el-option
                         v-for="(label, key) in columns"
@@ -32,6 +31,8 @@
                         style="width: 100%;"
                         placeholder="Buscar"
                         value-format="yyyy-MM-dd"
+                    @change="getRecords"
+
                     >
                     </el-date-picker>
                 </template>
@@ -39,7 +40,7 @@
                     <el-input
                         v-model="search.value"
                         placeholder="Buscar"
-                        @change="getRecords"
+                        @input="getRecords"
                     >
                     </el-input>
                 </template>
@@ -52,7 +53,7 @@
                 layout="total, prev, pager, next"
                 :total="pagination.total"
                 :current-page.sync="pagination.current_page"
-                :page-size="Number(pagination.per_page)"s
+                :page-size="Number(pagination.per_page)"
             >
             </el-pagination>
         </div>
@@ -159,7 +160,7 @@ export default {
                
             },
              columns:{
-                    name: "Cliente",
+                    person_id: "Cliente",
                     date_of_issue: "Fecha de consignación",
                     date_of_end: "Fecha de liquidación",
                 }
@@ -235,7 +236,7 @@ export default {
         async getRecords() {
             try {
                 this.loading = true;
-                const response = await this.$http(`/${this.resource}/records?column=${this.search.column ||
+                const response = await this.$http(`${this.resource}/records?column=${this.search.column ||
                         ""}&value=${this.search.value || ""}`);
                 console.log(response);
                 this.records = response.data.data;
