@@ -38,10 +38,10 @@
                 } else {
                 }
                   if (this.form.document_type_id === "80") {
-                     const response = await this.$http.get(`/restaurant/ordens/payment/80/${this.form_cash_document.sale_note_id}/${this.idOrden}`);
+                     const response = await this.$http.get(`/caja/ordens/payment/80/${this.form_cash_document.sale_note_id}/${this.idOrden}`);
                   } else {
 
-                      const response = await this.$http.get(`/restaurant/ordens/payment/01/${this.form_cash_document.document_id}/${this.idOrden}`);
+                      const response = await this.$http.get(`/caja/ordens/payment/01/${this.form_cash_document.document_id}/${this.idOrden}`);
                  }
 
                 } else {

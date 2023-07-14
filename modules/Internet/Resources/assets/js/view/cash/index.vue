@@ -147,7 +147,7 @@ export default {
             showDialog: false,
             showDialogClose: false,
             open_cash: true,
-            resource: "restaurant/worker/cash",
+            resource: "caja/worker/cash",
             recordId: null,
             data_closed: moment().format("YYYY-MM-DD"),
             date_start: moment().format("YYYY-MM-DD"),
@@ -193,7 +193,7 @@ export default {
         },
         printreport(row) {
             window.open(
-                `/restaurant/report-boxes/reports_resumen_type?date_end=${row.date_closed}&date_start=${row.date_closed}&month_end=${this.month_start}&month_start=${this.month_start}&period=between_dates&type=pdf&cash_id=${row.id}`,
+                `/caja/report-boxes/reports_resumen_type?date_end=${row.date_closed}&date_start=${row.date_closed}&month_end=${this.month_start}&month_start=${this.month_start}&period=between_dates&type=pdf&cash_id=${row.id}`,
                 "_blank"
             );
         },
@@ -202,7 +202,7 @@ export default {
             instance.confirmButtonText = "Cerrando caja...";
             //this.$http.get(`/${this.resource}/close/${this.recordId}`)
             window.open(
-                `/restaurant/report-boxes/reports_resumen_type?date_end=${this.date_start}&date_start=${this.date_start}&month_end=${this.month_start}&month_start=${this.month_start}&period=between_dates&type=pdf`,
+                `/caja/report-boxes/reports_resumen_type?date_end=${this.date_start}&date_start=${this.date_start}&month_end=${this.month_start}&month_start=${this.month_start}&period=between_dates&type=pdf`,
                 "_blank"
             );
             this.showDialogClose = false;
@@ -211,7 +211,7 @@ export default {
             this.$eventHub.$emit("reloadData");
             //         this.open_cash = true
             //         this.$toast.success(response.data.message)
-            //          window.open(`/restaurant/report-boxes/reports_resumen_type?date_end=${this.date_start}&date_start=${this.date_start}&month_end=${this.month_start}&month_start=${this.month_start}&period=between_dates&type=pdf`, '_blank')
+            //          window.open(`/caja/report-boxes/reports_resumen_type?date_end=${this.date_start}&date_start=${this.date_start}&month_end=${this.month_start}&month_start=${this.month_start}&period=between_dates&type=pdf`, '_blank')
             //         //window.open(`/${this.resource}/${type}/?${query}`, '_blank')
             //     }else{
             //         console.log(response)

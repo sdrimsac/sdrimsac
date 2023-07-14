@@ -1833,7 +1833,7 @@ export default {
         },
         async getPrinter() {
             const response = await this.$http.get(
-                `/restaurant/worker/cash/get_printer/${this.area_id}`
+                `/caja/worker/cash/get_printer/${this.area_id}`
             );
             if (response.status == 200) {
                 const { printer } = response.data;
@@ -2617,7 +2617,7 @@ console.log(this.form.items);
                             }
                         }
                         const response = await this.$http.get(
-                            `/restaurant/worker/ordens-status`
+                            `/caja/worker/ordens-status`
                         );
                         if (response.status == 200) {
                             let Ordens = response.data.ordens;
@@ -2651,7 +2651,7 @@ console.log(this.form.items);
                             index++
                         ) {
                             const response = await this.$http.get(
-                                `/restaurant/worker/ordens-ready/` +
+                                `/caja/worker/ordens-ready/` +
                                     this.selectedCatIds[index]
                             );
                             if (response.data.success == true) {
@@ -2688,7 +2688,7 @@ console.log(this.form.items);
                             }
                         }
                         const response = await this.$http.get(
-                            `/restaurant/worker/ordens-status`
+                            `/caja/worker/ordens-status`
                         );
                         if (response.status == 200) {
                             let Ordens = response.data.ordens;
@@ -2851,7 +2851,7 @@ console.log(this.form.items);
         async view_modal() {
             this.loading = true;
             const response = await this.$http.get(
-                `/restaurant/worker/totales_sales?cash_id=${this.cashId}&send=1`
+                `/caja/worker/totales_sales?cash_id=${this.cashId}&send=1`
             );
             this.$toast(
                 ` Venta Acumulada S/ ` + response.data.total_sales.toFixed(2)
@@ -2861,7 +2861,7 @@ console.log(this.form.items);
         async list_tables() {
             this.loading = true;
             const response = await this.$http.get(
-                `/restaurant/worker/${this.resource}/listtables`
+                `/caja/worker/${this.resource}/listtables`
             );
             this.listtables = response.data;
             this.listar_tables = response.data;

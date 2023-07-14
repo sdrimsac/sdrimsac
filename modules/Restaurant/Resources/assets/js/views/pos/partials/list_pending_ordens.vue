@@ -86,7 +86,7 @@ export default {
         async printTicket(id) {
             try {
                 const response = await this.$http.get(
-                    `/restaurant/worker/record/${id}?to_kitchen=1`
+                    `/caja/worker/record/${id}?to_kitchen=1`
                 );
                 let url = response.data.print;
 

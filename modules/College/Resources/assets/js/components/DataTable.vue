@@ -33,7 +33,7 @@
                             "
                         >
                             <template
-                                v-if="resource != 'restaurant/worker/expenses'"
+                                v-if="resource != 'caja/worker/expenses'"
                             >
                                 <el-date-picker
                                     v-model="search.value"
@@ -88,7 +88,7 @@
             </div>
             <div
                 v-if="
-                    resource == 'restaurant/worker/expenses' &&
+                    resource == 'caja/worker/expenses' &&
                         records.length != 0
                 "
                 class="row"

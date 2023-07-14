@@ -134,7 +134,7 @@ export default {
         openWhastappForm(cash) {
             this.number = null;
             this.message = `Reporte de ${cash.user} ${cash.date_opening}`;
-            this.resource = `/restaurant/report-boxes/reports_resumen_type?cash_id=${cash.id}`;
+            this.resource = `/caja/report-boxes/reports_resumen_type?cash_id=${cash.id}`;
             this.showWhatsappForm = true;
         },
         async sendWhatsapp() {
@@ -163,7 +163,7 @@ export default {
         },
         openA4(cash) {
             window.open(
-                `/restaurant/report-boxes/reports_resumen_type?cash_id=${cash.id}`
+                `/caja/report-boxes/reports_resumen_type?cash_id=${cash.id}`
             );
         },
         seeDetail(cash) {
@@ -184,7 +184,7 @@ export default {
             try {
                 this.loading = true;
                 const response = await this.$http(
-                    `/restaurant/worker/cash/records?${query}`
+                    `/caja/worker/cash/records?${query}`
                 );
                 if (response.status == 200) {
                     const { data, meta } = response.data;

@@ -459,7 +459,7 @@ export default {
       warehouse: {},
 
       titleDialog: null,
-      resource: this.worker ? "restaurant/worker/items" : "items",
+      resource: this.worker ? "caja/worker/items" : "items",
       errors: {},
       form: {},
       unit_types: [],

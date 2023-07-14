@@ -112,7 +112,7 @@ export default {
   ],
   data() {
     return {
-      resource: "restaurant",
+      resource: "caja",
       loading: false,
       maskPin: null,
       pinHide: null,

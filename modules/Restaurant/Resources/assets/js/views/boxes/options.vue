@@ -81,17 +81,17 @@ export default {
       this.titleDialog = this.titleDialog;
       if (this.options2 == "Ventas Efectivo") {
         if (this.options == "Detallado") {
-          let link = `/restaurant/report-boxes/reports_type?${query}`;
+          let link = `/caja/report-boxes/reports_type?${query}`;
           window.open(`${link}`, "_blank");
         } else if (this.options == "Resumen") {
-          let link = `/restaurant/report-boxes/reports_resumen_type?${query}`;
+          let link = `/caja/report-boxes/reports_resumen_type?${query}`;
           window.open(`${link}`, "_blank");
         } else {
-          let link = `/restaurant/report-boxes/reports_categoria_type?${query}`;
+          let link = `/caja/report-boxes/reports_categoria_type?${query}`;
           window.open(`${link}`, "_blank");
         }
       } else {
-        let link = `/restaurant/report-boxes/reports_bancario_type?${query}`;
+        let link = `/caja/report-boxes/reports_bancario_type?${query}`;
         window.open(`${link}`, "_blank");
       }
     },

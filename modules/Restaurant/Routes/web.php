@@ -24,7 +24,7 @@ use Modules\Restaurant\Http\Controllers\OrdenController;
 use Modules\Restaurant\Http\Controllers\RestaurantController;
 use Modules\Restaurant\Http\Controllers\PromocionPorItemController;
 
-Route::prefix('restaurant')->group(function () {
+Route::prefix('caja')->group(function () {
     //Route::get('/', 'RestaurantController@index');
     //Route::get('documents', 'OrdenController@printTicket');
     Route::get('sale-notes', [App\Http\Controllers\SaleNoteController::class, 'pos'])->name('pos.sale_notes.index')->middleware('redirect.level');

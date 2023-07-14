@@ -301,7 +301,7 @@ export default {
             try {
                 this.loadingPrint = true;
                 const response = await this.$http(
-                    `/restaurant/worker/cash/get_printer/${this.area_id}`
+                    `/caja/worker/cash/get_printer/${this.area_id}`
                 );
 
                 let {
@@ -320,7 +320,7 @@ export default {
                         format: "file",
                         data:
                             this.url +
-                            `/restaurant/worker/cash/print-report?cash_id=${this.cash.id}`
+                            `/caja/worker/cash/print-report?cash_id=${this.cash.id}`
                     }
                 ];
                 await qz.print(config, data);
@@ -359,7 +359,7 @@ export default {
             try {
                 this.loading = true;
                 const response = await this.$http(
-                    `/restaurant/boxes/records/${this.cash.id}`
+                    `/caja/boxes/records/${this.cash.id}`
                 );
                 const { data } = response;
                 this.form = data;

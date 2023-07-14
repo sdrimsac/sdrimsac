@@ -300,7 +300,7 @@
                 showDialogCDetraction: false,
                 showDialogValidate:false,
                 showImportSecondDialog: false,
-                resource: 'restaurant/documents',
+                resource: 'caja/documents',
                 recordId: null,
                 showDialogOptions: false,
                 showDialogPayments: false,

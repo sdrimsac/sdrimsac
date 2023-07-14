@@ -74,7 +74,7 @@ export default {
             );
             if (confirm) {
                 const response = await this.$http.get(
-                    "/restaurant/pos/update_items_warehouse"
+                    "/caja/pos/update_items_warehouse"
                 );
                 if (response.status == 200) {
                     const { updates, createds } = response.data;

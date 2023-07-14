@@ -125,7 +125,7 @@ export default {
         },
         async Printer(box) {
             console.log(box);
-            let linkpdf = `/restaurant/worker/expenses/print-box?box_id=${box.id}`
+            let linkpdf = `/caja/worker/expenses/print-box?box_id=${box.id}`
             
             let Printer = this.establishments.printer;
             let paperConfig = {
@@ -162,7 +162,7 @@ export default {
                 );
 
                 const response = await this.$http.delete(
-                    `/restaurant/worker/cash/incomes_expenses/${id}/${this.type}`
+                    `/caja/worker/cash/incomes_expenses/${id}/${this.type}`
                 );
 
                 if (response.data.success) {

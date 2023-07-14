@@ -53,7 +53,7 @@ class JustAdmin
                     $redirect_to = "toll";
                     return redirect($redirect_to);
                 }
-                $redirect_to = $internet ? "/internet/worker/" :  "/restaurant/worker/";
+                $redirect_to = $internet ? "/internet/worker/" :  "/caja/worker/";
 
                 $worker_type = WorkersType::find($user->worker_type_id);
                 $description_type = strtoupper($worker_type->description);

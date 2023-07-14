@@ -96,7 +96,7 @@ class SaleNoteController extends Controller
         $soap_company  = $company->soap_type_id;
         $configuration = Configuration::first();
         $user_type = auth()->user()->type;
-        $resource = "restaurant/sale-notes";
+        $resource = "caja/sale-notes";
         return view('tenant.sale_notes.pos', compact('soap_company', 'configuration', 'user_type', 'resource'));
     }
     public function create($id = null)

@@ -217,7 +217,7 @@ export default {
             try {
                 this.loading = true;
                 const response = await this.$http.get(
-                    `/restaurant/worker/documents/send/${document_id}`
+                    `/caja/worker/documents/send/${document_id}`
                 );
 
                 if (response.data.success) {
@@ -240,7 +240,7 @@ export default {
             try {
                 this.loading = true;
                 const response = await this.$http.get(
-                    `/restaurant/worker/documents/re_store/${document_id}`
+                    `/caja/worker/documents/re_store/${document_id}`
                 );
                 console.log(response);
                 if (response.data.success) {
@@ -259,7 +259,7 @@ export default {
             try {
                 this.loading = true;
                 const response = await this.$http.get(
-                    `/restaurant/worker/documents/validate/${document_id}`
+                    `/caja/worker/documents/validate/${document_id}`
                 );
 
                 if (response.data.success) {

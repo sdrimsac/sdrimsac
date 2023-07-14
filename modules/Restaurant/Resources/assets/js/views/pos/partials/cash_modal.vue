@@ -304,7 +304,7 @@ export default {
                         format: "file",
                         data:
                             this.url +
-                            `/restaurant/worker/cash/print-report?cash_id=${this.cash.id}`
+                            `/caja/worker/cash/print-report?cash_id=${this.cash.id}`
                     }
                 ];
                 await qz.print(config, data);

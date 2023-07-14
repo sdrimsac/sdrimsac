@@ -1795,7 +1795,7 @@ export default {
         async printTicket(id) {
             try {
                 const response = await this.$http.get(
-                    `/restaurant/worker/record/${id}`
+                    `/caja/worker/record/${id}`
                 );
                 let url = response.data.print;
 
@@ -1915,7 +1915,7 @@ export default {
             }
             this.loading = true;
             // const responses = await this.$http.post(
-            //     "/restaurant/worker/send-orden",
+            //     "/caja/worker/send-orden",
             //     form_submit
             // );
 

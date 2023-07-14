@@ -119,7 +119,7 @@ export default {
                 ["4", "5", "6"],
                 ["7", "8", "9"]
             ],
-            resource: "restaurant",
+            resource: "caja",
             loading: false,
             maskPin: null,
             pinHide: "",

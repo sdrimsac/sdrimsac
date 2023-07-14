@@ -254,7 +254,7 @@ export default {
             showDialog: false,
             open_cash: true,
             errors: {},
-            resource: "restaurant/worker/cash",
+            resource: "caja/worker/cash",
             date_closed: moment().format("YYYY-MM-DD"),
             date_start: moment().format("YYYY-MM-DD"),
             month_start: moment().format("YYYY-MM"),
@@ -317,7 +317,7 @@ export default {
         async dateclosed(date_closed) {
             this.loading = true;
             await this.$http
-                .get(`/restaurant/cash/balance-final/${this.date_closed}`)
+                .get(`/caja/cash/balance-final/${this.date_closed}`)
                 .then(response => {
                     //  this.final_balance = response.data.balance_total.toFixed(2);
                     this.loading = false;
@@ -362,7 +362,7 @@ export default {
             instance.confirmButtonLoading = true;
             instance.confirmButtonText = "Cerrando caja...";
             window.open(
-                `/restaurant/report-boxes/reports_resumen_type?cash_id=${this.recordId}`,
+                `/caja/report-boxes/reports_resumen_type?cash_id=${this.recordId}`,
                 "_blank"
             );
             this.closeDialog();

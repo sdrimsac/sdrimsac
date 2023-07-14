@@ -96,7 +96,7 @@ export default {
         openWhastappForm(cash) {
             this.number = null;
             this.message = `Reporte de ${cash.user} ${cash.date_opening}`;
-            this.resource = `/restaurant/report-boxes/reports_resumen_type?cash_id=${cash.id}`;
+            this.resource = `/caja/report-boxes/reports_resumen_type?cash_id=${cash.id}`;
             this.showWhatsappForm = true;
         },
         async sendWhatsapp() {
@@ -125,7 +125,7 @@ export default {
         },
         openA4(cash) {
             window.open(
-                `/restaurant/report-boxes/reports_resumen_type?cash_id=${cash.id}`
+                `/caja/report-boxes/reports_resumen_type?cash_id=${cash.id}`
             );
         },
         seeDetail(cash) {

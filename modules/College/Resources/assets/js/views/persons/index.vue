@@ -84,7 +84,7 @@
                                             <template
                                                 v-if="
                                                     resource !=
-                                                        'restaurant/worker/expenses'
+                                                        'caja/worker/expenses'
                                                 "
                                             >
                                                 <el-date-picker

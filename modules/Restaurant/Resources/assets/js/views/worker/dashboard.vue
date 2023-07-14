@@ -495,7 +495,7 @@ export default {
             //             {
             //                 type: 'pdf',
             //                 format: 'file',
-            //                 data: "http://demo.facturadorpro3.oo/restaurant/worker/print-ticket?id=40"
+            //                 data: "http://demo.facturadorpro3.oo/caja/worker/print-ticket?id=40"
             //             }
             //         ];
             //         qz.print(config, data).catch((e) => {

@@ -251,7 +251,7 @@ export default {
         return {
             loading_submit: false,
             titleDialog: null,
-            resource: "restaurant/worker/expenses",
+            resource: "caja/worker/expenses",
             errors: {},
             errors_group: {},
             errors_category: {},
@@ -364,7 +364,7 @@ export default {
         },
         submit_Category() {
             this.$http
-                .post(`/restaurant/worker/category`, this.form_category)
+                .post(`/caja/worker/category`, this.form_category)
                 .then(response => {
                     if (response.data.success) {
                         this.register_category = false;
@@ -391,7 +391,7 @@ export default {
         },
         submit_Subcategory() {
             this.$http
-                .post(`/restaurant/worker/subcategories`, this.form_subcategory)
+                .post(`/caja/worker/subcategories`, this.form_subcategory)
                 .then(response => {
                     if (response.data.success) {
                         this.register_subcategory = false;

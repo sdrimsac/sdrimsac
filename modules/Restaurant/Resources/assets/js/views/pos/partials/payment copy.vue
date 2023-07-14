@@ -1671,7 +1671,7 @@ export default {
                         this.documentNewId = response.data.data.id;
 
                         const responses = await this.$http.post(
-                            "/restaurant/worker/send-orden",
+                            "/caja/worker/send-orden",
                             this.orden_items
                         );
                         if (responses.data.success == true) {

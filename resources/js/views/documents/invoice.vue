@@ -3044,7 +3044,7 @@ export default {
                                         } else {
                                             location.href = this.isContingency
                                                 ? `/contingencies`
-                                                : `/restaurant/documents`;
+                                                : `/caja/documents`;
                                         }
                                     });
                             } else {

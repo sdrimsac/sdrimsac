@@ -137,7 +137,7 @@ export default {
             addingOrden: false,
             ordens: [],
             loading: false,
-            resource: "/restaurant/tables/tables",
+            resource: "/caja/tables/tables",
             tables: [],
             showOrdens: false,
             ordensSaved: [],
@@ -174,7 +174,7 @@ export default {
             this.tableSelectedNumber = table.number;
             try {
                 const response = await this.$http(
-                    `/restaurant/tables/orden/${table.id}`
+                    `/caja/tables/orden/${table.id}`
                 );
                 if (response.status == 200) {
                     const { ordens } = response.data;

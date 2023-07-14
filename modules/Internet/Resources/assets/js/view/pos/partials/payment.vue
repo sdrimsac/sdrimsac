@@ -1282,7 +1282,7 @@ export default {
                     "input"
                 )[0].value;
                 const response = await this.$http(
-                    `/restaurant/search_customers?value=${this.input_person.number}`
+                    `/caja/search_customers?value=${this.input_person.number}`
                 );
                 const { persons } = response.data;
 
@@ -2080,7 +2080,7 @@ export default {
                     !this.conf.direct_sale
                 ) {
                     const responses = await this.$http.post(
-                        "/restaurant/worker/send-orden",
+                        "/caja/worker/send-orden",
                         this.orden_items
                     );
                     ordenId = responses.data.id;

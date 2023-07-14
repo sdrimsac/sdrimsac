@@ -137,7 +137,7 @@ export default {
             try {
                 this.loading = true;
                 const response = await this.$http(
-                    `/restaurant/items_detail?description=${query ?? ""}`
+                    `/caja/items_detail?description=${query ?? ""}`
                 );
                 if (response.status == 200) {
                     const {

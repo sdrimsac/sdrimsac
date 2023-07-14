@@ -587,7 +587,7 @@ export default {
             //  let total = this.totalOrdenItems;
             //   try {
             //     printjs({
-            //       printable: `restaurant/worker/print-ticket?id=${id}&total=${total}`,
+            //       printable: `caja/worker/print-ticket?id=${id}&total=${total}`,
             //       type: "pdf",
             //       showModal: true,
             //       modalMessage: "Espere por favor...",
@@ -597,7 +597,7 @@ export default {
             //   }
             try {
                 const response = await this.$http.get(
-                    `/restaurant/worker/record/${id}`
+                    `/caja/worker/record/${id}`
                 );
                 let config = qz.configs.create(response.data.printer, {
                     usingSecure: false,

@@ -54,7 +54,7 @@
                 showDialog: false,
                 open_cash: true,
                 errors: {},
-                resource: 'restaurant/worker/cash',
+                resource: 'caja/worker/cash',
                 date_closed:moment().format('YYYY-MM-DD'),
                 date_start: moment().format('YYYY-MM-DD'),
                 month_start: moment().format('YYYY-MM'),

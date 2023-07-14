@@ -435,7 +435,7 @@ class OrdenController extends Controller
                 'printer' => $printer,
                 'direct_printing' => (bool) $establishment->direct_printing,
                 'printer_serve' => $establishment->printer_serve,
-                'print'   => url('') . "/restaurant/worker/print-ticket?id={$id}&ids={$ids_string}&area_id={$area_id}"
+                'print'   => url('') . "/caja/worker/print-ticket?id={$id}&ids={$ids_string}&area_id={$area_id}"
             ];
         }
     }

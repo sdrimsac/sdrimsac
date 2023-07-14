@@ -320,7 +320,7 @@ export default {
         },
         anular_command(id) {
             this.anular_comanda(
-                `/restaurant/worker/destroyorden/${id}`,
+                `/caja/worker/destroyorden/${id}`,
                 id
             ).then(() => this.$eventHub.$emit("reloadData"));
         },

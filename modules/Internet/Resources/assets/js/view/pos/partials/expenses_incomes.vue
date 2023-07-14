@@ -125,7 +125,7 @@ export default {
             try {
                 this.loading = true;
                 const response = await this.$http(
-                    `/restaurant/items_detail?description=${query ?? ""}`
+                    `/caja/items_detail?description=${query ?? ""}`
                 );
                 if (response.status == 200) {
                     const {
@@ -170,7 +170,7 @@ export default {
         async getPrinter() {
             this.loading = true;
             const response = await this.$http(
-                `/restaurant/worker/cash/get_printer/${this.area_id}`
+                `/caja/worker/cash/get_printer/${this.area_id}`
             );
 
             let {
@@ -222,7 +222,7 @@ export default {
             try {
                 this.loading = true;
                 const response = await this.$http(
-                    `/restaurant/worker/cash/incomes_expenses?${this.getQueryParameters()}`
+                    `/caja/worker/cash/incomes_expenses?${this.getQueryParameters()}`
                 );
 
                 if (response.status != 200) {

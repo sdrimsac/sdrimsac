@@ -2,6 +2,6 @@
 
 
 @section('content')
-    <tenant-restaurant-items type='restaurant/status-orden' :configurations="{{ json_encode($configurations) }}"
+    <tenant-restaurant-items type='caja/status-orden' :configurations="{{ json_encode($configurations) }}"
         title='Listado de Estados de Pedidos'></tenant-restaurant-items>
 @endsection

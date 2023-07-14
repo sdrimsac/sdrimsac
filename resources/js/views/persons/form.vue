@@ -663,7 +663,7 @@ export default {
             social_medias: [],
             loading_submit: false,
             titleDialog: null,
-            resource: this.worker ? "restaurant/worker/persons" : "persons",
+            resource: this.worker ? "caja/worker/persons" : "persons",
             errors: {},
             api_service_token: false,
             form: {},

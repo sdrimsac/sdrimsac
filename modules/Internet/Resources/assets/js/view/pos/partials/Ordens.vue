@@ -197,7 +197,7 @@
             //  let total = this.totalOrdenItems;
             //   try {
             //     printjs({
-            //       printable: `restaurant/worker/print-ticket?id=${id}&total=${total}`,
+            //       printable: `caja/worker/print-ticket?id=${id}&total=${total}`,
             //       type: "pdf",
             //       showModal: true,
             //       modalMessage: "Espere por favor...",
@@ -206,7 +206,7 @@
             //     console.log(e.response);
             //   }
             try {
-                const response = await this.$http.get(`/restaurant/worker/record/${id}`);
+                const response = await this.$http.get(`/caja/worker/record/${id}`);
                 let config = qz.configs.create(response.data.printer, {
                     scaleContent: false
                 });
@@ -271,7 +271,7 @@
             pin:null
         }
         this.loading = true;
-        const response = await this.$http.post("/restaurant/worker/send-orden", form_submit);
+        const response = await this.$http.post("/caja/worker/send-orden", form_submit);
         if (response.status == 200) {
             const { success, message } = response.data;
             if (success) {

@@ -27,7 +27,12 @@ class FoodCollection extends ResourceCollection
             if (!array_key_exists($user->type, ["admin", "superadmin"])) {
                 $warehouse = Warehouse::where('establishment_id', $user->establishment_id)->first();
                 $warehouse_id = $warehouse->id;
-                $stock = ItemWarehouse::where('warehouse_id', $warehouse_id)->where('item_id', $item->id)->first()->stock;
+                $stock = ItemWarehouse::where('warehouse_id', $warehouse_id)->where('item_id', $item->id)->first();
+                if($stock){
+                    $stock = $stock->stock;
+                }else{
+                    $stock = 0;
+                }
                 $item->stock = $stock;
             }
             $item_unit_types = [];

@@ -8,7 +8,7 @@
         <form autocomplete="off" @submit.prevent="submit">
             <div class="form-body">
                 <div class="row">
-                    <div v-if="type !== 'restaurant/tables'" class="col-md-12">
+                    <div v-if="type !== 'caja/tables'" class="col-md-12">
                         <div
                             class="form-group"
                             :class="{ 'has-danger': errors.description }"
@@ -24,7 +24,7 @@
                     </div>
                     <div
                         v-if="
-                            type == 'restaurant/areas' &&
+                            type == 'caja/areas' &&
                                 configurations.multiple_boxes === 1
                         "
                         class="col-md-6"
@@ -44,7 +44,7 @@
                     </div>
                     <div
                         v-if="
-                            type == 'restaurant/areas' &&
+                            type == 'caja/areas' &&
                                 configurations.multiple_boxes === 1
                         "
                         class="col-md-6"
@@ -62,7 +62,7 @@
                             ></small>
                         </div>
                     </div>
-                    <template v-if="type == 'restaurant/tables'">
+                    <template v-if="type == 'caja/tables'">
                         <div class="col-md-4">
                             <div
                                 class="form-group"

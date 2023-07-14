@@ -1854,7 +1854,7 @@ export default {
         async view_modal() {
             this.loading = true;
             const response = await this.$http.get(
-                `/restaurant/worker/totales_sales?cash_id=${this.cashId}`
+                `/caja/worker/totales_sales?cash_id=${this.cashId}`
             );
             this.$toast(
                 ` Venta Acumulada S/ ` + response.data.total_sales.toFixed(2)
@@ -1864,7 +1864,7 @@ export default {
         async list_tables() {
             this.loading = true;
             const response = await this.$http.get(
-                `/restaurant/worker/${this.resource}/listtables`
+                `/caja/worker/${this.resource}/listtables`
             );
             this.listtables = response.data;
             this.listar_tables = response.data;

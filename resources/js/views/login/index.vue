@@ -116,7 +116,7 @@ export default {
     props: ["company", "config"],
     data() {
         return {
-            resource: "restaurant",
+            resource: "caja",
             maskPin: null,
             form: {}
         };
@@ -187,16 +187,16 @@ export default {
                 this.$toast.success("Sesión exitosa. Bienvenido/a .");
                 if (response.data.kitchen == true) {
                     window.location.href =
-                        "restaurant/worker/dashboard-kitchen";
+                        "caja/worker/dashboard-kitchen";
                 } else if (response.data.pos == true) {
                     if (this.config.internet) {
                         window.location.href = "internet/worker/dashboard-pos";
                     } else {
                         window.location.href =
-                            "restaurant/worker/dashboard-pos";
+                            "caja/worker/dashboard-pos";
                     }
                 } else if (response.data.waiter == true) {
-                    window.location.href = "restaurant/worker/dashboard";
+                    window.location.href = "caja/worker/dashboard";
                 } else if (response.data.collector == true) {
                     window.location.href = "toll";
                 } else {

@@ -76,10 +76,10 @@ class PrintEvent implements ShouldBroadcast
         $documentLink = null;
         switch ($document_type) {
             case "0":
-                $documentLink = url('') . "/restaurant/worker/print-ticket?id={$id}&area_id={$area_id}&ids={$ids_string}";
+                $documentLink = url('') . "/caja/worker/print-ticket?id={$id}&area_id={$area_id}&ids={$ids_string}";
                 break;
             case "box":
-                $documentLink = url('') . "/restaurant/worker/expenses/print-box?box_id={$id}&area_id={$area_id}";
+                $documentLink = url('') . "/caja/worker/expenses/print-box?box_id={$id}&area_id={$area_id}";
                 break;
             case "01":
                 $doc = Document::where('id', $id)->first();

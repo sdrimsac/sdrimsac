@@ -1395,7 +1395,7 @@ export default {
                     "input"
                 )[0].value;
                 const response = await this.$http(
-                    `/restaurant/search_customers?value=${this.input_person.number}`
+                    `/caja/search_customers?value=${this.input_person.number}`
                 );
                 const { persons } = response.data;
 

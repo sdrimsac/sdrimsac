@@ -100,7 +100,7 @@ export default {
         return {
             loading_submit: false,
             titleDialog: null,
-            resource: "restaurant/worker/cash",
+            resource: "caja/worker/cash",
             errors: {},
             form: {},
             user: {},

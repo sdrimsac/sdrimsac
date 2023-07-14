@@ -29,7 +29,7 @@
                             <span>Nuevo</span>
                         </button>
                         <button
-                            v-if="resource == 'restaurant/tables'"
+                            v-if="resource == 'caja/tables'"
                             type="button"
                             class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto m-l-5"
                             @click.prevent="clickCreateMassive()"
@@ -51,22 +51,22 @@
                     <data-table :resource="resource">
                         <tr slot="heading">
                             <th>#</th>
-                            <th v-if="type != 'restaurant/tables'">
+                            <th v-if="type != 'caja/tables'">
                                 Descripción
                             </th>
-                            <th v-if="type == 'restaurant/tables'">
+                            <th v-if="type == 'caja/tables'">
                                 Número
                             </th>
-                            <th v-if="type == 'restaurant/tables'">
+                            <th v-if="type == 'caja/tables'">
                                 Área
                             </th>
-                            <th v-if="type == 'restaurant/tables'">
+                            <th v-if="type == 'caja/tables'">
                                 Establecimiento
                             </th>
-                            <th v-if="type == 'restaurant/areas'">
+                            <th v-if="type == 'caja/areas'">
                                 Impresora
                             </th>
-                            <th v-if="type == 'restaurant/areas'">
+                            <th v-if="type == 'caja/areas'">
                                 Forzar impresión
                             </th>
                             <th class="text-end">Acciones</th>
@@ -75,22 +75,22 @@
                         <tr></tr>
                         <tr slot-scope="{ index, row }">
                             <td>{{ index }}</td>
-                            <td v-if="type != 'restaurant/tables'">
+                            <td v-if="type != 'caja/tables'">
                                 {{ row.description }}
                             </td>
-                            <td v-if="type == 'restaurant/tables'">
+                            <td v-if="type == 'caja/tables'">
                                 {{ row.number }}
                             </td>
-                            <td v-if="type == 'restaurant/tables'">
+                            <td v-if="type == 'caja/tables'">
                                 {{ row.area.description }}
                             </td>
-                            <td v-if="type == 'restaurant/tables'">
+                            <td v-if="type == 'caja/tables'">
                                 {{ row.establishment }}
                             </td>
-                            <td v-if="type == 'restaurant/areas'">
+                            <td v-if="type == 'caja/areas'">
                                 {{ row.printer }}
                             </td>
-                            <td v-if="type == 'restaurant/areas'">
+                            <td v-if="type == 'caja/areas'">
                                 <el-switch
                                     v-if="row.printer == null"
                                     @change="updateSearchPrint(row)"
@@ -178,7 +178,7 @@ export default {
         };
     },
     created() {
-        if (this.type == "restaurant/tables") {
+        if (this.type == "caja/tables") {
             this.getTables();
         }
         // this.getData();
@@ -217,14 +217,14 @@ export default {
         async getTables() {
             this.$http
                 .get(
-                    `/restaurant/areas/records?column=description&page=1&value`
+                    `/caja/areas/records?column=description&page=1&value`
                 )
                 .then(response => {
                     this.areas = response.data.data;
                 });
             this.$http
                 .get(
-                    `/restaurant/status-tables/records?column=description&page=1&value`
+                    `/caja/status-tables/records?column=description&page=1&value`
                 )
                 .then(response => {
                     this.statusTable = response.data.data;

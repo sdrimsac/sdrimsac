@@ -34,7 +34,7 @@
                             "
                         >
                             <template
-                                v-if="resource != 'restaurant/worker/expenses'"
+                                v-if="resource != 'caja/worker/expenses'"
                             >
                                 <el-date-picker
                                     v-model="search.value"
@@ -113,12 +113,12 @@
             </div>
             <div
                 v-if="
-                    resource == 'restaurant/worker/expenses' || 'purchases' &&
+                    resource == 'caja/worker/expenses' || 'purchases' &&
                         records.length != 0
                 "
                 class="row"
             >
-                <div v-if="resource == 'restaurant/worker/expenses'" 
+                <div v-if="resource == 'caja/worker/expenses'" 
                 class="col-md-3">
                     <el-button
                     

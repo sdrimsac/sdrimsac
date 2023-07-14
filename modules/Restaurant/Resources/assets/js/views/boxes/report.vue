@@ -230,7 +230,7 @@ export default {
     return {
       loading_submit: false,
       titleDialog: null,
-      resource: "restaurant/report-boxes",
+      resource: "caja/report-boxes",
       form: {},
       array_subcategorias: [],
       array_categorias: [],
@@ -318,7 +318,7 @@ export default {
       // window.open(`/expensesbox/reports?${this.getQueryParameters()}`, '_blank');
        this.loading_submit =  true;
       this.$http
-        .get(`/restaurant/report-boxes/reports?${this.getQueryParameters()}`)
+        .get(`/caja/report-boxes/reports?${this.getQueryParameters()}`)
         .then((response) => {
           this.records = response.data.data;
           this.pagination = response.data.meta;

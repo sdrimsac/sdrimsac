@@ -504,7 +504,7 @@ export default {
             showDialog: false,
             open_cash: true,
             errors: {},
-            resource: "restaurant/worker/cash",
+            resource: "caja/worker/cash",
             date_closed: moment().format("YYYY-MM-DD"),
             date_start: moment().format("YYYY-MM-DD"),
             month_start: moment().format("YYYY-MM"),
@@ -597,7 +597,7 @@ export default {
             try {
                 this.loading = true;
                 const response = await this.$http.get(
-                    `/restaurant/worker/totales_sales?cash_id=${this.recordId}&only_cash=1`
+                    `/caja/worker/totales_sales?cash_id=${this.recordId}&only_cash=1`
                 );
                 if (response.status == 200) {
                     const { data } = response;
@@ -649,7 +649,7 @@ export default {
 
             instance.confirmButtonText = "Cerrando caja...";
             window.open(
-                `/restaurant/report-boxes/reports_resumen_type?cash_id=${this.recordId}`,
+                `/caja/report-boxes/reports_resumen_type?cash_id=${this.recordId}`,
                 "_blank"
             );
             this.closeDialog();
