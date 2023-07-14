@@ -8,7 +8,53 @@
         width="80%"
     >
         <div class="row mt-2">
+            <div class="col-md-3">
+                <label for="filter" class="w-100">Filtrar por:</label>
+                <el-select
+                    v-model="search.column"
+                    placeholder="Select"
+                    @change="getRecords"
+                >
+                    <el-option
+                        v-for="(label, key) in columns"
+                        :key="key"
+                        :value="key"
+                        :label="label"
+                    ></el-option>
+                </el-select>
+            </div>
+            <div class="col-md-3">
+                <label for="filter" class="w-100">Buscar:</label>
+                <template v-if="search.column == 'date_of_issue' || search.column == 'date_of_end'">
+                    <el-date-picker
+                        v-model="search.value"
+                        type="date"
+                        style="width: 100%;"
+                        placeholder="Buscar"
+                        value-format="yyyy-MM-dd"
+                    >
+                    </el-date-picker>
+                </template>
+                <template v-else>
+                    <el-input
+                        v-model="search.value"
+                        placeholder="Buscar"
+                        @change="getRecords"
+                    >
+                    </el-input>
+                </template>
 
+            </div>
+        </div>
+         <div>
+            <el-pagination
+                @current-change="getRecords()"
+                layout="total, prev, pager, next"
+                :total="pagination.total"
+                :current-page.sync="pagination.current_page"
+                :page-size="Number(pagination.per_page)"s
+            >
+            </el-pagination>
         </div>
         <div class="row mt-2">
             <table class="table table-responsive table-striped table-hover">
@@ -84,18 +130,7 @@
             >
             </items-modal>
         </div>
-        <div>
-                <!-- <el-pagination
-                                            @current-change="getRecords()"
-                                            layout="total, prev, pager, next"
-                                            :total="pagination.total"
-                                            :current-page.sync="
-                                                pagination.current_page
-                                            "
-                                            :page-size="pagination.per_page"
-                                        >
-                                        </el-pagination> -->
-        </div>
+       
     </el-dialog>
 </template>
 
@@ -119,10 +154,21 @@ export default {
             records: [],
             loading_search: false,
             resource: "/consignment",
-            pagination: {}
+            pagination: {},
+            search:{
+               
+            },
+             columns:{
+                    name: "Cliente",
+                    date_of_issue: "Fecha de consignación",
+                    date_of_end: "Fecha de liquidación",
+                }
         };
     },
     methods: {
+        changeClearInput(){
+
+        },
         async clickSendMessage(id) {
             try {
                 this.loading = true;
@@ -179,7 +225,7 @@ export default {
             this.recordId = consignment.id;
             this.showDialogItems = true;
         },
-            customIndex(index) {
+        customIndex(index) {
             return (
                 this.pagination.per_page * (this.pagination.current_page - 1) +
                 index +
@@ -189,7 +235,8 @@ export default {
         async getRecords() {
             try {
                 this.loading = true;
-                const response = await this.$http(`${this.resource}/records`);
+                const response = await this.$http(`/${this.resource}/records?column=${this.search.column ||
+                        ""}&value=${this.search.value || ""}`);
                 console.log(response);
                 this.records = response.data.data;
                 this.pagination = response.data.meta;

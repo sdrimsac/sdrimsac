@@ -280,6 +280,30 @@ export default {
         window.addEventListener("resize", this.handleResize);
     }, 
     methods: {
+          formatedStockPresentation(
+            {
+                max_quantity,
+                item_unit_types,
+
+                unit_type
+            },
+            stock
+        ) {
+            let general = Math.trunc(stock / max_quantity);
+            let part = ((stock / max_quantity) % 1).toFixed(2);
+
+            let text = `${general} ${unit_type.id}`;
+            if (part != 0) {
+                let item_unit = item_unit_types.find(
+                    i => Number(i.quantity_unit) == Number(max_quantity)
+                );
+                if (item_unit) {
+                    text += ` ${part * max_quantity} ${item_unit.unit_type.id}`;
+                }
+            }
+
+            return text;
+        },
           clickCommand(type) {
             let idxFood = this.listFoods.findIndex(
                 food => food.item.id == type.item_id
