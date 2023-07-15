@@ -18,6 +18,7 @@ use App\Models\Tenant\Configuration;
 use App\Models\Tenant\Establishment;
 use App\Models\Tenant\ItemUnitType;
 use Barryvdh\DomPDF\Facade as PDF;
+use Facade\Ignition\Tabs\Tab;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Modules\Restaurant\Models\Area;
@@ -37,6 +38,29 @@ use Modules\Restaurant\Models\Observation;
 
 class OrdenController extends Controller
 {
+    public function changeOrder(Request $request)
+    {
+        $orden = Orden::find($request->orden_id);
+        $table = Table::find($request->table_id);
+        $table_old = Table::find($orden->table_id);
+        $orden->table_id = $table->id;
+        $orden->save();
+        $table->status_table_id = 2;
+        $table->save();
+
+        $ordens = Orden::where('table_id', $table_old->id)->where('status_orden_id', '<>', 4)->where('status_orden_id', '<>', 5)->get();
+        if (count($ordens) == 0) {
+            $table_old->status_table_id = 1;
+            $table_old->save();
+        }
+
+
+        return [
+            'success' => true,
+            'message' => 'Orden cambiada',
+
+        ];
+    }
     public function observation_index()
     {
         return view('restaurant::configuration.observations');
@@ -489,11 +513,11 @@ class OrdenController extends Controller
             $items = $request->items;
             $user_id = $user->id;
             $message = 'Pedido realizado.';
-                $establishment_id = auth()->user()->establishment_id;
+            $establishment_id = auth()->user()->establishment_id;
             if ($request->caja == true && $sale_direct == true) {
                 $table = Table::where('number', "caja")
-                ->where('establishment_id', $establishment_id)
-                ->first();
+                    ->where('establishment_id', $establishment_id)
+                    ->first();
                 if ($table == null) {
                     $table = Table::firstOrNew(['id' => $request->table_id]);
                     $table->area_id = auth()->user()->area_id;
@@ -637,13 +661,14 @@ class OrdenController extends Controller
         return false;
     }
     public function cancelOrden(Request $request)
-    {   $configuration = Configuration::first();
+    {
+        $configuration = Configuration::first();
         $id = $request->id;
         $reason = $request->reason;
         $user = auth()->user();
         $pin = $request->pin;
-        if($configuration->pin_orden_delete){
-           
+        if ($configuration->pin_orden_delete) {
+
             if ($user->pin != $pin) {
                 return [
                     'success' => false,
@@ -652,7 +677,7 @@ class OrdenController extends Controller
             }
         }
         $items = OrdenItem::where('orden_id', $id)->get();
-        $items_message =[];
+        $items_message = [];
         foreach ($items as $item) {
             //cancelar orden
             $items_message[] = $item->info_item();
@@ -662,7 +687,7 @@ class OrdenController extends Controller
         $orden = Orden::find($id);
         if ($configuration->send_whatsapp_activity && $configuration->pin_orden_delete) {
             try {
-              (new WhatsappController)->sendMessage($orden->info_to_message($items_message,$reason));
+                (new WhatsappController)->sendMessage($orden->info_to_message($items_message, $reason));
             } catch (Exception $e) {
                 return [
                     'success' => false,

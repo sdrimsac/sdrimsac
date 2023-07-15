@@ -9,10 +9,27 @@
         :close-on-click-modal="false"
         :class="{ top }"
     >
-        <div class="card" v-if="ordens.length == 0">
+        <div class="card" v-if="ordens.length == 0 || hasSelectedOrdenToChange">
             <div class="d-flex justify-content-end p-2">
                 <button
+                    v-if="hasTableOcuped"
                     type="button"
+                    :class="
+                        `btn ${changingOrden ? 'btn-warning' : 'btn-primary'}`
+                    "
+                    @click="changeOrden"
+                >
+                    {{
+                        changingOrden
+                            ? hasSelectedOrdenToChange
+                                ? "Seleccione a la mesa destino"
+                                : "Seleccionar mesa"
+                            : "Cambiar orden"
+                    }}
+                </button>
+                <button
+                    type="button"
+                    style="margin-left:15px;"
                     :class="`btn ${addingOrden ? 'btn-danger' : 'btn-primary'}`"
                     @click="addOrden"
                 >
@@ -60,49 +77,13 @@
                 <span>Sin mesas</span>
             </div>
         </div>
-        <!-- <div class="card" v-if="ordens.length == 0 && screenWidth < 600">
-            <div class="d-flex justify-content-end p-2">
-                <button
-                    type="button"
-                    :class="`btn ${addingOrden ? 'btn-danger' : 'btn-primary'}`"
-                    @click="addOrden"
-                >
-                    {{ addingOrden ? "Seleccione mesa" : "Nueva orden" }}
-                </button>
-                <button
-                    type="button"
-                    style="margin-left:15px;"
-                    class="btn btn-light"
-                    @click="close"
-                >
-                    Cerrar
-                </button>
+        <div
+            class="card-body p-2"
+            v-if="ordens.length > 0 && !hasSelectedOrdenToChange"
+        >
+            <div class="row" v-if="hasSelectedTableToChange">
+                <h3>Seleccione la orden a cambiar</h3>
             </div>
-            <div               v-if="tables.length > 0"                class="d-flex flex-wrap justify-content-center"            >
-                
-                <div                    v-for="(table, idx) in tables"                    
-                :class="`${ table.status_table_id == 1? 'btn-primary': 'btn-danger'}`"
-                    class=" col-2 btn   m-1 d-flex flex-column justify-content-center align-items-center "
-                    :key="idx"
-                    @click="selectTable(table)" style="max-height: 64px;    max-width: 62px;"
-                >
-                    
-                    <i class="icofont-dining-table icofont-2x"></i>
-
-                    <span class="h2  text-white">
-                        {{ table.number }}
-                    </span>
-
-                    
-                </div>
-            </div>
-            <div v-else class="h-25 d-flex justify-content-center align-items-center">
-                <span>Sin mesas</span>
-            </div>
-            
-        </div> -->
-
-        <div class="card-body p-2" v-if="ordens.length > 0">
             <div class="d-flex flex-wrap justify-content-left">
                 <div class="col-3" v-for="(ord, idx) in ordens" :key="idx">
                     <button
@@ -142,33 +123,91 @@ export default {
             showOrdens: false,
             ordensSaved: [],
             top: "rounded-top",
-            screenWidth: 0
+            screenWidth: 0,
+            hasTableOcuped: false,
+            changingOrden: false,
+            hasSelectedTableToChange: false,
+            hasSelectedOrdenToChange: false,
+            ordenToChange: null
         };
     },
     methods: {
+        changeOrden() {
+            console.log("object");
+            this.changingOrden = !this.changingOrden;
+        },
         handleResize() {
             this.screenWidth = window.innerWidth;
         },
         addOrden() {
             this.addingOrden = !this.addingOrden;
         },
+       async sendOrdenToNewTable(orden,table) {
+            let orden_id = orden.id;   
+            let table_id = table.id;
+            try{
+                this.loading = true;
+                const response = await this.$http.post(`change-orden`,{orden_id,table_id});
+                if(response.status == 200){
+                    this.$toast.success("Orden cambiada con éxito");
+                   
+                }else{
+                    this.$toast.error("Ocurrió un error, al cambiar la orden");
+                }
+            }catch(e){
+                console.log(e);
+                this.$toast.error("Ocurrió un error, al cambiar la orden");
+            }finally{
+                this.loading = false;
+ this.close();
+            }
+        },
         closeOrden() {
             this.ordens = [];
+            this.changingOrden = false;
+            this.hasSelectedTableToChange = false;
+            this.hasSelectedOrdenToChange = false;
+            this.ordenToChange = null;
         },
         sendOrdens(orden) {
-            this.$emit("sendOrdens", orden);
-            this.close();
+            if (this.changingOrden && !this.hasSelectedTableToChange) {
+                this.hasSelectedTableToChange = true;
+            } else if (this.changingOrden && this.hasSelectedTableToChange) {
+                this.ordenToChange = orden;
+                this.hasSelectedOrdenToChange = true;
+                this.hasSelectedTableToChange = false;
+            } else {
+                this.$emit("sendOrdens", orden);
+                this.close();
+            }
         },
+
         async selectTable(table) {
+            if (
+                this.changingOrden &&
+                !this.hasSelectedTableToChange &&
+                this.hasSelectedOrdenToChange
+            ) {
+                if (table.status_table_id == 2) {
+                    this.$toast.warning("La mesa no esta libre");
+                    return;
+                }else{
+                    this.sendOrdenToNewTable(this.ordenToChange,table);
+                    return;
+                }
+            }
+
             if (this.addingOrden) {
                 this.$emit("creatingOrden", table.number, table.id);
                 this.close();
                 return;
             }
+
             if (table.status_table_id == 1) {
                 this.$toast.warning("La mesa no tiene ordenes");
                 return;
             }
+
             this.loading = true;
 
             this.tableSelectedNumber = table.number;
@@ -183,7 +222,9 @@ export default {
                     if (ordens.length == 1) {
                         this.sendOrdens(this.ordens[0]);
                     } else {
-                        this.showOrdens = true;
+                        if (this.changingOrden) {
+                            this.hasSelectedTableToChange = true;
+                        }
                     }
                 }
                 this.loading = false;
@@ -201,6 +242,9 @@ export default {
                     const { tables } = response.data;
                     //  this.tables = tables.filter(f => f.number != "caja");
                     this.tables = tables;
+                    this.hasTableOcuped = tables.some(
+                        s => s.status_table_id == 2
+                    );
                 } else {
                     this.$toast.warning("Ocurrió un error");
                 }
