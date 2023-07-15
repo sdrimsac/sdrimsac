@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Http\Controllers\DocumentController;
+use App\Http\Controllers\Tenant\DocumentController;
 use Illuminate\Console\Command;
 use App\Traits\CommandTrait;
 use App\Models\Tenant\{
@@ -56,7 +56,8 @@ class SendAllSunatCommand extends Command
 
             foreach ($documents as $document) {
                 try {
-                    $response = DocumentController::send($document->id);
+                    $documentController = new DocumentController;
+                    $response = $documentController->send($document->id);
 
                     $document->sunat_shipping_status = json_encode($response);
                     $document->success_sunat_shipping_status = true;

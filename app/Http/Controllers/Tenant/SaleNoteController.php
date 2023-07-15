@@ -364,7 +364,7 @@ class SaleNoteController extends Controller
                 // $item->save();
             }
             if ($request->orden_id) {
-                $Orden = Orden::FindOrFail($request->orden_id);
+                $Orden = Orden::findOrFail($request->orden_id);
                 $Orden->sale_note_id = $this->sale_note->id;
                 $Orden->status_orden_id = 4;
                 $Orden->customer_id = $this->sale_note->customer_id;

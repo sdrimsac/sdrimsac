@@ -30,11 +30,11 @@ class TableController extends Controller
     {
         $establishment_id = auth()->user()->establishment_id;
         $tables = new TableCollection(Table::where('area_id', $id)
-        ->where(function  ($q) use ($establishment_id) {
-            $q->where('establishment_id', $establishment_id)
-            ->orWhereNull('establishment_id');
-        })
-        ->get());
+            ->where(function ($q) use ($establishment_id) {
+                $q->where('establishment_id', $establishment_id)
+                    ->orWhereNull('establishment_id');
+            })
+            ->get());
 
         return [
             'success' => true,
@@ -45,9 +45,8 @@ class TableController extends Controller
     {
         $user = auth()->user();
         $establishment_id = $user->establishment_id;
-        $tables = Table::where('establishment_id', $establishment_id)->
-        orWhereNull('establishment_id')
-        ->get();
+        $tables = Table::where('establishment_id', $establishment_id)->orWhereNull('establishment_id')
+            ->get();
 
         return compact('tables');
     }
@@ -59,6 +58,7 @@ class TableController extends Controller
     }
     public function records()
     {
+        $this->checkTables();
         $records = Table::query();
         return new TableCollection($records->paginate(config('tenant.items_per_page')));
 
@@ -66,6 +66,22 @@ class TableController extends Controller
         //     'success' => true,
         //     'data' => $tables
         // ];
+    }
+    function checkTables()
+    {
+        Table::where('status_table_id', 2)->chunk(
+            50,
+            function ($row) {
+                foreach ($row as $table) {
+                    //buscar las ordenes de la mesa
+                    $ordens = Orden::where('table_id', $table->id)->where('status_orden_id', '<>', 4)->where('status_orden_id', '<>', 5)->get();
+                    if (count($ordens) == 0) {
+                        $table->status_table_id = 1;
+                        $table->save();
+                    }
+                }
+            }
+        );
     }
     public function record($id)
     {
@@ -76,15 +92,15 @@ class TableController extends Controller
             'data' => $table
         ];
     }
-    public function store_massive(Request $request){
+    public function store_massive(Request $request)
+    {
         $numbers = $request->input('numbers');
         //check in Table if exist the number
         $tables = Table::whereIn('number', $numbers)
-        ->where('establishment_id', $request->input('establishment_id'))
-        ->where('area_id', $request->input('area_id'))
-        ->
-        get();
-        if(count($tables) > 0){
+            ->where('establishment_id', $request->input('establishment_id'))
+            ->where('area_id', $request->input('area_id'))
+            ->get();
+        if (count($tables) > 0) {
             return [
                 'success' => false,
                 'message' => 'Ya existen mesas con los números ingresados'

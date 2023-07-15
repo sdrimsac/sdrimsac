@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use Facades\App\Http\Controllers\DocumentController;
+use App\Http\Controllers\Tenant\DocumentController;
 use Illuminate\Console\Command;
 use App\Traits\CommandTrait;
 use App\Traits\OfflineTrait;
@@ -59,7 +59,8 @@ class SendAllServerCommand extends Command
             
             foreach ($documents as $document) {
                 try {
-                    $response = DocumentController::sendServer($document->id);
+                    $documentController = new DocumentController;
+                    $response = $documentController->sendServer($document->id);
                     
                     // // $document->shipping_status = '';
 
