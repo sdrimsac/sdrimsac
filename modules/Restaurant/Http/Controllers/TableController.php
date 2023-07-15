@@ -70,6 +70,8 @@ class TableController extends Controller
     }
     function checkTables()
     {
+        $count = Table::where('status_table_id', 2)->count();
+        Log::info('mesas abiertas ' . $count);
         Table::where('status_table_id', 2)->chunk(
             50,
             function ($row) {
