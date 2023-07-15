@@ -73,13 +73,14 @@ class TableController extends Controller
     {
     
         Table::where('status_table_id', 2)
-        ->where('establishment_id', $establishment_id)
+        ->where('establishment_id', $establishment_id)->orWhereNull('establishment_id')
         ->chunk(
             50,
             function ($row) {
                 foreach ($row as $table) {
                     //buscar las ordenes de la mesa
                     $ordens = Orden::where('table_id', $table->id)->where('status_orden_id', '<>', 4)->where('status_orden_id', '<>', 5)->get();
+                    dump(count($ordens));
                     if (count($ordens) == 0) {
                         $table->status_table_id = 1;
                         $table->save();
