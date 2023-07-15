@@ -6,6 +6,7 @@ namespace Modules\Restaurant\Http\Controllers;
 use App\Models\Tenant\Configuration;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Log;
 use Modules\Restaurant\Models\Table;
 use Modules\Restaurant\Http\Requests\TableRequest;
 use Modules\Restaurant\Http\Resources\TableCollection;
@@ -75,6 +76,7 @@ class TableController extends Controller
                 foreach ($row as $table) {
                     //buscar las ordenes de la mesa
                     $ordens = Orden::where('table_id', $table->id)->where('status_orden_id', '<>', 4)->where('status_orden_id', '<>', 5)->get();
+                    Log::info('ordenes de la mesa ' . $table->number . ' ' . count($ordens));
                     if (count($ordens) == 0) {
                         $table->status_table_id = 1;
                         $table->save();
