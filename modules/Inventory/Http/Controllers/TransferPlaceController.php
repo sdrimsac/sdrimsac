@@ -5,6 +5,7 @@ namespace Modules\Inventory\Http\Controllers;
 use App\CoreFacturalo\Requests\Inputs\Functions;
 use App\Http\Controllers\Controller;
 use App\Models\Tenant\Company;
+use App\Models\Tenant\Configuration;
 use App\Models\Tenant\Establishment;
 use Exception;
 use Barryvdh\DomPDF\Facade as PDF;
@@ -141,7 +142,8 @@ class TransferPlaceController extends Controller
     {
         $pin = $request->pin;
         $user = auth()->user();
-        if ($pin != $user->pin) {
+        $configuration = Configuration::first();
+        if ($pin != $user->pin && !$configuration->translate_direct) {
             return [
                 "success" => false,
                 "message" => "El pin no corresponde al usuario actual"
@@ -316,11 +318,19 @@ class TransferPlaceController extends Controller
             $detail->save();
         }
         $establishment = Establishment::find($request->printer);
-        return [
-            "message" => "Transferencia por aceptar",
-            "code" => url('') . "/transfers/print_places/" . $code,
-            'printer' => $establishment->printer,
-            "success" => true,
-        ];
+        $configuration = Configuration::first();
+        if($configuration->translate_direct){
+            $request->merge(['code' => $code]);
+            $response = $this->accept_transfer($request);
+            return $response;
+        }else{
+            return [
+                "message" => "Transferencia por aceptar",
+                "code" => url('') . "/transfers/print_places/" . $code,
+                'printer' => $establishment->printer,
+                "success" => true,
+            ];
+        }
+
     }
 }

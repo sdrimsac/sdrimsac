@@ -64,7 +64,7 @@
 
 <script>
 export default {
-  props: ["showDialog", "recordId"],
+  props: ["showDialog", "recordId","isDirect"],
   data() {
     return {
       loading_submit: false,

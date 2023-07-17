@@ -132,6 +132,7 @@
                 <inventories-form
                     :showDialog.sync="showDialog"
                     :recordId="recordId"
+                    :isDirect="direct"
                 ></inventories-form>
             </div>
         </div>
@@ -146,17 +147,20 @@ import InventoriesForm from "./form.vue";
 export default {
     components: { DataTable, InventoriesForm },
     mixins: [deletable],
+    props: ["configuration"],
     data() {
         return {
             title: null,
             showDialog: false,
             resource: "transfers",
             recordId: null,
-            typeTransaction: null
+            typeTransaction: null,
+            direct:false
         };
     },
     created() {
         this.title = "Traslados";
+        this.direct = this.configuration.translate_direct;
     },
     methods: {
         clickCreate(recordId = null) {

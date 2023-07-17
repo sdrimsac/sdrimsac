@@ -2,6 +2,8 @@
 
 @section('content')
 
-    <inventory-transfers-index></inventory-transfers-index>
+    <inventory-transfers-index
+    :configuration="{{\App\Models\Tenant\Configuration::getPublicConfig()}}"
+    ></inventory-transfers-index>
 
 @endsection

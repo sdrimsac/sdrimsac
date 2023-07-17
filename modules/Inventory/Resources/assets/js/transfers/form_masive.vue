@@ -1,7 +1,7 @@
 <template>
     <div class="card mb-0 pt-2 pt-md-0">
         <div class="card-header bg-primary">
-            <h6 class="my-0 text-white">Nuevo Traslado</h6>
+            <h6 class="my-0 text-white">Nuevo Traslado {{isDirect ? ' (Traslado directo)':''}}</h6>
         </div>
         <div class="tab-content p-3">
             <form
@@ -161,7 +161,7 @@
                             <div class="form-group">
                                 <label class="control-label"
                                     >Cantidad Actual
-                                    <template v-if="currentItem">
+                                    <template v-if="currentItem && currentItem.max_quantity">
                                         <el-tooltip
                                             v-if="currentItem.max_quantity"
                                             :content="
@@ -338,13 +338,14 @@ import OutputLotsForm from "./partials/lots.vue";
 import OutputLotesForm from "./partials/lotes.vue";
 
 export default {
-    props: ["establishment_id", "establishments"],
+    props: ["establishment_id", "establishments","configuration"],
     components: { OutputLotsForm, OutputLotesForm },
     data() {
         return {
             sameEstablishment: false,
             hasLots: false,
             loading_item: false,
+            isDirect:false,
             loading_submit: false,
             titleDialog: null,
             showDialogLotsOutput: false,
@@ -361,6 +362,7 @@ export default {
         };
     },
     async created() {
+        this.isDirect = this.configuration.translate_direct;
         await this.$http.get(`/${this.resource}/tables`).then(response => {
             this.warehouses = response.data.warehouses;
             this.items = response.data.items;
@@ -621,7 +623,7 @@ export default {
             };
         },
         async submit() {
-            if (!this.form.printer) {
+            if (!this.form.printer && !this.isDirect) {
                 return this.$toast.warning(
                     "Recuerde Seleccionar una impresora."
                 );
@@ -641,7 +643,9 @@ export default {
                         this.$toast.success(response.data.message);
                         let { code } = response.data;
                         let { printer } = response.data;
-                        await this.printTransfer(code, printer);
+                        if(this.form.printer){
+                            await this.printTransfer(code, printer);
+                        }
                         this.close();
                     } else {
                         this.$toast.error(response.data.message);

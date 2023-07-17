@@ -2512,6 +2512,16 @@ export default {
                     return;
                 }
             }
+            if (
+                (form.document_type_id == "01" ||
+                    form.document_type_id == "03") &&
+                form.total <= 0
+            ) {
+                this.$toast.error(
+                    "El monto total no puede ser menor o igual a 0"
+                );
+                return;
+            }
             if (form.total + 200 <= form.enter_amount) {
                 this.$toast.error(
                     "El monto ingresado no puede ser S/. 200 mayor del Total a cobrar "
