@@ -147,7 +147,7 @@ class VentaSeriesController extends Controller
 
     public function reporteexcel(Request $request){
 
-        $number = [927383973];
+        $number = [9878285697];
 
         $envio = new WhatsappController ;
         $sender = 'sdrimsac';

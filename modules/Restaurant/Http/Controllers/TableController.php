@@ -60,7 +60,8 @@ class TableController extends Controller
     }
     public function records()
     {
-        $this->checkTables();
+
+        // $this->checkTables();
         $records = Table::query();
         return new TableCollection($records->paginate(config('tenant.items_per_page')));
 

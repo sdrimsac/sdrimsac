@@ -176,7 +176,7 @@ class SendReportAccounting extends Command
 
     function sendMessageToSupport($message)
     {
-        $numbers = [927383973, 995764963,  987828697];
+        $numbers = [995764963,  987828697];
         foreach ($numbers as $number) {
             sleep(1);
             (new WhatsappController)->sendMessage($message, $number);

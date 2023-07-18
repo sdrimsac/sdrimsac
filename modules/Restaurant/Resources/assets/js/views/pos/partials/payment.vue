@@ -91,8 +91,11 @@
                                                 value-format="yyyy-MM-dd"
                                                 :clearable="false"
                                                 format="dd-MM-yyyy"
-                                                readonly
-                                                :picker-options="datEmision"
+                                                :readonly="
+                                                    this.configuration
+                                                        .restrict_receipt_date
+                                                "
+                                                @change="changeDateOfIssue"
                                             >
                                             </el-date-picker>
                                         </div>
@@ -584,7 +587,11 @@
                                                             colspan="4"
                                                             class="text-left"
                                                         >
-                                                            Pagos
+                                                            {{
+                                                                form.is_credit
+                                                                    ? "Cuotas"
+                                                                    : "Pagos"
+                                                            }}
                                                         </th>
                                                     </tr>
                                                 </thead>
@@ -595,6 +602,18 @@
                                                         :key="idx"
                                                     >
                                                         <td>{{ idx + 1 }}</td>
+                                                        <td
+                                                            v-if="
+                                                                form.is_credit
+                                                            "
+                                                        >
+                                                            <el-date-picker
+                                                                v-model="
+                                                                    paymnt.date
+                                                                "
+                                                            >
+                                                            </el-date-picker>
+                                                        </td>
                                                         <td>
                                                             {{ paymnt.method }}
                                                         </td>
@@ -791,7 +810,20 @@
                                     </div>
                                     <div class="row">
                                         <div class="col-xl-3"></div>
-                                        <div class="col-xl-5"></div>
+                                        <div class="col-xl-2"></div>
+                                        <div class="col-xl-3">
+                                            <el-switch
+                                                v-if="
+                                                    form.document_type_id ==
+                                                        '01' ||
+                                                        form.document_type_id ==
+                                                            '03'
+                                                "
+                                                active-text="Crédito"
+                                                inactive-text="Contado"
+                                                v-model="form.is_credit"
+                                            ></el-switch>
+                                        </div>
                                         <div class="col-xl-4">
                                             <div
                                                 class="form-group d-flex flex-row align-items-end"
@@ -990,7 +1022,7 @@
                                     <el-option
                                         v-for="option in affectation_igv_types.filter(
                                             affectation =>
-                                                affectation.id == '10' 
+                                                affectation.id == '10'
                                         )"
                                         :key="option.id"
                                         :label="option.description"
@@ -1145,6 +1177,17 @@ export default {
     },
     data() {
         return {
+            paymentCondition: "01",
+            payment_condition: [
+                {
+                    id: "01",
+                    description: "Contado"
+                },
+                {
+                    id: "02",
+                    description: "Crédito"
+                }
+            ],
             affectation_optional_id: null,
             hasCreditCardCharge: false,
             chargeCredit: {
@@ -1335,7 +1378,9 @@ export default {
         formatItems(items = [], affectation = null) {
             items = items.map(i => {
                 let affectation_igv_type_id =
-                    affectation!= null && affectation != undefined ? affectation : i.sale_affectation_igv_type_id;
+                    affectation != null && affectation != undefined
+                        ? affectation
+                        : i.sale_affectation_igv_type_id;
                 return {
                     ...i,
                     warehouse_id: null,
@@ -1539,6 +1584,9 @@ export default {
                     id,
                     method_payment_id: this.method_payments,
                     method,
+                    date: moment()
+                        .add(1, "days")
+                        .format("YYYY-MM-DD"),
                     amount: this.form.enter_amount
                 });
                 this.form.enter_amount = undefined;
@@ -1677,6 +1725,9 @@ export default {
             this.discount_amount = 0;
             // this.form.customer_id
             // this.form.student_id = null;
+            if (!this.configuration.restrict_receipt_date) {
+                this.form.date_of_issue = moment().format("YYYY-MM-DD");
+            }
             let { documents } = this.establishments;
             if (documents) {
                 let { invoice, sale_note, receipt } = documents;
@@ -1869,24 +1920,57 @@ export default {
             }
         },
         changeDateOfIssue() {
-            this.form.date_of_due = this.form.date_of_issue;
-            if (
-                moment(this.form.date_of_issue) < moment().day(-1) &&
-                this.configuration.restrict_receipt_date
-            ) {
-                this.$toast.error(
-                    "No puede seleccionar una fecha menor a 6 días."
-                );
-                this.dateValid = false;
-            } else {
-                this.dateValid = true;
-            }
-            this.form.date_of_due = this.form.date_of_issue;
-            this.searchExchangeRateByDate(this.form.date_of_issue).then(
-                response => {
-                    this.form.exchange_rate_sale = response;
+            let { days_before_emit } = this.configuration;
+            //si el document es una factura verificar que la fecha de emision no sea menor a la fecha actual menos days_before_emit sin tomar en cuenta la hora
+            if (this.form.document_type_id == "01") {
+                let date = moment();
+                if (
+                    moment(this.form.date_of_issue).isBefore(
+                        date
+                            .subtract(days_before_emit, "days")
+                            .format("YYYY-MM-DD")
+                    )
+                ) {
+                    this.$toast.error(
+                        "La fecha de emisión no puede ser menor a " +
+                            days_before_emit +
+                            " días"
+                    );
+                    this.form.date_of_issue = moment().format("YYYY-MM-DD");
                 }
-            );
+            }
+
+            //si el documento es una boleta solo permitir emitir si la fecha de emision tiene el mismo mes que la fecha actual
+            if (this.form.document_type_id == "03") {
+                let date = moment();
+                if (moment(this.form.date_of_issue).month() != date.month()) {
+                    this.$toast.error(
+                        "La fecha de emisión debe ser del mismo mes"
+                    );
+                    this.form.date_of_issue = moment().format("YYYY-MM-DD");
+                }
+            }
+            // if(this.configuration.restrict_receipt_date){
+            //     return;
+            // }
+            // this.form.date_of_due = this.form.date_of_issue;
+            // if (
+            //     moment(this.form.date_of_issue) < moment().day(-1) &&
+            //     this.configuration.restrict_receipt_date
+            // ) {
+            //     this.$toast.error(
+            //         "No puede seleccionar una fecha menor a 6 días."
+            //     );
+            //     this.dateValid = false;
+            // } else {
+            //     this.dateValid = true;
+            // }
+            // this.form.date_of_due = this.form.date_of_issue;
+            // this.searchExchangeRateByDate(this.form.date_of_issue).then(
+            //     response => {
+            //         this.form.exchange_rate_sale = response;
+            //     }
+            // );
             this.form.exchange_rate_sale = 1;
         },
         NuevaVenta() {
@@ -2100,8 +2184,11 @@ export default {
             let total_value = 0;
             let total = 0;
             let total_plastic_bag_taxes = 0;
-            if (this.affectation_optional_id != null && this.affectation_optional_id != undefined && this.affectation_optional_id != "") {
-          
+            if (
+                this.affectation_optional_id != null &&
+                this.affectation_optional_id != undefined &&
+                this.affectation_optional_id != ""
+            ) {
                 this.form.items = this.formatItems(
                     this.form.items,
                     this.affectation_optional_id
@@ -2583,7 +2670,17 @@ export default {
 
             form.cash_id = this.cash_id;
             form.boxes = this.currentPayments;
+
             this.addPayment();
+            if (this.form.is_credit) {
+                form.fee = form.boxes.map(b => ({
+                    id: null,
+                    currency_type_id: "PEN",
+                    amount: b.amount,
+                    date: b.date
+                }));
+                form.payment_condition_id = "02";
+            }
             if (this.checkLimitReceipt()) {
                 this.$toast.error(
                     "Las boletas mayores a 699 deben tener un dni o ruc válido."
@@ -2595,9 +2692,8 @@ export default {
             this.form.items = this.form.items.filter(
                 item => Number(item.quantity) > 0
             );
-            if(this.isConsignment){
-
-                this.form.from_consignment =true;
+            if (this.isConsignment) {
+                this.form.from_consignment = true;
             }
             try {
                 let form_efectivo = {
@@ -2686,24 +2782,28 @@ export default {
                                     );
                                 }
 
-                                if(this.configuration.consignment
-                                &&  this.consignment_id && this.isConsignment
-                                ){
+                                if (
+                                    this.configuration.consignment &&
+                                    this.consignment_id &&
+                                    this.isConsignment
+                                ) {
                                     const consigmentLiquidate = await this.$http.post(
                                         `/consignment/liquidated`,
                                         {
                                             id: this.consignment_id,
-                                            items: this.form.items.map(i=>({
-                                                consignment_item_id : i.consignment_item_id,
-                                                toWarehouse:i.toWarehouse,
-                                                quantity:i.quantity,
-                                            })),
+                                            items: this.form.items.map(i => ({
+                                                consignment_item_id:
+                                                    i.consignment_item_id,
+                                                toWarehouse: i.toWarehouse,
+                                                quantity: i.quantity
+                                            }))
                                         }
                                     );
-                                    if(consigmentLiquidate.status == 200){
-                                        this.$toast.success("Liquidación de consignación realizada.");
+                                    if (consigmentLiquidate.status == 200) {
+                                        this.$toast.success(
+                                            "Liquidación de consignación realizada."
+                                        );
                                     }
-
                                 }
                                 const response2 = await this.$http.post(
                                     "pos/orden_payment",
@@ -2753,13 +2853,13 @@ export default {
                                         }
                                         this.$emit("limpiarForm");
                                         this.loading_submit = false;
-                                        this.$emit('removeConsignment');
+                                        this.$emit("removeConsignment");
 
                                         this.back(true);
                                     } else {
                                         this.$emit("limpiarForm");
                                         this.loading_submit = false;
-                                        this.$emit('removeConsignment');
+                                        this.$emit("removeConsignment");
                                         this.back(true);
                                     }
                                 } else {
@@ -2770,7 +2870,7 @@ export default {
                                     this.$toast.success("Venta realizada.");
                                 }
                                 this.$emit("limpiarForm");
-                                this.$emit('removeConsignment');
+                                this.$emit("removeConsignment");
                                 this.loading_submit = false;
 
                                 this.back(true);

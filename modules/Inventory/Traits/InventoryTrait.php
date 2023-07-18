@@ -115,6 +115,7 @@ trait InventoryTrait
                 'description' => $row->description,
                 'lots_enabled' => (bool)$row->lots_enabled,
                 'series_enabled' => (bool)$row->series_enabled,
+                'full_description' => ($row->internal_id) ? "{$row->internal_id} - {$row->description}" : $row->description,
                 'max_quantity' => $row->max_quantity,
                 'lotes' => $row->lots_group->where('warehouse_id', $warehouse_id)->transform(function ($row) {
                     return [

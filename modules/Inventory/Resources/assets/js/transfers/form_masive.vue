@@ -93,6 +93,25 @@
                     </div>
                     <br />
                     <div class="d-flex align-items-end justify-content-between">
+                            <div class="col-md-2">
+                            <div class="form-group">
+                                <label class="control-label">Buscar por</label>
+                                <el-select v-model="searchType">
+                                    <el-option
+                                        label="Descripción"
+                                        value="description"
+                                    ></el-option>
+                                    <el-option
+                                        value="serie"
+                                        label="Serie"
+                                    ></el-option>
+                                    <el-option
+                                        value="lote"
+                                        label="Lote"
+                                    ></el-option>
+                                </el-select>
+                            </div>
+                        </div>
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label class="control-label">Producto</label>
@@ -112,7 +131,7 @@
                                         v-for="option in items"
                                         :key="option.id"
                                         :value="option.id"
-                                        :label="option.description"
+                                        :label="option.full_description"
                                     ></el-option>
                                 </el-select>
 
@@ -138,25 +157,7 @@
                                 >
                             </div>
                         </div>
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <label class="control-label">Buscar por</label>
-                                <el-select v-model="searchType">
-                                    <el-option
-                                        label="Descripción"
-                                        value="description"
-                                    ></el-option>
-                                    <el-option
-                                        value="serie"
-                                        label="Serie"
-                                    ></el-option>
-                                    <el-option
-                                        value="lote"
-                                        label="Lote"
-                                    ></el-option>
-                                </el-select>
-                            </div>
-                        </div>
+                    
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label class="control-label"
