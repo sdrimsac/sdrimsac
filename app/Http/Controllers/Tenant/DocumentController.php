@@ -1527,7 +1527,7 @@ class DocumentController extends Controller
             });
             return [
                 'success' => $deleted,
-                'message' => $deleted ? 'Documento anulado con exito ' : 'El documento no se puede eliminar, debido a que tiene mas un dia de emitido. ' . $date_now
+                'message' => $deleted ? 'Documento anulado con exito ' : 'El documento no se puede eliminar, debido a que tiene mas de dos de emitido. ' . $date_now
             ];
         } catch (Exception $e) {
 
