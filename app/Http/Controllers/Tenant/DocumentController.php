@@ -1496,8 +1496,9 @@ class DocumentController extends Controller
             $deleted = DB::connection('tenant')->transaction(function () use ($document_id, $date_now) {
 
                 $record = Document::findOrFail($document_id);
-
-                $same_date = $record->date_of_issue == $date_now;
+                $date_of_issue = $record->date_of_issue;
+                $date_of_issue = Carbon::parse($date_of_issue)->addDay()->format('Y-m-d');
+                $same_date = $date_of_issue == $date_now;
 
                 if ($same_date) {
                     $this->deleteAllPayments($record->payments);
