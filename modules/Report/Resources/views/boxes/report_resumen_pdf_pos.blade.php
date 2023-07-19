@@ -311,8 +311,12 @@
                 <td width="50%" style="vertical-align: top;text-align: right">
                     <span class="f12">
                         APERTURA {{ Carbon\Carbon::parse($cash->date_opening)->format('d/m/Y') }}
-                        {{ $cash->time_opening }} - CIERRE
+                        {{ $cash->time_opening }} 
+                        @if ($cash->date_closed)
+                        - CIERRE
                         {{ Carbon\Carbon::parse($cash->date_closed)->format('d/m/Y') }} {{ $cash->time_closed }}
+                            
+                        @endif
                     </span>
                 </td>
             </tr>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Tenant;
 
+use App\Models\Tenant\Box;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
 class CashCollection extends ResourceCollection
@@ -15,6 +16,11 @@ class CashCollection extends ResourceCollection
     public function toArray($request)
     {
         return $this->collection->transform(function ($row, $key) {
+            $final_cash = $row->beginning_balance + $row->income - $row->expense;
+            $income = Box::where('cash_id', $row->id)->where('expenses' ,0)->sum('amount');
+            $expense= Box::where('cash_id', $row->id)->where('expenses' ,1)->sum('amount');
+            $final_cash = $row->beginning_balance + $income - $expense;
+            // $total_cierre = $transfer + $digital + $sales_detail['cash']['sum'] + $cash->beginning_balance + $incomes_expenses_cash['incomes']['amount'] - $incomes_expenses_cash['expenses']['amount'];
             $counter = [];
             if($row->counter != null )
             {foreach ($row->counter as $value => $total) {
@@ -35,7 +41,7 @@ class CashCollection extends ResourceCollection
                 'time_closed' => $row->time_closed,
                 'closed' => "{$row->date_closed} {$row->time_closed}",
                 'beginning_balance' => $row->beginning_balance,
-                'final_balance' => $row->final_balance,
+                'final_balance' => $final_cash,
                 'income' => $row->income,
                 'expense' => $row->expense,
                 'filename' => $row->filename,
@@ -43,6 +49,7 @@ class CashCollection extends ResourceCollection
                 'state_description' => ($row->state) ? 'Aperturada' : 'Cerrada',
                 'reference_number' => $row->reference_number,
                 'counter' => $counter,
+                // 'final_cash' => $final_cash,
 
             ];
         });

@@ -103,8 +103,8 @@ class ItemsImport implements ToCollection
                     //dd($item,"aqui...");
                     $brand = Brand::updateOrCreate(['name' => $brand_name]);
                     $item = Item::create([
-'max_quantity'=>$max_quantity,
-'max_quantity_description'=>$max_quantity_description,
+                        'max_quantity' => $max_quantity,
+                        'max_quantity_description' => $max_quantity_description,
                         'description' => $description,
                         'second_name' => $second_name,
                         'item_type_id' => $item_type_id,
@@ -148,8 +148,8 @@ class ItemsImport implements ToCollection
                 } else {
 
                     $item->update([
-                        'max_quantity'=>$max_quantity,
-                        'max_quantity_description'=>$max_quantity_description,
+                        'max_quantity' => $max_quantity,
+                        'max_quantity_description' => $max_quantity_description,
                         'description' => $description,
                         'second_name' => $second_name,
                         'item_type_id' => $item_type_id,
@@ -231,7 +231,7 @@ class ItemsImport implements ToCollection
     {
         return $this->data;
     }
-
+    
     function checkPrice($price)
     {
         if ($price['desc'] == null && $price['qty'] == null && $price['price'] == null) {

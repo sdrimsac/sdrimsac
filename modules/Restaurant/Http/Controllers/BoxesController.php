@@ -51,9 +51,10 @@ class BoxesController extends Controller
         ];
         $documents = [];
         foreach ($boxes as $box) {
-
+            $total =0;
             if ($box->document_id) {
                 $document = Document::find($box->document_id);
+                $boxes = Box::where('document_id', $box->document_id)->get()->pluck('amount')->toArray();
                 $name_document =  $document->getNumberFullAttribute();
                 $column = array_column($documents, 'name');
                 if (!in_array($name_document, $column)) {
@@ -104,6 +105,7 @@ class BoxesController extends Controller
             if ($box->sale_note_id) {
 
                 $sale_note = SaleNote::find($box->sale_note_id);
+                $boxes = Box::where('sale_note_id', $box->sale_note_id)->get()->pluck('amount')->toArray();
                 $name_sale_note =  $sale_note->getNumberFullAttribute();
                 $column = array_column($documents, 'name');
 
@@ -115,6 +117,7 @@ class BoxesController extends Controller
                         "total" => $sale_note->total,
                     ];
                     $items = SaleNoteItem::where("sale_note_id", $box->sale_note_id)->get();
+
                     foreach ($items as $item) {
                         $data = $item->item;
                         $data = (array)$data;
@@ -141,9 +144,10 @@ class BoxesController extends Controller
                         }
                      
                     }
+                    $all_documents["notas"]["total"] += $sale_note->total;
+                    $all_documents["notas"]["quantity"] += 1;
                 }
-                $all_documents["notas"]["total"] += $sale_note->total;
-                $all_documents["notas"]["quantity"] += 1;
+              
             }
         }
         $grouped = array_reduce($all_items, function ($carry, $item) {
@@ -555,15 +559,25 @@ class BoxesController extends Controller
         foreach ($sales_cash_records as $ringreso) {
             if ($ringreso["sale_note_id"]) {
                 $sale_note = SaleNote::find($ringreso["sale_note_id"]);
-                $sales_cash_sum += $sale_note->total;
-                if($sale_note->total_discount){
+                if($sale_note->total > $ringreso["amount"]){
+                    $sales_cash_sum +=$ringreso["amount"];
+                }else{
+                    $sales_cash_sum += $sale_note->total;
+                }
+                if ($sale_note->total_discount) {
+
                     $total_discount += $sale_note->total_discount;
                 }
             }
             if ($ringreso["document_id"]) {
                 $document = Document::find($ringreso["document_id"]);
-                $sales_cash_sum += $document->total;
-                if($document->total_discount){
+                if($document->total > $ringreso["amount"]){
+                    $sales_cash_sum +=  $ringreso["amount"];
+                }else{
+                    $sales_cash_sum += $document->total;
+                }
+                if ($document->total_discount) {
+
                     $total_discount += $document->total_discount;
                 }
             }
@@ -1209,11 +1223,21 @@ class BoxesController extends Controller
         foreach ($sales_cash_records as $ringreso) {
             if ($ringreso["sale_note_id"]) {
                 $sale_note = SaleNote::find($ringreso["sale_note_id"]);
-                $sales_cash_sum += $sale_note->total;
+                if ($sale_note->total > $ringreso["amount"]) {
+                    $sales_cash_sum += $ringreso["amount"];
+                } else if ($sale_note->total <= $ringreso["amount"]) {
+                    $sales_cash_sum += $sale_note->total;
+                }
+
             }
             if ($ringreso["document_id"]) {
                 $sale_note = Document::find($ringreso["document_id"]);
-                $sales_cash_sum += $sale_note->total;
+                if ($sale_note->total > $ringreso["amount"]) {
+                    $sales_cash_sum += $ringreso["amount"];
+                } else if ($sale_note->total <= $ringreso["amount"]) {
+                    $sales_cash_sum += $sale_note->total;
+                }
+
             }
         }
         $sales_amount += $sales_cash_sum;

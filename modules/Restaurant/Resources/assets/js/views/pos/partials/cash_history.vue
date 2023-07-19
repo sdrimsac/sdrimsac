@@ -28,16 +28,16 @@
                             {{ idx + 1 }}
                         </td>
                         <td>
-                            {{ `${box.date_opening}/ ${box.reference_number}` }}
+                            {{ `${box.date_opening}/ ${box.reference_number ||'SIN REFERENCIA'}` }}
                         </td>
                         <td>
                             {{ box.beginning_balance }}
                         </td>
                         <td>
-                            {{ box.date_closed }}
+                            {{ box.date_closed || 'Sin cierre'}}
                         </td>
                         <td>
-                            {{ box.date_closed ? box.final_balance : "" }}
+                            {{ box.date_closed ? box.final_balance.toFixed(2) : "" }}
                         </td>
                         <td>
                             <el-button type="success" class="text-white" @click="openWhastappForm(box)">
@@ -135,8 +135,8 @@ export default {
         getQueryParameters() {
             return queryString.stringify({
                 page: this.pagination.current_page,
-                column: "state",
-                value: 0
+                // column: "state",
+                // value: 0
 
                 // limit: this.limit
             });
