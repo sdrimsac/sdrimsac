@@ -627,14 +627,24 @@
                                             >
                                                 <!--   {{ currency_type.symbol }} {{ parseFloat(row.total)+parseFloat(row.unit_price_igv) }}-->
                                                 {{ currency_type.symbol }}
-                                                {{ parseFloat(row.total) }}
+                                               <el-input-number
+                                                v-model="row.total"
+                                                @input="inputTotal(index)"
+                                                >
+
+                                                </el-input-number>
                                             </td>
                                             <td
                                                 class="text-end"
                                                 v-if="form.includes == true"
                                             >
                                                 {{ currency_type.symbol }}
-                                                {{ parseFloat(row.total) }}
+                                                <el-input-number
+                                                v-model="row.total"
+                                                @input="inputTotal(index)"
+                                                >
+
+                                                </el-input-number>
                                             </td>
                                             <td class="text-end">
                                                 <button
@@ -955,6 +965,13 @@ export default {
         this.percentage_igv = response.data;
     },
     methods: {
+        inputTotal(idx){
+            let item = this.form.items[idx];
+            item.unit_price = item.total / item.quantity;
+            this.form.items[idx] = item;
+            
+            this.calculateTotal();
+        },
         updateQuantity() {
             let { items } = this.form;
 

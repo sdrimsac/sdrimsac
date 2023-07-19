@@ -21,15 +21,14 @@ class WorkerController extends Controller
     }
     public function records()
     {
-        $records = User::query();
+       
+        $user_type = auth()->user()->type;
+        if ($user_type == 'admin') {
+            $records = User::where('type', '<>', 'superadmin');
+        } else {
+            $records = User::query();
+        }
         return new UserCollection($records->paginate(config('tenant.items_per_page')));
-
-        // $workers = User::whereNotNull('worker_type_id')
-        //     ->get();
-        // return [
-        //     'success' => true,
-        //     'data' => $workers
-        // ];
     }
     public function record($id)
     {

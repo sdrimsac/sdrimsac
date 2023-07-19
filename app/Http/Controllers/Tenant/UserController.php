@@ -128,6 +128,7 @@ class UserController extends Controller
     }
     public function records($type)
     {
+        
         if($type=="users"){
             $records = User::orderBy('id') ;
         }else{

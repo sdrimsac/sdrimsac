@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Tenant;
 
+use App\Models\Tenant\Item;
 use App\Models\Tenant\Purchase;
 use Modules\Inventory\Models\Warehouse;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -64,7 +65,10 @@ class PurchaseResource extends JsonResource
     public static function getTransformItems($items){
         
         return $items->transform(function($row, $key){ 
+            $item = Item::find($row->item_id);
             return [
+                'max_quantity' => $item->max_quantity,
+                'max_quantity_description' => $item->max_quantity_description,
                 'id' => $row->id, 
                 'purchase_id' => $row->purchase_id,  
                 'item_id' => $row->item_id,  

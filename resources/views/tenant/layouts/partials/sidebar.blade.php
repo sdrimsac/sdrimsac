@@ -145,7 +145,12 @@
                     @if ($user->type == 'superadmin')
                     @endif
 
-
+                    <li>
+                        <a class="{{ $path[0] === 'caja' && $path[1] === 'workers' ? 'active' : '' }}"
+                            href="{{ route('restaurant.workers') }}">
+                            <i class="icofont-users-alt-1"></i> Usuarios
+                        </a>
+                    </li>
                     {{-- <li>
                 <a class="{{$path[0] === 'items' && $path[1] === ''  ? 'active' : '' }}"
                     href="{{ route('tenant.documents_identity.index') }}">
