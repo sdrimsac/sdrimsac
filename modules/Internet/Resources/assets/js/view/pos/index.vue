@@ -907,6 +907,7 @@ export default {
     sockets: {},
     computed: {},
     methods: {
+      
         updateData(record) {
             this.currentRecord = record;
             this.showChangeData = true;
@@ -1081,7 +1082,6 @@ export default {
                 this.pagination.per_page = parseInt(
                     response.data.meta.per_page
                 );
-               
             } catch (e) {
                 console.log(e);
             } finally {
@@ -3026,7 +3026,6 @@ export default {
         },
 
         async limpiarForm() {
-            
             this.selectOption = 4;
             this.blockCart = false;
             this.variation = false;
@@ -3281,7 +3280,9 @@ export default {
             }
         }
     },
+   
     mounted() {
+
         this.optionsMenu = [
             {
                 id: 1,

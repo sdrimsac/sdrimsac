@@ -1821,6 +1821,20 @@ export default {
     sockets: {},
     computed: {},
     methods: {
+          handleKeydown(event) {
+            let { keyCode, key } = event;
+            switch (keyCode) {
+                case 113:
+                    event.preventDefault(); // Evita la función por defecto del navegador
+
+                    this.openTables();
+
+                    break;
+
+                default:
+                    break;
+            }
+        },
         setItemsToLiquidate(items, consignment_id) {
             this.consignment_id = consignment_id;
             this.localOrden = items;
@@ -4435,7 +4449,11 @@ console.log(this.form.items);
             //this.$forceUpdate();
         }
     },
+        beforeUnmount() {
+        document.removeEventListener("keydown", this.handleKeydown);
+    },
     mounted() {
+                document.addEventListener("keydown", this.handleKeydown);
         this.optionsMenu = [
             {
                 id: 1,
