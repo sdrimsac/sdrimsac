@@ -107,8 +107,8 @@ class ConsignmentController extends Controller
         $establishment = Establishment::first();
         $company = Company::active();
         $customer = $consignment->person;
-        $height = 8  * 40;
-        $height += $items->count() * 40;
+        $height = 8  * 50;
+        $height += $items->count() * 60;
         try {
             $pdf = PDf::loadView("consignment::consignment_ticket_liquidated", compact(
                 'consignment',
