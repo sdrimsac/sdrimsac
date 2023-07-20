@@ -3,7 +3,6 @@
 namespace App\Models\Tenant;
 
 
-use Illuminate\Database\Eloquent\Model;
 
 class ConfEstablishment extends ModelTenant
 {
@@ -11,11 +10,13 @@ class ConfEstablishment extends ModelTenant
     protected $casts = [
         "direct_sale" => "boolean",
         "pos_quick_sale" => "boolean",
+        "company_address" => "boolean",
     ];
     protected $fillable = [
         'establishment_id',
         'direct_sale',
-        'pos_quick_sale'
+        'pos_quick_sale',
+        'company_address'
     ];
 
 

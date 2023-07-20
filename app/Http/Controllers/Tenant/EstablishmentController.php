@@ -117,6 +117,8 @@ class EstablishmentController extends Controller
             $exist = ConfEstablishment::firstOrNew(['establishment_id' => $establishment->id]);
             $exist->direct_sale =
                 Functions::valueKeyInArray($conf, 'direct_sale', false);
+            $exist->company_address =
+                Functions::valueKeyInArray($conf, 'company_address', false);
             $exist->save();
         }
         //series
@@ -133,10 +135,7 @@ class EstablishmentController extends Controller
 
 
 
-        return [
-            'success' => true,
-            'message' => ($id) ? 'Serie editada con éxito' : 'Serie registrada con éxito'
-        ];
+      
         return [
             'success' => true,
             'message' => ($id) ? 'Establecimiento actualizado' : 'Establecimiento registrado'

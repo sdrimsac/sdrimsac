@@ -1,6 +1,12 @@
 @php
     $establishment = $document->establishment;
     $customer = $document->customer;
+    $establish_model = \App\Models\Tenant\Establishment::where('id', $document->establishment_id)->first();
+    $conf_establishment = \App\Models\Tenant\ConfEstablishment::where('establishment_id', $document->establishment_id)->first();
+    $print_company_address = false;
+    if ($conf_establishment) {
+        $print_company_address = $conf_establishment->company_address;
+    }
     //$path_style = app_path('CoreFacturalo'.DIRECTORY_SEPARATOR.'Templates'.DIRECTORY_SEPARATOR.'pdf'.DIRECTORY_SEPARATOR.'style.css');
     
     $document_number = $document->series . '-' . str_pad($document->number, 8, '0', STR_PAD_LEFT);
@@ -81,6 +87,22 @@
                 <td>RUC: {{ $customer->number }}
                 </td>
             </tr>
+            @if ($print_company_address)
+            @isset($establish_model->trade_address)
+                <tr>
+                    <td class="text-center ">
+                        {{ $establish_model->trade_address !== '-' ? $establish_model->trade_address : '' }}
+                    </td>
+                </tr>
+            @endisset
+            <tr>
+                <td class="text-center ">
+                    <strong>
+                        {{ strtoupper($establish_model->description) }}
+                    </strong>
+                </td>
+            </tr>
+        @endif
             <tr>
                 <td>Dirección: {{ $customer->address }}
                     {{ $customer->district_id !== '-' ? ', ' . $customer->district->description : '' }}

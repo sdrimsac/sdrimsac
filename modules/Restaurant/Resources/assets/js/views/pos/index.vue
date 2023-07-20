@@ -3604,7 +3604,7 @@ console.log(this.form.items);
             };
             let partsUrl = linkpdf.split("/");
             let document = partsUrl[partsUrl.length - 1];
-            let isTicket = document.toLowerCase().includes("ticket");
+            let isTicket = linkpdf.toLowerCase().includes("ticket");
             let isA4 = document.toLowerCase().includes("a4");
 
             let tipoBandejaImpresora = this.config.new_old_printer;
@@ -4610,7 +4610,7 @@ console.log(this.form.items);
         Echo.channel("print_orden").listen(
             `.print-order-${this.configuration.socket_channel}`,
             e => {
-                console.log("imprimiendo", e);
+                console.log("imprimiendoxd", e);
                 if (e.data.direct_printing == true) {
                     if (e.data.printing == true) {
                         this.Printer(
@@ -4630,173 +4630,6 @@ console.log(this.form.items);
             }
         );
     }
-    // mounted() {
-    //     this.optionsMenu = [
-    //         {
-    //             id: 1,
-    //             title: ["Reimprimir"],
-    //             icon: "fas fa-print ",
-    //             visible: true
-    //         },
-    //         /* {
-    //                 id: 2,
-    //                 title: ["Abrir", "cajon"],
-    //                 icon: "fas fa-cash-register",
-    //                 visible: true
-    //             }, */
-    //         // {
-    //         //     id: 3,
-    //         //     title: ["Reabrir", "tickets"],
-    //         //     icon: "fas fa-folder-open",
-    //         //     visible: true
-    //         // },
-    //         {
-    //             id: 3,
-    //             title: ["Productos"],
-    //             icon: "fas fa-box-open",
-    //             visible: true
-    //         },
-    //         {
-    //             id: 4,
-    //             title: ["Clientes"],
-    //             //icon: "fas fa-hand-holding-water"
-    //             icon: "fas fa-user ",
-    //             visible: true
-    //         },
-    //         {
-    //             id: 5,
-    //             title: [" Zona "],
-    //             icon: "fas fa-map-pin ",
-    //             visible:
-    //                 this.configuration.restaurant && !this.configuration.college
-    //         },
-    //         {
-    //             id: 6,
-    //             title: ["Venta", "del Dia"],
-    //             icon: "icofont-money-bag",
-    //             visible:
-    //                 this.configuration.view_daily_cash ||
-    //                 this.configuration.view_daily_cash_pin
-    //         },
-
-    //         {
-    //             id: 7,
-    //             title: ["Historial", ""],
-    //             icon: "fas fa-history ",
-    //             visible: true
-    //         },
-
-    //         {
-    //             id: 9,
-    //             title: ["Matriculas", "Mensualidades"],
-    //             icon: "fas fa-user-edit",
-    //             visible: this.configuration.college
-    //         },
-    //         {
-    //             id: 10,
-    //             title: ["Canjear", "Promocion"],
-    //             icon: "fas fa-user-tag",
-    //             visible: this.configuration.promotions_sell
-    //         },
-    //         {
-    //             id: 33,
-    //             title: ["Créditos"],
-    //             icon: "fas fa-credit-card",
-    //             visible: this.configuration.credits
-    //         },
-    //         {
-    //             id: 25,
-    //             title: ["Guías", "Remisión"],
-    //             icon: "fas fa-file",
-    //             visible: this.configuration.dispatch
-    //         },
-    //         {
-    //             id: 102,
-    //             title: ["Cambiar", "Categorías"],
-    //             icon: "fa fa-bars",
-    //             visible: this.configuration.pos_drag_category
-    //         },
-    //         {
-    //             id: 103,
-    //             title: ["Editar", "Productos"],
-    //             icon: "fa fa-edit",
-    //             visible: this.configuration.edit_product_pos
-    //         }
-
-    //         // {
-    //         //     title: ["Configuración"],
-    //         //     icon: "fas fa-printer"
-    //         // },
-    //         // {
-    //         //     title: ["Movimiento ", "efectivo"],
-    //         //     icon: "fas fa-printer"
-    //         // },
-    //         // {
-    //         //     title: ["Abrir / Cerrar", " Caja"],
-    //         //     icon: "fas fa-printer"
-    //         // }
-    //     ];
-    //     this.screenWidth = window.innerWidth;
-    //     window.addEventListener("resize", this.handleResize);
-
-    //     // this.teclasInit();
-    //     Echo.channel("orden_pending").listen(
-    //         `.orden-pending-${this.configuration.socket_channel}`,
-    //         e => {
-    //             let num = Number(e.amount);
-    //             this.ordensPending = this.ordensPending + num;
-
-    //             this.$notify({
-    //                 title: "Aviso",
-    //                 duration: 1500,
-    //                 iconClass:
-    //                     num > 0 ? "el-icon-star-on" : "el-icon-delete-solid",
-    //                 message: num > 0 ? "Nueva orden" : "Una orden fue anulada",
-    //                 position: "bottom-left"
-    //             });
-    //         }
-    //     );
-    //     Echo.channel("stock_orden").listen(
-    //         `.stock-order-${this.configuration.socket_channel}`,
-    //         e => {
-    //             for (let index = 0; index < e.data.order_item.length; index++) {
-    //                 let xFind = _.find(this.listFoods, {
-    //                     id: e.data.order_item[index].food_id
-    //                 });
-    //                 if (xFind) {
-    //                     let index_find = _.findIndex(this.listFoods, {
-    //                         id: xFind.id
-    //                     });
-    //                     if (index_find !== -1) {
-    //                         let nSaldo =
-    //                             parseInt(
-    //                                 this.listFoods[index_find].item.stock
-    //                             ) - e.data.order_item[index].quantity;
-    //                         this.listFoods[index_find].item.stock = nSaldo;
-    //                     }
-    //                 }
-    //             }
-    //         }
-    //     );
-    //     Echo.channel("print_orden").listen(
-    //         `.print-order-${this.configuration.socket_channel}`,
-    //         e => {
-    //             console.log("imprimiendo", e);
-    //             if (e.data.direct_printing == true) {
-    //                 if (e.data.printing == true) {
-    //                     this.Printer(
-    //                         e.data.printer,
-    //                         e.data.print,
-    //                         e.data.copies,
-    //                         e.data.user_id,
-    //                         e.data.multiple_boxes,
-    //                         e.data.typeuser,
-    //                         e.data.printing
-    //                     );
-    //                 }
-    //             }
-    //         }
-    //     );
-    // }
+   
 };
 </script>

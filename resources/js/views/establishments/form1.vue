@@ -14,7 +14,11 @@
                             :class="{ 'has-danger': errors.description }"
                         >
                             <label class="control-label">Descripción</label>
-                            <el-input ref="inputDescription" v-model="form.description"> </el-input>
+                            <el-input
+                                ref="inputDescription"
+                                v-model="form.description"
+                            >
+                            </el-input>
                             <small
                                 class="form-control-feedback"
                                 v-if="errors.description"
@@ -189,7 +193,11 @@
                             <label class="control-label"
                                 >Dirección Fiscal</label
                             >
-                            <el-input ref="address_input" v-model="form.address"> </el-input>
+                            <el-input
+                                ref="address_input"
+                                v-model="form.address"
+                            >
+                            </el-input>
                             <small
                                 class="form-control-feedback"
                                 v-if="errors.address"
@@ -239,7 +247,8 @@
                             <label class="control-label"
                                 >Correo de contacto</label
                             >
-                            <el-input ref="emailInput" v-model="form.email"> </el-input>
+                            <el-input ref="emailInput" v-model="form.email">
+                            </el-input>
                             <small
                                 class="form-control-feedback"
                                 v-if="errors.email"
@@ -345,6 +354,15 @@
                             ></small>
                         </div>
                     </div>
+                    <div class="col-md-6">
+                        <label class="control-label"
+                            >Impresión dirección de la empresa y
+                            establecimiento</label
+                        ><br>
+                        <el-checkbox v-model="conf.company_address">
+                            {{ conf.company_address ? "Si" : "No" }}
+                        </el-checkbox>
+                    </div>
                 </div>
                 <div class="row">
                     <div class="col-md-6">
@@ -431,7 +449,9 @@
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <label class="control-label">Venta rápida en caja</label>
+                        <label class="control-label"
+                            >Venta rápida en caja</label
+                        >
                         <br />
                         <el-switch
                             :disabled="!documents.sale_note"
@@ -696,7 +716,6 @@ export default {
                     .then(response => {
                         if (response.data !== "") {
                             this.form = response.data.data;
-                            console.log(this.form);
                             if (this.form.direct_printing == "1") {
                                 this.form.direct_printing = true;
                             } else {
@@ -714,22 +733,29 @@ export default {
             }
         },
         async submit() {
-            
-
-            if(this.form.description == null  || this.form.description == ""){
+            if (this.form.description == null || this.form.description == "") {
                 this.$refs.inputDescription.$el.querySelector("input").focus();
-                this.$toast.error('El campo "Descripción" no puede estar vacio',{icon:'fas fa-poo'});
-                return ; 
+                this.$toast.error(
+                    'El campo "Descripción" no puede estar vacio',
+                    { icon: "fas fa-poo" }
+                );
+                return;
             }
-            if(this.form.address == null  || this.form.address == "" ){
+            if (this.form.address == null || this.form.address == "") {
                 this.$refs.address_input.$el.querySelector("input").focus();
-                this.$toast.error('El campo "Direccion Fiscal" no puede estar vacio',{icon:'fas fa-poo'});
-                return ; 
+                this.$toast.error(
+                    'El campo "Direccion Fiscal" no puede estar vacio',
+                    { icon: "fas fa-poo" }
+                );
+                return;
             }
-            if(this.form.email == null  || this.form.email == "" ){
+            if (this.form.email == null || this.form.email == "") {
                 this.$refs.emailInput.$el.querySelector("input").focus();
-                this.$toast.error('El campo "Correo de Contacto" no puede estar vacio',{icon:'fas fa-poo'});
-                return ; 
+                this.$toast.error(
+                    'El campo "Correo de Contacto" no puede estar vacio',
+                    { icon: "fas fa-poo" }
+                );
+                return;
             }
             this.loading_submit = true;
             this.form.documents = this.documents;

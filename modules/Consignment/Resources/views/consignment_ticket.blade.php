@@ -364,11 +364,11 @@ use App\Models\Tenant\Turned;
     <table class="">
         <thead >
             <tr>
-                <th class="mini">CANT.</th>
-                <th class="mini">UNIDAD</th>
-                <th class="mini">DESCRIPCIÓN</th>
-                <th class="mini">P.UNIT</th>
-                <th class="mini">TOTAL</th>
+                <th class="border-top-bottom desc-9 text-left mini">CANT.</th>
+                <th class="border-top-bottom desc-9 text-left mini">UNIDAD</th>
+                <th class="border-top-bottom desc-9 text-left mini">DESCRIPCIÓN</th>
+                <th class="border-top-bottom desc-9 text-left mini">P.UNIT</th>
+                <th class="border-top-bottom desc-9 text-left mini">TOTAL</th>
             </tr>
         </thead>
         <tbody>

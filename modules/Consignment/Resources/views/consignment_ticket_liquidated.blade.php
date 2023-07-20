@@ -22,7 +22,12 @@ use App\Models\Tenant\Turned;
             border-spacing: 0;
 
         }
-
+        .mini{
+        font-size: 7px !important;
+    }
+    .mini2{
+        font-size: 8px !important;
+    }
         .table {
             /* border: 0.1px solid #ccc; */
         }
@@ -267,17 +272,17 @@ use App\Models\Tenant\Turned;
     @endif
     <table class="full-width">
         <tr>
-            <td class="text-center">
+            <td class="text-center mini2">
                 <h4>{{ $company->eslogan }}</h4>
             </td>
         </tr>
         <tr>
-            <td class="text-center">
+            <td class="text-center mini2">
                 <h5>{{ 'RUC ' . $company->number }}</h5>
             </td>
         </tr>
         <tr>
-            <td class="text-center">
+            <td class="text-center mini2">
                 {{ $establishment->address !== '-' ? $establishment->address : '' }}
                 {{ $establishment->district_id !== '-' ? ', ' . $establishment->district->description : '' }}
                 {{ $establishment->province_id !== '-' ? ', ' . $establishment->province->description : '' }}
@@ -285,13 +290,13 @@ use App\Models\Tenant\Turned;
             </td>
         </tr>
         <tr>
-            <td class="text-center">{{ $establishment->email !== '-' ? $establishment->email : '' }}</td>
+            <td class="text-center mini2">{{ $establishment->email !== '-' ? $establishment->email : '' }}</td>
         </tr>
         <tr>
-            <td class="text-center pb-3">{{ $establishment->telephone !== '-' ? $establishment->telephone : '' }}</td>
+            <td class="text-center pb-3 mini2">{{ $establishment->telephone !== '-' ? $establishment->telephone : '' }}</td>
         </tr>
         <tr>
-            <td class="text-center border-top">
+            <td class="text-center border-top mini2">
                 <h4>CONSIGNACION (liquidada)</h4>
             </td>
         </tr>
@@ -300,7 +305,7 @@ use App\Models\Tenant\Turned;
                 use Carbon\Carbon;
                 $number = str_pad($consignment->id, 8, '0', STR_PAD_LEFT);
             @endphp
-            <td class="text-center pb-3 border-bottom">
+            <td class="text-center pb-3 border-bottom mini2">
                 <h3>{{ $number }}</h3>
             </td>
         </tr>
@@ -308,44 +313,44 @@ use App\Models\Tenant\Turned;
     <table class="full-width">
         <tr>
             <td width="" class="">
-                <p class="desc">F. Consignación:</p>
+                <p class="mini2">F. Consignación:</p>
             </td>
             <td width="" class="">
-                <p class="desc">{{ Carbon::parse($consignment->date_of_issue)->format('d-m-Y') }}</p>
+                <p class="dmini2emini2sc">{{ Carbon::parse($consignment->date_of_issue)->format('d-m-Y') }}</p>
             </td>
         </tr>
         <tr>
             <td width="">
-                <p class="desc">F. Liquidación:</p>
+                <p class="mini2">F. Liquidación:</p>
             </td>
             <td width="">
-                <p class="desc">{{ Carbon::parse($consignment->date_of_end)->format('d-m-Y') }}</p>
+                <p class="mini2">{{ Carbon::parse($consignment->date_of_end)->format('d-m-Y') }}</p>
             </td>
         </tr>
 
         <tr>
             <td class="align-top">
-                <p class="desc">Cliente:</p>
+                <p class="mini2">Cliente:</p>
             </td>
             <td>
-                <p class="desc">{{ $customer->name }}</p>
+                <p class="mini2">{{ $customer->name }}</p>
             </td>
         </tr>
         <tr>
             <td>
-                <p class="desc">{{ $customer->identity_document_type->description }}:</p>
+                <p class="mini2">{{ $customer->identity_document_type->description }}:</p>
             </td>
             <td>
-                <p class="desc">{{ $customer->number }}</p>
+                <p class="mini2">{{ $customer->number }}</p>
             </td>
         </tr>
         @if ($customer->address !== '')
             <tr>
                 <td class="align-top">
-                    <p class="desc">Dirección:</p>
+                    <p class="mini2">Dirección:</p>
                 </td>
                 <td>
-                    <p class="desc">
+                    <p class="mini2">
                         {{ $customer->address }}
                         {{ $customer->district_id !== '-' ? ', ' . $customer->district->description : '' }}
                         {{ $customer->province_id !== '-' ? ', ' . $customer->province->description : '' }}
@@ -364,28 +369,28 @@ use App\Models\Tenant\Turned;
         <table class="full-width mt-10 mb-10">
             <thead class="">
                 <tr>
-                    <th class="border-top-bottom desc-9 text-left">CANT.</th>
-                    <th class="border-top-bottom desc-9 text-left">UNIDAD</th>
-                    <th class="border-top-bottom desc-9 text-left">DESCRIPCIÓN</th>
-                    <th class="border-top-bottom desc-9 text-left">P.UNIT</th>
-                    <th class="border-top-bottom desc-9 text-left">TOTAL</th>
+                    <th class="border-top-bottom  text-left mini">CANT.</th>
+                    <th class="border-top-bottom  text-left mini">UNIDAD</th>
+                    <th class="border-top-bottom  text-left mini">DESCRIPCIÓN</th>
+                    <th class="border-top-bottom  text-left mini">P.UNIT</th>
+                    <th class="border-top-bottom  text-left mini">TOTAL</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach ($items as $item)
                     @if ($item->selled_quantity > 0)
                         <tr>
-                            <td class="text-center desc-9 align-top">
+                            <td class="text-center mini align-top">
                                 {{ $item->original_quantity }}
                             </td>
-                            <td class="text-center desc-9 align-top">{{ $item->item->unit_type_id }}</td>
-                            <td class="text-left desc-9 align-top">
+                            <td class="text-center mini align-top">{{ $item->item->unit_type_id }}</td>
+                            <td class="text-left mini align-top">
 
                                 {!! $item->item->description !!}
 
                             </td>
-                            <td class="text-right desc-9 align-top">{{ number_format($item->price, 2) }}</td>
-                            <td class="text-right desc-9 align-top">
+                            <td class="text-right mini align-top">{{ number_format($item->price, 2) }}</td>
+                            <td class="text-right mini align-top">
                                 {{ number_format($item->price * $item->original_quantity, 2) }}</td>
                         </tr>
                         <tr>
@@ -405,34 +410,34 @@ use App\Models\Tenant\Turned;
         <table class="full-width mt-10 mb-10">
             <thead class="">
                 <tr>
-                    <th colspan="3">
+                    <th colspan="3" class="mini">
                         PRODUCTOS DEVUELTOS
 
                     </th>
                 </tr>
                 <tr>
-                    <th class="border-top-bottom desc-9 text-left">CANT.</th>
-                    <th class="border-top-bottom desc-9 text-left">UNIDAD</th>
-                    <th class="border-top-bottom desc-9 text-left">DESCRIPCIÓN</th>
-                    {{-- <th class="border-top-bottom desc-9 text-left">P.UNIT</th> --}}
-                    {{-- <th class="border-top-bottom desc-9 text-left">TOTAL</th> --}}
+                    <th class="border-top-bottom mini text-left">CANT.</th>
+                    <th class="border-top-bottom mini text-left">UNIDAD</th>
+                    <th class="border-top-bottom mini text-left">DESCRIPCIÓN</th>
+                    {{-- <th class="border-top-bottom mini text-left">P.UNIT</th> --}}
+                    {{-- <th class="border-top-bottom mini text-left">TOTAL</th> --}}
                 </tr>
             </thead>
             <tbody>
                 @foreach ($items as $item)
                     @if ($item->return_quantity > 0)
                         <tr>
-                            <td class="text-center desc-9 align-top">
+                            <td class="text-center mini align-top">
                                 {{ $item->return_quantity }}
                             </td>
-                            <td class="text-center desc-9 align-top">{{ $item->item->unit_type_id }}</td>
-                            <td class="text-center desc-9 align-top">
+                            <td class="text-center mini align-top">{{ $item->item->unit_type_id }}</td>
+                            <td class="text-center mini align-top">
 
                                 {!! $item->item->description !!}
 
                             </td>
-                            {{-- <td class="text-right desc-9 align-top">{{ number_format($item->price, 2) }}</td>
-                            <td class="text-right desc-9 align-top">
+                            {{-- <td class="text-right mini align-top">{{ number_format($item->price, 2) }}</td>
+                            <td class="text-right mini align-top">
                                 {{ number_format($item->price * $item->return_quantity, 2) }}</td> --}}
                         </tr>
                         <tr>
@@ -448,7 +453,7 @@ use App\Models\Tenant\Turned;
     <table class="full-width">
             <tr>
                 <td align="center">
-                    <small>
+                    <small class="mini">
                       Esta consignación ha sido liquidada
                     </small>
                 </td>

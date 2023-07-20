@@ -468,6 +468,7 @@ class Facturalo
                 $append_height = 15;
                 $this->appendHeightFromDispatch($append_height, $format, $this->document);
             }
+
             $pdf = new Mpdf([
                 'mode' => 'utf-8',
                 'format' => [
