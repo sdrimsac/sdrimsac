@@ -117,7 +117,7 @@ class ConsignmentController extends Controller
                 'establishment',
                 'customer'
             ))
-            ->setPaper(array(0, 0, 150, $height));
+            ->setPaper(array(0, 0, 249, $height));
         } catch (Exception $e) {
             return ['m' => $e->getMessage()];
         }
@@ -148,7 +148,7 @@ class ConsignmentController extends Controller
                 'establishment',
                 'customer'
             ))
-            ->setPaper(array(0, 0, 150, $height));
+            ->setPaper(array(0, 0, 249, $height));
         } catch (Exception $e) {
             return ['m' => $e->getMessage()];
         }
