@@ -63,38 +63,38 @@ class CheckDocumentsStatus extends Command
             $results = DB::select("SHOW DATABASES;            ");
 
 
-            foreach ($results as $result) {
-                //$this->line($result->Database);
-                if (strpos($result->Database, 'xyz') !== false) {
+            // foreach ($results as $result) {
+            //     //$this->line($result->Database);
+            //     if (strpos($result->Database, 'xyz') !== false) {
 
 
 
-                    $resultsPorDB = DB::select('
-                    SELECT documents.id as document_id, 
-                    state_types.description statusDoc,
-                    soap_types.description modo,
-                    documents.series as document_series,
-                    documents.number as document_number,
-                    documents.date_of_due as document_date_of_due,
-                    ( SELECT trade_name FROM ' . $result->Database . '.companies LIMIT 1 ) AS proyecto
-                    FROM ' . $result->Database . '.`documents`
-                    INNER JOIN state_types ON documents.state_type_id = state_types.id
-                    INNER JOIN soap_types ON documents.soap_type_id = soap_types.id 
-                     where soap_type_id = "02" and documents.state_type_id in  ("01","03") and documents.date_of_issue >= "' . $primerDiaDelMes . '"  and documents.date_of_issue < "' . $fechaHoy . '" 	ORDER BY 4,5 ');
-                    $resultsPorDB = json_decode(json_encode($resultsPorDB), true);
+            //         $resultsPorDB = DB::select('
+            //         SELECT documents.id as document_id, 
+            //         state_types.description statusDoc,
+            //         soap_types.description modo,
+            //         documents.series as document_series,
+            //         documents.number as document_number,
+            //         documents.date_of_due as document_date_of_due,
+            //         ( SELECT trade_name FROM ' . $result->Database . '.companies LIMIT 1 ) AS proyecto
+            //         FROM ' . $result->Database . '.`documents`
+            //         INNER JOIN state_types ON documents.state_type_id = state_types.id
+            //         INNER JOIN soap_types ON documents.soap_type_id = soap_types.id 
+            //          where soap_type_id = "02" and documents.state_type_id in  ("01","03") and documents.date_of_issue >= "' . $primerDiaDelMes . '"  and documents.date_of_issue < "' . $fechaHoy . '" 	ORDER BY 4,5 ');
+            //         $resultsPorDB = json_decode(json_encode($resultsPorDB), true);
 
-                    $companies = DB::select('select soap_type_id from ' . $result->Database . '.companies  ');
-                    $companies = json_decode(json_encode($companies), true);
+            //         $companies = DB::select('select soap_type_id from ' . $result->Database . '.companies  ');
+            //         $companies = json_decode(json_encode($companies), true);
 
-                    if (count($resultsPorDB) > 0) {
+            //         if (count($resultsPorDB) > 0) {
 
-                        if ($companies[0]['soap_type_id'] == '02') {
-                            $this->info('El Sistema ' . $result->Database . ' tiene Documentos sin procesar ' . $fechaHoy);
-                            $infoCompleta[] = $resultsPorDB;
-                        }
-                    }
-                }
-            }
+            //             if ($companies[0]['soap_type_id'] == '02') {
+            //                 $this->info('El Sistema ' . $result->Database . ' tiene Documentos sin procesar ' . $fechaHoy);
+            //                 $infoCompleta[] = $resultsPorDB;
+            //             }
+            //         }
+            //     }
+            // }
             $tenant = Website::all();
             $tenant = json_decode(json_encode($tenant), true);
             foreach ($tenant as $key => $value) {
