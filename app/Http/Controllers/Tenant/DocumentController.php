@@ -1497,8 +1497,10 @@ class DocumentController extends Controller
 
                 $record = Document::findOrFail($document_id);
                 $date_of_issue = $record->date_of_issue;
-                $date_of_issue = Carbon::parse($date_of_issue)->addDay()->format('Y-m-d');
-                $same_date = $date_of_issue == $date_now;
+                $issued_date = Carbon::parse($date_of_issue);
+                $date_now = Carbon::now();
+                $two_days_ago = $date_now->subDays(2);
+                $same_date = $issued_date >= $two_days_ago && $issued_date <= $date_now;
 
                 if ($same_date) {
                     $this->deleteAllPayments($record->payments);
