@@ -1499,7 +1499,8 @@ class DocumentController extends Controller
                 $date_of_issue = $record->date_of_issue;
                 $issued_date = Carbon::parse($date_of_issue);
                 $date_now = Carbon::now();
-                $two_days_ago = $date_now->subDays(2);
+                $date_now->setTime(0, 0, 0);
+                $two_days_ago = $date_now->copy()->subDays(2);
                 $same_date = $issued_date >= $two_days_ago && $issued_date <= $date_now;
 
                 if ($same_date) {
