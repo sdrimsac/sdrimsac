@@ -25,10 +25,10 @@ use App\Models\Tenant\Turned;
 
     }
     .mini{
-        font-size: 7px !important;
+        font-size: 9px !important;
     }
     .mini2{
-        font-size: 8px !important;
+        font-size: 10px !important;
     }
     .table {
         /* border: 0.1px solid #ccc; */
