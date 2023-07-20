@@ -13,8 +13,10 @@ use App\Models\Tenant\Turned;
     {{-- <link href="{{ $path_style }}" rel="stylesheet" /> --}}
   <style>
      html {
+        margin: 3px;
+        padding: 5px;
         font-family: sans-serif;
-        font-size: 11px;
+        font-size: 8px;
     }
 
     table {
@@ -22,7 +24,12 @@ use App\Models\Tenant\Turned;
         border-spacing: 0;
 
     }
-
+    .mini{
+        font-size: 7px !important;
+    }
+    .mini2{
+        font-size: 9px !important;
+    }
     .table {
         /* border: 0.1px solid #ccc; */
     }
@@ -196,6 +203,9 @@ use App\Models\Tenant\Turned;
     .description {
         font-size: 13px;
     }
+    .desc{
+        font-size: 9px;
+    }
 
     .description_preparacion {
         font-size: 11px !important;
@@ -301,44 +311,44 @@ use App\Models\Tenant\Turned;
     <table class="full-width">
         <tr>
             <td width="" class="">
-                <p class="desc">F. Consignación:</p>
+                <p class="mini2">F. Consignación:</p>
             </td>
             <td width="" class="">
-                <p class="desc">{{ Carbon::parse($consignment->date_of_issue)->format('d-m-Y') }}</p>
+                <p class="mini2">{{ Carbon::parse($consignment->date_of_issue)->format('d-m-Y') }}</p>
             </td>
         </tr>
         <tr>
             <td width="">
-                <p class="desc">F. Liquidación:</p>
+                <p class="mini2">F. Liquidación:</p>
             </td>
             <td width="">
-                <p class="desc">{{ Carbon::parse($consignment->date_of_end)->format('d-m-Y') }}</p>
+                <p class="mini2">{{ Carbon::parse($consignment->date_of_end)->format('d-m-Y') }}</p>
             </td>
         </tr>
 
         <tr>
             <td class="align-top">
-                <p class="desc">Cliente:</p>
+                <p class="mini2">Cliente:</p>
             </td>
             <td>
-                <p class="desc">{{ $customer->name }}</p>
+                <p class="mini2">{{ $customer->name }}</p>
             </td>
         </tr>
         <tr>
             <td>
-                <p class="desc">{{ $customer->identity_document_type->description }}:</p>
+                <p class="mini2">{{ $customer->identity_document_type->description }}:</p>
             </td>
             <td>
-                <p class="desc">{{ $customer->number }}</p>
+                <p class="mini2">{{ $customer->number }}</p>
             </td>
         </tr>
         @if ($customer->address !== '')
             <tr>
                 <td class="align-top">
-                    <p class="desc">Dirección:</p>
+                    <p class="mini2">Dirección:</p>
                 </td>
                 <td>
-                    <p class="desc">
+                    <p class="mini2">
                         {{ $customer->address }}
                         {{ $customer->district_id !== '-' ? ', ' . $customer->district->description : '' }}
                         {{ $customer->province_id !== '-' ? ', ' . $customer->province->description : '' }}
@@ -351,30 +361,30 @@ use App\Models\Tenant\Turned;
 
     </table>
 
-    <table class="full-width mt-10 mb-10">
-        <thead class="">
+    <table class="">
+        <thead >
             <tr>
-                <th class="border-top-bottom desc-9 text-left">CANT.</th>
-                <th class="border-top-bottom desc-9 text-left">UNIDAD</th>
-                <th class="border-top-bottom desc-9 text-left">DESCRIPCIÓN</th>
-                <th class="border-top-bottom desc-9 text-left">P.UNIT</th>
-                <th class="border-top-bottom desc-9 text-left">TOTAL</th>
+                <th class="mini">CANT.</th>
+                <th class="mini">UNIDAD</th>
+                <th class="mini">DESCRIPCIÓN</th>
+                <th class="mini">P.UNIT</th>
+                <th class="mini">TOTAL</th>
             </tr>
         </thead>
         <tbody>
             @foreach ($items as $item)
                 <tr>
-                    <td class="text-center desc-9 align-top">
+                    <td class="text-center mini align-top">
                         {{ $item->original_quantity }}
                     </td>
-                    <td class="text-center desc-9 align-top">{{ $item->item->unit_type_id }}</td>
-                    <td class="text-left desc-9 align-top">
+                    <td class="text-center mini align-top">{{ $item->item->unit_type_id }}</td>
+                    <td class="text-left mini align-top">
 
                         {!! $item->item->description !!}
 
                     </td>
-                    <td class="text-right desc-9 align-top">{{ number_format($item->price, 2) }}</td>
-                    <td class="text-right desc-9 align-top">
+                    <td class="text-right mini align-top">{{ number_format($item->price, 2) }}</td>
+                    <td class="text-right mini align-top">
                         {{ number_format($item->price * $item->original_quantity, 2) }}</td>
                 </tr>
                 <tr>
@@ -388,7 +398,8 @@ use App\Models\Tenant\Turned;
         @if ($consignment->penalty)
             <tr>
                 <td align="center">
-                    <small>
+                    <br><br>
+                    <small class="mini">
                         @php
                             $penalty = $consignment->penalty;
                             $type = $penalty->type;
