@@ -28,7 +28,7 @@ use App\Models\Tenant\Turned;
         font-size: 7px !important;
     }
     .mini2{
-        font-size: 9px !important;
+        font-size: 8px !important;
     }
     .table {
         /* border: 0.1px solid #ccc; */
@@ -275,12 +275,12 @@ use App\Models\Tenant\Turned;
             </td>
         </tr>
         <tr>
-            <td class="text-center">
+            <td class="text-center mini2">
                 <h5>{{ 'RUC ' . $company->number }}</h5>
             </td>
         </tr>
         <tr>
-            <td class="text-center">
+            <td class="text-center mini2">
                 {{ $establishment->address !== '-' ? $establishment->address : '' }}
                 {{ $establishment->district_id !== '-' ? ', ' . $establishment->district->description : '' }}
                 {{ $establishment->province_id !== '-' ? ', ' . $establishment->province->description : '' }}
@@ -288,13 +288,13 @@ use App\Models\Tenant\Turned;
             </td>
         </tr>
         <tr>
-            <td class="text-center">{{ $establishment->email !== '-' ? $establishment->email : '' }}</td>
+            <td class="text-center mini2">{{ $establishment->email !== '-' ? $establishment->email : '' }}</td>
         </tr>
         <tr>
-            <td class="text-center pb-3">{{ $establishment->telephone !== '-' ? $establishment->telephone : '' }}</td>
+            <td class="text-center pb-3 mini2">{{ $establishment->telephone !== '-' ? $establishment->telephone : '' }}</td>
         </tr>
         <tr>
-            <td class="text-center border-top">
+            <td class="text-center border-top mini2">
                 <h4>CONSIGNACION</h4>
             </td>
         </tr>
@@ -303,7 +303,7 @@ use App\Models\Tenant\Turned;
                 use Carbon\Carbon;
                 $number = str_pad($consignment->id, 8, '0', STR_PAD_LEFT);
             @endphp
-            <td class="text-center pb-3 border-bottom">
+            <td class="text-center pb-3 border-bottom mini2">
                 <h3>{{ $number }}</h3>
             </td>
         </tr>
