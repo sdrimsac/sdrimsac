@@ -125,7 +125,7 @@
                                         {{$data['document_number']}}
                                     </td>
                                     <td class="celda" style="border: 1px solid black !important; ">
-                                        {{$data['document_date_of_due']}}
+                                        {{$data['document_date_of_issue']}}
                                     </td>
                                     <td class="celda" style="border: 1px solid black !important; ">
                                         {{$data['proyecto']}}

@@ -13,7 +13,7 @@ class AddEstablishmentAddressConfDocumentsPrint extends Migration
      */
     public function up()
     {
-        Schema::table('conf_establishment', function (Blueprint $table) {
+        Schema::table('configurations', function (Blueprint $table) {
             $table->boolean('company_address')->default(false)->comment('Dirección de la empresa en el documento de impresión, nombre del establecimiento y su dirección');
         });
     }
@@ -25,7 +25,7 @@ class AddEstablishmentAddressConfDocumentsPrint extends Migration
      */
     public function down()
     {
-        Schema::table('conf_establishment', function (Blueprint $table) {
+        Schema::table('configurations', function (Blueprint $table) {
             $table->dropColumn('company_address');
 
         });

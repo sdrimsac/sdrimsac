@@ -209,11 +209,19 @@
             </table>
 
             <table class="table table border-bottom">
+                  <tr>
+                    <td></td>
+                    <td class="text-left lead-font-weight-700 h6">SALDO INICIAL</td>
+                    <td class="text-right h6">
+                  {{ formatedMoney(cash.beginning_balance) }}
+                    </td>
+                </tr>
+                
                 <tr>
                     <td></td>
                     <td class="text-left lead-font-weight-700 h6">EFECTIVO</td>
                     <td class="text-right h6">
-                        {{ formatedMoney(totalCoins) }}
+                        {{ formatedMoney(cashAmount) }}
                     </td>
                 </tr>
                 <tr>
@@ -223,11 +231,20 @@
                         {{ formatedMoney(virtualAmount) }}
                     </td>
                 </tr>
+                  <tr>
+                    <td></td>
+                    <td class="text-left lead-font-weight-700 h6">GASTOS</td>
+                    <td   v-if="form.incomes_expenses_cash" class="text-right h6">
+                        {{  formatedMoney(
+                                form.incomes_expenses_cash.expenses.amount
+                            )}}
+                    </td>
+                </tr>
                 <tr>
                     <td></td>
                     <td class="text-left lead-font-weight-700 h6">TOTAL</td>
-                    <td class="text-right h6">
-                        {{ formatedMoney(virtualAmount + totalCoins) }}
+                    <td   v-if="form.incomes_expenses_cash" class="text-right h6">
+                        {{ formatedMoney(Number(virtualAmount) + Number(cashAmount) + Number(cash.beginning_balance) - Number(form.incomes_expenses_cash.expenses.amount)) }}
                     </td>
                 </tr>
             </table>
@@ -280,6 +297,7 @@ export default {
             this.counter = [];
             this.totalCoins = 0;
             this.virtualAmount = 0;
+            this.cashAmount = 0;
         },
         async print() {
             try {
@@ -315,6 +333,7 @@ export default {
             }
         },
         formatedMoney(amount) {
+            amount = Number(amount);
             return this.moneyFormat.format(amount);
         },
         formatedCounter() {
@@ -352,6 +371,9 @@ export default {
                 Object.keys(sales_detail).forEach((k, idx) => {
                     if (k != "cash") {
                         this.virtualAmount += Number(sales_detail[k].sum);
+                    }
+                    if(k == "cash"){
+                        this.cashAmount = Number(sales_detail[k].sum);
                     }
                 });
             } catch (e) {

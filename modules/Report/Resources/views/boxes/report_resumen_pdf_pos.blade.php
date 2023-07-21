@@ -160,7 +160,7 @@
         }
 
         @page {
-            margin: 0.1cm 0.1cm 0cm 0.1cm;
+            margin: 0.1cm 0.1cm 0.1cm 0.1cm;
             font-family: sans-serif;
         }
 
@@ -880,7 +880,75 @@
             </td>
         </table>
 
-        <table>
+        <div style="text-align:center;">
+            <span style="font-size: 18px !important;">
+                DETALLE DE PRODUCTOS VENDIDOS
+            </span>
+          
+                    @foreach ($grouped as $group)
+                    <table class="border">
+                        <thead>
+                            <tr>
+                                <th colspan="4" class="left">
+                                    <span class="f12">
+                                        {{ $group[0]['category'] }}
+                                    </span>
+                                </th>
+                            </tr>
+                            <tr>
+                                <th>
+                                    <span class="f12">UNIDAD</span>
+                                </th>
+                                <th>
+                                    <span class="f12">DESCRIPCION</span>
+                                </th>
+                                <th>
+                                    <span class="f12">PRECIO</span>
+                                </th>
+                                <th>
+                                    <span class="f12">TOTAL</span>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($group as $a_item)
+                                <tr>
+                                    <td class="f12 center">
+                                        {{ intval($a_item['quantity']) }}
+                                    </td>
+                                    <td class="f12">
+                                        {{ $a_item['description'] }}
+                                    </td>
+                                    <td class="f12 right">
+                                        {{ number_format(floatval($a_item['price']), 2) }}
+                                    </td>
+                                    <td class="f12 right">
+                                        {{ number_format($a_item['total'], 2) }}
+                                    </td>
+                                </tr>
+                            @endforeach
+                            <tr>
+                                <td colspan="2"></td>
+                                <td class="f12 right">TOTAL</td>
+                                <td class="f12 right">
+                                    @php
+                                        $t = array_reduce(
+                                            $group,
+                                            function ($carry, $item) {
+                                                return $carry + $item['total'];
+                                            },
+                                            0,
+                                        );
+                                    @endphp
+                                    S/ {{ number_format($t, 2) }}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    @endforeach
+       
+        </div>
+        {{-- <table>
             <thead>
                 <tr>
                     <th colspan="2">
@@ -1002,7 +1070,7 @@
                 </tr>
 
             </tbody>
-        </table>
+        </table> --}}
     </div>
 
     {{-- <table>
@@ -1128,15 +1196,15 @@
             </tr>
         </tbody>
     </table> --}}
-    <footer>
-        <table width="100%" border="0" style="border-collapse: collapse;border-top:1px solid #ddd;">
+    {{-- <footer>
+        <table width="100%" border="0" style="border-collapse: collapse;border-top:1px solid #ddd;margin-top:15px;">
             <tr>
                 <td align="left" valign="middle" colspan="2">Direccion:{{ $establishment->address }} -
                     {{ $establishment->department->description }} - {{ $establishment->district->description }} -
                     Telefonos: {{ $establishment->telephone }} Email: {{ $establishment->email }}</td>
             </tr>
         </table>
-    </footer>
+    </footer> --}}
 </body>
 
 

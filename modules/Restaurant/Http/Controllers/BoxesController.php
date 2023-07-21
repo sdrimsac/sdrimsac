@@ -1225,7 +1225,7 @@ class BoxesController extends Controller
                 $sale_note = SaleNote::find($ringreso["sale_note_id"]);
                 if ($sale_note->total > $ringreso["amount"]) {
                     $sales_cash_sum += $ringreso["amount"];
-                } else if ($sale_note->total <= $ringreso["amount"]) {
+                } else {
                     $sales_cash_sum += $sale_note->total;
                 }
 
@@ -1234,7 +1234,7 @@ class BoxesController extends Controller
                 $sale_note = Document::find($ringreso["document_id"]);
                 if ($sale_note->total > $ringreso["amount"]) {
                     $sales_cash_sum += $ringreso["amount"];
-                } else if ($sale_note->total <= $ringreso["amount"]) {
+                } else {
                     $sales_cash_sum += $sale_note->total;
                 }
 
@@ -1406,8 +1406,6 @@ class BoxesController extends Controller
             "incomes_expenses_cash",
             "documents",
             "documents_info",
-
-
         );
     }
     public function list_food_sales(Request $request)

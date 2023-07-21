@@ -1141,6 +1141,7 @@ class CashController extends Controller
 
 
         $total_coins = 0.0;
+        $total_cash = $sales_cash_sum;
         $total_coins_virtual = $sales_card_sum +
             $sales_yape_sum +
             $sales_plin_sum +
@@ -1163,6 +1164,7 @@ class CashController extends Controller
                 'establishment',
                 "total_coins_virtual",
                 "total_coins",
+                "total_cash",
                 "sales_quantity",
                 "sales_amount",
                 "sales_detail",
@@ -1257,7 +1259,6 @@ class CashController extends Controller
             case 'seller':
                 $users = User::where('id', $user->id)->get();
                 $turnsTable = Turns::where('turn_active',  1)->get();
-
                 break;
         }
 

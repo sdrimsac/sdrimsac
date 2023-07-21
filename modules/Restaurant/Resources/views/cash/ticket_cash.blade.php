@@ -242,14 +242,22 @@
         </table>
 
         <table class="table border-bottom">
+            <tr>
 
+                <td colspan="2" class="text-left lead-font-weight-700">
+                    SALDO INICIAL
+                </td>
+                <td class="text-left ">
+                    {{ formatMoney($cash->beginning_balance) }}
+                </td>
+            </tr>
             <tr>
 
                 <td colspan="2" class="text-left lead-font-weight-700">
                     EFECTIVO
                 </td>
                 <td class="text-left ">
-                    {{ formatMoney($total_coins) }}
+                    {{ formatMoney($total_cash) }}
                 </td>
             </tr>
             <tr>
@@ -264,10 +272,19 @@
             <tr>
 
                 <td colspan="2" class="text-left lead-font-weight-700">
+                    GASTOS
+                </td>
+                <td class="text-left ">
+                    {{ formatMoney($incomes_expenses_cash['expenses']['amount']) }}
+                </td>
+            </tr>
+            <tr>
+               
+                <td colspan="2" class="text-left lead-font-weight-700">
                     TOTAL
                 </td>
                 <td class="text-left ">
-                    {{ formatMoney($total_coins + $total_coins_virtual) }}
+                    {{ formatMoney($total_cash + $total_coins_virtual +$cash->beginning_balance -  $incomes_expenses_cash['expenses']['amount']) }}
                 </td>
             </tr>
         </table>

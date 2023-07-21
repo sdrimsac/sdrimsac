@@ -16,20 +16,49 @@ class CashCollection extends ResourceCollection
     public function toArray($request)
     {
         return $this->collection->transform(function ($row, $key) {
-            $final_cash = $row->beginning_balance + $row->income - $row->expense;
-            $income = Box::where('cash_id', $row->id)->where('expenses' ,0)->sum('amount');
-            $expense= Box::where('cash_id', $row->id)->where('expenses' ,1)->sum('amount');
-            $final_cash = $row->beginning_balance + $income - $expense;
+            // $final_cash = $row->beginning_balance + $row->income - $row->expense;
+            // $income = Box::where('cash_id', $row->id)->where('expenses', 0)->sum('amount');
+            $incomes = 0;
+            Box::where('cash_id', $row->id)->where('expenses', 0)->where('incomes', 0)->chunk(50, function ($rows) use (&$incomes) {
+                foreach ($rows as $row) {
+                    $amount = $row->amount;
+                    if ($row->salenote) {
+                        $total = $row->salenote->total;
+                        if ($total > $amount) {
+                            $incomes += $amount;
+                        } else {
+                            $incomes += $total;
+                        }
+                    }
+                    if ($row->document) {
+                        $total = $row->document->total;
+                        if ($total > $amount) {
+                            $incomes += $amount;
+                        } else {
+                            $incomes += $total;
+                        }
+                    }
+                    if (!$row->salenote && !$row->document) {
+                        $incomes += $amount;
+                    }
+                }
+            });
+
+
+            $expense = Box::where('cash_id', $row->id)->where('expenses', 1)->sum('amount');
+            $final_cash = $row->beginning_balance + $incomes - $expense;
+
             // $total_cierre = $transfer + $digital + $sales_detail['cash']['sum'] + $cash->beginning_balance + $incomes_expenses_cash['incomes']['amount'] - $incomes_expenses_cash['expenses']['amount'];
             $counter = [];
-            if($row->counter != null )
-            {foreach ($row->counter as $value => $total) {
+            if ($row->counter != null) {
+                foreach ($row->counter as $value => $total) {
 
-                $counter[] = [
-                    "value" => $value,
-                    "total" => $total
-                ];
-            }}
+                    $counter[] = [
+                        "value" => $value,
+                        "total" => $total
+                    ];
+                }
+            }
             return [
                 'id' => $row->id,
                 'user_id' => $row->user_id,
