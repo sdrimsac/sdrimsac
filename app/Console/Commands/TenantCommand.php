@@ -41,16 +41,18 @@ class TenantCommand extends Command
     public function handle() {
         // Log::debug('Aqui se ejecuta tarea Progrmada '. Carbon::now()->format('H:i').':00');
        
-        foreach (Task::where('execution_time', Carbon::now()->format('H:i').':00')->get() as $task) {
-            try {
-                Artisan::call($task->class);
-                $task->output = Artisan::output();
-                $task->save();
+        if (Schema::connection('tenant')->hasTable('tasks')) {
+            // Si la tabla existe, continuar con el proceso
+            foreach (Task::where('execution_time', Carbon::now()->format('H:i').':00')->get() as $task) {
+                try {
+                    Artisan::call($task->class);
+                    $task->output = Artisan::output();
+                    $task->save();
+                } catch (\Exception $e) {
+                    $task->output = $e->getMessage();
+                    $task->save();
+                }
             }
-            catch (\Exception $e) {
-                $task->output = $e->getMessage();
-                $task->save();
-            }
-        };
+        } 
     }
 }
