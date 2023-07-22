@@ -141,7 +141,10 @@ $date_start
                                         @if (isset($value["max_quantity_item"]))
                                         {{format_unit($value,$count)}}
                                         @else
-                                            {{number_format($value["count"],2)}} {{$value["unit_item"]}}
+                                        @php
+                                            $c = floatval($count["count"]) *(isset($count["factor"])?$count["factor"]:1);
+                                        @endphp
+                                            {{number_format($c,2)}} {{$value["unit_item"]}}
                                         @endif
                                     </td>
                                     <td class="celda">{{number_format($value["purchase_unit_price"],2)}}</td>
