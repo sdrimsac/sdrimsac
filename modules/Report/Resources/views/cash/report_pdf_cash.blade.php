@@ -113,8 +113,8 @@ $date_start
                                 <th class="th">Producto</th>
                                 <th class="th">Cant. Total</th>
                                 <th class="th">P.C.</th>
-                                <th class="th">P.V.</th>
-                                <th class="th">Total</th>
+                                {{-- <th class="th">Total C.</th> --}}
+                                <th class="th">Total V.</th>
                                 <th class="th">Utilidad</th> 
                             </tr>
                         </thead>
@@ -123,7 +123,7 @@ $date_start
                                 <tr>
                                     <td class="celda">{{$loop->iteration}}</td>
                                     <td class="celda" style="text-align: left;">{{$value["description"]}}
-                                    @if (count($value["prices"])>1)
+                                    {{-- @if (count($value["prices"])>1) --}}
                                         <table style="border:0px">
 
                                             <thead>
@@ -172,7 +172,7 @@ $date_start
                                                </tr>
                                            @endforeach
                                         </table>
-                                    @endif
+                                    {{-- @endif --}}
                                     </td>
                                     <td class="celda">
                                         @if (isset($value["max_quantity_item"]))
@@ -185,12 +185,12 @@ $date_start
                                     
                                     </td>
                                     <td class="celda">{{number_format($value["purchase_unit_price"],2)}}</td>
-                                    <td class="celda">
+                                    {{-- <td class="celda">
                                         @if (count($value["prices"])==1)
                                         {{number_format(array_key_first($value["prices"]),2)}}
                                         @endif
                                         
-                                    </td>
+                                    </td> --}}
                                     <td class="celda">{{number_format($value["total"],2)}}</td>
                                     <td class="celda">
                                         @php
@@ -206,7 +206,7 @@ $date_start
                             @endforeach
                            
                             <tr>
-                                <td class="celda" colspan="4"></td>
+                                <td class="celda" colspan="3"></td>
                                 <td class="celda" >Totales</td>
                                 <td class="celda" >{{number_format($total,2)}}</td>
                                 <td class="celda" >{{number_format($gain_total,2)}}</td>
