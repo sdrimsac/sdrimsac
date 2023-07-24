@@ -136,22 +136,7 @@
             @endif
         </tr>
 
-        @if ($print_company_address)
-            @isset($establish_model->trade_address)
-                <tr>
-                    <td class="text-center ">
-                        {{ $establish_model->trade_address !== '-' ? $establish_model->trade_address : '' }}
-                    </td>
-                </tr>
-            @endisset
-            <tr>
-                <td class="text-center ">
-                    <strong>
-                        {{ strtoupper($establish_model->description) }}
-                    </strong>
-                </td>
-            </tr>
-        @endif
+     
         <tr>
             <td class="text-center">
                 {{ $establishment->address !== '-' ? $establishment->address . ',' : '' }}
@@ -160,7 +145,23 @@
                 {{ $establishment->department_id !== '-' ? '- ' . $establishment->department->description : '' }}
             </td>
         </tr>
+        @if ($print_company_address)
+        @isset($establish_model->trade_address)
+            <tr>
+                <td class="text-center ">
+                    <strong>
+                        {{ strtoupper($establish_model->description) }}
+                    </strong>
+                </td>
+            </tr>
 
+            <tr>
+                <td class="text-center ">
+                    {{ $establish_model->trade_address !== '-' ? $establish_model->trade_address : '' }}
+                </td>
+            </tr>
+        @endisset
+    @endif
         <tr>
             <td class="text-center ">
                 {{ $establishment->telephone !== '-' ? 'Teléfono:' . $establishment->telephone : '' }}</td>
