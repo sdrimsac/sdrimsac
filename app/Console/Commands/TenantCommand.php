@@ -40,6 +40,7 @@ class TenantCommand extends Command
      * @return mixed
      */
     public function handle() {
+        
         // Log::debug('Aqui se ejecuta tarea Progrmada '. Carbon::now()->format('H:i').':00');
        
         if (Schema::connection('tenant')->hasTable('tasks')) {

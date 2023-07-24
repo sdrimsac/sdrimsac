@@ -66,6 +66,7 @@ Vue.component('system-plans-form', require('./views/system/plans/form.vue'));
 //auto update
 Vue.component('system-update', require('./views/system/update/index.vue'));
 
+Vue.component('system-logo', require('./views/system/logo/index.vue'));
 //auto update
 Vue.component('system-backup', require('./views/system/backup/index.vue'));
 

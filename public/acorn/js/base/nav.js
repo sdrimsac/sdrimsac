@@ -19,8 +19,8 @@ class Nav {
       matchUrl: true,
       disablePinning: false,
       verticalUnpinned: Globals.xxl.replace('px', ''),
-      verticalMobile: Globals.lg.replace('px', ''),
-      horizontalMobile: Globals.lg.replace('px', ''),
+      verticalMobile: Globals.xxl.replace('px', ''),
+      horizontalMobile: Globals.xxl.replace('px', ''),
     };
   }
 
@@ -560,6 +560,7 @@ class Nav {
       if (this.verticalMobile > windowWidth) {
         // Adding vertical menu for mobile
         if (this.placementStatus !== 3) {
+    
           this.html.setAttribute('data-dimension', 'mobile');
           this.html.setAttribute('data-placement', 'horizontal');
           this._addVerticalMenu();

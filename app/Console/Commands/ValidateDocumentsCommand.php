@@ -159,7 +159,7 @@ class ValidateDocumentsCommand extends Command
                 $file=public_path("storage/txt/{$filename}") ;
                 $res = $service->validar_cpe($filename);
 
-                $data_response=json_decode($res);
+                $data_response=json_decode($res,true);
 
                 if (array_key_exists('data',json_decode($res,true))) {
                     $res =json_decode($res);

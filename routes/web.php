@@ -716,6 +716,7 @@ if ($hostname) {
         Route::post('login', 'System\LoginController@login');
         Route::post('logout', 'System\LoginController@logout')->name('logout');
         Route::get('phone', 'System\UserController@getPhone');
+ 
 
         Route::middleware('auth:admin')->group(function () {
             Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
@@ -723,7 +724,7 @@ if ($hostname) {
                 return redirect()->route('system.dashboard');
             });
             Route::get('dashboard', 'System\HomeController@index')->name('system.dashboard');
-
+            Route::post('logos', 'System\UserController@setLogo');
             //Clients
             Route::get('clients', 'System\ClientController@index')->name('system.clients.index');
             Route::get('clients/records', 'System\ClientController@records');

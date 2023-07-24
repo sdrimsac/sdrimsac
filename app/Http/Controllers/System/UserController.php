@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\System;
 
 use App\Http\Controllers\Controller;
@@ -9,7 +10,8 @@ use Hyn\Tenancy\Environment;
 use App\Models\System\Client;
 use Illuminate\Support\Facades\DB;
 use App\Models\System\Configuration;
-
+use Illuminate\Http\Request;
+use Intervention\Image\ImageManagerStatic as Image;
 class UserController extends Controller
 {
     public function create()
@@ -17,6 +19,18 @@ class UserController extends Controller
         return view('system.users.form');
     }
 
+    public function setLogo(Request $request)
+    {
+    
+        $file = $request->file('file');
+        $fileName = "store" . '.' . $file->getClientOriginalExtension();
+        $file->move(public_path('acorn/img/profile'), $fileName);
+        return [
+            'success' => true,
+            'message' => 'Logo actualizado'
+
+        ];
+    }
     public function record()
     {
         $user = User::first();
@@ -54,7 +68,8 @@ class UserController extends Controller
     }
 
 
-    public function updatePhoneClients($phone, $enable_whatsapp){
+    public function updatePhoneClients($phone, $enable_whatsapp)
+    {
 
         DB::connection('system')->transaction(function () use ($phone, $enable_whatsapp) {
 
@@ -70,9 +85,7 @@ class UserController extends Controller
                     'enable_whatsapp' => $enable_whatsapp
                 ]);
             }
-
         });
-
     }
 
 
@@ -84,5 +97,4 @@ class UserController extends Controller
 
         return $user_resource->phone;
     }
-
 }

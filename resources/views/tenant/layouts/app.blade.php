@@ -68,19 +68,7 @@
                         </a>
                     </div>
                 </div>
-                <!-- Logo End -->
-                {{-- !-- Language Switch Start -->
-          <div class="language-switch-container">
-            <button class="btn btn-empty language-button dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">EN</button>
-            <div class="dropdown-menu">
-              <a href="#" class="dropdown-item">DE</a>
-              <a href="#" class="dropdown-item active">EN</a>
-              <a href="#" class="dropdown-item">ES</a>
-            </div>
-          </div>
-          <!-- Language Switch End --> --}}
-
-                <!-- User Menu Start -->
+       
                 <div class="user-container d-flex" style="max-width: 200px ;max-height: 120px;">
                     <a href="#" class="d-flex user position-relative" data-bs-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="false">
@@ -123,28 +111,7 @@
                         </div>
                     </div>
                 </div>
-                <!-- User Menu End -->
-
-                <!-- Icons Menu Start -->
-                {{-- <ul class="list-unstyled list-inline text-center menu-icons">
-            
-                <li class="list-inline-item">
-                <a href="#" id="pinButton" class="pin-button">
-                    <i data-cs-icon="lock-on" class="unpin" data-cs-size="18"></i>
-                    <i data-cs-icon="lock-off" class="pin" data-cs-size="18"></i>
-                </a>
-                </li>
-                <li class="list-inline-item">
-                <a href="#" id="colorButton">
-                    <i data-cs-icon="light-on" class="light" data-cs-size="18"></i>
-                    <i data-cs-icon="light-off" class="dark" data-cs-size="18"></i>
-                </a>
-                </li>
-
-            </ul> --}}
-                <!-- Icons Menu End -->
-
-                <!-- Menu Start -->
+           
                 @include('tenant.layouts.partials.sidebar')
                 <!-- Menu End -->
 

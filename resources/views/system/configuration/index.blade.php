@@ -7,6 +7,8 @@
             <system-companies-form></system-companies-form>
         </div> -->
         <div class="col-lg-6 col-md-12">
+
+            <system-logo></system-logo>
             <system-certificate-index></system-certificate-index>
             <system-login-settings :configuration='@json($configuration)'></system-login-settings>
 
