@@ -7,6 +7,7 @@ use App\Models\Tenant\Task;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Schema;
 
 class TenantCommand extends Command
 {
