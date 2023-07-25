@@ -80,13 +80,16 @@ use App\CoreFacturalo\Requests\Inputs\Functions;
 use App\Models\Tenant\Cash;
 use Modules\Inventory\Models\Warehouse as ModuleWarehouse;
 use App\Models\Tenant\Catalogs\PaymentMethodType as CatPaymentMethodType;
+use App\Models\Tenant\Summary;
 use App\Services\RoleService;
+use Hyn\Tenancy\Models\Website;
 use Illuminate\Support\Facades\Http;
 use Modules\Item\Models\ItemLot;
 use Modules\Item\Models\ItemLotsGroup;
 use Modules\Restaurant\Events\OrdenReadyEvent;
 use Modules\Restaurant\Models\OrdenItem;
 use Modules\Services\Data\ServiceData;
+use GuzzleHttp\Client as ClientGuzzleHttp;
 
 class DocumentController extends Controller
 {
@@ -104,6 +107,109 @@ class DocumentController extends Controller
     {
 
         $this->middleware('input.request:document,web', ['only' => ['store']]);
+    }
+    public function checkSummarie()
+    {
+        $hostname = Website::query()
+            ->where('uuid', app(\Hyn\Tenancy\Environment::class)->tenant()->uuid)
+            ->first()
+            ->hostnames
+            ->first();
+        $summaries = Summary::query()
+            ->where([
+                'soap_type_id' => Company::firstOrFail()->active()->soap_type_id,
+                'summary_status_type_id' => '1',
+                'state_type_id' => '03',
+            ])
+            ->get();
+        foreach ($summaries as $summary) {
+            $constructor_params = [
+                'base_uri' => config('tenant.force_https') ? "https://{$hostname->fqdn}" : "https://{$hostname->fqdn}",
+                'verify' => false
+            ];
+
+            $clientGuzzleHttp = new ClientGuzzleHttp($constructor_params);
+
+            $response = $clientGuzzleHttp->post('/api/summaries/status', [
+                'http_errors' => false,
+                'headers' => [
+                    'Authorization' => 'Bearer ' . auth()->user()->api_token,
+                    'Accept' => 'application/json',
+                ],
+                'form_params' => [
+                    'external_id' => $summary->external_id,
+                    'ticket' => $summary->ticket
+                ]
+            ]);
+
+
+
+            $res = json_decode($response->getBody()->getContents(), true);
+
+            $longitud = count($res);
+
+            if ($longitud == 1) {
+                Log::error($res["message"]);
+            }
+            if (!$res['success']) $this->info("{$summary->external_id} - {$summary->ticket} - {$res['message']}");
+        }
+        return [
+            'success' => true,
+            'message' => 'Se consultó los resumenes'
+
+        ];
+    }
+    public function createSummarie()
+    {
+        $hostname = Website::query()
+            ->where('uuid', app(\Hyn\Tenancy\Environment::class)->tenant()->uuid)
+            ->first()
+            ->hostnames
+            ->first();
+        // $hostname=config('tenant.app_url_base');
+        $documents = Document::query()
+            ->select('date_of_issue')
+            ->where([
+                'soap_type_id' => Company::firstOrFail()->active()->soap_type_id,
+                'state_type_id' => '01',
+                'group_id' => '02'
+            ])
+            ->groupBy('date_of_issue')
+            ->get();
+        $curl = curl_init();
+        foreach ($documents as $document) {
+
+            curl_setopt_array($curl, array(
+                CURLOPT_URL => "https://{$hostname->fqdn}" . '/api/summaries',
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 0,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => 'POST',
+                CURLOPT_POSTFIELDS => '{
+            "fecha_de_emision_de_documentos": "' . $document->date_of_issue . '",
+            "codigo_tipo_proceso": "1"
+          }
+          ',
+                CURLOPT_HTTPHEADER => array(
+                    'Content-Type: application/json',
+                    'Authorization: Bearer ' . auth()->user()->api_token
+                ),
+            ));
+
+            $response = curl_exec($curl);
+            $res = json_decode($response, true);
+            if (!$res['success']) $this->info("{$document->date_of_issue} - {$res['message']}");
+        }
+
+        curl_close($curl);
+        return [
+            'success' => true,
+            'message' => 'Se envió los resumenes'
+
+        ];
     }
     public function totals($request)
     {

@@ -296,9 +296,12 @@ if ($hostname) {
                 Route::get('consolidated/records', [App\Http\Controllers\Tenant\ConsolidatedController::class, 'records']);
                 Route::get('consolidated/filter', [App\Http\Controllers\Tenant\ConsolidatedController::class, 'filter']);
                 //Documents
+                Route::get('documents/create_summarie', [App\Http\Controllers\Tenant\DocumentController::class, 'createSummarie']);
+                Route::get('documents/check_summarie', [App\Http\Controllers\Tenant\DocumentController::class, 'checkSummarie']);
                 Route::post('documents/categories', [App\Http\Controllers\Tenant\DocumentController::class, 'storeCategories']);
                 Route::post('documents/brands', [App\Http\Controllers\Tenant\DocumentController::class, 'storeBrands']);
                 Route::get('documents/data_table', [App\Http\Controllers\Tenant\DocumentController::class, 'data_table']);
+            
 
                 Route::get('documents/notpayment', [App\Http\Controllers\Tenant\DocumentController::class, 'notpayment']);
 

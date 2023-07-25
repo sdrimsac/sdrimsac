@@ -50,6 +50,20 @@
                                 <button
                                     class="dropdown-item"
                                     type="button"
+                                    @click.prevent="clickResume()"
+                                >
+                                    Generar resumen
+                                </button>
+                                <button
+                                    class="dropdown-item"
+                                    type="button"
+                                    @click.prevent="checkResume()"
+                                >
+                                    Consultar resumen
+                                </button>
+                                <button
+                                    class="dropdown-item"
+                                    type="button"
                                     @click.prevent="clickValidate()"
                                 >
                                     Validar CPE
@@ -1011,6 +1025,42 @@ export default {
         clickCDetraction(recordId) {
             this.recordId = recordId;
             this.showDialogCDetraction = true;
+        },
+        async checkResume() {
+            try {
+                this.loading_data = true;
+                const response = await this.$http.get(
+                    `/documents/check_summarie`
+                );
+                if (response.data.success) {
+                    this.$toast.success(response.data.message);
+                    this.$eventHub.$emit("reloadData");
+                } else {
+                    this.$toast.error(response.data.message);
+                }
+            } catch (e) {
+                this.$toast.error(e.response.data.message);
+            } finally {
+                this.loading_data = false;
+            }
+        },
+        async clickResume() {
+            try {
+                this.loading_data = true;
+                const response = await this.$http.get(
+                    `/documents/create_summarie`
+                );
+                if (response.data.success) {
+                    this.$toast.success(response.data.message);
+                    this.$eventHub.$emit("reloadData");
+                } else {
+                    this.$toast.error(response.data.message);
+                }
+            } catch (e) {
+                this.$toast.error(e.response.data.message);
+            } finally {
+                this.loading_data = false;
+            }
         },
         clickValidarCpe(document_id) {
             this.loading_data = false;
