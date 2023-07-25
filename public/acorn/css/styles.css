@@ -11500,7 +11500,7 @@ html[data-placement='vertical'] .nav-container {
   html[data-placement='vertical'] .nav-container .logo img,
   html[data-placement='vertical'] .nav-container .logo .img {
     max-width: 180px;
-    height: 75px;
+    height: 65px;
     object-position: left;
     object-fit: contain;
     transition: width var(--transition-time), height var(--transition-time); }

@@ -19,8 +19,10 @@ class Nav {
       matchUrl: true,
       disablePinning: false,
       verticalUnpinned: Globals.xxl.replace('px', ''),
-      verticalMobile: Globals.xxl.replace('px', ''),
-      horizontalMobile: Globals.xxl.replace('px', ''),
+      // verticalMobile: Globals.xxl.replace('px', ''),
+      verticalMobile: '1600',
+      horizontalMobile: '1600',
+      // horizontalMobile: Globals.xxl.replace('px', ''),
     };
   }
 
@@ -29,6 +31,7 @@ class Nav {
       return;
     }
     this.settings = Object.assign(this.options, options);
+    console.log(this.settings);
     this.settings = Object.assign(this.settings, element.dataset);
     this.element = element;
     this._init();
