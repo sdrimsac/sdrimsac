@@ -11,7 +11,8 @@ use App\Models\Tenant\{
     User
 };
 use Carbon\Carbon;
-use Auth;
+use Hyn\Tenancy\Models\Website;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
 class SummarySendCommand extends Command
@@ -52,12 +53,12 @@ class SummarySendCommand extends Command
         Auth::login(User::firstOrFail());
 
         if (Configuration::firstOrFail()->cron) {
-            // $hostname = Website::query()
-            //     ->where('uuid', app(\Hyn\Tenancy\Environment::class)->tenant()->uuid)
-            //     ->first()
-            //     ->hostnames
-            //     ->first();
-            $hostname=config('tenant.app_url_base');
+            $hostname = Website::query()
+                ->where('uuid', app(\Hyn\Tenancy\Environment::class)->tenant()->uuid)
+                ->first()
+                ->hostnames
+                ->first();
+            // $hostname=config('tenant.app_url_base');
             $documents = Document::query()
                 ->select('date_of_issue')
                 ->where([
@@ -71,7 +72,7 @@ class SummarySendCommand extends Command
             foreach ($documents as $document) {
 
                 curl_setopt_array($curl, array(
-                    CURLOPT_URL => "https://{$hostname}".'/api/summaries',
+                    CURLOPT_URL => "https://{$hostname->fqdn}".'/api/summaries',
                     CURLOPT_RETURNTRANSFER => true,
                     CURLOPT_ENCODING => '',
                     CURLOPT_MAXREDIRS => 10,

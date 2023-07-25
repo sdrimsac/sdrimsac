@@ -11502,7 +11502,7 @@ html[data-placement='vertical'] .nav-container {
     max-width: 180px;
     height: 75px;
     object-position: left;
-    object-fit: cover;
+    object-fit: contain;
     transition: width var(--transition-time), height var(--transition-time); }
   html[data-placement='horizontal'] .nav-container .logo .img,
   html[data-placement='vertical'] .nav-container .logo .img {

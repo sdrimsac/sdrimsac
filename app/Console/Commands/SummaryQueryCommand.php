@@ -10,7 +10,8 @@ use App\Models\Tenant\{
     Company,
     User
 };
-use Auth;
+use Hyn\Tenancy\Models\Website;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
 class SummaryQueryCommand extends Command
@@ -49,12 +50,12 @@ class SummaryQueryCommand extends Command
         Auth::login(User::firstOrFail());
 
         if (Configuration::firstOrFail()->cron) {
-            // $hostname = Website::query()
-            //     ->where('uuid', app(\Hyn\Tenancy\Environment::class)->tenant()->uuid)
-            //     ->first()
-            //     ->hostnames
-            //     ->first();
-            $hostname=config('tenant.app_url_base');
+            $hostname = Website::query()
+                ->where('uuid', app(\Hyn\Tenancy\Environment::class)->tenant()->uuid)
+                ->first()
+                ->hostnames
+                ->first();
+            // $hostname=config('tenant.app_url_base');
             $summaries = Summary::query()
                 ->where([
                     'soap_type_id' => Company::firstOrFail()->active()->soap_type_id,
@@ -88,7 +89,7 @@ class SummaryQueryCommand extends Command
                 $response = curl_exec($curl);
                  $res = json_decode($response, true); */
                  $constructor_params = [
-                    'base_uri' => config('tenant.force_https') ? "https://{$hostname}" : "https://{$hostname}",
+                    'base_uri' => config('tenant.force_https') ? "https://{$hostname->fqdn}" : "https://{$hostname->fqdn}",
                     'verify' => false
                 ];
 

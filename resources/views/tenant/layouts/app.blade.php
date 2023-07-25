@@ -51,7 +51,6 @@
                 <!-- Logo Start -->
                 <div class="fix-logo">
                     <div class="logo position-relative ">
-                        <a href="javascript:void(void)">
                             <div class="img">
                                 {{-- @if (isset($vc_establishment->logo))
                 <img  src="{{ asset('storage/uploads/logos/'.$vc_establishment->logo) }}"/> --}}
@@ -65,11 +64,10 @@
 
 
                             </div>
-                        </a>
                     </div>
                 </div>
        
-                <div class="user-container d-flex" style="max-width: 200px ;max-height: 120px;">
+                <div class="user-container d-flex" style="max-width: 200px ;max-height: 120px; margin-bottom:10px;">
                     <a href="#" class="d-flex user position-relative" data-bs-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="false">
                         <img style="width:90%;height:90%" class="profile" alt="profile"

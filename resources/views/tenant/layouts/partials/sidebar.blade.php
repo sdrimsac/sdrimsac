@@ -7,7 +7,7 @@
     $config = \App\Models\Tenant\Configuration::first();
 @endphp
 
-<div class="menu-container flex-grow-1">
+<div class="menu-container flex-grow-1" style="margin-top:20px; ">
     <ul id="menu" class="menu">
 
         {{--  <li>
