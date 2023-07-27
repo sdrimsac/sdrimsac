@@ -1271,6 +1271,11 @@
                                                                         <input
                                                                             type="text"
                                                                             :readonly="
+                                                                                 order_pend
+                                                                                        .food
+                                                                                        .item
+                                                                                        .is_set ==
+                                                                                        1 ||
                                                                             isConsignment ||
                                                                                 !configuration.quantity_cash ||
                                                                                     order_pend
@@ -1310,6 +1315,10 @@
                                                                                 class="spin-up"
                                                                                 data-spin="up"
                                                                                 :disabled="
+                                                                                 order_pend
+                                                                                        .food
+                                                                                        .item
+                                                                                        .is_set ==1 ||
                                                                                 isConsignment ||
                                                                                     order_pend
                                                                                         .food
@@ -1343,6 +1352,7 @@
                                                                                 class="spin-down"
                                                                                 data-spin="down"
                                                                                 :disabled="
+                                                                             
                                                                                  isConsignment ||
                                                                                     order_pend
                                                                                         .food

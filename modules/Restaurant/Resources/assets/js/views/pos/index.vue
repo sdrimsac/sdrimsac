@@ -1202,7 +1202,6 @@
                                                             </div>
                                                         </div>
                                                         <div
-                                                            @click="nthing"
                                                             v-if="
                                                                 data.types
                                                                     .length > 0
@@ -1821,6 +1820,80 @@ export default {
     sockets: {},
     computed: {},
     methods: {
+        
+        clickCommand(type) {
+            let idxFood = this.listFoods.findIndex(
+                food => food.item.id == type.item_id
+            );
+            if (idxFood >= 0) {
+                this.addFood(idxFood, type);
+            }
+        },
+         formatedStockPresentation(
+            {
+                max_quantity,
+                item_unit_types,
+                max_quantity_description,
+                unit_type
+            },
+            stock
+        ) {
+            // let item_unit = item_unit_types.find(
+            //     i => Number(i.quantity_unit) == Number(max_quantity)
+            // );
+            // let general = 0;
+            // if (item_unit) {
+            //     general = Math.trunc(stock / max_quantity);
+            // } else {
+            //     general = stock / max_quantity;
+            // }
+            // let part = ((stock / max_quantity) % 1).toFixed(2);
+            // let part_general = general.toString().split(".");
+
+            // if (part_general.length > 1 && part_general[1].length > 2) {
+            //     general = general.toFixed(2);
+            // }
+            // let text = `${general} ${unit_type.id}`;
+            // if (part != 0) {
+            //     if (item_unit) {
+            //         text += ` ${part * max_quantity} ${item_unit.unit_type.id}`;
+            //     } else {
+            //         text = `${general} ${max_quantity_description ||
+            //             unit_type.id}`;
+            //     }
+            // } else {
+            //     text = `${general} ${max_quantity_description || unit_type.id}`;
+            // }
+
+            // return text;
+            let general = Math.trunc(stock / max_quantity);
+            let part = ((stock / max_quantity) % 1).toFixed(2);
+
+            let text = `${general} ${unit_type.id}`;
+            if (part != 0) {
+                let item_unit = item_unit_types.find(
+                    i => Number(i.quantity_unit) == Number(max_quantity)
+                );
+                let part = (stock / max_quantity) % 1;
+                if (item_unit) {
+                    let new_part = part * max_quantity;
+                    new_part = new_part.toFixed(2);
+                    text += ` ${new_part} ${item_unit.unit_type.id}`;
+                }
+                if (max_quantity && max_quantity_description) {
+                    text = `${general} ${max_quantity_description}`;
+                    let new_part = part * max_quantity;
+                    new_part = new_part.toFixed(2);
+                    text += ` ${new_part} ${unit_type.id}`;
+                }
+            }else{
+                if (max_quantity && max_quantity_description) {
+                    text = `${general} ${max_quantity_description}`;
+                }
+            }
+
+            return text;
+        },
           handleKeydown(event) {
             let { keyCode, key } = event;
             switch (keyCode) {
@@ -1958,7 +2031,7 @@ export default {
             });
         },
 
-        async getFile({ documentId, documentTypeId, number, message }) {
+        async getFile({ total, documentId, documentTypeId, number, message }) {
             try {
                 const response = await this.$http.post(
                     "/whatsapp/get-file",
@@ -1972,8 +2045,10 @@ export default {
                 let basicMessage =
                     "Su comprobante de pago electrónico " +
                     name +
+                    "por " +
+                    total +
                     " de *" +
-                    this.company.name +
+                    this.establishments.description +
                     "*, ha sido generado correctamente a través del facturador electrónico de *Sdrimsac Solutions*";
                 if (message) {
                     basicMessage += "\n" + message;

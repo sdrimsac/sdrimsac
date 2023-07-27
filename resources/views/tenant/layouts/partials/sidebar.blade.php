@@ -469,7 +469,7 @@
                     </a>
                 </li>
                 <li>
-                    <a class="{{ $path[0] === 'reports' && $path[1] === 'inventory' ? 'active' : '' }}"
+                    <a class="{{ $path[0] === 'reports' && $path[1] === 'credits' ? 'active' : '' }}"
                         href="{{ route('reports.credits.index') }}">
                         <i class="fas fa-credit-card"></i>
 
@@ -477,7 +477,7 @@
                     </a>
                 </li>
                 <li>
-                    <a class="{{ $path[0] === 'reports' && $path[1] === 'inventory' ? 'active' : '' }}"
+                    <a class="{{ $path[0] === 'report_cash'? 'active' : '' }}"
                         href="{{ route('reports.cash.index') }}">
                         <i class="icofont-money-bag"></i>
                         Ganancias

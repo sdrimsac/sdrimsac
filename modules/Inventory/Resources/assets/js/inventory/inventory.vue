@@ -25,16 +25,13 @@
                     <h6 class="my-0 text-white">Listado de {{ title }}</h6>
                 </div>
                 <div class="card-body">
-                    <data-table :resource="resource">
+                    <data-table :resource="resource" ref="dataTable">
                         <tr slot="heading">
                             <th class="text-center">#</th>
                             <th class="text-left">Producto</th>
                             <th class="text-left">Almacén</th>
                             <th class="text-center">Stock</th>
-                            <th class="text-center">Precio Compra</th>
-                            <th class="text-center">Precio Venta</th>
-                            <th class="text-center">Capital</th>
-                            <th class="text-center">Utilidad</th>
+                            <th class="text-center">Stock real</th>
                         </tr>
 
                         <tr></tr>
@@ -90,28 +87,27 @@
                                 {{ parseFloat(row.stock).toFixed(2) }}
                             </td>
                             <td class="text-center">
-                                {{
-                                    parseFloat(row.purchase_unit_price).toFixed(
-                                        2
-                                    )
-                                }}
-                            </td>
-                            <td class="text-center">
-                                {{ parseFloat(row.sale_unit_price).toFixed(2) }}
-                            </td>
-                            <td class="text-center">
-                                <template v-if="row.stock > 0">
-                                    {{ row.purchase_unit_price * row.stock }}
-                                </template>
-                            </td>
-                            <td class="text-center">
-                                <template v-if="row.stock > 0">
-                                    {{
-                                        (row.sale_unit_price -
-                                            row.purchase_unit_price) *
-                                            row.stock
-                                    }}
-                                </template>
+                                <div class="flex">
+                                    <el-input
+                                        size="mini"
+                                        class="w-50"
+                                        type="number"
+                                        v-model="row.realStock"
+                                    >
+                                        <el-button
+                                            @click="
+                                                clickSetStockReal(
+                                                    row.item_id,
+                                                    row.realStock,
+                                                    row.stock,
+                                                    row.warehouse_id
+                                                )
+                                            "
+                                            slot="append"
+                                            icon="el-icon-top-right"
+                                        ></el-button>
+                                    </el-input>
+                                </div>
                             </td>
                         </tr>
                     </data-table>
@@ -143,6 +139,29 @@ export default {
         this.title = "Inventario";
     },
     methods: {
+        async clickSetStockReal(itemId, realStock,stock, warehouse_id) {
+            //inventory/stock
+
+            const response = await this.$http.post(`/inventory/stock`, {
+                item_id: itemId,
+                quantity_real: realStock,
+                quantity: stock,
+                warehouse_id: warehouse_id
+            });
+            if(response.data.success){
+                this.$message({
+                    type: "success",
+                    message: response.data.message
+                });
+                this.$refs.dataTable.getRecords();
+            }else{
+                this.$message({
+                    type: "error",
+                    message: response.data.message
+                });
+            }
+            console.log(response);
+        },
         clickMove(recordId) {
             this.recordId = recordId;
             this.showDialogMove = true;

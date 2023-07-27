@@ -1883,8 +1883,10 @@ export default {
                     mensaje:
                         "Su comprobante de pago electrónico " +
                         number +
+                        "por S/" +
+                        this.form.total +
                         " de *" +
-                        this.company.name +
+                        this.establishments.description +
                         "*, ha sido generado correctamente a través del facturador electrónico de *Sdrimsac Solutions*"
                 };
                 try {
@@ -2836,6 +2838,7 @@ export default {
                                     if (this.form.customer_telephone) {
                                         if (this.personalWhatsapp) {
                                             await this.$emit("getFile", {
+                                                total: this.form.total,
                                                 documentId: this.documentNewId,
                                                 documentTypeId:
                                                     form.document_type_id,

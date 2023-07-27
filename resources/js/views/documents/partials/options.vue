@@ -260,8 +260,10 @@ export default {
                     mensaje:
                         "Su comprobante de pago electrónico " +
                         this.form.number +
+                        " por S/" +
+                        this.form.total +
                         " de *" +
-                        this.company.name +
+                        this.form.establishment_description +
                         "*, ha sido generado correctamente a través del facturador electrónico de *Sdrimsac Solutions*"
                 };
                 try {
@@ -345,7 +347,7 @@ export default {
                 .then(response => {
                     this.form = response.data.data;
 
-                    this.titleDialog = "xd Comprobante: " + this.form.number;
+                    this.titleDialog = "Comprobante: " + this.form.number;
                     this.loading_print = false;
                     // }
                     if (this.generatDispatch)

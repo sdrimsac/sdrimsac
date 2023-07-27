@@ -31,7 +31,6 @@ class Nav {
       return;
     }
     this.settings = Object.assign(this.options, options);
-    console.log(this.settings);
     this.settings = Object.assign(this.settings, element.dataset);
     this.element = element;
     this._init();

@@ -36,7 +36,7 @@
                             <el-button class="submit" type="primary" @click.prevent="getRecordsByFilter" :loading="loading_submit" icon="el-icon-search" >Buscar</el-button>
                             <template v-if="records.length>0">
 
-                                <el-button class="submit" type="danger" @click.prevent="clickDownload('pdf')"><i class="fa fa-file-pdf" ></i>  Exportal PDF</el-button>
+                                <!-- <el-button class="submit" type="danger" @click.prevent="clickDownload('pdf')"><i class="fa fa-file-pdf" ></i>  Exportal PDF</el-button> -->
                                 <el-button class="submit" type="success" @click.prevent="clickDownload('excel')"><i class="fa fa-file-excel" ></i>  Exportal Excel</el-button>
                             </template>
 
@@ -156,6 +156,10 @@
             getRecords() {
                 return this.$http.get(`/${this.resource}/records?${this.getQueryParameters()}`).then((response) => {
                     this.records = response.data.data
+                    this.records = this.records.map(r=>({
+                        ...r,
+                        realStock:r.stock
+                    }));
                     
                     this.pagination = response.data.meta
                     this.pagination.per_page = parseInt(response.data.meta.per_page)

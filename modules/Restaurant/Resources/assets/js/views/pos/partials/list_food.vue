@@ -119,7 +119,8 @@
                                                                 )
                                                             "
                                                             class="thumbail"
-                                                            style="  max-height: 69px;  max-width: 69px;" />
+                                                            style="  max-height: 69px;  max-width: 69px;"
+                                                        />
                                                     </template>
                                                 </div>
                                             </div>
@@ -127,80 +128,74 @@
                                         <div>
                                             {{ data.code }}
                                         </div>
-                                        
                                     </div>
                                 </div>
-                                
+
                                 <div
-                                    
                                     class="d-flex justify-content-between"
                                     style="padding-right: 10px; margin-top: 5px"
                                 >
                                     <div
-                                            class="d-flex flex-column align-items-end"
-                                        >
-                                            <!-- <div class="text-uppercase font-weight-light h5">
+                                        class="d-flex flex-column align-items-end"
+                                    >
+                                        <!-- <div class="text-uppercase font-weight-light h5">
                                                 {{ data.category.name }}
                                             </div> -->
-                                            <div class="block mb-2">
+                                        <div class="block mb-2">
+                                            <span
+                                                class="time font-weight-light"
+                                            >
                                                 <span
-                                                    class="time font-weight-light"
+                                                    class="text-muted lead-font-weight-700"
                                                 >
-                                                    <span
-                                                        class="text-muted lead-font-weight-700"
-                                                    >
-                                                        S/
-                                                        {{ data.price }}</span
-                                                    >
-                                                </span>
-                                            </div>
-                                            <div>
-                                                
-                                            </div>
+                                                    S/
+                                                    {{ data.price }}</span
+                                                >
+                                            </span>
                                         </div>
-                                        <div @click="nthing"
-                                         v-if="data.types.length > 0">
-                                            <el-dropdown @command="clickCommand">
-                                                <span class="el-dropdown-link">
-                                                    Precios<i
-                                                        class="el-icon-arrow-down el-icon--right"
-                                                    ></i>
-                                                </span>
-                                                <el-dropdown-menu slot="dropdown">
-                                                    <el-dropdown-item
-                                                        v-for="(type,
-                                                        idx) in data.types"
-                                                        :key="idx"
-                                                        :command="type"
-                                                    >
-                                                        {{
-                                                            formatDescriptionType(type)
-                                                        }}
-                                                    </el-dropdown-item>
-                                                </el-dropdown-menu>
-                                            </el-dropdown>
-                                        </div>
-                                    
+                                        <div></div>
+                                    </div>
+                                    <div v-if="data.types.length > 0">
+                                        <el-dropdown @command="clickCommand">
+                                            <span class="el-dropdown-link">
+                                                Precios<i
+                                                    class="el-icon-arrow-down el-icon--right"
+                                                ></i>
+                                            </span>
+                                            <el-dropdown-menu slot="dropdown">
+                                                <el-dropdown-item
+                                                    v-for="(type,
+                                                    idx) in data.types"
+                                                    :key="idx"
+                                                    :command="type"
+                                                >
+                                                    {{
+                                                        formatDescriptionType(
+                                                            type
+                                                        )
+                                                    }}
+                                                </el-dropdown-item>
+                                            </el-dropdown-menu>
+                                        </el-dropdown>
+                                    </div>
                                 </div>
-                                <div class="row justify-content-end " style="margin-left: 2px; margin-right: 2px; margin-bottom: 2px;">
-                                    
-                                    <template
-                                        v-if="data.item.stock > 0"
-                                    >
+                                <div
+                                    v-if="data.item.is_set == 0"
+                                    class="row justify-content-end "
+                                    style="margin-left: 2px; margin-right: 2px; margin-bottom: 2px;"
+                                >
+                                    <template v-if="data.item.stock > 0">
                                         <span
-                                            class="badge rounded-pill bg-primary m-l-0" style="text-align: center !important"
+                                            class="badge rounded-pill bg-primary m-l-0"
+                                            style="text-align: center !important"
                                             >Stock
                                             <template
-                                                v-if="
-                                                    data.item
-                                                        .max_quantity
-                                                "
+                                                v-if="data.item.max_quantity"
                                             >
                                                 {{
                                                     formatedStockPresentation(
                                                         data.item,
-                                                        data.item
-                                                            .stock
+                                                        data.item.stock
                                                     )
                                                 }}
                                                 <!-- {{
@@ -215,22 +210,20 @@
                                             </template>
                                             <template v-else>
                                                 {{
-                                                    parseFloat(
-                                                        data.item
-                                                            .stock
-                                                    )
+                                                    parseFloat(data.item.stock)
                                                 }}
                                             </template>
                                         </span>
                                     </template>
                                     <template v-else>
                                         <span
-                                            class="badge rounded-pill bg-danger m-l-0" style="text-align: center !important"
+                                            class="badge rounded-pill bg-danger m-l-0"
+                                            style="text-align: center !important"
                                         >
                                             Agotado
                                         </span>
                                     </template>
-                    </div>
+                                </div>
                             </div>
                         </el-tooltip>
                     </div>
@@ -476,7 +469,7 @@ export default {
                     new_part = new_part.toFixed(2);
                     text += ` ${new_part} ${unit_type.id}`;
                 }
-            }else{
+            } else {
                 if (max_quantity && max_quantity_description) {
                     text = `${general} ${max_quantity_description}`;
                 }
@@ -511,7 +504,22 @@ export default {
                 this.listFoods = _.filter(this.foods, { category_food_id: id });
             }
         },
-        addFood(index = 0, type = null) {
+        async setItemCheckStock(id,quantity) {
+            //item-sets/check/{id}
+            let pass = true;
+            const response = await this.$http.get(`/item-sets/check/${id}/${quantity}`);
+            if(response.status == 200){
+                const {success,message} = response.data;
+                if(!success){
+                    this.$toast.error(message);
+                    pass = false;
+                }
+            }
+            console.log(response);
+            return pass;
+        },
+       async addFood(index = 0, type = null) {
+      
             if (this.blockAdd && !this.configuration.box_orden) {
                 this.$toast.error("No puede agregar productos a esta orden.");
                 return;
@@ -521,17 +529,36 @@ export default {
             );
 
             if (!this.selectedFood) return;
-
-            if (
-                Number(this.selectedFood.item.stock) <= 0 &&
-                this.configuration.sales_stock == true
-            ) {
-                this.$toast.warning("Stock insuficiente");
-                return;
-            }
+            
             let foodFound = this.localOrden.filter(
                 f => f.id == this.selectedFood.id
             );
+
+            if (this.selectedFood.item.is_set == 1) {
+                if (this.configuration.sales_stock == true) {
+                    let qty = 1;
+                    if(foodFound.length != 0){
+                        qty = foodFound.reduce((a, b) => a + Number(b.quantity), 0);
+                        qty += 1;
+                    }
+                    let pass = await this.setItemCheckStock(this.selectedFood.item.id,qty);
+                    if(!pass){
+                        return;
+                    }
+                }
+            } else {
+                if (
+                    Number(this.selectedFood.item.stock) <= 0 &&
+                    this.configuration.sales_stock == true
+                ) {
+                    this.$toast.warning("Stock insuficiente");
+                    return;
+                }
+            }
+
+            // let foodFound = this.localOrden.filter(
+            //     f => f.id == this.selectedFood.id
+            // );
 
             if (foodFound.length != 0) {
                 let { item } = this.selectedFood;
@@ -568,7 +595,7 @@ export default {
                 } else {
                     qty += 1;
                 }
-                if (this.configuration.sales_stock == true) {
+                if (this.configuration.sales_stock == true && selectedFood.item.is_set == 0) {
                     if (qty > Number(this.selectedFood.item.stock)) {
                         this.$toast.warning("Limite de stock alcanzado");
                         return;
@@ -577,7 +604,7 @@ export default {
             } else {
                 if (type) {
                     let qty = type.quantity_unit;
-                    if (this.configuration.sales_stock == true) {
+                    if (this.configuration.sales_stock == true && selectedFood.item.is_set == 0) {
                         let stock = Number(this.selectedFood.item.stock);
                         if (qty == stock || qty > stock) {
                             this.$toast.warning("Limite de stock alcanzado");

@@ -67,12 +67,13 @@
                                     <tr>
                                         <th>#</th>
                                         <th>Descripción</th>
-                                        <th>Inventario actual</th>
-                                        <th>Costo</th>
+                                        <th>Almacén</th>
+                                        <th>Stock</th>
+                                        <th>Stock real</th>
+                                        {{-- 
                                         <th>Precio de venta</th>
                                         <th>Inversion</th>
-                                        <th>Margen Utilidad</th>
-                                        <th>Almacén</th>
+                                        <th>Margen Utilidad</th> --}}
                                     </tr>
 
                                     @foreach ($value['item'] as $values)
@@ -106,9 +107,13 @@
                                                     @endif
                                                 @endisset
                                             </td>
+                                            <td valign="top" class="celda  center">
+                                                {{ $values->warehouses[$iw]->warehouse->description }}</td>
                                             <td valign="top"  class="celda center">{{ $values->warehouses[$iw]->stock ?? '0.00' }}
                                             </td>
-                                            <td valign="top"  class="celda center">
+                                             <td valign="top"  class="celda center">
+                                                </td>
+                                            {{-- <td valign="top"  class="celda center">
                                                 {{ number_format($values->purchase_unit_price, 2) }}</td>
                                             <td valign="top"  class="celda  center">
                                                 {{ number_format($values->sale_unit_price, 2) ?? '0.00' }}</td>
@@ -120,20 +125,15 @@
                                                 <td valign="top" class="celda  center">0</td>
                                             @endif
                                             @if ($values->warehouses[$iw]->stock > 0)
-                                                <?php
-                                                $conteo++;
-                                                if ($values->warehouses[$iw]->stock > 0) {
-                                                    $importe_utilidad = $importe_utilidad + ($values->sale_unit_price - $values->purchase_unit_price) * $values->warehouses[$iw]->stock;
-                                                }
-                                                ?>
+                                           
                                                    <td valign="top" class="celda  center">
                                                     {{ number_format(($values->sale_unit_price - $values->purchase_unit_price) * $values->warehouses[$iw]->stock, 2) ?? '0.00' }}
                                                 </td>
                                             @else
                                             <td valign="top" class="celda  center">0</td>
                                             @endif
-                                            <td valign="top" class="celda  center">
-                                                {{ $values->warehouses[$iw]->warehouse->description }}</td>
+                                         
+                                                 --}}
                                         </tr>
                                     @endforeach
                                     <tbody>

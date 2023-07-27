@@ -32,6 +32,8 @@ class InventoryCollection extends ResourceCollection
             ;
             return [
                 'id' => $row->id,
+                'item_id' => $row->item_id,
+                'warehouse_id' => $row->warehouse_id,
                 'item_internal_id' => $row->item->internal_id,
                 'item_description' => $row->item->description,
                 'item_fulldescription' => ($row->item->internal_id) ? "{$row->item->internal_id} - {$row->item->description}" : $row->item->description,

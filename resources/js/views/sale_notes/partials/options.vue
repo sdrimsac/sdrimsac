@@ -238,11 +238,11 @@ export default {
                     customer_telephone: this.form.customer_telephone,
                     mensaje:
                         "Su comprobante de pago electrónico " +
-                        this.form.serie +
-                        "-" +
-                        this.form.number +
+                        this.form.identifier +
+                        " por S/" +
+                        this.form.total +
                         " de *" +
-                        this.company.name +
+                        this.form.establishment_description +
                         "*, ha sido generado correctamente a través del facturador electrónico de *Sdrimsac Solutions*"
                 };
                 try {

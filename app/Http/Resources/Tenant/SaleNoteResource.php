@@ -25,6 +25,8 @@ class SaleNoteResource extends JsonResource
         return [
             'from_consignment' => (bool) $this->from_consignment,
             'id' => $this->id,
+            'establishment_description' => $establishment->description,
+            'total' => $this->total,
             'external_id' => $this->external_id,
             'format_printer' => $establishment->format_printer,
             'printer' => $establishment->printer,
