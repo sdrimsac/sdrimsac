@@ -1165,7 +1165,7 @@
                                     <div class="col-md-6 mt-2"></div>
                                 </div>
                             </el-tab-pane>
-                            <el-tab-pane label="Modoss">
+                            <el-tab-pane label="Modos">
                                 <div class="row">
                                     <div class="col-md-6 mt-4">
                                         <div class="form-group">

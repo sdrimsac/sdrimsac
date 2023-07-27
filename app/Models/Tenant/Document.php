@@ -148,6 +148,22 @@ class Document extends ModelTenant
 
         );
     }
+  public function getGlobalDiscountsNoBase()
+    { 
+
+        //descuentos globales que no afectan la base
+        $allowance_total_amount = 0;
+    
+        if($this->discounts){
+            
+            $allowance_total_amount = collect($this->discounts)->sum(function($discount){
+                return (in_array($discount->discount_type_id, ['03', '63'])) ? $discount->amount : 0;
+            });
+
+        }
+
+        return $allowance_total_amount;
+    }
     public function get_document_type(){
         $document_type_id = $this->document_type_id;
         return $document_type_id == "03" ? "BOLETA" : "FACTURA";

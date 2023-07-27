@@ -6,6 +6,13 @@
     {
         return str_replace(',', '.', $string);
     }
+    
+    $amount_discount = 0;
+    if($document->discounts){
+        foreach ($document->discounts as $discount) {
+            $amount_discount = $discount->discount_type_id == 2 ? $document->total_value : $discount->base;
+        }
+    }
 @endphp
 {!! '<?xml version="1.0" encoding="utf-8" standalone="no"?>' !!}
 <Invoice xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2"
@@ -239,7 +246,7 @@
                 <cbc:AllowanceChargeReasonCode>{{ $discount->discount_type_id }}</cbc:AllowanceChargeReasonCode>
                 <cbc:MultiplierFactorNumeric>{{ replaceCommaWithDot($discount->factor) }}</cbc:MultiplierFactorNumeric>
                 <cbc:Amount currencyID="{{ $document->currency_type_id }}">{{ $discount->amount }}</cbc:Amount>
-                <cbc:BaseAmount currencyID="{{ $document->currency_type_id }}">{{ $discount->base }}</cbc:BaseAmount>
+                <cbc:BaseAmount currencyID="{{ $document->currency_type_id }}">{{ replaceCommaWithDot($discount->base) }}</cbc:BaseAmount>
             </cac:AllowanceCharge>
         @endforeach
     @endif
@@ -365,7 +372,7 @@
     <cac:LegalMonetaryTotal>
         <cbc:LineExtensionAmount currencyID="{{ $document->currency_type_id }}">{{ $document->total_value }}</cbc:LineExtensionAmount>
         @if ($document->total_discount > 0)
-            <cbc:TaxInclusiveAmount currencyID="{{ $document->currency_type_id }}">{{ $document->total_value }}</cbc:TaxInclusiveAmount>
+            <cbc:TaxInclusiveAmount currencyID="{{ $document->currency_type_id }}">{{ $amount_discount }}</cbc:TaxInclusiveAmount>
         @else
             <cbc:TaxInclusiveAmount currencyID="{{ $document->currency_type_id }}">{{ $document->total }}</cbc:TaxInclusiveAmount>
         @endif

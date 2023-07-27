@@ -595,7 +595,7 @@ export default {
                 } else {
                     qty += 1;
                 }
-                if (this.configuration.sales_stock == true && selectedFood.item.is_set == 0) {
+                if (this.configuration.sales_stock == true && this.selectedFood.item.is_set == 0) {
                     if (qty > Number(this.selectedFood.item.stock)) {
                         this.$toast.warning("Limite de stock alcanzado");
                         return;
@@ -604,7 +604,7 @@ export default {
             } else {
                 if (type) {
                     let qty = type.quantity_unit;
-                    if (this.configuration.sales_stock == true && selectedFood.item.is_set == 0) {
+                    if (this.configuration.sales_stock == true && this.selectedFood.item.is_set == 0) {
                         let stock = Number(this.selectedFood.item.stock);
                         if (qty == stock || qty > stock) {
                             this.$toast.warning("Limite de stock alcanzado");

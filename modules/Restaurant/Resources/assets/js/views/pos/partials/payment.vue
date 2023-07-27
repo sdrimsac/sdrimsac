@@ -211,6 +211,18 @@
                                             v-model="discount_amount"
                                         ></el-input-number>
                                     </div>
+                                    <!-- <div class="col-md-4 form-group">
+                                        <label class="control-label"
+                                            >Tipo de descuento</label
+                                        >
+                                        <el-checkbox v-model="discountTotal" @change="reCalculateTotal">
+                                            {{
+                                                discountTotal
+                                                    ? "Descuento del total"
+                                                    : "Descuento a la base"
+                                            }}
+                                        </el-checkbox>
+                                    </div> -->
                                 </div>
                             </div>
                         </div>
@@ -1177,6 +1189,7 @@ export default {
     },
     data() {
         return {
+            discountTotal: true,
             paymentCondition: "01",
             payment_condition: [
                 {
@@ -1265,10 +1278,12 @@ export default {
             students: [],
             bank: null,
             hasExceedBank: false
+            // percentage_igv: 18
         };
     },
 
     async created() {
+        console.log(this.percentage_igv, " el igv");
         this.conf = this.establishments.conf ?? {};
         this.button_payment = true;
         this.currentDocumentsType = this.documentsType;
@@ -2012,9 +2027,10 @@ export default {
             }
         },
         discountGlobal() {
-            this.form.total = this.form.total_value;
+            // this.form.total = this.form.total_value;
             let global_discount = parseFloat(this.discount_amount);
-            let total = parseFloat(this.form.total_value);
+            let total = parseFloat(this.form.total);
+            let base = parseFloat(this.form.total_value);
             if (global_discount > total) {
                 this.discount_amount = 0;
                 this.$forceUpdate();
@@ -2022,6 +2038,7 @@ export default {
                     "El descuento no puede ser mayor al total"
                 );
             }
+            // let total_value = parseFloat(this.form.total_value);
             let new_total = total - global_discount;
             let factor = _.round(global_discount / total, 4);
             this.form.discounts = [
@@ -2035,10 +2052,43 @@ export default {
                 }
             ];
             this.form.total_discount = global_discount;
-            this.form.total = new_total;
-            // let amount = parseFloat(global_discount);
-            // let discounts = this.splitDiscount(amount, this.form.items.length);
-            // this.setDiscountItems(discounts);
+            if (this.discountTotal) {
+                this.form.total = new_total;
+            } else {
+                let factor = _.round(global_discount / base, 4);
+                this.form.discounts = [
+                    {
+                        discount_type_id: "02",
+                        description:
+                            "Descuentos globales que afectan la base imponible del IGV/IVAP",
+                        factor,
+                        amount: global_discount,
+                        base
+                    }
+                ];
+                this.form.total_taxed = _.round(
+                    base - this.form.total_discount,
+                    2
+                );
+                this.form.total_value = this.form.total_taxed;
+                this.form.total_igv = _.round(
+                    this.form.total_taxed * (this.percentage_igv / 100),
+                    2
+                );
+
+                //impuestos (isc + igv + icbper)
+                this.form.total_taxes = _.round(
+                    this.form.total_igv +
+                        this.form.total_isc +
+                        this.form.total_plastic_bag_taxes,
+                    2
+                );
+                this.form.total = _.round(
+                    this.form.total_taxed + this.form.total_taxes,
+                    2
+                );
+                this.form.subtotal = this.form.total;
+            }
         },
         discountGlobal3() {
             let global_discount = parseFloat(this.discount_amount);
