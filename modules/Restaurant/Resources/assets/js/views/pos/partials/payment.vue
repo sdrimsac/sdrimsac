@@ -1746,7 +1746,7 @@ export default {
             };
         },
         async date_of_issue() {
-            this.discount_amount = 0;
+            // this.discount_amount = 0;
             // this.form.customer_id
             // this.form.student_id = null;
             if (!this.configuration.restrict_receipt_date) {
@@ -2083,8 +2083,7 @@ export default {
                             base,
                         }
                     ];
-                    console.log(base, " base");
-                    console.log(global_discount_amount, " disc");
+              
                     let new_base = this.form.total_value_without_rounding;
                     this.form.total_taxed = _.round(
                         new_base - global_discount_amount_without_rounding,
