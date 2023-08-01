@@ -514,7 +514,7 @@ export default {
                     let qty = type.quantity_unit;
                     if (this.configuration.sales_stock == true) {
                         let stock = Number(this.selectedFood.item.stock);
-                        if (qty == stock || qty > stock) {
+                        if ( qty > stock) {
                             this.$toast.warning("Limite de stock alcanzado");
                             return;
                         }
