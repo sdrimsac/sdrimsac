@@ -103,6 +103,8 @@ class DocumentInput
         }
         // $from_dispatch = array_key_exists('dispatch_id', $inputs);
         return [
+
+            'discount_variant' => Functions::valueKeyInArray($inputs, 'discount_variant', null),
             'college' => Functions::valueKeyInArray($inputs, 'college', false),
             'variation' => Functions::valueKeyInArray($inputs, 'variation', false),
             'boxes' => Functions::valueKeyInArray($inputs, 'boxes'),

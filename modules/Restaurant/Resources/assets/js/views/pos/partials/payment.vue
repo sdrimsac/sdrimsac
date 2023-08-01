@@ -211,18 +211,27 @@
                                             v-model="discount_amount"
                                         ></el-input-number>
                                     </div>
-                                    <!-- <div class="col-md-4 form-group">
+                                    <div
+                                        v-if="
+                                            configuration.affectation_igv_type_id ==
+                                                '10'
+                                        "
+                                        class="col-md-4 form-group"
+                                    >
                                         <label class="control-label"
                                             >Tipo de descuento</label
                                         >
-                                        <el-checkbox v-model="discountTotal" @change="reCalculateTotal">
+                                        <el-checkbox
+                                            v-model="discountTotal"
+                                            @change="reCalculateTotal"
+                                        >
                                             {{
                                                 discountTotal
                                                     ? "Descuento del total"
                                                     : "Descuento a la base"
                                             }}
                                         </el-checkbox>
-                                    </div> -->
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -2031,6 +2040,7 @@ export default {
             let global_discount = parseFloat(this.discount_amount);
             let total = parseFloat(this.form.total);
             let base = parseFloat(this.form.total_value);
+            console.log("base ",this.form.total_value);
             if (global_discount > total) {
                 this.discount_amount = 0;
                 this.$forceUpdate();
@@ -2055,39 +2065,55 @@ export default {
             if (this.discountTotal) {
                 this.form.total = new_total;
             } else {
-                let factor = _.round(global_discount / base, 4);
-                this.form.discounts = [
-                    {
-                        discount_type_id: "02",
-                        description:
-                            "Descuentos globales que afectan la base imponible del IGV/IVAP",
-                        factor,
-                        amount: global_discount,
-                        base
+                let global_discount_amount = global_discount;
+                    let global_discount_amount_without_rounding = global_discount;
+                let { discount_with_base_variant } = this.configuration;
+                if (discount_with_base_variant) {
+                    global_discount_amount = Number((global_discount / 1.18).toFixed(2));
+                    global_discount_amount_without_rounding = global_discount / 1.18;
+                } 
+                    let factor = _.round(global_discount_amount / base, 4);
+                    this.form.discounts = [
+                        {
+                            discount_type_id: "02",
+                            description:
+                                "Descuentos globales que afectan la base imponible del IGV/IVAP",
+                            factor,
+                            amount: global_discount_amount,
+                            base,
+                        }
+                    ];
+                    console.log(base, " base");
+                    console.log(global_discount_amount, " disc");
+                    let new_base = this.form.total_value_without_rounding;
+                    this.form.total_taxed = _.round(
+                        new_base - global_discount_amount_without_rounding,
+                        2
+                    );
+                    this.form.total_value = this.form.total_taxed;
+                    if (this.configuration.affectation_igv_type_id == "10") {
+                        this.form.total_igv = _.round(
+                            this.form.total_taxed * (this.percentage_igv / 100),
+                            2
+                        );
+                    } else {
+                        this.form.total_igv = 0;
                     }
-                ];
-                this.form.total_taxed = _.round(
-                    base - this.form.total_discount,
-                    2
-                );
-                this.form.total_value = this.form.total_taxed;
-                this.form.total_igv = _.round(
-                    this.form.total_taxed * (this.percentage_igv / 100),
-                    2
-                );
 
-                //impuestos (isc + igv + icbper)
-                this.form.total_taxes = _.round(
-                    this.form.total_igv +
-                        this.form.total_isc +
-                        this.form.total_plastic_bag_taxes,
-                    2
-                );
-                this.form.total = _.round(
-                    this.form.total_taxed + this.form.total_taxes,
-                    2
-                );
-                this.form.subtotal = this.form.total;
+                    //impuestos (isc + igv + icbper)
+                    this.form.total_taxes = _.round(
+                        this.form.total_igv +
+                            this.form.total_isc +
+                            this.form.total_plastic_bag_taxes,
+                        2
+                    );
+                    console.log(this.form, " form");
+                    this.form.total = _.round(
+                        this.form.total_taxed + this.form.total_taxes,
+                        2
+                    );
+                    this.form.subtotal = this.form.total;
+                
             }
         },
         discountGlobal3() {
@@ -2293,6 +2319,7 @@ export default {
             this.form.total_free = _.round(total_free, 2);
             this.form.total_igv = _.round(total_igv, 2);
             this.form.total_value = _.round(total_value, 2);
+            this.form.total_value_without_rounding = total_value;
             this.form.total_taxes = _.round(total_igv, 2);
             this.form.total_plastic_bag_taxes = _.round(
                 total_plastic_bag_taxes,

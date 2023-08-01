@@ -1137,6 +1137,30 @@
                                             ></el-switch>
                                         </div>
                                     </div>
+                                        <div class="col-md-6 mt-4">
+                                        <div class="form-group">
+                                            <label class="control-label w-100"
+                                                                                      >Descuentos variante
+
+                                                <el-tooltip
+                                                    content="Permite recalcular el precio de venta de un producto con descuento a la base"
+                                                >
+                                                    <i
+                                                        class="fa fa-info-circle"
+                                                    ></i>
+                                                </el-tooltip>
+                                            </label>
+                                            <el-switch
+                                                v-model="
+                                                    form.discount_with_base_variant
+
+                                                "
+                                                active-text="Si"
+                                                inactive-text="No"
+                                                @change="submit"
+                                            ></el-switch>
+                                        </div>
+                                    </div>
                                 </div>
                             </el-tab-pane>
                             <el-tab-pane label="Impresion">

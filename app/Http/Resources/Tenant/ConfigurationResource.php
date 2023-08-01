@@ -15,6 +15,7 @@ class ConfigurationResource extends JsonResource
     public function toArray($request)
     {
         return [
+            'discount_with_base_variant' => (bool) $this->discount_with_base_variant,
             'translate_direct'         => (bool) $this->translate_direct,
             'item_consignment_id'      => $this->item_consignment_id,
             'id'                        => $this->id,

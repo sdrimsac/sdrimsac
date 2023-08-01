@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Config;
 class Configuration extends ModelTenant
 {
     protected $fillable = [
+        'discount_with_base_variant',
         'translate_direct',
         'item_consignment_id',
         'affectation_optional',
@@ -105,6 +106,7 @@ class Configuration extends ModelTenant
         
     ];
     protected $casts = [
+        'discount_with_base_variant' => 'boolean',
         'consignment' => 'boolean',
         'commands_fisico' => 'boolean',
         'print_commands'  => 'boolean',
@@ -169,6 +171,7 @@ class Configuration extends ModelTenant
         // $skins = Skin::all();
         $skins = [];
         return [
+            'discount_with_base_variant' => (bool)$this->discount_with_base_variant,
             'translate_direct' => (bool)$this->translate_direct,
             'item_consignment_id' => $this->item_consignment_id,
             'id' => $this->id,

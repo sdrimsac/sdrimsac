@@ -8,8 +8,12 @@
     }
     
     $amount_discount = 0;
+    $discount_without_base = 0;
     if($document->discounts){
         foreach ($document->discounts as $discount) {
+            if($discount->discount_type_id == 3){
+                $discount_without_base += $discount->amount;
+            }
             $amount_discount = $discount->discount_type_id == 2 ? $document->total_value : $discount->base;
         }
     }
@@ -245,7 +249,7 @@
                 <cbc:ChargeIndicator>false</cbc:ChargeIndicator>
                 <cbc:AllowanceChargeReasonCode>{{ $discount->discount_type_id }}</cbc:AllowanceChargeReasonCode>
                 <cbc:MultiplierFactorNumeric>{{ replaceCommaWithDot($discount->factor) }}</cbc:MultiplierFactorNumeric>
-                <cbc:Amount currencyID="{{ $document->currency_type_id }}">{{ $discount->amount }}</cbc:Amount>
+                <cbc:Amount currencyID="{{ $document->currency_type_id }}">{{ replaceCommaWithDot($discount->amount )}}</cbc:Amount>
                 <cbc:BaseAmount currencyID="{{ $document->currency_type_id }}">{{ replaceCommaWithDot($discount->base) }}</cbc:BaseAmount>
             </cac:AllowanceCharge>
         @endforeach
@@ -371,13 +375,13 @@
     </cac:TaxTotal>
     <cac:LegalMonetaryTotal>
         <cbc:LineExtensionAmount currencyID="{{ $document->currency_type_id }}">{{ $document->total_value }}</cbc:LineExtensionAmount>
-        @if ($document->total_discount > 0)
-            <cbc:TaxInclusiveAmount currencyID="{{ $document->currency_type_id }}">{{ $amount_discount }}</cbc:TaxInclusiveAmount>
+        @if ($discount_without_base > 0)
+            <cbc:TaxInclusiveAmount currencyID="{{ $document->currency_type_id }}">{{$amount_discount  }}</cbc:TaxInclusiveAmount>
         @else
             <cbc:TaxInclusiveAmount currencyID="{{ $document->currency_type_id }}">{{ $document->total }}</cbc:TaxInclusiveAmount>
         @endif
-        @if ($document->total_discount > 0)
-            <cbc:AllowanceTotalAmount currencyID="{{ $document->currency_type_id }}">{{ $document->total_discount }}</cbc:AllowanceTotalAmount>
+        @if ($discount_without_base > 0)
+            <cbc:AllowanceTotalAmount currencyID="{{ $document->currency_type_id }}">{{ $discount_without_base }}</cbc:AllowanceTotalAmount>
         @endif
         @if ($document->total_charges > 0)
             <cbc:ChargeTotalAmount currencyID="{{ $document->currency_type_id }}">{{ $document->total_charges }}</cbc:ChargeTotalAmount>
