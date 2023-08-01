@@ -373,9 +373,10 @@ export default {
                 }
             } else {
                 if (type) {
-                    let qty = type.quantity_unit;
+                    let qty = Number( type.quantity_unit);
                     if (this.configuration.sales_stock == true) {
                         let stock = Number(this.selectedFood.item.stock);
+                        console.log(qty," as ",stock," sa" );
                         if ( qty > stock) {
                             this.$toast.warning("Limite de stock alcanzado");
                             return;
