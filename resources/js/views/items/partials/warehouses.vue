@@ -196,7 +196,12 @@ export default {
                 if (part != 0) {
                     let new_part = part * max_quantity;
                     new_part = new_part.toFixed(2);
-                    text += ` ${new_part} ${unit_type_description}`;
+                    if(general > 0){
+                        text += ` ${new_part} ${unit_type_description}`;
+
+                    }else{
+                        text = `${new_part} ${unit_type_description}`;
+                    }
                 }
 
                 return text;

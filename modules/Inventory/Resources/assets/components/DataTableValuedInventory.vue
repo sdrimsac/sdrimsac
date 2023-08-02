@@ -23,7 +23,7 @@
                                 </el-select>
                             </div>
                         </div>
-                            <div class="col-md-2">
+                            <!-- <div class="col-md-2">
                             <div class="form-group">
                                 <label class="control-label">Tipo Reporte</label>
                                 <el-select v-model="form.typeresult" clearable filterable>
@@ -31,8 +31,8 @@
                                     <el-option value="Resumen" label="Resumen"></el-option>
                                 </el-select>
                             </div>
-                        </div>
-                        <div class="col-lg-4 col-md-4 col-md-4 col-sm-12">
+                        </div> -->
+                        <div class="col-lg-4 col-md-4 col-md-4 col-sm-12 d-flex align-items-center">
                             <el-button class="submit" type="primary" @click.prevent="getRecordsByFilter" :loading="loading_submit" icon="el-icon-search" >Buscar</el-button>
                             <template v-if="records.length>0">
 

@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Modules\Inventory\Http\Controllers\TransferController;
 use Modules\Inventory\Http\Controllers\TransferPlaceController;
 use Modules\Inventory\Models\TransferPlace;
+Route::get('reports/valued/excel', 'ReportValuedStockController@exportExcel');
 
 Route::middleware(['auth', 'redirect.module', 'locked.tenant'])->group(function () {
     // Config inventory
@@ -89,6 +90,9 @@ Route::middleware(['auth', 'redirect.module', 'locked.tenant'])->group(function 
         Route::get('stockmin/getListProv', 'ReportStockMinController@getListProv');
         Route::post('stockmin/genOrdenCompraMasiva', 'ReportStockMinController@genOrdenCompraMasiva');
 
+        Route::get('valued', 'ReportValuedStockController@index')->name('reports.valued.index');
+        Route::get('valued/records', 'ReportValuedStockController@report_cash');
+ 
 
         Route::get('series/', 'VentaSeriesController@index')->name('reports.series.index');
         Route::post('series/getDataSeries', 'VentaSeriesController@getDataSeries');

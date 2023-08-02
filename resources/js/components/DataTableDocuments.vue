@@ -217,6 +217,23 @@
                             </el-select>
                         </div>
                     </div>
+                          <div class="col-lg-2 col-md-2 col-sm-12 pb-2">
+                        <div class="form-group">
+                            <label class="control-label w-100">Condición de pago</label>
+                            <el-select
+                                v-model="search.payment_condition_id"
+                                filterable
+                                clearable
+                            >
+                                <el-option
+                                    v-for="option in payment_conditions"
+                                    :key="option.id"
+                                    :value="option.id"
+                                    :label="option.name"
+                                ></el-option>
+                            </el-select>
+                        </div>
+                    </div>
                     <div class="col-lg-2 col-md-2 col-sm-12 mt-4">
                         <div class="form-group">
                             <el-checkbox v-model="search.pending_payment"
@@ -325,6 +342,7 @@ export default {
             establishments: [],
             series: [],
             activePanel: 0,
+            payment_conditions: [],
             see_more: false,
             totals: null,
             pickerOptionsDates: {
@@ -351,6 +369,7 @@ export default {
             this.document_types = response.data.document_types;
             this.all_series = response.data.series;
             this.establishments = response.data.establishments;
+            this.payment_conditions = response.data.payment_conditions;
         });
 
         await this.getRecords();

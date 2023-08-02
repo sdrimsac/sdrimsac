@@ -2106,6 +2106,11 @@ export default {
                     100;
         },
         async submit() {
+
+            if(this.form.max_quantity && !this.form.max_quantity_description){
+                this.$toast.warning("Ingrese una descripción del contenedor para la cantidad máxima");
+                return false;
+            }
              if(!this.form.category_id){
                 this.$toast.warning("Seleccione una categoria");
                 return false;

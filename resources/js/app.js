@@ -732,6 +732,11 @@ const app = new Vue({
                 /* webpackChunkName:"js/stockmin-report"*/
                 "../../modules/Inventory/Resources/assets/js/stockminReport/report.vue"
             ),
+            "valued-report": () =>
+            import(
+                /* webpackChunkName:"js/valued-report"*/
+                "../../modules/Inventory/Resources/assets/js/valuedReport/index.vue"
+            ),
         "college-schoolsupplies": () =>
             import(
                 /* webpackChunkName:"js/stockmin-report"*/

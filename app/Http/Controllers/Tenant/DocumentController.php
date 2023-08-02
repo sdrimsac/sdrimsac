@@ -1409,6 +1409,7 @@ class DocumentController extends Controller
         $customer_id = $request->customer_id;
         $item_id = $request->item_id;
         $category_id = $request->category_id;
+        $payment_condition_id = $request->payment_condition_id;
         if ($d_start && $d_end) {
             $records = Document::where('document_type_id', 'like', '%' . $document_type_id . '%')
                 ->where('soap_type_id', '=', $soap_type_id)
@@ -1447,6 +1448,9 @@ class DocumentController extends Controller
         if ($customer_id) {
             $records = $records->where('customer_id', $customer_id);
         }
+        if($payment_condition_id){
+            $records = $records->where('payment_condition_id', $payment_condition_id);
+        }
 
         if ($item_id) {
             $records = $records->whereHas('items', function ($query) use ($item_id) {
@@ -1476,8 +1480,8 @@ class DocumentController extends Controller
         $document_types = DocumentType::whereIn('id', ['01', '03', '07', '08'])->get();
         $series = Series::whereIn('document_type_id', ['01', '03', '07', '08'])->get();
         $establishments = Establishment::where('id', auth()->user()->establishment_id)->get(); // Establishment::all();
-
-        return compact('customers', 'document_types', 'series', 'establishments', 'state_types', 'items', 'categories');
+        $payment_conditions = PaymentCondition::all();
+        return compact('customers','payment_conditions' ,'document_types', 'series', 'establishments', 'state_types', 'items', 'categories');
     }
 
 

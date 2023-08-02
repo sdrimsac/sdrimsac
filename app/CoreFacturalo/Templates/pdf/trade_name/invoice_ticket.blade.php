@@ -668,6 +668,10 @@
         </tr>
         @endif
         </tr>
+        <tr>
+            <td colspan="4" class="text-left font-bold desc"><b>FORMA DE PAGO</b></td>
+            <td class="text-left font-bold desc">{{ mb_strtoupper($document->payment_condition->name) }}</td>
+        </tr>
         {{-- <tr>
             <td class="desc pt-3"><b>OBSERVACION:</b> {{ trim($document->observation) }}
             @isset($document->additional_information)
@@ -715,6 +719,7 @@
         {{-- <tr>
         <td class="text-center desc">Código Hash: {{ $document->hash }}</td>
     </tr> --}}
+
 
         @if ($customer->department_id == 16)
             <tr>

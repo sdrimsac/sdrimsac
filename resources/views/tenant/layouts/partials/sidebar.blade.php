@@ -484,6 +484,13 @@
                     </a>
                 </li>
                 <li>
+                    <a class="{{ $path[0] === 'reports' && $path[1] === 'valued' ? 'active' : '' }}"
+                        href="{{ route('reports.valued.index') }}">
+                        
+                        <i class="icofont-dollar"></i> Stock valorizado
+                    </a>
+                </li>
+                <li>
                     <a class="{{ $path[0] === 'reports' && $path[1] === 'inventory' ? 'active' : '' }}"
                         href="{{ route('reports.inventory.index') }}">
                         <i class="icofont-box"></i> Stock Producto
