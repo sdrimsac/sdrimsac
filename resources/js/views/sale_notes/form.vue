@@ -1776,6 +1776,7 @@ export default {
             this.filterCustomersUser();
         },
         addRow(row) {
+            console.log(row);
             if (this.recordItem) {
                 this.form.items[this.recordItem.indexi] = row;
                 this.recordItem = null;

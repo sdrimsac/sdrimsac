@@ -118,12 +118,15 @@ export default {
                     return this.$toast.error("Ingrese un número válido");
                 }
                 this.loading = true;
-                console.log(this.resource);
                 let b64 = await this.getBase64FromUrl(this.resource);
+                let extension = ".pdf";
+                if (this.resource.includes(".xlsx")) {
+                    extension = ".xlsx";
+                }
                 b64 = b64.split(",")[1];
                 this.socket.emit("sendFile", {
                     file: b64,
-                    name: `${this.message.split(" ").join("-")}.pdf`,
+                    name: `${this.message.split(" ").join("-")}${extension}`,
                     number: `51${this.number}`,
                     sender: this.sender
                 });
