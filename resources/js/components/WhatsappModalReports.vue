@@ -120,7 +120,7 @@ export default {
                 this.loading = true;
                 let b64 = await this.getBase64FromUrl(this.resource);
                 let extension = ".pdf";
-                if (this.resource.includes(".xlsx")) {
+                if (this.name.includes(".xlsx")) {
                     extension = ".xlsx";
                 }
                 b64 = b64.split(",")[1];
@@ -131,6 +131,7 @@ export default {
                     sender: this.sender
                 });
                 this.$toast.success("Se envió el mensaje");
+                this.close();
             } catch (e) {
                 let msg = "Ocurrió un error";
 
