@@ -120,13 +120,11 @@ export default {
                 this.loading = true;
                 let b64 = await this.getBase64FromUrl(this.resource);
                 let extension = ".pdf";
-                if (this.name.includes(".xlsx")) {
-                    extension = ".xlsx";
-                }
+             
                 b64 = b64.split(",")[1];
                 this.socket.emit("sendFile", {
                     file: b64,
-                    name: `${this.message.split(" ").join("-")}${extension}`,
+                    name: `${this.message.split(" ").join("-")}${this.message.includes(".xlsx") ? "":extension}`,
                     number: `51${this.number}`,
                     sender: this.sender
                 });
