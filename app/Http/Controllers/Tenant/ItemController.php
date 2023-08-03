@@ -49,6 +49,7 @@ use App\Models\Tenant\InventoryKardex;
 use App\Models\Tenant\ItemWarehousePrice;
 use App\Models\Tenant\Kardex;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Modules\Inventory\Models\Warehouse as WarehouseModule;
 
 
@@ -482,6 +483,7 @@ class ItemController extends Controller
         try {
 
             $item = Item::findOrFail($id);
+            ItemUnitType::where('item_id', $id)->delete();
             if ($item) {
                 Food::where('item_id', $id)->delete();
             }
@@ -493,7 +495,7 @@ class ItemController extends Controller
                 'message' => 'Producto eliminado con éxito'
             ];
         } catch (Exception $e) {
-
+            Log::error($e->getMessage());
             return ($e->getCode() == '23000') ? ['success' => false, 'message' => 'El producto esta siendo usado por otros registros, no puede eliminar'] : ['success' => false, 'message' => 'Error inesperado, no se pudo eliminar el producto'];
         }
     }

@@ -18,6 +18,9 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Tenant\Kardex;
 use App\Models\Tenant\InventoryKardex;
 use App\Models\Tenant\ItemUnitType;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
+use Modules\Item\Models\ItemLotsGroup;
 
 class ItemsImport implements ToCollection
 {
@@ -50,6 +53,9 @@ class ItemsImport implements ToCollection
             $area_description = strtoupper($row[16]);
             $max_quantity = $row[30];
             $max_quantity_description = $row[31];
+            $lote_code = ($row[32]) ?: null;
+            $lote_date = ($row[33]) ?: null;
+
             $establishment_id = 1;
 
             $warehouse = Warehouse::where('establishment_id',  request('warehouse_id'))->first();
@@ -138,7 +144,23 @@ class ItemsImport implements ToCollection
                         'item_id'     => $item->id
                     ]);
 
-
+                    if($lote_code && $lote_date){
+                        try{
+                            $format_date = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($lote_date)->format('Y-m-d');
+                            if($format_date){
+                                ItemLotsGroup::create([
+                                    'code' => $lote_code,
+                                    'item_id' => $item->id,
+                                    'warehouse_id' => $warehouse->id,
+                                    'quantity' => $stock,
+                                    'date_of_due' => $format_date,
+                                ]);
+                            }
+                         
+                        }catch(Exception $e){
+                            Log::error($e->getMessage());
+                        }
+                    }
 
                     foreach ($prices as $price) {
                         $this->insertPriceifExist($item->id, $price, $warehouse_id);
