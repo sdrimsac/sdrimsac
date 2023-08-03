@@ -155,6 +155,9 @@ class ItemsImport implements ToCollection
                                     'quantity' => $stock,
                                     'date_of_due' => $format_date,
                                 ]);
+                                $item->update([
+                                    'lots_enabled' => true,
+                                ]);
                             }
                          
                         }catch(Exception $e){

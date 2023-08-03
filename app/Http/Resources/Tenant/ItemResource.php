@@ -4,6 +4,7 @@ namespace App\Http\Resources\Tenant;
 
 use Modules\Restaurant\Models\Food;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Modules\Item\Models\ItemLotsGroup;
 
 class ItemResource extends JsonResource
 {
@@ -16,6 +17,17 @@ class ItemResource extends JsonResource
     public function toArray($request)
     {
         $foods = Food::where('item_id', $this->id)->first();
+        $lot_code = null;
+        $date_of_due = null;
+        if($this->lots_enabled){
+            $lot_group = ItemLotsGroup::where('item_id', $this->id)->first();
+
+            if($lot_group){
+                $lot_code = $lot_group->code;
+                $date_of_due = $lot_group->date_of_due;
+            }
+     
+        }
 
         return [
             'max_quantity_description' => $this->max_quantity_description,
@@ -54,7 +66,7 @@ class ItemResource extends JsonResource
             'account_id' => $this->account_id,
             'category_id' => $this->category_id,
             'brand_id' => $this->brand_id,
-            'date_of_due' => $this->date_of_due,
+            'date_of_due' => $date_of_due,
             'image_url' => ($this->image !== 'imagen-no-disponible.jpg') ? asset('storage' . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'items' . DIRECTORY_SEPARATOR . $this->image) : asset("/logo/{$this->image}"),
             'individual_items' => $this->sets->transform(function ($row, $key) {
                 $full_description = ($row->individual_item->internal_id) ? $row->individual_item->internal_id . ' - ' . $row->individual_item->description : $row->individual_item->description;
@@ -72,7 +84,7 @@ class ItemResource extends JsonResource
             'apply_store' => (bool)$this->apply_store,
             //  'individual_items' => collect($this->sets)->pluck('individual_item_id'),
             'commission_amount' => $this->commission_amount,
-            'lot_code' => $this->lot_code,
+            'lot_code' => $lot_code,
             'lots' => $this->lots->transform(function ($row, $key) {
                 return [
                     'id' => $row->id,

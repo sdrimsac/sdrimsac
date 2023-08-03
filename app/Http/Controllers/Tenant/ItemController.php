@@ -484,6 +484,7 @@ class ItemController extends Controller
 
             $item = Item::findOrFail($id);
             ItemUnitType::where('item_id', $id)->delete();
+            ItemLotsGroup::where('item_id', $id)->delete();
             if ($item) {
                 Food::where('item_id', $id)->delete();
             }
