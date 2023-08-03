@@ -70,7 +70,7 @@
                                         justify-content-between
                                         p-1
                                         "
-                                style="height: 182px;"
+                                style="height: 190px;"
                             >
                                 <div @click="addFood(index)">
                                     <div>
@@ -133,7 +133,7 @@
 
                                 <div
                                     class="d-flex justify-content-between"
-                                    style="padding-right: 10px; margin-top: 5px"
+                                    style="padding-right: 10px; margin-top: 2px"
                                 >
                                     <div
                                         class="d-flex flex-column align-items-end"
@@ -179,6 +179,28 @@
                                         </el-dropdown>
                                     </div>
                                 </div>
+                                    <div class="d-flex justify-content-center m-1"
+                                            v-if="
+                                                data.item.lots_enabled == 1 &&
+                                                    data.item.date_of_due
+                                            "
+                                        >
+                                            <el-tag
+                                                :type="
+                                                    `${
+                                                        isExpired(
+                                                            data.item
+                                                                .date_of_due
+                                                        )
+                                                            ? 'danger'
+                                                            : 'primary'
+                                                    }`
+                                                "
+                                            >
+                                                Fecha de vencimiento:
+                                                {{ data.item.date_of_due }}
+                                            </el-tag>
+                                        </div>
                                 <div
                                     v-if="data.item.is_set == 0"
                                     class="row justify-content-end "
@@ -370,6 +392,15 @@ export default {
     },
 
     methods: {
+          isExpired(date){
+            let today = new Date();
+            let dateOfDue = new Date(date);
+            if(today > dateOfDue){
+                return true;
+            }
+            return false;
+    
+        },
         handleResize() {
             this.screenWidth = window.innerWidth;
         },

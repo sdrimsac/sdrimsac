@@ -156,6 +156,8 @@ class ItemsImport implements ToCollection
                                     'date_of_due' => $format_date,
                                 ]);
                                 $item->update([
+                                    'lot_code' => $lote_code,
+                                    'date_of_due' => $format_date,
                                     'lots_enabled' => true,
                                 ]);
                             }

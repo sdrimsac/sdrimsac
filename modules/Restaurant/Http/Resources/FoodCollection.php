@@ -8,6 +8,7 @@ use App\Models\Tenant\Warehouse;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Support\Facades\Storage;
 use Modules\Item\Models\ItemLot;
+use Modules\Item\Models\ItemLotsGroup;
 
 class FoodCollection extends ResourceCollection
 {
@@ -22,6 +23,13 @@ class FoodCollection extends ResourceCollection
         return $this->collection->transform(function ($row, $key) {
             $user = auth()->user();
             $item = $row->item;
+            if($item->lots_enabled && $item->lot_code == null){
+                $lot_group = ItemLotsGroup::where('item_id', $item->id)->first();
+                if($lot_group){
+                    $item->lot_code = $lot_group->code;
+                    $item->date_of_due = $lot_group->date_of_due;
+                }
+            }
             $stock = 0;
             $price = $row->price;
             if (!array_key_exists($user->type, ["admin", "superadmin"])) {

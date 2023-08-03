@@ -79,6 +79,28 @@
                                                 >
                                             </span>
                                         </div>
+                                        <div
+                                            v-if="
+                                                data.item.lots_enabled == 1 &&
+                                                    data.item.date_of_due
+                                            "
+                                        >
+                                            <el-tag
+                                                :type="
+                                                    `${
+                                                        isExpired(
+                                                            data.item
+                                                                .date_of_due
+                                                        )
+                                                            ? 'danger'
+                                                            : 'success'
+                                                    }`
+                                                "
+                                            >
+                                                Fecha de vencimiento:
+                                                {{ data.item.date_of_due }}
+                                            </el-tag>
+                                        </div>
                                         <div>
                                             <template
                                                 v-if="data.item.stock > 0"
@@ -133,7 +155,7 @@
                 </div>
             </template>
         </div>
-        
+
         <view-image
             :image="currentImage"
             :showDialog.sync="showImage"
@@ -292,8 +314,17 @@ export default {
     mounted(){
         this.screenWidth = window.innerWidth;
         window.addEventListener("resize", this.handleResize);
-    }, 
+    },
     methods: {
+        isExpired(date){
+            let today = new Date();
+            let dateOfDue = new Date(date);
+            if(today > dateOfDue){
+                return true;
+            }
+            return false;
+    
+        },
         getDefaultPrice(type) {
             let listPricesDescription = ["price1", "price2", "price3"];
             let currentPriceIndx =
