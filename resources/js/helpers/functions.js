@@ -2,7 +2,7 @@ function calculateRowItem(
     row_old,
     currency_type_id_new,
     exchange_rate_sale,
-    pigv
+    pigv = 0.18
 ) {
     // console.log(currency_type_id_new, exchange_rate_sale)
 
@@ -217,8 +217,6 @@ function calculateRowItem(
             row.discounts.splice(index, discount);
         });
     }
-    // console.log('total base discount:'+discount_base)
-    // console.log('total no base discount:'+discount_no_base)
 
     /* Charges */
     let charge_base = 0;
@@ -237,8 +235,6 @@ function calculateRowItem(
             row.charges.splice(index, charge);
         });
     }
-    // console.log('total base charge:'+charge_base)
-    // console.log('total no base charge:'+charge_no_base)
 
     let total_isc = 0;
     let total_other_taxes = 0;
@@ -248,7 +244,6 @@ function calculateRowItem(
     let total_value = total_value_partial - total_discount + total_charge;
     let total_base_igv = total_value_partial - discount_base + total_isc;
 
-    // console.log(total_base_igv, total_value)
 
     let total_igv = 0;
 

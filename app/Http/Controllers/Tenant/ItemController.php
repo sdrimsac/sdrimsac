@@ -80,6 +80,17 @@ class ItemController extends Controller
         ];
     }
 
+    public function generateCode()
+    {
+        $new_code = "";
+        $item = Item::where('internal_id', 'like', '9%')->whereRaw('LENGTH(internal_id) = 8')->orderBy('internal_id', 'desc')->first();
+        if (!$item) {
+            $new_code = "90000000";
+        } else {
+            $new_code = intval($item->internal_id) + 1;
+        }
+        return $new_code;
+    }
     public function tablesImport()
     {
         $user = auth()->user();
@@ -118,8 +129,8 @@ class ItemController extends Controller
         ];
     }
     public function getRecords($request)
-    {   
-        $datos = $request->value ;
+    {
+        $datos = $request->value;
         $textoIntoArray =  explode(' ', $datos);
 
         switch ($request->column) {
@@ -144,23 +155,23 @@ class ItemController extends Controller
                     ->whereIsNotActive();
                 break;
             case 'description':
-                if(count($textoIntoArray) === 1){ 
+                if (count($textoIntoArray) === 1) {
                     $records = Item::whereTypeUser()
-                    ->whereNotIsSet()
-                    ->where('description', 'like', "%{$request->value}%")
-                    ->orWhere('internal_id', 'like', "%{$request->value}%")
-                    ->orWhere('second_name', 'like', "%{$request->value}%");
+                        ->whereNotIsSet()
+                        ->where('description', 'like', "%{$request->value}%")
+                        ->orWhere('internal_id', 'like', "%{$request->value}%")
+                        ->orWhere('second_name', 'like', "%{$request->value}%");
                     break;
-                }else{
+                } else {
                     $records = Item::whereTypeUser()
-                    ->whereNotIsSet();
+                        ->whereNotIsSet();
                     foreach ($textoIntoArray as $key => $value) {
                         $records->where('description', 'like', '%' . $value . '%');
                     }
 
                     break;
                 }
-                
+
             case 'category':
                 $records = Item::whereTypeUser()
                     ->whereNotIsSet()
@@ -174,7 +185,7 @@ class ItemController extends Controller
                     ->where($request->column, 'like', "%{$request->value}%");
                 break;
         }
-        
+
 
         return $records->orderBy('description');
     }
@@ -183,7 +194,8 @@ class ItemController extends Controller
     {
         return view('tenant.items.form');
     }
-    public function check_all_stock(){
+    public function check_all_stock()
+    {
         return view('tenant.items.index_check_stock');
     }
     public function check_stock(Request $request)
@@ -197,16 +209,16 @@ class ItemController extends Controller
                     ->where('item_lots.has_sale', 0)
                     ->where('item_lots.state', 'Activo');
             })
-            ->whereRaw('(SELECT COUNT(*) FROM item_lots WHERE item_lots.item_id = items.id AND item_lots.has_sale = 0 AND item_lots.state = "Activo") != items.stock');
+                ->whereRaw('(SELECT COUNT(*) FROM item_lots WHERE item_lots.item_id = items.id AND item_lots.has_sale = 0 AND item_lots.state = "Activo") != items.stock');
 
-           
-        
+
+
             $query->orWhere(function ($subquery) {
                 $subquery->whereRaw('(SELECT SUM(stock) FROM item_warehouse WHERE item_warehouse.item_id = items.id) != items.stock');
             });
         });
-        
-        
+
+
 
 
 
@@ -228,9 +240,12 @@ class ItemController extends Controller
         $categories = CategoryItem::all();
 
         $brands = Brand::all();
-  $configuration = Configuration::select(
+        $configuration = Configuration::select(
             'init_stock',
-            'affectation_igv_type_id', 'restaurant','promotions_sell')->firstOrFail();
+            'affectation_igv_type_id',
+            'restaurant',
+            'promotions_sell'
+        )->firstOrFail();
 
 
         return compact(
@@ -256,11 +271,12 @@ class ItemController extends Controller
         return $record;
     }
 
+
     public function store(ItemRequest $request)
     {
         $all_establishment = $request->all_establishment;
         $id = $request->input('id');
-        
+
         $item = Item::firstOrNew(['id' => $id]);
         $item->item_type_id = '01';
         $item->amount_plastic_bag_taxes = Configuration::firstOrFail()->amount_plastic_bag_taxes;
@@ -380,29 +396,40 @@ class ItemController extends Controller
         }
         $lote = null;
         if ($request['lot_code']) {
-            $item_group = new ItemLotsGroup;
-            $item_group->warehouse_id = $request['warehouse_id'];
-            $item_group->item_id = $item->id;
-            $item_group->date_of_due = $request['date_of_due'];
-            $item_group->code = $request['lot_code'];
-            $item_group->quantity = $request['stock'];
-            $item_group->save();
-            $lote = $item_group->id;
+            $exists = ItemLotsGroup::where('code', $request['lot_code'])
+                ->where('warehouse_id', $request['warehouse_id'])
+                ->where('item_id', $item->id)
+                ->first();
+            if (!$exists) {
+                $item_group = new ItemLotsGroup;
+                $item_group->warehouse_id = $request['warehouse_id'];
+                $item_group->item_id = $item->id;
+                $item_group->date_of_due = $request['date_of_due'];
+                $item_group->code = $request['lot_code'];
+                $item_group->quantity = $request['stock'];
+                $item_group->save();
+                $lote = $item_group->id;
+            }
         }
         $v_lots = isset($request->lots) ? $request->lots : [];
 
         foreach ($v_lots as $lot) {
-
-
-            $item->lots()->create([
-                'date' => $lot['date'],
-                'series' => $lot['series'],
-                'item_id' => $item->id,
-                'warehouse_id' => $request['warehouse_id'],
-                'has_sale' => false,
-                'lote_id' => $lote,
-                'state' => $lot['state'],
-            ]);
+            $series = $lot['series'];
+            $item_id = $item->id;
+            $exists = ItemLot::where('series', $series)->where('item_id', $item_id)
+                ->where('warehouse_id', $request['warehouse_id'])
+                ->first();
+            if (!$exists) {
+                $item->lots()->create([
+                    'date' => $lot['date'],
+                    'series' => $lot['series'],
+                    'item_id' => $item->id,
+                    'warehouse_id' => $request['warehouse_id'],
+                    'has_sale' => false,
+                    'lote_id' => $lote,
+                    'state' => $lot['state'],
+                ]);
+            }
         }
 
         //---------------------------------

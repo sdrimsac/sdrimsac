@@ -8,6 +8,7 @@
         @open="create"
         append-to-body
         top="7vh"
+        v-loading="loading"
     >
         <form autocomplete="off" @submit.prevent="submit">
             <div class="form-body">
@@ -1615,6 +1616,7 @@ export default {
 
     data() {
         return {
+            loading:true,
             allEstablishment: false,
             showDialogLots: false,
             form_category: { add: false, name: null, id: null },
@@ -1953,7 +1955,14 @@ export default {
                     : null;
             this.setDefaultConfiguration();
         },
-        create() {
+        async generateCode(){
+            this.loading = true
+            const response = await this.$http(`/items/generate_code`);
+            this.form.internal_id = response.data;
+            this.loading = false
+        }
+        ,
+        async create() {
             this.titleDialog = this.recordId
                 ? "Editar Productos"
                 : "Nuevo Producto";
@@ -2011,6 +2020,7 @@ export default {
                         } else this.form.series_enabled = false;
                     });
             } else {
+                await this.generateCode();
                 this.showSeries = true;
                 this.form.area_id = 2;
             }

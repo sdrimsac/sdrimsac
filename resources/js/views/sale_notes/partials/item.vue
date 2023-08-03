@@ -217,6 +217,7 @@
                         >
                             <label class="control-label">Cantidad</label>
                             <el-input-number
+                            class="w-100"
                                 @focus="$event.target.select()"
                                 ref="cantidad"
                                 v-model="form.quantity"
@@ -1026,13 +1027,11 @@ export default {
         });
 
         this.$eventHub.$on("selectWarehouseId", warehouse_id => {
-            // console.log(warehouse_id)
             this.form.warehouse_id = warehouse_id;
         });
     },
     methods: {
         async searchRemoteItems(input) {
-            // console.log(input)
 
             if (input.length > 2) {
                 this.loading_search = true;
@@ -1074,7 +1073,6 @@ export default {
                 this.form.item_id = item.id;
                 this.changeItem();
             }
-            // console.log(item)
         },
         clickWarehouseDetail() {
             if (!this.form.item_id) {
@@ -1292,7 +1290,6 @@ export default {
             this.calculateQuantity();
 
             this.form.lots_group = this.form.item.lots_group;
-            // console.log(this.recordItem)
             // if (!this.recordItem) {
             //     await this.form.item.warehouses.forEach(element => {
             //         if(element.checked){
@@ -1430,7 +1427,7 @@ export default {
                 this.form,
                 this.currencyTypeIdActive,
                 this.exchangeRateSale,
-                "sale-notes"
+               this.percentage_igv / 100
             );
             let select_lots = await _.filter(this.row.item.lots, {
                 has_sale: true

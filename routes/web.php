@@ -252,6 +252,7 @@ if ($hostname) {
                 Route::get('items/records', [App\Http\Controllers\Tenant\ItemController::class, 'records']);
                 Route::post('items/updateprice', [App\Http\Controllers\Tenant\ItemController::class, 'updateprice']);
                 Route::get('items/check_stock', [ItemController::class, 'check_stock']);
+                Route::get('items/generate_code', [ItemController::class, 'generateCode']);
 
                 Route::get('items/record/{item}', [App\Http\Controllers\Tenant\ItemController::class, 'record']);
                 Route::post('items', [App\Http\Controllers\Tenant\ItemController::class, 'store']);

@@ -89,7 +89,7 @@
                 let duplicates = await _.filter(this.lots, {'series':data})
                 if(duplicates.length > 1)
                 {
-                    this.lots[index].series = ''
+                    this.lots[index].series = null;
                 }
             },
             create(){

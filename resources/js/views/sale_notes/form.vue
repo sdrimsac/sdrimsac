@@ -904,7 +904,11 @@
                                                     {{ row.quantity }}
                                                 </td>
                                                 <td class="text-end">
-                                                    {{ row.unit_price }}
+                                                    {{
+                                                        row.unit_price.toFixed(
+                                                            2
+                                                        )
+                                                    }}
                                                 </td>
 
                                                 <td class="text-end">
@@ -1453,7 +1457,6 @@ export default {
             let total_value = 0;
             let total = 0;
             let total_plastic_bag_taxes = 0;
-
             this.form.items.forEach(row => {
                 total_discount += parseFloat(row.total_discount);
                 total_charge += parseFloat(row.total_charge);
@@ -1776,7 +1779,6 @@ export default {
             this.filterCustomersUser();
         },
         addRow(row) {
-            console.log(row);
             if (this.recordItem) {
                 this.form.items[this.recordItem.indexi] = row;
                 this.recordItem = null;
@@ -1837,6 +1839,7 @@ export default {
             let total = 0;
             let total_rounded = 0;
             let total_payment = 0;
+
             this.form.items.forEach(row => {
                 total_discount += parseFloat(row.total_discount);
                 total_charge += parseFloat(row.total_charge);
@@ -1905,7 +1908,6 @@ export default {
             // this.form.total_payment=Math.round(parseFloat(total_venta)* 10) / 10
         },
         async print_pdf(PrinterName, FileLink) {
-            console.log("FileLink", FileLink);
             try {
                 let config = qz.configs.create(PrinterName, {
                     scaleContent: false
