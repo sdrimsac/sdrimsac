@@ -42,7 +42,7 @@
                             <a
                                 class="dropdown-item"
                                 href="javascript:void(0)"
-                                    @click.prevent="clickImport()"
+                                @click.prevent="clickImport()"
                             >
                                 <i class="fa fa-upload"></i> Importar</a
                             >
@@ -98,7 +98,7 @@
                             </el-dropdown>
                         </div>
                         <div class="card-body">
-                            <data-table :resource="resource">
+                            <data-table ref="datatable" :resource="resource">
                                 <tr slot="heading">
                                     <th>#</th>
                                     <th>Serie</th>
@@ -111,6 +111,7 @@
                                     </th>
                                     <th>Vendido</th>
                                     <th>Estado</th>
+                                    <th></th>
                                 </tr>
 
                                 <tr></tr>
@@ -136,36 +137,90 @@
                                     <td>
                                         {{ row.active }}
                                     </td>
+                                    <td>
+                                        <el-button
+                                            size="mini"
+                                            type="success"
+                                            @click="editSerie(row.id)"
+                                            >Editar</el-button
+                                        >
+                                        <el-button
+                                            size="mini"
+                                            type="danger"
+                                            @click="removeSerie(row.id)"
+                                            >Eliminar</el-button
+                                        >
+                                    </td>
                                 </tr>
                             </data-table>
                         </div>
                     </div>
                 </div>
-                
             </div>
         </div>
-          <series-import
-                    :showDialog.sync="showImportDialog"
-                ></series-import>
+        <series-import :showDialog.sync="showImportDialog"></series-import>
+
+        <form-serie-edit
+            :showDialog.sync="showFormDialog"
+            :recordId.sync="recordId"
+            @reload="reload"
+        >
+        </form-serie-edit>
     </div>
 </template>
 
 <script>
+const FormSerieEdit = () => import("./form_edit.vue");
 import DataTable from "../components/Datatable.vue";
 import SeriesImport from "./series_import.vue";
 export default {
-    components: { DataTable,SeriesImport },
+    components: { DataTable, SeriesImport, FormSerieEdit },
     data() {
         return {
             resource: "lotitem",
             columns: {},
-            showImportDialog:false,
+            showImportDialog: false,
+            recordId: null,
+            showFormDialog: false
         };
     },
-    methods:{
-         clickImport() {
+    methods: {
+        reload() {
+            this.$refs.datatable.getRecords();
+        },
+        clickImport() {
             this.showImportDialog = true;
         },
+        editSerie(id) {
+            this.recordId = id;
+            this.showFormDialog = true;
+        },
+        async removeSerie(id) {
+            try {
+                await this.$confirm(
+                    "¿Está seguro de eliminar el registro?",
+                    "Eliminar",
+                    {
+                        confirmButtonText: "Sí",
+                        cancelButtonText: "No",
+                        type: "warning"
+                    }
+                );
+                const response = await this.$http.get(`/lotitem/delete/${id}`);
+                if (response.data.success) {
+                    this.$toast({
+                        message: response.data.message,
+                        type: "success"
+                    });
+                    this.$refs.datatable.getRecords();
+                } else {
+                    this.$toast({
+                        message: response.data.message,
+                        type: "error"
+                    });
+                }
+            } catch (e) {}
+        }
     }
 };
 </script>

@@ -151,6 +151,32 @@ class LotItemController extends Controller
             ->establishment($establishment)
             ->download('Reporte_Serie_' . Carbon::now() . '.xlsx');
     }
+    public function record($id){
+        $record = ItemLot::find($id);
+        return compact('record');
+    }
+    public function delete_record($id){
+        $record = ItemLot::find($id);
+        $item_id = $record->item_id;
+        $warehouse_id = $record->warehouse_id;
+        ItemWarehouse::where('item_id', $item_id)->where('warehouse_id', $warehouse_id)->update(['stock' => DB::raw('stock - 1')]);
+        Item::where('id', $item_id)->update(['stock' => DB::raw('stock - 1')]);
+        $record->delete();
+        return [
+            'success' => true,
+            'message' => 'Registro eliminado'
+        ];
+    }
+    public function update_record(Request $request){
+        $id = $request->id;
+        $record = ItemLot::find($id);
+        $record->update($request->all());
+        return [
+            'success' => true,
+            'message' => 'Registro actualizado'
+        ];
+
+    }
     public function records(Request $request)
     {
         $series = $request->series;
