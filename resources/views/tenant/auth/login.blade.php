@@ -10,10 +10,10 @@
     </div>
 @endsection
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        limpiarcache(false);
+    // document.addEventListener('DOMContentLoaded', function() {
+    //     limpiarcache(false);
 
-    });
+    // });
 
     function limpiarcache(reload = true) {
         const btnrefresh = document.getElementById('btn-refresh');
