@@ -863,38 +863,5 @@ const app = new Vue({
                 "../../modules/Inventory/Resources/assets/js/series/reporteSeriesSell.vue"
             )
     },
-    created() {
-        window.addEventListener("keydown", this.handleKeyDown);
-    },
-    destroyed() {
-        window.removeEventListener("keydown", this.handleKeyDown);
-    },
-    methods: {
-        handleKeyDown(event) {
-            if (event.keyCode === 120) {
-                if ("caches" in window) {
-                    caches.keys().then(function(cacheNames) {
-                        console.log(cacheNames);
-                        cacheNames.forEach(function(cacheName) {
-                            caches.delete(cacheName);
-                        });
-                    });
-                }
-
-                navigator.serviceWorker
-                    ?.getRegistrations()
-                    .then(function(registrations) {
-                        console.log(registrations);
-                        for (let registration of registrations) {
-                            registration.unregister();
-                        }
-                    });
-                    this.$toast.success("Se limpio el cache del navegador");
-
-                    setTimeout(() => {
-                        window.location.reload();
-                    }, 1000);
-            }
-        }
-    }
+ 
 });

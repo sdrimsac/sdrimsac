@@ -206,6 +206,34 @@
     <script src="{{ asset('qz/qz-tray.js') }}"></script>
     <script src="{{ asset('js/app.js') }}"></script>
     <script>
+      document.addEventListener('keydown', function(event) {
+          if (event.keyCode === 120) {
+              if ("caches" in window) {
+                  caches.keys().then(function(cacheNames) {
+                      console.log(cacheNames);
+                      cacheNames.forEach(function(cacheName) {
+                          caches.delete(cacheName);
+                      });
+                  });
+              }
+
+              navigator.serviceWorker
+                  ?.getRegistrations()
+                  .then(function(registrations) {
+                      console.log(registrations);
+                      for (let registration of registrations) {
+                          registration.unregister();
+                      }
+                  });
+                 
+
+                  setTimeout(() => {
+                      window.location.reload();
+                  }, 1000);
+          }
+      });
+    </script>
+    <script>
         $(window).on('load', function() {
             if (feather) {
                 feather.replace({

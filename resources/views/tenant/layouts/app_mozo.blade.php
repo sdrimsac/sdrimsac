@@ -454,6 +454,34 @@
 
     <!-- Vendor Scripts Start -->
     <script src="{{ mix('/js/app.js') }}"></script>
+    <script>
+      document.addEventListener('keydown', function(event) {
+          if (event.keyCode === 120) {
+              if ("caches" in window) {
+                  caches.keys().then(function(cacheNames) {
+                      console.log(cacheNames);
+                      cacheNames.forEach(function(cacheName) {
+                          caches.delete(cacheName);
+                      });
+                  });
+              }
+
+              navigator.serviceWorker
+                  ?.getRegistrations()
+                  .then(function(registrations) {
+                      console.log(registrations);
+                      for (let registration of registrations) {
+                          registration.unregister();
+                      }
+                  });
+                 
+
+                  setTimeout(() => {
+                      window.location.reload();
+                  }, 1000);
+          }
+      });
+    </script>
     {{--
      <script src="{{ asset('acorn/js/vendor/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('acorn/js/vendor/OverlayScrollbars.min.js') }}"></script>
