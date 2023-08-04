@@ -41,6 +41,7 @@ const options = {
 };
 
 Vue.use(Toast, options);
+
 /* Vue toast (notificaciones personalizadas )  */
 
 //Vue.prototype.$http.defaults.withCredentials = false;
@@ -53,41 +54,73 @@ Vue.use(Toast, options);
 // Vue.component('table-column', TableColumn);
 
 // System
-Vue.component('system-clients-index', require('./views/system/clients/index.vue'));
-Vue.component('system-clients-form', require('./views/system/clients/form.vue'));
-Vue.component('system-users-form', require('./views/system/users/form.vue'));
+Vue.component(
+    "system-clients-index",
+    require("./views/system/clients/index.vue")
+);
+Vue.component(
+    "system-clients-form",
+    require("./views/system/clients/form.vue")
+);
+Vue.component("system-users-form", require("./views/system/users/form.vue"));
 
-Vue.component('system-certificate-index', require('./views/system/certificate/index.vue'));
-Vue.component('system-companies-form', require('./views/system/companies/form.vue'));
+Vue.component(
+    "system-certificate-index",
+    require("./views/system/certificate/index.vue")
+);
+Vue.component(
+    "system-companies-form",
+    require("./views/system/companies/form.vue")
+);
 
 // Vue.component('system-accounting-index', require('@viewsModuleAccount/system/accounting/index.vue'));
-Vue.component('system-plans-index', require('./views/system/plans/index.vue'));
-Vue.component('system-plans-form', require('./views/system/plans/form.vue'));
+Vue.component("system-plans-index", require("./views/system/plans/index.vue"));
+Vue.component("system-plans-form", require("./views/system/plans/form.vue"));
 //auto update
-Vue.component('system-update', require('./views/system/update/index.vue'));
+Vue.component("system-update", require("./views/system/update/index.vue"));
 
-Vue.component('system-logo', require('./views/system/logo/index.vue'));
+Vue.component("system-logo", require("./views/system/logo/index.vue"));
 //auto update
-Vue.component('system-backup', require('./views/system/backup/index.vue'));
+Vue.component("system-backup", require("./views/system/backup/index.vue"));
 
 //culqi
-Vue.component('system-configuration-culqi', require('./views/system/configuration/culqi.vue'))
+Vue.component(
+    "system-configuration-culqi",
+    require("./views/system/configuration/culqi.vue")
+);
 
 //apk url
-Vue.component('system-configuration-apk-url', require('./views/system/configuration/apk-url.vue'))
+Vue.component(
+    "system-configuration-apk-url",
+    require("./views/system/configuration/apk-url.vue")
+);
 
 //token
-Vue.component('system-configuration-token', require('./views/system/configuration/token_ruc_dni.vue'))
+Vue.component(
+    "system-configuration-token",
+    require("./views/system/configuration/token_ruc_dni.vue")
+);
 
 // php info
-Vue.component('system-php-configuration', require('./views/system/configuration/php_info.vue'))
-Vue.component('system-server-status', require('./views/system/configuration/server_status.vue'))
+Vue.component(
+    "system-php-configuration",
+    require("./views/system/configuration/php_info.vue")
+);
+Vue.component(
+    "system-server-status",
+    require("./views/system/configuration/server_status.vue")
+);
 
 //Configuración global del login
-Vue.component('system-login-settings', require('./views/system/configuration/login.vue'))
+Vue.component(
+    "system-login-settings",
+    require("./views/system/configuration/login.vue")
+);
 
-Vue.component('system-login-other-configuration', require('./views/system/configuration/other_configuration.vue'))
-
+Vue.component(
+    "system-login-other-configuration",
+    require("./views/system/configuration/other_configuration.vue")
+);
 
 //
 Vue.component(
@@ -374,7 +407,7 @@ const app = new Vue({
                 /* webpackChunkName:"js/tenant-cash-index" */
                 "../../modules/Restaurant/Resources/assets/js/views/cash/index.vue"
             ),
-            "cash-index-closed": () =>
+        "cash-index-closed": () =>
             import(
                 /* webpackChunkName:"js/tenant-cash-closed" */
                 "@views/cash/closed.vue"
@@ -732,7 +765,7 @@ const app = new Vue({
                 /* webpackChunkName:"js/stockmin-report"*/
                 "../../modules/Inventory/Resources/assets/js/stockminReport/report.vue"
             ),
-            "valued-report": () =>
+        "valued-report": () =>
             import(
                 /* webpackChunkName:"js/valued-report"*/
                 "../../modules/Inventory/Resources/assets/js/valuedReport/index.vue"
@@ -763,7 +796,7 @@ const app = new Vue({
                 /* webpackChunkName:"js/tenant-dispatches-create"*/
                 "./views/dispatches/create.vue"
             ),
-            "tenant-internet-pos": () =>
+        "tenant-internet-pos": () =>
             import(
                 /* webpackChunkName:"js/tenant-internet-pos" */
                 "../../modules/Internet/Resources/assets/js/view/pos/index.vue"
@@ -773,7 +806,7 @@ const app = new Vue({
                 /* webpackChunkName:"js/tenant-internet-planes" */
                 "../../modules/Internet/Resources/assets/js/view/planes/index.vue"
             ),
-            "items-stock" : () =>
+        "items-stock": () =>
             import(
                 /*webpackChunkName:"tenant-registers-index"*/
                 "./views/items/check_stock.vue"
@@ -796,12 +829,12 @@ const app = new Vue({
                 /*webpackChunkName:"tenant-quotations-edit"*/
                 "./views/quotations/form_edit.vue"
             ),
-//report-consignment-index
-"report-consignment-index": () =>
-import(
-    /*webpackChunkName:"report-credit-index"*/
-    "../../modules/Report/Resources/assets/js/views/consignment/index.vue"
-),
+        //report-consignment-index
+        "report-consignment-index": () =>
+            import(
+                /*webpackChunkName:"report-credit-index"*/
+                "../../modules/Report/Resources/assets/js/views/consignment/index.vue"
+            ),
         "report-credit-index": () =>
             import(
                 /*webpackChunkName:"report-credit-index"*/
@@ -812,27 +845,56 @@ import(
                 /*webpackChunkName:"tenant-search-index"*/
                 "./views/search/index.vue"
             ),
-             
 
-        "tenant-registers-index" : () =>
+        "tenant-registers-index": () =>
             import(
                 /*webpackChunkName:"tenant-registers-index"*/
                 "./views/registers/index.vue"
             ),
-            
-            "tenant-consignment-index" : ()=>
+
+        "tenant-consignment-index": () =>
             import(
                 /*webpackChunkName:"tenant-consigment-index"*/
                 "@viewsModuleConsignment/index.vue"
             ),
-            "report-series-vendidas" : ()=>
+        "report-series-vendidas": () =>
             import(
                 /*webpackChunkName:"reporte-series-vendidas"*/
                 "../../modules/Inventory/Resources/assets/js/series/reporteSeriesSell.vue"
-            ),
+            )
+    },
+    created() {
+        window.addEventListener("keydown", this.handleKeyDown);
+    },
+    destroyed() {
+        window.removeEventListener("keydown", this.handleKeyDown);
+    },
+    methods: {
+        handleKeyDown(event) {
+            if (event.keyCode === 120) {
+                if ("caches" in window) {
+                    caches.keys().then(function(cacheNames) {
+                        console.log(cacheNames);
+                        cacheNames.forEach(function(cacheName) {
+                            caches.delete(cacheName);
+                        });
+                    });
+                }
 
+                navigator.serviceWorker
+                    ?.getRegistrations()
+                    .then(function(registrations) {
+                        console.log(registrations);
+                        for (let registration of registrations) {
+                            registration.unregister();
+                        }
+                    });
+                    this.$toast.success("Se limpio el cache del navegador");
 
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1000);
+            }
+        }
     }
 });
-
-
