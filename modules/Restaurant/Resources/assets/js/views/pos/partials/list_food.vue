@@ -197,7 +197,7 @@
                                                     }`
                                                 "
                                             >
-                                                Fecha de vencimiento:
+                                                {{data.item.lot_code}} - 
                                                 {{ data.item.date_of_due }}
                                             </el-tag>
                                         </div>

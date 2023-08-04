@@ -218,6 +218,7 @@
     <script src="{{ asset('qz/dependencies/sha-256.min.js') }}"></script>
     <script src="{{ asset('qz/qz-tray.js') }}"></script>
      <script src="{{ asset('js/app.js') }}"></script>
+     <script src="{{ mix('/js/clear_cache.js') }}"></script>
     <!-- Page Specific Scripts End -->
   </body>
 </html>

@@ -506,6 +506,7 @@
                 <div class="container">
                     <div class="row">
                         <div class="col-12 col-sm-12">
+                            <i class="fas fa-code" role="button" onclick="limpiarcache()"></i>
                             @php
                             $commit = exec('git rev-parse HEAD');
                             $commit = substr($commit, 0, 7);
@@ -584,6 +585,7 @@
     <script src="{{ asset('qz/dependencies/sha-256.min.js') }}"></script>
     <script src="{{ asset('qz/qz-tray.js') }}"></script>
     <script src="{{ mix('/js/app.js') }}"></script>
+    <script src="{{ mix('/js/clear_cache.js') }}"></script>
     <!-- Page Specific Scripts End -->
 </body>
 

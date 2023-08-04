@@ -159,6 +159,7 @@
             <div class="container">
               <div class="row">
                 <div class="col-12 col-sm-6">
+                  <i class="fas fa-code" role="button" onclick="limpiarcache()"></i>
                    @php
                        $commit = exec('git rev-parse HEAD');
                        $commit = substr($commit, 0, 7);
@@ -454,6 +455,7 @@
 
     <!-- Vendor Scripts Start -->
     <script src="{{ mix('/js/app.js') }}"></script>
+    <script src="{{ mix('/js/clear_cache.js') }}"></script>
     {{--
      <script src="{{ asset('acorn/js/vendor/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('acorn/js/vendor/OverlayScrollbars.min.js') }}"></script>

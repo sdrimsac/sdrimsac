@@ -237,6 +237,7 @@
         </div>
     </section> 
     <script src="{{ asset('js/app.js') }}"></script>
+    <script src="{{ mix('/js/clear_cache.js') }}"></script>
   
 </body>
 </html>
