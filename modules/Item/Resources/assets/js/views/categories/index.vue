@@ -55,7 +55,9 @@
                     <h6 class="my-0 text-white">Listado de {{ title }}</h6>
                 </div>
                 <div class="card-body">
-                    <data-table :resource="resource">
+                    <data-table :resource="resource"
+                    @clickReport="clickReport"
+                    >
                         <tr slot="heading">
                             <th>#</th>
                             <th>Nombre</th>
@@ -131,6 +133,10 @@ export default {
         this.title = "Categorías";
     },
     methods: {
+                clickReport(query = null) {
+            let { column, value } = query;
+            window.open(`/items/categories/export?column=${column||''}&value=${value||''}`, '_blank');
+        },
         async changeDrag(row) {
             try {
                 this.loading = true;

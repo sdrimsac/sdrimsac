@@ -2,6 +2,8 @@
 
 namespace Modules\Item\Http\Controllers;
 
+use App\Models\Tenant\Company;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
@@ -9,6 +11,7 @@ use Modules\Item\Models\Brand;
 use Modules\Item\Http\Resources\BrandCollection;
 use Modules\Item\Http\Resources\BrandResource;
 use Modules\Item\Http\Requests\BrandRequest;
+use Modules\Report\Exports\BrandExport;
 
 class BrandController extends Controller
 {
@@ -32,6 +35,17 @@ class BrandController extends Controller
                             ->latest();
 
         return new BrandCollection($records->paginate(config('tenant.items_per_page')));
+    }
+    public function export(Request $request)
+    {
+        $company = Company::first();
+        $records = Brand::where($request->column, 'like', "%{$request->value}%")
+                            ->get();
+
+                            return (new BrandExport)
+                            ->records($records)
+                            ->company($company)
+                            ->download('Reporte_de_marcas_'.Carbon::now().'.xlsx');
     }
 
 

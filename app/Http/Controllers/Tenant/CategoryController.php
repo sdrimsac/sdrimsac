@@ -8,12 +8,16 @@ use App\Http\Resources\Tenant\CategoryResource;
 use App\Models\Tenant\Category;
 use Exception;
 use App\Http\Controllers\Controller;
+use App\Models\Tenant\Company;
 use App\Models\Tenant\Configuration;
 use App\Models\Tenant\Item;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Modules\Report\Exports\CategoryExport;
 
 class CategoryController extends Controller
 {
+  
     public function index()                     //Llama al template Blade de laravel
     {
         $configuration = Configuration::first();

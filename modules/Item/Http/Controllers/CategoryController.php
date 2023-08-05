@@ -3,8 +3,10 @@
 namespace Modules\Item\Http\Controllers;
 
 use App\Http\Resources\Tenant\ItemCollection;
+use App\Models\Tenant\Company;
 use App\Models\Tenant\Configuration;
 use App\Models\Tenant\Item;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -15,6 +17,7 @@ use Modules\Item\Http\Resources\CategoryResource;
 use Modules\Item\Http\Requests\CategoryRequest;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Modules\Report\Exports\CategoryExport;
 use Modules\Restaurant\Models\Food;
 
 class CategoryController extends Controller
@@ -25,6 +28,17 @@ class CategoryController extends Controller
         $configuration = Configuration::first();
 
         return view('item::category.index', compact('configuration'));
+    }
+    public function export(Request $request)
+    {
+        $company = Company::first();
+        $records = CategoryItem::where($request->column, 'like', "%{$request->value}%")
+            ->get();
+
+        return (new CategoryExport)
+            ->records($records)
+            ->company($company)
+            ->download('Reporte_de_categorias_' . Carbon::now() . '.xlsx');
     }
 
     public function searchItemsByCategory($category_id, Request $request)

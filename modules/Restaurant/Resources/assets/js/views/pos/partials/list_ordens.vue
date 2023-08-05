@@ -2371,7 +2371,7 @@ export default {
         changeName(idx) {
             this.currentIdx = idx;
             let ordens = [...this.localOrden];
-            this.name_pdf= ordens[idx].food.description;
+            this.name_pdf = ordens[idx].food.description;
             this.showChangeName = true;
         },
         updateWarehouse(order, index) {
