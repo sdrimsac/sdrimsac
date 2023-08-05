@@ -80,15 +80,24 @@ class ItemController extends Controller
             // 'description' => 'Descripción'
         ];
     }
-
+ 
     public function generateCode()
     {
+        $regex = '/^\d+$/';
         $new_code = "";
         $item = Item::where('internal_id', 'like', '9%')->whereRaw('LENGTH(internal_id) = 8')->orderBy('internal_id', 'desc')->first();
         if (!$item) {
             $new_code = "90000000";
         } else {
-            $new_code = intval($item->internal_id) + 1;
+            $internal_id = $item->internal_id;
+            if(preg_match($regex, $internal_id) === 1){
+                $new_code = $internal_id + 1;
+            }else{
+                $new_code = "90000000";
+            }
+
+
+
         }
         return $new_code;
     }
