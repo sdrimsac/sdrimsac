@@ -492,7 +492,11 @@
                     </cbc:Description>
                 @else
                     <cbc:Description>
-                        <![CDATA[{{ $row->item->description }}]]>
+                        @if($row->name_product_pdf)
+                            <![CDATA[{{ $row->name_product_pdf }}]]>
+                        @else
+                            <![CDATA[{{ $row->item->description }}]]>
+                        @endif
                     </cbc:Description>
                 @endif
 

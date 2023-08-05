@@ -1152,9 +1152,26 @@
                                                             <h3
                                                                 class="lead font-weight-light"
                                                             >
-                                                                {{
-                                                                    order_pend.food.description.toUpperCase()
-                                                                }}
+                                                                <template
+                                                                    v-if="
+                                                                        order_pend
+                                                                            .food
+                                                                            .item
+                                                                            .name_product_pdf
+                                                                    "
+                                                                >
+                                                                    {{
+                                                                        order_pend.food.item.name_product_pdf.toUpperCase()
+                                                                    }}
+                                                                </template>
+                                                                <template
+                                                                    v-else
+                                                                >
+                                                                    {{
+                                                                        order_pend.food.description.toUpperCase()
+                                                                    }}
+                                                                </template>
+
                                                                 <span
                                                                     v-if="
                                                                         order_pend.type_id
@@ -1169,6 +1186,43 @@
                                                                         >
                                                                     </small>
                                                                 </span>
+                                                                <el-tooltip
+                                                                    content="Cambiar nombre del producto"
+                                                                >
+                                                                    <el-tag
+                                                                        role="button"
+                                                                        type="success"
+                                                                        size="mini"
+                                                                        @click="
+                                                                            changeName(
+                                                                                indexx
+                                                                            )
+                                                                        "
+                                                                    >
+                                                                        <i
+                                                                            class="fas fa-edit text-black"
+                                                                        ></i>
+                                                                    </el-tag>
+                                                                </el-tooltip>
+                                                                <el-tooltip
+                                                                v-if="order_pend.food.item.name_product_pdf"
+                                                                    content="Restaurar nombre del producto"
+                                                                >
+                                                                    <el-tag
+                                                                        role="button"
+                                                                        type="danger"
+                                                                        size="mini"
+                                                                        @click="
+                                                                            restoreName(
+                                                                                indexx
+                                                                            )
+                                                                        "
+                                                                    >
+                                                                        <i
+                                                                            class="fas fa-times text-black"
+                                                                        ></i>
+                                                                    </el-tag>
+                                                                </el-tooltip>
                                                             </h3>
                                                             <p
                                                                 class="
@@ -1271,13 +1325,13 @@
                                                                         <input
                                                                             type="text"
                                                                             :readonly="
-                                                                                 order_pend
-                                                                                        .food
-                                                                                        .item
-                                                                                        .is_set ==
-                                                                                        1 ||
-                                                                            isConsignment ||
-                                                                                !configuration.quantity_cash ||
+                                                                                order_pend
+                                                                                    .food
+                                                                                    .item
+                                                                                    .is_set ==
+                                                                                    1 ||
+                                                                                    isConsignment ||
+                                                                                    !configuration.quantity_cash ||
                                                                                     order_pend
                                                                                         .food
                                                                                         .item
@@ -1315,16 +1369,17 @@
                                                                                 class="spin-up"
                                                                                 data-spin="up"
                                                                                 :disabled="
-                                                                                 order_pend
-                                                                                        .food
-                                                                                        .item
-                                                                                        .is_set ==1 ||
-                                                                                isConsignment ||
                                                                                     order_pend
                                                                                         .food
                                                                                         .item
-                                                                                        .series_enabled ==
+                                                                                        .is_set ==
                                                                                         1 ||
+                                                                                        isConsignment ||
+                                                                                        order_pend
+                                                                                            .food
+                                                                                            .item
+                                                                                            .series_enabled ==
+                                                                                            1 ||
                                                                                         (order_pend
                                                                                             .food
                                                                                             .item
@@ -1352,13 +1407,12 @@
                                                                                 class="spin-down"
                                                                                 data-spin="down"
                                                                                 :disabled="
-                                                                             
-                                                                                 isConsignment ||
-                                                                                    order_pend
-                                                                                        .food
-                                                                                        .item
-                                                                                        .series_enabled ==
-                                                                                        1 ||
+                                                                                    isConsignment ||
+                                                                                        order_pend
+                                                                                            .food
+                                                                                            .item
+                                                                                            .series_enabled ==
+                                                                                            1 ||
                                                                                         (order_pend
                                                                                             .food
                                                                                             .item
@@ -1697,17 +1751,35 @@
                                                                 }}</small
                                                             >
                                                         </div>
-                                                        <div class="row" v-if="isConsignment">
-                                                            <div class="col-md-4" v-if="!order_pend.is_penalty">
-                                                                <label for="warehouse">Para el almacen</label>
-                                                                     <el-input-number
-                                                                        :min="0"
-                                                                     @change="updateWarehouse(order_pend, indexx)"
-                                                                     class="w-100"
-                                                                     controls-position="right"
-                                                                v-model="order_pend.toWarehouse"
+                                                        <div
+                                                            class="row"
+                                                            v-if="isConsignment"
+                                                        >
+                                                            <div
+                                                                class="col-md-4"
+                                                                v-if="
+                                                                    !order_pend.is_penalty
+                                                                "
+                                                            >
+                                                                <label
+                                                                    for="warehouse"
+                                                                    >Para el
+                                                                    almacen</label
                                                                 >
-
+                                                                <el-input-number
+                                                                    :min="0"
+                                                                    @change="
+                                                                        updateWarehouse(
+                                                                            order_pend,
+                                                                            indexx
+                                                                        )
+                                                                    "
+                                                                    class="w-100"
+                                                                    controls-position="right"
+                                                                    v-model="
+                                                                        order_pend.toWarehouse
+                                                                    "
+                                                                >
                                                                 </el-input-number>
                                                             </div>
                                                         </div>
@@ -2003,6 +2075,24 @@
             @limpiarForm="limpiarForm"
         >
         </consignment-form>
+        <el-dialog
+            :visible.sync="showChangeName"
+            title="Cambiar nombre de producto"
+            @close="showChangeName = false"
+            @open="name_pdf = null"
+            append-to-body
+        >
+            <div class="row m-2">
+                <el-input v-model="name_pdf" placeholder="Ingrese un nombre">
+                </el-input>
+            </div>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="showChangeName = false">Cancelar</el-button>
+                <el-button type="primary" @click="changeNamePdf"
+                    >Guardar</el-button
+                >
+            </div>
+        </el-dialog>
     </div>
 </template>
 <style>
@@ -2090,6 +2180,8 @@ export default {
 
     data() {
         return {
+            name_pdf: null,
+            showChangeName: false,
             isConsignment: false,
             showConsignmentForm: false,
             deleteGeneralOrden: false,
@@ -2264,21 +2356,38 @@ export default {
         await this.getTags();
     },
     methods: {
+        restoreName(idx) {
+            let ordens = [...this.localOrden];
+            ordens[idx].food.item.name_product_pdf = null;
+            this.$emit("update:localOrden", ordens);
+        },
+        changeNamePdf() {
+            let idx = this.currentIdx;
+            let ordens = [...this.localOrden];
+            ordens[idx].food.item.name_product_pdf = this.name_pdf;
+            this.$emit("update:localOrden", ordens);
+            this.showChangeName = false;
+        },
+        changeName(idx) {
+            this.currentIdx = idx;
+            this.showChangeName = true;
+        },
         updateWarehouse(order, index) {
             let ordens = [...this.localOrden];
             ordens[index].toWarehouse = order.toWarehouse;
-            let newQuantity = ordens[index].originalQuantity - order.toWarehouse;
-            if(newQuantity < 0){
+            let newQuantity =
+                ordens[index].originalQuantity - order.toWarehouse;
+            if (newQuantity < 0) {
                 this.$toast.error("No puede ser mayor a la cantidad original");
                 ordens[index].toWarehouse = 0;
                 ordens[index].quantity = ordens[index].originalQuantity;
-            }else{
-                ordens[index].quantity = ordens[index].originalQuantity - order.toWarehouse;
+            } else {
+                ordens[index].quantity =
+                    ordens[index].originalQuantity - order.toWarehouse;
             }
             this.$emit("update:localOrden", ordens);
         },
         setConsignment(consigment) {
-            
             this.isConsignment = true;
         },
         removeConsignment() {
@@ -2804,23 +2913,21 @@ export default {
             }
         },
         async cancelOrden() {
-            try{
-                  let res = await this.$confirm(
-                "Desea cancelar este pedido?",
-                "Cancelar",
-                {
-                    confirmButtonText: "Ok",
-                    cancelButtonText: "Cancelar",
-                    type: "warning"
+            try {
+                let res = await this.$confirm(
+                    "Desea cancelar este pedido?",
+                    "Cancelar",
+                    {
+                        confirmButtonText: "Ok",
+                        cancelButtonText: "Cancelar",
+                        type: "warning"
+                    }
+                );
+                if (res) {
+                    this.isConsignment = false;
+                    this.$emit("cancelOrden");
                 }
-            );
-            if (res) {
-                this.isConsignment = false;
-                this.$emit("cancelOrden");
-            }
-            }catch(e){
-                
-            }
+            } catch (e) {}
         },
         addNumberPin(number) {
             if (this.pin.length >= 4) {

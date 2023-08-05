@@ -162,7 +162,11 @@
                         @if (isset($row->item->descriptionInternet))
                             {{ $row->item->descriptionInternet }}
                         @else
-                            {!! $row->item->description !!}
+                            @if ($row->item->name_product_pdf)
+                                {{ $row->item->name_product_pdf }}
+                            @else
+                                {{ $row->item->description }}
+                            @endif
                         @endif
 
                         @if (isset($row->item->from_unit_type_id_desc))
