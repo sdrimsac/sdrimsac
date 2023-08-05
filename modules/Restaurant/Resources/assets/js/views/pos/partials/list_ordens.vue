@@ -1187,6 +1187,7 @@
                                                                     </small>
                                                                 </span>
                                                                 <el-tooltip
+                                                                v-if="configuration.edit_name_product"
                                                                     content="Cambiar nombre del producto"
                                                                 >
                                                                     <el-tag
@@ -2079,7 +2080,6 @@
             :visible.sync="showChangeName"
             title="Cambiar nombre de producto"
             @close="showChangeName = false"
-            @open="name_pdf = null"
             append-to-body
         >
             <div class="row m-2">
@@ -2370,6 +2370,8 @@ export default {
         },
         changeName(idx) {
             this.currentIdx = idx;
+            let ordens = [...this.localOrden];
+            this.name_pdf= ordens[idx].food.description;
             this.showChangeName = true;
         },
         updateWarehouse(order, index) {
