@@ -85,7 +85,7 @@ class ItemController extends Controller
     {
         $regex = '/^\d+$/';
         $new_code = "";
-        $item = Item::where('internal_id', 'regexp', '^9[0-9]{7}$')->first();
+        $item = Item::where('internal_id', 'regexp', '^9[0-9]{7}$')->orderBy('internal_id', 'desc')->first();
         if (!$item) {
             $new_code = "90000000";
         } else {
