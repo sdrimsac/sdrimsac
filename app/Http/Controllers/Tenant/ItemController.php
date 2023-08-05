@@ -85,13 +85,13 @@ class ItemController extends Controller
     {
         $regex = '/^\d+$/';
         $new_code = "";
-        $item = Item::where('internal_id', 'like', '9%')->whereRaw('LENGTH(internal_id) = 8')->orderBy('internal_id', 'desc')->first();
+        $item = Item::where('internal_id', 'regexp', '^[0-9]{8}$')->first();
         if (!$item) {
             $new_code = "90000000";
         } else {
             $internal_id = $item->internal_id;
             if(preg_match($regex, $internal_id) === 1){
-                $new_code = $internal_id + 1;
+                $new_code = intval($internal_id) + 1;
             }else{
                 $new_code = "90000000";
             }
