@@ -472,7 +472,7 @@
                     </td>
                     <td class="text-center desc-9 align-top">{{ $row->item->unit_type_id }}</td>
                     <td class="text-left desc-9 align-top">
-                        @if (isset($row->item->name_product_pdf))
+                        @if (isset($row->name_product_pdf))
                             {!! $row->name_product_pdf !!}
                         @else
                             @if (isset($row->item->description_internet))

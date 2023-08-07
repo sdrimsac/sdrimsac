@@ -293,8 +293,8 @@
                         @if (isset($row->item->descriptionInternet))
                             {{ $row->item->descriptionInternet }}
                         @else
-                            @if (isset($row->item->name_product_pdf))
-                                {{ $row->item->name_product_pdf }}
+                            @if (isset($row->name_product_pdf))
+                                {{ $row->name_product_pdf }}
                             @else
                                 {{ $row->item->description }}
                             @endif

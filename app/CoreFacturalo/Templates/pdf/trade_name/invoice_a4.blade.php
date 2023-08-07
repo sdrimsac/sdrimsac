@@ -370,7 +370,7 @@
                             <td class="text-left align-top bordes" height="20px">
 
 
-                                @if (isset($row->item->name_product_pdf))
+                                @if (isset($row->name_product_pdf))
                                     {{ $row->name_product_pdf }}
                                 @else
                                     @if (isset($row->item->description_internet))
