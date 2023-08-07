@@ -36,6 +36,8 @@ if ($hostname) {
             Route::get('sale-notes/print/{external_id}/{format?}', [App\Http\Controllers\Tenant\SaleNoteController::class, 'toPrint']);
             Route::get('sale-notes/schedule/{sale_note_id}', [App\Http\Controllers\Tenant\SaleNoteController::class, 'schedule']);
             Route::get('receipt/print/{external_id}', [App\Http\Controllers\Tenant\ReceiptController::class, 'toPrint']);
+            Route::get('getDesarrollador', [App\Http\Controllers\Tenant\UserController::class, 'getDesarrollador']);
+
             //Route::post('logout', [App\Http\Controllers\Tenant\LoginController::class, 'logout'])->name('logout');
             Route::post('auth', [App\Http\Controllers\Tenant\LoginController::class, 'authenticate'])->name('authenticate');
 

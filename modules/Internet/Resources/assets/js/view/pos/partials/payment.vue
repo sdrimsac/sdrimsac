@@ -1523,7 +1523,7 @@ export default {
                         number +
                         " de *" +
                         this.company.name +
-                        "*, ha sido generado correctamente a través del facturador electrónico de *Sdrimsac Solutions*"
+                        "*, ha sido generado correctamente a través del facturador electrónico de "+"*"+this.$desarrollador+"*"
                 };
                 try {
                     this.loading = true;

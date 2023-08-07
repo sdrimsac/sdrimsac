@@ -9,6 +9,7 @@ use App\Models\Tenant\Module;
 use App\Models\Tenant\User;
 use Illuminate\Http\Request;
 use App\Http\Resources\Tenant\UserCollection;
+use App\Models\Tenant\Desarrollador;
 use Modules\LevelAccess\Models\ModuleLevel;
 
 class UserController extends Controller
@@ -26,6 +27,14 @@ class UserController extends Controller
          return view('tenant.users.index',compact('type'));
     }
 
+    public function getDesarrollador(){
+        $desarrollador = Desarrollador::first();
+        $name = "Sdrimsac Solutions";
+        if($desarrollador){
+            $name = $desarrollador->name;
+        }
+        return $name;
+    }
     public function update_pin(Request  $request){
         $pin = $request->input('pin');
         $user = User::findOrFail($request->input('id'));

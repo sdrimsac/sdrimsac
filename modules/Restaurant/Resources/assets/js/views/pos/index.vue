@@ -2050,7 +2050,7 @@ export default {
                     total +
                     " de *" +
                     this.establishments.description +
-                    "*, ha sido generado correctamente a través del facturador electrónico de *Sdrimsac Solutions*";
+                    "*, ha sido generado correctamente a través del facturador electrónico de "+"*"+this.$desarrollador+"*"
                 if (message) {
                     basicMessage += "\n" + message;
                 }

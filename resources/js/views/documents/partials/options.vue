@@ -264,7 +264,7 @@ export default {
                         this.form.total +
                         " de *" +
                         this.form.establishment_description +
-                        "*, ha sido generado correctamente a través del facturador electrónico de *Sdrimsac Solutions*"
+                        "*, ha sido generado correctamente a través del facturador electrónico de "+"*"+this.$desarrollador+"*"
                 };
                 try {
                     this.loading = true;

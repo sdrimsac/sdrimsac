@@ -9,7 +9,6 @@
             autocomplete="off"
             @submit.prevent="clickAddItem"
             @keydown.enter.prevent
-          
         >
             <div class="form-body">
                 <div class="row">
@@ -44,6 +43,7 @@
                                 ></el-option>
                             </el-select>
                             <el-input
+                                ref="input_barcode"
                                 v-if="barcode_lector"
                                 v-model="input_barcode"
                                 placeholder="Buscar"
@@ -518,6 +518,7 @@ export default {
     components: { itemForm, LotsForm },
     data() {
         return {
+            changing_name: false,
             input_barcode: null,
             barcode_lector: false,
             timer: null,
@@ -564,8 +565,9 @@ export default {
     },
     methods: {
         async searchItems() {
+            if (this.changing_name) return (this.changing_name = false);
             let input = this.input_barcode;
-            console.log(input);
+
             if (input.length > 2) {
                 this.loading_search = true;
                 let parameters = `input=${input}`;
@@ -584,7 +586,7 @@ export default {
                             this.filterItems();
                         } else {
                             this.form.item_id = this.items[0].id;
-                            this.changeItem();
+                            this.changeItem(true);
                         }
                     });
             }
@@ -794,9 +796,13 @@ export default {
                 Number(this.unids) * Number(this.form.quantity);
             this.form.total_price = this.form.unit_price * this.form.quantity;
         },
-        changeItem() {
+        changeItem(changing_name = false) {
             this.form.item = _.find(this.items, { id: this.form.item_id });
-            console.log(this.form.item);
+            if (changing_name) {
+                this.changing_name = true;
+                this.input_barcode = this.form.item.full_description;
+                this.changing_name = false;
+            }
             this.form.unit_price = this.form.item.purchase_unit_price;
             this.form.affectation_igv_type_id = this.form.item.purchase_affectation_igv_type_id;
             this.form.item_unit_types = _.find(this.items, {
@@ -857,6 +863,9 @@ export default {
             this.unids = 0;
             this.noIsUnid = false;
             this.input_barcode = null;
+            if (this.barcode_lector) {
+                this.$refs.input_barcode.focus();
+            }
             // this.initializeFields()
             this.$emit("add", this.row);
         },

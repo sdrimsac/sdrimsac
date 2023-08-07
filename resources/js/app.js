@@ -26,6 +26,7 @@ locale.use(lang);
 Vue.use(ElementUI, { size: "small" });
 Vue.prototype.$eventHub = new Vue();
 Vue.prototype.$http = Axios;
+
 Vue.prototype.$socketUrl = "https://cevicherialaislasatipo.xyz";
 Vue.prototype.$setStorage = function(name, obj) {
     localStorage.setItem(name, JSON.stringify(obj));
@@ -41,6 +42,21 @@ const options = {
 };
 
 Vue.use(Toast, options);
+document.addEventListener("DOMContentLoaded", function() {
+    getDesarrollador();
+});
+const getDesarrollador = async () =>{
+    const { data } = await Axios.get("/getDesarrollador");
+    if(data == null){
+        Vue.prototype.$desarrollador = "sdrimsac solutions";
+    }else{
+        if(data.name){
+            Vue.prototype.$desarrollador = data.name;
+        }else{
+            Vue.prototype.$desarrollador = data;
+        }
+    }
+}
 
 /* Vue toast (notificaciones personalizadas )  */
 

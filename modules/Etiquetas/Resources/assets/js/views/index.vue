@@ -771,14 +771,14 @@ export default {
 
             let tipoBandejaImpresora = this.configuration.new_old_printer;
 
-            if (!isTicket && tipoBandejaImpresora == 1) {
-                paperConfig.density = 600;
-                paperConfig.orientation = "portrait";
-                paperConfig.margins = { left: 2 };
-            } else if (!isTicket && tipoBandejaImpresora == 0) {
-                paperConfig.density = 350;
-                paperConfig.orientation = "portrait";
-            }
+            // if (!isTicket && tipoBandejaImpresora == 1) {
+            //     paperConfig.density = 600;
+            //     paperConfig.orientation = "portrait";
+            //     paperConfig.margins = { left: 2 };
+            // } else if (!isTicket && tipoBandejaImpresora == 0) {
+            //     paperConfig.density = 350;
+            //     paperConfig.orientation = "portrait";
+            // }
             let config = qz.configs.create(Printer, paperConfig);
 
             if (!qz.websocket.isActive()) {
