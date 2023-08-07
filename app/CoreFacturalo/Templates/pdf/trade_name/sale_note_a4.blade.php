@@ -162,7 +162,7 @@
                         @if (isset($row->item->descriptionInternet))
                             {{ $row->item->descriptionInternet }}
                         @else
-                        @if (isset($row->name_product_pdf))
+                        @if (isset($row->name_product_pdf) && strlen($row->name_product_pdf) > 0)
                                 {{ $row->name_product_pdf }}
                             @else
                                 {{ $row->item->description }}
