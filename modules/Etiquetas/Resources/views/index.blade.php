@@ -2,5 +2,7 @@
 
 
 @section('content')
-   <etiqueta-index></etiqueta-index>
+   <etiqueta-index
+   :configuration="{{\App\Models\Tenant\Configuration::getPublicConfig()}}"
+   ></etiqueta-index>
 @endsection

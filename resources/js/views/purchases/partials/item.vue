@@ -5,7 +5,12 @@
         @open="create"
         @close="close"
     >
-        <form autocomplete="off" @submit.prevent="clickAddItem">
+        <form
+            autocomplete="off"
+            @submit.prevent="clickAddItem"
+            @keydown.enter.prevent
+          
+        >
             <div class="form-body">
                 <div class="row">
                     <div class="col-md-6">
@@ -22,6 +27,7 @@
                                 >
                             </label>
                             <el-select
+                                v-if="!barcode_lector"
                                 v-model="form.item_id"
                                 :loading="loading_search"
                                 :remote-method="searchRemoteItems"
@@ -37,11 +43,16 @@
                                     :label="option.full_description"
                                 ></el-option>
                             </el-select>
-                            <small
-                                class="form-control-feedback"
-                                v-if="errors.item_id"
-                                v-text="errors.item_id[0]"
-                            ></small>
+                            <el-input
+                                v-if="barcode_lector"
+                                v-model="input_barcode"
+                                placeholder="Buscar"
+                                @input="searchItems"
+                            >
+                            </el-input>
+                            <el-checkbox v-model="barcode_lector"
+                                >Lector de código de barras</el-checkbox
+                            >
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -507,6 +518,9 @@ export default {
     components: { itemForm, LotsForm },
     data() {
         return {
+            input_barcode: null,
+            barcode_lector: false,
+            timer: null,
             insertTotalPrice: false,
             unids: 0,
             noIsUnid: false,
@@ -549,13 +563,9 @@ export default {
         });
     },
     methods: {
-        initFilterItems() {
-            this.activeName = "first";
-            this.items = this.all_items;
-        },
-        async searchRemoteItems(input) {
-            // console.log(input)
-
+        async searchItems() {
+            let input = this.input_barcode;
+            console.log(input);
             if (input.length > 2) {
                 this.loading_search = true;
                 let parameters = `input=${input}`;
@@ -572,8 +582,44 @@ export default {
 
                         if (this.items.length == 0) {
                             this.filterItems();
+                        } else {
+                            this.form.item_id = this.items[0].id;
+                            this.changeItem();
                         }
                     });
+            }
+        },
+
+        initFilterItems() {
+            this.activeName = "first";
+            this.items = this.all_items;
+        },
+        async searchRemoteItems(input) {
+            console.log(input);
+
+            if (input.length > 2) {
+                this.loading_search = true;
+                let parameters = `input=${input}`;
+
+                if (this.timer) {
+                    clearTimeout(this.timer);
+                }
+                this.timer = setTimeout(async () => {
+                    await this.$http
+                        .get(`/documents/search-items/?${parameters}`)
+                        .then(response => {
+                            this.items_select = response.data.items[0];
+                            this.items = response.data.items;
+
+                            this.loading_search = false;
+
+                            // this.enabledSearchItemsBarcode();
+
+                            if (this.items.length == 0) {
+                                this.filterItems();
+                            }
+                        });
+                }, 500);
             } else {
                 await this.filterItems();
             }
@@ -647,6 +693,8 @@ export default {
         //     this.form.affectation_igv_type_id = this.affectation_igv_types[0].id
         // },
         create() {
+            this.input_barcode = null;
+            this.barcode_lector = false;
             //     this.initializeFields()
         },
         clickAddDiscount() {

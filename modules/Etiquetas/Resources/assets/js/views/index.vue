@@ -59,6 +59,14 @@
                         >
                             Subir imagen
                         </el-button>
+                        <el-button v-if="imageSaved"
+                            class="m-2"
+                            type="danger"
+
+                            @click="delete_image"
+                        >
+                        <i class="el-icon-delete"></i>
+                        </el-button>
                         <p><em>JPG, PNG, JPEG | 150x150 </em></p>
                         <input
                             accept="image/png, image/jpeg, image/jpg"
@@ -75,6 +83,7 @@
                             class="el-input el-input-group el-input-group--append mb-2"
                         >
                             <el-select
+                                v-if="!lector_barcode"
                                 v-model="product_id"
                                 @change="changeItem"
                                 filterable
@@ -91,6 +100,19 @@
                                     :label="option.descripcion"
                                 ></el-option>
                             </el-select>
+                            <el-input
+                                v-else
+                                v-model="item_for_barcode"
+                                @input="searchItems"
+                                placeholder="Buscar producto"
+                                popper-class="el-select-items"
+                            ></el-input>
+                            <el-checkbox
+                            v-model="lector_barcode"
+                            >
+
+                                Lector de código de barras
+                            </el-checkbox>
                         </div>
 
                         <div
@@ -515,6 +537,7 @@
                         <el-button type="success" @click="generate">
                             Generar
                         </el-button>
+                        
                     </div>
                 </div>
             </div>
@@ -537,9 +560,13 @@
 import FormWord from "./form.vue";
 import JsBarcode from "jsbarcode";
 export default {
+    props: ["configuration"],
     components: { FormWord },
     data() {
         return {
+            establishment: null,
+            lector_barcode:false,
+            item_for_barcode: null,
             limitFormat: false,
             QSticker: 1,
             paperType: 1,
@@ -575,6 +602,26 @@ export default {
         await this.getTables();
     },
     methods: {
+        async delete_image(){
+            try {
+                this.loading = true;
+                const response = await this.$http.get(
+                    `${this.resource}/delete_image`
+                );
+                this.$toast.success("Imagen eliminada");
+                const {
+                    data: { image }
+                } = response;
+                this.imageSaved = image;
+                this.loading = false;
+            } catch (e) {
+                const {
+                    data: { message }
+                } = e.response;
+                this.$toast.error(message);
+                this.loading = false;
+            }
+        },
         generateBarcode(barcode, type) {
             if (type == "EAN-8") {
                 JsBarcode("#barcode")
@@ -683,7 +730,14 @@ export default {
                 )}&type_barcode=${encodeURIComponent(
                     this.typeBarcode
                 )}&location=${this.product.location || ""}`;
+                let {print_direct} = this.configuration;
+                let {printer } = this.establishment;
+                if(print_direct && printer){
+                    this.Printer(printer, endPoint);
+                }else{
                 const response = await axios.get(endPoint, config);
+                console.log(response);
+                console.log(this.configuration);
                 const url = window.URL.createObjectURL(
                     new Blob([response.data])
                 );
@@ -692,6 +746,8 @@ export default {
                 link.setAttribute("download", "file.pdf");
                 document.body.appendChild(link);
                 link.click();
+                }
+            
                 this.loading = false;
             } catch (e) {
                 const {
@@ -700,6 +756,46 @@ export default {
                 this.$toast.error(message);
                 this.loading = false;
             }
+        },
+          async Printer(
+            Printer,
+            linkpdf,
+
+        ) {
+            let paperConfig = {
+                scaleContent: false
+            };
+            let partsUrl = linkpdf.split("/");
+            let document = partsUrl[partsUrl.length - 1];
+            let isTicket = document.toLowerCase().includes("ticket");
+
+            let tipoBandejaImpresora = this.configuration.new_old_printer;
+
+            if (!isTicket && tipoBandejaImpresora == 1) {
+                paperConfig.density = 600;
+                paperConfig.orientation = "portrait";
+                paperConfig.margins = { left: 2 };
+            } else if (!isTicket && tipoBandejaImpresora == 0) {
+                paperConfig.density = 350;
+                paperConfig.orientation = "portrait";
+            }
+            let config = qz.configs.create(Printer, paperConfig);
+
+            if (!qz.websocket.isActive()) {
+                await qz.websocket.connect(config);
+            }
+            let data = [
+                {
+                    type: "pdf",
+                    format: "file",
+                    data: linkpdf
+                }
+            ];
+
+            qz.print(config, data).catch(e => {
+                this.$toast.error(e.message);
+            });
+         
         },
         changeFormat(quantity) {
             if (this.limitFormat && quantity != 1) {
@@ -816,8 +912,10 @@ export default {
                     codigos,
                     palabras,
                     company_name,
-                    etiqueta
+                    etiqueta,
+                    establishment
                 } = response.data;
+                this.establishment = establishment;
                 this.codes = codigos;
                 this.words = palabras;
                 this.company_name = company_name;
@@ -860,6 +958,32 @@ export default {
                     );
                     let { items } = response.data;
                     this.items = items;
+
+                    this.loading_search = false;
+                } catch (e) {
+                    const {
+                        data: { message }
+                    } = e.response;
+                    this.$toast.error(message);
+                    this.loading = false;
+                }
+            }
+        },
+           async searchItems() {
+            let input = this.item_for_barcode;
+            if (input.length > 2) {
+                this.loading_search = true;
+                let parameters = `input=${input}`;
+                try {
+                    let response = await this.$http.get(
+                        `/${this.resource}/items/?${parameters}`
+                    );
+                    let { items } = response.data;
+                    this.items = items;
+                    if(items.length == 1){
+                        this.product_id = items[0].id;
+                        this.changeItem();
+                    }
 
                     this.loading_search = false;
                 } catch (e) {

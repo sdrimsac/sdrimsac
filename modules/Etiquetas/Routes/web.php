@@ -13,6 +13,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Modules\Etiquetas\Http\Controllers\EtiquetasController;
+Route::get('/etiquetas/generate', [EtiquetasController::class, 'generate']);
 
 Route::middleware(['auth', 'locked.tenant'])->group(function () {
     Route::prefix('etiquetas')->group(function () {
@@ -21,7 +22,7 @@ Route::middleware(['auth', 'locked.tenant'])->group(function () {
         Route::get('/tables', [EtiquetasController::class, 'tables']);
         Route::post('/palabra', [EtiquetasController::class, 'save_word']);
         Route::post('/image', [EtiquetasController::class, 'image']);
-        Route::get('/generate', [EtiquetasController::class, 'generate']);
+        Route::get('/delete_image', [EtiquetasController::class, 'delete_image']);
         // Route::get('/', 'EtiquetasController@index')->name('tenant.etiquetas.index');
     });
 });

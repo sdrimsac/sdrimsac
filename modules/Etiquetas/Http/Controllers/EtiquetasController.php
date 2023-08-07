@@ -3,6 +3,7 @@
 namespace Modules\Etiquetas\Http\Controllers;
 
 use App\Models\Tenant\Company;
+use App\Models\Tenant\Establishment;
 use App\Models\Tenant\Item;
 use Exception;
 use Illuminate\Contracts\Support\Renderable;
@@ -23,6 +24,7 @@ class EtiquetasController extends Controller
      */
     public function index()
     {
+        
         return view('etiquetas::index');
     }
 
@@ -142,6 +144,19 @@ class EtiquetasController extends Controller
         }
     }
 
+    public function delete_image(){
+        $company = Company::first();
+        if ($company->etiqueta != null) {
+            $image_path = $company->etiqueta;
+            Storage::delete($image_path);
+        }
+        $company->etiqueta = null;
+        $company->save();
+        return [
+            "success" => true,
+            "image" => null
+        ];
+    }
     public function image(Request $request)
     {
         $company = Company::first();
@@ -170,11 +185,12 @@ class EtiquetasController extends Controller
         $company = Company::first();
         $company_name = $company->name;
         $etiqueta = null;
+        $establishment = Establishment::find(auth()->user()->establishment_id);
         if ($company->etiqueta) {
             $etiqueta = asset('storage' . DIRECTORY_SEPARATOR . 'files' . DIRECTORY_SEPARATOR . explode("/", $company->etiqueta)[2]);
         }
 
-        return compact('palabras', 'codigos', 'company_name', 'etiqueta');
+        return compact('palabras', 'codigos', 'company_name', 'etiqueta','establishment');
     }
     public function items(Request $request)
     {
