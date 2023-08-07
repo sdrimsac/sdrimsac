@@ -731,9 +731,9 @@ export default {
                     this.typeBarcode
                 )}&location=${this.product.location || ""}`;
                 let {print_direct} = this.configuration;
-                let {printer } = this.establishment;
-                if(print_direct && printer){
-                    this.Printer(printer, endPoint);
+                let {etiquetadora } = this.establishment;
+                if(print_direct && etiquetadora){
+                    this.Printer(etiquetadora, endPoint);
                 }else{
                 const response = await axios.get(endPoint, config);
                 console.log(response);

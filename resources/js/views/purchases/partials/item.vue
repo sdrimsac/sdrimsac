@@ -856,6 +856,7 @@ export default {
             this.initForm();
             this.unids = 0;
             this.noIsUnid = false;
+            this.input_barcode = null;
             // this.initializeFields()
             this.$emit("add", this.row);
         },

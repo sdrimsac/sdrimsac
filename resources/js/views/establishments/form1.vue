@@ -270,7 +270,7 @@
                             ></small>
                         </div>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <div
                             class="form-group"
                             :class="{ 'has-danger': errors.direct_printing }"
@@ -288,7 +288,23 @@
                             ></small>
                         </div>
                     </div>
-                    <div class="col-md-4">
+                         <div class="col-md-3">
+                        <div
+                            class="form-group"
+                            :class="{ 'has-danger': errors.etiquetadora }"
+                        >
+                            <label class="control-label"
+                                >Nombre de Etiquetadora</label
+                            >
+                            <el-input v-model="form.etiquetadora"> </el-input>
+                            <small
+                                class="form-control-feedback"
+                                v-if="errors.etiquetadora"
+                                v-text="errors.etiquetadora[0]"
+                            ></small>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
                         <div
                             class="form-group"
                             :class="{ 'has-danger': errors.printer }"
@@ -304,7 +320,7 @@
                             ></small>
                         </div>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <div
                             class="form-group"
                             :class="{ 'has-danger': errors.copies }"

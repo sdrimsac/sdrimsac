@@ -17,6 +17,7 @@ class EstablishmentResource extends JsonResource
     {
         // $establishment = Establishment::where('id', auth()->user()->id)->first();
         return [
+            'etiquetadora' => $this->etiquetadora,
             'id' => $this->id,
             'description' => $this->description,
             'country_id' => $this->country_id,
