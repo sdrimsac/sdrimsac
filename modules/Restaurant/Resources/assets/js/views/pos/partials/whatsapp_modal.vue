@@ -87,7 +87,7 @@ export default {
                     this.documentNumber +
                     " de *" +
                     this.company.name +
-                    "*, ha sido generado correctamente a través del facturador electrónico de *"+this.$desarrolador+"*"
+                    "*, ha sido generado correctamente a través del facturador electrónico de *"+this.$desarrollador+"*"
             };
             try {
                 this.loading = true;
