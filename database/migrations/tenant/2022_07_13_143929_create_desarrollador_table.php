@@ -16,10 +16,10 @@ class CreateDesarrolladorTable extends Migration
     {
         Schema::create('desarrollador', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->nullable()->default('GRUPOPCSYSTEMS');
+            $table->string('name')->nullable()->default('SDRIMSAC SOLUTIONS');
         });
         DB::table('desarrollador')->insert([
-            ['name' => 'GRUPOPCSYSTEMS SAC'],
+            ['name' => 'SDRIMSAC SOLUTIONS'],
          ]);
 
     }
