@@ -34,6 +34,7 @@ use App\Models\Tenant\Item;
 use App\Models\Tenant\ItemWarehouse;
 use Barryvdh\DomPDF\Facade as PDF;
 use Exception;
+use Modules\Item\Models\CategoryItem;
 use Modules\Restaurant\Events\OrdenPaidEvent;
 use Modules\Restaurant\Http\Requests\ExpensesRequest;
 use Modules\Restaurant\Http\Resources\OrdenCollection;
@@ -138,7 +139,11 @@ class PosController extends Controller
     }
     public function foods(Request $request)
     {
-        
+        $category_ins =  CategoryItem::where('name','INSUMOS')->first();
+        $category_ins_id = null;
+        if($category_ins){
+            $category_ins_id = $category_ins->id;
+        }
         $datafoods = $request->all();
 
         $category_id = $request->category;
@@ -174,6 +179,9 @@ class PosController extends Controller
                     }
                 });
             }
+        }
+        if($category_ins_id){
+            $foods = $foods->where('category_food_id','<>',$category_ins_id);
         }
         if (empty($datafoods)){
             

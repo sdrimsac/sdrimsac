@@ -270,6 +270,7 @@ class PosController extends Controller
                     $query->where('warehouse_id', $user->establishment_id);
                 });
             })
+            ->where('name','<>','INSUMOS')
             ->get();
         //  dd($row,$documents);
         $item_default = null;

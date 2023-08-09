@@ -1164,7 +1164,7 @@
                                       <div class="col-md-6 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
-                                                                                      >Cerrar caja sin ordenes pendientes
+                                                                                      >Evitar cerrar caja sin ordenes pendientes
 
                                                 <el-tooltip
                                                     content="Alerta sobre las mesas pendientes al cerrar caja, es posible emitir una nota de venta por todo"
