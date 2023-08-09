@@ -69,6 +69,7 @@ use App\CoreFacturalo\Requests\Inputs\Functions;
 use App\Models\Tenant\Cash;
 use Modules\Restaurant\Events\OrdenReadyEvent;
 use Modules\Restaurant\Models\OrdenItem;
+use Modules\Restaurant\Models\Table;
 use Mpdf\Mpdf;
 
 class SaleNoteController extends Controller
@@ -334,6 +335,7 @@ class SaleNoteController extends Controller
             $request["total_rounded"] = Functions::valueKeyInArray($request->all(), "total", 0.0);
             $request["total_payment"] = Functions::valueKeyInArray($request->all(), "total_payment", 0.0);
             $request["document_type_id"] = "80";
+            $all_ordens = Functions::valueKeyInArray($request->all(), "all_ordens", false);
             $data = $this->mergeData($request);
             $this->sale_note =  SaleNote::updateOrCreate(
                 ['id' => $request->input('id')],
@@ -374,6 +376,27 @@ class SaleNoteController extends Controller
                     $orden_item->status_orden_id = 4;
                     $orden_item->save();
                     event(new OrdenReadyEvent($orden_item->id));
+                }
+            }
+            if($all_ordens){
+                $tables = Table::where('establishment_id', auth()->user()->establishment_id)
+                ->orWhereNull('establishment_id')
+                ->where('status_table_id',2)
+                ->get();
+                foreach ($tables as $table) {
+                    $ordens = Orden::where('table_id', $table->id)->whereIn('status_orden_id', [1,2,3])->get();
+                    foreach ($ordens as $orden) {
+                        $orden->sale_note_id = $this->sale_note->id;
+                        $orden->status_orden_id = 4;
+                        $orden->customer_id = $this->sale_note->customer_id;
+                        $orden->save();
+                        $orden_items = OrdenItem::where('orden_id', $orden->id)->get();
+                        foreach ($orden_items as $orden_item) {
+                            $orden_item->status_orden_id = 4;
+                            $orden_item->save();
+                        }
+                    }
+                    Table::where('id', $table->id)->update(['status_table_id' => 1]);
                 }
             }
             /////------------------------------------------

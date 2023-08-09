@@ -64,6 +64,7 @@
                             :pagination.sync="pagination.saleNotes"
                             :type="'saleNotes'"
                             :sender="sender"
+                            :establishment.sync="establishment"
                         >
                         </document-print-detail>
                     </el-tab-pane>
@@ -80,6 +81,7 @@
                             :records.sync="documents"
                             :pagination.sync="pagination.documents"
                             :type="'documents'"
+                            :establishment.sync="establishment"
                         >
                         </document-print-detail>
                     </el-tab-pane>
@@ -92,6 +94,7 @@
                             :records.sync="quotations"
                             :pagination.sync="pagination.quotations"
                             :type="'quotations'"
+                            :establishment.sync="establishment"
                         >
                         </document-print-detail>
                     </el-tab-pane>
@@ -151,16 +154,16 @@ export default {
 
             let tipoBandejaImpresora = this.config.new_old_printer;
 
-            if(isA4){
-                if(tipoBandejaImpresora == 1){
+            if (isA4) {
+                if (tipoBandejaImpresora == 1) {
                     paperConfig.density = 700;
                     paperConfig.orientation = "portrait";
-                }else{
+                } else {
                     paperConfig.density = 350;
                     paperConfig.orientation = "portrait";
                 }
-                
-            }else{//NO MOVER ESTA CONFIGURACION ESTA PARA IMPRESION DIRECTA EN A5
+            } else {
+                //NO MOVER ESTA CONFIGURACION ESTA PARA IMPRESION DIRECTA EN A5
                 if (!isTicket && tipoBandejaImpresora == 1) {
                     //opciones que permiten hacer una impresion correcta en impresoras nuevas
                     paperConfig.density = 600;
@@ -170,8 +173,7 @@ export default {
                     paperConfig.density = 350;
                     paperConfig.orientation = "portrait";
                 }
-            }//FIN IMPRESION DIRECTA A5 
-
+            } //FIN IMPRESION DIRECTA A5
 
             try {
                 let config = qz.configs.create(this.printer, paperConfig);
@@ -236,14 +238,12 @@ export default {
                 }
             }
             //console.log(config.direct_printing)
-            
-            if(this.establishment.direct_printing == 0 ){
-                window.open(url , "_blank");
-            }else{
+
+            if (this.establishment.direct_printing == 0) {
+                window.open(url, "_blank");
+            } else {
                 await this.printEvent(url);
             }
-             
-            
         },
         async getLastDocument() {
             try {

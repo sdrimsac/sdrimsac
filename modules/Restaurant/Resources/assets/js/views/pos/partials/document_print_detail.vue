@@ -215,6 +215,7 @@
             :documentTypeId="currentType"
             :showDialog.sync="showWhatsappModal"
             :sender="sender"
+            :establishment.sync="establishment"
         >
         </whatsapp-modal>
     </div>
@@ -224,7 +225,7 @@
 import whatsappModal from "./whatsapp_modal.vue";
 export default {
     components: { whatsappModal },
-    props: ["records", "pagination", "type", "company", "sender"],
+    props: ["records", "pagination", "type", "company", "sender","establishment"],
     data() {
         return {
             loading: false,
@@ -237,6 +238,7 @@ export default {
 
     methods: {
         clickOpenWhatsapp(record) {
+            console.log(this.establishment, " mode");
             this.showWhatsappModal = true;
             this.currentId = record.id;
             this.currentType = record.document_type_id || "COT";

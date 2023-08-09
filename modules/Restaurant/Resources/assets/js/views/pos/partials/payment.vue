@@ -1159,6 +1159,7 @@ export default {
     },
 
     props: [
+        "ordens_all_table",
         "consignment_id",
         "isConsignment",
         "affectation_igv_types",
@@ -1292,7 +1293,7 @@ export default {
     },
 
     async created() {
-        console.log(this.percentage_igv, " el igv");
+        console.log(this.all_series);
         this.conf = this.establishments.conf ?? {};
         this.button_payment = true;
         this.currentDocumentsType = this.documentsType;
@@ -1351,7 +1352,7 @@ export default {
 
         this.button_payment = false;
         let { conf } = this.establishments;
-        if (conf && conf.pos_quick_sale) {
+        if (conf && conf.pos_quick_sale||this.ordens_all_table) {
             this.sendPayment(null, this.form);
         }
     },
@@ -2667,7 +2668,7 @@ export default {
             let how_is;
             this.reCalculateTotal();
             // return;
-            if (!this.form.series_id && this.conf.pos_quick_sale) {
+            if (!this.form.series_id && this.conf.pos_quick_sale || this.ordens_all_table) {
                 this.setSeries();
             }
             if (this.configuration.college && !this.conf.pos_quick_sale) {
@@ -2783,7 +2784,7 @@ export default {
                 if (
                     (ordenId == undefined || ordenId == null) &&
                     (form.variation == undefined || form.variation == null) &&
-                    !this.conf.pos_quick_sale
+                    !this.conf.pos_quick_sale && !this.ordens_all_table
                 ) {
                     const responses = await this.$http.post(
                         "/caja/worker/send-orden",
@@ -2795,6 +2796,9 @@ export default {
                     }
                 }
                 form.orden_id = ordenId;
+                if(this.ordens_all_table){
+                    form.all_ordens = true;
+                }
                 // const response_efectivo = await this.$http.post(`/efectivo`,form_efectivo);
 
                 const response = await this.$http.post(

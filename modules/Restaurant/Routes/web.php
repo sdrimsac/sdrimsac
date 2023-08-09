@@ -136,6 +136,7 @@ Route::prefix('caja')->group(function () {
         //**** MESAS */
         Route::get('tables', 'TableController@index')->name('restaurant.tables');
         Route::get('tables/columns', 'TableController@columns');
+        Route::get('tables/check', 'TableController@check');
         Route::get('tables/records', 'TableController@records');
         Route::get('tables/tables', 'TableController@get_tables');
         Route::get('tables/orden/{id}', 'TableController@get_ordens');

@@ -830,6 +830,7 @@
                 <div class="col-5 col-sm-7 col-lg-6 col-md-7 col-xl-5">
                     <div class="card-body p-2">
                         <list-orden
+                            @sendOrdensAllTables="sendOrdensAllTables"
                             ref="list_orden"
                             :affectation_igv_types="affectation_igv_types"
                             :all_series.sync="all_series"
@@ -1106,7 +1107,8 @@
                                                                                         )
                                                                                     "
                                                                                     class="thumbail"
-                                                                                    style="  max-height: 69px;  max-width: 69px;" />
+                                                                                    style="  max-height: 69px;  max-width: 69px;"
+                                                                                />
                                                                             </template>
                                                                         </div>
                                                                     </div>
@@ -1383,8 +1385,9 @@
 
         <template>
             <payment-form
-            :consignment_id="consignment_id"
-            @removeConsignment="removeConsignment"
+                :ordens_all_table.sync="ordens_all_table"
+                :consignment_id="consignment_id"
+                @removeConsignment="removeConsignment"
                 :isConsignment.sync="isConsignment"
                 :printer="printer"
                 :personalWhatsapp="personalWhatsapp"
@@ -1466,7 +1469,7 @@
             :company="company"
             :showDialog.sync="showDocumentsPrint"
             :config.sync="config"
-            :establishment.sync="establishment"
+            :establishment.sync="establishments"
         ></documents-print>
         <PromotionCanje
             :showDialog.sync="showdialogPromocion"
@@ -1645,6 +1648,7 @@ export default {
 
     data() {
         return {
+            ordens_all_table: false,
             consignment_id: null,
             isConsignment: false,
             showDialogConsignment: false,
@@ -1821,7 +1825,6 @@ export default {
     sockets: {},
     computed: {},
     methods: {
-        
         clickCommand(type) {
             let idxFood = this.listFoods.findIndex(
                 food => food.item.id == type.item_id
@@ -1830,7 +1833,7 @@ export default {
                 this.addFood(idxFood, type);
             }
         },
-         formatedStockPresentation(
+        formatedStockPresentation(
             {
                 max_quantity,
                 item_unit_types,
@@ -1887,7 +1890,7 @@ export default {
                     new_part = new_part.toFixed(2);
                     text += ` ${new_part} ${unit_type.id}`;
                 }
-            }else{
+            } else {
                 if (max_quantity && max_quantity_description) {
                     text = `${general} ${max_quantity_description}`;
                 }
@@ -1895,13 +1898,15 @@ export default {
 
             return text;
         },
-          handleKeydown(event) {
+        handleKeydown(event) {
             let { keyCode, key } = event;
             switch (keyCode) {
                 case 113:
                     event.preventDefault(); // Evita la función por defecto del navegador
 
-                    this.openTables();
+                    if(this.configuration.restaurant){
+                        this.openTables();
+                    }
 
                     break;
 
@@ -2050,7 +2055,10 @@ export default {
                     total +
                     " de *" +
                     this.establishments.description +
-                    "*, ha sido generado correctamente a través del facturador electrónico de "+"*"+this.$desarrollador+"*"
+                    "*, ha sido generado correctamente a través del facturador electrónico de " +
+                    "*" +
+                    this.$desarrollador +
+                    "*";
                 if (message) {
                     basicMessage += "\n" + message;
                 }
@@ -2100,6 +2108,107 @@ export default {
                 table: number,
                 table_id: id
             };
+        },
+        async setPaymentOrden(items) {
+            let form = {
+                id: null,
+                caja: true,
+                printDocument: false,
+                printing: this.configuration.print_commands,
+                commands_fisico: false,
+                print_kitchen: this.configuration.print_kitchen,
+                to_carry: false,
+                orden: {
+                    table_id: 1,
+                    status_orden_id: 1
+                },
+                pin: null,
+                items
+            };
+            this.orden_items = form;
+            this.form.printDocument = form.printDocument;
+            // let { items } = form;
+            this.ordens = items;
+            for (let i = 0; i < items.length; i++) {
+                let item = items[i];
+                this.ordens[i].food.item.from_unit_type_id = item.type_id;
+                this.ordens[i].food.item.from_unit_type_id_desc =
+                    item.type_description;
+
+                this.ordens[i].food.item.quantity = item.quantity;
+                this.ordens[i].food.item.lotes = item.lotes;
+                this.ordens[i].food.item.lots = item.series;
+                this.ordens[i].food.item.sale_unit_price = item.price;
+                this.ordens[i].food.price = item.price;
+                // this.ordens[i].food.item.price = item.price;
+                this.ordens[i].food.item.toWarehouse = item.toWarehouse;
+                this.ordens[i].food.item.consignment_item_id =
+                    item.consignment_item_id;
+            }
+            this.form.items = this.ordens.map(o => o.food.item);
+            this.formatItems();
+            this.calculateTotal();
+            this.form.enter_amount = this.form.total;
+            this.form.difference = 0;
+            let flag = 0;
+            this.form.establishment_id = this.establishment.id;
+            if (!this.form.customer_id) {
+                let varios = this.all_customers.filter(a =>
+                    a.name.toLowerCase().includes("varios")
+                );
+                if (varios.length == 0) {
+                    this.form.customer_id = this.all_customers[0].id;
+                } else {
+                    this.form.customer_id = varios[0].id;
+                }
+                if (!this.form.customer_id) {
+                    this.is_payment = false;
+                    return this.$toast.error("Seleccione un cliente");
+                }
+                
+            } 
+            this.is_payment = true;
+        },
+        sendOrdensAllTables(orden_items) {
+            this.clientTableData = {
+                table: "Todas",
+                ref: "-"
+                // table_id: orden.mesa.id,
+                // orden_id: orden.id
+            };
+
+            // orden.type_id = type ? type.id : null;
+            //  orden.type_description = type ? type.description : null;
+            // orden.type_quantity = type ? Number(type.quantity_unit) : 0;
+            this.ordensItems = [
+                ...orden_items.map(o => {
+                    let orden = o;
+                    orden.price = Number(orden.price).toFixed(2);
+                    if (orden.unit_type_id) {
+                        let { item } = orden.food;
+
+                        let unit_type = item.item_unit_types.find(
+                            u => u.id == orden.unit_type_id
+                        );
+                        if (unit_type) {
+                            orden.type_id = unit_type.id;
+                            orden.type_description = unit_type.description;
+                            orden.type_quantity = Number(
+                                unit_type.quantity_unit
+                            );
+                        }
+                    }
+                    return {
+                        ...orden,
+                        sended: true
+                    };
+                })
+            ];
+            this.blockCart = true;
+            this.isCreatingOrden = false;
+            this.ordens_all_table = true;
+            this.setPaymentOrden(orden_items);
+            // this.idOrden = orden.id;
         },
         //aqui se envia los productos desde la mesa
         sendOrdens(orden) {
@@ -2345,7 +2454,8 @@ export default {
                 this.ordens[i].food.price = item.price;
                 // this.ordens[i].food.item.price = item.price;
                 this.ordens[i].food.item.toWarehouse = item.toWarehouse;
-                this.ordens[i].food.item.consignment_item_id = item.consignment_item_id;
+                this.ordens[i].food.item.consignment_item_id =
+                    item.consignment_item_id;
             }
             if (variationItem.length > 0) {
                 this.variation = true;
@@ -2404,7 +2514,7 @@ export default {
                 if (this.variation) {
                     this.isNoteIsDefault();
                 }
-console.log(this.form.items);
+                console.log(this.form.items);
                 this.is_payment = true;
             }
         },
@@ -3685,18 +3795,16 @@ console.log(this.form.items);
 
             let tipoBandejaImpresora = this.config.new_old_printer;
 
-            
-
-            if(isA4){
-                if(tipoBandejaImpresora == 1){
+            if (isA4) {
+                if (tipoBandejaImpresora == 1) {
                     paperConfig.density = 700;
                     paperConfig.orientation = "portrait";
-                }else{
+                } else {
                     paperConfig.density = 350;
                     paperConfig.orientation = "portrait";
                 }
-                
-            }else{//NO MOVER ESTA CONFIGURACION ESTA PARA IMPRESION DIRECTA EN A5
+            } else {
+                //NO MOVER ESTA CONFIGURACION ESTA PARA IMPRESION DIRECTA EN A5
                 if (!isTicket && tipoBandejaImpresora == 1) {
                     //opciones que permiten hacer una impresion correcta en impresoras nuevas
                     paperConfig.density = 600;
@@ -3706,12 +3814,7 @@ console.log(this.form.items);
                     paperConfig.density = 350;
                     paperConfig.orientation = "portrait";
                 }
-            }//FIN IMPRESION DIRECTA A5 
-            
-            
-
-            
-            
+            } //FIN IMPRESION DIRECTA A5
 
             let config = qz.configs.create(Printer, paperConfig);
 
@@ -4146,6 +4249,7 @@ console.log(this.form.items);
             });
         },
         async limpiarForm() {
+            this.ordens_all_table = false;
             this.isConsignment = false;
             this.selectOption = 4;
             this.blockCart = false;
@@ -4525,11 +4629,11 @@ console.log(this.form.items);
             //this.$forceUpdate();
         }
     },
-        beforeUnmount() {
+    beforeUnmount() {
         document.removeEventListener("keydown", this.handleKeydown);
     },
     mounted() {
-                document.addEventListener("keydown", this.handleKeydown);
+        document.addEventListener("keydown", this.handleKeydown);
         this.optionsMenu = [
             {
                 id: 1,
@@ -4699,13 +4803,12 @@ console.log(this.form.items);
                             e.data.printing
                         );
                     }
-                }else{
-                    console.log(e.data.print)
-                    window.open(e.data.print , "_blank");
+                } else {
+                    console.log(e.data.print);
+                    window.open(e.data.print, "_blank");
                 }
             }
         );
     }
-   
 };
 </script>

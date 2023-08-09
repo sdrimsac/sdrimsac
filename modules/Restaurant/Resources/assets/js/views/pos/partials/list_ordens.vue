@@ -1187,7 +1187,9 @@
                                                                     </small>
                                                                 </span>
                                                                 <el-tooltip
-                                                                v-if="configuration.edit_name_product"
+                                                                    v-if="
+                                                                        configuration.edit_name_product
+                                                                    "
                                                                     content="Cambiar nombre del producto"
                                                                 >
                                                                     <el-tag
@@ -1206,7 +1208,12 @@
                                                                     </el-tag>
                                                                 </el-tooltip>
                                                                 <el-tooltip
-                                                                v-if="order_pend.food.item.name_product_pdf"
+                                                                    v-if="
+                                                                        order_pend
+                                                                            .food
+                                                                            .item
+                                                                            .name_product_pdf
+                                                                    "
                                                                     content="Restaurar nombre del producto"
                                                                 >
                                                                     <el-tag
@@ -2837,7 +2844,13 @@ export default {
         restoreToLocalOrdens(ordens) {
             this.$emit("update:localOrden", ordens);
         },
-        trigerFunction(id) {
+        async checkTables() {
+            const response = await this.$http("/caja/tables/check");
+            const { data } = response;
+            return data;
+        },
+
+        async trigerFunction(id) {
             switch (id) {
                 case 7:
                     if (!this.cash_id) {
@@ -2851,7 +2864,31 @@ export default {
                     break;
                 case 3:
                     if (this.cash_id) {
-                        this.showDialogClose = true;
+                        if (this.configuration.ordens_cash) {
+                            let data = await this.checkTables();
+                            if (!data.success) {
+                                this.showDialogClose = true;
+                            } else {
+                                let { ordenes, total, items } = data;
+                                try {
+                                    await this.$confirm(
+                                        `Existen ${ordenes} ordenes pendientes por cobrar, con un total de ${total} soles. Desea emitir una nota de venta por el total?`,
+                                        "Cerrar Caja",
+                                        {
+                                            confirmButtonText: "Emitir",
+                                            cancelButtonText: "Cerrar",
+                                            type: "warning"
+                                        }
+                                    );
+
+                                    this.$emit("sendOrdensAllTables", items);
+                                } catch (e) {
+                                    console.log(e);
+                                }
+                            }
+                        } else {
+                            this.showDialogClose = true;
+                        }
                     } else {
                         this.showDialogCash = true;
                     }

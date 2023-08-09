@@ -5,6 +5,7 @@
         title="Enviar documento por whatsapp"
         width="40%"
         :visible="showDialog"
+        @open="open"
     >
         <div class="card ">
             <div class="row d-flex align-items-center">
@@ -40,7 +41,8 @@ export default {
         "documentTypeId",
         "company",
         "documentNumber",
-        "sender"
+        "sender",
+        "establishment"
     ],
     data() {
         return {
@@ -50,6 +52,9 @@ export default {
         };
     },
     methods: {
+        open(){
+            console.log(this.establishment);
+        },
         close() {
             this.$emit("update:showDialog", false);
             this.number = null;
@@ -86,7 +91,7 @@ export default {
                     "Su comprobante de pago electrónico " +
                     this.documentNumber +
                     " de *" +
-                    this.company.name +
+                   (this.establishment ? this.establishment.description : this.company.name) +
                     "*, ha sido generado correctamente a través del facturador electrónico de *"+this.$desarrollador+"*"
             };
             try {

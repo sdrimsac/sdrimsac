@@ -11,11 +11,52 @@ use Modules\Restaurant\Models\Table;
 use Modules\Restaurant\Http\Requests\TableRequest;
 use Modules\Restaurant\Http\Resources\TableCollection;
 use Modules\Restaurant\Models\Orden;
+use Modules\Restaurant\Models\OrdenItem;
 
 class TableController extends Controller
 {
 
 
+    public function check(){
+        $total = 0;
+        $user = auth()->user();
+        $establishment_id = $user->establishment_id;
+        $tables = Table::where('status_table_id', 2)
+        ->where(function($q) use($establishment_id){
+            $q->where('establishment_id', $establishment_id)->orWhereNull('establishment_id');
+        })
+        ->get();
+        $number_tables = count($tables);
+       
+        if($number_tables == 0){
+            return [
+                'success' => false,
+            ];
+        }
+        $ordens_desc = [];
+        $number_ordens = 0;
+        $orden_items = [];
+        foreach ($tables as $table) {
+            $ordens = Orden::where('table_id', $table->id)->whereIn('status_orden_id', [1,2,3])->get();
+            $number_ordens += count($ordens);
+            foreach ($ordens as $orden) {
+                $ordens_desc[] = $orden->id;
+                $items = OrdenItem::where('orden_id', $orden->id)->get()->toArray();
+                $orden_items = array_merge($orden_items, $items);
+                
+                $total += OrdenItem::where('orden_id', $orden->id)->selectRaw('SUM(price * quantity) as total')->value('total');
+            }
+
+
+        }
+
+        return [
+            'items' => $orden_items,
+            'ordenes' => $number_ordens,
+            'success' => true,
+            'total' => $total
+        ];
+    }
     public function index()
     {
         $configurations = Configuration::first();
@@ -54,7 +95,9 @@ class TableController extends Controller
     }
     public function get_ordens($id)
     {
-        $ordens = Orden::where('table_id', $id)->where('status_orden_id', '<>', 4)->get();
+        $ordens = Orden::where('table_id', $id)->where('status_orden_id', '<>', 4)
+        ->where('status_orden_id', '<>', 5)
+        ->get();
 
         return compact('ordens');
     }
