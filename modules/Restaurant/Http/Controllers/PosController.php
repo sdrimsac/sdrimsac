@@ -147,6 +147,7 @@ class PosController extends Controller
         $datafoods = $request->all();
 
         $category_id = $request->category;
+        $external_id =  $request->external_id == "true" ? true : false;
         $value = $request->value;
         $establishment_id = auth()->user()->establishment_id;
 
@@ -169,9 +170,15 @@ class PosController extends Controller
         }
         if ($value) {
             if (count($textoIntoArray) === 1) {
-                $foods = $foods->where(function ($query) use ($value) {
-                    $query->where('description', 'LIKE', '%' . $value . '%')->orWhere('code', 'LIKE', '%' . $value . '%');
-                });
+                if($external_id){
+                    $foods = $foods->whereHas('item',function($query) use ($value){
+                        $query->where('description', 'LIKE', '%' . $value . '%')->orWhere('barcode', 'LIKE', '%' . $value . '%');
+                    });
+                }else{
+                    $foods = $foods->where(function ($query) use ($value) {
+                        $query->where('description', 'LIKE', '%' . $value . '%')->orWhere('code', 'LIKE', '%' . $value . '%');
+                    });
+                }
             } else {
                 $foods = $foods->where(function ($query) use ($value,  $textoIntoArray) {
                     foreach ($textoIntoArray as $key => $valor) {

@@ -89,22 +89,30 @@
                         <div class="row card mx-1 mt-2">
                             <div>
                                 <div class="d-flex row align-items-center">
-                                    <div
-                                        class="col-12 col-lg-2 d-flex justify-content-center align-items-center"
-                                    >
-                                        <i class="far fa-scanner"></i>
+                                    <div class="col-2 d-flex flex-column">
                                         <el-checkbox
-                                            id="barcode"
-                                            class="d-flex align-items-center"
                                             v-model="barcode"
+                                            @change="saveInLocalStorageBarcode"
                                         >
                                             <h2 class="text-muted text-small">
                                                 Barcode
                                             </h2>
-                                            <i
+                                            <!-- <i
                                                 class="fas fa-barcode"
                                                 style="font-size:30px;"
-                                            ></i>
+                                            ></i> -->
+                                        </el-checkbox>
+                                        <el-checkbox
+                                            v-model="type_code"
+                                            @change="saveInLocalStorage"
+                                        >
+                                            <h2 class="text-muted text-small">
+                                                QR
+                                            </h2>
+                                            <!-- <i
+                                                class="fas fa-barcode"
+                                                style="font-size:30px;"
+                                            ></i> -->
                                         </el-checkbox>
                                     </div>
                                     <div class="col-12 col-lg-3 p-2">
@@ -1544,9 +1552,9 @@
 </template>
 
 <style>
-.el-checkbox#barcode .el-checkbox__label {
+/* .el-checkbox#barcode .el-checkbox__label {
     padding-top: 10px !important;
-}
+} */
 </style>
 <script>
 import _ from "lodash";
@@ -1648,6 +1656,7 @@ export default {
 
     data() {
         return {
+            type_code: false,
             ordens_all_table: false,
             consignment_id: null,
             isConsignment: false,
@@ -1771,7 +1780,14 @@ export default {
     },
 
     async created() {
-        console.log(this.configuration);
+        let type_code = localStorage.getItem("type_code");
+        let barcode = localStorage.getItem("barcode");
+        if (barcode) {
+            this.barcode = barcode == "1" ? true : false;
+        }
+        if (type_code) {
+            this.type_code = type_code == "1" ? true : false;
+        }
         // console.log(this.establishments, " xdl");
         this.conf = this.establishments.conf ?? {};
         this.cashId = this.cash_id;
@@ -1825,6 +1841,12 @@ export default {
     sockets: {},
     computed: {},
     methods: {
+        saveInLocalStorageBarcode(barcode) {
+            localStorage.setItem("barcode", barcode ? "1" : "0");
+        },
+        saveInLocalStorage(type_code) {
+            localStorage.setItem("type_code", type_code ? "1" : "0");
+        },
         clickCommand(type) {
             let idxFood = this.listFoods.findIndex(
                 food => food.item.id == type.item_id
@@ -1904,7 +1926,7 @@ export default {
                 case 113:
                     event.preventDefault(); // Evita la función por defecto del navegador
 
-                    if(this.configuration.restaurant){
+                    if (this.configuration.restaurant) {
                         this.openTables();
                     }
 
@@ -2165,8 +2187,7 @@ export default {
                     this.is_payment = false;
                     return this.$toast.error("Seleccione un cliente");
                 }
-                
-            } 
+            }
             this.is_payment = true;
         },
         sendOrdensAllTables(orden_items) {
@@ -4140,6 +4161,7 @@ export default {
         getQueryParameters(form = {}) {
             return queryString.stringify({
                 page: this.pagination.current_page,
+                external_id: this.type_code,
                 ...form
 
                 // limit: this.limit
