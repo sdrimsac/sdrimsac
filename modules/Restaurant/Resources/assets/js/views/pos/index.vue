@@ -189,6 +189,7 @@
                                     :blockAdd.sync="blockCart"
                                     ref="list_foods"
                                     :barcode.sync="barcode"
+                                    :type_code.sync="type_code"
                                     :worker="worker"
                                     @insertOrden="insertOrden"
                                     :configuration="configuration"

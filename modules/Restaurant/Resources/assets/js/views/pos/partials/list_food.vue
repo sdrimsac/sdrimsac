@@ -265,7 +265,7 @@ export default {
         "pagination",
         "blockAdd",
         "localOrden",
-
+        "type_code",
         "barcode"
     ],
     data() {
@@ -439,7 +439,7 @@ export default {
                 f.price = Number(f.price).toFixed(2);
                 return { ...f, select: false };
             });
-            if (this.barcode && this.listFoods.length == 1) {
+            if (this.barcode && this.listFoods.length == 1 || this.type_code && this.listFoods.length == 1) {
                 this.addFood(0);
             }
         },
