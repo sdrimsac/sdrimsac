@@ -10,10 +10,7 @@
         <div class="row mt-2">
             <div class="col-md-3">
                 <label for="filter" class="w-100">Filtrar por:</label>
-                <el-select
-                    v-model="search.column"
-                    placeholder="Selecccionar"
-                >
+                <el-select v-model="search.column" placeholder="Selecccionar">
                     <el-option
                         v-for="(label, key) in columns"
                         :key="key"
@@ -24,15 +21,19 @@
             </div>
             <div class="col-md-3">
                 <label for="filter" class="w-100">Buscar:</label>
-                <template v-if="search.column == 'date_of_issue' || search.column == 'date_of_end'">
+                <template
+                    v-if="
+                        search.column == 'date_of_issue' ||
+                            search.column == 'date_of_end'
+                    "
+                >
                     <el-date-picker
                         v-model="search.value"
                         type="date"
                         style="width: 100%;"
                         placeholder="Buscar"
                         value-format="yyyy-MM-dd"
-                    @change="getRecords"
-
+                        @change="getRecords"
                     >
                     </el-date-picker>
                 </template>
@@ -44,10 +45,9 @@
                     >
                     </el-input>
                 </template>
-
             </div>
         </div>
-         <div>
+        <div>
             <el-pagination
                 @current-change="getRecords()"
                 layout="total, prev, pager, next"
@@ -62,6 +62,7 @@
                 <thead>
                     <tr>
                         <th>#</th>
+                        <th>Usuario</th>
                         <th>Cliente</th>
                         <th>Fecha de consignación</th>
                         <th>Fecha de liquidación</th>
@@ -75,6 +76,14 @@
                 <tbody>
                     <tr v-for="(consignment, idx) in records" :key="idx">
                         <td>{{ customIndex(idx) }}</td>
+                        <td class="text-small ">
+                            <template v-if="consignment.user_name"> 
+                                <strong>CREADO:</strong> {{ consignment.user_name }} <br>
+                            </template>
+                            <template v-if="consignment.user_liquidated_name"> 
+                                <strong>LIQUIDADO:</strong> {{ consignment.user_liquidated_name }}
+                            </template>
+                        </td>
                         <td>{{ consignment.person.name }}</td>
                         <td>{{ consignment.date_of_issue }}</td>
                         <td>{{ consignment.date_of_end }}</td>
@@ -110,6 +119,19 @@
                             </el-button>
                         </td>
                         <td>
+                            <template
+                                v-if="
+                                    consignment.liquidated &&
+                                        consignment.download_url
+                                "
+                            >
+                                <el-button
+                                    type="success"
+                                    @click="clickDownload(consignment)"
+                                >
+                                    {{ consignment.number_document }}
+                                </el-button>
+                            </template>
                             <el-button
                                 v-if="!consignment.liquidated"
                                 @click="clickLiquidate(consignment)"
@@ -131,7 +153,6 @@
             >
             </items-modal>
         </div>
-       
     </el-dialog>
 </template>
 
@@ -156,20 +177,20 @@ export default {
             loading_search: false,
             resource: "/consignment",
             pagination: {},
-            search:{
-               
-            },
-             columns:{
-                    person_id: "Cliente",
-                    date_of_issue: "Fecha de consignación",
-                    date_of_end: "Fecha de liquidación",
-                }
+            search: {},
+            columns: {
+                person_id: "Cliente",
+                date_of_issue: "Fecha de consignación",
+                date_of_end: "Fecha de liquidación"
+            }
         };
     },
     methods: {
-        changeClearInput(){
-
+        clickDownload(consignment) {
+            window.open(consignment.download_url, "_blank");
         },
+
+        changeClearInput() {},
         async clickSendMessage(id) {
             try {
                 this.loading = true;
@@ -236,8 +257,10 @@ export default {
         async getRecords() {
             try {
                 this.loading = true;
-                const response = await this.$http(`${this.resource}/records?column=${this.search.column ||
-                        ""}&value=${this.search.value || ""}`);
+                const response = await this.$http(
+                    `${this.resource}/records?column=${this.search.column ||
+                        ""}&value=${this.search.value || ""}`
+                );
                 console.log(response);
                 this.records = response.data.data;
                 this.pagination = response.data.meta;

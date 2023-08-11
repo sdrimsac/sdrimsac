@@ -9,6 +9,8 @@
                     <tr slot="heading">
                         <th>#</th>
                         <th class="text-center">N°</th>
+                        <th class="text-center">Creado por</th>
+                        <th class="text-center">Liquidado por</th>
                         <th class="text-center">Fecha de emisión</th>
                         <th class="text-center">Fecha de liquidación</th>
                         <th class="text-left">Cliente/Vendedor</th>
@@ -23,6 +25,9 @@
                         <td>{{ index }}</td>
 
                         <td class="text-center">{{ row.number }}</td>
+                        <td class="text-center">{{ row.user_name }}</td>
+                        <td class="text-center">{{ row.user_liquidated_name }}</td>
+
                         <td class="text-center">{{ row.date_of_issue }}</td>
                         <td class="text-center">{{ row.date_of_end }}</td>
                         <td class="text-left">

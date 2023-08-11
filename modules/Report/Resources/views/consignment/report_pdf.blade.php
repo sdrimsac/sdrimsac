@@ -86,6 +86,8 @@
                         <tr>
                             <th>#</th>
                             <th class="text-center">N°</th>
+                            <th class="text-center">Creado por</th>
+                            <th class="text-center">Liquidado por</th>
                             <th class="text-center">Fecha de emisión</th>
                             <th class="text-center">Fecha de liquidación</th>
                             <th class="text-left">Cliente/Vendedor</th>
@@ -101,7 +103,9 @@
                             <tr>
                                 <td class="celda">{{ $key + 1 }}</td>
 
-                                <td class="celda">{{ $value['number'] }}</td>
+                                <td class="celda">{{ $value["number"] }}</td>
+                                <td class="celda">{{ $value["user_name"] }}</td>
+                                <td class="celda">{{ $value["user_name_liquidated"] }}</td>
                                 <td class="celda">{{ $value['date_of_issue'] }}</td>
                                 <td class="celda">{{ $value['date_of_end'] }}</td>
                                 <td class="celda">

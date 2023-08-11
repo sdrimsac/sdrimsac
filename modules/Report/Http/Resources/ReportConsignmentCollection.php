@@ -31,6 +31,8 @@ class ReportConsignmentCollection extends ResourceCollection
                     $penalty = 'S/ ' . $amount;
                 }
             }
+            $user_name = $row->user ?$row->user->name:"";
+            $user_liquidated_name = $row->user_liquidated ?$row->user_liquidated->name:"";
             return [
                 'id' => $row->id,
                 'number' => $number,
@@ -41,6 +43,8 @@ class ReportConsignmentCollection extends ResourceCollection
                 "total" => $total,
                 "penalty" => $penalty,
                 "liquidated" => $row->liquidated  == 1 ? 'Liquidado' : 'Por liquidar',
+                'user_name' => $user_name,
+                'user_liquidated_name' => $user_liquidated_name,
             ];
         });
     }

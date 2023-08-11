@@ -5,6 +5,7 @@ namespace Modules\Consignment\Models;
 
 use App\Models\Tenant\ModelTenant;
 use App\Models\Tenant\Person;
+use App\Models\Tenant\User;
 
 class Consignment extends ModelTenant
 {
@@ -15,8 +16,20 @@ class Consignment extends ModelTenant
         'penalty_id',
         'active',
         'liquidated',
+        'user_id',
+        'user_liquidated_id',
     ];
     
+
+    public function user(){
+            
+            return $this->belongsTo(User::class);
+    }
+
+    public function user_liquidated(){
+            
+            return $this->belongsTo(User::class,'user_liquidated_id');
+    }
 
     public function person(){
 

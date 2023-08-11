@@ -7,6 +7,7 @@
         @close="close"
         v-loading="loading"
         :title="title"
+        width="75%"
     >
         <table class="table table-striped">
             <thead>

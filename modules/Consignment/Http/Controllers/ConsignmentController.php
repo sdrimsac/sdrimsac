@@ -18,6 +18,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Modules\Consignment\Http\Resources\ConsignmentCollection;
 use Modules\Consignment\Models\Consignment;
+use Modules\Consignment\Models\ConsignmentDocument;
 use Modules\Consignment\Models\ConsignmentItem;
 use Modules\Consignment\Models\ConsignmentItemLot;
 use Modules\Consignment\Models\ConsignmentPenalty;
@@ -189,6 +190,8 @@ class ConsignmentController extends Controller
     public function liquidated(Request $request)
     {
         $consigment_id = $request->input('id');
+        $document_id = $request->input('document_id');
+        $document_type_id = $request->input('document_type_id');
 
         $items = $request->input('items');
         if ($items && is_array($items)) {
@@ -208,7 +211,21 @@ class ConsignmentController extends Controller
         }
         $consigment = Consignment::find($consigment_id);
         $consigment->liquidated = true;
+        $consigment->user_liquidated_id = auth()->user()->id;
         $consigment->save();
+        if($document_id && $document_type_id){
+            $document = new ConsignmentDocument;
+            if($document_type_id != '80'){
+                $document->document_id = $document_id;
+                $document->consignment_id = $consigment_id;
+                $document->save();
+            }else{
+                $document->sale_note_id = $document_id;
+                $document->consignment_id = $consigment_id;
+                $document->save();
+            }
+        }
+
         event(new PrintEvent($consigment->id, "COL", true, 0));
         return [
             'success' => true,
@@ -410,6 +427,7 @@ class ConsignmentController extends Controller
             $consigment->date_of_issue = $date_of_issue;
             $consigment->date_of_end = $date_of_end;
             $consigment->penalty_id = $penalty_id;
+            $consigment->user_id = auth()->id();
             $consigment->save();
             $this->restoreStock($consigment->id);
             $items = $request->input('items');

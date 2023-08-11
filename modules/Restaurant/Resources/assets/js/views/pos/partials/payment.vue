@@ -2891,7 +2891,10 @@ export default {
                                                     i.consignment_item_id,
                                                 toWarehouse: i.toWarehouse,
                                                 quantity: i.quantity
-                                            }))
+                                            })),
+                                            document_id: this.documentNewId,
+                                            document_type_id:
+                                                form.document_type_id
                                         }
                                     );
                                     if (consigmentLiquidate.status == 200) {

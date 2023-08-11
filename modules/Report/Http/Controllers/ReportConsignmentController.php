@@ -158,7 +158,11 @@ class ReportConsignmentController extends Controller
                         $penalty = 'S/ ' . $amount;
                     }
                 }
+                $user_name = $row->user ? $row->user->name : '';
+                $user_name_liquidated = $row->user_liquidated ? $row->user_liquidated->name : '';
                 $all_records[] = [
+                    'user_name' => $user_name,
+                    'user_name_liquidated' => $user_name_liquidated,
                     'id' => $row->id,
                     'number' => $number,
                     'date_of_issue' => Carbon::parse($row->date_of_issue)->format('Y-m-d'),
@@ -237,7 +241,11 @@ class ReportConsignmentController extends Controller
                         $penalty = 'S/ ' . $amount;
                     }
                 }
+                $user_name = $row->user ? $row->user->name : '';
+                $user_name_liquidated = $row->user_liquidated ? $row->user_liquidated->name : '';
                 $all_records[] = [
+                    'user_name' => $user_name,
+                    'user_name_liquidated' => $user_name_liquidated,
                     'id' => $row->id,
                     'number' => $number,
                     'date_of_issue' => Carbon::parse($row->date_of_issue)->format('Y-m-d'),
