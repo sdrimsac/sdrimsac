@@ -1065,7 +1065,7 @@
                                                                     justify-content-between
                                                                     p-1
                                                                     "
-                                                        style="height: 112px; width: 297px ; margin-left: 9px; "
+                                                        style="height: 190px; width: 297px ; margin-left: 9px; "
                                                     >
                                                         <div
                                                             @click="
