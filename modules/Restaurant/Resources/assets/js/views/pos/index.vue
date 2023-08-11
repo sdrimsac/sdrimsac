@@ -878,12 +878,12 @@
                 <div class="d-flex flex-wrap ">
                     <button
                         type="button"
-                        class="btn settings-button btn-gradient-primary"
+                        class="btn settings-button bg-primary text-white border border-white"
                         data-bs-toggle="modal"
                         data-bs-target="#settings"
                         id="settingsButton"
                     >
-                        <i class="fas fa-inventory"></i>
+                        <i class="fas fa-cart-plus"></i>
                     </button>
                     <div
                         class="modal fade modal-right scroll-out-negative"
@@ -1842,6 +1842,12 @@ export default {
     sockets: {},
     computed: {},
     methods: {
+        formatDescriptionType(type) {
+            let price = this.getDefaultPrice(type);
+            return `${type.description} (${Number(
+                type.quantity_unit
+            )}) - S/ ${price}`;
+        },
         saveInLocalStorageBarcode(barcode) {
             localStorage.setItem("barcode", barcode ? "1" : "0");
         },
@@ -1945,7 +1951,9 @@ export default {
         },
         removeConsignment() {
             this.isConsignment = false;
-            this.$refs.list_orden.removeConsignment();
+            if (this.$refs.list_orden) {
+                this.$refs.list_orden.removeConsignment();
+            }
         },
         async getPrinter() {
             const response = await this.$http.get(

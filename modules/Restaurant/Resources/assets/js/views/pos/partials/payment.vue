@@ -703,12 +703,14 @@
                                                 <label class="control-label"
                                                     >Ingrese monto</label
                                                 >
-                                                <div class="row col-12">
+                                                <div
+                                                    class="d-flex flex-wrap justify-content-around"
+                                                >
                                                     <div
-                                                        class="col-2 col-md-2  col-xl-2"
+                                                        class="col-3 col-lg-2 col-md-2  col-xl-2"
                                                     >
                                                         <button
-                                                            class="btn btn-outline-primary btn_responsive m-2"
+                                                            class="btn btn-outline-primary  m-2"
                                                             @click="
                                                                 setAmountCash(
                                                                     10
@@ -719,10 +721,10 @@
                                                         </button>
                                                     </div>
                                                     <div
-                                                        class="col-2 col-md-2  col-xl-2"
+                                                        class="col-3 col-lg-2 col-md-2  col-xl-2"
                                                     >
                                                         <button
-                                                            class="btn btn-outline-primary btn_responsive m-2"
+                                                            class="btn btn-outline-primary  m-2"
                                                             @click="
                                                                 setAmountCash(
                                                                     20
@@ -733,24 +735,22 @@
                                                         </button>
                                                     </div>
                                                     <div
-                                                        class="col-2 col-md-2  col-xl-2"
+                                                        class="col-3  col-lg-2 col-md-2  col-xl-2"
                                                     >
                                                         <button
-                                                            class="btn btn-outline-primary btn_responsive m-2"
+                                                            class="btn btn-outline-primary  m-2"
                                                             @click="
                                                                 setAmountCash(
                                                                     50
                                                                 )
                                                             "
-                                                        >
-                                                            50
-                                                        </button>
+                                                        >50</button>
                                                     </div>
                                                     <div
-                                                        class="col-2 col-md-2  col-xl-2"
+                                                        class="col-3 col-lg-2 col-md-2  col-xl-2"
                                                     >
                                                         <button
-                                                            class="btn btn-outline-primary btn_responsive m-2"
+                                                            class="btn btn-outline-primary  m-2"
                                                             @click="
                                                                 setAmountCash(
                                                                     100
@@ -761,10 +761,10 @@
                                                         </button>
                                                     </div>
                                                     <div
-                                                        class="col-2 col-md-2  col-xl-2"
+                                                        class="col-3 col-lg-2 col-md-2  col-xl-2"
                                                     >
                                                         <button
-                                                            class="btn btn-outline-primary btn_responsive m-2"
+                                                            class="btn btn-outline-primary m-2"
                                                             @click="
                                                                 setAmountCash(
                                                                     200
@@ -779,7 +779,7 @@
                                                     class="row col-xl-12 col-12"
                                                 >
                                                     <div
-                                                        class=" col-xl-6 col-3"
+                                                        class=" col-xl-6 col-md-3 col-lg-3 col-12"
                                                     >
                                                         <el-input
                                                             id="inputTotal"
@@ -800,7 +800,9 @@
                                                             >
                                                         </el-input>
                                                     </div>
-                                                    <div class="col-xl-2 col-2">
+                                                    <div
+                                                        class="col-xl-2 col-md-2 col-lg-2 col-6"
+                                                    >
                                                         <el-button
                                                             type="primary"
                                                             @click="addPayment"
@@ -808,7 +810,7 @@
                                                         >
                                                     </div>
                                                     <div
-                                                        class="col-xl-3 col-3 "
+                                                        class="col-xl-3 col-md-3 col-lg-3 col-6 "
                                                     >
                                                         <el-button
                                                             type="success"
@@ -1008,30 +1010,9 @@
                     </div>
                 </div>
                 <div class="p-3">
-                    <div class="d-flex align-items-end  ">
-                        <div class="col-lg-4">
-                            <div
-                                class="btn-group btn-group-square"
-                                role="group"
-                            >
-                                <button
-                                    class="btn btn-block btn-primary"
-                                    @click="sendPayment"
-                                    :disabled="button_payment"
-                                >
-                                    <i class="fas fa-money-bill-alt"></i>
-                                    PAGAR
-                                </button>
-                                <button
-                                    class="btn btn-block btn-dark"
-                                    @click="back(false)"
-                                >
-                                    <i class="fa fa-reply"></i> Cerrar
-                                </button>
-                            </div>
-                        </div>
-                        <template v-if="configuration.affectation_optional">
-                            <div class="col-lg-6">
+                    <div class="row">
+                           <template v-if="configuration.affectation_optional">
+                            <div class="col-lg-6 col-md-6 col-12">
                                 <label>
                                     Afectación IGV para el documento
                                 </label>
@@ -1053,6 +1034,29 @@
                                 </el-select>
                             </div>
                         </template>
+                        <div class="col-lg-4 col-md-4 col-12 d-flex align-items-end justify-content-center">
+                            <div
+                            >
+                           
+                                <button
+                                    class="btn btn-block btn-primary"
+                                    @click="sendPayment"
+                                    :disabled="button_payment"
+                                >
+                                    <i class="fas fa-money-bill-alt"></i>
+                                    PAGAR
+                                </button>
+                            </div>
+                            <div>
+                                <button
+                                    class="btn btn-block btn-dark"
+                                    @click="back(false)"
+                                >
+                                    <i class="fa fa-reply"></i> Cerrar
+                                </button>
+                            </div>
+                        </div>
+                     
                     </div>
                 </div>
             </div>
@@ -1352,7 +1356,7 @@ export default {
 
         this.button_payment = false;
         let { conf } = this.establishments;
-        if (conf && conf.pos_quick_sale||this.ordens_all_table) {
+        if ((conf && conf.pos_quick_sale) || this.ordens_all_table) {
             this.sendPayment(null, this.form);
         }
     },
@@ -1912,7 +1916,10 @@ export default {
                         this.form.total +
                         " de *" +
                         this.establishments.description +
-                        "*, ha sido generado correctamente a través del facturador electrónico de "+"*"+this.$desarrollador+"*"
+                        "*, ha sido generado correctamente a través del facturador electrónico de " +
+                        "*" +
+                        this.$desarrollador +
+                        "*"
                 };
                 try {
                     this.loading = true;
@@ -2041,7 +2048,7 @@ export default {
             let global_discount = parseFloat(this.discount_amount);
             let total = parseFloat(this.form.total);
             let base = parseFloat(this.form.total_value);
-            console.log("base ",this.form.total_value);
+            console.log("base ", this.form.total_value);
             if (global_discount > total) {
                 this.discount_amount = 0;
                 this.$forceUpdate();
@@ -2067,53 +2074,55 @@ export default {
                 this.form.total = new_total;
             } else {
                 let global_discount_amount = global_discount;
-                    let global_discount_amount_without_rounding = global_discount;
+                let global_discount_amount_without_rounding = global_discount;
                 let { discount_with_base_variant } = this.configuration;
                 if (discount_with_base_variant) {
-                    global_discount_amount = Number((global_discount / 1.18).toFixed(2));
-                    global_discount_amount_without_rounding = global_discount / 1.18;
-                } 
-                    let factor = _.round(global_discount_amount / base, 4);
-                    this.form.discounts = [
-                        {
-                            discount_type_id: "02",
-                            description:
-                                "Descuentos globales que afectan la base imponible del IGV/IVAP",
-                            factor,
-                            amount: global_discount_amount,
-                            base,
-                        }
-                    ];
-              
-                    let new_base = this.form.total_value_without_rounding;
-                    this.form.total_taxed = _.round(
-                        new_base - global_discount_amount_without_rounding,
-                        2
+                    global_discount_amount = Number(
+                        (global_discount / 1.18).toFixed(2)
                     );
-                    this.form.total_value = this.form.total_taxed;
-                    if (this.configuration.affectation_igv_type_id == "10") {
-                        this.form.total_igv = _.round(
-                            this.form.total_taxed * (this.percentage_igv / 100),
-                            2
-                        );
-                    } else {
-                        this.form.total_igv = 0;
+                    global_discount_amount_without_rounding =
+                        global_discount / 1.18;
+                }
+                let factor = _.round(global_discount_amount / base, 4);
+                this.form.discounts = [
+                    {
+                        discount_type_id: "02",
+                        description:
+                            "Descuentos globales que afectan la base imponible del IGV/IVAP",
+                        factor,
+                        amount: global_discount_amount,
+                        base
                     }
+                ];
 
-                    //impuestos (isc + igv + icbper)
-                    this.form.total_taxes = _.round(
-                        this.form.total_igv +
-                            this.form.total_isc +
-                            this.form.total_plastic_bag_taxes,
+                let new_base = this.form.total_value_without_rounding;
+                this.form.total_taxed = _.round(
+                    new_base - global_discount_amount_without_rounding,
+                    2
+                );
+                this.form.total_value = this.form.total_taxed;
+                if (this.configuration.affectation_igv_type_id == "10") {
+                    this.form.total_igv = _.round(
+                        this.form.total_taxed * (this.percentage_igv / 100),
                         2
                     );
-                    console.log(this.form, " form");
-                    this.form.total = _.round(
-                        this.form.total_taxed + this.form.total_taxes,
-                        2
-                    );
-                    this.form.subtotal = this.form.total;
-                
+                } else {
+                    this.form.total_igv = 0;
+                }
+
+                //impuestos (isc + igv + icbper)
+                this.form.total_taxes = _.round(
+                    this.form.total_igv +
+                        this.form.total_isc +
+                        this.form.total_plastic_bag_taxes,
+                    2
+                );
+                console.log(this.form, " form");
+                this.form.total = _.round(
+                    this.form.total_taxed + this.form.total_taxes,
+                    2
+                );
+                this.form.subtotal = this.form.total;
             }
         },
         discountGlobal3() {
@@ -2668,7 +2677,10 @@ export default {
             let how_is;
             this.reCalculateTotal();
             // return;
-            if (!this.form.series_id && this.conf.pos_quick_sale || this.ordens_all_table) {
+            if (
+                (!this.form.series_id && this.conf.pos_quick_sale) ||
+                this.ordens_all_table
+            ) {
                 this.setSeries();
             }
             if (this.configuration.college && !this.conf.pos_quick_sale) {
@@ -2784,7 +2796,8 @@ export default {
                 if (
                     (ordenId == undefined || ordenId == null) &&
                     (form.variation == undefined || form.variation == null) &&
-                    !this.conf.pos_quick_sale && !this.ordens_all_table
+                    !this.conf.pos_quick_sale &&
+                    !this.ordens_all_table
                 ) {
                     const responses = await this.$http.post(
                         "/caja/worker/send-orden",
@@ -2796,7 +2809,7 @@ export default {
                     }
                 }
                 form.orden_id = ordenId;
-                if(this.ordens_all_table){
+                if (this.ordens_all_table) {
                     form.all_ordens = true;
                 }
                 // const response_efectivo = await this.$http.post(`/efectivo`,form_efectivo);
