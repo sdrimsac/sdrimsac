@@ -93,7 +93,7 @@ class ItemLotsGroupController extends Controller
                 ->records($records->get())
                 ->company($company)
                 ->establishment($establishment)
-                ->download('Reporte_Ventas_por_Producto_'.Carbon::now().'.xlsx');
+                ->download('Reporte_Lotes_por_Producto_'.Carbon::now().'.xlsx');
     }
 
     public function records(Request $request)
