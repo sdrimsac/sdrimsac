@@ -442,7 +442,8 @@
                         </a>
                     </li>
                     <li>
-                        <a class="{{ $path[0] === 'index_report_closed_cash' ? 'active' : '' }}" href="{{ route('reports.cash_closes.index') }}">
+                        <a class="{{ $path[0] === 'index_report_closed_cash' ? 'active' : '' }}"
+                            href="{{ route('reports.cash_closes.index') }}">
                             <i class="icofont-attachment"></i>
                             Reporte de Cierre de Caja
                         </a>
@@ -477,7 +478,7 @@
                     </a>
                 </li>
                 <li>
-                    <a class="{{ $path[0] === 'report_cash'? 'active' : '' }}"
+                    <a class="{{ $path[0] === 'report_cash' ? 'active' : '' }}"
                         href="{{ route('reports.cash.index') }}">
                         <i class="icofont-money-bag"></i>
                         Ganancias
@@ -486,7 +487,7 @@
                 <li>
                     <a class="{{ $path[0] === 'reports' && $path[1] === 'valued' ? 'active' : '' }}"
                         href="{{ route('reports.valued.index') }}">
-                        
+
                         <i class="icofont-dollar"></i> Stock valorizado
                     </a>
                 </li>
@@ -540,15 +541,15 @@
         @if ($config->college)
             <li>
                 <a href="#college" data-bs-toggle="collapse" data-role="button"
-                    aria-expanded="{{ $path[0] === 'college' ? true : false }}"
-                    class="{{ $path[0] === 'college' ? 'active' : '' }}"
-                    data-clicked="{{ $path[0] === 'college' ? true : false }}">
+                    aria-expanded="{{ $path[0] === 'college' && $path[1] == 'students' ? true : false }}{{ $path[0] === 'college' && $path[1] == 'classrooms' ? true : false }}{{ $path[0] === 'college' && $path[1] == 'persons' ? true : false }}{{ $path[0] === 'college' && $path[1] == 'plans' ? true : false }}{{ $path[0] === 'college' && $path[1] == 'periods' ? true : false }}{{ $path[0] === 'college' && $path[1] == 'penalties' ? true : false }}{{ $path[0] === 'college' && $path[1] == 'levels' ? true : false }}{{ $path[0] === 'college' && $path[1] == 'listsuplies' ? true : false }}"
+                    class="{{ $path[0] === 'college' && $path[1] == 'students' ? 'active' : '' }}{{ $path[0] === 'college' && $path[1] == 'classrooms' ? 'active' : '' }}{{ $path[0] === 'college' && $path[1] == 'persons' ? 'active' : '' }}{{ $path[0] === 'college' && $path[1] == 'plans' ? 'active' : '' }}{{ $path[0] === 'college' && $path[1] == 'periods' ? 'active' : '' }}{{ $path[0] === 'college' && $path[1] == 'penalties' ? 'active' : '' }}{{ $path[0] === 'college' && $path[1] == 'levels' ? 'active' : '' }}{{ $path[0] === 'college' && $path[1] == 'listsuplies' ? 'active' : '' }}"
+                    data-clicked="{{ $path[0] === 'college' && $path[1] == 'students' ? true : false }}{{ $path[0] === 'college' && $path[1] == 'classrooms' ? true : false }}{{ $path[0] === 'college' && $path[1] == 'persons' ? true : false }}{{ $path[0] === 'college' && $path[1] == 'plans' ? true : false }}{{ $path[0] === 'college' && $path[1] == 'periods' ? true : false }}{{ $path[0] === 'college' && $path[1] == 'penalties' ? true : false }}{{ $path[0] === 'college' && $path[1] == 'levels' ? true : false }}{{ $path[0] === 'college' && $path[1] == 'listsuplies' ? true : false }}">
                     <i class="icofont-graduate icon-parent"></i>
 
-                    <span class="label">Suscripción Escolar</span>
+                    <span class="label">Suscripción Escoslar</span>
                 </a>
 
-                <ul id="person" class="collapse ">
+                <ul id="college" class="collapse">
                     <li>
                         <a class="{{ $path[0] === 'college' && $path[1] === 'students' ? 'active' : '' }}"
                             href="{{ route('college.students.index') }}">

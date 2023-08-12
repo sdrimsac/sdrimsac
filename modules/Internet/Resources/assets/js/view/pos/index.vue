@@ -716,6 +716,7 @@ export default {
 
     data() {
         return {
+            products_to_due: 0,
             showZones: false,
             showTechs: false,
             showChangeData: false,
@@ -2969,7 +2970,7 @@ export default {
             //this.loadingInstance = Loading.service({fullscreen: false,lock:true,text:"Espere por favor..."});
             await this.$http.get(`/${this.resource}/tables`).then(response => {
                 // this.all_items = response.data.items;
-
+    this.products_to_due = response.data.products_to_due;
                 this.payments = response.data.method_payment;
                 this.date_last = response.data.date_last;
                 this.documentsType = response.data.documents_type;

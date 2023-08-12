@@ -3,12 +3,15 @@
 use Illuminate\Support\Facades\Route;
 use Modules\Item\Http\Controllers\ItemLotsGroupController;
 
+Route::get('lotes/excel', [ItemLotsGroupController::class, 'excel']);
+Route::get('lotes/to_due/excel', [ItemLotsGroupController::class, 'to_due_excel']);
 Route::middleware(['auth', 'locked.tenant'])->group(function () {
 
 
     Route::get('lotes', [ItemLotsGroupController::class, 'index'])->name("lotes");
     Route::get('lotes/records', [ItemLotsGroupController::class, 'records']);
     Route::get('lotes/tables', [ItemLotsGroupController::class, 'tables']);
+    Route::get('lotes/to_due', [ItemLotsGroupController::class, 'to_due']);
     Route::get('categories/init', 'CategoryController@init');
     //->name('tenant.categories.index')
     Route::get('items/categories', 'CategoryController@index')->middleware('redirect.level');

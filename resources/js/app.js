@@ -148,6 +148,7 @@ Vue.component("x-input-service", require("./components/InputService.vue"));
 Vue.component("x-input-service", require("./components/InputService.vue"));
 
 const app = new Vue({
+
     store,
     el: "#main",
 

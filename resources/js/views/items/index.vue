@@ -77,7 +77,11 @@
                     <h6 class="my-0 text-white">Listado de productos</h6>
                 </div>
                 <div class="card-body">
-                    <data-table :resource="resource" :config="config">
+                    <data-table
+                        :resource="resource"
+                        :config="config"
+                        @clickReport="clickReport"
+                    >
                         <tr slot="heading" width="100%">
                             <th>#</th>
                             <th>Cód. Interno</th>
@@ -178,8 +182,22 @@
                                     </button>
 
                                     <!-- <button type="button" class="btn waves-effect waves-light btn-sm btn-warning" @click.prevent="duplicate(row.id)">Duplicar</button> -->
-                                <button type="button" class="btn waves-effect waves-light btn-sm btn-danger" @click.prevent="clickDisable(row.id)" v-if="row.active">Inhabilitar</button>
-                                <button type="button" class="btn waves-effect waves-light btn-sm btn-primary" @click.prevent="clickEnable(row.id)" v-else>Habilitar</button>
+                                    <button
+                                        type="button"
+                                        class="btn waves-effect waves-light btn-sm btn-danger"
+                                        @click.prevent="clickDisable(row.id)"
+                                        v-if="row.active"
+                                    >
+                                        Inhabilitar
+                                    </button>
+                                    <button
+                                        type="button"
+                                        class="btn waves-effect waves-light btn-sm btn-primary"
+                                        @click.prevent="clickEnable(row.id)"
+                                        v-else
+                                    >
+                                        Habilitar
+                                    </button>
                                     <!--
 
                                 <button type="button" class="btn waves-effect waves-light btn-sm btn-primary" @click.prevent="clickBarcode(row)">Cod. Barras</button>
@@ -213,8 +231,7 @@
                     :itemId="itemId"
                     :item="currentItem"
                     :config="config"
-                                        :user="user"
-
+                    :user="user"
                 >
                 </warehouses-detail>
 
@@ -239,7 +256,7 @@ import { deletable } from "../../mixins/deletable";
 //const  DataTable = () =>  import(/* webpackChunkName:"js/components/DataTable.vue"*/"../../components/DataTable.vue");
 
 export default {
-    props: ["typeUser","user"],
+    props: ["typeUser", "user"],
     mixins: [deletable],
     components: {
         ItemsForm,
@@ -270,6 +287,13 @@ export default {
         });
     },
     methods: {
+        clickReport(query = null) {
+            let { column, value } = query;
+            window.open(
+                `/items/excel?column=${column || ""}&value=${value || ""}`,
+                "_blank"
+            );
+        },
         duplicate(id) {
             this.$http
                 .post(`${this.resource}/duplicate`, { id })

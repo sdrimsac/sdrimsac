@@ -1549,6 +1549,11 @@
             @setItemsToLiquidate="setItemsToLiquidate"
             :showDialog.sync="showDialogConsignment"
         ></consignment-list>
+        <products-due
+        :showDialog.sync="showDialogDueProducts"
+        >
+
+        </products-due>
     </div>
 </template>
 
@@ -1612,6 +1617,7 @@ const CollegeParents = () =>
         "../../../../../../College/Resources/assets/js/views/persons/form.vue"
     );
 const CategoryDrag = () => import("./partials/category_drag.vue");
+const ProductsDue = () => import("./partials/products_due.vue");
 const options = {
     text: "Loading ...",
     customClass: "login_loading",
@@ -1632,6 +1638,7 @@ export default {
         "area"
     ],
     components: {
+        ProductsDue,
         ConsignmentList,
         EditProduct,
         CategoryDrag,
@@ -1657,6 +1664,8 @@ export default {
 
     data() {
         return {
+            products_to_due:0,
+            showDialogDueProducts:false,
             type_code: false,
             ordens_all_table: false,
             consignment_id: null,
@@ -1801,6 +1810,7 @@ export default {
         await this.initForm(this.customer_default.id);
         await this.getFoods();
         await this.filterCategorie(0, false);
+        this.setMenuOptions();
         // await this.changeCustomer();
         this.loading = false;
         this.$eventHub.$on("reloadDataPersons", customer_id => {
@@ -1842,6 +1852,126 @@ export default {
     sockets: {},
     computed: {},
     methods: {
+
+        setMenuOptions(){
+              this.optionsMenu = [
+            {
+                id: 1,
+                title: ["Reimprimir"],
+                icon: "fas fa-print ",
+                visible: true
+            },
+            /* {
+                    id: 2,
+                    title: ["Abrir", "cajon"],
+                    icon: "fas fa-cash-register",
+                    visible: true
+                }, */
+            // {
+            //     id: 3,
+            //     title: ["Reabrir", "tickets"],
+            //     icon: "fas fa-folder-open",
+            //     visible: true
+            // },
+            {
+                id: 3,
+                title: ["Productos"],
+                icon: "fas fa-box-open",
+                visible: true
+            },
+            {
+                id: 4,
+                title: ["Clientes"],
+                //icon: "fas fa-hand-holding-water"
+                icon: "fas fa-user ",
+                visible: true
+            },
+            {
+                id: 5,
+                title: [" Zona "],
+                icon: "fas fa-map-pin ",
+                visible:
+                    this.configuration.restaurant && !this.configuration.college
+            },
+            {
+                id: 6,
+                title: ["Venta", "del Dia"],
+                icon: "icofont-money-bag",
+                visible:
+                    this.configuration.view_daily_cash ||
+                    this.configuration.view_daily_cash_pin
+            },
+
+            {
+                id: 7,
+                title: ["Historial", ""],
+                icon: "fas fa-history ",
+                visible: true
+            },
+
+            {
+                id: 9,
+                title: ["Matriculas", "Mensualidades"],
+                icon: "fas fa-user-edit",
+                visible: this.configuration.college
+            },
+            {
+                id: 10,
+                title: ["Canjear", "Promocion"],
+                icon: "fas fa-user-tag",
+                visible: this.configuration.promotions_sell
+            },
+            {
+                id: 33,
+                title: ["Créditos"],
+                icon: "fas fa-credit-card",
+                visible: this.configuration.credits
+            },
+            {
+                id: 25,
+                title: ["Guías", "Remisión"],
+                icon: "fas fa-file",
+                visible: this.configuration.dispatch
+            },
+            {
+                id: 102,
+                title: ["Cambiar", "Categorías"],
+                icon: "fa fa-bars",
+                visible: this.configuration.pos_drag_category
+            },
+            {
+                id: 103,
+                title: ["Editar", "Productos"],
+                icon: "fa fa-edit",
+                visible: this.configuration.edit_product_pos
+            },
+            {
+                id: 109,
+                title: ["Ver", "Consignaciones"],
+                icon: "fa fa-edit",
+                visible: this.configuration.consignment
+            },
+             {
+                id: 42,
+                title: ["Productos", "Por vencer",this.products_to_due],
+                icon: "far fa-calendar-alt",
+                visible: true,
+            }
+
+            // {
+            //     title: ["Configuración"],
+            //     icon: "fas fa-printer"
+            // },
+            // {
+            //     title: ["Movimiento ", "efectivo"],
+            //     icon: "fas fa-printer"
+            // },
+            // {
+            //     title: ["Abrir / Cerrar", " Caja"],
+            //     icon: "fas fa-printer"
+            // }
+        ];
+        },
         formatDescriptionType(type) {
             let price = this.getDefaultPrice(type);
             return `${type.description} (${Number(
@@ -2297,6 +2427,9 @@ export default {
         },
         trigerFunction(id) {
             switch (id) {
+                case 42:
+                    this.showDialogDueProducts = true;
+                    break;
                 case 109:
                     this.showDialogConsignment = true;
                     break;
@@ -4212,6 +4345,8 @@ export default {
             //this.loadingInstance = Loading.service({fullscreen: false,lock:true,text:"Espere por favor..."});
             await this.$http.get(`/${this.resource}/tables`).then(response => {
                 // this.all_items = response.data.items;
+                
+                this.products_to_due = response.data.products_to_due;
                 this.categories = response.data.categories;
                 this.areas = response.data.areas;
                 this.payments = response.data.method_payment;
@@ -4665,117 +4800,7 @@ export default {
     },
     mounted() {
         document.addEventListener("keydown", this.handleKeydown);
-        this.optionsMenu = [
-            {
-                id: 1,
-                title: ["Reimprimir"],
-                icon: "fas fa-print ",
-                visible: true
-            },
-            /* {
-                    id: 2,
-                    title: ["Abrir", "cajon"],
-                    icon: "fas fa-cash-register",
-                    visible: true
-                }, */
-            // {
-            //     id: 3,
-            //     title: ["Reabrir", "tickets"],
-            //     icon: "fas fa-folder-open",
-            //     visible: true
-            // },
-            {
-                id: 3,
-                title: ["Productos"],
-                icon: "fas fa-box-open",
-                visible: true
-            },
-            {
-                id: 4,
-                title: ["Clientes"],
-                //icon: "fas fa-hand-holding-water"
-                icon: "fas fa-user ",
-                visible: true
-            },
-            {
-                id: 5,
-                title: [" Zona "],
-                icon: "fas fa-map-pin ",
-                visible:
-                    this.configuration.restaurant && !this.configuration.college
-            },
-            {
-                id: 6,
-                title: ["Venta", "del Dia"],
-                icon: "icofont-money-bag",
-                visible:
-                    this.configuration.view_daily_cash ||
-                    this.configuration.view_daily_cash_pin
-            },
-
-            {
-                id: 7,
-                title: ["Historial", ""],
-                icon: "fas fa-history ",
-                visible: true
-            },
-
-            {
-                id: 9,
-                title: ["Matriculas", "Mensualidades"],
-                icon: "fas fa-user-edit",
-                visible: this.configuration.college
-            },
-            {
-                id: 10,
-                title: ["Canjear", "Promocion"],
-                icon: "fas fa-user-tag",
-                visible: this.configuration.promotions_sell
-            },
-            {
-                id: 33,
-                title: ["Créditos"],
-                icon: "fas fa-credit-card",
-                visible: this.configuration.credits
-            },
-            {
-                id: 25,
-                title: ["Guías", "Remisión"],
-                icon: "fas fa-file",
-                visible: this.configuration.dispatch
-            },
-            {
-                id: 102,
-                title: ["Cambiar", "Categorías"],
-                icon: "fa fa-bars",
-                visible: this.configuration.pos_drag_category
-            },
-            {
-                id: 103,
-                title: ["Editar", "Productos"],
-                icon: "fa fa-edit",
-                visible: this.configuration.edit_product_pos
-            },
-            {
-                id: 109,
-                title: ["Ver", "Consignaciones"],
-                icon: "fa fa-edit",
-                visible: this.configuration.consignment
-            }
-
-            // {
-            //     title: ["Configuración"],
-            //     icon: "fas fa-printer"
-            // },
-            // {
-            //     title: ["Movimiento ", "efectivo"],
-            //     icon: "fas fa-printer"
-            // },
-            // {
-            //     title: ["Abrir / Cerrar", " Caja"],
-            //     icon: "fas fa-printer"
-            // }
-        ];
+      
         this.screenWidth = window.innerWidth;
         window.addEventListener("resize", this.handleResize);
 

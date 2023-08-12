@@ -10,6 +10,7 @@ use App\Models\Tenant\SaleNoteItem;
 use App\Models\Tenant\Purchase;
 use App\Models\Tenant\Item;
 use Carbon\Carbon;
+use Modules\Item\Models\ItemLotsGroup;
 
 class DashboardSalePurchase
 {
@@ -23,7 +24,20 @@ class DashboardSalePurchase
         $month_end = $request['month_end'];
         $enabled_move_item = $request['enabled_move_item'];
         $enabled_transaction_customer = $request['enabled_transaction_customer'];
-
+        $items_to_due = ItemLotsGroup::where('date_of_due', '<=', Carbon::now()->addMonths(2))->
+        where('quantity', '>', 0)->get()->take(10)->transform(function ($row){
+            return [
+                'id' => $row->id,
+                'lote' => $row->code,
+                'item_id' => $row->item_id,
+                'item_description' => $row->item->description,
+                'warehouse_id' => $row->warehouse_id,
+                'warehouse_description' => $row->warehouse->description,
+                'series' => $row->series,
+                'date_of_due' => $row->date_of_due,
+                'quantity' => $row->quantity,
+            ];
+        });
         $d_start = null;
         $d_end = null;
 
@@ -47,6 +61,7 @@ class DashboardSalePurchase
         }
 
         return [
+            'items_to_due' => $items_to_due,
             'purchase' => $this->purchase_totals($establishment_id, $d_start, $d_end),
             'items_by_sales' => $this->items_by_sales($establishment_id, $d_start, $d_end, $enabled_move_item),
             'top_customers' => $this->top_customers($establishment_id, $d_start, $d_end, $enabled_transaction_customer),

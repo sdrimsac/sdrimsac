@@ -252,6 +252,7 @@ if ($hostname) {
                 Route::get('items', [App\Http\Controllers\Tenant\ItemController::class, 'index'])->name('tenant.items.index')->middleware(['redirect.level', 'just.admin']);
                 Route::get('items/columns', [App\Http\Controllers\Tenant\ItemController::class, 'columns']);
                 Route::get('items/records', [App\Http\Controllers\Tenant\ItemController::class, 'records']);
+                Route::get('items/excel', [App\Http\Controllers\Tenant\ItemController::class, 'excel']);
                 Route::post('items/updateprice', [App\Http\Controllers\Tenant\ItemController::class, 'updateprice']);
                 Route::get('items/check_stock', [ItemController::class, 'check_stock']);
                 Route::get('items/generate_code', [ItemController::class, 'generateCode']);

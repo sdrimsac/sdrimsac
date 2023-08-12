@@ -27,9 +27,11 @@ use Modules\Inventory\Models\Warehouse;
 use Modules\Finance\Traits\FinanceTrait;
 use App\Models\Tenant\Catalogs\AffectationIgvType;
 use App\Models\Tenant\Catalogs\IdentityDocumentType;
+use Carbon\Carbon;
 use Modules\College\Models\CollegeStudent;
 use Modules\Inventory\Models\ItemWarehouse;
 use Modules\Inventory\Models\InventoryConfiguration;
+use Modules\Item\Models\ItemLotsGroup;
 use Modules\Restaurant\Models\Area;
 use Modules\Restaurant\Models\Food;
 use Modules\Restaurant\Models\Orden;
@@ -228,6 +230,9 @@ class PosController extends Controller
     }
     public function tables()
     {
+        $products_to_due = ItemLotsGroup::where('date_of_due', '<=', Carbon::now()->addMonths(2))
+        ->where('quantity', '>', 0)
+        ->count();
         $affectation_igv_types = AffectationIgvType::whereActive()->get();
         $establishment = Establishment::where('id', auth()->user()->establishment_id)->first();
         $method_payment = PaymentMethodType::where('active', 1)->orderBy('description', 'asc')->get();
@@ -280,6 +285,7 @@ class PosController extends Controller
         }
         $areas = Area::all();
         return compact(
+            'products_to_due',
             'areas',
             'customers_variation',
             'item_default',

@@ -197,8 +197,8 @@
                             class="custom-legend-container mb-3 pb-3 d-flex flex-row"
                         ></div>
                         <div class="sh-25">
-                            <graphline :all-data="general.graph">
-                            </graphline>
+                            <!-- <graphline :all-data="general.graph">
+                            </graphline> -->
                         </div>
                     </div>
                 </div>
@@ -589,7 +589,45 @@
                     </div>
                 </section>
             </div>
-
+    <div class="col-xl-6 col-md-6">
+                <h2 class="small-title mb-3 mt-3">Productos por vencerse</h2>
+                <section class="card">
+                    <div class="card-body">
+                      
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Producto</th>
+                                        <th>Lote</th>
+                                        <th>Stock</th>
+                                       
+                                        <th class="text-end">Fecha de vencimiento</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <template
+                                        v-for="(row, index) in items_to_due"
+                                    >
+                                        <tr :key="index">
+                                            <td>{{ index + 1 }}</td>
+                                            <td>{{ row.item_description }}</td>
+                                            <td>{{ row.lote }}</td>
+                                            <td class="text-end">
+                                                {{ row.quantity }}
+                                            </td>
+                                            <td class="text-end">
+                                                {{ row.date_of_due }}
+                                            </td>
+                                        </tr>
+                                    </template>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+            </div>
             <div class="col-xl-6 col-md-6">
                 <h2 class="small-title mb-3 mt-3">Top clientes</h2>
                 <section class="card">
@@ -738,6 +776,7 @@ export default {
             },
             records: [],
             items_by_sales: [],
+            items_to_due:[],
             top_customers: [],
             recordId: null,
             showDialogDocumentPayments: false,
@@ -1023,28 +1062,28 @@ export default {
                         );
                     }
                 });
-            await this.$http
-                .post(`/${this.resource}/utilities`, this.form)
-                .then(response => {
-                    this.utilities = response.data.data.utilities;
-                    for (
-                        let index = 0;
-                        index <
-                        response.data.data.utilities.graph.datasets[0].data
-                            .length;
-                        index++
-                    ) {
-                        this.seriesUtilidad.push(
-                            parseFloat(
-                                response.data.data.utilities.graph.datasets[0]
-                                    .data[index]
-                            )
-                        );
-                    }
+            // await this.$http
+            //     .post(`/${this.resource}/utilities`, this.form)
+            //     .then(response => {
+            //         this.utilities = response.data.data.utilities;
+            //         for (
+            //             let index = 0;
+            //             index <
+            //             response.data.data.utilities.graph.datasets[0].data
+            //                 .length;
+            //             index++
+            //         ) {
+            //             this.seriesUtilidad.push(
+            //                 parseFloat(
+            //                     response.data.data.utilities.graph.datasets[0]
+            //                         .data[index]
+            //                 )
+            //             );
+            //         }
 
-                    this.labels_utilidad = this.utilities.graph.labels;
-                    this.loaders.utility = false;
-                });
+            //         this.labels_utilidad = this.utilities.graph.labels;
+            //         this.loaders.utility = false;
+            //     });
             //   this.$http.get(`/command/df`).then(response => {
             //     if (response.data[0] != 'error'){
             //       this.disc.used = Number(response.data[0].replace(/[^0-9\.]+/g,""));
@@ -1059,8 +1098,10 @@ export default {
             this.$http
                 .post(`/${this.resource}/data_aditional`, this.form)
                 .then(response => {
+                    console.log(response);
                     this.purchase = response.data.data.purchase;
                     this.items_by_sales = response.data.data.items_by_sales;
+                    this.items_to_due = response.data.data.items_to_due;
                     this.top_customers = response.data.data.top_customers;
                 });
         },

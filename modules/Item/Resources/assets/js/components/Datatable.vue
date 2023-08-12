@@ -135,6 +135,14 @@
                             icon="el-icon-delete"
                             >Limpiar
                         </el-button>
+                        <el-button
+                            v-if="resource == 'lotes' && records.length > 0"
+                            class="submit"
+                            type="success"
+                            @click.prevent="exportRecords"
+                            icon="el-icon-download"
+                            >Exportar
+                        </el-button>
                     </div>
                 </div>
             </div>
@@ -226,6 +234,10 @@ export default {
         await this.getRecords();
     },
     methods: {
+        exportRecords() {
+            let url = `/${this.resource}/excel?${this.getQueryParameters()}`;
+            window.open(url, "_blank");
+        },
         async getWarehouses() {
             try {
                 const response = await this.$http(`${this.resource}/tables`);

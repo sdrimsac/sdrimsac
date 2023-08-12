@@ -48,10 +48,12 @@ use App\Models\Tenant\Catalogs\AffectationIgvType;
 use App\Models\Tenant\InventoryKardex;
 use App\Models\Tenant\ItemWarehousePrice;
 use App\Models\Tenant\Kardex;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Modules\Inventory\Models\Warehouse as WarehouseModule;
-
+use Modules\Report\Exports\ItemExport;
+use Modules\Report\Exports\ItemExportGeneral;
 
 class ItemController extends Controller
 {
@@ -629,6 +631,18 @@ class ItemController extends Controller
             'success' => false,
             'message' =>  __('app.actions.upload.error'),
         ];
+    }
+    public function excel(Request $request){
+        $records = $this->getRecords($request);
+        $company = Company::first();
+        $establishment = ($request->establishment_id) ? Establishment::findOrFail($request->establishment_id) : auth()->user()->establishment;
+        $records = $records->get();
+        return (new ItemExportGeneral)
+                ->records($records)
+                ->company($company)
+                ->establishment($establishment)
+                ->download('Reporte_Productos_'.Carbon::now().'.xlsx');
+
     }
     public function import(Request $request)
     {
