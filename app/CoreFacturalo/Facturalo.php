@@ -785,6 +785,8 @@ class Facturalo
             throw new Exception("Code: {$res->getError()->getCode()}; Description: {$res->getError()->getMessage()}");
         } else {
             $cdrResponse = $res->getCdrResponse();
+            Log::info($$res->getCdrZip());
+
             $this->uploadFile($res->getCdrZip(), 'cdr');
             $this->updateState(self::ACCEPTED);
             if ($this->type === 'summary') {
@@ -820,7 +822,6 @@ class Facturalo
             throw new Exception("Code: {$res->getError()->getCode()}; Description: {$res->getError()->getMessage()}");
         } else {
             $cdrResponse = $res->getCdrResponse();
-            Log::info($$res->getCdrZip());
             $this->uploadFile($res->getCdrZip(), 'cdr');
             $this->updateState(self::ACCEPTED);
             $this->response = [
