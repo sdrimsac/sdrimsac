@@ -37,6 +37,7 @@ use App\CoreFacturalo\WS\Services\ConsultCdrService;
 use App\CoreFacturalo\Helpers\Storage\StorageDocument;
 use App\CoreFacturalo\WS\Validator\XmlErrorCodeProvider;
 use App\Models\Tenant\DispatchItem;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 
 
@@ -819,6 +820,7 @@ class Facturalo
             throw new Exception("Code: {$res->getError()->getCode()}; Description: {$res->getError()->getMessage()}");
         } else {
             $cdrResponse = $res->getCdrResponse();
+            Log::info($$res->getCdrZip());
             $this->uploadFile($res->getCdrZip(), 'cdr');
             $this->updateState(self::ACCEPTED);
             $this->response = [
