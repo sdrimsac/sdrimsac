@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Config;
 class Configuration extends ModelTenant
 {
     protected $fillable = [
+        'item_set_caja',
         'ordens_cash',
         'discount_with_base_variant',
         'translate_direct',
@@ -107,6 +108,7 @@ class Configuration extends ModelTenant
         
     ];
     protected $casts = [
+        'item_set_caja' => 'boolean',
         'ordens_cash' => 'boolean',
         'discount_with_base_variant' => 'boolean',
         'consignment' => 'boolean',
@@ -173,6 +175,7 @@ class Configuration extends ModelTenant
         // $skins = Skin::all();
         $skins = [];
         return [
+            'item_set_caja' => (bool)$this->item_set_caja,
             'ordens_cash' => (bool)$this->ordens_cash,
             'discount_with_base_variant' => (bool)$this->discount_with_base_variant,
             'translate_direct' => (bool)$this->translate_direct,

@@ -1001,7 +1001,8 @@
                                     <div class="col-md-6 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
-                                                                                      >Observación al hacer ajuste de stock
+                                                >Observación al hacer ajuste de
+                                                stock
 
                                                 <el-tooltip
                                                     content="Obligar a dar razón del traslado"
@@ -1024,7 +1025,7 @@
                                     <div class="col-md-6 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
-                                                                                      >Consignación en caja
+                                                >Consignación en caja
 
                                                 <el-tooltip
                                                     content="Crear y liquidar consignaciones desde caja"
@@ -1035,19 +1036,18 @@
                                                 </el-tooltip>
                                             </label>
                                             <el-switch
-                                                v-model="
-                                                    form.consignment
-                                                "
+                                                v-model="form.consignment"
                                                 active-text="Si"
                                                 inactive-text="No"
                                                 @change="submit"
                                             ></el-switch>
                                         </div>
                                     </div>
-                                            <div class="col-md-6 mt-4">
+                                    <div class="col-md-6 mt-4">
                                         <template id="select-append">
                                             <label class="control-label w-100"
-                                                >Producto penalidad - Consignación
+                                                >Producto penalidad -
+                                                Consignación
                                             </label>
                                             <div
                                                 class="el-input el-input-group el-input-group--append"
@@ -1091,10 +1091,10 @@
                                             </div>
                                         </template>
                                     </div>
-                                     <div class="col-md-6 mt-4">
+                                    <div class="col-md-6 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
-                                                                                      >Cambiar afectación IGV en caja
+                                                >Cambiar afectación IGV en caja
 
                                                 <el-tooltip
                                                     content="Permite cambiar la afectación de IGV en caja"
@@ -1114,10 +1114,10 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                     <div class="col-md-6 mt-4">
+                                    <div class="col-md-6 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
-                                                                                      >Traslados directos
+                                                >Traslados directos
 
                                                 <el-tooltip
                                                     content="Sin necesidad de insertar clave y/o código"
@@ -1128,19 +1128,17 @@
                                                 </el-tooltip>
                                             </label>
                                             <el-switch
-                                                v-model="
-                                                    form.translate_direct
-                                                "
+                                                v-model="form.translate_direct"
                                                 active-text="Si"
                                                 inactive-text="No"
                                                 @change="submit"
                                             ></el-switch>
                                         </div>
                                     </div>
-                                        <div class="col-md-6 mt-4">
+                                    <div class="col-md-6 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
-                                                                                      >Descuentos variante
+                                                >Descuentos variante
 
                                                 <el-tooltip
                                                     content="Permite recalcular el precio de venta de un producto con descuento a la base"
@@ -1153,7 +1151,6 @@
                                             <el-switch
                                                 v-model="
                                                     form.discount_with_base_variant
-
                                                 "
                                                 active-text="Si"
                                                 inactive-text="No"
@@ -1161,10 +1158,11 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                      <div class="col-md-6 mt-4">
+                                    <div class="col-md-6 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
-                                                                                      >Evitar cerrar caja sin ordenes pendientes
+                                                >Evitar cerrar caja sin ordenes
+                                                pendientes
 
                                                 <el-tooltip
                                                     content="Alerta sobre las mesas pendientes al cerrar caja, es posible emitir una nota de venta por todo"
@@ -1175,10 +1173,21 @@
                                                 </el-tooltip>
                                             </label>
                                             <el-switch
-                                                v-model="
-                                                    form.ordens_cash
-
-                                                "
+                                                v-model="form.ordens_cash"
+                                                active-text="Si"
+                                                inactive-text="No"
+                                                @change="submit"
+                                            ></el-switch>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mt-4">
+                                        <div class="form-group">
+                                            <label class="control-label w-100"
+                                                >Crear productos compuestos en
+                                                caja
+                                            </label>
+                                            <el-switch
+                                                v-model="form.item_set_caja"
                                                 active-text="Si"
                                                 inactive-text="No"
                                                 @change="submit"

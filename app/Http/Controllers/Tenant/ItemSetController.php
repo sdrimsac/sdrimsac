@@ -26,6 +26,7 @@ use App\Models\Tenant\Catalogs\AttributeType;
 use App\Models\Tenant\Catalogs\SystemIscType;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Tenant\Catalogs\AffectationIgvType;
+use App\Models\Tenant\Establishment;
 use App\Models\Tenant\ItemSet;
 
 class ItemSetController extends Controller
@@ -68,6 +69,7 @@ class ItemSetController extends Controller
         $affectation_igv_types = AffectationIgvType::whereActive()->get();
         $areas = Area::where('active', 1)->get();
         $categories = CategoryItem::all();
+        $warehouses = Establishment::all();
         $individual_items = Item::whereWarehouse()->whereTypeUser()->whereNotIsSet()->whereIsActive()->get()->transform(function ($row) {
             $full_description = ($row->internal_id) ? $row->internal_id . ' - ' . $row->description : $row->description;
             return [
@@ -79,7 +81,7 @@ class ItemSetController extends Controller
             ];
         });
 
-        return compact('unit_types', 'currency_types', 'attribute_types', 'areas', 'categories', 'system_isc_types', 'affectation_igv_types', 'individual_items');
+        return compact('warehouses','unit_types', 'currency_types', 'attribute_types', 'areas', 'categories', 'system_isc_types', 'affectation_igv_types', 'individual_items');
     }
 
     public function record($id)
@@ -88,15 +90,28 @@ class ItemSetController extends Controller
 
         return $record;
     }
-    public function item_tables()
+    public function item_tables(Request $request)
     {
-
-        $individual_items = Item::whereWarehouse()->whereTypeUser()->whereNotIsSet()->whereIsActive()->get()->transform(function ($row) {
+        $warehouse_id = $request->warehouse_id;
+        $input = $request->input;
+        
+        $individual_items = Item::whereWarehouse()->whereTypeUser()->whereNotIsSet()->whereIsActive();
+        if($input){
+            $individual_items = $individual_items->where(function($query) use($input){
+                $query->where('description', 'like', "%{$input}%")
+                ->orWhere('internal_id', 'like', "%{$input}%");
+            });
+        }
+        if($warehouse_id){
+            $individual_items = $individual_items->whereHas('warehouses', function($query) use($warehouse_id){
+                $query->where('warehouse_id', $warehouse_id);
+            });
+        }
+        $individual_items =  $individual_items->get()
+        ->take(20)
+        ->transform(function ($row) {
             $full_description = ($row->internal_id) ? $row->internal_id . ' - ' . $row->description : $row->description;
             $unit_type_description = $row->unit_type->description;
-            // if($row->max_quantity && $row->max_quantity_description){
-            //     $unit_type_description = $row->max_quantity_description;
-            // }
             return [
                 'id' => $row->id,
                 'full_description' => $full_description,

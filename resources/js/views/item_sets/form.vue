@@ -263,14 +263,40 @@
                             <small class="form-control-feedback" v-if="errors.web_platform_id" v-text="errors.web_platform_id[0]"></small>
                         </div>
                     </div> -->
-
-                    <div class="col-md-3 mt-4">
-                        <el-button
-                            type="primary"
-                            icon="el-icon-plus"
-                            @click.prevent="showDialogAddItem = true"
-                            >Agregar productos</el-button
+                    <div class="col-md-3" v-show="recordId == null">
+                        <div
+                            class="form-group"
+                            :class="{ 'has-danger': errors.warehouse_id }"
                         >
+                            <label class="control-label">
+                                Almacén
+                                <el-tooltip
+                                    class="item"
+                                    effect="dark"
+                                    content="Si no selecciona almacén, se asignará por defecto el relacionado al establecimiento"
+                                    placement="top"
+                                >
+                                    <i class="fa fa-info-circle"></i>
+                                </el-tooltip>
+                            </label>
+                            <el-select
+                                :disabled="establishment_id != null"
+                                v-model="form.warehouse_id"
+                                filterable
+                            >
+                                <el-option
+                                    v-for="option in warehouses"
+                                    :key="option.id"
+                                    :value="option.id"
+                                    :label="option.description"
+                                ></el-option>
+                            </el-select>
+                            <small
+                                class="form-control-feedback"
+                                v-if="errors.warehouse_id"
+                                v-text="errors.warehouse_id[0]"
+                            ></small>
+                        </div>
                     </div>
 
                     <div
@@ -308,8 +334,8 @@
                                             {{ row.sale_unit_price }}
                                         </td>
                                         <td class="text-right">
-                                            {{ row.quantity }} 
-                                            {{row.unit_type_description}}
+                                            {{ row.quantity }}
+                                            {{ row.unit_type_description }}
                                         </td>
                                         <td class="text-right">
                                             <button
@@ -344,6 +370,15 @@
                             ></small>
                         </div>
                     </div>
+
+                    <div class="col-md-3 mt-4">
+                        <el-button
+                            type="primary"
+                            icon="el-icon-plus"
+                            @click.prevent="showDialogAddItem = true"
+                            >Agregar productos</el-button
+                        >
+                    </div>
                     <!--
                     <div class="col-md-3" v-show="form.unit_type_id !='ZZ'">
                         <div class="form-group" :class="{'has-danger': errors.stock_min}">
@@ -365,21 +400,8 @@
                             <el-input v-model="form.percentage_perception"></el-input>
                         </div>
                     </div> -->
-                    <!-- <div class="col-md-3" v-show="recordId==null">
-                        <div class="form-group" :class="{'has-danger': errors.warehouse_id}">
-                            <label class="control-label">
-                                Almacén
-                                <el-tooltip class="item" effect="dark" content="Si no selecciona almacén, se asignará por defecto el relacionado al establecimiento" placement="top">
-                                    <i class="fa fa-info-circle"></i>
-                                </el-tooltip>
-                            </label>
-                            <el-select v-model="form.warehouse_id" filterable >
-                                <el-option v-for="option in warehouses" :key="option.id" :value="option.id" :label="option.description"></el-option>
-                            </el-select>
-                            <small class="form-control-feedback" v-if="errors.warehouse_id" v-text="errors.warehouse_id[0]"></small>
-                        </div>
-                    </div>
 
+                    <!-- 
                     <div class="col-md-3 " >
                         <div class="form-group" :class="{'has-danger': errors.date_of_due}">
                             <label class="control-label">Fec. Vencimiento</label>
@@ -623,6 +645,7 @@
                     </div>
 
                     <item-set-form-item
+                        :warehouse_id.sync="form.warehouse_id"
                         :showDialog.sync="showDialogAddItem"
                         @add="addRow"
                     ></item-set-form-item>
@@ -645,7 +668,7 @@
 import ItemSetFormItem from "./partials/item.vue";
 
 export default {
-    props: ["showDialog", "recordId", "external"],
+    props: ["showDialog", "recordId", "external", "establishment_id"],
     components: { ItemSetFormItem },
 
     data() {
@@ -688,6 +711,7 @@ export default {
     created() {
         this.initForm();
         this.$http.get(`/${this.resource}/tables`).then(response => {
+            console.log(response);
             this.unit_types = response.data.unit_types;
             this.accounts = response.data.accounts;
             this.currency_types = response.data.currency_types;
@@ -697,6 +721,12 @@ export default {
             this.categories = response.data.categories;
             // this.individual_items = response.data.individual_items
             this.warehouses = response.data.warehouses;
+            if (this.warehouses.length > 0) {
+                this.form.warehouse_id = this.warehouses[0].id;
+            }
+            if (this.establishment_id) {
+                this.form.warehouse_id = this.establishment_id;
+            }
             this.web_platforms = response.data.web_platforms;
 
             this.form.sale_affectation_igv_type_id =
@@ -748,80 +778,74 @@ export default {
                         this.$toast.error("No se guardaron los cambios");
                     }
                 })
-                .catch(error => {
-
-                })
-            },
-            changeIndividualItems(){
-
-                // let acum_sale_unit_price = 0
-
-                // this.form.individual_items.forEach(row => {
-                //     // let individual_item = _.find(this.individual_items,{'id':id})
-                //     acum_sale_unit_price += parseFloat(row.sale_unit_price) * parseFloat(row.quantity)
-                // });
-
-                // this.form.sale_unit_price = acum_sale_unit_price
-                // this.form.sale_unit_price_set = acum_sale_unit_price
-
-            },
-            initForm() {
-                this.loading_submit = false,
-                this.errors = {}
-                this.form = {
-                    id: null,
-                    item_type_id: '01',
-                    internal_id: null,
-                    item_code: null,
-                    item_code_gs1: null,
-                    description: null,
-                    name: null,
-                    second_name: null,
-                    unit_type_id: 'NIU',
-                    currency_type_id: 'PEN',
-                    sale_unit_price: 0,
-                    purchase_unit_price: 0,
-                    has_isc: false,
-                    system_isc_type_id: null,
-                    percentage_isc: 0,
-                    suggested_price: 0,
-                    sale_affectation_igv_type_id: null,
-                    purchase_affectation_igv_type_id: null,
-                    calculate_quantity: false,
-                    stock: 0,
-                    stock_min: 1,
-                    has_igv: true,
-                    has_perception: false,
-                    item_unit_types:[],
-                    percentage_of_profit: 0,
-                    percentage_perception: 0,
-                    image: null,
-                    image_url: null,
-                    temp_path: null,
-                    account_id: null,
-                    is_set: true,
-                    sale_unit_price_set: 0,
-                    date_of_due:null,
-                    web_platform_id:null,
-                    category_id:null,
-                    area_id:null,
-                    individual_items:[],
-                    attributes: []
-                }
-                this.show_has_igv = true
-                this.enabled_percentage_of_profit = false
-            },
-            onSuccess(response, file, fileList) {
-                if (response.success) {
-                    this.form.image = response.data.filename
-                    this.form.image_url = response.data.temp_image
-                    this.form.temp_path = response.data.temp_path
-                } else {
-                    this.$toast.error(response.message)
-                }
-            },
-            changeAffectationIgvType(){
-                let is_exonerated = false
+                .catch(error => {});
+        },
+        changeIndividualItems() {
+            // let acum_sale_unit_price = 0
+            // this.form.individual_items.forEach(row => {
+            //     // let individual_item = _.find(this.individual_items,{'id':id})
+            //     acum_sale_unit_price += parseFloat(row.sale_unit_price) * parseFloat(row.quantity)
+            // });
+            // this.form.sale_unit_price = acum_sale_unit_price
+            // this.form.sale_unit_price_set = acum_sale_unit_price
+        },
+        initForm() {
+            (this.loading_submit = false), (this.errors = {});
+            this.form = {
+                warehouse_id: null,
+                id: null,
+                item_type_id: "01",
+                internal_id: null,
+                item_code: null,
+                item_code_gs1: null,
+                description: null,
+                name: null,
+                second_name: null,
+                unit_type_id: "NIU",
+                currency_type_id: "PEN",
+                sale_unit_price: 0,
+                purchase_unit_price: 0,
+                has_isc: false,
+                system_isc_type_id: null,
+                percentage_isc: 0,
+                suggested_price: 0,
+                sale_affectation_igv_type_id: null,
+                purchase_affectation_igv_type_id: null,
+                calculate_quantity: false,
+                stock: 0,
+                stock_min: 1,
+                has_igv: true,
+                has_perception: false,
+                item_unit_types: [],
+                percentage_of_profit: 0,
+                percentage_perception: 0,
+                image: null,
+                image_url: null,
+                temp_path: null,
+                account_id: null,
+                is_set: true,
+                sale_unit_price_set: 0,
+                date_of_due: null,
+                web_platform_id: null,
+                category_id: null,
+                area_id: null,
+                individual_items: [],
+                attributes: []
+            };
+            this.show_has_igv = true;
+            this.enabled_percentage_of_profit = false;
+        },
+        onSuccess(response, file, fileList) {
+            if (response.success) {
+                this.form.image = response.data.filename;
+                this.form.image_url = response.data.temp_image;
+                this.form.temp_path = response.data.temp_path;
+            } else {
+                this.$toast.error(response.message);
+            }
+        },
+        changeAffectationIgvType() {
+            let is_exonerated = false;
             if (is_exonerated) {
                 this.show_has_igv = false;
                 this.form.has_igv = true;
@@ -852,6 +876,9 @@ export default {
                         console.log(this.form);
                         this.changeAffectationIgvType();
                     });
+            }
+            if (!this.form.warehouse_id && this.warehouses.length > 0) {
+                this.form.warehouse_id = this.warehouses[0].id;
             }
         },
         loadRecord() {
@@ -950,9 +977,9 @@ export default {
                     100;
         },
         submit() {
+            if(this.form.category_id === null) return this.$toast.error("Debe seleccionar una categoría");
             if (this.form.individual_items.length < 1)
                 return this.$toast.error("Al menos debe elegir 2 productos");
-                
 
             this.form.sale_unit_price_set = this.form.sale_unit_price;
             this.form.attributes = this.form.attributes

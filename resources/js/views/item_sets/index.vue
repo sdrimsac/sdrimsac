@@ -61,7 +61,7 @@
                 <h6 class="my-0 text-white">Productos compuestos</h6>
             </div>
             <div class="card-body">
-                <data-table :resource="resource">
+                <data-table ref="datatable" :resource="resource">
                     <tr slot="heading" width="100%">
                         <th>#</th>
                         <th>Cód. Interno</th>
@@ -170,7 +170,9 @@ export default {
             warehousesDetail: []
         };
     },
-    created() {},
+    created() {
+     
+    },
     methods: {
         clickImportSetIndividual() {
             this.showImportSetIndividualDialog = true;
