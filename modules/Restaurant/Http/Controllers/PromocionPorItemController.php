@@ -94,7 +94,7 @@ class PromocionPorItemController extends Controller
                 
                 $restante = $PromoDisp - $totalReclamar ; 
                 DB::connection('tenant')->select('update promociones set prom_to_redeem = ? , prom_redeemed = ?    where id  = ?', [$restante, $totalReclamar,$promocionId ]); 
-                DB::insert('insert into listado_canje_promotion (fecha_cambio, clie_id , items_id, cantidad, created_at , updated_at ) values (?,?,?,?,?,?)', [$date,$clieId,$itemId,$totalReclamar,$date,$date]);
+                DB::connection('tenant')->insert('insert into listado_canje_promotion (fecha_cambio, clie_id , items_id, cantidad, created_at , updated_at ) values (?,?,?,?,?,?)', [$date,$clieId,$itemId,$totalReclamar,$date,$date]);
 
             }
         } catch (\Exception $e) {
