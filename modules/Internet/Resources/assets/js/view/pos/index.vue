@@ -662,7 +662,7 @@ const WarehousesDetail = () =>
     );
 const Tables = () => import("./partials/tables.vue");
 const CashHistory = () => import("./partials/cash_history.vue");
-const DocumentsPrint = () => import("./partials/documents_print.vue");
+const DocumentsPrint = () => import("../../../../../../Restaurant/Resources/assets/js/views/pos/partials/documents_print.vue");
 const ListOrden = () => import("./partials/list_ordens.vue");
 const RegisterForm = () => import("./partials/register_form.vue");
 const ListFoodMobiles = () => import("./partials/list_food_mobiles.vue");

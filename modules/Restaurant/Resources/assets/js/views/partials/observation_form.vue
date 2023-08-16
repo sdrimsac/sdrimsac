@@ -25,7 +25,7 @@
                 <template v-if="tags.length == 0">
                     <el-tag type="danger" :disable-transitions="true">
                         <span
-                            > PRECIONE
+                            > PRESIONE
                             <b>+ AGREGAR</b> PARA GUARDARLA
                         </span>
                     </el-tag>

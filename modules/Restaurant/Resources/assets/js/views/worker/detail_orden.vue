@@ -28,7 +28,7 @@
         </div>
 
         <div class="row">
-            <div v-if="screenWidth > 678" class="col-md-5 col-xl-8 col-lg-6 p-1">
+            <div v-if="screenWidth > 800" class="col-md-5 col-xl-8 col-lg-6 p-1">
                 <list-food ref="list_foods" @insertOrden="insertOrden" :configuration="configuration"
                     :pagination="pagination" :table="table" :categories="categories" :showMenu.sync="showMenu"
                     :localOrden.sync="localOrden" :foods.sync="foods" @changePage="changePage"></list-food>
@@ -392,10 +392,11 @@ export default {
             //this.$forceUpdate();
         },
         setFalse() {
-            this.foods = this.foods.map(f => {
+            let f = this.foods.map(f => {
                 f.select = false;
                 return f;
             });
+            this.$emit("update:foods", f);
             this.allFalse = true;
         },
         

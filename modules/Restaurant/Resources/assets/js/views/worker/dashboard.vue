@@ -13,15 +13,27 @@
                                     <i class="icofont-waiter icofont-2x"></i>
                                     {{ user.name }}
                                 </a>
-                                <div class="dropdown-menu w-300" aria-labelledby="dropdownMenuLink">
+                                <el-button
+                                v-if="show != 'tables'"
+                                @click="
+                                        selectOption = 1;
+                                    tables_row_select = null;
+                                    show = 'tables';"
+                                    >
+                                    <i class="icofont icofont-dining-table"></i>
+                                    Visualizar mesas
+                                </el-button>
+                                <!-- <div class="dropdown-menu w-300" aria-labelledby="dropdownMenuLink"> -->
                                     <!-- <a class="dropdown-item" href="javascript:void(0)" @click="selectOption=1;tables_row_select=null;show ='tables';createOrden();"><i class="icofont-fast-food"></i> Nueva Orden</a> -->
-                                    <a class="dropdown-item" href="javascript:void(0)" @click="
+                                    <!-- <a class="dropdown-item" href="javascript:void(0)" @click="
                                         selectOption = 1;
                                     tables_row_select = null;
                                     show = 'tables';
                                     "><i class="icofont icofont-dining-table"></i>
-                                        Visualizar Mesas</a>
-                                    <a class="dropdown-item" href="javascript:void(0)" @click="
+                                        Visualizar Mesas</a> -->
+
+
+                                    <!-- <a class="dropdown-item" href="javascript:void(0)" @click="
                                         selectOption = 2;
                                     setArea(0);
                                     show = 'ordens';
@@ -31,11 +43,11 @@
                                     <a class="dropdown-item" href="javascript:void(0)"
                                         onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                         <i class="icofont-power"></i> Cerrar
-                                        Sessión</a>
-                                    <form id="logout-form" action="/logout" method="POST" style="display: none;">
+                                        Sessión</a> -->
+                                    <!-- <form id="logout-form" action="/logout" method="POST" style="display: none;">
                                         <input type="hidden" name="_token" :value="csrf" />
-                                    </form>
-                                </div>
+                                    </form> -->
+                                <!-- </div> -->
                             </div>
                         </div>
                     </h1>
@@ -72,7 +84,7 @@
                         <span slot="label">
                             <i class="fas fa-list"></i>
                             <template v-if="optionsSelected == 0">
-                                Buscar por Nombre del Productoooo
+                                Buscar por Nombre del Producto
                             </template>
                             <template v-else>
                                 Buscar por Codigo Interno Producto
