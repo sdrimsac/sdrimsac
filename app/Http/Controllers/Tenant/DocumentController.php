@@ -1612,7 +1612,10 @@ class DocumentController extends Controller
                 $date_now->setTime(0, 0, 0);
                 $two_days_ago = $date_now->copy()->subDays(2);
                 $same_date = $issued_date >= $two_days_ago && $issued_date <= $date_now;
-
+                //si issued_date es mayor al dia de hoy
+                if ($issued_date > $date_now) {
+                    $same_date = true;
+                }
                 if ($same_date) {
                     $this->deleteAllPayments($record->payments);
                     $record->state_type_id = "11";
@@ -1640,7 +1643,7 @@ class DocumentController extends Controller
             });
             return [
                 'success' => $deleted,
-                'message' => $deleted ? 'Documento anulado con exito ' : 'El documento no se puede eliminar, debido a que tiene mas de dos de emitido. ' . $date_now
+                'message' => $deleted ? 'Documento anulado con exito ' : 'El documento no se puede eliminar, debido a que tiene mas de dos días de emitido. ' . $date_now
             ];
         } catch (Exception $e) {
 
