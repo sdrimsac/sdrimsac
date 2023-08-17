@@ -233,19 +233,19 @@ export default {
                 this.showMessage(message);
             });
             this.socket.on("connected", ({ message }) => {
-                this.$message.success(message);
+                // this.$message.success(message);
 
                 this.socket.emit("getStatus", url);
             });
             this.socket.on("setStatus", ({ status, sender }) => {
                 console.log(sender);
-                if (!status) {
-                    this.sender = "sdrimsac";
-                    this.$message.warning("Sesión iniciada con SDRIMSAC");
-                } else {
-                    this.sender = sender;
-                    this.$message.success("Whatsapp Listo!");
-                }
+                // if (!status) {
+                //     this.sender = "sdrimsac";
+                //     this.$message.warning("Sesión iniciada con SDRIMSAC");
+                // } else {
+                //     this.sender = sender;
+                //     this.$message.success("Whatsapp Listo!");
+                // }
             });
             //MessageResponse
         },

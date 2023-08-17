@@ -2218,8 +2218,9 @@ export default {
 
                 this.changePrice(newPrice);
                 this.reCalculateTotal();
-            }
-            if (this.form.total == 0) {
+            }   
+           
+            if (this.form.total == 0 && !this.emit_sale_note ) {
                 if (this.data) {
                     if (!this.data.oldClient && this.registerInternetId ) {
                         this.$toast.error("Monto inválido.");

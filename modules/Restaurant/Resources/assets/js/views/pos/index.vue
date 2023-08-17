@@ -1796,6 +1796,7 @@ export default {
     },
 
     async created() {
+        localStorage.setItem("quotation_stock", 0);
         let type_code = localStorage.getItem("type_code");
         let barcode = localStorage.getItem("barcode");
         if (barcode) {

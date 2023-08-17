@@ -605,7 +605,8 @@ export default {
             let totalPerDay = total / passed_days;
             let toPay = totalPerDay * (passed_days - left_days);
 
-            return [toPay, left_days, passed_days];
+
+            return [toPay.toFixed(2), left_days, passed_days];
         },
         async updateTotal(localItem) {
             let items = [];
@@ -684,7 +685,6 @@ export default {
                     concepts: this.conceptsSelected,
                     plan_variation_id: this.variationId
                 };
-
                 if (
                     this.newPlanCost > 0 &&
                     this.leftDays > 0 &&
@@ -693,6 +693,7 @@ export default {
                     let obs = this.observationChange();
                     let perDay = this.newPlanCost / this.passedDays;
                     let toPay = perDay * this.leftDays;
+                    toPay = toPay.toFixed(2);
                     obs += `SALDO RESTANTE NUEVO PLAN ${toPay}\n`;
                     this.$emit("updateObservation", obs);
                 }

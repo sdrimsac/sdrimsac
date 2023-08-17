@@ -27,9 +27,23 @@
                     </tr>
                 </thead>
                 <tbody>
-              <tr v-for="(data, idx) in records" :key="idx" :class="`${data.state_type_id == '11' ?'bg-danger text-white' :''}`">
-                        <td :class="`${data.state_type_id == '11' && 'text-white'}`" v-if="type == 'documents'">
-
+                    <tr
+                        v-for="(data, idx) in records"
+                        :key="idx"
+                        :class="
+                            `${
+                                data.state_type_id == '11'
+                                    ? 'bg-danger text-white'
+                                    : ''
+                            }`
+                        "
+                    >
+                        <td
+                            :class="
+                                `${data.state_type_id == '11' && 'text-white'}`
+                            "
+                            v-if="type == 'documents'"
+                        >
                             <div
                                 class="dropdown-as-select d-inline-block"
                                 data-childselector="span"
@@ -107,9 +121,48 @@
                                 </div>
                             </div>
                         </td>
-                       <td  :class="`${data.state_type_id == '11' && 'text-white'}`">
+                        <td
+                            :class="
+                                `${data.state_type_id == '11' && 'text-white'}`
+                            "
+                        >
+                            <template
+                                v-if="
+                                    type == 'quotations' &&
+                                        data.state_type_id != '11'
+                                "
+                            >
+                                <el-tooltip content="Generar documento">
+                                    <el-button
+                                        size="mini"
+                                        style="margin-bottom:3px;"
+                                        @click="clickOptionsQuotation(data.id)"
+                                    >
+                                        <i class="fas fa-file-import"></i>
+                                    </el-button>
+                                </el-tooltip>
+                                <el-tooltip content="Editar">
+                                    <el-button
+                                        size="mini"
+                                        style="margin-bottom:3px;"
+                                        @click="clickEditQuotation(data.id)"
+                                    >
+                                        <i class="fas fa-pencil-alt"></i>
+                                    </el-button>
+                                </el-tooltip>
+                                <el-tooltip content="Anular">
+                                    <el-button
+                                        @click="clickAnulateQuotation(data.id)"
+                                        type="danger"
+                                        size="mini"
+                                        style="margin-bottom:3px;"
+                                    >
+                                        <i class="fas fa-ban"></i>
+                                    </el-button>
+                                </el-tooltip>
+                            </template>
                             <el-button
-                               v-if="data.state_type_id != '11'"
+                                v-if="data.state_type_id != '11'"
                                 size="mini"
                                 type="success"
                                 style="margin-bottom:3px;"
@@ -122,7 +175,7 @@
                             </el-button>
 
                             <el-button
-                                  v-if="data.state_type_id != '11'"
+                                v-if="data.state_type_id != '11'"
                                 size="mini"
                                 plain
                                 @click="
@@ -135,7 +188,11 @@
                                 <i class="fas fa-print"></i>
                             </el-button>
                         </td>
-                          <td  :class="`${data.state_type_id == '11' && 'text-white'}`">
+                        <td
+                            :class="
+                                `${data.state_type_id == '11' && 'text-white'}`
+                            "
+                        >
                             <template v-if="type == 'saleNotes'">
                                 {{ data.full_number }}
                             </template>
@@ -146,9 +203,18 @@
                                 {{ data.identifier }}
                             </template>
                         </td>
-                             <td  :class="`${data.state_type_id == '11' && 'text-white'}`">{{ data.date_of_issue }}</td>
-                        <td  :class="`${data.state_type_id == '11' && 'text-white'}`">
-
+                        <td
+                            :class="
+                                `${data.state_type_id == '11' && 'text-white'}`
+                            "
+                        >
+                            {{ data.date_of_issue }}
+                        </td>
+                        <td
+                            :class="
+                                `${data.state_type_id == '11' && 'text-white'}`
+                            "
+                        >
                             {{ data.customer_name }} <br />
                             <span class="text-muted">{{
                                 data.customer_number
@@ -176,7 +242,6 @@
                             </template>
                         </td>
                         <td
-                          
                             :class="
                                 `${
                                     data.state_type_description == 'Aceptado'
@@ -192,9 +257,12 @@
                             "
                         >
                             <b> {{ data.state_type_description }}</b>
-                            </td >
-                        <td  :class="`${data.state_type_id == '11' && 'text-white'}`">
-
+                        </td>
+                        <td
+                            :class="
+                                `${data.state_type_id == '11' && 'text-white'}`
+                            "
+                        >
                             {{ data.total }}
                         </td>
                     </tr>
@@ -218,25 +286,69 @@
             :establishment.sync="establishment"
         >
         </whatsapp-modal>
+
+        <template v-if="type == 'quotations'">
+            <quotation-options
+                :showDialog.sync="showDialogOptions"
+                :recordId="quotationId"
+                :showGenerate="true"
+                :showClose="true"
+            ></quotation-options>
+            <quotation-edit-modal
+                :showDialog.sync="showEditQuotationDialog"
+                :recordId="quotationId"
+            ></quotation-edit-modal>
+        </template>
     </div>
 </template>
 
 <script>
 import whatsappModal from "./whatsapp_modal.vue";
+import { deletable } from "../../../../../../../../resources/js/mixins/deletable";
+const QuotationEditModal = () => import("./quotation_edit_modal.vue");
+const QuotationOptions = () =>
+    import(
+        "../../../../../../../../resources/js/views/quotations/partials/options.vue"
+    );
 export default {
-    components: { whatsappModal },
-    props: ["records", "pagination", "type", "company", "sender","establishment"],
+    components: { whatsappModal, QuotationOptions, QuotationEditModal },
+    mixins: [deletable],
+    props: [
+        "records",
+        "pagination",
+        "type",
+        "company",
+        "sender",
+        "establishment"
+    ],
     data() {
         return {
             loading: false,
             showWhatsappModal: false,
             currentId: null,
             currentType: null,
-            currentNumber: null
+            currentNumber: null,
+            showDialogOptions: false,
+            quotationId: null,
+            showEditQuotationDialog: false
         };
     },
 
     methods: {
+        clickAnulateQuotation(id = null) {
+            this.anular(`/quotations/anular/${id}`).then(() =>
+            this.$emit("getRecords")
+                // this.$eventHub.$emit("reloadData")
+            );
+        },
+        clickEditQuotation(recordId = null) {
+            this.quotationId = recordId;
+            this.showEditQuotationDialog = true;
+        },
+        clickOptionsQuotation(recordId = null) {
+            this.quotationId = recordId;
+            this.showDialogOptions = true;
+        },
         clickOpenWhatsapp(record) {
             console.log(this.establishment, " mode");
             this.showWhatsappModal = true;

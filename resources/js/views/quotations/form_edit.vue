@@ -95,7 +95,7 @@
                                     ></small>
                                 </div>
                             </div>
-                            <div class="col-lg-2">
+                            <div class="col-4 col-lg-2">
                                 <div
                                     class="form-group"
                                     :class="{
@@ -107,6 +107,7 @@
                                         >Fec. Emisión</label
                                     >
                                     <el-date-picker
+                                        class="w-100"
                                         v-model="form.date_of_issue"
                                         type="date"
                                         value-format="yyyy-MM-dd"
@@ -121,7 +122,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-lg-2">
+                            <div class="col-4 col-lg-2">
                                 <div
                                     class="form-group"
                                     :class="{
@@ -132,6 +133,7 @@
                                         >Fec. Vencimiento</label
                                     >
                                     <el-date-picker
+                                        class="w-100"
                                         v-model="form.date_of_due"
                                         type="date"
                                         value-format="yyyy-MM-dd"
@@ -144,7 +146,7 @@
                                     ></small>
                                 </div>
                             </div>
-                            <div class="col-lg-2">
+                            <div class="col-md-4 col-lg-2">
                                 <div
                                     class="form-group"
                                     :class="{
@@ -155,6 +157,7 @@
                                         >Fec. Entrega</label
                                     >
                                     <el-date-picker
+                                        class="w-100"
                                         v-model="form.delivery_date"
                                         type="date"
                                         value-format="yyyy-MM-dd"
@@ -514,7 +517,8 @@
                                                 <td>{{ index + 1 }}</td>
                                                 <td>
                                                     {{ row.item.description }}
-                                                    {{row.item.presentation &&
+                                                    {{
+                                                        row.item.presentation &&
                                                         row.item.presentation.hasOwnProperty(
                                                             "description"
                                                         )
@@ -695,6 +699,9 @@ export default {
         TermsCondition
     },
     props: {
+        external:{
+            default:false,
+        },
         resourceId: {
             required: true,
 
@@ -734,8 +741,17 @@ export default {
             recordItem: null
         };
     },
+    
     async created() {
-        await this.initForm();
+            if(!this.external){
+                this.initialize();
+            }
+    },
+    methods: {
+        async initialize(){
+        
+
+         await this.initForm();
         await this.$http.get(`/${this.resource}/tables`).then(response => {
             this.currency_types = response.data.currency_types;
             this.establishments = response.data.establishments;
@@ -760,12 +776,12 @@ export default {
             this.allCustomers();
             this.initRecord();
         });
-        this.loading_form = true;
         this.$eventHub.$on("reloadDataPersons", customer_id => {
             this.reloadDataCustomers(customer_id);
         });
+        this.loading_form = true;
+        
     },
-    methods: {
         changeTermsCondition() {
             if (this.form.active_terms_condition) {
                 this.showDialogTermsCondition = true;
@@ -1087,7 +1103,11 @@ export default {
                         this.$message.success(
                             "Se guardaron los cambios correctamente."
                         );
-                        this.showDialogOptions = true;
+                        if(this.external){
+                            this.$emit("close");
+                        }else{
+                            this.showDialogOptions = true;
+                        }
                     } else {
                         this.$message.error(response.data.message);
                     }
@@ -1104,7 +1124,12 @@ export default {
                 });
         },
         close() {
-            location.href = "/quotations";
+            if(this.external){
+                this.$emit("close");
+            }else{
+
+                location.href = "/quotations";
+            }
         },
         reloadDataCustomers(customer_id) {
             this.$http

@@ -16,6 +16,7 @@ use Barryvdh\DomPDF\Facade as PDF;
 use App\Models\Tenant\CashDocument;
 use App\Models\Tenant\DocumentItem;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Tenant\WhatsappController;
 use App\Models\Tenant\Catalogs\UnitType;
 use App\Models\Tenant\PaymentMethodType;
 use App\Http\Requests\Tenant\CashRequest;
@@ -36,6 +37,8 @@ use App\Models\Tenant\ItemUnitType;
 use App\Models\Tenant\Quotation;
 use App\Models\Tenant\SaleNoteItem;
 use Barryvdh\Debugbar\Twig\Extension\Dump;
+use Hyn\Tenancy\Environment;
+use Hyn\Tenancy\Models\Website;
 use Modules\Restaurant\Models\Turns;
 use Illuminate\Support\Facades\DB;
 use Modules\Item\Models\CategoryItem;
@@ -48,9 +51,10 @@ use NumberFormatter;
 class CashController extends Controller
 {
 
-    public function index_report_closed_cash(){
+    public function index_report_closed_cash()
+    {
         $configuration = Configuration::first();
-        $users = User::where('active',1)->get();
+        $users = User::where('active', 1)->get();
         return view('tenant.cash.index_closed', compact('configuration', 'users'));
     }
     public function index_report_cash()
@@ -60,19 +64,19 @@ class CashController extends Controller
     }
     //index_report_closed_cash
 
-    public function incomes_expenses_delete($id,$type){
+    public function incomes_expenses_delete($id, $type)
+    {
 
         $box = Box::findOrFail($id);
-        if($type == 'expenses'){
-            BoxesDetail::where('boxes_id',$id)->delete();
+        if ($type == 'expenses') {
+            BoxesDetail::where('boxes_id', $id)->delete();
         }
         $box->delete();
         $message = $type == 'expenses' ? 'Gasto' : 'Ingreso';
         return [
             'success' => true,
-            'message' => $message.' eliminado con éxito'
+            'message' => $message . ' eliminado con éxito'
         ];
-            
     }
     public function report_cash_export($type, Request $request)
     {
@@ -444,9 +448,9 @@ class CashController extends Controller
         //total venta -> jalar documentos
         $recordsDocument = null;
         if ($date_end) {
-            $recordsDocument = Document::where('state_type_id','<>',11) ->whereBetween('date_of_issue', [$date_start, $date_end]);
+            $recordsDocument = Document::where('state_type_id', '<>', 11)->whereBetween('date_of_issue', [$date_start, $date_end]);
         } else {
-            $recordsDocument = Document::where('state_type_id','<>',11) ->whereDate('date_of_issue', '=', $date_start);
+            $recordsDocument = Document::where('state_type_id', '<>', 11)->whereDate('date_of_issue', '=', $date_start);
         }
         $config = Configuration::first();
         $item_id_variation = $config->item_variation_id;
@@ -610,9 +614,9 @@ class CashController extends Controller
         });
         $recordsSaleNote = null;
         if ($date_end) {
-            $recordsSaleNote = SaleNote::where('state_type_id','<>',11)->whereBetween('date_of_issue', [$date_start, $date_end]);
+            $recordsSaleNote = SaleNote::where('state_type_id', '<>', 11)->whereBetween('date_of_issue', [$date_start, $date_end]);
         } else {
-            $recordsSaleNote = SaleNote::where('state_type_id','<>',11)->whereDate('date_of_issue', '=', $date_start);
+            $recordsSaleNote = SaleNote::where('state_type_id', '<>', 11)->whereDate('date_of_issue', '=', $date_start);
         }
 
         if ($establishment_id) {
@@ -825,8 +829,7 @@ class CashController extends Controller
         }
         $company = Company::active();
         $documents = $model::where('establishment_id', $establishment_id)
-        ->where('soap_type_id', $company->soap_type_id)
-        ;
+            ->where('soap_type_id', $company->soap_type_id);
         // $documents = $is_note_sale ?  SaleNote::where('establishment_id', $establishment_id) : Document::where('establishment_id', $establishment_id);
         $column = $request->column ?? "description";
         $value = $request->value;
@@ -1213,10 +1216,10 @@ class CashController extends Controller
         $user_id  = $request->input('user_id');
         $date_close = $request->input('date_close');
         $records = Cash::where('state', '=', 0);
-        if($user_id){
+        if ($user_id) {
             $records = $records->where('user_id', '=', $user_id);
         }
-        if($date_close){
+        if ($date_close) {
             $records = $records->where('date_closed', '=', $date_close);
         }
 
@@ -1350,29 +1353,27 @@ class CashController extends Controller
         $cash->state = 0;
         $cash->date_closed = date('Y-m-d');
         $cash->time_closed = date('H:i:s');
-
-        // $d_start =$cash->date_opening;
-        // $d_end = date('Y-m-d');
-        // $efectivo = Box::where('type', '1')->where('method', 'Efectivo')->where('expenses',0)->where('incomes',0)->where('state',0)->whereBetween('date', [$d_start, $d_end])->where('user_id',auth()->user()->id)->OrderBy('date', 'asc')->sum('amount');
-        // $gastos = Box::where('type', '2')->whereBetween('date', [$d_start, $d_end])->where('expenses',1)->where('state',0)->where('user_id',auth()->user()->id)->OrderBy('date', 'asc')->sum('amount');
-        // $transferencia = Box::where('type', '1')->where('method', 'Transferencia')->where('expenses',0)->where('incomes',0)->where('state',0)->whereBetween('date', [$d_start, $d_end])->where('user_id',auth()->user()->id)->OrderBy('date', 'asc')->sum('amount');
-        // $depositos = Box::where('type', '1')->where('method', 'Deposito Bancario')->where('expenses',0)->where('incomes',0)->where('state',0)->whereBetween('date', [$d_start, $d_end])->where('user_id',auth()->user()->id)->OrderBy('date', 'asc')->sum('amount');
-        // $tarjeta = Box::where('type', '1')->where('method', 'Tarjeta')->where('expenses',0)->where('incomes',0)->where('state',0)->whereBetween('date', [$d_start, $d_end])->where('user_id',auth()->user()->id)->OrderBy('date', 'asc')->sum('amount');
-        // $yape = Box::where('type', '1')->where('method', 'Yape')->where('expenses',0)->where('incomes',0)->where('state',0)->whereBetween('date', [$d_start, $d_end])->where('user_id',auth()->user()->id)->OrderBy('date', 'asc')->sum('amount');
-        // $plin = Box::where('type', '1')->where('method', 'PLIN')->where('expenses',0)->where('incomes',0)->where('state',0)->whereBetween('date', [$d_start, $d_end])->where('user_id',auth()->user()->id)->OrderBy('date', 'asc')->sum('amount');
-        // $otros_ingresos = Box::where('type', '1')->where('method', 'Efectivo')->where('incomes',1)->where('state',0)->whereBetween('date', [$d_start, $d_end])->where('user_id',auth()->user()->id)->OrderBy('date', 'asc')->sum('amount');
-        // // $cash->final_balance = round(($efectivo+$transferencia+$depositos+$tarjeta+$yape+$plin+$otros_ingresos)-$gastos, 2);
-        // // $cash->income = round($otros_ingresos, 2);
-        // // $cash->state = false;
         $cash->save();
         Box::where('cash_id', $id)->update(['close' => date('Y-m-d'), 'state' => 0]);
-        // $close_boxe = Box::where('state', 1)->where('cash_id', $id)->get();
-        // foreach ($close_boxe as $key => $value) {
-        //     $box = Box::findOrFail($value->id);
-        //     $box->close = date('Y-m-d');
-        //     $box->state = 0;
-        //     $box->save();
-        // }
+        $user_name = $cash->user->name;
+        $configuration = Configuration::first();
+        $number_activity = $configuration->number_activity;
+        if ($number_activity) {
+            $hostname =  app(Environment::class)->hostname();
+            $resource ="http://".$hostname->fqdn."/caja/report-boxes/reports_resumen_type?cash_id=".$id;
+            $request = new Request(
+                [
+                    'from_server' => true,
+                    'sender' => 'sdrimsac',
+                    'number' => $number_activity,
+                    'resource' => $resource,
+                    'file_name' => 'Reporte_Caja' . Carbon::now()->format("Y-m-d"),
+                    'message' => "Caja cerrada por " . $user_name
+                ]
+            );
+
+            (new WhatsappController)->sendHistorial($request);
+        }
 
         return [
             'success' => true,

@@ -1,6 +1,7 @@
 <template>
     <div>
         <el-dialog
+        append-to-body
             :title="titleDialog"
             :visible="showDialog"
             @open="create"
@@ -371,8 +372,10 @@
 </template>
 
 <script>
-import DocumentOptions from "../../documents/partials/options.vue";
-import SaleNoteOptions from "../../sale_notes/partials/options.vue";
+const DocumentOptions = () => import("../../documents/partials/options.vue");
+// import DocumentOptions from "../../documents/partials/options.vue";
+const SaleNoteOptions = () => import("../../sale_notes/partials/options.vue");
+// import SaleNoteOptions from "../../sale_notes/partials/options.vue";
 
 export default {
     components: { DocumentOptions, SaleNoteOptions },

@@ -550,7 +550,9 @@ export default {
             return pass;
         },
        async addFood(index = 0, type = null) {
-      
+            let quotation_stock = localStorage.getItem("quotation_stock") || 0;
+            quotation_stock = quotation_stock == 1;
+
             if (this.blockAdd && !this.configuration.box_orden) {
                 this.$toast.error("No puede agregar productos a esta orden.");
                 return;
@@ -566,7 +568,7 @@ export default {
             );
 
             if (this.selectedFood.item.is_set == 1) {
-                if (this.configuration.sales_stock == true) {
+                if (this.configuration.sales_stock == true && !quotation_stock) {
                     let qty = 1;
                     if(foodFound.length != 0){
                         qty = foodFound.reduce((a, b) => a + Number(b.quantity), 0);
@@ -581,6 +583,7 @@ export default {
                 if (
                     Number(this.selectedFood.item.stock) <= 0 &&
                     this.configuration.sales_stock == true
+                    && !quotation_stock
                 ) {
                     this.$toast.warning("Stock insuficiente");
                     return;
@@ -626,7 +629,7 @@ export default {
                 } else {
                     qty += 1;
                 }
-                if (this.configuration.sales_stock == true && this.selectedFood.item.is_set == 0) {
+                if (this.configuration.sales_stock == true && this.selectedFood.item.is_set == 0 && !quotation_stock) {
                     if (qty > Number(this.selectedFood.item.stock)) {
                         this.$toast.warning("Limite de stock alcanzado");
                         return;
@@ -635,7 +638,7 @@ export default {
             } else {
                 if (type) {
                     let qty = type.quantity_unit;
-                    if (this.configuration.sales_stock == true && this.selectedFood.item.is_set == 0) {
+                    if (this.configuration.sales_stock == true && this.selectedFood.item.is_set == 0 && !quotation_stock) {
                         let stock = Number(this.selectedFood.item.stock);
                         if ( qty > stock) {
                             this.$toast.warning("Limite de stock alcanzado");

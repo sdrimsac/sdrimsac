@@ -188,21 +188,45 @@
             <div :class="`p-1 bg-primary`">
                 <div class="row col-md-12 mx-1">
                     <div>
-                        <button
-                            alt="Cobrar La venta "
-                            v-if="isCreatingOrden == false"
-                            class="btn btn-light mt-2"
-                            type="button"
-                            @click="payOrden()"
-                            style="max-height: 45px ; max-width: 80px;"
+                        <template
+                            v-if="
+                                this.quotation_stock &&
+                                    configuration.quotation &&
+                                    localOrden.length != 0
+                            "
                         >
-                            <i
-                                class="fas fa-money-bill-wave"
-                                style="color: var(--primary) !important"
-                            ></i>
-                            <br />
-                            Cobrar
-                        </button>
+                            <button
+                                alt="Cotizar "
+                                class="btn btn-light mt-2"
+                                type="button"
+                                @click="openQuotation"
+                                style="max-height: 45px ; max-width: 80px;"
+                            >
+                                <i
+                                    class="fas fa-clipboard-list"
+                                    style="color: var(--primary) !important"
+                                ></i>
+                                <br />
+                                Cotizar
+                            </button>
+                        </template>
+                        <template v-else>
+                            <button
+                                alt="Cobrar La venta "
+                                v-if="isCreatingOrden == false"
+                                class="btn btn-light mt-2"
+                                type="button"
+                                @click="payOrden()"
+                                style="max-height: 45px ; max-width: 80px;"
+                            >
+                                <i
+                                    class="fas fa-money-bill-wave"
+                                    style="color: var(--primary) !important"
+                                ></i>
+                                <br />
+                                Cobrar
+                            </button>
+                        </template>
 
                         <button
                             v-if="
@@ -350,7 +374,7 @@
                                     </el-button>
                                     <div></div>
                                 </div>
-                                <div class="col-12">
+                                <!-- <div class="col-12">
                                     <el-button
                                         v-if="
                                             configuration.quotation &&
@@ -384,7 +408,7 @@
                                         </div>
                                         <div></div>
                                     </el-button>
-                                </div>
+                                </div> -->
                                 <div class="col-12">
                                     <el-button
                                         v-if="
@@ -541,6 +565,27 @@
                                     >Variación</span
                                 ></el-checkbox
                             >
+                        </template>
+                        <template>
+                            <el-checkbox
+                                class="margin-left:5px;"
+                                v-model="quotation_stock"
+                                @change="setQuotationStock"
+                                v-if="
+                                    configuration.quotation 
+                                "
+                            >
+                                <span class="text-white"
+                                    >Para cotizar
+                                    <el-tooltip
+                                        content="No se toma en cuenta el stock de los productos"
+                                    >
+                                        <i
+                                            class="el-tooltip fa fa-info-circle item"
+                                        ></i>
+                                    </el-tooltip>
+                                </span>
+                            </el-checkbox>
                         </template>
                         <template>
                             <el-input
@@ -2187,6 +2232,7 @@ export default {
 
     data() {
         return {
+            quotation_stock: false,
             name_pdf: null,
             showChangeName: false,
             isConsignment: false,
@@ -2363,6 +2409,13 @@ export default {
         await this.getTags();
     },
     methods: {
+        setQuotationStock() {
+            let quotation_stock = this.quotation_stock ? 1 : 0;
+            localStorage.setItem("quotation_stock", quotation_stock);
+            if (!this.quotation_stock) {
+                this.directSale();
+            }
+        },
         restoreName(idx) {
             let ordens = [...this.localOrden];
             ordens[idx].food.item.name_product_pdf = null;
@@ -2714,7 +2767,7 @@ export default {
             this.$emit("update:localOrden", ord);
         },
         verifyStock(orden, idx) {
-            if (this.configuration.sales_stock) {
+            if (this.configuration.sales_stock && !this.quotation_stock) {
                 let current_orden = this.localOrden.filter(
                     o => o.id == orden.id
                 );
@@ -2766,7 +2819,10 @@ export default {
             }
             let stock = Number(orden.food.item.stock);
 
-            if (this.configuration.sales_stock == true) {
+            if (
+                this.configuration.sales_stock == true &&
+                !this.quotation_stock
+            ) {
                 if (qty > stock) {
                     return true;
                 }
@@ -2910,6 +2966,7 @@ export default {
             }
         },
         limpiarForm() {
+            this.quotation_stock = false;
             this.$emit("limpiarForm");
         },
         openApart() {
