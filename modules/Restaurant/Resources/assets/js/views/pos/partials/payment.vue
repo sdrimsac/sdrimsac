@@ -14,6 +14,13 @@
     >
         <div v-loading="loading" class=" mb-0">
             <div class="pt-1" v-loading="loading_submit">
+                <div class="d-flex pt-2 justify-content-end">
+                        <el-button size="mini" type="primary"
+                        @click="showListItems = true"
+                        >
+                            <i class="fas fa-clipboard-list"></i>
+                        </el-button>
+                </div>
                 <div class="row pt-2">
                     <div class="col-lg-12">
                         <div class="mb-2">
@@ -744,7 +751,9 @@
                                                                     50
                                                                 )
                                                             "
-                                                        >50</button>
+                                                        >
+                                                            50
+                                                        </button>
                                                     </div>
                                                     <div
                                                         class="col-3 col-lg-2 col-md-2  col-xl-2"
@@ -1011,7 +1020,7 @@
                 </div>
                 <div class="p-3">
                     <div class="row">
-                           <template v-if="configuration.affectation_optional">
+                        <template v-if="configuration.affectation_optional">
                             <div class="col-lg-6 col-md-6 col-12">
                                 <label>
                                     Afectación IGV para el documento
@@ -1034,10 +1043,10 @@
                                 </el-select>
                             </div>
                         </template>
-                        <div class="col-lg-4 col-md-4 col-12 d-flex align-items-end justify-content-center">
-                            <div
-                            >
-                           
+                        <div
+                            class="col-lg-4 col-md-4 col-12 d-flex align-items-end justify-content-center"
+                        >
+                            <div>
                                 <button
                                     class="btn btn-block btn-primary"
                                     @click="sendPayment"
@@ -1056,7 +1065,6 @@
                                 </button>
                             </div>
                         </div>
-                     
                     </div>
                 </div>
             </div>
@@ -1103,6 +1111,15 @@
             >
             </person-college-form>
         </div>
+
+        <list-items
+        
+        :showDialog.sync="showListItems"
+        :form="form"
+
+        >
+
+        </list-items>
     </el-dialog>
 </template>
 
@@ -1142,7 +1159,7 @@ import printjs from "print-js";
 //import MultiplePaymentForm from "./multiple_payment.vue";
 //import PersonForm from "../../../../../../../../resources/js/views/persons/form.vue";
 //import ShowSplitPaymentForm from "./split_payment.vue";
-
+const ListItems = () => import("./list_items.vue");
 const CardBrandsForm = () =>
     import("../../../../../../../../resources/js/views/card_brands/form.vue");
 const MultiplePaymentForm = () => import("./multiple_payment.vue");
@@ -1155,6 +1172,7 @@ const PersonCollegeForm = () =>
     );
 export default {
     components: {
+        ListItems,
         PersonCollegeForm,
         CardBrandsForm,
         MultiplePaymentForm,
@@ -1203,6 +1221,7 @@ export default {
     },
     data() {
         return {
+            showListItems: false,
             discountTotal: true,
             paymentCondition: "01",
             payment_condition: [
@@ -2344,6 +2363,7 @@ export default {
                 this.discountGlobal();
             }
 
+         
             // this.discountGlobal();
         },
         chargeGlobal() {

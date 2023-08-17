@@ -4240,13 +4240,12 @@ export default {
             let total_value = 0;
             let total = 0;
             this.ordens.forEach(orden => {
-                total += _.round(
-                    orden.food.item.quantity * orden.food.price,
+              let t = parseFloat(_.round(
+                    parseInt(orden.food.item.quantity) * parseFloat(orden.food.price),
                     2
-                );
+                ));
+                total += t;
             });
-
-            //  total_igv = _.round((total / (1+(this.percentage_igv/100))) * (this.percentage_igv/100), 2);
 
             this.form.items.forEach(row => {
                 total_discount += parseFloat(row.total_discount);

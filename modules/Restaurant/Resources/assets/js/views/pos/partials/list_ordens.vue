@@ -3239,11 +3239,15 @@ export default {
             }
         },
         mergeItems(items) {
+            let hasFoodId = items.every(item => item.food && item.food.id);
+            if (!hasFoodId) {
+                return items;
+            }
             const resultado = {};
-
             // Recorrer el arreglo original
             items.forEach(obj => {
-                const key = `${obj.food_id}-${Number(obj.price).toFixed(2)}`;
+                const key = `${obj.food.id}-${Number(obj.price).toFixed(2)}`;
+                console.log(key);
                 if (resultado[key]) {
                     resultado[key].quantity += obj.quantity;
                 } else {

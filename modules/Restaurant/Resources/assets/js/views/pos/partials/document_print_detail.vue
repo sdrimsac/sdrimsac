@@ -187,6 +187,18 @@
                             >
                                 <i class="fas fa-print"></i>
                             </el-button>
+                            <el-button
+                                size="mini"
+                                plain
+                                @click="
+                                    previsualitation(
+                                        data.external_id,
+                                        data.document_type_id
+                                    )
+                                "
+                            >
+                      <i class="far fa-file-pdf"></i>
+                            </el-button>
                         </td>
                         <td
                             :class="
@@ -299,19 +311,30 @@
                 :recordId="quotationId"
             ></quotation-edit-modal>
         </template>
+        <document-print-previsualitation
+        :resource="resourcePdf"
+        :showDialog.sync="showPrevisualitation"
+        > </document-print-previsualitation>
     </div>
 </template>
 
 <script>
 import whatsappModal from "./whatsapp_modal.vue";
 import { deletable } from "../../../../../../../../resources/js/mixins/deletable";
+const DocumentPrintPrevisualitation = () =>
+    import("./document_print_previsualitation.vue");
 const QuotationEditModal = () => import("./quotation_edit_modal.vue");
 const QuotationOptions = () =>
     import(
         "../../../../../../../../resources/js/views/quotations/partials/options.vue"
     );
 export default {
-    components: { whatsappModal, QuotationOptions, QuotationEditModal },
+    components: {
+        whatsappModal,
+        QuotationOptions,
+        QuotationEditModal,
+        DocumentPrintPrevisualitation
+    },
     mixins: [deletable],
     props: [
         "records",
@@ -323,6 +346,8 @@ export default {
     ],
     data() {
         return {
+            resourcePdf: null,
+            showPrevisualitation: false,
             loading: false,
             showWhatsappModal: false,
             currentId: null,
@@ -335,9 +360,21 @@ export default {
     },
 
     methods: {
+        previsualitation(external_id, type) {
+            let url = null;
+            if (type == "80") {
+                url = `/sale-notes/print/${external_id}/ticket`;
+            } else if (type == "03" || type == "01") {
+                url = `/print/document/${external_id}/ticket`;
+            } else {
+                url = `/quotations/print/${external_id}/ticket`;
+            }
+            this.resourcePdf = url;
+            this.showPrevisualitation = true;
+        },
         clickAnulateQuotation(id = null) {
-            this.anular(`/quotations/anular/${id}`).then(() =>
-            this.$emit("getRecords")
+            this.anular(`/quotations/anular/${id}`).then(
+                () => this.$emit("getRecords")
                 // this.$eventHub.$emit("reloadData")
             );
         },
