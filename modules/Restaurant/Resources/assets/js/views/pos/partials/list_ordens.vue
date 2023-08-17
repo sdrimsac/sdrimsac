@@ -571,9 +571,7 @@
                                 class="margin-left:5px;"
                                 v-model="quotation_stock"
                                 @change="setQuotationStock"
-                                v-if="
-                                    configuration.quotation 
-                                "
+                                v-if="configuration.quotation"
                             >
                                 <span class="text-white"
                                     >Para cotizar
@@ -3207,6 +3205,8 @@ export default {
             } else {
                 form_submit.items = this.localOrden;
             }
+            form_submit.items = this.mergeItems(form_submit.items);
+            // console.log(form_submit.items);
             this.loading = true;
             // const responses = await this.$http.post(
             //     "/caja/worker/send-orden",
@@ -3237,6 +3237,23 @@ export default {
             } else {
                 this.$emit("paymentsOrden", form_submit);
             }
+        },
+        mergeItems(items) {
+            const resultado = {};
+
+            // Recorrer el arreglo original
+            items.forEach(obj => {
+                const key = `${obj.food_id}-${Number(obj.price).toFixed(2)}`;
+                if (resultado[key]) {
+                    resultado[key].quantity += obj.quantity;
+                } else {
+                    resultado[key] = { ...obj };
+                }
+            });
+
+            // Convertir el objeto resultado de nuevo en un arreglo
+            const arregloResultado = Object.values(resultado);
+            return arregloResultado;
         },
         formatUrlImage(url) {
             if (!url) return;

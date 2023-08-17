@@ -1965,7 +1965,7 @@ export default {
                     id: 42,
                     title: ["Productos", "Por vencer", this.products_to_due],
                     icon: "far fa-calendar-alt",
-                    visible: true
+                    visible: this.configuration.items_due_caja
                 },
                 {
                     id: 32,
