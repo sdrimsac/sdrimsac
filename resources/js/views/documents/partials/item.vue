@@ -77,7 +77,7 @@
                     </div>
                     <div class="col-md-3 col-sm-3">
                         <div class="form-group" :class="{'has-danger': errors.quantity}">
-                            <label class="control-label">Cantidad</label>
+                            <label class="control-label w-100">Cantidad</label>
 
                             <el-input-number  @focus="$event.target.select()" ref="cantidad" v-model="form.quantity" :min="0.01" :precision="4" @keyup.enter.native="focusPrecio();calculateQuantity();updateprice()" @input="calculateQuantity()"></el-input-number>
                             <small class="txt-danger" v-if="errors.quantity" v-text="errors.quantity[0]"></small>
@@ -996,6 +996,7 @@
                 this.showDialogSelectLots = true
             },
             addRowSelectLot(lots){
+                console.log("AQui los lots",lots);
                 this.lots = lots
             },
         }

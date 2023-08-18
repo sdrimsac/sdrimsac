@@ -3766,6 +3766,7 @@ export default {
             this.form.items = this.form.items.map(i => {
                 return {
                     ...i,
+                    attributes:i.attributes || [],
                     toWarehouse: i.toWarehouse || 0,
                     consignment_item_id: i.consignment_item_id,
                     warehouse_id: null,
@@ -3819,7 +3820,6 @@ export default {
                     presentation: null,
                     charges: [],
                     discounts: [],
-                    attributes: [],
                     affectation_igv_type: i.sale_affectation_igv_type_id
                 };
             });

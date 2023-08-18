@@ -349,7 +349,7 @@
                                     <tbody>
                                         <tr>
                                             <td>
-                                                <span class="f12">{{ $documents['facturas']['total'] }}</span>
+                                                <span class="f12">{{ $documents['facturas']['quantity'] }}</span>
                                             </td>
                                             <td><span class="f12">FACTURAS</span></td>
                                             <td class="right"><span class="f12 right">

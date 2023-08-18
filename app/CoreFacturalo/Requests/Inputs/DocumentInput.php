@@ -240,7 +240,11 @@ class DocumentInput
                         'amount_plastic_bag_taxes' => $item->amount_plastic_bag_taxes,
                         'is_set' => $item->is_set,
                         'is_stock' => $is_stock,
-                        'lots' => (isset($row['item']['lots'])) ? $row['item']['lots'] : [],
+                        'lots' => (isset($row['item']['lots'])) ?
+                            collect($row['item']['lots'])->filter(function ($lot) {
+                                return isset($lot['has_sale']) && $lot['has_sale'] === true;
+                            })->all() : [],
+
                         'lotes' => (isset($row['item']['lotes'])) ? $row['item']['lotes'] : [],
                         'IdLoteSelected' => (isset($row['IdLoteSelected']) ? $row['IdLoteSelected'] : null)
                     ],
