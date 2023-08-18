@@ -5,6 +5,9 @@
     $path[0] = $path[0] === '' ? 'documents' : $path[0];
     $user = auth()->user();
     $config = \App\Models\Tenant\Configuration::first();
+    $has_series = (bool) \Modules\Item\Models\ItemLot::count();
+    $has_lotes = (bool) \Modules\Item\Models\ItemLotsGroup::count();
+    $many_establishments = \App\Models\Tenant\Establishment::count() > 1;
 @endphp
 
 <div class="menu-container flex-grow-1" style="margin-top:20px; ">
@@ -197,12 +200,14 @@
                     </li>
 
 
-                    <li>
-                        <a class="{{ $path[0] === 'caja' && $path[1] === 'observations' ? 'active' : '' }}"
-                            href="{{ route('restaurant.observations') }}">
-                            <i class="icofont-dining-table"></i> Observaciones
-                        </a>
-                    </li>
+                    @if ($config->restaurant)
+                        <li>
+                            <a class="{{ $path[0] === 'caja' && $path[1] === 'observations' ? 'active' : '' }}"
+                                href="{{ route('restaurant.observations') }}">
+                                <i class="icofont-dining-table"></i> Observaciones
+                            </a>
+                        </li>
+                    @endif
                     @if ($config->personal_phone)
                         <li>
                             <a class="{{ $path[0] === 'whatsapp' ? 'active' : '' }}" href="{{ route('whatsapp') }}">
@@ -281,18 +286,20 @@
                                 <i class="icofont-soft-drinks"></i> Productos
                             </a>
                         </li>
-                        <li>
-                            <a class="{{ $path[0] === 'transfers' && $path[1] === '' ? 'active' : '' }}"
-                                href="{{ route('transfers.index') }}">
-                                <i class="icofont-list"></i> Traslados
-                            </a>
-                        </li>
-                        <li>
-                            <a class="{{ $path[0] === 'transfers_place' && $path[1] === '' ? 'active' : '' }}"
-                                href="{{ route('transfers_place.index') }}">
-                                <i class="icofont-list"></i> Traslados por aceptar
-                            </a>
-                        </li>
+                        @if ($many_establishments)
+                            <li>
+                                <a class="{{ $path[0] === 'transfers' && $path[1] === '' ? 'active' : '' }}"
+                                    href="{{ route('transfers.index') }}">
+                                    <i class="icofont-list"></i> Traslados
+                                </a>
+                            </li>
+                            <li>
+                                <a class="{{ $path[0] === 'transfers_place' && $path[1] === '' ? 'active' : '' }}"
+                                    href="{{ route('transfers_place.index') }}">
+                                    <i class="icofont-list"></i> Traslados por aceptar
+                                </a>
+                            </li>
+                        @endif
 
                         <li>
                             <a class="{{ $path[0] === 'transfers_place' && $path[1] === '' ? 'active' : '' }}"
@@ -302,19 +309,23 @@
                                 Guias de remisión
                             </a>
                         </li>
-                        <li>
-                            <a class="{{ $path[0] === 'itemlots' && $path[1] === '' ? 'active' : '' }}"
-                                href="{{ route('itemlots') }}">
-                                <i class="icofont-soft-drinks"></i> Series (productos)
-                            </a>
-                        </li>
+                        @if ($has_series)
+                            <li>
+                                <a class="{{ $path[0] === 'itemlots' && $path[1] === '' ? 'active' : '' }}"
+                                    href="{{ route('itemlots') }}">
+                                    <i class="icofont-soft-drinks"></i> Series (productos)
+                                </a>
+                            </li>
+                        @endif
 
-                        <li>
-                            <a class="{{ $path[0] === 'lotes' && $path[1] === '' ? 'active' : '' }}"
-                                href="{{ route('lotes') }}">
-                                <i class="icofont-bar-code"></i> Lotes
-                            </a>
-                        </li>
+                        @if ($has_lotes)
+                            <li>
+                                <a class="{{ $path[0] === 'lotes' && $path[1] === '' ? 'active' : '' }}"
+                                    href="{{ route('lotes') }}">
+                                    <i class="icofont-bar-code"></i> Lotes
+                                </a>
+                            </li>
+                        @endif
                         <li>
                             <a class="{{ $path[0] === 'item-sets' && $path[1] === '' ? 'active' : '' }}"
                                 href="{{ route('tenant.item_sets.index') }}">
@@ -461,22 +472,26 @@
                 <span class="label">Reporte </span>
             </a>
             <ul id="reporte" class="collapse ">
-                <li>
-                    <a class="{{ $path[0] === 'reports' && $path[1] === 'consignment' ? 'active' : '' }}"
-                        href="{{ route('reports.consignment.index') }}">
-                        <i class="icofont-file-excel"></i>
+                @if ($config->consignment)
+                    <li>
+                        <a class="{{ $path[0] === 'reports' && $path[1] === 'consignment' ? 'active' : '' }}"
+                            href="{{ route('reports.consignment.index') }}">
+                            <i class="icofont-file-excel"></i>
 
-                        Consignamiento
-                    </a>
-                </li>
-                <li>
-                    <a class="{{ $path[0] === 'reports' && $path[1] === 'credits' ? 'active' : '' }}"
-                        href="{{ route('reports.credits.index') }}">
-                        <i class="fas fa-credit-card"></i>
+                            Consignamiento
+                        </a>
+                    </li>
+                @endif
+                @if ($config->credits)
+                    <li>
+                        <a class="{{ $path[0] === 'reports' && $path[1] === 'credits' ? 'active' : '' }}"
+                            href="{{ route('reports.credits.index') }}">
+                            <i class="fas fa-credit-card"></i>
 
-                        Créditos
-                    </a>
-                </li>
+                            Créditos
+                        </a>
+                    </li>
+                @endif
                 <li>
                     <a class="{{ $path[0] === 'report_cash' ? 'active' : '' }}"
                         href="{{ route('reports.cash.index') }}">
@@ -509,12 +524,14 @@
                         <i class="icofont-chart-bar-graph"></i> Kardex
                     </a>
                 </li>
-                <li>
-                    <a class="{{ $path[0] === 'reports' && $path[1] === 'series' ? 'active' : '' }}"
-                        href="{{ route('reports.series.index') }}">
-                        <i class="fas fa-fingerprint"></i> Venta de Series
-                    </a>
-                </li>
+                @if ($has_series)
+                    <li>
+                        <a class="{{ $path[0] === 'reports' && $path[1] === 'series' ? 'active' : '' }}"
+                            href="{{ route('reports.series.index') }}">
+                            <i class="fas fa-fingerprint"></i> Venta de Series
+                        </a>
+                    </li>
+                @endif
 
             </ul>
         </li>

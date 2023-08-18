@@ -26,8 +26,10 @@ use App\Models\Tenant\Catalogs\AttributeType;
 use App\Models\Tenant\Catalogs\SystemIscType;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Tenant\Catalogs\AffectationIgvType;
+use App\Models\Tenant\Configuration;
 use App\Models\Tenant\Establishment;
 use App\Models\Tenant\ItemSet;
+use PSpell\Config;
 
 class ItemSetController extends Controller
 {
@@ -59,15 +61,47 @@ class ItemSetController extends Controller
     {
         return view('tenant.items.form');
     }
-
+    function create_internal_id(){
+        //buscar en items los que tengan la propiedad is_set en 1 y que su internal id empiece con pack#### osea pack seguido de 4 numeros
+        $item = Item::where('is_set', 1)
+        ->where('internal_id', 'regexp', '^PACK[0-9]{4}')
+        ->orderBy('id', 'desc')
+        ->first();
+        ;
+        if($item == null){
+            return "PACK0001";
+        }else{
+            $internal_id = $item->internal_id;
+            $internal_id = substr($internal_id, 4);
+            $internal_id = intval($internal_id);
+            $internal_id++;
+            $internal_id = str_pad($internal_id, 4, "0", STR_PAD_LEFT);
+            return "PACK".$internal_id;
+        }
+    
+    }
     public function tables()
     {
+        $company = Configuration::first();
+        $affectation_igv_type_id = $company->affectation_igv_type_id;
+        //affectation_igv_types
+        $internal_id = $this->create_internal_id();
+        $current_affection_igv_types = AffectationIgvType::whereActive()->get();
         $unit_types = UnitType::whereActive()->orderByDescription()->get();
         $currency_types = CurrencyType::whereActive()->orderByDescription()->get();
         $attribute_types = AttributeType::whereActive()->orderByDescription()->get();
         $system_isc_types = SystemIscType::whereActive()->orderByDescription()->get();
         $affectation_igv_types = AffectationIgvType::whereActive()->get();
         $areas = Area::where('active', 1)->get();
+        //buscar categoryitem que tenga el nombre PACKS si no existe crearlo
+        $category_item = CategoryItem::where('name', 'PACKS')->first();
+        if (!$category_item) {
+            $category_item = CategoryItem::create([
+                'name' => 'PACKS',
+                'user_id' => auth()->user()->id
+            ]);
+        }
+
         $categories = CategoryItem::all();
         $warehouses = Establishment::all();
         $individual_items = Item::whereWarehouse()->whereTypeUser()->whereNotIsSet()->whereIsActive()->get()->transform(function ($row) {
@@ -81,7 +115,10 @@ class ItemSetController extends Controller
             ];
         });
 
-        return compact('warehouses','unit_types', 'currency_types', 'attribute_types', 'areas', 'categories', 'system_isc_types', 'affectation_igv_types', 'individual_items');
+        return compact(
+            'internal_id',
+            'affectation_igv_type_id',
+            'warehouses','unit_types', 'currency_types', 'attribute_types', 'areas', 'categories', 'system_isc_types', 'affectation_igv_types', 'individual_items');
     }
 
     public function record($id)

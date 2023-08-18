@@ -46,6 +46,7 @@ export default {
     ],
     data() {
         return {
+            
             number: null,
             withXml: false,
             loading: false

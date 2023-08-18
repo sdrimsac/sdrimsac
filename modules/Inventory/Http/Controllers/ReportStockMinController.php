@@ -123,12 +123,12 @@ class ReportStockMinController extends Controller
             
 
             $numOrdengen  =  DB::connection('tenant')->select('select id from orden_compras  order by 1 DESC limit 1');
-            DB::update('update list_orden_compras set id_orden_compra = ? WHERE ISNULL(id_orden_compra) ', [$numOrdengen[0]->id ] );
+            DB::connection('tenant')->update('update list_orden_compras set id_orden_compra = ? WHERE ISNULL(id_orden_compra) ', [$numOrdengen[0]->id ] );
 
             foreach($ordenesCompra as $key => $value){
                 
                 $idItem = $value['item_id'];
-                DB::update('update items set has_orden_compra = 0 where id = ?', [$idItem]);
+                DB::connection('tenant')->update('update items set has_orden_compra = 0 where id = ?', [$idItem]);
             }
 
             DB::commit();

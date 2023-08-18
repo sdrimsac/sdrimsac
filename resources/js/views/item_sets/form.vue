@@ -19,7 +19,7 @@
                             <small class="form-control-feedback" v-if="errors.description" v-text="errors.description[0]"></small>
                         </div>
                     </div> -->
-                    <div class="col-md-4">
+                    <div class="col-md-8">
                         <div
                             class="form-group"
                             :class="{ 'has-danger': errors.description }"
@@ -64,7 +64,7 @@
                             ></small>
                         </div>
                     </div>
-                    <div class="col-md-4">
+                    <!-- <div class="col-md-4">
                         <div
                             class="form-group"
                             :class="{ 'has-danger': errors.second_name }"
@@ -82,7 +82,7 @@
                                 v-text="errors.second_name[0]"
                             ></small>
                         </div>
-                    </div>
+                    </div> -->
 
                     <!-- <div class="col-md-9">
                         <div class="form-group" :class="{'has-danger': errors.name}">
@@ -353,7 +353,7 @@
                             </table>
                         </div>
                     </div>
-                    <div
+                    <!-- <div
                         class="col-md-3"
                         v-show="recordId == null && form.unit_type_id != 'ZZ'"
                     >
@@ -369,7 +369,7 @@
                                 v-text="errors.stock[0]"
                             ></small>
                         </div>
-                    </div>
+                    </div> -->
 
                     <div class="col-md-3 mt-4">
                         <el-button
@@ -509,9 +509,9 @@
                     </div> -->
                     <!-- </div>    -->
 
-                    <div class="col-md-12">
+                    <!-- <div class="col-md-12">
                         <h5 class="separator-title">Campos adicionales</h5>
-                    </div>
+                    </div> -->
                     <div class="row col-md-12">
                         <div class="col-md-3">
                             <div class="form-group">
@@ -578,7 +578,7 @@
                                     </div>
                                 </div>
 
-                                <div class="short-div col-md-4">
+                                <!-- <div class="short-div col-md-4">
                                     <div
                                         class="form-group"
                                         :class="{
@@ -608,7 +608,7 @@
                                             v-text="errors.item_code[0]"
                                         ></small>
                                     </div>
-                                </div>
+                                </div> -->
                                 <div class="short-div col-md-4">
                                     <div
                                         class="form-group"
@@ -693,6 +693,8 @@ export default {
             individual_items: [],
             system_isc_types: [],
             affectation_igv_types: [],
+            internal_id: null,
+            affectation_igv_type_id: null,
             accounts: [],
             show_has_igv: true,
             have_account: false,
@@ -710,34 +712,7 @@ export default {
     },
     created() {
         this.initForm();
-        this.$http.get(`/${this.resource}/tables`).then(response => {
-            console.log(response);
-            this.unit_types = response.data.unit_types;
-            this.accounts = response.data.accounts;
-            this.currency_types = response.data.currency_types;
-            this.system_isc_types = response.data.system_isc_types;
-            this.affectation_igv_types = response.data.affectation_igv_types;
-            this.areas = response.data.areas;
-            this.categories = response.data.categories;
-            // this.individual_items = response.data.individual_items
-            this.warehouses = response.data.warehouses;
-            if (this.warehouses.length > 0) {
-                this.form.warehouse_id = this.warehouses[0].id;
-            }
-            if (this.establishment_id) {
-                this.form.warehouse_id = this.establishment_id;
-            }
-            this.web_platforms = response.data.web_platforms;
-
-            this.form.sale_affectation_igv_type_id =
-                this.affectation_igv_types.length > 0
-                    ? this.affectation_igv_types[0].id
-                    : null;
-            this.form.purchase_affectation_igv_type_id =
-                this.affectation_igv_types.length > 0
-                    ? this.affectation_igv_types[0].id
-                    : null;
-        });
+     
 
         this.$eventHub.$on("submitPercentagePerception", data => {
             this.form.percentage_perception = data;
@@ -864,7 +839,39 @@ export default {
                     ? this.affectation_igv_types[0].id
                     : null;
         },
-        create() {
+        async create() {
+              const response = await this.$http.get(`/${this.resource}/tables`);
+
+         
+           this.unit_types = response.data.unit_types;
+            this.accounts = response.data.accounts;
+            this.currency_types = response.data.currency_types;
+            this.system_isc_types = response.data.system_isc_types;
+            this.affectation_igv_types = response.data.affectation_igv_types;
+            this.affectation_igv_type_id =
+                response.data.affectation_igv_type_id;
+            this.internal_id = response.data.internal_id;
+            this.areas = response.data.areas;
+            this.categories = response.data.categories;
+            // this.individual_items = response.data.individual_items
+            this.warehouses = response.data.warehouses;
+            if (this.warehouses.length > 0) {
+                this.form.warehouse_id = this.warehouses[0].id;
+            }
+            if (this.establishment_id) {
+                this.form.warehouse_id = this.establishment_id;
+            }
+
+            this.web_platforms = response.data.web_platforms;
+
+            this.form.sale_affectation_igv_type_id =
+                this.affectation_igv_types.length > 0
+                    ? this.affectation_igv_types[0].id
+                    : null;
+            this.form.purchase_affectation_igv_type_id =
+                this.affectation_igv_types.length > 0
+                    ? this.affectation_igv_types[0].id
+                    : null;
             this.titleDialog = this.recordId
                 ? "Editar producto compuesto"
                 : "Nuevo producto compuesto";
@@ -873,12 +880,38 @@ export default {
                     .get(`/${this.resource}/record/${this.recordId}`)
                     .then(response => {
                         this.form = response.data.data;
-                        console.log(this.form);
                         this.changeAffectationIgvType();
                     });
+            } else {
+            }
+            if (!this.form.category_id && this.categories.length > 0) {
+                let categoria_packs = this.categories.find(
+                    area => area.name == "PACKS"
+                );
+                if (categoria_packs) {
+                    this.form.category_id = categoria_packs.id;
+                }
             }
             if (!this.form.warehouse_id && this.warehouses.length > 0) {
                 this.form.warehouse_id = this.warehouses[0].id;
+            }
+            if (!this.form.area_id && this.areas.length > 0) {
+                let area_caja = this.areas.find(
+                    area => area.description == "CAJA"
+                );
+                if (area_caja) {
+                    this.form.area_id = area_caja.id;
+                }
+            }
+            if (
+                
+                this.affectation_igv_type_id && !this.recordId
+            ) {
+                console.log("xd");
+                this.form.sale_affectation_igv_type_id = this.affectation_igv_type_id;
+            }
+            if (!this.form.internal_id && this.internal_id) {
+                this.form.internal_id = this.internal_id;
             }
         },
         loadRecord() {
@@ -977,7 +1010,8 @@ export default {
                     100;
         },
         submit() {
-            if(this.form.category_id === null) return this.$toast.error("Debe seleccionar una categoría");
+            if (this.form.category_id === null)
+                return this.$toast.error("Debe seleccionar una categoría");
             if (this.form.individual_items.length < 1)
                 return this.$toast.error("Al menos debe elegir 2 productos");
 

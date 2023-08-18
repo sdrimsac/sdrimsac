@@ -4241,7 +4241,7 @@ export default {
             let total = 0;
             this.ordens.forEach(orden => {
               let t = parseFloat(_.round(
-                    parseInt(orden.food.item.quantity) * parseFloat(orden.food.price),
+                    parseFloat(orden.food.item.quantity) * parseFloat(orden.food.price),
                     2
                 ));
                 total += t;

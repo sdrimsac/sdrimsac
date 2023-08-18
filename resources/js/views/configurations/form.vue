@@ -1025,7 +1025,7 @@
                                     <div class="col-md-6 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
-                                                >Consignación en caja
+                                                >Consignación
 
                                                 <el-tooltip
                                                     content="Crear y liquidar consignaciones desde caja"
