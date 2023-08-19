@@ -190,6 +190,8 @@ class PosController extends Controller
         if($category_ins_id){
             $foods = $foods->where('category_food_id','<>',$category_ins_id);
         }
+        //orderBy('description', 'ASC')
+        $foods = $foods->orderBy('description', 'ASC');
         if (empty($datafoods)){
             
             return new FoodCollection($foods->paginate(50));

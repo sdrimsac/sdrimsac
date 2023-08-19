@@ -75,11 +75,11 @@
                                 <div @click="addFood(index)">
                                     <div>
                                         <span
-                                            class="lead-font-weight-700 d-inline-block text-truncate"
+                                            class="lead-font-weight-700"
                                         >
                                             {{ data.description.toUpperCase() }}
                                         </span>
-                                        <el-tooltip
+                                        <!-- <el-tooltip
                                             class="item"
                                             effect="dark"
                                             :content="
@@ -88,7 +88,7 @@
                                             placement="top-start"
                                         >
                                             <i class="fas fa-ellipsis-h"></i>
-                                        </el-tooltip>
+                                        </el-tooltip> -->
                                     </div>
                                     <div
                                         class="d-flex align-items-end justify-content-between"
