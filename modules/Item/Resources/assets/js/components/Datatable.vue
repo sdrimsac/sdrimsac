@@ -82,7 +82,7 @@
                             </el-select>
                         </div>
                     </div>
-                    <div class="col-lg-2 col-md-2 pb-2">
+                    <!-- <div class="col-lg-2 col-md-2 pb-2">
                         <div class="form-group">
                             <label class="control-label w-100"
                                 >Fecha inicio
@@ -117,9 +117,97 @@
                             >
                             </el-date-picker>
                         </div>
-                    </div>
+                    </div> -->
 
-                    <div class="col-lg-4 col-md-4 col-md-4 col-sm-12">
+                    <div class="col-lg-2 col-md-2 pb-2">
+                        <div class="form-group">
+                            <label class="control-label w-100"
+                                >Filtrar fecha de vencimiento</label
+                            >
+                            <el-select
+                                class="w-100"
+                                v-model="search.date_filter"
+                                clearable
+                            >
+                                <el-option
+                                    v-for="option in due_date_filter"
+                                    :key="option.id"
+                                    :value="option.value"
+                                    :label="option.label"
+                                ></el-option>
+                            </el-select>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-2 pb-2">
+                        <div class="form-group">
+                            <label class="control-label w-100">
+                                Fecha de vencimiento
+                            </label>
+
+                            <template v-if="search.date_filter == 'week'">
+                                <el-date-picker
+                                    v-model="search.date_filter_value"
+                                    :picker-options="optionPicker"
+                                    type="week"
+                                    value-format="yyyy-MM-dd"
+                                    :format="customFormat"
+                                    placeholder="Elija una semana"
+                                >
+                                </el-date-picker>
+                            </template>
+                            <template v-if="search.date_filter == 'month'">
+                                <el-date-picker
+                                    v-model="search.date_filter_value"
+                                    type="month"
+                                    value-format="yyyy-MM-dd"
+                                    placeholder="Elija un mes"
+                                >
+                                </el-date-picker>
+                            </template>
+                            <template v-if="search.date_filter == 'year'">
+                                <el-date-picker
+                                    v-model="search.date_filter_value"
+                                    type="year"
+                                    value-format="yyyy-MM-dd"
+                                    placeholder="Elija un año"
+                                >
+                                </el-date-picker>
+                            </template>
+                            <template v-if="search.date_filter == 'between'">
+                                <el-date-picker
+                                    v-model="search.d_start"
+                                    type="date"
+                                    style="width: 100%;"
+                                    placeholder="Buscar"
+                                    value-format="yyyy-MM-dd"
+                                    @change="changeDisabledDates"
+                                >
+                                </el-date-picker>
+                            </template>
+                        </div>
+                    </div>
+                    <div
+                        class="col-lg-2 col-md-2 pb-2"
+                        v-if="search.date_filter == 'between'"
+                    >
+                        <div class="form-group">
+                            <label class="control-label w-100"
+                                >Fecha final
+                            </label>
+                            <el-date-picker
+                                v-model="search.d_end"
+                                type="date"
+                                value-format="yyyy-MM-dd"
+                                :disabled="!search.d_start"
+                                style="width: 100%;"
+                                placeholder="Buscar"
+                                :picker-options="pickerOptionsDates"
+                                @change="changeEndDate"
+                            >
+                            </el-date-picker>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-md-4 col-sm-12 d-flex align-items-center">
                         <el-button
                             class="submit"
                             type="primary"
@@ -196,6 +284,28 @@ export default {
     },
     data() {
         return {
+            due_date_filter: [
+                {
+                    id: 1,
+                    label: "Semana",
+                    value: "week"
+                },
+                {
+                    id: 2,
+                    label: "Mes",
+                    value: "month"
+                },
+                {
+                    id: 3,
+                    label: "Año",
+                    value: "year"
+                },
+                {
+                    id: 4,
+                    label: "Entre fechas",
+                    value: "between"
+                }
+            ],
             items: [],
             warehouses: [],
             loading_submit: false,
@@ -213,10 +323,21 @@ export default {
             array_district: [],
             time: null,
             see_more: false,
-            loading: false
+            loading: false,
+            optionPicker: {
+                firstDayOfWeek: 1
+            }
         };
     },
-    computed: {},
+    computed: {
+        customFormat() {
+            return "WW [semana] - M [mes]";
+            return {
+                week: "Semana WW",
+                month: "MMMM"
+            };
+        }
+    },
 
     created() {
         this.$eventHub.$on("reloadData", () => {
@@ -234,6 +355,14 @@ export default {
         await this.getRecords();
     },
     methods: {
+    
+        getWeekNumber(date) {
+            const d = new Date(date);
+            d.setHours(0, 0, 0, 0);
+            d.setDate(d.getDate() + 4 - (d.getDay() || 7));
+            const yearStart = new Date(d.getFullYear(), 0, 1);
+            return Math.ceil(((d - yearStart) / 86400000 + 1) / 7);
+        },
         exportRecords() {
             let url = `/${this.resource}/excel?${this.getQueryParameters()}`;
             window.open(url, "_blank");
@@ -256,7 +385,8 @@ export default {
                 d_start: null,
                 d_end: null,
                 has_sale: false,
-                active: true
+                active: true,
+                date_filter: "week",
             };
         },
         cleanInputs() {
@@ -335,11 +465,11 @@ export default {
                         this.loading_search = false;
 
                         if (this.items.length == 0) {
-                            this.filterItems();
+                            // this.filterItems();
                         }
                     });
             } else {
-                this.filterItems();
+                // this.filterItems();
             }
         },
         changeClearInput() {

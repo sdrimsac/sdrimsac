@@ -332,6 +332,14 @@
                                 <i class="icofont-price"></i> Promocion / Ofertas
                             </a>
                         </li>
+                        {{-- @if ($has_series)
+                        <li>
+                            <a class="{{ $path[0] === 'lotes_due' && $path[1] === '' ? 'active' : '' }}"
+                                href="{{ route('lotes') }}">
+                                <i class="icofont-bar-code"></i> Productos por vencer
+                            </a>
+                        </li>
+                        @endif --}}
 
 
                     </ul>
