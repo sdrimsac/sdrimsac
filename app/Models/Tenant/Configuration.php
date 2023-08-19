@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Config;
 class Configuration extends ModelTenant
 {
     protected $fillable = [
+        'trunc_txt',
+        'ord_dscp',
         'items_due_caja',
         'item_set_caja',
         'ordens_cash',
@@ -106,9 +108,11 @@ class Configuration extends ModelTenant
         'pos_drag_category',
         'init_stock',
         'observation_translate',
-        
+
     ];
     protected $casts = [
+        'trunc_txt' => 'boolean',
+        'ord_dscp' => 'boolean',
         'items_due_caja' => 'boolean',
         'item_set_caja' => 'boolean',
         'ordens_cash' => 'boolean',
@@ -132,7 +136,7 @@ class Configuration extends ModelTenant
         'send_whatsapp_activity' => 'boolean',
         'pin_orden_delete' => 'boolean',
         'edit_product_pos' => 'boolean',
-        
+
         'print_incomes_expenses' => 'boolean',
     ];
     public function scopeGetUnitPriceDispatchRelatedRecord($query)
@@ -177,6 +181,8 @@ class Configuration extends ModelTenant
         // $skins = Skin::all();
         $skins = [];
         return [
+            'trunc_txt' => (bool)$this->trunc_txt,
+            'ord_dscp' => (bool)$this->ord_dscp,
             'items_due_caja' => (bool)$this->items_due_caja,
             'item_set_caja' => (bool)$this->item_set_caja,
             'ordens_cash' => (bool)$this->ordens_cash,
@@ -375,7 +381,7 @@ class Configuration extends ModelTenant
             'view_daily_cash' => (bool) $this->view_daily_cash,
             'view_daily_cash_pin' => (bool) $this->view_daily_cash_pin,
             'send_whatsapp_daily_cash' => (bool) $this->send_whatsapp_daily_cash,
-            'init_stock' =>(bool) $this->init_stock,
+            'init_stock' => (bool) $this->init_stock,
             'observation_translate' => (bool)$this->observation_translate,
             'consignment' => (bool)$this->consignment,
             'affectation_optional' => (bool)$this->affectation_optional,

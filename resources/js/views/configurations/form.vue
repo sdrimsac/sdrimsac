@@ -1194,14 +1194,44 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                            <div class="col-md-6 mt-4">
+                                    <div class="col-md-6 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
-                                                >Ver productos por vencer en caja
-                                                
+                                                >Ver productos por vencer en
+                                                caja
                                             </label>
                                             <el-switch
                                                 v-model="form.items_due_caja"
+                                                active-text="Si"
+                                                inactive-text="No"
+                                                @change="submit"
+                                            ></el-switch>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6 mt-4">
+                                        <div class="form-group">
+                                            <label class="control-label w-100"
+                                                >Mostrar toda la descripción del
+                                                producto en caja
+                                            </label>
+                                            <el-switch
+                                                v-model="form.trunc_txt"
+                                                active-text="Si"
+                                                inactive-text="No"
+                                                @change="submit"
+                                            ></el-switch>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6 mt-4">
+                                        <div class="form-group">
+                                            <label class="control-label w-100"
+                                                >Ordenar productos por
+                                                descripción caja
+                                            </label>
+                                            <el-switch
+                                                v-model="form.ord_dscp"
                                                 active-text="Si"
                                                 inactive-text="No"
                                                 @change="submit"

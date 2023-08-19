@@ -15,6 +15,8 @@ class ConfigurationResource extends JsonResource
     public function toArray($request)
     {
         return [
+            'trunc_txt' => (bool) $this->trunc_txt,
+            'ord_dscp' => (bool) $this->ord_dscp,
             'items_due_caja'           => (bool) $this->items_due_caja,
             'item_set_caja'            => (bool) $this->item_set_caja,
             'ordens_cash'              => (bool) $this->ordens_cash,

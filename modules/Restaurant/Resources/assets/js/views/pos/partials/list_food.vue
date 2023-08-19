@@ -70,16 +70,18 @@
                                         justify-content-between
                                         p-1
                                         "
-                                style="height: 190px;"
+                                :style="`${configuration.trunc_txt ? 'min-height: 190px;':'height: 190px;'}`"
                             >
                                 <div @click="addFood(index)">
                                     <div>
+                                        
                                         <span
-                                            class="lead-font-weight-700"
+                                            :class="`lead-font-weight-700 ${configuration.trunc_txt ? 'd-inline-block text-truncate':'' }`"
                                         >
                                             {{ data.description.toUpperCase() }}
                                         </span>
-                                        <!-- <el-tooltip
+                                       <template v-if="configuration.trunc_txt">
+                                         <el-tooltip
                                             class="item"
                                             effect="dark"
                                             :content="
@@ -88,7 +90,8 @@
                                             placement="top-start"
                                         >
                                             <i class="fas fa-ellipsis-h"></i>
-                                        </el-tooltip> -->
+                                        </el-tooltip>
+                                       </template>
                                     </div>
                                     <div
                                         class="d-flex align-items-end justify-content-between"
