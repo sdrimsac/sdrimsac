@@ -80,7 +80,6 @@ class VentaSeriesController extends Controller
                 $all_items =  $document->items;
                 foreach ($all_items as $items) {
                     foreach ($items->item->lots as $key =>  $lot) {
-                        if($lot->has_sale){
                             $item = $items->item;
                             $datosSeries[] =  [
                                 'documentId' => $document->id,
@@ -94,7 +93,6 @@ class VentaSeriesController extends Controller
                                 'external_id' => $document->external_id,
                                 'codigoInterno' => $item->internal_id, 'establish_description' => $description_establishment, 'descripcion' => $item->description, 'series' => $lot->series, 'docSeries' => $document->series . '-' . $document->number, 'docDate' =>  $document->date_of_issue, 'itemValue' => $items->unit_value, 'pers_name' => $document->customer->name . '-' . $document->customer->number
                             ];
-                        }
                     }
                 }
             }
@@ -156,7 +154,6 @@ class VentaSeriesController extends Controller
                 $all_items =  $document->items;
                 foreach ($all_items as $items) {
                     foreach ($items->item->lots as $key =>  $lot) {
-                        if($lot->has_sale){
                             $item = $items->item;
                             $datosSeries[] =
     
@@ -172,7 +169,6 @@ class VentaSeriesController extends Controller
                                     'external_id' => $document->external_id,
                                     'codigoInterno' => $item->internal_id, 'establish_description' => $description_establishment, 'descripcion' => $item->description, 'series' => $lot->series, 'docSeries' => $document->series . '-' . $document->number, 'docDate' =>  $document->date_of_issue, 'itemValue' => $items->unit_value, 'pers_name' => $document->customer->name . '-' . $document->customer->number
                                 ];
-                        }
                     }
                 }
             }
@@ -249,7 +245,6 @@ class VentaSeriesController extends Controller
                         $all_items =  $document->items;
                         foreach ($all_items as $items) {
                             foreach ($items->item->lots as $key =>  $lot) {
-                                if($lot->has_sale){
                                     $item = $items->item;
                                     $datosSeries[] =  [
                                         'isNote' => false,
@@ -259,7 +254,6 @@ class VentaSeriesController extends Controller
                                        
                                         'pers_name' => $document->customer->name . '-' . $document->customer->number
                                     ];
-                                }
                             }
                         }
                     }
@@ -308,24 +302,21 @@ class VentaSeriesController extends Controller
                         $all_items =  $document->items;
                         foreach ($all_items as $items) {
                             foreach ($items->item->lots as $key =>  $lot) {
-                                if($lot->has_sale){
                                     $item = $items->item;
                                     $datosSeries[] =
             
                                         [
-                                            'printer' => $printer,
                                             'isNote' => true,
                                             'external_id' => $document->external_id,
                                             'codigoInterno' => $item->internal_id, 'establish_description' => $description_establishment, 'descripcion' => $item->description, 'series' => $lot->series, 'docSeries' => $document->series . '-' . $document->number, 'docDate' =>  $document->date_of_issue, 'itemValue' => $items->unit_value, 'pers_name' => $document->customer->name . '-' . $document->customer->number
                                         ];
-                                }
                             }
                         }
                     }
                 }
         
                 $documento = (new SeriesSell)
-                    ->datosSeries($datosSeriesSalesNotes)
+                    ->datosSeries($datosSeries)
                     ->download('ReporteSeriesVendidas' . Carbon::now() . '.xlsx');
             }
         } catch (\Exception $e) {
