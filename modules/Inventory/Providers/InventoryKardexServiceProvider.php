@@ -105,11 +105,11 @@ class InventoryKardexServiceProvider extends ServiceProvider
             if (isset($document_item->item->lots)) {
                 foreach ($document_item->item->lots as $it) {
 
-                    if($it->has_sale){
+                    // if($it->has_sale){
                         $r = ItemLot::find($it->id);
                         $r->has_sale = ($document->document_type_id === '07') ? false : true;
                         $r->save();
-                    }
+                    // }
                     // $r->has_sale = true;
                 }
                 /*if($document_item->item->IdLoteSelected != null)
