@@ -48,6 +48,21 @@ class PurchaseController extends Controller
 
     use FinanceTrait;
 
+    public function ne76_correlative(){
+        //NE01
+        $record = Purchase::where('document_type_id', 'NE76')->where('series', 'NE01')->orderBy('id', 'desc')->first();
+        if(!$record){
+            return [
+                'series' => 'NE01',
+                'number' => '00000001'
+            ];
+        }
+        $number = (int)$record->number + 1;
+        return [
+            'series' => 'NE01',
+            'number' => str_pad($number, 8, '0', STR_PAD_LEFT)
+        ];
+    }
     public function index()
     {
         return view('tenant.purchases.index');
