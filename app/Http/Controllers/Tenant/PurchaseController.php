@@ -42,6 +42,7 @@ use App\CoreFacturalo\Requests\Inputs\Common\LegendInput;
 use App\CoreFacturalo\Requests\Inputs\Common\PersonInput;
 use App\Exports\PurchaseExport;
 use Exception;
+use Modules\Restaurant\Models\Food;
 
 class PurchaseController extends Controller
 {
@@ -341,6 +342,7 @@ class PurchaseController extends Controller
                     $item = Item::findOrFail($row['item_id']);
                     $item->sale_unit_price = $row['sale_unit_price'];
                     $item->save();
+                    Food::where('item_id', $row['item_id'])->update(['price' => $row['sale_unit_price']]);
                     if (array_key_exists('lots', $row)) {
                         foreach ($row['lots'] as $lot) {
                             // Verificar si el lote existe en la tabla item_lots
