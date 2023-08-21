@@ -11,6 +11,5 @@ class Subcategory extends ModelTenant
     protected $fillable = [
         'subcategory',                      // subcategoria  
         'type'
-        
     ];
 }

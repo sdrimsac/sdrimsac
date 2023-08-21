@@ -104,7 +104,7 @@
             },
             close() {
                 this.$emit('update:showDialog', false)
-                this.lots_ = this.lots_.filter(l => l.has_sale == true);
+   
                 
                 this.$emit('addRowSelectLot', this.lots_);
             },

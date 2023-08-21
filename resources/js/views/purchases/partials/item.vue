@@ -215,6 +215,18 @@
                             >
                         </small>
                     </div>
+                    <div class="col-md-3">
+                        <label class="control-label"
+                            >Precio de venta</label
+                        >
+                        <el-input
+                        
+                            style="width:100%;"
+                            v-model="form.sale_unit_price"
+                        >
+                        </el-input>
+                    
+                    </div>
                     <div class="col-md-3 " v-if="noIsUnid">
                         <label class="control-label">Cantidad total</label>
                         <el-input readonly v-model="form.real_quantity">
@@ -663,6 +675,7 @@ export default {
         initForm() {
             this.errors = {};
             this.form = {
+                sale_unit_price: 0,
                 total_price: 0,
                 item_id: null,
                 real_quantity: 0,
@@ -804,6 +817,7 @@ export default {
                 this.changing_name = false;
             }
             this.form.unit_price = this.form.item.purchase_unit_price;
+            this.form.sale_unit_price = this.form.item.sale_unit_price;
             this.form.affectation_igv_type_id = this.form.item.purchase_affectation_igv_type_id;
             this.form.item_unit_types = _.find(this.items, {
                 id: this.form.item_id
@@ -852,6 +866,7 @@ export default {
             if (this.noIsUnid) {
                 this.row.real_quantity = this.form.real_quantity;
             }
+            this.row.sale_unit_price = this.form.sale_unit_price;
             this.row.lot_code = await this.lot_code;
             this.row.lots = await this.lots;
 

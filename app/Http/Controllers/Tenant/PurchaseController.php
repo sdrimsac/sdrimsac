@@ -338,7 +338,9 @@ class PurchaseController extends Controller
                     $p_item->fill($row);
                     $p_item->purchase_id = $doc->id;
                     $p_item->save();
-
+                    $item = Item::findOrFail($row['item_id']);
+                    $item->sale_unit_price = $row['sale_unit_price'];
+                    $item->save();
                     if (array_key_exists('lots', $row)) {
                         foreach ($row['lots'] as $lot) {
                             // Verificar si el lote existe en la tabla item_lots

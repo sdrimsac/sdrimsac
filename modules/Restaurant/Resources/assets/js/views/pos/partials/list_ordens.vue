@@ -3195,9 +3195,7 @@ export default {
                     table_id: 1,
                     status_orden_id: 1
                 },
-                //enviar las ordenes a cobrar
-                //  items: this.ordens,
-                // items: this.localOrden,
+
                 pin: null
             };
             if (this.clientTableData.table) {
@@ -3206,26 +3204,16 @@ export default {
                 form_submit.items = this.localOrden;
             }
             form_submit.items = this.mergeItems(form_submit.items);
-            // console.log(form_submit.items);
             this.loading = true;
-            // const responses = await this.$http.post(
-            //     "/caja/worker/send-orden",
-            //     form_submit
-            // );
+
 
             this.commands_fisico = "";
             this.to_carry = false;
-            //    let IdOrdensend = responses.data.id;
-            //    if (responses.data.success == true) {
+
 
             this.loading = false;
-            // this.$toast.success(responses.data.message);
             this.disableSend = false;
-            //      document.querySelector("#close_offcanvas").click();
-            // } else {
-            //     this.loading = false;
-            //     this.$toast.error(responses.data.message);
-            // }
+         
             if (this.variation) {
                 form_submit.variationItems = this.foodDefaults;
             }
@@ -3255,7 +3243,6 @@ export default {
                 }
             });
 
-            // Convertir el objeto resultado de nuevo en un arreglo
             const arregloResultado = Object.values(resultado);
             return arregloResultado;
         },
@@ -3264,42 +3251,7 @@ export default {
             let formated = "storage/uploads/items/" + url;
             return `/${formated}`;
         },
-        // async cancelGeneralOrden() {
-        //     this.loading = true;
-        //     try {
-        //         let res = await this.$confirm(
-        //             "Desea cancelar toda la orden?",
-        //             "Cancelar",
-        //             {
-        //                 confirmButtonText: "Ok",
-        //                 cancelButtonText: "Cancelar",
-        //                 type: "warning"
-        //             }
-        //         );
-        //         if (res) {
-        //             let form = {
-        //                 id: this.ordens[0].orden_id
-        //             };
-        //             const response = await this.$http.post(
-        //                 "cancel-orden",
-        //                 form
-        //             );
-        //             if (response.status == 200) {
-        //                 const { message } = response.data;
-        //                 this.$toast.success(message);
-        //                 this.$eventHub.$emit("reloadData");
-        //                 this.$emit("ordenDeleted");
-        //                 this.directSale();
-        //             }
-        //         }
-        //     } catch (e) {
-        //         if (e != "cancel") {
-        //             console.log(e);
-        //             this.$toast.error("Ocurrió un error");
-        //         }
-        //     }
-        //     this.loading = false;
-        // },
+    
         calculateTotal(w = null) {
             this.totalOrdenItems = 0.0;
             this.total = 0.0;

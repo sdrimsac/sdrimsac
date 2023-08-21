@@ -112,18 +112,7 @@ function calculateRowItem(
     /* Discounts */
     let discount_base = 0;
     let discount_no_base = 0;
-    // row.discounts.forEach((discount, index) => {
-    //     discount.percentage = parseFloat(discount.percentage)
-    //     discount.factor = discount.percentage / 100
-    //     discount.base = _.round(total_value_partial, 2)
-    //     discount.amount = _.round(discount.base * discount.factor, 2)
-    //     if (discount.discount_type.base) {
-    //         discount_base += discount.amount
-    //     } else {
-    //         discount_no_base += discount.amount
-    //     }
-    //     row.discounts.splice(index, discount)
-    // })
+
     if (row.discounts.length > 0) {
         row.discounts.forEach((discount, index) => {
             let affectation_igv_type_exonerated = [
@@ -161,11 +150,7 @@ function calculateRowItem(
                 } else {
                     let aux_total_line = row.unit_price * row.quantity;
 
-                    // if (!affectation_igv_type_exonerated.includes(row.affectation_igv_type_id)) {
-                    //     total_value_partial = (aux_total_line - discount.percentage) / (1 + percentage_igv / 100)
-                    // } else {
-                    //     total_value_partial = aux_total_line - discount.percentage
-                    // }
+          
 
                     discount.base = _.round(aux_total_line, 2);
                     //amount and percentage are equals in input
@@ -179,8 +164,7 @@ function calculateRowItem(
                         2
                     );
                     discount.factor = _.round(discount.percentage / 100, 5);
-                    // discount.factor = _.round(discount.percentage / 100, 2)
-                    // discount_no_base += discount.amount
+            
                 }
             } else {
                 if (discount.discount_type.base) {
@@ -191,11 +175,9 @@ function calculateRowItem(
                         discount.base * discount.factor,
                         2
                     );
-                    // if (discount.discount_type.base) {
+            
                     discount_base += discount.amount;
-                    // } else {
-                    //     discount_no_base += discount.amount
-                    // }
+                
                 } else {
                     let aux_total_line = row.unit_price * row.quantity;
                     discount.factor = _.round(discount.percentage / 100, 5);
@@ -204,11 +186,6 @@ function calculateRowItem(
                         2
                     );
 
-                    // if (!affectation_igv_type_exonerated.includes(row.affectation_igv_type_id)) {
-                    //     total_value_partial = (aux_total_line - discount.amount) / (1 + percentage_igv / 100)
-                    // } else {
-                    //     total_value_partial = aux_total_line - discount.amount
-                    // }
 
                     discount.base = _.round(aux_total_line, 2);
                 }
@@ -312,21 +289,7 @@ function calculateRowItem(
         //calcular nuevo precio unitario
         row.unit_price = _.round(total / row.quantity, 6);
 
-        // // console.log("apply isc")
-        // row.total_base_isc = total_value //total valor antes de aplicar isc
-        // // row.total_base_isc = total_value_partial //total valor antes de aplicar isc
-        // row.total_isc = _.round(row.total_base_isc * (row.percentage_isc / 100), 2)
-        // row.total_base_igv += row.total_isc  //calcular nueva base incrementando el valor actual + isc
-        // row.total_igv = row.total_base_igv * (percentage_igv / 100)
 
-        // //asignar nuevo total impuestos, si tiene descuentos se usa total_taxes para calcular el precio unitario
-        // total_taxes = row.total_igv + row.total_isc
-        // row.total_taxes = total_taxes
-
-        // row.total = row.total_value + row.total_taxes
-
-        // //calcular nuevo precio unitario
-        // row.unit_price = _.round(row.total / row.quantity, 6)
     }
     //procedimiento para agregar isc
 
@@ -347,14 +310,6 @@ function calculateRowItem(
         row.unit_price =
             (total_value + total_taxes - sum_discount_no_base) / row.quantity;
 
-        //obs 4288
-        // let exist_discount_no_base = _.find(row.discounts, {discount_type_id: '01'})
-        // if (exist_discount_no_base) {
-        //     row.unit_value = (total_value + total_taxes) / row.quantity
-        //     if (row.affectation_igv_type_id === '10') {
-        //         row.unit_value = row.unit_value / (1 + percentage_igv / 100)
-        //     }
-        // }
 
         let total_discounts = sum_discount_no_base + sum_discount_base;
         row.total_discount = _.round(total_discounts, 2);
@@ -371,20 +326,12 @@ function calculateRowItem(
     if (row.affectation_igv_type.free) {
         row.price_type_id = "02";
         row.unit_value = 0;
-        // row.total_value = 0
-        // row.total = 0
+
         row.total = 0 + total_plastic_bag_taxes;
 
-        //valor sin redondeo
+
         row.total_without_rounding = 0;
     }
-
-    //impuesto bolsa
-    // if (row_old.has_plastic_bag_taxes) {
-    //     row.total_plastic_bag_taxes = total_plastic_bag_taxes
-    // }
-
-    // console.log(row)
     return row;
 }
 

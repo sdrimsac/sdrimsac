@@ -883,7 +883,7 @@
                     this.row.indexi = this.recordItem.indexi
                 }
                 this.row.IdLoteSelected = IdLoteSelected
-                console.log("this.row",this.row)
+                this.row.item.lots = this.lots;
                 this.$emit('add', this.row);
 
                 this.agregar_item=false
@@ -996,7 +996,7 @@
                 this.showDialogSelectLots = true
             },
             addRowSelectLot(lots){
-                console.log("AQui los lots",lots);
+                lots =  lots.filter(item => item.has_sale == true)
                 this.lots = lots
             },
         }

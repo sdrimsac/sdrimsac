@@ -485,6 +485,7 @@ if ($hostname) {
                 //purchases
                 Route::get('purchases', [App\Http\Controllers\Tenant\PurchaseController::class, 'index'])->name('tenant.purchases.index')->middleware('just.admin');
                 Route::get('purchases/columns', [App\Http\Controllers\Tenant\PurchaseController::class, 'columns']);
+                Route::get('purchases/ne76/correlative', [App\Http\Controllers\Tenant\PurchaseController::class, 'ne76_correlative']);
                 Route::get('purchases/records', [App\Http\Controllers\Tenant\PurchaseController::class, 'records']);
                 Route::get('purchases/export/{type}', [App\Http\Controllers\Tenant\PurchaseController::class, 'exports']);
                 Route::get('purchases/create/{purchase_order_id?}', [App\Http\Controllers\Tenant\PurchaseController::class, 'create'])->name('tenant.purchases.create')->middleware('just.admin');;

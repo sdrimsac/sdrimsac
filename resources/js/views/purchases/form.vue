@@ -48,7 +48,12 @@
                                             >*</span
                                         ></label
                                     >
-                                    <el-input v-model="form.series">
+                                    <el-input
+                                        v-model="form.series"
+                                        :readonly="
+                                            this.form.document_type_id == 'NE76'
+                                        "
+                                    >
                                         <i
                                             slot="prefix"
                                             class="el-icon-edit-outline"
@@ -73,7 +78,12 @@
                                             >*</span
                                         ></label
                                     >
-                                    <el-input v-model="form.number">
+                                    <el-input
+                                        v-model="form.number"
+                                        :readonly="
+                                            this.form.document_type_id == 'NE76'
+                                        "
+                                    >
                                         <i
                                             slot="prefix"
                                             class="el-icon-edit-outline"
@@ -224,17 +234,6 @@
                                 ></small>
                             </div>
                         </div>
-                        <!-- <div class="col-lg-3">
-                            <div class="form-group" :class="{'has-danger': errors.payment_method_type_id}">
-                                <label class="control-label">
-                                    Forma de pago
-                                </label>
-                                <el-select v-model="form.payment_method_type_id" filterable @change="changePaymentMethodType">
-                                    <el-option v-for="option in payment_method_types" :key="option.id" :value="option.id" :label="option.description"></el-option>
-                                </el-select>
-                                <small class="form-control-feedback" v-if="errors.payment_method_type_id" v-text="errors.payment_method_type_id[0]"></small>
-                            </div>
-                        </div> -->
                         <div class="col-lg-2">
                             <div
                                 class="form-group"
@@ -498,44 +497,6 @@
                             style="border:1px solid:display:none"
                         >
                             <div class="form-group">
-                                <!--<table  class="table">
-                                    <thead>
-                                         <tr>
-                                        <td colspan="5" align="right">Tiempo</td>
-                                        <td>  <h1>{{ timestamp }}</h1></td>
-                                         </tr>
-                                    <tr style="background-color: blue;padding:5px; color:#fff">
-                                        <th>Nuevo</th>
-                                        <th>Aceptado</th>
-                                        <th>Con Repartidor</th>
-                                        <th>En Camino</th>
-                                        <th>Entregado</th>
-                                        <th>Cancelado</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                     <tr>
-                                        <td  v-for="(row_nuevo, index1) in array_nuevo" :key="index1">
-                                            <CardPerdido :number="row_nuevo.number" :category_name="row_nuevo.category_name" :restaurant_name="row_nuevo.restaurant_name" :time="row_nuevo.time" :status="row_nuevo.status"></CardPerdido>
-                                        </td>
-                                        <td  v-for="(row_aceptado, index1) in array_aceptado" :key="index1">
-                                            <CardPerdido :number="row_nuevo.number" :category_name="row_nuevo.category_name" :restaurant_name="row_nuevo.restaurant_name" :time="row_nuevo.time" :status="row_nuevo.status"></CardPerdido>
-                                        </td>
-                                       <td  v-for="(row_repartidor, index1) in array_repartidor" :key="index1">
-                                            <CardPerdido :number="row_nuevo.number" :category_name="row_nuevo.category_name" :restaurant_name="row_nuevo.restaurant_name" :time="row_nuevo.time" :status="row_nuevo.status"></CardPerdido>
-                                        </td>
-                                        <td  v-for="(row_camino, index1) in array_camino" :key="index1">
-                                            <CardPerdido :number="row_nuevo.number" :category_name="row_nuevo.category_name" :restaurant_name="row_nuevo.restaurant_name" :time="row_nuevo.time" :status="row_nuevo.status"></CardPerdido>
-                                        </td>
-                                       <td  v-for="(row_entregado, index1) in array_entregado" :key="index1">
-                                            <CardPerdido :number="row_nuevo.number" :category_name="row_nuevo.category_name" :restaurant_name="row_nuevo.restaurant_name" :time="row_nuevo.time" :status="row_nuevo.status"></CardPerdido>
-                                        </td>
-                                        <td  v-for="(row_cancelado, index1) in array_cancelado" :key="index1">
-                                            <CardPerdido :number="row_nuevo.number" :category_name="row_nuevo.category_name" :restaurant_name="row_nuevo.restaurant_name" :time="row_nuevo.time" :status="row_nuevo.status"></CardPerdido>
-                                        </td>
-                                    </tr>
-                                    </tbody>
-                                 </table> -->
                                 <button
                                     type="button"
                                     class="btn waves-effect waves-light btn-primary"
@@ -621,30 +582,18 @@
                                                 {{ currency_type.symbol }}
                                                 {{ row.total_charge }}
                                             </td>
+                                     
                                             <td
                                                 class="text-end"
-                                                v-if="form.includes == false"
-                                            >
-                                                <!--   {{ currency_type.symbol }} {{ parseFloat(row.total)+parseFloat(row.unit_price_igv) }}-->
-                                                {{ currency_type.symbol }}
-                                               <el-input-number
-                                                v-model="row.total"
-                                                @input="inputTotal(index)"
-                                                >
-
-                                                </el-input-number>
-                                            </td>
-                                            <td
-                                                class="text-end"
-                                                v-if="form.includes == true"
+                                            
                                             >
                                                 {{ currency_type.symbol }}
-                                                <el-input-number
-                                                v-model="row.total"
-                                                @input="inputTotal(index)"
+                                                {{ row.total }}
+                                                <!-- <el-input-number
+                                                    v-model="row.total"
+                                                    @input="inputTotal(index,true)"
                                                 >
-
-                                                </el-input-number>
+                                                </el-input-number> -->
                                             </td>
                                             <td class="text-end">
                                                 <button
@@ -965,13 +914,45 @@ export default {
         this.percentage_igv = response.data;
     },
     methods: {
-        inputTotal(idx){
-            let item = this.form.items[idx];
-            item.unit_price = item.total / item.quantity;
-            this.form.items[idx] = item;
-            
-            this.calculateTotal();
-        },
+        // inputTotal(idx,updateTotal = false) {
+       
+        //     let item = this.form.items[idx];
+        //     let unit_value = item.unit_price;
+        //     item.unit_price = item.total / item.quantity;
+        //     item.total_base_igv = item.total;
+
+        //     let total_value_partial = unit_value * item.quantity;
+        //     if (item.affectation_igv_type_id == "10") {
+        //         unit_value = item.unit_price / (1 + this.percentage_igv / 100);
+        //         item.unit_price = _.round(unit_value, 2);
+        //         total_value_partial = unit_value * item.quantity;
+        //         item.unit_price_igv =
+        //             item.unit_price * (this.percentage_igv / 100);
+        //         item.unit_price_igv = parseFloat(item.unit_price_igv).toFixed(
+        //             2
+        //         );
+        //         item.total_base_igv =
+        //             item.total / (1 + this.percentage_igv / 100);
+        //         item.total_igv =
+        //             (total_value_partial * this.percentage_igv) / 100;
+        //     } else {
+        //         item.unit_price_igv = 0;
+        //         item.total_igv = 0;
+        //     }
+        //     let total = total_value_partial + item.total_igv;
+        //     item.total_value = _.round(total_value_partial, 2);
+        //     item.total_base_igv = _.round(total_value_partial, 2);
+        //     item.total_igv = _.round(item.total_igv, 2);
+        //     item.total_taxes = _.round(item.total_igv, 2);
+        //     if(updateTotal){
+
+        //         item.total = _.round(total, 2);
+        //     }
+        //     this.form.items[idx] = item;
+
+
+        //     this.calculateTotal();
+        // },
         updateQuantity() {
             let { items } = this.form;
 
@@ -1312,15 +1293,32 @@ export default {
                 }
             );
         },
-        changeDocumentType() {
+        async changeDocumentType() {
             if (
                 this.form.document_type_id == "GU75" ||
                 this.form.document_type_id == "NE76"
             ) {
                 this.form.series = "";
                 this.form.number = "0";
+                if (this.form.document_type_id == "NE76") {
+                    await this.getCorrelative();
+                }
+            } else {
+                this.form.series = null;
+                this.form.number = null;
             }
             this.filterSuppliers();
+        },
+        async getCorrelative() {
+            try {
+                const response = await this.$http.get(`ne76/correlative`);
+                if (response.status === 200) {
+                    this.form.series = response.data.series;
+                    this.form.number = response.data.number;
+                }
+            } catch (e) {
+                console.log(e);
+            }
         },
         addRow(row) {
             this.form.items.push(row);
@@ -1373,13 +1371,16 @@ export default {
                         this.form.includes == 0 ||
                         this.form.includes == false
                     ) {
+                        console.log(row.unit_price_igv, "mk unit_price_igv");
                         if (
                             row.unit_price_igv === 0 ||
                             row.unit_price_igv === undefined
                         ) {
                             let igv_item = row.unit_price * row.quantity;
+                            console.log(igv_item, " igv_item");
                             row.unit_price_igv =
                                 igv_item * (this.percentage_igv / 100);
+                            console.log(row.unit_price_igv, " unit_price_igv");
                         } else {
                             unit_price_igv = 0;
                         }
