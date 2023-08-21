@@ -11,6 +11,7 @@ use App\Models\Tenant\PurchasePayment;
 use App\Models\Tenant\PaymentMethodType;
 use Modules\Finance\Traits\FinanceTrait; 
 use App\Models\Tenant\Catalogs\DocumentType;
+use App\Models\Tenant\Subcategory;
 use Modules\Finance\Traits\FilePaymentTrait; 
 use Modules\Purchase\Http\Requests\PurchasePaymentRequest;
 use Modules\Purchase\Http\Resources\PurchasePaymentCollection;
@@ -66,6 +67,13 @@ class PurchasePaymentController extends Controller
             //$document_type=DocumentType::where('id',$request->document_type_id)->first();
             $company=Company::first();
             if($request->payment_method_type_id=="01"){
+                $sub_category = Subcategory::where('id', 2)->first();
+                if(!$sub_category){
+                    $sub_category = Subcategory::create([
+                        'id' => 2,
+                        'subcategory' => 'Compras',
+                    ]);
+                }
             $boxes=Box::create([
                 'purchase_id' => $purchase->id,
                 'group_id'=>2,
