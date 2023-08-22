@@ -862,10 +862,10 @@
 
                 let IdLoteSelected = this.form.IdLoteSelected
 
-                console.log("this.percentage_igv this.percentage_igv ",this.percentage_igv)
                 // return
-                // console.log
-                this.row = calculateRowItem(this.form, this.currencyTypeIdActive, this.exchangeRateSale,1,'documents',true,this.percentage_igv);
+                // console.logc
+                this.row = calculateRowItem(this.form, this.currencyTypeIdActive, this.exchangeRateSale,this.percentage_igv/100);
+            console.log(JSON.stringify(this.row));
 
                 let select_lots = await _.filter(this.row.item.lots, {'has_sale':true})
                 let un_select_lots = await _.filter(this.row.item.lots, {'has_sale':false})

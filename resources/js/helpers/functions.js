@@ -4,6 +4,8 @@ function calculateRowItem(
     exchange_rate_sale,
     pigv = 0.18
 ) {
+
+    console.log("el igv en calculateRowItem es: " + pigv);
     // console.log(currency_type_id_new, exchange_rate_sale)
 
     let currency_type_id_old = row_old.item.currency_type_id;
