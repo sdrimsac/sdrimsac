@@ -2020,6 +2020,16 @@ export default {
                         } else this.form.series_enabled = false;
                     });
             } else {
+                   if (this.warehouses.length > 0) {
+                this.form.warehouse_id = this.warehouses[0].id;
+                this.form.warehouse_prices = this.warehouses.map(w => ({
+                    id: null,
+                    item_id: null,
+                    warehouse_id: w.id,
+                    price: null,
+                    warehouse: w.description
+                }));
+            }
                 await this.generateCode();
                 this.showSeries = true;
                 this.form.area_id = 2;

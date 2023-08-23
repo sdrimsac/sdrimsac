@@ -287,6 +287,7 @@ class ItemController extends Controller
     public function store(ItemRequest $request)
     {
         $all_establishment = $request->all_establishment;
+       
         $id = $request->input('id');
 
         $item = Item::firstOrNew(['id' => $id]);

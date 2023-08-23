@@ -3,6 +3,7 @@
 namespace Modules\Inventory\Providers;
 
 use App\Models\Tenant\Item;
+use App\Models\Tenant\Warehouse;
 use Illuminate\Support\ServiceProvider;
 use Modules\Inventory\Models\Inventory;
 use Modules\Inventory\Traits\InventoryTrait;
@@ -29,6 +30,23 @@ class InventoryChangeServiceProvider extends ServiceProvider
 
 
             if ($item->unit_type_id == 'ZZ') {
+                $warehouses = Warehouse::all()->pluck('id');
+                $stock = $item->stock;
+                $id = $item->id;
+                foreach ($warehouses as $wh) {
+                    $exist = ItemWarehouse::where('warehouse_id', $wh)->where('item_id', $id)->first();
+    
+                    if (!isset($exist)) {
+                        ItemWarehouse::create([
+                            'warehouse_id' => $wh,
+                            'stock' => $stock,
+                            'item_id' => $item->id,
+                            'created_at' => date('Y-m-d H:i:s '),
+                            'updated_at' => date('Y-m-d H:i:s '),
+                        ]);
+                   
+                    }
+                }
                 return;
             }
 

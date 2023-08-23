@@ -2765,10 +2765,12 @@ export default {
             this.$emit("update:localOrden", ord);
         },
         verifyStock(orden, idx) {
-            if (this.configuration.sales_stock && !this.quotation_stock) {
-                let current_orden = this.localOrden.filter(
+              let current_orden = this.localOrden.filter(
                     o => o.id == orden.id
                 );
+            let unit_type_id = current_orden[0].food.item.unit_type_id;
+            if (this.configuration.sales_stock && !this.quotation_stock && unit_type_id != 'ZZ') {
+              
                 let qty = current_orden.reduce(
                     (a, b) => a + Number(b.quantity),
                     0
@@ -2816,10 +2818,10 @@ export default {
                 qty += quantity;
             }
             let stock = Number(orden.food.item.stock);
-
+            let unit_type_id = orden.food.item.unit_type_id;
             if (
                 this.configuration.sales_stock == true &&
-                !this.quotation_stock
+                !this.quotation_stock && unit_type_id != 'ZZ'
             ) {
                 if (qty > stock) {
                     return true;
