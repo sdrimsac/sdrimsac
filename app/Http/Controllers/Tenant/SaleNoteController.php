@@ -67,6 +67,7 @@ use App\CoreFacturalo\Requests\Inputs\Common\PersonInput;
 use App\CoreFacturalo\Requests\Inputs\Common\EstablishmentInput;
 use App\CoreFacturalo\Requests\Inputs\Functions;
 use App\Models\Tenant\Cash;
+use App\Models\Tenant\SaleNoteCredit;
 use Modules\Restaurant\Events\OrdenReadyEvent;
 use Modules\Restaurant\Models\OrdenItem;
 use Modules\Restaurant\Models\Table;
@@ -328,7 +329,7 @@ class SaleNoteController extends Controller
 
         DB::connection('tenant')->transaction(function () use ($request) {
 
-
+            $request["is_credit"] = Functions::valueKeyInArray($request->all(), "is_credit", false);
             $request["user_id"] = Functions::valueKeyInArray($request->all(), "user_id", auth()->id());
             $request["advances"] = Functions::valueKeyInArray($request->all(), "advances", 0.0);
             $request["total_advances"] = Functions::valueKeyInArray($request->all(), "total_advances", 0.0);
@@ -439,9 +440,8 @@ class SaleNoteController extends Controller
 
             $company = Company::first();
             if ($request->afectar_caja == true) {
-                if ($request->restaurant == true) {
-                    $payments = PaymentMethodType::where('id', $request->payment_condition_id)->first();
-                    $method = $payments->description;
+                    // $payments = PaymentMethodType::where('id', $request->payment_condition_id)->first();
+                    // $method = $payments->description;
                     $document_save = SaleNote::where('id', $this->sale_note->id)->first();
                     $type_document = "NOTA DE VENTA";
                     $document = $type_document . " N° " . $document_save->series . " - " . $document_save->number;
@@ -485,14 +485,13 @@ class SaleNoteController extends Controller
                         $cajas->establishment_id = auth()->user()->establishment_id;
                         $cajas->save();
                     }
-                }
             }
             $boxes = Box::where('sale_note_id', $this->sale_note->id)->get();
 
 
             $this->setFilename();
             $this->createPdf($this->sale_note, "a4", $this->sale_note->filename, $boxes);
-            $paid = 0;
+            $paid = $request->paid;
 
             if (count($request->payments) > 0) {
                 if ($request->payments[0]['payment_method_type_id'] == "01" || $request->payments[0]['payment_method_type_id'] == "10") {
@@ -500,29 +499,34 @@ class SaleNoteController extends Controller
                 }
             }
 
-            if ($request->generate === null) {
-                $paid = 1;
+            if ($request->generate === null||$request->generate === false) {
                 //advances
-
-
+                
+                
             } else {
+                $paid = 0;
+                $user_id = auth()->user()->id;
+                $cash = Cash::where('state', 1)->where('user_id', $user_id)->first();
+                if ($cash == null) {
+                    $cash = Cash::create([
+                        'user_id' => auth()->user()->id,
+                        'date_opening' => date('Y-m-d'),
+                        'time_opening' => date('H:i:s'),
+                        'date_closed' => null,
+                        'time_closed' => null,
+                        'beginning_balance' => 0,
+                        'final_balance' => 0,
+                        'income' => 0,
+                        'state' => true,
+                        'reference_number' => null
+                    ]);
+                }
+                SaleNoteCredit::create([
+                    'cash_id' => $cash->id,
+                    'sale_note_id' => $this->sale_note->id,
+                ]);
                 if ($request->advances) {
-                    $user_id = auth()->user()->id;
-                    $cash = Cash::where('state', 1)->where('user_id', $user_id)->first();
-                    if ($cash == null) {
-                        $cash = Cash::create([
-                            'user_id' => auth()->user()->id,
-                            'date_opening' => date('Y-m-d'),
-                            'time_opening' => date('H:i:s'),
-                            'date_closed' => null,
-                            'time_closed' => null,
-                            'beginning_balance' => 0,
-                            'final_balance' => 0,
-                            'income' => 0,
-                            'state' => true,
-                            'reference_number' => null
-                        ]);
-                    }
+                 
                     $cajas    = new Box;
                     $cajas->group_id = 1;
                     $cajas->category_id = 1;

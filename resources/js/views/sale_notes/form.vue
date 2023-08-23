@@ -257,7 +257,7 @@
                                                             <th
                                                                 v-if="
                                                                     form
-                                                                        .payments
+                                                                        .boxes
                                                                         .length >
                                                                         0
                                                                 "
@@ -267,27 +267,27 @@
                                                             <th
                                                                 v-if="
                                                                     form
-                                                                        .payments
+                                                                        .boxes
                                                                         .length >
                                                                         0
                                                                 "
                                                             >
                                                                 Destino
                                                             </th>
-                                                            <th
+                                                            <!-- <th
                                                                 v-if="
                                                                     form
-                                                                        .payments
+                                                                        .boxes
                                                                         .length >
                                                                         0
                                                                 "
                                                             >
                                                                 Referencia
-                                                            </th>
+                                                            </th> -->
                                                             <th
                                                                 v-if="
                                                                     form
-                                                                        .payments
+                                                                        .boxes
                                                                         .length >
                                                                         0
                                                                 "
@@ -298,7 +298,7 @@
                                                                 <a
                                                                     href="#"
                                                                     @click.prevent="
-                                                                        clickAddPayment
+                                                                        clickAddBoxes
                                                                     "
                                                                     class="text-center font-weight-bold text-info"
                                                                     >[+
@@ -310,7 +310,7 @@
                                                     <tbody>
                                                         <tr
                                                             v-for="(row,
-                                                            index) in form.payments"
+                                                            index) in form.boxes"
                                                             :key="index"
                                                         >
                                                             <td>
@@ -319,22 +319,20 @@
                                                                 >
                                                                     <el-select
                                                                         v-model="
-                                                                            row.payment_method_type_id
+                                                                            row.method
                                                                         "
-                                                                        @change="
-                                                                            monto_efectivo()
-                                                                        "
+                                                                      
                                                                     >
                                                                         <el-option
-                                                                            v-for="option in payment_method_types"
+                                                                            v-for="(option,idx) in methods"
                                                                             :key="
-                                                                                option.id
+                                                                                idx
                                                                             "
                                                                             :value="
-                                                                                option.id
+                                                                                option
                                                                             "
                                                                             :label="
-                                                                                option.description
+                                                                                option
                                                                             "
                                                                         ></el-option>
                                                                     </el-select>
@@ -346,7 +344,7 @@
                                                                 >
                                                                     <el-select
                                                                         v-model="
-                                                                            row.payment_destination_id
+                                                                            row.cash_id
                                                                         "
                                                                         filterable
                                                                     >
@@ -371,7 +369,7 @@
                                                                 >
                                                                     <el-input
                                                                         v-model="
-                                                                            row.reference
+                                                                            row.amount
                                                                         "
                                                                     >
                                                                         <i
@@ -381,7 +379,7 @@
                                                                     ></el-input>
                                                                 </div>
                                                             </td>
-                                                            <td>
+                                                            <!-- <td>
                                                                 <div
                                                                     class="form-group mb-2 mr-1"
                                                                 >
@@ -396,20 +394,20 @@
                                                                         ></i
                                                                     ></el-input>
                                                                 </div>
-                                                            </td>
+                                                            </td> -->
                                                             <td
                                                                 class="series-table-actions text-center"
                                                             >
-                                                                <!-- <button  type="button" class="btn waves-effect waves-light btn-sm btn-danger" @click.prevent="clickCancel(index)">
+                                                                <button  type="button" class="btn waves-effect waves-light btn-sm btn-danger" @click.prevent="clickCancel(index)">
                                                                 <i class="fa fa-trash"></i>
-                                                            </button> -->
+                                                            </button>
                                                             </td>
                                                             <br />
                                                         </tr>
                                                     </tbody>
                                                 </table>
                                             </div>
-                                            <div class="col-lg-2 col-md-2">
+                                            <!-- <div class="col-lg-2 col-md-2">
                                                 <div class="form-group">
                                                     <label
                                                         class="control-label"
@@ -465,7 +463,7 @@
                                                         :min="0"
                                                     ></el-input-number>
                                                 </div>
-                                            </div>
+                                            </div> -->
                                             <div class="col-lg-2 col-md-2">
                                                 <div
                                                     class="form-group"
@@ -1136,6 +1134,16 @@ export default {
     mixins: [functions, exchangeRate],
     data() {
         return {
+              methods: [
+                "Efectivo",
+                "Yape",
+                "PLIN",
+                "Culqui",
+                "TARJETA: NIUBIZ",
+                "TARJETA: IZYPAY",
+                "Transferencia"
+            ],
+            boxes:[],
             resource: "sale-notes",
             showDialogAddItem: false,
             showDialogNewPerson: false,
@@ -1207,6 +1215,21 @@ export default {
         await this.calculateTotal();
     },
     methods: {
+         clickAddBoxes() {
+            let cash_id = null;
+            if (this.payment_destinations.length != 0) {
+                cash_id = this.payment_destinations[0].id;
+            }
+            this.form.boxes.push({
+                id: null,
+                document_id: null,
+                date_of_payment: moment().format("YYYY-MM-DD"),
+                method: "Efectivo",
+                reference: null,
+                cash_id,
+                amount: 0
+            });
+        },
         update_stock() {
             this.$http
                 .post(`/inventories/configuration`, this.form_control)
@@ -1343,11 +1366,11 @@ export default {
                 this.form.payments[0].payment_method_type_id == "09"
             ) {
                 this.form.payments[0].payment = 0.0;
-                //this.form.generate=true
+             
             } else {
-                if (!this.form.generate) {
-                    this.form.payments[0].payment = this.form.total;
-                }
+                // if (!this.form.generate) {
+                //     this.form.payments[0].payment = this.form.total;
+                // }
             }
             this.Calculate();
         },
@@ -1636,7 +1659,7 @@ export default {
             }
         },
         clickAddPayment() {
-            if (this.form.payments.length == 0)
+            // if (this.form.payments.length == 0)
                 this.form.payments.push({
                     id: null,
                     document_id: null,
@@ -1648,7 +1671,10 @@ export default {
                 });
         },
         clickCancel(index) {
-            this.form.payments.splice(index, 1);
+            
+            if(this.form.boxes.length > 1){
+                  this.form.boxes.splice(index, 1);
+            }
         },
         searchRemoteCustomers(input) {
             if (input.length > 0) {
@@ -1671,6 +1697,7 @@ export default {
         initForm() {
             this.errors = {};
             this.form = {
+                boxes:[],
                 id: null,
                 afectar_caja: true,
                 restaurant: false,
@@ -1734,7 +1761,8 @@ export default {
                 method_pay: "Efectivo"
             };
             //this.form.sss=0
-            this.clickAddPayment();
+            // this.clickAddPayment();
+            this.clickAddBoxes();
         },
         resetForm() {
             this.activePanel = 0;
@@ -1787,19 +1815,21 @@ export default {
             }
             this.calculateTotal();
             this.Calculate();
-            if (
-                this.form.payments[0].payment_method_type_id == "02" ||
-                this.form.payments[0].payment_method_type_id == "03" ||
-                this.form.payments[0].payment_method_type_id == "05" ||
-                this.form.payments[0].payment_method_type_id == "07" ||
-                this.form.payments[0].payment_method_type_id == "08" ||
-                this.form.payments[0].payment_method_type_id == "09"
-            ) {
-                this.form.payments[0].payment = 0.0;
-            } else {
-                this.form.payments[0].payment = this.form.total;
+            // if (
+            //     this.form.payments[0].payment_method_type_id == "02" ||
+            //     this.form.payments[0].payment_method_type_id == "03" ||
+            //     this.form.payments[0].payment_method_type_id == "05" ||
+            //     this.form.payments[0].payment_method_type_id == "07" ||
+            //     this.form.payments[0].payment_method_type_id == "08" ||
+            //     this.form.payments[0].payment_method_type_id == "09"
+            // ) {
+            //     this.form.payments[0].payment = 0.0;
+            // } else {
+            //     this.form.payments[0].payment = this.form.total;
+            // }
+            if(this.form.boxes.length == 1){
+                this.form.boxes[0].amount = this.form.total;
             }
-
             if (this.form.generate) {
                 this.form.payments[0].payment = 0.0;
             }
@@ -1894,13 +1924,13 @@ export default {
         },
         setTotalDefaultPayment() {
             if (
-                this.form.payments.length > 0 &&
-                this.form.payments[0].payment_method_type_id == "01"
+                this.form.boxes.length > 0 &&
+                this.form.boxes[0].method == "Efecrtivo"
             ) {
-                this.form.payments[0].payment = this.form.total;
+                this.form.boxes[0].payment = this.form.total;
             } else {
-                if (this.form.payments.length > 0) {
-                    this.form.payments[0].payment = 0;
+                if (this.form.boxes.length > 0) {
+                    this.form.boxes[0].payment = 0;
                 }
             }
 
@@ -1953,6 +1983,7 @@ export default {
             } else {
                 this.validarForm = false;
             }
+   
             if (this.enabled_discount == false) {
                 if (
                     validate.acum_total > parseFloat(this.form.total) ||
@@ -1999,7 +2030,7 @@ export default {
                     `/efectivo`,
                     form_efectivo
                 );
-
+                // this.form.boxes = this.form.payments;
                 if (response_efectivo.data.success == true) {
                     this.$http
                         .post(`/${this.resource}`, this.form)
@@ -2035,17 +2066,17 @@ export default {
             }
         },
         validate_payments() {
-            for (let index = 0; index < this.form.payments.length; index++) {
-                if (parseFloat(this.form.payments[index].payment) == 0)
-                    this.form.payments.splice(index, 1);
+            for (let index = 0; index < this.form.boxes.length; index++) {
+                if (parseFloat(this.form.boxes[index].amount) == 0)
+                    this.form.boxes.splice(index, 1);
             }
 
             let error_by_item = 0;
             let acum_total = 0;
 
-            this.form.payments.forEach(item => {
-                acum_total += parseFloat(item.payment);
-                if (item.payment <= 0 || item.payment == null) error_by_item++;
+            this.form.boxes.forEach(item => {
+                acum_total += parseFloat(item.amount);
+                if (item.amount <= 0 || item.amount == null) error_by_item++;
             });
 
             return {

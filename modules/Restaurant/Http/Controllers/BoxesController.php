@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\DB;
 use Modules\Restaurant\Models\Area;
 use Modules\Restaurant\Models\Orden;
 use App\Http\Resources\Tenant\BoxCollection;
+use App\Models\Tenant\SaleNoteCredit;
 use App\Models\Tenant\SaleNoteItem;
 use Exception;
 use Modules\Report\Exports\BoxesExport;
@@ -42,7 +43,18 @@ class BoxesController extends Controller
 
     function get_items_from_box($cash_id)
     {
-        $boxes = Box::where('cash_id', $cash_id)->get();
+        $boxes = Box::where('cash_id', $cash_id)
+        ->select('document_id', 'sale_note_id')
+        ->addSelect(DB::raw('false as is_credit'))
+        ->get();
+        $sale_note_credit = SaleNoteCredit::where('cash_id', $cash_id)->get(['sale_note_id']);
+        foreach ($sale_note_credit as $key => $value) {
+            $boxes[] = (object) [
+                "document_id" => null,
+                "sale_note_id" => $value->sale_note_id,
+                "is_credit" => true
+            ];
+        }
         $all_items = [];
         $all_documents = [
             "facturas" => ["total" => 0, "quantity" => 0],
@@ -105,17 +117,21 @@ class BoxesController extends Controller
             if ($box->sale_note_id) {
 
                 $sale_note = SaleNote::find($box->sale_note_id);
-                $boxes = Box::where('sale_note_id', $box->sale_note_id)->get()->pluck('amount')->toArray();
+                $boxes = Box::where('sale_note_id', $box->sale_note_id)
+            
+                ->get()->pluck('amount')->toArray();
                 $name_sale_note =  $sale_note->getNumberFullAttribute();
                 $column = array_column($documents, 'name');
 
                 if (!in_array($name_sale_note, $column)) {
 
 
-                    $documents[] = [
-                        "name" => $name_sale_note,
-                        "total" => $sale_note->total,
-                    ];
+                    if(!$box->is_credit){
+                        $documents[] = [
+                            "name" => $name_sale_note,
+                            "total" => $sale_note->total,
+                        ];
+                    }
                     $items = SaleNoteItem::where("sale_note_id", $box->sale_note_id)->get();
 
                     foreach ($items as $item) {
@@ -144,8 +160,10 @@ class BoxesController extends Controller
                         }
                      
                     }
-                    $all_documents["notas"]["total"] += $sale_note->total;
-                    $all_documents["notas"]["quantity"] += 1;
+                    if(!$box->is_credit){
+                        $all_documents["notas"]["total"] += $sale_note->total;
+                        $all_documents["notas"]["quantity"] += 1;
+                    }
                 }
               
             }

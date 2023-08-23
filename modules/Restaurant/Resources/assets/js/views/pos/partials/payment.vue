@@ -198,6 +198,7 @@
                                             >Observaciones</label
                                         >
                                         <el-input
+                                        ref="observation"
                                             type="textarea"
                                             :rows="2"
                                             :placeholder="bank"
@@ -2033,12 +2034,12 @@ export default {
         async setInitialAmount() {
             this.enter_amount = this.form.total;
             this.form.payments = this.payments;
-            await this.$refs.enter_amount.$el
-                .getElementsByTagName("input")[0]
+            await this.$refs.observation.$el
+                .getElementsByTagName("textarea")[0]
                 .focus();
-            await this.$refs.enter_amount.$el
-                .getElementsByTagName("input")[0]
-                .select();
+            // await this.$refs.enter_amount.$el
+            //     .getElementsByTagName("input")[0]
+            //     .select();
         },
         inputDiscountAmount() {
             if (this.enabled_discount) {
