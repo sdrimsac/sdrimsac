@@ -426,6 +426,22 @@ class SaleNoteController extends Controller
                             $date_payment = \Carbon\Carbon::parse($date->addDay($dias))->format('Y-m-d');
                             break;
                     }
+                    $user_id = auth()->user()->id;
+                    $cash = Cash::where('state', 1)->where('user_id', $user_id)->first();
+                    if ($cash == null) {
+                        $cash = Cash::create([
+                            'user_id' => auth()->user()->id,
+                            'date_opening' => date('Y-m-d'),
+                            'time_opening' => date('H:i:s'),
+                            'date_closed' => null,
+                            'time_closed' => null,
+                            'beginning_balance' => 0,
+                            'final_balance' => 0,
+                            'income' => 0,
+                            'state' => true,
+                            'reference_number' => null
+                        ]);
+                    }
                     Payment::create([
                         "user_id"     => auth()->user()->id,
                         "amount"       => $request->amount,
@@ -436,6 +452,10 @@ class SaleNoteController extends Controller
                     ]);
                     // $payment = Payment::firstOrNew(['id' => $id]);
                 }
+                SaleNoteCredit::create([
+                    'cash_id' => $cash->id,
+                    'sale_note_id' => $this->sale_note->id,
+                ]);
             }
 
             $company = Company::first();
@@ -521,10 +541,7 @@ class SaleNoteController extends Controller
                         'reference_number' => null
                     ]);
                 }
-                SaleNoteCredit::create([
-                    'cash_id' => $cash->id,
-                    'sale_note_id' => $this->sale_note->id,
-                ]);
+            
                 if ($request->advances) {
                  
                     $cajas    = new Box;

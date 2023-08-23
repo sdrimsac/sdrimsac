@@ -47,14 +47,14 @@ class BoxesController extends Controller
         ->select('document_id', 'sale_note_id')
         ->addSelect(DB::raw('false as is_credit'))
         ->get();
-        $sale_note_credit = SaleNoteCredit::where('cash_id', $cash_id)->get(['sale_note_id']);
-        foreach ($sale_note_credit as $key => $value) {
-            $boxes[] = (object) [
-                "document_id" => null,
-                "sale_note_id" => $value->sale_note_id,
-                "is_credit" => true
-            ];
-        }
+        // $sale_note_credit = SaleNoteCredit::where('cash_id', $cash_id)->get(['sale_note_id']);
+        // foreach ($sale_note_credit as $key => $value) {
+        //     $boxes[] = (object) [
+        //         "document_id" => null,
+        //         "sale_note_id" => $value->sale_note_id,
+        //         "is_credit" => true
+        //     ];
+        // }
         $all_items = [];
         $all_documents = [
             "facturas" => ["total" => 0, "quantity" => 0],
