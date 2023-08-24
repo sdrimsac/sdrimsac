@@ -410,6 +410,28 @@ class ConsignmentController extends Controller
             $warehouse->save();
         }
     }
+    public function delete($id){
+        $consigment = Consignment::find($id);
+        $liquidated = $consigment->liquidated;
+        if($liquidated){
+            return [
+                'success' => false,
+                'message' => 'No se puede eliminar una consignación liquidada'
+            ];
+        }
+        $this->restoreStock($id);
+        $items = $consigment->items;
+        foreach ($items as $item) {
+           ConsignmentItemLot::where('consignment_item_id', $item->id)->delete();
+        }
+        $consigment->items()->delete();
+        $consigment->delete();
+        return [
+            'success' => true,
+            'message' => 'Consignación eliminada con éxito'
+        ];
+
+    }
     public function store(Request $request)
     {
 

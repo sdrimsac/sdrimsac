@@ -401,7 +401,7 @@ class SaleNoteController extends Controller
                 }
             }
             /////------------------------------------------
-            if (count($request->payments) == 0) {
+            if ($request->boxes == null || count($request->boxes) == 0) {
                 $date = Carbon::parse($request->date_of_issue);
                 for ($i = 0; $i < $request->num_cuota; $i++) {
                     switch ($request->type_payment) {
@@ -486,25 +486,26 @@ class SaleNoteController extends Controller
                             $cajas->establishment_id = auth()->user()->establishment_id;
                             $cajas->save();
                         }
-                    } else {
-                        $cajas    = Box::firstOrNew(['sale_note_id' => $this->sale_note->id]);
-                        $cajas->group_id = 1;
-                        $cajas->category_id = 1;
-                        $cajas->subcategory_id = 1;
-                        $cajas->amount = $request->input('total');
-                        $cajas->date = Carbon::parse($request->input('date_of_issue'))->format('Y-m-d');
-                        $cajas->type = '1';
-                        $cajas->state = '1';
-                        $cajas->method =  $request->method_pay;
-                        $cajas->sale_note_id = $this->sale_note->id;
-                        $cajas->orden_id =  $request->orden_id;
-                        $cajas->cash_id = $request->cash_id;
-                        $cajas->user_id = auth()->user()->id;
-                        $cajas->description = "VENTAS " . $document;
-                        $cajas->soap_type_id = $company->soap_type_id;
-                        $cajas->establishment_id = auth()->user()->establishment_id;
-                        $cajas->save();
-                    }
+                    } 
+                    // else {
+                    //     $cajas    = Box::firstOrNew(['sale_note_id' => $this->sale_note->id]);
+                    //     $cajas->group_id = 1;
+                    //     $cajas->category_id = 1;
+                    //     $cajas->subcategory_id = 1;
+                    //     $cajas->amount = $request->input('total');
+                    //     $cajas->date = Carbon::parse($request->input('date_of_issue'))->format('Y-m-d');
+                    //     $cajas->type = '1';
+                    //     $cajas->state = '1';
+                    //     $cajas->method =  $request->method_pay;
+                    //     $cajas->sale_note_id = $this->sale_note->id;
+                    //     $cajas->orden_id =  $request->orden_id;
+                    //     $cajas->cash_id = $request->cash_id;
+                    //     $cajas->user_id = auth()->user()->id;
+                    //     $cajas->description = "VENTAS " . $document;
+                    //     $cajas->soap_type_id = $company->soap_type_id;
+                    //     $cajas->establishment_id = auth()->user()->establishment_id;
+                    //     $cajas->save();
+                    // }
             }
             $boxes = Box::where('sale_note_id', $this->sale_note->id)->get();
 

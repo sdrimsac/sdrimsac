@@ -40,7 +40,9 @@ class BoxesController extends Controller
     {
         //ini_set('memory_limit', '4096M');
     }
-
+    function get_items_from_credit($cash_id){
+        $sale_notes_credit = SaleNoteCredit::where('cash_id', $cash_id)->get();
+    }
     function get_items_from_box($cash_id)
     {
         $boxes = Box::where('cash_id', $cash_id)

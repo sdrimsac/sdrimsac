@@ -288,7 +288,8 @@
                             @endif
                         @endif
                     </td>
-                    <td class="text-center desc-9 align-top">{{ $row->item->unit_type_id }}</td>
+                    <td class="text-center desc-9 align-top">  {{          isset($row->item->from_unit_type_id_desc) ? 'NIU' :
+                        $row->item->unit_type_id }}</td>
                     <td class="text-left desc-9 align-top">
                         @if (isset($row->item->descriptionInternet))
                             {{ $row->item->descriptionInternet }}

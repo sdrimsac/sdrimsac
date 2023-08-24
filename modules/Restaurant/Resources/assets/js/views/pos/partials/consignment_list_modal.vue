@@ -5,7 +5,7 @@
         @close="close"
         :visible="showDialog"
         title="Lista de Consignaciones"
-        width="80%"
+        width="90%"
     >
         <div class="row mt-2">
             <div class="col-md-3">
@@ -49,7 +49,7 @@
         </div>
         <div>
             <el-pagination
-                @current-change="getRecords()"
+                @current-change="getRecords"
                 layout="total, prev, pager, next"
                 :total="pagination.total"
                 :current-page.sync="pagination.current_page"
@@ -77,11 +77,13 @@
                     <tr v-for="(consignment, idx) in records" :key="idx">
                         <td>{{ customIndex(idx) }}</td>
                         <td class="text-small ">
-                            <template v-if="consignment.user_name"> 
-                                <strong>CREADO:</strong> {{ consignment.user_name }} <br>
+                            <template v-if="consignment.user_name">
+                                <strong>CREADO:</strong>
+                                {{ consignment.user_name }} <br />
                             </template>
-                            <template v-if="consignment.user_liquidated_name"> 
-                                <strong>LIQUIDADO:</strong> {{ consignment.user_liquidated_name }}
+                            <template v-if="consignment.user_liquidated_name">
+                                <strong>LIQUIDADO:</strong>
+                                {{ consignment.user_liquidated_name }}
                             </template>
                         </td>
                         <td>{{ consignment.person.name }}</td>
@@ -140,6 +142,14 @@
                                 <i class="el-icon-cash"></i>
                                 Liquidar
                             </el-button>
+                            <el-button
+                                size="mini"
+                                type="danger"
+                                v-if="!consignment.liquidated"
+                                @click="clickDelete(consignment)"
+                            >
+                                <i class="el-icon-delete"></i>
+                            </el-button>
                             <span v-else>
                                 Liquidado
                             </span>
@@ -157,6 +167,7 @@
 </template>
 
 <script>
+import queryString from "query-string";
 const ItemsModal = () =>
     import(
         "../../../../../../../Consignment/Resources/assets/js/views/partials/items.vue"
@@ -186,6 +197,45 @@ export default {
         };
     },
     methods: {
+        async clickDelete(consignment) {
+            this.$confirm(
+                "¿Está seguro de eliminar la consignación?",
+                "Advertencia",
+                {
+                    confirmButtonText: "Aceptar",
+                    cancelButtonText: "Cancelar",
+                    type: "warning"
+                }
+            )
+                .then(async () => {
+                    const response = await this.$http.get(
+                        `${this.resource}/delete/${consignment.id}`
+                    );
+                    if (response.status == 200) {
+                        if (response.data.success) {
+                            this.$toast.success(response.data.message);
+                            this.getRecords();
+                        } else {
+                            this.$toast.error(response.data.message);
+                        }
+                    } else {
+                        this.$toast.error(
+                            "Ocurrió un error al eliminar la consignación"
+                        );
+                    }
+                })
+                .catch(e => {
+                    console.log(e);
+                });
+        },
+        getQueryParameters() {
+            return queryString.stringify({
+                page: this.pagination.current_page,
+                limit: this.limit,
+                value: this.search.value,
+                column: this.search.column
+            });
+        },
         clickDownload(consignment) {
             window.open(consignment.download_url, "_blank");
         },
@@ -258,8 +308,7 @@ export default {
             try {
                 this.loading = true;
                 const response = await this.$http(
-                    `${this.resource}/records?column=${this.search.column ||
-                        ""}&value=${this.search.value || ""}`
+                    `${this.resource}/records?${this.getQueryParameters()}`
                 );
                 console.log(response);
                 this.records = response.data.data;

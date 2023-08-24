@@ -365,7 +365,11 @@
                                     @endif
                                 @endif
                             </td>
-                            <td class="text-center align-top bordes" height="20px">{{ $row->item->unit_type_id }}
+                            <td class="text-center align-top bordes" height="20px">{{
+                            
+                            isset($row->item->has_unit_type) ? 'NIU' :
+                            $row->item->unit_type_id 
+                            }}
                             </td>
                             <td class="text-left align-top bordes" height="20px">
 

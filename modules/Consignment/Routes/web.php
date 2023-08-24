@@ -30,6 +30,7 @@ Route::prefix('consignment')->group(function() {
     Route::get('/tables', [ConsignmentController::class,'tables']);
     Route::get('/stock', [ConsignmentController::class,'stock']);
     Route::get('/message/{id}', [ConsignmentController::class,'consignment_message']);
+    Route::get('/delete/{id}', [ConsignmentController::class,'delete']);
 
     Route::prefix('penalty')->group(function (){
         Route::get('/', [ConsignmentPenaltyController::class,'penalties']);

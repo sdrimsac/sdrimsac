@@ -58,7 +58,7 @@ class ConsignmentCollection extends ResourceCollection
                     'number' => $row->person->number,
                 ],
                 'stock' => $stock,
-                'total' => $total_price ? $total_price->total : 0,
+                'total' => $total_price ? number_format($total_price->total,2,'.',',') : 0,
                 'active' => (bool)$row->active,
                 'user_name' => $user_name,
                 'user_liquidated_name' => $user_liquidated_name,

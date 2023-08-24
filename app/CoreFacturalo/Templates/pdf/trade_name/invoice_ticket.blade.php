@@ -470,7 +470,8 @@
                             @endif
                         @endif
                     </td>
-                    <td class="text-center desc-9 align-top">{{ $row->item->unit_type_id }}</td>
+                    <td class="text-center desc-9 align-top">{{      isset($row->item->has_unit_type) ? 'NIU' :
+                        $row->item->unit_type_id  }}</td>
                     <td class="text-left desc-9 align-top">
                         @if (isset($row->name_product_pdf))
                             {!! $row->name_product_pdf !!}

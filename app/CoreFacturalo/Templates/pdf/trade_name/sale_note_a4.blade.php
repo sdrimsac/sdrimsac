@@ -156,7 +156,10 @@
                             @endif
                         @endif
                     </td>
-                    <td class="text-center align-top">{{ $row->item->unit_type_id }}</td>
+                    <td class="text-center align-top">
+                        {{          isset($row->item->from_unit_type_id_desc) ? 'NIU' :
+                        $row->item->unit_type_id }}
+                        </td>
                     <td class="text-left">
 
                         @if (isset($row->item->descriptionInternet))
