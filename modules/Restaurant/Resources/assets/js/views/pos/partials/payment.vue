@@ -15,11 +15,13 @@
         <div v-loading="loading" class=" mb-0">
             <div class="pt-1" v-loading="loading_submit">
                 <div class="d-flex pt-2 justify-content-end">
-                        <el-button size="mini" type="primary"
+                    <el-button
+                        size="mini"
+                        type="primary"
                         @click="showListItems = true"
-                        >
-                            <i class="fas fa-clipboard-list"></i>
-                        </el-button>
+                    >
+                        <i class="fas fa-clipboard-list"></i>
+                    </el-button>
                 </div>
                 <div class="row pt-2">
                     <div class="col-lg-12">
@@ -198,7 +200,7 @@
                                             >Observaciones</label
                                         >
                                         <el-input
-                                        ref="observation"
+                                            ref="observation"
                                             type="textarea"
                                             :rows="2"
                                             :placeholder="bank"
@@ -1113,14 +1115,7 @@
             </person-college-form>
         </div>
 
-        <list-items
-        
-        :showDialog.sync="showListItems"
-        :form="form"
-
-        >
-
-        </list-items>
+        <list-items :showDialog.sync="showListItems" :form="form"> </list-items>
     </el-dialog>
 </template>
 
@@ -2034,12 +2029,21 @@ export default {
         async setInitialAmount() {
             this.enter_amount = this.form.total;
             this.form.payments = this.payments;
-            await this.$refs.observation.$el
-                .getElementsByTagName("textarea")[0]
-                .focus();
-            // await this.$refs.enter_amount.$el
-            //     .getElementsByTagName("input")[0]
-            //     .select();
+            //get with screen size
+            let width = window.innerWidth;
+            console.log(width);
+            if (width > 800) {
+                await this.$refs.enter_amount.$el
+                    .getElementsByTagName("input")[0]
+                    .focus();
+                await this.$refs.enter_amount.$el
+                    .getElementsByTagName("input")[0]
+                    .select();
+            } else {
+                await this.$refs.observation.$el
+                    .getElementsByTagName("textarea")[0]
+                    .focus();
+            }
         },
         inputDiscountAmount() {
             if (this.enabled_discount) {
@@ -2364,7 +2368,6 @@ export default {
                 this.discountGlobal();
             }
 
-         
             // this.discountGlobal();
         },
         chargeGlobal() {
