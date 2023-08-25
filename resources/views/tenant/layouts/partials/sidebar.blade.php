@@ -145,15 +145,15 @@
                 </a>
                 <ul id="restaurantComponents" class="collapse ">
 
-                    @if ($user->type == 'superadmin')
-                    @endif
-
+                    @if ($config->users_views)
+                    
                     <li>
                         <a class="{{ $path[0] === 'caja' && $path[1] === 'workers' ? 'active' : '' }}"
-                            href="{{ route('restaurant.workers') }}">
-                            <i class="icofont-users-alt-1"></i> Usuarios
-                        </a>
-                    </li>
+                        href="{{ route('restaurant.workers') }}">
+                        <i class="icofont-users-alt-1"></i> Usuarios
+                    </a>
+                </li>
+                @endif
                     {{-- <li>
                 <a class="{{$path[0] === 'items' && $path[1] === ''  ? 'active' : '' }}"
                     href="{{ route('tenant.documents_identity.index') }}">

@@ -458,7 +458,7 @@ export default {
                 let parameters = `input=${input}`;
 
                 this.$http
-                    .get(`/documents/data-table/items?series=1&${parameters}`)
+                    .get(`/documents/data-table/items?${parameters}`)
                     .then(response => {
                         // console.log(response.data)
                         this.items = response.data;

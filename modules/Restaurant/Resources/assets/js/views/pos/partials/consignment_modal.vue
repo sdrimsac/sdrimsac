@@ -127,7 +127,7 @@ export default {
                 person_id: null,
                 date_of_issue: null,
                 date_of_end: null,
-                penalty_id: null
+                penalty_id: null,
             };
         },
         async getPenalties() {

@@ -504,7 +504,7 @@ export default {
                 afectar_caja: true,
                 restaurant: false,
                 series_id: null,
-                generate: false,
+                generate: true,
                 prefix: "NV",
                 month: 0,
                 establishment_id: null,

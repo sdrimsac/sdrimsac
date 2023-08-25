@@ -401,7 +401,7 @@ class SaleNoteController extends Controller
                 }
             }
             /////------------------------------------------
-            if (count($request->payments) == 0) {
+            if ($request->generate == true) {
                 $date = Carbon::parse($request->date_of_issue);
                 for ($i = 0; $i < $request->num_cuota; $i++) {
                     switch ($request->type_payment) {

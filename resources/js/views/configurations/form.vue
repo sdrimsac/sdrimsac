@@ -1238,6 +1238,19 @@
                                             ></el-switch>
                                         </div>
                                     </div>
+                                     <div class="col-md-6 mt-4">
+                                        <div class="form-group">
+                                            <label class="control-label w-100"
+                                                >Visualizar administrador - usuarios
+                                            </label>
+                                            <el-switch
+                                                v-model="form.users_views"
+                                                active-text="Si"
+                                                inactive-text="No"
+                                                @change="submit"
+                                            ></el-switch>
+                                        </div>
+                                    </div>
                                 </div>
                             </el-tab-pane>
                             <el-tab-pane label="Impresion">

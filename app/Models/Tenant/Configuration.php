@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Config;
 class Configuration extends ModelTenant
 {
     protected $fillable = [
+        'users_views',
         'trunc_txt',
         'ord_dscp',
         'items_due_caja',
@@ -111,6 +112,7 @@ class Configuration extends ModelTenant
 
     ];
     protected $casts = [
+        'users_views' => 'boolean',
         'trunc_txt' => 'boolean',
         'ord_dscp' => 'boolean',
         'items_due_caja' => 'boolean',
@@ -181,6 +183,7 @@ class Configuration extends ModelTenant
         // $skins = Skin::all();
         $skins = [];
         return [
+            'users_views' => (bool)$this->users_views,
             'trunc_txt' => (bool)$this->trunc_txt,
             'ord_dscp' => (bool)$this->ord_dscp,
             'items_due_caja' => (bool)$this->items_due_caja,

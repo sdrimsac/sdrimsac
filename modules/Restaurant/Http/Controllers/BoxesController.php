@@ -41,7 +41,38 @@ class BoxesController extends Controller
         //ini_set('memory_limit', '4096M');
     }
     function get_items_from_credit($cash_id){
+        $items = [];
         $sale_notes_credit = SaleNoteCredit::where('cash_id', $cash_id)->get();
+        foreach ($sale_notes_credit as $idx => $sale_note_credit) {
+            $sale_note = SaleNote::find($sale_note_credit->sale_note_id);
+            $sale_note_items = $sale_note->items;
+            foreach ($sale_note_items as $idx => $sale_note_item) {
+                $item = $sale_note_item->item;
+                $item = (array)$item;
+                $id_exist  = false;
+                if (count($items) > 0) {
+                    $id_exist = array_search($item['description'], array_column($items, 'description'));
+                }
+                if (gettype($id_exist) == "integer") {
+                    $items[$id_exist] = [
+                        "price" => $sale_note_item->unit_price,
+                        "description" => $item['description'],
+                        "category" => isset($sale_note_item->item->category) ?  $sale_note_item->item->category->name : "OTROS",
+                        "quantity" => $items[$id_exist]["quantity"] + $sale_note_item->quantity,
+                        "total" => $items[$id_exist]["total"] + $sale_note_item->total
+                    ];
+                } else {
+                    $items[] = [
+                        "price" => $sale_note_item->unit_price,
+                        "description" => $item['description'],
+                        "category" => isset($sale_note_item->item->category) ?  $sale_note_item->item->category->name : "OTROS",
+                        "quantity" => $sale_note_item->quantity,
+                        "total" => $sale_note_item->total
+                    ];
+                }
+            }
+        }
+
     }
     function get_items_from_box($cash_id)
     {
