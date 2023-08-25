@@ -17,12 +17,18 @@
                         </ol>
                     </div>
                 </div>
+                <div class="row">
+                    <el-button @click="printTest">
+                        <i class="el-icon-printer"></i>
+                        Test
+                    </el-button>
+
+                   
+                </div>
             </div>
         </div>
         <div class="container-fluid p-l-0 p-r-0">
-            <table class="table table-responsive">
-                
-            </table>
+            <table class="table table-responsive"></table>
         </div>
     </div>
 </template>
@@ -44,6 +50,26 @@ export default {
         this.getRecords();
     },
     methods: {
+        printTest() {
+            var printWindow = window.open(
+                "https://tunegocio.sdrimsac.pro/print/document/5a0cb63a-a97c-4443-9672-5ec464978c18/ticket",
+                "Print",
+                "left=200",
+                "top=200",
+                "width=950",
+                "height=500",
+                "toolbar=0",
+                "resizable=0"
+            );
+            printWindow.addEventListener(
+                "load",
+                function() {
+                    printWindow.print();
+                    printWindow.close();
+                },
+                true
+            );
+        },
         async getRecords() {
             try {
                 this.loading = true;
