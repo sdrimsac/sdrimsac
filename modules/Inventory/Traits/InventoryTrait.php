@@ -80,7 +80,6 @@ trait InventoryTrait
         })
 
             ->where([['item_type_id', '01'], ['unit_type_id', $is_service ? '=' : '!=', 'ZZ'], ['active', 1]])->whereNotIsSet();
-        dump($is_service);
         //$establishment_id = auth()->user()->establishment_id;
         //$current_warehouse = Warehouse::where('establishment_id', $establishment_id)->first();
         switch ($type) {
