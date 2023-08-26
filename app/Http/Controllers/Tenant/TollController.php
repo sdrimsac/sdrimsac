@@ -46,7 +46,7 @@ class TollController extends Controller
     {
         $description = $request->description;
         return [
-            'items' => $this->optionsItemWareHousexId($warehouse_id, $description),
+            'items' => $this->optionsItemWareHousexId($warehouse_id, $description,null,true),
         ];
     }
 

@@ -1,9 +1,17 @@
 yst<template>
     <div v-loading="loading" class="d-flex justify-content-center">
         <div class="card col-lg-8 col-md-12 col-sm-12">
-            <div class="d-flex justify-content-end">
+            <div class="d-flex justify-content-between">
+                <div class="col-md-3">
+                    <label>Impresión directa</label><br />
+                    <el-switch
+                        v-model="direct_printing"
+                        @change="changeConfiguration"
+                    >
+                    </el-switch>
+                </div>
                 <el-button
-                    class="m-3 text-primary"
+                    class=" text-primary"
                     v-if="elements.length"
                     @click="addElement"
                 >
@@ -138,6 +146,7 @@ export default {
     components: { FormAdd, ElementCard },
     data() {
         return {
+            direct_printing: true,
             resource: "toll",
             elements: [],
             showFormElement: false,
@@ -164,23 +173,41 @@ export default {
             `.print-order-${this.configuration.socket_channel}`,
             e => {
                 console.log("imprimiendo", e);
-                //   if (e.data.direct_printing == true) {
-                //       if (e.data.printing == true) {
-                this.Printer(
-                    e.data.printer,
-                    e.data.print,
-                    e.data.copies,
-                    e.data.user_id,
-                    e.data.multiple_boxes,
-                    e.data.typeuser,
-                    e.data.printing
-                );
-                // }
+                if (e.data.direct_printing == true) {
+                    if (e.data.printing == true) {
+                        this.Printer(
+                            e.data.printer,
+                            e.data.print,
+                            e.data.copies,
+                            e.data.user_id,
+                            e.data.multiple_boxes,
+                            e.data.typeuser,
+                            e.data.printing
+                        );
+                    }else{
+                        let url = e.data.print;
+                        window.open(url, "_blank");
+                    }
+                }
             }
-            //  }
         );
     },
     methods: {
+        async changeConfiguration() {
+            try {
+                this.loading = true;
+                const response = await this.$http.post(`/configurations`, {
+                    ...this.configuration,
+                    print_direct: this.direct_printing
+                });
+                this.$toast.success("Configuración actualizada");
+            } catch (e) {
+                this.$toast.error("Ocurrió un problema");
+                console.log(e);
+            } finally {
+                this.loading = false;
+            }
+        },
         async Printer(Printer, linkpdf, copies) {
             let paperConfig = {
                 scaleContent: false
@@ -303,6 +330,7 @@ export default {
                 time_of_issue: moment().format("HH:mm:ss")
             };
 
+            this.direct_printing = this.configuration.print_direct == 1;
             if (this.defaultCustomers.length != 0) {
                 let [customer] = this.defaultCustomers;
                 this.form.customer_id = customer.id;
@@ -522,10 +550,11 @@ export default {
                     `/${resource_documents}`,
                     form
                 );
-                console.log(response);
+
                 this.$toast.success("Documento emitido");
                 if (response.status == 200) {
                     if (response.data.success == true) {
+                        console.log(response);
                     }
                 } else {
                     this.loading_submit = true;

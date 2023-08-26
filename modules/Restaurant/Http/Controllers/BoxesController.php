@@ -72,7 +72,6 @@ class BoxesController extends Controller
                 }
             }
         }
-        dump($items);
     }
     function get_items_from_box($cash_id)
     {

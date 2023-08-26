@@ -49,28 +49,25 @@ export default {
     },
     methods: {
         async printTest() {
-            try {
-                const pdfUrl =
-                    "https://tunegocio.villacorpfact.net/print/document/75877986-94b5-4c83-bb1d-382edf33ec71/ticket";
-                const pdfFile = new File([pdfUrl], "archivo.pdf", {
-                    type: "application/pdf"
-                });
+          var printWindow = window.open(
+                "https://tunegocio.sdrimsac.pro/print/document/5a0cb63a-a97c-4443-9672-5ec464978c18/ticket",
+                "Print",
+                "left=200",
+                "top=200",
+                "width=950",
+                "height=500",
+                "toolbar=0",
+                "resizable=0"
+            );
+            printWindow.addEventListener(
+                "load",
+                function() {
+                    printWindow.print();
+                    printWindow.close();
+                },
+                true
+            );
 
-                if (navigator.share) {
-                    await navigator.share({
-                        title: "Compartir archivo PDF",
-                        text: "Aquí tienes un archivo PDF para compartir",
-                        files: [pdfFile]
-                    });
-                    this.$toast.success("Archivo PDF compartido con éxito");
-                } else {
-                    this.$toast.error(
-                        "Tu navegador no soporta la API Web Share"
-                    );
-                }
-            } catch (error) {
-                this.$toast.error("Error al compartir el archivo PDF");
-            }
         },
         async getRecords() {
             try {

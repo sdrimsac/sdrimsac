@@ -72,15 +72,15 @@ trait InventoryTrait
         });
     }
 
-    public function optionsItemWareHousexId($warehouse_id, $description = null, $type = 'description')
+    public function optionsItemWareHousexId($warehouse_id, $description = null, $type = 'description', $is_service = false)
     {
 
         $records = Item::whereHas('warehouses', function ($query) use ($warehouse_id) {
             $query->where('warehouse_id', $warehouse_id);
         })
 
-            ->where([['item_type_id', '01'], ['unit_type_id', '!=', 'ZZ'], ['active', 1]])->whereNotIsSet();
-
+            ->where([['item_type_id', '01'], ['unit_type_id', $is_service ? '=' : '!=', 'ZZ'], ['active', 1]])->whereNotIsSet();
+        dump($is_service);
         //$establishment_id = auth()->user()->establishment_id;
         //$current_warehouse = Warehouse::where('establishment_id', $establishment_id)->first();
         switch ($type) {
