@@ -35,7 +35,9 @@ use App\Models\Tenant\Establishment;
 use App\Models\Tenant\Item;
 use App\Models\Tenant\ItemUnitType;
 use App\Models\Tenant\Quotation;
+use App\Models\Tenant\Receipt;
 use App\Models\Tenant\SaleNoteItem;
+use App\Models\Tenant\SaleNotePayment;
 use Barryvdh\Debugbar\Twig\Extension\Dump;
 use Hyn\Tenancy\Environment;
 use Hyn\Tenancy\Models\Website;
@@ -995,7 +997,7 @@ class CashController extends Controller
         $sales_quantity = $sales->count();
         $sales_amount = $sales->where('method', '<>', 'Efectivo')->sum('amount');
 
-        $sales_cash = Box::where('type', '1')->where('method', 'Efectivo')->where('expenses', 0)->where('incomes', 0)->where('state', 0)->where('cash_id', $cash_id)->OrderBy('date', 'asc');
+        $sales_cash = Box::where('method', 'Efectivo')->where('expenses', 0)->where('incomes', 0)->where('cash_id', $cash_id)->OrderBy('date', 'asc');
         $sales_cash_sum = 0;
         $sales_cash_records = $sales_cash->get();
         foreach ($sales_cash_records as $ringreso) {
@@ -1161,6 +1163,11 @@ class CashController extends Controller
         }
         $user = User::find($cash->user_id);
         $establishment = Establishment::find($user->establishment_id);
+
+        $receipts = $this->get_receipts($cash_id); // receipts
+        // $quantity_receipts = count($receipts);
+        $total_receipts = $receipts->sum('amount');
+        $documents["recibos"] = $total_receipts;
         try {
             $pdf = PDF::loadView('restaurant::cash.ticket_cash', compact(
                 'user',
@@ -1185,6 +1192,47 @@ class CashController extends Controller
             return ['m' => $e->getMessage()];
         }
         return $pdf->stream('pdf_file.pdf');
+    }
+    function get_receipts($cash_id)
+    {
+        $receipts = [];
+        $receipts = Receipt::where('cash_id', $cash_id)->get()
+            ->transform(function ($row) {
+                $number = "RC01-" . $row->id;
+                $time = Carbon::parse($row->hour)->format('H:m:s');
+                $date = Carbon::parse($row->date_of_issue)->format('d-m-Y');
+                $customer = $row->customer;
+                $customer_number = $customer->number;
+                $customer_name = $customer->name;
+                $sale_note_id = $row->sale_note_id;
+                $box = Box::where('sale_note_id', $row->sale_note_id)
+                    ->where('sale_note_payment_id', $row->sale_note_payment_id)
+                    ->first();
+                $method  = null;
+
+                if ($box) {
+                    $method = $box->method;
+                }
+                $amount = $row->amount;
+                $paid = (bool) $row->sale_note->paid;
+                $amount_payment = SaleNotePayment::where('sale_note_id', $sale_note_id)->sum('payment');
+                $remaining = number_format($row->sale_note->total - $amount_payment, 2, ".", "");
+                return
+                    [
+                        "id" => $row->id,
+                        "number" => $number,
+                        "time" => $time,
+                        "date" => $date,
+                        "customer_number" => $customer_number,
+                        "customer_name" => $customer_name,
+                        "method" => $method,
+                        "amount" => $amount,
+                        "paid" => $paid,
+                        "remaining" => $remaining,
+                    ];
+            });
+
+        return $receipts;
     }
     public function index()
     {

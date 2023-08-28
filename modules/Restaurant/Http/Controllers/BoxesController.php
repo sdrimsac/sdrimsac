@@ -148,7 +148,7 @@ class BoxesController extends Controller
 
         $boxes = Box::where('cash_id', $cash_id)
             ->select('document_id', 'sale_note_id')
-            ->addSelect(DB::raw('false as is_credit'))
+            // ->addSelect(DB::raw('false as is_credit'))
             ->whereNull('sale_note_payment_id')
             ->get();
 
@@ -1338,7 +1338,7 @@ class BoxesController extends Controller
         $sales = Box::where('cash_id', $cash_id)->where('expenses', 0)->where('incomes', 0)->OrderBy('date', 'asc');
         $sales_quantity = $sales->count();
         $sales_amount = $sales->where('method', '<>', 'Efectivo')->sum('amount');
-        $sales_cash = Box::where('type', '1')->where('method', 'Efectivo')->where('expenses', 0)->where('incomes', 0)->where('state', 0)->where('cash_id', $cash_id)->OrderBy('date', 'asc');
+        $sales_cash = Box::where('method', 'Efectivo')->where('expenses', 0)->where('incomes', 0)->where('state', 0)->where('cash_id', $cash_id)->OrderBy('date', 'asc');
         $sales_cash_records = $sales_cash->get();
         // $sales_cash_sum = $sales_cash->sum('amount');
         $sales_cash_sum = 0;
@@ -1519,6 +1519,16 @@ class BoxesController extends Controller
                 "amount" => $expenses_cash_sum,
             ],
         ];
+        $receipts = $this->get_receipts($cash_id); // receipts
+        $quantity_receipts = count($receipts);
+        $total_receipts = $receipts->sum('amount');
+        $documents["recibos"] = ["total" => $total_receipts, "quantity" => $quantity_receipts];
+
+        // $documents_credit = $this->get_items_from_credit($cash_id); 
+        // $all_credit_items = $documents_credit['items'];
+        // $credit_grouped = $documents_credit['documents'];
+        // $array_receipts = $receipts->toArray();
+        // $all_credit_documents = array_merge($credit_grouped,$array_receipts );
         return compact(
             "sales_quantity",
             "sales_amount",
