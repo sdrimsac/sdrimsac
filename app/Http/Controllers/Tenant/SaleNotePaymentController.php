@@ -25,6 +25,7 @@ use Modules\Finance\Traits\FilePaymentTrait;
 use App\Http\Requests\Tenant\SaleNotePaymentRequest;
 use App\CoreFacturalo\Helpers\Storage\StorageDocument;
 use App\Http\Resources\Tenant\SaleNotePaymentCollection;
+use App\Models\Tenant\Cash;
 
 class SaleNotePaymentController extends Controller
 {
@@ -85,6 +86,23 @@ class SaleNotePaymentController extends Controller
 
     public function store(SaleNotePaymentRequest $request)
     {
+
+        $user_id = auth()->user()->id;
+        $cash = Cash::where('state', 1)->where('user_id', $user_id)->first();
+        if ($cash == null) {
+            $cash = Cash::create([
+                'user_id' => auth()->user()->id,
+                'date_opening' => date('Y-m-d'),
+                'time_opening' => date('H:i:s'),
+                'date_closed' => null,
+                'time_closed' => null,
+                'beginning_balance' => 0,
+                'final_balance' => 0,
+                'income' => 0,
+                'state' => true,
+                'reference_number' => null
+            ]);
+        }
         //dd($request->all());   
         $id = $request->input('id');
         $document_save = SaleNote::where('id', $request->sale_note_id)->first();
@@ -113,12 +131,14 @@ class SaleNotePaymentController extends Controller
             $boxes->description = "PAGO DE " . $type_document . " N° " . $document_save->series . " - " . $document_save->number;
             $boxes->soap_type_id = $company->soap_type_id;
             $boxes->sale_note_payment_id = $record->id;
+            $boxes->cash_id = $cash->id;
             $boxes->save();
         }
         /////////////////////////////////////////////////////////////////////////////////////////////////
         $receipt = Receipt::firstOrNew(['id' => $request->id]);
         $receipt->fill($request->all());
         $receipt->user_id = auth()->user()->id;
+        $receipt->cash_id = $cash->id;
         $receipt->establishment_id = auth()->user()->establishment_id;
         $receipt->customer_id = $document_save->customer_id;
         $receipt->sale_note_id = $document_save->id;

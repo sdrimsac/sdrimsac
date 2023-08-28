@@ -51,8 +51,9 @@ class ReceiptController extends Controller
         $user = User::findOrFail($data->user_id);
 
         $establishment = Establishment::find($user->establishment_id);
-        $recibo = PDF::loadView('tenant.receipt.index', ['data' => $data, 'company' => $company, 'interes' => $interes, 'establishment' => $establishment, "deuda" => $deuda, "payments" => $payments]);
-        return $recibo->setPaper(array(0, 0, 249.45, 520), 'portrait')->stream();
+        $recibo = PDF::loadView('tenant.receipt.index', ['data' => $data, 'company' => $company, 'interes' => $interes, 'establishment' => $establishment, "deuda" => $deuda, "payments" => $payments,"user" => $user]);
+    //    return view('tenant.receipt.index', ['data' => $data, 'company' => $company, 'interes' => $interes, 'establishment' => $establishment, "deuda" => $deuda, "payments" => $payments]);
+        return $recibo->setPaper(array(0, 0, 249.45, 650), 'portrait')->stream();
     }
 
     public function store(ReceiptRequest $request)

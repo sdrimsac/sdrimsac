@@ -52,7 +52,7 @@ class ReportCreditCollection extends ResourceCollection
                 'number' => $row->number_full,
                 'dues' => $dues,
                 'date_of_due' => $date_of_due,
-
+                'canceled' => (bool) $row->paid,
                 // 'amount_due' => number_format($amount_due, 2, ".", ""),
                 'amount_due' => number_format($amount_due, 2, ".", ""),
                 'differenc_days' => $differenc_days,

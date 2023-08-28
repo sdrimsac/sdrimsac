@@ -4,8 +4,8 @@
         v-loading="loading"
         @open="open"
         @close="close"
-        title="List de créditos"
-        width="70%"
+        title="Lista de créditos"
+        width="85%"
     >
         <div class="row mt-2">
             <div class="col-md-3">
@@ -174,6 +174,7 @@
                         <th class="text-center">DNI</th>
                         <th class="text-center">Nombres</th>
                         <th class="text-center">N° Cuotas Vencidas</th>
+                        <th class="text-center">Estado</th>
                         <th class="text-end">Fecha de cobro</th>
                         <th class="text-end">Monto</th>
                         <th class="text-end">Días de atraso</th>
@@ -189,6 +190,9 @@
                         <td class="text-center">{{ row.customer.number }}</td>
                         <td class="text-center">{{ row.customer.name }}</td>
                         <td class="text-center">{{ row.dues }}</td>
+                        <td class="text-center" :class="`${row.canceled ? 'text-success':'text-danger'}`">
+                            {{ row.canceled ? "PAGADO" : "PENDIENTE" }}
+                        </td>
                         <td class="text-end">{{ row.date_of_due }}</td>
                         <td class="text-end">{{ row.amount_due }}</td>
                         <td class="text-end">{{ row.differenc_days }}</td>

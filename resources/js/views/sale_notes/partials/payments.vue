@@ -63,7 +63,7 @@
                                         <td
                                             class="series-table-actions text-end"
                                         >
-                                            <button
+                                            <!-- <button
                                                 type="button"
                                                 class="btn waves-effect waves-light btn-sm btn-danger"
                                                 @click.prevent="
@@ -71,7 +71,7 @@
                                                 "
                                             >
                                                 Eliminar
-                                            </button>
+                                            </button> -->
                                             <button
                                                 type="button"
                                                 class="btn waves-effect waves-light btn-sm btn-primary"

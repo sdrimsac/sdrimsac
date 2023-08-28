@@ -41,6 +41,13 @@ class TollController extends Controller
         return compact('customers', 'series', 'printer');
     }
 
+    public function delete_item($id)
+    {
+        $toll = Toll::findOrFail($id);
+        $toll->delete();
+        return ["success" => true, "message" => "Eliminado exitosamente."];
+    }
+
     public function items($warehouse_id, Request $request)
 
     {

@@ -22,8 +22,10 @@ use Illuminate\Support\Facades\DB;
 use Modules\Restaurant\Models\Area;
 use Modules\Restaurant\Models\Orden;
 use App\Http\Resources\Tenant\BoxCollection;
+use App\Models\Tenant\Receipt;
 use App\Models\Tenant\SaleNoteCredit;
 use App\Models\Tenant\SaleNoteItem;
+use App\Models\Tenant\SaleNotePayment;
 use Exception;
 use Modules\Report\Exports\BoxesExport;
 use Modules\Restaurant\Models\OrdenItem;
@@ -40,11 +42,55 @@ class BoxesController extends Controller
     {
         //ini_set('memory_limit', '4096M');
     }
-    function get_items_from_credit($cash_id){
+    function get_receipts($cash_id)
+    {
+        $receipts = [];
+        $receipts = Receipt::where('cash_id', $cash_id)->get()
+            ->transform(function ($row) {
+                $number = "RC01-" . $row->id;
+                $time = Carbon::parse($row->hour)->format('H:m:s');
+                $date = Carbon::parse($row->date_of_issue)->format('d-m-Y');
+                $customer = $row->customer;
+                $customer_number = $customer->number;
+                $customer_name = $customer->name;
+                $sale_note_id = $row->sale_note_id;
+                $box = Box::where('sale_note_id', $row->sale_note_id)
+                    ->where('sale_note_payment_id', $row->sale_note_payment_id)
+                    ->first();
+                $method  = null;
+
+                if ($box) {
+                    $method = $box->method;
+                }
+                $amount = $row->amount;
+                $paid = (bool) $row->sale_note->paid;
+                $amount_payment = SaleNotePayment::where('sale_note_id', $sale_note_id)->sum('payment');
+                $remaining = number_format($row->sale_note->total - $amount_payment, 2, ".", "");
+                return
+                    [
+                        "id" => $row->id,
+                        "number" => $number,
+                        "time" => $time,
+                        "date" => $date,
+                        "customer_number" => $customer_number,
+                        "customer_name" => $customer_name,
+                        "method" => $method,
+                        "amount" => $amount,
+                        "paid" => $paid,
+                        "remaining" => $remaining,
+                    ];
+            });
+
+        return $receipts;
+    }
+    function get_items_from_credit($cash_id)
+    {
         $items = [];
+        $documents_credit = [];
         $sale_notes_credit = SaleNoteCredit::where('cash_id', $cash_id)->get();
         foreach ($sale_notes_credit as $idx => $sale_note_credit) {
             $sale_note = SaleNote::find($sale_note_credit->sale_note_id);
+
             $sale_note_items = $sale_note->items;
             foreach ($sale_note_items as $idx => $sale_note_item) {
                 $item = $sale_note_item->item;
@@ -71,24 +117,51 @@ class BoxesController extends Controller
                     ];
                 }
             }
+            $documents_credit[] =    [
+                "id" => $sale_note->id,
+                "number" => $sale_note->getNumberFullAttribute(),
+                "time" => Carbon::parse($sale_note->time_of_issue)->format('H:m:s'),
+                "date" => $sale_note->date_of_issue->format('d-m-Y'),
+                "customer_number" => $sale_note->customer->number,
+                "customer_name" => $sale_note->customer->name,
+                "method" => "-",
+                "amount" => "-",
+                "paid" => false,
+                "remaining" => $sale_note->total,
+            ];
         }
+        $grouped = array_reduce($items, function ($carry, $item) {
+            $category = $item['category'];
+            $carry[$category][] = $item;
+            return $carry;
+        }, []);
+        usort($grouped, function ($a, $b) {
+            return count($a) < count($b);
+        });
+        return [
+            "items" => $grouped,
+            "documents" => $documents_credit
+        ];
     }
     function get_items_from_box($cash_id)
     {
+
         $boxes = Box::where('cash_id', $cash_id)
-        ->select('document_id', 'sale_note_id')
-        ->addSelect(DB::raw('false as is_credit'))
-        ->get();
-        
+            ->select('document_id', 'sale_note_id')
+            ->addSelect(DB::raw('false as is_credit'))
+            ->whereNull('sale_note_payment_id')
+            ->get();
+
         $all_items = [];
         $all_documents = [
             "facturas" => ["total" => 0, "quantity" => 0],
             "boletas" => ["total" => 0, "quantity" => 0],
             "notas" => ["total" => 0, "quantity" => 0],
         ];
+
         $documents = [];
         foreach ($boxes as $box) {
-            $total =0;
+            $total = 0;
             if ($box->document_id) {
                 $document = Document::find($box->document_id);
                 $boxes = Box::where('document_id', $box->document_id)->get()->pluck('amount')->toArray();
@@ -139,19 +212,18 @@ class BoxesController extends Controller
                     }
                 }
             }
-            if ($box->sale_note_id) {
-
+            if ($box->sale_note_id && $box->sale_note_payment_id == null) {
                 $sale_note = SaleNote::find($box->sale_note_id);
                 $boxes = Box::where('sale_note_id', $box->sale_note_id)
-            
-                ->get()->pluck('amount')->toArray();
+
+                    ->get()->pluck('amount')->toArray();
                 $name_sale_note =  $sale_note->getNumberFullAttribute();
                 $column = array_column($documents, 'name');
 
                 if (!in_array($name_sale_note, $column)) {
 
 
-                    if(!$box->is_credit){
+                    if (!$box->is_credit) {
                         $documents[] = [
                             "name" => $name_sale_note,
                             "total" => $sale_note->total,
@@ -183,12 +255,10 @@ class BoxesController extends Controller
                                 "total" => $item->total
                             ];
                         }
-                     
                     }
-                        $all_documents["notas"]["total"] += $sale_note->total;
-                        $all_documents["notas"]["quantity"] += 1;
+                    $all_documents["notas"]["total"] += $sale_note->total;
+                    $all_documents["notas"]["quantity"] += 1;
                 }
-              
             }
         }
         $grouped = array_reduce($all_items, function ($carry, $item) {
@@ -199,6 +269,7 @@ class BoxesController extends Controller
         usort($grouped, function ($a, $b) {
             return count($a) < count($b);
         });
+
         return [
             "grouped" => $grouped,
             "items" => $all_items,
@@ -318,6 +389,7 @@ class BoxesController extends Controller
 
 
         $documents_items = $this->get_items_from_box($cash_id);
+
         $items = $documents_items["items"];
         $total_items = 0;
         foreach ($items as $item) {
@@ -600,9 +672,9 @@ class BoxesController extends Controller
         foreach ($sales_cash_records as $ringreso) {
             if ($ringreso["sale_note_id"]) {
                 $sale_note = SaleNote::find($ringreso["sale_note_id"]);
-                if($sale_note->total > $ringreso["amount"]){
-                    $sales_cash_sum +=$ringreso["amount"];
-                }else{
+                if ($sale_note->total > $ringreso["amount"]) {
+                    $sales_cash_sum += $ringreso["amount"];
+                } else {
                     $sales_cash_sum += $sale_note->total;
                 }
                 if ($sale_note->total_discount) {
@@ -612,9 +684,9 @@ class BoxesController extends Controller
             }
             if ($ringreso["document_id"]) {
                 $document = Document::find($ringreso["document_id"]);
-                if($document->total > $ringreso["amount"]){
+                if ($document->total > $ringreso["amount"]) {
                     $sales_cash_sum +=  $ringreso["amount"];
-                }else{
+                } else {
                     $sales_cash_sum += $document->total;
                 }
                 if ($document->total_discount) {
@@ -707,9 +779,9 @@ class BoxesController extends Controller
                 "amount" => $row->amount
             ];
         });
-        
 
-        
+
+
 
         $cash = Cash::find($cash_id);
         $counter = $cash->counter ?? [];
@@ -832,9 +904,7 @@ class BoxesController extends Controller
             'only_cash' => '1'
         ]);
 
-        $total_sales = (new PosController(
-
-        ))->total_sales($requestSales);
+        $total_sales = (new PosController())->total_sales($requestSales);
 
         if ($total_sales) {
 
@@ -846,8 +916,8 @@ class BoxesController extends Controller
             documents.series as  doc_series, 
             documents.number as  doc_number   
             FROM      boxes      INNER JOIN ordens ON boxes.orden_id = ordens.id      
-            INNER JOIN documents ON ordens.document_id = documents.id       AND ordens.id = documents.orden_id      INNER JOIN document_items ON documents.id = document_items.document_id   WHERE      cash_id = ?', [$cash_id]);    
-        
+            INNER JOIN documents ON ordens.document_id = documents.id       AND ordens.id = documents.orden_id      INNER JOIN document_items ON documents.id = document_items.document_id   WHERE      cash_id = ?', [$cash_id]);
+
         $seriesSalesNotes = DB::connection('tenant')->select('SELECT
                         sale_note_items.* ,sale_notes.series as salenotes_series,
 	                    sale_notes.number as salenotes_number
@@ -858,12 +928,12 @@ class BoxesController extends Controller
                         AND ordens.id = sale_notes.orden_id
                         INNER JOIN sale_note_items ON sale_notes.id = sale_note_items.sale_note_id  WHERE      cash_id = ?', [$cash_id]);
 
-        $datosSeries = [] ; 
+        $datosSeries = [];
         if (!empty($seriesDocs)) {
             foreach ($seriesDocs as $key => $value) {
                 $detalleSell =  json_decode($value->item, true);
                 foreach ($detalleSell['lots'] as $key => $valueDetalle) {
-                    $datosSeries[] =  [ $value->doc_series.'-'. $value->doc_number , $detalleSell['description'] , $valueDetalle['series']]; 
+                    $datosSeries[] =  [$value->doc_series . '-' . $value->doc_number, $detalleSell['description'], $valueDetalle['series']];
                 }
             }
         }
@@ -871,16 +941,29 @@ class BoxesController extends Controller
         if (!empty($seriesSalesNotes)) {
             foreach ($seriesSalesNotes as $key => $value) {
                 $detalleSalesNotes =  json_decode($value->item, true);
-                if(isset($detalleSalesNotes['lots'])){
+                if (isset($detalleSalesNotes['lots'])) {
                     foreach ($detalleSalesNotes['lots'] as $key => $valueDetalle) {
-                        $datosSeries[] =  [$value->salenotes_series.'-'. $value->salenotes_number , $detalleSalesNotes['description'] , $valueDetalle['series']]; 
+                        $datosSeries[] =  [$value->salenotes_series . '-' . $value->salenotes_number, $detalleSalesNotes['description'], $valueDetalle['series']];
                     }
                 }
             }
         }
+        $receipts = $this->get_receipts($cash_id); // receipts
+        $quantity_receipts = count($receipts);
+        $total_receipts = $receipts->sum('amount');
+        $documents["recibos"] = ["total" => $total_receipts, "quantity" => $quantity_receipts];
 
+        $documents_credit = $this->get_items_from_credit($cash_id); 
+        $all_credit_items = $documents_credit['items'];
+        $credit_grouped = $documents_credit['documents'];
+        $array_receipts = $receipts->toArray();
+        $all_credit_documents = array_merge($credit_grouped,$array_receipts );
+
+       
         try {
             $pdf = PDF::loadView('report::boxes.report_resumen_pdf_pos', compact(
+                "all_credit_items",
+                "all_credit_documents",
                 "user",
                 "company",
                 "establishment",
@@ -983,7 +1066,6 @@ class BoxesController extends Controller
                 if ($ringreso["document_id"]) {
                     $sale_note = Document::find($ringreso["document_id"]);
                     $data_ingresos += $sale_note->total;
-                    
                 }
             }
             $dataingresos_all = $dataingresos_all->get();
@@ -1269,7 +1351,6 @@ class BoxesController extends Controller
                 } else {
                     $sales_cash_sum += $sale_note->total;
                 }
-
             }
             if ($ringreso["document_id"]) {
                 $sale_note = Document::find($ringreso["document_id"]);
@@ -1278,7 +1359,6 @@ class BoxesController extends Controller
                 } else {
                     $sales_cash_sum += $sale_note->total;
                 }
-
             }
         }
         $sales_amount += $sales_cash_sum;

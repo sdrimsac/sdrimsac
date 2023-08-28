@@ -35,7 +35,10 @@ yst<template>
                         v-for="(item, idx) in elements"
                         :key="idx"
                     >
-                        <element-card :item="item"></element-card>
+                        <element-card
+                        
+                          @reloadData="getRecords"
+                         :item="item"></element-card>
                     </div>
                 </div>
                 <div v-else class="p-3">
@@ -587,7 +590,10 @@ export default {
             try {
                 this.loading = true;
                 const response = await this.$http(`${this.resource}/records`);
-                this.elements = response.data.records.map(r => r.item);
+                this.elements = response.data.records.map(r =>({
+                    ...r.item,
+                    tollId:r.id
+                }));
             } catch (e) {
                 this.$toast.error("Ocurrió un problema");
                 console.log(e);

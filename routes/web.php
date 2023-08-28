@@ -58,6 +58,7 @@ if ($hostname) {
                 Route::get('toll/records', [TollController::class, 'records']);
                 Route::get('toll/items/{warehouse_id}', [TollController::class, 'items']);
                 Route::get('toll/tables', [TollController::class, 'tables']);
+                Route::get('toll/delete/{toll_id}', [TollController::class, 'delete_item']);
                 Route::post('toll', [TollController::class, 'store']);
                 Route::get('toll/{number}', [TollController::class, 'person']);
 
