@@ -1402,10 +1402,7 @@ class SaleNoteController extends Controller
     {
 
         $i_lots_group = isset($item->item->lots_group) ? $item->item->lots_group : [];
-
-        $lot_group_selected = collect($i_lots_group)->first(function ($row) {
-            return $row->checked;
-        });
+        $lot_group_selected = collect($i_lots_group)->first();
 
         if ($lot_group_selected) {
 
