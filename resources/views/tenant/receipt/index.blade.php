@@ -173,7 +173,7 @@
         </tr>
         <tr>
             <td valign="top" width="100%" align="center">
-                <div class="border_round text-center" style="height:120px;">
+                <div class="border_round text-center" style="">
                     <table width="100%" border="0" cellspacing="0" cellpadding="0" class="full-width text-center">
                         <tr>
                             <td>
@@ -189,15 +189,8 @@
                         </tr>
                         <tr>
                             <td>
-                                {{ $establishment->address !== '-' ? $establishment->address : '' }}
-                                {{ $establishment->district_id !== '-' ? ', ' . $establishment->district->description : '' }}
-                                {{ $establishment->province_id !== '-' ? ', ' . $establishment->province->description : '' }}
-                                {{ $establishment->department_id !== '-' ? '- ' . $establishment->department->description : '' }}
-                                @isset($establishment->trade_address)
-                                    {{ $establishment->trade_address !== '-' ? '  ' . $establishment->trade_address : '' }}
-                                @endisset
-                                {{ $establishment->telephone !== '-' ? $establishment->telephone : '' }}
-                                {{ $establishment->email !== '-' ? 'Email: ' . $establishment->email : '' }}
+                                {{ $establishment->description !== '-' ? $establishment->description : '' }}
+                                
                             </td>
                         </tr>
                     </table>
@@ -209,10 +202,10 @@
                 <table class="full-width" border="0" align="left" width="100%" cellspacing="0" cellpadding="0">
                     <tr>
                         <td width="100%" align="left" valign="top">
-                            <div class="border_round" style="height: 1.50cm !important;margin-bottom:5px !important">
+                            <div class="border_round" style="margin-bottom:5px !important">
                                 <table border="0" class="full-width" border="0">
                                     <tr>
-                                        <td class="negrita">Cliente : </td>
+                                        <td class="negrita">CLIENTE : </td>
                                         <td>{{ strtoupper($data->customer->name) }}</td>
                                     </tr>
                                     <tr>
@@ -262,7 +255,7 @@
                                         <td align="center" valign="top" class="border-top"
                                             style="padding: 5px !important;">
                                             <b><span style="font-size: 17px;">
-                                                    {{ $data->sale_note->total + $interes }}
+                                                    {{ number_format($data->sale_note->total + $interes, 2) }}
                                                     <?php
                                                     //dd($data->amount);
                                                     ?>

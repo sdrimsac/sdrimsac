@@ -937,7 +937,7 @@
                                 {{ $credit_document['paid'] ? 'CANCELADO' : 'DEBE' }}
                             </td>
                             <td>
-                                {{ $credit_document['remaining'] }}
+                                {{ $credit_document['paid'] ? '0.00' : $credit_document['remaining'] }}
                             </td>
                         </tr>
                     @endforeach

@@ -122,7 +122,30 @@
                     </el-select>
                 </div>
             </div>
+            <div class="col-lg-2 col-md-2">
+                <div class="form-group">
+                    <label class="w-100 control-label">
+                        Estado
+                    </label>
 
+                    <el-select
+                        class="w-100"
+                        v-model="form.paid"
+                     
+                        clearable
+                        placeholder="Estado de crédito"
+                        @change="getRecordsByFilter"
+                        :loading="loading_search"
+                    >
+                        <el-option
+                            v-for="(option,idx) in [{id:0,description:'Pendiente'},{id:1,description:'Pagado'}]"
+                            :key="idx"
+                            :value="option.id"
+                            :label="option.description"
+                        ></el-option>
+                    </el-select>
+                </div>
+            </div>
             <div class="d-flex" style="margin-top:29px">
                 <el-button
                     class="submit"
@@ -368,6 +391,7 @@ export default {
         },
         initForm() {
             this.form = {
+                paid: null,
                 establishment_id: null,
                 person_id: null,
                 type_person: null,
@@ -493,6 +517,7 @@ export default {
             );
         },
         open() {
+            this.initForm();
             this.getRecords();
         },
         close() {

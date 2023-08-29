@@ -46,7 +46,9 @@ class ReportCreditController extends Controller
     }
 
     public function records(Request $request)
-    {
+    {   
+        $paid = $request->paid;
+
         $period = $this->getDatesOfPeriod($request);
         $person_id = $request->person_id;
         $params = (object)[
@@ -59,6 +61,9 @@ class ReportCreditController extends Controller
 
         if ($person_id) {
             $records = $records->where('customer_id', $person_id);
+        }
+        if($paid != null){
+            $records = $records->where('paid', $paid);
         }
 
         $records->orderBy('created_at', 'desc');

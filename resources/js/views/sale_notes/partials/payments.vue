@@ -42,9 +42,25 @@
                                         </td>
                                         <td>{{ row.reference }}</td>
                                         <td class="text-center">
-                                            <button
+                                           <template v-if="row.filename">
+                                             <button
+                                                v-if="isImage(row.filename)"
                                                 type="button"
-                                                v-if="row.filename"
+                                                class="btn waves-effect waves-light btn-sm btn-primary"
+                                                @click.prevent="
+                                                    clickImagePreview(
+                                                        row.filename
+                                                    )
+                                                "
+                                            >
+                                                <i
+                                                    class="fas fa-file-image"
+                                                ></i>
+                                            </button>
+                                            <button
+                                                v-else
+                                                type="button"
+                                             
                                                 class="btn waves-effect waves-light btn-sm btn-primary"
                                                 @click.prevent="
                                                     clickDownloadFile(
@@ -56,6 +72,7 @@
                                                     class="fas fa-file-download"
                                                 ></i>
                                             </button>
+                                           </template>
                                         </td>
                                         <td class="text-end">
                                             {{ row.payment }}
@@ -366,18 +383,28 @@
                     >
                 </div>
             </div>
+            <image-preview-modal
+                :showDialog.sync="showImagePreviewModal"
+                :image="imagePreview"
+            >
+            </image-preview-modal>
         </div>
     </el-dialog>
 </template>
 
 <script>
 import { deletable } from "../../../mixins/deletable";
-
+import ImagePreviewModal  from "../../../components/ImagePreviewModal.vue";
 export default {
     props: ["showDialog", "documentId"],
     mixins: [deletable],
+    components: {
+        ImagePreviewModal
+    },
     data() {
         return {
+            showImagePreviewModal: false,
+            imagePreview: null,
             creditDiscount: 0,
             cancelCredit: false,
             title: null,
@@ -402,6 +429,15 @@ export default {
         });
     },
     methods: {
+        isImage(url) {
+            return url.match(/\.(jpeg|jpg|gif|png)$/) != null;
+        },
+        clickImagePreview(url) {
+            
+            this.imagePreview = 
+            `/finances/payment-file/download-file/${url}/sale_notes`;
+            this.showImagePreviewModal = true;
+        },
         calculateDiscountCredit() {
             this.document.total_difference_credit =
                 this.document.total_difference - this.creditDiscount;
