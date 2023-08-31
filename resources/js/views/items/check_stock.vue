@@ -18,6 +18,12 @@
                     </div>
                 </div>
                 <div class="row">
+                    <div class="col-12">
+                        <label for="link">Url</label>
+                        <el-input v-model="linkpdf"></el-input>
+                    </div>
+                </div>
+                <div class="row">
                     <div class="col-md-4" col-12>
                         <label for="density">Densidad</label>
                         <el-input type="number" v-model="config.density">
@@ -86,6 +92,7 @@ export default {
 
     data() {
         return {
+            linkPdf:"https://tunegocio.sdrimsac.pro/sale-notes/print/6e977e52-38c8-4c4d-a897-3bbb1fd77ca8/a5",
             printer:null,
             resource: "/items/check_stock",
             records: [],
@@ -139,7 +146,12 @@ export default {
                 this.$toast.error("Debe ingresar una impresora");
                 return;
             }
-            let linkpdf = "https://portal.sdrimsac.pro/sale-notes/print/c393face-938f-40d1-9c9d-6cd9e55fb791/a5";   
+            if(!this.linkpdf || this.linkpdf == "" || this.linkpdf == null){
+                
+                this.$toast.error("Debe ingresar una url");
+                return;
+            }
+            // let linkpdf = "https://portal.sdrimsac.pro/sale-notes/print/c393face-938f-40d1-9c9d-6cd9e55fb791/a5";   
             let config = qz.configs.create(this.printer, this.config);
             localStorage.setItem("printer", this.config);
             if (!qz.websocket.isActive()) {
@@ -149,7 +161,7 @@ export default {
                 {
                     type: "pdf",
                     format: "file",
-                    data: linkpdf
+                    data: this.linkpdf
                 }
             ];
 
