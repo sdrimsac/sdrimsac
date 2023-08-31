@@ -67,6 +67,7 @@ use App\CoreFacturalo\Requests\Inputs\Common\PersonInput;
 use App\CoreFacturalo\Requests\Inputs\Common\EstablishmentInput;
 use App\CoreFacturalo\Requests\Inputs\Functions;
 use App\Models\Tenant\Cash;
+use App\Models\Tenant\ItemUnitType;
 use App\Models\Tenant\SaleNoteCredit;
 use Modules\Restaurant\Events\OrdenReadyEvent;
 use Modules\Restaurant\Models\OrdenItem;
@@ -1224,24 +1225,33 @@ class SaleNoteController extends Controller
 
             foreach ($obj->items as $item) {
                 $lots = isset($item->item->lots) ? $item->item->lots : [];
-
+                $quantity = $item->quantity;
                 foreach ($lots as $lot) {
                     ItemLot::find($lot->id)->update(["has_sale" => 0]);
                 }
+               
+                if (isset($item->item->from_unit_type_id)) {
+                    $unit_type = ItemUnitType::where('id', $item->item->from_unit_type_id)
+                        ->first();
+                    if ($unit_type) {
+
+                        $quantity = $quantity * $unit_type->quantity_unit;
+                    }
+                }
+                $wr = ItemWarehouse::where([['item_id', $item->item_id], ['warehouse_id', $warehouse->id]])->first();
+                $it = Item::find($item->item_id);
                 $item->sale_note->inventory_kardex()->create([
                     'date_of_issue' => date('Y-m-d'),
                     'item_id' => $item->item_id,
                     'warehouse_id' => $warehouse->id,
-                    'quantity' => $item->quantity,
+                    'quantity' => $quantity,
                 ]);
-                $wr = ItemWarehouse::where([['item_id', $item->item_id], ['warehouse_id', $warehouse->id]])->first();
-                $it = Item::find($item->item_id);
                 if ($it) {
-                    $it->stock =  $it->stock + $item->quantity;
+                    $it->stock =  $it->stock + $quantity;
                     $it->save();
                 }
                 if ($wr) {
-                    $wr->stock =  $wr->stock + $item->quantity;
+                    $wr->stock =  $wr->stock + $quantity;
                     $wr->save();
                 }
 

@@ -3995,6 +3995,7 @@ export default {
                 } else if (!isTicket && tipoBandejaImpresora == 0) {
                     paperConfig.density = 350;
                     paperConfig.orientation = "portrait";
+                    paperConfig.margins = { left: 2 };
                 }
             } //FIN IMPRESION DIRECTA A5
 
