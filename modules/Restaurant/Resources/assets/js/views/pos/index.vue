@@ -3766,7 +3766,7 @@ export default {
             this.form.items = this.form.items.map(i => {
                 return {
                     ...i,
-                    attributes:i.attributes || [],
+                    attributes: i.attributes || [],
                     toWarehouse: i.toWarehouse || 0,
                     consignment_item_id: i.consignment_item_id,
                     warehouse_id: null,
@@ -3988,9 +3988,9 @@ export default {
                 }
             } else {
                 let orientation = "portrait";
-                if(isA5){
-                    let {a5_orientation} =  this.configuration
-                    orientation = a5_orientation ? "landscape" : "portrait"
+                if (isA5) {
+                    let { a5_orientation } = this.configuration;
+                    orientation = a5_orientation ? "landscape" : "portrait";
                 }
                 //NO MOVER ESTA CONFIGURACION ESTA PARA IMPRESION DIRECTA EN A5
                 if (!isTicket && tipoBandejaImpresora == 1) {
@@ -4001,7 +4001,10 @@ export default {
                 } else if (!isTicket && tipoBandejaImpresora == 0) {
                     paperConfig.density = 350;
                     paperConfig.orientation = orientation;
-                    paperConfig.margins = { left: orientation == "landscape" ? 0 : 1.5 };
+                    paperConfig.margins = {
+                        left: orientation == "landscape" ? 0 : 1.5,
+                        top: orientation == "landscape" ? 1.5 : 0
+                    };
                 }
             } //FIN IMPRESION DIRECTA A5
 
@@ -4247,10 +4250,13 @@ export default {
             let total_value = 0;
             let total = 0;
             this.ordens.forEach(orden => {
-              let t = parseFloat(_.round(
-                    parseFloat(orden.food.item.quantity) * parseFloat(orden.food.price),
-                    2
-                ));
+                let t = parseFloat(
+                    _.round(
+                        parseFloat(orden.food.item.quantity) *
+                            parseFloat(orden.food.price),
+                        2
+                    )
+                );
                 total += t;
             });
 
