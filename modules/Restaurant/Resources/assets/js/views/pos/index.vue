@@ -3991,7 +3991,9 @@ export default {
                 if (isA5) {
                     let { a5_orientation } = this.configuration;
                     orientation = a5_orientation ? "landscape" : "portrait";
-                }
+                }   
+
+                console.log(orientation, "orientation");
                 //NO MOVER ESTA CONFIGURACION ESTA PARA IMPRESION DIRECTA EN A5
                 if (!isTicket && tipoBandejaImpresora == 1) {
                     //opciones que permiten hacer una impresion correcta en impresoras nuevas
@@ -4001,9 +4003,11 @@ export default {
                 } else if (!isTicket && tipoBandejaImpresora == 0) {
                     paperConfig.density = 350;
                     paperConfig.orientation = orientation;
+             
                     paperConfig.margins = {
                         left: orientation == "landscape" ? 0 : 1.5,
-                        top: orientation == "landscape" ? 1.5 : 0
+                        // top: orientation == "landscape" ? 1.5 : 0,
+                        // top:0,
                     };
                 }
             } //FIN IMPRESION DIRECTA A5
