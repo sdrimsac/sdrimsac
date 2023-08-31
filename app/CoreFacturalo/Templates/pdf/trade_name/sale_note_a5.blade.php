@@ -1,5 +1,6 @@
 @php
-    
+        $configuration = \App\Models\Tenant\Configuration::first();
+    $company = \App\Models\Tenant\Company::first();
     $establishment = $document->establishment;
     $customer = $document->customer;
     //$path_style = app_path('CoreFacturalo'.DIRECTORY_SEPARATOR.'Templates'.DIRECTORY_SEPARATOR.'pdf'.DIRECTORY_SEPARATOR.'style.css');
@@ -102,7 +103,14 @@
                 </table>
             </div>
         </div>
-
+        @if ($company->a5_image && $configuration->show_image_a5)
+        @php
+            $image = $company->a5_image;
+        @endphp
+            <div class="w-100 text-center">
+                <img src="data:{{mime_content_type(public_path("storage/uploads/logos/{$image}"))}};base64, {{base64_encode(file_get_contents(public_path("storage/uploads/logos/{$image}")))}}" alt="{{$company->image}}"  style="max-height: 250px;">
+            </div>
+        @endif
         <div class="bordes_datos_clientes  mt-3">
             <table class="full-width">
 

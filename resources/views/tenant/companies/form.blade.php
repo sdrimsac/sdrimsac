@@ -20,7 +20,9 @@
     </div>
     </div>
     <div class="col-md-12">
-        <tenant-companies-form></tenant-companies-form>
+        <tenant-companies-form
+        :configuration="{{\App\Models\Tenant\Configuration::getPublicConfig()}}"
+        ></tenant-companies-form>
         </div>
 
     </div>

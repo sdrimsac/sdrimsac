@@ -959,13 +959,16 @@ class SaleNoteController extends Controller
                 $total_exonerated +
                 $total_taxed;
             $diferencia = 148 - (float)$alto;
-
+            $orientation = $this->configuration->a5_orientation;
+         
             $pdf = new Mpdf([
                 'mode' => 'utf-8',
-                'format' => [
-                    150,
-                    210
-                ],
+                'format' =>$orientation ? 'A5-L' : 'A5-P',
+                'orientation' => $orientation ? 'L' : 'P',
+                // 'format' => [
+                //     150,
+                //     210
+                // ],
                 'margin_top' => 8,
                 'margin_right' => 8,
                 'margin_bottom' => 0,

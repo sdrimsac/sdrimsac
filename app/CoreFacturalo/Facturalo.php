@@ -556,11 +556,11 @@ class Facturalo
                 $total_exonerated +
                 $total_taxed;
             $diferencia = 148 - (float)$height;
-
+            $orientation = $this->configuration->a5_orientation;
             $pdf = new Mpdf([
                 'mode' => 'utf-8',
-                'format' => 'A5-P',
-                'orientation' => 'P',
+                'format' =>$orientation ? 'A5-L' : 'A5-P',
+                'orientation' => $orientation ? 'L' : 'P',
                 'margin_top' => 5,
                 'margin_right' => 5,
                 'margin_bottom' => 0,

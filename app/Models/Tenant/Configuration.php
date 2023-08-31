@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Config;
 class Configuration extends ModelTenant
 {
     protected $fillable = [
+        'show_image_a5',
+        'a5_orientation',
         'users_views',
         'trunc_txt',
         'ord_dscp',
@@ -112,6 +114,8 @@ class Configuration extends ModelTenant
 
     ];
     protected $casts = [
+        'show_image_a5' => 'boolean',
+        'a5_orientation' => 'boolean',
         'users_views' => 'boolean',
         'trunc_txt' => 'boolean',
         'ord_dscp' => 'boolean',
@@ -183,6 +187,8 @@ class Configuration extends ModelTenant
         // $skins = Skin::all();
         $skins = [];
         return [
+            'show_image_a5' => (bool)$this->show_image_a5,
+            'a5_orientation' => (bool)$this->a5_orientation,
             'users_views' => (bool)$this->users_views,
             'trunc_txt' => (bool)$this->trunc_txt,
             'ord_dscp' => (bool)$this->ord_dscp,

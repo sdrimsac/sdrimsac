@@ -18,6 +18,7 @@ class CompanyResource extends JsonResource
     {
         $configuration = Configuration::first();
         return [
+            'a5_image' => $this->a5_image,
             'id' => $this->id,
             'number' => $this->number,
             'name' => $this->name,

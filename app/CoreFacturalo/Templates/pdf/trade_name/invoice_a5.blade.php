@@ -1,4 +1,6 @@
 @php
+    $configuration = \App\Models\Tenant\Configuration::first();
+    $company = \App\Models\Tenant\Company::first();
     $establishment = $document->establishment;
     $customer = $document->customer;
     $invoice = $document->invoice;
@@ -31,7 +33,7 @@
     </div>
 @endif
 <div>
- 
+
 
 <div id="contenedor" class="clearfix">
     <div class="border_round text-center " id="lateral" style="width:20%">
@@ -98,6 +100,14 @@
 </div>
 
 
+@if ($company->a5_image && $configuration->show_image_a5)
+@php
+    $image = $company->a5_image;
+@endphp
+    <div class="w-100 text-center">
+        <img src="data:{{mime_content_type(public_path("storage/uploads/logos/{$image}"))}};base64, {{base64_encode(file_get_contents(public_path("storage/uploads/logos/{$image}")))}}" alt="{{$company->image}}"  style="max-height: 250px;">
+    </div>
+@endif
 <div class="bordes_datos_clientes  mt-2">
 <table class="full-width" border="0">
     <tr>

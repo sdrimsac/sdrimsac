@@ -410,7 +410,7 @@ export default {
                     this.clickPrintPos(this.form.printer, this.form.print_a4);
                 }
                 if (format == "a5") {
-                    this.clickPrintPos(this.form.printer, this.form.print_a4);
+                    this.clickPrintPos(this.form.printer, this.form.print_a5);
                 }
                 if (format == "ticket") {
                     console.log(this.form);

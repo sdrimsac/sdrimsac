@@ -1238,10 +1238,11 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                     <div class="col-md-6 mt-4">
+                                    <div class="col-md-6 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
-                                                >Visualizar administrador - usuarios
+                                                >Visualizar administrador -
+                                                usuarios
                                             </label>
                                             <el-switch
                                                 v-model="form.users_views"
@@ -1276,7 +1277,19 @@
                                             @change="submit"
                                         ></el-switch>
                                     </div>
-                                    <div class="col-md-6 mt-2"></div>
+
+                                    <div class="col-md-6 mt-2">
+                                        <label class="control-label w-100">
+                                            Orientación A5
+                                        
+                                        </label>
+                                        <el-switch
+                                            v-model="form.a5_orientation"
+                                            active-text="Horizontal"
+                                            inactive-text="Vertical"
+                                            @change="submit"
+                                        ></el-switch>
+                                    </div>
                                 </div>
                             </el-tab-pane>
                             <el-tab-pane label="Modos">
