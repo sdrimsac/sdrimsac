@@ -18,10 +18,59 @@
                     </div>
                 </div>
                 <div class="row">
-                    <el-button @click="printTest">
-                        <i class="el-icon-printer"></i>
-                        Test
+                    <div class="col-md-4" col-12>
+                        <label for="density">Densidad</label>
+                        <el-input type="number" v-model="config.density">
+                        </el-input>
+                    </div>
+                      <div class="col-md-4 col-12">
+                        <label for="density">Impresora</label>
+                        <el-input  v-model="printer">
+                        </el-input>
+                    </div>
+                    <div class="col-md-4 col-12">
+                        <label for="orientation">Orientación</label>
+                        <el-select v-model="config.orientation">
+                            <el-option
+                                label="Vertical"
+                                value="portrait"
+                            ></el-option>
+                            <el-option
+                                label="Horizontal"
+                                value="landscape"
+                            ></el-option>
+                        </el-select>
+
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3 col-12">
+                        <label for="top">Arriba</label>
+                        <el-input type="number" v-model="config.margins.top">
+                        </el-input>
+                    </div>
+                    <div class="col-md-3 col-12">
+                        <label for="left">Izquierda</label>
+                        <el-input type="number" v-model="config.margins.left">
+                        </el-input>
+                    </div>
+                    <div class="col-md-3 col-12">
+                        <label for="right">Derecha</label>
+                        <el-input type="number" v-model="config.margins.right">
+                        </el-input>
+                    </div>
+                    <div class="col-md-3 col-12">
+                        <label for="bottom">Abajo</label>
+                        <el-input type="number" v-model="config.margins.bottom">
+                        </el-input>
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-md-3 col-12">
+                        <el-button type="primary" @click="Printer('zebra')">
+                        Imprimir
                     </el-button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -37,38 +86,79 @@ export default {
 
     data() {
         return {
+            printer:null,
             resource: "/items/check_stock",
             records: [],
             loading: false,
-            pagination: {}
+            pagination: {},
+            config: {
+                scaleContent: false,
+                density: 350,
+                orientation: "landscape",
+                margins: {
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0
+                }
+            }
         };
     },
 
     created() {
-        this.getRecords();
+        // this.getRecords();
+         qz.security.setCertificatePromise((resolve, reject) => {
+            this.$http
+                .get("/api/qz/crt/override", {
+                    responseType: "text"
+                })
+                .then(response => {
+                    resolve(response.data);
+                })
+                .catch(error => {
+                    reject(error.data);
+                });
+        });
+
+        qz.security.setSignaturePromise(toSign => {
+            return (resolve, reject) => {
+                this.$http
+                    .post("/api/qz/signing", { request: toSign })
+                    .then(response => {
+                        resolve(response.data);
+                    })
+                    .catch(error => {
+                        reject(error.data);
+                    });
+            };
+        });
     },
     methods: {
-        async printTest() {
-          var printWindow = window.open(
-                "https://tunegocio.sdrimsac.pro/print/document/5a0cb63a-a97c-4443-9672-5ec464978c18/ticket",
-                "Print",
-                "left=200",
-                "top=200",
-                "width=950",
-                "height=500",
-                "toolbar=0",
-                "resizable=0"
-            );
-            printWindow.addEventListener(
-                "load",
-                function() {
-                    printWindow.print();
-                    printWindow.close();
-                },
-                true
-            );
+        async Printer() {
+            if(!this.printer){
+                this.$toast.error("Debe ingresar una impresora");
+                return;
+            }
+            let linkpdf = "https://portal.sdrimsac.pro/sale-notes/print/c393face-938f-40d1-9c9d-6cd9e55fb791/a5";   
+            let config = qz.configs.create(this.printer, this.config);
+            localStorage.setItem("printer", this.config);
+            if (!qz.websocket.isActive()) {
+                await qz.websocket.connect(config);
+            }
+            let data = [
+                {
+                    type: "pdf",
+                    format: "file",
+                    data: linkpdf
+                }
+            ];
 
+            qz.print(config, data).catch(e => {
+                this.$toast.error(e.message);
+            });
+          
         },
+    
         async getRecords() {
             try {
                 this.loading = true;

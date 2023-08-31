@@ -4003,15 +4003,26 @@ export default {
                 } else if (!isTicket && tipoBandejaImpresora == 0) {
                     paperConfig.density = 350;
                     paperConfig.orientation = orientation;
-             
-                    paperConfig.margins = {
-                        left: orientation == "landscape" ? 0 : 1.5,
-                        top: orientation == "landscape" ? 1.5 : 0,
-                        // top:0,
-                    };
+                    let margins = {}
+                    if(orientation == "landscape"){
+                        margins = {
+                            right: 1.5,
+                            bottom:0,
+                        };
+                    }else{
+                        margins = {
+                            left: 1.5,
+                        };
+                    }
+                    paperConfig.margins = margins;
+                    // paperConfig.margins = {
+                    //     left: orientation == "landscape" ? 0 : 1.5,
+                    //     top: orientation == "landscape" ? 1.5 : 0,
+                    //     // top:0,
+                    // };
                 }
             } //FIN IMPRESION DIRECTA A5
-
+    console.log(paperConfig, "paperConfig");
             let config = qz.configs.create(Printer, paperConfig);
 
             if (!qz.websocket.isActive()) {
