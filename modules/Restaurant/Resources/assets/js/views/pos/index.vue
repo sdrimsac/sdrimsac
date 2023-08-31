@@ -4005,8 +4005,8 @@ export default {
                     paperConfig.orientation = orientation;
              
                     paperConfig.margins = {
-                        left:   1.5,
-                        // top: orientation == "landscape" ? 1.5 : 0,
+                        left: orientation == "landscape" ? 0 : 1.5,
+                        top: orientation == "landscape" ? 1.5 : 0,
                         // top:0,
                     };
                 }
