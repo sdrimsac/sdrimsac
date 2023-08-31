@@ -1,5 +1,5 @@
 @php
-        $configuration = \App\Models\Tenant\Configuration::first();
+    $configuration = \App\Models\Tenant\Configuration::first();
     $company = \App\Models\Tenant\Company::first();
     $establishment = $document->establishment;
     $customer = $document->customer;
@@ -104,54 +104,71 @@
             </div>
         </div>
         @if ($company->a5_image && $configuration->show_image_a5)
-        @php
-            $image = $company->a5_image;
-        @endphp
+            @php
+                $image = $company->a5_image;
+            @endphp
             <div class="w-100 text-center">
-                <img src="data:{{mime_content_type(public_path("storage/uploads/logos/{$image}"))}};base64, {{base64_encode(file_get_contents(public_path("storage/uploads/logos/{$image}")))}}" alt="{{$company->image}}"  style="max-height: 250px;">
+                <img src="data:{{ mime_content_type(public_path("storage/uploads/logos/{$image}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/uploads/logos/{$image}"))) }}"
+                    alt="{{ $company->image }}" style="max-height: 250px;">
             </div>
         @endif
         <div class="bordes_datos_clientes  mt-3">
             <table class="full-width">
 
+            </table>
+            <table class="full-width">
 
-                <tr>
-                    <td height="20px" style="font-size:12px;"><b>CLIENTE</b></td>
-                    <td height="20px">:</td>
-                    <td colspan="4" height="20px" style="font-size:12px;">{{ $customer->name }}</td>
-                </tr>
-                <tr>
-                    <td width="120px" height="20px" style="font-size:12px;"><b>FECHA EMISIÓN</b></td>
-                    <td width="8px" height="20px">:</td>
-                    <td style="font-size:12px;">{{ $document->date_of_issue->format('d-m-Y') }}</td>
-                    <td height="18px" style="font-size:12px;"><b>TELEFONO</b></td>
-                    <td height="20px">:</td>
-                    <td style="font-size:12px;">{{ $customer->telephone }}</td>
-                </tr>
 
                 <tr>
                     <td height="20px" style="font-size:12px;">
-                        <b>{{ $customer->identity_document_type->description }}</b></td>
-                    <td height="20px">:</td>
-                    <td colspan="4" height="20px" style="font-size:12px;">{{ $customer->number }}</td>
+                        <b>{{ $customer->identity_document_type->description }}</b>:
+                        {{ $customer->number }}
+                    </td>
+                    <td height="20px" colspan="5">
+                        <b>CLIENTE</b>
+                        :
+                        {{ $customer->name }}
+                    </td>
+
+
+                    {{-- <td  style="font-size:12px;"></td> --}}
+                </tr>
+                <tr>
+                    <td colspan="2" height="20px" style="font-size:12px;"><b>FECHA EMISIÓN: </b>
+                        {{ $document->date_of_issue->format('d-m-Y') }}
+                    </td>
+                    <td colspan="2" height="18px" style="font-size:12px;"><b>TELEFONO</b>:
+                        {{ $customer->telephone }}
+                    </td>
+
+
+                    <td colspan="2" height="18px" style="font-size:12px;"><b>ESTADO</b>:
+                        @if ($document->paid == 1)
+                            CANCELADO
+                        @else
+                            PENDIENTE DE PAGO
+                        @endif
+                    </td>
+                    >
+                </tr>
+
+                <tr>
+
 
 
                 </tr>
                 @if ($customer->address !== '')
                     <tr>
-                        <td class="align-top" height="20px" style="font-size:12px;"><b>DIRECCIÓN:</b></td>
-                        <td>:</td>
-                        <td colspan="4" style="font-size:12px;">
+                        <td colspan="6" class="align-top" height="20px" style="font-size:12px;"><b>DIRECCIÓN:</b>
+
                             {{ $customer->address }}
                             {{ $customer->district_id !== '-' ? ', ' . $customer->district->description : '' }}
                             {{ $customer->province_id !== '-' ? ', ' . $customer->province->description : '' }}
                             {{ $customer->department_id !== '-' ? '- ' . $customer->department->description : '' }}
                         </td>
-
-
                     </tr>
                 @endif
-                @if ($document->paid == 1)
+                {{-- @if ($document->paid == 1)
                     <tr>
                         <td height="18px" style="font-size:12px;padding:0px;"><b>ESTADO</b></td>
                         <td>:</td>
@@ -163,11 +180,11 @@
                         <td>:</td>
                         <td colspan="4" style="font-size:12px;padding:0px;">PENDIENTE DE PAGO</td>
                     </tr>
-                @endif
+                @endif --}}
                 <tr>
-                    <td height="18px" style="font-size:12px;padding:0px;"><b>OBSERVACION:</b></td>
-                    <td>:</td>
-                    <td colspan="4" style="font-size:12px;padding:0px;">{{ $document->observation }}</td>
+                    <td colspan="6" height="18px" style="font-size:12px;padding:0px;"><b>OBSERVACION:</b>
+
+                        {{ $document->observation }}</td>
                 </tr>
             </table>
         </div>
@@ -194,7 +211,7 @@
             <thead class="">
                 <tr class="bg-grey">
                     <th class="border-top-bottom text-center py-2" width="8%">CANT.</th>
-                    <th class="border-top-bottom text-center py-2" width="8%">UNIDAD</th>
+                    <th class="border-top-bottom text-center py-2" width="8%">UND</th>
                     <th class="border-top-bottom text-left py-2">DESCRIPCIÓN</th>
                     <th class="border-top-bottom text-right py-2" width="12%">P.UNIT</th>
                     <th class="border-top-bottom text-right py-2" width="8%">DTO.</th>
