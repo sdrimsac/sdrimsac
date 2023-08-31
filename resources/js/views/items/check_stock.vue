@@ -92,7 +92,7 @@ export default {
 
     data() {
         return {
-            linkPdf:"https://tunegocio.sdrimsac.pro/sale-notes/print/6e977e52-38c8-4c4d-a897-3bbb1fd77ca8/a5",
+            linkpdf:"https://tunegocio.sdrimsac.pro/sale-notes/print/6e977e52-38c8-4c4d-a897-3bbb1fd77ca8/a5",
             printer:null,
             resource: "/items/check_stock",
             records: [],
