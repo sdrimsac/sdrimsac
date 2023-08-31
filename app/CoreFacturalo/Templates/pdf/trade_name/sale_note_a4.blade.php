@@ -312,7 +312,7 @@
         </tbody>
     </table>
 
-    <table align="center" width="70%" style="margin-top:50px">
+    {{-- <table align="center" width="70%" style="margin-top:50px">
         <tr>
             <td align="center" width="45%" style="border-top:1px solid #000;font-weight:bold">Recibi
                 Conforme<br>Cliente</td>
@@ -321,7 +321,7 @@
                 {{ $document->user->name }}<br>Celular:{{ $document->user->telephone }}</td>
 
         </tr>
-    </table>
+    </table> --}}
 </body>
 
 </html>

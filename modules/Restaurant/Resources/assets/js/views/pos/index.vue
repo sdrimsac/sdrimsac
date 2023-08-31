@@ -3974,6 +3974,7 @@ export default {
             let document = partsUrl[partsUrl.length - 1];
             let isTicket = linkpdf.toLowerCase().includes("ticket");
             let isA4 = document.toLowerCase().includes("a4");
+            let isA5 = document.toLowerCase().includes("a5");
 
             let tipoBandejaImpresora = this.config.new_old_printer;
 
@@ -3986,16 +3987,21 @@ export default {
                     paperConfig.orientation = "portrait";
                 }
             } else {
+                let orientation = "portrait";
+                if(isA5){
+                    let {a5_orientation} =  this.configuration
+                    orientation = a5_orientation ? "landscape" : "portrait"
+                }
                 //NO MOVER ESTA CONFIGURACION ESTA PARA IMPRESION DIRECTA EN A5
                 if (!isTicket && tipoBandejaImpresora == 1) {
                     //opciones que permiten hacer una impresion correcta en impresoras nuevas
                     paperConfig.density = 600;
-                    paperConfig.orientation = "portrait";
+                    paperConfig.orientation = orientation;
                     paperConfig.margins = { left: 2 };
                 } else if (!isTicket && tipoBandejaImpresora == 0) {
                     paperConfig.density = 350;
-                    paperConfig.orientation = "portrait";
-                    paperConfig.margins = { left: 1 };
+                    paperConfig.orientation = orientation;
+                    paperConfig.margins = { left: 1.5 };
                 }
             } //FIN IMPRESION DIRECTA A5
 
