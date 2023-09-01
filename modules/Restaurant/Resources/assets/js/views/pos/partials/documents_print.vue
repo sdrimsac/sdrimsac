@@ -144,16 +144,16 @@ export default {
             this.getRecords();
         },
         async printEvent(url) {
-            let paperConfig = {
+            console.log(url);
+               let paperConfig = {
                 scaleContent: false
             };
             let partsUrl = url.split("/");
             let document = partsUrl[partsUrl.length - 1];
             let isTicket = document.toLowerCase().includes("ticket");
             let isA4 = document.toLowerCase().includes("a4");
-
+            let isA5 = document.toLowerCase().includes("a5");
             let tipoBandejaImpresora = this.config.new_old_printer;
-
             if (isA4) {
                 if (tipoBandejaImpresora == 1) {
                     paperConfig.density = 700;
@@ -163,17 +163,35 @@ export default {
                     paperConfig.orientation = "portrait";
                 }
             } else {
-                //NO MOVER ESTA CONFIGURACION ESTA PARA IMPRESION DIRECTA EN A5
+                let orientation = "portrait";
+                if (isA5) {
+                    let { a5_orientation } = this.config;
+                    orientation = a5_orientation ? "landscape" : "portrait";
+                }
                 if (!isTicket && tipoBandejaImpresora == 1) {
                     //opciones que permiten hacer una impresion correcta en impresoras nuevas
                     paperConfig.density = 600;
-                    paperConfig.orientation = "portrait";
+                    paperConfig.orientation = orientation;
                     paperConfig.margins = { left: 2 };
                 } else if (!isTicket && tipoBandejaImpresora == 0) {
                     paperConfig.density = 350;
-                    paperConfig.orientation = "portrait";
+                    paperConfig.orientation = orientation;
+                    let margins = {};
+                    if (orientation == "landscape") {
+                        margins = {
+                            top: 1.1,
+                            left: 0.95,
+                            right: 0.3,
+                            bottom: 1.1
+                        };
+                    } else {
+                        margins = {
+                            left: 1.5
+                        };
+                    }
+                    paperConfig.margins = margins;
                 }
-            } //FIN IMPRESION DIRECTA A5
+            }
 
             try {
                 let config = qz.configs.create(this.printer, paperConfig);

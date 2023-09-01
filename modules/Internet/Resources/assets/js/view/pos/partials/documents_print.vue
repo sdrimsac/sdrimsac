@@ -227,7 +227,7 @@ export default {
                     url = `/print/document/${external_id}/ticket_50`;
                 }
             }
-
+            console.log(url);
             await this.printEvent(url);
         },
         async getLastDocument() {
