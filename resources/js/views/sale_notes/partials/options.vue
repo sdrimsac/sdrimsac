@@ -187,6 +187,31 @@ export default {
         };
     },
     created() {
+         qz.security.setCertificatePromise((resolve, reject) => {
+            this.$http
+                .get("/api/qz/crt/override", {
+                    responseType: "text"
+                })
+                .then(response => {
+                    resolve(response.data);
+                })
+                .catch(error => {
+                    reject(error.data);
+                });
+        });
+
+        qz.security.setSignaturePromise(toSign => {
+            return (resolve, reject) => {
+                this.$http
+                    .post("/api/qz/signing", { request: toSign })
+                    .then(response => {
+                        resolve(response.data);
+                    })
+                    .catch(error => {
+                        reject(error.data);
+                    });
+            };
+        });
         this.initForm();
         this.socketWhatsappConfig();
     },
@@ -291,11 +316,72 @@ export default {
                             "Espere imprimiendo el Comprobante " +
                             this.form.number;
                         this.loading_print = true;
+                         let paperConfig = {
+                            scaleContent: false
+                        };
+                        let partsUrl = formatoPdf.split("/");
+                        let document = partsUrl[partsUrl.length - 1];
+                        let isTicket = document
+                            .toLowerCase()
+                            .includes("ticket");
+                        let isA4 = document.toLowerCase().includes("a4");
+                        let isA5 = document.toLowerCase().includes("a5");
+                        let tipoBandejaImpresora = this.configuration.new_old_printer;
+                        if (isA4) {
+                            if (tipoBandejaImpresora == 1) {
+                                paperConfig.density = 700;
+                                paperConfig.orientation = "portrait";
+                            } else {
+                                paperConfig.density = 350;
+                                paperConfig.orientation = "portrait";
+                            }
+                        } else {
+                            let orientation = "portrait";
+                            if (isA5) {
+                                let { a5_orientation } = this.configuration;
+                                orientation = a5_orientation
+                                    ? "landscape"
+                                    : "portrait";
+                            }
+                            if (!isTicket && tipoBandejaImpresora == 1) {
+                                //opciones que permiten hacer una impresion correcta en impresoras nuevas
+                                paperConfig.density = 600;
+                                paperConfig.orientation = orientation;
+                                paperConfig.margins = { left: 2 };
+                            } else if (!isTicket && tipoBandejaImpresora == 0) {
+                                paperConfig.density = 350;
+                                paperConfig.orientation = orientation;
+                                let margins = {};
+                                if (orientation == "landscape") {
+                                    margins = {
+                                        top: 1.1,
+                                        left: 0.95,
+                                        right: 0.3,
+                                        bottom: 1.1
+                                    };
+                                } else {
+                                    margins = {
+                                        left: 1.5
+                                    };
+                                }
+                                paperConfig.margins = margins;
+                            }
+                        }
+                        this.message =
+                            "Espere imprimiendo el Comprobante " +
+                            this.form.number;
+                        this.loading_print = true;
+
                         let config = qz.configs.create(
                             printerName,
-                            { scaleContent: false },
+                            paperConfig,
                             { jobName: this.form.number }
                         );
+                        // let config = qz.configs.create(
+                        //     printerName,
+                        //     { scaleContent: false },
+                        //     { jobName: this.form.number }
+                        // );
                         if (!qz.websocket.isActive()) {
                             await qz.websocket.connect(config);
                         }

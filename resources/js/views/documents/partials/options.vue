@@ -201,9 +201,33 @@ export default {
         };
     },
     async created() {
-        console.log(this.company);
         this.initForm();
         this.socketWhatsappConfig();
+         qz.security.setCertificatePromise((resolve, reject) => {
+            this.$http
+                .get("/api/qz/crt/override", {
+                    responseType: "text"
+                })
+                .then(response => {
+                    resolve(response.data);
+                })
+                .catch(error => {
+                    reject(error.data);
+                });
+        });
+
+        qz.security.setSignaturePromise(toSign => {
+            return (resolve, reject) => {
+                this.$http
+                    .post("/api/qz/signing", { request: toSign })
+                    .then(response => {
+                        resolve(response.data);
+                    })
+                    .catch(error => {
+                        reject(error.data);
+                    });
+            };
+        });
         // await this.$http.get(`/companies/record`).then(response => {
         //     if (response.data !== "") {
         //         this.company = response.data.data;
@@ -264,7 +288,10 @@ export default {
                         this.form.total +
                         " de *" +
                         this.form.establishment_description +
-                        "*, ha sido generado correctamente a través del facturador electrónico de "+"*"+this.$desarrollador+"*"
+                        "*, ha sido generado correctamente a través del facturador electrónico de " +
+                        "*" +
+                        this.$desarrollador +
+                        "*"
                 };
                 try {
                     this.loading = true;
@@ -362,7 +389,7 @@ export default {
                     this.locked_emission = response.data;
                 });
         },
-         async clickPrintPos(printerName, formatoPdf) {
+        async clickPrintPos(printerName, formatoPdf) {
             this.$confirm("Elija una de las opciones", "Imprimir", {
                 confirmButtonText: "Impresión directa",
                 cancelButtonText: "Descargar PDF",
@@ -370,18 +397,71 @@ export default {
             })
                 .then(async () => {
                     try {
+                        let paperConfig = {
+                            scaleContent: false
+                        };
+                        let partsUrl = formatoPdf.split("/");
+                        let document = partsUrl[partsUrl.length - 1];
+                        let isTicket = document
+                            .toLowerCase()
+                            .includes("ticket");
+                        let isA4 = document.toLowerCase().includes("a4");
+                        let isA5 = document.toLowerCase().includes("a5");
+                        let tipoBandejaImpresora = this.configuration.new_old_printer;
+                        if (isA4) {
+                            if (tipoBandejaImpresora == 1) {
+                                paperConfig.density = 700;
+                                paperConfig.orientation = "portrait";
+                            } else {
+                                paperConfig.density = 350;
+                                paperConfig.orientation = "portrait";
+                            }
+                        } else {
+                            let orientation = "portrait";
+                            if (isA5) {
+                                let { a5_orientation } = this.configuration;
+                                orientation = a5_orientation
+                                    ? "landscape"
+                                    : "portrait";
+                            }
+                            if (!isTicket && tipoBandejaImpresora == 1) {
+                                //opciones que permiten hacer una impresion correcta en impresoras nuevas
+                                paperConfig.density = 600;
+                                paperConfig.orientation = orientation;
+                                paperConfig.margins = { left: 2 };
+                            } else if (!isTicket && tipoBandejaImpresora == 0) {
+                                paperConfig.density = 350;
+                                paperConfig.orientation = orientation;
+                                let margins = {};
+                                if (orientation == "landscape") {
+                                    margins = {
+                                        top: 1.1,
+                                        left: 0.95,
+                                        right: 0.3,
+                                        bottom: 1.1
+                                    };
+                                } else {
+                                    margins = {
+                                        left: 1.5
+                                    };
+                                }
+                                paperConfig.margins = margins;
+                            }
+                        }
                         this.message =
                             "Espere imprimiendo el Comprobante " +
                             this.form.number;
                         this.loading_print = true;
+
                         let config = qz.configs.create(
                             printerName,
-                            { scaleContent: false },
+                            paperConfig,
                             { jobName: this.form.number }
                         );
                         if (!qz.websocket.isActive()) {
                             await qz.websocket.connect(config);
                         }
+
                         let data = [
                             {
                                 type: "pdf",
@@ -404,21 +484,20 @@ export default {
                     this.clickClose();
                 });
         },
-   clickPrint(format) {
-   
-                if (format == "a4") {
-                    this.clickPrintPos(this.form.printer, this.form.print_a4);
-                }
-                if (format == "a5") {
-                    this.clickPrintPos(this.form.printer, this.form.print_a5);
-                }
-                if (format == "ticket") {
-                    console.log(this.form);
-                    this.clickPrintPos(this.form.printer, this.form.ticket);
-                }
-                if (format == "ticket_50") {
-                    this.clickPrintPos(this.form.printer, this.form.ticket_50);
-                }
+        clickPrint(format) {
+            if (format == "a4") {
+                this.clickPrintPos(this.form.printer, this.form.print_a4);
+            }
+            if (format == "a5") {
+                this.clickPrintPos(this.form.printer, this.form.print_a5);
+            }
+            if (format == "ticket") {
+                console.log(this.form);
+                this.clickPrintPos(this.form.printer, this.form.ticket);
+            }
+            if (format == "ticket_50") {
+                this.clickPrintPos(this.form.printer, this.form.ticket_50);
+            }
         },
         clickDownloadImage() {
             window.open(`${this.form.image_detraction}`, "_blank");
