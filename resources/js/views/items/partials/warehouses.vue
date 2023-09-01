@@ -43,7 +43,7 @@
                                     </th>
                                     <th>
                                         <button
-                                            v-if="!hasSerie"
+                                            v-if="!hasSerie && config.item_adjustment"
                                             type="button"
                                             class="btn waves-effect waves-light btn-sm btn-warning"
                                             @click.prevent="clickStock(row)"

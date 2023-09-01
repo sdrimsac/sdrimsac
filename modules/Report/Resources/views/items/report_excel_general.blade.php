@@ -1,3 +1,6 @@
+@php
+    $warehouses = App\Models\Tenant\Warehouse::all();
+@endphp
 <!DOCTYPE html>
 <html lang="es">
 
@@ -143,10 +146,15 @@
                     <thead>
                         <tr>
                             <th class="">#</th>
-                            <th class="">Producto</th>
                             <th class="">Codigo Interno</th>
+                            <th class="">Producto</th>
+                            <th class="">Categoría</th>
+                            <th class="">Marca</th>
                             <th class="">Precio de Compra</th>
                             <th class="">Precio de Venta</th>
+                            {{-- @foreach ($warehouses as $warehouse )
+                                   <th class="right">{{$warehouse->description}}</th>
+                            @endforeach --}}
                             <th class="right">Stock</th>
                         </tr>
                     </thead>
@@ -155,12 +163,18 @@
                             <tr>
                                 <td class="celda center">{{ $loop->iteration }}</td>
                             
-                                <td class="celda">{{ $value->description }}</td>
                                 <td class="celda center">{{ $value->internal_id }}</td>
+                                <td class="celda">{{ $value->description }}</td>
+                                <td class="celda">{{ $value->category ? $value->category->name :''}}</td>
+                                <td class="celda">{{ $value->brand ? $value->brand->name : '' }}</td>
                                 <td class="celda center">{{ $value->purchase_unit_price }}</td>
                                 <td class="celda center">{{ $value->sale_unit_price }}</td>
+                                {{-- @foreach ($warehouses as $warehouse )
+                                <td></td>
+                                @endforeach --}}
                                 <td class="celda center" style="border-right:  border-right: 0.1px solid black;">
                                     {{ $value->stock }}</td>
+                                
                             </tr>
                             @php
                                 

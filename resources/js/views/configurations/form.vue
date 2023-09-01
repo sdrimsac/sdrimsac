@@ -1238,6 +1238,7 @@
                                             ></el-switch>
                                         </div>
                                     </div>
+                                    
                                     <div class="col-md-6 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
@@ -1246,6 +1247,19 @@
                                             </label>
                                             <el-switch
                                                 v-model="form.users_views"
+                                                active-text="Si"
+                                                inactive-text="No"
+                                                @change="submit"
+                                            ></el-switch>
+                                        </div>
+                                    </div>
+                                      <div class="col-md-6 mt-4">
+                                        <div class="form-group">
+                                            <label class="control-label w-100"
+                                                >Permitir ajuste de stock
+                                            </label>
+                                            <el-switch
+                                                v-model="form.item_adjustment"
                                                 active-text="Si"
                                                 inactive-text="No"
                                                 @change="submit"

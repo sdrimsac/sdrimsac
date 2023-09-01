@@ -4006,8 +4006,10 @@ export default {
                     let margins = {}
                     if(orientation == "landscape"){
                         margins = {
-                            right: 1.5,
-                            bottom:0,
+                            top:1.1,
+                            left: 0.95,
+                            right: 0.30,
+                            bottom:1.1,
                         };
                     }else{
                         margins = {
