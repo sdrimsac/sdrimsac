@@ -756,7 +756,7 @@
                     <li>
                         <a class="{{ $path[0] === 'caja' && $path[1] === 'status-tables' ? 'active' : '' }}"
                             href="{{ route('tenant.items.check_stock') }}">
-                            <i class="icofont-search-stock"></i> Verificar Stock
+                            <i class="icofont-search-stock"></i> Herramientas
                         </a>
                     </li>
 
