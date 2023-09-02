@@ -90,14 +90,15 @@
                             <div>
                                 <div class="d-flex row align-items-center">
                                     <div class="col-2 d-flex flex-column">
- <el-checkbox
+                                        <el-checkbox
                                             v-model="searchSeries"
-                                            @change="saveInLocalStorageSearchSeries"
+                                            @change="
+                                                saveInLocalStorageSearchSeries
+                                            "
                                         >
                                             <h2 class="text-muted text-small">
                                                 Buscar por series
                                             </h2>
-                                          
                                         </el-checkbox>
                                         <el-checkbox
                                             v-model="barcode"
@@ -106,7 +107,6 @@
                                             <h2 class="text-muted text-small">
                                                 Barcode
                                             </h2>
-                                          
                                         </el-checkbox>
                                         <el-checkbox
                                             v-model="type_code"
@@ -195,6 +195,7 @@
                                     :blockAdd.sync="blockCart"
                                     ref="list_foods"
                                     :barcode.sync="barcode"
+                                    :searchSeries.sync="searchSeries"
                                     :type_code.sync="type_code"
                                     :worker="worker"
                                     @insertOrden="insertOrden"
@@ -1675,7 +1676,7 @@ export default {
 
     data() {
         return {
-            searchSeries:false,
+            searchSeries: false,
             showDialogItemSet: false,
             products_to_due: 0,
             showDialogDueProducts: false,
@@ -1813,7 +1814,7 @@ export default {
         if (type_code) {
             this.type_code = type_code == "1" ? true : false;
         }
-        if(searchSeries){
+        if (searchSeries) {
             this.searchSeries = searchSeries == "1" ? true : false;
         }
         // console.log(this.establishments, " xdl");
@@ -2005,7 +2006,7 @@ export default {
                 type.quantity_unit
             )}) - S/ ${price}`;
         },
-         saveInLocalStorageSearchSeries(searchSeries) {
+        saveInLocalStorageSearchSeries(searchSeries) {
             localStorage.setItem("searchSeries", searchSeries ? "1" : "0");
         },
         saveInLocalStorageBarcode(barcode) {
@@ -2797,7 +2798,7 @@ export default {
             }
             return price;
         },
-        insertOrden(orden, food_id, type) {
+        insertOrden(orden, food_id, type, selectSerie = false) {
             //esto ya no me puede traer solo uno
             //ya que podré agregar más de una vez un producto
             // let ordenAdded = _.filter(this.localOrden, {
@@ -2811,11 +2812,13 @@ export default {
                 orden.to_carry = false;
                 orden.change_subtotal = false;
                 orden.series = [];
+
                 orden.lotes = [];
                 let added = false;
                 let {
                     food: {
-                        item: { lots_group }
+                        item: { lots_group },
+                        series
                     }
                 } = orden;
 
@@ -2848,6 +2851,18 @@ export default {
                     // orden.quantity = Number(type.quantity_unit);
                     orden.quantity = orden.food.item.series_enabled ? 0 : 1;
                     orden.price = this.getDefaultPrice(type);
+                }
+                if (selectSerie) {
+                    console.log("las series ", series);
+                    let serie = this.input_item.toLowerCase();
+
+                    let serieFind = series.find(s =>
+                        s.series.toLowerCase().includes(serie)
+                    );
+                    if (serieFind) {
+                        orden.series = [serieFind];
+                    }
+                    orden.quantity = 1;
                 }
                 this.localOrden.unshift(orden);
             }
@@ -4006,7 +4021,7 @@ export default {
                 if (isA5) {
                     let { a5_orientation } = this.configuration;
                     orientation = a5_orientation ? "landscape" : "portrait";
-                }   
+                }
 
                 console.log(orientation, "orientation");
                 //NO MOVER ESTA CONFIGURACION ESTA PARA IMPRESION DIRECTA EN A5
@@ -4018,17 +4033,17 @@ export default {
                 } else if (!isTicket && tipoBandejaImpresora == 0) {
                     paperConfig.density = 350;
                     paperConfig.orientation = orientation;
-                    let margins = {}
-                    if(orientation == "landscape"){
+                    let margins = {};
+                    if (orientation == "landscape") {
                         margins = {
-                            top:1.1,
+                            top: 1.1,
                             left: 0.95,
-                            right: 0.30,
-                            bottom:1.1,
+                            right: 0.3,
+                            bottom: 1.1
                         };
-                    }else{
+                    } else {
                         margins = {
-                            left: 1.5,
+                            left: 1.5
                         };
                     }
                     paperConfig.margins = margins;
@@ -4039,7 +4054,7 @@ export default {
                     // };
                 }
             } //FIN IMPRESION DIRECTA A5
-    console.log(paperConfig, "paperConfig");
+            console.log(paperConfig, "paperConfig");
             let config = qz.configs.create(Printer, paperConfig);
 
             if (!qz.websocket.isActive()) {
@@ -4367,7 +4382,7 @@ export default {
             return queryString.stringify({
                 page: this.pagination.current_page,
                 external_id: this.type_code,
-                search_by_series:this.searchSeries,
+                search_by_series: this.searchSeries,
                 ...form
 
                 // limit: this.limit

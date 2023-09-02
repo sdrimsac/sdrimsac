@@ -421,6 +421,7 @@ if ($hostname) {
                     Route::post('/getDocumentType', [DispatchController::class, 'getDocumentTypeToDispatches']);
                     Route::get('/data_table', [DispatchController::class, 'data_table']);
                     Route::get('create_new/{table}/{id}', [DispatchController::class, 'createNew']);
+                    Route::get('create_new_info/{table}/{id}', [DispatchController::class, 'createNewInfo']);
                     Route::get('/get_origin_addresses/{establishment_id}', [DispatchController::class, 'getOriginAddresses']);
                     // Route::get('/get_delivery_addresses/{person_id}', [DispatchController::class, 'getDeliveryAddresses']);
                     // Route::get('/search/customers', [DispatchController::class, 'searchCustomers']);

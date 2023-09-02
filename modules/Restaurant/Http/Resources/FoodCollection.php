@@ -13,6 +13,13 @@ use Modules\Item\Models\ItemLotsGroup;
 
 class FoodCollection extends ResourceCollection
 {
+    protected $with_series;
+    public function __construct($resource, $with_series = false)
+    {
+        parent::__construct($resource);
+        $this->with_series = $with_series;
+    }
+    
     /**
      * Transform the resource collection into an array.
      *
@@ -57,7 +64,7 @@ class FoodCollection extends ResourceCollection
                     $q->where('warehouse_id', $user->establishment_id)->orWhereNull('warehouse_id');
                 })->get();
             }
-            if($item->series_enabled){
+            if($this->with_series){
                 $lots = ItemLot::where('item_id',$item->id)->where('warehouse_id', $user->establishment_id)
                 ->where('has_sale', false)
                 ->get();
@@ -75,7 +82,8 @@ class FoodCollection extends ResourceCollection
                 'price' => $price,
                 'area_id' => $row->area_id,
                 'active' => $row->active,
-                'types' => $item_unit_types
+                'types' => $item_unit_types,
+                'series'  => $lots ?? [],
             ];
         });
     }

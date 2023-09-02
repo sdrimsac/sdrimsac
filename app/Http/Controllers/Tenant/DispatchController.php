@@ -59,9 +59,10 @@ class DispatchController extends Controller
     {
         $this->middleware('input.request:dispatch,web', ['only' => ['store']]);
     }
-    public function getCorrelative($serie){
+    public function getCorrelative($serie)
+    {
         $correlative = Dispatch::where('series', $serie)->max('number');
-        if($correlative == null){
+        if ($correlative == null) {
             return 1;
         }
         return $correlative + 1;
@@ -187,6 +188,88 @@ class DispatchController extends Controller
         return view('tenant.dispatches.form', compact('document', 'items', 'type', 'dispatch'));
     }
 
+    public function createNewInfo($parentTable, $parentId)
+    {
+        $query = null;
+        $reference_document_id = null;
+        $reference_quotation_id = null;
+        $reference_sale_note_id = null;
+        $reference_order_form_id = null;
+        $reference_order_note_id = null;
+
+        if ($parentTable === 'document') {
+            $reference_document_id = $parentId;
+            $query = Document::query();
+        } elseif ($parentTable === 'quotation') {
+            $reference_quotation_id = $parentId;
+            $query = Quotation::query();
+        } elseif ($parentTable === 'sale_note') {
+            $reference_sale_note_id = $parentId;
+            $query = SaleNote::query();
+        } elseif ($parentTable === 'order_note') {
+            $reference_order_note_id = $parentId;
+            $query = OrderNote::query();
+        } elseif ($parentTable === 'dispatch') {
+            $query = Dispatch::query();
+        }
+        $document = $query->find($parentId);
+        $configuration = Configuration::query()->first();
+        $items = [];
+        foreach ($document->items as $item) {
+            $name_product_pdf = ($configuration->show_pdf_name) ? strip_tags($item->name_product_pdf) : null;
+            $items[] = [
+                'item_id' => $item->item_id,
+                'item' => $item,
+                'quantity' => $item->quantity,
+                'description' => $item->item->description,
+                'unit_type_id' => $item->item->unit_type_id,
+                'name_product_pdf' => $name_product_pdf
+            ];
+        }
+
+        if ($parentTable === 'dispatch') {
+            $data = [
+                'id' => $document->id,
+                'series' => $document->series,
+                'number' => $document->number,
+                'establishment_id' => $document->establishment_id,
+                'customer_id' => $document->customer_id,
+                'items' => $items,
+                'date_of_issue' => $document->date_of_issue->format('Y-m-d'),
+                'date_of_shipping' => $document->date_of_shipping->format('Y-m-d'),
+                'packages_number' => $document->packages_number,
+                'total_weight' => $document->total_weight,
+                'transfer_reason_type_id' => $document->transfer_reason_type_id,
+                'transfer_reason_description' => $document->transfer_reason_description,
+                'transport_mode_type_id' => $document->transport_mode_type_id,
+                'transshipment_indicator' => $document->transshipment_indicator,
+                'unit_type_id' => $document->unit_type_id,
+                'observations' => $document->observations,
+                'driver_id' => $document->driver_id,
+                'dispatcher_id' => $document->dispatcher_id,
+                'transport_id' => $document->transport_id,
+                'origin_address_id' => $document->origin_address_id,
+                'delivery_address_id' => $document->delivery_address_id,
+            ];
+        } else {
+            $data = [
+                'establishment_id' => $document->establishment_id,
+                'customer_id' => $document->customer_id,
+                'items' => $items,
+                'reference_document_id' => $reference_document_id,
+                'reference_quotation_id' => $reference_quotation_id,
+                'reference_sale_note_id' => $reference_sale_note_id,
+                'reference_order_form_id' => $reference_order_form_id,
+                'reference_order_note_id' => $reference_order_note_id,
+            ];
+        }
+
+        return  [
+            'document' => $data,
+            'parentTable' => $parentTable,
+            'parentId' => $parentId
+        ];
+    }
     public function createNew($parentTable, $parentId)
     {
         $query = null;

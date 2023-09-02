@@ -8,6 +8,7 @@
                 <thead>
                     <tr>
                         <th v-if="type == 'documents'">SUNAT</th>
+                        <th v-if="type == 'saleNotes'">Acciones</th>
                         <th>
                             Acciones
                         </th>
@@ -118,6 +119,81 @@
                                     >
                                         Validar cpe
                                     </el-button>
+                                    <br
+                                        v-if="
+                                            type == 'documents' &&
+                                                data.state_type_id != '11'
+                                        "
+                                    />
+
+                                    <el-button
+                                        class="col-md-12 col-12"
+                                        v-if="data.state_type_id != '11'"
+                                        @click="clickGenerateGuie(data.id)"
+                                    >
+                                        Guia
+                                    </el-button>
+                                </div>
+                            </div>
+                        </td>
+                        <td
+                            :class="
+                                `${data.state_type_id == '11' && 'text-white'}`
+                            "
+                            v-if="type == 'saleNotes'"
+                        >
+                            <div
+                                class="dropdown-as-select d-inline-block"
+                                data-childselector="span"
+                            >
+                                <button
+                                    v-if="data.state_type_id != '11'"
+                                    class="btn p-0"
+                                    type="button"
+                                    data-bs-toggle="dropdown"
+                                    aria-haspopup="true"
+                                    aria-expanded="false"
+                                >
+                                    <span
+                                        class="btn btn-primary dropdown-toggle"
+                                        data-bs-toggle="tooltip"
+                                        data-bs-placement="top"
+                                        data-bs-delay="0"
+                                        title=""
+                                        data-bs-original-title="Item Count"
+                                        aria-label="Item Count"
+                                        ><i class="fas fa-list"></i
+                                    ></span>
+                                </button>
+
+                                <div
+                                    class="dropdown-menu dropdown-menu-end col-md-2 col-1"
+                                >
+                                    <el-button
+                                        class="col-md-12 col-12"
+                                        v-if="
+                                            data.state_type_id != '11' &&
+                                                !data.changed
+                                        "
+                                        @click="clickGenerate(data.id)"
+                                    >
+                                        Generar comprobantes
+                                    </el-button>
+                                    <br
+                                        v-if="
+                                            data.state_type_id != '11' &&
+                                                !data.changed
+                                        "
+                                    />
+                                    <el-button
+                                        class="col-md-12 col-12"
+                                        v-if="data.state_type_id != '11'"
+                                        @click="
+                                            clickGenerateGuie(data.id, '80')
+                                        "
+                                    >
+                                        Guia
+                                    </el-button>
                                 </div>
                             </div>
                         </td>
@@ -197,7 +273,7 @@
                                     )
                                 "
                             >
-                      <i class="far fa-file-pdf"></i>
+                                <i class="far fa-file-pdf"></i>
                             </el-button>
                         </td>
                         <td
@@ -312,9 +388,26 @@
             ></quotation-edit-modal>
         </template>
         <document-print-previsualitation
-        :resource="resourcePdf"
-        :showDialog.sync="showPrevisualitation"
-        > </document-print-previsualitation>
+            :resource="resourcePdf"
+            :showDialog.sync="showPrevisualitation"
+        >
+        </document-print-previsualitation>
+
+        <sale-note-generate
+            :showDialog.sync="showDialogGenerate"
+            :recordId="currentId"
+            :showGenerate="true"
+            :showClose="false"
+            :fromCaja="true"
+            @getRecords="getRecords"
+        ></sale-note-generate>
+        <create-dispatch
+            :showDialog.sync="showCreateDispatch"
+            :type="currentType"
+            :recordId="currentId"
+            :configuration="configuration"
+        >
+        </create-dispatch>
     </div>
 </template>
 
@@ -328,12 +421,19 @@ const QuotationOptions = () =>
     import(
         "../../../../../../../../resources/js/views/quotations/partials/options.vue"
     );
+const SaleNoteGenerate = () =>
+    import(
+        "../../../../../../../../resources/js/views/sale_notes/partials/option_documents.vue"
+    );
+const CreateDispatch = ()=>import("./create_dispatch.vue");
 export default {
     components: {
         whatsappModal,
         QuotationOptions,
         QuotationEditModal,
-        DocumentPrintPrevisualitation
+        DocumentPrintPrevisualitation,
+        SaleNoteGenerate,
+        CreateDispatch
     },
     mixins: [deletable],
     props: [
@@ -342,7 +442,8 @@ export default {
         "type",
         "company",
         "sender",
-        "establishment"
+        "establishment",
+        "configuration"
     ],
     data() {
         return {
@@ -355,11 +456,23 @@ export default {
             currentNumber: null,
             showDialogOptions: false,
             quotationId: null,
-            showEditQuotationDialog: false
+            showEditQuotationDialog: false,
+            showDialogGenerate: false,
+            currentType: null,
+            showCreateDispatch:false
         };
     },
 
     methods: {
+        clickGenerateGuie(recordId, type = "03"){
+            this.currentId = recordId;
+            this.currentType = type;
+            this.showCreateDispatch = true;
+        },
+      clickGenerate(recordId) {
+            this.currentId = recordId;
+            this.showDialogGenerate = true;
+        },
         previsualitation(external_id, type) {
             let url = null;
             if (type == "80") {

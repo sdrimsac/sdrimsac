@@ -226,7 +226,7 @@ export default {
         "pagination",
         "blockAdd",
         "localOrden",
-
+        "searchSeries",
         "barcode"
     ],
     data() {
@@ -391,8 +391,14 @@ export default {
                 f.price = Number(f.price).toFixed(2);
                 return { ...f, select: false };
             });
-            if (this.barcode && this.listFoods.length == 1) {
-                this.addFood(0);
+
+            if (this.listFoods.length == 1) {
+                if (this.barcode) {
+                    this.addFood(0);
+                }
+                if (this.searchSeries) {
+                    this.addFood(0, null, true);
+                }
             }
         },
         formatedStockPresentation(
@@ -446,7 +452,7 @@ export default {
                 this.listFoods = _.filter(this.foods, { category_food_id: id });
             }
         },
-        addFood(index = 0, type = null) {
+        addFood(index = 0, type = null, selectSerie = false) {
             if (this.blockAdd && !this.configuration.box_orden) {
                 this.$toast.error("No puede agregar productos a esta orden.");
                 return;
@@ -454,7 +460,7 @@ export default {
             this.selectedFood = JSON.parse(
                 JSON.stringify(this.listFoods[index])
             );
-
+            console.log(this.selectedFood);
             if (!this.selectedFood) return;
 
             if (
@@ -514,7 +520,7 @@ export default {
                     let qty = type.quantity_unit;
                     if (this.configuration.sales_stock == true) {
                         let stock = Number(this.selectedFood.item.stock);
-                        if ( qty > stock) {
+                        if (qty > stock) {
                             this.$toast.warning("Limite de stock alcanzado");
                             return;
                         }
@@ -533,7 +539,7 @@ export default {
                 "insertOrden",
                 this.currentFood,
                 this.selectedFood.id,
-                type
+                type,
             );
             this.$notify({
                 title: this.currentFood.food.description.toLowerCase(),

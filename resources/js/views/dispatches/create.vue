@@ -1191,8 +1191,8 @@ export default {
         ...mapActions(["loadItems", "loadConfiguration"]),
         initForm() {
             this.errors = {};
-            let customer_id = parseInt(this.config.establishment.customer_id);
-            let establishment_id = parseInt(this.config.establishment.id);
+            let customer_id = parseInt(this.config.establishment ? this.config.establishment.customer_id : null);
+            let establishment_id = parseInt(this.config.establishment ? this.config.establishment.id : null);
             if (isNaN(customer_id)) customer_id = null;
             if (isNaN(establishment_id)) establishment_id = null;
             this.form = {
@@ -1721,7 +1721,7 @@ export default {
                 }
                 // if (this.form.dispatcher.number_mtc === '' || _.isNull(this.form.dispatcher.number_mtc)) {
                 //     return this.$message.error('El MTC del transportista es requerido')
-                // }
+                // }submit
             }
             const validateQuantity = await this.verifyQuantityItems();
             if (!validateQuantity.validate) {
@@ -1751,6 +1751,10 @@ export default {
                         this.recordId = response.data.data.id;
                         this.send_sunat = response.data.data.send_sunat;
                         if (this.pos) {
+                            this.$message({
+                                type: "success",
+                                message: "Se registró correctamente"
+                            });
                             this.$emit("records");
                             this.$emit("closeDispatch");
                         } else {
@@ -1762,7 +1766,7 @@ export default {
                 })
                 .catch(error => {
                     this.loading_submit = false;
-
+console.log(error);
                     if (error.response.status === 422) {
                         this.errors = error.response.data;
                     } else {

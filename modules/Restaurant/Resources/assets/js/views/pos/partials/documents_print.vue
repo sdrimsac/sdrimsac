@@ -57,6 +57,7 @@
                 <el-tabs v-model="activeName" @tab-click="handleClick">
                     <el-tab-pane label="Notas de venta" name="saleNotes">
                         <document-print-detail
+                        :configuration="config"
                             :company="company"
                             @getRecords="getRecords"
                             @printData="printData"
@@ -74,6 +75,7 @@
                         name="documents"
                     >
                         <document-print-detail
+                        :configuration="config"
                             :sender="sender"
                             :company="company"
                             @getRecords="getRecords"
@@ -87,6 +89,7 @@
                     </el-tab-pane>
                     <el-tab-pane label="Cotizaciones" name="quotations">
                         <document-print-detail
+                        :configuration="config"
                             :sender="sender"
                             :company="company"
                             @getRecords="getRecords"

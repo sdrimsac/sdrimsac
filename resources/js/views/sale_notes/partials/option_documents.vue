@@ -7,7 +7,9 @@
             width="50%"
             :close-on-click-modal="false"
             :close-on-press-escape="false"
+            @close="clickClose"
             :show-close="false"
+            append-to-body
         >
             <div class="row" v-loading="loading_documents">
                 <div class="col-lg-8">
@@ -270,7 +272,7 @@ import PersonForm from "../../persons/form.vue";
 export default {
     components: { DocumentOptions, PersonForm },
 
-    props: ["showDialog", "recordId", "showClose", "showGenerate"],
+    props: ["showDialog", "recordId", "showClose", "showGenerate", "fromCaja"],
     data() {
         return {
             titleDialog: null,
@@ -498,9 +500,7 @@ export default {
             }
             if (this.generate_dispatch) {
                 if (!this.dispatch_id) {
-                    return this.$toast.error(
-                        "Debe seleccionar una guía base"
-                    );
+                    return this.$toast.error("Debe seleccionar una guía base");
                 }
             }
             this.loading_submit = true;
@@ -512,14 +512,26 @@ export default {
                 .then(response => {
                     if (response.data.success) {
                         this.documentNewId = response.data.data.id;
-                        this.showDialogDocumentOptions = true;
-                        this.$http
+
+                        if (this.fromCaja) {
+                               this.$http
+                            .get(`/${this.resource}/changed/${this.recordId}`)
+                            .then(() => {
+                                this.$emit("getRecords");
+                               
+                            });
+                            this.clickClose();
+                        } else {
+                              this.$http
                             .get(`/${this.resource}/changed/${this.form.id}`)
                             .then(() => {
                                 this.$eventHub.$emit("reloadData");
                                 this.flag_generate = false;
                             });
                         this.resetDocument();
+                            this.showDialogDocumentOptions = true;
+                        }
+                      
 
                         // this.clickClose();
                     } else {

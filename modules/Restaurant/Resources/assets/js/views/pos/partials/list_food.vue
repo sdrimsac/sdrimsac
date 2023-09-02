@@ -269,7 +269,8 @@ export default {
         "blockAdd",
         "localOrden",
         "type_code",
-        "barcode"
+        "barcode",
+        "searchSeries"
     ],
     data() {
         return {
@@ -445,6 +446,9 @@ export default {
             if (this.barcode && this.listFoods.length == 1 || this.type_code && this.listFoods.length == 1) {
                 this.addFood(0);
             }
+            if(this.searchSeries && this.listFoods.length == 1){
+                this.addFood(0,null,true);
+            }
         },
         formatedStockPresentation(
             {
@@ -552,7 +556,7 @@ export default {
             console.log(response);
             return pass;
         },
-       async addFood(index = 0, type = null) {
+       async addFood(index = 0, type = null, selectSerie = false) {
             let quotation_stock = localStorage.getItem("quotation_stock") || 0;
             quotation_stock = quotation_stock == 1;
 
@@ -663,7 +667,9 @@ export default {
                 "insertOrden",
                 this.currentFood,
                 this.selectedFood.id,
-                type
+                type,
+                selectSerie
+
             );
             this.$notify({
                 title: this.currentFood.food.description.toLowerCase(),
