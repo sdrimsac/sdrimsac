@@ -145,7 +145,7 @@ class PosController extends Controller
             $category_ins_id = $category_ins->id;
         }
         $datafoods = $request->all();
-
+        $search_by_series = $request->search_by_series;
         $category_id = $request->category;
         $external_id =  $request->external_id == "true" ? true : false;
         $value = $request->value;
@@ -156,11 +156,19 @@ class PosController extends Controller
 
         $foods = Food::query()->whereHas(
             "item",
-            function ($query) use ($establishment_id) {
+            function ($query) use ($establishment_id,$search_by_series,$value) {
                 $query
-                    ->where('active', 1)->whereHas('warehouses', function ($query) use ($establishment_id) {
+                    ->where('active', 1)->whereHas('warehouses', function ($query) use ($establishment_id ,$value) {
                         $query->where('warehouse_id', $establishment_id);
                     });
+                if($search_by_series){
+                    $query->where('series_enabled', 1)
+                    ->whereHas('item_lots', function ($query) use ($establishment_id,$value) {
+                        $query->where('warehouse_id', $establishment_id)->where('has_sale', 0)
+                        ->where('series','like','%'.$value.'%')
+                        ;
+                    });
+                }
             }
         );
 
@@ -168,7 +176,7 @@ class PosController extends Controller
 
             $foods = $foods->where('category_food_id', $category_id);
         }
-        if ($value) {
+        if ($value && !$search_by_series) {
             if (count($textoIntoArray) === 1) {
                 if($external_id){
                     $foods = $foods->whereHas('item',function($query) use ($value){

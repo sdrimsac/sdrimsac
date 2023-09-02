@@ -80,6 +80,7 @@ use App\CoreFacturalo\Requests\Inputs\Functions;
 use App\Models\Tenant\Cash;
 use Modules\Inventory\Models\Warehouse as ModuleWarehouse;
 use App\Models\Tenant\Catalogs\PaymentMethodType as CatPaymentMethodType;
+use App\Models\Tenant\ItemUnitType;
 use App\Models\Tenant\Summary;
 use App\Services\RoleService;
 use Hyn\Tenancy\Models\Website;
@@ -1606,6 +1607,7 @@ class DocumentController extends Controller
             $deleted = DB::connection('tenant')->transaction(function () use ($document_id, $date_now) {
 
                 $record = Document::findOrFail($document_id);
+                $establishment_id = $record->establishment_id;
                 $date_of_issue = $record->date_of_issue;
                 $issued_date = Carbon::parse($date_of_issue);
                 $date_now = Carbon::now();
@@ -1625,10 +1627,21 @@ class DocumentController extends Controller
                         foreach ($lots as $lot) {
                             ItemLot::find($lot->id)->update(["has_sale" => 0]);
                         }
+                        $quantity = $it->quantity;
+                        if (isset($it->item->has_unit_type)) {
+                            $unit_type = ItemUnitType::where('item_id', $it->item_id)
+                                ->where('description', $it->item->has_unit_type)->first();
+                            if ($unit_type) {
+        
+                                $quantity = $quantity * $unit_type->quantity_unit;
+                            }
+                        }
+                        ItemWarehouse::where('item_id', $it->item_id)->where('warehouse_id', $establishment_id)->increment('stock', $quantity);
+                        ItemWarehouse::where('item_id', $it->item_id)->increment('stock', $quantity);
                     }
                     Box::where('document_id', $document_id)->delete();
                     $orden = Orden::where('document_id', $document_id)->first();
-                    $desc = "App\Models\Document";
+                    $desc = "App\Models\Tenant\Document";
                     InventoryKardex::where("inventory_kardexable_type", $desc)->where("inventory_kardexable_id", $document_id)->delete();
                     $record->save();
 

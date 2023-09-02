@@ -254,6 +254,7 @@ export default {
             });
             this.socket.on("authenticated", ({ message, sender }) => {
                 this.sender = sender;
+                 console.log(sender, " xddd");
                 this.showMessage(message);
             });
             this.socket.on("connected", ({ message }) => {
@@ -262,7 +263,7 @@ export default {
                 this.socket.emit("getStatus", url);
             });
             this.socket.on("setStatus", ({ status, sender }) => {
-                console.log(sender);
+                this.sender = sender || 'sdrimsac';
                 // if (!status) {
                 //     this.sender = "sdrimsac";
                 //     this.$message.warning("Sesión iniciada con SDRIMSAC");

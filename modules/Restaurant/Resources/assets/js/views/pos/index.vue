@@ -90,6 +90,15 @@
                             <div>
                                 <div class="d-flex row align-items-center">
                                     <div class="col-2 d-flex flex-column">
+ <el-checkbox
+                                            v-model="searchSeries"
+                                            @change="saveInLocalStorageSearchSeries"
+                                        >
+                                            <h2 class="text-muted text-small">
+                                                Buscar por series
+                                            </h2>
+                                          
+                                        </el-checkbox>
                                         <el-checkbox
                                             v-model="barcode"
                                             @change="saveInLocalStorageBarcode"
@@ -97,10 +106,7 @@
                                             <h2 class="text-muted text-small">
                                                 Barcode
                                             </h2>
-                                            <!-- <i
-                                                class="fas fa-barcode"
-                                                style="font-size:30px;"
-                                            ></i> -->
+                                          
                                         </el-checkbox>
                                         <el-checkbox
                                             v-model="type_code"
@@ -1669,6 +1675,7 @@ export default {
 
     data() {
         return {
+            searchSeries:false,
             showDialogItemSet: false,
             products_to_due: 0,
             showDialogDueProducts: false,
@@ -1799,11 +1806,15 @@ export default {
         localStorage.setItem("quotation_stock", 0);
         let type_code = localStorage.getItem("type_code");
         let barcode = localStorage.getItem("barcode");
+        let searchSeries = localStorage.getItem("searchSeries");
         if (barcode) {
             this.barcode = barcode == "1" ? true : false;
         }
         if (type_code) {
             this.type_code = type_code == "1" ? true : false;
+        }
+        if(searchSeries){
+            this.searchSeries = searchSeries == "1" ? true : false;
         }
         // console.log(this.establishments, " xdl");
         this.conf = this.establishments.conf ?? {};
@@ -1993,6 +2004,9 @@ export default {
             return `${type.description} (${Number(
                 type.quantity_unit
             )}) - S/ ${price}`;
+        },
+         saveInLocalStorageSearchSeries(searchSeries) {
+            localStorage.setItem("searchSeries", searchSeries ? "1" : "0");
         },
         saveInLocalStorageBarcode(barcode) {
             localStorage.setItem("barcode", barcode ? "1" : "0");
@@ -2185,6 +2199,7 @@ export default {
                 this.showMessage(message);
             });
             this.socket.on("authenticated", ({ message, sender }) => {
+                console.log(sender, " xddd");
                 this.sender = sender;
                 this.showMessage(message);
             });
@@ -4352,6 +4367,7 @@ export default {
             return queryString.stringify({
                 page: this.pagination.current_page,
                 external_id: this.type_code,
+                search_by_series:this.searchSeries,
                 ...form
 
                 // limit: this.limit
