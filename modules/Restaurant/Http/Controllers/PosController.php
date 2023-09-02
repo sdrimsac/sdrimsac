@@ -145,7 +145,7 @@ class PosController extends Controller
             $category_ins_id = $category_ins->id;
         }
         $datafoods = $request->all();
-        $search_by_series = $request->search_by_series;
+        $search_by_series =null;
         $category_id = $request->category;
         $external_id =  $request->external_id == "true" ? true : false;
         $value = $request->value;
@@ -176,7 +176,7 @@ class PosController extends Controller
 
             $foods = $foods->where('category_food_id', $category_id);
         }
-        if ($value && !$search_by_series) {
+        if ($value ) {
             if (count($textoIntoArray) === 1) {
                 if($external_id){
                     $foods = $foods->whereHas('item',function($query) use ($value){
