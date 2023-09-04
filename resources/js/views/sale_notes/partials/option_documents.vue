@@ -520,6 +520,7 @@ export default {
                                 this.$emit("getRecords");
                                
                             });
+                               this.showDialogDocumentOptions = true;
                             this.clickClose();
                         } else {
                               this.$http

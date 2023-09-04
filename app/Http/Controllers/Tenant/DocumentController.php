@@ -77,6 +77,7 @@ use Modules\Item\Http\Requests\CategoryRequest;
 use  Modules\Inventory\Models\InventoryConfiguration;
 use App\CoreFacturalo\Helpers\Storage\StorageDocument;
 use App\CoreFacturalo\Requests\Inputs\Functions;
+use App\Exports\DocumentExport;
 use App\Models\Tenant\Cash;
 use Modules\Inventory\Models\Warehouse as ModuleWarehouse;
 use App\Models\Tenant\Catalogs\PaymentMethodType as CatPaymentMethodType;
@@ -1325,6 +1326,17 @@ class DocumentController extends Controller
         }
     }
 
+    public function excel(Request $request)
+    {
+        $records = $this->getRecords($request)->get();
+        $establishment = Establishment::first();
+        $company = Company::active();
+        return (new DocumentExport)
+            ->records($records)
+            ->company($company)
+            ->establishment($establishment)
+            ->download('Reporte_Ventas_' . Carbon::now() . '.xlsx');
+    }
     public function import(Request $request)
     {
         if ($request->hasFile('file')) {
@@ -1449,7 +1461,7 @@ class DocumentController extends Controller
         if ($customer_id) {
             $records = $records->where('customer_id', $customer_id);
         }
-        if($payment_condition_id){
+        if ($payment_condition_id) {
             $records = $records->where('payment_condition_id', $payment_condition_id);
         }
 
@@ -1482,7 +1494,7 @@ class DocumentController extends Controller
         $series = Series::whereIn('document_type_id', ['01', '03', '07', '08'])->get();
         $establishments = Establishment::where('id', auth()->user()->establishment_id)->get(); // Establishment::all();
         $payment_conditions = PaymentCondition::all();
-        return compact('customers','payment_conditions' ,'document_types', 'series', 'establishments', 'state_types', 'items', 'categories');
+        return compact('customers', 'payment_conditions', 'document_types', 'series', 'establishments', 'state_types', 'items', 'categories');
     }
 
 
@@ -1632,7 +1644,7 @@ class DocumentController extends Controller
                             $unit_type = ItemUnitType::where('item_id', $it->item_id)
                                 ->where('description', $it->item->has_unit_type)->first();
                             if ($unit_type) {
-        
+
                                 $quantity = $quantity * $unit_type->quantity_unit;
                             }
                         }

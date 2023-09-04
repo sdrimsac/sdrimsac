@@ -612,8 +612,8 @@ export default {
                     }
                 }
 
-                if (item.series_enabled) {
-                    if (item.item_unit_types.length == 0) {
+                if (item.series_enabled ) {
+                    if (item.item_unit_types.length == 0 && !selectSerie) {
                         let message = "Producto con serie, ya  agregado";
                         this.$toast.warning(message);
                         return;
@@ -621,7 +621,7 @@ export default {
                         if (type) {
                             if (foodFound.some(i => i.type_id == type.id)) {
                                 let message =
-                                    "Producto con serie, ya  agregado";
+                                    "Tipo de producto agregado";
                                 this.$toast.warning(message);
                                 return;
                             }

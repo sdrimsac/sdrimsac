@@ -1878,7 +1878,7 @@ export default {
             this.optionsMenu = [
                 {
                     id: 1,
-                    title: ["Reimprimir"],
+                    title: ["Comprobantes"],
                     icon: "fas fa-print ",
                     visible: true
                 },
@@ -2852,10 +2852,9 @@ export default {
                     orden.quantity = orden.food.item.series_enabled ? 0 : 1;
                     orden.price = this.getDefaultPrice(type);
                 }
-                if (selectSerie) {
-                    console.log("las series ", series);
-                    let serie = this.input_item.toLowerCase();
 
+                if (selectSerie) {
+                    let serie = this.input_item.toLowerCase();
                     let serieFind = series.find(s =>
                         s.series.toLowerCase().includes(serie)
                     );
@@ -2916,17 +2915,43 @@ export default {
 
                     //y si no agregarla como nueva
                 } else {
+                    let {
+                        food: { series }
+                    } = orden;
+              
                     //si es original, seguir agregando uno
                     let indexFind = this.localOrden.findIndex(
                         p => p.id == food_id && p.type_id == null
                     );
                     if (indexFind != -1) {
+                            if (selectSerie) {
+                            let serie = this.input_item.toLowerCase();
+                            let serieFind = series.find(s =>
+                                s.series.toLowerCase().includes(serie)
+                            );
+                            if (serieFind) {
+                                let exist = this.localOrden[
+                                    indexFind
+                                ].series.find(s => s.id == serieFind.id);
+                                if (!exist) {
+                                    this.localOrden[indexFind].series = [
+                                        ...this.localOrden[indexFind].series,
+                                        serieFind
+                                    ];
+                                }else{
+                                    this.$toast.warning("La serie ya fue agregada");
+                                    return;
+                                }
+                               
+                            }
+                        }
                         //actualizamos el elemento que agregamos, pero lo sacamos del objeot y lo volvemos a colocar de primero, de esta manera podemos saber si ya esta el producto que estamos agregando a la lista y saber cuanto tenemos en total
                         this.localOrden[indexFind].quantity =
                             Number(this.localOrden[indexFind].quantity) + 1;
                         let itemAwait = this.localOrden[indexFind];
                         this.localOrden.splice(indexFind, 1);
                         this.localOrden.unshift(itemAwait);
+                    
                     } else {
                         orden.to_carry = false;
                         orden.change_subtotal = false;
@@ -4023,7 +4048,6 @@ export default {
                     orientation = a5_orientation ? "landscape" : "portrait";
                 }
 
-                console.log(orientation, "orientation");
                 //NO MOVER ESTA CONFIGURACION ESTA PARA IMPRESION DIRECTA EN A5
                 if (!isTicket && tipoBandejaImpresora == 1) {
                     //opciones que permiten hacer una impresion correcta en impresoras nuevas
@@ -4054,7 +4078,6 @@ export default {
                     // };
                 }
             } //FIN IMPRESION DIRECTA A5
-            console.log(paperConfig, "paperConfig");
             let config = qz.configs.create(Printer, paperConfig);
 
             if (!qz.websocket.isActive()) {

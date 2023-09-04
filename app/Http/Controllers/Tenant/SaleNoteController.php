@@ -66,6 +66,7 @@ use App\CoreFacturalo\Requests\Inputs\Common\LegendInput;
 use App\CoreFacturalo\Requests\Inputs\Common\PersonInput;
 use App\CoreFacturalo\Requests\Inputs\Common\EstablishmentInput;
 use App\CoreFacturalo\Requests\Inputs\Functions;
+use App\Exports\SaleNoteExport;
 use App\Models\Tenant\Cash;
 use App\Models\Tenant\ItemUnitType;
 use App\Models\Tenant\SaleNoteCredit;
@@ -146,6 +147,26 @@ class SaleNoteController extends Controller
         ];
     }
 
+    public function excel(Request $request){
+        if ($request->column == 'customer_id') {
+            $records = SaleNote::where($request->column, '=', $request->value)
+                ->latest('id');
+            // dd(SaleNote::where($request->column, '=',$request->value)->toSql());
+        } else {
+            $records = SaleNote::where($request->column, 'like', "%{$request->value}%")->latest('id');
+        }
+
+        if ($request->series) {
+            $records = $records->where('series', 'like', '%' . $request->series . '%');
+        }
+        $records = $records->get();
+        $company = Company::active();
+        $establishment = Establishment::where('id', auth()->user()->establishment_id)->first();
+        return (new SaleNoteExport)
+                ->records($records)
+                ->company($company)
+                ->download('Reporte_Nota_de_Venta_'.Carbon::now().'.xlsx');
+    }
     public function records(Request $request)
     {
         if ($request->column == 'customer_id') {

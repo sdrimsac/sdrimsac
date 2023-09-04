@@ -103,17 +103,24 @@
                                 prefix-icon="el-icon-search"
                                 @input="getRecords"
                             >
-                                <i
-                                    slot="prefix"
-                                    class="el-icon-edit-outline"
-                                ></i
-                            ></el-input>
+                            </el-input>
                         </template>
                     </div>
                     <div class="col-md-2">
                         <el-tag>
                             Total por cobrar {{ saleNotesPending.toFixed(2) }}
                         </el-tag>
+                    </div>
+                    <div class="col-12">
+                        <el-button
+                            type="success"
+                            icon="el-icon-download"
+                            size="small"
+                            v-if="records.length > 0"
+                            @click="exportRecords"
+                        >
+                            Exportar
+                        </el-button>
                     </div>
                 </div>
             </div>
@@ -277,6 +284,12 @@ export default {
                 this.pagination.per_page * (this.pagination.current_page - 1) +
                 index +
                 1
+            );
+        },
+        exportRecords() {
+            window.open(
+                `/${this.resource}/excel?${this.getQueryParameters()}`,
+                "_blank"
             );
         },
         getRecords() {

@@ -2,6 +2,7 @@
 
 namespace Modules\Order\Http\Resources;
 
+use App\Models\Tenant\Establishment;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class DispatchResource extends JsonResource
@@ -43,8 +44,10 @@ class DispatchResource extends JsonResource
         if (in_array($this->state_type_id, ['05', '07'])) {
             $has_cdr = true;
         }
-
+        $establishment = Establishment::where('id', auth()->user()->establishment_id)->first();
+        $printer  = $establishment->printer;
         return [
+            'printerName' => $printer,
             'id' => $this->id,
             'external_id' => $this->external_id,
             'document_type_id' => $this->document_type_id,

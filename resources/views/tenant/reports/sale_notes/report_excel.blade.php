@@ -63,7 +63,7 @@
                             @foreach($records as $key => $value)
                             <tr>
                                 <td>{{$loop->iteration}}</td>
-                                <td>{{$value->date_of_issue</td>
+                                <td>{{$value->date_of_issue}}</td>
                                 <td>{{$value->customer->name}}</td>
                                 <td>{{$value->identifier}}</td>
                                 <td>{{$value->state_type->description}}</td>

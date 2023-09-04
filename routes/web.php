@@ -96,6 +96,7 @@ if ($hostname) {
                 Route::get('pos/table/{table}', [App\Http\Controllers\Tenant\PosController::class, 'table']);
                 Route::get('companies/record', [App\Http\Controllers\Tenant\CompanyController::class, 'record']);
                 Route::get('documents/records', [App\Http\Controllers\Tenant\DocumentController::class, 'records']);
+                Route::get('documents/excel', [App\Http\Controllers\Tenant\DocumentController::class, 'excel']);
 
 
                 Route::get('catalogs', [App\Http\Controllers\Tenant\CatalogController::class, 'index'])->name('tenant.catalogs.index')->middleware('just.admin');
@@ -543,6 +544,7 @@ if ($hostname) {
                 Route::get('sale-notes/columns2', [App\Http\Controllers\Tenant\SaleNoteController::class, 'columns2']);
 
                 Route::get('sale-notes/records', [App\Http\Controllers\Tenant\SaleNoteController::class, 'records']);
+                Route::get('sale-notes/excel', [App\Http\Controllers\Tenant\SaleNoteController::class, 'excel']);
                 Route::get('sale-notes/credit_pending', [App\Http\Controllers\Tenant\SaleNoteController::class, 'getCreditPending']);
                 Route::get('sale-notes/totals', [App\Http\Controllers\Tenant\SaleNoteController::class, 'totals']);
                 // Route::get('sale-notes/create', [App\Http\Controllers\Tenant\SaleNoteController::class, 'create'])->name('tenant.sale_notes.create']);

@@ -260,6 +260,15 @@
                             icon="el-icon-delete"
                             >Limpiar
                         </el-button>
+                        <el-button
+                            class="submit"
+                            type="success"
+                            v-if="records.length > 0"
+                            @click.prevent="exportRecords"
+                            icon="el-icon-download"
+                            >Exportar
+                        </el-button>
+
                     </div>
                 </div>
             </div>
@@ -467,6 +476,10 @@ export default {
             this.loading_submit = await true;
             await this.getRecords();
             this.loading_submit = await false;
+        },
+        exportRecords(){
+            let parameters = this.getQueryParameters();
+            window.open(`/${this.resource}/excel?${parameters}`, '_blank');
         },
         getRecords() {
             return this.$http

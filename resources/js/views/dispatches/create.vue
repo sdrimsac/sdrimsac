@@ -1,7 +1,9 @@
 <template>
     <div class="card mb-0 pt-2 pt-md-0">
         <div class="card-header bg-primary">
-            <h6 class="my-0 text-white">Nueva Guía de Remisión {{correlative}}</h6>
+            <h6 class="my-0 text-white">
+                Nueva Guía de Remisión {{ correlative }}
+            </h6>
         </div>
         <div class="card-body">
             <form autocomplete="off" @submit.prevent="submit">
@@ -988,6 +990,7 @@
         ></items>
 
         <dispatch-finish
+            :configuration="configuration"
             :recordId="recordId"
             :showClose="false"
             :send-sunat="send_sunat"
@@ -1059,7 +1062,8 @@ export default {
         ...mapState(["config", "item", "items", "all_items"])
     },
     data() {
-        return {correlative:null,
+        return {
+            correlative: null,
             can_add_new_product: false,
             showDialogNewItem: false,
             showDialogAddItems: false,
@@ -1177,22 +1181,29 @@ export default {
         });
     },
     methods: {
-        async getCorrelative(){
-            let {series} = this.form;
-            const response = await this.$http(`/dispatches/correlative/${series}`);
-            if(response.status == 200){
+        async getCorrelative() {
+            let { series } = this.form;
+            const response = await this.$http(
+                `/dispatches/correlative/${series}`
+            );
+            if (response.status == 200) {
                 let number = response.data;
 
                 let serie = `${series}-${number}`;
                 this.correlative = serie;
-
             }
         },
         ...mapActions(["loadItems", "loadConfiguration"]),
         initForm() {
             this.errors = {};
-            let customer_id = parseInt(this.config.establishment ? this.config.establishment.customer_id : null);
-            let establishment_id = parseInt(this.config.establishment ? this.config.establishment.id : null);
+            let customer_id = parseInt(
+                this.config.establishment
+                    ? this.config.establishment.customer_id
+                    : null
+            );
+            let establishment_id = parseInt(
+                this.config.establishment ? this.config.establishment.id : null
+            );
             if (isNaN(customer_id)) customer_id = null;
             if (isNaN(establishment_id)) establishment_id = null;
             this.form = {
@@ -1756,7 +1767,9 @@ export default {
                                 message: "Se registró correctamente"
                             });
                             this.$emit("records");
+
                             this.$emit("closeDispatch");
+                            this.showDialogFinish = true;
                         } else {
                             this.showDialogFinish = true;
                         }
@@ -1766,7 +1779,7 @@ export default {
                 })
                 .catch(error => {
                     this.loading_submit = false;
-console.log(error);
+                    console.log(error);
                     if (error.response.status === 422) {
                         this.errors = error.response.data;
                     } else {
