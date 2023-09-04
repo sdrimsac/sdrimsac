@@ -12,8 +12,8 @@ class ServiceData
 {
     public static function exchange_rate($date = null)
     {
-        $url_api_peru = "https://apiperu.dev/api";
-        $token_api_peru = "dd40073ec4429db30e520ee95a8a95dc72e181f3c4227b035e913d3e88b4d765";
+        $url_api_peru = config('app.api_peru_service_url');
+        $token_api_peru = config('app.api_peru_service_token');
         $full_url_api_peru = $url_api_peru . "/tipo_de_cambio";
 
         $fecha = $date ??  Carbon::now()->format('y-m-d');
@@ -36,10 +36,12 @@ class ServiceData
         // if($type=="ruc"){;
 
         //dd40073ec4429db30e520ee95a8a95dc72e181f3c4227b035e913d3e88b4d765
-        // $api_url = config('configuration.api_service_url');
-        // $token = config('configuration.api_service_token');
-        $url_api_peru = "https://apiperu.dev/api";
-        $token_api_peru = "dd40073ec4429db30e520ee95a8a95dc72e181f3c4227b035e913d3e88b4d765";
+        $url_api_peru = config('app.api_peru_service_url');
+        $token_api_peru = config('app.api_peru_service_token');
+        
+
+        // $url_api_peru = "https://apiperu.dev/api";
+        // $token_api_peru = "dd40073ec4429db30e520ee95a8a95dc72e181f3c4227b035e913d3e88b4d765";
         $full_url_api_peru = $url_api_peru . "/" . $type . "/" . $number . "?api_token=" . $token_api_peru;
         $client2 = new Client(['base_uri' => $full_url_api_peru, 'verify' => false]);
         $res2 = $client2->request('GET', $full_url_api_peru);
@@ -69,8 +71,10 @@ class ServiceData
         try {
             //91654192
             //$configuration = Configuration::first();
-            $api_url = config('configuration.api_service_url');
-            $token = config('configuration.api_service_token');
+            $api_url = config('app.api_peru_service_url');
+            $token = config('app.api_peru_service_token');
+            // $api_url = config('configuration.api_service_url');
+            // $token = config('configuration.api_service_token');
 
             $this->client = new Client(['base_uri' => $api_url, 'verify' => false, 'http_errors' => false]);
             $curl = [
