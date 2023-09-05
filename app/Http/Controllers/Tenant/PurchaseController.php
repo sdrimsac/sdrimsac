@@ -354,7 +354,7 @@ class PurchaseController extends Controller
                                 ->first();
 
                             if ($item_lot) {
-                                $message = "El lote {$lot['series']} ya existe en el sistema";
+                                $message = "La serie {$lot['series']} ya existe en el sistema";
                                 $has_error = true;
                                 DB::rollBack();
                                 break 2; // Salir de ambos bucles y terminar la transacción
