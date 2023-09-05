@@ -197,7 +197,7 @@ class RegisterEvent implements ShouldBroadcast
         } else {
             return [
                 "food" => $this->model->food->description,
-                "area" => $this->model->area->description,
+                "area" => $this->model->area ? $this->model->area->description : "Sin area",
                 "table" => $this->model->orden->mesa->number,
                 "quantity" => $this->model->quantity,
                 "price" => $this->model->price,
