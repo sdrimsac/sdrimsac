@@ -249,6 +249,7 @@
                 :dispatchId="dispatch_id"
                 :isContingency="false"
                 :showClose="true"
+                :configuration="configuration"
             >
             </document-options>
             <person-form
@@ -272,7 +273,7 @@ import PersonForm from "../../persons/form.vue";
 export default {
     components: { DocumentOptions, PersonForm },
 
-    props: ["showDialog", "recordId", "showClose", "showGenerate", "fromCaja"],
+    props: ["showDialog", "recordId", "showClose", "showGenerate", "fromCaja","configuration"],
     data() {
         return {
             titleDialog: null,
@@ -694,6 +695,7 @@ export default {
         },
 
         async create() {
+            console.log(this.configuration, " la configuracion");
             this.loading_documents = true;
             await this.$http
                 .get(`/${this.resource}/option/tables`)

@@ -394,6 +394,7 @@
         </document-print-previsualitation>
 
         <sale-note-generate
+        :configuration="configuration"
             :showDialog.sync="showDialogGenerate"
             :recordId="currentId"
             :showGenerate="true"

@@ -418,7 +418,9 @@ export default {
                     }
                 })
                 .catch(() => {
+                let url = window.location.origin;
                  let formatoPdf = `${url}/print/dispatch/${this.form.external_id}/${format}`;
+                 console.log(formatoPdf);
                     window.open(formatoPdf, "_blank");
                     this.clickClose();
                 });

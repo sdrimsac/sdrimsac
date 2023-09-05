@@ -155,7 +155,7 @@ class OrdenItemController extends Controller
 
     public function records()
     {
-        $date = Carbon::now()->format('Y-m-d');
+        // $date = Carbon::now()->format('Y-m-d');
 
         $ordens = new OrdenItemCollection(OrdenItem::where('status_orden_id', 1)->get());
 

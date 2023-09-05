@@ -408,6 +408,7 @@ export default {
                             .includes("ticket");
                         let isA4 = document.toLowerCase().includes("a4");
                         let isA5 = document.toLowerCase().includes("a5");
+                        console.log(this.configuration, " configuraccion");
                         let tipoBandejaImpresora = this.configuration.new_old_printer;
                         if (isA4) {
                             if (tipoBandejaImpresora == 1) {
