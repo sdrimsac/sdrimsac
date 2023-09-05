@@ -266,6 +266,7 @@ class WhatsappController extends Controller
         $number = $request->number;
         $from_server = $request->from_server ?? false;
         $file_name = (strpos($file_name, '.') !== false) ? $file_name : $file_name . ".pdf";
+       
         if ($from_server) {
 
             $content_file = file_get_contents($resource, 0, stream_context_create(["http" => ["timeout" => 60]]));

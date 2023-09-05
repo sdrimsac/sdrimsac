@@ -604,8 +604,13 @@ class DispatchController extends Controller
         $transports = (new TransportController())->getOptions();
         $dispatchers = (new DispatcherController())->getOptions();
         $related_document_types = RelatedDocumentType::get();
-
+        $series_dispatches = Series::where('document_type_id', '09')->get();
+        $last_numbers = [];
+        foreach ($series_dispatches as $series_dispatch) {
+            $last_numbers[$series_dispatch->number] = $this->getCorrelative($series_dispatch->number);
+        }
         return compact(
+            'last_numbers',
             'establishments',
             'customers',
             'series',
@@ -627,7 +632,7 @@ class DispatchController extends Controller
             'itemsFromSummary'
         );
     }
-
+  
     public function downloadExternal($type, $external_id)
     {
         $retention = Dispatch::where('external_id', $external_id)->first();

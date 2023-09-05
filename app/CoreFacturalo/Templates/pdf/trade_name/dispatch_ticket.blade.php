@@ -329,7 +329,7 @@
 
     @endif
 
-    @if ($document->reference_sale_note_id)
+    {{-- @if ($document->reference_sale_note_id)
         <table class="full-width border-box">
             @if ($document->sale_note)
                 <tr>
@@ -340,7 +340,7 @@
                 </tr>
             @endif
         </table>
-    @endif
+    @endif --}}
 
     @if ($document->qr)
         <table class="full-width">

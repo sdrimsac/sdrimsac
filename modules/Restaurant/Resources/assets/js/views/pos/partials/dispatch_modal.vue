@@ -27,6 +27,7 @@
                         <th>Fecha</th>
                         <th>Numero</th>
                         <th>Cliente</th>
+                        <th>Documento afectado</th>
                         <th>Estado</th>
                         <th>Acciones</th>
                     </tr>
@@ -43,6 +44,15 @@
                             {{ record.customer_name }}
                         </td>
                         <td>
+                            {{
+                                record.documents.length > 0
+                                    ? record.documents
+                                          .map(r => r.description)
+                                          .join(",")
+                                    : ""
+                            }}
+                        </td>
+                        <td>
                             {{ record.state_type_description }}
                         </td>
                         <td>
@@ -53,6 +63,13 @@
                             >
                                 <i class="fas fa-file"></i>
                                 A4
+                            </el-button>
+                            <el-button
+                                type="success"
+                                size="mini"
+                                @click="whatsapp(record)"
+                            >
+                                <i class="fab fa-whatsapp"></i>
                             </el-button>
                         </td>
                     </tr>
@@ -71,7 +88,14 @@
                 :configuration="configuration"
                 :pos="true"
             ></dispatch-create>
+            
         </el-dialog>
+        <whatsapp-modal
+                :resource="linkResource"
+                :message="message"
+                :showWhatsappForm.sync="showWhatsappForm"
+            >
+            </whatsapp-modal>
     </el-dialog>
 </template>
 <style>
@@ -83,23 +107,43 @@
 }
 </style>
 <script>
+const WhatsappModal = () =>
+    import(
+        "../../../../../../../../resources/js/components/WhatsappModalReports.vue"
+    );
 const DispatchCreate = () =>
     import("../../../../../../../../resources/js/views/dispatches/create.vue");
 
 export default {
     props: ["showDialog", "configuration"],
     components: {
-        DispatchCreate
+        DispatchCreate,
+        WhatsappModal
     },
     data() {
         return {
             showCreate: false,
             loading: false,
             resource: "dispatches",
-            records: []
+            records: [],
+            linkResource: null,
+            message: null,
+            showWhatsappForm:false
         };
     },
     methods: {
+        whatsapp(record) {
+            let { external_id } = record;
+            let formatoPdf = `/print/dispatch/${external_id}/ticket`;
+            this.linkResource = formatoPdf;
+            this.message =  "Su comprobante electrónico *" +
+                        record.number +
+                        "*, ha sido generado correctamente a través del facturador electrónico de " +
+                        "*" +
+                        this.$desarrollador +
+                        "*"
+            this.showWhatsappForm = true;
+        },
         openPdf(record, format) {
             window.open(
                 `/print/dispatch/${record.external_id}/${format}`,

@@ -695,7 +695,6 @@ export default {
         },
 
         async create() {
-            console.log(this.configuration, " la configuracion");
             this.loading_documents = true;
             await this.$http
                 .get(`/${this.resource}/option/tables`)

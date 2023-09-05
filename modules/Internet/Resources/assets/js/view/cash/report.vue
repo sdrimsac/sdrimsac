@@ -341,7 +341,7 @@ export default {
         openWhastappForm() {
             this.messageReport = `Reporte de ganancias ${this.form.date_start
                 } ${this.form.date_end ? this.form.date_end : ""}`;
-            console.log(this.messageReport);
+           
             this.resourceReport = `/${this.resource
                 }/report/pdf?${this.getQueryParameters()}`;
                 console.log(this.resourceReport);

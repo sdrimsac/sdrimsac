@@ -55,7 +55,7 @@
                                     <el-option
                                         v-for="(option, idx) in series"
                                         :key="idx"
-                                        :label="option.number"
+                                        :label="option.correlative"
                                         :value="option.number"
                                     ></el-option>
                                 </el-select>
@@ -1113,7 +1113,8 @@ export default {
             delivery: null,
             delivery_addresses: [],
             origin_addresses: [],
-            send_sunat: false
+            send_sunat: false,
+            last_numbers:[],
         };
     },
     created() {
@@ -1132,6 +1133,7 @@ export default {
         await this.$http
             .post(`/${this.resource}/tables`, payload)
             .then(response => {
+                this.last_numbers = response.data.last_numbers;
                 this.company = response.data.company;
                 this.identityDocumentTypes =
                     response.data.identityDocumentTypes;
@@ -1514,6 +1516,12 @@ export default {
                 this.series = _.filter(this.seriesAll, {
                     establishment_id: this.form.establishment_id,
                     document_type_id: this.form.document_type_id
+                });
+                this.series = this.series.map(s => {
+                    return {
+                        ...s,
+                        correlative: `${s.number}-${this.last_numbers[s.number]}`
+                    };
                 });
                 await this.getOriginAddresses(this.form.establishment_id);
             }
