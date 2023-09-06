@@ -16,6 +16,7 @@
                 @closeDispatch="close"
                 :configuration="configuration"
                 :pos="true"
+                ref="dispatchCreate"
 
             ></dispatch-create>
     </el-dialog>
@@ -60,6 +61,10 @@ export default {
         },
         async open(){
             await this.getData();
+            let parentId = this.$refs.dispatchCreate.parentId;
+            console.log(parentId);
+            console.log(parentId == this.parentId);
+            this.$refs.dispatchCreate.mountedMethod();
         }
     }
 }

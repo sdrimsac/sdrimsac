@@ -992,7 +992,7 @@
         <dispatch-finish
             :configuration="configuration"
             :recordId="recordId"
-            :showClose="false"
+            :showClose="pos"
             :send-sunat="send_sunat"
             :showDialog.sync="showDialogFinish"
         ></dispatch-finish>
@@ -1124,7 +1124,13 @@ export default {
         this.canCreateProduct();
     },
     async mounted() {
-        const itemsFromSummary = localStorage.getItem("items");
+        if(!this.pos){
+            await this.mountedMethod();
+        }
+    },
+    methods: {
+        async mountedMethod(){
+             const itemsFromSummary = localStorage.getItem("items");
         const payload = {};
         if (itemsFromSummary) {
             const items = JSON.parse(itemsFromSummary);
@@ -1181,8 +1187,7 @@ export default {
         this.$eventHub.$on("initInputPerson", () => {
             this.initInputPerson();
         });
-    },
-    methods: {
+        },
         async getCorrelative() {
             let { series } = this.form;
             const response = await this.$http(
@@ -1485,7 +1490,7 @@ export default {
             }
         },
         setDefaultCustomer() {
-            if (this.config.establishment.customer_id) {
+            if (this.config.establishment && this.config.establishment.customer_id) {
                 let temp_customers = this.customers;
                 let customer_id = this.config.establishment.customer_id;
                 let custom = temp_customers.find(l => l.id == customer_id);
@@ -1523,6 +1528,9 @@ export default {
                         correlative: `${s.number}-${this.last_numbers[s.number]}`
                     };
                 });
+                if(this.series.length > 0){
+                    this.form.series = this.series[0].number;
+                }
                 await this.getOriginAddresses(this.form.establishment_id);
             }
         },

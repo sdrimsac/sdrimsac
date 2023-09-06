@@ -179,7 +179,6 @@
 export default {
     props: [
         "showDialog",
-
         "configuration",
         "recordId",
         "sendSunat",
