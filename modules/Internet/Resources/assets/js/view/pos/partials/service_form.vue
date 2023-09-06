@@ -183,6 +183,7 @@ export default {
 
     data() {
         return {
+            creditOldPlan:0,
             payments: [],
             passedDays: 0,
             leftDays: 0,
@@ -251,7 +252,7 @@ export default {
         },
         observationChange() {
             let [toPay] = this.calculateRestPlan();
-            let observation = `CAMBIO DE PLAN: ${toPay} RESTA PAGAR DEL PLAN ANTERIOR\n`;
+            let observation = `CAMBIO DE PLAN: ${toPay} PLAN ANTERIOR\n`;
             return observation;
         },
         changeConcept() {
@@ -600,11 +601,9 @@ export default {
             let endDate = moment(month.end_date).startOf("day");
             let startDate = moment(month.start_date).startOf("day");
             let passed_days = endDate.diff(startDate, "days");
-            let left_days = endDate.diff(today, "days"); // devuelve 1
-
+            let left_days = endDate.diff(today, "days");
             let totalPerDay = total / passed_days;
-            let toPay = totalPerDay * (passed_days - left_days);
-
+            let toPay = totalPerDay * (passed_days-left_days);
 
             return [toPay.toFixed(2), left_days, passed_days];
         },
@@ -641,7 +640,8 @@ export default {
                 item.percentage_igv = 18;
                 item.descriptionInternet = name + " (Saldo plan anterior)";
                 items.push(item);
-                let observation = `CAMBIO DE PLAN: ${toPay} RESTA PAGAR DEL PLAN ANTERIOR`;
+                this.creditOldPlan = toPay;
+                let observation = `CREDITO: ${toPay} DEL PLAN ANTERIOR`;
                 this.$emit("updateObservation", observation);
             }
             if (incomplete) {
@@ -677,7 +677,8 @@ export default {
 
             if (this.updatePlan) {
                 let perDay = this.newPlanCost / this.passedDays;
-                let toPay = perDay * this.leftDays;
+                let days = this.passedDays - this.leftDays;
+                let toPay = perDay * days;
                 form = {
                     rest: toPay,
                     operation_id: this.plan.operation_id,
@@ -692,9 +693,14 @@ export default {
                 ) {
                     let obs = this.observationChange();
                     let perDay = this.newPlanCost / this.passedDays;
+                    console.log("🚀 ~ file: service_form.vue:696 ~ updateTotal ~ this.newPlanCost:", this.newPlanCost)
                     let toPay = perDay * this.leftDays;
                     toPay = toPay.toFixed(2);
-                    obs += `SALDO RESTANTE NUEVO PLAN ${toPay}\n`;
+                    console.log("🚀 ~ file: service_form.vue:699 ~ updateTotal ~ toPay:", toPay)
+                    console.log("🚀 ~ file: service_form.vue:702 ~ updateTotal ~ creditOldPlan:", this.creditOldPlan)
+                    obs += `SALDO RESTANTE NUEVO PLAN ${toPay}\n
+                    TOTAL A PAGAR ${this.newPlanCost - (this.creditOldPlan - toPay)}
+                    `;
                     this.$emit("updateObservation", obs);
                 }
             }
