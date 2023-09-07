@@ -8,8 +8,10 @@
         v-loading="loading"
         :title="title"
         width="75%"
+        class="no_break_word"
     >
-        <table class="table table-striped">
+    <div class="table-responsive">
+              <table class="table table-striped">
             <thead>
                 <tr>
                     <th>#</th>
@@ -62,6 +64,7 @@
                 </tr>
             </tbody>
         </table>
+    </div>
         <payment-college
             type="incomplete"
             :plan="planForm"
@@ -81,7 +84,11 @@
         </show-payments-form>
     </el-dialog>
 </template>
-
+<style>
+.el-dialog__body{
+    word-break: normal;
+}
+</style>
 <script>
 import moment from "moment";
 const PaymentCollege = () => import("../components/payment_college.vue");

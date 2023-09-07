@@ -7,6 +7,7 @@ use App\Http\Controllers\Tenant\ItemController;
 use App\Http\Controllers\Tenant\TollController;
 use App\Http\Controllers\Tenant\WhatsappController;
 use App\Http\Controllers\Tenant\PurchaseController;
+use App\Http\Controllers\Tenant\SellerController;
 use App\Models\Tenant\Dispatch;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -43,6 +44,11 @@ if ($hostname) {
 
             Route::middleware(['auth', 'redirect.module', 'locked.tenant'])->group(function () {
 
+                Route::prefix('/sellers')->group(function () {
+                    //
+                    Route::get('/', [SellerController::class, 'index'])->name('tenant.sellers.index');
+                    Route::get('/records', [SellerController::class, 'records']);
+                });
                 Route::prefix('/registers')->group(function () {
                     Route::get('/', [App\Http\Controllers\Tenant\RegisterController::class, 'index'])->name('tenant.registers.index');
                     Route::get('/records', [App\Http\Controllers\Tenant\RegisterController::class, 'records']);
@@ -282,7 +288,7 @@ if ($hostname) {
                 Route::post('client_zones', [ClientZoneController::class, 'store']);
                 Route::get('client_zones/active/{id}', [ClientZoneController::class, 'active_desactive']);
                 Route::delete('client_zones/delete/{id}', [ClientZoneController::class, 'destroy']);
-                Route::get('purchases/search-items', [PurchaseController::class,'searchItems']);
+                Route::get('purchases/search-items', [PurchaseController::class, 'searchItems']);
 
                 //Persons
                 Route::get('filtrar_distritos/records', [App\Http\Controllers\Tenant\PersonController::class, 'distritos']);
@@ -307,7 +313,7 @@ if ($hostname) {
                 Route::post('documents/categories', [App\Http\Controllers\Tenant\DocumentController::class, 'storeCategories']);
                 Route::post('documents/brands', [App\Http\Controllers\Tenant\DocumentController::class, 'storeBrands']);
                 Route::get('documents/data_table', [App\Http\Controllers\Tenant\DocumentController::class, 'data_table']);
-            
+
 
                 Route::get('documents/notpayment', [App\Http\Controllers\Tenant\DocumentController::class, 'notpayment']);
 
@@ -411,7 +417,7 @@ if ($hostname) {
                     Route::post('/tables', [App\Http\Controllers\Tenant\DispatchController::class, 'tables']);
                     Route::post('/', [App\Http\Controllers\Tenant\DispatchController::class, 'store']);
                     Route::get('/record/{id}', [DispatchController::class, 'record']);
-                    Route::get('/correlative/{serie}',[DispatchController::class, 'getCorrelative']);
+                    Route::get('/correlative/{serie}', [DispatchController::class, 'getCorrelative']);
                     Route::post('/sendSunat/{document}', [DispatchController::class, 'sendDispatchToSunat']);
                     Route::post('/email', [DispatchController::class, 'email']);
                     Route::get('/generate/{sale_note}', [DispatchController::class, 'generate']);
@@ -720,16 +726,16 @@ if ($hostname) {
         }
     );
 } else {
-    $prefix = env('PREFIX_URL',null);
-    $prefix = !empty($prefix)?$prefix.".":'';
-    $app_url = $prefix. env('APP_URL_BASE');
+    $prefix = env('PREFIX_URL', null);
+    $prefix = !empty($prefix) ? $prefix . "." : '';
+    $app_url = $prefix . env('APP_URL_BASE');
 
     Route::domain($app_url)->group(function () {
         Route::get('login', 'System\LoginController@showLoginForm')->name('login');
         Route::post('login', 'System\LoginController@login');
         Route::post('logout', 'System\LoginController@logout')->name('logout');
         Route::get('phone', 'System\UserController@getPhone');
- 
+
 
         Route::middleware('auth:admin')->group(function () {
             Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
@@ -859,9 +865,6 @@ if ($hostname) {
                 }
             });
             */
-
-
-
         });
     });
 }

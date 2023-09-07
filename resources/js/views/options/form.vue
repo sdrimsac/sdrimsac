@@ -26,7 +26,7 @@
                     </div>
                 </div>
             </div>
-            <br />
+            <!-- <br />
             <div class="col-md-12">
                 <el-button
                     type="primary"
@@ -34,7 +34,7 @@
                     @click="sendItemWarehouse"
                     >Mandar stock a almacen 1</el-button
                 >
-            </div>
+            </div> -->
             <!--<form autocomplete="off" @submit.prevent="consultVoided">
                 <div class="form-body">
                     <div class="row">

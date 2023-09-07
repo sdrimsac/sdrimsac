@@ -205,8 +205,8 @@ export default {
     methods: {
         validate() {
             let flag = true;
-            if (this.tasaInteres == 0) {
-                this.$toast.error("La tasa de interes no puede ser 0");
+            if (this.tasaInteres < 0) {
+                this.$toast.error("La tasa de interes no puede ser negativa");
                 flag = false;
             }
             if (this.credit.advances > this.form.total) {

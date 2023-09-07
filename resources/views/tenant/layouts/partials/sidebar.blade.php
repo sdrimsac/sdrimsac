@@ -146,18 +146,17 @@
                 <ul id="restaurantComponents" class="collapse ">
 
                     @if ($config->users_views)
-                    
-                    <li>
-                        <a class="{{ $path[0] === 'caja' && $path[1] === 'workers' ? 'active' : '' }}"
-                        href="{{ route('restaurant.workers') }}">
-                        <i class="icofont-users-alt-1"></i> Usuarios
-                    </a>
-                </li>
-                @endif
+                        <li>
+                            <a class="{{ $path[0] === 'caja' && $path[1] === 'workers' ? 'active' : '' }}"
+                                href="{{ route('restaurant.workers') }}">
+                                <i class="icofont-users-alt-1"></i> Usuarios
+                            </a>
+                        </li>
+                    @endif
                     {{-- <li>
-                <a class="{{$path[0] === 'items' && $path[1] === ''  ? 'active' : '' }}"
-                    href="{{ route('tenant.documents_identity.index') }}">
-                    <i class="icofont-id-card"></i>  Tipo de documentos
+                <a class="{{$path[0] === 'sellers' && $path[1] === ''  ? 'active' : '' }}"
+                    href="{{ route('tenant.sellers.index') }}">
+                    <i class="icofont-id-card"></i>  Vendedores
                 </a>
             </li> --}}
                     <li>

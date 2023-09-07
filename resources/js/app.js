@@ -878,7 +878,13 @@ const app = new Vue({
             import(
                 /*webpackChunkName:"reporte-series-vendidas"*/
                 "../../modules/Inventory/Resources/assets/js/series/reporteSeriesSell.vue"
+            ),
+            "tenant-sellers-index": () =>
+            import(
+                /*webpackChunkName:"reporte-series-vendidas"*/
+                "./views/sellers/index.vue"
             )
+            
     },
  
 });

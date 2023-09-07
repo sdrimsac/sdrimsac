@@ -6,8 +6,7 @@
         @open="open"
         @close="close"
     >
-        <div class="card">
-            <div class="row mt-5">
+            <div class="row mt-5 table-responsive">
                 <table v-if="payments.length > 0" class="table table-striped">
                     <thead>
                         <tr>
@@ -64,7 +63,6 @@
                     <span>SIN PAGOS MENSUALES</span>
                 </div>
             </div>
-        </div>
     </el-dialog>
 </template>
 
