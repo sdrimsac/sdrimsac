@@ -216,23 +216,22 @@
                         </small>
                     </div>
                     <div class="col-md-3">
-                        <label class="control-label"
-                            >Precio de venta</label
-                        >
+                        <label class="control-label">Precio de venta</label>
                         <el-input
-                        
                             style="width:100%;"
                             v-model="form.sale_unit_price"
                         >
                         </el-input>
-                    
                     </div>
                     <div class="col-md-3 " v-if="noIsUnid">
                         <label class="control-label">Cantidad total</label>
                         <el-input readonly v-model="form.real_quantity">
                         </el-input>
                     </div>
-                    <div class="col-md-6 mt-2" v-if="form.item_id">
+                    <div
+                        class="col-md-6 mt-2"
+                        v-if="form.item && form.item.lots_enabled"
+                    >
                         <div
                             class="form-group"
                             :class="{ 'has-danger': errors.lot_code }"
@@ -258,7 +257,7 @@
                     <div
                         style="padding-top: 1%;"
                         class="col-md-3"
-                        v-show="form.item_id"
+                        v-if="form.item && form.item.lots_enabled"
                     >
                         <div
                             class="form-group"
@@ -288,28 +287,54 @@
                             :class="{ 'has-danger': errors.lot_code }"
                             v-if="form.item.series_enabled"
                         >
-                            <label class="control-label w-100" >
-                                <!-- <el-checkbox v-model="enabled_lots"  @change="changeEnabledPercentageOfProfit">Código lote</el-checkbox> -->
-                                Ingrese series
-                            </label>
+                            <div class="d-flex">
+                                <div class="col-md-6">
+                                    <label class="control-label w-100">
+                                        <!-- <el-checkbox v-model="enabled_lots"  @change="changeEnabledPercentageOfProfit">Código lote</el-checkbox> -->
+                                        Ingrese series
+                                    </label>
 
-                            <el-button
-                                style="margin-top:2%;"
-                                type="primary"
-                                icon="el-icon-edit-outline"
-                                @click.prevent="clickLotcode"
-                            ></el-button>
+                                    <el-button
+                                        style="margin-top:2%;"
+                                        type="primary"
+                                        icon="el-icon-edit-outline"
+                                        @click.prevent="clickLotcode"
+                                    ></el-button>
 
-                            <small
-                                class="form-control-feedback"
-                                v-if="errors.lot_code"
-                                v-text="errors.lot_code[0]"
-                            ></small>
+                                    <small
+                                        class="form-control-feedback"
+                                        v-if="errors.lot_code"
+                                        v-text="errors.lot_code[0]"
+                                    ></small>
+                                </div>
+                                <div>
+                                    <label class="control-label w-100">
+                                        Subir excel
+                                    </label>
+
+                                    <el-button
+                                        style="margin-top:2%;"
+                                        type="primary"
+                                        icon="el-icon-tickets"
+                                        @click.prevent="$refs.file.click()"
+                                    ></el-button>
+                                    <input
+                                        type="file"
+                                        @change="uploadExcel"
+                                        style="visibility:hidden;"
+                                        ref="file"
+                                        accept=".xlsx,.xls"
+                                    />
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div
                         class="col-md-12"
-                        v-if="form.item_unit_types.length > 0"
+                        v-if="
+                            form.item_unit_types &&
+                                form.item_unit_types.length > 0
+                        "
                     >
                         <div style="margin:3px" class="table-responsive">
                             <h6 class="separator-title">
@@ -373,117 +398,6 @@
                             </table>
                         </div>
                     </div>
-                    <!-- <div class="col-md-12 mt-3">
-                        <section class="card mb-2 card-transparent card-collapsed" id="card-section">
-                                <header class="card-header hoverable bg-light border-top rounded-0 py-1" data-card-toggle style="cursor: pointer;" id="card-click">
-                                    <div class="card-actions" style="margin-top: -12px;">
-                                        <a href="#" class="card-action card-action-toggle text-info" data-card-toggle=""></a>
-                                    </div>
-
-                                    <p class="pl-1">Información adicional atributos UBL 2.1</p>
-                                </header>
-                                <div class="card-body px-0 pt-2" style="display: none;">
-                                    <div class="col-md-12 px-0" v-if="discount_types.length > 0">
-                                        <label class="control-label">
-                                            Descuentos
-                                            <a href="#" @click.prevent="clickAddDiscount">[+ Agregar]</a>
-                                        </label>
-                                        <table class="table">
-                                            <thead>
-                                            <tr>
-                                                <th>Tipo</th>
-                                                <th>Descripción</th>
-                                                <th>Porcentaje</th>
-                                                <th></th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                            <tr v-for="(row, index) in form.discounts">
-                                                <td>
-                                                    <el-select v-model="row.discount_type_id" @change="changeDiscountType(index)">
-                                                        <el-option v-for="option in discount_types" :key="option.id" :value="option.id" :label="option.description"></el-option>
-                                                    </el-select>
-                                                </td>
-                                                <td>
-                                                    <el-input v-model="row.description"> <i slot="prefix" class="el-icon-edit-outline"></i></el-input>
-                                                </td>
-                                                <td>
-                                                    <el-input v-model="row.percentage"> <i slot="prefix" class="el-icon-edit-outline"></i></el-input>
-                                                </td>
-                                                <td>
-                                                    <button type="button" class="btn btn-danger" @click.prevent="clickRemoveDiscount(index)">x</button>
-                                                </td>
-                                            </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <div class="col-md-12 px-0" v-if="charge_types.length > 0">
-                                        <label class="control-label">
-                                            Cargos
-                                            <a href="#" @click.prevent="clickAddCharge">[+ Agregar]</a>
-                                        </label>
-                                        <table class="table">
-                                            <thead>
-                                            <tr>
-                                                <th>Tipo</th>
-                                                <th>Descripción</th>
-                                                <th>Porcentaje</th>
-                                                <th></th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                            <tr v-for="(row, index) in form.charges">
-                                                <td>
-                                                    <el-select v-model="row.charge_type_id" @change="changeChargeType(index)">
-                                                        <el-option v-for="option in charge_types" :key="option.id" :value="option.id" :label="option.description"></el-option>
-                                                    </el-select>
-                                                </td>
-                                                <td>
-                                                    <el-input v-model="row.description"> <i slot="prefix" class="el-icon-edit-outline"></i></el-input>
-                                                </td>
-                                                <td>
-                                                    <el-input v-model="row.percentage"> <i slot="prefix" class="el-icon-edit-outline"></i></el-input>
-                                                </td>
-                                                <td>
-                                                    <button type="button" class="btn btn-danger" @click.prevent="clickRemoveCharge(index)">x</button>
-                                                </td>
-                                            </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <div class="col-md-12 px-0" v-if="attribute_types.length > 0">
-                                        <label class="control-label">
-                                            Atributos
-                                            <a href="#" @click.prevent="clickAddAttribute">[+ Agregar]</a>
-                                        </label>
-                                        <table class="table">
-                                            <thead>
-                                            <tr>
-                                                <th>Tipo</th>
-                                                <th>Descripción</th>
-                                                <th></th>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                            <tr v-for="(row, index) in form.attributes">
-                                                <td>
-                                                    <el-select v-model="row.attribute_type_id" filterable @change="changeAttributeType(index)">
-                                                        <el-option v-for="option in attribute_types" :key="option.id" :value="option.id" :label="option.description"></el-option>
-                                                    </el-select>
-                                                </td>
-                                                <td>
-                                                    <el-input v-model="row.value"> <i slot="prefix" class="el-icon-edit-outline"></i></el-input>
-                                                </td>
-                                                <td>
-                                                    <button type="button" class="btn btn-danger" @click.prevent="clickRemoveAttribute(index)">x</button>
-                                                </td>
-                                            </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                        </section>
-                    </div> -->
                 </div>
             </div>
             <div class="form-actions text-end pt-2 pb-2">
@@ -518,6 +432,8 @@
 import itemForm from "../../items/form.vue";
 import { calculateRowItem } from "../../../helpers/functions";
 import LotsForm from "../../items/partials/lots.vue";
+import readXlsxFile from "read-excel-file";
+import moment from "moment";
 
 export default {
     props: [
@@ -576,6 +492,31 @@ export default {
         });
     },
     methods: {
+        uploadExcel(event) {
+   
+            let file = event.target.files[0];
+            readXlsxFile(file).then(rows => {
+                //skip header
+                rows.shift();
+                // `rows` is an array of rows
+                // each row being an array of cells.
+
+                this.lots = rows.map(row => {
+                    let date = moment(row[1])
+                        .add(5, "hours")
+                        .format("YYYY-MM-DD");
+
+
+                    return {
+                        series: row[0],
+                        date: date,
+                        state: "Activo"
+                    };
+                });
+                this.form.quantity = this.lots.length;
+                event.target.value = "";
+            });
+        },
         async searchItems() {
             if (this.changing_name) return (this.changing_name = false);
             let input = this.input_barcode;
@@ -609,8 +550,6 @@ export default {
             this.items = this.all_items;
         },
         async searchRemoteItems(input) {
-            console.log(input);
-
             if (input.length > 2) {
                 this.loading_search = true;
                 let parameters = `input=${input}`;
@@ -649,7 +588,9 @@ export default {
             this.showDialogLots = true;
         },
         filterItems() {
-            this.items = this.items.filter(item => item.warehouses.length > 0);
+            this.items = this.items.filter(
+                item => item.warehouses && item.warehouses.length > 0
+            );
         },
         addRowItems(row) {
             this.form.item_id = row.id;

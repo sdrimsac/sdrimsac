@@ -350,10 +350,12 @@ class PurchaseController extends Controller
                         foreach ($row['lots'] as $lot) {
                             // Verificar si el lote existe en la tabla item_lots
                             $item_lot = ItemLot::where('series', $lot['series'])
-                                ->where('item_id', $row['item_id'])
-                                ->first();
+                            ->where('item_id', $row['item_id'])
+                            ->whereRaw('LENGTH(series) = ?', [strlen($lot['series'])])
+                            ->first();
 
                             if ($item_lot) {
+                             
                                 $message = "La serie {$lot['series']} ya existe en el sistema";
                                 $has_error = true;
                                 DB::rollBack();
