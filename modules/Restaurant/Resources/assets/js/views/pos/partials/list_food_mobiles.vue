@@ -332,9 +332,9 @@ export default ({
             let currentPriceIndx = listPricesDescription[type.price_default - 1];
             let price = type[currentPriceIndx];
             if (type.total == null) {
-                this.$toast.error(
-                    "Politica de precio sin total: Tomando precio unitario.."
-                );
+                // this.$toast.error(
+                //     "Politica de precio sin total: Tomando precio unitario.."
+                // );
             } else {
                 price = Number(type.total);
             }

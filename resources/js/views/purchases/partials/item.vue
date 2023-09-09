@@ -288,7 +288,7 @@
                             :class="{ 'has-danger': errors.lot_code }"
                             v-if="form.item.series_enabled"
                         >
-                            <label class="control-label">
+                            <label class="control-label w-100" >
                                 <!-- <el-checkbox v-model="enabled_lots"  @change="changeEnabledPercentageOfProfit">Código lote</el-checkbox> -->
                                 Ingrese series
                             </label>
