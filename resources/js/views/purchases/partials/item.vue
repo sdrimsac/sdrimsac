@@ -310,6 +310,9 @@
                                 <div>
                                     <label class="control-label w-100">
                                         Subir excel
+
+                                        <a href="/formats/series_compras.xlsx"
+                                            >Descargar formato</a>
                                     </label>
 
                                     <el-button
@@ -505,6 +508,7 @@ export default {
                     let date = moment(row[1])
                         .add(5, "hours")
                         .format("YYYY-MM-DD");
+
 
 
                     return {
