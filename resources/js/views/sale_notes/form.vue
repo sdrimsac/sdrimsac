@@ -65,15 +65,13 @@
                                                         >Vendedor</label
                                                     >
                                                     <el-select
-                                                        v-model="form.user_id"
+                                                        v-model="form.seller_id"
                                                         filterable
-                                                        @change="
-                                                            filterCustomersUser()
-                                                        "
+                                                    
                                                     >
                                                         <el-option
-                                                            v-for="option in array_users"
-                                                            :key="option.id"
+                                                            v-for="(option,idx) in sellers"
+                                                            :key="idx"
                                                             :value="option.id"
                                                             :label="option.name"
                                                         ></el-option>
@@ -1188,7 +1186,8 @@ export default {
             editSale: false,
             tasa_interes: 0,
             tasaInteres: 0,
-            disabled_month: true
+            disabled_month: true,
+            sellers: [],
         };
     },
     async created() {
@@ -1273,6 +1272,8 @@ export default {
         },
         async getTables() {
             await this.$http.get(`/${this.resource}/tables`).then(response => {
+                console.log(response);
+                this.sellers = response.data.sellers;
                 this.currency_types = response.data.currency_types;
                 this.establishments = response.data.establishments;
                 this.all_customers = response.data.customers;

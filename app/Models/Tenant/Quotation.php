@@ -19,7 +19,7 @@ class Quotation extends ModelTenant
         'soap_type_id',
         'state_type_id',
         'payment_method_type_id',
-
+        'seller_id',
         'prefix',
 
         'date_of_issue',

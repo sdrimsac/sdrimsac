@@ -32,6 +32,7 @@ use Modules\Restaurant\Models\OrdenItem;
 use Modules\Restaurant\Events\StockEvent;
 use App\Models\Tenant\Item;
 use App\Models\Tenant\ItemWarehouse;
+use App\Models\Tenant\Seller;
 use Barryvdh\DomPDF\Facade as PDF;
 use Exception;
 use Modules\Item\Models\CategoryItem;
@@ -401,7 +402,7 @@ class PosController extends Controller
         $establishment = Establishment::find($user->establishment_id);
         $gruop = Group::all();
         //buscar productos del establecimiento, y preguntar
-
+        $sellers = Seller::where('establishment_id', $user->establishment_id)->get();
         $category = Category::all();
         $subcategory = Subcategory::all();
         $company = Company::first();

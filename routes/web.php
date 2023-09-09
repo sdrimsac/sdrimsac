@@ -48,6 +48,9 @@ if ($hostname) {
                     //
                     Route::get('/', [SellerController::class, 'index'])->name('tenant.sellers.index');
                     Route::get('/records', [SellerController::class, 'records']);
+                    Route::get('/record/{id}', [SellerController::class, 'record']);
+                    Route::get('/tables', [SellerController::class, 'tables']);
+                    Route::post('/', [SellerController::class, 'store']);
                 });
                 Route::prefix('/registers')->group(function () {
                     Route::get('/', [App\Http\Controllers\Tenant\RegisterController::class, 'index'])->name('tenant.registers.index');

@@ -70,6 +70,7 @@ use App\Exports\SaleNoteExport;
 use App\Models\Tenant\Cash;
 use App\Models\Tenant\ItemUnitType;
 use App\Models\Tenant\SaleNoteCredit;
+use App\Models\Tenant\Seller;
 use Modules\Restaurant\Events\OrdenReadyEvent;
 use Modules\Restaurant\Models\OrdenItem;
 use Modules\Restaurant\Models\Table;
@@ -136,7 +137,7 @@ class SaleNoteController extends Controller
             'date_of_issue' => 'Fecha de emisión',
             'customer_id' => 'Cliente',
             'state_type_id' => 'Estado Comprobante',
-            'user_id' => 'Asesor - Vendedor',
+            'seller_id' => 'Asesor - Vendedor',
         ];
     }
 
@@ -147,7 +148,8 @@ class SaleNoteController extends Controller
         ];
     }
 
-    public function excel(Request $request){
+    public function excel(Request $request)
+    {
         if ($request->column == 'customer_id') {
             $records = SaleNote::where($request->column, '=', $request->value)
                 ->latest('id');
@@ -163,9 +165,9 @@ class SaleNoteController extends Controller
         $company = Company::active();
         $establishment = Establishment::where('id', auth()->user()->establishment_id)->first();
         return (new SaleNoteExport)
-                ->records($records)
-                ->company($company)
-                ->download('Reporte_Nota_de_Venta_'.Carbon::now().'.xlsx');
+            ->records($records)
+            ->company($company)
+            ->download('Reporte_Nota_de_Venta_' . Carbon::now() . '.xlsx');
     }
     public function records(Request $request)
     {
@@ -242,6 +244,7 @@ class SaleNoteController extends Controller
 
     public function tables()
     {
+        $sellers = Seller::where('establishment_id', auth()->user()->establishment_id)->get();
         $customers = $this->table('customers');
         $establishments = Establishment::where('id', auth()->user()->establishment_id)->get();
         $currency_types = CurrencyType::whereActive()->get();
@@ -251,7 +254,7 @@ class SaleNoteController extends Controller
         $tasa_interes = $configuration->rates;
         $company = Company::active();
         $payment_method_types = PaymentMethodType::where('active', 1)->get();
-        $users =User::where('active',1)->get();
+        $users = User::where('active', 1)->get();
         $user_select = User::select('id')->where('id', auth()->user()->id)->first();
         $document_type_03_filter = config('tenant.document_type_03_filter');
         $series = collect(Series::all())->transform(function ($row) {
@@ -266,6 +269,7 @@ class SaleNoteController extends Controller
         $payment_destinations = $this->getPaymentDestinations();
 
         return compact(
+            'sellers',
             'customers',
             'establishments',
             'tasa_interes',
@@ -338,11 +342,12 @@ class SaleNoteController extends Controller
         $recibo = PDF::loadView('tenant.contract.index', ['company' => $company, 'sale' => $sale, 'payment' => $payment, 'establishment' => $establishment]);
         return $recibo->setPaper('a4', 'portrait')->stream();
     }
-    function restoreStock($qty,$item_id,$warehouse_id){
+    function restoreStock($qty, $item_id, $warehouse_id)
+    {
         $item = Item::find($item_id);
         $item->stock = $item->stock + $qty;
         $item->save();
-        $item_warehouse = ItemWarehouse::where('warehouse_id',$warehouse_id)->where('item_id',$item_id)->first();
+        $item_warehouse = ItemWarehouse::where('warehouse_id', $warehouse_id)->where('item_id', $item_id)->first();
         $item_warehouse->stock = $item_warehouse->stock + $qty;
         $item_warehouse->save();
     }
@@ -376,12 +381,12 @@ class SaleNoteController extends Controller
                 $sale_note_item->name_product_pdf = (isset($row['name_product_pdf'])) ? $row['name_product_pdf'] : "";
                 $sale_note_item->sale_note_id = $this->sale_note->id;
                 $sale_note_item->save();
-                if(array_key_exists('toWarehouse',$row)){
+                if (array_key_exists('toWarehouse', $row)) {
                     $quantity_to_restore = $row['toWarehouse'];
-                    if($quantity_to_restore > 0){
+                    if ($quantity_to_restore > 0) {
                         $item_id = $row['item_id'];
                         $warehouse_id = $row['item']['warehouse_id'];
-                        $this->restoreStock($quantity_to_restore,$item_id,$warehouse_id);
+                        $this->restoreStock($quantity_to_restore, $item_id, $warehouse_id);
                     }
                 }
                 // $item = Item::find($item_id);
@@ -394,20 +399,20 @@ class SaleNoteController extends Controller
                 $Orden->status_orden_id = 4;
                 $Orden->customer_id = $this->sale_note->customer_id;
                 $Orden->save();
-               $orden_items = OrdenItem::where('orden_id', $request->orden_id)->get();
+                $orden_items = OrdenItem::where('orden_id', $request->orden_id)->get();
                 foreach ($orden_items as $orden_item) {
                     $orden_item->status_orden_id = 4;
                     $orden_item->save();
                     event(new OrdenReadyEvent($orden_item->id));
                 }
             }
-            if($all_ordens){
+            if ($all_ordens) {
                 $tables = Table::where('establishment_id', auth()->user()->establishment_id)
-                ->orWhereNull('establishment_id')
-                ->where('status_table_id',2)
-                ->get();
+                    ->orWhereNull('establishment_id')
+                    ->where('status_table_id', 2)
+                    ->get();
                 foreach ($tables as $table) {
-                    $ordens = Orden::where('table_id', $table->id)->whereIn('status_orden_id', [1,2,3])->get();
+                    $ordens = Orden::where('table_id', $table->id)->whereIn('status_orden_id', [1, 2, 3])->get();
                     foreach ($ordens as $orden) {
                         $orden->sale_note_id = $this->sale_note->id;
                         $orden->status_orden_id = 4;
@@ -449,7 +454,7 @@ class SaleNoteController extends Controller
                             break;
                     }
                     $user_id = auth()->user()->id;
-                
+
                     Payment::create([
                         "user_id"     => auth()->user()->id,
                         "amount"       => $request->amount,
@@ -483,43 +488,23 @@ class SaleNoteController extends Controller
 
             $company = Company::first();
             if ($request->afectar_caja == true) {
-                    // $payments = PaymentMethodType::where('id', $request->payment_condition_id)->first();
-                    // $method = $payments->description;
-                    $document_save = SaleNote::where('id', $this->sale_note->id)->first();
-                    $type_document = "NOTA DE VENTA";
-                    $document = $type_document . " N° " . $document_save->series . " - " . $document_save->number;
+                // $payments = PaymentMethodType::where('id', $request->payment_condition_id)->first();
+                // $method = $payments->description;
+                $document_save = SaleNote::where('id', $this->sale_note->id)->first();
+                $type_document = "NOTA DE VENTA";
+                $document = $type_document . " N° " . $document_save->series . " - " . $document_save->number;
 
-                    if ($request->boxes) {
-                        foreach ($request->boxes as $currentBox) {
-                            $cajas    = new Box;
-                            $cajas->group_id = 1;
-                            $cajas->category_id = 1;
-                            $cajas->subcategory_id = 1;
-                            $cajas->amount = $currentBox["amount"];
-                            $cajas->date = Carbon::parse($request->input('date_of_issue'))->format('Y-m-d');
-                            $cajas->type = '1';
-                            $cajas->state = '1';
-                            $cajas->method =  $currentBox['method'];
-                            $cajas->sale_note_id = $this->sale_note->id;
-                            $cajas->orden_id =  $request->orden_id;
-                            $cajas->cash_id = $request->cash_id;
-                            $cajas->user_id = auth()->user()->id;
-                            $cajas->description = "VENTAS " . $document;
-                            $cajas->soap_type_id = $company->soap_type_id;
-                            $cajas->establishment_id = auth()->user()->establishment_id;
-                            $cajas->save();
-                        }
-                    } 
-                    else {
-                        $cajas    = Box::firstOrNew(['sale_note_id' => $this->sale_note->id]);
+                if ($request->boxes) {
+                    foreach ($request->boxes as $currentBox) {
+                        $cajas    = new Box;
                         $cajas->group_id = 1;
                         $cajas->category_id = 1;
                         $cajas->subcategory_id = 1;
-                        $cajas->amount = $request->input('total');
+                        $cajas->amount = $currentBox["amount"];
                         $cajas->date = Carbon::parse($request->input('date_of_issue'))->format('Y-m-d');
                         $cajas->type = '1';
                         $cajas->state = '1';
-                        $cajas->method =  $request->method_pay;
+                        $cajas->method =  $currentBox['method'];
                         $cajas->sale_note_id = $this->sale_note->id;
                         $cajas->orden_id =  $request->orden_id;
                         $cajas->cash_id = $request->cash_id;
@@ -529,6 +514,25 @@ class SaleNoteController extends Controller
                         $cajas->establishment_id = auth()->user()->establishment_id;
                         $cajas->save();
                     }
+                } else {
+                    $cajas    = Box::firstOrNew(['sale_note_id' => $this->sale_note->id]);
+                    $cajas->group_id = 1;
+                    $cajas->category_id = 1;
+                    $cajas->subcategory_id = 1;
+                    $cajas->amount = $request->input('total');
+                    $cajas->date = Carbon::parse($request->input('date_of_issue'))->format('Y-m-d');
+                    $cajas->type = '1';
+                    $cajas->state = '1';
+                    $cajas->method =  $request->method_pay;
+                    $cajas->sale_note_id = $this->sale_note->id;
+                    $cajas->orden_id =  $request->orden_id;
+                    $cajas->cash_id = $request->cash_id;
+                    $cajas->user_id = auth()->user()->id;
+                    $cajas->description = "VENTAS " . $document;
+                    $cajas->soap_type_id = $company->soap_type_id;
+                    $cajas->establishment_id = auth()->user()->establishment_id;
+                    $cajas->save();
+                }
             }
             $boxes = Box::where('sale_note_id', $this->sale_note->id)->get();
 
@@ -543,10 +547,10 @@ class SaleNoteController extends Controller
                 }
             }
 
-            if ($request->generate === null||$request->generate === false) {
+            if ($request->generate === null || $request->generate === false) {
                 //advances
-                
-                
+
+
             } else {
                 $paid = 0;
                 $user_id = auth()->user()->id;
@@ -565,9 +569,9 @@ class SaleNoteController extends Controller
                         'reference_number' => null
                     ]);
                 }
-            
+
                 if ($request->advances) {
-                 
+
                     $cajas    = new Box;
                     $cajas->group_id = 1;
                     $cajas->category_id = 1;
@@ -982,10 +986,10 @@ class SaleNoteController extends Controller
                 $total_taxed;
             $diferencia = 148 - (float)$alto;
             $orientation = $this->configuration->a5_orientation;
-         
+
             $pdf = new Mpdf([
                 'mode' => 'utf-8',
-                'format' =>$orientation ? 'A5-L' : 'A5-P',
+                'format' => $orientation ? 'A5-L' : 'A5-P',
                 'orientation' => $orientation ? 'L' : 'P',
                 // 'format' => [
                 //     150,
@@ -1250,7 +1254,7 @@ class SaleNoteController extends Controller
                 foreach ($lots as $lot) {
                     ItemLot::find($lot->id)->update(["has_sale" => 0]);
                 }
-               
+
                 if (isset($item->item->from_unit_type_id)) {
                     $unit_type = ItemUnitType::where('id', $item->item->from_unit_type_id)
                         ->first();

@@ -39,6 +39,7 @@ use App\Mail\QuotationEmail;
 use App\Models\Tenant\PaymentMethodType;
 use Modules\Finance\Traits\FinanceTrait;
 use App\Models\Tenant\Configuration;
+use App\Models\Tenant\Seller;
 use App\Models\Tenant\StateType;
 
 
@@ -77,15 +78,16 @@ class QuotationController extends Controller
             'customer' => 'Cliente',
             'date_of_issue' => 'Fecha de emisión',
             'delivery_date' => 'Fecha de entrega',
-            'user_name' => 'Vendedor'
+            'seller_id' => 'Vendedor'
         ];
     }
 
     public function filter()
     {
+        $sellers = Seller::where('establishment_id', auth()->user()->establishment_id)->get();
         $state_types = StateType::whereIn('id', ['01', '05', '09'])->get();
 
-        return compact('state_types');
+        return compact('state_types','sellers');
     }
 
     public function records(Request $request)
@@ -139,6 +141,7 @@ class QuotationController extends Controller
     public function tables()
     {
         $customers = $this->table('customers');
+        $sellers = Seller::where('establishment_id', auth()->user()->establishment_id)->get();
         $establishments = Establishment::where('id', auth()->user()->establishment_id)->get();
         $currency_types = CurrencyType::whereActive()->get();
         // $document_types_invoice = DocumentType::whereIn('id', ['01', '03'])->get();
@@ -150,6 +153,7 @@ class QuotationController extends Controller
         $payment_destinations = $this->getPaymentDestinations();
 
         return compact(
+            'sellers',
             'customers',
             'establishments',
             'currency_types',

@@ -22,7 +22,10 @@
                             </el-select>
                         </div>
                     </div>
-                    <div class="col-lg-2 col-md-2">
+                    <div class="col-lg-2 col-md-2"
+                    
+                    
+                    >
                         <div class="form-group">
                             <el-select
                                 @change="getRecords"
@@ -58,8 +61,9 @@
                             >
                             </el-date-picker>
                         </template>
-                        <template v-else-if="search.column == 'user_id'">
+                        <template v-else-if="search.column == 'seller_id'">
                             <el-select
+                                clearable
                                 v-model="search.value"
                                 class="border-left rounded-left border-info w-100"
                                 popper-class="el-select-customers"
@@ -67,8 +71,8 @@
                                 @change="getRecords"
                             >
                                 <el-option
-                                    v-for="option in array_users"
-                                    :key="option.id"
+                                    v-for="(option,idx) in sellers"
+                                    :key="idx"
                                     :value="option.id"
                                     :label="option.name"
                                 ></el-option>
@@ -197,6 +201,7 @@ export default {
     },
     data() {
         return {
+            sellers:[],
             customers: [],
             loading_search: false,
             search: {
@@ -227,6 +232,7 @@ export default {
         });
         this.$http.get(`/sale-notes/tables`).then(response => {
             this.array_users = response.data.users;
+            this.sellers = response.data.sellers;
         });
     },
     async mounted() {

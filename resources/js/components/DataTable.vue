@@ -76,6 +76,21 @@
                                 </el-option>
                             </el-select>
                         </template>
+                        <template v-else-if="search.column == 'seller_id'">
+                               <el-select
+                                v-model="search.value"
+                                @change="getRecords"
+                                placeholder="Seleccione el vendedor"
+                            >
+                                <el-option
+                                    v-for="(item,idx) in sellers"
+                                    :key="idx"
+                                    :label="item.name"
+                                    :value="item.id"
+                                >
+                                </el-option>
+                            </el-select>
+                        </template>
                         <template v-else>
                             <el-input
                                 placeholder="Buscar"
@@ -175,6 +190,10 @@ import queryString from "query-string";
 
 export default {
     props: {
+        sellers: {
+            type: Array,
+            default: () => []
+        },
         resource: String,
         applyFilter: {
             type: Boolean,

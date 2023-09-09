@@ -846,6 +846,7 @@
                 <div class="col-5 col-sm-7 col-lg-6 col-md-7 col-xl-5">
                     <div class="card-body p-2">
                         <list-orden
+                            :sellers="sellers"
                             @sendOrdensAllTables="sendOrdensAllTables"
                             ref="list_orden"
                             :affectation_igv_types="affectation_igv_types"
@@ -1401,6 +1402,7 @@
 
         <template>
             <payment-form
+                :sellers.sync="sellers"
                 :ordens_all_table.sync="ordens_all_table"
                 :consignment_id="consignment_id"
                 @removeConsignment="removeConsignment"
@@ -1676,6 +1678,7 @@ export default {
 
     data() {
         return {
+            sellers:[],
             searchSeries: false,
             showDialogItemSet: false,
             products_to_due: 0,
@@ -4447,7 +4450,8 @@ export default {
             //this.loadingInstance = Loading.service({fullscreen: false,lock:true,text:"Espere por favor..."});
             await this.$http.get(`/${this.resource}/tables`).then(response => {
                 // this.all_items = response.data.items;
-
+                this.sellers = response.data.sellers;
+                console.log(response, " response pos");
                 this.products_to_due = response.data.products_to_due;
                 this.categories = response.data.categories;
                 this.areas = response.data.areas;
@@ -4523,6 +4527,7 @@ export default {
             this.blockCart = false;
             this.variation = false;
             this.form.discounts = [];
+            this.form.seller_id = null;
             this.form.total_discount = 0;
             this.cancelOrden();
             if (

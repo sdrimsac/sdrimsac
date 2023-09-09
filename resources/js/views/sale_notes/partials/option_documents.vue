@@ -466,7 +466,8 @@ export default {
                 sale_note_id: null,
                 payments: [],
                 hotel: {},
-                orden_id: null
+                orden_id: null,
+                seller_id:null,
             };
         },
         resetDocument() {
@@ -609,6 +610,7 @@ export default {
             this.document.charges = q.charges;
             this.document.discounts = q.discounts;
             this.document.attributes = [];
+            this.document.seller_id = q.seller_id;
             this.document.guides = q.guides;
             this.document.additional_information = null;
             this.document.actions = {

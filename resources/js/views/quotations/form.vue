@@ -302,7 +302,25 @@
                                     ></small>
                                 </div>
                             </div>
-
+ <div class="col-lg-2 col-md-2">
+                                                <div class="form-group">
+                                                    <label class="control-label"
+                                                        >Vendedor</label
+                                                    >
+                                                    <el-select
+                                                        v-model="form.seller_id"
+                                                        filterable
+                                                   
+                                                    >
+                                                        <el-option
+                                                            v-for="(option,idx) in sellers"
+                                                            :key="idx"
+                                                            :value="option.id"
+                                                            :label="option.name"
+                                                        ></el-option>
+                                                    </el-select>
+                                                </div>
+                                            </div>
                             <div class="col-lg-8 mt-2">
                                 <table>
                                     <thead>
@@ -712,6 +730,7 @@ export default {
     mixins: [functions, exchangeRate],
     data() {
         return {
+            sellers:[],
             resource: "quotations",
             showDialogTermsCondition: false,
             showDialogAddItem: false,
@@ -740,6 +759,7 @@ export default {
     async created() {
         await this.initForm();
         await this.$http.get(`/${this.resource}/tables`).then(response => {
+            this.sellers = response.data.sellers;
             this.currency_types = response.data.currency_types;
             this.establishments = response.data.establishments;
             this.all_customers = response.data.customers;

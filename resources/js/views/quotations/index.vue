@@ -50,7 +50,9 @@
                     </el-dropdown>
                 </div>
                 <div class="card-body">
-                    <data-table :resource="resource">
+                    <data-table :resource="resource"
+                    :sellers="sellers"
+                    >
                         <tr slot="heading">
                             <th>#</th>
                             <th class="text-end">Acciones</th>
@@ -381,6 +383,7 @@ export default {
             showDialogOptions: false,
             showDialogOptionsPdf: false,
             state_types: [],
+            sellers:[],
             columns: {
                 total_exportation: {
                     title: "T.Exportación",
@@ -421,6 +424,7 @@ export default {
         filter() {
             this.$http.get(`/${this.resource}/filter`).then(response => {
                 this.state_types = response.data.state_types;
+                this.sellers = response.data.sellers;
             });
         },
         clickEdit(id) {

@@ -153,12 +153,12 @@
                             </a>
                         </li>
                     @endif
-                    {{-- <li>
+                    <li>
                 <a class="{{$path[0] === 'sellers' && $path[1] === ''  ? 'active' : '' }}"
                     href="{{ route('tenant.sellers.index') }}">
                     <i class="icofont-id-card"></i>  Vendedores
                 </a>
-            </li> --}}
+            </li>
                     <li>
                         <a class="{{ $path[0] === 'registers' ? 'active' : '' }}"
                             href="{{ route('tenant.registers.index') }}">

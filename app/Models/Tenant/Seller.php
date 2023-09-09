@@ -9,6 +9,7 @@ class Seller extends ModelTenant
     protected $table = 'sellers';
     
     protected $fillable = [
+        'document_type_id',
         'establishment_id',
         'user_id',
         'name',

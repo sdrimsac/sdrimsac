@@ -15,6 +15,7 @@ class SaleNote extends ModelTenant
     protected $with = ['user', 'soap_type', 'state_type', 'currency_type', 'items', 'document_type'];
 
     protected $fillable = [
+        'seller_id',
         'from_consignment',
         'user_id',
         'external_id',

@@ -251,7 +251,7 @@
                             </div>
                         </div>
                         <div class="row mt-1">
-                            <div class="col-lg-4 pb-2">
+                            <!-- <div class="col-lg-4 pb-2">
                                 <div class="form-group">
                                     <label class="control-label"
                                         >Vendedores</label
@@ -270,7 +270,7 @@
                                         ></el-option>
                                     </el-select>
                                 </div>
-                            </div>
+                            </div> -->
 
                             <div class="col-lg-4 pb-2">
                                 <div
@@ -464,6 +464,35 @@
                                         class="form-control-feedback"
                                         v-if="errors.payment_condition_id"
                                         v-text="errors.payment_condition_id[0]"
+                                    ></small>
+                                </div>
+                            </div>
+                             <div class="col-lg-2">
+                                <div
+                                    class="form-group"
+                                    :class="{
+                                        'has-danger':
+                                            errors.seller_id
+                                    }"
+                                >
+                                    <label class="control-label"
+                                        >Vendedor</label
+                                    >
+                                    <el-select
+                                    clearable
+                                        v-model="form.seller_id"
+                                    >
+                                        <el-option
+                                            v-for="(option,idx) in sellers"
+                                            :key="idx"
+                                            :value="option.id"
+                                            :label="option.name"
+                                        ></el-option>
+                                    </el-select>
+                                    <small
+                                        class="form-control-feedback"
+                                        v-if="errors.sellerr_id"
+                                        v-text="errors.seller_id[0]"
                                     ></small>
                                 </div>
                             </div>
@@ -1637,6 +1666,7 @@ export default {
     mixins: [functions, exchangeRate],
     data() {
         return {
+            sellers:[],
             editandoDocument: false,
             tempMethod: "Efectivo",
             methods: [
@@ -1753,6 +1783,7 @@ export default {
         await this.initForm();
         this.loader = true;
         await this.$http.get(`/documents/tables`).then(response => {
+            this.sellers = response.data.sellers;
             this.show_restriction =
                 response.data.configuration.show_restriction;
             this.show_quotations = response.data.configuration.show_quotations;

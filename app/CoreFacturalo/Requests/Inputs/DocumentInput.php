@@ -130,6 +130,7 @@ class DocumentInput
             'filename' => '', //$filename,
             'document_type_id' => $document_type_id,
             'series' => $series,
+            'seller_id' => Functions::valueKeyInArray($inputs, 'seller_id'),
             'number' => $number,
             'series_id' => $series_id,
             'additional_information' => $inputs['additional_information'],

@@ -5,8 +5,11 @@ namespace App\Http\Controllers\Tenant;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Tenant\SeriesRequest;
 use App\Http\Resources\Tenant\SellerCollection;
+use App\Http\Resources\Tenant\SellerResource;
 use App\Http\Resources\Tenant\SeriesCollection;
 use App\Models\Tenant\Catalogs\DocumentType;
+use App\Models\Tenant\Catalogs\IdentityDocumentType;
+use App\Models\Tenant\Establishment;
 use App\Models\Tenant\Seller;
 use App\Models\Tenant\Series;
 use Illuminate\Http\Request;
@@ -46,31 +49,29 @@ class SellerController extends Controller
     }
 
     public function tables()
-    {
-        $document_types = DocumentType::whereActive()->whereIn('id', ['01', '03', '07', '08', '09', '20', '40', '80'])->get();
-
-        return compact('document_types');
+    {   $document_types = IdentityDocumentType::whereActive()
+        ->where('id','<>' ,'6')
+        ->get();
+        $establishments = Establishment::all();
+        return compact('establishments', 'document_types');
+        
     }
 
-    public function store(SeriesRequest $request)
+    public function record($id){
+        $record = new SellerResource(Seller::findOrFail($id));
+
+        return $record;
+    }
+    public function store(Request $request)
     {
-        $record = Series::where([['document_type_id', $request->document_type_id], ['number', $request->number]])->first();
-
-        if ($record) {
-            return [
-                'success' => false,
-                'message' => 'La serie ya ha sido registrada'
-            ];
-        }
-
         $id = $request->input('id');
-        $series = Series::firstOrNew(['id' => $id]);
-        $series->fill($request->all());
-        $series->save();
-
+       $seller = Seller::firstOrNew(['id' => $id]);
+        $seller->fill($request->all());
+        $seller->save();
         return [
             'success' => true,
-            'message' => ($id) ? 'Serie editada con éxito' : 'Serie registrada con éxito'
+            'message' => ($id)?'Vendedor editado con éxito':'Vendedor registrado con éxito',
+            'id' => $seller->id
         ];
     }
 

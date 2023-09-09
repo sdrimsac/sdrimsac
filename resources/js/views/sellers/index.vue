@@ -16,12 +16,12 @@
                     </div>
                     <div class="col-sm-6 d-flex justify-content-end">
                         <div class="bookmark">
-                                     <el-button
-                                     type="primary"
-                                     @click.prevent="clickCreate()"
-                                     >
-                                    Crear vendedor
-                                     </el-button>
+                            <el-button
+                                type="primary"
+                                @click.prevent="clickCreate()"
+                            >
+                                Crear vendedor
+                            </el-button>
                         </div>
                     </div>
                 </div>
@@ -78,7 +78,8 @@
                 <sellers-form
                     :showDialog.sync="showDialog"
                     :typeUser="typeUser"
-              
+                    :establishments="establishments"
+                    :document_types="document_types"
                     :recordId="recordId"
                 ></sellers-form>
             </div>
@@ -100,7 +101,9 @@ export default {
             resource: "sellers",
             recordId: null,
             records: [],
-            title: null
+            title: null,
+            establishments: [],
+            document_types: []
         };
     },
     created() {
@@ -108,15 +111,21 @@ export default {
             this.getData();
         });
         this.getData();
-     
+        this.getTables();
     },
     methods: {
+        async getTables() {
+            const response = await this.$http(`${this.resource}/tables`);
+            console.log(response);
+            const { establishments,document_types } = response.data;
+            this.establishments = establishments;
+            this.document_types = document_types;
+            // this.establishments = response.data.data.establishments;
+        },
         getData() {
-            this.$http
-                .get(`/${this.resource}/records`)
-                .then(response => {
-                    this.records = response.data.data;
-                });
+            this.$http.get(`/${this.resource}/records`).then(response => {
+                this.records = response.data.data;
+            });
         },
         clickCreate(recordId = null) {
             console.log("sadas");

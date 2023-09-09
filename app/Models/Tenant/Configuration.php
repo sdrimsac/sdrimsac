@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Config;
 class Configuration extends ModelTenant
 {
     protected $fillable = [
+        'seller_caja',
         'item_adjustment',
         'show_image_a5',
         'a5_orientation',
@@ -115,6 +116,7 @@ class Configuration extends ModelTenant
 
     ];
     protected $casts = [
+        'seller_caja' => 'boolean',
         'item_adjustment' => 'boolean',
         'show_image_a5' => 'boolean',
         'a5_orientation' => 'boolean',
@@ -189,6 +191,7 @@ class Configuration extends ModelTenant
         // $skins = Skin::all();
         $skins = [];
         return [
+            'seller_caja' => (bool)$this->seller_caja,
             'item_adjustment' => (bool)$this->item_adjustment,
             'show_image_a5' => (bool)$this->show_image_a5,
             'a5_orientation' => (bool)$this->a5_orientation,

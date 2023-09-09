@@ -209,6 +209,7 @@
                         ></small>
                     </div>
                 </div>
+              
                 <br />
                 <div class="col-lg-4">
                     <div
@@ -608,6 +609,7 @@ export default {
             this.document.total_taxes = q.total_taxes;
             this.document.total_value = q.total_value;
             this.document.total = q.total;
+            this.document.seller_id = q.seller_id;
             this.document.operation_type_id = "0101";
             // this.document.date_of_due = q.date_of_issue
             this.document.items = q.items;

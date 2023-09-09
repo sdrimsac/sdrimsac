@@ -48,6 +48,24 @@
                     <el-date-picker class="w-100" v-model="form.date_of_due">
                     </el-date-picker>
                 </div>
+                 <div class="col-md-6">
+                    <label>
+                        Vendedor
+                     
+                    </label>
+                    <el-select
+                        v-model="form.seller_id"
+                        filterable
+
+                    >
+                        <el-option
+                            v-for="(option,idx) in sellers"
+                            :key="idx"
+                            :value="option.id"
+                            :label="option.name"
+                        ></el-option>
+                    </el-select>
+                </div>
             </div>
             <div class="row">
                 <div class="col-md-12">
@@ -87,7 +105,7 @@ import moment from "moment";
 const PersonForm = () =>
     import("../../../../../../../../resources/js/views/persons/form.vue");
 export default {
-    props: ["items", "cash_id", "all_customers", "showDialog"],
+    props: ["items", "cash_id", "all_customers", "showDialog","sellers"],
     components: { PersonForm },
     data() {
         return {

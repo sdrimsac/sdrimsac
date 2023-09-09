@@ -1982,6 +1982,7 @@
             :customers="customers"
             @limpiarForm="limpiarForm"
             :cash_id="cash_id"
+            :sellers="sellers"
         >
         </quotation-form>
 
@@ -2206,6 +2207,7 @@ export default {
         QuotationForm
     },
     props: [
+        "sellers",
         "affectation_igv_types",
         "all_series",
         "areas",

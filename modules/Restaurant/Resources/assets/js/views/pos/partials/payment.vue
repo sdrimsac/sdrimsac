@@ -194,6 +194,20 @@
                                         </el-select>
                                     </div>
                                 </div>
+                                <div class="row" v-if="configuration.seller_caja">
+                                    <div class="col-md-4 col-12">
+                                        <label for="seller">Vendedor</label>
+                                        <el-select v-model="form.seller_id">
+                                            <el-option
+                                                v-for="(option, idx) in sellers"
+                                                :key="idx"
+                                                :label="option.name"
+                                                :value="option.id"
+                                            >
+                                            </el-option>
+                                        </el-select>
+                                    </div>
+                                </div>
                                 <div class="row col-lg-12 col-xl-12">
                                     <div class="form-group">
                                         <label class="control-label"
@@ -1205,7 +1219,8 @@ export default {
         "percentage_igv",
         "all_series",
         "all_customers",
-        "personalWhatsapp"
+        "personalWhatsapp",
+        "sellers"
     ],
     watch: {
         all_customers(newCustomer, _) {
@@ -1766,6 +1781,7 @@ export default {
             };
         },
         async date_of_issue() {
+            console.log(this.sellers, " sellers");
             // this.discount_amount = 0;
             // this.form.customer_id
             // this.form.student_id = null;

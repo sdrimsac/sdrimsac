@@ -234,6 +234,23 @@
                             </el-select>
                         </div>
                     </div>
+                         <div class="col-lg-2 col-md-2 col-sm-12 pb-2">
+                        <div class="form-group">
+                            <label class="control-label w-100">Vendedor</label>
+                            <el-select
+                                v-model="search.seller_id"
+                                filterable
+                                clearable
+                            >
+                                <el-option
+                                    v-for="(option,idx) in sellers"
+                                    :key="idx"
+                                    :value="option.id"
+                                    :label="option.name"
+                                ></el-option>
+                            </el-select>
+                        </div>
+                    </div>
                     <div class="col-lg-2 col-md-2 col-sm-12 mt-4">
                         <div class="form-group">
                             <el-checkbox v-model="search.pending_payment"
@@ -352,6 +369,7 @@ export default {
             series: [],
             activePanel: 0,
             payment_conditions: [],
+            sellers: [],
             see_more: false,
             totals: null,
             pickerOptionsDates: {
@@ -371,6 +389,7 @@ export default {
     },
     async mounted() {
         await this.$http.get(`/${this.resource}/data_table`).then(response => {
+            this.sellers = response.data.sellers;
             this.all_customers = response.data.customers;
             this.all_items = response.data.items;
             this.categories = response.data.categories;

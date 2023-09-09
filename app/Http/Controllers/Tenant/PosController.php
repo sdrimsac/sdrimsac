@@ -27,6 +27,7 @@ use Modules\Inventory\Models\Warehouse;
 use Modules\Finance\Traits\FinanceTrait;
 use App\Models\Tenant\Catalogs\AffectationIgvType;
 use App\Models\Tenant\Catalogs\IdentityDocumentType;
+use App\Models\Tenant\Seller;
 use Carbon\Carbon;
 use Modules\College\Models\CollegeStudent;
 use Modules\Inventory\Models\ItemWarehouse;
@@ -230,6 +231,7 @@ class PosController extends Controller
     }
     public function tables()
     {
+        $sellers = Seller::where('establishment_id', auth()->user()->establishment_id)->get();
         $products_to_due = ItemLotsGroup::where('date_of_due', '<=', Carbon::now()->addMonths(2))
         ->where('quantity', '>', 0)
         ->count();
@@ -285,6 +287,7 @@ class PosController extends Controller
         }
         $areas = Area::all();
         return compact(
+            'sellers',
             'products_to_due',
             'areas',
             'customers_variation',

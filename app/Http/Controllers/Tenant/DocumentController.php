@@ -82,6 +82,7 @@ use App\Models\Tenant\Cash;
 use Modules\Inventory\Models\Warehouse as ModuleWarehouse;
 use App\Models\Tenant\Catalogs\PaymentMethodType as CatPaymentMethodType;
 use App\Models\Tenant\ItemUnitType;
+use App\Models\Tenant\Seller;
 use App\Models\Tenant\Summary;
 use App\Services\RoleService;
 use Hyn\Tenancy\Models\Website;
@@ -474,7 +475,9 @@ class DocumentController extends Controller
         $is_client = $this->getIsClient();
         $select_first_document_type_03 = config('tenant.select_first_document_type_03');
         $payment_conditions = PaymentCondition::all();
-
+        $sellers = Seller::where('active', true)
+        ->where('establishment_id', auth()->user()->establishment_id)
+        ->get();
         $document_types_guide = DocumentType::whereIn('id', ['09', '31'])->get()->transform(function ($row) {
             return [
                 'id' => $row->id,
@@ -507,6 +510,7 @@ class DocumentController extends Controller
         // this->getPaymentDestinations();
 
         return compact(
+            'sellers',
             'exchange_rate_sale',
             'customers',
             'establishments',
@@ -1414,6 +1418,7 @@ class DocumentController extends Controller
         $date_of_issue = $request->date_of_issue;
         $document_type_id = $request->document_type_id;
         $state_type_id = $request->state_type_id;
+        $seller_id = $request->seller_id;
         $number = $request->number;
         $series = $request->series;
         $company = Company::first();
@@ -1470,7 +1475,9 @@ class DocumentController extends Controller
                 $query->where('item_id', $item_id);
             });
         }
-
+        if($seller_id){
+            $records = $records->where('seller_id', $seller_id);
+        }
         if ($category_id) {
 
             $records = $records->whereHas('items', function ($query) use ($category_id) {
@@ -1488,13 +1495,14 @@ class DocumentController extends Controller
 
         $customers = $this->table('customers');
         $items = $this->getItems();
+        $sellers = Seller::all();
         $categories = CategoryItem::orderBy('name')->get();
         $state_types = StateType::get();
         $document_types = DocumentType::whereIn('id', ['01', '03', '07', '08'])->get();
         $series = Series::whereIn('document_type_id', ['01', '03', '07', '08'])->get();
         $establishments = Establishment::where('id', auth()->user()->establishment_id)->get(); // Establishment::all();
         $payment_conditions = PaymentCondition::all();
-        return compact('customers', 'payment_conditions', 'document_types', 'series', 'establishments', 'state_types', 'items', 'categories');
+        return compact('customers','sellers', 'payment_conditions', 'document_types', 'series', 'establishments', 'state_types', 'items', 'categories');
     }
 
 
