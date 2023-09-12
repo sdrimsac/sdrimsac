@@ -55,7 +55,7 @@
                                 v-model="search.value"
                                 type="date"
                                 style="width: 100%;"
-                                placeholder="Buscar"
+                                placeholder="Fecha inicial"
                                 value-format="yyyy-MM-dd"
                                 @change="getRecords"
                             >
@@ -123,7 +123,7 @@
                                 v-model="search.end"
                                 type="date"
                                 style="width: 100%;"
-                                placeholder="Buscar"
+                                placeholder="Fecha final"
                                 value-format="yyyy-MM-dd"
                                 @change="getRecords"
                             >
