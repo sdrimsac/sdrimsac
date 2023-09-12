@@ -151,21 +151,22 @@ class PosController extends Controller
         $external_id =  $request->external_id == "true" ? true : false;
         $value = $request->value;
         $establishment_id = auth()->user()->establishment_id;
-
+        $warehouse = Warehouse::where('establishment_id', $establishment_id)->first();
+        $warehouse_id = $warehouse->id;
         $textoIntoArray =  explode(' ', $value);
 
 
         $foods = Food::query()->whereHas(
             "item",
-            function ($query) use ($establishment_id,$search_by_series,$value) {
+            function ($query) use ($warehouse_id,$search_by_series,$value) {
                 $query
-                    ->where('active', 1)->whereHas('warehouses', function ($query) use ($establishment_id ,$value) {
-                        $query->where('warehouse_id', $establishment_id);
+                    ->where('active', 1)->whereHas('warehouses', function ($query) use ($warehouse_id ,$value) {
+                        $query->where('warehouse_id', $warehouse_id);
                     });
                 if($search_by_series == true){
                     $query->where('series_enabled', 1)
-                    ->whereHas('item_lots', function ($query) use ($establishment_id,$value) {
-                        $query->where('warehouse_id', $establishment_id)->where('has_sale', 0)
+                    ->whereHas('item_lots', function ($query) use ($warehouse_id,$value) {
+                        $query->where('warehouse_id', $warehouse_id)->where('has_sale', 0)
                         ->where('series','like','%'.$value.'%')
                         ;
                     });
