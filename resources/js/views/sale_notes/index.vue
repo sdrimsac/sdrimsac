@@ -55,7 +55,8 @@
         <!-- Container-fluid starts-->
         <div class="container-fluid p-l-0 p-r-0">
             <div class="card mb-0">
-                <div class="data-table-visible-columns">
+                <!-- <div class="data-table-visible-columns"> -->
+                <div class="col-12 text-end">
                     <el-dropdown :hide-on-click="false">
                         <el-button type="primary">
                             Mostrar/Ocultar columnas<i

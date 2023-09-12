@@ -154,9 +154,18 @@ class SaleNoteController extends Controller
             $records = SaleNote::where($request->column, '=', $request->value)
                 ->latest('id');
             // dd(SaleNote::where($request->column, '=',$request->value)->toSql());
+        } else if ($request->column == 'date_of_issue') {
+            if ($request->end != null) {
+                $records = SaleNote::whereBetween($request->column, [$request->value, $request->end])->latest('id');
+            } else {
+                $records = SaleNote::where($request->column, 'like', "%{$request->value}%")->latest('id');
+            }
         } else {
             $records = SaleNote::where($request->column, 'like', "%{$request->value}%")->latest('id');
         }
+
+
+
 
         if ($request->series) {
             $records = $records->where('series', 'like', '%' . $request->series . '%');
@@ -175,6 +184,12 @@ class SaleNoteController extends Controller
             $records = SaleNote::where($request->column, '=', $request->value)
                 ->latest('id');
             // dd(SaleNote::where($request->column, '=',$request->value)->toSql());
+        } else if ($request->column == 'date_of_issue') {
+            if ($request->end != null) {
+                $records = SaleNote::whereBetween($request->column, [$request->value, $request->end])->latest('id');
+            } else {
+                $records = SaleNote::where($request->column, 'like', "%{$request->value}%")->latest('id');
+            }
         } else {
             $records = SaleNote::where($request->column, 'like', "%{$request->value}%")->latest('id');
         }

@@ -109,13 +109,29 @@
                             >
                             </el-input>
                         </template>
+                          
                     </div>
-                    <div class="col-md-2">
-                        <el-tag>
-                            Total por cobrar {{ saleNotesPending.toFixed(2) }}
-                        </el-tag>
+                    <div class="col-md-2 col-lg-3">
+                         <template
+                            v-if="
+                                search.column == 'date_of_issue' ||
+                                    search.column == 'date_of_due' ||
+                                    search.column == 'date_of_payment'
+                            "
+                        >
+                            <el-date-picker
+                                v-model="search.end"
+                                type="date"
+                                style="width: 100%;"
+                                placeholder="Buscar"
+                                value-format="yyyy-MM-dd"
+                                @change="getRecords"
+                            >
+                            </el-date-picker>
+                        </template>
                     </div>
-                    <div class="col-12">
+                  
+                    <div class="col-md-6 col-sm-12">
                         <el-button
                             type="success"
                             icon="el-icon-download"
@@ -125,6 +141,11 @@
                         >
                             Exportar
                         </el-button>
+                    </div>
+                      <div class="col-md-2">
+                        <el-tag>
+                            Total por cobrar {{ saleNotesPending.toFixed(2) }}
+                        </el-tag>
                     </div>
                 </div>
             </div>
@@ -207,7 +228,8 @@ export default {
             search: {
                 column: null,
                 value: null,
-                series: null
+                series: null,
+                end:null,
             },
             totals: {
                 total_pen: 0,
