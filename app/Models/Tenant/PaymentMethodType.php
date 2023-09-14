@@ -25,7 +25,10 @@ class PaymentMethodType extends ModelTenant
         'number_days',
     ];
 
-
+    public function getDescription()
+    {
+        return $this->description;
+    }
     public function document_payments()
     {
         return $this->hasMany(DocumentPayment::class,  'payment_method_type_id');

@@ -101,7 +101,7 @@
                                         >Tipo comprobante</label
                                     >
                                     <el-select
-                                    :disabled="editandoDocument"
+                                        :disabled="editandoDocument"
                                         v-model="form.document_type_id"
                                         @change="changeDocumentType"
                                         popper-class="el-select-document_type"
@@ -200,19 +200,25 @@
                                     :class="{ 'has-danger': errors.series_id }"
                                 >
                                     <label class="control-label">Serie</label>
-                                    <el-select v-if="editandoDocument" v-model="form.series_id" :disabled="editandoDocument">
+                                    <el-select
+                                        v-if="editandoDocument"
+                                        v-model="form.series_id"
+                                        :disabled="editandoDocument"
+                                    >
                                         <el-option
                                             v-for="option in series"
                                             :key="option.id"
-                                            :value="option.id "
-                                            :label="`${option.number} - ${documentinfo}`"
+                                            :value="option.id"
+                                            :label="
+                                                `${option.number} - ${documentinfo}`
+                                            "
                                         ></el-option>
                                     </el-select>
-                                    <el-select v-else v-model="form.series_id" >
+                                    <el-select v-else v-model="form.series_id">
                                         <el-option
                                             v-for="option in series"
                                             :key="option.id"
-                                            :value="option.id "
+                                            :value="option.id"
                                             :label="option.number"
                                         ></el-option>
                                     </el-select>
@@ -366,7 +372,8 @@
                                     >
                                     <el-date-picker
                                         :readonly="
-                                            !configuration.change_date_emit
+                                            !configuration.change_date_emit ||
+                                                readonly_date_of_due
                                         "
                                         v-model="form.date_of_issue"
                                         type="date"
@@ -454,10 +461,16 @@
                                         @change="changePaymentCondition"
                                     >
                                         <el-option
-                                            v-for="option in payment_conditions"
-                                            :key="option.id"
-                                            :value="option.id"
-                                            :label="option.name"
+                                            label="Crédito con cuotas"
+                                            value="03"
+                                        ></el-option>
+                                        <el-option
+                                            label="Crédito"
+                                            value="02"
+                                        ></el-option>
+                                        <el-option
+                                            label="Contado"
+                                            value="01"
                                         ></el-option>
                                     </el-select>
                                     <small
@@ -467,23 +480,22 @@
                                     ></small>
                                 </div>
                             </div>
-                             <div class="col-lg-2">
+                            <div class="col-lg-2">
                                 <div
                                     class="form-group"
                                     :class="{
-                                        'has-danger':
-                                            errors.seller_id
+                                        'has-danger': errors.seller_id
                                     }"
                                 >
                                     <label class="control-label"
                                         >Vendedor</label
                                     >
                                     <el-select
-                                    clearable
+                                        clearable
                                         v-model="form.seller_id"
                                     >
                                         <el-option
-                                            v-for="(option,idx) in sellers"
+                                            v-for="(option, idx) in sellers"
                                             :key="idx"
                                             :value="option.id"
                                             :label="option.name"
@@ -902,6 +914,83 @@
                                         >[+ Datos para transporte de
                                         pasajeros]</a
                                     >
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12 col-lg-6 col-12">
+                                          <table
+                                v-if="form.fee.length > 0"
+                                class="text-left table"
+                            >
+                                <thead>
+                                    <tr>
+                                        <th
+                                            class="text-left"
+                                            style="width: 100px"
+                                        >
+                                            Fecha
+                                        </th>
+                                        <th
+                                            class="text-left"
+                                            style="width: 100px"
+                                        >
+                                            Monto
+                                        </th>
+                                        <th style="width: 30px"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr
+                                        v-for="(row, index) in form.fee"
+                                        :key="index"
+                                    >
+                                        <td>
+                                            <el-date-picker
+                                                v-model="row.date"
+                                                :clearable="false"
+                                                format="dd/MM/yyyy"
+                                                type="date"
+                                                value-format="yyyy-MM-dd"
+                                            ></el-date-picker>
+                                        </td>
+                                        <td>
+                                            <el-input
+                                                v-model="row.amount"
+                                            ></el-input>
+                                        </td>
+                                        <td class="text-center">
+                                            <button
+                                                v-if="index > 0"
+                                                class="btn waves-effect waves-light btn-sm btn-danger"
+                                                type="button"
+                                                @click.prevent="
+                                                    clickRemoveFee(index)
+                                                "
+                                            >
+                                                <i class="fa fa-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="5">
+                                            <label class="control-label">
+                                                <a
+                                                    class=""
+                                                    href="#"
+                                                    @click.prevent="clickAddFee"
+                                                    ><i
+                                                        class="fa fa-plus font-weight-bold text-info"
+                                                    ></i>
+                                                    <span style="color: #777777"
+                                                        >Agregar cuota</span
+                                                    ></a
+                                                >
+                                            </label>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
                                 </div>
                             </div>
                         </template>
@@ -1656,7 +1745,7 @@ import { calculateRowItem } from "../../helpers/functions";
 import Logo from "../companies/logo.vue";
 
 export default {
-    props: ["id", "typeUser", "configuration","documentinfo"],
+    props: ["id", "typeUser", "configuration", "documentinfo"],
     components: {
         DocumentFormItem,
         PersonForm,
@@ -1666,7 +1755,8 @@ export default {
     mixins: [functions, exchangeRate],
     data() {
         return {
-            sellers:[],
+            readonly_date_of_due: false,
+            sellers: [],
             editandoDocument: false,
             tempMethod: "Efectivo",
             methods: [
@@ -1754,7 +1844,6 @@ export default {
     },
 
     async created() {
-        
         qz.security.setCertificatePromise((resolve, reject) => {
             this.$http
                 .get("/api/qz/crt/override", {
@@ -2335,7 +2424,10 @@ export default {
             this.form.transport = transport;
         },
         changeIsReceivable() {},
-        clickAddBoxes() {
+        clickAddBoxes(reset = false) {
+            if(reset){
+                this.form.boxes = [];
+            }
             let cash_id = null;
             if (this.payment_destinations.length != 0) {
                 cash_id = this.payment_destinations[0].id;
@@ -2511,6 +2603,7 @@ export default {
             this.form.user_id = this.user_default;
 
             this.filterCustomers();
+            this.form.boxes = [];
             // this.filterCustomersUser();
         },
         async changeOperationType() {
@@ -2630,7 +2723,7 @@ export default {
                 this.$toast.error(
                     `No puede seleccionar una fecha menor a ${days} días.`
                 );
-                
+
                 //          this.form.date_of_issue= moment().format("YYYY-MM-DD");
                 this.dateValid = false;
             } else {
@@ -2651,13 +2744,12 @@ export default {
                 );
                 if (response.status == 200) {
                     let data = response.data;
-                    if(data){
+                    if (data) {
                         data = data.toString();
                         data = data.replace(",", ".");
-                           this.form.exchange_rate_sale = Number(data);
+                        this.form.exchange_rate_sale = Number(data);
                     }
 
-                 
                     this.loader = false;
                 }
             } catch (e) {
@@ -2960,8 +3052,6 @@ export default {
         },
 
         async submit() {
-            
-            
             if (this.form.has_prepayment || this.prepayment_deduction) {
                 let error_prepayment = await this.validateAffectationTypePrepayment();
                 if (!error_prepayment.success) {
@@ -3009,7 +3099,8 @@ export default {
                     `/efectivo`,
                     form_efectivo
                 );
-
+        if (this.form.payment_condition_id === "03")
+                this.form.payment_condition_id = "02";
                 this.loading_submit = true;
                 this.$http
                     .post(`/${this.resource}`, this.form)
@@ -3018,7 +3109,7 @@ export default {
                             this.user_default = this.form.user_id;
                             this.$eventHub.$emit("reloadDataItems", null);
                             this.resetForm();
-                            this.clickAddBoxes();
+                            this.clickAddBoxes(true);
                             if (this.show_restriction == 1) {
                                 if (this.form_control.stock_control == false) {
                                     this.form_control.stock_control = true;
@@ -3225,15 +3316,75 @@ export default {
 
             this.calculateTotal();
         },
+        clickAddFeeNew() {
+            let first = {
+                id: "05",
+                number_days: 0
+            };
+            if (this.credit_payment_metod[0] !== undefined) {
+                first = this.credit_payment_metod[0];
+            }
+
+            // let date = moment()
+            //     .add(first.number_days, 'days')
+            //     .format('YYYY-MM-DD')
+
+            let date = moment(this.form.date_of_issue)
+                .add(first.number_days, "days")
+                .format("YYYY-MM-DD");
+
+            this.form.date_of_due = date;
+            this.form.fee.push({
+                id: null,
+                document_id: null,
+                payment_method_type_id: first.id,
+                // reference: null,
+                // payment_destination_id: this.getPaymentDestinationId(),
+                // payment: 0,
+
+                date: date,
+                currency_type_id: this.form.currency_type_id,
+                amount: 0
+            });
+            this.calculateFee();
+        },
+        initDataPaymentCondition01() {
+            this.readonly_date_of_due = false;
+            this.enabled_payments = true;
+            this.form.date_of_due = this.form.date_of_issue;
+            this.form.payment_method_type_id = null;
+        },
         changePaymentCondition() {
+            // this.form.fee = [];
+            // this.form.payments = [];
+            // if (this.form.payment_condition_id === "01") {
+            //     // this.clickAddPayment();
+            //     this.clickAddBoxes();
+            // }
+            // if (this.form.payment_condition_id === "02") {
+            //     this.clickAddFee();
+            // }
+            ///
             this.form.fee = [];
             this.form.payments = [];
             if (this.form.payment_condition_id === "01") {
-                // this.clickAddPayment();
                 this.clickAddBoxes();
+                this.initDataPaymentCondition01();
             }
             if (this.form.payment_condition_id === "02") {
+                this.clickAddFeeNew();
+                this.readonly_date_of_due = true;
+            }
+            if (this.form.payment_condition_id === "03") {
                 this.clickAddFee();
+            }
+
+            // if(this.isCreditPaymentCondition){
+            // this.changeRetention()
+            // }
+
+            if (!_.isEmpty(this.form.retention)) {
+                this.setTotalPendingAmountRetention(this.form.retention.amount);
             }
         },
         clickAddFee() {
@@ -3267,9 +3418,9 @@ export default {
     },
     mounted() {
         // this.teclasInit();
-        console.log(this.documentinfo) 
-        if(this.id != null ){
-            this.editandoDocument = true
+        console.log(this.documentinfo);
+        if (this.id != null) {
+            this.editandoDocument = true;
         }
         this.loader = true;
     }

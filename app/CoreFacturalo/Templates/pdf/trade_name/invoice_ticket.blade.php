@@ -136,7 +136,7 @@
             @endif
         </tr>
 
-     
+
         <tr>
             <td class="text-center">
                 {{ $establishment->address !== '-' ? $establishment->address . ',' : '' }}
@@ -146,33 +146,43 @@
             </td>
         </tr>
         @if ($print_company_address)
-        @isset($establish_model->trade_address)
-            <tr>
-                <td class="text-center ">
-                    <strong>
-                        {{ strtoupper($establish_model->description) }}
-                    </strong>
-                </td>
-            </tr>
+            @isset($establish_model->trade_address)
+                <tr>
+                    <td class="text-center ">
+                        <strong>
+                            {{ strtoupper($establish_model->description) }}
+                        </strong>
+                    </td>
+                </tr>
 
-            <tr>
-                <td class="text-center ">
-                    {{ $establish_model->trade_address !== '-' ? $establish_model->trade_address : '' }}
-                </td>
-            </tr>
-        @endisset
-    @endif
-    <tr>
-        <td class="text-center">{{ $establishment->email !== '-' ? 'Email: ' . $establishment->email : '' }}</td>
-    </tr>
+                <tr>
+                    <td class="text-center ">
+                        {{ $establish_model->trade_address !== '-' ? $establish_model->trade_address : '' }}
+                    </td>
+                </tr>
+            @endisset
+        @endif
+        <tr>
+            <td class="text-center">{{ $establishment->email !== '-' ? 'Email: ' . $establishment->email : '' }}</td>
+        </tr>
         <tr>
             <td class="text-center">
-                <svg width="15px" height="15px" viewBox="0 0 24 24" version="1.1" id="svg8" inkscape:version="0.92.4 (5da689c313, 2019-01-14)" sodipodi:docname="1881161.svg" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"  xml:space="preserve"><path id="path4" inkscape:connector-curvature="0" d="M16.6,14c-0.2-0.1-1.5-0.7-1.7-0.8c-0.2-0.1-0.4-0.1-0.6,0.1c-0.2,0.2-0.6,0.8-0.8,1c-0.1,0.2-0.3,0.2-0.5,0.1c-0.7-0.3-1.4-0.7-2-1.2c-0.5-0.5-1-1.1-1.4-1.7c-0.1-0.2,0-0.4,0.1-0.5c0.1-0.1,0.2-0.3,0.4-0.4c0.1-0.1,0.2-0.3,0.2-0.4c0.1-0.1,0.1-0.3,0-0.4c-0.1-0.1-0.6-1.3-0.8-1.8C9.4,7.3,9.2,7.3,9,7.3c-0.1,0-0.3,0-0.5,0C8.3,7.3,8,7.5,7.9,7.6C7.3,8.2,7,8.9,7,9.7c0.1,0.9,0.4,1.8,1,2.6c1.1,1.6,2.5,2.9,4.2,3.7c0.5,0.2,0.9,0.4,1.4,0.5c0.5,0.2,1,0.2,1.6,0.1c0.7-0.1,1.3-0.6,1.7-1.2c0.2-0.4,0.2-0.8,0.1-1.2C17,14.2,16.8,14.1,16.6,14 M19.1,4.9C15.2,1,8.9,1,5,4.9c-3.2,3.2-3.8,8.1-1.6,12L2,22l5.3-1.4c1.5,0.8,3.1,1.2,4.7,1.2h0c5.5,0,9.9-4.4,9.9-9.9C22,9.3,20.9,6.8,19.1,4.9 M16.4,18.9c-1.3,0.8-2.8,1.3-4.4,1.3h0c-1.5,0-2.9-0.4-4.2-1.1l-0.3-0.2l-3.1,0.8l0.8-3l-0.2-0.3C2.6,12.4,3.8,7.4,7.7,4.9S16.6,3.7,19,7.5C21.4,11.4,20.3,16.5,16.4,18.9"/></svg>
-                  
-                {{ $establishment->telephone !== '-' ?  $establishment->telephone : '' }}
+                <svg width="15px" height="15px" viewBox="0 0 24 24" version="1.1" id="svg8"
+                    inkscape:version="0.92.4 (5da689c313, 2019-01-14)" sodipodi:docname="1881161.svg"
+                    xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/"
+                    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+                    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+                    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+                    xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg"
+                    xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve">
+                    <path id="path4" inkscape:connector-curvature="0"
+                        d="M16.6,14c-0.2-0.1-1.5-0.7-1.7-0.8c-0.2-0.1-0.4-0.1-0.6,0.1c-0.2,0.2-0.6,0.8-0.8,1c-0.1,0.2-0.3,0.2-0.5,0.1c-0.7-0.3-1.4-0.7-2-1.2c-0.5-0.5-1-1.1-1.4-1.7c-0.1-0.2,0-0.4,0.1-0.5c0.1-0.1,0.2-0.3,0.4-0.4c0.1-0.1,0.2-0.3,0.2-0.4c0.1-0.1,0.1-0.3,0-0.4c-0.1-0.1-0.6-1.3-0.8-1.8C9.4,7.3,9.2,7.3,9,7.3c-0.1,0-0.3,0-0.5,0C8.3,7.3,8,7.5,7.9,7.6C7.3,8.2,7,8.9,7,9.7c0.1,0.9,0.4,1.8,1,2.6c1.1,1.6,2.5,2.9,4.2,3.7c0.5,0.2,0.9,0.4,1.4,0.5c0.5,0.2,1,0.2,1.6,0.1c0.7-0.1,1.3-0.6,1.7-1.2c0.2-0.4,0.2-0.8,0.1-1.2C17,14.2,16.8,14.1,16.6,14 M19.1,4.9C15.2,1,8.9,1,5,4.9c-3.2,3.2-3.8,8.1-1.6,12L2,22l5.3-1.4c1.5,0.8,3.1,1.2,4.7,1.2h0c5.5,0,9.9-4.4,9.9-9.9C22,9.3,20.9,6.8,19.1,4.9 M16.4,18.9c-1.3,0.8-2.8,1.3-4.4,1.3h0c-1.5,0-2.9-0.4-4.2-1.1l-0.3-0.2l-3.1,0.8l0.8-3l-0.2-0.3C2.6,12.4,3.8,7.4,7.7,4.9S16.6,3.7,19,7.5C21.4,11.4,20.3,16.5,16.4,18.9" />
+                </svg>
+
+                {{ $establishment->telephone !== '-' ? $establishment->telephone : '' }}
             </td>
         </tr>
-       
+
         @isset($establishment->web_address)
             <tr>
                 <td class="text-center">
@@ -470,8 +480,9 @@
                             @endif
                         @endif
                     </td>
-                    <td class="text-center desc-9 align-top">{{      isset($row->item->has_unit_type) ? 'NIU' :
-                        $row->item->unit_type_id  }}</td>
+                    <td class="text-center desc-9 align-top">
+                        {{ isset($row->item->has_unit_type) ? 'NIU' : $row->item->unit_type_id }}
+                    </td>
                     <td class="text-left desc-9 align-top">
                         @if (isset($row->name_product_pdf))
                             {!! $row->name_product_pdf !!}
@@ -649,7 +660,7 @@
         </tr>
         <tr>
 
-            @if ($balance < 0)
+            {{-- @if ($balance < 0)
 
                 @php
                     $Total = $document->total + $paymet2;
@@ -661,13 +672,15 @@
                 {{ $document->currency_type->symbol }}</td>
             <td class="text-left font-bold desc">{{ number_format(abs($box->amount), 2, '.', '') }}</td>
         </tr>
-        @endforeach
-
-        <tr>
-            <td colspan="4" class="text-left font-bold desc">VUELTO: {{ $document->currency_type->symbol }}</td>
-            <td class="text-left font-bold desc">{{ number_format(abs($paymet2), 2, '.', '') }}</td>
-        </tr>
+        @endforeach --}}
+        @if ($document->payment_condition_id == '01')
+            <tr>
+                <td colspan="4" class="text-left font-bold desc">VUELTO: {{ $document->currency_type->symbol }}
+                </td>
+                <td class="text-left font-bold desc">{{ number_format(abs($paymet2), 2, '.', '') }}</td>
+            </tr>
         @endif
+        {{-- @endif --}}
         </tr>
         <tr>
             <td colspan="4" class="text-left font-bold desc"><b>FORMA DE PAGO</b></td>
@@ -733,21 +746,45 @@
                 </td>
             </tr>
         @endif
-        <h3> $payments->count= {{ $payments->count() }} </h3>
-        @if ($payments->count())
+        {{-- <h3> $payments->count= {{ $payments->count() }} </h3> --}}
+        @if ($document->payment_condition_id == '01')
             <tr>
                 <td class="desc pt-5">
                     <strong>PAGOS:</strong>
                 </td>
             </tr>
-            @foreach ($payments as $row)
+            @foreach ($boxes as $box)
+            <tr>
+                <td colspan="4" class="text-left font-bold desc">Total {{ $box->method }}:
+                    {{ $document->currency_type->symbol }}</td>
+                <td class="text-left font-bold desc">{{ number_format(abs($box->amount), 2, '.', '') }}</td>
+            </tr>
+            @endforeach
+            {{-- @foreach ($payments as $row)
                 <tr>
                     <td class="desc">&#8226; {{ $row->payment_method_type->description }} -
                         {{ $row->reference ? $row->reference . ' - ' : '' }} {{ $document->currency_type->symbol }}
                         {{ $row->payment + $row->change }}</td>
                 </tr>
+            @endforeach --}}
+        @endif
+        @if (count($document->fee) > 0)
+            <tr>
+                <td class="desc pt-5">
+                    <strong>CUOTAS:</strong>
+                </td>
+            </tr>
+            @foreach ($document->fee as $key => $quote)
+                <tr>
+                    <td class="desc">
+                        &#8226;
+                        {{ empty($quote->getStringPaymentMethodType()) ? 'Cuota #' . ($key + 1) : $quote->getStringPaymentMethodType() }}
+                        / Fecha: {{ $quote->date->format('d-m-Y') }} /
+                        Monto: {{ $quote->currency_type->symbol }}{{ $quote->amount }}</td>
+                </tr>
             @endforeach
         @endif
+
 
         {{-- <tr>
         <td class="desc pt-2">

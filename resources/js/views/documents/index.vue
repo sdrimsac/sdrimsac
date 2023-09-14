@@ -196,12 +196,15 @@
                                     >
                                         T.Igv
                                     </th>
-                                    <th
+                                    <th class="text-center">
+                                        Saldo
+                                    </th>
+                                    <!-- <th
                                         class="text-center"
                                         v-if="columns.boxes.visible"
                                     >
                                         Metodo de pago
-                                    </th>
+                                    </th> -->
                                     <th class="text-left">Total</th>
 
                                     <th class="text-center">Pago</th>
@@ -418,6 +421,7 @@
                                                 </a>
 
                                                 <a
+                                                    v-if="row.is_credit"
                                                     type="button"
                                                     class="dropdown-item"
                                                     @click.prevent="
@@ -694,7 +698,12 @@
                                     >
                                         {{ row.total_igv }}
                                     </td>
-                                    <td v-if="columns.boxes.visible">
+                                    <td class="text-warning text-center">
+                                        <span v-if="row.remain > 0">
+                                            {{ row.remain.toFixed(2) }}
+                                        </span>
+                                    </td>
+                                    <!-- <td v-if="columns.boxes.visible">
                                         <div
                                             class="justify-content-center d-flex flex-column"
                                         >
@@ -711,7 +720,7 @@
                                                 >
                                             </el-tag>
                                         </div>
-                                    </td>
+                                    </td> -->
                                     <td
                                         :class="{
                                             'text-dark':
@@ -747,9 +756,15 @@
                                     <template>
                                         <td class="text-center">
                                             <span
+                                                v-if="row.paid"
                                                 class="badge rounded-pill bg-success text-white"
                                                 >Pagado</span
+                                            ><span
+                                                v-else
+                                                class="badge rounded-pill bg-warning text-white"
                                             >
+                                                Pendiente
+                                            </span>
                                         </td>
                                     </template>
 

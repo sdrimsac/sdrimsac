@@ -9,6 +9,7 @@ use App\Models\Tenant\Establishment;
 use App\Models\Tenant\Item;
 use App\Models\Tenant\ItemWarehouse;
 use App\Models\Tenant\Person;
+use App\Models\Tenant\Warehouse;
 use Carbon\Carbon;
 use Barryvdh\DomPDF\Facade as PDF;
 use Exception;
@@ -322,9 +323,10 @@ class ConsignmentController extends Controller
                 'message' => 'No se encontró el establecimiento o el producto'
             ];
         }
+        $warehouse_id = Warehouse::where('establishment_id', $establishment_id)->first()->id;
         // $item = Item::find($item_id);
         $warehouse = ItemWarehouse::where('item_id', $item_id)
-            ->where('warehouse_id', $establishment_id)
+            ->where('warehouse_id', $warehouse_id)
             ->first();
         if (!$warehouse) {
             return [

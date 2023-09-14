@@ -166,6 +166,9 @@ class Document extends ModelTenant
 
         return $allowance_total_amount;
     }
+    public function boxes(){
+        return $this->hasMany(Box::class,'document_id');
+    }
     public function get_document_type(){
         $document_type_id = $this->document_type_id;
         return $document_type_id == "03" ? "BOLETA" : "FACTURA";

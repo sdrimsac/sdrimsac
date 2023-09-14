@@ -93,9 +93,23 @@ class DocumentCollection extends ResourceCollection
             //    $balance = number_format(($row->tototal_paymenttal) - $total_payments,2, ".", "");
 
             // }
-            $boxes = Box::where('document_id', $row->id)->get();
+            $boxes = Box::where('document_id', $row->id);
+            $is_credit = $row->payment_condition_id == "02";
+            $paid = true;
+            $remain = 0;
+            if($is_credit){
+                $sum = $boxes->sum('amount');
+                if($sum < $row->total){
+                    $remain = $row->total - $sum;
+                    $paid = false;
+                }
+            }
 
+            $boxes = $boxes->get();
             return [
+                'remain' => $remain,
+                'paid' => $paid,
+                'is_credit' => $row->payment_condition_id == "02",
                 'dispatch_id' => $row->dispatch_id,
                 'boxes' => $boxes,
                 'id' => $row->id,

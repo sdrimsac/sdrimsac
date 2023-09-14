@@ -337,6 +337,7 @@ export default {
             }
         },
         async open() {
+            console.log(this.config);
             await this.getLastDocument();
             await this.getLastDocuments();
             await this.getPrinter();

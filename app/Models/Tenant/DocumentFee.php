@@ -31,4 +31,14 @@ class DocumentFee extends ModelTenant
     {
         return $this->belongsTo(CurrencyType::class, 'currency_type_id');
     }
+    public function getStringPaymentMethodType(){
+
+        $payment_method_type = PaymentMethodType::where('id',$this->payment_method_type_id)->first();
+        $return = null;
+        if(!empty($payment_method_type)){
+            $return =  $payment_method_type->getDescription();
+        }
+        return $return;
+    }
+    //getStringPaymentMethodType
 }

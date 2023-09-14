@@ -365,11 +365,8 @@
                                     @endif
                                 @endif
                             </td>
-                            <td class="text-center align-top bordes" height="20px">{{
-                            
-                            isset($row->item->has_unit_type) ? 'NIU' :
-                            $row->item->unit_type_id 
-                            }}
+                            <td class="text-center align-top bordes" height="20px">
+                                {{ isset($row->item->has_unit_type) ? 'NIU' : $row->item->unit_type_id }}
                             </td>
                             <td class="text-left align-top bordes" height="20px">
 
@@ -710,16 +707,41 @@
 
 
 
-        @if ($payments->count())
 
 
             <table class="full-width">
-                <tr>
-                    <td>
-                        <strong>PAGOS:</strong>
-                    </td>
-                </tr>
-                @php
+                @if ($document->payment_condition_id == '01')
+                    <tr>
+                        <td>
+                            <strong>PAGOS:</strong>
+                        </td>
+                    </tr>
+                    @foreach ($boxes as $box)
+                        <tr>
+                            <td colspan="4" class="text-left font-bold desc">Total {{ $box->method }}:
+                                {{ $document->currency_type->symbol }}</td>
+                            <td class="text-left font-bold desc">{{ number_format(abs($box->amount), 2, '.', '') }}
+                            </td>
+                        </tr>
+                    @endforeach
+                @endif
+                @if (count($document->fee) > 0)
+                    <tr>
+                        <td class="desc pt-5">
+                            <strong>CUOTAS:</strong>
+                        </td>
+                    </tr>
+                    @foreach ($document->fee as $key => $quote)
+                        <tr>
+                            <td class="desc">
+                                &#8226;
+                                {{ empty($quote->getStringPaymentMethodType()) ? 'Cuota #' . ($key + 1) : $quote->getStringPaymentMethodType() }}
+                                / Fecha: {{ $quote->date->format('d-m-Y') }} /
+                                Monto: {{ $quote->currency_type->symbol }}{{ $quote->amount }}</td>
+                        </tr>
+                    @endforeach
+                @endif
+                {{-- @php
                     $payment = 0;
                 @endphp
                 @foreach ($payments as $row)
@@ -730,10 +752,9 @@
                             {{ $document->total_payment + $row->change }}</td>
                     </tr>
                 @endforeach
-                </tr>
+                </tr> --}}
 
             </table>
-        @endif
 
         @if ($document->user)
             <br>

@@ -476,8 +476,8 @@ class DocumentController extends Controller
         $select_first_document_type_03 = config('tenant.select_first_document_type_03');
         $payment_conditions = PaymentCondition::all();
         $sellers = Seller::where('active', true)
-        ->where('establishment_id', auth()->user()->establishment_id)
-        ->get();
+            ->where('establishment_id', auth()->user()->establishment_id)
+            ->get();
         $document_types_guide = DocumentType::whereIn('id', ['09', '31'])->get()->transform(function ($row) {
             return [
                 'id' => $row->id,
@@ -1460,8 +1460,21 @@ class DocumentController extends Controller
             $records = $records->where('establishment_id', auth()->user()->establishment_id)->whereTypeUser();
         }
         if ($pending_payment) {
-            $records = $records->where('total_canceled', false);
+            $records = $records->where('payment_condition_id', '02')
+                ->where(function ($query) {
+                    $query->doesntHave('boxes')
+                        ->orWhere(function ($subquery) {
+                            $subquery->whereExists(function ($innerQuery) {
+                                $innerQuery->select(DB::raw('1'))
+                                    ->from('boxes')
+                                    ->whereRaw('documents.id = boxes.document_id')
+                                    ->groupBy('boxes.document_id')
+                                    ->havingRaw('SUM(boxes.amount) != documents.total');
+                            });
+                        });
+                });
         }
+
 
         if ($customer_id) {
             $records = $records->where('customer_id', $customer_id);
@@ -1475,7 +1488,7 @@ class DocumentController extends Controller
                 $query->where('item_id', $item_id);
             });
         }
-        if($seller_id){
+        if ($seller_id) {
             $records = $records->where('seller_id', $seller_id);
         }
         if ($category_id) {
@@ -1502,7 +1515,7 @@ class DocumentController extends Controller
         $series = Series::whereIn('document_type_id', ['01', '03', '07', '08'])->get();
         $establishments = Establishment::where('id', auth()->user()->establishment_id)->get(); // Establishment::all();
         $payment_conditions = PaymentCondition::all();
-        return compact('customers','sellers', 'payment_conditions', 'document_types', 'series', 'establishments', 'state_types', 'items', 'categories');
+        return compact('customers', 'sellers', 'payment_conditions', 'document_types', 'series', 'establishments', 'state_types', 'items', 'categories');
     }
 
 
@@ -1656,7 +1669,9 @@ class DocumentController extends Controller
                                 $quantity = $quantity * $unit_type->quantity_unit;
                             }
                         }
-                        ItemWarehouse::where('item_id', $it->item_id)->where('warehouse_id', $establishment_id)->increment('stock', $quantity);
+                        $warehouse = Warehouse::where('establishment_id', $establishment_id)->first();
+                        $warehouse_id = ($warehouse) ? $warehouse->id : null;
+                        ItemWarehouse::where('item_id', $it->item_id)->where('warehouse_id', $warehouse_id)->increment('stock', $quantity);
                         ItemWarehouse::where('item_id', $it->item_id)->increment('stock', $quantity);
                     }
                     Box::where('document_id', $document_id)->delete();
