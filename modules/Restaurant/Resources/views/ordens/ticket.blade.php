@@ -1,5 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
+@php
+    // $configuration = App\Models\Tenant\Configuration::getPublicConfig();
+@endphp
 
 <head>
     <meta charset="UTF-8">
@@ -76,7 +79,9 @@
         font-size: 20px !important;
         text-decoration: underline;
     }
-
+    .bold{
+        font-weight: bold;
+    }
     p>strong {
         margin-left: 5px;
         font-size: 13px;
@@ -446,6 +451,22 @@
             @endif
 
         </table>
+        <br>
+        @if ($to_kitchen && $configuration->text_comanda)
+           <div class="text-center">
+            @if ($configuration->text_one)
+            <label class="header_title1 bold">
+                {{ mb_strtoupper($configuration->text_one) }}
+            </label>
+            <br>
+        @endif
+        @if ($configuration->text_two)
+            <label class="header_title1 bold">
+                {{ mb_strtoupper($configuration->text_two) }}
+            </label>
+        @endif
+           </div>
+        @endif
     </div>
 
 </body>

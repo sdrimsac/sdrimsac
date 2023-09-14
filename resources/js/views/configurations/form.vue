@@ -1410,6 +1410,62 @@
                                     </div>
                                 </div>
                             </el-tab-pane>
+                               <el-tab-pane label="Consumo">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label class="control-label w-100">
+                                            Texto en precuenta
+                                            <el-tooltip
+                                                class="item"
+                                                effect="dark"
+                                                content="Permite agregar un texto en la precuenta de consumo"
+                                                placement="top-start"
+                                            >
+                                                <i
+                                                    class="fa fa-info-circle"
+                                                ></i>
+                                            </el-tooltip>
+                                        </label>
+                                        <el-switch
+                                            v-model="form.text_comanda"
+                                            active-text="Si"
+                                            inactive-text="No"
+                                            @change="submit"
+                                        ></el-switch>
+                                    </div>
+                                    <div class="col-md-6"></div>
+                                    <div class="col-md-6">
+                                        <label for="text_1">
+                                            Primer texto
+                                        </label>
+                                        <el-input
+                                        :disabled="!form.text_comanda"
+                                        class="w-100"
+                                            v-model="
+                                                form.text_one
+                                            "
+                                            placeholder="Texto 1"
+                                            size="normal"
+                                            @input="saveSubmitDebounce"
+                                        ></el-input>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="text-2">
+                                            Segundo texto
+                                        </label>
+                                        <el-input
+                                        :disabled="!form.text_comanda"
+                                        class="w-100"
+                                            v-model="
+                                                form.text_two
+                                            "
+                                            placeholder="Texto 2"
+                                            size="normal"
+                                            @input="saveSubmitDebounce"
+                                        ></el-input>
+                                    </div>
+                                </div>
+                            </el-tab-pane>
                         </el-tabs>
                     </div>
                 </form>
@@ -1427,6 +1483,7 @@ export default {
     //
     data() {
         return {
+            timer: null,
             loading_search: false,
             showDialogTermsCondition: false,
             loading_submit: false,
@@ -1459,6 +1516,13 @@ export default {
         });
     },
     methods: {
+        saveSubmitDebounce() {
+            if(this.timer!=null)
+            clearTimeout(this.timer);
+            this.timer = setTimeout(() => {
+                this.submit();
+            }, 700);
+        },
         changeNumberActivity(input) {
             let number_activity = input;
             if (number_activity.length < 9) {

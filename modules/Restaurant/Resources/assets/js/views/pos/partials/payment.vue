@@ -633,7 +633,7 @@
                                                             class="text-left"
                                                         >
                                                             {{
-                                                                form.is_credit
+                                                                form.payment_condition_id !== '01'
                                                                     ? "Cuotas"
                                                                     : "Pagos"
                                                             }}
@@ -649,7 +649,7 @@
                                                         <td>{{ idx + 1 }}</td>
                                                         <td
                                                             v-if="
-                                                                form.is_credit
+                                                         form.payment_condition_id !== '01'
                                                             "
                                                         >
                                                             <el-date-picker
@@ -861,7 +861,26 @@
                                         <div class="col-xl-3"></div>
                                         <div class="col-xl-2"></div>
                                         <div class="col-xl-3">
-                                            <el-switch
+                                            <el-select
+                                            v-model="form.payment_condition_id"
+                                            >
+                                                <el-option
+                                                value="01"
+                                                label="Contado"
+                                                >
+
+                                                </el-option>
+                                                <el-option
+                                                value="02"
+                                                label="Crédito"
+                                                >
+                                                </el-option>
+                                                <el-option
+                                                value="03"
+                                                label="Crédito a cuotas"
+                                                ></el-option>
+                                            </el-select>
+                                            <!-- <el-switch
                                                 v-if="
                                                     form.document_type_id ==
                                                         '01' ||
@@ -871,7 +890,7 @@
                                                 active-text="Crédito"
                                                 inactive-text="Contado"
                                                 v-model="form.is_credit"
-                                            ></el-switch>
+                                            ></el-switch> -->
                                         </div>
                                         <div class="col-xl-4">
                                             <div
@@ -2803,7 +2822,7 @@ export default {
             form.boxes = this.currentPayments;
 
             this.addPayment();
-            if (this.form.is_credit) {
+            if (this.form.payment_condition_id !== "01") {
                 form.fee = form.boxes.map(b => ({
                     id: null,
                     currency_type_id: "PEN",

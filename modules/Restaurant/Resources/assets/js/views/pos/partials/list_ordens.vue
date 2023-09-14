@@ -2317,7 +2317,6 @@ export default {
             this.calculateTotal(newOrdens);
         },
         localOrden(newOrdens, _) {
-            console.log(newOrdens);
             this.calculateTotal(this.ordens);
         }
     },
@@ -2456,7 +2455,6 @@ export default {
             this.isConsignment = false;
         },
         openConsignment() {
-            console.log("xd");
             this.showConsignmentForm = true;
         },
         async changeQuickSale() {
@@ -3239,7 +3237,6 @@ export default {
             // Recorrer el arreglo original
             items.forEach(obj => {
                 const key = `${obj.food.id}-${Number(obj.price).toFixed(2)}`;
-                console.log(key);
                 if (resultado[key]) {
                     resultado[key].quantity += obj.quantity;
                 } else {

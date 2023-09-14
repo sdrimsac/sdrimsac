@@ -1870,7 +1870,7 @@ export default {
         });
 
         await this.initForm();
-        this.loader = true;
+
         await this.$http.get(`/documents/tables`).then(response => {
             this.sellers = response.data.sellers;
             this.show_restriction =
