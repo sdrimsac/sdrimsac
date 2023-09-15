@@ -540,7 +540,7 @@
                                         >
                                             <td>{{ index + 1 }}</td>
                                             <td>
-                                                {{ row.item.description
+                                              {{row.item.internal_id}}-{{ row.item.description
                                                 }}<br /><small>{{
                                                     row.affectation_igv_type
                                                         .description

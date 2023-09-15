@@ -479,7 +479,15 @@ export default {
         };
     },
     created() {
-        this.initForm();
+            this.inititem();
+
+        this.$eventHub.$on("reloadDataItems", item_id => {
+            this.reloadDataItems(item_id);
+        });
+    },
+    methods: {
+        inititem(){
+               this.initForm();
         this.$http.get(`/${this.resource}/item/tables`).then(response => {
             this.items = response.data.items;
             this.affectation_igv_types = response.data.affectation_igv_types;
@@ -490,12 +498,7 @@ export default {
             this.warehouses = response.data.warehouses;
             // this.filterItems()
         });
-
-        this.$eventHub.$on("reloadDataItems", item_id => {
-            this.reloadDataItems(item_id);
-        });
-    },
-    methods: {
+        },
         uploadExcel(event) {
             let file = event.target.files[0];
             readXlsxFile(file).then(rows => {
@@ -657,6 +660,7 @@ export default {
         //     this.form.affectation_igv_type_id = this.affectation_igv_types[0].id
         // },
         create() {
+            this.inititem();
             this.input_barcode = null;
             this.barcode_lector = false;
             //     this.initializeFields()

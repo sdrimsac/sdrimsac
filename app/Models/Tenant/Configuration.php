@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Config;
 class Configuration extends ModelTenant
 {
     protected $fillable = [
+        'purchase_affectation_igv_type_id',
         'text_comanda',
         'text_one',
         'text_two',
@@ -195,6 +196,7 @@ class Configuration extends ModelTenant
         // $skins = Skin::all();
         $skins = [];
         return [
+            'purchase_affectation_igv_type_id' => $this->purchase_affectation_igv_type_id,
             'text_comanda' => (bool) $this->text_comanda,
             'text_one' => $this->text_one,
             'text_two' => $this->text_two,

@@ -342,6 +342,7 @@ class PurchaseController extends Controller
                     $p_item->save();
                     $item = Item::findOrFail($row['item_id']);
                     $item->sale_unit_price = $row['sale_unit_price'];
+                    $item->purchase_affectation_igv_type_id = $row['affectation_igv_type_id'];
                     $item->save();
                     Food::where('item_id', $row['item_id'])->update(['price' => $row['sale_unit_price']]);
                     ItemWarehousePrice::where('item_id', $row['item_id'])

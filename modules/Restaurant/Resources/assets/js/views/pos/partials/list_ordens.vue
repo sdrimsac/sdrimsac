@@ -3106,6 +3106,7 @@ export default {
                         data: url
                     }
                 ];
+                        console.log("🚀 ~ file: list_ordens.vue:3107 ~ printTicket ~ url:", url)
                 qz.print(config, data).catch(e => {
                     this.$toast.error(e.message);
                 });

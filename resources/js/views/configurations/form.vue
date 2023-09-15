@@ -151,7 +151,7 @@
                                             }"
                                         >
                                             <label class="control-label"
-                                                >Tipo de afectación
+                                                >Tipo de afectación Venta
                                                 <el-tooltip
                                                     class="item"
                                                     effect="dark"
@@ -189,6 +189,53 @@
                                             ></small>
                                         </div>
                                     </div>
+                                       <!-- <div class="col-md-6 mt-4">
+                                        <div
+                                            class="form-group"
+                                            :class="{
+                                                'has-danger':
+                                                    errors.affectation_igv_type_id
+                                            }"
+                                        >
+                                            <label class="control-label"
+                                                >Tipo de afectación Compra
+                                                <el-tooltip
+                                                    class="item"
+                                                    effect="dark"
+                                                    content="Tipo de afectación predeterminada al comprar producto"
+                                                    placement="top-start"
+                                                >
+                                                    <i
+                                                        class="fa fa-info-circle"
+                                                    ></i>
+                                                </el-tooltip>
+                                            </label>
+                                            <el-select
+                                                v-model="
+                                                    form.purchase_affectation_igv_type_id
+                                                "
+                                                @change="submit"
+                                                filterable
+                                            >
+                                                <el-option
+                                                    v-for="option in affectation_igv_types"
+                                                    :key="option.id"
+                                                    :value="option.id"
+                                                    :label="option.description"
+                                                ></el-option>
+                                            </el-select>
+                                            <small
+                                                class="text-danger"
+                                                v-if="
+                                                    errors.affectation_igv_type_id
+                                                "
+                                                v-text="
+                                                    errors
+                                                        .affectation_igv_type_id[0]
+                                                "
+                                            ></small>
+                                        </div>
+                                    </div> -->
                                 </div>
                             </el-tab-pane>
                             <el-tab-pane label="Visual">
