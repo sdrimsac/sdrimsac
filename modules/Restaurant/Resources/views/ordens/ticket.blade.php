@@ -238,7 +238,7 @@
 <body>
     <div id="register">
 
-        <table border="0" style="border:0px solid;width:100%">
+        <table border="0" style="border:0px solid;width:90%">
 
             @if ($to_kitchen)
                 @if ($is_restaurant)
