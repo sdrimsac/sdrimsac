@@ -453,7 +453,7 @@
         </table>
         <br>
         @if ($to_kitchen && $configuration->text_comanda)
-           <div class="text-center">
+           <div class="text-center"  style="width:75%">
             @if ($configuration->text_one)
             <label class="header_title0 bold">
                 {{ mb_strtoupper($configuration->text_one) }}
