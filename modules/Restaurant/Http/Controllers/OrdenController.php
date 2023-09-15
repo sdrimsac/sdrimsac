@@ -232,7 +232,7 @@ class OrdenController extends Controller
                 'ordenes',
                 'orden_items'
             ))
-                ->setPaper(array(0, 0, 245, $height));
+                ->setPaper(array(0, 0, 249.45, $height));
         } catch (Exception $e) {
             return ['m' => $e->getMessage()];
         }
