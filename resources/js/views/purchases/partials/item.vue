@@ -47,7 +47,7 @@
                                 v-if="barcode_lector"
                                 v-model="input_barcode"
                                 placeholder="Buscar"
-                                @input="searchItems"
+                                @input="searchItemsDebounce"
                             >
                             </el-input>
                             <el-checkbox v-model="barcode_lector"
@@ -312,7 +312,8 @@
                                         Subir excel
 
                                         <a href="/formats/series_compras.xlsx"
-                                            >Descargar formato</a>
+                                            >Descargar formato</a
+                                        >
                                     </label>
 
                                     <el-button
@@ -496,7 +497,6 @@ export default {
     },
     methods: {
         uploadExcel(event) {
-   
             let file = event.target.files[0];
             readXlsxFile(file).then(rows => {
                 //skip header
@@ -509,8 +509,6 @@ export default {
                         .add(5, "hours")
                         .format("YYYY-MM-DD");
 
-
-
                     return {
                         series: row[0],
                         date: date,
@@ -520,6 +518,12 @@ export default {
                 this.form.quantity = this.lots.length;
                 event.target.value = "";
             });
+        },
+        searchItemsDebounce() {
+            if (this.timer) clearTimeout(this.timer);
+            this.timer = setTimeout(() => {
+                this.searchItems();
+            }, 500);
         },
         async searchItems() {
             if (this.changing_name) return (this.changing_name = false);
