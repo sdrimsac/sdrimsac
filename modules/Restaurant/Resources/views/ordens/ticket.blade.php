@@ -180,7 +180,7 @@
     }
 
     @page {
-        margin: 15px;
+        margin: 3px;
     }
 
     td,
@@ -238,7 +238,7 @@
 <body>
     <div id="register">
 
-        <table border="0" style="border:0px solid;width:90%">
+        <table border="0" style="border:0px solid;width:100%">
 
             @if ($to_kitchen)
                 @if ($is_restaurant)
@@ -455,13 +455,13 @@
         @if ($to_kitchen && $configuration->text_comanda)
            <div class="text-center">
             @if ($configuration->text_one)
-            <label class="header_title1 bold">
+            <label class="header_title0 bold">
                 {{ mb_strtoupper($configuration->text_one) }}
             </label>
             <br>
         @endif
         @if ($configuration->text_two)
-            <label class="header_title1 bold">
+            <label class="header_title0 bold">
                 {{ mb_strtoupper($configuration->text_two) }}
             </label>
         @endif

@@ -210,6 +210,9 @@ class OrdenController extends Controller
         } else {
             $height = $height + $orden_item_length;
         }
+        if($configuration->text_comanda){
+            $height += 100;
+        }
 
         // 
 
@@ -229,7 +232,7 @@ class OrdenController extends Controller
                 'ordenes',
                 'orden_items'
             ))
-                ->setPaper(array(0, 0, 249.45, $height));
+                ->setPaper(array(0, 0, 245, $height));
         } catch (Exception $e) {
             return ['m' => $e->getMessage()];
         }
