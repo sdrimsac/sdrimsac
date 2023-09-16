@@ -228,7 +228,14 @@ class InternetController extends Controller
         try {
             $pdf = PDf::loadView("internet::formats.contracts", compact(
                 'total',
-                'register', 'company', 'operation', 'plan_variation', 'plan', 'items', 'concept_price'))
+                'register',
+                'company',
+                'operation',
+                'plan_variation',
+                'plan',
+                'items',
+                'concept_price'
+            ))
                 ->setPaper('a4', 'portrait');
         } catch (Exception $e) {
             return ['m' => $e->getMessage()];
@@ -248,10 +255,12 @@ class InternetController extends Controller
             $records = InternetRegister::where('active', $active);
             if ($value) {
                 $records = $records->where('identifier', 'like', '%' . $value . '%')
+                    ->whereHas('person', function ($query) use ($value) {
+                        $query->where('enabled', 1);
+                    })
                     ->orWhereHas('person', function ($query) use ($value) {
-                        $query->where('enabled',1)
-                        ->
-                        where('number', 'like', '%' . $value . '%')
+                        $query->where('enabled', 1)
+                            ->where('number', 'like', '%' . $value . '%')
                             ->orWhere('name', 'like', '%' . $value . '%');
                     });
             }
@@ -286,11 +295,10 @@ class InternetController extends Controller
         if ($value != null) {
             $records = $records->where(function ($query) use ($value) {
                 $query->where('internet_register.identifier', 'LIKE', "%$value%")
-                ->where('persons.enabled',1)
+                    ->where('persons.enabled', 1)
                     ->orWhere(function ($query) use ($value) {
                         $query
-                        ->
-                        where('persons.name', 'LIKE', "%$value%")
+                            ->where('persons.name', 'LIKE', "%$value%")
                             ->orWhere('persons.number', 'LIKE', "%$value%");
                     });
             });
