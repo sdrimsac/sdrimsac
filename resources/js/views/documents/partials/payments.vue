@@ -1,5 +1,6 @@
 <template>
-    <el-dialog :title="title" :visible="showDialog" @close="close" @open="getData" width="65%">
+    <el-dialog :title="title" :visible="showDialog" @close="close" @open="getData" width="65%"
+    append-to-body>
         <div class="form-body">
             <div class="row">
                 <div class="col-md-12" v-if="records.length > 0">
@@ -144,7 +145,7 @@
     import {deletable} from '../../../mixins/deletable'
 
     export default {
-        props: ['showDialog', 'documentId'],
+        props: ['showDialog', 'documentId','external'],
         mixins: [deletable],
         data() {
             return {
@@ -268,6 +269,9 @@
                             // this.initDocumentTypes()
                             this.showAddButton = true;
                             this.$eventHub.$emit('reloadData')
+                            if(this.external){
+                                this.$emit('getRecords')
+                            }
                         } else {
                             this.$toast.error(response.data.message);
                         }

@@ -87,7 +87,7 @@
                         >
                         </document-print-detail>
                     </el-tab-pane>
-                    <el-tab-pane label="Cotizaciones" name="quotations">
+                    <el-tab-pane v-if="config.quotation" label="Cotizaciones" name="quotations">
                         <document-print-detail
                         :configuration="config"
                             :sender="sender"

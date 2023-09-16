@@ -151,6 +151,7 @@ class Configuration extends ModelTenant
         'send_whatsapp_activity' => 'boolean',
         'pin_orden_delete' => 'boolean',
         'edit_product_pos' => 'boolean',
+        'quotation' => 'boolean',
 
         'print_incomes_expenses' => 'boolean',
     ];

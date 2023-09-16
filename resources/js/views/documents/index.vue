@@ -1163,8 +1163,7 @@ export default {
             this.showImportDialog = true;
         },
         clickValidate() {
-            (this.showDialogValidate = true),
-                console.log(this.showDialogValidate);
+            this.showDialogValidate = true
         },
         clickDownloadReportPagos(type) {
             window.open(`/${this.resource}/payments/${type}`, "_blank");

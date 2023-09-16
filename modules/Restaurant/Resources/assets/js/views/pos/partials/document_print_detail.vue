@@ -22,6 +22,9 @@
                         <th>
                             Estado
                         </th>
+                        <th v-if="type == 'documents'">
+                            Saldo
+                        </th>
                         <th>
                             Monto
                         </th>
@@ -33,7 +36,7 @@
                         :key="idx"
                         :class="
                             `${
-                                data.state_type_id == '11'
+                                (data.state_type_id == '11' || data.state_type_id == '13')
                                     ? 'bg-danger text-white'
                                     : ''
                             }`
@@ -41,7 +44,7 @@
                     >
                         <td
                             :class="
-                                `${data.state_type_id == '11' && 'text-white'}`
+                                `${(data.state_type_id != '11' && data.state_type_id != '13') && 'text-white'}`
                             "
                             v-if="type == 'documents'"
                         >
@@ -50,7 +53,7 @@
                                 data-childselector="span"
                             >
                                 <button
-                                    v-if="data.state_type_id != '11'"
+                                    v-if="(data.state_type_id != '11' && data.state_type_id != '13')"
                                     class="btn p-0"
                                     type="button"
                                     data-bs-toggle="dropdown"
@@ -72,11 +75,46 @@
                                 <div
                                     class="dropdown-menu dropdown-menu-end col-md-2 col-1"
                                 >
+                                    <template>
+                                        <el-button class="col-md-12 col-12"
+                                        v-if="data.state_type_id== '01'"
+                                        @click="clickDeleteDocument(data.id)"
+                                        >
+                                            Anular internamente
+                                        </el-button>
+                                        <br   v-if="data.state_type_id== '01'" /><el-button
+                                            v-if="data.document_type_id == '01'"
+                                            class="col-md-12 col-12"
+                                            @click="clickVoided(data.id)"
+                                        >
+                                            Anular sunat
+                                        </el-button>
+                                        <br
+                                            v-if="data.document_type_id == '01'"
+                                        />
+                                        <!-- <el-button
+                                            v-if="data.state_type_id != '05'"
+                                            class="col-md-12 col-12"
+                                        >
+                                            Nota de crédito
+                                        </el-button>
+                                        <br
+                                            v-if="data.state_type_id != '05'"
+                                        /> -->
+                                        <el-button
+                                            v-if="data.is_credit"
+                                            class="col-md-12 col-12"
+                                            @click="clickPayment(data.id)"
+                                        >
+                                            Pagos
+                                        </el-button>
+                                        <br v-if="data.is_credit" />
+                                    </template>
                                     <el-button
                                         class="col-md-12 col-12"
                                         v-if="
                                             type == 'documents' &&
-                                                data.state_type_id != '11' &&
+                                               ( data.state_type_id != '11' && data.state_type_id != '13') &&
                                                 data.document_type_id == '01'
                                         "
                                         @click="clickReStore(data.id)"
@@ -86,7 +124,7 @@
                                     <br
                                         v-if="
                                             type == 'documents' &&
-                                                data.state_type_id != '11' &&
+                                                (data.state_type_id != '11' && data.state_type_id != '13')  &&
                                                 data.document_type_id == '01'
                                         "
                                     />
@@ -95,7 +133,7 @@
                                         v-if="
                                             type == 'documents' &&
                                                 data.document_type_id == '01' &&
-                                                data.state_type_id != '11'
+                                                (data.state_type_id != '11' && data.state_type_id != '13' )
                                         "
                                         plain
                                         @click="clickSendOnline(data.id)"
@@ -113,7 +151,7 @@
                                         class="col-md-12 col-12"
                                         v-if="
                                             type == 'documents' &&
-                                                data.state_type_id != '11'
+                                                (data.state_type_id != '11' && data.state_type_id != '13') 
                                         "
                                         @click="clickValidarCpe(data.id)"
                                     >
@@ -122,13 +160,13 @@
                                     <br
                                         v-if="
                                             type == 'documents' &&
-                                                data.state_type_id != '11'
+                                                (data.state_type_id != '11' && data.state_type_id != '13')
                                         "
                                     />
 
                                     <el-button
                                         class="col-md-12 col-12"
-                                        v-if="data.state_type_id != '11'"
+                                        v-if="data.state_type_id != '11' && data.state_type_id != '13' "
                                         @click="clickGenerateGuie(data.id)"
                                     >
                                         Guia
@@ -138,7 +176,7 @@
                         </td>
                         <td
                             :class="
-                                `${data.state_type_id == '11' && 'text-white'}`
+                                `${(data.state_type_id == '11' || data.state_type_id == '13') && 'text-white'}`
                             "
                             v-if="type == 'saleNotes'"
                         >
@@ -147,7 +185,7 @@
                                 data-childselector="span"
                             >
                                 <button
-                                    v-if="data.state_type_id != '11'"
+                                    v-if="data.state_type_id != '11' && data.state_type_id != '13' "
                                     class="btn p-0"
                                     type="button"
                                     data-bs-toggle="dropdown"
@@ -172,7 +210,7 @@
                                     <el-button
                                         class="col-md-12 col-12"
                                         v-if="
-                                            data.state_type_id != '11' &&
+                                            (data.state_type_id != '11' && data.state_type_id != '13' )&&
                                                 !data.changed
                                         "
                                         @click="clickGenerate(data.id)"
@@ -181,13 +219,13 @@
                                     </el-button>
                                     <br
                                         v-if="
-                                            data.state_type_id != '11' &&
+                                           ( data.state_type_id != '11'  || data.state_type_id != '13')&&
                                                 !data.changed
                                         "
                                     />
                                     <el-button
                                         class="col-md-12 col-12"
-                                        v-if="data.state_type_id != '11'"
+                                        v-if="data.state_type_id != '11' && data.state_type_id != '13'"
                                         @click="
                                             clickGenerateGuie(data.id, '80')
                                         "
@@ -199,7 +237,7 @@
                         </td>
                         <td
                             :class="
-                                `${data.state_type_id == '11' && 'text-white'}`
+                                `${(data.state_type_id == '11'|| data.state_type_id == '13' )&& 'text-white'}`
                             "
                         >
                             <template
@@ -238,7 +276,7 @@
                                 </el-tooltip>
                             </template>
                             <el-button
-                                v-if="data.state_type_id != '11'"
+                                v-if="data.state_type_id != '11' && data.state_type_id != '13'"
                                 size="mini"
                                 type="success"
                                 style="margin-bottom:3px;"
@@ -251,7 +289,7 @@
                             </el-button>
 
                             <el-button
-                                v-if="data.state_type_id != '11'"
+                                v-if="data.state_type_id != '11' && data.state_type_id != '13'"
                                 size="mini"
                                 plain
                                 @click="
@@ -278,7 +316,7 @@
                         </td>
                         <td
                             :class="
-                                `${data.state_type_id == '11' && 'text-white'}`
+                                `${(data.state_type_id == '11' || data.state_type_id == '13') && 'text-white'}`
                             "
                         >
                             <template v-if="type == 'saleNotes'">
@@ -293,14 +331,14 @@
                         </td>
                         <td
                             :class="
-                                `${data.state_type_id == '11' && 'text-white'}`
+                                `${(data.state_type_id == '11'|| data.state_type_id == '13') && 'text-white'}`
                             "
                         >
                             {{ data.date_of_issue }}
                         </td>
                         <td
                             :class="
-                                `${data.state_type_id == '11' && 'text-white'}`
+                                `${(data.state_type_id == '11'|| data.state_type_id == '13') && 'text-white'}`
                             "
                         >
                             {{ data.customer_name }} <br />
@@ -335,8 +373,10 @@
                                     data.state_type_description == 'Aceptado'
                                         ? 'text-success'
                                         : data.state_type_description ==
-                                          'Anulado'
+                                          'Anulado' || data.state_type_description ==
+                                          'Por anular'
                                         ? 'text-white'
+                                  
                                         : data.state_type_description ==
                                           'Enviado'
                                         ? 'text-primary'
@@ -346,9 +386,12 @@
                         >
                             <b> {{ data.state_type_description }}</b>
                         </td>
+                        <td v-if="type == 'documents'" class="text-warning">
+                            {{ data.remain > 0 ? data.remain : "" }}
+                        </td>
                         <td
                             :class="
-                                `${data.state_type_id == '11' && 'text-white'}`
+                                `${(data.state_type_id == '11'|| data.state_type_id == '13') && 'text-white'}`
                             "
                         >
                             {{ data.total }}
@@ -394,7 +437,7 @@
         </document-print-previsualitation>
 
         <sale-note-generate
-        :configuration="configuration"
+            :configuration="configuration"
             :showDialog.sync="showDialogGenerate"
             :recordId="currentId"
             :showGenerate="true"
@@ -409,10 +452,25 @@
             :configuration="configuration"
         >
         </create-dispatch>
+        
+                        <documents-voided
+                            :external="true"
+                            @getRecords="getRecords"
+                            :showDialog.sync="showDialogVoided"
+                            :recordId="recordId"
+                        ></documents-voided>
+                             <documents-payments
+                                          @getRecords="getRecords"
+                                           :external="true"
+                            :showDialog.sync="showDialogPayments"
+                            :documentId="recordId"
+                        ></documents-payments>
     </div>
 </template>
 
 <script>
+const DocumentsVoided = () => import("../../../../../../../../resources/js/views/documents/partials/voided.vue");
+const DocumentsPayments = () => import("../../../../../../../../resources/js/views/documents/partials/payments.vue");
 import whatsappModal from "./whatsapp_modal.vue";
 import { deletable } from "../../../../../../../../resources/js/mixins/deletable";
 const DocumentPrintPrevisualitation = () =>
@@ -426,7 +484,7 @@ const SaleNoteGenerate = () =>
     import(
         "../../../../../../../../resources/js/views/sale_notes/partials/option_documents.vue"
     );
-const CreateDispatch = ()=>import("./create_dispatch.vue");
+const CreateDispatch = () => import("./create_dispatch.vue");
 export default {
     components: {
         whatsappModal,
@@ -434,7 +492,9 @@ export default {
         QuotationEditModal,
         DocumentPrintPrevisualitation,
         SaleNoteGenerate,
-        CreateDispatch
+        CreateDispatch,
+        DocumentsVoided,
+        DocumentsPayments
     },
     mixins: [deletable],
     props: [
@@ -456,21 +516,37 @@ export default {
             currentType: null,
             currentNumber: null,
             showDialogOptions: false,
+            recordId: null,
             quotationId: null,
+            showDialogVoided: false,
             showEditQuotationDialog: false,
             showDialogGenerate: false,
             currentType: null,
-            showCreateDispatch:false
+            showCreateDispatch: false,
+            showDialogPayments: false
         };
     },
 
     methods: {
-        clickGenerateGuie(recordId, type = "03"){
+        clickPayment(recordId){
+     this.recordId = recordId;
+            this.showDialogPayments = true;
+        },
+        clickVoided(recordId){
+         this.recordId = recordId;
+            this.showDialogVoided = true;
+        },
+        clickDeleteDocument(document_id){
+         this.destroy(
+                `/documents/delete_document/${document_id}`
+            ).then(() => this.$emit("getRecords"));
+        },
+        clickGenerateGuie(recordId, type = "03") {
             this.currentId = recordId;
             this.currentType = type;
             this.showCreateDispatch = true;
         },
-      clickGenerate(recordId) {
+        clickGenerate(recordId) {
             this.currentId = recordId;
             this.showDialogGenerate = true;
         },

@@ -18,18 +18,17 @@ class InventoryCollection extends ResourceCollection
     {
         return $this->collection->transform(function ($row, $key) {
             $lots = ItemLot::where('item_id', $row->item_id)->where('has_sale', false)->get()
-            ->transform(function ($row) {
-                return [
-                    'id' => $row->id,
-                    'series' => $row->series,
-                    'date' => $row->date,
-                    'item_id' => $row->item_id,
-                    'warehouse_id' => $row->warehouse_id,
-                    'has_sale' => (bool)$row->has_sale,
-                    'lot_code' => ($row->item_loteable_type) ? (isset($row->item_loteable->lot_code) ? $row->item_loteable->lot_code : null) : null
-                ];
-            })
-            ;
+                ->transform(function ($row) {
+                    return [
+                        'id' => $row->id,
+                        'series' => $row->series,
+                        'date' => $row->date,
+                        'item_id' => $row->item_id,
+                        'warehouse_id' => $row->warehouse_id,
+                        'has_sale' => (bool)$row->has_sale,
+                        'lot_code' => ($row->item_loteable_type) ? (isset($row->item_loteable->lot_code) ? $row->item_loteable->lot_code : null) : null
+                    ];
+                });
             return [
                 'id' => $row->id,
                 'item_id' => $row->item_id,
@@ -44,7 +43,7 @@ class InventoryCollection extends ResourceCollection
                 "system_stock" => $row->system_stock,
                 'series_enabled' => (bool) $row->item->series_enabled,
                 'series' => $lots,
-                'stock' => $row->stock,
+                'stock' => count($lots) > 0 ? count($lots) : $row->stock,
                 'created_at' => $row->created_at->format('Y-m-d H:i:s'),
                 'updated_at' => $row->updated_at->format('Y-m-d H:i:s'),
             ];

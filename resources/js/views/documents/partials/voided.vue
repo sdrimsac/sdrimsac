@@ -1,5 +1,7 @@
 <template>
-    <el-dialog :title="titleDialog" :visible="showDialog" @close="close" @open="create">
+    <el-dialog 
+    append-to-body
+    :title="titleDialog" :visible="showDialog" @close="close" @open="create">
         <form autocomplete="off" @submit.prevent="submit">
             <div class="form-body">
                 <div class="row">
@@ -22,7 +24,7 @@
 
 <script>
     export default {
-        props: ['showDialog', 'recordId'],
+        props: ['showDialog', 'recordId','external'],
         data() {
             return {
                 titleDialog: null,
@@ -70,6 +72,9 @@
                         if (response.data.success) {
                             this.$eventHub.$emit('reloadData')
                             this.$toast.success(response.data.message)
+                            if(this.external){
+                                this.$emit('getRecords')
+                            }
                             this.close()
                         } else {
                             this.$toast.error(response.data.message)

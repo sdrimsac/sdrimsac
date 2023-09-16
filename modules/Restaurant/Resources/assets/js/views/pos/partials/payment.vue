@@ -194,7 +194,10 @@
                                         </el-select>
                                     </div>
                                 </div>
-                                <div class="row" v-if="configuration.seller_caja">
+                                <div
+                                    class="row"
+                                    v-if="configuration.seller_caja"
+                                >
                                     <div class="col-md-4 col-12">
                                         <label for="seller">Vendedor</label>
                                         <el-select v-model="form.seller_id">
@@ -633,7 +636,8 @@
                                                             class="text-left"
                                                         >
                                                             {{
-                                                                form.payment_condition_id !== '01'
+                                                                form.payment_condition_id !==
+                                                                "01"
                                                                     ? "Cuotas"
                                                                     : "Pagos"
                                                             }}
@@ -649,7 +653,8 @@
                                                         <td>{{ idx + 1 }}</td>
                                                         <td
                                                             v-if="
-                                                         form.payment_condition_id !== '01'
+                                                                form.payment_condition_id !==
+                                                                    '01'
                                                             "
                                                         >
                                                             <el-date-picker
@@ -832,10 +837,28 @@
                                                         <el-button
                                                             type="primary"
                                                             @click="addPayment"
-                                                            >Agregar</el-button
+                                                            :disabled="
+                                                                disabledAddPayment()
+                                                            "
                                                         >
+                                                            <span
+                                                                v-if="
+                                                                    form.payment_condition_id ==
+                                                                        '01'
+                                                                "
+                                                            >
+                                                                Agregar
+                                                            </span>
+                                                            <span v-else>
+                                                                Agregar cuota
+                                                            </span>
+                                                        </el-button>
                                                     </div>
                                                     <div
+                                                        v-if="
+                                                            form.payment_condition_id ==
+                                                                '01'
+                                                        "
                                                         class="col-xl-3 col-md-3 col-lg-3 col-6 "
                                                     >
                                                         <el-button
@@ -862,22 +885,29 @@
                                         <div class="col-xl-2"></div>
                                         <div class="col-xl-3">
                                             <el-select
-                                            v-model="form.payment_condition_id"
+                                                v-if="
+                                                    form.document_type_id ==
+                                                        '01' ||
+                                                        form.document_type_id ==
+                                                            '03'
+                                                "
+                                                v-model="
+                                                    form.payment_condition_id
+                                                "
                                             >
                                                 <el-option
-                                                value="01"
-                                                label="Contado"
-                                                >
-
-                                                </el-option>
-                                                <el-option
-                                                value="02"
-                                                label="Crédito"
+                                                    value="01"
+                                                    label="Contado"
                                                 >
                                                 </el-option>
                                                 <el-option
-                                                value="03"
-                                                label="Crédito a cuotas"
+                                                    value="02"
+                                                    label="Crédito"
+                                                >
+                                                </el-option>
+                                                <el-option
+                                                    value="03"
+                                                    label="Crédito a cuotas"
                                                 ></el-option>
                                             </el-select>
                                             <!-- <el-switch
@@ -901,7 +931,14 @@
                                                 }"
                                             >
                                                 <label
-                                                    class="control-label display-4"
+                                                    :class="
+                                                        `${
+                                                            form.difference < 0
+                                                                ? 'text-danger'
+                                                                : ''
+                                                        }`
+                                                    "
+                                                    class="control-label fs-4"
                                                     v-text="
                                                         form.difference < 0
                                                             ? 'Faltante: '
@@ -909,14 +946,21 @@
                                                     "
                                                 ></label>
                                                 <span
-                                                    class="control-label font-weight-semibold text-center display-3 "
+                                                    :class="
+                                                        `${
+                                                            form.difference < 0
+                                                                ? 'text-danger'
+                                                                : ''
+                                                        }`
+                                                    "
+                                                    class="control-label font-weight-semibold text-center fs-4"
                                                 >
                                                     {{
                                                         currencyTypeActive.symbol
                                                     }}{{
-                                                        form.difference.toFixed(
-                                                            2
-                                                        )
+                                                        form.difference
+                                                            .toFixed(2)
+                                                            .replace("-", "")
                                                     }}</span
                                                 >
                                             </div>
@@ -1346,7 +1390,6 @@ export default {
     },
 
     async created() {
-        console.log(this.all_series);
         this.conf = this.establishments.conf ?? {};
         this.button_payment = true;
         this.currentDocumentsType = this.documentsType;
@@ -1643,9 +1686,26 @@ export default {
             this.currentPayments = this.currentPayments.filter(c => c.id != id);
             this.enterAmount();
         },
+        checkPaymentTotal() {
+            let total = this.currentPayments.reduce(
+                (a, b) => a + Number(b.amount),
+                0
+            );
+            return total != this.form.total
+                ? Number(this.form.total) - total
+                : 0.0;
+        },
+        disabledAddPayment() {
+            if (this.form.payment_condition_id == "03") {
+                return this.checkPaymentTotal() == 0.0;
+            }
+            if (this.form.payment_condition_id == "02") {
+                return this.currentPayments.length > 0;
+            }
+            return false;
+        },
         addPayment() {
             let id = this.currentPayments.length + 1;
-
             let method = this.paymentsValue[this.method_payments];
             if (this.form.total + 200 <= this.form.enter_amount) {
                 this.$toast.error(
@@ -1658,16 +1718,40 @@ export default {
                 !isNaN(this.form.enter_amount) &&
                 this.form.enter_amount != undefined
             ) {
+                if (this.form.payment_condition_id != "01") {
+                    let total = this.currentPayments.reduce(
+                        (a, b) => a + Number(b.amount),
+                        0
+                    );
+                    if (
+                        this.form.total <
+                        total + Number(this.form.enter_amount)
+                    ) {
+                        this.$toast.error(
+                            "El monto a agregar no puede ser mayor al pago total "
+                        );
+                        return;
+                    }
+                }
+             
+                let days = this.currentPayments.length + 1;
+                
+                let date = moment().add(5,"hours")
+                    .add(days, "days")
+                  ;
                 this.currentPayments.push({
                     id,
                     method_payment_id: this.method_payments,
                     method,
-                    date: moment()
-                        .add(1, "days")
-                        .format("YYYY-MM-DD"),
+                    date,
                     amount: this.form.enter_amount
                 });
-                this.form.enter_amount = undefined;
+                if (this.form.payment_condition_id == "03") {
+                    this.form.enter_amount = this.checkPaymentTotal();
+                    this.enterAmount();
+                } else {
+                    this.form.enter_amount = 0.0;
+                }
             }
         },
         customerForm(isNew) {
@@ -1800,7 +1884,6 @@ export default {
             };
         },
         async date_of_issue() {
-            console.log(this.sellers, " sellers");
             // this.discount_amount = 0;
             // this.form.customer_id
             // this.form.student_id = null;
@@ -2066,7 +2149,6 @@ export default {
             this.form.payments = this.payments;
             //get with screen size
             let width = window.innerWidth;
-            console.log(width);
             if (width > 800) {
                 await this.$refs.enter_amount.$el
                     .getElementsByTagName("input")[0]
@@ -2107,7 +2189,6 @@ export default {
             let global_discount = parseFloat(this.discount_amount);
             let total = parseFloat(this.form.total);
             let base = parseFloat(this.form.total_value);
-            console.log("base ", this.form.total_value);
             if (global_discount > total) {
                 this.discount_amount = 0;
                 this.$forceUpdate();
@@ -2176,7 +2257,6 @@ export default {
                         this.form.total_plastic_bag_taxes,
                     2
                 );
-                console.log(this.form, " form");
                 this.form.total = _.round(
                     this.form.total_taxed + this.form.total_taxes,
                     2
@@ -2522,7 +2602,7 @@ export default {
                 (parseFloat(this.form.enter_amount) || 0) +
                 this.totalPayments() -
                 parseFloat(this.form.total);
-            if (differen < 0) {
+            if (differen < 0 && this.form.payment_condition_id == "01") {
                 this.$toast.error(
                     "El monto de efectivo es menor al total de venta"
                 );
@@ -2732,6 +2812,13 @@ export default {
                 }
             }
         },
+        checkPaymentsIsOk() {
+            let total = 0;
+            this.currentPayments.forEach(p => {
+                total += parseFloat(p.amount);
+            });
+            return total == this.form.total;
+        },
         async clickPayment(form) {
             let how_is;
             this.reCalculateTotal();
@@ -2819,17 +2906,27 @@ export default {
             ];
 
             form.cash_id = this.cash_id;
-            form.boxes = this.currentPayments;
+            if (this.form.payment_condition_id == "01") {
+                form.boxes = this.currentPayments;
+            } else {
+                let isOk = this.checkPaymentsIsOk();
+                if (!isOk) {
+                    this.$toast.error("Las cuotas no coinciden con el total");
+                    return;
+                }
+            }
 
-            this.addPayment();
             if (this.form.payment_condition_id !== "01") {
-                form.fee = form.boxes.map(b => ({
+           
+                form.fee = this.currentPayments.map(b => ({
                     id: null,
                     currency_type_id: "PEN",
                     amount: b.amount,
                     date: b.date
                 }));
                 form.payment_condition_id = "02";
+            }else{
+                     this.addPayment();
             }
             if (this.checkLimitReceipt()) {
                 this.$toast.error(
