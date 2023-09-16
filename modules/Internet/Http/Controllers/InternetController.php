@@ -260,8 +260,10 @@ class InternetController extends Controller
                     })
                     ->orWhereHas('person', function ($query) use ($value) {
                         $query->where('enabled', 1)
-                            ->where('number', 'like', '%' . $value . '%')
-                            ->orWhere('name', 'like', '%' . $value . '%');
+                           ->where(function ($query) use ($value) {
+                                $query->where('name', 'like', '%' . $value . '%')
+                                    ->orWhere('number', 'like', '%' . $value . '%');
+                            });
                     });
             }
         } else {
