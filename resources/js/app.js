@@ -818,6 +818,11 @@ const app = new Vue({
                 /* webpackChunkName:"js/tenant-internet-pos" */
                 "../../modules/Internet/Resources/assets/js/view/pos/index.vue"
             ),
+        "tenant-internet-workersadm": () =>
+            import(
+                /* webpackChunkName:"js/tenant-internet-workersadm" */
+                "../../modules/Internet/Resources/assets/js/view/workers/index.vue"
+            ),
         "tenant-internet-planes": () =>
             import(
                 /* webpackChunkName:"js/tenant-internet-planes" */

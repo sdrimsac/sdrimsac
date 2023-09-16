@@ -249,7 +249,9 @@ class InternetController extends Controller
             if ($value) {
                 $records = $records->where('identifier', 'like', '%' . $value . '%')
                     ->orWhereHas('person', function ($query) use ($value) {
-                        $query->where('number', 'like', '%' . $value . '%')
+                        $query->where('enabled',1)
+                        ->
+                        where('number', 'like', '%' . $value . '%')
                             ->orWhere('name', 'like', '%' . $value . '%');
                     });
             }
@@ -285,7 +287,9 @@ class InternetController extends Controller
             $records = $records->where(function ($query) use ($value) {
                 $query->where('internet_register.identifier', 'LIKE', "%$value%")
                     ->orWhere(function ($query) use ($value) {
-                        $query->where('persons.name', 'LIKE', "%$value%")
+                        $query->where('enabled',1)
+                        ->
+                        where('persons.name', 'LIKE', "%$value%")
                             ->orWhere('persons.number', 'LIKE', "%$value%");
                     });
             });
