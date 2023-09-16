@@ -287,7 +287,7 @@ class InternetController extends Controller
             $records = $records->where(function ($query) use ($value) {
                 $query->where('internet_register.identifier', 'LIKE', "%$value%")
                     ->orWhere(function ($query) use ($value) {
-                        $query->where('enabled',1)
+                        $query->where('persons.enabled',1)
                         ->
                         where('persons.name', 'LIKE', "%$value%")
                             ->orWhere('persons.number', 'LIKE', "%$value%");
