@@ -16,8 +16,10 @@ use Exception, Illuminate\Support\Facades\DB;
 use Modules\Finance\Traits\FilePaymentTrait;
 use App\Http\Requests\Tenant\DocumentPaymentRequest;
 use App\Http\Resources\Tenant\DocumentPaymentCollection;
+use App\Models\System\Configuration;
 use App\Models\Tenant\Cash;
-
+use App\Models\Tenant\Receipt;
+use Illuminate\Support\Str;
 class DocumentPaymentController extends Controller
 {
 
@@ -60,7 +62,34 @@ class DocumentPaymentController extends Controller
             'total_difference' => $total_difference
         ];
     }
+    function create_receipt($request,$cash_id,$document_save,$record){
+        
+        $receipt = new Receipt;
+        $receipt->fill($request->all());
+        $receipt->user_id = auth()->user()->id;
+        $receipt->cash_id = $cash_id;
+        $receipt->establishment_id = auth()->user()->establishment_id;
+        $receipt->customer_id = $document_save->customer_id;
+        $receipt->document_id = $document_save->id;
+        $receipt->document_payment_id = $record->id;
+        $type = $document_save->document_type_id == "01" ? "FACTURA ELECTRONICA" : "BOLETA DE VENTA ELECTRONICA";
+        $receipt->detail = "PAGO DE ".$type. " N° " . $document_save->series . " - " . $document_save->number;
+        $receipt->hour = date('H:i:s');
+        $receipt->date_of_issue = Carbon::parse($request->date)->format('Y-m-d');
+        $number_receipt = Receipt::select(DB::raw('MAX(number) AS number'))->first();
+        if ($number_receipt !== null) {
+            $number = str_pad(($number_receipt->number + 1), 7, "0", STR_PAD_LEFT);
+        } else {
+            $number = "1";
+        }
+        $receipt->amount = $request->input('payment');
+        $receipt->number = $number;
+        $receipt->external_id = Str::uuid()->toString();
 
+        $receipt->save();
+
+
+    }
     public function store(DocumentPaymentRequest $request)
     {
         // dd($request->all());
@@ -74,7 +103,11 @@ class DocumentPaymentController extends Controller
                 $record->save();
                 $this->createGlobalPayment($record, $request->all());
                 $this->saveFiles($record, $request, 'documents');
-
+                $cash =  $this->getCash();
+                $cash_id   = null;
+                if ($cash) {
+                    $cash_id = $cash["cash_id"];
+                }
                 $method_payment = PaymentMethodType::where('id', $request->payment_method_type_id)->first();
                 $boxes = new Box;
                 $company = Company::first();
@@ -85,6 +118,7 @@ class DocumentPaymentController extends Controller
                 $boxes->date = Carbon::parse($request->input('date_of_payment'))->format('Y-m-d');
                 $boxes->type = '1';
                 $boxes->state = '1';
+                $boxes->cash_id = $cash_id;
                 $boxes->method = $method_payment->description;
                 $boxes->document_id = $request->document_id;
                 $boxes->document_payment_id = $record->id;
@@ -93,9 +127,11 @@ class DocumentPaymentController extends Controller
                 switch ($document_save->document_type_id) {
                     case "01":
                         $type_document = "FACTURA ELECTRONICA";
+                        $this->create_receipt($request,$cash_id,$document_save,$record);
                         break;
                     case "03":
                         $type_document = "BOLETA DE VENTA ELECTRONICA";
+                        $this->create_receipt($request,$cash_id,$document_save,$record);
                         break;
                     case "07":
                         $type_document = "NOTA DE CREDITO";
@@ -110,7 +146,6 @@ class DocumentPaymentController extends Controller
                 $boxes->save();
             }
         });
-
         return [
             'success' => true,
             'message' => ($id) ? 'Pago editado con éxito' : 'Pago registrado con éxito'

@@ -2,27 +2,30 @@
 
 namespace App\Models\Tenant;
 
- use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Model;
 
 class Receipt extends ModelTenant
 {
     protected $table = "receipts";
-    protected $with = ["customer","sale_note"];
+    protected $with = ["customer", "sale_note"];
     protected $fillable = [
         'user_id',
-        'date_of_issue',                   
-        'hour',                
+        'date_of_issue',
+        'hour',
         'customer_id',
+        'document_id',
+        'document_payment_id',
         'sale_note_id',
+
         'sale_note_payment_id',
         'number',
         'external_id',
-        'detail',   
+        'detail',
         'amount',
         'establishment_id',
         'state',
     ];
-    
+
     // public function sales_payments()
     // {
     //     return $this->belongsTo(SaleNotePayment::class,'sale_note_payment_id','id');
@@ -32,9 +35,13 @@ class Receipt extends ModelTenant
     {
         return $this->belongsTo(Person::class);
     }
+    public function document()
+    {
+
+        return $this->belongsTo(Document::class);
+    }
     public function sale_note()
     {
         return $this->belongsTo(SaleNote::class);
     }
-
 }

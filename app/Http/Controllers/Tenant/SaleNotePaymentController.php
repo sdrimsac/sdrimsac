@@ -147,7 +147,7 @@ class SaleNotePaymentController extends Controller
         $receipt->hour = date('H:i:s');
         $receipt->date_of_issue = Carbon::parse($request->date)->format('Y-m-d');
         $number_receipt = Receipt::select(DB::raw('MAX(number) AS number'))->first();
-        if ($number_receipt == null) {
+        if ($number_receipt !== null) {
             $number = str_pad(($number_receipt->number + 1), 7, "0", STR_PAD_LEFT);
         } else {
             $number = "1";

@@ -886,6 +886,64 @@
                 </table>
             </td>
         </table>
+        @if ($all_credit_invoices_documents && count($all_credit_invoices_documents) > 0)
+        <table style="margin-top: 10px;" class="border">
+            <thead>
+                <tr>
+                    <th colspan="9">
+                        <span class="f12">
+                            FACTURAS/BOLETAS CREDITO
+                        </span>
+                    </th>
+                </tr>
+                <tr>
+                    <th class="center">FECHA</th>
+                    <th class="center">HORA</th>
+                    <th class="center">NRO DOC</th>
+                    <th class="center">DNI/RUC</th>
+                    <th class="center">CLIENTE</th>
+                    <th class="center">METODO DE PAGO</th>
+                    <th class="center">MONTO PAGADO</th>
+                    <th class="center">ESTADO</th>
+                    <th class="center">PAGO</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach ($all_credit_invoices_documents as $credit_document)
+                    <tr>
+                        <td>
+                            {{ $credit_document['date'] }}
+                        </td>
+                        <td>
+                            {{ $credit_document['time'] }}
+
+                        </td>
+                        <td>
+                            {{ $credit_document['number'] }}
+                        </td>
+                        <td>
+                            {{ $credit_document['customer_number'] }}
+                        </td>
+                        <td>
+                            {{ $credit_document['customer_name'] }}
+                        </td>
+                        <td>
+                            {{ $credit_document['method'] }}
+                        </td>
+                        <td>
+                            {{ $credit_document['amount'] }}
+                        </td>
+                        <td>
+                            {{ $credit_document['paid'] ? 'CANCELADO' : 'DEBE' }}
+                        </td>
+                        <td>
+                            {{ $credit_document['paid'] ? '0.00' : $credit_document['remaining'] }}
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    @endif
         @if ($all_credit_documents && count($all_credit_documents) > 0)
             <table style="margin-top: 10px;" class="border">
                 <thead>

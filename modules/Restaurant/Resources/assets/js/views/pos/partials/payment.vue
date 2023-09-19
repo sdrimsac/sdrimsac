@@ -1296,7 +1296,7 @@ export default {
     data() {
         return {
             showListItems: false,
-            discountTotal: true,
+            discountTotal: false,
             paymentCondition: "01",
             payment_condition: [
                 {

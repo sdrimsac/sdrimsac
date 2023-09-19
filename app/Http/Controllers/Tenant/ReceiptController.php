@@ -28,6 +28,7 @@ use App\Http\Resources\Tenant\WorksCollection;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Resources\Tenant\ReceiptCollection;
 use App\Http\Requests\Tenant\ReceiptRequest;
+use App\Models\Tenant\DocumentPayment;
 
 class ReceiptController extends Controller
 {
@@ -37,22 +38,26 @@ class ReceiptController extends Controller
     {
         $data = Receipt::where("external_id", $external_id)->first();
         // $SaleNote=SaleNote::where('id',$receipt->sale_note_id)->first();
-        $data_payments = Payment::where('sale_note_id', $data->sale_note_id)->first();
-        if ($data_payments != null) {
-            $interes = $data->sale_note->total * ($data_payments->tasa / 100);
+        $interes = 0;
+        if ($data->sale_note_id) {
+            $data_payments = Payment::where('sale_note_id', $data->sale_note_id)->first();
+            if ($data_payments != null) {
+                $interes = $data->sale_note->total * ($data_payments->tasa / 100);
+            }
+            $payments = SaleNotePayment::select(DB::raw('SUM(payment) as total_payment'))->where('sale_note_id', $data->sale_note_id)->first();
+            $deuda = $data->sale_note->total - $payments->total_payment;
         } else {
-            $interes = 0;
+            $payments = DocumentPayment::select(DB::raw('SUM(payment) as total_payment'))->where('document_id', $data->document_id)->first();
+            $deuda = $data->document->total - $payments->total_payment;
         }
-        $payments = SaleNotePayment::select(DB::raw('SUM(payment) as total_payment'))->where('sale_note_id', $data->sale_note_id)->first();
-        $deuda = $data->sale_note->total - $payments->total_payment;
 
         if (!$data) throw new Exception("El código {$external_id} es inválido, no se encontro la cotización relacionada");
         $company = Company::first();
         $user = User::findOrFail($data->user_id);
 
         $establishment = Establishment::find($user->establishment_id);
-        $recibo = PDF::loadView('tenant.receipt.index', ['data' => $data, 'company' => $company, 'interes' => $interes, 'establishment' => $establishment, "deuda" => $deuda, "payments" => $payments,"user" => $user]);
-    //    return view('tenant.receipt.index', ['data' => $data, 'company' => $company, 'interes' => $interes, 'establishment' => $establishment, "deuda" => $deuda, "payments" => $payments]);
+        $recibo = PDF::loadView('tenant.receipt.index', ['data' => $data, 'company' => $company, 'interes' => $interes, 'establishment' => $establishment, "deuda" => $deuda, "payments" => $payments, "user" => $user]);
+        //    return view('tenant.receipt.index', ['data' => $data, 'company' => $company, 'interes' => $interes, 'establishment' => $establishment, "deuda" => $deuda, "payments" => $payments]);
         return $recibo->setPaper(array(0, 0, 249.45, 650), 'portrait')->stream();
     }
 
@@ -63,7 +68,7 @@ class ReceiptController extends Controller
         $receipt->user_id = $request->user_id;
         $receipt->date = Carbon::parse($request->date)->format('Y-m-d');
         $number_receipt = Receipt::select(DB::raw('MAX(number) AS number'))->first();
-        if ($number_receipt == null) {
+        if ($number_receipt !== null) {
             $number = str_pad(($number_receipt->number + 1), 7, "0", STR_PAD_LEFT);
         } else {
             $number = "1";

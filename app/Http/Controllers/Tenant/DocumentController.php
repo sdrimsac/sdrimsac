@@ -857,6 +857,7 @@ class DocumentController extends Controller
                     $box->user_id = auth()->user()->id;
                     $box->establishment_id = auth()->user()->establishment_id;
                     $document_save = Document::where('id', $document->id)->first();
+                    $document_save->cash_id = $request->cash_id; 
                     switch ($document_save->document_type_id) {
                         case "01":
                             $type_document = "FACTURA ELECTRONICA";
