@@ -91,6 +91,7 @@ if ($hostname) {
                 Route::get('persons/tables', [App\Http\Controllers\Tenant\PersonController::class, 'tables']);
                 Route::get('items/tables', [App\Http\Controllers\Tenant\ItemController::class, 'tables']);
                 Route::get('documents/record/{document}', [App\Http\Controllers\Tenant\DocumentController::class, 'record']);
+                Route::get('documents/get_record/{document}', [App\Http\Controllers\Tenant\DocumentController::class, 'getRecord']);
                 Route::get('sale-notes/record/{salenote}', [App\Http\Controllers\Tenant\SaleNoteController::class, 'record']);
                 Route::get('pos/print_default', [App\Http\Controllers\Tenant\PosController::class, 'print_default']);
                 Route::post('pos/date_of_issue', [App\Http\Controllers\Tenant\PosController::class, 'date_of_issue']);

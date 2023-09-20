@@ -481,7 +481,7 @@ import { functions, exchangeRate } from "../../mixins/functions";
 export default {
     components: { DocumentFormItem, DocumentOptions },
     mixins: [functions, exchangeRate],
-    props: ["document_affected", "configuration"],
+    props: ["document_affected", "configuration", "external"],
     data() {
         return {
             recordItem: null,
@@ -514,38 +514,41 @@ export default {
         }
     },
     created() {
-        this.document = this.document_affected;
-        this.initForm();
-        this.$http.get(`/${this.resource}/tables`).then(response => {
-            this.document_types = response.data.document_types_note;
-            this.currency_types = response.data.currency_types;
-            this.all_series = response.data.series;
-            // this.customers = response.data.customers
-            this.note_credit_types = response.data.note_credit_types;
-            this.note_debit_types = response.data.note_debit_types;
-            this.operation_types = response.data.operation_types;
-            this.user = response.data.user;
-
-            this.currency_type = _.find(this.currency_types, {
-                id: this.form.currency_type_id
-            });
-            this.form.document_type_id =
-                this.document_types.length > 0
-                    ? this.document_types[0].id
-                    : null;
-            this.form.operation_type_id =
-                this.operation_types.length > 0
-                    ? this.operation_types[0].id
-                    : null;
-
-            this.changeDocumentType();
-            this.changeDateOfIssue();
-        });
-
-        this.getCustomer();
+        this.initComponent();
     },
     mounted() {},
     methods: {
+        initComponent() {
+            this.document = this.document_affected;
+            this.initForm();
+            this.$http.get(`/${this.resource}/tables`).then(response => {
+                this.document_types = response.data.document_types_note;
+                this.currency_types = response.data.currency_types;
+                this.all_series = response.data.series;
+                // this.customers = response.data.customers
+                this.note_credit_types = response.data.note_credit_types;
+                this.note_debit_types = response.data.note_debit_types;
+                this.operation_types = response.data.operation_types;
+                this.user = response.data.user;
+
+                this.currency_type = _.find(this.currency_types, {
+                    id: this.form.currency_type_id
+                });
+                this.form.document_type_id =
+                    this.document_types.length > 0
+                        ? this.document_types[0].id
+                        : null;
+                this.form.operation_type_id =
+                    this.operation_types.length > 0
+                        ? this.operation_types[0].id
+                        : null;
+
+                this.changeDocumentType();
+                this.changeDateOfIssue();
+            });
+
+            this.getCustomer();
+        },
         async initForm() {
             this.errors = {};
             this.form = {
@@ -768,9 +771,13 @@ export default {
                 .post(`/${this.resource}`, this.form)
                 .then(response => {
                     if (response.data.success) {
-                        this.resetForm();
-                        this.documentNewId = response.data.data.id;
-                        this.showDialogOptions = true;
+                        if (!this.external) {
+                            this.resetForm();
+                            this.documentNewId = response.data.data.id;
+                            this.showDialogOptions = true;
+                        } else {
+                            this.$emit("success");
+                        }
                     } else {
                         this.$toast.error(response.data.message);
                     }
@@ -797,7 +804,11 @@ export default {
                 });
         },
         close() {
-            location.href = "/documents";
+            if (this.external) {
+                this.$emit("close");
+            } else {
+                location.href = "/documents";
+            }
         }
     }
 };

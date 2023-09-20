@@ -1326,6 +1326,30 @@
                                             ></el-switch>
                                         </div>
                                     </div>
+                                        <div class="col-md-6 mt-4">
+                                        <div class="form-group">
+                                            <label class="control-label w-100"
+                                                >Acciones en caja
+                                                 <el-tooltip
+                                                class="item"
+                                                effect="dark"
+                                                content="Acciones, como anulación de comprobantes, pagos, nota de crédito"
+                                                placement="top-start"
+                                            >
+                                                <i
+                                                    class="fa fa-info-circle"
+                                                ></i>
+                                            </el-tooltip>
+                                            </label>
+                                              
+                                            <el-switch
+                                                v-model="form.caja_actions"
+                                                active-text="Si"
+                                                inactive-text="No"
+                                                @change="submit"
+                                            ></el-switch>
+                                        </div>
+                                    </div>
                                 </div>
                             </el-tab-pane>
                             <el-tab-pane label="Impresion">

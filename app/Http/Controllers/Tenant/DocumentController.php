@@ -715,7 +715,10 @@ class DocumentController extends Controller
             'stock' => $stock,
         ];
     }
-
+    public function getRecord($id){
+        $record = Document::find($id);
+        return $record;
+    }
 
     public function record($id)
     {
