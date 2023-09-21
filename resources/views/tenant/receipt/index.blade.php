@@ -55,7 +55,7 @@
         }
 
         .full-width {
-            width: 100%;
+            width: 85%;
         }
 
         .margin-right {
