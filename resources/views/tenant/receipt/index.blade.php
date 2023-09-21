@@ -153,7 +153,7 @@
 </head>
 
 <body>
-    <table border="0" style="width: 90%">
+    <table border="0" style="width: 87%">
         <tr>
             <td height="80px" valign="top">
                 <table border="0" class="full-width">
