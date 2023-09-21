@@ -12,14 +12,15 @@
              **/
         @page {
             margin: 0cm 0cm;
+            padding: 0cm 0cm;
         }
 
         /** Define now the real margins of every page in the PDF **/
         body {
-            margin-top: .5cm;
-            margin-left: .5cm;
-            margin-right: .5cm;
-            margin-bottom: .5cm;
+            /* margin-top: .2cm;
+            margin-left: .2cm;
+            margin-right: .2cm;
+            margin-bottom: .2cm; */
         }
 
         /** Define the footer rules **/
