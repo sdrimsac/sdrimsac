@@ -4,6 +4,7 @@ use App\Http\Controllers\Tenant\ClientZoneController;
 use App\Http\Controllers\Tenant\DispatchController;
 use App\Http\Controllers\Tenant\InventoryController;
 use App\Http\Controllers\Tenant\ItemController;
+use App\Http\Controllers\Tenant\PersonController;
 use App\Http\Controllers\Tenant\TollController;
 use App\Http\Controllers\Tenant\WhatsappController;
 use App\Http\Controllers\Tenant\PurchaseController;
@@ -297,7 +298,7 @@ if ($hostname) {
                 //Persons
                 Route::get('filtrar_distritos/records', [App\Http\Controllers\Tenant\PersonController::class, 'distritos']);
                 Route::get('persons/columns', [App\Http\Controllers\Tenant\PersonController::class, 'columns']);
-
+                Route::get('customers/list', [PersonController::class,'clientsForGenerateCPE'] );
                 Route::get('persons/{type}', [App\Http\Controllers\Tenant\PersonController::class, 'index'])->name('tenant.persons.index')->middleware('just.admin');
                 Route::get('persons/{type}/printer', [App\Http\Controllers\Tenant\PersonController::class, 'printer']);
                 Route::get('persons/{type}/records', [App\Http\Controllers\Tenant\PersonController::class, 'records']);
@@ -551,8 +552,9 @@ if ($hostname) {
                 //sale-notes
                 Route::get('sale-notes', [App\Http\Controllers\Tenant\SaleNoteController::class, 'index'])->name('tenant.sale_notes.index')->middleware('redirect.level')->middleware('just.admin');
                 Route::get('sale-notes/columns', [App\Http\Controllers\Tenant\SaleNoteController::class, 'columns']);
+                Route::post('sale-notes/items',  [App\Http\Controllers\Tenant\SaleNoteController::class, 'getItemsFromNotes']);
                 Route::get('sale-notes/columns2', [App\Http\Controllers\Tenant\SaleNoteController::class, 'columns2']);
-
+                Route::get('sale-notes/list-by-client',[App\Http\Controllers\Tenant\SaleNoteController::class, 'saleNotesByClient']);
                 Route::get('sale-notes/records', [App\Http\Controllers\Tenant\SaleNoteController::class, 'records']);
                 Route::get('sale-notes/excel', [App\Http\Controllers\Tenant\SaleNoteController::class, 'excel']);
                 Route::get('sale-notes/credit_pending', [App\Http\Controllers\Tenant\SaleNoteController::class, 'getCreditPending']);

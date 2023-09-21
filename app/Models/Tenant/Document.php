@@ -151,6 +151,16 @@ class Document extends ModelTenant
 
         );
     }
+
+  public function canceled(){
+    $boxes = Box::where('document_id', $this->id)->sum('amount');
+    if($boxes > 0){
+        if($boxes == $this->total){
+            $this->total_canceled = true;
+            $this->save();
+        }
+    }
+  }
   public function getGlobalDiscountsNoBase()
     { 
 

@@ -86,6 +86,62 @@ class SaleNoteController extends Controller
     protected $document;
     protected $configuration;
 
+    public function getItemsFromNotes(Request $request)
+    {
+        $request->validate([
+            'notes_id' => 'required|array',
+        ]);
+
+
+        if ($request->select_all) {
+
+            $items = SaleNoteItem::whereIn('sale_note_id', $request->notes_id)->get();
+        } else {
+
+            $items = SaleNoteItem::whereIn('sale_note_id', $request->notes_id)
+                ->select('item_id', 'quantity')
+                ->get();
+        }
+
+
+        return response()->json([
+            'success' => true,
+            'data' => $items,
+        ], 200);
+    }
+    public function saleNotesByClient(Request $request)
+    {
+        $request->validate([
+            'client_id' => 'required|numeric|min:1',
+        ]);
+        $clientId = $request->client_id;
+        $records = SaleNote::without(['user', 'soap_type', 'state_type', 'currency_type', 'payments'])
+            ->select('series', 'number', 'id', 'date_of_issue', 'total')
+            ->where('customer_id', $clientId)
+            ->whereNull('document_id')
+            ->whereIn('state_type_id', ['01', '03', '05'])
+            ->orderBy('number', 'desc');
+
+        $dateOfIssue = $request->date_of_issue;
+        $dateOfDue = $request->date_of_due;
+        if ($dateOfIssue && !$dateOfDue) {
+            $records = $records->where('date_of_issue', $dateOfIssue);
+        }
+
+        if ($dateOfIssue && $dateOfDue) {
+            $records = $records->whereBetween('date_of_issue', [$dateOfIssue, $dateOfDue]);
+        }
+        $sum_total = 0;
+        $records = $records->take(20)
+            ->get();
+        $sum_total = number_format($records->sum('total'), 2);
+        return response()->json([
+            'success' => true,
+            'data' => $records,
+            'sum_total' => $sum_total,
+        ], 200);
+    }
+
     public function index()
     {
         $company = Company::select('soap_type_id', 'name')->first();

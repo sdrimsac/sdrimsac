@@ -24,6 +24,15 @@
                                 <i class="icofont-plus-circle"></i>
                                 <span>Nuevo</span>
                             </button>
+                            <button
+                                @click.prevent="onOpenModalGenerateCPE"
+                                type="button"
+                                class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto"
+                            >
+                                <span>
+                                    Generar comprobante desde múltiples Notas
+                                </span>
+                            </button>
                             <!-- <ul>
                                 <li>
                                     <el-tooltip
@@ -561,6 +570,7 @@
             :boxes="boxes"
         >
         </sale-note-detail>
+             <modal-generate-cpe :show.sync="showModalGenerateCPE"></modal-generate-cpe>
     </div>
 </template>
 <style>
@@ -576,11 +586,12 @@ import SaleNotesOptions from "./partials/options.vue";
 import SaleNoteGenerate from "./partials/option_documents";
 import SaleNoteDetail from "./partials/detail.vue";
 import { deletable } from "../../mixins/deletable";
-
+import ModalGenerateCpe from "./ModalGenerateCPE";
 export default {
     props: ["soapCompany", "company", "configuration", "user_type"],
     mixins: [deletable],
     components: {
+        ModalGenerateCpe,
         DataTable,
         SaleNotePayments,
         SaleNotesOptions,
@@ -589,6 +600,7 @@ export default {
     },
     data() {
         return {
+            showModalGenerateCPE:false,
             resource: "sale-notes",
             showDialogDetail: false,
             showDialogPayments: false,
@@ -671,6 +683,9 @@ export default {
         }
     },
     methods: {
+        onOpenModalGenerateCPE(){
+   this.showModalGenerateCPE = true;
+        },
         teclasInit() {
             document.onkeydown = e => {
                 const key = e.key;

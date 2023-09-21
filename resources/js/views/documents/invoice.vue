@@ -1844,6 +1844,61 @@ export default {
     },
 
     async created() {
+        
+        const itemsFromNotes = localStorage.getItem("itemsForNotes");
+        if (itemsFromNotes) {
+            const itemsParsed = JSON.parse(itemsFromNotes);
+            const items = itemsParsed.map(i => i.id);
+            const params = {
+                items_id: items
+            };
+            localStorage.removeItem("itemsForNotes");
+            await this.$http
+                .get("/documents/search-items", { params })
+                .then(response => {
+                    const itemsResponse = response.data.items.map(i => {
+                        return this.setItemFromResponse(i, itemsParsed);
+                    });
+                    console.log("🚀 ~ file: invoice.vue:1862 ~ itemsResponse ~ itemsResponse:", itemsResponse)
+                    
+                    this.form.items = itemsResponse.map(i => {
+                        return calculateRowItem(
+                            i,
+                            this.form.currency_type_id,
+                            this.form.exchange_rate_sale,
+                            this.percentage_igv || 0.18
+                        );
+                    });
+                });
+        }
+
+        //parse items from multiple sale notes not group
+        // this.processItemsForNotesNotGroup();
+
+        const clientfromDispatchesOrNotes = localStorage.getItem("client");
+        if (clientfromDispatchesOrNotes) {
+            const client = JSON.parse(clientfromDispatchesOrNotes);
+            if (client.identity_document_type_id == 1) {
+                this.form.document_type_id = "03";
+            } else if (client.identity_document_type_id == 6) {
+                this.form.document_type_id = "01";
+            }
+
+            this.searchRemoteCustomers(client.number);
+            this.form.customer_id = client.id;
+            this.changeEstablishment();
+            this.filterSeries();
+            this.filterCustomers();
+            this.changeCurrencyType();
+            localStorage.removeItem("client");
+        }
+       
+        const notesNumbersFromNotes = localStorage.getItem("notes");
+        if (notesNumbersFromNotes) {
+            this.form.sale_notes_relateds = JSON.parse(notesNumbersFromNotes);
+            localStorage.removeItem("notes");
+        }
+
         qz.security.setCertificatePromise((resolve, reject) => {
             this.$http
                 .get("/api/qz/crt/override", {
@@ -1966,6 +2021,76 @@ export default {
     },
 
     methods: {
+             setItemFromResponse(item, itemsParsed) {
+            /* Obtiene el igv del item, si no existe, coloca el gravado*/
+            if (item.sale_affectation_igv_type !== undefined) {
+                item.affectation_igv_type = item.sale_affectation_igv_type;
+            } else {
+                item.affectation_igv_type = {
+                    active: 1,
+                    description: "Gravado - Operación Onerosa",
+                    exportation: 0,
+                    free: 0,
+                    id: "10"
+                };
+            }
+            item.presentation = {};
+            item.unit_price = item.sale_unit_price;
+            item.item = {
+                amount_plastic_bag_taxes: item.amount_plastic_bag_taxes,
+                attributes: item.attributes,
+                brand: item.brand,
+                calculate_quantity: item.calculate_quantity,
+                category: item.category,
+                currency_type_id: item.currency_type_id,
+                currency_type_symbol: item.currency_type_symbol,
+                description: item.description,
+                full_description: item.full_description,
+                has_igv: item.has_igv,
+                has_plastic_bag_taxes: item.has_plastic_bag_taxes,
+                id: item.id,
+                internal_id: item.internal_id,
+                item_unit_types: item.item_unit_types,
+                lots: item.lots,
+                lots_enabled: item.lots_enabled,
+                lots_group: item.lots_group,
+                model: item.model,
+                presentation: {},
+                purchase_affectation_igv_type_id:
+                    item.purchase_affectation_igv_type_id,
+                purchase_unit_price: item.purchase_unit_price,
+                sale_affectation_igv_type_id: item.sale_affectation_igv_type_id,
+                sale_unit_price: item.sale_unit_price,
+                series_enabled: item.series_enabled,
+                stock: item.stock,
+                unit_price: item.sale_unit_price,
+                unit_type_id: item.unit_type_id,
+                warehouses: item.warehouses
+            };
+            item.IdLoteSelected = null;
+            if (item.affectation_igv_type_id === undefined) {
+                item.affectation_igv_type_id = item.affectation_igv_type.id;
+                // item.affectation_igv_type_id = "10";
+            }
+            item.discounts = [];
+            item.charges = [];
+            item.item_id = item.id;
+            item.unit_price_value = item.sale_unit_price;
+            item.input_unit_price_value = item.sale_unit_price;
+
+            item.quantity = 1;
+
+            let tempItem = itemsParsed.find(
+                ip => ip.item_id == item.id || ip.id == item.id
+            );
+            if (tempItem !== undefined) {
+                item.quantity = tempItem.quantity;
+            }
+            // item.quantity = itemsParsed.find(ip => ip.item_id == item.id).quantity;
+            item.warehouse_id = null;
+
+            return item;
+        },
         update_stock() {
             this.$http
                 .post(`/inventories/configuration`, this.form_control)
@@ -2862,6 +2987,7 @@ export default {
                 id: this.form.currency_type_id
             });
             let items = [];
+                console.log("🚀 ~ file: invoice.vue:2994 ~ changeCurrencyType ~ this.form:", this.form)
             this.form.items.forEach(row => {
                 items.push(
                     calculateRowItem(

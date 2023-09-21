@@ -1,7 +1,7 @@
 function calculateRowItem(
     row_old,
     currency_type_id_new,
-    exchange_rate_sale,
+    exchange_rate_sale = 1,
     pigv = 0.18
 ) {
 

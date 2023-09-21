@@ -3,7 +3,48 @@ webpackJsonp([177],{
 /***/ "./modules/Restaurant/Resources/assets/js/views/pos/partials/quotation_edit_modal.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
-eval("var disposed = false\nvar normalizeComponent = __webpack_require__(\"./node_modules/vue-loader/lib/component-normalizer.js\")\n/* script */\nvar __vue_script__ = __webpack_require__(\"./node_modules/babel-loader/lib/index.js?{\\\"cacheDirectory\\\":true,\\\"presets\\\":[[\\\"@babel/preset-env\\\",{\\\"modules\\\":false,\\\"targets\\\":{\\\"browsers\\\":[\\\"> 2%\\\"]},\\\"forceAllTransforms\\\":true}]],\\\"plugins\\\":[\\\"@babel/plugin-proposal-object-rest-spread\\\",[\\\"@babel/plugin-transform-runtime\\\",{\\\"helpers\\\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/Restaurant/Resources/assets/js/views/pos/partials/quotation_edit_modal.vue\")\n/* template */\nvar __vue_template__ = __webpack_require__(\"./node_modules/vue-loader/lib/template-compiler/index.js?{\\\"id\\\":\\\"data-v-762ecd28\\\",\\\"hasScoped\\\":false,\\\"buble\\\":{\\\"transforms\\\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Restaurant/Resources/assets/js/views/pos/partials/quotation_edit_modal.vue\")\n/* template functional */\nvar __vue_template_functional__ = false\n/* styles */\nvar __vue_styles__ = null\n/* scopeId */\nvar __vue_scopeId__ = null\n/* moduleIdentifier (server only) */\nvar __vue_module_identifier__ = null\nvar Component = normalizeComponent(\n  __vue_script__,\n  __vue_template__,\n  __vue_template_functional__,\n  __vue_styles__,\n  __vue_scopeId__,\n  __vue_module_identifier__\n)\nComponent.options.__file = \"modules/Restaurant/Resources/assets/js/views/pos/partials/quotation_edit_modal.vue\"\n\n/* hot reload */\nif (false) {(function () {\n  var hotAPI = require(\"vue-hot-reload-api\")\n  hotAPI.install(require(\"vue\"), false)\n  if (!hotAPI.compatible) return\n  module.hot.accept()\n  if (!module.hot.data) {\n    hotAPI.createRecord(\"data-v-762ecd28\", Component.options)\n  } else {\n    hotAPI.reload(\"data-v-762ecd28\", Component.options)\n  }\n  module.hot.dispose(function (data) {\n    disposed = true\n  })\n})()}\n\nmodule.exports = Component.exports\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vLi9tb2R1bGVzL1Jlc3RhdXJhbnQvUmVzb3VyY2VzL2Fzc2V0cy9qcy92aWV3cy9wb3MvcGFydGlhbHMvcXVvdGF0aW9uX2VkaXRfbW9kYWwudnVlP2ZhMzYiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7QUFDQSx5QkFBeUIsbUJBQU8sQ0FBQyx1REFBMkU7QUFDNUc7QUFDQSxxQkFBcUIsbUJBQU8sQ0FBQyx5Y0FBd1k7QUFDcmE7QUFDQSx1QkFBdUIsbUJBQU8sQ0FBQyw4UkFBNFE7QUFDM1M7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTs7QUFFQTtBQUNBLElBQUksS0FBVSxHQUFHO0FBQ2pCO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLEdBQUc7QUFDSDtBQUNBO0FBQ0E7QUFDQTtBQUNBLEdBQUc7QUFDSCxDQUFDOztBQUVEIiwiZmlsZSI6Ii4vbW9kdWxlcy9SZXN0YXVyYW50L1Jlc291cmNlcy9hc3NldHMvanMvdmlld3MvcG9zL3BhcnRpYWxzL3F1b3RhdGlvbl9lZGl0X21vZGFsLnZ1ZS5qcyIsInNvdXJjZXNDb250ZW50IjpbInZhciBkaXNwb3NlZCA9IGZhbHNlXG52YXIgbm9ybWFsaXplQ29tcG9uZW50ID0gcmVxdWlyZShcIiEuLi8uLi8uLi8uLi8uLi8uLi8uLi8uLi9ub2RlX21vZHVsZXMvdnVlLWxvYWRlci9saWIvY29tcG9uZW50LW5vcm1hbGl6ZXJcIilcbi8qIHNjcmlwdCAqL1xudmFyIF9fdnVlX3NjcmlwdF9fID0gcmVxdWlyZShcIiEhYmFiZWwtbG9hZGVyP3tcXFwiY2FjaGVEaXJlY3RvcnlcXFwiOnRydWUsXFxcInByZXNldHNcXFwiOltbXFxcIkBiYWJlbC9wcmVzZXQtZW52XFxcIix7XFxcIm1vZHVsZXNcXFwiOmZhbHNlLFxcXCJ0YXJnZXRzXFxcIjp7XFxcImJyb3dzZXJzXFxcIjpbXFxcIj4gMiVcXFwiXX0sXFxcImZvcmNlQWxsVHJhbnNmb3Jtc1xcXCI6dHJ1ZX1dXSxcXFwicGx1Z2luc1xcXCI6W1xcXCJAYmFiZWwvcGx1Z2luLXByb3Bvc2FsLW9iamVjdC1yZXN0LXNwcmVhZFxcXCIsW1xcXCJAYmFiZWwvcGx1Z2luLXRyYW5zZm9ybS1ydW50aW1lXFxcIix7XFxcImhlbHBlcnNcXFwiOmZhbHNlfV1dfSEuLi8uLi8uLi8uLi8uLi8uLi8uLi8uLi9ub2RlX21vZHVsZXMvdnVlLWxvYWRlci9saWIvc2VsZWN0b3I/dHlwZT1zY3JpcHQmaW5kZXg9MCEuL3F1b3RhdGlvbl9lZGl0X21vZGFsLnZ1ZVwiKVxuLyogdGVtcGxhdGUgKi9cbnZhciBfX3Z1ZV90ZW1wbGF0ZV9fID0gcmVxdWlyZShcIiEhLi4vLi4vLi4vLi4vLi4vLi4vLi4vLi4vbm9kZV9tb2R1bGVzL3Z1ZS1sb2FkZXIvbGliL3RlbXBsYXRlLWNvbXBpbGVyL2luZGV4P3tcXFwiaWRcXFwiOlxcXCJkYXRhLXYtNzYyZWNkMjhcXFwiLFxcXCJoYXNTY29wZWRcXFwiOmZhbHNlLFxcXCJidWJsZVxcXCI6e1xcXCJ0cmFuc2Zvcm1zXFxcIjp7fX19IS4uLy4uLy4uLy4uLy4uLy4uLy4uLy4uL25vZGVfbW9kdWxlcy92dWUtbG9hZGVyL2xpYi9zZWxlY3Rvcj90eXBlPXRlbXBsYXRlJmluZGV4PTAhLi9xdW90YXRpb25fZWRpdF9tb2RhbC52dWVcIilcbi8qIHRlbXBsYXRlIGZ1bmN0aW9uYWwgKi9cbnZhciBfX3Z1ZV90ZW1wbGF0ZV9mdW5jdGlvbmFsX18gPSBmYWxzZVxuLyogc3R5bGVzICovXG52YXIgX192dWVfc3R5bGVzX18gPSBudWxsXG4vKiBzY29wZUlkICovXG52YXIgX192dWVfc2NvcGVJZF9fID0gbnVsbFxuLyogbW9kdWxlSWRlbnRpZmllciAoc2VydmVyIG9ubHkpICovXG52YXIgX192dWVfbW9kdWxlX2lkZW50aWZpZXJfXyA9IG51bGxcbnZhciBDb21wb25lbnQgPSBub3JtYWxpemVDb21wb25lbnQoXG4gIF9fdnVlX3NjcmlwdF9fLFxuICBfX3Z1ZV90ZW1wbGF0ZV9fLFxuICBfX3Z1ZV90ZW1wbGF0ZV9mdW5jdGlvbmFsX18sXG4gIF9fdnVlX3N0eWxlc19fLFxuICBfX3Z1ZV9zY29wZUlkX18sXG4gIF9fdnVlX21vZHVsZV9pZGVudGlmaWVyX19cbilcbkNvbXBvbmVudC5vcHRpb25zLl9fZmlsZSA9IFwibW9kdWxlcy9SZXN0YXVyYW50L1Jlc291cmNlcy9hc3NldHMvanMvdmlld3MvcG9zL3BhcnRpYWxzL3F1b3RhdGlvbl9lZGl0X21vZGFsLnZ1ZVwiXG5cbi8qIGhvdCByZWxvYWQgKi9cbmlmIChtb2R1bGUuaG90KSB7KGZ1bmN0aW9uICgpIHtcbiAgdmFyIGhvdEFQSSA9IHJlcXVpcmUoXCJ2dWUtaG90LXJlbG9hZC1hcGlcIilcbiAgaG90QVBJLmluc3RhbGwocmVxdWlyZShcInZ1ZVwiKSwgZmFsc2UpXG4gIGlmICghaG90QVBJLmNvbXBhdGlibGUpIHJldHVyblxuICBtb2R1bGUuaG90LmFjY2VwdCgpXG4gIGlmICghbW9kdWxlLmhvdC5kYXRhKSB7XG4gICAgaG90QVBJLmNyZWF0ZVJlY29yZChcImRhdGEtdi03NjJlY2QyOFwiLCBDb21wb25lbnQub3B0aW9ucylcbiAgfSBlbHNlIHtcbiAgICBob3RBUEkucmVsb2FkKFwiZGF0YS12LTc2MmVjZDI4XCIsIENvbXBvbmVudC5vcHRpb25zKVxuICB9XG4gIG1vZHVsZS5ob3QuZGlzcG9zZShmdW5jdGlvbiAoZGF0YSkge1xuICAgIGRpc3Bvc2VkID0gdHJ1ZVxuICB9KVxufSkoKX1cblxubW9kdWxlLmV4cG9ydHMgPSBDb21wb25lbnQuZXhwb3J0c1xuXG5cblxuLy8vLy8vLy8vLy8vLy8vLy8vXG4vLyBXRUJQQUNLIEZPT1RFUlxuLy8gLi9tb2R1bGVzL1Jlc3RhdXJhbnQvUmVzb3VyY2VzL2Fzc2V0cy9qcy92aWV3cy9wb3MvcGFydGlhbHMvcXVvdGF0aW9uX2VkaXRfbW9kYWwudnVlXG4vLyBtb2R1bGUgaWQgPSAuL21vZHVsZXMvUmVzdGF1cmFudC9SZXNvdXJjZXMvYXNzZXRzL2pzL3ZpZXdzL3Bvcy9wYXJ0aWFscy9xdW90YXRpb25fZWRpdF9tb2RhbC52dWVcbi8vIG1vZHVsZSBjaHVua3MgPSAxNzciXSwic291cmNlUm9vdCI6IiJ9\n//# sourceURL=webpack-internal:///./modules/Restaurant/Resources/assets/js/views/pos/partials/quotation_edit_modal.vue\n");
+var disposed = false
+var normalizeComponent = __webpack_require__("./node_modules/vue-loader/lib/component-normalizer.js")
+/* script */
+var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/Restaurant/Resources/assets/js/views/pos/partials/quotation_edit_modal.vue")
+/* template */
+var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-762ecd28\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Restaurant/Resources/assets/js/views/pos/partials/quotation_edit_modal.vue")
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "modules/Restaurant/Resources/assets/js/views/pos/partials/quotation_edit_modal.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-762ecd28", Component.options)
+  } else {
+    hotAPI.reload("data-v-762ecd28", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
 
 /***/ }),
 
@@ -11,15 +52,99 @@ eval("var disposed = false\nvar normalizeComponent = __webpack_require__(\"./nod
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("Object.defineProperty(__webpack_exports__, \"__esModule\", { value: true });\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\nvar TenantQuotationsEdit = function TenantQuotationsEdit() {\n  return __webpack_require__.e/* import() */(142).then(__webpack_require__.bind(null, \"./resources/js/views/quotations/form_edit.vue\"));\n};\n\n/* harmony default export */ __webpack_exports__[\"default\"] = ({\n  components: {\n    TenantQuotationsEdit: TenantQuotationsEdit\n  },\n  props: [\"showDialog\", \"recordId\"],\n  data: function data() {\n    return {};\n  },\n  methods: {\n    open: function open() {\n      var _this = this;\n\n      console.log(this.recordId);\n      setTimeout(function () {\n        _this.$refs.edit.initialize();\n      }, 500);\n    },\n    close: function close() {\n      this.$emit(\"update:showDialog\", false);\n    }\n  },\n  mounted: function mounted() {}\n});//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vbW9kdWxlcy9SZXN0YXVyYW50L1Jlc291cmNlcy9hc3NldHMvanMvdmlld3MvcG9zL3BhcnRpYWxzL3F1b3RhdGlvbl9lZGl0X21vZGFsLnZ1ZT83MmExIl0sIm5hbWVzIjpbImNvbXBvbmVudHMiLCJUZW5hbnRRdW90YXRpb25zRWRpdCIsInByb3BzIiwiZGF0YSIsIm1ldGhvZHMiLCJvcGVuIiwiY29uc29sZSIsInNldFRpbWVvdXQiLCJjbG9zZSIsIm1vdW50ZWQiXSwibWFwcGluZ3MiOiI7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7O0FBb0JBO0FBQUEsU0FDQSw4SEFEQTtBQUFBOztBQUllO0FBQ2ZBO0FBQ0FDO0FBREEsR0FEQTtBQUlBQyxtQ0FKQTtBQUtBQyxNQUxBLGtCQUtBO0FBQ0E7QUFDQSxHQVBBO0FBUUFDO0FBQ0FDLFFBREEsa0JBQ0E7QUFBQTs7QUFDQUM7QUFDQUM7QUFDQTtBQUNBLE9BRkEsRUFFQSxHQUZBO0FBSUEsS0FQQTtBQVFBQyxTQVJBLG1CQVFBO0FBQ0E7QUFDQTtBQVZBLEdBUkE7QUFvQkFDLFNBcEJBLHFCQW9CQSxDQUNBO0FBckJBIiwiZmlsZSI6Ii4vbm9kZV9tb2R1bGVzL2JhYmVsLWxvYWRlci9saWIvaW5kZXguanM/e1wiY2FjaGVEaXJlY3RvcnlcIjp0cnVlLFwicHJlc2V0c1wiOltbXCJAYmFiZWwvcHJlc2V0LWVudlwiLHtcIm1vZHVsZXNcIjpmYWxzZSxcInRhcmdldHNcIjp7XCJicm93c2Vyc1wiOltcIj4gMiVcIl19LFwiZm9yY2VBbGxUcmFuc2Zvcm1zXCI6dHJ1ZX1dXSxcInBsdWdpbnNcIjpbXCJAYmFiZWwvcGx1Z2luLXByb3Bvc2FsLW9iamVjdC1yZXN0LXNwcmVhZFwiLFtcIkBiYWJlbC9wbHVnaW4tdHJhbnNmb3JtLXJ1bnRpbWVcIix7XCJoZWxwZXJzXCI6ZmFsc2V9XV19IS4vbm9kZV9tb2R1bGVzL3Z1ZS1sb2FkZXIvbGliL3NlbGVjdG9yLmpzP3R5cGU9c2NyaXB0JmluZGV4PTAhLi9tb2R1bGVzL1Jlc3RhdXJhbnQvUmVzb3VyY2VzL2Fzc2V0cy9qcy92aWV3cy9wb3MvcGFydGlhbHMvcXVvdGF0aW9uX2VkaXRfbW9kYWwudnVlLmpzIiwic291cmNlc0NvbnRlbnQiOlsiPHRlbXBsYXRlPlxyXG4gICAgPGVsLWRpYWxvZ1xyXG4gICAgICAgIDp2aXNpYmxlPVwic2hvd0RpYWxvZ1wiXHJcbiAgICAgICAgYXBwZW5kLXRvLWJvZHlcclxuICAgICAgICBAb3Blbj1cIm9wZW5cIlxyXG4gICAgICAgIEBjbG9zZT1cImNsb3NlXCJcclxuICAgICAgICB0aXRsZT1cIkVkaXRhciBjb3RpemFjacOzblwiXHJcbiAgICAgICAgd2lkdGg9XCI4MCVcIlxyXG4gICAgPlxyXG4gICAgICAgIDx0ZW5hbnQtcXVvdGF0aW9ucy1lZGl0XHJcbiAgICAgICAgcmVmPVwiZWRpdFwiXHJcbiAgICAgICAgICAgIEBjbG9zZT1cImNsb3NlXCJcclxuICAgICAgICAgICAgOmV4dGVybmFsPVwidHJ1ZVwiXHJcbiAgICAgICAgICAgIDpyZXNvdXJjZS1pZD1cInJlY29yZElkXCJcclxuICAgICAgICAgICAgdHlwZS11c2VyPVwic2VsbGVyXCJcclxuICAgICAgICA+PC90ZW5hbnQtcXVvdGF0aW9ucy1lZGl0PlxyXG4gICAgPC9lbC1kaWFsb2c+XHJcbjwvdGVtcGxhdGU+XHJcblxyXG48c2NyaXB0PlxyXG5jb25zdCBUZW5hbnRRdW90YXRpb25zRWRpdCA9ICgpID0+XHJcbiAgICBpbXBvcnQoXHJcbiAgICAgICAgXCIuLi8uLi8uLi8uLi8uLi8uLi8uLi8uLi9yZXNvdXJjZXMvanMvdmlld3MvcXVvdGF0aW9ucy9mb3JtX2VkaXQudnVlXCJcclxuICAgICk7XHJcbmV4cG9ydCBkZWZhdWx0IHtcclxuICAgIGNvbXBvbmVudHM6IHtcclxuICAgICAgICBUZW5hbnRRdW90YXRpb25zRWRpdFxyXG4gICAgfSxcclxuICAgIHByb3BzOiBbXCJzaG93RGlhbG9nXCIsIFwicmVjb3JkSWRcIl0sXHJcbiAgICBkYXRhKCkge1xyXG4gICAgICAgIHJldHVybiB7fTtcclxuICAgIH0sXHJcbiAgICBtZXRob2RzOiB7XHJcbiAgICAgICAgb3BlbigpIHtcclxuICAgICAgICAgICAgY29uc29sZS5sb2codGhpcy5yZWNvcmRJZCk7XHJcbiAgICAgICAgc2V0VGltZW91dCgoKSA9PiB7XHJcbiAgICAgICAgICAgdGhpcy4kcmVmcy5lZGl0LmluaXRpYWxpemUoKTsgXHJcbiAgICAgICAgfSwgNTAwKTtcclxuXHJcbiAgICAgICAgfSxcclxuICAgICAgICBjbG9zZSgpIHtcclxuICAgICAgICAgICAgdGhpcy4kZW1pdChcInVwZGF0ZTpzaG93RGlhbG9nXCIsIGZhbHNlKTtcclxuICAgICAgICB9XHJcbiAgICB9LFxyXG4gICAgbW91bnRlZCgpe1xyXG4gICAgfVxyXG59O1xyXG48L3NjcmlwdD5cclxuXG5cblxuLy8gV0VCUEFDSyBGT09URVIgLy9cbi8vIG1vZHVsZXMvUmVzdGF1cmFudC9SZXNvdXJjZXMvYXNzZXRzL2pzL3ZpZXdzL3Bvcy9wYXJ0aWFscy9xdW90YXRpb25fZWRpdF9tb2RhbC52dWUiXSwic291cmNlUm9vdCI6IiJ9\n//# sourceURL=webpack-internal:///./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/Restaurant/Resources/assets/js/views/pos/partials/quotation_edit_modal.vue\n");
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var TenantQuotationsEdit = function TenantQuotationsEdit() {
+  return __webpack_require__.e/* import() */(142).then(__webpack_require__.bind(null, "./resources/js/views/quotations/form_edit.vue"));
+};
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  components: {
+    TenantQuotationsEdit: TenantQuotationsEdit
+  },
+  props: ["showDialog", "recordId"],
+  data: function data() {
+    return {};
+  },
+  methods: {
+    open: function open() {
+      var _this = this;
+
+      console.log(this.recordId);
+      setTimeout(function () {
+        _this.$refs.edit.initialize();
+      }, 500);
+    },
+    close: function close() {
+      this.$emit("update:showDialog", false);
+    }
+  },
+  mounted: function mounted() {}
+});
 
 /***/ }),
 
 /***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-762ecd28\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Restaurant/Resources/assets/js/views/pos/partials/quotation_edit_modal.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
-eval("var render = function() {\n  var _vm = this\n  var _h = _vm.$createElement\n  var _c = _vm._self._c || _h\n  return _c(\n    \"el-dialog\",\n    {\n      attrs: {\n        visible: _vm.showDialog,\n        \"append-to-body\": \"\",\n        title: \"Editar cotización\",\n        width: \"80%\"\n      },\n      on: { open: _vm.open, close: _vm.close }\n    },\n    [\n      _c(\"tenant-quotations-edit\", {\n        ref: \"edit\",\n        attrs: {\n          external: true,\n          \"resource-id\": _vm.recordId,\n          \"type-user\": \"seller\"\n        },\n        on: { close: _vm.close }\n      })\n    ],\n    1\n  )\n}\nvar staticRenderFns = []\nrender._withStripped = true\nmodule.exports = { render: render, staticRenderFns: staticRenderFns }\nif (false) {\n  module.hot.accept()\n  if (module.hot.data) {\n    require(\"vue-hot-reload-api\")      .rerender(\"data-v-762ecd28\", module.exports)\n  }\n}//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vLi9tb2R1bGVzL1Jlc3RhdXJhbnQvUmVzb3VyY2VzL2Fzc2V0cy9qcy92aWV3cy9wb3MvcGFydGlhbHMvcXVvdGF0aW9uX2VkaXRfbW9kYWwudnVlPzI0OTYiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0EsT0FBTztBQUNQLFdBQVc7QUFDWCxLQUFLO0FBQ0w7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSxTQUFTO0FBQ1QsYUFBYTtBQUNiLE9BQU87QUFDUDtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSxrQkFBa0I7QUFDbEIsSUFBSSxLQUFVO0FBQ2Q7QUFDQTtBQUNBO0FBQ0E7QUFDQSIsImZpbGUiOiIuL25vZGVfbW9kdWxlcy92dWUtbG9hZGVyL2xpYi90ZW1wbGF0ZS1jb21waWxlci9pbmRleC5qcz97XCJpZFwiOlwiZGF0YS12LTc2MmVjZDI4XCIsXCJoYXNTY29wZWRcIjpmYWxzZSxcImJ1YmxlXCI6e1widHJhbnNmb3Jtc1wiOnt9fX0hLi9ub2RlX21vZHVsZXMvdnVlLWxvYWRlci9saWIvc2VsZWN0b3IuanM/dHlwZT10ZW1wbGF0ZSZpbmRleD0wIS4vbW9kdWxlcy9SZXN0YXVyYW50L1Jlc291cmNlcy9hc3NldHMvanMvdmlld3MvcG9zL3BhcnRpYWxzL3F1b3RhdGlvbl9lZGl0X21vZGFsLnZ1ZS5qcyIsInNvdXJjZXNDb250ZW50IjpbInZhciByZW5kZXIgPSBmdW5jdGlvbigpIHtcbiAgdmFyIF92bSA9IHRoaXNcbiAgdmFyIF9oID0gX3ZtLiRjcmVhdGVFbGVtZW50XG4gIHZhciBfYyA9IF92bS5fc2VsZi5fYyB8fCBfaFxuICByZXR1cm4gX2MoXG4gICAgXCJlbC1kaWFsb2dcIixcbiAgICB7XG4gICAgICBhdHRyczoge1xuICAgICAgICB2aXNpYmxlOiBfdm0uc2hvd0RpYWxvZyxcbiAgICAgICAgXCJhcHBlbmQtdG8tYm9keVwiOiBcIlwiLFxuICAgICAgICB0aXRsZTogXCJFZGl0YXIgY290aXphY2nDs25cIixcbiAgICAgICAgd2lkdGg6IFwiODAlXCJcbiAgICAgIH0sXG4gICAgICBvbjogeyBvcGVuOiBfdm0ub3BlbiwgY2xvc2U6IF92bS5jbG9zZSB9XG4gICAgfSxcbiAgICBbXG4gICAgICBfYyhcInRlbmFudC1xdW90YXRpb25zLWVkaXRcIiwge1xuICAgICAgICByZWY6IFwiZWRpdFwiLFxuICAgICAgICBhdHRyczoge1xuICAgICAgICAgIGV4dGVybmFsOiB0cnVlLFxuICAgICAgICAgIFwicmVzb3VyY2UtaWRcIjogX3ZtLnJlY29yZElkLFxuICAgICAgICAgIFwidHlwZS11c2VyXCI6IFwic2VsbGVyXCJcbiAgICAgICAgfSxcbiAgICAgICAgb246IHsgY2xvc2U6IF92bS5jbG9zZSB9XG4gICAgICB9KVxuICAgIF0sXG4gICAgMVxuICApXG59XG52YXIgc3RhdGljUmVuZGVyRm5zID0gW11cbnJlbmRlci5fd2l0aFN0cmlwcGVkID0gdHJ1ZVxubW9kdWxlLmV4cG9ydHMgPSB7IHJlbmRlcjogcmVuZGVyLCBzdGF0aWNSZW5kZXJGbnM6IHN0YXRpY1JlbmRlckZucyB9XG5pZiAobW9kdWxlLmhvdCkge1xuICBtb2R1bGUuaG90LmFjY2VwdCgpXG4gIGlmIChtb2R1bGUuaG90LmRhdGEpIHtcbiAgICByZXF1aXJlKFwidnVlLWhvdC1yZWxvYWQtYXBpXCIpICAgICAgLnJlcmVuZGVyKFwiZGF0YS12LTc2MmVjZDI4XCIsIG1vZHVsZS5leHBvcnRzKVxuICB9XG59XG5cblxuLy8vLy8vLy8vLy8vLy8vLy8vXG4vLyBXRUJQQUNLIEZPT1RFUlxuLy8gLi9ub2RlX21vZHVsZXMvdnVlLWxvYWRlci9saWIvdGVtcGxhdGUtY29tcGlsZXI/e1wiaWRcIjpcImRhdGEtdi03NjJlY2QyOFwiLFwiaGFzU2NvcGVkXCI6ZmFsc2UsXCJidWJsZVwiOntcInRyYW5zZm9ybXNcIjp7fX19IS4vbm9kZV9tb2R1bGVzL3Z1ZS1sb2FkZXIvbGliL3NlbGVjdG9yLmpzP3R5cGU9dGVtcGxhdGUmaW5kZXg9MCEuL21vZHVsZXMvUmVzdGF1cmFudC9SZXNvdXJjZXMvYXNzZXRzL2pzL3ZpZXdzL3Bvcy9wYXJ0aWFscy9xdW90YXRpb25fZWRpdF9tb2RhbC52dWVcbi8vIG1vZHVsZSBpZCA9IC4vbm9kZV9tb2R1bGVzL3Z1ZS1sb2FkZXIvbGliL3RlbXBsYXRlLWNvbXBpbGVyL2luZGV4LmpzP3tcImlkXCI6XCJkYXRhLXYtNzYyZWNkMjhcIixcImhhc1Njb3BlZFwiOmZhbHNlLFwiYnVibGVcIjp7XCJ0cmFuc2Zvcm1zXCI6e319fSEuL25vZGVfbW9kdWxlcy92dWUtbG9hZGVyL2xpYi9zZWxlY3Rvci5qcz90eXBlPXRlbXBsYXRlJmluZGV4PTAhLi9tb2R1bGVzL1Jlc3RhdXJhbnQvUmVzb3VyY2VzL2Fzc2V0cy9qcy92aWV3cy9wb3MvcGFydGlhbHMvcXVvdGF0aW9uX2VkaXRfbW9kYWwudnVlXG4vLyBtb2R1bGUgY2h1bmtzID0gMTc3Il0sInNvdXJjZVJvb3QiOiIifQ==\n//# sourceURL=webpack-internal:///./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-762ecd28\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Restaurant/Resources/assets/js/views/pos/partials/quotation_edit_modal.vue\n");
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "el-dialog",
+    {
+      attrs: {
+        visible: _vm.showDialog,
+        "append-to-body": "",
+        title: "Editar cotización",
+        width: "80%"
+      },
+      on: { open: _vm.open, close: _vm.close }
+    },
+    [
+      _c("tenant-quotations-edit", {
+        ref: "edit",
+        attrs: {
+          external: true,
+          "resource-id": _vm.recordId,
+          "type-user": "seller"
+        },
+        on: { close: _vm.close }
+      })
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-762ecd28", module.exports)
+  }
+}
 
 /***/ })
 
 });
+//# sourceMappingURL=177.js.map

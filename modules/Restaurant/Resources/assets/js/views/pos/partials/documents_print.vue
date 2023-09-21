@@ -31,6 +31,18 @@
                         v-model="value"
                     ></el-date-picker>
                 </div>
+                <div class="col-6 p-1-col-md-3
+                d-flex align-items-end justify-content-start
+                "
+
+                v-if="activeName == 'documents'"
+                >
+                <el-checkbox
+                    v-model="remain"
+                    @change="getRecordsInput"
+                    >Saldos</el-checkbox
+                >
+                </div>
             </div>
             <div class="d-flex align-items-center justify-content-end">
                 <span class="p-1"
@@ -125,6 +137,7 @@ export default {
     props: ["showDialog", "company", "sender", "config", "establishment"],
     data() {
         return {
+            remain:false,
             time: null,
             loading: false,
             value: null,
@@ -322,12 +335,14 @@ export default {
                 isNote: this.activeName == "saleNotes",
                 typeDocument: this.activeName,
                 column: this.typeSearch,
-                value: this.value
+                value: this.value,
+                remain:this.remain
 
                 // limit: this.limit
             });
         },
         handleClick() {
+            this.remain = false;
             if (
                 this.saleNotes.length == 0 ||
                 this.documents.length == 0 ||
@@ -368,6 +383,9 @@ export default {
                         this.pagination.quotations = meta;
                     } else {
                         this.documents = data;
+                        if(this.remain){
+                            this.documents = this.documents.filter((document)=>document.remain>0)
+                        }
                         this.pagination.documents = meta;
                     }
                 }

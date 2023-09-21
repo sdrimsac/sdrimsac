@@ -3,28 +3,200 @@ webpackJsonp([1,136],{
 /***/ "./modules/Report/Resources/assets/js/components/DataTableReportsConsignment.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
-eval("var disposed = false\nfunction injectStyle (ssrContext) {\n  if (disposed) return\n  __webpack_require__(\"./node_modules/vue-style-loader/index.js!./node_modules/css-loader/index.js?sourceMap!./node_modules/vue-loader/lib/style-compiler/index.js?{\\\"vue\\\":true,\\\"id\\\":\\\"data-v-a1f8963c\\\",\\\"scoped\\\":false,\\\"hasInlineConfig\\\":true}!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./modules/Report/Resources/assets/js/components/DataTableReportsConsignment.vue\")\n}\nvar normalizeComponent = __webpack_require__(\"./node_modules/vue-loader/lib/component-normalizer.js\")\n/* script */\nvar __vue_script__ = __webpack_require__(\"./node_modules/babel-loader/lib/index.js?{\\\"cacheDirectory\\\":true,\\\"presets\\\":[[\\\"@babel/preset-env\\\",{\\\"modules\\\":false,\\\"targets\\\":{\\\"browsers\\\":[\\\"> 2%\\\"]},\\\"forceAllTransforms\\\":true}]],\\\"plugins\\\":[\\\"@babel/plugin-proposal-object-rest-spread\\\",[\\\"@babel/plugin-transform-runtime\\\",{\\\"helpers\\\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/Report/Resources/assets/js/components/DataTableReportsConsignment.vue\")\n/* template */\nvar __vue_template__ = __webpack_require__(\"./node_modules/vue-loader/lib/template-compiler/index.js?{\\\"id\\\":\\\"data-v-a1f8963c\\\",\\\"hasScoped\\\":false,\\\"buble\\\":{\\\"transforms\\\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Report/Resources/assets/js/components/DataTableReportsConsignment.vue\")\n/* template functional */\nvar __vue_template_functional__ = false\n/* styles */\nvar __vue_styles__ = injectStyle\n/* scopeId */\nvar __vue_scopeId__ = null\n/* moduleIdentifier (server only) */\nvar __vue_module_identifier__ = null\nvar Component = normalizeComponent(\n  __vue_script__,\n  __vue_template__,\n  __vue_template_functional__,\n  __vue_styles__,\n  __vue_scopeId__,\n  __vue_module_identifier__\n)\nComponent.options.__file = \"modules/Report/Resources/assets/js/components/DataTableReportsConsignment.vue\"\n\n/* hot reload */\nif (false) {(function () {\n  var hotAPI = require(\"vue-hot-reload-api\")\n  hotAPI.install(require(\"vue\"), false)\n  if (!hotAPI.compatible) return\n  module.hot.accept()\n  if (!module.hot.data) {\n    hotAPI.createRecord(\"data-v-a1f8963c\", Component.options)\n  } else {\n    hotAPI.reload(\"data-v-a1f8963c\", Component.options)\n  }\n  module.hot.dispose(function (data) {\n    disposed = true\n  })\n})()}\n\nmodule.exports = Component.exports\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vLi9tb2R1bGVzL1JlcG9ydC9SZXNvdXJjZXMvYXNzZXRzL2pzL2NvbXBvbmVudHMvRGF0YVRhYmxlUmVwb3J0c0NvbnNpZ25tZW50LnZ1ZT80ZThkIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0FBQ0E7QUFDQTtBQUNBLEVBQUUsbUJBQU8sQ0FBQywrV0FBNlM7QUFDdlQ7QUFDQSx5QkFBeUIsbUJBQU8sQ0FBQyx1REFBcUU7QUFDdEc7QUFDQSxxQkFBcUIsbUJBQU8sQ0FBQyxvY0FBeVk7QUFDdGE7QUFDQSx1QkFBdUIsbUJBQU8sQ0FBQyx5UkFBdVE7QUFDdFM7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTs7QUFFQTtBQUNBLElBQUksS0FBVSxHQUFHO0FBQ2pCO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLEdBQUc7QUFDSDtBQUNBO0FBQ0E7QUFDQTtBQUNBLEdBQUc7QUFDSCxDQUFDOztBQUVEIiwiZmlsZSI6Ii4vbW9kdWxlcy9SZXBvcnQvUmVzb3VyY2VzL2Fzc2V0cy9qcy9jb21wb25lbnRzL0RhdGFUYWJsZVJlcG9ydHNDb25zaWdubWVudC52dWUuanMiLCJzb3VyY2VzQ29udGVudCI6WyJ2YXIgZGlzcG9zZWQgPSBmYWxzZVxuZnVuY3Rpb24gaW5qZWN0U3R5bGUgKHNzckNvbnRleHQpIHtcbiAgaWYgKGRpc3Bvc2VkKSByZXR1cm5cbiAgcmVxdWlyZShcIiEhdnVlLXN0eWxlLWxvYWRlciFjc3MtbG9hZGVyP3NvdXJjZU1hcCEuLi8uLi8uLi8uLi8uLi8uLi9ub2RlX21vZHVsZXMvdnVlLWxvYWRlci9saWIvc3R5bGUtY29tcGlsZXIvaW5kZXg/e1xcXCJ2dWVcXFwiOnRydWUsXFxcImlkXFxcIjpcXFwiZGF0YS12LWExZjg5NjNjXFxcIixcXFwic2NvcGVkXFxcIjpmYWxzZSxcXFwiaGFzSW5saW5lQ29uZmlnXFxcIjp0cnVlfSEuLi8uLi8uLi8uLi8uLi8uLi9ub2RlX21vZHVsZXMvdnVlLWxvYWRlci9saWIvc2VsZWN0b3I/dHlwZT1zdHlsZXMmaW5kZXg9MCEuL0RhdGFUYWJsZVJlcG9ydHNDb25zaWdubWVudC52dWVcIilcbn1cbnZhciBub3JtYWxpemVDb21wb25lbnQgPSByZXF1aXJlKFwiIS4uLy4uLy4uLy4uLy4uLy4uL25vZGVfbW9kdWxlcy92dWUtbG9hZGVyL2xpYi9jb21wb25lbnQtbm9ybWFsaXplclwiKVxuLyogc2NyaXB0ICovXG52YXIgX192dWVfc2NyaXB0X18gPSByZXF1aXJlKFwiISFiYWJlbC1sb2FkZXI/e1xcXCJjYWNoZURpcmVjdG9yeVxcXCI6dHJ1ZSxcXFwicHJlc2V0c1xcXCI6W1tcXFwiQGJhYmVsL3ByZXNldC1lbnZcXFwiLHtcXFwibW9kdWxlc1xcXCI6ZmFsc2UsXFxcInRhcmdldHNcXFwiOntcXFwiYnJvd3NlcnNcXFwiOltcXFwiPiAyJVxcXCJdfSxcXFwiZm9yY2VBbGxUcmFuc2Zvcm1zXFxcIjp0cnVlfV1dLFxcXCJwbHVnaW5zXFxcIjpbXFxcIkBiYWJlbC9wbHVnaW4tcHJvcG9zYWwtb2JqZWN0LXJlc3Qtc3ByZWFkXFxcIixbXFxcIkBiYWJlbC9wbHVnaW4tdHJhbnNmb3JtLXJ1bnRpbWVcXFwiLHtcXFwiaGVscGVyc1xcXCI6ZmFsc2V9XV19IS4uLy4uLy4uLy4uLy4uLy4uL25vZGVfbW9kdWxlcy92dWUtbG9hZGVyL2xpYi9zZWxlY3Rvcj90eXBlPXNjcmlwdCZpbmRleD0wIS4vRGF0YVRhYmxlUmVwb3J0c0NvbnNpZ25tZW50LnZ1ZVwiKVxuLyogdGVtcGxhdGUgKi9cbnZhciBfX3Z1ZV90ZW1wbGF0ZV9fID0gcmVxdWlyZShcIiEhLi4vLi4vLi4vLi4vLi4vLi4vbm9kZV9tb2R1bGVzL3Z1ZS1sb2FkZXIvbGliL3RlbXBsYXRlLWNvbXBpbGVyL2luZGV4P3tcXFwiaWRcXFwiOlxcXCJkYXRhLXYtYTFmODk2M2NcXFwiLFxcXCJoYXNTY29wZWRcXFwiOmZhbHNlLFxcXCJidWJsZVxcXCI6e1xcXCJ0cmFuc2Zvcm1zXFxcIjp7fX19IS4uLy4uLy4uLy4uLy4uLy4uL25vZGVfbW9kdWxlcy92dWUtbG9hZGVyL2xpYi9zZWxlY3Rvcj90eXBlPXRlbXBsYXRlJmluZGV4PTAhLi9EYXRhVGFibGVSZXBvcnRzQ29uc2lnbm1lbnQudnVlXCIpXG4vKiB0ZW1wbGF0ZSBmdW5jdGlvbmFsICovXG52YXIgX192dWVfdGVtcGxhdGVfZnVuY3Rpb25hbF9fID0gZmFsc2Vcbi8qIHN0eWxlcyAqL1xudmFyIF9fdnVlX3N0eWxlc19fID0gaW5qZWN0U3R5bGVcbi8qIHNjb3BlSWQgKi9cbnZhciBfX3Z1ZV9zY29wZUlkX18gPSBudWxsXG4vKiBtb2R1bGVJZGVudGlmaWVyIChzZXJ2ZXIgb25seSkgKi9cbnZhciBfX3Z1ZV9tb2R1bGVfaWRlbnRpZmllcl9fID0gbnVsbFxudmFyIENvbXBvbmVudCA9IG5vcm1hbGl6ZUNvbXBvbmVudChcbiAgX192dWVfc2NyaXB0X18sXG4gIF9fdnVlX3RlbXBsYXRlX18sXG4gIF9fdnVlX3RlbXBsYXRlX2Z1bmN0aW9uYWxfXyxcbiAgX192dWVfc3R5bGVzX18sXG4gIF9fdnVlX3Njb3BlSWRfXyxcbiAgX192dWVfbW9kdWxlX2lkZW50aWZpZXJfX1xuKVxuQ29tcG9uZW50Lm9wdGlvbnMuX19maWxlID0gXCJtb2R1bGVzL1JlcG9ydC9SZXNvdXJjZXMvYXNzZXRzL2pzL2NvbXBvbmVudHMvRGF0YVRhYmxlUmVwb3J0c0NvbnNpZ25tZW50LnZ1ZVwiXG5cbi8qIGhvdCByZWxvYWQgKi9cbmlmIChtb2R1bGUuaG90KSB7KGZ1bmN0aW9uICgpIHtcbiAgdmFyIGhvdEFQSSA9IHJlcXVpcmUoXCJ2dWUtaG90LXJlbG9hZC1hcGlcIilcbiAgaG90QVBJLmluc3RhbGwocmVxdWlyZShcInZ1ZVwiKSwgZmFsc2UpXG4gIGlmICghaG90QVBJLmNvbXBhdGlibGUpIHJldHVyblxuICBtb2R1bGUuaG90LmFjY2VwdCgpXG4gIGlmICghbW9kdWxlLmhvdC5kYXRhKSB7XG4gICAgaG90QVBJLmNyZWF0ZVJlY29yZChcImRhdGEtdi1hMWY4OTYzY1wiLCBDb21wb25lbnQub3B0aW9ucylcbiAgfSBlbHNlIHtcbiAgICBob3RBUEkucmVsb2FkKFwiZGF0YS12LWExZjg5NjNjXCIsIENvbXBvbmVudC5vcHRpb25zKVxuICB9XG4gIG1vZHVsZS5ob3QuZGlzcG9zZShmdW5jdGlvbiAoZGF0YSkge1xuICAgIGRpc3Bvc2VkID0gdHJ1ZVxuICB9KVxufSkoKX1cblxubW9kdWxlLmV4cG9ydHMgPSBDb21wb25lbnQuZXhwb3J0c1xuXG5cblxuLy8vLy8vLy8vLy8vLy8vLy8vXG4vLyBXRUJQQUNLIEZPT1RFUlxuLy8gLi9tb2R1bGVzL1JlcG9ydC9SZXNvdXJjZXMvYXNzZXRzL2pzL2NvbXBvbmVudHMvRGF0YVRhYmxlUmVwb3J0c0NvbnNpZ25tZW50LnZ1ZVxuLy8gbW9kdWxlIGlkID0gLi9tb2R1bGVzL1JlcG9ydC9SZXNvdXJjZXMvYXNzZXRzL2pzL2NvbXBvbmVudHMvRGF0YVRhYmxlUmVwb3J0c0NvbnNpZ25tZW50LnZ1ZVxuLy8gbW9kdWxlIGNodW5rcyA9IDEiXSwic291cmNlUm9vdCI6IiJ9\n//# sourceURL=webpack-internal:///./modules/Report/Resources/assets/js/components/DataTableReportsConsignment.vue\n");
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__("./node_modules/vue-style-loader/index.js!./node_modules/css-loader/index.js?sourceMap!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-a1f8963c\",\"scoped\":false,\"hasInlineConfig\":true}!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./modules/Report/Resources/assets/js/components/DataTableReportsConsignment.vue")
+}
+var normalizeComponent = __webpack_require__("./node_modules/vue-loader/lib/component-normalizer.js")
+/* script */
+var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/Report/Resources/assets/js/components/DataTableReportsConsignment.vue")
+/* template */
+var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-a1f8963c\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Report/Resources/assets/js/components/DataTableReportsConsignment.vue")
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "modules/Report/Resources/assets/js/components/DataTableReportsConsignment.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-a1f8963c", Component.options)
+  } else {
+    hotAPI.reload("data-v-a1f8963c", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
 
 /***/ }),
 
 /***/ "./modules/Report/Resources/assets/js/components/DataTableReportsCredits.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
-eval("var disposed = false\nfunction injectStyle (ssrContext) {\n  if (disposed) return\n  __webpack_require__(\"./node_modules/vue-style-loader/index.js!./node_modules/css-loader/index.js?sourceMap!./node_modules/vue-loader/lib/style-compiler/index.js?{\\\"vue\\\":true,\\\"id\\\":\\\"data-v-4d29955f\\\",\\\"scoped\\\":false,\\\"hasInlineConfig\\\":true}!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./modules/Report/Resources/assets/js/components/DataTableReportsCredits.vue\")\n}\nvar normalizeComponent = __webpack_require__(\"./node_modules/vue-loader/lib/component-normalizer.js\")\n/* script */\nvar __vue_script__ = __webpack_require__(\"./node_modules/babel-loader/lib/index.js?{\\\"cacheDirectory\\\":true,\\\"presets\\\":[[\\\"@babel/preset-env\\\",{\\\"modules\\\":false,\\\"targets\\\":{\\\"browsers\\\":[\\\"> 2%\\\"]},\\\"forceAllTransforms\\\":true}]],\\\"plugins\\\":[\\\"@babel/plugin-proposal-object-rest-spread\\\",[\\\"@babel/plugin-transform-runtime\\\",{\\\"helpers\\\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/Report/Resources/assets/js/components/DataTableReportsCredits.vue\")\n/* template */\nvar __vue_template__ = __webpack_require__(\"./node_modules/vue-loader/lib/template-compiler/index.js?{\\\"id\\\":\\\"data-v-4d29955f\\\",\\\"hasScoped\\\":false,\\\"buble\\\":{\\\"transforms\\\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Report/Resources/assets/js/components/DataTableReportsCredits.vue\")\n/* template functional */\nvar __vue_template_functional__ = false\n/* styles */\nvar __vue_styles__ = injectStyle\n/* scopeId */\nvar __vue_scopeId__ = null\n/* moduleIdentifier (server only) */\nvar __vue_module_identifier__ = null\nvar Component = normalizeComponent(\n  __vue_script__,\n  __vue_template__,\n  __vue_template_functional__,\n  __vue_styles__,\n  __vue_scopeId__,\n  __vue_module_identifier__\n)\nComponent.options.__file = \"modules/Report/Resources/assets/js/components/DataTableReportsCredits.vue\"\n\n/* hot reload */\nif (false) {(function () {\n  var hotAPI = require(\"vue-hot-reload-api\")\n  hotAPI.install(require(\"vue\"), false)\n  if (!hotAPI.compatible) return\n  module.hot.accept()\n  if (!module.hot.data) {\n    hotAPI.createRecord(\"data-v-4d29955f\", Component.options)\n  } else {\n    hotAPI.reload(\"data-v-4d29955f\", Component.options)\n  }\n  module.hot.dispose(function (data) {\n    disposed = true\n  })\n})()}\n\nmodule.exports = Component.exports\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vLi9tb2R1bGVzL1JlcG9ydC9SZXNvdXJjZXMvYXNzZXRzL2pzL2NvbXBvbmVudHMvRGF0YVRhYmxlUmVwb3J0c0NyZWRpdHMudnVlP2Y1MjMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7QUFDQTtBQUNBO0FBQ0EsRUFBRSxtQkFBTyxDQUFDLDJXQUF5UztBQUNuVDtBQUNBLHlCQUF5QixtQkFBTyxDQUFDLHVEQUFxRTtBQUN0RztBQUNBLHFCQUFxQixtQkFBTyxDQUFDLGdjQUFxWTtBQUNsYTtBQUNBLHVCQUF1QixtQkFBTyxDQUFDLHFSQUFtUTtBQUNsUztBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBOztBQUVBO0FBQ0EsSUFBSSxLQUFVLEdBQUc7QUFDakI7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0EsR0FBRztBQUNIO0FBQ0E7QUFDQTtBQUNBO0FBQ0EsR0FBRztBQUNILENBQUM7O0FBRUQiLCJmaWxlIjoiLi9tb2R1bGVzL1JlcG9ydC9SZXNvdXJjZXMvYXNzZXRzL2pzL2NvbXBvbmVudHMvRGF0YVRhYmxlUmVwb3J0c0NyZWRpdHMudnVlLmpzIiwic291cmNlc0NvbnRlbnQiOlsidmFyIGRpc3Bvc2VkID0gZmFsc2VcbmZ1bmN0aW9uIGluamVjdFN0eWxlIChzc3JDb250ZXh0KSB7XG4gIGlmIChkaXNwb3NlZCkgcmV0dXJuXG4gIHJlcXVpcmUoXCIhIXZ1ZS1zdHlsZS1sb2FkZXIhY3NzLWxvYWRlcj9zb3VyY2VNYXAhLi4vLi4vLi4vLi4vLi4vLi4vbm9kZV9tb2R1bGVzL3Z1ZS1sb2FkZXIvbGliL3N0eWxlLWNvbXBpbGVyL2luZGV4P3tcXFwidnVlXFxcIjp0cnVlLFxcXCJpZFxcXCI6XFxcImRhdGEtdi00ZDI5OTU1ZlxcXCIsXFxcInNjb3BlZFxcXCI6ZmFsc2UsXFxcImhhc0lubGluZUNvbmZpZ1xcXCI6dHJ1ZX0hLi4vLi4vLi4vLi4vLi4vLi4vbm9kZV9tb2R1bGVzL3Z1ZS1sb2FkZXIvbGliL3NlbGVjdG9yP3R5cGU9c3R5bGVzJmluZGV4PTAhLi9EYXRhVGFibGVSZXBvcnRzQ3JlZGl0cy52dWVcIilcbn1cbnZhciBub3JtYWxpemVDb21wb25lbnQgPSByZXF1aXJlKFwiIS4uLy4uLy4uLy4uLy4uLy4uL25vZGVfbW9kdWxlcy92dWUtbG9hZGVyL2xpYi9jb21wb25lbnQtbm9ybWFsaXplclwiKVxuLyogc2NyaXB0ICovXG52YXIgX192dWVfc2NyaXB0X18gPSByZXF1aXJlKFwiISFiYWJlbC1sb2FkZXI/e1xcXCJjYWNoZURpcmVjdG9yeVxcXCI6dHJ1ZSxcXFwicHJlc2V0c1xcXCI6W1tcXFwiQGJhYmVsL3ByZXNldC1lbnZcXFwiLHtcXFwibW9kdWxlc1xcXCI6ZmFsc2UsXFxcInRhcmdldHNcXFwiOntcXFwiYnJvd3NlcnNcXFwiOltcXFwiPiAyJVxcXCJdfSxcXFwiZm9yY2VBbGxUcmFuc2Zvcm1zXFxcIjp0cnVlfV1dLFxcXCJwbHVnaW5zXFxcIjpbXFxcIkBiYWJlbC9wbHVnaW4tcHJvcG9zYWwtb2JqZWN0LXJlc3Qtc3ByZWFkXFxcIixbXFxcIkBiYWJlbC9wbHVnaW4tdHJhbnNmb3JtLXJ1bnRpbWVcXFwiLHtcXFwiaGVscGVyc1xcXCI6ZmFsc2V9XV19IS4uLy4uLy4uLy4uLy4uLy4uL25vZGVfbW9kdWxlcy92dWUtbG9hZGVyL2xpYi9zZWxlY3Rvcj90eXBlPXNjcmlwdCZpbmRleD0wIS4vRGF0YVRhYmxlUmVwb3J0c0NyZWRpdHMudnVlXCIpXG4vKiB0ZW1wbGF0ZSAqL1xudmFyIF9fdnVlX3RlbXBsYXRlX18gPSByZXF1aXJlKFwiISEuLi8uLi8uLi8uLi8uLi8uLi9ub2RlX21vZHVsZXMvdnVlLWxvYWRlci9saWIvdGVtcGxhdGUtY29tcGlsZXIvaW5kZXg/e1xcXCJpZFxcXCI6XFxcImRhdGEtdi00ZDI5OTU1ZlxcXCIsXFxcImhhc1Njb3BlZFxcXCI6ZmFsc2UsXFxcImJ1YmxlXFxcIjp7XFxcInRyYW5zZm9ybXNcXFwiOnt9fX0hLi4vLi4vLi4vLi4vLi4vLi4vbm9kZV9tb2R1bGVzL3Z1ZS1sb2FkZXIvbGliL3NlbGVjdG9yP3R5cGU9dGVtcGxhdGUmaW5kZXg9MCEuL0RhdGFUYWJsZVJlcG9ydHNDcmVkaXRzLnZ1ZVwiKVxuLyogdGVtcGxhdGUgZnVuY3Rpb25hbCAqL1xudmFyIF9fdnVlX3RlbXBsYXRlX2Z1bmN0aW9uYWxfXyA9IGZhbHNlXG4vKiBzdHlsZXMgKi9cbnZhciBfX3Z1ZV9zdHlsZXNfXyA9IGluamVjdFN0eWxlXG4vKiBzY29wZUlkICovXG52YXIgX192dWVfc2NvcGVJZF9fID0gbnVsbFxuLyogbW9kdWxlSWRlbnRpZmllciAoc2VydmVyIG9ubHkpICovXG52YXIgX192dWVfbW9kdWxlX2lkZW50aWZpZXJfXyA9IG51bGxcbnZhciBDb21wb25lbnQgPSBub3JtYWxpemVDb21wb25lbnQoXG4gIF9fdnVlX3NjcmlwdF9fLFxuICBfX3Z1ZV90ZW1wbGF0ZV9fLFxuICBfX3Z1ZV90ZW1wbGF0ZV9mdW5jdGlvbmFsX18sXG4gIF9fdnVlX3N0eWxlc19fLFxuICBfX3Z1ZV9zY29wZUlkX18sXG4gIF9fdnVlX21vZHVsZV9pZGVudGlmaWVyX19cbilcbkNvbXBvbmVudC5vcHRpb25zLl9fZmlsZSA9IFwibW9kdWxlcy9SZXBvcnQvUmVzb3VyY2VzL2Fzc2V0cy9qcy9jb21wb25lbnRzL0RhdGFUYWJsZVJlcG9ydHNDcmVkaXRzLnZ1ZVwiXG5cbi8qIGhvdCByZWxvYWQgKi9cbmlmIChtb2R1bGUuaG90KSB7KGZ1bmN0aW9uICgpIHtcbiAgdmFyIGhvdEFQSSA9IHJlcXVpcmUoXCJ2dWUtaG90LXJlbG9hZC1hcGlcIilcbiAgaG90QVBJLmluc3RhbGwocmVxdWlyZShcInZ1ZVwiKSwgZmFsc2UpXG4gIGlmICghaG90QVBJLmNvbXBhdGlibGUpIHJldHVyblxuICBtb2R1bGUuaG90LmFjY2VwdCgpXG4gIGlmICghbW9kdWxlLmhvdC5kYXRhKSB7XG4gICAgaG90QVBJLmNyZWF0ZVJlY29yZChcImRhdGEtdi00ZDI5OTU1ZlwiLCBDb21wb25lbnQub3B0aW9ucylcbiAgfSBlbHNlIHtcbiAgICBob3RBUEkucmVsb2FkKFwiZGF0YS12LTRkMjk5NTVmXCIsIENvbXBvbmVudC5vcHRpb25zKVxuICB9XG4gIG1vZHVsZS5ob3QuZGlzcG9zZShmdW5jdGlvbiAoZGF0YSkge1xuICAgIGRpc3Bvc2VkID0gdHJ1ZVxuICB9KVxufSkoKX1cblxubW9kdWxlLmV4cG9ydHMgPSBDb21wb25lbnQuZXhwb3J0c1xuXG5cblxuLy8vLy8vLy8vLy8vLy8vLy8vXG4vLyBXRUJQQUNLIEZPT1RFUlxuLy8gLi9tb2R1bGVzL1JlcG9ydC9SZXNvdXJjZXMvYXNzZXRzL2pzL2NvbXBvbmVudHMvRGF0YVRhYmxlUmVwb3J0c0NyZWRpdHMudnVlXG4vLyBtb2R1bGUgaWQgPSAuL21vZHVsZXMvUmVwb3J0L1Jlc291cmNlcy9hc3NldHMvanMvY29tcG9uZW50cy9EYXRhVGFibGVSZXBvcnRzQ3JlZGl0cy52dWVcbi8vIG1vZHVsZSBjaHVua3MgPSAxIl0sInNvdXJjZVJvb3QiOiIifQ==\n//# sourceURL=webpack-internal:///./modules/Report/Resources/assets/js/components/DataTableReportsCredits.vue\n");
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__("./node_modules/vue-style-loader/index.js!./node_modules/css-loader/index.js?sourceMap!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-4d29955f\",\"scoped\":false,\"hasInlineConfig\":true}!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./modules/Report/Resources/assets/js/components/DataTableReportsCredits.vue")
+}
+var normalizeComponent = __webpack_require__("./node_modules/vue-loader/lib/component-normalizer.js")
+/* script */
+var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/Report/Resources/assets/js/components/DataTableReportsCredits.vue")
+/* template */
+var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-4d29955f\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Report/Resources/assets/js/components/DataTableReportsCredits.vue")
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "modules/Report/Resources/assets/js/components/DataTableReportsCredits.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-4d29955f", Component.options)
+  } else {
+    hotAPI.reload("data-v-4d29955f", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
 
 /***/ }),
 
 /***/ "./modules/Report/Resources/assets/js/views/consignment/index.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
-eval("var disposed = false\nvar normalizeComponent = __webpack_require__(\"./node_modules/vue-loader/lib/component-normalizer.js\")\n/* script */\nvar __vue_script__ = __webpack_require__(\"./node_modules/babel-loader/lib/index.js?{\\\"cacheDirectory\\\":true,\\\"presets\\\":[[\\\"@babel/preset-env\\\",{\\\"modules\\\":false,\\\"targets\\\":{\\\"browsers\\\":[\\\"> 2%\\\"]},\\\"forceAllTransforms\\\":true}]],\\\"plugins\\\":[\\\"@babel/plugin-proposal-object-rest-spread\\\",[\\\"@babel/plugin-transform-runtime\\\",{\\\"helpers\\\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/Report/Resources/assets/js/views/consignment/index.vue\")\n/* template */\nvar __vue_template__ = __webpack_require__(\"./node_modules/vue-loader/lib/template-compiler/index.js?{\\\"id\\\":\\\"data-v-7ed86416\\\",\\\"hasScoped\\\":false,\\\"buble\\\":{\\\"transforms\\\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Report/Resources/assets/js/views/consignment/index.vue\")\n/* template functional */\nvar __vue_template_functional__ = false\n/* styles */\nvar __vue_styles__ = null\n/* scopeId */\nvar __vue_scopeId__ = null\n/* moduleIdentifier (server only) */\nvar __vue_module_identifier__ = null\nvar Component = normalizeComponent(\n  __vue_script__,\n  __vue_template__,\n  __vue_template_functional__,\n  __vue_styles__,\n  __vue_scopeId__,\n  __vue_module_identifier__\n)\nComponent.options.__file = \"modules/Report/Resources/assets/js/views/consignment/index.vue\"\n\n/* hot reload */\nif (false) {(function () {\n  var hotAPI = require(\"vue-hot-reload-api\")\n  hotAPI.install(require(\"vue\"), false)\n  if (!hotAPI.compatible) return\n  module.hot.accept()\n  if (!module.hot.data) {\n    hotAPI.createRecord(\"data-v-7ed86416\", Component.options)\n  } else {\n    hotAPI.reload(\"data-v-7ed86416\", Component.options)\n  }\n  module.hot.dispose(function (data) {\n    disposed = true\n  })\n})()}\n\nmodule.exports = Component.exports\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vLi9tb2R1bGVzL1JlcG9ydC9SZXNvdXJjZXMvYXNzZXRzL2pzL3ZpZXdzL2NvbnNpZ25tZW50L2luZGV4LnZ1ZT8xOTNjIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0FBQ0EseUJBQXlCLG1CQUFPLENBQUMsdURBQXdFO0FBQ3pHO0FBQ0EscUJBQXFCLG1CQUFPLENBQUMscWJBQXNYO0FBQ25aO0FBQ0EsdUJBQXVCLG1CQUFPLENBQUMsMFFBQXVQO0FBQ3RSO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7O0FBRUE7QUFDQSxJQUFJLEtBQVUsR0FBRztBQUNqQjtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSxHQUFHO0FBQ0g7QUFDQTtBQUNBO0FBQ0E7QUFDQSxHQUFHO0FBQ0gsQ0FBQzs7QUFFRCIsImZpbGUiOiIuL21vZHVsZXMvUmVwb3J0L1Jlc291cmNlcy9hc3NldHMvanMvdmlld3MvY29uc2lnbm1lbnQvaW5kZXgudnVlLmpzIiwic291cmNlc0NvbnRlbnQiOlsidmFyIGRpc3Bvc2VkID0gZmFsc2VcbnZhciBub3JtYWxpemVDb21wb25lbnQgPSByZXF1aXJlKFwiIS4uLy4uLy4uLy4uLy4uLy4uLy4uL25vZGVfbW9kdWxlcy92dWUtbG9hZGVyL2xpYi9jb21wb25lbnQtbm9ybWFsaXplclwiKVxuLyogc2NyaXB0ICovXG52YXIgX192dWVfc2NyaXB0X18gPSByZXF1aXJlKFwiISFiYWJlbC1sb2FkZXI/e1xcXCJjYWNoZURpcmVjdG9yeVxcXCI6dHJ1ZSxcXFwicHJlc2V0c1xcXCI6W1tcXFwiQGJhYmVsL3ByZXNldC1lbnZcXFwiLHtcXFwibW9kdWxlc1xcXCI6ZmFsc2UsXFxcInRhcmdldHNcXFwiOntcXFwiYnJvd3NlcnNcXFwiOltcXFwiPiAyJVxcXCJdfSxcXFwiZm9yY2VBbGxUcmFuc2Zvcm1zXFxcIjp0cnVlfV1dLFxcXCJwbHVnaW5zXFxcIjpbXFxcIkBiYWJlbC9wbHVnaW4tcHJvcG9zYWwtb2JqZWN0LXJlc3Qtc3ByZWFkXFxcIixbXFxcIkBiYWJlbC9wbHVnaW4tdHJhbnNmb3JtLXJ1bnRpbWVcXFwiLHtcXFwiaGVscGVyc1xcXCI6ZmFsc2V9XV19IS4uLy4uLy4uLy4uLy4uLy4uLy4uL25vZGVfbW9kdWxlcy92dWUtbG9hZGVyL2xpYi9zZWxlY3Rvcj90eXBlPXNjcmlwdCZpbmRleD0wIS4vaW5kZXgudnVlXCIpXG4vKiB0ZW1wbGF0ZSAqL1xudmFyIF9fdnVlX3RlbXBsYXRlX18gPSByZXF1aXJlKFwiISEuLi8uLi8uLi8uLi8uLi8uLi8uLi9ub2RlX21vZHVsZXMvdnVlLWxvYWRlci9saWIvdGVtcGxhdGUtY29tcGlsZXIvaW5kZXg/e1xcXCJpZFxcXCI6XFxcImRhdGEtdi03ZWQ4NjQxNlxcXCIsXFxcImhhc1Njb3BlZFxcXCI6ZmFsc2UsXFxcImJ1YmxlXFxcIjp7XFxcInRyYW5zZm9ybXNcXFwiOnt9fX0hLi4vLi4vLi4vLi4vLi4vLi4vLi4vbm9kZV9tb2R1bGVzL3Z1ZS1sb2FkZXIvbGliL3NlbGVjdG9yP3R5cGU9dGVtcGxhdGUmaW5kZXg9MCEuL2luZGV4LnZ1ZVwiKVxuLyogdGVtcGxhdGUgZnVuY3Rpb25hbCAqL1xudmFyIF9fdnVlX3RlbXBsYXRlX2Z1bmN0aW9uYWxfXyA9IGZhbHNlXG4vKiBzdHlsZXMgKi9cbnZhciBfX3Z1ZV9zdHlsZXNfXyA9IG51bGxcbi8qIHNjb3BlSWQgKi9cbnZhciBfX3Z1ZV9zY29wZUlkX18gPSBudWxsXG4vKiBtb2R1bGVJZGVudGlmaWVyIChzZXJ2ZXIgb25seSkgKi9cbnZhciBfX3Z1ZV9tb2R1bGVfaWRlbnRpZmllcl9fID0gbnVsbFxudmFyIENvbXBvbmVudCA9IG5vcm1hbGl6ZUNvbXBvbmVudChcbiAgX192dWVfc2NyaXB0X18sXG4gIF9fdnVlX3RlbXBsYXRlX18sXG4gIF9fdnVlX3RlbXBsYXRlX2Z1bmN0aW9uYWxfXyxcbiAgX192dWVfc3R5bGVzX18sXG4gIF9fdnVlX3Njb3BlSWRfXyxcbiAgX192dWVfbW9kdWxlX2lkZW50aWZpZXJfX1xuKVxuQ29tcG9uZW50Lm9wdGlvbnMuX19maWxlID0gXCJtb2R1bGVzL1JlcG9ydC9SZXNvdXJjZXMvYXNzZXRzL2pzL3ZpZXdzL2NvbnNpZ25tZW50L2luZGV4LnZ1ZVwiXG5cbi8qIGhvdCByZWxvYWQgKi9cbmlmIChtb2R1bGUuaG90KSB7KGZ1bmN0aW9uICgpIHtcbiAgdmFyIGhvdEFQSSA9IHJlcXVpcmUoXCJ2dWUtaG90LXJlbG9hZC1hcGlcIilcbiAgaG90QVBJLmluc3RhbGwocmVxdWlyZShcInZ1ZVwiKSwgZmFsc2UpXG4gIGlmICghaG90QVBJLmNvbXBhdGlibGUpIHJldHVyblxuICBtb2R1bGUuaG90LmFjY2VwdCgpXG4gIGlmICghbW9kdWxlLmhvdC5kYXRhKSB7XG4gICAgaG90QVBJLmNyZWF0ZVJlY29yZChcImRhdGEtdi03ZWQ4NjQxNlwiLCBDb21wb25lbnQub3B0aW9ucylcbiAgfSBlbHNlIHtcbiAgICBob3RBUEkucmVsb2FkKFwiZGF0YS12LTdlZDg2NDE2XCIsIENvbXBvbmVudC5vcHRpb25zKVxuICB9XG4gIG1vZHVsZS5ob3QuZGlzcG9zZShmdW5jdGlvbiAoZGF0YSkge1xuICAgIGRpc3Bvc2VkID0gdHJ1ZVxuICB9KVxufSkoKX1cblxubW9kdWxlLmV4cG9ydHMgPSBDb21wb25lbnQuZXhwb3J0c1xuXG5cblxuLy8vLy8vLy8vLy8vLy8vLy8vXG4vLyBXRUJQQUNLIEZPT1RFUlxuLy8gLi9tb2R1bGVzL1JlcG9ydC9SZXNvdXJjZXMvYXNzZXRzL2pzL3ZpZXdzL2NvbnNpZ25tZW50L2luZGV4LnZ1ZVxuLy8gbW9kdWxlIGlkID0gLi9tb2R1bGVzL1JlcG9ydC9SZXNvdXJjZXMvYXNzZXRzL2pzL3ZpZXdzL2NvbnNpZ25tZW50L2luZGV4LnZ1ZVxuLy8gbW9kdWxlIGNodW5rcyA9IDEiXSwic291cmNlUm9vdCI6IiJ9\n//# sourceURL=webpack-internal:///./modules/Report/Resources/assets/js/views/consignment/index.vue\n");
+var disposed = false
+var normalizeComponent = __webpack_require__("./node_modules/vue-loader/lib/component-normalizer.js")
+/* script */
+var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/Report/Resources/assets/js/views/consignment/index.vue")
+/* template */
+var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-7ed86416\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Report/Resources/assets/js/views/consignment/index.vue")
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "modules/Report/Resources/assets/js/views/consignment/index.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-7ed86416", Component.options)
+  } else {
+    hotAPI.reload("data-v-7ed86416", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
 
 /***/ }),
 
 /***/ "./modules/Report/Resources/assets/js/views/credit/index.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
-eval("var disposed = false\nvar normalizeComponent = __webpack_require__(\"./node_modules/vue-loader/lib/component-normalizer.js\")\n/* script */\nvar __vue_script__ = __webpack_require__(\"./node_modules/babel-loader/lib/index.js?{\\\"cacheDirectory\\\":true,\\\"presets\\\":[[\\\"@babel/preset-env\\\",{\\\"modules\\\":false,\\\"targets\\\":{\\\"browsers\\\":[\\\"> 2%\\\"]},\\\"forceAllTransforms\\\":true}]],\\\"plugins\\\":[\\\"@babel/plugin-proposal-object-rest-spread\\\",[\\\"@babel/plugin-transform-runtime\\\",{\\\"helpers\\\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/Report/Resources/assets/js/views/credit/index.vue\")\n/* template */\nvar __vue_template__ = __webpack_require__(\"./node_modules/vue-loader/lib/template-compiler/index.js?{\\\"id\\\":\\\"data-v-6cc5a2f6\\\",\\\"hasScoped\\\":false,\\\"buble\\\":{\\\"transforms\\\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Report/Resources/assets/js/views/credit/index.vue\")\n/* template functional */\nvar __vue_template_functional__ = false\n/* styles */\nvar __vue_styles__ = null\n/* scopeId */\nvar __vue_scopeId__ = null\n/* moduleIdentifier (server only) */\nvar __vue_module_identifier__ = null\nvar Component = normalizeComponent(\n  __vue_script__,\n  __vue_template__,\n  __vue_template_functional__,\n  __vue_styles__,\n  __vue_scopeId__,\n  __vue_module_identifier__\n)\nComponent.options.__file = \"modules/Report/Resources/assets/js/views/credit/index.vue\"\n\n/* hot reload */\nif (false) {(function () {\n  var hotAPI = require(\"vue-hot-reload-api\")\n  hotAPI.install(require(\"vue\"), false)\n  if (!hotAPI.compatible) return\n  module.hot.accept()\n  if (!module.hot.data) {\n    hotAPI.createRecord(\"data-v-6cc5a2f6\", Component.options)\n  } else {\n    hotAPI.reload(\"data-v-6cc5a2f6\", Component.options)\n  }\n  module.hot.dispose(function (data) {\n    disposed = true\n  })\n})()}\n\nmodule.exports = Component.exports\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vLi9tb2R1bGVzL1JlcG9ydC9SZXNvdXJjZXMvYXNzZXRzL2pzL3ZpZXdzL2NyZWRpdC9pbmRleC52dWU/ZjFmYyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtBQUNBLHlCQUF5QixtQkFBTyxDQUFDLHVEQUF3RTtBQUN6RztBQUNBLHFCQUFxQixtQkFBTyxDQUFDLGdiQUFzWDtBQUNuWjtBQUNBLHVCQUF1QixtQkFBTyxDQUFDLHFRQUF1UDtBQUN0UjtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBOztBQUVBO0FBQ0EsSUFBSSxLQUFVLEdBQUc7QUFDakI7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0EsR0FBRztBQUNIO0FBQ0E7QUFDQTtBQUNBO0FBQ0EsR0FBRztBQUNILENBQUM7O0FBRUQiLCJmaWxlIjoiLi9tb2R1bGVzL1JlcG9ydC9SZXNvdXJjZXMvYXNzZXRzL2pzL3ZpZXdzL2NyZWRpdC9pbmRleC52dWUuanMiLCJzb3VyY2VzQ29udGVudCI6WyJ2YXIgZGlzcG9zZWQgPSBmYWxzZVxudmFyIG5vcm1hbGl6ZUNvbXBvbmVudCA9IHJlcXVpcmUoXCIhLi4vLi4vLi4vLi4vLi4vLi4vLi4vbm9kZV9tb2R1bGVzL3Z1ZS1sb2FkZXIvbGliL2NvbXBvbmVudC1ub3JtYWxpemVyXCIpXG4vKiBzY3JpcHQgKi9cbnZhciBfX3Z1ZV9zY3JpcHRfXyA9IHJlcXVpcmUoXCIhIWJhYmVsLWxvYWRlcj97XFxcImNhY2hlRGlyZWN0b3J5XFxcIjp0cnVlLFxcXCJwcmVzZXRzXFxcIjpbW1xcXCJAYmFiZWwvcHJlc2V0LWVudlxcXCIse1xcXCJtb2R1bGVzXFxcIjpmYWxzZSxcXFwidGFyZ2V0c1xcXCI6e1xcXCJicm93c2Vyc1xcXCI6W1xcXCI+IDIlXFxcIl19LFxcXCJmb3JjZUFsbFRyYW5zZm9ybXNcXFwiOnRydWV9XV0sXFxcInBsdWdpbnNcXFwiOltcXFwiQGJhYmVsL3BsdWdpbi1wcm9wb3NhbC1vYmplY3QtcmVzdC1zcHJlYWRcXFwiLFtcXFwiQGJhYmVsL3BsdWdpbi10cmFuc2Zvcm0tcnVudGltZVxcXCIse1xcXCJoZWxwZXJzXFxcIjpmYWxzZX1dXX0hLi4vLi4vLi4vLi4vLi4vLi4vLi4vbm9kZV9tb2R1bGVzL3Z1ZS1sb2FkZXIvbGliL3NlbGVjdG9yP3R5cGU9c2NyaXB0JmluZGV4PTAhLi9pbmRleC52dWVcIilcbi8qIHRlbXBsYXRlICovXG52YXIgX192dWVfdGVtcGxhdGVfXyA9IHJlcXVpcmUoXCIhIS4uLy4uLy4uLy4uLy4uLy4uLy4uL25vZGVfbW9kdWxlcy92dWUtbG9hZGVyL2xpYi90ZW1wbGF0ZS1jb21waWxlci9pbmRleD97XFxcImlkXFxcIjpcXFwiZGF0YS12LTZjYzVhMmY2XFxcIixcXFwiaGFzU2NvcGVkXFxcIjpmYWxzZSxcXFwiYnVibGVcXFwiOntcXFwidHJhbnNmb3Jtc1xcXCI6e319fSEuLi8uLi8uLi8uLi8uLi8uLi8uLi9ub2RlX21vZHVsZXMvdnVlLWxvYWRlci9saWIvc2VsZWN0b3I/dHlwZT10ZW1wbGF0ZSZpbmRleD0wIS4vaW5kZXgudnVlXCIpXG4vKiB0ZW1wbGF0ZSBmdW5jdGlvbmFsICovXG52YXIgX192dWVfdGVtcGxhdGVfZnVuY3Rpb25hbF9fID0gZmFsc2Vcbi8qIHN0eWxlcyAqL1xudmFyIF9fdnVlX3N0eWxlc19fID0gbnVsbFxuLyogc2NvcGVJZCAqL1xudmFyIF9fdnVlX3Njb3BlSWRfXyA9IG51bGxcbi8qIG1vZHVsZUlkZW50aWZpZXIgKHNlcnZlciBvbmx5KSAqL1xudmFyIF9fdnVlX21vZHVsZV9pZGVudGlmaWVyX18gPSBudWxsXG52YXIgQ29tcG9uZW50ID0gbm9ybWFsaXplQ29tcG9uZW50KFxuICBfX3Z1ZV9zY3JpcHRfXyxcbiAgX192dWVfdGVtcGxhdGVfXyxcbiAgX192dWVfdGVtcGxhdGVfZnVuY3Rpb25hbF9fLFxuICBfX3Z1ZV9zdHlsZXNfXyxcbiAgX192dWVfc2NvcGVJZF9fLFxuICBfX3Z1ZV9tb2R1bGVfaWRlbnRpZmllcl9fXG4pXG5Db21wb25lbnQub3B0aW9ucy5fX2ZpbGUgPSBcIm1vZHVsZXMvUmVwb3J0L1Jlc291cmNlcy9hc3NldHMvanMvdmlld3MvY3JlZGl0L2luZGV4LnZ1ZVwiXG5cbi8qIGhvdCByZWxvYWQgKi9cbmlmIChtb2R1bGUuaG90KSB7KGZ1bmN0aW9uICgpIHtcbiAgdmFyIGhvdEFQSSA9IHJlcXVpcmUoXCJ2dWUtaG90LXJlbG9hZC1hcGlcIilcbiAgaG90QVBJLmluc3RhbGwocmVxdWlyZShcInZ1ZVwiKSwgZmFsc2UpXG4gIGlmICghaG90QVBJLmNvbXBhdGlibGUpIHJldHVyblxuICBtb2R1bGUuaG90LmFjY2VwdCgpXG4gIGlmICghbW9kdWxlLmhvdC5kYXRhKSB7XG4gICAgaG90QVBJLmNyZWF0ZVJlY29yZChcImRhdGEtdi02Y2M1YTJmNlwiLCBDb21wb25lbnQub3B0aW9ucylcbiAgfSBlbHNlIHtcbiAgICBob3RBUEkucmVsb2FkKFwiZGF0YS12LTZjYzVhMmY2XCIsIENvbXBvbmVudC5vcHRpb25zKVxuICB9XG4gIG1vZHVsZS5ob3QuZGlzcG9zZShmdW5jdGlvbiAoZGF0YSkge1xuICAgIGRpc3Bvc2VkID0gdHJ1ZVxuICB9KVxufSkoKX1cblxubW9kdWxlLmV4cG9ydHMgPSBDb21wb25lbnQuZXhwb3J0c1xuXG5cblxuLy8vLy8vLy8vLy8vLy8vLy8vXG4vLyBXRUJQQUNLIEZPT1RFUlxuLy8gLi9tb2R1bGVzL1JlcG9ydC9SZXNvdXJjZXMvYXNzZXRzL2pzL3ZpZXdzL2NyZWRpdC9pbmRleC52dWVcbi8vIG1vZHVsZSBpZCA9IC4vbW9kdWxlcy9SZXBvcnQvUmVzb3VyY2VzL2Fzc2V0cy9qcy92aWV3cy9jcmVkaXQvaW5kZXgudnVlXG4vLyBtb2R1bGUgY2h1bmtzID0gMSJdLCJzb3VyY2VSb290IjoiIn0=\n//# sourceURL=webpack-internal:///./modules/Report/Resources/assets/js/views/credit/index.vue\n");
+var disposed = false
+var normalizeComponent = __webpack_require__("./node_modules/vue-loader/lib/component-normalizer.js")
+/* script */
+var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/Report/Resources/assets/js/views/credit/index.vue")
+/* template */
+var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-6cc5a2f6\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Report/Resources/assets/js/views/credit/index.vue")
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "modules/Report/Resources/assets/js/views/credit/index.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-6cc5a2f6", Component.options)
+  } else {
+    hotAPI.reload("data-v-6cc5a2f6", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
 
 /***/ }),
 
@@ -32,7 +204,551 @@ eval("var disposed = false\nvar normalizeComponent = __webpack_require__(\"./nod
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("Object.defineProperty(__webpack_exports__, \"__esModule\", { value: true });\n/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator__ = __webpack_require__(\"./node_modules/@babel/runtime/regenerator/index.js\");\n/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator__);\n/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_moment__ = __webpack_require__(\"./node_modules/moment/moment.js\");\n/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_moment___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_moment__);\n/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_query_string__ = __webpack_require__(\"./node_modules/query-string/index.js\");\n/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_query_string___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_query_string__);\n/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__resources_js_components_WhatsappModalReports_vue__ = __webpack_require__(\"./resources/js/components/WhatsappModalReports.vue\");\n/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__resources_js_components_WhatsappModalReports_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__resources_js_components_WhatsappModalReports_vue__);\nfunction ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }\n\nfunction _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }\n\nfunction _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }\n\n\n\nfunction asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }\n\nfunction _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, \"next\", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, \"throw\", err); } _next(undefined); }); }; }\n\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n\n\n\n/* harmony default export */ __webpack_exports__[\"default\"] = ({\n  props: {\n    resource: String,\n    applyCustomer: {\n      type: Boolean,\n      required: false,\n      \"default\": false\n    }\n  },\n  components: {\n    WhatsappFormReport: __WEBPACK_IMPORTED_MODULE_3__resources_js_components_WhatsappModalReports_vue___default.a\n  },\n  data: function data() {\n    var _this = this;\n\n    return {\n      messageReport: \"\",\n      resourceReport: \"\",\n      showWhatsappForm: false,\n      loading_submit: false,\n      persons: [],\n      all_persons: [],\n      loading_search: false,\n      columns: [],\n      records: [],\n      headers: headers_token,\n      document_types: [],\n      pagination: {},\n      search: {},\n      totals: {},\n      establishment: null,\n      establishments: [],\n      state_types: [],\n      form: {},\n      pickerOptionsDates: {\n        disabledDate: function disabledDate(time) {\n          time = __WEBPACK_IMPORTED_MODULE_1_moment___default()(time).format(\"YYYY-MM-DD\");\n          return _this.form.date_start > time;\n        }\n      },\n      pickerOptionsMonths: {\n        disabledDate: function disabledDate(time) {\n          time = __WEBPACK_IMPORTED_MODULE_1_moment___default()(time).format(\"YYYY-MM\");\n          return _this.form.month_start > time;\n        }\n      },\n      sellers: []\n    };\n  },\n  computed: {},\n  created: function created() {\n    var _this2 = this;\n\n    this.initForm();\n    this.initTotals();\n    this.$eventHub.$on(\"reloadData\", function () {\n      _this2.getRecords();\n    });\n  },\n  mounted: function mounted() {\n    var _this3 = this;\n\n    return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee() {\n      return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee$(_context) {\n        while (1) {\n          switch (_context.prev = _context.next) {\n            case 0:\n              _context.next = 2;\n              return _this3.$http.get(\"/\".concat(_this3.resource, \"/filter\")).then(function (response) {\n                _this3.establishments = response.data.establishments;\n                _this3.all_persons = response.data.persons;\n                _this3.sellers = response.data.sellers;\n              });\n\n            case 2:\n              _context.next = 4;\n              return _this3.getRecords();\n\n            case 4:\n              _context.next = 6;\n              return _this3.filterPersons();\n\n            case 6:\n              // await this.getTotals()\n              _this3.form.type_person = _this3.resource === \"reports/sales\" ? \"customers\" : \"suppliers\";\n\n            case 7:\n            case \"end\":\n              return _context.stop();\n          }\n        }\n      }, _callee);\n    }))();\n  },\n  methods: {\n    clickOpenWhatsapp: function clickOpenWhatsapp() {\n      var query = __WEBPACK_IMPORTED_MODULE_2_query_string___default.a.stringify(_objectSpread({}, this.form));\n      this.resourceReport = \"/\".concat(this.resource, \"/pdf?\").concat(query);\n      this.messageReport = \"Reporte de consignamiento a la fecha \".concat(__WEBPACK_IMPORTED_MODULE_1_moment___default()().format(\"DD-MM-YYYY\"));\n      this.showWhatsappForm = true;\n    },\n    changePersons: function changePersons() {// this.form.type_person = this.resource === 'reports/sales' ? 'customers':'suppliers'\n    },\n    searchRemotePersons: function searchRemotePersons(input) {\n      var _this4 = this;\n\n      if (input.length > 0) {\n        this.loading_search = true;\n        var parameters = \"input=\".concat(input);\n        this.form.type_person = \"customers\";\n        this.$http.get(\"/reports/data-table/persons/\".concat(this.form.type_person, \"?\").concat(parameters)).then(function (response) {\n          _this4.persons = response.data.persons;\n          _this4.loading_search = false;\n\n          if (_this4.persons.length == 0) {\n            _this4.filterPersons();\n          }\n        });\n      } else {\n        this.filterPersons();\n      }\n    },\n    filterPersons: function filterPersons() {\n      this.persons = this.all_persons;\n      console.log(this.persons);\n    },\n    clickDownload: function clickDownload(type) {\n      var query = __WEBPACK_IMPORTED_MODULE_2_query_string___default.a.stringify(_objectSpread({}, this.form));\n      window.open(\"/\".concat(this.resource, \"/\").concat(type, \"/?\").concat(query), \"_blank\");\n    },\n    initForm: function initForm() {\n      this.form = {\n        date_of_end: null,\n        person_id: null,\n        period: \"month\",\n        date_start: __WEBPACK_IMPORTED_MODULE_1_moment___default()().format(\"YYYY-MM-DD\"),\n        date_end: __WEBPACK_IMPORTED_MODULE_1_moment___default()().format(\"YYYY-MM-DD\"),\n        month_start: __WEBPACK_IMPORTED_MODULE_1_moment___default()().format(\"YYYY-MM\"),\n        month_end: __WEBPACK_IMPORTED_MODULE_1_moment___default()().format(\"YYYY-MM\"),\n        liquidated: null\n      };\n    },\n    initTotals: function initTotals() {\n      this.totals = {\n        acum_total_taxed: 0,\n        acum_total_igv: 0,\n        acum_total: 0,\n        acum_total_exonerated: 0,\n        acum_total_unaffected: 0,\n        acum_total_free: 0,\n        acum_total_taxed_usd: 0,\n        acum_total_igv_usd: 0,\n        acum_total_usd: 0\n      };\n    },\n    customIndex: function customIndex(index) {\n      return this.pagination.per_page * (this.pagination.current_page - 1) + index + 1;\n    },\n    getRecordsByFilter: function getRecordsByFilter() {\n      var _this5 = this;\n\n      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee2() {\n        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee2$(_context2) {\n          while (1) {\n            switch (_context2.prev = _context2.next) {\n              case 0:\n                _context2.next = 2;\n                return true;\n\n              case 2:\n                _this5.loading_submit = _context2.sent;\n                _context2.next = 5;\n                return _this5.getRecords();\n\n              case 5:\n                _context2.next = 7;\n                return false;\n\n              case 7:\n                _this5.loading_submit = _context2.sent;\n\n              case 8:\n              case \"end\":\n                return _context2.stop();\n            }\n          }\n        }, _callee2);\n      }))();\n    },\n    getRecords: function getRecords() {\n      var _this6 = this;\n\n      return this.$http.get(\"/\".concat(this.resource, \"/records?\").concat(this.getQueryParameters())).then(function (response) {\n        _this6.records = response.data.data;\n        console.log(_this6.records); //sort records by dues property (int) in descending order\n        // this.records.sort(function(a, b) {\n        //     return b.dues - a.dues;\n        // });\n\n        _this6.pagination = response.data.meta;\n        _this6.pagination.per_page = parseInt(response.data.meta.per_page);\n        _this6.loading_submit = false; // this.initTotals()\n      });\n    },\n    getQueryParameters: function getQueryParameters() {\n      return __WEBPACK_IMPORTED_MODULE_2_query_string___default.a.stringify(_objectSpread({\n        page: this.pagination.current_page,\n        limit: this.limit\n      }, this.form));\n    },\n    changeDisabledDates: function changeDisabledDates() {\n      if (this.form.date_end < this.form.date_start) {\n        this.form.date_end = this.form.date_start;\n      } // this.loadAll();\n\n    },\n    changeDisabledMonths: function changeDisabledMonths() {\n      if (this.form.month_end < this.form.month_start) {\n        this.form.month_end = this.form.month_start;\n      } // this.loadAll();\n\n    },\n    changePeriod: function changePeriod() {\n      if (this.form.period === \"month\") {\n        this.form.month_start = __WEBPACK_IMPORTED_MODULE_1_moment___default()().format(\"YYYY-MM\");\n        this.form.month_end = __WEBPACK_IMPORTED_MODULE_1_moment___default()().format(\"YYYY-MM\");\n      }\n\n      if (this.form.period === \"between_months\") {\n        this.form.month_start = __WEBPACK_IMPORTED_MODULE_1_moment___default()().startOf(\"year\").format(\"YYYY-MM\"); //'2019-01';\n\n        this.form.month_end = __WEBPACK_IMPORTED_MODULE_1_moment___default()().endOf(\"year\").format(\"YYYY-MM\");\n      }\n\n      if (this.form.period === \"date\") {\n        this.form.date_start = __WEBPACK_IMPORTED_MODULE_1_moment___default()().format(\"YYYY-MM-DD\");\n        this.form.date_end = __WEBPACK_IMPORTED_MODULE_1_moment___default()().format(\"YYYY-MM-DD\");\n      }\n\n      if (this.form.period === \"between_dates\") {\n        this.form.date_start = __WEBPACK_IMPORTED_MODULE_1_moment___default()().startOf(\"month\").format(\"YYYY-MM-DD\");\n        this.form.date_end = __WEBPACK_IMPORTED_MODULE_1_moment___default()().endOf(\"month\").format(\"YYYY-MM-DD\");\n      } // this.loadAll();\n\n    }\n  }\n});//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vbW9kdWxlcy9SZXBvcnQvUmVzb3VyY2VzL2Fzc2V0cy9qcy9jb21wb25lbnRzL0RhdGFUYWJsZVJlcG9ydHNDb25zaWdubWVudC52dWU/NzkzOSJdLCJuYW1lcyI6WyJwcm9wcyIsInJlc291cmNlIiwiYXBwbHlDdXN0b21lciIsInR5cGUiLCJyZXF1aXJlZCIsImNvbXBvbmVudHMiLCJXaGF0c2FwcEZvcm1SZXBvcnQiLCJkYXRhIiwibWVzc2FnZVJlcG9ydCIsInJlc291cmNlUmVwb3J0Iiwic2hvd1doYXRzYXBwRm9ybSIsImxvYWRpbmdfc3VibWl0IiwicGVyc29ucyIsImFsbF9wZXJzb25zIiwibG9hZGluZ19zZWFyY2giLCJjb2x1bW5zIiwicmVjb3JkcyIsImhlYWRlcnMiLCJkb2N1bWVudF90eXBlcyIsInBhZ2luYXRpb24iLCJzZWFyY2giLCJ0b3RhbHMiLCJlc3RhYmxpc2htZW50IiwiZXN0YWJsaXNobWVudHMiLCJzdGF0ZV90eXBlcyIsImZvcm0iLCJwaWNrZXJPcHRpb25zRGF0ZXMiLCJkaXNhYmxlZERhdGUiLCJ0aW1lIiwicGlja2VyT3B0aW9uc01vbnRocyIsInNlbGxlcnMiLCJjb21wdXRlZCIsImNyZWF0ZWQiLCJtb3VudGVkIiwibWV0aG9kcyIsImNsaWNrT3BlbldoYXRzYXBwIiwiY2hhbmdlUGVyc29ucyIsInNlYXJjaFJlbW90ZVBlcnNvbnMiLCJpbnB1dCIsImdldCIsInBhcmFtZXRlcnMiLCJ0aGVuIiwiZmlsdGVyUGVyc29ucyIsImNvbnNvbGUiLCJjbGlja0Rvd25sb2FkIiwid2luZG93IiwiaW5pdEZvcm0iLCJkYXRlX29mX2VuZCIsInBlcnNvbl9pZCIsInBlcmlvZCIsImRhdGVfc3RhcnQiLCJkYXRlX2VuZCIsIm1vbnRoX3N0YXJ0IiwibW9udGhfZW5kIiwibGlxdWlkYXRlZCIsImluaXRUb3RhbHMiLCJhY3VtX3RvdGFsX3RheGVkIiwiYWN1bV90b3RhbF9pZ3YiLCJhY3VtX3RvdGFsIiwiYWN1bV90b3RhbF9leG9uZXJhdGVkIiwiYWN1bV90b3RhbF91bmFmZmVjdGVkIiwiYWN1bV90b3RhbF9mcmVlIiwiYWN1bV90b3RhbF90YXhlZF91c2QiLCJhY3VtX3RvdGFsX2lndl91c2QiLCJhY3VtX3RvdGFsX3VzZCIsImN1c3RvbUluZGV4IiwiaW5kZXgiLCJnZXRSZWNvcmRzQnlGaWx0ZXIiLCJnZXRSZWNvcmRzIiwicmVzcG9uc2UiLCJnZXRRdWVyeVBhcmFtZXRlcnMiLCJwYWdlIiwibGltaXQiLCJjaGFuZ2VEaXNhYmxlZERhdGVzIiwiY2hhbmdlRGlzYWJsZWRNb250aHMiLCJjaGFuZ2VQZXJpb2QiLCJzdGFydE9mIiwiZm9ybWF0IiwiZW5kT2YiXSwibWFwcGluZ3MiOiI7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7QUFtUjRCO0FBQ1c7QUFDNkQ7QUFDckY7QUFDZkE7QUFDQUMsb0JBREE7QUFFQUM7QUFBQUM7QUFBQUM7QUFBQTtBQUFBO0FBRkEsR0FEQTtBQUtBQztBQUFBQztBQUFBLEdBTEE7QUFNQUMsTUFOQSxrQkFNQTtBQUFBOztBQUNBO0FBQ0FDLHVCQURBO0FBRUFDLHdCQUZBO0FBR0FDLDZCQUhBO0FBSUFDLDJCQUpBO0FBS0FDLGlCQUxBO0FBTUFDLHFCQU5BO0FBT0FDLDJCQVBBO0FBUUFDLGlCQVJBO0FBU0FDLGlCQVRBO0FBVUFDLDRCQVZBO0FBV0FDLHdCQVhBO0FBWUFDLG9CQVpBO0FBYUFDLGdCQWJBO0FBY0FDLGdCQWRBO0FBZUFDLHlCQWZBO0FBZ0JBQyx3QkFoQkE7QUFpQkFDLHFCQWpCQTtBQWtCQUMsY0FsQkE7QUFvQkFDO0FBQ0FDO0FBQ0FDO0FBQ0E7QUFDQTtBQUpBLE9BcEJBO0FBMEJBQztBQUNBRjtBQUNBQztBQUNBO0FBQ0E7QUFKQSxPQTFCQTtBQWdDQUU7QUFoQ0E7QUFrQ0EsR0F6Q0E7QUEwQ0FDLGNBMUNBO0FBMkNBQyxTQTNDQSxxQkEyQ0E7QUFBQTs7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLEtBRkE7QUFHQSxHQWpEQTtBQWtEQUMsU0FsREEscUJBa0RBO0FBQUE7O0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUEscUJBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSxlQUpBLENBREE7O0FBQUE7QUFBQTtBQUFBLHFCQU9BLG1CQVBBOztBQUFBO0FBQUE7QUFBQSxxQkFRQSxzQkFSQTs7QUFBQTtBQVNBO0FBQ0Esd0NBQ0EsK0RBREE7O0FBVkE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFZQSxHQTlEQTtBQStEQUM7QUFDQUMscUJBREEsK0JBQ0E7QUFDQSxtR0FDQSxTQURBO0FBR0E7QUFDQSxrSUFDQSxZQURBO0FBR0E7QUFDQSxLQVZBO0FBV0FDLGlCQVhBLDJCQVdBLENBQ0E7QUFDQSxLQWJBO0FBY0FDLHVCQWRBLCtCQWNBQyxLQWRBLEVBY0E7QUFBQTs7QUFDQTtBQUNBO0FBQ0E7QUFFQTtBQUVBLG1CQUNBQyxHQURBLHVDQUVBLHFCQUZBLGNBRUFDLFVBRkEsR0FJQUMsSUFKQSxDQUlBO0FBQ0E7QUFDQTs7QUFFQTtBQUNBO0FBQ0E7QUFDQSxTQVhBO0FBWUEsT0FsQkEsTUFrQkE7QUFDQTtBQUNBO0FBQ0EsS0FwQ0E7QUFxQ0FDLGlCQXJDQSwyQkFxQ0E7QUFDQTtBQUNBQztBQUNBLEtBeENBO0FBMENBQyxpQkExQ0EseUJBMENBekMsSUExQ0EsRUEwQ0E7QUFDQSxtR0FDQSxTQURBO0FBR0EwQztBQUNBLEtBL0NBO0FBZ0RBQyxZQWhEQSxzQkFnREE7QUFDQTtBQUNBQyx5QkFEQTtBQUVBQyx1QkFGQTtBQUdBQyx1QkFIQTtBQUlBQyx5RkFKQTtBQUtBQyx1RkFMQTtBQU1BQyx1RkFOQTtBQU9BQyxxRkFQQTtBQVFBQztBQVJBO0FBVUEsS0EzREE7QUE0REFDLGNBNURBLHdCQTREQTtBQUNBO0FBQ0FDLDJCQURBO0FBRUFDLHlCQUZBO0FBR0FDLHFCQUhBO0FBSUFDLGdDQUpBO0FBS0FDLGdDQUxBO0FBTUFDLDBCQU5BO0FBUUFDLCtCQVJBO0FBU0FDLDZCQVRBO0FBVUFDO0FBVkE7QUFZQSxLQXpFQTtBQTBFQUMsZUExRUEsdUJBMEVBQyxLQTFFQSxFQTBFQTtBQUNBLGFBQ0EsZ0VBQ0FBLEtBREEsR0FFQSxDQUhBO0FBS0EsS0FoRkE7QUFpRkFDLHNCQWpGQSxnQ0FpRkE7QUFBQTs7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQSx1QkFDQSxJQURBOztBQUFBO0FBQ0EscUNBREE7QUFBQTtBQUFBLHVCQUVBLG1CQUZBOztBQUFBO0FBQUE7QUFBQSx1QkFHQSxLQUhBOztBQUFBO0FBR0EscUNBSEE7O0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFJQSxLQXJGQTtBQXNGQUMsY0F0RkEsd0JBc0ZBO0FBQUE7O0FBQ0Esd0JBQ0E3QixHQURBLFlBQ0EsYUFEQSxzQkFDQSx5QkFEQSxHQUVBRSxJQUZBLENBRUE7QUFDQTtBQUNBRSxvQ0FGQSxDQUdBO0FBQ0E7QUFDQTtBQUNBOztBQUVBO0FBQ0EsOENBQ0EwQiwyQkFEQTtBQUdBLHNDQVpBLENBYUE7QUFFQSxPQWpCQTtBQWtCQSxLQXpHQTtBQTBHQUMsc0JBMUdBLGdDQTBHQTtBQUNBO0FBQ0FDLDBDQURBO0FBRUFDO0FBRkEsU0FHQSxTQUhBO0FBS0EsS0FoSEE7QUFrSEFDLHVCQWxIQSxpQ0FrSEE7QUFDQTtBQUNBO0FBQ0EsT0FIQSxDQUlBOztBQUNBLEtBdkhBO0FBd0hBQyx3QkF4SEEsa0NBd0hBO0FBQ0EsVUFDQSxzQkFDQSxxQkFGQSxFQUdBO0FBQ0E7QUFDQSxPQU5BLENBT0E7O0FBQ0EsS0FoSUE7QUFpSUFDLGdCQWpJQSwwQkFpSUE7QUFDQTtBQUNBLHdGQUNBLFNBREE7QUFHQTtBQUNBOztBQUNBO0FBQ0EsaUZBQ0FDLE9BREEsQ0FDQSxNQURBLEVBRUFDLE1BRkEsQ0FFQSxTQUZBLEVBREEsQ0FHQTs7QUFDQSwrRUFDQUMsS0FEQSxDQUNBLE1BREEsRUFFQUQsTUFGQSxDQUVBLFNBRkE7QUFHQTs7QUFDQTtBQUNBO0FBQ0E7QUFDQTs7QUFDQTtBQUNBLGdGQUNBRCxPQURBLENBQ0EsT0FEQSxFQUVBQyxNQUZBLENBRUEsWUFGQTtBQUdBLDhFQUNBQyxLQURBLENBQ0EsT0FEQSxFQUVBRCxNQUZBLENBRUEsWUFGQTtBQUdBLE9BMUJBLENBMkJBOztBQUNBO0FBN0pBO0FBL0RBIiwiZmlsZSI6Ii4vbm9kZV9tb2R1bGVzL2JhYmVsLWxvYWRlci9saWIvaW5kZXguanM/e1wiY2FjaGVEaXJlY3RvcnlcIjp0cnVlLFwicHJlc2V0c1wiOltbXCJAYmFiZWwvcHJlc2V0LWVudlwiLHtcIm1vZHVsZXNcIjpmYWxzZSxcInRhcmdldHNcIjp7XCJicm93c2Vyc1wiOltcIj4gMiVcIl19LFwiZm9yY2VBbGxUcmFuc2Zvcm1zXCI6dHJ1ZX1dXSxcInBsdWdpbnNcIjpbXCJAYmFiZWwvcGx1Z2luLXByb3Bvc2FsLW9iamVjdC1yZXN0LXNwcmVhZFwiLFtcIkBiYWJlbC9wbHVnaW4tdHJhbnNmb3JtLXJ1bnRpbWVcIix7XCJoZWxwZXJzXCI6ZmFsc2V9XV19IS4vbm9kZV9tb2R1bGVzL3Z1ZS1sb2FkZXIvbGliL3NlbGVjdG9yLmpzP3R5cGU9c2NyaXB0JmluZGV4PTAhLi9tb2R1bGVzL1JlcG9ydC9SZXNvdXJjZXMvYXNzZXRzL2pzL2NvbXBvbmVudHMvRGF0YVRhYmxlUmVwb3J0c0NvbnNpZ25tZW50LnZ1ZS5qcyIsInNvdXJjZXNDb250ZW50IjpbIjx0ZW1wbGF0ZT5cclxuICAgIDxkaXY+XHJcbiAgICAgICAgPGRpdiBjbGFzcz1cInJvd1wiPlxyXG4gICAgICAgICAgICA8ZGl2IGNsYXNzPVwiY29sLW1kLTEyIGNvbC1sZy0xMiBjb2wteGwtMTIgXCI+XHJcbiAgICAgICAgICAgICAgICA8ZGl2IGNsYXNzPVwicm93IG10LTJcIj5cclxuICAgICAgICAgICAgICAgICAgICA8ZGl2IGNsYXNzPVwiY29sLW1kLTNcIj5cclxuICAgICAgICAgICAgICAgICAgICAgICAgPGxhYmVsIGNsYXNzPVwiY29udHJvbC1sYWJlbFwiXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICA+RmVjaGEgZGUgY29uc2lnbmFjacOzbjwvbGFiZWxcclxuICAgICAgICAgICAgICAgICAgICAgICAgPlxyXG4gICAgICAgICAgICAgICAgICAgICAgICA8ZWwtc2VsZWN0IHYtbW9kZWw9XCJmb3JtLnBlcmlvZFwiIEBjaGFuZ2U9XCJjaGFuZ2VQZXJpb2RcIj5cclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxlbC1vcHRpb25cclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBrZXk9XCJtb250aFwiXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdmFsdWU9XCJtb250aFwiXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgbGFiZWw9XCJQb3IgbWVzXCJcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgID48L2VsLW9wdGlvbj5cclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxlbC1vcHRpb25cclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBrZXk9XCJiZXR3ZWVuX21vbnRoc1wiXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdmFsdWU9XCJiZXR3ZWVuX21vbnRoc1wiXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgbGFiZWw9XCJFbnRyZSBtZXNlc1wiXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICA+PC9lbC1vcHRpb24+XHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICA8ZWwtb3B0aW9uXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAga2V5PVwiZGF0ZVwiXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdmFsdWU9XCJkYXRlXCJcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBsYWJlbD1cIlBvciBmZWNoYVwiXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICA+PC9lbC1vcHRpb24+XHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICA8ZWwtb3B0aW9uXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAga2V5PVwiYmV0d2Vlbl9kYXRlc1wiXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdmFsdWU9XCJiZXR3ZWVuX2RhdGVzXCJcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBsYWJlbD1cIkVudHJlIGZlY2hhc1wiXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICA+PC9lbC1vcHRpb24+XHJcbiAgICAgICAgICAgICAgICAgICAgICAgIDwvZWwtc2VsZWN0PlxyXG4gICAgICAgICAgICAgICAgICAgIDwvZGl2PlxyXG4gICAgICAgICAgICAgICAgICAgIDx0ZW1wbGF0ZVxyXG4gICAgICAgICAgICAgICAgICAgICAgICB2LWlmPVwiXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICBmb3JtLnBlcmlvZCA9PT0gJ21vbnRoJyB8fFxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGZvcm0ucGVyaW9kID09PSAnYmV0d2Vlbl9tb250aHMnXHJcbiAgICAgICAgICAgICAgICAgICAgICAgIFwiXHJcbiAgICAgICAgICAgICAgICAgICAgPlxyXG4gICAgICAgICAgICAgICAgICAgICAgICA8ZGl2IGNsYXNzPVwiY29sLW1kLTJcIj5cclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxsYWJlbCBjbGFzcz1cInctMTAwIGNvbnRyb2wtbGFiZWxcIj5NZXMgZGU8L2xhYmVsPlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgPGVsLWRhdGUtcGlja2VyXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdi1tb2RlbD1cImZvcm0ubW9udGhfc3RhcnRcIlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHR5cGU9XCJtb250aFwiXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY2xhc3M9XCJ3LTEwMFwiXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgQGNoYW5nZT1cImNoYW5nZURpc2FibGVkTW9udGhzXCJcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB2YWx1ZS1mb3JtYXQ9XCJ5eXl5LU1NXCJcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBmb3JtYXQ9XCJNTS95eXl5XCJcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA6Y2xlYXJhYmxlPVwidHJ1ZVwiXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICA+PC9lbC1kYXRlLXBpY2tlcj5cclxuICAgICAgICAgICAgICAgICAgICAgICAgPC9kaXY+XHJcbiAgICAgICAgICAgICAgICAgICAgPC90ZW1wbGF0ZT5cclxuICAgICAgICAgICAgICAgICAgICA8dGVtcGxhdGUgdi1pZj1cImZvcm0ucGVyaW9kID09PSAnYmV0d2Vlbl9tb250aHMnXCI+XHJcbiAgICAgICAgICAgICAgICAgICAgICAgIDxkaXYgY2xhc3M9XCJjb2wtbWQtMlwiPlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgPGxhYmVsIGNsYXNzPVwidy0xMDAgY29udHJvbC1sYWJlbFwiPk1lcyBhbDwvbGFiZWw+XHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICA8ZWwtZGF0ZS1waWNrZXJcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjbGFzcz1cInctMTAwXCJcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB2LW1vZGVsPVwiZm9ybS5tb250aF9lbmRcIlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHR5cGU9XCJtb250aFwiXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgOnBpY2tlci1vcHRpb25zPVwicGlja2VyT3B0aW9uc01vbnRoc1wiXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdmFsdWUtZm9ybWF0PVwieXl5eS1NTVwiXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgZm9ybWF0PVwiTU0veXl5eVwiXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgOmNsZWFyYWJsZT1cInRydWVcIlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgPjwvZWwtZGF0ZS1waWNrZXI+XHJcbiAgICAgICAgICAgICAgICAgICAgICAgIDwvZGl2PlxyXG4gICAgICAgICAgICAgICAgICAgIDwvdGVtcGxhdGU+XHJcbiAgICAgICAgICAgICAgICAgICAgPHRlbXBsYXRlXHJcbiAgICAgICAgICAgICAgICAgICAgICAgIHYtaWY9XCJcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIGZvcm0ucGVyaW9kID09PSAnZGF0ZScgfHxcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBmb3JtLnBlcmlvZCA9PT0gJ2JldHdlZW5fZGF0ZXMnXHJcbiAgICAgICAgICAgICAgICAgICAgICAgIFwiXHJcbiAgICAgICAgICAgICAgICAgICAgPlxyXG4gICAgICAgICAgICAgICAgICAgICAgICA8ZGl2IGNsYXNzPVwiY29sLW1kLTJcIj5cclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxsYWJlbCBjbGFzcz1cInctMTAwIGNvbnRyb2wtbGFiZWxcIj5GZWNoYSBkZWw8L2xhYmVsPlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgPGVsLWRhdGUtcGlja2VyXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY2xhc3M9XCJ3LTEwMFwiXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdi1tb2RlbD1cImZvcm0uZGF0ZV9zdGFydFwiXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdHlwZT1cImRhdGVcIlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIEBjaGFuZ2U9XCJjaGFuZ2VEaXNhYmxlZERhdGVzXCJcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB2YWx1ZS1mb3JtYXQ9XCJ5eXl5LU1NLWRkXCJcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBmb3JtYXQ9XCJkZC9NTS95eXl5XCJcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA6Y2xlYXJhYmxlPVwidHJ1ZVwiXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICA+PC9lbC1kYXRlLXBpY2tlcj5cclxuICAgICAgICAgICAgICAgICAgICAgICAgPC9kaXY+XHJcbiAgICAgICAgICAgICAgICAgICAgPC90ZW1wbGF0ZT5cclxuICAgICAgICAgICAgICAgICAgICA8dGVtcGxhdGUgdi1pZj1cImZvcm0ucGVyaW9kID09PSAnYmV0d2Vlbl9kYXRlcydcIj5cclxuICAgICAgICAgICAgICAgICAgICAgICAgPGRpdiBjbGFzcz1cImNvbC1tZC0yXCI+XHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICA8bGFiZWwgY2xhc3M9XCJ3LTEwMCBjb250cm9sLWxhYmVsXCI+RmVjaGEgYWw8L2xhYmVsPlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgPGVsLWRhdGUtcGlja2VyXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY2xhc3M9XCJ3LTEwMFwiXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdi1tb2RlbD1cImZvcm0uZGF0ZV9lbmRcIlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHR5cGU9XCJkYXRlXCJcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA6cGlja2VyLW9wdGlvbnM9XCJwaWNrZXJPcHRpb25zRGF0ZXNcIlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHZhbHVlLWZvcm1hdD1cInl5eXktTU0tZGRcIlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGZvcm1hdD1cImRkL01NL3l5eXlcIlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDpjbGVhcmFibGU9XCJ0cnVlXCJcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgID48L2VsLWRhdGUtcGlja2VyPlxyXG4gICAgICAgICAgICAgICAgICAgICAgICA8L2Rpdj5cclxuICAgICAgICAgICAgICAgICAgICA8L3RlbXBsYXRlPlxyXG4gICAgICAgICAgICAgICAgICAgIDxkaXYgY2xhc3M9XCJjb2wtbGctNCBjb2wtbWQtNFwiPlxyXG4gICAgICAgICAgICAgICAgICAgICAgICA8ZGl2IGNsYXNzPVwiZm9ybS1ncm91cFwiPlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgPGxhYmVsIGNsYXNzPVwidy0xMDAgY29udHJvbC1sYWJlbFwiPlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIENsaWVudGVcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIDwvbGFiZWw+XHJcblxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgPGVsLXNlbGVjdFxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNsYXNzPVwidy0xMDBcIlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHYtbW9kZWw9XCJmb3JtLnBlcnNvbl9pZFwiXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgZmlsdGVyYWJsZVxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlbW90ZVxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHBvcHBlci1jbGFzcz1cImVsLXNlbGVjdC1jdXN0b21lcnNcIlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNsZWFyYWJsZVxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHBsYWNlaG9sZGVyPVwiTm9tYnJlIG8gbsO6bWVybyBkZSBkb2N1bWVudG9cIlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDpyZW1vdGUtbWV0aG9kPVwic2VhcmNoUmVtb3RlUGVyc29uc1wiXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgOmxvYWRpbmc9XCJsb2FkaW5nX3NlYXJjaFwiXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgQGNoYW5nZT1cImNoYW5nZVBlcnNvbnNcIlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgPlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxlbC1vcHRpb25cclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdi1mb3I9XCJvcHRpb24gaW4gcGVyc29uc1wiXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDprZXk9XCJvcHRpb24uaWRcIlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA6dmFsdWU9XCJvcHRpb24uaWRcIlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA6bGFiZWw9XCJvcHRpb24uZGVzY3JpcHRpb25cIlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgID48L2VsLW9wdGlvbj5cclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIDwvZWwtc2VsZWN0PlxyXG4gICAgICAgICAgICAgICAgICAgICAgICA8L2Rpdj5cclxuICAgICAgICAgICAgICAgICAgICA8L2Rpdj5cclxuXHJcbiAgICAgICAgICAgICAgICAgICAgPGRpdiBjbGFzcz1cImNvbC1sZy0zIGNvbC1tZC0zXCI+XHJcbiAgICAgICAgICAgICAgICAgICAgICAgIDxkaXYgY2xhc3M9XCJmb3JtLWdyb3VwXCI+XHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICA8bGFiZWwgY2xhc3M9XCJ3LTEwMCBjb250cm9sLWxhYmVsXCI+XHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgRXN0YWRvXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICA8L2xhYmVsPlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgPGVsLXNlbGVjdCBjbGFzcz1cInctMTAwXCIgdi1tb2RlbD1cImZvcm0ubGlxdWlkYXRlZFwiIGNsZWFyYWJsZT5cclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8ZWwtb3B0aW9uXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGtleT1cIjFcIlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA6dmFsdWU9XCIxXCJcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgbGFiZWw9XCJMaXF1aWRhZG9cIlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgID48L2VsLW9wdGlvbj5cclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8ZWwtb3B0aW9uXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGtleT1cIjJcIlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA6dmFsdWU9XCIwXCJcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgbGFiZWw9XCJQb3IgbGlxdWlkYXJcIlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgID48L2VsLW9wdGlvbj5cclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIDwvZWwtc2VsZWN0PlxyXG4gICAgICAgICAgICAgICAgICAgICAgICA8L2Rpdj5cclxuICAgICAgICAgICAgICAgICAgICA8L2Rpdj5cclxuICAgICAgICAgICAgICAgICAgICA8ZGl2IGNsYXNzPVwiY29sLWxnLTMgY29sLW1kLTNcIj5cclxuICAgICAgICAgICAgICAgICAgICAgICAgPGRpdiBjbGFzcz1cImZvcm0tZ3JvdXBcIj5cclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxsYWJlbCBjbGFzcz1cInctMTAwIGNvbnRyb2wtbGFiZWxcIj5cclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBGZWNoYSBkZSBsaXF1aWRhY2nDs25cclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIDwvbGFiZWw+XHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICA8ZWwtZGF0ZS1waWNrZXJcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjbGFzcz1cInctMTAwXCJcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB2LW1vZGVsPVwiZm9ybS5kYXRlX29mX2VuZFwiXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdHlwZT1cImRhdGVcIlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHZhbHVlLWZvcm1hdD1cInl5eXktTU0tZGRcIlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGZvcm1hdD1cImRkL01NL3l5eXlcIlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDpjbGVhcmFibGU9XCJ0cnVlXCJcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgID48L2VsLWRhdGUtcGlja2VyPlxyXG4gICAgICAgICAgICAgICAgICAgICAgICA8L2Rpdj5cclxuICAgICAgICAgICAgICAgICAgICA8L2Rpdj5cclxuICAgICAgICAgICAgICAgICAgICA8ZGl2IGNsYXNzPVwiZC1mbGV4XCIgc3R5bGU9XCJtYXJnaW4tdG9wOjI5cHhcIj5cclxuICAgICAgICAgICAgICAgICAgICAgICAgPGVsLWJ1dHRvblxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgY2xhc3M9XCJzdWJtaXRcIlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgdHlwZT1cInByaW1hcnlcIlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgQGNsaWNrLnByZXZlbnQ9XCJnZXRSZWNvcmRzQnlGaWx0ZXJcIlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgOmxvYWRpbmc9XCJsb2FkaW5nX3N1Ym1pdFwiXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICBpY29uPVwiZWwtaWNvbi1zZWFyY2hcIlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgPkJ1c2NhcjwvZWwtYnV0dG9uXHJcbiAgICAgICAgICAgICAgICAgICAgICAgID5cclxuXHJcbiAgICAgICAgICAgICAgICAgICAgICAgIDx0ZW1wbGF0ZVxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgdi1pZj1cIlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlY29yZHMubGVuZ3RoID4gMCAmJlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZXNvdXJjZSAhPT0gJ3JlcG9ydHMvZG9jdW1lbnQtZGV0cmFjdGlvbnMnXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICBcIlxyXG4gICAgICAgICAgICAgICAgICAgICAgICA+XHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICA8ZWwtYnV0dG9uXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY2xhc3M9XCJzdWJtaXRcIlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHR5cGU9XCJkYW5nZXJcIlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGljb249XCJlbC1pY29uLXRpY2tldHNcIlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIEBjbGljay5wcmV2ZW50PVwiY2xpY2tEb3dubG9hZCgncGRmJylcIlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgID5FeHBvcnRhciBQREY8L2VsLWJ1dHRvblxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgPlxyXG5cclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxlbC1idXR0b25cclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjbGFzcz1cInN1Ym1pdFwiXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdHlwZT1cInN1Y2Nlc3NcIlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIEBjbGljay5wcmV2ZW50PVwiY2xpY2tEb3dubG9hZCgnZXhjZWwnKVwiXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPjxpIGNsYXNzPVwiZmEgZmEtZmlsZS1leGNlbFwiPjwvaT4gRXhwb3J0YWxcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBFeGNlbDwvZWwtYnV0dG9uXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICA+XHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICA8ZWwtYnV0dG9uXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY2xhc3M9XCJzdWJtaXRcIlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIEBjbGljay5wcmV2ZW50PVwiY2xpY2tPcGVuV2hhdHNhcHBcIlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgID48aSBjbGFzcz1cImZhIGZhLXdoYXRzYXBwXCI+PC9pPiBFbnZpYXJcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB3aGF0c2FwcDwvZWwtYnV0dG9uXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICA+XHJcbiAgICAgICAgICAgICAgICAgICAgICAgIDwvdGVtcGxhdGU+XHJcbiAgICAgICAgICAgICAgICAgICAgPC9kaXY+XHJcbiAgICAgICAgICAgICAgICA8L2Rpdj5cclxuICAgICAgICAgICAgICAgIDxkaXYgY2xhc3M9XCJyb3cgbXQtMSBtYi00XCI+PC9kaXY+XHJcbiAgICAgICAgICAgIDwvZGl2PlxyXG5cclxuICAgICAgICAgICAgPGRpdiBjbGFzcz1cImNvbC1tZC0xMlwiPlxyXG4gICAgICAgICAgICAgICAgPGRpdiBjbGFzcz1cInRhYmxlLXJlc3BvbnNpdmVcIj5cclxuICAgICAgICAgICAgICAgICAgICA8dGFibGUgY2xhc3M9XCJ0YWJsZVwiPlxyXG4gICAgICAgICAgICAgICAgICAgICAgICA8dGhlYWQ+XHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICA8c2xvdCBuYW1lPVwiaGVhZGluZ1wiPjwvc2xvdD5cclxuICAgICAgICAgICAgICAgICAgICAgICAgPC90aGVhZD5cclxuICAgICAgICAgICAgICAgICAgICAgICAgPHRib2R5PlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgPHNsb3RcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB2LWZvcj1cIihyb3csIGluZGV4KSBpbiByZWNvcmRzXCJcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA6cm93PVwicm93XCJcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA6aW5kZXg9XCJjdXN0b21JbmRleChpbmRleClcIlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgPjwvc2xvdD5cclxuICAgICAgICAgICAgICAgICAgICAgICAgPC90Ym9keT5cclxuICAgICAgICAgICAgICAgICAgICAgICAgPHRmb290XHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICB2LWlmPVwiXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVzb3VyY2UgPT0gJ3JlcG9ydHMvc2FsZXMnIHx8XHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlc291cmNlID09ICdyZXBvcnRzL3B1cmNoYXNlcydcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIFwiXHJcbiAgICAgICAgICAgICAgICAgICAgICAgID5cclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIDx0cj5cclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8dGRcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgOmNvbHNwYW49XCJcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlc291cmNlID09ICdyZXBvcnRzL3NhbGVzJyA/IDcgOiA4XHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFwiXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPjwvdGQ+XHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPHRkPjxzdHJvbmc+VG90YWxlcyBQRU48L3N0cm9uZz48L3RkPlxyXG5cclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8dGQ+e3sgdG90YWxzLmFjdW1fdG90YWxfdGF4ZWQgfX08L3RkPlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDx0ZD57eyB0b3RhbHMuYWN1bV90b3RhbF9pZ3YgfX08L3RkPlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDx0ZD57eyB0b3RhbHMuYWN1bV90b3RhbCB9fTwvdGQ+XHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICA8L3RyPlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgPHRyPlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDx0ZFxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA6Y29sc3Bhbj1cIlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVzb3VyY2UgPT0gJ3JlcG9ydHMvc2FsZXMnID8gNyA6IDhcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXCJcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA+PC90ZD5cclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8dGQ+PHN0cm9uZz5Ub3RhbGVzIFVTRDwvc3Ryb25nPjwvdGQ+XHJcblxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDx0ZD57eyB0b3RhbHMuYWN1bV90b3RhbF90YXhlZF91c2QgfX08L3RkPlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDx0ZD57eyB0b3RhbHMuYWN1bV90b3RhbF9pZ3ZfdXNkIH19PC90ZD5cclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8dGQ+e3sgdG90YWxzLmFjdW1fdG90YWxfdXNkIH19PC90ZD5cclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIDwvdHI+XHJcbiAgICAgICAgICAgICAgICAgICAgICAgIDwvdGZvb3Q+XHJcbiAgICAgICAgICAgICAgICAgICAgPC90YWJsZT5cclxuICAgICAgICAgICAgICAgICAgICA8ZGl2PlxyXG4gICAgICAgICAgICAgICAgICAgICAgICA8ZWwtcGFnaW5hdGlvblxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgQGN1cnJlbnQtY2hhbmdlPVwiZ2V0UmVjb3Jkc1wiXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICBsYXlvdXQ9XCJ0b3RhbCwgcHJldiwgcGFnZXIsIG5leHRcIlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgOnRvdGFsPVwicGFnaW5hdGlvbi50b3RhbFwiXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICA6Y3VycmVudC1wYWdlLnN5bmM9XCJwYWdpbmF0aW9uLmN1cnJlbnRfcGFnZVwiXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICA6cGFnZS1zaXplPVwicGFnaW5hdGlvbi5wZXJfcGFnZVwiXHJcbiAgICAgICAgICAgICAgICAgICAgICAgID5cclxuICAgICAgICAgICAgICAgICAgICAgICAgPC9lbC1wYWdpbmF0aW9uPlxyXG4gICAgICAgICAgICAgICAgICAgIDwvZGl2PlxyXG4gICAgICAgICAgICAgICAgPC9kaXY+XHJcbiAgICAgICAgICAgIDwvZGl2PlxyXG4gICAgICAgIDwvZGl2PlxyXG4gICAgICAgIDx3aGF0c2FwcC1mb3JtLXJlcG9ydFxyXG4gICAgICAgICAgICA6bWVzc2FnZS5zeW5jPVwibWVzc2FnZVJlcG9ydFwiXHJcbiAgICAgICAgICAgIDpyZXNvdXJjZT1cInJlc291cmNlUmVwb3J0XCJcclxuICAgICAgICAgICAgOnNob3dXaGF0c2FwcEZvcm0uc3luYz1cInNob3dXaGF0c2FwcEZvcm1cIlxyXG4gICAgICAgID5cclxuICAgICAgICA8L3doYXRzYXBwLWZvcm0tcmVwb3J0PlxyXG4gICAgPC9kaXY+XHJcbjwvdGVtcGxhdGU+XHJcbjxzdHlsZT5cclxuLmZvbnQtY3VzdG9tIHtcclxuICAgIGZvbnQtc2l6ZTogMTVweCAhaW1wb3J0YW50O1xyXG59XHJcbjwvc3R5bGU+XHJcbjxzY3JpcHQ+XHJcbmltcG9ydCBtb21lbnQgZnJvbSBcIm1vbWVudFwiO1xyXG5pbXBvcnQgcXVlcnlTdHJpbmcgZnJvbSBcInF1ZXJ5LXN0cmluZ1wiO1xyXG5pbXBvcnQgV2hhdHNhcHBGb3JtUmVwb3J0IGZyb20gXCIuLi8uLi8uLi8uLi8uLi8uLi9yZXNvdXJjZXMvanMvY29tcG9uZW50cy9XaGF0c2FwcE1vZGFsUmVwb3J0cy52dWVcIjtcclxuZXhwb3J0IGRlZmF1bHQge1xyXG4gICAgcHJvcHM6IHtcclxuICAgICAgICByZXNvdXJjZTogU3RyaW5nLFxyXG4gICAgICAgIGFwcGx5Q3VzdG9tZXI6IHsgdHlwZTogQm9vbGVhbiwgcmVxdWlyZWQ6IGZhbHNlLCBkZWZhdWx0OiBmYWxzZSB9XHJcbiAgICB9LFxyXG4gICAgY29tcG9uZW50czogeyBXaGF0c2FwcEZvcm1SZXBvcnQgfSxcclxuICAgIGRhdGEoKSB7XHJcbiAgICAgICAgcmV0dXJuIHtcclxuICAgICAgICAgICAgbWVzc2FnZVJlcG9ydDogXCJcIixcclxuICAgICAgICAgICAgcmVzb3VyY2VSZXBvcnQ6IFwiXCIsXHJcbiAgICAgICAgICAgIHNob3dXaGF0c2FwcEZvcm06IGZhbHNlLFxyXG4gICAgICAgICAgICBsb2FkaW5nX3N1Ym1pdDogZmFsc2UsXHJcbiAgICAgICAgICAgIHBlcnNvbnM6IFtdLFxyXG4gICAgICAgICAgICBhbGxfcGVyc29uczogW10sXHJcbiAgICAgICAgICAgIGxvYWRpbmdfc2VhcmNoOiBmYWxzZSxcclxuICAgICAgICAgICAgY29sdW1uczogW10sXHJcbiAgICAgICAgICAgIHJlY29yZHM6IFtdLFxyXG4gICAgICAgICAgICBoZWFkZXJzOiBoZWFkZXJzX3Rva2VuLFxyXG4gICAgICAgICAgICBkb2N1bWVudF90eXBlczogW10sXHJcbiAgICAgICAgICAgIHBhZ2luYXRpb246IHt9LFxyXG4gICAgICAgICAgICBzZWFyY2g6IHt9LFxyXG4gICAgICAgICAgICB0b3RhbHM6IHt9LFxyXG4gICAgICAgICAgICBlc3RhYmxpc2htZW50OiBudWxsLFxyXG4gICAgICAgICAgICBlc3RhYmxpc2htZW50czogW10sXHJcbiAgICAgICAgICAgIHN0YXRlX3R5cGVzOiBbXSxcclxuICAgICAgICAgICAgZm9ybToge30sXHJcblxyXG4gICAgICAgICAgICBwaWNrZXJPcHRpb25zRGF0ZXM6IHtcclxuICAgICAgICAgICAgICAgIGRpc2FibGVkRGF0ZTogdGltZSA9PiB7XHJcbiAgICAgICAgICAgICAgICAgICAgdGltZSA9IG1vbWVudCh0aW1lKS5mb3JtYXQoXCJZWVlZLU1NLUREXCIpO1xyXG4gICAgICAgICAgICAgICAgICAgIHJldHVybiB0aGlzLmZvcm0uZGF0ZV9zdGFydCA+IHRpbWU7XHJcbiAgICAgICAgICAgICAgICB9XHJcbiAgICAgICAgICAgIH0sXHJcbiAgICAgICAgICAgIHBpY2tlck9wdGlvbnNNb250aHM6IHtcclxuICAgICAgICAgICAgICAgIGRpc2FibGVkRGF0ZTogdGltZSA9PiB7XHJcbiAgICAgICAgICAgICAgICAgICAgdGltZSA9IG1vbWVudCh0aW1lKS5mb3JtYXQoXCJZWVlZLU1NXCIpO1xyXG4gICAgICAgICAgICAgICAgICAgIHJldHVybiB0aGlzLmZvcm0ubW9udGhfc3RhcnQgPiB0aW1lO1xyXG4gICAgICAgICAgICAgICAgfVxyXG4gICAgICAgICAgICB9LFxyXG4gICAgICAgICAgICBzZWxsZXJzOiBbXVxyXG4gICAgICAgIH07XHJcbiAgICB9LFxyXG4gICAgY29tcHV0ZWQ6IHt9LFxyXG4gICAgY3JlYXRlZCgpIHtcclxuICAgICAgICB0aGlzLmluaXRGb3JtKCk7XHJcbiAgICAgICAgdGhpcy5pbml0VG90YWxzKCk7XHJcbiAgICAgICAgdGhpcy4kZXZlbnRIdWIuJG9uKFwicmVsb2FkRGF0YVwiLCAoKSA9PiB7XHJcbiAgICAgICAgICAgIHRoaXMuZ2V0UmVjb3JkcygpO1xyXG4gICAgICAgIH0pO1xyXG4gICAgfSxcclxuICAgIGFzeW5jIG1vdW50ZWQoKSB7XHJcbiAgICAgICAgYXdhaXQgdGhpcy4kaHR0cC5nZXQoYC8ke3RoaXMucmVzb3VyY2V9L2ZpbHRlcmApLnRoZW4ocmVzcG9uc2UgPT4ge1xyXG4gICAgICAgICAgICB0aGlzLmVzdGFibGlzaG1lbnRzID0gcmVzcG9uc2UuZGF0YS5lc3RhYmxpc2htZW50cztcclxuICAgICAgICAgICAgdGhpcy5hbGxfcGVyc29ucyA9IHJlc3BvbnNlLmRhdGEucGVyc29ucztcclxuICAgICAgICAgICAgdGhpcy5zZWxsZXJzID0gcmVzcG9uc2UuZGF0YS5zZWxsZXJzO1xyXG4gICAgICAgIH0pO1xyXG5cclxuICAgICAgICBhd2FpdCB0aGlzLmdldFJlY29yZHMoKTtcclxuICAgICAgICBhd2FpdCB0aGlzLmZpbHRlclBlcnNvbnMoKTtcclxuICAgICAgICAvLyBhd2FpdCB0aGlzLmdldFRvdGFscygpXHJcbiAgICAgICAgdGhpcy5mb3JtLnR5cGVfcGVyc29uID1cclxuICAgICAgICAgICAgdGhpcy5yZXNvdXJjZSA9PT0gXCJyZXBvcnRzL3NhbGVzXCIgPyBcImN1c3RvbWVyc1wiIDogXCJzdXBwbGllcnNcIjtcclxuICAgIH0sXHJcbiAgICBtZXRob2RzOiB7XHJcbiAgICAgICAgY2xpY2tPcGVuV2hhdHNhcHAoKSB7XHJcbiAgICAgICAgICAgIGxldCBxdWVyeSA9IHF1ZXJ5U3RyaW5nLnN0cmluZ2lmeSh7XHJcbiAgICAgICAgICAgICAgICAuLi50aGlzLmZvcm1cclxuICAgICAgICAgICAgfSk7XHJcbiAgICAgICAgICAgIHRoaXMucmVzb3VyY2VSZXBvcnQgPSBgLyR7dGhpcy5yZXNvdXJjZX0vcGRmPyR7cXVlcnl9YDtcclxuICAgICAgICAgICAgdGhpcy5tZXNzYWdlUmVwb3J0ID0gYFJlcG9ydGUgZGUgY29uc2lnbmFtaWVudG8gYSBsYSBmZWNoYSAke21vbWVudCgpLmZvcm1hdChcclxuICAgICAgICAgICAgICAgIFwiREQtTU0tWVlZWVwiXHJcbiAgICAgICAgICAgICl9YDtcclxuICAgICAgICAgICAgdGhpcy5zaG93V2hhdHNhcHBGb3JtID0gdHJ1ZTtcclxuICAgICAgICB9LFxyXG4gICAgICAgIGNoYW5nZVBlcnNvbnMoKSB7XHJcbiAgICAgICAgICAgIC8vIHRoaXMuZm9ybS50eXBlX3BlcnNvbiA9IHRoaXMucmVzb3VyY2UgPT09ICdyZXBvcnRzL3NhbGVzJyA/ICdjdXN0b21lcnMnOidzdXBwbGllcnMnXHJcbiAgICAgICAgfSxcclxuICAgICAgICBzZWFyY2hSZW1vdGVQZXJzb25zKGlucHV0KSB7XHJcbiAgICAgICAgICAgIGlmIChpbnB1dC5sZW5ndGggPiAwKSB7XHJcbiAgICAgICAgICAgICAgICB0aGlzLmxvYWRpbmdfc2VhcmNoID0gdHJ1ZTtcclxuICAgICAgICAgICAgICAgIGxldCBwYXJhbWV0ZXJzID0gYGlucHV0PSR7aW5wdXR9YDtcclxuXHJcbiAgICAgICAgICAgICAgICB0aGlzLmZvcm0udHlwZV9wZXJzb24gPSBcImN1c3RvbWVyc1wiO1xyXG5cclxuICAgICAgICAgICAgICAgIHRoaXMuJGh0dHBcclxuICAgICAgICAgICAgICAgICAgICAuZ2V0KFxyXG4gICAgICAgICAgICAgICAgICAgICAgICBgL3JlcG9ydHMvZGF0YS10YWJsZS9wZXJzb25zLyR7dGhpcy5mb3JtLnR5cGVfcGVyc29ufT8ke3BhcmFtZXRlcnN9YFxyXG4gICAgICAgICAgICAgICAgICAgIClcclxuICAgICAgICAgICAgICAgICAgICAudGhlbihyZXNwb25zZSA9PiB7XHJcbiAgICAgICAgICAgICAgICAgICAgICAgIHRoaXMucGVyc29ucyA9IHJlc3BvbnNlLmRhdGEucGVyc29ucztcclxuICAgICAgICAgICAgICAgICAgICAgICAgdGhpcy5sb2FkaW5nX3NlYXJjaCA9IGZhbHNlO1xyXG5cclxuICAgICAgICAgICAgICAgICAgICAgICAgaWYgKHRoaXMucGVyc29ucy5sZW5ndGggPT0gMCkge1xyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgdGhpcy5maWx0ZXJQZXJzb25zKCk7XHJcbiAgICAgICAgICAgICAgICAgICAgICAgIH1cclxuICAgICAgICAgICAgICAgICAgICB9KTtcclxuICAgICAgICAgICAgfSBlbHNlIHtcclxuICAgICAgICAgICAgICAgIHRoaXMuZmlsdGVyUGVyc29ucygpO1xyXG4gICAgICAgICAgICB9XHJcbiAgICAgICAgfSxcclxuICAgICAgICBmaWx0ZXJQZXJzb25zKCkge1xyXG4gICAgICAgICAgICB0aGlzLnBlcnNvbnMgPSB0aGlzLmFsbF9wZXJzb25zO1xyXG4gICAgICAgICAgICBjb25zb2xlLmxvZyh0aGlzLnBlcnNvbnMpO1xyXG4gICAgICAgIH0sXHJcblxyXG4gICAgICAgIGNsaWNrRG93bmxvYWQodHlwZSkge1xyXG4gICAgICAgICAgICBsZXQgcXVlcnkgPSBxdWVyeVN0cmluZy5zdHJpbmdpZnkoe1xyXG4gICAgICAgICAgICAgICAgLi4udGhpcy5mb3JtXHJcbiAgICAgICAgICAgIH0pO1xyXG4gICAgICAgICAgICB3aW5kb3cub3BlbihgLyR7dGhpcy5yZXNvdXJjZX0vJHt0eXBlfS8/JHtxdWVyeX1gLCBcIl9ibGFua1wiKTtcclxuICAgICAgICB9LFxyXG4gICAgICAgIGluaXRGb3JtKCkge1xyXG4gICAgICAgICAgICB0aGlzLmZvcm0gPSB7XHJcbiAgICAgICAgICAgICAgICBkYXRlX29mX2VuZDogbnVsbCxcclxuICAgICAgICAgICAgICAgIHBlcnNvbl9pZDogbnVsbCxcclxuICAgICAgICAgICAgICAgIHBlcmlvZDogXCJtb250aFwiLFxyXG4gICAgICAgICAgICAgICAgZGF0ZV9zdGFydDogbW9tZW50KCkuZm9ybWF0KFwiWVlZWS1NTS1ERFwiKSxcclxuICAgICAgICAgICAgICAgIGRhdGVfZW5kOiBtb21lbnQoKS5mb3JtYXQoXCJZWVlZLU1NLUREXCIpLFxyXG4gICAgICAgICAgICAgICAgbW9udGhfc3RhcnQ6IG1vbWVudCgpLmZvcm1hdChcIllZWVktTU1cIiksXHJcbiAgICAgICAgICAgICAgICBtb250aF9lbmQ6IG1vbWVudCgpLmZvcm1hdChcIllZWVktTU1cIiksXHJcbiAgICAgICAgICAgICAgICBsaXF1aWRhdGVkOiBudWxsXHJcbiAgICAgICAgICAgIH07XHJcbiAgICAgICAgfSxcclxuICAgICAgICBpbml0VG90YWxzKCkge1xyXG4gICAgICAgICAgICB0aGlzLnRvdGFscyA9IHtcclxuICAgICAgICAgICAgICAgIGFjdW1fdG90YWxfdGF4ZWQ6IDAsXHJcbiAgICAgICAgICAgICAgICBhY3VtX3RvdGFsX2lndjogMCxcclxuICAgICAgICAgICAgICAgIGFjdW1fdG90YWw6IDAsXHJcbiAgICAgICAgICAgICAgICBhY3VtX3RvdGFsX2V4b25lcmF0ZWQ6IDAsXHJcbiAgICAgICAgICAgICAgICBhY3VtX3RvdGFsX3VuYWZmZWN0ZWQ6IDAsXHJcbiAgICAgICAgICAgICAgICBhY3VtX3RvdGFsX2ZyZWU6IDAsXHJcblxyXG4gICAgICAgICAgICAgICAgYWN1bV90b3RhbF90YXhlZF91c2Q6IDAsXHJcbiAgICAgICAgICAgICAgICBhY3VtX3RvdGFsX2lndl91c2Q6IDAsXHJcbiAgICAgICAgICAgICAgICBhY3VtX3RvdGFsX3VzZDogMFxyXG4gICAgICAgICAgICB9O1xyXG4gICAgICAgIH0sXHJcbiAgICAgICAgY3VzdG9tSW5kZXgoaW5kZXgpIHtcclxuICAgICAgICAgICAgcmV0dXJuIChcclxuICAgICAgICAgICAgICAgIHRoaXMucGFnaW5hdGlvbi5wZXJfcGFnZSAqICh0aGlzLnBhZ2luYXRpb24uY3VycmVudF9wYWdlIC0gMSkgK1xyXG4gICAgICAgICAgICAgICAgaW5kZXggK1xyXG4gICAgICAgICAgICAgICAgMVxyXG4gICAgICAgICAgICApO1xyXG4gICAgICAgIH0sXHJcbiAgICAgICAgYXN5bmMgZ2V0UmVjb3Jkc0J5RmlsdGVyKCkge1xyXG4gICAgICAgICAgICB0aGlzLmxvYWRpbmdfc3VibWl0ID0gYXdhaXQgdHJ1ZTtcclxuICAgICAgICAgICAgYXdhaXQgdGhpcy5nZXRSZWNvcmRzKCk7XHJcbiAgICAgICAgICAgIHRoaXMubG9hZGluZ19zdWJtaXQgPSBhd2FpdCBmYWxzZTtcclxuICAgICAgICB9LFxyXG4gICAgICAgIGdldFJlY29yZHMoKSB7XHJcbiAgICAgICAgICAgIHJldHVybiB0aGlzLiRodHRwXHJcbiAgICAgICAgICAgICAgICAuZ2V0KGAvJHt0aGlzLnJlc291cmNlfS9yZWNvcmRzPyR7dGhpcy5nZXRRdWVyeVBhcmFtZXRlcnMoKX1gKVxyXG4gICAgICAgICAgICAgICAgLnRoZW4ocmVzcG9uc2UgPT4ge1xyXG4gICAgICAgICAgICAgICAgICAgIHRoaXMucmVjb3JkcyA9IHJlc3BvbnNlLmRhdGEuZGF0YTtcclxuICAgICAgICAgICAgICAgICAgICBjb25zb2xlLmxvZyh0aGlzLnJlY29yZHMpO1xyXG4gICAgICAgICAgICAgICAgICAgIC8vc29ydCByZWNvcmRzIGJ5IGR1ZXMgcHJvcGVydHkgKGludCkgaW4gZGVzY2VuZGluZyBvcmRlclxyXG4gICAgICAgICAgICAgICAgICAgIC8vIHRoaXMucmVjb3Jkcy5zb3J0KGZ1bmN0aW9uKGEsIGIpIHtcclxuICAgICAgICAgICAgICAgICAgICAvLyAgICAgcmV0dXJuIGIuZHVlcyAtIGEuZHVlcztcclxuICAgICAgICAgICAgICAgICAgICAvLyB9KTtcclxuXHJcbiAgICAgICAgICAgICAgICAgICAgdGhpcy5wYWdpbmF0aW9uID0gcmVzcG9uc2UuZGF0YS5tZXRhO1xyXG4gICAgICAgICAgICAgICAgICAgIHRoaXMucGFnaW5hdGlvbi5wZXJfcGFnZSA9IHBhcnNlSW50KFxyXG4gICAgICAgICAgICAgICAgICAgICAgICByZXNwb25zZS5kYXRhLm1ldGEucGVyX3BhZ2VcclxuICAgICAgICAgICAgICAgICAgICApO1xyXG4gICAgICAgICAgICAgICAgICAgIHRoaXMubG9hZGluZ19zdWJtaXQgPSBmYWxzZTtcclxuICAgICAgICAgICAgICAgICAgICAvLyB0aGlzLmluaXRUb3RhbHMoKVxyXG4gICAgICAgICAgICAgICAgICBcclxuICAgICAgICAgICAgICAgIH0pO1xyXG4gICAgICAgIH0sXHJcbiAgICAgICAgZ2V0UXVlcnlQYXJhbWV0ZXJzKCkge1xyXG4gICAgICAgICAgICByZXR1cm4gcXVlcnlTdHJpbmcuc3RyaW5naWZ5KHtcclxuICAgICAgICAgICAgICAgIHBhZ2U6IHRoaXMucGFnaW5hdGlvbi5jdXJyZW50X3BhZ2UsXHJcbiAgICAgICAgICAgICAgICBsaW1pdDogdGhpcy5saW1pdCxcclxuICAgICAgICAgICAgICAgIC4uLnRoaXMuZm9ybVxyXG4gICAgICAgICAgICB9KTtcclxuICAgICAgICB9LFxyXG5cclxuICAgICAgICBjaGFuZ2VEaXNhYmxlZERhdGVzKCkge1xyXG4gICAgICAgICAgICBpZiAodGhpcy5mb3JtLmRhdGVfZW5kIDwgdGhpcy5mb3JtLmRhdGVfc3RhcnQpIHtcclxuICAgICAgICAgICAgICAgIHRoaXMuZm9ybS5kYXRlX2VuZCA9IHRoaXMuZm9ybS5kYXRlX3N0YXJ0O1xyXG4gICAgICAgICAgICB9XHJcbiAgICAgICAgICAgIC8vIHRoaXMubG9hZEFsbCgpO1xyXG4gICAgICAgIH0sXHJcbiAgICAgICAgY2hhbmdlRGlzYWJsZWRNb250aHMoKSB7XHJcbiAgICAgICAgICAgIGlmIChcclxuICAgICAgICAgICAgICAgIHRoaXMuZm9ybS5tb250aF9lbmQgPFxyXG4gICAgICAgICAgICAgICAgdGhpcy5mb3JtLm1vbnRoX3N0YXJ0XHJcbiAgICAgICAgICAgICkge1xyXG4gICAgICAgICAgICAgICAgdGhpcy5mb3JtLm1vbnRoX2VuZCA9IHRoaXMuZm9ybS5tb250aF9zdGFydDtcclxuICAgICAgICAgICAgfVxyXG4gICAgICAgICAgICAvLyB0aGlzLmxvYWRBbGwoKTtcclxuICAgICAgICB9LFxyXG4gICAgICAgIGNoYW5nZVBlcmlvZCgpIHtcclxuICAgICAgICAgICAgaWYgKHRoaXMuZm9ybS5wZXJpb2QgPT09IFwibW9udGhcIikge1xyXG4gICAgICAgICAgICAgICAgdGhpcy5mb3JtLm1vbnRoX3N0YXJ0ID0gbW9tZW50KCkuZm9ybWF0KFxyXG4gICAgICAgICAgICAgICAgICAgIFwiWVlZWS1NTVwiXHJcbiAgICAgICAgICAgICAgICApO1xyXG4gICAgICAgICAgICAgICAgdGhpcy5mb3JtLm1vbnRoX2VuZCA9IG1vbWVudCgpLmZvcm1hdChcIllZWVktTU1cIik7XHJcbiAgICAgICAgICAgIH1cclxuICAgICAgICAgICAgaWYgKHRoaXMuZm9ybS5wZXJpb2QgPT09IFwiYmV0d2Vlbl9tb250aHNcIikge1xyXG4gICAgICAgICAgICAgICAgdGhpcy5mb3JtLm1vbnRoX3N0YXJ0ID0gbW9tZW50KClcclxuICAgICAgICAgICAgICAgICAgICAuc3RhcnRPZihcInllYXJcIilcclxuICAgICAgICAgICAgICAgICAgICAuZm9ybWF0KFwiWVlZWS1NTVwiKTsgLy8nMjAxOS0wMSc7XHJcbiAgICAgICAgICAgICAgICB0aGlzLmZvcm0ubW9udGhfZW5kID0gbW9tZW50KClcclxuICAgICAgICAgICAgICAgICAgICAuZW5kT2YoXCJ5ZWFyXCIpXHJcbiAgICAgICAgICAgICAgICAgICAgLmZvcm1hdChcIllZWVktTU1cIik7XHJcbiAgICAgICAgICAgIH1cclxuICAgICAgICAgICAgaWYgKHRoaXMuZm9ybS5wZXJpb2QgPT09IFwiZGF0ZVwiKSB7XHJcbiAgICAgICAgICAgICAgICB0aGlzLmZvcm0uZGF0ZV9zdGFydCA9IG1vbWVudCgpLmZvcm1hdChcIllZWVktTU0tRERcIik7XHJcbiAgICAgICAgICAgICAgICB0aGlzLmZvcm0uZGF0ZV9lbmQgPSBtb21lbnQoKS5mb3JtYXQoXCJZWVlZLU1NLUREXCIpO1xyXG4gICAgICAgICAgICB9XHJcbiAgICAgICAgICAgIGlmICh0aGlzLmZvcm0ucGVyaW9kID09PSBcImJldHdlZW5fZGF0ZXNcIikge1xyXG4gICAgICAgICAgICAgICAgdGhpcy5mb3JtLmRhdGVfc3RhcnQgPSBtb21lbnQoKVxyXG4gICAgICAgICAgICAgICAgICAgIC5zdGFydE9mKFwibW9udGhcIilcclxuICAgICAgICAgICAgICAgICAgICAuZm9ybWF0KFwiWVlZWS1NTS1ERFwiKTtcclxuICAgICAgICAgICAgICAgIHRoaXMuZm9ybS5kYXRlX2VuZCA9IG1vbWVudCgpXHJcbiAgICAgICAgICAgICAgICAgICAgLmVuZE9mKFwibW9udGhcIilcclxuICAgICAgICAgICAgICAgICAgICAuZm9ybWF0KFwiWVlZWS1NTS1ERFwiKTtcclxuICAgICAgICAgICAgfVxyXG4gICAgICAgICAgICAvLyB0aGlzLmxvYWRBbGwoKTtcclxuICAgICAgICB9XHJcbiAgICB9XHJcbn07XHJcbjwvc2NyaXB0PlxyXG5cblxuXG4vLyBXRUJQQUNLIEZPT1RFUiAvL1xuLy8gbW9kdWxlcy9SZXBvcnQvUmVzb3VyY2VzL2Fzc2V0cy9qcy9jb21wb25lbnRzL0RhdGFUYWJsZVJlcG9ydHNDb25zaWdubWVudC52dWUiXSwic291cmNlUm9vdCI6IiJ9\n//# sourceURL=webpack-internal:///./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/Report/Resources/assets/js/components/DataTableReportsConsignment.vue\n");
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator__ = __webpack_require__("./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_moment__ = __webpack_require__("./node_modules/moment/moment.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_moment___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_moment__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_query_string__ = __webpack_require__("./node_modules/query-string/index.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_query_string___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_query_string__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__resources_js_components_WhatsappModalReports_vue__ = __webpack_require__("./resources/js/components/WhatsappModalReports.vue");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__resources_js_components_WhatsappModalReports_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__resources_js_components_WhatsappModalReports_vue__);
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: {
+    resource: String,
+    applyCustomer: {
+      type: Boolean,
+      required: false,
+      "default": false
+    }
+  },
+  components: {
+    WhatsappFormReport: __WEBPACK_IMPORTED_MODULE_3__resources_js_components_WhatsappModalReports_vue___default.a
+  },
+  data: function data() {
+    var _this = this;
+
+    return {
+      messageReport: "",
+      resourceReport: "",
+      showWhatsappForm: false,
+      loading_submit: false,
+      persons: [],
+      all_persons: [],
+      loading_search: false,
+      columns: [],
+      records: [],
+      headers: headers_token,
+      document_types: [],
+      pagination: {},
+      search: {},
+      totals: {},
+      establishment: null,
+      establishments: [],
+      state_types: [],
+      form: {},
+      pickerOptionsDates: {
+        disabledDate: function disabledDate(time) {
+          time = __WEBPACK_IMPORTED_MODULE_1_moment___default()(time).format("YYYY-MM-DD");
+          return _this.form.date_start > time;
+        }
+      },
+      pickerOptionsMonths: {
+        disabledDate: function disabledDate(time) {
+          time = __WEBPACK_IMPORTED_MODULE_1_moment___default()(time).format("YYYY-MM");
+          return _this.form.month_start > time;
+        }
+      },
+      sellers: []
+    };
+  },
+  computed: {},
+  created: function created() {
+    var _this2 = this;
+
+    this.initForm();
+    this.initTotals();
+    this.$eventHub.$on("reloadData", function () {
+      _this2.getRecords();
+    });
+  },
+  mounted: function mounted() {
+    var _this3 = this;
+
+    return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee() {
+      return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              _context.next = 2;
+              return _this3.$http.get("/".concat(_this3.resource, "/filter")).then(function (response) {
+                _this3.establishments = response.data.establishments;
+                _this3.all_persons = response.data.persons;
+                _this3.sellers = response.data.sellers;
+              });
+
+            case 2:
+              _context.next = 4;
+              return _this3.getRecords();
+
+            case 4:
+              _context.next = 6;
+              return _this3.filterPersons();
+
+            case 6:
+              // await this.getTotals()
+              _this3.form.type_person = _this3.resource === "reports/sales" ? "customers" : "suppliers";
+
+            case 7:
+            case "end":
+              return _context.stop();
+          }
+        }
+      }, _callee);
+    }))();
+  },
+  methods: {
+    clickOpenWhatsapp: function clickOpenWhatsapp() {
+      var query = __WEBPACK_IMPORTED_MODULE_2_query_string___default.a.stringify(_objectSpread({}, this.form));
+      this.resourceReport = "/".concat(this.resource, "/pdf?").concat(query);
+      this.messageReport = "Reporte de consignamiento a la fecha ".concat(__WEBPACK_IMPORTED_MODULE_1_moment___default()().format("DD-MM-YYYY"));
+      this.showWhatsappForm = true;
+    },
+    changePersons: function changePersons() {// this.form.type_person = this.resource === 'reports/sales' ? 'customers':'suppliers'
+    },
+    searchRemotePersons: function searchRemotePersons(input) {
+      var _this4 = this;
+
+      if (input.length > 0) {
+        this.loading_search = true;
+        var parameters = "input=".concat(input);
+        this.form.type_person = "customers";
+        this.$http.get("/reports/data-table/persons/".concat(this.form.type_person, "?").concat(parameters)).then(function (response) {
+          _this4.persons = response.data.persons;
+          _this4.loading_search = false;
+
+          if (_this4.persons.length == 0) {
+            _this4.filterPersons();
+          }
+        });
+      } else {
+        this.filterPersons();
+      }
+    },
+    filterPersons: function filterPersons() {
+      this.persons = this.all_persons;
+      console.log(this.persons);
+    },
+    clickDownload: function clickDownload(type) {
+      var query = __WEBPACK_IMPORTED_MODULE_2_query_string___default.a.stringify(_objectSpread({}, this.form));
+      window.open("/".concat(this.resource, "/").concat(type, "/?").concat(query), "_blank");
+    },
+    initForm: function initForm() {
+      this.form = {
+        date_of_end: null,
+        person_id: null,
+        period: "month",
+        date_start: __WEBPACK_IMPORTED_MODULE_1_moment___default()().format("YYYY-MM-DD"),
+        date_end: __WEBPACK_IMPORTED_MODULE_1_moment___default()().format("YYYY-MM-DD"),
+        month_start: __WEBPACK_IMPORTED_MODULE_1_moment___default()().format("YYYY-MM"),
+        month_end: __WEBPACK_IMPORTED_MODULE_1_moment___default()().format("YYYY-MM"),
+        liquidated: null
+      };
+    },
+    initTotals: function initTotals() {
+      this.totals = {
+        acum_total_taxed: 0,
+        acum_total_igv: 0,
+        acum_total: 0,
+        acum_total_exonerated: 0,
+        acum_total_unaffected: 0,
+        acum_total_free: 0,
+        acum_total_taxed_usd: 0,
+        acum_total_igv_usd: 0,
+        acum_total_usd: 0
+      };
+    },
+    customIndex: function customIndex(index) {
+      return this.pagination.per_page * (this.pagination.current_page - 1) + index + 1;
+    },
+    getRecordsByFilter: function getRecordsByFilter() {
+      var _this5 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee2() {
+        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                _context2.next = 2;
+                return true;
+
+              case 2:
+                _this5.loading_submit = _context2.sent;
+                _context2.next = 5;
+                return _this5.getRecords();
+
+              case 5:
+                _context2.next = 7;
+                return false;
+
+              case 7:
+                _this5.loading_submit = _context2.sent;
+
+              case 8:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2);
+      }))();
+    },
+    getRecords: function getRecords() {
+      var _this6 = this;
+
+      return this.$http.get("/".concat(this.resource, "/records?").concat(this.getQueryParameters())).then(function (response) {
+        _this6.records = response.data.data;
+        console.log(_this6.records); //sort records by dues property (int) in descending order
+        // this.records.sort(function(a, b) {
+        //     return b.dues - a.dues;
+        // });
+
+        _this6.pagination = response.data.meta;
+        _this6.pagination.per_page = parseInt(response.data.meta.per_page);
+        _this6.loading_submit = false; // this.initTotals()
+      });
+    },
+    getQueryParameters: function getQueryParameters() {
+      return __WEBPACK_IMPORTED_MODULE_2_query_string___default.a.stringify(_objectSpread({
+        page: this.pagination.current_page,
+        limit: this.limit
+      }, this.form));
+    },
+    changeDisabledDates: function changeDisabledDates() {
+      if (this.form.date_end < this.form.date_start) {
+        this.form.date_end = this.form.date_start;
+      } // this.loadAll();
+
+    },
+    changeDisabledMonths: function changeDisabledMonths() {
+      if (this.form.month_end < this.form.month_start) {
+        this.form.month_end = this.form.month_start;
+      } // this.loadAll();
+
+    },
+    changePeriod: function changePeriod() {
+      if (this.form.period === "month") {
+        this.form.month_start = __WEBPACK_IMPORTED_MODULE_1_moment___default()().format("YYYY-MM");
+        this.form.month_end = __WEBPACK_IMPORTED_MODULE_1_moment___default()().format("YYYY-MM");
+      }
+
+      if (this.form.period === "between_months") {
+        this.form.month_start = __WEBPACK_IMPORTED_MODULE_1_moment___default()().startOf("year").format("YYYY-MM"); //'2019-01';
+
+        this.form.month_end = __WEBPACK_IMPORTED_MODULE_1_moment___default()().endOf("year").format("YYYY-MM");
+      }
+
+      if (this.form.period === "date") {
+        this.form.date_start = __WEBPACK_IMPORTED_MODULE_1_moment___default()().format("YYYY-MM-DD");
+        this.form.date_end = __WEBPACK_IMPORTED_MODULE_1_moment___default()().format("YYYY-MM-DD");
+      }
+
+      if (this.form.period === "between_dates") {
+        this.form.date_start = __WEBPACK_IMPORTED_MODULE_1_moment___default()().startOf("month").format("YYYY-MM-DD");
+        this.form.date_end = __WEBPACK_IMPORTED_MODULE_1_moment___default()().endOf("month").format("YYYY-MM-DD");
+      } // this.loadAll();
+
+    }
+  }
+});
 
 /***/ }),
 
@@ -40,7 +756,693 @@ eval("Object.defineProperty(__webpack_exports__, \"__esModule\", { value: true }
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("Object.defineProperty(__webpack_exports__, \"__esModule\", { value: true });\n/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator__ = __webpack_require__(\"./node_modules/@babel/runtime/regenerator/index.js\");\n/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator__);\n/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_moment__ = __webpack_require__(\"./node_modules/moment/moment.js\");\n/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_moment___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_moment__);\n/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_query_string__ = __webpack_require__(\"./node_modules/query-string/index.js\");\n/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_query_string___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_query_string__);\n/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__resources_js_components_WhatsappModalReports_vue__ = __webpack_require__(\"./resources/js/components/WhatsappModalReports.vue\");\n/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__resources_js_components_WhatsappModalReports_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__resources_js_components_WhatsappModalReports_vue__);\nfunction ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }\n\nfunction _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }\n\nfunction _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }\n\n\n\nfunction asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }\n\nfunction _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, \"next\", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, \"throw\", err); } _next(undefined); }); }; }\n\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n\n\n\n/* harmony default export */ __webpack_exports__[\"default\"] = ({\n  props: {\n    resource: String,\n    applyCustomer: {\n      type: Boolean,\n      required: false,\n      \"default\": false\n    }\n  },\n  components: {\n    WhatsappFormReport: __WEBPACK_IMPORTED_MODULE_3__resources_js_components_WhatsappModalReports_vue___default.a\n  },\n  data: function data() {\n    var _this = this;\n\n    return {\n      messageReport: \"\",\n      resourceReport: \"\",\n      showWhatsappForm: false,\n      loading_submit: false,\n      persons: [],\n      all_persons: [],\n      loading_search: false,\n      columns: [],\n      records: [],\n      headers: headers_token,\n      document_types: [],\n      pagination: {},\n      search: {},\n      totals: {},\n      establishment: null,\n      establishments: [],\n      state_types: [],\n      form: {},\n      pickerOptionsDates: {\n        disabledDate: function disabledDate(time) {\n          time = __WEBPACK_IMPORTED_MODULE_1_moment___default()(time).format(\"YYYY-MM-DD\");\n          return _this.form.date_start > time;\n        }\n      },\n      pickerOptionsMonths: {\n        disabledDate: function disabledDate(time) {\n          time = __WEBPACK_IMPORTED_MODULE_1_moment___default()(time).format(\"YYYY-MM\");\n          return _this.form.month_start > time;\n        }\n      },\n      sellers: []\n    };\n  },\n  computed: {},\n  created: function created() {\n    var _this2 = this;\n\n    this.initForm();\n    this.initTotals();\n    this.$eventHub.$on(\"reloadData\", function () {\n      _this2.getRecords();\n    });\n  },\n  mounted: function mounted() {\n    var _this3 = this;\n\n    return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee() {\n      return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee$(_context) {\n        while (1) {\n          switch (_context.prev = _context.next) {\n            case 0:\n              _context.next = 2;\n              return _this3.$http.get(\"/\".concat(_this3.resource, \"/filter\")).then(function (response) {\n                _this3.establishments = response.data.establishments;\n                _this3.all_persons = response.data.persons;\n                _this3.sellers = response.data.sellers;\n              });\n\n            case 2:\n              _context.next = 4;\n              return _this3.getRecords();\n\n            case 4:\n              _context.next = 6;\n              return _this3.filterPersons();\n\n            case 6:\n              // await this.getTotals()\n              _this3.form.type_person = _this3.resource === \"reports/sales\" ? \"customers\" : \"suppliers\";\n\n            case 7:\n            case \"end\":\n              return _context.stop();\n          }\n        }\n      }, _callee);\n    }))();\n  },\n  methods: {\n    clickOpenWhatsapp: function clickOpenWhatsapp() {\n      var query = __WEBPACK_IMPORTED_MODULE_2_query_string___default.a.stringify(_objectSpread({}, this.form));\n      this.resourceReport = \"/\".concat(this.resource, \"/pdf?\").concat(query);\n      this.messageReport = \"Reporte de creditos a la fecha \".concat(__WEBPACK_IMPORTED_MODULE_1_moment___default()().format(\"DD-MM-YYYY\"));\n      this.showWhatsappForm = true;\n    },\n    changePersons: function changePersons() {// this.form.type_person = this.resource === 'reports/sales' ? 'customers':'suppliers'\n    },\n    searchRemotePersons: function searchRemotePersons(input) {\n      var _this4 = this;\n\n      if (input.length > 0) {\n        this.loading_search = true;\n        var parameters = \"input=\".concat(input);\n        this.form.type_person = \"customers\";\n        this.$http.get(\"/reports/data-table/persons/\".concat(this.form.type_person, \"?\").concat(parameters)).then(function (response) {\n          _this4.persons = response.data.persons;\n          _this4.loading_search = false;\n\n          if (_this4.persons.length == 0) {\n            _this4.filterPersons();\n          }\n        });\n      } else {\n        this.filterPersons();\n      }\n    },\n    filterPersons: function filterPersons() {\n      this.persons = this.all_persons;\n      console.log(this.persons);\n    },\n    getTotals: function getTotals(records) {\n      var _this5 = this;\n\n      this.initTotals(); // console.log(records)\n\n      records.forEach(function (row) {\n        var signal = row.document_type_id;\n        var state = row.state_type_id;\n\n        if (row.currency_type_id == \"PEN\") {\n          if (signal == \"07\" && state != \"11\") {\n            _this5.totals.acum_total += parseFloat(-row.total);\n            _this5.totals.acum_total_taxed += parseFloat(-row.total_taxed);\n            _this5.totals.acum_total_igv += parseFloat(-row.total_igv);\n            _this5.totals.acum_total_exonerated += parseFloat(-row.total_exonerated);\n            _this5.totals.acum_total_unaffected += parseFloat(-row.total_unaffected);\n            _this5.totals.acum_total_free += parseFloat(-row.total_free);\n          } else if (signal != \"07\" && state == \"11\") {\n            _this5.totals.acum_total += 0;\n            _this5.totals.acum_total_taxed += 0;\n            _this5.totals.acum_total_igv += 0;\n            _this5.totals.acum_total_exonerated += 0;\n            _this5.totals.acum_total_unaffected += 0;\n            _this5.totals.acum_total_free += 0;\n          } else {\n            _this5.totals.acum_total += parseFloat(row.total);\n            _this5.totals.acum_total_taxed += parseFloat(row.total_taxed);\n            _this5.totals.acum_total_igv += parseFloat(row.total_igv);\n            _this5.totals.acum_total_exonerated += parseFloat(row.total_exonerated);\n            _this5.totals.acum_total_unaffected += parseFloat(row.total_unaffected);\n            _this5.totals.acum_total_free += parseFloat(row.total_free);\n          }\n        } else if (row.currency_type_id == \"USD\") {\n          if (signal == \"07\" && state != \"11\") {\n            _this5.totals.acum_total_usd += parseFloat(-row.total);\n            _this5.totals.acum_total_taxed_usd += parseFloat(-row.total_taxed);\n            _this5.totals.acum_total_igv_usd += parseFloat(-row.total_igv);\n          } else if (signal != \"07\" && state == \"11\") {\n            _this5.totals.acum_total_usd += 0;\n            _this5.totals.acum_total_taxed_usd += 0;\n            _this5.totals.acum_total_igv_usd += 0;\n          } else {\n            _this5.totals.acum_total_usd += parseFloat(row.total);\n            _this5.totals.acum_total_taxed_usd += parseFloat(row.total_taxed);\n            _this5.totals.acum_total_igv_usd += parseFloat(row.total_igv);\n          }\n        }\n\n        _this5.totals.acum_total_taxed = _.round(_this5.totals.acum_total_taxed, 2);\n        _this5.totals.acum_total_igv = _.round(_this5.totals.acum_total_igv, 2);\n        _this5.totals.acum_total = _.round(_this5.totals.acum_total, 2);\n        _this5.totals.acum_total_exonerated = _.round(_this5.totals.acum_total_exonerated, 2);\n        _this5.totals.acum_total_unaffected = _.round(_this5.totals.acum_total_unaffected, 2);\n        _this5.totals.acum_total_free = _.round(_this5.totals.acum_total_free, 2);\n        _this5.totals.acum_total_taxed_usd = _.round(_this5.totals.acum_total_taxed_usd, 2);\n        _this5.totals.acum_total_igv_usd = _.round(_this5.totals.acum_total_igv_usd, 2);\n        _this5.totals.acum_total_usd = _.round(_this5.totals.acum_total_usd, 2);\n      });\n    },\n    clickDownload: function clickDownload(type) {\n      var query = __WEBPACK_IMPORTED_MODULE_2_query_string___default.a.stringify(_objectSpread({}, this.form));\n      window.open(\"/\".concat(this.resource, \"/\").concat(type, \"/?\").concat(query), \"_blank\");\n    },\n    initForm: function initForm() {\n      this.form = {\n        establishment_id: null,\n        person_id: null,\n        type_person: null,\n        document_type_id: null,\n        period: \"month\",\n        date_start: __WEBPACK_IMPORTED_MODULE_1_moment___default()().format(\"YYYY-MM-DD\"),\n        date_end: __WEBPACK_IMPORTED_MODULE_1_moment___default()().format(\"YYYY-MM-DD\"),\n        month_start: __WEBPACK_IMPORTED_MODULE_1_moment___default()().format(\"YYYY-MM\"),\n        month_end: __WEBPACK_IMPORTED_MODULE_1_moment___default()().format(\"YYYY-MM\"),\n        seller_id: null,\n        state_type_id: null,\n        typeresult: \"Detallado\"\n      };\n    },\n    initTotals: function initTotals() {\n      this.totals = {\n        acum_total_taxed: 0,\n        acum_total_igv: 0,\n        acum_total: 0,\n        acum_total_exonerated: 0,\n        acum_total_unaffected: 0,\n        acum_total_free: 0,\n        acum_total_taxed_usd: 0,\n        acum_total_igv_usd: 0,\n        acum_total_usd: 0\n      };\n    },\n    customIndex: function customIndex(index) {\n      return this.pagination.per_page * (this.pagination.current_page - 1) + index + 1;\n    },\n    getRecordsByFilter: function getRecordsByFilter() {\n      var _this6 = this;\n\n      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee2() {\n        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee2$(_context2) {\n          while (1) {\n            switch (_context2.prev = _context2.next) {\n              case 0:\n                _context2.next = 2;\n                return true;\n\n              case 2:\n                _this6.loading_submit = _context2.sent;\n                _context2.next = 5;\n                return _this6.getRecords();\n\n              case 5:\n                _context2.next = 7;\n                return false;\n\n              case 7:\n                _this6.loading_submit = _context2.sent;\n\n              case 8:\n              case \"end\":\n                return _context2.stop();\n            }\n          }\n        }, _callee2);\n      }))();\n    },\n    getRecords: function getRecords() {\n      var _this7 = this;\n\n      return this.$http.get(\"/\".concat(this.resource, \"/records?\").concat(this.getQueryParameters())).then(function (response) {\n        _this7.records = response.data.data; //sort records by dues property (int) in descending order\n\n        _this7.records.sort(function (a, b) {\n          return b.dues - a.dues;\n        });\n\n        _this7.pagination = response.data.meta;\n        _this7.pagination.per_page = parseInt(response.data.meta.per_page);\n        _this7.loading_submit = false; // this.initTotals()\n\n        if (_this7.resource == \"reports/sales\" || _this7.resource == \"reports/purchases\") _this7.getTotals(response.data.data);\n      });\n    },\n    getQueryParameters: function getQueryParameters() {\n      return __WEBPACK_IMPORTED_MODULE_2_query_string___default.a.stringify(_objectSpread({\n        page: this.pagination.current_page,\n        limit: this.limit\n      }, this.form));\n    },\n    changeDisabledDates: function changeDisabledDates() {\n      if (this.form.date_end < this.form.date_start) {\n        this.form.date_end = this.form.date_start;\n      } // this.loadAll();\n\n    },\n    changeDisabledMonths: function changeDisabledMonths() {\n      if (this.form.month_end < this.form.month_start) {\n        this.form.month_end = this.form.month_start;\n      } // this.loadAll();\n\n    },\n    changePeriod: function changePeriod() {\n      if (this.form.period === \"month\") {\n        this.form.month_start = __WEBPACK_IMPORTED_MODULE_1_moment___default()().format(\"YYYY-MM\");\n        this.form.month_end = __WEBPACK_IMPORTED_MODULE_1_moment___default()().format(\"YYYY-MM\");\n      }\n\n      if (this.form.period === \"between_months\") {\n        this.form.month_start = __WEBPACK_IMPORTED_MODULE_1_moment___default()().startOf(\"year\").format(\"YYYY-MM\"); //'2019-01';\n\n        this.form.month_end = __WEBPACK_IMPORTED_MODULE_1_moment___default()().endOf(\"year\").format(\"YYYY-MM\");\n      }\n\n      if (this.form.period === \"date\") {\n        this.form.date_start = __WEBPACK_IMPORTED_MODULE_1_moment___default()().format(\"YYYY-MM-DD\");\n        this.form.date_end = __WEBPACK_IMPORTED_MODULE_1_moment___default()().format(\"YYYY-MM-DD\");\n      }\n\n      if (this.form.period === \"between_dates\") {\n        this.form.date_start = __WEBPACK_IMPORTED_MODULE_1_moment___default()().startOf(\"month\").format(\"YYYY-MM-DD\");\n        this.form.date_end = __WEBPACK_IMPORTED_MODULE_1_moment___default()().endOf(\"month\").format(\"YYYY-MM-DD\");\n      } // this.loadAll();\n\n    }\n  }\n});//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vbW9kdWxlcy9SZXBvcnQvUmVzb3VyY2VzL2Fzc2V0cy9qcy9jb21wb25lbnRzL0RhdGFUYWJsZVJlcG9ydHNDcmVkaXRzLnZ1ZT81NjYxIl0sIm5hbWVzIjpbInByb3BzIiwicmVzb3VyY2UiLCJhcHBseUN1c3RvbWVyIiwidHlwZSIsInJlcXVpcmVkIiwiY29tcG9uZW50cyIsIldoYXRzYXBwRm9ybVJlcG9ydCIsImRhdGEiLCJtZXNzYWdlUmVwb3J0IiwicmVzb3VyY2VSZXBvcnQiLCJzaG93V2hhdHNhcHBGb3JtIiwibG9hZGluZ19zdWJtaXQiLCJwZXJzb25zIiwiYWxsX3BlcnNvbnMiLCJsb2FkaW5nX3NlYXJjaCIsImNvbHVtbnMiLCJyZWNvcmRzIiwiaGVhZGVycyIsImRvY3VtZW50X3R5cGVzIiwicGFnaW5hdGlvbiIsInNlYXJjaCIsInRvdGFscyIsImVzdGFibGlzaG1lbnQiLCJlc3RhYmxpc2htZW50cyIsInN0YXRlX3R5cGVzIiwiZm9ybSIsInBpY2tlck9wdGlvbnNEYXRlcyIsImRpc2FibGVkRGF0ZSIsInRpbWUiLCJwaWNrZXJPcHRpb25zTW9udGhzIiwic2VsbGVycyIsImNvbXB1dGVkIiwiY3JlYXRlZCIsIm1vdW50ZWQiLCJtZXRob2RzIiwiY2xpY2tPcGVuV2hhdHNhcHAiLCJjaGFuZ2VQZXJzb25zIiwic2VhcmNoUmVtb3RlUGVyc29ucyIsImlucHV0IiwiZ2V0IiwicGFyYW1ldGVycyIsInRoZW4iLCJmaWx0ZXJQZXJzb25zIiwiY29uc29sZSIsImdldFRvdGFscyIsInJvdyIsImNsaWNrRG93bmxvYWQiLCJ3aW5kb3ciLCJpbml0Rm9ybSIsImVzdGFibGlzaG1lbnRfaWQiLCJwZXJzb25faWQiLCJ0eXBlX3BlcnNvbiIsImRvY3VtZW50X3R5cGVfaWQiLCJwZXJpb2QiLCJkYXRlX3N0YXJ0IiwiZGF0ZV9lbmQiLCJtb250aF9zdGFydCIsIm1vbnRoX2VuZCIsInNlbGxlcl9pZCIsInN0YXRlX3R5cGVfaWQiLCJ0eXBlcmVzdWx0IiwiaW5pdFRvdGFscyIsImFjdW1fdG90YWxfdGF4ZWQiLCJhY3VtX3RvdGFsX2lndiIsImFjdW1fdG90YWwiLCJhY3VtX3RvdGFsX2V4b25lcmF0ZWQiLCJhY3VtX3RvdGFsX3VuYWZmZWN0ZWQiLCJhY3VtX3RvdGFsX2ZyZWUiLCJhY3VtX3RvdGFsX3RheGVkX3VzZCIsImFjdW1fdG90YWxfaWd2X3VzZCIsImFjdW1fdG90YWxfdXNkIiwiY3VzdG9tSW5kZXgiLCJpbmRleCIsImdldFJlY29yZHNCeUZpbHRlciIsImdldFJlY29yZHMiLCJyZXNwb25zZSIsImdldFF1ZXJ5UGFyYW1ldGVycyIsInBhZ2UiLCJsaW1pdCIsImNoYW5nZURpc2FibGVkRGF0ZXMiLCJjaGFuZ2VEaXNhYmxlZE1vbnRocyIsImNoYW5nZVBlcmlvZCIsInN0YXJ0T2YiLCJmb3JtYXQiLCJlbmRPZiJdLCJtYXBwaW5ncyI6Ijs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7O0FBZ1c0QjtBQUNXO0FBQzZEO0FBQ3JGO0FBQ2ZBO0FBQ0FDLG9CQURBO0FBRUFDO0FBQUFDO0FBQUFDO0FBQUE7QUFBQTtBQUZBLEdBREE7QUFLQUM7QUFBQUM7QUFBQSxHQUxBO0FBTUFDLE1BTkEsa0JBTUE7QUFBQTs7QUFDQTtBQUNBQyx1QkFEQTtBQUVBQyx3QkFGQTtBQUdBQyw2QkFIQTtBQUlBQywyQkFKQTtBQUtBQyxpQkFMQTtBQU1BQyxxQkFOQTtBQU9BQywyQkFQQTtBQVFBQyxpQkFSQTtBQVNBQyxpQkFUQTtBQVVBQyw0QkFWQTtBQVdBQyx3QkFYQTtBQVlBQyxvQkFaQTtBQWFBQyxnQkFiQTtBQWNBQyxnQkFkQTtBQWVBQyx5QkFmQTtBQWdCQUMsd0JBaEJBO0FBaUJBQyxxQkFqQkE7QUFrQkFDLGNBbEJBO0FBb0JBQztBQUNBQztBQUNBQztBQUNBO0FBQ0E7QUFKQSxPQXBCQTtBQTBCQUM7QUFDQUY7QUFDQUM7QUFDQTtBQUNBO0FBSkEsT0ExQkE7QUFnQ0FFO0FBaENBO0FBa0NBLEdBekNBO0FBMENBQyxjQTFDQTtBQTJDQUMsU0EzQ0EscUJBMkNBO0FBQUE7O0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSxLQUZBO0FBR0EsR0FqREE7QUFrREFDLFNBbERBLHFCQWtEQTtBQUFBOztBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBLHFCQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0EsZUFKQSxDQURBOztBQUFBO0FBQUE7QUFBQSxxQkFPQSxtQkFQQTs7QUFBQTtBQUFBO0FBQUEscUJBUUEsc0JBUkE7O0FBQUE7QUFTQTtBQUNBLHdDQUNBLCtEQURBOztBQVZBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBWUEsR0E5REE7QUErREFDO0FBQ0FDLHFCQURBLCtCQUNBO0FBQ0EsbUdBQ0EsU0FEQTtBQUdBO0FBQ0EsNEhBQ0EsWUFEQTtBQUdBO0FBQ0EsS0FWQTtBQVdBQyxpQkFYQSwyQkFXQSxDQUNBO0FBQ0EsS0FiQTtBQWNBQyx1QkFkQSwrQkFjQUMsS0FkQSxFQWNBO0FBQUE7O0FBQ0E7QUFDQTtBQUNBO0FBRUE7QUFFQSxtQkFDQUMsR0FEQSx1Q0FFQSxxQkFGQSxjQUVBQyxVQUZBLEdBSUFDLElBSkEsQ0FJQTtBQUNBO0FBQ0E7O0FBRUE7QUFDQTtBQUNBO0FBQ0EsU0FYQTtBQVlBLE9BbEJBLE1Ba0JBO0FBQ0E7QUFDQTtBQUNBLEtBcENBO0FBcUNBQyxpQkFyQ0EsMkJBcUNBO0FBQ0E7QUFDQUM7QUFDQSxLQXhDQTtBQXlDQUMsYUF6Q0EscUJBeUNBNUIsT0F6Q0EsRUF5Q0E7QUFBQTs7QUFDQSx3QkFEQSxDQUVBOztBQUVBQTtBQUNBO0FBQ0E7O0FBRUE7QUFDQTtBQUNBO0FBQ0EseURBQ0EsZ0JBREE7QUFHQSx1REFDQSxjQURBO0FBSUEsOERBQ0EscUJBREE7QUFHQSw4REFDQSxxQkFEQTtBQUdBLHdEQUNBLGVBREE7QUFHQSxXQWxCQSxNQWtCQTtBQUNBO0FBQ0E7QUFDQTtBQUVBO0FBQ0E7QUFDQTtBQUNBLFdBUkEsTUFRQTtBQUNBO0FBQ0EseURBQ0E2QixlQURBO0FBR0E7QUFFQSw4REFDQUEsb0JBREE7QUFHQSw4REFDQUEsb0JBREE7QUFHQSx3REFDQUEsY0FEQTtBQUdBO0FBQ0EsU0E1Q0EsTUE0Q0E7QUFDQTtBQUNBO0FBQ0EsNkRBQ0EsZ0JBREE7QUFHQSwyREFDQSxjQURBO0FBR0EsV0FSQSxNQVFBO0FBQ0E7QUFDQTtBQUNBO0FBQ0EsV0FKQSxNQUlBO0FBQ0E7QUFDQSw2REFDQUEsZUFEQTtBQUdBLDJEQUNBQSxhQURBO0FBR0E7QUFDQTs7QUFDQSxpREFDQSw4QkFEQSxFQUVBLENBRkE7QUFJQSwrQ0FDQSw0QkFEQSxFQUVBLENBRkE7QUFJQTtBQUNBLHNEQUNBLG1DQURBLEVBRUEsQ0FGQTtBQUlBLHNEQUNBLG1DQURBLEVBRUEsQ0FGQTtBQUlBLGdEQUNBLDZCQURBLEVBRUEsQ0FGQTtBQUtBLHFEQUNBLGtDQURBLEVBRUEsQ0FGQTtBQUlBLG1EQUNBLGdDQURBLEVBRUEsQ0FGQTtBQUlBLCtDQUNBLDRCQURBLEVBRUEsQ0FGQTtBQUlBLE9BekdBO0FBMEdBLEtBdkpBO0FBd0pBQyxpQkF4SkEseUJBd0pBM0MsSUF4SkEsRUF3SkE7QUFDQSxtR0FDQSxTQURBO0FBR0E0QztBQUNBLEtBN0pBO0FBOEpBQyxZQTlKQSxzQkE4SkE7QUFDQTtBQUNBQyw4QkFEQTtBQUVBQyx1QkFGQTtBQUdBQyx5QkFIQTtBQUlBQyw4QkFKQTtBQUtBQyx1QkFMQTtBQU1BQyx5RkFOQTtBQU9BQyx1RkFQQTtBQVFBQyx1RkFSQTtBQVNBQyxxRkFUQTtBQVVBQyx1QkFWQTtBQVdBQywyQkFYQTtBQVlBQztBQVpBO0FBY0EsS0E3S0E7QUE4S0FDLGNBOUtBLHdCQThLQTtBQUNBO0FBQ0FDLDJCQURBO0FBRUFDLHlCQUZBO0FBR0FDLHFCQUhBO0FBSUFDLGdDQUpBO0FBS0FDLGdDQUxBO0FBTUFDLDBCQU5BO0FBUUFDLCtCQVJBO0FBU0FDLDZCQVRBO0FBVUFDO0FBVkE7QUFZQSxLQTNMQTtBQTRMQUMsZUE1TEEsdUJBNExBQyxLQTVMQSxFQTRMQTtBQUNBLGFBQ0EsZ0VBQ0FBLEtBREEsR0FFQSxDQUhBO0FBS0EsS0FsTUE7QUFtTUFDLHNCQW5NQSxnQ0FtTUE7QUFBQTs7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQSx1QkFDQSxJQURBOztBQUFBO0FBQ0EscUNBREE7QUFBQTtBQUFBLHVCQUVBLG1CQUZBOztBQUFBO0FBQUE7QUFBQSx1QkFHQSxLQUhBOztBQUFBO0FBR0EscUNBSEE7O0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFJQSxLQXZNQTtBQXdNQUMsY0F4TUEsd0JBd01BO0FBQUE7O0FBQ0Esd0JBQ0FuQyxHQURBLFlBQ0EsYUFEQSxzQkFDQSx5QkFEQSxHQUVBRSxJQUZBLENBRUE7QUFDQSw0Q0FEQSxDQUVBOztBQUNBO0FBQ0E7QUFDQSxTQUZBOztBQUlBO0FBQ0EsOENBQ0FrQywyQkFEQTtBQUdBLHNDQVhBLENBWUE7O0FBQ0EsWUFDQSxzQ0FDQSxzQ0FGQSxFQUlBO0FBQ0EsT0FwQkE7QUFxQkEsS0E5TkE7QUErTkFDLHNCQS9OQSxnQ0ErTkE7QUFDQTtBQUNBQywwQ0FEQTtBQUVBQztBQUZBLFNBR0EsU0FIQTtBQUtBLEtBck9BO0FBdU9BQyx1QkF2T0EsaUNBdU9BO0FBQ0E7QUFDQTtBQUNBLE9BSEEsQ0FJQTs7QUFDQSxLQTVPQTtBQTZPQUMsd0JBN09BLGtDQTZPQTtBQUNBO0FBQ0E7QUFDQSxPQUhBLENBSUE7O0FBQ0EsS0FsUEE7QUFtUEFDLGdCQW5QQSwwQkFtUEE7QUFDQTtBQUNBO0FBQ0E7QUFDQTs7QUFDQTtBQUNBLGlGQUNBQyxPQURBLENBQ0EsTUFEQSxFQUVBQyxNQUZBLENBRUEsU0FGQSxFQURBLENBR0E7O0FBQ0EsK0VBQ0FDLEtBREEsQ0FDQSxNQURBLEVBRUFELE1BRkEsQ0FFQSxTQUZBO0FBR0E7O0FBQ0E7QUFDQTtBQUNBO0FBQ0E7O0FBQ0E7QUFDQSxnRkFDQUQsT0FEQSxDQUNBLE9BREEsRUFFQUMsTUFGQSxDQUVBLFlBRkE7QUFHQSw4RUFDQUMsS0FEQSxDQUNBLE9BREEsRUFFQUQsTUFGQSxDQUVBLFlBRkE7QUFHQSxPQXhCQSxDQXlCQTs7QUFDQTtBQTdRQTtBQS9EQSIsImZpbGUiOiIuL25vZGVfbW9kdWxlcy9iYWJlbC1sb2FkZXIvbGliL2luZGV4LmpzP3tcImNhY2hlRGlyZWN0b3J5XCI6dHJ1ZSxcInByZXNldHNcIjpbW1wiQGJhYmVsL3ByZXNldC1lbnZcIix7XCJtb2R1bGVzXCI6ZmFsc2UsXCJ0YXJnZXRzXCI6e1wiYnJvd3NlcnNcIjpbXCI+IDIlXCJdfSxcImZvcmNlQWxsVHJhbnNmb3Jtc1wiOnRydWV9XV0sXCJwbHVnaW5zXCI6W1wiQGJhYmVsL3BsdWdpbi1wcm9wb3NhbC1vYmplY3QtcmVzdC1zcHJlYWRcIixbXCJAYmFiZWwvcGx1Z2luLXRyYW5zZm9ybS1ydW50aW1lXCIse1wiaGVscGVyc1wiOmZhbHNlfV1dfSEuL25vZGVfbW9kdWxlcy92dWUtbG9hZGVyL2xpYi9zZWxlY3Rvci5qcz90eXBlPXNjcmlwdCZpbmRleD0wIS4vbW9kdWxlcy9SZXBvcnQvUmVzb3VyY2VzL2Fzc2V0cy9qcy9jb21wb25lbnRzL0RhdGFUYWJsZVJlcG9ydHNDcmVkaXRzLnZ1ZS5qcyIsInNvdXJjZXNDb250ZW50IjpbIjx0ZW1wbGF0ZT5cclxuICAgIDxkaXY+XHJcbiAgICAgICAgPGRpdiBjbGFzcz1cInJvd1wiPlxyXG4gICAgICAgICAgICA8ZGl2IGNsYXNzPVwiY29sLW1kLTEyIGNvbC1sZy0xMiBjb2wteGwtMTIgXCI+XHJcbiAgICAgICAgICAgICAgICA8ZGl2IGNsYXNzPVwicm93IG10LTJcIj5cclxuICAgICAgICAgICAgICAgICAgICA8ZGl2IGNsYXNzPVwiY29sLW1kLTNcIj5cclxuICAgICAgICAgICAgICAgICAgICAgICAgPGxhYmVsIGNsYXNzPVwiY29udHJvbC1sYWJlbFwiXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICA+UGVyaW9kbyAoRmVjaGEgZGUgZW1pc2nDs24pPC9sYWJlbFxyXG4gICAgICAgICAgICAgICAgICAgICAgICA+XHJcbiAgICAgICAgICAgICAgICAgICAgICAgIDxlbC1zZWxlY3Qgdi1tb2RlbD1cImZvcm0ucGVyaW9kXCIgQGNoYW5nZT1cImNoYW5nZVBlcmlvZFwiPlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgPGVsLW9wdGlvblxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGtleT1cIm1vbnRoXCJcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB2YWx1ZT1cIm1vbnRoXCJcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBsYWJlbD1cIlBvciBtZXNcIlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgPjwvZWwtb3B0aW9uPlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgPGVsLW9wdGlvblxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGtleT1cImJldHdlZW5fbW9udGhzXCJcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB2YWx1ZT1cImJldHdlZW5fbW9udGhzXCJcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBsYWJlbD1cIkVudHJlIG1lc2VzXCJcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgID48L2VsLW9wdGlvbj5cclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxlbC1vcHRpb25cclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBrZXk9XCJkYXRlXCJcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB2YWx1ZT1cImRhdGVcIlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGxhYmVsPVwiUG9yIGZlY2hhXCJcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgID48L2VsLW9wdGlvbj5cclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxlbC1vcHRpb25cclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBrZXk9XCJiZXR3ZWVuX2RhdGVzXCJcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB2YWx1ZT1cImJldHdlZW5fZGF0ZXNcIlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGxhYmVsPVwiRW50cmUgZmVjaGFzXCJcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgID48L2VsLW9wdGlvbj5cclxuICAgICAgICAgICAgICAgICAgICAgICAgPC9lbC1zZWxlY3Q+XHJcbiAgICAgICAgICAgICAgICAgICAgPC9kaXY+XHJcbiAgICAgICAgICAgICAgICAgICAgPHRlbXBsYXRlXHJcbiAgICAgICAgICAgICAgICAgICAgICAgIHYtaWY9XCJcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIGZvcm0ucGVyaW9kID09PSAnbW9udGgnIHx8XHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgZm9ybS5wZXJpb2QgPT09ICdiZXR3ZWVuX21vbnRocydcclxuICAgICAgICAgICAgICAgICAgICAgICAgXCJcclxuICAgICAgICAgICAgICAgICAgICA+XHJcbiAgICAgICAgICAgICAgICAgICAgICAgIDxkaXYgY2xhc3M9XCJjb2wtbWQtMlwiPlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgPGxhYmVsIGNsYXNzPVwidy0xMDAgY29udHJvbC1sYWJlbFwiPk1lcyBkZTwvbGFiZWw+XHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICA8ZWwtZGF0ZS1waWNrZXJcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB2LW1vZGVsPVwiZm9ybS5tb250aF9zdGFydFwiXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdHlwZT1cIm1vbnRoXCJcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjbGFzcz1cInctMTAwXCJcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBAY2hhbmdlPVwiY2hhbmdlRGlzYWJsZWRNb250aHNcIlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHZhbHVlLWZvcm1hdD1cInl5eXktTU1cIlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGZvcm1hdD1cIk1NL3l5eXlcIlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDpjbGVhcmFibGU9XCJmYWxzZVwiXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICA+PC9lbC1kYXRlLXBpY2tlcj5cclxuICAgICAgICAgICAgICAgICAgICAgICAgPC9kaXY+XHJcbiAgICAgICAgICAgICAgICAgICAgPC90ZW1wbGF0ZT5cclxuICAgICAgICAgICAgICAgICAgICA8dGVtcGxhdGUgdi1pZj1cImZvcm0ucGVyaW9kID09PSAnYmV0d2Vlbl9tb250aHMnXCI+XHJcbiAgICAgICAgICAgICAgICAgICAgICAgIDxkaXYgY2xhc3M9XCJjb2wtbWQtMlwiPlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgPGxhYmVsIGNsYXNzPVwidy0xMDAgY29udHJvbC1sYWJlbFwiPk1lcyBhbDwvbGFiZWw+XHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICA8ZWwtZGF0ZS1waWNrZXJcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjbGFzcz1cInctMTAwXCJcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB2LW1vZGVsPVwiZm9ybS5tb250aF9lbmRcIlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHR5cGU9XCJtb250aFwiXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgOnBpY2tlci1vcHRpb25zPVwicGlja2VyT3B0aW9uc01vbnRoc1wiXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdmFsdWUtZm9ybWF0PVwieXl5eS1NTVwiXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgZm9ybWF0PVwiTU0veXl5eVwiXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgOmNsZWFyYWJsZT1cImZhbHNlXCJcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgID48L2VsLWRhdGUtcGlja2VyPlxyXG4gICAgICAgICAgICAgICAgICAgICAgICA8L2Rpdj5cclxuICAgICAgICAgICAgICAgICAgICA8L3RlbXBsYXRlPlxyXG4gICAgICAgICAgICAgICAgICAgIDx0ZW1wbGF0ZVxyXG4gICAgICAgICAgICAgICAgICAgICAgICB2LWlmPVwiXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICBmb3JtLnBlcmlvZCA9PT0gJ2RhdGUnIHx8XHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgZm9ybS5wZXJpb2QgPT09ICdiZXR3ZWVuX2RhdGVzJ1xyXG4gICAgICAgICAgICAgICAgICAgICAgICBcIlxyXG4gICAgICAgICAgICAgICAgICAgID5cclxuICAgICAgICAgICAgICAgICAgICAgICAgPGRpdiBjbGFzcz1cImNvbC1tZC0yXCI+XHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICA8bGFiZWwgY2xhc3M9XCJ3LTEwMCBjb250cm9sLWxhYmVsXCI+RmVjaGEgZGVsPC9sYWJlbD5cclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxlbC1kYXRlLXBpY2tlclxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNsYXNzPVwidy0xMDBcIlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHYtbW9kZWw9XCJmb3JtLmRhdGVfc3RhcnRcIlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHR5cGU9XCJkYXRlXCJcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBAY2hhbmdlPVwiY2hhbmdlRGlzYWJsZWREYXRlc1wiXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdmFsdWUtZm9ybWF0PVwieXl5eS1NTS1kZFwiXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgZm9ybWF0PVwiZGQvTU0veXl5eVwiXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgOmNsZWFyYWJsZT1cImZhbHNlXCJcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgID48L2VsLWRhdGUtcGlja2VyPlxyXG4gICAgICAgICAgICAgICAgICAgICAgICA8L2Rpdj5cclxuICAgICAgICAgICAgICAgICAgICA8L3RlbXBsYXRlPlxyXG4gICAgICAgICAgICAgICAgICAgIDx0ZW1wbGF0ZSB2LWlmPVwiZm9ybS5wZXJpb2QgPT09ICdiZXR3ZWVuX2RhdGVzJ1wiPlxyXG4gICAgICAgICAgICAgICAgICAgICAgICA8ZGl2IGNsYXNzPVwiY29sLW1kLTJcIj5cclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxsYWJlbCBjbGFzcz1cInctMTAwIGNvbnRyb2wtbGFiZWxcIj5GZWNoYSBhbDwvbGFiZWw+XHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICA8ZWwtZGF0ZS1waWNrZXJcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjbGFzcz1cInctMTAwXCJcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB2LW1vZGVsPVwiZm9ybS5kYXRlX2VuZFwiXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdHlwZT1cImRhdGVcIlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDpwaWNrZXItb3B0aW9ucz1cInBpY2tlck9wdGlvbnNEYXRlc1wiXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdmFsdWUtZm9ybWF0PVwieXl5eS1NTS1kZFwiXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgZm9ybWF0PVwiZGQvTU0veXl5eVwiXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgOmNsZWFyYWJsZT1cImZhbHNlXCJcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgID48L2VsLWRhdGUtcGlja2VyPlxyXG4gICAgICAgICAgICAgICAgICAgICAgICA8L2Rpdj5cclxuICAgICAgICAgICAgICAgICAgICA8L3RlbXBsYXRlPlxyXG5cclxuICAgICAgICAgICAgICAgICAgICA8IS0tIDxkaXYgY2xhc3M9XCJjb2wtbWQtM1wiPlxyXG4gICAgICAgICAgICAgICAgICAgICAgICA8ZGl2IGNsYXNzPVwiZm9ybS1ncm91cFwiPlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgPGxhYmVsIGNsYXNzPVwidy0xMDAgY29udHJvbC1sYWJlbFwiXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPkVzdGFibGVjaW1pZW50bzwvbGFiZWxcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgID5cclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxlbC1zZWxlY3RcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjbGFzcz1cInctMTAwXCJcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB2LW1vZGVsPVwiZm9ybS5lc3RhYmxpc2htZW50X2lkXCJcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjbGVhcmFibGVcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgID5cclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8ZWwtb3B0aW9uXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHYtZm9yPVwib3B0aW9uIGluIGVzdGFibGlzaG1lbnRzXCJcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgOmtleT1cIm9wdGlvbi5pZFwiXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDp2YWx1ZT1cIm9wdGlvbi5pZFwiXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDpsYWJlbD1cIm9wdGlvbi5uYW1lXCJcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA+PC9lbC1vcHRpb24+XHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICA8L2VsLXNlbGVjdD5cclxuICAgICAgICAgICAgICAgICAgICAgICAgPC9kaXY+XHJcbiAgICAgICAgICAgICAgICAgICAgPC9kaXY+IC0tPlxyXG4gICAgICAgICAgICAgICAgICAgIDwhLS0gPGRpdlxyXG4gICAgICAgICAgICAgICAgICAgICAgICBjbGFzcz1cImNvbC1tZC0zXCJcclxuICAgICAgICAgICAgICAgICAgICAgICAgdi1zaG93PVwiXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICByZXNvdXJjZSA9PSAncmVwb3J0cy9zYWxlcycgfHxcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZXNvdXJjZSA9PSAncmVwb3J0cy9wdXJjaGFzZXMnXHJcbiAgICAgICAgICAgICAgICAgICAgICAgIFwiXHJcbiAgICAgICAgICAgICAgICAgICAgPlxyXG4gICAgICAgICAgICAgICAgICAgICAgICA8ZGl2IGNsYXNzPVwiZm9ybS1ncm91cFwiPlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgPGxhYmVsIGNsYXNzPVwidy0xMDAgY29udHJvbC1sYWJlbFwiXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPlRpcG8gZGUgZG9jdW1lbnRvPC9sYWJlbFxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgPlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgPGVsLXNlbGVjdFxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNsYXNzPVwidy0xMDBcIlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHYtbW9kZWw9XCJmb3JtLmRvY3VtZW50X3R5cGVfaWRcIlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNsZWFyYWJsZVxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgPlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxlbC1vcHRpb25cclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdi1mb3I9XCJvcHRpb24gaW4gZG9jdW1lbnRfdHlwZXNcIlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA6a2V5PVwib3B0aW9uLmlkXCJcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgOnZhbHVlPVwib3B0aW9uLmlkXCJcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgOmxhYmVsPVwib3B0aW9uLmRlc2NyaXB0aW9uXCJcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA+PC9lbC1vcHRpb24+XHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICA8L2VsLXNlbGVjdD5cclxuICAgICAgICAgICAgICAgICAgICAgICAgPC9kaXY+XHJcbiAgICAgICAgICAgICAgICAgICAgPC9kaXY+IC0tPlxyXG5cclxuICAgICAgICAgICAgICAgICAgICA8ZGl2IGNsYXNzPVwiY29sLWxnLTQgY29sLW1kLTRcIj5cclxuICAgICAgICAgICAgICAgICAgICAgICAgPGRpdiBjbGFzcz1cImZvcm0tZ3JvdXBcIj5cclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxsYWJlbCBjbGFzcz1cInctMTAwIGNvbnRyb2wtbGFiZWxcIj5cclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBDbGllbnRlc1xyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgPC9sYWJlbD5cclxuXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICA8ZWwtc2VsZWN0XHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY2xhc3M9XCJ3LTEwMFwiXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdi1tb2RlbD1cImZvcm0ucGVyc29uX2lkXCJcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBmaWx0ZXJhYmxlXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVtb3RlXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcG9wcGVyLWNsYXNzPVwiZWwtc2VsZWN0LWN1c3RvbWVyc1wiXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY2xlYXJhYmxlXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcGxhY2Vob2xkZXI9XCJOb21icmUgbyBuw7ptZXJvIGRlIGRvY3VtZW50b1wiXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgOnJlbW90ZS1tZXRob2Q9XCJzZWFyY2hSZW1vdGVQZXJzb25zXCJcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA6bG9hZGluZz1cImxvYWRpbmdfc2VhcmNoXCJcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBAY2hhbmdlPVwiY2hhbmdlUGVyc29uc1wiXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICA+XHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPGVsLW9wdGlvblxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB2LWZvcj1cIm9wdGlvbiBpbiBwZXJzb25zXCJcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgOmtleT1cIm9wdGlvbi5pZFwiXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDp2YWx1ZT1cIm9wdGlvbi5pZFwiXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDpsYWJlbD1cIm9wdGlvbi5kZXNjcmlwdGlvblwiXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPjwvZWwtb3B0aW9uPlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgPC9lbC1zZWxlY3Q+XHJcbiAgICAgICAgICAgICAgICAgICAgICAgIDwvZGl2PlxyXG4gICAgICAgICAgICAgICAgICAgIDwvZGl2PlxyXG5cclxuICAgICAgICAgICAgICAgICAgICA8IS0tIDxkaXZcclxuICAgICAgICAgICAgICAgICAgICAgICAgOmNsYXNzPVwiXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICByZXNvdXJjZSA9PSAncmVwb3J0cy9zYWxlcycgfHxcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlc291cmNlID09ICdyZXBvcnRzL3B1cmNoYXNlcydcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA/ICdjb2wtbGctMyBjb2wtbWQtMydcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA6ICdjb2wtbGctMiBjb2wtbWQtMidcclxuICAgICAgICAgICAgICAgICAgICAgICAgXCJcclxuICAgICAgICAgICAgICAgICAgICAgICAgdi1pZj1cImFwcGx5Q3VzdG9tZXJcIlxyXG4gICAgICAgICAgICAgICAgICAgID5cclxuICAgICAgICAgICAgICAgICAgICAgICAgPGRpdiBjbGFzcz1cImZvcm0tZ3JvdXBcIj5cclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxsYWJlbCBjbGFzcz1cInctMTAwIGNvbnRyb2wtbGFiZWxcIj5cclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBVc3Vhcmlvc1xyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgPC9sYWJlbD5cclxuXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICA8ZWwtc2VsZWN0XHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY2xhc3M9XCJ3LTEwMFwiXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdi1tb2RlbD1cImZvcm0uc2VsbGVyX2lkXCJcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBmaWx0ZXJhYmxlXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcG9wcGVyLWNsYXNzPVwiZWwtc2VsZWN0LWN1c3RvbWVyc1wiXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY2xlYXJhYmxlXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcGxhY2Vob2xkZXI9XCJOb21icmUgdXN1YXJpb1wiXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICA+XHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPGVsLW9wdGlvblxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB2LWZvcj1cIm9wdGlvbiBpbiBzZWxsZXJzXCJcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgOmtleT1cIm9wdGlvbi5pZFwiXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDp2YWx1ZT1cIm9wdGlvbi5pZFwiXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDpsYWJlbD1cIm9wdGlvbi5uYW1lXCJcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA+PC9lbC1vcHRpb24+XHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICA8L2VsLXNlbGVjdD5cclxuICAgICAgICAgICAgICAgICAgICAgICAgPC9kaXY+XHJcbiAgICAgICAgICAgICAgICAgICAgPC9kaXY+IC0tPlxyXG5cclxuICAgICAgICAgICAgICAgICAgICA8IS0tIDxkaXZcclxuICAgICAgICAgICAgICAgICAgICAgICAgOmNsYXNzPVwiXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICByZXNvdXJjZSA9PSAncmVwb3J0cy9zYWxlcycgfHxcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlc291cmNlID09ICdyZXBvcnRzL3B1cmNoYXNlcydcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA/ICdjb2wtbGctMiBjb2wtbWQtMidcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA6ICdjb2wtbGctMiBjb2wtbWQtMidcclxuICAgICAgICAgICAgICAgICAgICAgICAgXCJcclxuICAgICAgICAgICAgICAgICAgICAgICAgdi1pZj1cImFwcGx5Q3VzdG9tZXJcIlxyXG4gICAgICAgICAgICAgICAgICAgID5cclxuICAgICAgICAgICAgICAgICAgICAgICAgPGRpdiBjbGFzcz1cImZvcm0tZ3JvdXBcIj5cclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxsYWJlbCBjbGFzcz1cInctMTAwIGNvbnRyb2wtbGFiZWxcIj5cclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBUaXBvIGRlIFJlcG9ydGVcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIDwvbGFiZWw+XHJcblxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgPGVsLXNlbGVjdFxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNsYXNzPVwidy0xMDBcIlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHYtbW9kZWw9XCJmb3JtLnR5cGVyZXN1bHRcIlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGZpbHRlcmFibGVcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBwb3BwZXItY2xhc3M9XCJlbC1zZWxlY3QtY3VzdG9tZXJzXCJcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjbGVhcmFibGVcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgID5cclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8ZWwtb3B0aW9uXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGxhYmVsPVwiRGV0YWxsYWRvXCJcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdmFsdWU9XCJEZXRhbGxhZG9cIlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgID48L2VsLW9wdGlvbj5cclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8ZWwtb3B0aW9uXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGxhYmVsPVwiUmVzdW1lblwiXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHZhbHVlPVwiUmVzdW1lblwiXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPjwvZWwtb3B0aW9uPlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgPC9lbC1zZWxlY3Q+XHJcbiAgICAgICAgICAgICAgICAgICAgICAgIDwvZGl2PlxyXG4gICAgICAgICAgICAgICAgICAgIDwvZGl2PiAtLT5cclxuXHJcbiAgICAgICAgICAgICAgICAgICAgPGRpdiBjbGFzcz1cImQtZmxleFwiIHN0eWxlPVwibWFyZ2luLXRvcDoyOXB4XCI+XHJcbiAgICAgICAgICAgICAgICAgICAgICAgIDxlbC1idXR0b25cclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNsYXNzPVwic3VibWl0XCJcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIHR5cGU9XCJwcmltYXJ5XCJcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIEBjbGljay5wcmV2ZW50PVwiZ2V0UmVjb3Jkc0J5RmlsdGVyXCJcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIDpsb2FkaW5nPVwibG9hZGluZ19zdWJtaXRcIlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgaWNvbj1cImVsLWljb24tc2VhcmNoXCJcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgID5CdXNjYXI8L2VsLWJ1dHRvblxyXG4gICAgICAgICAgICAgICAgICAgICAgICA+XHJcblxyXG4gICAgICAgICAgICAgICAgICAgICAgICA8dGVtcGxhdGVcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIHYtaWY9XCJcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZWNvcmRzLmxlbmd0aCA+IDAgJiZcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVzb3VyY2UgIT09ICdyZXBvcnRzL2RvY3VtZW50LWRldHJhY3Rpb25zJ1xyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgXCJcclxuICAgICAgICAgICAgICAgICAgICAgICAgPlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgPGVsLWJ1dHRvblxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNsYXNzPVwic3VibWl0XCJcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB0eXBlPVwiZGFuZ2VyXCJcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBpY29uPVwiZWwtaWNvbi10aWNrZXRzXCJcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBAY2xpY2sucHJldmVudD1cImNsaWNrRG93bmxvYWQoJ3BkZicpXCJcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA+RXhwb3J0YXIgUERGPC9lbC1idXR0b25cclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgID5cclxuXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICA8ZWwtYnV0dG9uXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY2xhc3M9XCJzdWJtaXRcIlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHR5cGU9XCJzdWNjZXNzXCJcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBAY2xpY2sucHJldmVudD1cImNsaWNrRG93bmxvYWQoJ2V4Y2VsJylcIlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgID48aSBjbGFzcz1cImZhIGZhLWZpbGUtZXhjZWxcIj48L2k+IEV4cG9ydGFsXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgRXhjZWw8L2VsLWJ1dHRvblxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgPlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgPGVsLWJ1dHRvblxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNsYXNzPVwic3VibWl0XCJcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBAY2xpY2sucHJldmVudD1cImNsaWNrT3BlbldoYXRzYXBwXCJcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA+PGkgY2xhc3M9XCJmYSBmYS13aGF0c2FwcFwiPjwvaT4gRW52aWFyXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgd2hhdHNhcHA8L2VsLWJ1dHRvblxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgPlxyXG4gICAgICAgICAgICAgICAgICAgICAgICA8L3RlbXBsYXRlPlxyXG4gICAgICAgICAgICAgICAgICAgIDwvZGl2PlxyXG4gICAgICAgICAgICAgICAgPC9kaXY+XHJcbiAgICAgICAgICAgICAgICA8ZGl2IGNsYXNzPVwicm93IG10LTEgbWItNFwiPjwvZGl2PlxyXG4gICAgICAgICAgICA8L2Rpdj5cclxuXHJcbiAgICAgICAgICAgIDxkaXYgY2xhc3M9XCJjb2wtbWQtMTJcIj5cclxuICAgICAgICAgICAgICAgIDxkaXYgY2xhc3M9XCJ0YWJsZS1yZXNwb25zaXZlXCI+XHJcbiAgICAgICAgICAgICAgICAgICAgPHRhYmxlIGNsYXNzPVwidGFibGVcIj5cclxuICAgICAgICAgICAgICAgICAgICAgICAgPHRoZWFkPlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgPHNsb3QgbmFtZT1cImhlYWRpbmdcIj48L3Nsb3Q+XHJcbiAgICAgICAgICAgICAgICAgICAgICAgIDwvdGhlYWQ+XHJcbiAgICAgICAgICAgICAgICAgICAgICAgIDx0Ym9keT5cclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxzbG90XHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdi1mb3I9XCIocm93LCBpbmRleCkgaW4gcmVjb3Jkc1wiXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgOnJvdz1cInJvd1wiXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgOmluZGV4PVwiY3VzdG9tSW5kZXgoaW5kZXgpXCJcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgID48L3Nsb3Q+XHJcbiAgICAgICAgICAgICAgICAgICAgICAgIDwvdGJvZHk+XHJcbiAgICAgICAgICAgICAgICAgICAgICAgIDx0Zm9vdFxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgdi1pZj1cIlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlc291cmNlID09ICdyZXBvcnRzL3NhbGVzJyB8fFxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZXNvdXJjZSA9PSAncmVwb3J0cy9wdXJjaGFzZXMnXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICBcIlxyXG4gICAgICAgICAgICAgICAgICAgICAgICA+XHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICA8dHI+XHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPHRkXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDpjb2xzcGFuPVwiXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZXNvdXJjZSA9PSAncmVwb3J0cy9zYWxlcycgPyA3IDogOFxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBcIlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgID48L3RkPlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDx0ZD48c3Ryb25nPlRvdGFsZXMgUEVOPC9zdHJvbmc+PC90ZD5cclxuXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPHRkPnt7IHRvdGFscy5hY3VtX3RvdGFsX3RheGVkIH19PC90ZD5cclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8dGQ+e3sgdG90YWxzLmFjdW1fdG90YWxfaWd2IH19PC90ZD5cclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8dGQ+e3sgdG90YWxzLmFjdW1fdG90YWwgfX08L3RkPlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgPC90cj5cclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIDx0cj5cclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8dGRcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgOmNvbHNwYW49XCJcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlc291cmNlID09ICdyZXBvcnRzL3NhbGVzJyA/IDcgOiA4XHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFwiXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPjwvdGQ+XHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPHRkPjxzdHJvbmc+VG90YWxlcyBVU0Q8L3N0cm9uZz48L3RkPlxyXG5cclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8dGQ+e3sgdG90YWxzLmFjdW1fdG90YWxfdGF4ZWRfdXNkIH19PC90ZD5cclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8dGQ+e3sgdG90YWxzLmFjdW1fdG90YWxfaWd2X3VzZCB9fTwvdGQ+XHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPHRkPnt7IHRvdGFscy5hY3VtX3RvdGFsX3VzZCB9fTwvdGQ+XHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICA8L3RyPlxyXG4gICAgICAgICAgICAgICAgICAgICAgICA8L3Rmb290PlxyXG4gICAgICAgICAgICAgICAgICAgIDwvdGFibGU+XHJcbiAgICAgICAgICAgICAgICAgICAgPGRpdj5cclxuICAgICAgICAgICAgICAgICAgICAgICAgPGVsLXBhZ2luYXRpb25cclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIEBjdXJyZW50LWNoYW5nZT1cImdldFJlY29yZHNcIlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgbGF5b3V0PVwidG90YWwsIHByZXYsIHBhZ2VyLCBuZXh0XCJcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIDp0b3RhbD1cInBhZ2luYXRpb24udG90YWxcIlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgOmN1cnJlbnQtcGFnZS5zeW5jPVwicGFnaW5hdGlvbi5jdXJyZW50X3BhZ2VcIlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgOnBhZ2Utc2l6ZT1cInBhZ2luYXRpb24ucGVyX3BhZ2VcIlxyXG4gICAgICAgICAgICAgICAgICAgICAgICA+XHJcbiAgICAgICAgICAgICAgICAgICAgICAgIDwvZWwtcGFnaW5hdGlvbj5cclxuICAgICAgICAgICAgICAgICAgICA8L2Rpdj5cclxuICAgICAgICAgICAgICAgIDwvZGl2PlxyXG4gICAgICAgICAgICA8L2Rpdj5cclxuICAgICAgICA8L2Rpdj5cclxuICAgICAgICA8d2hhdHNhcHAtZm9ybS1yZXBvcnRcclxuICAgICAgICAgICAgOm1lc3NhZ2Uuc3luYz1cIm1lc3NhZ2VSZXBvcnRcIlxyXG4gICAgICAgICAgICA6cmVzb3VyY2U9XCJyZXNvdXJjZVJlcG9ydFwiXHJcbiAgICAgICAgICAgIDpzaG93V2hhdHNhcHBGb3JtLnN5bmM9XCJzaG93V2hhdHNhcHBGb3JtXCJcclxuICAgICAgICA+XHJcbiAgICAgICAgPC93aGF0c2FwcC1mb3JtLXJlcG9ydD5cclxuICAgIDwvZGl2PlxyXG48L3RlbXBsYXRlPlxyXG48c3R5bGU+XHJcbi5mb250LWN1c3RvbSB7XHJcbiAgICBmb250LXNpemU6IDE1cHggIWltcG9ydGFudDtcclxufVxyXG48L3N0eWxlPlxyXG48c2NyaXB0PlxyXG5pbXBvcnQgbW9tZW50IGZyb20gXCJtb21lbnRcIjtcclxuaW1wb3J0IHF1ZXJ5U3RyaW5nIGZyb20gXCJxdWVyeS1zdHJpbmdcIjtcclxuaW1wb3J0IFdoYXRzYXBwRm9ybVJlcG9ydCBmcm9tIFwiLi4vLi4vLi4vLi4vLi4vLi4vcmVzb3VyY2VzL2pzL2NvbXBvbmVudHMvV2hhdHNhcHBNb2RhbFJlcG9ydHMudnVlXCI7XHJcbmV4cG9ydCBkZWZhdWx0IHtcclxuICAgIHByb3BzOiB7XHJcbiAgICAgICAgcmVzb3VyY2U6IFN0cmluZyxcclxuICAgICAgICBhcHBseUN1c3RvbWVyOiB7IHR5cGU6IEJvb2xlYW4sIHJlcXVpcmVkOiBmYWxzZSwgZGVmYXVsdDogZmFsc2UgfVxyXG4gICAgfSxcclxuICAgIGNvbXBvbmVudHM6IHsgV2hhdHNhcHBGb3JtUmVwb3J0IH0sXHJcbiAgICBkYXRhKCkge1xyXG4gICAgICAgIHJldHVybiB7XHJcbiAgICAgICAgICAgIG1lc3NhZ2VSZXBvcnQ6IFwiXCIsXHJcbiAgICAgICAgICAgIHJlc291cmNlUmVwb3J0OiBcIlwiLFxyXG4gICAgICAgICAgICBzaG93V2hhdHNhcHBGb3JtOiBmYWxzZSxcclxuICAgICAgICAgICAgbG9hZGluZ19zdWJtaXQ6IGZhbHNlLFxyXG4gICAgICAgICAgICBwZXJzb25zOiBbXSxcclxuICAgICAgICAgICAgYWxsX3BlcnNvbnM6IFtdLFxyXG4gICAgICAgICAgICBsb2FkaW5nX3NlYXJjaDogZmFsc2UsXHJcbiAgICAgICAgICAgIGNvbHVtbnM6IFtdLFxyXG4gICAgICAgICAgICByZWNvcmRzOiBbXSxcclxuICAgICAgICAgICAgaGVhZGVyczogaGVhZGVyc190b2tlbixcclxuICAgICAgICAgICAgZG9jdW1lbnRfdHlwZXM6IFtdLFxyXG4gICAgICAgICAgICBwYWdpbmF0aW9uOiB7fSxcclxuICAgICAgICAgICAgc2VhcmNoOiB7fSxcclxuICAgICAgICAgICAgdG90YWxzOiB7fSxcclxuICAgICAgICAgICAgZXN0YWJsaXNobWVudDogbnVsbCxcclxuICAgICAgICAgICAgZXN0YWJsaXNobWVudHM6IFtdLFxyXG4gICAgICAgICAgICBzdGF0ZV90eXBlczogW10sXHJcbiAgICAgICAgICAgIGZvcm06IHt9LFxyXG5cclxuICAgICAgICAgICAgcGlja2VyT3B0aW9uc0RhdGVzOiB7XHJcbiAgICAgICAgICAgICAgICBkaXNhYmxlZERhdGU6IHRpbWUgPT4ge1xyXG4gICAgICAgICAgICAgICAgICAgIHRpbWUgPSBtb21lbnQodGltZSkuZm9ybWF0KFwiWVlZWS1NTS1ERFwiKTtcclxuICAgICAgICAgICAgICAgICAgICByZXR1cm4gdGhpcy5mb3JtLmRhdGVfc3RhcnQgPiB0aW1lO1xyXG4gICAgICAgICAgICAgICAgfVxyXG4gICAgICAgICAgICB9LFxyXG4gICAgICAgICAgICBwaWNrZXJPcHRpb25zTW9udGhzOiB7XHJcbiAgICAgICAgICAgICAgICBkaXNhYmxlZERhdGU6IHRpbWUgPT4ge1xyXG4gICAgICAgICAgICAgICAgICAgIHRpbWUgPSBtb21lbnQodGltZSkuZm9ybWF0KFwiWVlZWS1NTVwiKTtcclxuICAgICAgICAgICAgICAgICAgICByZXR1cm4gdGhpcy5mb3JtLm1vbnRoX3N0YXJ0ID4gdGltZTtcclxuICAgICAgICAgICAgICAgIH1cclxuICAgICAgICAgICAgfSxcclxuICAgICAgICAgICAgc2VsbGVyczogW11cclxuICAgICAgICB9O1xyXG4gICAgfSxcclxuICAgIGNvbXB1dGVkOiB7fSxcclxuICAgIGNyZWF0ZWQoKSB7XHJcbiAgICAgICAgdGhpcy5pbml0Rm9ybSgpO1xyXG4gICAgICAgIHRoaXMuaW5pdFRvdGFscygpO1xyXG4gICAgICAgIHRoaXMuJGV2ZW50SHViLiRvbihcInJlbG9hZERhdGFcIiwgKCkgPT4ge1xyXG4gICAgICAgICAgICB0aGlzLmdldFJlY29yZHMoKTtcclxuICAgICAgICB9KTtcclxuICAgIH0sXHJcbiAgICBhc3luYyBtb3VudGVkKCkge1xyXG4gICAgICAgIGF3YWl0IHRoaXMuJGh0dHAuZ2V0KGAvJHt0aGlzLnJlc291cmNlfS9maWx0ZXJgKS50aGVuKHJlc3BvbnNlID0+IHtcclxuICAgICAgICAgICAgdGhpcy5lc3RhYmxpc2htZW50cyA9IHJlc3BvbnNlLmRhdGEuZXN0YWJsaXNobWVudHM7XHJcbiAgICAgICAgICAgIHRoaXMuYWxsX3BlcnNvbnMgPSByZXNwb25zZS5kYXRhLnBlcnNvbnM7XHJcbiAgICAgICAgICAgIHRoaXMuc2VsbGVycyA9IHJlc3BvbnNlLmRhdGEuc2VsbGVycztcclxuICAgICAgICB9KTtcclxuXHJcbiAgICAgICAgYXdhaXQgdGhpcy5nZXRSZWNvcmRzKCk7XHJcbiAgICAgICAgYXdhaXQgdGhpcy5maWx0ZXJQZXJzb25zKCk7XHJcbiAgICAgICAgLy8gYXdhaXQgdGhpcy5nZXRUb3RhbHMoKVxyXG4gICAgICAgIHRoaXMuZm9ybS50eXBlX3BlcnNvbiA9XHJcbiAgICAgICAgICAgIHRoaXMucmVzb3VyY2UgPT09IFwicmVwb3J0cy9zYWxlc1wiID8gXCJjdXN0b21lcnNcIiA6IFwic3VwcGxpZXJzXCI7XHJcbiAgICB9LFxyXG4gICAgbWV0aG9kczoge1xyXG4gICAgICAgIGNsaWNrT3BlbldoYXRzYXBwKCkge1xyXG4gICAgICAgICAgICBsZXQgcXVlcnkgPSBxdWVyeVN0cmluZy5zdHJpbmdpZnkoe1xyXG4gICAgICAgICAgICAgICAgLi4udGhpcy5mb3JtXHJcbiAgICAgICAgICAgIH0pO1xyXG4gICAgICAgICAgICB0aGlzLnJlc291cmNlUmVwb3J0ID0gYC8ke3RoaXMucmVzb3VyY2V9L3BkZj8ke3F1ZXJ5fWA7XHJcbiAgICAgICAgICAgIHRoaXMubWVzc2FnZVJlcG9ydCA9IGBSZXBvcnRlIGRlIGNyZWRpdG9zIGEgbGEgZmVjaGEgJHttb21lbnQoKS5mb3JtYXQoXHJcbiAgICAgICAgICAgICAgICBcIkRELU1NLVlZWVlcIlxyXG4gICAgICAgICAgICApfWA7XHJcbiAgICAgICAgICAgIHRoaXMuc2hvd1doYXRzYXBwRm9ybSA9IHRydWU7XHJcbiAgICAgICAgfSxcclxuICAgICAgICBjaGFuZ2VQZXJzb25zKCkge1xyXG4gICAgICAgICAgICAvLyB0aGlzLmZvcm0udHlwZV9wZXJzb24gPSB0aGlzLnJlc291cmNlID09PSAncmVwb3J0cy9zYWxlcycgPyAnY3VzdG9tZXJzJzonc3VwcGxpZXJzJ1xyXG4gICAgICAgIH0sXHJcbiAgICAgICAgc2VhcmNoUmVtb3RlUGVyc29ucyhpbnB1dCkge1xyXG4gICAgICAgICAgICBpZiAoaW5wdXQubGVuZ3RoID4gMCkge1xyXG4gICAgICAgICAgICAgICAgdGhpcy5sb2FkaW5nX3NlYXJjaCA9IHRydWU7XHJcbiAgICAgICAgICAgICAgICBsZXQgcGFyYW1ldGVycyA9IGBpbnB1dD0ke2lucHV0fWA7XHJcblxyXG4gICAgICAgICAgICAgICAgdGhpcy5mb3JtLnR5cGVfcGVyc29uID0gXCJjdXN0b21lcnNcIjtcclxuXHJcbiAgICAgICAgICAgICAgICB0aGlzLiRodHRwXHJcbiAgICAgICAgICAgICAgICAgICAgLmdldChcclxuICAgICAgICAgICAgICAgICAgICAgICAgYC9yZXBvcnRzL2RhdGEtdGFibGUvcGVyc29ucy8ke3RoaXMuZm9ybS50eXBlX3BlcnNvbn0/JHtwYXJhbWV0ZXJzfWBcclxuICAgICAgICAgICAgICAgICAgICApXHJcbiAgICAgICAgICAgICAgICAgICAgLnRoZW4ocmVzcG9uc2UgPT4ge1xyXG4gICAgICAgICAgICAgICAgICAgICAgICB0aGlzLnBlcnNvbnMgPSByZXNwb25zZS5kYXRhLnBlcnNvbnM7XHJcbiAgICAgICAgICAgICAgICAgICAgICAgIHRoaXMubG9hZGluZ19zZWFyY2ggPSBmYWxzZTtcclxuXHJcbiAgICAgICAgICAgICAgICAgICAgICAgIGlmICh0aGlzLnBlcnNvbnMubGVuZ3RoID09IDApIHtcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIHRoaXMuZmlsdGVyUGVyc29ucygpO1xyXG4gICAgICAgICAgICAgICAgICAgICAgICB9XHJcbiAgICAgICAgICAgICAgICAgICAgfSk7XHJcbiAgICAgICAgICAgIH0gZWxzZSB7XHJcbiAgICAgICAgICAgICAgICB0aGlzLmZpbHRlclBlcnNvbnMoKTtcclxuICAgICAgICAgICAgfVxyXG4gICAgICAgIH0sXHJcbiAgICAgICAgZmlsdGVyUGVyc29ucygpIHtcclxuICAgICAgICAgICAgdGhpcy5wZXJzb25zID0gdGhpcy5hbGxfcGVyc29ucztcclxuICAgICAgICAgICAgY29uc29sZS5sb2codGhpcy5wZXJzb25zKTtcclxuICAgICAgICB9LFxyXG4gICAgICAgIGdldFRvdGFscyhyZWNvcmRzKSB7XHJcbiAgICAgICAgICAgIHRoaXMuaW5pdFRvdGFscygpO1xyXG4gICAgICAgICAgICAvLyBjb25zb2xlLmxvZyhyZWNvcmRzKVxyXG5cclxuICAgICAgICAgICAgcmVjb3Jkcy5mb3JFYWNoKHJvdyA9PiB7XHJcbiAgICAgICAgICAgICAgICBsZXQgc2lnbmFsID0gcm93LmRvY3VtZW50X3R5cGVfaWQ7XHJcbiAgICAgICAgICAgICAgICBsZXQgc3RhdGUgPSByb3cuc3RhdGVfdHlwZV9pZDtcclxuXHJcbiAgICAgICAgICAgICAgICBpZiAocm93LmN1cnJlbmN5X3R5cGVfaWQgPT0gXCJQRU5cIikge1xyXG4gICAgICAgICAgICAgICAgICAgIGlmIChzaWduYWwgPT0gXCIwN1wiICYmIHN0YXRlICE9IFwiMTFcIikge1xyXG4gICAgICAgICAgICAgICAgICAgICAgICB0aGlzLnRvdGFscy5hY3VtX3RvdGFsICs9IHBhcnNlRmxvYXQoLXJvdy50b3RhbCk7XHJcbiAgICAgICAgICAgICAgICAgICAgICAgIHRoaXMudG90YWxzLmFjdW1fdG90YWxfdGF4ZWQgKz0gcGFyc2VGbG9hdChcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIC1yb3cudG90YWxfdGF4ZWRcclxuICAgICAgICAgICAgICAgICAgICAgICAgKTtcclxuICAgICAgICAgICAgICAgICAgICAgICAgdGhpcy50b3RhbHMuYWN1bV90b3RhbF9pZ3YgKz0gcGFyc2VGbG9hdChcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIC1yb3cudG90YWxfaWd2XHJcbiAgICAgICAgICAgICAgICAgICAgICAgICk7XHJcblxyXG4gICAgICAgICAgICAgICAgICAgICAgICB0aGlzLnRvdGFscy5hY3VtX3RvdGFsX2V4b25lcmF0ZWQgKz0gcGFyc2VGbG9hdChcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIC1yb3cudG90YWxfZXhvbmVyYXRlZFxyXG4gICAgICAgICAgICAgICAgICAgICAgICApO1xyXG4gICAgICAgICAgICAgICAgICAgICAgICB0aGlzLnRvdGFscy5hY3VtX3RvdGFsX3VuYWZmZWN0ZWQgKz0gcGFyc2VGbG9hdChcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIC1yb3cudG90YWxfdW5hZmZlY3RlZFxyXG4gICAgICAgICAgICAgICAgICAgICAgICApO1xyXG4gICAgICAgICAgICAgICAgICAgICAgICB0aGlzLnRvdGFscy5hY3VtX3RvdGFsX2ZyZWUgKz0gcGFyc2VGbG9hdChcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIC1yb3cudG90YWxfZnJlZVxyXG4gICAgICAgICAgICAgICAgICAgICAgICApO1xyXG4gICAgICAgICAgICAgICAgICAgIH0gZWxzZSBpZiAoc2lnbmFsICE9IFwiMDdcIiAmJiBzdGF0ZSA9PSBcIjExXCIpIHtcclxuICAgICAgICAgICAgICAgICAgICAgICAgdGhpcy50b3RhbHMuYWN1bV90b3RhbCArPSAwO1xyXG4gICAgICAgICAgICAgICAgICAgICAgICB0aGlzLnRvdGFscy5hY3VtX3RvdGFsX3RheGVkICs9IDA7XHJcbiAgICAgICAgICAgICAgICAgICAgICAgIHRoaXMudG90YWxzLmFjdW1fdG90YWxfaWd2ICs9IDA7XHJcblxyXG4gICAgICAgICAgICAgICAgICAgICAgICB0aGlzLnRvdGFscy5hY3VtX3RvdGFsX2V4b25lcmF0ZWQgKz0gMDtcclxuICAgICAgICAgICAgICAgICAgICAgICAgdGhpcy50b3RhbHMuYWN1bV90b3RhbF91bmFmZmVjdGVkICs9IDA7XHJcbiAgICAgICAgICAgICAgICAgICAgICAgIHRoaXMudG90YWxzLmFjdW1fdG90YWxfZnJlZSArPSAwO1xyXG4gICAgICAgICAgICAgICAgICAgIH0gZWxzZSB7XHJcbiAgICAgICAgICAgICAgICAgICAgICAgIHRoaXMudG90YWxzLmFjdW1fdG90YWwgKz0gcGFyc2VGbG9hdChyb3cudG90YWwpO1xyXG4gICAgICAgICAgICAgICAgICAgICAgICB0aGlzLnRvdGFscy5hY3VtX3RvdGFsX3RheGVkICs9IHBhcnNlRmxvYXQoXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICByb3cudG90YWxfdGF4ZWRcclxuICAgICAgICAgICAgICAgICAgICAgICAgKTtcclxuICAgICAgICAgICAgICAgICAgICAgICAgdGhpcy50b3RhbHMuYWN1bV90b3RhbF9pZ3YgKz0gcGFyc2VGbG9hdChyb3cudG90YWxfaWd2KTtcclxuXHJcbiAgICAgICAgICAgICAgICAgICAgICAgIHRoaXMudG90YWxzLmFjdW1fdG90YWxfZXhvbmVyYXRlZCArPSBwYXJzZUZsb2F0KFxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgcm93LnRvdGFsX2V4b25lcmF0ZWRcclxuICAgICAgICAgICAgICAgICAgICAgICAgKTtcclxuICAgICAgICAgICAgICAgICAgICAgICAgdGhpcy50b3RhbHMuYWN1bV90b3RhbF91bmFmZmVjdGVkICs9IHBhcnNlRmxvYXQoXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICByb3cudG90YWxfdW5hZmZlY3RlZFxyXG4gICAgICAgICAgICAgICAgICAgICAgICApO1xyXG4gICAgICAgICAgICAgICAgICAgICAgICB0aGlzLnRvdGFscy5hY3VtX3RvdGFsX2ZyZWUgKz0gcGFyc2VGbG9hdChcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJvdy50b3RhbF9mcmVlXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICk7XHJcbiAgICAgICAgICAgICAgICAgICAgfVxyXG4gICAgICAgICAgICAgICAgfSBlbHNlIGlmIChyb3cuY3VycmVuY3lfdHlwZV9pZCA9PSBcIlVTRFwiKSB7XHJcbiAgICAgICAgICAgICAgICAgICAgaWYgKHNpZ25hbCA9PSBcIjA3XCIgJiYgc3RhdGUgIT0gXCIxMVwiKSB7XHJcbiAgICAgICAgICAgICAgICAgICAgICAgIHRoaXMudG90YWxzLmFjdW1fdG90YWxfdXNkICs9IHBhcnNlRmxvYXQoLXJvdy50b3RhbCk7XHJcbiAgICAgICAgICAgICAgICAgICAgICAgIHRoaXMudG90YWxzLmFjdW1fdG90YWxfdGF4ZWRfdXNkICs9IHBhcnNlRmxvYXQoXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAtcm93LnRvdGFsX3RheGVkXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICk7XHJcbiAgICAgICAgICAgICAgICAgICAgICAgIHRoaXMudG90YWxzLmFjdW1fdG90YWxfaWd2X3VzZCArPSBwYXJzZUZsb2F0KFxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgLXJvdy50b3RhbF9pZ3ZcclxuICAgICAgICAgICAgICAgICAgICAgICAgKTtcclxuICAgICAgICAgICAgICAgICAgICB9IGVsc2UgaWYgKHNpZ25hbCAhPSBcIjA3XCIgJiYgc3RhdGUgPT0gXCIxMVwiKSB7XHJcbiAgICAgICAgICAgICAgICAgICAgICAgIHRoaXMudG90YWxzLmFjdW1fdG90YWxfdXNkICs9IDA7XHJcbiAgICAgICAgICAgICAgICAgICAgICAgIHRoaXMudG90YWxzLmFjdW1fdG90YWxfdGF4ZWRfdXNkICs9IDA7XHJcbiAgICAgICAgICAgICAgICAgICAgICAgIHRoaXMudG90YWxzLmFjdW1fdG90YWxfaWd2X3VzZCArPSAwO1xyXG4gICAgICAgICAgICAgICAgICAgIH0gZWxzZSB7XHJcbiAgICAgICAgICAgICAgICAgICAgICAgIHRoaXMudG90YWxzLmFjdW1fdG90YWxfdXNkICs9IHBhcnNlRmxvYXQocm93LnRvdGFsKTtcclxuICAgICAgICAgICAgICAgICAgICAgICAgdGhpcy50b3RhbHMuYWN1bV90b3RhbF90YXhlZF91c2QgKz0gcGFyc2VGbG9hdChcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJvdy50b3RhbF90YXhlZFxyXG4gICAgICAgICAgICAgICAgICAgICAgICApO1xyXG4gICAgICAgICAgICAgICAgICAgICAgICB0aGlzLnRvdGFscy5hY3VtX3RvdGFsX2lndl91c2QgKz0gcGFyc2VGbG9hdChcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJvdy50b3RhbF9pZ3ZcclxuICAgICAgICAgICAgICAgICAgICAgICAgKTtcclxuICAgICAgICAgICAgICAgICAgICB9XHJcbiAgICAgICAgICAgICAgICB9XHJcbiAgICAgICAgICAgICAgICB0aGlzLnRvdGFscy5hY3VtX3RvdGFsX3RheGVkID0gXy5yb3VuZChcclxuICAgICAgICAgICAgICAgICAgICB0aGlzLnRvdGFscy5hY3VtX3RvdGFsX3RheGVkLFxyXG4gICAgICAgICAgICAgICAgICAgIDJcclxuICAgICAgICAgICAgICAgICk7XHJcbiAgICAgICAgICAgICAgICB0aGlzLnRvdGFscy5hY3VtX3RvdGFsX2lndiA9IF8ucm91bmQoXHJcbiAgICAgICAgICAgICAgICAgICAgdGhpcy50b3RhbHMuYWN1bV90b3RhbF9pZ3YsXHJcbiAgICAgICAgICAgICAgICAgICAgMlxyXG4gICAgICAgICAgICAgICAgKTtcclxuICAgICAgICAgICAgICAgIHRoaXMudG90YWxzLmFjdW1fdG90YWwgPSBfLnJvdW5kKHRoaXMudG90YWxzLmFjdW1fdG90YWwsIDIpO1xyXG4gICAgICAgICAgICAgICAgdGhpcy50b3RhbHMuYWN1bV90b3RhbF9leG9uZXJhdGVkID0gXy5yb3VuZChcclxuICAgICAgICAgICAgICAgICAgICB0aGlzLnRvdGFscy5hY3VtX3RvdGFsX2V4b25lcmF0ZWQsXHJcbiAgICAgICAgICAgICAgICAgICAgMlxyXG4gICAgICAgICAgICAgICAgKTtcclxuICAgICAgICAgICAgICAgIHRoaXMudG90YWxzLmFjdW1fdG90YWxfdW5hZmZlY3RlZCA9IF8ucm91bmQoXHJcbiAgICAgICAgICAgICAgICAgICAgdGhpcy50b3RhbHMuYWN1bV90b3RhbF91bmFmZmVjdGVkLFxyXG4gICAgICAgICAgICAgICAgICAgIDJcclxuICAgICAgICAgICAgICAgICk7XHJcbiAgICAgICAgICAgICAgICB0aGlzLnRvdGFscy5hY3VtX3RvdGFsX2ZyZWUgPSBfLnJvdW5kKFxyXG4gICAgICAgICAgICAgICAgICAgIHRoaXMudG90YWxzLmFjdW1fdG90YWxfZnJlZSxcclxuICAgICAgICAgICAgICAgICAgICAyXHJcbiAgICAgICAgICAgICAgICApO1xyXG5cclxuICAgICAgICAgICAgICAgIHRoaXMudG90YWxzLmFjdW1fdG90YWxfdGF4ZWRfdXNkID0gXy5yb3VuZChcclxuICAgICAgICAgICAgICAgICAgICB0aGlzLnRvdGFscy5hY3VtX3RvdGFsX3RheGVkX3VzZCxcclxuICAgICAgICAgICAgICAgICAgICAyXHJcbiAgICAgICAgICAgICAgICApO1xyXG4gICAgICAgICAgICAgICAgdGhpcy50b3RhbHMuYWN1bV90b3RhbF9pZ3ZfdXNkID0gXy5yb3VuZChcclxuICAgICAgICAgICAgICAgICAgICB0aGlzLnRvdGFscy5hY3VtX3RvdGFsX2lndl91c2QsXHJcbiAgICAgICAgICAgICAgICAgICAgMlxyXG4gICAgICAgICAgICAgICAgKTtcclxuICAgICAgICAgICAgICAgIHRoaXMudG90YWxzLmFjdW1fdG90YWxfdXNkID0gXy5yb3VuZChcclxuICAgICAgICAgICAgICAgICAgICB0aGlzLnRvdGFscy5hY3VtX3RvdGFsX3VzZCxcclxuICAgICAgICAgICAgICAgICAgICAyXHJcbiAgICAgICAgICAgICAgICApO1xyXG4gICAgICAgICAgICB9KTtcclxuICAgICAgICB9LFxyXG4gICAgICAgIGNsaWNrRG93bmxvYWQodHlwZSkge1xyXG4gICAgICAgICAgICBsZXQgcXVlcnkgPSBxdWVyeVN0cmluZy5zdHJpbmdpZnkoe1xyXG4gICAgICAgICAgICAgICAgLi4udGhpcy5mb3JtXHJcbiAgICAgICAgICAgIH0pO1xyXG4gICAgICAgICAgICB3aW5kb3cub3BlbihgLyR7dGhpcy5yZXNvdXJjZX0vJHt0eXBlfS8/JHtxdWVyeX1gLCBcIl9ibGFua1wiKTtcclxuICAgICAgICB9LFxyXG4gICAgICAgIGluaXRGb3JtKCkge1xyXG4gICAgICAgICAgICB0aGlzLmZvcm0gPSB7XHJcbiAgICAgICAgICAgICAgICBlc3RhYmxpc2htZW50X2lkOiBudWxsLFxyXG4gICAgICAgICAgICAgICAgcGVyc29uX2lkOiBudWxsLFxyXG4gICAgICAgICAgICAgICAgdHlwZV9wZXJzb246IG51bGwsXHJcbiAgICAgICAgICAgICAgICBkb2N1bWVudF90eXBlX2lkOiBudWxsLFxyXG4gICAgICAgICAgICAgICAgcGVyaW9kOiBcIm1vbnRoXCIsXHJcbiAgICAgICAgICAgICAgICBkYXRlX3N0YXJ0OiBtb21lbnQoKS5mb3JtYXQoXCJZWVlZLU1NLUREXCIpLFxyXG4gICAgICAgICAgICAgICAgZGF0ZV9lbmQ6IG1vbWVudCgpLmZvcm1hdChcIllZWVktTU0tRERcIiksXHJcbiAgICAgICAgICAgICAgICBtb250aF9zdGFydDogbW9tZW50KCkuZm9ybWF0KFwiWVlZWS1NTVwiKSxcclxuICAgICAgICAgICAgICAgIG1vbnRoX2VuZDogbW9tZW50KCkuZm9ybWF0KFwiWVlZWS1NTVwiKSxcclxuICAgICAgICAgICAgICAgIHNlbGxlcl9pZDogbnVsbCxcclxuICAgICAgICAgICAgICAgIHN0YXRlX3R5cGVfaWQ6IG51bGwsXHJcbiAgICAgICAgICAgICAgICB0eXBlcmVzdWx0OiBcIkRldGFsbGFkb1wiXHJcbiAgICAgICAgICAgIH07XHJcbiAgICAgICAgfSxcclxuICAgICAgICBpbml0VG90YWxzKCkge1xyXG4gICAgICAgICAgICB0aGlzLnRvdGFscyA9IHtcclxuICAgICAgICAgICAgICAgIGFjdW1fdG90YWxfdGF4ZWQ6IDAsXHJcbiAgICAgICAgICAgICAgICBhY3VtX3RvdGFsX2lndjogMCxcclxuICAgICAgICAgICAgICAgIGFjdW1fdG90YWw6IDAsXHJcbiAgICAgICAgICAgICAgICBhY3VtX3RvdGFsX2V4b25lcmF0ZWQ6IDAsXHJcbiAgICAgICAgICAgICAgICBhY3VtX3RvdGFsX3VuYWZmZWN0ZWQ6IDAsXHJcbiAgICAgICAgICAgICAgICBhY3VtX3RvdGFsX2ZyZWU6IDAsXHJcblxyXG4gICAgICAgICAgICAgICAgYWN1bV90b3RhbF90YXhlZF91c2Q6IDAsXHJcbiAgICAgICAgICAgICAgICBhY3VtX3RvdGFsX2lndl91c2Q6IDAsXHJcbiAgICAgICAgICAgICAgICBhY3VtX3RvdGFsX3VzZDogMFxyXG4gICAgICAgICAgICB9O1xyXG4gICAgICAgIH0sXHJcbiAgICAgICAgY3VzdG9tSW5kZXgoaW5kZXgpIHtcclxuICAgICAgICAgICAgcmV0dXJuIChcclxuICAgICAgICAgICAgICAgIHRoaXMucGFnaW5hdGlvbi5wZXJfcGFnZSAqICh0aGlzLnBhZ2luYXRpb24uY3VycmVudF9wYWdlIC0gMSkgK1xyXG4gICAgICAgICAgICAgICAgaW5kZXggK1xyXG4gICAgICAgICAgICAgICAgMVxyXG4gICAgICAgICAgICApO1xyXG4gICAgICAgIH0sXHJcbiAgICAgICAgYXN5bmMgZ2V0UmVjb3Jkc0J5RmlsdGVyKCkge1xyXG4gICAgICAgICAgICB0aGlzLmxvYWRpbmdfc3VibWl0ID0gYXdhaXQgdHJ1ZTtcclxuICAgICAgICAgICAgYXdhaXQgdGhpcy5nZXRSZWNvcmRzKCk7XHJcbiAgICAgICAgICAgIHRoaXMubG9hZGluZ19zdWJtaXQgPSBhd2FpdCBmYWxzZTtcclxuICAgICAgICB9LFxyXG4gICAgICAgIGdldFJlY29yZHMoKSB7XHJcbiAgICAgICAgICAgIHJldHVybiB0aGlzLiRodHRwXHJcbiAgICAgICAgICAgICAgICAuZ2V0KGAvJHt0aGlzLnJlc291cmNlfS9yZWNvcmRzPyR7dGhpcy5nZXRRdWVyeVBhcmFtZXRlcnMoKX1gKVxyXG4gICAgICAgICAgICAgICAgLnRoZW4ocmVzcG9uc2UgPT4ge1xyXG4gICAgICAgICAgICAgICAgICAgIHRoaXMucmVjb3JkcyA9IHJlc3BvbnNlLmRhdGEuZGF0YTtcclxuICAgICAgICAgICAgICAgICAgICAvL3NvcnQgcmVjb3JkcyBieSBkdWVzIHByb3BlcnR5IChpbnQpIGluIGRlc2NlbmRpbmcgb3JkZXJcclxuICAgICAgICAgICAgICAgICAgICB0aGlzLnJlY29yZHMuc29ydChmdW5jdGlvbihhLCBiKSB7XHJcbiAgICAgICAgICAgICAgICAgICAgICAgIHJldHVybiBiLmR1ZXMgLSBhLmR1ZXM7XHJcbiAgICAgICAgICAgICAgICAgICAgfSk7XHJcblxyXG4gICAgICAgICAgICAgICAgICAgIHRoaXMucGFnaW5hdGlvbiA9IHJlc3BvbnNlLmRhdGEubWV0YTtcclxuICAgICAgICAgICAgICAgICAgICB0aGlzLnBhZ2luYXRpb24ucGVyX3BhZ2UgPSBwYXJzZUludChcclxuICAgICAgICAgICAgICAgICAgICAgICAgcmVzcG9uc2UuZGF0YS5tZXRhLnBlcl9wYWdlXHJcbiAgICAgICAgICAgICAgICAgICAgKTtcclxuICAgICAgICAgICAgICAgICAgICB0aGlzLmxvYWRpbmdfc3VibWl0ID0gZmFsc2U7XHJcbiAgICAgICAgICAgICAgICAgICAgLy8gdGhpcy5pbml0VG90YWxzKClcclxuICAgICAgICAgICAgICAgICAgICBpZiAoXHJcbiAgICAgICAgICAgICAgICAgICAgICAgIHRoaXMucmVzb3VyY2UgPT0gXCJyZXBvcnRzL3NhbGVzXCIgfHxcclxuICAgICAgICAgICAgICAgICAgICAgICAgdGhpcy5yZXNvdXJjZSA9PSBcInJlcG9ydHMvcHVyY2hhc2VzXCJcclxuICAgICAgICAgICAgICAgICAgICApXHJcbiAgICAgICAgICAgICAgICAgICAgICAgIHRoaXMuZ2V0VG90YWxzKHJlc3BvbnNlLmRhdGEuZGF0YSk7XHJcbiAgICAgICAgICAgICAgICB9KTtcclxuICAgICAgICB9LFxyXG4gICAgICAgIGdldFF1ZXJ5UGFyYW1ldGVycygpIHtcclxuICAgICAgICAgICAgcmV0dXJuIHF1ZXJ5U3RyaW5nLnN0cmluZ2lmeSh7XHJcbiAgICAgICAgICAgICAgICBwYWdlOiB0aGlzLnBhZ2luYXRpb24uY3VycmVudF9wYWdlLFxyXG4gICAgICAgICAgICAgICAgbGltaXQ6IHRoaXMubGltaXQsXHJcbiAgICAgICAgICAgICAgICAuLi50aGlzLmZvcm1cclxuICAgICAgICAgICAgfSk7XHJcbiAgICAgICAgfSxcclxuXHJcbiAgICAgICAgY2hhbmdlRGlzYWJsZWREYXRlcygpIHtcclxuICAgICAgICAgICAgaWYgKHRoaXMuZm9ybS5kYXRlX2VuZCA8IHRoaXMuZm9ybS5kYXRlX3N0YXJ0KSB7XHJcbiAgICAgICAgICAgICAgICB0aGlzLmZvcm0uZGF0ZV9lbmQgPSB0aGlzLmZvcm0uZGF0ZV9zdGFydDtcclxuICAgICAgICAgICAgfVxyXG4gICAgICAgICAgICAvLyB0aGlzLmxvYWRBbGwoKTtcclxuICAgICAgICB9LFxyXG4gICAgICAgIGNoYW5nZURpc2FibGVkTW9udGhzKCkge1xyXG4gICAgICAgICAgICBpZiAodGhpcy5mb3JtLm1vbnRoX2VuZCA8IHRoaXMuZm9ybS5tb250aF9zdGFydCkge1xyXG4gICAgICAgICAgICAgICAgdGhpcy5mb3JtLm1vbnRoX2VuZCA9IHRoaXMuZm9ybS5tb250aF9zdGFydDtcclxuICAgICAgICAgICAgfVxyXG4gICAgICAgICAgICAvLyB0aGlzLmxvYWRBbGwoKTtcclxuICAgICAgICB9LFxyXG4gICAgICAgIGNoYW5nZVBlcmlvZCgpIHtcclxuICAgICAgICAgICAgaWYgKHRoaXMuZm9ybS5wZXJpb2QgPT09IFwibW9udGhcIikge1xyXG4gICAgICAgICAgICAgICAgdGhpcy5mb3JtLm1vbnRoX3N0YXJ0ID0gbW9tZW50KCkuZm9ybWF0KFwiWVlZWS1NTVwiKTtcclxuICAgICAgICAgICAgICAgIHRoaXMuZm9ybS5tb250aF9lbmQgPSBtb21lbnQoKS5mb3JtYXQoXCJZWVlZLU1NXCIpO1xyXG4gICAgICAgICAgICB9XHJcbiAgICAgICAgICAgIGlmICh0aGlzLmZvcm0ucGVyaW9kID09PSBcImJldHdlZW5fbW9udGhzXCIpIHtcclxuICAgICAgICAgICAgICAgIHRoaXMuZm9ybS5tb250aF9zdGFydCA9IG1vbWVudCgpXHJcbiAgICAgICAgICAgICAgICAgICAgLnN0YXJ0T2YoXCJ5ZWFyXCIpXHJcbiAgICAgICAgICAgICAgICAgICAgLmZvcm1hdChcIllZWVktTU1cIik7IC8vJzIwMTktMDEnO1xyXG4gICAgICAgICAgICAgICAgdGhpcy5mb3JtLm1vbnRoX2VuZCA9IG1vbWVudCgpXHJcbiAgICAgICAgICAgICAgICAgICAgLmVuZE9mKFwieWVhclwiKVxyXG4gICAgICAgICAgICAgICAgICAgIC5mb3JtYXQoXCJZWVlZLU1NXCIpO1xyXG4gICAgICAgICAgICB9XHJcbiAgICAgICAgICAgIGlmICh0aGlzLmZvcm0ucGVyaW9kID09PSBcImRhdGVcIikge1xyXG4gICAgICAgICAgICAgICAgdGhpcy5mb3JtLmRhdGVfc3RhcnQgPSBtb21lbnQoKS5mb3JtYXQoXCJZWVlZLU1NLUREXCIpO1xyXG4gICAgICAgICAgICAgICAgdGhpcy5mb3JtLmRhdGVfZW5kID0gbW9tZW50KCkuZm9ybWF0KFwiWVlZWS1NTS1ERFwiKTtcclxuICAgICAgICAgICAgfVxyXG4gICAgICAgICAgICBpZiAodGhpcy5mb3JtLnBlcmlvZCA9PT0gXCJiZXR3ZWVuX2RhdGVzXCIpIHtcclxuICAgICAgICAgICAgICAgIHRoaXMuZm9ybS5kYXRlX3N0YXJ0ID0gbW9tZW50KClcclxuICAgICAgICAgICAgICAgICAgICAuc3RhcnRPZihcIm1vbnRoXCIpXHJcbiAgICAgICAgICAgICAgICAgICAgLmZvcm1hdChcIllZWVktTU0tRERcIik7XHJcbiAgICAgICAgICAgICAgICB0aGlzLmZvcm0uZGF0ZV9lbmQgPSBtb21lbnQoKVxyXG4gICAgICAgICAgICAgICAgICAgIC5lbmRPZihcIm1vbnRoXCIpXHJcbiAgICAgICAgICAgICAgICAgICAgLmZvcm1hdChcIllZWVktTU0tRERcIik7XHJcbiAgICAgICAgICAgIH1cclxuICAgICAgICAgICAgLy8gdGhpcy5sb2FkQWxsKCk7XHJcbiAgICAgICAgfVxyXG4gICAgfVxyXG59O1xyXG48L3NjcmlwdD5cclxuXG5cblxuLy8gV0VCUEFDSyBGT09URVIgLy9cbi8vIG1vZHVsZXMvUmVwb3J0L1Jlc291cmNlcy9hc3NldHMvanMvY29tcG9uZW50cy9EYXRhVGFibGVSZXBvcnRzQ3JlZGl0cy52dWUiXSwic291cmNlUm9vdCI6IiJ9\n//# sourceURL=webpack-internal:///./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/Report/Resources/assets/js/components/DataTableReportsCredits.vue\n");
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator__ = __webpack_require__("./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_moment__ = __webpack_require__("./node_modules/moment/moment.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_moment___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_moment__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_query_string__ = __webpack_require__("./node_modules/query-string/index.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_query_string___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_query_string__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__resources_js_components_WhatsappModalReports_vue__ = __webpack_require__("./resources/js/components/WhatsappModalReports.vue");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__resources_js_components_WhatsappModalReports_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__resources_js_components_WhatsappModalReports_vue__);
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: {
+    resource: String,
+    applyCustomer: {
+      type: Boolean,
+      required: false,
+      "default": false
+    }
+  },
+  components: {
+    WhatsappFormReport: __WEBPACK_IMPORTED_MODULE_3__resources_js_components_WhatsappModalReports_vue___default.a
+  },
+  data: function data() {
+    var _this = this;
+
+    return {
+      messageReport: "",
+      resourceReport: "",
+      showWhatsappForm: false,
+      loading_submit: false,
+      persons: [],
+      all_persons: [],
+      loading_search: false,
+      columns: [],
+      records: [],
+      headers: headers_token,
+      document_types: [],
+      pagination: {},
+      search: {},
+      totals: {},
+      establishment: null,
+      establishments: [],
+      state_types: [],
+      form: {},
+      pickerOptionsDates: {
+        disabledDate: function disabledDate(time) {
+          time = __WEBPACK_IMPORTED_MODULE_1_moment___default()(time).format("YYYY-MM-DD");
+          return _this.form.date_start > time;
+        }
+      },
+      pickerOptionsMonths: {
+        disabledDate: function disabledDate(time) {
+          time = __WEBPACK_IMPORTED_MODULE_1_moment___default()(time).format("YYYY-MM");
+          return _this.form.month_start > time;
+        }
+      },
+      sellers: []
+    };
+  },
+  computed: {},
+  created: function created() {
+    var _this2 = this;
+
+    this.initForm();
+    this.initTotals();
+    this.$eventHub.$on("reloadData", function () {
+      _this2.getRecords();
+    });
+  },
+  mounted: function mounted() {
+    var _this3 = this;
+
+    return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee() {
+      return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              _context.next = 2;
+              return _this3.$http.get("/".concat(_this3.resource, "/filter")).then(function (response) {
+                _this3.establishments = response.data.establishments;
+                _this3.all_persons = response.data.persons;
+                _this3.sellers = response.data.sellers;
+              });
+
+            case 2:
+              _context.next = 4;
+              return _this3.getRecords();
+
+            case 4:
+              _context.next = 6;
+              return _this3.filterPersons();
+
+            case 6:
+              // await this.getTotals()
+              _this3.form.type_person = _this3.resource === "reports/sales" ? "customers" : "suppliers";
+
+            case 7:
+            case "end":
+              return _context.stop();
+          }
+        }
+      }, _callee);
+    }))();
+  },
+  methods: {
+    clickOpenWhatsapp: function clickOpenWhatsapp() {
+      var query = __WEBPACK_IMPORTED_MODULE_2_query_string___default.a.stringify(_objectSpread({}, this.form));
+      this.resourceReport = "/".concat(this.resource, "/pdf?").concat(query);
+      this.messageReport = "Reporte de creditos a la fecha ".concat(__WEBPACK_IMPORTED_MODULE_1_moment___default()().format("DD-MM-YYYY"));
+      this.showWhatsappForm = true;
+    },
+    changePersons: function changePersons() {// this.form.type_person = this.resource === 'reports/sales' ? 'customers':'suppliers'
+    },
+    searchRemotePersons: function searchRemotePersons(input) {
+      var _this4 = this;
+
+      if (input.length > 0) {
+        this.loading_search = true;
+        var parameters = "input=".concat(input);
+        this.form.type_person = "customers";
+        this.$http.get("/reports/data-table/persons/".concat(this.form.type_person, "?").concat(parameters)).then(function (response) {
+          _this4.persons = response.data.persons;
+          _this4.loading_search = false;
+
+          if (_this4.persons.length == 0) {
+            _this4.filterPersons();
+          }
+        });
+      } else {
+        this.filterPersons();
+      }
+    },
+    filterPersons: function filterPersons() {
+      this.persons = this.all_persons;
+      console.log(this.persons);
+    },
+    getTotals: function getTotals(records) {
+      var _this5 = this;
+
+      this.initTotals(); // console.log(records)
+
+      records.forEach(function (row) {
+        var signal = row.document_type_id;
+        var state = row.state_type_id;
+
+        if (row.currency_type_id == "PEN") {
+          if (signal == "07" && state != "11") {
+            _this5.totals.acum_total += parseFloat(-row.total);
+            _this5.totals.acum_total_taxed += parseFloat(-row.total_taxed);
+            _this5.totals.acum_total_igv += parseFloat(-row.total_igv);
+            _this5.totals.acum_total_exonerated += parseFloat(-row.total_exonerated);
+            _this5.totals.acum_total_unaffected += parseFloat(-row.total_unaffected);
+            _this5.totals.acum_total_free += parseFloat(-row.total_free);
+          } else if (signal != "07" && state == "11") {
+            _this5.totals.acum_total += 0;
+            _this5.totals.acum_total_taxed += 0;
+            _this5.totals.acum_total_igv += 0;
+            _this5.totals.acum_total_exonerated += 0;
+            _this5.totals.acum_total_unaffected += 0;
+            _this5.totals.acum_total_free += 0;
+          } else {
+            _this5.totals.acum_total += parseFloat(row.total);
+            _this5.totals.acum_total_taxed += parseFloat(row.total_taxed);
+            _this5.totals.acum_total_igv += parseFloat(row.total_igv);
+            _this5.totals.acum_total_exonerated += parseFloat(row.total_exonerated);
+            _this5.totals.acum_total_unaffected += parseFloat(row.total_unaffected);
+            _this5.totals.acum_total_free += parseFloat(row.total_free);
+          }
+        } else if (row.currency_type_id == "USD") {
+          if (signal == "07" && state != "11") {
+            _this5.totals.acum_total_usd += parseFloat(-row.total);
+            _this5.totals.acum_total_taxed_usd += parseFloat(-row.total_taxed);
+            _this5.totals.acum_total_igv_usd += parseFloat(-row.total_igv);
+          } else if (signal != "07" && state == "11") {
+            _this5.totals.acum_total_usd += 0;
+            _this5.totals.acum_total_taxed_usd += 0;
+            _this5.totals.acum_total_igv_usd += 0;
+          } else {
+            _this5.totals.acum_total_usd += parseFloat(row.total);
+            _this5.totals.acum_total_taxed_usd += parseFloat(row.total_taxed);
+            _this5.totals.acum_total_igv_usd += parseFloat(row.total_igv);
+          }
+        }
+
+        _this5.totals.acum_total_taxed = _.round(_this5.totals.acum_total_taxed, 2);
+        _this5.totals.acum_total_igv = _.round(_this5.totals.acum_total_igv, 2);
+        _this5.totals.acum_total = _.round(_this5.totals.acum_total, 2);
+        _this5.totals.acum_total_exonerated = _.round(_this5.totals.acum_total_exonerated, 2);
+        _this5.totals.acum_total_unaffected = _.round(_this5.totals.acum_total_unaffected, 2);
+        _this5.totals.acum_total_free = _.round(_this5.totals.acum_total_free, 2);
+        _this5.totals.acum_total_taxed_usd = _.round(_this5.totals.acum_total_taxed_usd, 2);
+        _this5.totals.acum_total_igv_usd = _.round(_this5.totals.acum_total_igv_usd, 2);
+        _this5.totals.acum_total_usd = _.round(_this5.totals.acum_total_usd, 2);
+      });
+    },
+    clickDownload: function clickDownload(type) {
+      var query = __WEBPACK_IMPORTED_MODULE_2_query_string___default.a.stringify(_objectSpread({}, this.form));
+      window.open("/".concat(this.resource, "/").concat(type, "/?").concat(query), "_blank");
+    },
+    initForm: function initForm() {
+      this.form = {
+        establishment_id: null,
+        person_id: null,
+        type_person: null,
+        document_type_id: null,
+        period: "month",
+        date_start: __WEBPACK_IMPORTED_MODULE_1_moment___default()().format("YYYY-MM-DD"),
+        date_end: __WEBPACK_IMPORTED_MODULE_1_moment___default()().format("YYYY-MM-DD"),
+        month_start: __WEBPACK_IMPORTED_MODULE_1_moment___default()().format("YYYY-MM"),
+        month_end: __WEBPACK_IMPORTED_MODULE_1_moment___default()().format("YYYY-MM"),
+        seller_id: null,
+        state_type_id: null,
+        typeresult: "Detallado"
+      };
+    },
+    initTotals: function initTotals() {
+      this.totals = {
+        acum_total_taxed: 0,
+        acum_total_igv: 0,
+        acum_total: 0,
+        acum_total_exonerated: 0,
+        acum_total_unaffected: 0,
+        acum_total_free: 0,
+        acum_total_taxed_usd: 0,
+        acum_total_igv_usd: 0,
+        acum_total_usd: 0
+      };
+    },
+    customIndex: function customIndex(index) {
+      return this.pagination.per_page * (this.pagination.current_page - 1) + index + 1;
+    },
+    getRecordsByFilter: function getRecordsByFilter() {
+      var _this6 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee2() {
+        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                _context2.next = 2;
+                return true;
+
+              case 2:
+                _this6.loading_submit = _context2.sent;
+                _context2.next = 5;
+                return _this6.getRecords();
+
+              case 5:
+                _context2.next = 7;
+                return false;
+
+              case 7:
+                _this6.loading_submit = _context2.sent;
+
+              case 8:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2);
+      }))();
+    },
+    getRecords: function getRecords() {
+      var _this7 = this;
+
+      return this.$http.get("/".concat(this.resource, "/records?").concat(this.getQueryParameters())).then(function (response) {
+        _this7.records = response.data.data; //sort records by dues property (int) in descending order
+
+        _this7.records.sort(function (a, b) {
+          return b.dues - a.dues;
+        });
+
+        _this7.pagination = response.data.meta;
+        _this7.pagination.per_page = parseInt(response.data.meta.per_page);
+        _this7.loading_submit = false; // this.initTotals()
+
+        if (_this7.resource == "reports/sales" || _this7.resource == "reports/purchases") _this7.getTotals(response.data.data);
+      });
+    },
+    getQueryParameters: function getQueryParameters() {
+      return __WEBPACK_IMPORTED_MODULE_2_query_string___default.a.stringify(_objectSpread({
+        page: this.pagination.current_page,
+        limit: this.limit
+      }, this.form));
+    },
+    changeDisabledDates: function changeDisabledDates() {
+      if (this.form.date_end < this.form.date_start) {
+        this.form.date_end = this.form.date_start;
+      } // this.loadAll();
+
+    },
+    changeDisabledMonths: function changeDisabledMonths() {
+      if (this.form.month_end < this.form.month_start) {
+        this.form.month_end = this.form.month_start;
+      } // this.loadAll();
+
+    },
+    changePeriod: function changePeriod() {
+      if (this.form.period === "month") {
+        this.form.month_start = __WEBPACK_IMPORTED_MODULE_1_moment___default()().format("YYYY-MM");
+        this.form.month_end = __WEBPACK_IMPORTED_MODULE_1_moment___default()().format("YYYY-MM");
+      }
+
+      if (this.form.period === "between_months") {
+        this.form.month_start = __WEBPACK_IMPORTED_MODULE_1_moment___default()().startOf("year").format("YYYY-MM"); //'2019-01';
+
+        this.form.month_end = __WEBPACK_IMPORTED_MODULE_1_moment___default()().endOf("year").format("YYYY-MM");
+      }
+
+      if (this.form.period === "date") {
+        this.form.date_start = __WEBPACK_IMPORTED_MODULE_1_moment___default()().format("YYYY-MM-DD");
+        this.form.date_end = __WEBPACK_IMPORTED_MODULE_1_moment___default()().format("YYYY-MM-DD");
+      }
+
+      if (this.form.period === "between_dates") {
+        this.form.date_start = __WEBPACK_IMPORTED_MODULE_1_moment___default()().startOf("month").format("YYYY-MM-DD");
+        this.form.date_end = __WEBPACK_IMPORTED_MODULE_1_moment___default()().endOf("month").format("YYYY-MM-DD");
+      } // this.loadAll();
+
+    }
+  }
+});
 
 /***/ }),
 
@@ -48,7 +1450,91 @@ eval("Object.defineProperty(__webpack_exports__, \"__esModule\", { value: true }
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("Object.defineProperty(__webpack_exports__, \"__esModule\", { value: true });\n/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator__ = __webpack_require__(\"./node_modules/@babel/runtime/regenerator/index.js\");\n/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator__);\n/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_DataTableReportsConsignment_vue__ = __webpack_require__(\"./modules/Report/Resources/assets/js/components/DataTableReportsConsignment.vue\");\n/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_DataTableReportsConsignment_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__components_DataTableReportsConsignment_vue__);\n\n\nfunction asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }\n\nfunction _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, \"next\", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, \"throw\", err); } _next(undefined); }); }; }\n\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n\n/* harmony default export */ __webpack_exports__[\"default\"] = ({\n  components: {\n    DataTable: __WEBPACK_IMPORTED_MODULE_1__components_DataTableReportsConsignment_vue___default.a\n  },\n  data: function data() {\n    return {\n      resource: \"reports/consignment\",\n      form: {}\n    };\n  },\n  created: function created() {\n    return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee() {\n      return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee$(_context) {\n        while (1) {\n          switch (_context.prev = _context.next) {\n            case 0:\n            case \"end\":\n              return _context.stop();\n          }\n        }\n      }, _callee);\n    }))();\n  },\n  methods: {}\n});//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vbW9kdWxlcy9SZXBvcnQvUmVzb3VyY2VzL2Fzc2V0cy9qcy92aWV3cy9jb25zaWdubWVudC9pbmRleC52dWU/NWIzMyJdLCJuYW1lcyI6WyJjb21wb25lbnRzIiwiRGF0YVRhYmxlIiwiZGF0YSIsInJlc291cmNlIiwiZm9ybSIsImNyZWF0ZWQiLCJtZXRob2RzIl0sIm1hcHBpbmdzIjoiOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7OztBQWlEeUU7QUFFMUQ7QUFDZkE7QUFBQUM7QUFBQSxHQURBO0FBRUFDLE1BRkEsa0JBRUE7QUFDQTtBQUNBQyxxQ0FEQTtBQUVBQztBQUZBO0FBSUEsR0FQQTtBQVFBQyxTQVJBLHFCQVFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBLEdBUkE7QUFTQUM7QUFUQSIsImZpbGUiOiIuL25vZGVfbW9kdWxlcy9iYWJlbC1sb2FkZXIvbGliL2luZGV4LmpzP3tcImNhY2hlRGlyZWN0b3J5XCI6dHJ1ZSxcInByZXNldHNcIjpbW1wiQGJhYmVsL3ByZXNldC1lbnZcIix7XCJtb2R1bGVzXCI6ZmFsc2UsXCJ0YXJnZXRzXCI6e1wiYnJvd3NlcnNcIjpbXCI+IDIlXCJdfSxcImZvcmNlQWxsVHJhbnNmb3Jtc1wiOnRydWV9XV0sXCJwbHVnaW5zXCI6W1wiQGJhYmVsL3BsdWdpbi1wcm9wb3NhbC1vYmplY3QtcmVzdC1zcHJlYWRcIixbXCJAYmFiZWwvcGx1Z2luLXRyYW5zZm9ybS1ydW50aW1lXCIse1wiaGVscGVyc1wiOmZhbHNlfV1dfSEuL25vZGVfbW9kdWxlcy92dWUtbG9hZGVyL2xpYi9zZWxlY3Rvci5qcz90eXBlPXNjcmlwdCZpbmRleD0wIS4vbW9kdWxlcy9SZXBvcnQvUmVzb3VyY2VzL2Fzc2V0cy9qcy92aWV3cy9jb25zaWdubWVudC9pbmRleC52dWUuanMiLCJzb3VyY2VzQ29udGVudCI6WyI8dGVtcGxhdGU+XHJcbiAgICA8ZGl2IGNsYXNzPVwiY2FyZCBtYi0wIHB0LTIgcHQtbWQtMFwiPlxyXG4gICAgICAgIDxkaXYgY2xhc3M9XCJjYXJkLWhlYWRlciBiZy1wcmltYXJ5XCI+XHJcbiAgICAgICAgICAgIDxoNiBjbGFzcz1cIm15LTAgdGV4dC13aGl0ZVwiPkNvbnN1bHRhIGRlIENvbnNpZ25hbWllbnRvPC9oNj5cclxuICAgICAgICA8L2Rpdj5cclxuICAgICAgICA8ZGl2IGNsYXNzPVwiY2FyZCBtYi0wXCI+XHJcbiAgICAgICAgICAgIDxkaXYgY2xhc3M9XCJjYXJkLWJvZHlcIj5cclxuICAgICAgICAgICAgICAgIDxkYXRhLXRhYmxlIDpyZXNvdXJjZT1cInJlc291cmNlXCI+XHJcbiAgICAgICAgICAgICAgICAgICAgPHRyIHNsb3Q9XCJoZWFkaW5nXCI+XHJcbiAgICAgICAgICAgICAgICAgICAgICAgIDx0aD4jPC90aD5cclxuICAgICAgICAgICAgICAgICAgICAgICAgPHRoIGNsYXNzPVwidGV4dC1jZW50ZXJcIj5OwrA8L3RoPlxyXG4gICAgICAgICAgICAgICAgICAgICAgICA8dGggY2xhc3M9XCJ0ZXh0LWNlbnRlclwiPkNyZWFkbyBwb3I8L3RoPlxyXG4gICAgICAgICAgICAgICAgICAgICAgICA8dGggY2xhc3M9XCJ0ZXh0LWNlbnRlclwiPkxpcXVpZGFkbyBwb3I8L3RoPlxyXG4gICAgICAgICAgICAgICAgICAgICAgICA8dGggY2xhc3M9XCJ0ZXh0LWNlbnRlclwiPkZlY2hhIGRlIGVtaXNpw7NuPC90aD5cclxuICAgICAgICAgICAgICAgICAgICAgICAgPHRoIGNsYXNzPVwidGV4dC1jZW50ZXJcIj5GZWNoYSBkZSBsaXF1aWRhY2nDs248L3RoPlxyXG4gICAgICAgICAgICAgICAgICAgICAgICA8dGggY2xhc3M9XCJ0ZXh0LWxlZnRcIj5DbGllbnRlL1ZlbmRlZG9yPC90aD5cclxuICAgICAgICAgICAgICAgICAgICAgICAgPHRoIGNsYXNzPVwidGV4dC1jZW50ZXJcIj5QZW5hbGlkYWQ8L3RoPlxyXG4gICAgICAgICAgICAgICAgICAgICAgICA8dGggY2xhc3M9XCJ0ZXh0LWVuZFwiPlByb2R1Y3RvczwvdGg+XHJcbiAgICAgICAgICAgICAgICAgICAgICAgIDx0aCBjbGFzcz1cInRleHQtZW5kXCI+TW9udG88L3RoPlxyXG4gICAgICAgICAgICAgICAgICAgICAgICA8dGggY2xhc3M9XCJ0ZXh0LWVuZFwiPkVzdGFkbzwvdGg+XHJcbiAgICAgICAgICAgICAgICAgICAgPC90cj5cclxuXHJcbiAgICAgICAgICAgICAgICAgICAgPHRyPjwvdHI+XHJcbiAgICAgICAgICAgICAgICAgICAgPHRyIHNsb3Qtc2NvcGU9XCJ7IGluZGV4LCByb3cgfVwiPlxyXG4gICAgICAgICAgICAgICAgICAgICAgICA8dGQ+e3sgaW5kZXggfX08L3RkPlxyXG5cclxuICAgICAgICAgICAgICAgICAgICAgICAgPHRkIGNsYXNzPVwidGV4dC1jZW50ZXJcIj57eyByb3cubnVtYmVyIH19PC90ZD5cclxuICAgICAgICAgICAgICAgICAgICAgICAgPHRkIGNsYXNzPVwidGV4dC1jZW50ZXJcIj57eyByb3cudXNlcl9uYW1lIH19PC90ZD5cclxuICAgICAgICAgICAgICAgICAgICAgICAgPHRkIGNsYXNzPVwidGV4dC1jZW50ZXJcIj57eyByb3cudXNlcl9saXF1aWRhdGVkX25hbWUgfX08L3RkPlxyXG5cclxuICAgICAgICAgICAgICAgICAgICAgICAgPHRkIGNsYXNzPVwidGV4dC1jZW50ZXJcIj57eyByb3cuZGF0ZV9vZl9pc3N1ZSB9fTwvdGQ+XHJcbiAgICAgICAgICAgICAgICAgICAgICAgIDx0ZCBjbGFzcz1cInRleHQtY2VudGVyXCI+e3sgcm93LmRhdGVfb2ZfZW5kIH19PC90ZD5cclxuICAgICAgICAgICAgICAgICAgICAgICAgPHRkIGNsYXNzPVwidGV4dC1sZWZ0XCI+XHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICB7eyByb3cucGVyc29uLm5hbWUgfX1cclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxiciAvPlxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgPHNtYWxsPnt7IHJvdy5wZXJzb24ubnVtYmVyIH19PC9zbWFsbD5cclxuICAgICAgICAgICAgICAgICAgICAgICAgPC90ZD5cclxuICAgICAgICAgICAgICAgICAgICAgICAgPHRkIGNsYXNzPVwidGV4dC1jZW50ZXJcIj57eyByb3cucGVuYWx0eSB9fTwvdGQ+XHJcbiAgICAgICAgICAgICAgICAgICAgICAgIDx0ZCBjbGFzcz1cInRleHQtZW5kXCI+e3sgcm93LmNvdW50X2l0ZW1zIH19PC90ZD5cclxuICAgICAgICAgICAgICAgICAgICAgICAgPHRkIGNsYXNzPVwidGV4dC1lbmRcIj57eyByb3cudG90YWwudG9GaXhlZCgyKSB9fTwvdGQ+XHJcbiAgICAgICAgICAgICAgICAgICAgICAgIDx0ZCBjbGFzcz1cInRleHQtZW5kXCI+e3sgcm93LmxpcXVpZGF0ZWQgfX08L3RkPlxyXG4gICAgICAgICAgICAgICAgICAgIDwvdHI+XHJcbiAgICAgICAgICAgICAgICA8L2RhdGEtdGFibGU+XHJcbiAgICAgICAgICAgIDwvZGl2PlxyXG4gICAgICAgIDwvZGl2PlxyXG4gICAgPC9kaXY+XHJcbjwvdGVtcGxhdGU+XHJcblxyXG48c2NyaXB0PlxyXG5pbXBvcnQgRGF0YVRhYmxlIGZyb20gXCIuLi8uLi9jb21wb25lbnRzL0RhdGFUYWJsZVJlcG9ydHNDb25zaWdubWVudC52dWVcIjtcclxuXHJcbmV4cG9ydCBkZWZhdWx0IHtcclxuICAgIGNvbXBvbmVudHM6IHsgRGF0YVRhYmxlIH0sXHJcbiAgICBkYXRhKCkge1xyXG4gICAgICAgIHJldHVybiB7XHJcbiAgICAgICAgICAgIHJlc291cmNlOiBcInJlcG9ydHMvY29uc2lnbm1lbnRcIixcclxuICAgICAgICAgICAgZm9ybToge31cclxuICAgICAgICB9O1xyXG4gICAgfSxcclxuICAgIGFzeW5jIGNyZWF0ZWQoKSB7fSxcclxuICAgIG1ldGhvZHM6IHt9XHJcbn07XHJcbjwvc2NyaXB0PlxyXG5cblxuXG4vLyBXRUJQQUNLIEZPT1RFUiAvL1xuLy8gbW9kdWxlcy9SZXBvcnQvUmVzb3VyY2VzL2Fzc2V0cy9qcy92aWV3cy9jb25zaWdubWVudC9pbmRleC52dWUiXSwic291cmNlUm9vdCI6IiJ9\n//# sourceURL=webpack-internal:///./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/Report/Resources/assets/js/views/consignment/index.vue\n");
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator__ = __webpack_require__("./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_DataTableReportsConsignment_vue__ = __webpack_require__("./modules/Report/Resources/assets/js/components/DataTableReportsConsignment.vue");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_DataTableReportsConsignment_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__components_DataTableReportsConsignment_vue__);
+
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  components: {
+    DataTable: __WEBPACK_IMPORTED_MODULE_1__components_DataTableReportsConsignment_vue___default.a
+  },
+  data: function data() {
+    return {
+      resource: "reports/consignment",
+      form: {}
+    };
+  },
+  created: function created() {
+    return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee() {
+      return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+            case "end":
+              return _context.stop();
+          }
+        }
+      }, _callee);
+    }))();
+  },
+  methods: {}
+});
 
 /***/ }),
 
@@ -56,7 +1542,82 @@ eval("Object.defineProperty(__webpack_exports__, \"__esModule\", { value: true }
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("Object.defineProperty(__webpack_exports__, \"__esModule\", { value: true });\n/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator__ = __webpack_require__(\"./node_modules/@babel/runtime/regenerator/index.js\");\n/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator__);\n/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_DataTableReportsCredits_vue__ = __webpack_require__(\"./modules/Report/Resources/assets/js/components/DataTableReportsCredits.vue\");\n/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_DataTableReportsCredits_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__components_DataTableReportsCredits_vue__);\n\n\nfunction asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }\n\nfunction _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, \"next\", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, \"throw\", err); } _next(undefined); }); }; }\n\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n\n/* harmony default export */ __webpack_exports__[\"default\"] = ({\n  components: {\n    DataTable: __WEBPACK_IMPORTED_MODULE_1__components_DataTableReportsCredits_vue___default.a\n  },\n  data: function data() {\n    return {\n      resource: \"reports/credits\",\n      form: {}\n    };\n  },\n  created: function created() {\n    return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee() {\n      return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee$(_context) {\n        while (1) {\n          switch (_context.prev = _context.next) {\n            case 0:\n            case \"end\":\n              return _context.stop();\n          }\n        }\n      }, _callee);\n    }))();\n  },\n  methods: {}\n});//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vbW9kdWxlcy9SZXBvcnQvUmVzb3VyY2VzL2Fzc2V0cy9qcy92aWV3cy9jcmVkaXQvaW5kZXgudnVlPzRkNjciXSwibmFtZXMiOlsiY29tcG9uZW50cyIsIkRhdGFUYWJsZSIsImRhdGEiLCJyZXNvdXJjZSIsImZvcm0iLCJjcmVhdGVkIiwibWV0aG9kcyJdLCJtYXBwaW5ncyI6Ijs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7QUF3Q3FFO0FBRXREO0FBQ2ZBO0FBQUFDO0FBQUEsR0FEQTtBQUVBQyxNQUZBLGtCQUVBO0FBQ0E7QUFDQUMsaUNBREE7QUFFQUM7QUFGQTtBQUlBLEdBUEE7QUFRQUMsU0FSQSxxQkFRQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQSxHQVJBO0FBU0FDO0FBVEEiLCJmaWxlIjoiLi9ub2RlX21vZHVsZXMvYmFiZWwtbG9hZGVyL2xpYi9pbmRleC5qcz97XCJjYWNoZURpcmVjdG9yeVwiOnRydWUsXCJwcmVzZXRzXCI6W1tcIkBiYWJlbC9wcmVzZXQtZW52XCIse1wibW9kdWxlc1wiOmZhbHNlLFwidGFyZ2V0c1wiOntcImJyb3dzZXJzXCI6W1wiPiAyJVwiXX0sXCJmb3JjZUFsbFRyYW5zZm9ybXNcIjp0cnVlfV1dLFwicGx1Z2luc1wiOltcIkBiYWJlbC9wbHVnaW4tcHJvcG9zYWwtb2JqZWN0LXJlc3Qtc3ByZWFkXCIsW1wiQGJhYmVsL3BsdWdpbi10cmFuc2Zvcm0tcnVudGltZVwiLHtcImhlbHBlcnNcIjpmYWxzZX1dXX0hLi9ub2RlX21vZHVsZXMvdnVlLWxvYWRlci9saWIvc2VsZWN0b3IuanM/dHlwZT1zY3JpcHQmaW5kZXg9MCEuL21vZHVsZXMvUmVwb3J0L1Jlc291cmNlcy9hc3NldHMvanMvdmlld3MvY3JlZGl0L2luZGV4LnZ1ZS5qcyIsInNvdXJjZXNDb250ZW50IjpbIjx0ZW1wbGF0ZT5cclxuICAgIDxkaXYgY2xhc3M9XCJjYXJkIG1iLTAgcHQtMiBwdC1tZC0wXCI+XHJcbiAgICAgICAgPGRpdiBjbGFzcz1cImNhcmQtaGVhZGVyIGJnLXByaW1hcnlcIj5cclxuICAgICAgICAgICAgPGg2IGNsYXNzPVwibXktMCB0ZXh0LXdoaXRlXCI+Q29uc3VsdGEgZGUgTm90YSBkZSB2ZW50YTwvaDY+XHJcbiAgICAgICAgPC9kaXY+XHJcbiAgICAgICAgPGRpdiBjbGFzcz1cImNhcmQgbWItMFwiPlxyXG4gICAgICAgICAgICA8ZGl2IGNsYXNzPVwiY2FyZC1ib2R5XCI+XHJcbiAgICAgICAgICAgICAgICA8ZGF0YS10YWJsZSA6cmVzb3VyY2U9XCJyZXNvdXJjZVwiPlxyXG4gICAgICAgICAgICAgICAgICAgIDx0ciBzbG90PVwiaGVhZGluZ1wiPlxyXG4gICAgICAgICAgICAgICAgICAgICAgICA8dGg+IzwvdGg+XHJcbiAgICAgICAgICAgICAgICAgICAgICAgIDx0aCBjbGFzcz1cInRleHQtY2VudGVyXCI+Ti9WPC90aD5cclxuICAgICAgICAgICAgICAgICAgICAgICAgPHRoIGNsYXNzPVwidGV4dC1jZW50ZXJcIj5GZWNoYSBkZSBlbWlzacOzbjwvdGg+XHJcbiAgICAgICAgICAgICAgICAgICAgICAgIDx0aCBjbGFzcz1cInRleHQtY2VudGVyXCI+RE5JPC90aD5cclxuICAgICAgICAgICAgICAgICAgICAgICAgPHRoIGNsYXNzPVwidGV4dC1jZW50ZXJcIj5Ob21icmVzPC90aD5cclxuICAgICAgICAgICAgICAgICAgICAgICAgPHRoIGNsYXNzPVwidGV4dC1jZW50ZXJcIj5OwrAgQ3VvdGFzIFZlbmNpZGFzPC90aD5cclxuICAgICAgICAgICAgICAgICAgICAgICAgPHRoIGNsYXNzPVwidGV4dC1lbmRcIj5GZWNoYSBkZSBjb2JybzwvdGg+XHJcbiAgICAgICAgICAgICAgICAgICAgICAgIDx0aCBjbGFzcz1cInRleHQtZW5kXCI+TW9udG88L3RoPlxyXG4gICAgICAgICAgICAgICAgICAgICAgICA8dGggY2xhc3M9XCJ0ZXh0LWVuZFwiPkTDrWFzIGRlIGF0cmFzbzwvdGg+XHJcbiAgICAgICAgICAgICAgICAgICAgPC90cj5cclxuXHJcbiAgICAgICAgICAgICAgICAgICAgPHRyPjwvdHI+XHJcbiAgICAgICAgICAgICAgICAgICAgPHRyIHNsb3Qtc2NvcGU9XCJ7IGluZGV4LCByb3cgfVwiPlxyXG4gICAgICAgICAgICAgICAgICAgICAgICA8dGQ+e3sgaW5kZXggfX08L3RkPlxyXG5cclxuICAgICAgICAgICAgICAgICAgICAgICAgPHRkIGNsYXNzPVwidGV4dC1jZW50ZXJcIj57eyByb3cubnVtYmVyIH19PC90ZD5cclxuICAgICAgICAgICAgICAgICAgICAgICAgPHRkIGNsYXNzPVwidGV4dC1jZW50ZXJcIj57eyByb3cuZGF0ZV9vZl9pc3N1ZSB9fTwvdGQ+XHJcbiAgICAgICAgICAgICAgICAgICAgICAgIDx0ZCBjbGFzcz1cInRleHQtY2VudGVyXCI+e3sgcm93LmN1c3RvbWVyLm51bWJlciB9fTwvdGQ+XHJcbiAgICAgICAgICAgICAgICAgICAgICAgIDx0ZCBjbGFzcz1cInRleHQtY2VudGVyXCI+e3sgcm93LmN1c3RvbWVyLm5hbWUgfX08L3RkPlxyXG4gICAgICAgICAgICAgICAgICAgICAgICA8dGQgY2xhc3M9XCJ0ZXh0LWNlbnRlclwiPnt7IHJvdy5kdWVzIH19PC90ZD5cclxuICAgICAgICAgICAgICAgICAgICAgICAgPHRkIGNsYXNzPVwidGV4dC1lbmRcIj57eyByb3cuZGF0ZV9vZl9kdWUgfX08L3RkPlxyXG4gICAgICAgICAgICAgICAgICAgICAgICA8dGQgY2xhc3M9XCJ0ZXh0LWVuZFwiPnt7IHJvdy5hbW91bnRfZHVlIH19PC90ZD5cclxuICAgICAgICAgICAgICAgICAgICAgICAgPHRkIGNsYXNzPVwidGV4dC1lbmRcIj57eyByb3cuZGlmZmVyZW5jX2RheXMgfX08L3RkPlxyXG4gICAgICAgICAgICAgICAgICAgIDwvdHI+XHJcbiAgICAgICAgICAgICAgICA8L2RhdGEtdGFibGU+XHJcbiAgICAgICAgICAgIDwvZGl2PlxyXG4gICAgICAgIDwvZGl2PlxyXG4gICAgPC9kaXY+XHJcbjwvdGVtcGxhdGU+XHJcblxyXG48c2NyaXB0PlxyXG5pbXBvcnQgRGF0YVRhYmxlIGZyb20gXCIuLi8uLi9jb21wb25lbnRzL0RhdGFUYWJsZVJlcG9ydHNDcmVkaXRzLnZ1ZVwiO1xyXG5cclxuZXhwb3J0IGRlZmF1bHQge1xyXG4gICAgY29tcG9uZW50czogeyBEYXRhVGFibGUgfSxcclxuICAgIGRhdGEoKSB7XHJcbiAgICAgICAgcmV0dXJuIHtcclxuICAgICAgICAgICAgcmVzb3VyY2U6IFwicmVwb3J0cy9jcmVkaXRzXCIsXHJcbiAgICAgICAgICAgIGZvcm06IHt9XHJcbiAgICAgICAgfTtcclxuICAgIH0sXHJcbiAgICBhc3luYyBjcmVhdGVkKCkge30sXHJcbiAgICBtZXRob2RzOiB7fVxyXG59O1xyXG48L3NjcmlwdD5cclxuXG5cblxuLy8gV0VCUEFDSyBGT09URVIgLy9cbi8vIG1vZHVsZXMvUmVwb3J0L1Jlc291cmNlcy9hc3NldHMvanMvdmlld3MvY3JlZGl0L2luZGV4LnZ1ZSJdLCJzb3VyY2VSb290IjoiIn0=\n//# sourceURL=webpack-internal:///./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/Report/Resources/assets/js/views/credit/index.vue\n");
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator__ = __webpack_require__("./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_DataTableReportsCredits_vue__ = __webpack_require__("./modules/Report/Resources/assets/js/components/DataTableReportsCredits.vue");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_DataTableReportsCredits_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__components_DataTableReportsCredits_vue__);
+
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  components: {
+    DataTable: __WEBPACK_IMPORTED_MODULE_1__components_DataTableReportsCredits_vue___default.a
+  },
+  data: function data() {
+    return {
+      resource: "reports/credits",
+      form: {}
+    };
+  },
+  created: function created() {
+    return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee() {
+      return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+            case "end":
+              return _context.stop();
+          }
+        }
+      }, _callee);
+    }))();
+  },
+  methods: {}
+});
 
 /***/ }),
 
@@ -64,21 +1625,385 @@ eval("Object.defineProperty(__webpack_exports__, \"__esModule\", { value: true }
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("Object.defineProperty(__webpack_exports__, \"__esModule\", { value: true });\n/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator__ = __webpack_require__(\"./node_modules/@babel/runtime/regenerator/index.js\");\n/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator__);\n\n\nfunction asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }\n\nfunction _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, \"next\", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, \"throw\", err); } _next(undefined); }); }; }\n\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n/* harmony default export */ __webpack_exports__[\"default\"] = ({\n  props: [\"resource\", \"message\", \"showWhatsappForm\"],\n  data: function data() {\n    return {\n      loading: false,\n      number: null,\n      configuration: {}\n    };\n  },\n  created: function created() {\n    var _this = this;\n\n    return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee() {\n      return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee$(_context) {\n        while (1) {\n          switch (_context.prev = _context.next) {\n            case 0:\n              _this.socketWhatsappConfig();\n\n              _context.next = 3;\n              return _this.getConfiguration();\n\n            case 3:\n            case \"end\":\n              return _context.stop();\n          }\n        }\n      }, _callee);\n    }))();\n  },\n  methods: {\n    send: function send() {\n      var _this2 = this;\n\n      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee2() {\n        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee2$(_context2) {\n          while (1) {\n            switch (_context2.prev = _context2.next) {\n              case 0:\n                if (!(_this2.sender == \"sdrimsac\")) {\n                  _context2.next = 5;\n                  break;\n                }\n\n                _context2.next = 3;\n                return _this2.sendWhatsapp();\n\n              case 3:\n                _context2.next = 7;\n                break;\n\n              case 5:\n                _context2.next = 7;\n                return _this2.sendFile();\n\n              case 7:\n              case \"end\":\n                return _context2.stop();\n            }\n          }\n        }, _callee2);\n      }))();\n    },\n    getConfiguration: function getConfiguration() {\n      var _this3 = this;\n\n      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee3() {\n        var response, data;\n        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee3$(_context3) {\n          while (1) {\n            switch (_context3.prev = _context3.next) {\n              case 0:\n                _context3.prev = 0;\n                _context3.next = 3;\n                return _this3.$http(\"/configurations/record\");\n\n              case 3:\n                response = _context3.sent;\n                data = response.data.data;\n                _this3.configuration = data;\n                _context3.next = 11;\n                break;\n\n              case 8:\n                _context3.prev = 8;\n                _context3.t0 = _context3[\"catch\"](0);\n\n                _this3.$toast.error(\"No se pudo obtener la configuración\");\n\n              case 11:\n              case \"end\":\n                return _context3.stop();\n            }\n          }\n        }, _callee3, null, [[0, 8]]);\n      }))();\n    },\n    open: function open() {},\n    socketWhatsappConfig: function socketWhatsappConfig() {\n      var _this4 = this;\n\n      var hostName = window.location.hostname;\n      var url = \"https://\".concat(hostName);\n      this.sender = hostName.replace(/https?\\:\\/\\//, \"\").replace(\"/\", \"\").split(\".\").join(\"\");\n\n      try {\n        this.socket = io.connect(this.$socketUrl);\n      } catch (e) {\n        console.log(e);\n      }\n\n      this.socket.on(\"ready\", function (message) {\n        _this4.showMessage(message);\n      });\n      this.socket.on(\"authenticated\", function (_ref) {\n        var message = _ref.message,\n            sender = _ref.sender;\n        _this4.sender = sender;\n\n        _this4.showMessage(message);\n      });\n      this.socket.on(\"connected\", function (_ref2) {\n        var message = _ref2.message;\n\n        _this4.$message.success(message);\n\n        _this4.socket.emit(\"getStatus\", url);\n      });\n      this.socket.on(\"setStatus\", function (_ref3) {\n        var status = _ref3.status,\n            sender = _ref3.sender;\n\n        if (!status) {\n          _this4.sender = \"sdrimsac\";\n\n          _this4.$message.warning(\"Sesión iniciada con SDRIMSAC\");\n        } else {\n          _this4.sender = sender;\n\n          _this4.$message.success(\"Whatsapp Listo!\");\n        }\n      }); //MessageResponse\n\n      this.socket.on(\"MessageResponse\", function (_ref4) {\n        var success = _ref4.success,\n            message = _ref4.message;\n\n        if (success) {\n          _this4.$message.success(message);\n        } else {\n          _this4.$message.error(message);\n        }\n      });\n    },\n    getBase64FromUrl: function getBase64FromUrl(url) {\n      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee4() {\n        var data, blob;\n        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee4$(_context4) {\n          while (1) {\n            switch (_context4.prev = _context4.next) {\n              case 0:\n                _context4.next = 2;\n                return fetch(url);\n\n              case 2:\n                data = _context4.sent;\n                _context4.next = 5;\n                return data.blob();\n\n              case 5:\n                blob = _context4.sent;\n                return _context4.abrupt(\"return\", new Promise(function (resolve) {\n                  var reader = new FileReader();\n                  reader.readAsDataURL(blob);\n\n                  reader.onloadend = function () {\n                    var base64data = reader.result;\n                    resolve(base64data);\n                  };\n                }));\n\n              case 7:\n              case \"end\":\n                return _context4.stop();\n            }\n          }\n        }, _callee4);\n      }))();\n    },\n    sendFile: function sendFile() {\n      var _this5 = this;\n\n      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee5() {\n        var b64, extension, msg;\n        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee5$(_context5) {\n          while (1) {\n            switch (_context5.prev = _context5.next) {\n              case 0:\n                _context5.prev = 0;\n\n                if (!(!_this5.number || _this5.number.length != 9 || isNaN(_this5.number))) {\n                  _context5.next = 3;\n                  break;\n                }\n\n                return _context5.abrupt(\"return\", _this5.$toast.error(\"Ingrese un número válido\"));\n\n              case 3:\n                _this5.loading = true;\n                _context5.next = 6;\n                return _this5.getBase64FromUrl(_this5.resource);\n\n              case 6:\n                b64 = _context5.sent;\n                extension = \".pdf\";\n                b64 = b64.split(\",\")[1];\n\n                _this5.socket.emit(\"sendFile\", {\n                  file: b64,\n                  name: \"\".concat(_this5.message.split(\" \").join(\"-\")).concat(_this5.message.includes(\".xlsx\") ? \"\" : extension),\n                  number: \"51\".concat(_this5.number),\n                  sender: _this5.sender\n                });\n\n                _this5.$toast.success(\"Se envió el mensaje\");\n\n                _this5.close();\n\n                _context5.next = 19;\n                break;\n\n              case 14:\n                _context5.prev = 14;\n                _context5.t0 = _context5[\"catch\"](0);\n                msg = \"Ocurrió un error\";\n                console.log(_context5.t0);\n\n                _this5.$toast.error(msg);\n\n              case 19:\n                _context5.prev = 19;\n                _this5.loading = false;\n                return _context5.finish(19);\n\n              case 22:\n              case \"end\":\n                return _context5.stop();\n            }\n          }\n        }, _callee5, null, [[0, 14, 19, 22]]);\n      }))();\n    },\n    sendWhatsapp: function sendWhatsapp() {\n      var _this6 = this;\n\n      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee6() {\n        var response;\n        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee6$(_context6) {\n          while (1) {\n            switch (_context6.prev = _context6.next) {\n              case 0:\n                if (!(!_this6.number || _this6.number.length != 9 || isNaN(_this6.number))) {\n                  _context6.next = 2;\n                  break;\n                }\n\n                return _context6.abrupt(\"return\", _this6.$toast.error(\"Ingrese un número válido\"));\n\n              case 2:\n                _this6.loading = true;\n                _context6.prev = 3;\n                _context6.next = 6;\n                return _this6.$http.post(\"/whatsapp/historial\", {\n                  number: _this6.number,\n                  message: _this6.message,\n                  resource: _this6.resource,\n                  file_name: _this6.message.split(\" \").join(\"-\"),\n                  sender: _this6.sender\n                });\n\n              case 6:\n                response = _context6.sent;\n\n                if (response.status == 200) {\n                  _this6.$toast.success(\"Mensaje enviado\");\n                }\n\n                _context6.next = 14;\n                break;\n\n              case 10:\n                _context6.prev = 10;\n                _context6.t0 = _context6[\"catch\"](3);\n\n                _this6.$toast.error(\"Mensaje no enviado\");\n\n                console.log(_context6.t0);\n\n              case 14:\n                _context6.prev = 14;\n                _this6.loading = false;\n\n                _this6.close();\n\n                return _context6.finish(14);\n\n              case 18:\n              case \"end\":\n                return _context6.stop();\n            }\n          }\n        }, _callee6, null, [[3, 10, 14, 18]]);\n      }))();\n    },\n    close: function close() {\n      this.number = null;\n      this.$emit(\"update:showWhatsappForm\", false);\n    }\n  }\n});//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vcmVzb3VyY2VzL2pzL2NvbXBvbmVudHMvV2hhdHNhcHBNb2RhbFJlcG9ydHMudnVlPzUxNTMiXSwibmFtZXMiOlsicHJvcHMiLCJkYXRhIiwibG9hZGluZyIsIm51bWJlciIsImNvbmZpZ3VyYXRpb24iLCJjcmVhdGVkIiwibWV0aG9kcyIsInNlbmQiLCJnZXRDb25maWd1cmF0aW9uIiwicmVzcG9uc2UiLCJvcGVuIiwic29ja2V0V2hhdHNhcHBDb25maWciLCJyZXBsYWNlIiwic3BsaXQiLCJqb2luIiwiY29uc29sZSIsImdldEJhc2U2NEZyb21VcmwiLCJ1cmwiLCJmZXRjaCIsImJsb2IiLCJyZWFkZXIiLCJyZXNvbHZlIiwic2VuZEZpbGUiLCJpc05hTiIsImI2NCIsImV4dGVuc2lvbiIsImZpbGUiLCJuYW1lIiwic2VuZGVyIiwibXNnIiwic2VuZFdoYXRzYXBwIiwibWVzc2FnZSIsInJlc291cmNlIiwiZmlsZV9uYW1lIiwiY2xvc2UiXSwibWFwcGluZ3MiOiI7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7O0FBcUJlO0FBQ2ZBLG9EQURBO0FBRUFDLE1BRkEsa0JBRUE7QUFDQTtBQUNBQyxvQkFEQTtBQUVBQyxrQkFGQTtBQUdBQztBQUhBO0FBS0EsR0FSQTtBQVNBQyxTQVRBLHFCQVNBO0FBQUE7O0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUNBOztBQURBO0FBQUEscUJBRUEsd0JBRkE7O0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFHQSxHQVpBO0FBY0FDO0FBQ0FDLFFBREEsa0JBQ0E7QUFBQTs7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUEsc0JBQ0EsMkJBREE7QUFBQTtBQUFBO0FBQUE7O0FBQUE7QUFBQSx1QkFFQSxxQkFGQTs7QUFBQTtBQUFBO0FBQUE7O0FBQUE7QUFBQTtBQUFBLHVCQUlBLGlCQUpBOztBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBTUEsS0FQQTtBQVFBQyxvQkFSQSw4QkFRQTtBQUFBOztBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQSx1QkFFQSxzQ0FGQTs7QUFBQTtBQUVBQyx3QkFGQTtBQUlBUixvQkFKQSxHQUtBUSxRQUxBLENBSUFSLElBSkEsQ0FJQUEsSUFKQTtBQU1BO0FBTkE7QUFBQTs7QUFBQTtBQUFBO0FBQUE7O0FBUUE7O0FBUkE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFVQSxLQWxCQTtBQW1CQVMsUUFuQkEsa0JBbUJBLEVBbkJBO0FBb0JBQyx3QkFwQkEsa0NBb0JBO0FBQUE7O0FBQ0E7QUFDQTtBQUNBLDZCQUNBQyxPQURBLENBQ0EsY0FEQSxFQUNBLEVBREEsRUFFQUEsT0FGQSxDQUVBLEdBRkEsRUFFQSxFQUZBLEVBR0FDLEtBSEEsQ0FHQSxHQUhBLEVBSUFDLElBSkEsQ0FJQSxFQUpBOztBQUtBO0FBQ0E7QUFDQSxPQUZBLENBRUE7QUFDQUM7QUFDQTs7QUFDQTtBQUNBO0FBQ0EsT0FGQTtBQUdBO0FBQUE7QUFBQTtBQUNBOztBQUNBO0FBQ0EsT0FIQTtBQUlBO0FBQUE7O0FBQ0E7O0FBRUE7QUFDQSxPQUpBO0FBS0E7QUFBQTtBQUFBOztBQUNBO0FBQ0E7O0FBQ0E7QUFDQSxTQUhBLE1BR0E7QUFDQTs7QUFDQTtBQUNBO0FBQ0EsT0FSQSxFQXpCQSxDQWtDQTs7QUFDQTtBQUFBO0FBQUE7O0FBQ0E7QUFDQTtBQUNBLFNBRkEsTUFFQTtBQUNBO0FBQ0E7QUFDQSxPQU5BO0FBT0EsS0E5REE7QUErREFDLG9CQS9EQSw0QkErREFDLEdBL0RBLEVBK0RBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQSx1QkFDQUMsVUFEQTs7QUFBQTtBQUNBakIsb0JBREE7QUFBQTtBQUFBLHVCQUVBQSxXQUZBOztBQUFBO0FBRUFrQixvQkFGQTtBQUFBLGtEQUdBO0FBQ0E7QUFDQUM7O0FBQ0FBO0FBQ0E7QUFDQUM7QUFDQSxtQkFIQTtBQUlBLGlCQVBBLENBSEE7O0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFXQSxLQTFFQTtBQTJFQUMsWUEzRUEsc0JBMkVBO0FBQUE7O0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7O0FBQUEsc0JBR0Esa0JBQ0EseUJBREEsSUFFQUMsb0JBTEE7QUFBQTtBQUFBO0FBQUE7O0FBQUEsa0RBT0EsK0NBUEE7O0FBQUE7QUFTQTtBQVRBO0FBQUEsdUJBVUEsd0NBVkE7O0FBQUE7QUFVQUMsbUJBVkE7QUFXQUMseUJBWEEsR0FXQSxNQVhBO0FBYUFEOztBQUNBO0FBQ0FFLDJCQURBO0FBRUFDLGdJQUZBO0FBR0F4QixvREFIQTtBQUlBeUI7QUFKQTs7QUFNQTs7QUFDQTs7QUFyQkE7QUFBQTs7QUFBQTtBQUFBO0FBQUE7QUF1QkFDLG1CQXZCQSxHQXVCQSxrQkF2QkE7QUF5QkFkOztBQUNBOztBQTFCQTtBQUFBO0FBNEJBO0FBNUJBOztBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBOEJBLEtBekdBO0FBMEdBZSxnQkExR0EsMEJBMEdBO0FBQUE7O0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUEsc0JBQ0EsbUVBREE7QUFBQTtBQUFBO0FBQUE7O0FBQUEsa0RBRUEsK0NBRkE7O0FBQUE7QUFJQTtBQUpBO0FBQUE7QUFBQSx1QkFNQTtBQUNBM0IsdUNBREE7QUFFQTRCLHlDQUZBO0FBR0FDLDJDQUhBO0FBSUFDLGdFQUpBO0FBS0FMO0FBTEEsa0JBTkE7O0FBQUE7QUFNQW5CLHdCQU5BOztBQWNBO0FBQ0E7QUFDQTs7QUFoQkE7QUFBQTs7QUFBQTtBQUFBO0FBQUE7O0FBa0JBOztBQUNBTTs7QUFuQkE7QUFBQTtBQXFCQTs7QUFDQTs7QUF0QkE7O0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUF3QkEsS0FsSUE7QUFtSUFtQixTQW5JQSxtQkFtSUE7QUFDQTtBQUVBO0FBQ0E7QUF2SUE7QUFkQSIsImZpbGUiOiIuL25vZGVfbW9kdWxlcy9iYWJlbC1sb2FkZXIvbGliL2luZGV4LmpzP3tcImNhY2hlRGlyZWN0b3J5XCI6dHJ1ZSxcInByZXNldHNcIjpbW1wiQGJhYmVsL3ByZXNldC1lbnZcIix7XCJtb2R1bGVzXCI6ZmFsc2UsXCJ0YXJnZXRzXCI6e1wiYnJvd3NlcnNcIjpbXCI+IDIlXCJdfSxcImZvcmNlQWxsVHJhbnNmb3Jtc1wiOnRydWV9XV0sXCJwbHVnaW5zXCI6W1wiQGJhYmVsL3BsdWdpbi1wcm9wb3NhbC1vYmplY3QtcmVzdC1zcHJlYWRcIixbXCJAYmFiZWwvcGx1Z2luLXRyYW5zZm9ybS1ydW50aW1lXCIse1wiaGVscGVyc1wiOmZhbHNlfV1dfSEuL25vZGVfbW9kdWxlcy92dWUtbG9hZGVyL2xpYi9zZWxlY3Rvci5qcz90eXBlPXNjcmlwdCZpbmRleD0wIS4vcmVzb3VyY2VzL2pzL2NvbXBvbmVudHMvV2hhdHNhcHBNb2RhbFJlcG9ydHMudnVlLmpzIiwic291cmNlc0NvbnRlbnQiOlsiPHRlbXBsYXRlPlxyXG4gICAgPGVsLWRpYWxvZ1xyXG4gICAgICAgIEBjbG9zZT1cImNsb3NlXCJcclxuICAgICAgICBAb3Blbj1cIm9wZW5cIlxyXG4gICAgICAgIGFwcGVuZC10by1ib2R5XHJcbiAgICAgICAgd2lkdGg9XCI0MCVcIlxyXG4gICAgICAgIHRpdGxlPVwiRW52aWFyIHJlcG9ydGUgcG9yIHdoYXRzYXBwXCJcclxuICAgICAgICA6dmlzaWJsZT1cInNob3dXaGF0c2FwcEZvcm1cIlxyXG4gICAgPlxyXG4gICAgICAgIDxkaXYgY2xhc3M9XCJwLTNcIiB2LWxvYWRpbmc9XCJsb2FkaW5nXCIgZWxlbWVudC1sb2FkaW5nLXRleHQ9XCJFbnZpYW5kby4uXCI+XHJcbiAgICAgICAgICAgIDxsYWJlbCBmb3I9XCJcIj5Ow7ptZXJvPC9sYWJlbD5cclxuICAgICAgICAgICAgPGVsLWlucHV0IHYtbW9kZWw9XCJudW1iZXJcIiBzdHlsZT1cIndpZHRoOjEwMCVcIj48L2VsLWlucHV0PlxyXG4gICAgICAgICAgICA8ZGl2IGNsYXNzPVwiZC1mbGV4IGp1c3RpZnktY29udGVudC1lbmQgcC0xXCI+XHJcbiAgICAgICAgICAgICAgICA8IS0tIDxlbC1idXR0b24gQGNsaWNrPVwic2VuZFdoYXRzYXBwXCI+RW52aWFyPC9lbC1idXR0b24+IC0tPlxyXG4gICAgICAgICAgICAgICAgPGVsLWJ1dHRvbiBAY2xpY2s9XCJzZW5kXCI+RW52aWFyPC9lbC1idXR0b24+XHJcbiAgICAgICAgICAgIDwvZGl2PlxyXG4gICAgICAgIDwvZGl2PlxyXG4gICAgPC9lbC1kaWFsb2c+XHJcbjwvdGVtcGxhdGU+XHJcblxyXG48c2NyaXB0PlxyXG5leHBvcnQgZGVmYXVsdCB7XHJcbiAgICBwcm9wczogW1wicmVzb3VyY2VcIiwgXCJtZXNzYWdlXCIsIFwic2hvd1doYXRzYXBwRm9ybVwiXSxcclxuICAgIGRhdGEoKSB7XHJcbiAgICAgICAgcmV0dXJuIHtcclxuICAgICAgICAgICAgbG9hZGluZzogZmFsc2UsXHJcbiAgICAgICAgICAgIG51bWJlcjogbnVsbCxcclxuICAgICAgICAgICAgY29uZmlndXJhdGlvbjoge31cclxuICAgICAgICB9O1xyXG4gICAgfSxcclxuICAgIGFzeW5jIGNyZWF0ZWQoKSB7XHJcbiAgICAgICAgdGhpcy5zb2NrZXRXaGF0c2FwcENvbmZpZygpO1xyXG4gICAgICAgIGF3YWl0IHRoaXMuZ2V0Q29uZmlndXJhdGlvbigpO1xyXG4gICAgfSxcclxuXHJcbiAgICBtZXRob2RzOiB7XHJcbiAgICAgICAgYXN5bmMgc2VuZCgpIHtcclxuICAgICAgICAgICAgaWYgKHRoaXMuc2VuZGVyID09IFwic2RyaW1zYWNcIikge1xyXG4gICAgICAgICAgICAgICAgYXdhaXQgdGhpcy5zZW5kV2hhdHNhcHAoKTtcclxuICAgICAgICAgICAgfSBlbHNlIHtcclxuICAgICAgICAgICAgICAgIGF3YWl0IHRoaXMuc2VuZEZpbGUoKTtcclxuICAgICAgICAgICAgfVxyXG4gICAgICAgIH0sXHJcbiAgICAgICAgYXN5bmMgZ2V0Q29uZmlndXJhdGlvbigpIHtcclxuICAgICAgICAgICAgdHJ5IHtcclxuICAgICAgICAgICAgICAgIGNvbnN0IHJlc3BvbnNlID0gYXdhaXQgdGhpcy4kaHR0cChcIi9jb25maWd1cmF0aW9ucy9yZWNvcmRcIik7XHJcbiAgICAgICAgICAgICAgICBjb25zdCB7XHJcbiAgICAgICAgICAgICAgICAgICAgZGF0YTogeyBkYXRhIH1cclxuICAgICAgICAgICAgICAgIH0gPSByZXNwb25zZTtcclxuICAgICAgICAgICAgICAgIHRoaXMuY29uZmlndXJhdGlvbiA9IGRhdGE7XHJcbiAgICAgICAgICAgIH0gY2F0Y2ggKGUpIHtcclxuICAgICAgICAgICAgICAgIHRoaXMuJHRvYXN0LmVycm9yKFwiTm8gc2UgcHVkbyBvYnRlbmVyIGxhIGNvbmZpZ3VyYWNpw7NuXCIpO1xyXG4gICAgICAgICAgICB9XHJcbiAgICAgICAgfSxcclxuICAgICAgICBvcGVuKCkge30sXHJcbiAgICAgICAgc29ja2V0V2hhdHNhcHBDb25maWcoKSB7XHJcbiAgICAgICAgICAgIGxldCBob3N0TmFtZSA9IHdpbmRvdy5sb2NhdGlvbi5ob3N0bmFtZTtcclxuICAgICAgICAgICAgbGV0IHVybCA9IGBodHRwczovLyR7aG9zdE5hbWV9YDtcclxuICAgICAgICAgICAgdGhpcy5zZW5kZXIgPSBob3N0TmFtZVxyXG4gICAgICAgICAgICAgICAgLnJlcGxhY2UoL2h0dHBzP1xcOlxcL1xcLy8sIFwiXCIpXHJcbiAgICAgICAgICAgICAgICAucmVwbGFjZShcIi9cIiwgXCJcIilcclxuICAgICAgICAgICAgICAgIC5zcGxpdChcIi5cIilcclxuICAgICAgICAgICAgICAgIC5qb2luKFwiXCIpO1xyXG4gICAgICAgICAgICB0cnkge1xyXG4gICAgICAgICAgICAgICAgdGhpcy5zb2NrZXQgPSBpby5jb25uZWN0KHRoaXMuJHNvY2tldFVybCk7XHJcbiAgICAgICAgICAgIH0gY2F0Y2ggKGUpIHtcclxuICAgICAgICAgICAgICAgIGNvbnNvbGUubG9nKGUpO1xyXG4gICAgICAgICAgICB9XHJcbiAgICAgICAgICAgIHRoaXMuc29ja2V0Lm9uKFwicmVhZHlcIiwgbWVzc2FnZSA9PiB7XHJcbiAgICAgICAgICAgICAgICB0aGlzLnNob3dNZXNzYWdlKG1lc3NhZ2UpO1xyXG4gICAgICAgICAgICB9KTtcclxuICAgICAgICAgICAgdGhpcy5zb2NrZXQub24oXCJhdXRoZW50aWNhdGVkXCIsICh7IG1lc3NhZ2UsIHNlbmRlciB9KSA9PiB7XHJcbiAgICAgICAgICAgICAgICB0aGlzLnNlbmRlciA9IHNlbmRlcjtcclxuICAgICAgICAgICAgICAgIHRoaXMuc2hvd01lc3NhZ2UobWVzc2FnZSk7XHJcbiAgICAgICAgICAgIH0pO1xyXG4gICAgICAgICAgICB0aGlzLnNvY2tldC5vbihcImNvbm5lY3RlZFwiLCAoeyBtZXNzYWdlIH0pID0+IHtcclxuICAgICAgICAgICAgICAgIHRoaXMuJG1lc3NhZ2Uuc3VjY2VzcyhtZXNzYWdlKTtcclxuXHJcbiAgICAgICAgICAgICAgICB0aGlzLnNvY2tldC5lbWl0KFwiZ2V0U3RhdHVzXCIsIHVybCk7XHJcbiAgICAgICAgICAgIH0pO1xyXG4gICAgICAgICAgICB0aGlzLnNvY2tldC5vbihcInNldFN0YXR1c1wiLCAoeyBzdGF0dXMsIHNlbmRlciB9KSA9PiB7XHJcbiAgICAgICAgICAgICAgICBpZiAoIXN0YXR1cykge1xyXG4gICAgICAgICAgICAgICAgICAgIHRoaXMuc2VuZGVyID0gXCJzZHJpbXNhY1wiO1xyXG4gICAgICAgICAgICAgICAgICAgIHRoaXMuJG1lc3NhZ2Uud2FybmluZyhcIlNlc2nDs24gaW5pY2lhZGEgY29uIFNEUklNU0FDXCIpO1xyXG4gICAgICAgICAgICAgICAgfSBlbHNlIHtcclxuICAgICAgICAgICAgICAgICAgICB0aGlzLnNlbmRlciA9IHNlbmRlcjtcclxuICAgICAgICAgICAgICAgICAgICB0aGlzLiRtZXNzYWdlLnN1Y2Nlc3MoXCJXaGF0c2FwcCBMaXN0byFcIik7XHJcbiAgICAgICAgICAgICAgICB9XHJcbiAgICAgICAgICAgIH0pO1xyXG4gICAgICAgICAgICAvL01lc3NhZ2VSZXNwb25zZVxyXG4gICAgICAgICAgICB0aGlzLnNvY2tldC5vbihcIk1lc3NhZ2VSZXNwb25zZVwiLCAoeyBzdWNjZXNzLCBtZXNzYWdlIH0pID0+IHtcclxuICAgICAgICAgICAgICAgIGlmIChzdWNjZXNzKSB7XHJcbiAgICAgICAgICAgICAgICAgICAgdGhpcy4kbWVzc2FnZS5zdWNjZXNzKG1lc3NhZ2UpO1xyXG4gICAgICAgICAgICAgICAgfSBlbHNlIHtcclxuICAgICAgICAgICAgICAgICAgICB0aGlzLiRtZXNzYWdlLmVycm9yKG1lc3NhZ2UpO1xyXG4gICAgICAgICAgICAgICAgfVxyXG4gICAgICAgICAgICB9KTtcclxuICAgICAgICB9LFxyXG4gICAgICAgIGFzeW5jIGdldEJhc2U2NEZyb21VcmwodXJsKSB7XHJcbiAgICAgICAgICAgIGNvbnN0IGRhdGEgPSBhd2FpdCBmZXRjaCh1cmwpO1xyXG4gICAgICAgICAgICBjb25zdCBibG9iID0gYXdhaXQgZGF0YS5ibG9iKCk7XHJcbiAgICAgICAgICAgIHJldHVybiBuZXcgUHJvbWlzZShyZXNvbHZlID0+IHtcclxuICAgICAgICAgICAgICAgIGNvbnN0IHJlYWRlciA9IG5ldyBGaWxlUmVhZGVyKCk7XHJcbiAgICAgICAgICAgICAgICByZWFkZXIucmVhZEFzRGF0YVVSTChibG9iKTtcclxuICAgICAgICAgICAgICAgIHJlYWRlci5vbmxvYWRlbmQgPSAoKSA9PiB7XHJcbiAgICAgICAgICAgICAgICAgICAgY29uc3QgYmFzZTY0ZGF0YSA9IHJlYWRlci5yZXN1bHQ7XHJcbiAgICAgICAgICAgICAgICAgICAgcmVzb2x2ZShiYXNlNjRkYXRhKTtcclxuICAgICAgICAgICAgICAgIH07XHJcbiAgICAgICAgICAgIH0pO1xyXG4gICAgICAgIH0sXHJcbiAgICAgICAgYXN5bmMgc2VuZEZpbGUoKSB7XHJcbiAgICAgICAgICAgIHRyeSB7XHJcbiAgICAgICAgICAgICAgICBpZiAoXHJcbiAgICAgICAgICAgICAgICAgICAgIXRoaXMubnVtYmVyIHx8XHJcbiAgICAgICAgICAgICAgICAgICAgdGhpcy5udW1iZXIubGVuZ3RoICE9IDkgfHxcclxuICAgICAgICAgICAgICAgICAgICBpc05hTih0aGlzLm51bWJlcilcclxuICAgICAgICAgICAgICAgICkge1xyXG4gICAgICAgICAgICAgICAgICAgIHJldHVybiB0aGlzLiR0b2FzdC5lcnJvcihcIkluZ3Jlc2UgdW4gbsO6bWVybyB2w6FsaWRvXCIpO1xyXG4gICAgICAgICAgICAgICAgfVxyXG4gICAgICAgICAgICAgICAgdGhpcy5sb2FkaW5nID0gdHJ1ZTtcclxuICAgICAgICAgICAgICAgIGxldCBiNjQgPSBhd2FpdCB0aGlzLmdldEJhc2U2NEZyb21VcmwodGhpcy5yZXNvdXJjZSk7XHJcbiAgICAgICAgICAgICAgICBsZXQgZXh0ZW5zaW9uID0gXCIucGRmXCI7XHJcbiAgICAgICAgICAgICBcclxuICAgICAgICAgICAgICAgIGI2NCA9IGI2NC5zcGxpdChcIixcIilbMV07XHJcbiAgICAgICAgICAgICAgICB0aGlzLnNvY2tldC5lbWl0KFwic2VuZEZpbGVcIiwge1xyXG4gICAgICAgICAgICAgICAgICAgIGZpbGU6IGI2NCxcclxuICAgICAgICAgICAgICAgICAgICBuYW1lOiBgJHt0aGlzLm1lc3NhZ2Uuc3BsaXQoXCIgXCIpLmpvaW4oXCItXCIpfSR7dGhpcy5tZXNzYWdlLmluY2x1ZGVzKFwiLnhsc3hcIikgPyBcIlwiOmV4dGVuc2lvbn1gLFxyXG4gICAgICAgICAgICAgICAgICAgIG51bWJlcjogYDUxJHt0aGlzLm51bWJlcn1gLFxyXG4gICAgICAgICAgICAgICAgICAgIHNlbmRlcjogdGhpcy5zZW5kZXJcclxuICAgICAgICAgICAgICAgIH0pO1xyXG4gICAgICAgICAgICAgICAgdGhpcy4kdG9hc3Quc3VjY2VzcyhcIlNlIGVudmnDsyBlbCBtZW5zYWplXCIpO1xyXG4gICAgICAgICAgICAgICAgdGhpcy5jbG9zZSgpO1xyXG4gICAgICAgICAgICB9IGNhdGNoIChlKSB7XHJcbiAgICAgICAgICAgICAgICBsZXQgbXNnID0gXCJPY3VycmnDsyB1biBlcnJvclwiO1xyXG5cclxuICAgICAgICAgICAgICAgIGNvbnNvbGUubG9nKGUpO1xyXG4gICAgICAgICAgICAgICAgdGhpcy4kdG9hc3QuZXJyb3IobXNnKTtcclxuICAgICAgICAgICAgfSBmaW5hbGx5IHtcclxuICAgICAgICAgICAgICAgIHRoaXMubG9hZGluZyA9IGZhbHNlO1xyXG4gICAgICAgICAgICB9XHJcbiAgICAgICAgfSxcclxuICAgICAgICBhc3luYyBzZW5kV2hhdHNhcHAoKSB7XHJcbiAgICAgICAgICAgIGlmICghdGhpcy5udW1iZXIgfHwgdGhpcy5udW1iZXIubGVuZ3RoICE9IDkgfHwgaXNOYU4odGhpcy5udW1iZXIpKSB7XHJcbiAgICAgICAgICAgICAgICByZXR1cm4gdGhpcy4kdG9hc3QuZXJyb3IoXCJJbmdyZXNlIHVuIG7Dum1lcm8gdsOhbGlkb1wiKTtcclxuICAgICAgICAgICAgfVxyXG4gICAgICAgICAgICB0aGlzLmxvYWRpbmcgPSB0cnVlO1xyXG4gICAgICAgICAgICB0cnkge1xyXG4gICAgICAgICAgICAgICAgY29uc3QgcmVzcG9uc2UgPSBhd2FpdCB0aGlzLiRodHRwLnBvc3QoXCIvd2hhdHNhcHAvaGlzdG9yaWFsXCIsIHtcclxuICAgICAgICAgICAgICAgICAgICBudW1iZXI6IHRoaXMubnVtYmVyLFxyXG4gICAgICAgICAgICAgICAgICAgIG1lc3NhZ2U6IHRoaXMubWVzc2FnZSxcclxuICAgICAgICAgICAgICAgICAgICByZXNvdXJjZTogdGhpcy5yZXNvdXJjZSxcclxuICAgICAgICAgICAgICAgICAgICBmaWxlX25hbWU6IHRoaXMubWVzc2FnZS5zcGxpdChcIiBcIikuam9pbihcIi1cIiksXHJcbiAgICAgICAgICAgICAgICAgICAgc2VuZGVyOiB0aGlzLnNlbmRlclxyXG4gICAgICAgICAgICAgICAgfSk7XHJcblxyXG4gICAgICAgICAgICAgICAgaWYgKHJlc3BvbnNlLnN0YXR1cyA9PSAyMDApIHtcclxuICAgICAgICAgICAgICAgICAgICB0aGlzLiR0b2FzdC5zdWNjZXNzKFwiTWVuc2FqZSBlbnZpYWRvXCIpO1xyXG4gICAgICAgICAgICAgICAgfVxyXG4gICAgICAgICAgICB9IGNhdGNoIChlKSB7XHJcbiAgICAgICAgICAgICAgICB0aGlzLiR0b2FzdC5lcnJvcihcIk1lbnNhamUgbm8gZW52aWFkb1wiKTtcclxuICAgICAgICAgICAgICAgIGNvbnNvbGUubG9nKGUpO1xyXG4gICAgICAgICAgICB9IGZpbmFsbHkge1xyXG4gICAgICAgICAgICAgICAgdGhpcy5sb2FkaW5nID0gZmFsc2U7XHJcbiAgICAgICAgICAgICAgICB0aGlzLmNsb3NlKCk7XHJcbiAgICAgICAgICAgIH1cclxuICAgICAgICB9LFxyXG4gICAgICAgIGNsb3NlKCkge1xyXG4gICAgICAgICAgICB0aGlzLm51bWJlciA9IG51bGw7XHJcblxyXG4gICAgICAgICAgICB0aGlzLiRlbWl0KFwidXBkYXRlOnNob3dXaGF0c2FwcEZvcm1cIiwgZmFsc2UpO1xyXG4gICAgICAgIH1cclxuICAgIH1cclxufTtcclxuPC9zY3JpcHQ+XHJcblxuXG5cbi8vIFdFQlBBQ0sgRk9PVEVSIC8vXG4vLyByZXNvdXJjZXMvanMvY29tcG9uZW50cy9XaGF0c2FwcE1vZGFsUmVwb3J0cy52dWUiXSwic291cmNlUm9vdCI6IiJ9\n//# sourceURL=webpack-internal:///./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/js/components/WhatsappModalReports.vue\n");
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator__ = __webpack_require__("./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator__);
+
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: ["resource", "message", "showWhatsappForm"],
+  data: function data() {
+    return {
+      loading: false,
+      number: null,
+      configuration: {}
+    };
+  },
+  created: function created() {
+    var _this = this;
+
+    return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee() {
+      return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              _this.socketWhatsappConfig();
+
+              _context.next = 3;
+              return _this.getConfiguration();
+
+            case 3:
+            case "end":
+              return _context.stop();
+          }
+        }
+      }, _callee);
+    }))();
+  },
+  methods: {
+    send: function send() {
+      var _this2 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee2() {
+        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                if (!(_this2.sender == "sdrimsac")) {
+                  _context2.next = 5;
+                  break;
+                }
+
+                _context2.next = 3;
+                return _this2.sendWhatsapp();
+
+              case 3:
+                _context2.next = 7;
+                break;
+
+              case 5:
+                _context2.next = 7;
+                return _this2.sendFile();
+
+              case 7:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2);
+      }))();
+    },
+    getConfiguration: function getConfiguration() {
+      var _this3 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee3() {
+        var response, data;
+        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                _context3.prev = 0;
+                _context3.next = 3;
+                return _this3.$http("/configurations/record");
+
+              case 3:
+                response = _context3.sent;
+                data = response.data.data;
+                _this3.configuration = data;
+                _context3.next = 11;
+                break;
+
+              case 8:
+                _context3.prev = 8;
+                _context3.t0 = _context3["catch"](0);
+
+                _this3.$toast.error("No se pudo obtener la configuración");
+
+              case 11:
+              case "end":
+                return _context3.stop();
+            }
+          }
+        }, _callee3, null, [[0, 8]]);
+      }))();
+    },
+    open: function open() {},
+    socketWhatsappConfig: function socketWhatsappConfig() {
+      var _this4 = this;
+
+      var hostName = window.location.hostname;
+      var url = "https://".concat(hostName);
+      this.sender = hostName.replace(/https?\:\/\//, "").replace("/", "").split(".").join("");
+
+      try {
+        this.socket = io.connect(this.$socketUrl);
+      } catch (e) {
+        console.log(e);
+      }
+
+      this.socket.on("ready", function (message) {
+        _this4.showMessage(message);
+      });
+      this.socket.on("authenticated", function (_ref) {
+        var message = _ref.message,
+            sender = _ref.sender;
+        _this4.sender = sender;
+
+        _this4.showMessage(message);
+      });
+      this.socket.on("connected", function (_ref2) {
+        var message = _ref2.message;
+
+        _this4.$message.success(message);
+
+        _this4.socket.emit("getStatus", url);
+      });
+      this.socket.on("setStatus", function (_ref3) {
+        var status = _ref3.status,
+            sender = _ref3.sender;
+
+        if (!status) {
+          _this4.sender = "sdrimsac";
+
+          _this4.$message.warning("Sesión iniciada con SDRIMSAC");
+        } else {
+          _this4.sender = sender;
+
+          _this4.$message.success("Whatsapp Listo!");
+        }
+      }); //MessageResponse
+
+      this.socket.on("MessageResponse", function (_ref4) {
+        var success = _ref4.success,
+            message = _ref4.message;
+
+        if (success) {
+          _this4.$message.success(message);
+        } else {
+          _this4.$message.error(message);
+        }
+      });
+    },
+    getBase64FromUrl: function getBase64FromUrl(url) {
+      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee4() {
+        var data, blob;
+        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee4$(_context4) {
+          while (1) {
+            switch (_context4.prev = _context4.next) {
+              case 0:
+                _context4.next = 2;
+                return fetch(url);
+
+              case 2:
+                data = _context4.sent;
+                _context4.next = 5;
+                return data.blob();
+
+              case 5:
+                blob = _context4.sent;
+                return _context4.abrupt("return", new Promise(function (resolve) {
+                  var reader = new FileReader();
+                  reader.readAsDataURL(blob);
+
+                  reader.onloadend = function () {
+                    var base64data = reader.result;
+                    resolve(base64data);
+                  };
+                }));
+
+              case 7:
+              case "end":
+                return _context4.stop();
+            }
+          }
+        }, _callee4);
+      }))();
+    },
+    sendFile: function sendFile() {
+      var _this5 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee5() {
+        var b64, extension, msg;
+        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee5$(_context5) {
+          while (1) {
+            switch (_context5.prev = _context5.next) {
+              case 0:
+                _context5.prev = 0;
+
+                if (!(!_this5.number || _this5.number.length != 9 || isNaN(_this5.number))) {
+                  _context5.next = 3;
+                  break;
+                }
+
+                return _context5.abrupt("return", _this5.$toast.error("Ingrese un número válido"));
+
+              case 3:
+                _this5.loading = true;
+                _context5.next = 6;
+                return _this5.getBase64FromUrl(_this5.resource);
+
+              case 6:
+                b64 = _context5.sent;
+                extension = ".pdf";
+                b64 = b64.split(",")[1];
+
+                _this5.socket.emit("sendFile", {
+                  file: b64,
+                  name: "".concat(_this5.message.split(" ").join("-")).concat(_this5.message.includes(".xlsx") ? "" : extension),
+                  number: "51".concat(_this5.number),
+                  sender: _this5.sender
+                });
+
+                _this5.$toast.success("Se envió el mensaje");
+
+                _this5.close();
+
+                _context5.next = 19;
+                break;
+
+              case 14:
+                _context5.prev = 14;
+                _context5.t0 = _context5["catch"](0);
+                msg = "Ocurrió un error";
+                console.log(_context5.t0);
+
+                _this5.$toast.error(msg);
+
+              case 19:
+                _context5.prev = 19;
+                _this5.loading = false;
+                return _context5.finish(19);
+
+              case 22:
+              case "end":
+                return _context5.stop();
+            }
+          }
+        }, _callee5, null, [[0, 14, 19, 22]]);
+      }))();
+    },
+    sendWhatsapp: function sendWhatsapp() {
+      var _this6 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee6() {
+        var response;
+        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee6$(_context6) {
+          while (1) {
+            switch (_context6.prev = _context6.next) {
+              case 0:
+                if (!(!_this6.number || _this6.number.length != 9 || isNaN(_this6.number))) {
+                  _context6.next = 2;
+                  break;
+                }
+
+                return _context6.abrupt("return", _this6.$toast.error("Ingrese un número válido"));
+
+              case 2:
+                _this6.loading = true;
+                _context6.prev = 3;
+                _context6.next = 6;
+                return _this6.$http.post("/whatsapp/historial", {
+                  number: _this6.number,
+                  message: _this6.message,
+                  resource: _this6.resource,
+                  file_name: _this6.message.split(" ").join("-"),
+                  sender: _this6.sender
+                });
+
+              case 6:
+                response = _context6.sent;
+
+                if (response.status == 200) {
+                  _this6.$toast.success("Mensaje enviado");
+                }
+
+                _context6.next = 14;
+                break;
+
+              case 10:
+                _context6.prev = 10;
+                _context6.t0 = _context6["catch"](3);
+
+                _this6.$toast.error("Mensaje no enviado");
+
+                console.log(_context6.t0);
+
+              case 14:
+                _context6.prev = 14;
+                _this6.loading = false;
+
+                _this6.close();
+
+                return _context6.finish(14);
+
+              case 18:
+              case "end":
+                return _context6.stop();
+            }
+          }
+        }, _callee6, null, [[3, 10, 14, 18]]);
+      }))();
+    },
+    close: function close() {
+      this.number = null;
+      this.$emit("update:showWhatsappForm", false);
+    }
+  }
+});
 
 /***/ }),
 
 /***/ "./node_modules/css-loader/index.js?sourceMap!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-4d29955f\",\"scoped\":false,\"hasInlineConfig\":true}!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./modules/Report/Resources/assets/js/components/DataTableReportsCredits.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
-eval("exports = module.exports = __webpack_require__(\"./node_modules/css-loader/lib/css-base.js\")(true);\n// imports\n\n\n// module\nexports.push([module.i, \"\\n.font-custom {\\r\\n    font-size: 15px !important;\\n}\\r\\n\", \"\", {\"version\":3,\"sources\":[\"D:/laragon/www/sdrimsac-tenant/modules/Report/Resources/assets/js/components/modules/Report/Resources/assets/js/components/DataTableReportsCredits.vue\"],\"names\":[],\"mappings\":\";AA2VA;IACA,2BAAA;CACA\",\"file\":\"DataTableReportsCredits.vue\",\"sourcesContent\":[\"<template>\\r\\n    <div>\\r\\n        <div class=\\\"row\\\">\\r\\n            <div class=\\\"col-md-12 col-lg-12 col-xl-12 \\\">\\r\\n                <div class=\\\"row mt-2\\\">\\r\\n                    <div class=\\\"col-md-3\\\">\\r\\n                        <label class=\\\"control-label\\\"\\r\\n                            >Periodo (Fecha de emisión)</label\\r\\n                        >\\r\\n                        <el-select v-model=\\\"form.period\\\" @change=\\\"changePeriod\\\">\\r\\n                            <el-option\\r\\n                                key=\\\"month\\\"\\r\\n                                value=\\\"month\\\"\\r\\n                                label=\\\"Por mes\\\"\\r\\n                            ></el-option>\\r\\n                            <el-option\\r\\n                                key=\\\"between_months\\\"\\r\\n                                value=\\\"between_months\\\"\\r\\n                                label=\\\"Entre meses\\\"\\r\\n                            ></el-option>\\r\\n                            <el-option\\r\\n                                key=\\\"date\\\"\\r\\n                                value=\\\"date\\\"\\r\\n                                label=\\\"Por fecha\\\"\\r\\n                            ></el-option>\\r\\n                            <el-option\\r\\n                                key=\\\"between_dates\\\"\\r\\n                                value=\\\"between_dates\\\"\\r\\n                                label=\\\"Entre fechas\\\"\\r\\n                            ></el-option>\\r\\n                        </el-select>\\r\\n                    </div>\\r\\n                    <template\\r\\n                        v-if=\\\"\\r\\n                            form.period === 'month' ||\\r\\n                                form.period === 'between_months'\\r\\n                        \\\"\\r\\n                    >\\r\\n                        <div class=\\\"col-md-2\\\">\\r\\n                            <label class=\\\"w-100 control-label\\\">Mes de</label>\\r\\n                            <el-date-picker\\r\\n                                v-model=\\\"form.month_start\\\"\\r\\n                                type=\\\"month\\\"\\r\\n                                class=\\\"w-100\\\"\\r\\n                                @change=\\\"changeDisabledMonths\\\"\\r\\n                                value-format=\\\"yyyy-MM\\\"\\r\\n                                format=\\\"MM/yyyy\\\"\\r\\n                                :clearable=\\\"false\\\"\\r\\n                            ></el-date-picker>\\r\\n                        </div>\\r\\n                    </template>\\r\\n                    <template v-if=\\\"form.period === 'between_months'\\\">\\r\\n                        <div class=\\\"col-md-2\\\">\\r\\n                            <label class=\\\"w-100 control-label\\\">Mes al</label>\\r\\n                            <el-date-picker\\r\\n                                class=\\\"w-100\\\"\\r\\n                                v-model=\\\"form.month_end\\\"\\r\\n                                type=\\\"month\\\"\\r\\n                                :picker-options=\\\"pickerOptionsMonths\\\"\\r\\n                                value-format=\\\"yyyy-MM\\\"\\r\\n                                format=\\\"MM/yyyy\\\"\\r\\n                                :clearable=\\\"false\\\"\\r\\n                            ></el-date-picker>\\r\\n                        </div>\\r\\n                    </template>\\r\\n                    <template\\r\\n                        v-if=\\\"\\r\\n                            form.period === 'date' ||\\r\\n                                form.period === 'between_dates'\\r\\n                        \\\"\\r\\n                    >\\r\\n                        <div class=\\\"col-md-2\\\">\\r\\n                            <label class=\\\"w-100 control-label\\\">Fecha del</label>\\r\\n                            <el-date-picker\\r\\n                                class=\\\"w-100\\\"\\r\\n                                v-model=\\\"form.date_start\\\"\\r\\n                                type=\\\"date\\\"\\r\\n                                @change=\\\"changeDisabledDates\\\"\\r\\n                                value-format=\\\"yyyy-MM-dd\\\"\\r\\n                                format=\\\"dd/MM/yyyy\\\"\\r\\n                                :clearable=\\\"false\\\"\\r\\n                            ></el-date-picker>\\r\\n                        </div>\\r\\n                    </template>\\r\\n                    <template v-if=\\\"form.period === 'between_dates'\\\">\\r\\n                        <div class=\\\"col-md-2\\\">\\r\\n                            <label class=\\\"w-100 control-label\\\">Fecha al</label>\\r\\n                            <el-date-picker\\r\\n                                class=\\\"w-100\\\"\\r\\n                                v-model=\\\"form.date_end\\\"\\r\\n                                type=\\\"date\\\"\\r\\n                                :picker-options=\\\"pickerOptionsDates\\\"\\r\\n                                value-format=\\\"yyyy-MM-dd\\\"\\r\\n                                format=\\\"dd/MM/yyyy\\\"\\r\\n                                :clearable=\\\"false\\\"\\r\\n                            ></el-date-picker>\\r\\n                        </div>\\r\\n                    </template>\\r\\n\\r\\n                    <!-- <div class=\\\"col-md-3\\\">\\r\\n                        <div class=\\\"form-group\\\">\\r\\n                            <label class=\\\"w-100 control-label\\\"\\r\\n                                >Establecimiento</label\\r\\n                            >\\r\\n                            <el-select\\r\\n                                class=\\\"w-100\\\"\\r\\n                                v-model=\\\"form.establishment_id\\\"\\r\\n                                clearable\\r\\n                            >\\r\\n                                <el-option\\r\\n                                    v-for=\\\"option in establishments\\\"\\r\\n                                    :key=\\\"option.id\\\"\\r\\n                                    :value=\\\"option.id\\\"\\r\\n                                    :label=\\\"option.name\\\"\\r\\n                                ></el-option>\\r\\n                            </el-select>\\r\\n                        </div>\\r\\n                    </div> -->\\r\\n                    <!-- <div\\r\\n                        class=\\\"col-md-3\\\"\\r\\n                        v-show=\\\"\\r\\n                            resource == 'reports/sales' ||\\r\\n                                resource == 'reports/purchases'\\r\\n                        \\\"\\r\\n                    >\\r\\n                        <div class=\\\"form-group\\\">\\r\\n                            <label class=\\\"w-100 control-label\\\"\\r\\n                                >Tipo de documento</label\\r\\n                            >\\r\\n                            <el-select\\r\\n                                class=\\\"w-100\\\"\\r\\n                                v-model=\\\"form.document_type_id\\\"\\r\\n                                clearable\\r\\n                            >\\r\\n                                <el-option\\r\\n                                    v-for=\\\"option in document_types\\\"\\r\\n                                    :key=\\\"option.id\\\"\\r\\n                                    :value=\\\"option.id\\\"\\r\\n                                    :label=\\\"option.description\\\"\\r\\n                                ></el-option>\\r\\n                            </el-select>\\r\\n                        </div>\\r\\n                    </div> -->\\r\\n\\r\\n                    <div class=\\\"col-lg-4 col-md-4\\\">\\r\\n                        <div class=\\\"form-group\\\">\\r\\n                            <label class=\\\"w-100 control-label\\\">\\r\\n                                Clientes\\r\\n                            </label>\\r\\n\\r\\n                            <el-select\\r\\n                                class=\\\"w-100\\\"\\r\\n                                v-model=\\\"form.person_id\\\"\\r\\n                                filterable\\r\\n                                remote\\r\\n                                popper-class=\\\"el-select-customers\\\"\\r\\n                                clearable\\r\\n                                placeholder=\\\"Nombre o número de documento\\\"\\r\\n                                :remote-method=\\\"searchRemotePersons\\\"\\r\\n                                :loading=\\\"loading_search\\\"\\r\\n                                @change=\\\"changePersons\\\"\\r\\n                            >\\r\\n                                <el-option\\r\\n                                    v-for=\\\"option in persons\\\"\\r\\n                                    :key=\\\"option.id\\\"\\r\\n                                    :value=\\\"option.id\\\"\\r\\n                                    :label=\\\"option.description\\\"\\r\\n                                ></el-option>\\r\\n                            </el-select>\\r\\n                        </div>\\r\\n                    </div>\\r\\n\\r\\n                    <!-- <div\\r\\n                        :class=\\\"\\r\\n                            resource == 'reports/sales' ||\\r\\n                            resource == 'reports/purchases'\\r\\n                                ? 'col-lg-3 col-md-3'\\r\\n                                : 'col-lg-2 col-md-2'\\r\\n                        \\\"\\r\\n                        v-if=\\\"applyCustomer\\\"\\r\\n                    >\\r\\n                        <div class=\\\"form-group\\\">\\r\\n                            <label class=\\\"w-100 control-label\\\">\\r\\n                                Usuarios\\r\\n                            </label>\\r\\n\\r\\n                            <el-select\\r\\n                                class=\\\"w-100\\\"\\r\\n                                v-model=\\\"form.seller_id\\\"\\r\\n                                filterable\\r\\n                                popper-class=\\\"el-select-customers\\\"\\r\\n                                clearable\\r\\n                                placeholder=\\\"Nombre usuario\\\"\\r\\n                            >\\r\\n                                <el-option\\r\\n                                    v-for=\\\"option in sellers\\\"\\r\\n                                    :key=\\\"option.id\\\"\\r\\n                                    :value=\\\"option.id\\\"\\r\\n                                    :label=\\\"option.name\\\"\\r\\n                                ></el-option>\\r\\n                            </el-select>\\r\\n                        </div>\\r\\n                    </div> -->\\r\\n\\r\\n                    <!-- <div\\r\\n                        :class=\\\"\\r\\n                            resource == 'reports/sales' ||\\r\\n                            resource == 'reports/purchases'\\r\\n                                ? 'col-lg-2 col-md-2'\\r\\n                                : 'col-lg-2 col-md-2'\\r\\n                        \\\"\\r\\n                        v-if=\\\"applyCustomer\\\"\\r\\n                    >\\r\\n                        <div class=\\\"form-group\\\">\\r\\n                            <label class=\\\"w-100 control-label\\\">\\r\\n                                Tipo de Reporte\\r\\n                            </label>\\r\\n\\r\\n                            <el-select\\r\\n                                class=\\\"w-100\\\"\\r\\n                                v-model=\\\"form.typeresult\\\"\\r\\n                                filterable\\r\\n                                popper-class=\\\"el-select-customers\\\"\\r\\n                                clearable\\r\\n                            >\\r\\n                                <el-option\\r\\n                                    label=\\\"Detallado\\\"\\r\\n                                    value=\\\"Detallado\\\"\\r\\n                                ></el-option>\\r\\n                                <el-option\\r\\n                                    label=\\\"Resumen\\\"\\r\\n                                    value=\\\"Resumen\\\"\\r\\n                                ></el-option>\\r\\n                            </el-select>\\r\\n                        </div>\\r\\n                    </div> -->\\r\\n\\r\\n                    <div class=\\\"d-flex\\\" style=\\\"margin-top:29px\\\">\\r\\n                        <el-button\\r\\n                            class=\\\"submit\\\"\\r\\n                            type=\\\"primary\\\"\\r\\n                            @click.prevent=\\\"getRecordsByFilter\\\"\\r\\n                            :loading=\\\"loading_submit\\\"\\r\\n                            icon=\\\"el-icon-search\\\"\\r\\n                            >Buscar</el-button\\r\\n                        >\\r\\n\\r\\n                        <template\\r\\n                            v-if=\\\"\\r\\n                                records.length > 0 &&\\r\\n                                    resource !== 'reports/document-detractions'\\r\\n                            \\\"\\r\\n                        >\\r\\n                            <el-button\\r\\n                                class=\\\"submit\\\"\\r\\n                                type=\\\"danger\\\"\\r\\n                                icon=\\\"el-icon-tickets\\\"\\r\\n                                @click.prevent=\\\"clickDownload('pdf')\\\"\\r\\n                                >Exportar PDF</el-button\\r\\n                            >\\r\\n\\r\\n                            <el-button\\r\\n                                class=\\\"submit\\\"\\r\\n                                type=\\\"success\\\"\\r\\n                                @click.prevent=\\\"clickDownload('excel')\\\"\\r\\n                                ><i class=\\\"fa fa-file-excel\\\"></i> Exportal\\r\\n                                Excel</el-button\\r\\n                            >\\r\\n                            <el-button\\r\\n                                class=\\\"submit\\\"\\r\\n                                @click.prevent=\\\"clickOpenWhatsapp\\\"\\r\\n                                ><i class=\\\"fa fa-whatsapp\\\"></i> Enviar\\r\\n                                whatsapp</el-button\\r\\n                            >\\r\\n                        </template>\\r\\n                    </div>\\r\\n                </div>\\r\\n                <div class=\\\"row mt-1 mb-4\\\"></div>\\r\\n            </div>\\r\\n\\r\\n            <div class=\\\"col-md-12\\\">\\r\\n                <div class=\\\"table-responsive\\\">\\r\\n                    <table class=\\\"table\\\">\\r\\n                        <thead>\\r\\n                            <slot name=\\\"heading\\\"></slot>\\r\\n                        </thead>\\r\\n                        <tbody>\\r\\n                            <slot\\r\\n                                v-for=\\\"(row, index) in records\\\"\\r\\n                                :row=\\\"row\\\"\\r\\n                                :index=\\\"customIndex(index)\\\"\\r\\n                            ></slot>\\r\\n                        </tbody>\\r\\n                        <tfoot\\r\\n                            v-if=\\\"\\r\\n                                resource == 'reports/sales' ||\\r\\n                                    resource == 'reports/purchases'\\r\\n                            \\\"\\r\\n                        >\\r\\n                            <tr>\\r\\n                                <td\\r\\n                                    :colspan=\\\"\\r\\n                                        resource == 'reports/sales' ? 7 : 8\\r\\n                                    \\\"\\r\\n                                ></td>\\r\\n                                <td><strong>Totales PEN</strong></td>\\r\\n\\r\\n                                <td>{{ totals.acum_total_taxed }}</td>\\r\\n                                <td>{{ totals.acum_total_igv }}</td>\\r\\n                                <td>{{ totals.acum_total }}</td>\\r\\n                            </tr>\\r\\n                            <tr>\\r\\n                                <td\\r\\n                                    :colspan=\\\"\\r\\n                                        resource == 'reports/sales' ? 7 : 8\\r\\n                                    \\\"\\r\\n                                ></td>\\r\\n                                <td><strong>Totales USD</strong></td>\\r\\n\\r\\n                                <td>{{ totals.acum_total_taxed_usd }}</td>\\r\\n                                <td>{{ totals.acum_total_igv_usd }}</td>\\r\\n                                <td>{{ totals.acum_total_usd }}</td>\\r\\n                            </tr>\\r\\n                        </tfoot>\\r\\n                    </table>\\r\\n                    <div>\\r\\n                        <el-pagination\\r\\n                            @current-change=\\\"getRecords\\\"\\r\\n                            layout=\\\"total, prev, pager, next\\\"\\r\\n                            :total=\\\"pagination.total\\\"\\r\\n                            :current-page.sync=\\\"pagination.current_page\\\"\\r\\n                            :page-size=\\\"pagination.per_page\\\"\\r\\n                        >\\r\\n                        </el-pagination>\\r\\n                    </div>\\r\\n                </div>\\r\\n            </div>\\r\\n        </div>\\r\\n        <whatsapp-form-report\\r\\n            :message.sync=\\\"messageReport\\\"\\r\\n            :resource=\\\"resourceReport\\\"\\r\\n            :showWhatsappForm.sync=\\\"showWhatsappForm\\\"\\r\\n        >\\r\\n        </whatsapp-form-report>\\r\\n    </div>\\r\\n</template>\\r\\n<style>\\r\\n.font-custom {\\r\\n    font-size: 15px !important;\\r\\n}\\r\\n</style>\\r\\n<script>\\r\\nimport moment from \\\"moment\\\";\\r\\nimport queryString from \\\"query-string\\\";\\r\\nimport WhatsappFormReport from \\\"../../../../../../resources/js/components/WhatsappModalReports.vue\\\";\\r\\nexport default {\\r\\n    props: {\\r\\n        resource: String,\\r\\n        applyCustomer: { type: Boolean, required: false, default: false }\\r\\n    },\\r\\n    components: { WhatsappFormReport },\\r\\n    data() {\\r\\n        return {\\r\\n            messageReport: \\\"\\\",\\r\\n            resourceReport: \\\"\\\",\\r\\n            showWhatsappForm: false,\\r\\n            loading_submit: false,\\r\\n            persons: [],\\r\\n            all_persons: [],\\r\\n            loading_search: false,\\r\\n            columns: [],\\r\\n            records: [],\\r\\n            headers: headers_token,\\r\\n            document_types: [],\\r\\n            pagination: {},\\r\\n            search: {},\\r\\n            totals: {},\\r\\n            establishment: null,\\r\\n            establishments: [],\\r\\n            state_types: [],\\r\\n            form: {},\\r\\n\\r\\n            pickerOptionsDates: {\\r\\n                disabledDate: time => {\\r\\n                    time = moment(time).format(\\\"YYYY-MM-DD\\\");\\r\\n                    return this.form.date_start > time;\\r\\n                }\\r\\n            },\\r\\n            pickerOptionsMonths: {\\r\\n                disabledDate: time => {\\r\\n                    time = moment(time).format(\\\"YYYY-MM\\\");\\r\\n                    return this.form.month_start > time;\\r\\n                }\\r\\n            },\\r\\n            sellers: []\\r\\n        };\\r\\n    },\\r\\n    computed: {},\\r\\n    created() {\\r\\n        this.initForm();\\r\\n        this.initTotals();\\r\\n        this.$eventHub.$on(\\\"reloadData\\\", () => {\\r\\n            this.getRecords();\\r\\n        });\\r\\n    },\\r\\n    async mounted() {\\r\\n        await this.$http.get(`/${this.resource}/filter`).then(response => {\\r\\n            this.establishments = response.data.establishments;\\r\\n            this.all_persons = response.data.persons;\\r\\n            this.sellers = response.data.sellers;\\r\\n        });\\r\\n\\r\\n        await this.getRecords();\\r\\n        await this.filterPersons();\\r\\n        // await this.getTotals()\\r\\n        this.form.type_person =\\r\\n            this.resource === \\\"reports/sales\\\" ? \\\"customers\\\" : \\\"suppliers\\\";\\r\\n    },\\r\\n    methods: {\\r\\n        clickOpenWhatsapp() {\\r\\n            let query = queryString.stringify({\\r\\n                ...this.form\\r\\n            });\\r\\n            this.resourceReport = `/${this.resource}/pdf?${query}`;\\r\\n            this.messageReport = `Reporte de creditos a la fecha ${moment().format(\\r\\n                \\\"DD-MM-YYYY\\\"\\r\\n            )}`;\\r\\n            this.showWhatsappForm = true;\\r\\n        },\\r\\n        changePersons() {\\r\\n            // this.form.type_person = this.resource === 'reports/sales' ? 'customers':'suppliers'\\r\\n        },\\r\\n        searchRemotePersons(input) {\\r\\n            if (input.length > 0) {\\r\\n                this.loading_search = true;\\r\\n                let parameters = `input=${input}`;\\r\\n\\r\\n                this.form.type_person = \\\"customers\\\";\\r\\n\\r\\n                this.$http\\r\\n                    .get(\\r\\n                        `/reports/data-table/persons/${this.form.type_person}?${parameters}`\\r\\n                    )\\r\\n                    .then(response => {\\r\\n                        this.persons = response.data.persons;\\r\\n                        this.loading_search = false;\\r\\n\\r\\n                        if (this.persons.length == 0) {\\r\\n                            this.filterPersons();\\r\\n                        }\\r\\n                    });\\r\\n            } else {\\r\\n                this.filterPersons();\\r\\n            }\\r\\n        },\\r\\n        filterPersons() {\\r\\n            this.persons = this.all_persons;\\r\\n            console.log(this.persons);\\r\\n        },\\r\\n        getTotals(records) {\\r\\n            this.initTotals();\\r\\n            // console.log(records)\\r\\n\\r\\n            records.forEach(row => {\\r\\n                let signal = row.document_type_id;\\r\\n                let state = row.state_type_id;\\r\\n\\r\\n                if (row.currency_type_id == \\\"PEN\\\") {\\r\\n                    if (signal == \\\"07\\\" && state != \\\"11\\\") {\\r\\n                        this.totals.acum_total += parseFloat(-row.total);\\r\\n                        this.totals.acum_total_taxed += parseFloat(\\r\\n                            -row.total_taxed\\r\\n                        );\\r\\n                        this.totals.acum_total_igv += parseFloat(\\r\\n                            -row.total_igv\\r\\n                        );\\r\\n\\r\\n                        this.totals.acum_total_exonerated += parseFloat(\\r\\n                            -row.total_exonerated\\r\\n                        );\\r\\n                        this.totals.acum_total_unaffected += parseFloat(\\r\\n                            -row.total_unaffected\\r\\n                        );\\r\\n                        this.totals.acum_total_free += parseFloat(\\r\\n                            -row.total_free\\r\\n                        );\\r\\n                    } else if (signal != \\\"07\\\" && state == \\\"11\\\") {\\r\\n                        this.totals.acum_total += 0;\\r\\n                        this.totals.acum_total_taxed += 0;\\r\\n                        this.totals.acum_total_igv += 0;\\r\\n\\r\\n                        this.totals.acum_total_exonerated += 0;\\r\\n                        this.totals.acum_total_unaffected += 0;\\r\\n                        this.totals.acum_total_free += 0;\\r\\n                    } else {\\r\\n                        this.totals.acum_total += parseFloat(row.total);\\r\\n                        this.totals.acum_total_taxed += parseFloat(\\r\\n                            row.total_taxed\\r\\n                        );\\r\\n                        this.totals.acum_total_igv += parseFloat(row.total_igv);\\r\\n\\r\\n                        this.totals.acum_total_exonerated += parseFloat(\\r\\n                            row.total_exonerated\\r\\n                        );\\r\\n                        this.totals.acum_total_unaffected += parseFloat(\\r\\n                            row.total_unaffected\\r\\n                        );\\r\\n                        this.totals.acum_total_free += parseFloat(\\r\\n                            row.total_free\\r\\n                        );\\r\\n                    }\\r\\n                } else if (row.currency_type_id == \\\"USD\\\") {\\r\\n                    if (signal == \\\"07\\\" && state != \\\"11\\\") {\\r\\n                        this.totals.acum_total_usd += parseFloat(-row.total);\\r\\n                        this.totals.acum_total_taxed_usd += parseFloat(\\r\\n                            -row.total_taxed\\r\\n                        );\\r\\n                        this.totals.acum_total_igv_usd += parseFloat(\\r\\n                            -row.total_igv\\r\\n                        );\\r\\n                    } else if (signal != \\\"07\\\" && state == \\\"11\\\") {\\r\\n                        this.totals.acum_total_usd += 0;\\r\\n                        this.totals.acum_total_taxed_usd += 0;\\r\\n                        this.totals.acum_total_igv_usd += 0;\\r\\n                    } else {\\r\\n                        this.totals.acum_total_usd += parseFloat(row.total);\\r\\n                        this.totals.acum_total_taxed_usd += parseFloat(\\r\\n                            row.total_taxed\\r\\n                        );\\r\\n                        this.totals.acum_total_igv_usd += parseFloat(\\r\\n                            row.total_igv\\r\\n                        );\\r\\n                    }\\r\\n                }\\r\\n                this.totals.acum_total_taxed = _.round(\\r\\n                    this.totals.acum_total_taxed,\\r\\n                    2\\r\\n                );\\r\\n                this.totals.acum_total_igv = _.round(\\r\\n                    this.totals.acum_total_igv,\\r\\n                    2\\r\\n                );\\r\\n                this.totals.acum_total = _.round(this.totals.acum_total, 2);\\r\\n                this.totals.acum_total_exonerated = _.round(\\r\\n                    this.totals.acum_total_exonerated,\\r\\n                    2\\r\\n                );\\r\\n                this.totals.acum_total_unaffected = _.round(\\r\\n                    this.totals.acum_total_unaffected,\\r\\n                    2\\r\\n                );\\r\\n                this.totals.acum_total_free = _.round(\\r\\n                    this.totals.acum_total_free,\\r\\n                    2\\r\\n                );\\r\\n\\r\\n                this.totals.acum_total_taxed_usd = _.round(\\r\\n                    this.totals.acum_total_taxed_usd,\\r\\n                    2\\r\\n                );\\r\\n                this.totals.acum_total_igv_usd = _.round(\\r\\n                    this.totals.acum_total_igv_usd,\\r\\n                    2\\r\\n                );\\r\\n                this.totals.acum_total_usd = _.round(\\r\\n                    this.totals.acum_total_usd,\\r\\n                    2\\r\\n                );\\r\\n            });\\r\\n        },\\r\\n        clickDownload(type) {\\r\\n            let query = queryString.stringify({\\r\\n                ...this.form\\r\\n            });\\r\\n            window.open(`/${this.resource}/${type}/?${query}`, \\\"_blank\\\");\\r\\n        },\\r\\n        initForm() {\\r\\n            this.form = {\\r\\n                establishment_id: null,\\r\\n                person_id: null,\\r\\n                type_person: null,\\r\\n                document_type_id: null,\\r\\n                period: \\\"month\\\",\\r\\n                date_start: moment().format(\\\"YYYY-MM-DD\\\"),\\r\\n                date_end: moment().format(\\\"YYYY-MM-DD\\\"),\\r\\n                month_start: moment().format(\\\"YYYY-MM\\\"),\\r\\n                month_end: moment().format(\\\"YYYY-MM\\\"),\\r\\n                seller_id: null,\\r\\n                state_type_id: null,\\r\\n                typeresult: \\\"Detallado\\\"\\r\\n            };\\r\\n        },\\r\\n        initTotals() {\\r\\n            this.totals = {\\r\\n                acum_total_taxed: 0,\\r\\n                acum_total_igv: 0,\\r\\n                acum_total: 0,\\r\\n                acum_total_exonerated: 0,\\r\\n                acum_total_unaffected: 0,\\r\\n                acum_total_free: 0,\\r\\n\\r\\n                acum_total_taxed_usd: 0,\\r\\n                acum_total_igv_usd: 0,\\r\\n                acum_total_usd: 0\\r\\n            };\\r\\n        },\\r\\n        customIndex(index) {\\r\\n            return (\\r\\n                this.pagination.per_page * (this.pagination.current_page - 1) +\\r\\n                index +\\r\\n                1\\r\\n            );\\r\\n        },\\r\\n        async getRecordsByFilter() {\\r\\n            this.loading_submit = await true;\\r\\n            await this.getRecords();\\r\\n            this.loading_submit = await false;\\r\\n        },\\r\\n        getRecords() {\\r\\n            return this.$http\\r\\n                .get(`/${this.resource}/records?${this.getQueryParameters()}`)\\r\\n                .then(response => {\\r\\n                    this.records = response.data.data;\\r\\n                    //sort records by dues property (int) in descending order\\r\\n                    this.records.sort(function(a, b) {\\r\\n                        return b.dues - a.dues;\\r\\n                    });\\r\\n\\r\\n                    this.pagination = response.data.meta;\\r\\n                    this.pagination.per_page = parseInt(\\r\\n                        response.data.meta.per_page\\r\\n                    );\\r\\n                    this.loading_submit = false;\\r\\n                    // this.initTotals()\\r\\n                    if (\\r\\n                        this.resource == \\\"reports/sales\\\" ||\\r\\n                        this.resource == \\\"reports/purchases\\\"\\r\\n                    )\\r\\n                        this.getTotals(response.data.data);\\r\\n                });\\r\\n        },\\r\\n        getQueryParameters() {\\r\\n            return queryString.stringify({\\r\\n                page: this.pagination.current_page,\\r\\n                limit: this.limit,\\r\\n                ...this.form\\r\\n            });\\r\\n        },\\r\\n\\r\\n        changeDisabledDates() {\\r\\n            if (this.form.date_end < this.form.date_start) {\\r\\n                this.form.date_end = this.form.date_start;\\r\\n            }\\r\\n            // this.loadAll();\\r\\n        },\\r\\n        changeDisabledMonths() {\\r\\n            if (this.form.month_end < this.form.month_start) {\\r\\n                this.form.month_end = this.form.month_start;\\r\\n            }\\r\\n            // this.loadAll();\\r\\n        },\\r\\n        changePeriod() {\\r\\n            if (this.form.period === \\\"month\\\") {\\r\\n                this.form.month_start = moment().format(\\\"YYYY-MM\\\");\\r\\n                this.form.month_end = moment().format(\\\"YYYY-MM\\\");\\r\\n            }\\r\\n            if (this.form.period === \\\"between_months\\\") {\\r\\n                this.form.month_start = moment()\\r\\n                    .startOf(\\\"year\\\")\\r\\n                    .format(\\\"YYYY-MM\\\"); //'2019-01';\\r\\n                this.form.month_end = moment()\\r\\n                    .endOf(\\\"year\\\")\\r\\n                    .format(\\\"YYYY-MM\\\");\\r\\n            }\\r\\n            if (this.form.period === \\\"date\\\") {\\r\\n                this.form.date_start = moment().format(\\\"YYYY-MM-DD\\\");\\r\\n                this.form.date_end = moment().format(\\\"YYYY-MM-DD\\\");\\r\\n            }\\r\\n            if (this.form.period === \\\"between_dates\\\") {\\r\\n                this.form.date_start = moment()\\r\\n                    .startOf(\\\"month\\\")\\r\\n                    .format(\\\"YYYY-MM-DD\\\");\\r\\n                this.form.date_end = moment()\\r\\n                    .endOf(\\\"month\\\")\\r\\n                    .format(\\\"YYYY-MM-DD\\\");\\r\\n            }\\r\\n            // this.loadAll();\\r\\n        }\\r\\n    }\\r\\n};\\r\\n</script>\\r\\n\"],\"sourceRoot\":\"\"}]);\n\n// exports\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vLi9tb2R1bGVzL1JlcG9ydC9SZXNvdXJjZXMvYXNzZXRzL2pzL2NvbXBvbmVudHMvRGF0YVRhYmxlUmVwb3J0c0NyZWRpdHMudnVlP2VlY2EiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUEsMkJBQTJCLG1CQUFPLENBQUMsMkNBQTJEO0FBQzlGOzs7QUFHQTtBQUNBLGNBQWMsUUFBUyxtQkFBbUIsbUNBQW1DLEdBQUcsWUFBWSx5TUFBeU0sTUFBTSxXQUFXLG9wZEFBb3BkLDJCQUEyQiwrQ0FBK0MseUJBQXlCLCtDQUErQyxxQkFBcUIsa2NBQWtjLCtCQUErQiwrQ0FBK0MsNkJBQTZCLCtDQUErQyx5QkFBeUIsMjhCQUEyOEIsbUNBQW1DLEtBQUssMERBQTBELDZDQUE2QywwR0FBMEcsb0JBQW9CLGdCQUFnQix5REFBeUQsaURBQWlELFNBQVMsc0JBQXNCLHFCQUFxQixpQkFBaUIsb0JBQW9CLHlaQUF5WiwyQkFBMkIsMkJBQTJCLGdJQUFnSSwwQ0FBMEMsMkNBQTJDLG1FQUFtRSwyREFBMkQscUJBQXFCLGlCQUFpQix1Q0FBdUMsMkNBQTJDLGdFQUFnRSw0REFBNEQscUJBQXFCLGlCQUFpQiwwQ0FBMEMsU0FBUyxxQkFBcUIsb0JBQW9CLDRCQUE0Qiw4QkFBOEIsc0RBQXNELGtDQUFrQyxhQUFhLEVBQUUsU0FBUywwQkFBMEIscUNBQXFDLGNBQWMsNEJBQTRCLG1FQUFtRSx5REFBeUQscURBQXFELGFBQWEsRUFBRSx3Q0FBd0MsdUNBQXVDLDRKQUE0SixTQUFTLG1CQUFtQixpQ0FBaUMsbURBQW1ELGlEQUFpRCxFQUFFLDBDQUEwQyxjQUFjLE9BQU8sTUFBTSxFQUFFLHVFQUF1RSxvRUFBb0UsRUFBRSw2Q0FBNkMsYUFBYSw4QkFBOEIsbUhBQW1ILHlDQUF5Qyx1Q0FBdUMsK0NBQStDLDhDQUE4QyxNQUFNLEVBQUUsOERBQThELDBIQUEwSCxzQkFBc0IsR0FBRyxXQUFXLHFFQUFxRSxpRUFBaUUsd0RBQXdELCtEQUErRCxxREFBcUQsNkJBQTZCLHlCQUF5QixFQUFFLGlCQUFpQixPQUFPLHlDQUF5QyxpQkFBaUIsYUFBYSw4QkFBOEIsZ0RBQWdELDBDQUEwQyxhQUFhLGlDQUFpQyxrQ0FBa0MsbUZBQW1GLHNEQUFzRCxrREFBa0QsOERBQThELGtFQUFrRSw2RUFBNkUscUpBQXFKLGlKQUFpSixtS0FBbUssK0pBQStKLG1KQUFtSix5QkFBeUIsZ0RBQWdELHdEQUF3RCw4REFBOEQsNERBQTRELHVFQUF1RSxtRUFBbUUsNkRBQTZELHlCQUF5QixPQUFPLDRFQUE0RSxvSkFBb0osb0ZBQW9GLGtLQUFrSyw4SkFBOEosa0pBQWtKLHlCQUF5QixxQkFBcUIsNENBQTRDLGtFQUFrRSxpRkFBaUYseUpBQXlKLHFKQUFxSix5QkFBeUIsZ0RBQWdELDREQUE0RCxrRUFBa0UsZ0VBQWdFLHlCQUF5QixPQUFPLGdGQUFnRix3SkFBd0osb0pBQW9KLHlCQUF5QixxQkFBcUIsK0pBQStKLDJKQUEySixnRkFBZ0YseUtBQXlLLHlLQUF5Syw2SkFBNkosMktBQTJLLG1LQUFtSywySkFBMkosaUJBQWlCLEVBQUUsYUFBYSxrQ0FBa0MsbURBQW1ELGlEQUFpRCxFQUFFLGdDQUFnQyxjQUFjLEdBQUcsS0FBSyxJQUFJLE1BQU0sZUFBZSxhQUFhLHlCQUF5Qiw2QkFBNkIseWtCQUF5a0IsYUFBYSwyQkFBMkIsK0JBQStCLGtZQUFrWSxhQUFhLGlDQUFpQyw2S0FBNkssYUFBYSx5Q0FBeUMsaURBQWlELHdDQUF3QyxrREFBa0QsYUFBYSwyQkFBMkIsOERBQThELGNBQWMsV0FBVywwQkFBMEIseUNBQXlDLDBEQUEwRCwySUFBMkksbURBQW1ELHlCQUF5QixFQUFFLGlFQUFpRSw2SUFBNkksb0RBQW9ELG1TQUFtUyxxQkFBcUIsRUFBRSxhQUFhLG1DQUFtQyw4Q0FBOEMsOElBQThJLEVBQUUsYUFBYSx3Q0FBd0MsZ0VBQWdFLDhEQUE4RCxpQkFBaUIsa0NBQWtDLGFBQWEscUNBQXFDLGtFQUFrRSxnRUFBZ0UsaUJBQWlCLGtDQUFrQyxhQUFhLDZCQUE2QixxREFBcUQseUVBQXlFLHVFQUF1RSxpQkFBaUIsOERBQThELDJJQUEySSxhQUFhLHVJQUF1SSxpQkFBaUIsb0RBQW9ELDJFQUEyRSx5RUFBeUUsaUJBQWlCLDZEQUE2RCw4SUFBOEksMElBQTBJLGlCQUFpQixrQ0FBa0MsYUFBYSxTQUFTLE1BQU0sb0NBQW9DOztBQUV2czhCIiwiZmlsZSI6Ii4vbm9kZV9tb2R1bGVzL2Nzcy1sb2FkZXIvaW5kZXguanM/c291cmNlTWFwIS4vbm9kZV9tb2R1bGVzL3Z1ZS1sb2FkZXIvbGliL3N0eWxlLWNvbXBpbGVyL2luZGV4LmpzP3tcInZ1ZVwiOnRydWUsXCJpZFwiOlwiZGF0YS12LTRkMjk5NTVmXCIsXCJzY29wZWRcIjpmYWxzZSxcImhhc0lubGluZUNvbmZpZ1wiOnRydWV9IS4vbm9kZV9tb2R1bGVzL3Z1ZS1sb2FkZXIvbGliL3NlbGVjdG9yLmpzP3R5cGU9c3R5bGVzJmluZGV4PTAhLi9tb2R1bGVzL1JlcG9ydC9SZXNvdXJjZXMvYXNzZXRzL2pzL2NvbXBvbmVudHMvRGF0YVRhYmxlUmVwb3J0c0NyZWRpdHMudnVlLmpzIiwic291cmNlc0NvbnRlbnQiOlsiZXhwb3J0cyA9IG1vZHVsZS5leHBvcnRzID0gcmVxdWlyZShcIi4uLy4uLy4uLy4uLy4uLy4uL25vZGVfbW9kdWxlcy9jc3MtbG9hZGVyL2xpYi9jc3MtYmFzZS5qc1wiKSh0cnVlKTtcbi8vIGltcG9ydHNcblxuXG4vLyBtb2R1bGVcbmV4cG9ydHMucHVzaChbbW9kdWxlLmlkLCBcIlxcbi5mb250LWN1c3RvbSB7XFxyXFxuICAgIGZvbnQtc2l6ZTogMTVweCAhaW1wb3J0YW50O1xcbn1cXHJcXG5cIiwgXCJcIiwge1widmVyc2lvblwiOjMsXCJzb3VyY2VzXCI6W1wiRDovbGFyYWdvbi93d3cvc2RyaW1zYWMtdGVuYW50L21vZHVsZXMvUmVwb3J0L1Jlc291cmNlcy9hc3NldHMvanMvY29tcG9uZW50cy9tb2R1bGVzL1JlcG9ydC9SZXNvdXJjZXMvYXNzZXRzL2pzL2NvbXBvbmVudHMvRGF0YVRhYmxlUmVwb3J0c0NyZWRpdHMudnVlXCJdLFwibmFtZXNcIjpbXSxcIm1hcHBpbmdzXCI6XCI7QUEyVkE7SUFDQSwyQkFBQTtDQUNBXCIsXCJmaWxlXCI6XCJEYXRhVGFibGVSZXBvcnRzQ3JlZGl0cy52dWVcIixcInNvdXJjZXNDb250ZW50XCI6W1wiPHRlbXBsYXRlPlxcclxcbiAgICA8ZGl2PlxcclxcbiAgICAgICAgPGRpdiBjbGFzcz1cXFwicm93XFxcIj5cXHJcXG4gICAgICAgICAgICA8ZGl2IGNsYXNzPVxcXCJjb2wtbWQtMTIgY29sLWxnLTEyIGNvbC14bC0xMiBcXFwiPlxcclxcbiAgICAgICAgICAgICAgICA8ZGl2IGNsYXNzPVxcXCJyb3cgbXQtMlxcXCI+XFxyXFxuICAgICAgICAgICAgICAgICAgICA8ZGl2IGNsYXNzPVxcXCJjb2wtbWQtM1xcXCI+XFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgPGxhYmVsIGNsYXNzPVxcXCJjb250cm9sLWxhYmVsXFxcIlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICA+UGVyaW9kbyAoRmVjaGEgZGUgZW1pc2nDs24pPC9sYWJlbFxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgID5cXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICA8ZWwtc2VsZWN0IHYtbW9kZWw9XFxcImZvcm0ucGVyaW9kXFxcIiBAY2hhbmdlPVxcXCJjaGFuZ2VQZXJpb2RcXFwiPlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICA8ZWwtb3B0aW9uXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBrZXk9XFxcIm1vbnRoXFxcIlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdmFsdWU9XFxcIm1vbnRoXFxcIlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgbGFiZWw9XFxcIlBvciBtZXNcXFwiXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgID48L2VsLW9wdGlvbj5cXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgPGVsLW9wdGlvblxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAga2V5PVxcXCJiZXR3ZWVuX21vbnRoc1xcXCJcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHZhbHVlPVxcXCJiZXR3ZWVuX21vbnRoc1xcXCJcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGxhYmVsPVxcXCJFbnRyZSBtZXNlc1xcXCJcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgPjwvZWwtb3B0aW9uPlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICA8ZWwtb3B0aW9uXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBrZXk9XFxcImRhdGVcXFwiXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB2YWx1ZT1cXFwiZGF0ZVxcXCJcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGxhYmVsPVxcXCJQb3IgZmVjaGFcXFwiXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgID48L2VsLW9wdGlvbj5cXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgPGVsLW9wdGlvblxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAga2V5PVxcXCJiZXR3ZWVuX2RhdGVzXFxcIlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdmFsdWU9XFxcImJldHdlZW5fZGF0ZXNcXFwiXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBsYWJlbD1cXFwiRW50cmUgZmVjaGFzXFxcIlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICA+PC9lbC1vcHRpb24+XFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgPC9lbC1zZWxlY3Q+XFxyXFxuICAgICAgICAgICAgICAgICAgICA8L2Rpdj5cXHJcXG4gICAgICAgICAgICAgICAgICAgIDx0ZW1wbGF0ZVxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgIHYtaWY9XFxcIlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICBmb3JtLnBlcmlvZCA9PT0gJ21vbnRoJyB8fFxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgZm9ybS5wZXJpb2QgPT09ICdiZXR3ZWVuX21vbnRocydcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICBcXFwiXFxyXFxuICAgICAgICAgICAgICAgICAgICA+XFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgPGRpdiBjbGFzcz1cXFwiY29sLW1kLTJcXFwiPlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICA8bGFiZWwgY2xhc3M9XFxcInctMTAwIGNvbnRyb2wtbGFiZWxcXFwiPk1lcyBkZTwvbGFiZWw+XFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxlbC1kYXRlLXBpY2tlclxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdi1tb2RlbD1cXFwiZm9ybS5tb250aF9zdGFydFxcXCJcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHR5cGU9XFxcIm1vbnRoXFxcIlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY2xhc3M9XFxcInctMTAwXFxcIlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgQGNoYW5nZT1cXFwiY2hhbmdlRGlzYWJsZWRNb250aHNcXFwiXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB2YWx1ZS1mb3JtYXQ9XFxcInl5eXktTU1cXFwiXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBmb3JtYXQ9XFxcIk1NL3l5eXlcXFwiXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA6Y2xlYXJhYmxlPVxcXCJmYWxzZVxcXCJcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgPjwvZWwtZGF0ZS1waWNrZXI+XFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgPC9kaXY+XFxyXFxuICAgICAgICAgICAgICAgICAgICA8L3RlbXBsYXRlPlxcclxcbiAgICAgICAgICAgICAgICAgICAgPHRlbXBsYXRlIHYtaWY9XFxcImZvcm0ucGVyaW9kID09PSAnYmV0d2Vlbl9tb250aHMnXFxcIj5cXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICA8ZGl2IGNsYXNzPVxcXCJjb2wtbWQtMlxcXCI+XFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxsYWJlbCBjbGFzcz1cXFwidy0xMDAgY29udHJvbC1sYWJlbFxcXCI+TWVzIGFsPC9sYWJlbD5cXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgPGVsLWRhdGUtcGlja2VyXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjbGFzcz1cXFwidy0xMDBcXFwiXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB2LW1vZGVsPVxcXCJmb3JtLm1vbnRoX2VuZFxcXCJcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHR5cGU9XFxcIm1vbnRoXFxcIlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgOnBpY2tlci1vcHRpb25zPVxcXCJwaWNrZXJPcHRpb25zTW9udGhzXFxcIlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdmFsdWUtZm9ybWF0PVxcXCJ5eXl5LU1NXFxcIlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgZm9ybWF0PVxcXCJNTS95eXl5XFxcIlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgOmNsZWFyYWJsZT1cXFwiZmFsc2VcXFwiXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgID48L2VsLWRhdGUtcGlja2VyPlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgIDwvZGl2PlxcclxcbiAgICAgICAgICAgICAgICAgICAgPC90ZW1wbGF0ZT5cXHJcXG4gICAgICAgICAgICAgICAgICAgIDx0ZW1wbGF0ZVxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgIHYtaWY9XFxcIlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICBmb3JtLnBlcmlvZCA9PT0gJ2RhdGUnIHx8XFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBmb3JtLnBlcmlvZCA9PT0gJ2JldHdlZW5fZGF0ZXMnXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgXFxcIlxcclxcbiAgICAgICAgICAgICAgICAgICAgPlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgIDxkaXYgY2xhc3M9XFxcImNvbC1tZC0yXFxcIj5cXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgPGxhYmVsIGNsYXNzPVxcXCJ3LTEwMCBjb250cm9sLWxhYmVsXFxcIj5GZWNoYSBkZWw8L2xhYmVsPlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICA8ZWwtZGF0ZS1waWNrZXJcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNsYXNzPVxcXCJ3LTEwMFxcXCJcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHYtbW9kZWw9XFxcImZvcm0uZGF0ZV9zdGFydFxcXCJcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHR5cGU9XFxcImRhdGVcXFwiXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBAY2hhbmdlPVxcXCJjaGFuZ2VEaXNhYmxlZERhdGVzXFxcIlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdmFsdWUtZm9ybWF0PVxcXCJ5eXl5LU1NLWRkXFxcIlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgZm9ybWF0PVxcXCJkZC9NTS95eXl5XFxcIlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgOmNsZWFyYWJsZT1cXFwiZmFsc2VcXFwiXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgID48L2VsLWRhdGUtcGlja2VyPlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgIDwvZGl2PlxcclxcbiAgICAgICAgICAgICAgICAgICAgPC90ZW1wbGF0ZT5cXHJcXG4gICAgICAgICAgICAgICAgICAgIDx0ZW1wbGF0ZSB2LWlmPVxcXCJmb3JtLnBlcmlvZCA9PT0gJ2JldHdlZW5fZGF0ZXMnXFxcIj5cXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICA8ZGl2IGNsYXNzPVxcXCJjb2wtbWQtMlxcXCI+XFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxsYWJlbCBjbGFzcz1cXFwidy0xMDAgY29udHJvbC1sYWJlbFxcXCI+RmVjaGEgYWw8L2xhYmVsPlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICA8ZWwtZGF0ZS1waWNrZXJcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNsYXNzPVxcXCJ3LTEwMFxcXCJcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHYtbW9kZWw9XFxcImZvcm0uZGF0ZV9lbmRcXFwiXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB0eXBlPVxcXCJkYXRlXFxcIlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgOnBpY2tlci1vcHRpb25zPVxcXCJwaWNrZXJPcHRpb25zRGF0ZXNcXFwiXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB2YWx1ZS1mb3JtYXQ9XFxcInl5eXktTU0tZGRcXFwiXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBmb3JtYXQ9XFxcImRkL01NL3l5eXlcXFwiXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA6Y2xlYXJhYmxlPVxcXCJmYWxzZVxcXCJcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgPjwvZWwtZGF0ZS1waWNrZXI+XFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgPC9kaXY+XFxyXFxuICAgICAgICAgICAgICAgICAgICA8L3RlbXBsYXRlPlxcclxcblxcclxcbiAgICAgICAgICAgICAgICAgICAgPCEtLSA8ZGl2IGNsYXNzPVxcXCJjb2wtbWQtM1xcXCI+XFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgPGRpdiBjbGFzcz1cXFwiZm9ybS1ncm91cFxcXCI+XFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxsYWJlbCBjbGFzcz1cXFwidy0xMDAgY29udHJvbC1sYWJlbFxcXCJcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgID5Fc3RhYmxlY2ltaWVudG88L2xhYmVsXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgID5cXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgPGVsLXNlbGVjdFxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY2xhc3M9XFxcInctMTAwXFxcIlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdi1tb2RlbD1cXFwiZm9ybS5lc3RhYmxpc2htZW50X2lkXFxcIlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY2xlYXJhYmxlXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgID5cXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxlbC1vcHRpb25cXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB2LWZvcj1cXFwib3B0aW9uIGluIGVzdGFibGlzaG1lbnRzXFxcIlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDprZXk9XFxcIm9wdGlvbi5pZFxcXCJcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA6dmFsdWU9XFxcIm9wdGlvbi5pZFxcXCJcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA6bGFiZWw9XFxcIm9wdGlvbi5uYW1lXFxcIlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPjwvZWwtb3B0aW9uPlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICA8L2VsLXNlbGVjdD5cXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICA8L2Rpdj5cXHJcXG4gICAgICAgICAgICAgICAgICAgIDwvZGl2PiAtLT5cXHJcXG4gICAgICAgICAgICAgICAgICAgIDwhLS0gPGRpdlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgIGNsYXNzPVxcXCJjb2wtbWQtM1xcXCJcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICB2LXNob3c9XFxcIlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICByZXNvdXJjZSA9PSAncmVwb3J0cy9zYWxlcycgfHxcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlc291cmNlID09ICdyZXBvcnRzL3B1cmNoYXNlcydcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICBcXFwiXFxyXFxuICAgICAgICAgICAgICAgICAgICA+XFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgPGRpdiBjbGFzcz1cXFwiZm9ybS1ncm91cFxcXCI+XFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxsYWJlbCBjbGFzcz1cXFwidy0xMDAgY29udHJvbC1sYWJlbFxcXCJcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgID5UaXBvIGRlIGRvY3VtZW50bzwvbGFiZWxcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgPlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICA8ZWwtc2VsZWN0XFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjbGFzcz1cXFwidy0xMDBcXFwiXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB2LW1vZGVsPVxcXCJmb3JtLmRvY3VtZW50X3R5cGVfaWRcXFwiXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjbGVhcmFibGVcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgPlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPGVsLW9wdGlvblxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHYtZm9yPVxcXCJvcHRpb24gaW4gZG9jdW1lbnRfdHlwZXNcXFwiXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgOmtleT1cXFwib3B0aW9uLmlkXFxcIlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDp2YWx1ZT1cXFwib3B0aW9uLmlkXFxcIlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDpsYWJlbD1cXFwib3B0aW9uLmRlc2NyaXB0aW9uXFxcIlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPjwvZWwtb3B0aW9uPlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICA8L2VsLXNlbGVjdD5cXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICA8L2Rpdj5cXHJcXG4gICAgICAgICAgICAgICAgICAgIDwvZGl2PiAtLT5cXHJcXG5cXHJcXG4gICAgICAgICAgICAgICAgICAgIDxkaXYgY2xhc3M9XFxcImNvbC1sZy00IGNvbC1tZC00XFxcIj5cXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICA8ZGl2IGNsYXNzPVxcXCJmb3JtLWdyb3VwXFxcIj5cXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgPGxhYmVsIGNsYXNzPVxcXCJ3LTEwMCBjb250cm9sLWxhYmVsXFxcIj5cXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIENsaWVudGVzXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIDwvbGFiZWw+XFxyXFxuXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxlbC1zZWxlY3RcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNsYXNzPVxcXCJ3LTEwMFxcXCJcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHYtbW9kZWw9XFxcImZvcm0ucGVyc29uX2lkXFxcIlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgZmlsdGVyYWJsZVxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVtb3RlXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBwb3BwZXItY2xhc3M9XFxcImVsLXNlbGVjdC1jdXN0b21lcnNcXFwiXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjbGVhcmFibGVcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHBsYWNlaG9sZGVyPVxcXCJOb21icmUgbyBuw7ptZXJvIGRlIGRvY3VtZW50b1xcXCJcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDpyZW1vdGUtbWV0aG9kPVxcXCJzZWFyY2hSZW1vdGVQZXJzb25zXFxcIlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgOmxvYWRpbmc9XFxcImxvYWRpbmdfc2VhcmNoXFxcIlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgQGNoYW5nZT1cXFwiY2hhbmdlUGVyc29uc1xcXCJcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgPlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPGVsLW9wdGlvblxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHYtZm9yPVxcXCJvcHRpb24gaW4gcGVyc29uc1xcXCJcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA6a2V5PVxcXCJvcHRpb24uaWRcXFwiXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgOnZhbHVlPVxcXCJvcHRpb24uaWRcXFwiXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgOmxhYmVsPVxcXCJvcHRpb24uZGVzY3JpcHRpb25cXFwiXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA+PC9lbC1vcHRpb24+XFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIDwvZWwtc2VsZWN0PlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgIDwvZGl2PlxcclxcbiAgICAgICAgICAgICAgICAgICAgPC9kaXY+XFxyXFxuXFxyXFxuICAgICAgICAgICAgICAgICAgICA8IS0tIDxkaXZcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICA6Y2xhc3M9XFxcIlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICByZXNvdXJjZSA9PSAncmVwb3J0cy9zYWxlcycgfHxcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVzb3VyY2UgPT0gJ3JlcG9ydHMvcHVyY2hhc2VzJ1xcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPyAnY29sLWxnLTMgY29sLW1kLTMnXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA6ICdjb2wtbGctMiBjb2wtbWQtMidcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICBcXFwiXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgdi1pZj1cXFwiYXBwbHlDdXN0b21lclxcXCJcXHJcXG4gICAgICAgICAgICAgICAgICAgID5cXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICA8ZGl2IGNsYXNzPVxcXCJmb3JtLWdyb3VwXFxcIj5cXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgPGxhYmVsIGNsYXNzPVxcXCJ3LTEwMCBjb250cm9sLWxhYmVsXFxcIj5cXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFVzdWFyaW9zXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIDwvbGFiZWw+XFxyXFxuXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxlbC1zZWxlY3RcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNsYXNzPVxcXCJ3LTEwMFxcXCJcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHYtbW9kZWw9XFxcImZvcm0uc2VsbGVyX2lkXFxcIlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgZmlsdGVyYWJsZVxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcG9wcGVyLWNsYXNzPVxcXCJlbC1zZWxlY3QtY3VzdG9tZXJzXFxcIlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY2xlYXJhYmxlXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBwbGFjZWhvbGRlcj1cXFwiTm9tYnJlIHVzdWFyaW9cXFwiXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgID5cXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxlbC1vcHRpb25cXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB2LWZvcj1cXFwib3B0aW9uIGluIHNlbGxlcnNcXFwiXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgOmtleT1cXFwib3B0aW9uLmlkXFxcIlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDp2YWx1ZT1cXFwib3B0aW9uLmlkXFxcIlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDpsYWJlbD1cXFwib3B0aW9uLm5hbWVcXFwiXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA+PC9lbC1vcHRpb24+XFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIDwvZWwtc2VsZWN0PlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgIDwvZGl2PlxcclxcbiAgICAgICAgICAgICAgICAgICAgPC9kaXY+IC0tPlxcclxcblxcclxcbiAgICAgICAgICAgICAgICAgICAgPCEtLSA8ZGl2XFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgOmNsYXNzPVxcXCJcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVzb3VyY2UgPT0gJ3JlcG9ydHMvc2FsZXMnIHx8XFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlc291cmNlID09ICdyZXBvcnRzL3B1cmNoYXNlcydcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgID8gJ2NvbC1sZy0yIGNvbC1tZC0yJ1xcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgOiAnY29sLWxnLTIgY29sLW1kLTInXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgXFxcIlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgIHYtaWY9XFxcImFwcGx5Q3VzdG9tZXJcXFwiXFxyXFxuICAgICAgICAgICAgICAgICAgICA+XFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgPGRpdiBjbGFzcz1cXFwiZm9ybS1ncm91cFxcXCI+XFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxsYWJlbCBjbGFzcz1cXFwidy0xMDAgY29udHJvbC1sYWJlbFxcXCI+XFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBUaXBvIGRlIFJlcG9ydGVcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgPC9sYWJlbD5cXHJcXG5cXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgPGVsLXNlbGVjdFxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY2xhc3M9XFxcInctMTAwXFxcIlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdi1tb2RlbD1cXFwiZm9ybS50eXBlcmVzdWx0XFxcIlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgZmlsdGVyYWJsZVxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcG9wcGVyLWNsYXNzPVxcXCJlbC1zZWxlY3QtY3VzdG9tZXJzXFxcIlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY2xlYXJhYmxlXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgID5cXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxlbC1vcHRpb25cXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBsYWJlbD1cXFwiRGV0YWxsYWRvXFxcIlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHZhbHVlPVxcXCJEZXRhbGxhZG9cXFwiXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA+PC9lbC1vcHRpb24+XFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8ZWwtb3B0aW9uXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgbGFiZWw9XFxcIlJlc3VtZW5cXFwiXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdmFsdWU9XFxcIlJlc3VtZW5cXFwiXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA+PC9lbC1vcHRpb24+XFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIDwvZWwtc2VsZWN0PlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgIDwvZGl2PlxcclxcbiAgICAgICAgICAgICAgICAgICAgPC9kaXY+IC0tPlxcclxcblxcclxcbiAgICAgICAgICAgICAgICAgICAgPGRpdiBjbGFzcz1cXFwiZC1mbGV4XFxcIiBzdHlsZT1cXFwibWFyZ2luLXRvcDoyOXB4XFxcIj5cXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICA8ZWwtYnV0dG9uXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNsYXNzPVxcXCJzdWJtaXRcXFwiXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIHR5cGU9XFxcInByaW1hcnlcXFwiXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIEBjbGljay5wcmV2ZW50PVxcXCJnZXRSZWNvcmRzQnlGaWx0ZXJcXFwiXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIDpsb2FkaW5nPVxcXCJsb2FkaW5nX3N1Ym1pdFxcXCJcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgaWNvbj1cXFwiZWwtaWNvbi1zZWFyY2hcXFwiXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgID5CdXNjYXI8L2VsLWJ1dHRvblxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgID5cXHJcXG5cXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICA8dGVtcGxhdGVcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgdi1pZj1cXFwiXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZWNvcmRzLmxlbmd0aCA+IDAgJiZcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZXNvdXJjZSAhPT0gJ3JlcG9ydHMvZG9jdW1lbnQtZGV0cmFjdGlvbnMnXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIFxcXCJcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICA+XFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxlbC1idXR0b25cXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNsYXNzPVxcXCJzdWJtaXRcXFwiXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB0eXBlPVxcXCJkYW5nZXJcXFwiXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBpY29uPVxcXCJlbC1pY29uLXRpY2tldHNcXFwiXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBAY2xpY2sucHJldmVudD1cXFwiY2xpY2tEb3dubG9hZCgncGRmJylcXFwiXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA+RXhwb3J0YXIgUERGPC9lbC1idXR0b25cXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgPlxcclxcblxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICA8ZWwtYnV0dG9uXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjbGFzcz1cXFwic3VibWl0XFxcIlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdHlwZT1cXFwic3VjY2Vzc1xcXCJcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIEBjbGljay5wcmV2ZW50PVxcXCJjbGlja0Rvd25sb2FkKCdleGNlbCcpXFxcIlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPjxpIGNsYXNzPVxcXCJmYSBmYS1maWxlLWV4Y2VsXFxcIj48L2k+IEV4cG9ydGFsXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBFeGNlbDwvZWwtYnV0dG9uXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgID5cXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgPGVsLWJ1dHRvblxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY2xhc3M9XFxcInN1Ym1pdFxcXCJcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIEBjbGljay5wcmV2ZW50PVxcXCJjbGlja09wZW5XaGF0c2FwcFxcXCJcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgID48aSBjbGFzcz1cXFwiZmEgZmEtd2hhdHNhcHBcXFwiPjwvaT4gRW52aWFyXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB3aGF0c2FwcDwvZWwtYnV0dG9uXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgID5cXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICA8L3RlbXBsYXRlPlxcclxcbiAgICAgICAgICAgICAgICAgICAgPC9kaXY+XFxyXFxuICAgICAgICAgICAgICAgIDwvZGl2PlxcclxcbiAgICAgICAgICAgICAgICA8ZGl2IGNsYXNzPVxcXCJyb3cgbXQtMSBtYi00XFxcIj48L2Rpdj5cXHJcXG4gICAgICAgICAgICA8L2Rpdj5cXHJcXG5cXHJcXG4gICAgICAgICAgICA8ZGl2IGNsYXNzPVxcXCJjb2wtbWQtMTJcXFwiPlxcclxcbiAgICAgICAgICAgICAgICA8ZGl2IGNsYXNzPVxcXCJ0YWJsZS1yZXNwb25zaXZlXFxcIj5cXHJcXG4gICAgICAgICAgICAgICAgICAgIDx0YWJsZSBjbGFzcz1cXFwidGFibGVcXFwiPlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgIDx0aGVhZD5cXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgPHNsb3QgbmFtZT1cXFwiaGVhZGluZ1xcXCI+PC9zbG90PlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgIDwvdGhlYWQ+XFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgPHRib2R5PlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICA8c2xvdFxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdi1mb3I9XFxcIihyb3csIGluZGV4KSBpbiByZWNvcmRzXFxcIlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgOnJvdz1cXFwicm93XFxcIlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgOmluZGV4PVxcXCJjdXN0b21JbmRleChpbmRleClcXFwiXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgID48L3Nsb3Q+XFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgPC90Ym9keT5cXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICA8dGZvb3RcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgdi1pZj1cXFwiXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZXNvdXJjZSA9PSAncmVwb3J0cy9zYWxlcycgfHxcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZXNvdXJjZSA9PSAncmVwb3J0cy9wdXJjaGFzZXMnXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIFxcXCJcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICA+XFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIDx0cj5cXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDx0ZFxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDpjb2xzcGFuPVxcXCJcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVzb3VyY2UgPT0gJ3JlcG9ydHMvc2FsZXMnID8gNyA6IDhcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBcXFwiXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA+PC90ZD5cXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDx0ZD48c3Ryb25nPlRvdGFsZXMgUEVOPC9zdHJvbmc+PC90ZD5cXHJcXG5cXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDx0ZD57eyB0b3RhbHMuYWN1bV90b3RhbF90YXhlZCB9fTwvdGQ+XFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8dGQ+e3sgdG90YWxzLmFjdW1fdG90YWxfaWd2IH19PC90ZD5cXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDx0ZD57eyB0b3RhbHMuYWN1bV90b3RhbCB9fTwvdGQ+XFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIDwvdHI+XFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIDx0cj5cXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDx0ZFxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDpjb2xzcGFuPVxcXCJcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVzb3VyY2UgPT0gJ3JlcG9ydHMvc2FsZXMnID8gNyA6IDhcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBcXFwiXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA+PC90ZD5cXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDx0ZD48c3Ryb25nPlRvdGFsZXMgVVNEPC9zdHJvbmc+PC90ZD5cXHJcXG5cXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDx0ZD57eyB0b3RhbHMuYWN1bV90b3RhbF90YXhlZF91c2QgfX08L3RkPlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPHRkPnt7IHRvdGFscy5hY3VtX3RvdGFsX2lndl91c2QgfX08L3RkPlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPHRkPnt7IHRvdGFscy5hY3VtX3RvdGFsX3VzZCB9fTwvdGQ+XFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIDwvdHI+XFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgPC90Zm9vdD5cXHJcXG4gICAgICAgICAgICAgICAgICAgIDwvdGFibGU+XFxyXFxuICAgICAgICAgICAgICAgICAgICA8ZGl2PlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgIDxlbC1wYWdpbmF0aW9uXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIEBjdXJyZW50LWNoYW5nZT1cXFwiZ2V0UmVjb3Jkc1xcXCJcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgbGF5b3V0PVxcXCJ0b3RhbCwgcHJldiwgcGFnZXIsIG5leHRcXFwiXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIDp0b3RhbD1cXFwicGFnaW5hdGlvbi50b3RhbFxcXCJcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgOmN1cnJlbnQtcGFnZS5zeW5jPVxcXCJwYWdpbmF0aW9uLmN1cnJlbnRfcGFnZVxcXCJcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgOnBhZ2Utc2l6ZT1cXFwicGFnaW5hdGlvbi5wZXJfcGFnZVxcXCJcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICA+XFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgPC9lbC1wYWdpbmF0aW9uPlxcclxcbiAgICAgICAgICAgICAgICAgICAgPC9kaXY+XFxyXFxuICAgICAgICAgICAgICAgIDwvZGl2PlxcclxcbiAgICAgICAgICAgIDwvZGl2PlxcclxcbiAgICAgICAgPC9kaXY+XFxyXFxuICAgICAgICA8d2hhdHNhcHAtZm9ybS1yZXBvcnRcXHJcXG4gICAgICAgICAgICA6bWVzc2FnZS5zeW5jPVxcXCJtZXNzYWdlUmVwb3J0XFxcIlxcclxcbiAgICAgICAgICAgIDpyZXNvdXJjZT1cXFwicmVzb3VyY2VSZXBvcnRcXFwiXFxyXFxuICAgICAgICAgICAgOnNob3dXaGF0c2FwcEZvcm0uc3luYz1cXFwic2hvd1doYXRzYXBwRm9ybVxcXCJcXHJcXG4gICAgICAgID5cXHJcXG4gICAgICAgIDwvd2hhdHNhcHAtZm9ybS1yZXBvcnQ+XFxyXFxuICAgIDwvZGl2PlxcclxcbjwvdGVtcGxhdGU+XFxyXFxuPHN0eWxlPlxcclxcbi5mb250LWN1c3RvbSB7XFxyXFxuICAgIGZvbnQtc2l6ZTogMTVweCAhaW1wb3J0YW50O1xcclxcbn1cXHJcXG48L3N0eWxlPlxcclxcbjxzY3JpcHQ+XFxyXFxuaW1wb3J0IG1vbWVudCBmcm9tIFxcXCJtb21lbnRcXFwiO1xcclxcbmltcG9ydCBxdWVyeVN0cmluZyBmcm9tIFxcXCJxdWVyeS1zdHJpbmdcXFwiO1xcclxcbmltcG9ydCBXaGF0c2FwcEZvcm1SZXBvcnQgZnJvbSBcXFwiLi4vLi4vLi4vLi4vLi4vLi4vcmVzb3VyY2VzL2pzL2NvbXBvbmVudHMvV2hhdHNhcHBNb2RhbFJlcG9ydHMudnVlXFxcIjtcXHJcXG5leHBvcnQgZGVmYXVsdCB7XFxyXFxuICAgIHByb3BzOiB7XFxyXFxuICAgICAgICByZXNvdXJjZTogU3RyaW5nLFxcclxcbiAgICAgICAgYXBwbHlDdXN0b21lcjogeyB0eXBlOiBCb29sZWFuLCByZXF1aXJlZDogZmFsc2UsIGRlZmF1bHQ6IGZhbHNlIH1cXHJcXG4gICAgfSxcXHJcXG4gICAgY29tcG9uZW50czogeyBXaGF0c2FwcEZvcm1SZXBvcnQgfSxcXHJcXG4gICAgZGF0YSgpIHtcXHJcXG4gICAgICAgIHJldHVybiB7XFxyXFxuICAgICAgICAgICAgbWVzc2FnZVJlcG9ydDogXFxcIlxcXCIsXFxyXFxuICAgICAgICAgICAgcmVzb3VyY2VSZXBvcnQ6IFxcXCJcXFwiLFxcclxcbiAgICAgICAgICAgIHNob3dXaGF0c2FwcEZvcm06IGZhbHNlLFxcclxcbiAgICAgICAgICAgIGxvYWRpbmdfc3VibWl0OiBmYWxzZSxcXHJcXG4gICAgICAgICAgICBwZXJzb25zOiBbXSxcXHJcXG4gICAgICAgICAgICBhbGxfcGVyc29uczogW10sXFxyXFxuICAgICAgICAgICAgbG9hZGluZ19zZWFyY2g6IGZhbHNlLFxcclxcbiAgICAgICAgICAgIGNvbHVtbnM6IFtdLFxcclxcbiAgICAgICAgICAgIHJlY29yZHM6IFtdLFxcclxcbiAgICAgICAgICAgIGhlYWRlcnM6IGhlYWRlcnNfdG9rZW4sXFxyXFxuICAgICAgICAgICAgZG9jdW1lbnRfdHlwZXM6IFtdLFxcclxcbiAgICAgICAgICAgIHBhZ2luYXRpb246IHt9LFxcclxcbiAgICAgICAgICAgIHNlYXJjaDoge30sXFxyXFxuICAgICAgICAgICAgdG90YWxzOiB7fSxcXHJcXG4gICAgICAgICAgICBlc3RhYmxpc2htZW50OiBudWxsLFxcclxcbiAgICAgICAgICAgIGVzdGFibGlzaG1lbnRzOiBbXSxcXHJcXG4gICAgICAgICAgICBzdGF0ZV90eXBlczogW10sXFxyXFxuICAgICAgICAgICAgZm9ybToge30sXFxyXFxuXFxyXFxuICAgICAgICAgICAgcGlja2VyT3B0aW9uc0RhdGVzOiB7XFxyXFxuICAgICAgICAgICAgICAgIGRpc2FibGVkRGF0ZTogdGltZSA9PiB7XFxyXFxuICAgICAgICAgICAgICAgICAgICB0aW1lID0gbW9tZW50KHRpbWUpLmZvcm1hdChcXFwiWVlZWS1NTS1ERFxcXCIpO1xcclxcbiAgICAgICAgICAgICAgICAgICAgcmV0dXJuIHRoaXMuZm9ybS5kYXRlX3N0YXJ0ID4gdGltZTtcXHJcXG4gICAgICAgICAgICAgICAgfVxcclxcbiAgICAgICAgICAgIH0sXFxyXFxuICAgICAgICAgICAgcGlja2VyT3B0aW9uc01vbnRoczoge1xcclxcbiAgICAgICAgICAgICAgICBkaXNhYmxlZERhdGU6IHRpbWUgPT4ge1xcclxcbiAgICAgICAgICAgICAgICAgICAgdGltZSA9IG1vbWVudCh0aW1lKS5mb3JtYXQoXFxcIllZWVktTU1cXFwiKTtcXHJcXG4gICAgICAgICAgICAgICAgICAgIHJldHVybiB0aGlzLmZvcm0ubW9udGhfc3RhcnQgPiB0aW1lO1xcclxcbiAgICAgICAgICAgICAgICB9XFxyXFxuICAgICAgICAgICAgfSxcXHJcXG4gICAgICAgICAgICBzZWxsZXJzOiBbXVxcclxcbiAgICAgICAgfTtcXHJcXG4gICAgfSxcXHJcXG4gICAgY29tcHV0ZWQ6IHt9LFxcclxcbiAgICBjcmVhdGVkKCkge1xcclxcbiAgICAgICAgdGhpcy5pbml0Rm9ybSgpO1xcclxcbiAgICAgICAgdGhpcy5pbml0VG90YWxzKCk7XFxyXFxuICAgICAgICB0aGlzLiRldmVudEh1Yi4kb24oXFxcInJlbG9hZERhdGFcXFwiLCAoKSA9PiB7XFxyXFxuICAgICAgICAgICAgdGhpcy5nZXRSZWNvcmRzKCk7XFxyXFxuICAgICAgICB9KTtcXHJcXG4gICAgfSxcXHJcXG4gICAgYXN5bmMgbW91bnRlZCgpIHtcXHJcXG4gICAgICAgIGF3YWl0IHRoaXMuJGh0dHAuZ2V0KGAvJHt0aGlzLnJlc291cmNlfS9maWx0ZXJgKS50aGVuKHJlc3BvbnNlID0+IHtcXHJcXG4gICAgICAgICAgICB0aGlzLmVzdGFibGlzaG1lbnRzID0gcmVzcG9uc2UuZGF0YS5lc3RhYmxpc2htZW50cztcXHJcXG4gICAgICAgICAgICB0aGlzLmFsbF9wZXJzb25zID0gcmVzcG9uc2UuZGF0YS5wZXJzb25zO1xcclxcbiAgICAgICAgICAgIHRoaXMuc2VsbGVycyA9IHJlc3BvbnNlLmRhdGEuc2VsbGVycztcXHJcXG4gICAgICAgIH0pO1xcclxcblxcclxcbiAgICAgICAgYXdhaXQgdGhpcy5nZXRSZWNvcmRzKCk7XFxyXFxuICAgICAgICBhd2FpdCB0aGlzLmZpbHRlclBlcnNvbnMoKTtcXHJcXG4gICAgICAgIC8vIGF3YWl0IHRoaXMuZ2V0VG90YWxzKClcXHJcXG4gICAgICAgIHRoaXMuZm9ybS50eXBlX3BlcnNvbiA9XFxyXFxuICAgICAgICAgICAgdGhpcy5yZXNvdXJjZSA9PT0gXFxcInJlcG9ydHMvc2FsZXNcXFwiID8gXFxcImN1c3RvbWVyc1xcXCIgOiBcXFwic3VwcGxpZXJzXFxcIjtcXHJcXG4gICAgfSxcXHJcXG4gICAgbWV0aG9kczoge1xcclxcbiAgICAgICAgY2xpY2tPcGVuV2hhdHNhcHAoKSB7XFxyXFxuICAgICAgICAgICAgbGV0IHF1ZXJ5ID0gcXVlcnlTdHJpbmcuc3RyaW5naWZ5KHtcXHJcXG4gICAgICAgICAgICAgICAgLi4udGhpcy5mb3JtXFxyXFxuICAgICAgICAgICAgfSk7XFxyXFxuICAgICAgICAgICAgdGhpcy5yZXNvdXJjZVJlcG9ydCA9IGAvJHt0aGlzLnJlc291cmNlfS9wZGY/JHtxdWVyeX1gO1xcclxcbiAgICAgICAgICAgIHRoaXMubWVzc2FnZVJlcG9ydCA9IGBSZXBvcnRlIGRlIGNyZWRpdG9zIGEgbGEgZmVjaGEgJHttb21lbnQoKS5mb3JtYXQoXFxyXFxuICAgICAgICAgICAgICAgIFxcXCJERC1NTS1ZWVlZXFxcIlxcclxcbiAgICAgICAgICAgICl9YDtcXHJcXG4gICAgICAgICAgICB0aGlzLnNob3dXaGF0c2FwcEZvcm0gPSB0cnVlO1xcclxcbiAgICAgICAgfSxcXHJcXG4gICAgICAgIGNoYW5nZVBlcnNvbnMoKSB7XFxyXFxuICAgICAgICAgICAgLy8gdGhpcy5mb3JtLnR5cGVfcGVyc29uID0gdGhpcy5yZXNvdXJjZSA9PT0gJ3JlcG9ydHMvc2FsZXMnID8gJ2N1c3RvbWVycyc6J3N1cHBsaWVycydcXHJcXG4gICAgICAgIH0sXFxyXFxuICAgICAgICBzZWFyY2hSZW1vdGVQZXJzb25zKGlucHV0KSB7XFxyXFxuICAgICAgICAgICAgaWYgKGlucHV0Lmxlbmd0aCA+IDApIHtcXHJcXG4gICAgICAgICAgICAgICAgdGhpcy5sb2FkaW5nX3NlYXJjaCA9IHRydWU7XFxyXFxuICAgICAgICAgICAgICAgIGxldCBwYXJhbWV0ZXJzID0gYGlucHV0PSR7aW5wdXR9YDtcXHJcXG5cXHJcXG4gICAgICAgICAgICAgICAgdGhpcy5mb3JtLnR5cGVfcGVyc29uID0gXFxcImN1c3RvbWVyc1xcXCI7XFxyXFxuXFxyXFxuICAgICAgICAgICAgICAgIHRoaXMuJGh0dHBcXHJcXG4gICAgICAgICAgICAgICAgICAgIC5nZXQoXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgYC9yZXBvcnRzL2RhdGEtdGFibGUvcGVyc29ucy8ke3RoaXMuZm9ybS50eXBlX3BlcnNvbn0/JHtwYXJhbWV0ZXJzfWBcXHJcXG4gICAgICAgICAgICAgICAgICAgIClcXHJcXG4gICAgICAgICAgICAgICAgICAgIC50aGVuKHJlc3BvbnNlID0+IHtcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICB0aGlzLnBlcnNvbnMgPSByZXNwb25zZS5kYXRhLnBlcnNvbnM7XFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgdGhpcy5sb2FkaW5nX3NlYXJjaCA9IGZhbHNlO1xcclxcblxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgIGlmICh0aGlzLnBlcnNvbnMubGVuZ3RoID09IDApIHtcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgdGhpcy5maWx0ZXJQZXJzb25zKCk7XFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgfVxcclxcbiAgICAgICAgICAgICAgICAgICAgfSk7XFxyXFxuICAgICAgICAgICAgfSBlbHNlIHtcXHJcXG4gICAgICAgICAgICAgICAgdGhpcy5maWx0ZXJQZXJzb25zKCk7XFxyXFxuICAgICAgICAgICAgfVxcclxcbiAgICAgICAgfSxcXHJcXG4gICAgICAgIGZpbHRlclBlcnNvbnMoKSB7XFxyXFxuICAgICAgICAgICAgdGhpcy5wZXJzb25zID0gdGhpcy5hbGxfcGVyc29ucztcXHJcXG4gICAgICAgICAgICBjb25zb2xlLmxvZyh0aGlzLnBlcnNvbnMpO1xcclxcbiAgICAgICAgfSxcXHJcXG4gICAgICAgIGdldFRvdGFscyhyZWNvcmRzKSB7XFxyXFxuICAgICAgICAgICAgdGhpcy5pbml0VG90YWxzKCk7XFxyXFxuICAgICAgICAgICAgLy8gY29uc29sZS5sb2cocmVjb3JkcylcXHJcXG5cXHJcXG4gICAgICAgICAgICByZWNvcmRzLmZvckVhY2gocm93ID0+IHtcXHJcXG4gICAgICAgICAgICAgICAgbGV0IHNpZ25hbCA9IHJvdy5kb2N1bWVudF90eXBlX2lkO1xcclxcbiAgICAgICAgICAgICAgICBsZXQgc3RhdGUgPSByb3cuc3RhdGVfdHlwZV9pZDtcXHJcXG5cXHJcXG4gICAgICAgICAgICAgICAgaWYgKHJvdy5jdXJyZW5jeV90eXBlX2lkID09IFxcXCJQRU5cXFwiKSB7XFxyXFxuICAgICAgICAgICAgICAgICAgICBpZiAoc2lnbmFsID09IFxcXCIwN1xcXCIgJiYgc3RhdGUgIT0gXFxcIjExXFxcIikge1xcclxcbiAgICAgICAgICAgICAgICAgICAgICAgIHRoaXMudG90YWxzLmFjdW1fdG90YWwgKz0gcGFyc2VGbG9hdCgtcm93LnRvdGFsKTtcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICB0aGlzLnRvdGFscy5hY3VtX3RvdGFsX3RheGVkICs9IHBhcnNlRmxvYXQoXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIC1yb3cudG90YWxfdGF4ZWRcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICApO1xcclxcbiAgICAgICAgICAgICAgICAgICAgICAgIHRoaXMudG90YWxzLmFjdW1fdG90YWxfaWd2ICs9IHBhcnNlRmxvYXQoXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIC1yb3cudG90YWxfaWd2XFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgKTtcXHJcXG5cXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICB0aGlzLnRvdGFscy5hY3VtX3RvdGFsX2V4b25lcmF0ZWQgKz0gcGFyc2VGbG9hdChcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgLXJvdy50b3RhbF9leG9uZXJhdGVkXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgKTtcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICB0aGlzLnRvdGFscy5hY3VtX3RvdGFsX3VuYWZmZWN0ZWQgKz0gcGFyc2VGbG9hdChcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgLXJvdy50b3RhbF91bmFmZmVjdGVkXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgKTtcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICB0aGlzLnRvdGFscy5hY3VtX3RvdGFsX2ZyZWUgKz0gcGFyc2VGbG9hdChcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgLXJvdy50b3RhbF9mcmVlXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgKTtcXHJcXG4gICAgICAgICAgICAgICAgICAgIH0gZWxzZSBpZiAoc2lnbmFsICE9IFxcXCIwN1xcXCIgJiYgc3RhdGUgPT0gXFxcIjExXFxcIikge1xcclxcbiAgICAgICAgICAgICAgICAgICAgICAgIHRoaXMudG90YWxzLmFjdW1fdG90YWwgKz0gMDtcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICB0aGlzLnRvdGFscy5hY3VtX3RvdGFsX3RheGVkICs9IDA7XFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgdGhpcy50b3RhbHMuYWN1bV90b3RhbF9pZ3YgKz0gMDtcXHJcXG5cXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICB0aGlzLnRvdGFscy5hY3VtX3RvdGFsX2V4b25lcmF0ZWQgKz0gMDtcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICB0aGlzLnRvdGFscy5hY3VtX3RvdGFsX3VuYWZmZWN0ZWQgKz0gMDtcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICB0aGlzLnRvdGFscy5hY3VtX3RvdGFsX2ZyZWUgKz0gMDtcXHJcXG4gICAgICAgICAgICAgICAgICAgIH0gZWxzZSB7XFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgdGhpcy50b3RhbHMuYWN1bV90b3RhbCArPSBwYXJzZUZsb2F0KHJvdy50b3RhbCk7XFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgdGhpcy50b3RhbHMuYWN1bV90b3RhbF90YXhlZCArPSBwYXJzZUZsb2F0KFxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICByb3cudG90YWxfdGF4ZWRcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICApO1xcclxcbiAgICAgICAgICAgICAgICAgICAgICAgIHRoaXMudG90YWxzLmFjdW1fdG90YWxfaWd2ICs9IHBhcnNlRmxvYXQocm93LnRvdGFsX2lndik7XFxyXFxuXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgdGhpcy50b3RhbHMuYWN1bV90b3RhbF9leG9uZXJhdGVkICs9IHBhcnNlRmxvYXQoXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJvdy50b3RhbF9leG9uZXJhdGVkXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgKTtcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICB0aGlzLnRvdGFscy5hY3VtX3RvdGFsX3VuYWZmZWN0ZWQgKz0gcGFyc2VGbG9hdChcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgcm93LnRvdGFsX3VuYWZmZWN0ZWRcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICApO1xcclxcbiAgICAgICAgICAgICAgICAgICAgICAgIHRoaXMudG90YWxzLmFjdW1fdG90YWxfZnJlZSArPSBwYXJzZUZsb2F0KFxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICByb3cudG90YWxfZnJlZVxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICk7XFxyXFxuICAgICAgICAgICAgICAgICAgICB9XFxyXFxuICAgICAgICAgICAgICAgIH0gZWxzZSBpZiAocm93LmN1cnJlbmN5X3R5cGVfaWQgPT0gXFxcIlVTRFxcXCIpIHtcXHJcXG4gICAgICAgICAgICAgICAgICAgIGlmIChzaWduYWwgPT0gXFxcIjA3XFxcIiAmJiBzdGF0ZSAhPSBcXFwiMTFcXFwiKSB7XFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgdGhpcy50b3RhbHMuYWN1bV90b3RhbF91c2QgKz0gcGFyc2VGbG9hdCgtcm93LnRvdGFsKTtcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICB0aGlzLnRvdGFscy5hY3VtX3RvdGFsX3RheGVkX3VzZCArPSBwYXJzZUZsb2F0KFxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAtcm93LnRvdGFsX3RheGVkXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgKTtcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICB0aGlzLnRvdGFscy5hY3VtX3RvdGFsX2lndl91c2QgKz0gcGFyc2VGbG9hdChcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgLXJvdy50b3RhbF9pZ3ZcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICApO1xcclxcbiAgICAgICAgICAgICAgICAgICAgfSBlbHNlIGlmIChzaWduYWwgIT0gXFxcIjA3XFxcIiAmJiBzdGF0ZSA9PSBcXFwiMTFcXFwiKSB7XFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgdGhpcy50b3RhbHMuYWN1bV90b3RhbF91c2QgKz0gMDtcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICB0aGlzLnRvdGFscy5hY3VtX3RvdGFsX3RheGVkX3VzZCArPSAwO1xcclxcbiAgICAgICAgICAgICAgICAgICAgICAgIHRoaXMudG90YWxzLmFjdW1fdG90YWxfaWd2X3VzZCArPSAwO1xcclxcbiAgICAgICAgICAgICAgICAgICAgfSBlbHNlIHtcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICB0aGlzLnRvdGFscy5hY3VtX3RvdGFsX3VzZCArPSBwYXJzZUZsb2F0KHJvdy50b3RhbCk7XFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgdGhpcy50b3RhbHMuYWN1bV90b3RhbF90YXhlZF91c2QgKz0gcGFyc2VGbG9hdChcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgcm93LnRvdGFsX3RheGVkXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgKTtcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICB0aGlzLnRvdGFscy5hY3VtX3RvdGFsX2lndl91c2QgKz0gcGFyc2VGbG9hdChcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgcm93LnRvdGFsX2lndlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICk7XFxyXFxuICAgICAgICAgICAgICAgICAgICB9XFxyXFxuICAgICAgICAgICAgICAgIH1cXHJcXG4gICAgICAgICAgICAgICAgdGhpcy50b3RhbHMuYWN1bV90b3RhbF90YXhlZCA9IF8ucm91bmQoXFxyXFxuICAgICAgICAgICAgICAgICAgICB0aGlzLnRvdGFscy5hY3VtX3RvdGFsX3RheGVkLFxcclxcbiAgICAgICAgICAgICAgICAgICAgMlxcclxcbiAgICAgICAgICAgICAgICApO1xcclxcbiAgICAgICAgICAgICAgICB0aGlzLnRvdGFscy5hY3VtX3RvdGFsX2lndiA9IF8ucm91bmQoXFxyXFxuICAgICAgICAgICAgICAgICAgICB0aGlzLnRvdGFscy5hY3VtX3RvdGFsX2lndixcXHJcXG4gICAgICAgICAgICAgICAgICAgIDJcXHJcXG4gICAgICAgICAgICAgICAgKTtcXHJcXG4gICAgICAgICAgICAgICAgdGhpcy50b3RhbHMuYWN1bV90b3RhbCA9IF8ucm91bmQodGhpcy50b3RhbHMuYWN1bV90b3RhbCwgMik7XFxyXFxuICAgICAgICAgICAgICAgIHRoaXMudG90YWxzLmFjdW1fdG90YWxfZXhvbmVyYXRlZCA9IF8ucm91bmQoXFxyXFxuICAgICAgICAgICAgICAgICAgICB0aGlzLnRvdGFscy5hY3VtX3RvdGFsX2V4b25lcmF0ZWQsXFxyXFxuICAgICAgICAgICAgICAgICAgICAyXFxyXFxuICAgICAgICAgICAgICAgICk7XFxyXFxuICAgICAgICAgICAgICAgIHRoaXMudG90YWxzLmFjdW1fdG90YWxfdW5hZmZlY3RlZCA9IF8ucm91bmQoXFxyXFxuICAgICAgICAgICAgICAgICAgICB0aGlzLnRvdGFscy5hY3VtX3RvdGFsX3VuYWZmZWN0ZWQsXFxyXFxuICAgICAgICAgICAgICAgICAgICAyXFxyXFxuICAgICAgICAgICAgICAgICk7XFxyXFxuICAgICAgICAgICAgICAgIHRoaXMudG90YWxzLmFjdW1fdG90YWxfZnJlZSA9IF8ucm91bmQoXFxyXFxuICAgICAgICAgICAgICAgICAgICB0aGlzLnRvdGFscy5hY3VtX3RvdGFsX2ZyZWUsXFxyXFxuICAgICAgICAgICAgICAgICAgICAyXFxyXFxuICAgICAgICAgICAgICAgICk7XFxyXFxuXFxyXFxuICAgICAgICAgICAgICAgIHRoaXMudG90YWxzLmFjdW1fdG90YWxfdGF4ZWRfdXNkID0gXy5yb3VuZChcXHJcXG4gICAgICAgICAgICAgICAgICAgIHRoaXMudG90YWxzLmFjdW1fdG90YWxfdGF4ZWRfdXNkLFxcclxcbiAgICAgICAgICAgICAgICAgICAgMlxcclxcbiAgICAgICAgICAgICAgICApO1xcclxcbiAgICAgICAgICAgICAgICB0aGlzLnRvdGFscy5hY3VtX3RvdGFsX2lndl91c2QgPSBfLnJvdW5kKFxcclxcbiAgICAgICAgICAgICAgICAgICAgdGhpcy50b3RhbHMuYWN1bV90b3RhbF9pZ3ZfdXNkLFxcclxcbiAgICAgICAgICAgICAgICAgICAgMlxcclxcbiAgICAgICAgICAgICAgICApO1xcclxcbiAgICAgICAgICAgICAgICB0aGlzLnRvdGFscy5hY3VtX3RvdGFsX3VzZCA9IF8ucm91bmQoXFxyXFxuICAgICAgICAgICAgICAgICAgICB0aGlzLnRvdGFscy5hY3VtX3RvdGFsX3VzZCxcXHJcXG4gICAgICAgICAgICAgICAgICAgIDJcXHJcXG4gICAgICAgICAgICAgICAgKTtcXHJcXG4gICAgICAgICAgICB9KTtcXHJcXG4gICAgICAgIH0sXFxyXFxuICAgICAgICBjbGlja0Rvd25sb2FkKHR5cGUpIHtcXHJcXG4gICAgICAgICAgICBsZXQgcXVlcnkgPSBxdWVyeVN0cmluZy5zdHJpbmdpZnkoe1xcclxcbiAgICAgICAgICAgICAgICAuLi50aGlzLmZvcm1cXHJcXG4gICAgICAgICAgICB9KTtcXHJcXG4gICAgICAgICAgICB3aW5kb3cub3BlbihgLyR7dGhpcy5yZXNvdXJjZX0vJHt0eXBlfS8/JHtxdWVyeX1gLCBcXFwiX2JsYW5rXFxcIik7XFxyXFxuICAgICAgICB9LFxcclxcbiAgICAgICAgaW5pdEZvcm0oKSB7XFxyXFxuICAgICAgICAgICAgdGhpcy5mb3JtID0ge1xcclxcbiAgICAgICAgICAgICAgICBlc3RhYmxpc2htZW50X2lkOiBudWxsLFxcclxcbiAgICAgICAgICAgICAgICBwZXJzb25faWQ6IG51bGwsXFxyXFxuICAgICAgICAgICAgICAgIHR5cGVfcGVyc29uOiBudWxsLFxcclxcbiAgICAgICAgICAgICAgICBkb2N1bWVudF90eXBlX2lkOiBudWxsLFxcclxcbiAgICAgICAgICAgICAgICBwZXJpb2Q6IFxcXCJtb250aFxcXCIsXFxyXFxuICAgICAgICAgICAgICAgIGRhdGVfc3RhcnQ6IG1vbWVudCgpLmZvcm1hdChcXFwiWVlZWS1NTS1ERFxcXCIpLFxcclxcbiAgICAgICAgICAgICAgICBkYXRlX2VuZDogbW9tZW50KCkuZm9ybWF0KFxcXCJZWVlZLU1NLUREXFxcIiksXFxyXFxuICAgICAgICAgICAgICAgIG1vbnRoX3N0YXJ0OiBtb21lbnQoKS5mb3JtYXQoXFxcIllZWVktTU1cXFwiKSxcXHJcXG4gICAgICAgICAgICAgICAgbW9udGhfZW5kOiBtb21lbnQoKS5mb3JtYXQoXFxcIllZWVktTU1cXFwiKSxcXHJcXG4gICAgICAgICAgICAgICAgc2VsbGVyX2lkOiBudWxsLFxcclxcbiAgICAgICAgICAgICAgICBzdGF0ZV90eXBlX2lkOiBudWxsLFxcclxcbiAgICAgICAgICAgICAgICB0eXBlcmVzdWx0OiBcXFwiRGV0YWxsYWRvXFxcIlxcclxcbiAgICAgICAgICAgIH07XFxyXFxuICAgICAgICB9LFxcclxcbiAgICAgICAgaW5pdFRvdGFscygpIHtcXHJcXG4gICAgICAgICAgICB0aGlzLnRvdGFscyA9IHtcXHJcXG4gICAgICAgICAgICAgICAgYWN1bV90b3RhbF90YXhlZDogMCxcXHJcXG4gICAgICAgICAgICAgICAgYWN1bV90b3RhbF9pZ3Y6IDAsXFxyXFxuICAgICAgICAgICAgICAgIGFjdW1fdG90YWw6IDAsXFxyXFxuICAgICAgICAgICAgICAgIGFjdW1fdG90YWxfZXhvbmVyYXRlZDogMCxcXHJcXG4gICAgICAgICAgICAgICAgYWN1bV90b3RhbF91bmFmZmVjdGVkOiAwLFxcclxcbiAgICAgICAgICAgICAgICBhY3VtX3RvdGFsX2ZyZWU6IDAsXFxyXFxuXFxyXFxuICAgICAgICAgICAgICAgIGFjdW1fdG90YWxfdGF4ZWRfdXNkOiAwLFxcclxcbiAgICAgICAgICAgICAgICBhY3VtX3RvdGFsX2lndl91c2Q6IDAsXFxyXFxuICAgICAgICAgICAgICAgIGFjdW1fdG90YWxfdXNkOiAwXFxyXFxuICAgICAgICAgICAgfTtcXHJcXG4gICAgICAgIH0sXFxyXFxuICAgICAgICBjdXN0b21JbmRleChpbmRleCkge1xcclxcbiAgICAgICAgICAgIHJldHVybiAoXFxyXFxuICAgICAgICAgICAgICAgIHRoaXMucGFnaW5hdGlvbi5wZXJfcGFnZSAqICh0aGlzLnBhZ2luYXRpb24uY3VycmVudF9wYWdlIC0gMSkgK1xcclxcbiAgICAgICAgICAgICAgICBpbmRleCArXFxyXFxuICAgICAgICAgICAgICAgIDFcXHJcXG4gICAgICAgICAgICApO1xcclxcbiAgICAgICAgfSxcXHJcXG4gICAgICAgIGFzeW5jIGdldFJlY29yZHNCeUZpbHRlcigpIHtcXHJcXG4gICAgICAgICAgICB0aGlzLmxvYWRpbmdfc3VibWl0ID0gYXdhaXQgdHJ1ZTtcXHJcXG4gICAgICAgICAgICBhd2FpdCB0aGlzLmdldFJlY29yZHMoKTtcXHJcXG4gICAgICAgICAgICB0aGlzLmxvYWRpbmdfc3VibWl0ID0gYXdhaXQgZmFsc2U7XFxyXFxuICAgICAgICB9LFxcclxcbiAgICAgICAgZ2V0UmVjb3JkcygpIHtcXHJcXG4gICAgICAgICAgICByZXR1cm4gdGhpcy4kaHR0cFxcclxcbiAgICAgICAgICAgICAgICAuZ2V0KGAvJHt0aGlzLnJlc291cmNlfS9yZWNvcmRzPyR7dGhpcy5nZXRRdWVyeVBhcmFtZXRlcnMoKX1gKVxcclxcbiAgICAgICAgICAgICAgICAudGhlbihyZXNwb25zZSA9PiB7XFxyXFxuICAgICAgICAgICAgICAgICAgICB0aGlzLnJlY29yZHMgPSByZXNwb25zZS5kYXRhLmRhdGE7XFxyXFxuICAgICAgICAgICAgICAgICAgICAvL3NvcnQgcmVjb3JkcyBieSBkdWVzIHByb3BlcnR5IChpbnQpIGluIGRlc2NlbmRpbmcgb3JkZXJcXHJcXG4gICAgICAgICAgICAgICAgICAgIHRoaXMucmVjb3Jkcy5zb3J0KGZ1bmN0aW9uKGEsIGIpIHtcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICByZXR1cm4gYi5kdWVzIC0gYS5kdWVzO1xcclxcbiAgICAgICAgICAgICAgICAgICAgfSk7XFxyXFxuXFxyXFxuICAgICAgICAgICAgICAgICAgICB0aGlzLnBhZ2luYXRpb24gPSByZXNwb25zZS5kYXRhLm1ldGE7XFxyXFxuICAgICAgICAgICAgICAgICAgICB0aGlzLnBhZ2luYXRpb24ucGVyX3BhZ2UgPSBwYXJzZUludChcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICByZXNwb25zZS5kYXRhLm1ldGEucGVyX3BhZ2VcXHJcXG4gICAgICAgICAgICAgICAgICAgICk7XFxyXFxuICAgICAgICAgICAgICAgICAgICB0aGlzLmxvYWRpbmdfc3VibWl0ID0gZmFsc2U7XFxyXFxuICAgICAgICAgICAgICAgICAgICAvLyB0aGlzLmluaXRUb3RhbHMoKVxcclxcbiAgICAgICAgICAgICAgICAgICAgaWYgKFxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgIHRoaXMucmVzb3VyY2UgPT0gXFxcInJlcG9ydHMvc2FsZXNcXFwiIHx8XFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgdGhpcy5yZXNvdXJjZSA9PSBcXFwicmVwb3J0cy9wdXJjaGFzZXNcXFwiXFxyXFxuICAgICAgICAgICAgICAgICAgICApXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgdGhpcy5nZXRUb3RhbHMocmVzcG9uc2UuZGF0YS5kYXRhKTtcXHJcXG4gICAgICAgICAgICAgICAgfSk7XFxyXFxuICAgICAgICB9LFxcclxcbiAgICAgICAgZ2V0UXVlcnlQYXJhbWV0ZXJzKCkge1xcclxcbiAgICAgICAgICAgIHJldHVybiBxdWVyeVN0cmluZy5zdHJpbmdpZnkoe1xcclxcbiAgICAgICAgICAgICAgICBwYWdlOiB0aGlzLnBhZ2luYXRpb24uY3VycmVudF9wYWdlLFxcclxcbiAgICAgICAgICAgICAgICBsaW1pdDogdGhpcy5saW1pdCxcXHJcXG4gICAgICAgICAgICAgICAgLi4udGhpcy5mb3JtXFxyXFxuICAgICAgICAgICAgfSk7XFxyXFxuICAgICAgICB9LFxcclxcblxcclxcbiAgICAgICAgY2hhbmdlRGlzYWJsZWREYXRlcygpIHtcXHJcXG4gICAgICAgICAgICBpZiAodGhpcy5mb3JtLmRhdGVfZW5kIDwgdGhpcy5mb3JtLmRhdGVfc3RhcnQpIHtcXHJcXG4gICAgICAgICAgICAgICAgdGhpcy5mb3JtLmRhdGVfZW5kID0gdGhpcy5mb3JtLmRhdGVfc3RhcnQ7XFxyXFxuICAgICAgICAgICAgfVxcclxcbiAgICAgICAgICAgIC8vIHRoaXMubG9hZEFsbCgpO1xcclxcbiAgICAgICAgfSxcXHJcXG4gICAgICAgIGNoYW5nZURpc2FibGVkTW9udGhzKCkge1xcclxcbiAgICAgICAgICAgIGlmICh0aGlzLmZvcm0ubW9udGhfZW5kIDwgdGhpcy5mb3JtLm1vbnRoX3N0YXJ0KSB7XFxyXFxuICAgICAgICAgICAgICAgIHRoaXMuZm9ybS5tb250aF9lbmQgPSB0aGlzLmZvcm0ubW9udGhfc3RhcnQ7XFxyXFxuICAgICAgICAgICAgfVxcclxcbiAgICAgICAgICAgIC8vIHRoaXMubG9hZEFsbCgpO1xcclxcbiAgICAgICAgfSxcXHJcXG4gICAgICAgIGNoYW5nZVBlcmlvZCgpIHtcXHJcXG4gICAgICAgICAgICBpZiAodGhpcy5mb3JtLnBlcmlvZCA9PT0gXFxcIm1vbnRoXFxcIikge1xcclxcbiAgICAgICAgICAgICAgICB0aGlzLmZvcm0ubW9udGhfc3RhcnQgPSBtb21lbnQoKS5mb3JtYXQoXFxcIllZWVktTU1cXFwiKTtcXHJcXG4gICAgICAgICAgICAgICAgdGhpcy5mb3JtLm1vbnRoX2VuZCA9IG1vbWVudCgpLmZvcm1hdChcXFwiWVlZWS1NTVxcXCIpO1xcclxcbiAgICAgICAgICAgIH1cXHJcXG4gICAgICAgICAgICBpZiAodGhpcy5mb3JtLnBlcmlvZCA9PT0gXFxcImJldHdlZW5fbW9udGhzXFxcIikge1xcclxcbiAgICAgICAgICAgICAgICB0aGlzLmZvcm0ubW9udGhfc3RhcnQgPSBtb21lbnQoKVxcclxcbiAgICAgICAgICAgICAgICAgICAgLnN0YXJ0T2YoXFxcInllYXJcXFwiKVxcclxcbiAgICAgICAgICAgICAgICAgICAgLmZvcm1hdChcXFwiWVlZWS1NTVxcXCIpOyAvLycyMDE5LTAxJztcXHJcXG4gICAgICAgICAgICAgICAgdGhpcy5mb3JtLm1vbnRoX2VuZCA9IG1vbWVudCgpXFxyXFxuICAgICAgICAgICAgICAgICAgICAuZW5kT2YoXFxcInllYXJcXFwiKVxcclxcbiAgICAgICAgICAgICAgICAgICAgLmZvcm1hdChcXFwiWVlZWS1NTVxcXCIpO1xcclxcbiAgICAgICAgICAgIH1cXHJcXG4gICAgICAgICAgICBpZiAodGhpcy5mb3JtLnBlcmlvZCA9PT0gXFxcImRhdGVcXFwiKSB7XFxyXFxuICAgICAgICAgICAgICAgIHRoaXMuZm9ybS5kYXRlX3N0YXJ0ID0gbW9tZW50KCkuZm9ybWF0KFxcXCJZWVlZLU1NLUREXFxcIik7XFxyXFxuICAgICAgICAgICAgICAgIHRoaXMuZm9ybS5kYXRlX2VuZCA9IG1vbWVudCgpLmZvcm1hdChcXFwiWVlZWS1NTS1ERFxcXCIpO1xcclxcbiAgICAgICAgICAgIH1cXHJcXG4gICAgICAgICAgICBpZiAodGhpcy5mb3JtLnBlcmlvZCA9PT0gXFxcImJldHdlZW5fZGF0ZXNcXFwiKSB7XFxyXFxuICAgICAgICAgICAgICAgIHRoaXMuZm9ybS5kYXRlX3N0YXJ0ID0gbW9tZW50KClcXHJcXG4gICAgICAgICAgICAgICAgICAgIC5zdGFydE9mKFxcXCJtb250aFxcXCIpXFxyXFxuICAgICAgICAgICAgICAgICAgICAuZm9ybWF0KFxcXCJZWVlZLU1NLUREXFxcIik7XFxyXFxuICAgICAgICAgICAgICAgIHRoaXMuZm9ybS5kYXRlX2VuZCA9IG1vbWVudCgpXFxyXFxuICAgICAgICAgICAgICAgICAgICAuZW5kT2YoXFxcIm1vbnRoXFxcIilcXHJcXG4gICAgICAgICAgICAgICAgICAgIC5mb3JtYXQoXFxcIllZWVktTU0tRERcXFwiKTtcXHJcXG4gICAgICAgICAgICB9XFxyXFxuICAgICAgICAgICAgLy8gdGhpcy5sb2FkQWxsKCk7XFxyXFxuICAgICAgICB9XFxyXFxuICAgIH1cXHJcXG59O1xcclxcbjwvc2NyaXB0PlxcclxcblwiXSxcInNvdXJjZVJvb3RcIjpcIlwifV0pO1xuXG4vLyBleHBvcnRzXG5cblxuXG4vLy8vLy8vLy8vLy8vLy8vLy9cbi8vIFdFQlBBQ0sgRk9PVEVSXG4vLyAuL25vZGVfbW9kdWxlcy9jc3MtbG9hZGVyP3NvdXJjZU1hcCEuL25vZGVfbW9kdWxlcy92dWUtbG9hZGVyL2xpYi9zdHlsZS1jb21waWxlcj97XCJ2dWVcIjp0cnVlLFwiaWRcIjpcImRhdGEtdi00ZDI5OTU1ZlwiLFwic2NvcGVkXCI6ZmFsc2UsXCJoYXNJbmxpbmVDb25maWdcIjp0cnVlfSEuL25vZGVfbW9kdWxlcy92dWUtbG9hZGVyL2xpYi9zZWxlY3Rvci5qcz90eXBlPXN0eWxlcyZpbmRleD0wIS4vbW9kdWxlcy9SZXBvcnQvUmVzb3VyY2VzL2Fzc2V0cy9qcy9jb21wb25lbnRzL0RhdGFUYWJsZVJlcG9ydHNDcmVkaXRzLnZ1ZVxuLy8gbW9kdWxlIGlkID0gLi9ub2RlX21vZHVsZXMvY3NzLWxvYWRlci9pbmRleC5qcz9zb3VyY2VNYXAhLi9ub2RlX21vZHVsZXMvdnVlLWxvYWRlci9saWIvc3R5bGUtY29tcGlsZXIvaW5kZXguanM/e1widnVlXCI6dHJ1ZSxcImlkXCI6XCJkYXRhLXYtNGQyOTk1NWZcIixcInNjb3BlZFwiOmZhbHNlLFwiaGFzSW5saW5lQ29uZmlnXCI6dHJ1ZX0hLi9ub2RlX21vZHVsZXMvdnVlLWxvYWRlci9saWIvc2VsZWN0b3IuanM/dHlwZT1zdHlsZXMmaW5kZXg9MCEuL21vZHVsZXMvUmVwb3J0L1Jlc291cmNlcy9hc3NldHMvanMvY29tcG9uZW50cy9EYXRhVGFibGVSZXBvcnRzQ3JlZGl0cy52dWVcbi8vIG1vZHVsZSBjaHVua3MgPSAxIl0sInNvdXJjZVJvb3QiOiIifQ==\n//# sourceURL=webpack-internal:///./node_modules/css-loader/index.js?sourceMap!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-4d29955f\",\"scoped\":false,\"hasInlineConfig\":true}!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./modules/Report/Resources/assets/js/components/DataTableReportsCredits.vue\n");
+exports = module.exports = __webpack_require__("./node_modules/css-loader/lib/css-base.js")(true);
+// imports
+
+
+// module
+exports.push([module.i, "\n.font-custom {\r\n    font-size: 15px !important;\n}\r\n", "", {"version":3,"sources":["D:/laragon/www/sdrimsac-tenant/modules/Report/Resources/assets/js/components/modules/Report/Resources/assets/js/components/DataTableReportsCredits.vue"],"names":[],"mappings":";AA2VA;IACA,2BAAA;CACA","file":"DataTableReportsCredits.vue","sourcesContent":["<template>\r\n    <div>\r\n        <div class=\"row\">\r\n            <div class=\"col-md-12 col-lg-12 col-xl-12 \">\r\n                <div class=\"row mt-2\">\r\n                    <div class=\"col-md-3\">\r\n                        <label class=\"control-label\"\r\n                            >Periodo (Fecha de emisión)</label\r\n                        >\r\n                        <el-select v-model=\"form.period\" @change=\"changePeriod\">\r\n                            <el-option\r\n                                key=\"month\"\r\n                                value=\"month\"\r\n                                label=\"Por mes\"\r\n                            ></el-option>\r\n                            <el-option\r\n                                key=\"between_months\"\r\n                                value=\"between_months\"\r\n                                label=\"Entre meses\"\r\n                            ></el-option>\r\n                            <el-option\r\n                                key=\"date\"\r\n                                value=\"date\"\r\n                                label=\"Por fecha\"\r\n                            ></el-option>\r\n                            <el-option\r\n                                key=\"between_dates\"\r\n                                value=\"between_dates\"\r\n                                label=\"Entre fechas\"\r\n                            ></el-option>\r\n                        </el-select>\r\n                    </div>\r\n                    <template\r\n                        v-if=\"\r\n                            form.period === 'month' ||\r\n                                form.period === 'between_months'\r\n                        \"\r\n                    >\r\n                        <div class=\"col-md-2\">\r\n                            <label class=\"w-100 control-label\">Mes de</label>\r\n                            <el-date-picker\r\n                                v-model=\"form.month_start\"\r\n                                type=\"month\"\r\n                                class=\"w-100\"\r\n                                @change=\"changeDisabledMonths\"\r\n                                value-format=\"yyyy-MM\"\r\n                                format=\"MM/yyyy\"\r\n                                :clearable=\"false\"\r\n                            ></el-date-picker>\r\n                        </div>\r\n                    </template>\r\n                    <template v-if=\"form.period === 'between_months'\">\r\n                        <div class=\"col-md-2\">\r\n                            <label class=\"w-100 control-label\">Mes al</label>\r\n                            <el-date-picker\r\n                                class=\"w-100\"\r\n                                v-model=\"form.month_end\"\r\n                                type=\"month\"\r\n                                :picker-options=\"pickerOptionsMonths\"\r\n                                value-format=\"yyyy-MM\"\r\n                                format=\"MM/yyyy\"\r\n                                :clearable=\"false\"\r\n                            ></el-date-picker>\r\n                        </div>\r\n                    </template>\r\n                    <template\r\n                        v-if=\"\r\n                            form.period === 'date' ||\r\n                                form.period === 'between_dates'\r\n                        \"\r\n                    >\r\n                        <div class=\"col-md-2\">\r\n                            <label class=\"w-100 control-label\">Fecha del</label>\r\n                            <el-date-picker\r\n                                class=\"w-100\"\r\n                                v-model=\"form.date_start\"\r\n                                type=\"date\"\r\n                                @change=\"changeDisabledDates\"\r\n                                value-format=\"yyyy-MM-dd\"\r\n                                format=\"dd/MM/yyyy\"\r\n                                :clearable=\"false\"\r\n                            ></el-date-picker>\r\n                        </div>\r\n                    </template>\r\n                    <template v-if=\"form.period === 'between_dates'\">\r\n                        <div class=\"col-md-2\">\r\n                            <label class=\"w-100 control-label\">Fecha al</label>\r\n                            <el-date-picker\r\n                                class=\"w-100\"\r\n                                v-model=\"form.date_end\"\r\n                                type=\"date\"\r\n                                :picker-options=\"pickerOptionsDates\"\r\n                                value-format=\"yyyy-MM-dd\"\r\n                                format=\"dd/MM/yyyy\"\r\n                                :clearable=\"false\"\r\n                            ></el-date-picker>\r\n                        </div>\r\n                    </template>\r\n\r\n                    <!-- <div class=\"col-md-3\">\r\n                        <div class=\"form-group\">\r\n                            <label class=\"w-100 control-label\"\r\n                                >Establecimiento</label\r\n                            >\r\n                            <el-select\r\n                                class=\"w-100\"\r\n                                v-model=\"form.establishment_id\"\r\n                                clearable\r\n                            >\r\n                                <el-option\r\n                                    v-for=\"option in establishments\"\r\n                                    :key=\"option.id\"\r\n                                    :value=\"option.id\"\r\n                                    :label=\"option.name\"\r\n                                ></el-option>\r\n                            </el-select>\r\n                        </div>\r\n                    </div> -->\r\n                    <!-- <div\r\n                        class=\"col-md-3\"\r\n                        v-show=\"\r\n                            resource == 'reports/sales' ||\r\n                                resource == 'reports/purchases'\r\n                        \"\r\n                    >\r\n                        <div class=\"form-group\">\r\n                            <label class=\"w-100 control-label\"\r\n                                >Tipo de documento</label\r\n                            >\r\n                            <el-select\r\n                                class=\"w-100\"\r\n                                v-model=\"form.document_type_id\"\r\n                                clearable\r\n                            >\r\n                                <el-option\r\n                                    v-for=\"option in document_types\"\r\n                                    :key=\"option.id\"\r\n                                    :value=\"option.id\"\r\n                                    :label=\"option.description\"\r\n                                ></el-option>\r\n                            </el-select>\r\n                        </div>\r\n                    </div> -->\r\n\r\n                    <div class=\"col-lg-4 col-md-4\">\r\n                        <div class=\"form-group\">\r\n                            <label class=\"w-100 control-label\">\r\n                                Clientes\r\n                            </label>\r\n\r\n                            <el-select\r\n                                class=\"w-100\"\r\n                                v-model=\"form.person_id\"\r\n                                filterable\r\n                                remote\r\n                                popper-class=\"el-select-customers\"\r\n                                clearable\r\n                                placeholder=\"Nombre o número de documento\"\r\n                                :remote-method=\"searchRemotePersons\"\r\n                                :loading=\"loading_search\"\r\n                                @change=\"changePersons\"\r\n                            >\r\n                                <el-option\r\n                                    v-for=\"option in persons\"\r\n                                    :key=\"option.id\"\r\n                                    :value=\"option.id\"\r\n                                    :label=\"option.description\"\r\n                                ></el-option>\r\n                            </el-select>\r\n                        </div>\r\n                    </div>\r\n\r\n                    <!-- <div\r\n                        :class=\"\r\n                            resource == 'reports/sales' ||\r\n                            resource == 'reports/purchases'\r\n                                ? 'col-lg-3 col-md-3'\r\n                                : 'col-lg-2 col-md-2'\r\n                        \"\r\n                        v-if=\"applyCustomer\"\r\n                    >\r\n                        <div class=\"form-group\">\r\n                            <label class=\"w-100 control-label\">\r\n                                Usuarios\r\n                            </label>\r\n\r\n                            <el-select\r\n                                class=\"w-100\"\r\n                                v-model=\"form.seller_id\"\r\n                                filterable\r\n                                popper-class=\"el-select-customers\"\r\n                                clearable\r\n                                placeholder=\"Nombre usuario\"\r\n                            >\r\n                                <el-option\r\n                                    v-for=\"option in sellers\"\r\n                                    :key=\"option.id\"\r\n                                    :value=\"option.id\"\r\n                                    :label=\"option.name\"\r\n                                ></el-option>\r\n                            </el-select>\r\n                        </div>\r\n                    </div> -->\r\n\r\n                    <!-- <div\r\n                        :class=\"\r\n                            resource == 'reports/sales' ||\r\n                            resource == 'reports/purchases'\r\n                                ? 'col-lg-2 col-md-2'\r\n                                : 'col-lg-2 col-md-2'\r\n                        \"\r\n                        v-if=\"applyCustomer\"\r\n                    >\r\n                        <div class=\"form-group\">\r\n                            <label class=\"w-100 control-label\">\r\n                                Tipo de Reporte\r\n                            </label>\r\n\r\n                            <el-select\r\n                                class=\"w-100\"\r\n                                v-model=\"form.typeresult\"\r\n                                filterable\r\n                                popper-class=\"el-select-customers\"\r\n                                clearable\r\n                            >\r\n                                <el-option\r\n                                    label=\"Detallado\"\r\n                                    value=\"Detallado\"\r\n                                ></el-option>\r\n                                <el-option\r\n                                    label=\"Resumen\"\r\n                                    value=\"Resumen\"\r\n                                ></el-option>\r\n                            </el-select>\r\n                        </div>\r\n                    </div> -->\r\n\r\n                    <div class=\"d-flex\" style=\"margin-top:29px\">\r\n                        <el-button\r\n                            class=\"submit\"\r\n                            type=\"primary\"\r\n                            @click.prevent=\"getRecordsByFilter\"\r\n                            :loading=\"loading_submit\"\r\n                            icon=\"el-icon-search\"\r\n                            >Buscar</el-button\r\n                        >\r\n\r\n                        <template\r\n                            v-if=\"\r\n                                records.length > 0 &&\r\n                                    resource !== 'reports/document-detractions'\r\n                            \"\r\n                        >\r\n                            <el-button\r\n                                class=\"submit\"\r\n                                type=\"danger\"\r\n                                icon=\"el-icon-tickets\"\r\n                                @click.prevent=\"clickDownload('pdf')\"\r\n                                >Exportar PDF</el-button\r\n                            >\r\n\r\n                            <el-button\r\n                                class=\"submit\"\r\n                                type=\"success\"\r\n                                @click.prevent=\"clickDownload('excel')\"\r\n                                ><i class=\"fa fa-file-excel\"></i> Exportal\r\n                                Excel</el-button\r\n                            >\r\n                            <el-button\r\n                                class=\"submit\"\r\n                                @click.prevent=\"clickOpenWhatsapp\"\r\n                                ><i class=\"fa fa-whatsapp\"></i> Enviar\r\n                                whatsapp</el-button\r\n                            >\r\n                        </template>\r\n                    </div>\r\n                </div>\r\n                <div class=\"row mt-1 mb-4\"></div>\r\n            </div>\r\n\r\n            <div class=\"col-md-12\">\r\n                <div class=\"table-responsive\">\r\n                    <table class=\"table\">\r\n                        <thead>\r\n                            <slot name=\"heading\"></slot>\r\n                        </thead>\r\n                        <tbody>\r\n                            <slot\r\n                                v-for=\"(row, index) in records\"\r\n                                :row=\"row\"\r\n                                :index=\"customIndex(index)\"\r\n                            ></slot>\r\n                        </tbody>\r\n                        <tfoot\r\n                            v-if=\"\r\n                                resource == 'reports/sales' ||\r\n                                    resource == 'reports/purchases'\r\n                            \"\r\n                        >\r\n                            <tr>\r\n                                <td\r\n                                    :colspan=\"\r\n                                        resource == 'reports/sales' ? 7 : 8\r\n                                    \"\r\n                                ></td>\r\n                                <td><strong>Totales PEN</strong></td>\r\n\r\n                                <td>{{ totals.acum_total_taxed }}</td>\r\n                                <td>{{ totals.acum_total_igv }}</td>\r\n                                <td>{{ totals.acum_total }}</td>\r\n                            </tr>\r\n                            <tr>\r\n                                <td\r\n                                    :colspan=\"\r\n                                        resource == 'reports/sales' ? 7 : 8\r\n                                    \"\r\n                                ></td>\r\n                                <td><strong>Totales USD</strong></td>\r\n\r\n                                <td>{{ totals.acum_total_taxed_usd }}</td>\r\n                                <td>{{ totals.acum_total_igv_usd }}</td>\r\n                                <td>{{ totals.acum_total_usd }}</td>\r\n                            </tr>\r\n                        </tfoot>\r\n                    </table>\r\n                    <div>\r\n                        <el-pagination\r\n                            @current-change=\"getRecords\"\r\n                            layout=\"total, prev, pager, next\"\r\n                            :total=\"pagination.total\"\r\n                            :current-page.sync=\"pagination.current_page\"\r\n                            :page-size=\"pagination.per_page\"\r\n                        >\r\n                        </el-pagination>\r\n                    </div>\r\n                </div>\r\n            </div>\r\n        </div>\r\n        <whatsapp-form-report\r\n            :message.sync=\"messageReport\"\r\n            :resource=\"resourceReport\"\r\n            :showWhatsappForm.sync=\"showWhatsappForm\"\r\n        >\r\n        </whatsapp-form-report>\r\n    </div>\r\n</template>\r\n<style>\r\n.font-custom {\r\n    font-size: 15px !important;\r\n}\r\n</style>\r\n<script>\r\nimport moment from \"moment\";\r\nimport queryString from \"query-string\";\r\nimport WhatsappFormReport from \"../../../../../../resources/js/components/WhatsappModalReports.vue\";\r\nexport default {\r\n    props: {\r\n        resource: String,\r\n        applyCustomer: { type: Boolean, required: false, default: false }\r\n    },\r\n    components: { WhatsappFormReport },\r\n    data() {\r\n        return {\r\n            messageReport: \"\",\r\n            resourceReport: \"\",\r\n            showWhatsappForm: false,\r\n            loading_submit: false,\r\n            persons: [],\r\n            all_persons: [],\r\n            loading_search: false,\r\n            columns: [],\r\n            records: [],\r\n            headers: headers_token,\r\n            document_types: [],\r\n            pagination: {},\r\n            search: {},\r\n            totals: {},\r\n            establishment: null,\r\n            establishments: [],\r\n            state_types: [],\r\n            form: {},\r\n\r\n            pickerOptionsDates: {\r\n                disabledDate: time => {\r\n                    time = moment(time).format(\"YYYY-MM-DD\");\r\n                    return this.form.date_start > time;\r\n                }\r\n            },\r\n            pickerOptionsMonths: {\r\n                disabledDate: time => {\r\n                    time = moment(time).format(\"YYYY-MM\");\r\n                    return this.form.month_start > time;\r\n                }\r\n            },\r\n            sellers: []\r\n        };\r\n    },\r\n    computed: {},\r\n    created() {\r\n        this.initForm();\r\n        this.initTotals();\r\n        this.$eventHub.$on(\"reloadData\", () => {\r\n            this.getRecords();\r\n        });\r\n    },\r\n    async mounted() {\r\n        await this.$http.get(`/${this.resource}/filter`).then(response => {\r\n            this.establishments = response.data.establishments;\r\n            this.all_persons = response.data.persons;\r\n            this.sellers = response.data.sellers;\r\n        });\r\n\r\n        await this.getRecords();\r\n        await this.filterPersons();\r\n        // await this.getTotals()\r\n        this.form.type_person =\r\n            this.resource === \"reports/sales\" ? \"customers\" : \"suppliers\";\r\n    },\r\n    methods: {\r\n        clickOpenWhatsapp() {\r\n            let query = queryString.stringify({\r\n                ...this.form\r\n            });\r\n            this.resourceReport = `/${this.resource}/pdf?${query}`;\r\n            this.messageReport = `Reporte de creditos a la fecha ${moment().format(\r\n                \"DD-MM-YYYY\"\r\n            )}`;\r\n            this.showWhatsappForm = true;\r\n        },\r\n        changePersons() {\r\n            // this.form.type_person = this.resource === 'reports/sales' ? 'customers':'suppliers'\r\n        },\r\n        searchRemotePersons(input) {\r\n            if (input.length > 0) {\r\n                this.loading_search = true;\r\n                let parameters = `input=${input}`;\r\n\r\n                this.form.type_person = \"customers\";\r\n\r\n                this.$http\r\n                    .get(\r\n                        `/reports/data-table/persons/${this.form.type_person}?${parameters}`\r\n                    )\r\n                    .then(response => {\r\n                        this.persons = response.data.persons;\r\n                        this.loading_search = false;\r\n\r\n                        if (this.persons.length == 0) {\r\n                            this.filterPersons();\r\n                        }\r\n                    });\r\n            } else {\r\n                this.filterPersons();\r\n            }\r\n        },\r\n        filterPersons() {\r\n            this.persons = this.all_persons;\r\n            console.log(this.persons);\r\n        },\r\n        getTotals(records) {\r\n            this.initTotals();\r\n            // console.log(records)\r\n\r\n            records.forEach(row => {\r\n                let signal = row.document_type_id;\r\n                let state = row.state_type_id;\r\n\r\n                if (row.currency_type_id == \"PEN\") {\r\n                    if (signal == \"07\" && state != \"11\") {\r\n                        this.totals.acum_total += parseFloat(-row.total);\r\n                        this.totals.acum_total_taxed += parseFloat(\r\n                            -row.total_taxed\r\n                        );\r\n                        this.totals.acum_total_igv += parseFloat(\r\n                            -row.total_igv\r\n                        );\r\n\r\n                        this.totals.acum_total_exonerated += parseFloat(\r\n                            -row.total_exonerated\r\n                        );\r\n                        this.totals.acum_total_unaffected += parseFloat(\r\n                            -row.total_unaffected\r\n                        );\r\n                        this.totals.acum_total_free += parseFloat(\r\n                            -row.total_free\r\n                        );\r\n                    } else if (signal != \"07\" && state == \"11\") {\r\n                        this.totals.acum_total += 0;\r\n                        this.totals.acum_total_taxed += 0;\r\n                        this.totals.acum_total_igv += 0;\r\n\r\n                        this.totals.acum_total_exonerated += 0;\r\n                        this.totals.acum_total_unaffected += 0;\r\n                        this.totals.acum_total_free += 0;\r\n                    } else {\r\n                        this.totals.acum_total += parseFloat(row.total);\r\n                        this.totals.acum_total_taxed += parseFloat(\r\n                            row.total_taxed\r\n                        );\r\n                        this.totals.acum_total_igv += parseFloat(row.total_igv);\r\n\r\n                        this.totals.acum_total_exonerated += parseFloat(\r\n                            row.total_exonerated\r\n                        );\r\n                        this.totals.acum_total_unaffected += parseFloat(\r\n                            row.total_unaffected\r\n                        );\r\n                        this.totals.acum_total_free += parseFloat(\r\n                            row.total_free\r\n                        );\r\n                    }\r\n                } else if (row.currency_type_id == \"USD\") {\r\n                    if (signal == \"07\" && state != \"11\") {\r\n                        this.totals.acum_total_usd += parseFloat(-row.total);\r\n                        this.totals.acum_total_taxed_usd += parseFloat(\r\n                            -row.total_taxed\r\n                        );\r\n                        this.totals.acum_total_igv_usd += parseFloat(\r\n                            -row.total_igv\r\n                        );\r\n                    } else if (signal != \"07\" && state == \"11\") {\r\n                        this.totals.acum_total_usd += 0;\r\n                        this.totals.acum_total_taxed_usd += 0;\r\n                        this.totals.acum_total_igv_usd += 0;\r\n                    } else {\r\n                        this.totals.acum_total_usd += parseFloat(row.total);\r\n                        this.totals.acum_total_taxed_usd += parseFloat(\r\n                            row.total_taxed\r\n                        );\r\n                        this.totals.acum_total_igv_usd += parseFloat(\r\n                            row.total_igv\r\n                        );\r\n                    }\r\n                }\r\n                this.totals.acum_total_taxed = _.round(\r\n                    this.totals.acum_total_taxed,\r\n                    2\r\n                );\r\n                this.totals.acum_total_igv = _.round(\r\n                    this.totals.acum_total_igv,\r\n                    2\r\n                );\r\n                this.totals.acum_total = _.round(this.totals.acum_total, 2);\r\n                this.totals.acum_total_exonerated = _.round(\r\n                    this.totals.acum_total_exonerated,\r\n                    2\r\n                );\r\n                this.totals.acum_total_unaffected = _.round(\r\n                    this.totals.acum_total_unaffected,\r\n                    2\r\n                );\r\n                this.totals.acum_total_free = _.round(\r\n                    this.totals.acum_total_free,\r\n                    2\r\n                );\r\n\r\n                this.totals.acum_total_taxed_usd = _.round(\r\n                    this.totals.acum_total_taxed_usd,\r\n                    2\r\n                );\r\n                this.totals.acum_total_igv_usd = _.round(\r\n                    this.totals.acum_total_igv_usd,\r\n                    2\r\n                );\r\n                this.totals.acum_total_usd = _.round(\r\n                    this.totals.acum_total_usd,\r\n                    2\r\n                );\r\n            });\r\n        },\r\n        clickDownload(type) {\r\n            let query = queryString.stringify({\r\n                ...this.form\r\n            });\r\n            window.open(`/${this.resource}/${type}/?${query}`, \"_blank\");\r\n        },\r\n        initForm() {\r\n            this.form = {\r\n                establishment_id: null,\r\n                person_id: null,\r\n                type_person: null,\r\n                document_type_id: null,\r\n                period: \"month\",\r\n                date_start: moment().format(\"YYYY-MM-DD\"),\r\n                date_end: moment().format(\"YYYY-MM-DD\"),\r\n                month_start: moment().format(\"YYYY-MM\"),\r\n                month_end: moment().format(\"YYYY-MM\"),\r\n                seller_id: null,\r\n                state_type_id: null,\r\n                typeresult: \"Detallado\"\r\n            };\r\n        },\r\n        initTotals() {\r\n            this.totals = {\r\n                acum_total_taxed: 0,\r\n                acum_total_igv: 0,\r\n                acum_total: 0,\r\n                acum_total_exonerated: 0,\r\n                acum_total_unaffected: 0,\r\n                acum_total_free: 0,\r\n\r\n                acum_total_taxed_usd: 0,\r\n                acum_total_igv_usd: 0,\r\n                acum_total_usd: 0\r\n            };\r\n        },\r\n        customIndex(index) {\r\n            return (\r\n                this.pagination.per_page * (this.pagination.current_page - 1) +\r\n                index +\r\n                1\r\n            );\r\n        },\r\n        async getRecordsByFilter() {\r\n            this.loading_submit = await true;\r\n            await this.getRecords();\r\n            this.loading_submit = await false;\r\n        },\r\n        getRecords() {\r\n            return this.$http\r\n                .get(`/${this.resource}/records?${this.getQueryParameters()}`)\r\n                .then(response => {\r\n                    this.records = response.data.data;\r\n                    //sort records by dues property (int) in descending order\r\n                    this.records.sort(function(a, b) {\r\n                        return b.dues - a.dues;\r\n                    });\r\n\r\n                    this.pagination = response.data.meta;\r\n                    this.pagination.per_page = parseInt(\r\n                        response.data.meta.per_page\r\n                    );\r\n                    this.loading_submit = false;\r\n                    // this.initTotals()\r\n                    if (\r\n                        this.resource == \"reports/sales\" ||\r\n                        this.resource == \"reports/purchases\"\r\n                    )\r\n                        this.getTotals(response.data.data);\r\n                });\r\n        },\r\n        getQueryParameters() {\r\n            return queryString.stringify({\r\n                page: this.pagination.current_page,\r\n                limit: this.limit,\r\n                ...this.form\r\n            });\r\n        },\r\n\r\n        changeDisabledDates() {\r\n            if (this.form.date_end < this.form.date_start) {\r\n                this.form.date_end = this.form.date_start;\r\n            }\r\n            // this.loadAll();\r\n        },\r\n        changeDisabledMonths() {\r\n            if (this.form.month_end < this.form.month_start) {\r\n                this.form.month_end = this.form.month_start;\r\n            }\r\n            // this.loadAll();\r\n        },\r\n        changePeriod() {\r\n            if (this.form.period === \"month\") {\r\n                this.form.month_start = moment().format(\"YYYY-MM\");\r\n                this.form.month_end = moment().format(\"YYYY-MM\");\r\n            }\r\n            if (this.form.period === \"between_months\") {\r\n                this.form.month_start = moment()\r\n                    .startOf(\"year\")\r\n                    .format(\"YYYY-MM\"); //'2019-01';\r\n                this.form.month_end = moment()\r\n                    .endOf(\"year\")\r\n                    .format(\"YYYY-MM\");\r\n            }\r\n            if (this.form.period === \"date\") {\r\n                this.form.date_start = moment().format(\"YYYY-MM-DD\");\r\n                this.form.date_end = moment().format(\"YYYY-MM-DD\");\r\n            }\r\n            if (this.form.period === \"between_dates\") {\r\n                this.form.date_start = moment()\r\n                    .startOf(\"month\")\r\n                    .format(\"YYYY-MM-DD\");\r\n                this.form.date_end = moment()\r\n                    .endOf(\"month\")\r\n                    .format(\"YYYY-MM-DD\");\r\n            }\r\n            // this.loadAll();\r\n        }\r\n    }\r\n};\r\n</script>\r\n"],"sourceRoot":""}]);
+
+// exports
+
 
 /***/ }),
 
 /***/ "./node_modules/css-loader/index.js?sourceMap!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-a1f8963c\",\"scoped\":false,\"hasInlineConfig\":true}!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./modules/Report/Resources/assets/js/components/DataTableReportsConsignment.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
-eval("exports = module.exports = __webpack_require__(\"./node_modules/css-loader/lib/css-base.js\")(true);\n// imports\n\n\n// module\nexports.push([module.i, \"\\n.font-custom {\\r\\n    font-size: 15px !important;\\n}\\r\\n\", \"\", {\"version\":3,\"sources\":[\"D:/laragon/www/sdrimsac-tenant/modules/Report/Resources/assets/js/components/modules/Report/Resources/assets/js/components/DataTableReportsConsignment.vue\"],\"names\":[],\"mappings\":\";AA8QA;IACA,2BAAA;CACA\",\"file\":\"DataTableReportsConsignment.vue\",\"sourcesContent\":[\"<template>\\r\\n    <div>\\r\\n        <div class=\\\"row\\\">\\r\\n            <div class=\\\"col-md-12 col-lg-12 col-xl-12 \\\">\\r\\n                <div class=\\\"row mt-2\\\">\\r\\n                    <div class=\\\"col-md-3\\\">\\r\\n                        <label class=\\\"control-label\\\"\\r\\n                            >Fecha de consignación</label\\r\\n                        >\\r\\n                        <el-select v-model=\\\"form.period\\\" @change=\\\"changePeriod\\\">\\r\\n                            <el-option\\r\\n                                key=\\\"month\\\"\\r\\n                                value=\\\"month\\\"\\r\\n                                label=\\\"Por mes\\\"\\r\\n                            ></el-option>\\r\\n                            <el-option\\r\\n                                key=\\\"between_months\\\"\\r\\n                                value=\\\"between_months\\\"\\r\\n                                label=\\\"Entre meses\\\"\\r\\n                            ></el-option>\\r\\n                            <el-option\\r\\n                                key=\\\"date\\\"\\r\\n                                value=\\\"date\\\"\\r\\n                                label=\\\"Por fecha\\\"\\r\\n                            ></el-option>\\r\\n                            <el-option\\r\\n                                key=\\\"between_dates\\\"\\r\\n                                value=\\\"between_dates\\\"\\r\\n                                label=\\\"Entre fechas\\\"\\r\\n                            ></el-option>\\r\\n                        </el-select>\\r\\n                    </div>\\r\\n                    <template\\r\\n                        v-if=\\\"\\r\\n                            form.period === 'month' ||\\r\\n                                form.period === 'between_months'\\r\\n                        \\\"\\r\\n                    >\\r\\n                        <div class=\\\"col-md-2\\\">\\r\\n                            <label class=\\\"w-100 control-label\\\">Mes de</label>\\r\\n                            <el-date-picker\\r\\n                                v-model=\\\"form.month_start\\\"\\r\\n                                type=\\\"month\\\"\\r\\n                                class=\\\"w-100\\\"\\r\\n                                @change=\\\"changeDisabledMonths\\\"\\r\\n                                value-format=\\\"yyyy-MM\\\"\\r\\n                                format=\\\"MM/yyyy\\\"\\r\\n                                :clearable=\\\"true\\\"\\r\\n                            ></el-date-picker>\\r\\n                        </div>\\r\\n                    </template>\\r\\n                    <template v-if=\\\"form.period === 'between_months'\\\">\\r\\n                        <div class=\\\"col-md-2\\\">\\r\\n                            <label class=\\\"w-100 control-label\\\">Mes al</label>\\r\\n                            <el-date-picker\\r\\n                                class=\\\"w-100\\\"\\r\\n                                v-model=\\\"form.month_end\\\"\\r\\n                                type=\\\"month\\\"\\r\\n                                :picker-options=\\\"pickerOptionsMonths\\\"\\r\\n                                value-format=\\\"yyyy-MM\\\"\\r\\n                                format=\\\"MM/yyyy\\\"\\r\\n                                :clearable=\\\"true\\\"\\r\\n                            ></el-date-picker>\\r\\n                        </div>\\r\\n                    </template>\\r\\n                    <template\\r\\n                        v-if=\\\"\\r\\n                            form.period === 'date' ||\\r\\n                                form.period === 'between_dates'\\r\\n                        \\\"\\r\\n                    >\\r\\n                        <div class=\\\"col-md-2\\\">\\r\\n                            <label class=\\\"w-100 control-label\\\">Fecha del</label>\\r\\n                            <el-date-picker\\r\\n                                class=\\\"w-100\\\"\\r\\n                                v-model=\\\"form.date_start\\\"\\r\\n                                type=\\\"date\\\"\\r\\n                                @change=\\\"changeDisabledDates\\\"\\r\\n                                value-format=\\\"yyyy-MM-dd\\\"\\r\\n                                format=\\\"dd/MM/yyyy\\\"\\r\\n                                :clearable=\\\"true\\\"\\r\\n                            ></el-date-picker>\\r\\n                        </div>\\r\\n                    </template>\\r\\n                    <template v-if=\\\"form.period === 'between_dates'\\\">\\r\\n                        <div class=\\\"col-md-2\\\">\\r\\n                            <label class=\\\"w-100 control-label\\\">Fecha al</label>\\r\\n                            <el-date-picker\\r\\n                                class=\\\"w-100\\\"\\r\\n                                v-model=\\\"form.date_end\\\"\\r\\n                                type=\\\"date\\\"\\r\\n                                :picker-options=\\\"pickerOptionsDates\\\"\\r\\n                                value-format=\\\"yyyy-MM-dd\\\"\\r\\n                                format=\\\"dd/MM/yyyy\\\"\\r\\n                                :clearable=\\\"true\\\"\\r\\n                            ></el-date-picker>\\r\\n                        </div>\\r\\n                    </template>\\r\\n                    <div class=\\\"col-lg-4 col-md-4\\\">\\r\\n                        <div class=\\\"form-group\\\">\\r\\n                            <label class=\\\"w-100 control-label\\\">\\r\\n                                Cliente\\r\\n                            </label>\\r\\n\\r\\n                            <el-select\\r\\n                                class=\\\"w-100\\\"\\r\\n                                v-model=\\\"form.person_id\\\"\\r\\n                                filterable\\r\\n                                remote\\r\\n                                popper-class=\\\"el-select-customers\\\"\\r\\n                                clearable\\r\\n                                placeholder=\\\"Nombre o número de documento\\\"\\r\\n                                :remote-method=\\\"searchRemotePersons\\\"\\r\\n                                :loading=\\\"loading_search\\\"\\r\\n                                @change=\\\"changePersons\\\"\\r\\n                            >\\r\\n                                <el-option\\r\\n                                    v-for=\\\"option in persons\\\"\\r\\n                                    :key=\\\"option.id\\\"\\r\\n                                    :value=\\\"option.id\\\"\\r\\n                                    :label=\\\"option.description\\\"\\r\\n                                ></el-option>\\r\\n                            </el-select>\\r\\n                        </div>\\r\\n                    </div>\\r\\n\\r\\n                    <div class=\\\"col-lg-3 col-md-3\\\">\\r\\n                        <div class=\\\"form-group\\\">\\r\\n                            <label class=\\\"w-100 control-label\\\">\\r\\n                                Estado\\r\\n                            </label>\\r\\n                            <el-select class=\\\"w-100\\\" v-model=\\\"form.liquidated\\\" clearable>\\r\\n                                <el-option\\r\\n                                    key=\\\"1\\\"\\r\\n                                    :value=\\\"1\\\"\\r\\n                                    label=\\\"Liquidado\\\"\\r\\n                                ></el-option>\\r\\n                                <el-option\\r\\n                                    key=\\\"2\\\"\\r\\n                                    :value=\\\"0\\\"\\r\\n                                    label=\\\"Por liquidar\\\"\\r\\n                                ></el-option>\\r\\n                            </el-select>\\r\\n                        </div>\\r\\n                    </div>\\r\\n                    <div class=\\\"col-lg-3 col-md-3\\\">\\r\\n                        <div class=\\\"form-group\\\">\\r\\n                            <label class=\\\"w-100 control-label\\\">\\r\\n                                Fecha de liquidación\\r\\n                            </label>\\r\\n                            <el-date-picker\\r\\n                                class=\\\"w-100\\\"\\r\\n                                v-model=\\\"form.date_of_end\\\"\\r\\n                                type=\\\"date\\\"\\r\\n                                value-format=\\\"yyyy-MM-dd\\\"\\r\\n                                format=\\\"dd/MM/yyyy\\\"\\r\\n                                :clearable=\\\"true\\\"\\r\\n                            ></el-date-picker>\\r\\n                        </div>\\r\\n                    </div>\\r\\n                    <div class=\\\"d-flex\\\" style=\\\"margin-top:29px\\\">\\r\\n                        <el-button\\r\\n                            class=\\\"submit\\\"\\r\\n                            type=\\\"primary\\\"\\r\\n                            @click.prevent=\\\"getRecordsByFilter\\\"\\r\\n                            :loading=\\\"loading_submit\\\"\\r\\n                            icon=\\\"el-icon-search\\\"\\r\\n                            >Buscar</el-button\\r\\n                        >\\r\\n\\r\\n                        <template\\r\\n                            v-if=\\\"\\r\\n                                records.length > 0 &&\\r\\n                                    resource !== 'reports/document-detractions'\\r\\n                            \\\"\\r\\n                        >\\r\\n                            <el-button\\r\\n                                class=\\\"submit\\\"\\r\\n                                type=\\\"danger\\\"\\r\\n                                icon=\\\"el-icon-tickets\\\"\\r\\n                                @click.prevent=\\\"clickDownload('pdf')\\\"\\r\\n                                >Exportar PDF</el-button\\r\\n                            >\\r\\n\\r\\n                            <el-button\\r\\n                                class=\\\"submit\\\"\\r\\n                                type=\\\"success\\\"\\r\\n                                @click.prevent=\\\"clickDownload('excel')\\\"\\r\\n                                ><i class=\\\"fa fa-file-excel\\\"></i> Exportal\\r\\n                                Excel</el-button\\r\\n                            >\\r\\n                            <el-button\\r\\n                                class=\\\"submit\\\"\\r\\n                                @click.prevent=\\\"clickOpenWhatsapp\\\"\\r\\n                                ><i class=\\\"fa fa-whatsapp\\\"></i> Enviar\\r\\n                                whatsapp</el-button\\r\\n                            >\\r\\n                        </template>\\r\\n                    </div>\\r\\n                </div>\\r\\n                <div class=\\\"row mt-1 mb-4\\\"></div>\\r\\n            </div>\\r\\n\\r\\n            <div class=\\\"col-md-12\\\">\\r\\n                <div class=\\\"table-responsive\\\">\\r\\n                    <table class=\\\"table\\\">\\r\\n                        <thead>\\r\\n                            <slot name=\\\"heading\\\"></slot>\\r\\n                        </thead>\\r\\n                        <tbody>\\r\\n                            <slot\\r\\n                                v-for=\\\"(row, index) in records\\\"\\r\\n                                :row=\\\"row\\\"\\r\\n                                :index=\\\"customIndex(index)\\\"\\r\\n                            ></slot>\\r\\n                        </tbody>\\r\\n                        <tfoot\\r\\n                            v-if=\\\"\\r\\n                                resource == 'reports/sales' ||\\r\\n                                    resource == 'reports/purchases'\\r\\n                            \\\"\\r\\n                        >\\r\\n                            <tr>\\r\\n                                <td\\r\\n                                    :colspan=\\\"\\r\\n                                        resource == 'reports/sales' ? 7 : 8\\r\\n                                    \\\"\\r\\n                                ></td>\\r\\n                                <td><strong>Totales PEN</strong></td>\\r\\n\\r\\n                                <td>{{ totals.acum_total_taxed }}</td>\\r\\n                                <td>{{ totals.acum_total_igv }}</td>\\r\\n                                <td>{{ totals.acum_total }}</td>\\r\\n                            </tr>\\r\\n                            <tr>\\r\\n                                <td\\r\\n                                    :colspan=\\\"\\r\\n                                        resource == 'reports/sales' ? 7 : 8\\r\\n                                    \\\"\\r\\n                                ></td>\\r\\n                                <td><strong>Totales USD</strong></td>\\r\\n\\r\\n                                <td>{{ totals.acum_total_taxed_usd }}</td>\\r\\n                                <td>{{ totals.acum_total_igv_usd }}</td>\\r\\n                                <td>{{ totals.acum_total_usd }}</td>\\r\\n                            </tr>\\r\\n                        </tfoot>\\r\\n                    </table>\\r\\n                    <div>\\r\\n                        <el-pagination\\r\\n                            @current-change=\\\"getRecords\\\"\\r\\n                            layout=\\\"total, prev, pager, next\\\"\\r\\n                            :total=\\\"pagination.total\\\"\\r\\n                            :current-page.sync=\\\"pagination.current_page\\\"\\r\\n                            :page-size=\\\"pagination.per_page\\\"\\r\\n                        >\\r\\n                        </el-pagination>\\r\\n                    </div>\\r\\n                </div>\\r\\n            </div>\\r\\n        </div>\\r\\n        <whatsapp-form-report\\r\\n            :message.sync=\\\"messageReport\\\"\\r\\n            :resource=\\\"resourceReport\\\"\\r\\n            :showWhatsappForm.sync=\\\"showWhatsappForm\\\"\\r\\n        >\\r\\n        </whatsapp-form-report>\\r\\n    </div>\\r\\n</template>\\r\\n<style>\\r\\n.font-custom {\\r\\n    font-size: 15px !important;\\r\\n}\\r\\n</style>\\r\\n<script>\\r\\nimport moment from \\\"moment\\\";\\r\\nimport queryString from \\\"query-string\\\";\\r\\nimport WhatsappFormReport from \\\"../../../../../../resources/js/components/WhatsappModalReports.vue\\\";\\r\\nexport default {\\r\\n    props: {\\r\\n        resource: String,\\r\\n        applyCustomer: { type: Boolean, required: false, default: false }\\r\\n    },\\r\\n    components: { WhatsappFormReport },\\r\\n    data() {\\r\\n        return {\\r\\n            messageReport: \\\"\\\",\\r\\n            resourceReport: \\\"\\\",\\r\\n            showWhatsappForm: false,\\r\\n            loading_submit: false,\\r\\n            persons: [],\\r\\n            all_persons: [],\\r\\n            loading_search: false,\\r\\n            columns: [],\\r\\n            records: [],\\r\\n            headers: headers_token,\\r\\n            document_types: [],\\r\\n            pagination: {},\\r\\n            search: {},\\r\\n            totals: {},\\r\\n            establishment: null,\\r\\n            establishments: [],\\r\\n            state_types: [],\\r\\n            form: {},\\r\\n\\r\\n            pickerOptionsDates: {\\r\\n                disabledDate: time => {\\r\\n                    time = moment(time).format(\\\"YYYY-MM-DD\\\");\\r\\n                    return this.form.date_start > time;\\r\\n                }\\r\\n            },\\r\\n            pickerOptionsMonths: {\\r\\n                disabledDate: time => {\\r\\n                    time = moment(time).format(\\\"YYYY-MM\\\");\\r\\n                    return this.form.month_start > time;\\r\\n                }\\r\\n            },\\r\\n            sellers: []\\r\\n        };\\r\\n    },\\r\\n    computed: {},\\r\\n    created() {\\r\\n        this.initForm();\\r\\n        this.initTotals();\\r\\n        this.$eventHub.$on(\\\"reloadData\\\", () => {\\r\\n            this.getRecords();\\r\\n        });\\r\\n    },\\r\\n    async mounted() {\\r\\n        await this.$http.get(`/${this.resource}/filter`).then(response => {\\r\\n            this.establishments = response.data.establishments;\\r\\n            this.all_persons = response.data.persons;\\r\\n            this.sellers = response.data.sellers;\\r\\n        });\\r\\n\\r\\n        await this.getRecords();\\r\\n        await this.filterPersons();\\r\\n        // await this.getTotals()\\r\\n        this.form.type_person =\\r\\n            this.resource === \\\"reports/sales\\\" ? \\\"customers\\\" : \\\"suppliers\\\";\\r\\n    },\\r\\n    methods: {\\r\\n        clickOpenWhatsapp() {\\r\\n            let query = queryString.stringify({\\r\\n                ...this.form\\r\\n            });\\r\\n            this.resourceReport = `/${this.resource}/pdf?${query}`;\\r\\n            this.messageReport = `Reporte de consignamiento a la fecha ${moment().format(\\r\\n                \\\"DD-MM-YYYY\\\"\\r\\n            )}`;\\r\\n            this.showWhatsappForm = true;\\r\\n        },\\r\\n        changePersons() {\\r\\n            // this.form.type_person = this.resource === 'reports/sales' ? 'customers':'suppliers'\\r\\n        },\\r\\n        searchRemotePersons(input) {\\r\\n            if (input.length > 0) {\\r\\n                this.loading_search = true;\\r\\n                let parameters = `input=${input}`;\\r\\n\\r\\n                this.form.type_person = \\\"customers\\\";\\r\\n\\r\\n                this.$http\\r\\n                    .get(\\r\\n                        `/reports/data-table/persons/${this.form.type_person}?${parameters}`\\r\\n                    )\\r\\n                    .then(response => {\\r\\n                        this.persons = response.data.persons;\\r\\n                        this.loading_search = false;\\r\\n\\r\\n                        if (this.persons.length == 0) {\\r\\n                            this.filterPersons();\\r\\n                        }\\r\\n                    });\\r\\n            } else {\\r\\n                this.filterPersons();\\r\\n            }\\r\\n        },\\r\\n        filterPersons() {\\r\\n            this.persons = this.all_persons;\\r\\n            console.log(this.persons);\\r\\n        },\\r\\n\\r\\n        clickDownload(type) {\\r\\n            let query = queryString.stringify({\\r\\n                ...this.form\\r\\n            });\\r\\n            window.open(`/${this.resource}/${type}/?${query}`, \\\"_blank\\\");\\r\\n        },\\r\\n        initForm() {\\r\\n            this.form = {\\r\\n                date_of_end: null,\\r\\n                person_id: null,\\r\\n                period: \\\"month\\\",\\r\\n                date_start: moment().format(\\\"YYYY-MM-DD\\\"),\\r\\n                date_end: moment().format(\\\"YYYY-MM-DD\\\"),\\r\\n                month_start: moment().format(\\\"YYYY-MM\\\"),\\r\\n                month_end: moment().format(\\\"YYYY-MM\\\"),\\r\\n                liquidated: null\\r\\n            };\\r\\n        },\\r\\n        initTotals() {\\r\\n            this.totals = {\\r\\n                acum_total_taxed: 0,\\r\\n                acum_total_igv: 0,\\r\\n                acum_total: 0,\\r\\n                acum_total_exonerated: 0,\\r\\n                acum_total_unaffected: 0,\\r\\n                acum_total_free: 0,\\r\\n\\r\\n                acum_total_taxed_usd: 0,\\r\\n                acum_total_igv_usd: 0,\\r\\n                acum_total_usd: 0\\r\\n            };\\r\\n        },\\r\\n        customIndex(index) {\\r\\n            return (\\r\\n                this.pagination.per_page * (this.pagination.current_page - 1) +\\r\\n                index +\\r\\n                1\\r\\n            );\\r\\n        },\\r\\n        async getRecordsByFilter() {\\r\\n            this.loading_submit = await true;\\r\\n            await this.getRecords();\\r\\n            this.loading_submit = await false;\\r\\n        },\\r\\n        getRecords() {\\r\\n            return this.$http\\r\\n                .get(`/${this.resource}/records?${this.getQueryParameters()}`)\\r\\n                .then(response => {\\r\\n                    this.records = response.data.data;\\r\\n                    console.log(this.records);\\r\\n                    //sort records by dues property (int) in descending order\\r\\n                    // this.records.sort(function(a, b) {\\r\\n                    //     return b.dues - a.dues;\\r\\n                    // });\\r\\n\\r\\n                    this.pagination = response.data.meta;\\r\\n                    this.pagination.per_page = parseInt(\\r\\n                        response.data.meta.per_page\\r\\n                    );\\r\\n                    this.loading_submit = false;\\r\\n                    // this.initTotals()\\r\\n                  \\r\\n                });\\r\\n        },\\r\\n        getQueryParameters() {\\r\\n            return queryString.stringify({\\r\\n                page: this.pagination.current_page,\\r\\n                limit: this.limit,\\r\\n                ...this.form\\r\\n            });\\r\\n        },\\r\\n\\r\\n        changeDisabledDates() {\\r\\n            if (this.form.date_end < this.form.date_start) {\\r\\n                this.form.date_end = this.form.date_start;\\r\\n            }\\r\\n            // this.loadAll();\\r\\n        },\\r\\n        changeDisabledMonths() {\\r\\n            if (\\r\\n                this.form.month_end <\\r\\n                this.form.month_start\\r\\n            ) {\\r\\n                this.form.month_end = this.form.month_start;\\r\\n            }\\r\\n            // this.loadAll();\\r\\n        },\\r\\n        changePeriod() {\\r\\n            if (this.form.period === \\\"month\\\") {\\r\\n                this.form.month_start = moment().format(\\r\\n                    \\\"YYYY-MM\\\"\\r\\n                );\\r\\n                this.form.month_end = moment().format(\\\"YYYY-MM\\\");\\r\\n            }\\r\\n            if (this.form.period === \\\"between_months\\\") {\\r\\n                this.form.month_start = moment()\\r\\n                    .startOf(\\\"year\\\")\\r\\n                    .format(\\\"YYYY-MM\\\"); //'2019-01';\\r\\n                this.form.month_end = moment()\\r\\n                    .endOf(\\\"year\\\")\\r\\n                    .format(\\\"YYYY-MM\\\");\\r\\n            }\\r\\n            if (this.form.period === \\\"date\\\") {\\r\\n                this.form.date_start = moment().format(\\\"YYYY-MM-DD\\\");\\r\\n                this.form.date_end = moment().format(\\\"YYYY-MM-DD\\\");\\r\\n            }\\r\\n            if (this.form.period === \\\"between_dates\\\") {\\r\\n                this.form.date_start = moment()\\r\\n                    .startOf(\\\"month\\\")\\r\\n                    .format(\\\"YYYY-MM-DD\\\");\\r\\n                this.form.date_end = moment()\\r\\n                    .endOf(\\\"month\\\")\\r\\n                    .format(\\\"YYYY-MM-DD\\\");\\r\\n            }\\r\\n            // this.loadAll();\\r\\n        }\\r\\n    }\\r\\n};\\r\\n</script>\\r\\n\"],\"sourceRoot\":\"\"}]);\n\n// exports\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vLi9tb2R1bGVzL1JlcG9ydC9SZXNvdXJjZXMvYXNzZXRzL2pzL2NvbXBvbmVudHMvRGF0YVRhYmxlUmVwb3J0c0NvbnNpZ25tZW50LnZ1ZT8wYTIzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBLDJCQUEyQixtQkFBTyxDQUFDLDJDQUEyRDtBQUM5Rjs7O0FBR0E7QUFDQSxjQUFjLFFBQVMsbUJBQW1CLG1DQUFtQyxHQUFHLFlBQVksNk1BQTZNLE1BQU0sV0FBVyxvd1dBQW93VywyQkFBMkIsK0NBQStDLHlCQUF5QiwrQ0FBK0MscUJBQXFCLGtjQUFrYywrQkFBK0IsK0NBQStDLDZCQUE2QiwrQ0FBK0MseUJBQXlCLDI4QkFBMjhCLG1DQUFtQyxLQUFLLDBEQUEwRCw2Q0FBNkMsMEdBQTBHLG9CQUFvQixnQkFBZ0IseURBQXlELGlEQUFpRCxTQUFTLHNCQUFzQixxQkFBcUIsaUJBQWlCLG9CQUFvQix5WkFBeVosMkJBQTJCLDJCQUEyQixnSUFBZ0ksMENBQTBDLDJDQUEyQyxtRUFBbUUsMkRBQTJELHFCQUFxQixpQkFBaUIsdUNBQXVDLDJDQUEyQyxnRUFBZ0UsNERBQTRELHFCQUFxQixpQkFBaUIsMENBQTBDLFNBQVMscUJBQXFCLG9CQUFvQiw0QkFBNEIsOEJBQThCLHNEQUFzRCxrQ0FBa0MsYUFBYSxFQUFFLFNBQVMsMEJBQTBCLHFDQUFxQyxjQUFjLDRCQUE0QixtRUFBbUUseURBQXlELHFEQUFxRCxhQUFhLEVBQUUsd0NBQXdDLHVDQUF1Qyw0SkFBNEosU0FBUyxtQkFBbUIsaUNBQWlDLG1EQUFtRCxpREFBaUQsRUFBRSwwQ0FBMEMsY0FBYyxPQUFPLE1BQU0sRUFBRSw2RUFBNkUsb0VBQW9FLEVBQUUsNkNBQTZDLGFBQWEsOEJBQThCLG1IQUFtSCx5Q0FBeUMsdUNBQXVDLCtDQUErQyw4Q0FBOEMsTUFBTSxFQUFFLDhEQUE4RCwwSEFBMEgsc0JBQXNCLEdBQUcsV0FBVyxxRUFBcUUsaUVBQWlFLHdEQUF3RCwrREFBK0QscURBQXFELDZCQUE2Qix5QkFBeUIsRUFBRSxpQkFBaUIsT0FBTyx5Q0FBeUMsaUJBQWlCLGFBQWEsOEJBQThCLGdEQUFnRCwwQ0FBMEMsYUFBYSxzQ0FBc0MsbURBQW1ELGlEQUFpRCxFQUFFLGdDQUFnQyxjQUFjLEdBQUcsS0FBSyxJQUFJLE1BQU0sZUFBZSxhQUFhLHlCQUF5Qiw2QkFBNkIsOFpBQThaLGFBQWEsMkJBQTJCLCtCQUErQixrWUFBa1ksYUFBYSxpQ0FBaUMsNktBQTZLLGFBQWEseUNBQXlDLGlEQUFpRCx3Q0FBd0Msa0RBQWtELGFBQWEsMkJBQTJCLDhEQUE4RCxjQUFjLFdBQVcsMEJBQTBCLHlDQUF5QywwREFBMEQsa0RBQWtELDhJQUE4SSxzREFBc0QsNEJBQTRCLEVBQUUsaUVBQWlFLDZJQUE2SSxvREFBb0QsdUZBQXVGLEVBQUUsYUFBYSxtQ0FBbUMsOENBQThDLDhJQUE4SSxFQUFFLGFBQWEsd0NBQXdDLGdFQUFnRSw4REFBOEQsaUJBQWlCLGtDQUFrQyxhQUFhLHFDQUFxQyx5SEFBeUgsZ0VBQWdFLGlCQUFpQixrQ0FBa0MsYUFBYSw2QkFBNkIscURBQXFELHFIQUFxSCx1RUFBdUUsaUJBQWlCLDhEQUE4RCwySUFBMkksYUFBYSx1SUFBdUksaUJBQWlCLG9EQUFvRCwyRUFBMkUseUVBQXlFLGlCQUFpQiw2REFBNkQsOElBQThJLDBJQUEwSSxpQkFBaUIsa0NBQWtDLGFBQWEsU0FBUyxNQUFNLG9DQUFvQzs7QUFFM2pyQiIsImZpbGUiOiIuL25vZGVfbW9kdWxlcy9jc3MtbG9hZGVyL2luZGV4LmpzP3NvdXJjZU1hcCEuL25vZGVfbW9kdWxlcy92dWUtbG9hZGVyL2xpYi9zdHlsZS1jb21waWxlci9pbmRleC5qcz97XCJ2dWVcIjp0cnVlLFwiaWRcIjpcImRhdGEtdi1hMWY4OTYzY1wiLFwic2NvcGVkXCI6ZmFsc2UsXCJoYXNJbmxpbmVDb25maWdcIjp0cnVlfSEuL25vZGVfbW9kdWxlcy92dWUtbG9hZGVyL2xpYi9zZWxlY3Rvci5qcz90eXBlPXN0eWxlcyZpbmRleD0wIS4vbW9kdWxlcy9SZXBvcnQvUmVzb3VyY2VzL2Fzc2V0cy9qcy9jb21wb25lbnRzL0RhdGFUYWJsZVJlcG9ydHNDb25zaWdubWVudC52dWUuanMiLCJzb3VyY2VzQ29udGVudCI6WyJleHBvcnRzID0gbW9kdWxlLmV4cG9ydHMgPSByZXF1aXJlKFwiLi4vLi4vLi4vLi4vLi4vLi4vbm9kZV9tb2R1bGVzL2Nzcy1sb2FkZXIvbGliL2Nzcy1iYXNlLmpzXCIpKHRydWUpO1xuLy8gaW1wb3J0c1xuXG5cbi8vIG1vZHVsZVxuZXhwb3J0cy5wdXNoKFttb2R1bGUuaWQsIFwiXFxuLmZvbnQtY3VzdG9tIHtcXHJcXG4gICAgZm9udC1zaXplOiAxNXB4ICFpbXBvcnRhbnQ7XFxufVxcclxcblwiLCBcIlwiLCB7XCJ2ZXJzaW9uXCI6MyxcInNvdXJjZXNcIjpbXCJEOi9sYXJhZ29uL3d3dy9zZHJpbXNhYy10ZW5hbnQvbW9kdWxlcy9SZXBvcnQvUmVzb3VyY2VzL2Fzc2V0cy9qcy9jb21wb25lbnRzL21vZHVsZXMvUmVwb3J0L1Jlc291cmNlcy9hc3NldHMvanMvY29tcG9uZW50cy9EYXRhVGFibGVSZXBvcnRzQ29uc2lnbm1lbnQudnVlXCJdLFwibmFtZXNcIjpbXSxcIm1hcHBpbmdzXCI6XCI7QUE4UUE7SUFDQSwyQkFBQTtDQUNBXCIsXCJmaWxlXCI6XCJEYXRhVGFibGVSZXBvcnRzQ29uc2lnbm1lbnQudnVlXCIsXCJzb3VyY2VzQ29udGVudFwiOltcIjx0ZW1wbGF0ZT5cXHJcXG4gICAgPGRpdj5cXHJcXG4gICAgICAgIDxkaXYgY2xhc3M9XFxcInJvd1xcXCI+XFxyXFxuICAgICAgICAgICAgPGRpdiBjbGFzcz1cXFwiY29sLW1kLTEyIGNvbC1sZy0xMiBjb2wteGwtMTIgXFxcIj5cXHJcXG4gICAgICAgICAgICAgICAgPGRpdiBjbGFzcz1cXFwicm93IG10LTJcXFwiPlxcclxcbiAgICAgICAgICAgICAgICAgICAgPGRpdiBjbGFzcz1cXFwiY29sLW1kLTNcXFwiPlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgIDxsYWJlbCBjbGFzcz1cXFwiY29udHJvbC1sYWJlbFxcXCJcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgPkZlY2hhIGRlIGNvbnNpZ25hY2nDs248L2xhYmVsXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgPlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgIDxlbC1zZWxlY3Qgdi1tb2RlbD1cXFwiZm9ybS5wZXJpb2RcXFwiIEBjaGFuZ2U9XFxcImNoYW5nZVBlcmlvZFxcXCI+XFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxlbC1vcHRpb25cXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGtleT1cXFwibW9udGhcXFwiXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB2YWx1ZT1cXFwibW9udGhcXFwiXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBsYWJlbD1cXFwiUG9yIG1lc1xcXCJcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgPjwvZWwtb3B0aW9uPlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICA8ZWwtb3B0aW9uXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBrZXk9XFxcImJldHdlZW5fbW9udGhzXFxcIlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdmFsdWU9XFxcImJldHdlZW5fbW9udGhzXFxcIlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgbGFiZWw9XFxcIkVudHJlIG1lc2VzXFxcIlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICA+PC9lbC1vcHRpb24+XFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxlbC1vcHRpb25cXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGtleT1cXFwiZGF0ZVxcXCJcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHZhbHVlPVxcXCJkYXRlXFxcIlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgbGFiZWw9XFxcIlBvciBmZWNoYVxcXCJcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgPjwvZWwtb3B0aW9uPlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICA8ZWwtb3B0aW9uXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBrZXk9XFxcImJldHdlZW5fZGF0ZXNcXFwiXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB2YWx1ZT1cXFwiYmV0d2Vlbl9kYXRlc1xcXCJcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGxhYmVsPVxcXCJFbnRyZSBmZWNoYXNcXFwiXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgID48L2VsLW9wdGlvbj5cXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICA8L2VsLXNlbGVjdD5cXHJcXG4gICAgICAgICAgICAgICAgICAgIDwvZGl2PlxcclxcbiAgICAgICAgICAgICAgICAgICAgPHRlbXBsYXRlXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgdi1pZj1cXFwiXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIGZvcm0ucGVyaW9kID09PSAnbW9udGgnIHx8XFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBmb3JtLnBlcmlvZCA9PT0gJ2JldHdlZW5fbW9udGhzJ1xcclxcbiAgICAgICAgICAgICAgICAgICAgICAgIFxcXCJcXHJcXG4gICAgICAgICAgICAgICAgICAgID5cXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICA8ZGl2IGNsYXNzPVxcXCJjb2wtbWQtMlxcXCI+XFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxsYWJlbCBjbGFzcz1cXFwidy0xMDAgY29udHJvbC1sYWJlbFxcXCI+TWVzIGRlPC9sYWJlbD5cXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgPGVsLWRhdGUtcGlja2VyXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB2LW1vZGVsPVxcXCJmb3JtLm1vbnRoX3N0YXJ0XFxcIlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdHlwZT1cXFwibW9udGhcXFwiXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjbGFzcz1cXFwidy0xMDBcXFwiXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBAY2hhbmdlPVxcXCJjaGFuZ2VEaXNhYmxlZE1vbnRoc1xcXCJcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHZhbHVlLWZvcm1hdD1cXFwieXl5eS1NTVxcXCJcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGZvcm1hdD1cXFwiTU0veXl5eVxcXCJcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDpjbGVhcmFibGU9XFxcInRydWVcXFwiXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgID48L2VsLWRhdGUtcGlja2VyPlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgIDwvZGl2PlxcclxcbiAgICAgICAgICAgICAgICAgICAgPC90ZW1wbGF0ZT5cXHJcXG4gICAgICAgICAgICAgICAgICAgIDx0ZW1wbGF0ZSB2LWlmPVxcXCJmb3JtLnBlcmlvZCA9PT0gJ2JldHdlZW5fbW9udGhzJ1xcXCI+XFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgPGRpdiBjbGFzcz1cXFwiY29sLW1kLTJcXFwiPlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICA8bGFiZWwgY2xhc3M9XFxcInctMTAwIGNvbnRyb2wtbGFiZWxcXFwiPk1lcyBhbDwvbGFiZWw+XFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxlbC1kYXRlLXBpY2tlclxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY2xhc3M9XFxcInctMTAwXFxcIlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdi1tb2RlbD1cXFwiZm9ybS5tb250aF9lbmRcXFwiXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB0eXBlPVxcXCJtb250aFxcXCJcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDpwaWNrZXItb3B0aW9ucz1cXFwicGlja2VyT3B0aW9uc01vbnRoc1xcXCJcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHZhbHVlLWZvcm1hdD1cXFwieXl5eS1NTVxcXCJcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGZvcm1hdD1cXFwiTU0veXl5eVxcXCJcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDpjbGVhcmFibGU9XFxcInRydWVcXFwiXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgID48L2VsLWRhdGUtcGlja2VyPlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgIDwvZGl2PlxcclxcbiAgICAgICAgICAgICAgICAgICAgPC90ZW1wbGF0ZT5cXHJcXG4gICAgICAgICAgICAgICAgICAgIDx0ZW1wbGF0ZVxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgIHYtaWY9XFxcIlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICBmb3JtLnBlcmlvZCA9PT0gJ2RhdGUnIHx8XFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBmb3JtLnBlcmlvZCA9PT0gJ2JldHdlZW5fZGF0ZXMnXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgXFxcIlxcclxcbiAgICAgICAgICAgICAgICAgICAgPlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgIDxkaXYgY2xhc3M9XFxcImNvbC1tZC0yXFxcIj5cXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgPGxhYmVsIGNsYXNzPVxcXCJ3LTEwMCBjb250cm9sLWxhYmVsXFxcIj5GZWNoYSBkZWw8L2xhYmVsPlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICA8ZWwtZGF0ZS1waWNrZXJcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNsYXNzPVxcXCJ3LTEwMFxcXCJcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHYtbW9kZWw9XFxcImZvcm0uZGF0ZV9zdGFydFxcXCJcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHR5cGU9XFxcImRhdGVcXFwiXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBAY2hhbmdlPVxcXCJjaGFuZ2VEaXNhYmxlZERhdGVzXFxcIlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdmFsdWUtZm9ybWF0PVxcXCJ5eXl5LU1NLWRkXFxcIlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgZm9ybWF0PVxcXCJkZC9NTS95eXl5XFxcIlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgOmNsZWFyYWJsZT1cXFwidHJ1ZVxcXCJcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgPjwvZWwtZGF0ZS1waWNrZXI+XFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgPC9kaXY+XFxyXFxuICAgICAgICAgICAgICAgICAgICA8L3RlbXBsYXRlPlxcclxcbiAgICAgICAgICAgICAgICAgICAgPHRlbXBsYXRlIHYtaWY9XFxcImZvcm0ucGVyaW9kID09PSAnYmV0d2Vlbl9kYXRlcydcXFwiPlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgIDxkaXYgY2xhc3M9XFxcImNvbC1tZC0yXFxcIj5cXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgPGxhYmVsIGNsYXNzPVxcXCJ3LTEwMCBjb250cm9sLWxhYmVsXFxcIj5GZWNoYSBhbDwvbGFiZWw+XFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxlbC1kYXRlLXBpY2tlclxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY2xhc3M9XFxcInctMTAwXFxcIlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdi1tb2RlbD1cXFwiZm9ybS5kYXRlX2VuZFxcXCJcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHR5cGU9XFxcImRhdGVcXFwiXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA6cGlja2VyLW9wdGlvbnM9XFxcInBpY2tlck9wdGlvbnNEYXRlc1xcXCJcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHZhbHVlLWZvcm1hdD1cXFwieXl5eS1NTS1kZFxcXCJcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGZvcm1hdD1cXFwiZGQvTU0veXl5eVxcXCJcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDpjbGVhcmFibGU9XFxcInRydWVcXFwiXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgID48L2VsLWRhdGUtcGlja2VyPlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgIDwvZGl2PlxcclxcbiAgICAgICAgICAgICAgICAgICAgPC90ZW1wbGF0ZT5cXHJcXG4gICAgICAgICAgICAgICAgICAgIDxkaXYgY2xhc3M9XFxcImNvbC1sZy00IGNvbC1tZC00XFxcIj5cXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICA8ZGl2IGNsYXNzPVxcXCJmb3JtLWdyb3VwXFxcIj5cXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgPGxhYmVsIGNsYXNzPVxcXCJ3LTEwMCBjb250cm9sLWxhYmVsXFxcIj5cXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIENsaWVudGVcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgPC9sYWJlbD5cXHJcXG5cXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgPGVsLXNlbGVjdFxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY2xhc3M9XFxcInctMTAwXFxcIlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdi1tb2RlbD1cXFwiZm9ybS5wZXJzb25faWRcXFwiXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBmaWx0ZXJhYmxlXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZW1vdGVcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHBvcHBlci1jbGFzcz1cXFwiZWwtc2VsZWN0LWN1c3RvbWVyc1xcXCJcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNsZWFyYWJsZVxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcGxhY2Vob2xkZXI9XFxcIk5vbWJyZSBvIG7Dum1lcm8gZGUgZG9jdW1lbnRvXFxcIlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgOnJlbW90ZS1tZXRob2Q9XFxcInNlYXJjaFJlbW90ZVBlcnNvbnNcXFwiXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA6bG9hZGluZz1cXFwibG9hZGluZ19zZWFyY2hcXFwiXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBAY2hhbmdlPVxcXCJjaGFuZ2VQZXJzb25zXFxcIlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICA+XFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8ZWwtb3B0aW9uXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdi1mb3I9XFxcIm9wdGlvbiBpbiBwZXJzb25zXFxcIlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDprZXk9XFxcIm9wdGlvbi5pZFxcXCJcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA6dmFsdWU9XFxcIm9wdGlvbi5pZFxcXCJcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA6bGFiZWw9XFxcIm9wdGlvbi5kZXNjcmlwdGlvblxcXCJcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgID48L2VsLW9wdGlvbj5cXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgPC9lbC1zZWxlY3Q+XFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgPC9kaXY+XFxyXFxuICAgICAgICAgICAgICAgICAgICA8L2Rpdj5cXHJcXG5cXHJcXG4gICAgICAgICAgICAgICAgICAgIDxkaXYgY2xhc3M9XFxcImNvbC1sZy0zIGNvbC1tZC0zXFxcIj5cXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICA8ZGl2IGNsYXNzPVxcXCJmb3JtLWdyb3VwXFxcIj5cXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgPGxhYmVsIGNsYXNzPVxcXCJ3LTEwMCBjb250cm9sLWxhYmVsXFxcIj5cXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIEVzdGFkb1xcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICA8L2xhYmVsPlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICA8ZWwtc2VsZWN0IGNsYXNzPVxcXCJ3LTEwMFxcXCIgdi1tb2RlbD1cXFwiZm9ybS5saXF1aWRhdGVkXFxcIiBjbGVhcmFibGU+XFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8ZWwtb3B0aW9uXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAga2V5PVxcXCIxXFxcIlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDp2YWx1ZT1cXFwiMVxcXCJcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBsYWJlbD1cXFwiTGlxdWlkYWRvXFxcIlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPjwvZWwtb3B0aW9uPlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPGVsLW9wdGlvblxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGtleT1cXFwiMlxcXCJcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA6dmFsdWU9XFxcIjBcXFwiXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgbGFiZWw9XFxcIlBvciBsaXF1aWRhclxcXCJcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgID48L2VsLW9wdGlvbj5cXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgPC9lbC1zZWxlY3Q+XFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgPC9kaXY+XFxyXFxuICAgICAgICAgICAgICAgICAgICA8L2Rpdj5cXHJcXG4gICAgICAgICAgICAgICAgICAgIDxkaXYgY2xhc3M9XFxcImNvbC1sZy0zIGNvbC1tZC0zXFxcIj5cXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICA8ZGl2IGNsYXNzPVxcXCJmb3JtLWdyb3VwXFxcIj5cXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgPGxhYmVsIGNsYXNzPVxcXCJ3LTEwMCBjb250cm9sLWxhYmVsXFxcIj5cXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIEZlY2hhIGRlIGxpcXVpZGFjacOzblxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICA8L2xhYmVsPlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICA8ZWwtZGF0ZS1waWNrZXJcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNsYXNzPVxcXCJ3LTEwMFxcXCJcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHYtbW9kZWw9XFxcImZvcm0uZGF0ZV9vZl9lbmRcXFwiXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB0eXBlPVxcXCJkYXRlXFxcIlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdmFsdWUtZm9ybWF0PVxcXCJ5eXl5LU1NLWRkXFxcIlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgZm9ybWF0PVxcXCJkZC9NTS95eXl5XFxcIlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgOmNsZWFyYWJsZT1cXFwidHJ1ZVxcXCJcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgPjwvZWwtZGF0ZS1waWNrZXI+XFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgPC9kaXY+XFxyXFxuICAgICAgICAgICAgICAgICAgICA8L2Rpdj5cXHJcXG4gICAgICAgICAgICAgICAgICAgIDxkaXYgY2xhc3M9XFxcImQtZmxleFxcXCIgc3R5bGU9XFxcIm1hcmdpbi10b3A6MjlweFxcXCI+XFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgPGVsLWJ1dHRvblxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICBjbGFzcz1cXFwic3VibWl0XFxcIlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICB0eXBlPVxcXCJwcmltYXJ5XFxcIlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICBAY2xpY2sucHJldmVudD1cXFwiZ2V0UmVjb3Jkc0J5RmlsdGVyXFxcIlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICA6bG9hZGluZz1cXFwibG9hZGluZ19zdWJtaXRcXFwiXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIGljb249XFxcImVsLWljb24tc2VhcmNoXFxcIlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICA+QnVzY2FyPC9lbC1idXR0b25cXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICA+XFxyXFxuXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgPHRlbXBsYXRlXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIHYtaWY9XFxcIlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVjb3Jkcy5sZW5ndGggPiAwICYmXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVzb3VyY2UgIT09ICdyZXBvcnRzL2RvY3VtZW50LWRldHJhY3Rpb25zJ1xcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICBcXFwiXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgPlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICA8ZWwtYnV0dG9uXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjbGFzcz1cXFwic3VibWl0XFxcIlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdHlwZT1cXFwiZGFuZ2VyXFxcIlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgaWNvbj1cXFwiZWwtaWNvbi10aWNrZXRzXFxcIlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgQGNsaWNrLnByZXZlbnQ9XFxcImNsaWNrRG93bmxvYWQoJ3BkZicpXFxcIlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPkV4cG9ydGFyIFBERjwvZWwtYnV0dG9uXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgID5cXHJcXG5cXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgPGVsLWJ1dHRvblxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY2xhc3M9XFxcInN1Ym1pdFxcXCJcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHR5cGU9XFxcInN1Y2Nlc3NcXFwiXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBAY2xpY2sucHJldmVudD1cXFwiY2xpY2tEb3dubG9hZCgnZXhjZWwnKVxcXCJcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgID48aSBjbGFzcz1cXFwiZmEgZmEtZmlsZS1leGNlbFxcXCI+PC9pPiBFeHBvcnRhbFxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgRXhjZWw8L2VsLWJ1dHRvblxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICA+XFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxlbC1idXR0b25cXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNsYXNzPVxcXCJzdWJtaXRcXFwiXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBAY2xpY2sucHJldmVudD1cXFwiY2xpY2tPcGVuV2hhdHNhcHBcXFwiXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA+PGkgY2xhc3M9XFxcImZhIGZhLXdoYXRzYXBwXFxcIj48L2k+IEVudmlhclxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgd2hhdHNhcHA8L2VsLWJ1dHRvblxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICA+XFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgPC90ZW1wbGF0ZT5cXHJcXG4gICAgICAgICAgICAgICAgICAgIDwvZGl2PlxcclxcbiAgICAgICAgICAgICAgICA8L2Rpdj5cXHJcXG4gICAgICAgICAgICAgICAgPGRpdiBjbGFzcz1cXFwicm93IG10LTEgbWItNFxcXCI+PC9kaXY+XFxyXFxuICAgICAgICAgICAgPC9kaXY+XFxyXFxuXFxyXFxuICAgICAgICAgICAgPGRpdiBjbGFzcz1cXFwiY29sLW1kLTEyXFxcIj5cXHJcXG4gICAgICAgICAgICAgICAgPGRpdiBjbGFzcz1cXFwidGFibGUtcmVzcG9uc2l2ZVxcXCI+XFxyXFxuICAgICAgICAgICAgICAgICAgICA8dGFibGUgY2xhc3M9XFxcInRhYmxlXFxcIj5cXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICA8dGhlYWQ+XFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIDxzbG90IG5hbWU9XFxcImhlYWRpbmdcXFwiPjwvc2xvdD5cXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICA8L3RoZWFkPlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgIDx0Ym9keT5cXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgPHNsb3RcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHYtZm9yPVxcXCIocm93LCBpbmRleCkgaW4gcmVjb3Jkc1xcXCJcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDpyb3c9XFxcInJvd1xcXCJcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDppbmRleD1cXFwiY3VzdG9tSW5kZXgoaW5kZXgpXFxcIlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICA+PC9zbG90PlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgIDwvdGJvZHk+XFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgPHRmb290XFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIHYtaWY9XFxcIlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVzb3VyY2UgPT0gJ3JlcG9ydHMvc2FsZXMnIHx8XFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVzb3VyY2UgPT0gJ3JlcG9ydHMvcHVyY2hhc2VzJ1xcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICBcXFwiXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgPlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICA8dHI+XFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8dGRcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA6Y29sc3Bhbj1cXFwiXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlc291cmNlID09ICdyZXBvcnRzL3NhbGVzJyA/IDcgOiA4XFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXFxcIlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPjwvdGQ+XFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8dGQ+PHN0cm9uZz5Ub3RhbGVzIFBFTjwvc3Ryb25nPjwvdGQ+XFxyXFxuXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8dGQ+e3sgdG90YWxzLmFjdW1fdG90YWxfdGF4ZWQgfX08L3RkPlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPHRkPnt7IHRvdGFscy5hY3VtX3RvdGFsX2lndiB9fTwvdGQ+XFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8dGQ+e3sgdG90YWxzLmFjdW1fdG90YWwgfX08L3RkPlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICA8L3RyPlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICA8dHI+XFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8dGRcXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA6Y29sc3Bhbj1cXFwiXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJlc291cmNlID09ICdyZXBvcnRzL3NhbGVzJyA/IDcgOiA4XFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXFxcIlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPjwvdGQ+XFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8dGQ+PHN0cm9uZz5Ub3RhbGVzIFVTRDwvc3Ryb25nPjwvdGQ+XFxyXFxuXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8dGQ+e3sgdG90YWxzLmFjdW1fdG90YWxfdGF4ZWRfdXNkIH19PC90ZD5cXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDx0ZD57eyB0b3RhbHMuYWN1bV90b3RhbF9pZ3ZfdXNkIH19PC90ZD5cXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDx0ZD57eyB0b3RhbHMuYWN1bV90b3RhbF91c2QgfX08L3RkPlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICA8L3RyPlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgIDwvdGZvb3Q+XFxyXFxuICAgICAgICAgICAgICAgICAgICA8L3RhYmxlPlxcclxcbiAgICAgICAgICAgICAgICAgICAgPGRpdj5cXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICA8ZWwtcGFnaW5hdGlvblxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICBAY3VycmVudC1jaGFuZ2U9XFxcImdldFJlY29yZHNcXFwiXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIGxheW91dD1cXFwidG90YWwsIHByZXYsIHBhZ2VyLCBuZXh0XFxcIlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICA6dG90YWw9XFxcInBhZ2luYXRpb24udG90YWxcXFwiXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIDpjdXJyZW50LXBhZ2Uuc3luYz1cXFwicGFnaW5hdGlvbi5jdXJyZW50X3BhZ2VcXFwiXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIDpwYWdlLXNpemU9XFxcInBhZ2luYXRpb24ucGVyX3BhZ2VcXFwiXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgPlxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgIDwvZWwtcGFnaW5hdGlvbj5cXHJcXG4gICAgICAgICAgICAgICAgICAgIDwvZGl2PlxcclxcbiAgICAgICAgICAgICAgICA8L2Rpdj5cXHJcXG4gICAgICAgICAgICA8L2Rpdj5cXHJcXG4gICAgICAgIDwvZGl2PlxcclxcbiAgICAgICAgPHdoYXRzYXBwLWZvcm0tcmVwb3J0XFxyXFxuICAgICAgICAgICAgOm1lc3NhZ2Uuc3luYz1cXFwibWVzc2FnZVJlcG9ydFxcXCJcXHJcXG4gICAgICAgICAgICA6cmVzb3VyY2U9XFxcInJlc291cmNlUmVwb3J0XFxcIlxcclxcbiAgICAgICAgICAgIDpzaG93V2hhdHNhcHBGb3JtLnN5bmM9XFxcInNob3dXaGF0c2FwcEZvcm1cXFwiXFxyXFxuICAgICAgICA+XFxyXFxuICAgICAgICA8L3doYXRzYXBwLWZvcm0tcmVwb3J0PlxcclxcbiAgICA8L2Rpdj5cXHJcXG48L3RlbXBsYXRlPlxcclxcbjxzdHlsZT5cXHJcXG4uZm9udC1jdXN0b20ge1xcclxcbiAgICBmb250LXNpemU6IDE1cHggIWltcG9ydGFudDtcXHJcXG59XFxyXFxuPC9zdHlsZT5cXHJcXG48c2NyaXB0PlxcclxcbmltcG9ydCBtb21lbnQgZnJvbSBcXFwibW9tZW50XFxcIjtcXHJcXG5pbXBvcnQgcXVlcnlTdHJpbmcgZnJvbSBcXFwicXVlcnktc3RyaW5nXFxcIjtcXHJcXG5pbXBvcnQgV2hhdHNhcHBGb3JtUmVwb3J0IGZyb20gXFxcIi4uLy4uLy4uLy4uLy4uLy4uL3Jlc291cmNlcy9qcy9jb21wb25lbnRzL1doYXRzYXBwTW9kYWxSZXBvcnRzLnZ1ZVxcXCI7XFxyXFxuZXhwb3J0IGRlZmF1bHQge1xcclxcbiAgICBwcm9wczoge1xcclxcbiAgICAgICAgcmVzb3VyY2U6IFN0cmluZyxcXHJcXG4gICAgICAgIGFwcGx5Q3VzdG9tZXI6IHsgdHlwZTogQm9vbGVhbiwgcmVxdWlyZWQ6IGZhbHNlLCBkZWZhdWx0OiBmYWxzZSB9XFxyXFxuICAgIH0sXFxyXFxuICAgIGNvbXBvbmVudHM6IHsgV2hhdHNhcHBGb3JtUmVwb3J0IH0sXFxyXFxuICAgIGRhdGEoKSB7XFxyXFxuICAgICAgICByZXR1cm4ge1xcclxcbiAgICAgICAgICAgIG1lc3NhZ2VSZXBvcnQ6IFxcXCJcXFwiLFxcclxcbiAgICAgICAgICAgIHJlc291cmNlUmVwb3J0OiBcXFwiXFxcIixcXHJcXG4gICAgICAgICAgICBzaG93V2hhdHNhcHBGb3JtOiBmYWxzZSxcXHJcXG4gICAgICAgICAgICBsb2FkaW5nX3N1Ym1pdDogZmFsc2UsXFxyXFxuICAgICAgICAgICAgcGVyc29uczogW10sXFxyXFxuICAgICAgICAgICAgYWxsX3BlcnNvbnM6IFtdLFxcclxcbiAgICAgICAgICAgIGxvYWRpbmdfc2VhcmNoOiBmYWxzZSxcXHJcXG4gICAgICAgICAgICBjb2x1bW5zOiBbXSxcXHJcXG4gICAgICAgICAgICByZWNvcmRzOiBbXSxcXHJcXG4gICAgICAgICAgICBoZWFkZXJzOiBoZWFkZXJzX3Rva2VuLFxcclxcbiAgICAgICAgICAgIGRvY3VtZW50X3R5cGVzOiBbXSxcXHJcXG4gICAgICAgICAgICBwYWdpbmF0aW9uOiB7fSxcXHJcXG4gICAgICAgICAgICBzZWFyY2g6IHt9LFxcclxcbiAgICAgICAgICAgIHRvdGFsczoge30sXFxyXFxuICAgICAgICAgICAgZXN0YWJsaXNobWVudDogbnVsbCxcXHJcXG4gICAgICAgICAgICBlc3RhYmxpc2htZW50czogW10sXFxyXFxuICAgICAgICAgICAgc3RhdGVfdHlwZXM6IFtdLFxcclxcbiAgICAgICAgICAgIGZvcm06IHt9LFxcclxcblxcclxcbiAgICAgICAgICAgIHBpY2tlck9wdGlvbnNEYXRlczoge1xcclxcbiAgICAgICAgICAgICAgICBkaXNhYmxlZERhdGU6IHRpbWUgPT4ge1xcclxcbiAgICAgICAgICAgICAgICAgICAgdGltZSA9IG1vbWVudCh0aW1lKS5mb3JtYXQoXFxcIllZWVktTU0tRERcXFwiKTtcXHJcXG4gICAgICAgICAgICAgICAgICAgIHJldHVybiB0aGlzLmZvcm0uZGF0ZV9zdGFydCA+IHRpbWU7XFxyXFxuICAgICAgICAgICAgICAgIH1cXHJcXG4gICAgICAgICAgICB9LFxcclxcbiAgICAgICAgICAgIHBpY2tlck9wdGlvbnNNb250aHM6IHtcXHJcXG4gICAgICAgICAgICAgICAgZGlzYWJsZWREYXRlOiB0aW1lID0+IHtcXHJcXG4gICAgICAgICAgICAgICAgICAgIHRpbWUgPSBtb21lbnQodGltZSkuZm9ybWF0KFxcXCJZWVlZLU1NXFxcIik7XFxyXFxuICAgICAgICAgICAgICAgICAgICByZXR1cm4gdGhpcy5mb3JtLm1vbnRoX3N0YXJ0ID4gdGltZTtcXHJcXG4gICAgICAgICAgICAgICAgfVxcclxcbiAgICAgICAgICAgIH0sXFxyXFxuICAgICAgICAgICAgc2VsbGVyczogW11cXHJcXG4gICAgICAgIH07XFxyXFxuICAgIH0sXFxyXFxuICAgIGNvbXB1dGVkOiB7fSxcXHJcXG4gICAgY3JlYXRlZCgpIHtcXHJcXG4gICAgICAgIHRoaXMuaW5pdEZvcm0oKTtcXHJcXG4gICAgICAgIHRoaXMuaW5pdFRvdGFscygpO1xcclxcbiAgICAgICAgdGhpcy4kZXZlbnRIdWIuJG9uKFxcXCJyZWxvYWREYXRhXFxcIiwgKCkgPT4ge1xcclxcbiAgICAgICAgICAgIHRoaXMuZ2V0UmVjb3JkcygpO1xcclxcbiAgICAgICAgfSk7XFxyXFxuICAgIH0sXFxyXFxuICAgIGFzeW5jIG1vdW50ZWQoKSB7XFxyXFxuICAgICAgICBhd2FpdCB0aGlzLiRodHRwLmdldChgLyR7dGhpcy5yZXNvdXJjZX0vZmlsdGVyYCkudGhlbihyZXNwb25zZSA9PiB7XFxyXFxuICAgICAgICAgICAgdGhpcy5lc3RhYmxpc2htZW50cyA9IHJlc3BvbnNlLmRhdGEuZXN0YWJsaXNobWVudHM7XFxyXFxuICAgICAgICAgICAgdGhpcy5hbGxfcGVyc29ucyA9IHJlc3BvbnNlLmRhdGEucGVyc29ucztcXHJcXG4gICAgICAgICAgICB0aGlzLnNlbGxlcnMgPSByZXNwb25zZS5kYXRhLnNlbGxlcnM7XFxyXFxuICAgICAgICB9KTtcXHJcXG5cXHJcXG4gICAgICAgIGF3YWl0IHRoaXMuZ2V0UmVjb3JkcygpO1xcclxcbiAgICAgICAgYXdhaXQgdGhpcy5maWx0ZXJQZXJzb25zKCk7XFxyXFxuICAgICAgICAvLyBhd2FpdCB0aGlzLmdldFRvdGFscygpXFxyXFxuICAgICAgICB0aGlzLmZvcm0udHlwZV9wZXJzb24gPVxcclxcbiAgICAgICAgICAgIHRoaXMucmVzb3VyY2UgPT09IFxcXCJyZXBvcnRzL3NhbGVzXFxcIiA/IFxcXCJjdXN0b21lcnNcXFwiIDogXFxcInN1cHBsaWVyc1xcXCI7XFxyXFxuICAgIH0sXFxyXFxuICAgIG1ldGhvZHM6IHtcXHJcXG4gICAgICAgIGNsaWNrT3BlbldoYXRzYXBwKCkge1xcclxcbiAgICAgICAgICAgIGxldCBxdWVyeSA9IHF1ZXJ5U3RyaW5nLnN0cmluZ2lmeSh7XFxyXFxuICAgICAgICAgICAgICAgIC4uLnRoaXMuZm9ybVxcclxcbiAgICAgICAgICAgIH0pO1xcclxcbiAgICAgICAgICAgIHRoaXMucmVzb3VyY2VSZXBvcnQgPSBgLyR7dGhpcy5yZXNvdXJjZX0vcGRmPyR7cXVlcnl9YDtcXHJcXG4gICAgICAgICAgICB0aGlzLm1lc3NhZ2VSZXBvcnQgPSBgUmVwb3J0ZSBkZSBjb25zaWduYW1pZW50byBhIGxhIGZlY2hhICR7bW9tZW50KCkuZm9ybWF0KFxcclxcbiAgICAgICAgICAgICAgICBcXFwiREQtTU0tWVlZWVxcXCJcXHJcXG4gICAgICAgICAgICApfWA7XFxyXFxuICAgICAgICAgICAgdGhpcy5zaG93V2hhdHNhcHBGb3JtID0gdHJ1ZTtcXHJcXG4gICAgICAgIH0sXFxyXFxuICAgICAgICBjaGFuZ2VQZXJzb25zKCkge1xcclxcbiAgICAgICAgICAgIC8vIHRoaXMuZm9ybS50eXBlX3BlcnNvbiA9IHRoaXMucmVzb3VyY2UgPT09ICdyZXBvcnRzL3NhbGVzJyA/ICdjdXN0b21lcnMnOidzdXBwbGllcnMnXFxyXFxuICAgICAgICB9LFxcclxcbiAgICAgICAgc2VhcmNoUmVtb3RlUGVyc29ucyhpbnB1dCkge1xcclxcbiAgICAgICAgICAgIGlmIChpbnB1dC5sZW5ndGggPiAwKSB7XFxyXFxuICAgICAgICAgICAgICAgIHRoaXMubG9hZGluZ19zZWFyY2ggPSB0cnVlO1xcclxcbiAgICAgICAgICAgICAgICBsZXQgcGFyYW1ldGVycyA9IGBpbnB1dD0ke2lucHV0fWA7XFxyXFxuXFxyXFxuICAgICAgICAgICAgICAgIHRoaXMuZm9ybS50eXBlX3BlcnNvbiA9IFxcXCJjdXN0b21lcnNcXFwiO1xcclxcblxcclxcbiAgICAgICAgICAgICAgICB0aGlzLiRodHRwXFxyXFxuICAgICAgICAgICAgICAgICAgICAuZ2V0KFxcclxcbiAgICAgICAgICAgICAgICAgICAgICAgIGAvcmVwb3J0cy9kYXRhLXRhYmxlL3BlcnNvbnMvJHt0aGlzLmZvcm0udHlwZV9wZXJzb259PyR7cGFyYW1ldGVyc31gXFxyXFxuICAgICAgICAgICAgICAgICAgICApXFxyXFxuICAgICAgICAgICAgICAgICAgICAudGhlbihyZXNwb25zZSA9PiB7XFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgdGhpcy5wZXJzb25zID0gcmVzcG9uc2UuZGF0YS5wZXJzb25zO1xcclxcbiAgICAgICAgICAgICAgICAgICAgICAgIHRoaXMubG9hZGluZ19zZWFyY2ggPSBmYWxzZTtcXHJcXG5cXHJcXG4gICAgICAgICAgICAgICAgICAgICAgICBpZiAodGhpcy5wZXJzb25zLmxlbmd0aCA9PSAwKSB7XFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIHRoaXMuZmlsdGVyUGVyc29ucygpO1xcclxcbiAgICAgICAgICAgICAgICAgICAgICAgIH1cXHJcXG4gICAgICAgICAgICAgICAgICAgIH0pO1xcclxcbiAgICAgICAgICAgIH0gZWxzZSB7XFxyXFxuICAgICAgICAgICAgICAgIHRoaXMuZmlsdGVyUGVyc29ucygpO1xcclxcbiAgICAgICAgICAgIH1cXHJcXG4gICAgICAgIH0sXFxyXFxuICAgICAgICBmaWx0ZXJQZXJzb25zKCkge1xcclxcbiAgICAgICAgICAgIHRoaXMucGVyc29ucyA9IHRoaXMuYWxsX3BlcnNvbnM7XFxyXFxuICAgICAgICAgICAgY29uc29sZS5sb2codGhpcy5wZXJzb25zKTtcXHJcXG4gICAgICAgIH0sXFxyXFxuXFxyXFxuICAgICAgICBjbGlja0Rvd25sb2FkKHR5cGUpIHtcXHJcXG4gICAgICAgICAgICBsZXQgcXVlcnkgPSBxdWVyeVN0cmluZy5zdHJpbmdpZnkoe1xcclxcbiAgICAgICAgICAgICAgICAuLi50aGlzLmZvcm1cXHJcXG4gICAgICAgICAgICB9KTtcXHJcXG4gICAgICAgICAgICB3aW5kb3cub3BlbihgLyR7dGhpcy5yZXNvdXJjZX0vJHt0eXBlfS8/JHtxdWVyeX1gLCBcXFwiX2JsYW5rXFxcIik7XFxyXFxuICAgICAgICB9LFxcclxcbiAgICAgICAgaW5pdEZvcm0oKSB7XFxyXFxuICAgICAgICAgICAgdGhpcy5mb3JtID0ge1xcclxcbiAgICAgICAgICAgICAgICBkYXRlX29mX2VuZDogbnVsbCxcXHJcXG4gICAgICAgICAgICAgICAgcGVyc29uX2lkOiBudWxsLFxcclxcbiAgICAgICAgICAgICAgICBwZXJpb2Q6IFxcXCJtb250aFxcXCIsXFxyXFxuICAgICAgICAgICAgICAgIGRhdGVfc3RhcnQ6IG1vbWVudCgpLmZvcm1hdChcXFwiWVlZWS1NTS1ERFxcXCIpLFxcclxcbiAgICAgICAgICAgICAgICBkYXRlX2VuZDogbW9tZW50KCkuZm9ybWF0KFxcXCJZWVlZLU1NLUREXFxcIiksXFxyXFxuICAgICAgICAgICAgICAgIG1vbnRoX3N0YXJ0OiBtb21lbnQoKS5mb3JtYXQoXFxcIllZWVktTU1cXFwiKSxcXHJcXG4gICAgICAgICAgICAgICAgbW9udGhfZW5kOiBtb21lbnQoKS5mb3JtYXQoXFxcIllZWVktTU1cXFwiKSxcXHJcXG4gICAgICAgICAgICAgICAgbGlxdWlkYXRlZDogbnVsbFxcclxcbiAgICAgICAgICAgIH07XFxyXFxuICAgICAgICB9LFxcclxcbiAgICAgICAgaW5pdFRvdGFscygpIHtcXHJcXG4gICAgICAgICAgICB0aGlzLnRvdGFscyA9IHtcXHJcXG4gICAgICAgICAgICAgICAgYWN1bV90b3RhbF90YXhlZDogMCxcXHJcXG4gICAgICAgICAgICAgICAgYWN1bV90b3RhbF9pZ3Y6IDAsXFxyXFxuICAgICAgICAgICAgICAgIGFjdW1fdG90YWw6IDAsXFxyXFxuICAgICAgICAgICAgICAgIGFjdW1fdG90YWxfZXhvbmVyYXRlZDogMCxcXHJcXG4gICAgICAgICAgICAgICAgYWN1bV90b3RhbF91bmFmZmVjdGVkOiAwLFxcclxcbiAgICAgICAgICAgICAgICBhY3VtX3RvdGFsX2ZyZWU6IDAsXFxyXFxuXFxyXFxuICAgICAgICAgICAgICAgIGFjdW1fdG90YWxfdGF4ZWRfdXNkOiAwLFxcclxcbiAgICAgICAgICAgICAgICBhY3VtX3RvdGFsX2lndl91c2Q6IDAsXFxyXFxuICAgICAgICAgICAgICAgIGFjdW1fdG90YWxfdXNkOiAwXFxyXFxuICAgICAgICAgICAgfTtcXHJcXG4gICAgICAgIH0sXFxyXFxuICAgICAgICBjdXN0b21JbmRleChpbmRleCkge1xcclxcbiAgICAgICAgICAgIHJldHVybiAoXFxyXFxuICAgICAgICAgICAgICAgIHRoaXMucGFnaW5hdGlvbi5wZXJfcGFnZSAqICh0aGlzLnBhZ2luYXRpb24uY3VycmVudF9wYWdlIC0gMSkgK1xcclxcbiAgICAgICAgICAgICAgICBpbmRleCArXFxyXFxuICAgICAgICAgICAgICAgIDFcXHJcXG4gICAgICAgICAgICApO1xcclxcbiAgICAgICAgfSxcXHJcXG4gICAgICAgIGFzeW5jIGdldFJlY29yZHNCeUZpbHRlcigpIHtcXHJcXG4gICAgICAgICAgICB0aGlzLmxvYWRpbmdfc3VibWl0ID0gYXdhaXQgdHJ1ZTtcXHJcXG4gICAgICAgICAgICBhd2FpdCB0aGlzLmdldFJlY29yZHMoKTtcXHJcXG4gICAgICAgICAgICB0aGlzLmxvYWRpbmdfc3VibWl0ID0gYXdhaXQgZmFsc2U7XFxyXFxuICAgICAgICB9LFxcclxcbiAgICAgICAgZ2V0UmVjb3JkcygpIHtcXHJcXG4gICAgICAgICAgICByZXR1cm4gdGhpcy4kaHR0cFxcclxcbiAgICAgICAgICAgICAgICAuZ2V0KGAvJHt0aGlzLnJlc291cmNlfS9yZWNvcmRzPyR7dGhpcy5nZXRRdWVyeVBhcmFtZXRlcnMoKX1gKVxcclxcbiAgICAgICAgICAgICAgICAudGhlbihyZXNwb25zZSA9PiB7XFxyXFxuICAgICAgICAgICAgICAgICAgICB0aGlzLnJlY29yZHMgPSByZXNwb25zZS5kYXRhLmRhdGE7XFxyXFxuICAgICAgICAgICAgICAgICAgICBjb25zb2xlLmxvZyh0aGlzLnJlY29yZHMpO1xcclxcbiAgICAgICAgICAgICAgICAgICAgLy9zb3J0IHJlY29yZHMgYnkgZHVlcyBwcm9wZXJ0eSAoaW50KSBpbiBkZXNjZW5kaW5nIG9yZGVyXFxyXFxuICAgICAgICAgICAgICAgICAgICAvLyB0aGlzLnJlY29yZHMuc29ydChmdW5jdGlvbihhLCBiKSB7XFxyXFxuICAgICAgICAgICAgICAgICAgICAvLyAgICAgcmV0dXJuIGIuZHVlcyAtIGEuZHVlcztcXHJcXG4gICAgICAgICAgICAgICAgICAgIC8vIH0pO1xcclxcblxcclxcbiAgICAgICAgICAgICAgICAgICAgdGhpcy5wYWdpbmF0aW9uID0gcmVzcG9uc2UuZGF0YS5tZXRhO1xcclxcbiAgICAgICAgICAgICAgICAgICAgdGhpcy5wYWdpbmF0aW9uLnBlcl9wYWdlID0gcGFyc2VJbnQoXFxyXFxuICAgICAgICAgICAgICAgICAgICAgICAgcmVzcG9uc2UuZGF0YS5tZXRhLnBlcl9wYWdlXFxyXFxuICAgICAgICAgICAgICAgICAgICApO1xcclxcbiAgICAgICAgICAgICAgICAgICAgdGhpcy5sb2FkaW5nX3N1Ym1pdCA9IGZhbHNlO1xcclxcbiAgICAgICAgICAgICAgICAgICAgLy8gdGhpcy5pbml0VG90YWxzKClcXHJcXG4gICAgICAgICAgICAgICAgICBcXHJcXG4gICAgICAgICAgICAgICAgfSk7XFxyXFxuICAgICAgICB9LFxcclxcbiAgICAgICAgZ2V0UXVlcnlQYXJhbWV0ZXJzKCkge1xcclxcbiAgICAgICAgICAgIHJldHVybiBxdWVyeVN0cmluZy5zdHJpbmdpZnkoe1xcclxcbiAgICAgICAgICAgICAgICBwYWdlOiB0aGlzLnBhZ2luYXRpb24uY3VycmVudF9wYWdlLFxcclxcbiAgICAgICAgICAgICAgICBsaW1pdDogdGhpcy5saW1pdCxcXHJcXG4gICAgICAgICAgICAgICAgLi4udGhpcy5mb3JtXFxyXFxuICAgICAgICAgICAgfSk7XFxyXFxuICAgICAgICB9LFxcclxcblxcclxcbiAgICAgICAgY2hhbmdlRGlzYWJsZWREYXRlcygpIHtcXHJcXG4gICAgICAgICAgICBpZiAodGhpcy5mb3JtLmRhdGVfZW5kIDwgdGhpcy5mb3JtLmRhdGVfc3RhcnQpIHtcXHJcXG4gICAgICAgICAgICAgICAgdGhpcy5mb3JtLmRhdGVfZW5kID0gdGhpcy5mb3JtLmRhdGVfc3RhcnQ7XFxyXFxuICAgICAgICAgICAgfVxcclxcbiAgICAgICAgICAgIC8vIHRoaXMubG9hZEFsbCgpO1xcclxcbiAgICAgICAgfSxcXHJcXG4gICAgICAgIGNoYW5nZURpc2FibGVkTW9udGhzKCkge1xcclxcbiAgICAgICAgICAgIGlmIChcXHJcXG4gICAgICAgICAgICAgICAgdGhpcy5mb3JtLm1vbnRoX2VuZCA8XFxyXFxuICAgICAgICAgICAgICAgIHRoaXMuZm9ybS5tb250aF9zdGFydFxcclxcbiAgICAgICAgICAgICkge1xcclxcbiAgICAgICAgICAgICAgICB0aGlzLmZvcm0ubW9udGhfZW5kID0gdGhpcy5mb3JtLm1vbnRoX3N0YXJ0O1xcclxcbiAgICAgICAgICAgIH1cXHJcXG4gICAgICAgICAgICAvLyB0aGlzLmxvYWRBbGwoKTtcXHJcXG4gICAgICAgIH0sXFxyXFxuICAgICAgICBjaGFuZ2VQZXJpb2QoKSB7XFxyXFxuICAgICAgICAgICAgaWYgKHRoaXMuZm9ybS5wZXJpb2QgPT09IFxcXCJtb250aFxcXCIpIHtcXHJcXG4gICAgICAgICAgICAgICAgdGhpcy5mb3JtLm1vbnRoX3N0YXJ0ID0gbW9tZW50KCkuZm9ybWF0KFxcclxcbiAgICAgICAgICAgICAgICAgICAgXFxcIllZWVktTU1cXFwiXFxyXFxuICAgICAgICAgICAgICAgICk7XFxyXFxuICAgICAgICAgICAgICAgIHRoaXMuZm9ybS5tb250aF9lbmQgPSBtb21lbnQoKS5mb3JtYXQoXFxcIllZWVktTU1cXFwiKTtcXHJcXG4gICAgICAgICAgICB9XFxyXFxuICAgICAgICAgICAgaWYgKHRoaXMuZm9ybS5wZXJpb2QgPT09IFxcXCJiZXR3ZWVuX21vbnRoc1xcXCIpIHtcXHJcXG4gICAgICAgICAgICAgICAgdGhpcy5mb3JtLm1vbnRoX3N0YXJ0ID0gbW9tZW50KClcXHJcXG4gICAgICAgICAgICAgICAgICAgIC5zdGFydE9mKFxcXCJ5ZWFyXFxcIilcXHJcXG4gICAgICAgICAgICAgICAgICAgIC5mb3JtYXQoXFxcIllZWVktTU1cXFwiKTsgLy8nMjAxOS0wMSc7XFxyXFxuICAgICAgICAgICAgICAgIHRoaXMuZm9ybS5tb250aF9lbmQgPSBtb21lbnQoKVxcclxcbiAgICAgICAgICAgICAgICAgICAgLmVuZE9mKFxcXCJ5ZWFyXFxcIilcXHJcXG4gICAgICAgICAgICAgICAgICAgIC5mb3JtYXQoXFxcIllZWVktTU1cXFwiKTtcXHJcXG4gICAgICAgICAgICB9XFxyXFxuICAgICAgICAgICAgaWYgKHRoaXMuZm9ybS5wZXJpb2QgPT09IFxcXCJkYXRlXFxcIikge1xcclxcbiAgICAgICAgICAgICAgICB0aGlzLmZvcm0uZGF0ZV9zdGFydCA9IG1vbWVudCgpLmZvcm1hdChcXFwiWVlZWS1NTS1ERFxcXCIpO1xcclxcbiAgICAgICAgICAgICAgICB0aGlzLmZvcm0uZGF0ZV9lbmQgPSBtb21lbnQoKS5mb3JtYXQoXFxcIllZWVktTU0tRERcXFwiKTtcXHJcXG4gICAgICAgICAgICB9XFxyXFxuICAgICAgICAgICAgaWYgKHRoaXMuZm9ybS5wZXJpb2QgPT09IFxcXCJiZXR3ZWVuX2RhdGVzXFxcIikge1xcclxcbiAgICAgICAgICAgICAgICB0aGlzLmZvcm0uZGF0ZV9zdGFydCA9IG1vbWVudCgpXFxyXFxuICAgICAgICAgICAgICAgICAgICAuc3RhcnRPZihcXFwibW9udGhcXFwiKVxcclxcbiAgICAgICAgICAgICAgICAgICAgLmZvcm1hdChcXFwiWVlZWS1NTS1ERFxcXCIpO1xcclxcbiAgICAgICAgICAgICAgICB0aGlzLmZvcm0uZGF0ZV9lbmQgPSBtb21lbnQoKVxcclxcbiAgICAgICAgICAgICAgICAgICAgLmVuZE9mKFxcXCJtb250aFxcXCIpXFxyXFxuICAgICAgICAgICAgICAgICAgICAuZm9ybWF0KFxcXCJZWVlZLU1NLUREXFxcIik7XFxyXFxuICAgICAgICAgICAgfVxcclxcbiAgICAgICAgICAgIC8vIHRoaXMubG9hZEFsbCgpO1xcclxcbiAgICAgICAgfVxcclxcbiAgICB9XFxyXFxufTtcXHJcXG48L3NjcmlwdD5cXHJcXG5cIl0sXCJzb3VyY2VSb290XCI6XCJcIn1dKTtcblxuLy8gZXhwb3J0c1xuXG5cblxuLy8vLy8vLy8vLy8vLy8vLy8vXG4vLyBXRUJQQUNLIEZPT1RFUlxuLy8gLi9ub2RlX21vZHVsZXMvY3NzLWxvYWRlcj9zb3VyY2VNYXAhLi9ub2RlX21vZHVsZXMvdnVlLWxvYWRlci9saWIvc3R5bGUtY29tcGlsZXI/e1widnVlXCI6dHJ1ZSxcImlkXCI6XCJkYXRhLXYtYTFmODk2M2NcIixcInNjb3BlZFwiOmZhbHNlLFwiaGFzSW5saW5lQ29uZmlnXCI6dHJ1ZX0hLi9ub2RlX21vZHVsZXMvdnVlLWxvYWRlci9saWIvc2VsZWN0b3IuanM/dHlwZT1zdHlsZXMmaW5kZXg9MCEuL21vZHVsZXMvUmVwb3J0L1Jlc291cmNlcy9hc3NldHMvanMvY29tcG9uZW50cy9EYXRhVGFibGVSZXBvcnRzQ29uc2lnbm1lbnQudnVlXG4vLyBtb2R1bGUgaWQgPSAuL25vZGVfbW9kdWxlcy9jc3MtbG9hZGVyL2luZGV4LmpzP3NvdXJjZU1hcCEuL25vZGVfbW9kdWxlcy92dWUtbG9hZGVyL2xpYi9zdHlsZS1jb21waWxlci9pbmRleC5qcz97XCJ2dWVcIjp0cnVlLFwiaWRcIjpcImRhdGEtdi1hMWY4OTYzY1wiLFwic2NvcGVkXCI6ZmFsc2UsXCJoYXNJbmxpbmVDb25maWdcIjp0cnVlfSEuL25vZGVfbW9kdWxlcy92dWUtbG9hZGVyL2xpYi9zZWxlY3Rvci5qcz90eXBlPXN0eWxlcyZpbmRleD0wIS4vbW9kdWxlcy9SZXBvcnQvUmVzb3VyY2VzL2Fzc2V0cy9qcy9jb21wb25lbnRzL0RhdGFUYWJsZVJlcG9ydHNDb25zaWdubWVudC52dWVcbi8vIG1vZHVsZSBjaHVua3MgPSAxIl0sInNvdXJjZVJvb3QiOiIifQ==\n//# sourceURL=webpack-internal:///./node_modules/css-loader/index.js?sourceMap!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-a1f8963c\",\"scoped\":false,\"hasInlineConfig\":true}!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./modules/Report/Resources/assets/js/components/DataTableReportsConsignment.vue\n");
+exports = module.exports = __webpack_require__("./node_modules/css-loader/lib/css-base.js")(true);
+// imports
+
+
+// module
+exports.push([module.i, "\n.font-custom {\r\n    font-size: 15px !important;\n}\r\n", "", {"version":3,"sources":["D:/laragon/www/sdrimsac-tenant/modules/Report/Resources/assets/js/components/modules/Report/Resources/assets/js/components/DataTableReportsConsignment.vue"],"names":[],"mappings":";AA8QA;IACA,2BAAA;CACA","file":"DataTableReportsConsignment.vue","sourcesContent":["<template>\r\n    <div>\r\n        <div class=\"row\">\r\n            <div class=\"col-md-12 col-lg-12 col-xl-12 \">\r\n                <div class=\"row mt-2\">\r\n                    <div class=\"col-md-3\">\r\n                        <label class=\"control-label\"\r\n                            >Fecha de consignación</label\r\n                        >\r\n                        <el-select v-model=\"form.period\" @change=\"changePeriod\">\r\n                            <el-option\r\n                                key=\"month\"\r\n                                value=\"month\"\r\n                                label=\"Por mes\"\r\n                            ></el-option>\r\n                            <el-option\r\n                                key=\"between_months\"\r\n                                value=\"between_months\"\r\n                                label=\"Entre meses\"\r\n                            ></el-option>\r\n                            <el-option\r\n                                key=\"date\"\r\n                                value=\"date\"\r\n                                label=\"Por fecha\"\r\n                            ></el-option>\r\n                            <el-option\r\n                                key=\"between_dates\"\r\n                                value=\"between_dates\"\r\n                                label=\"Entre fechas\"\r\n                            ></el-option>\r\n                        </el-select>\r\n                    </div>\r\n                    <template\r\n                        v-if=\"\r\n                            form.period === 'month' ||\r\n                                form.period === 'between_months'\r\n                        \"\r\n                    >\r\n                        <div class=\"col-md-2\">\r\n                            <label class=\"w-100 control-label\">Mes de</label>\r\n                            <el-date-picker\r\n                                v-model=\"form.month_start\"\r\n                                type=\"month\"\r\n                                class=\"w-100\"\r\n                                @change=\"changeDisabledMonths\"\r\n                                value-format=\"yyyy-MM\"\r\n                                format=\"MM/yyyy\"\r\n                                :clearable=\"true\"\r\n                            ></el-date-picker>\r\n                        </div>\r\n                    </template>\r\n                    <template v-if=\"form.period === 'between_months'\">\r\n                        <div class=\"col-md-2\">\r\n                            <label class=\"w-100 control-label\">Mes al</label>\r\n                            <el-date-picker\r\n                                class=\"w-100\"\r\n                                v-model=\"form.month_end\"\r\n                                type=\"month\"\r\n                                :picker-options=\"pickerOptionsMonths\"\r\n                                value-format=\"yyyy-MM\"\r\n                                format=\"MM/yyyy\"\r\n                                :clearable=\"true\"\r\n                            ></el-date-picker>\r\n                        </div>\r\n                    </template>\r\n                    <template\r\n                        v-if=\"\r\n                            form.period === 'date' ||\r\n                                form.period === 'between_dates'\r\n                        \"\r\n                    >\r\n                        <div class=\"col-md-2\">\r\n                            <label class=\"w-100 control-label\">Fecha del</label>\r\n                            <el-date-picker\r\n                                class=\"w-100\"\r\n                                v-model=\"form.date_start\"\r\n                                type=\"date\"\r\n                                @change=\"changeDisabledDates\"\r\n                                value-format=\"yyyy-MM-dd\"\r\n                                format=\"dd/MM/yyyy\"\r\n                                :clearable=\"true\"\r\n                            ></el-date-picker>\r\n                        </div>\r\n                    </template>\r\n                    <template v-if=\"form.period === 'between_dates'\">\r\n                        <div class=\"col-md-2\">\r\n                            <label class=\"w-100 control-label\">Fecha al</label>\r\n                            <el-date-picker\r\n                                class=\"w-100\"\r\n                                v-model=\"form.date_end\"\r\n                                type=\"date\"\r\n                                :picker-options=\"pickerOptionsDates\"\r\n                                value-format=\"yyyy-MM-dd\"\r\n                                format=\"dd/MM/yyyy\"\r\n                                :clearable=\"true\"\r\n                            ></el-date-picker>\r\n                        </div>\r\n                    </template>\r\n                    <div class=\"col-lg-4 col-md-4\">\r\n                        <div class=\"form-group\">\r\n                            <label class=\"w-100 control-label\">\r\n                                Cliente\r\n                            </label>\r\n\r\n                            <el-select\r\n                                class=\"w-100\"\r\n                                v-model=\"form.person_id\"\r\n                                filterable\r\n                                remote\r\n                                popper-class=\"el-select-customers\"\r\n                                clearable\r\n                                placeholder=\"Nombre o número de documento\"\r\n                                :remote-method=\"searchRemotePersons\"\r\n                                :loading=\"loading_search\"\r\n                                @change=\"changePersons\"\r\n                            >\r\n                                <el-option\r\n                                    v-for=\"option in persons\"\r\n                                    :key=\"option.id\"\r\n                                    :value=\"option.id\"\r\n                                    :label=\"option.description\"\r\n                                ></el-option>\r\n                            </el-select>\r\n                        </div>\r\n                    </div>\r\n\r\n                    <div class=\"col-lg-3 col-md-3\">\r\n                        <div class=\"form-group\">\r\n                            <label class=\"w-100 control-label\">\r\n                                Estado\r\n                            </label>\r\n                            <el-select class=\"w-100\" v-model=\"form.liquidated\" clearable>\r\n                                <el-option\r\n                                    key=\"1\"\r\n                                    :value=\"1\"\r\n                                    label=\"Liquidado\"\r\n                                ></el-option>\r\n                                <el-option\r\n                                    key=\"2\"\r\n                                    :value=\"0\"\r\n                                    label=\"Por liquidar\"\r\n                                ></el-option>\r\n                            </el-select>\r\n                        </div>\r\n                    </div>\r\n                    <div class=\"col-lg-3 col-md-3\">\r\n                        <div class=\"form-group\">\r\n                            <label class=\"w-100 control-label\">\r\n                                Fecha de liquidación\r\n                            </label>\r\n                            <el-date-picker\r\n                                class=\"w-100\"\r\n                                v-model=\"form.date_of_end\"\r\n                                type=\"date\"\r\n                                value-format=\"yyyy-MM-dd\"\r\n                                format=\"dd/MM/yyyy\"\r\n                                :clearable=\"true\"\r\n                            ></el-date-picker>\r\n                        </div>\r\n                    </div>\r\n                    <div class=\"d-flex\" style=\"margin-top:29px\">\r\n                        <el-button\r\n                            class=\"submit\"\r\n                            type=\"primary\"\r\n                            @click.prevent=\"getRecordsByFilter\"\r\n                            :loading=\"loading_submit\"\r\n                            icon=\"el-icon-search\"\r\n                            >Buscar</el-button\r\n                        >\r\n\r\n                        <template\r\n                            v-if=\"\r\n                                records.length > 0 &&\r\n                                    resource !== 'reports/document-detractions'\r\n                            \"\r\n                        >\r\n                            <el-button\r\n                                class=\"submit\"\r\n                                type=\"danger\"\r\n                                icon=\"el-icon-tickets\"\r\n                                @click.prevent=\"clickDownload('pdf')\"\r\n                                >Exportar PDF</el-button\r\n                            >\r\n\r\n                            <el-button\r\n                                class=\"submit\"\r\n                                type=\"success\"\r\n                                @click.prevent=\"clickDownload('excel')\"\r\n                                ><i class=\"fa fa-file-excel\"></i> Exportal\r\n                                Excel</el-button\r\n                            >\r\n                            <el-button\r\n                                class=\"submit\"\r\n                                @click.prevent=\"clickOpenWhatsapp\"\r\n                                ><i class=\"fa fa-whatsapp\"></i> Enviar\r\n                                whatsapp</el-button\r\n                            >\r\n                        </template>\r\n                    </div>\r\n                </div>\r\n                <div class=\"row mt-1 mb-4\"></div>\r\n            </div>\r\n\r\n            <div class=\"col-md-12\">\r\n                <div class=\"table-responsive\">\r\n                    <table class=\"table\">\r\n                        <thead>\r\n                            <slot name=\"heading\"></slot>\r\n                        </thead>\r\n                        <tbody>\r\n                            <slot\r\n                                v-for=\"(row, index) in records\"\r\n                                :row=\"row\"\r\n                                :index=\"customIndex(index)\"\r\n                            ></slot>\r\n                        </tbody>\r\n                        <tfoot\r\n                            v-if=\"\r\n                                resource == 'reports/sales' ||\r\n                                    resource == 'reports/purchases'\r\n                            \"\r\n                        >\r\n                            <tr>\r\n                                <td\r\n                                    :colspan=\"\r\n                                        resource == 'reports/sales' ? 7 : 8\r\n                                    \"\r\n                                ></td>\r\n                                <td><strong>Totales PEN</strong></td>\r\n\r\n                                <td>{{ totals.acum_total_taxed }}</td>\r\n                                <td>{{ totals.acum_total_igv }}</td>\r\n                                <td>{{ totals.acum_total }}</td>\r\n                            </tr>\r\n                            <tr>\r\n                                <td\r\n                                    :colspan=\"\r\n                                        resource == 'reports/sales' ? 7 : 8\r\n                                    \"\r\n                                ></td>\r\n                                <td><strong>Totales USD</strong></td>\r\n\r\n                                <td>{{ totals.acum_total_taxed_usd }}</td>\r\n                                <td>{{ totals.acum_total_igv_usd }}</td>\r\n                                <td>{{ totals.acum_total_usd }}</td>\r\n                            </tr>\r\n                        </tfoot>\r\n                    </table>\r\n                    <div>\r\n                        <el-pagination\r\n                            @current-change=\"getRecords\"\r\n                            layout=\"total, prev, pager, next\"\r\n                            :total=\"pagination.total\"\r\n                            :current-page.sync=\"pagination.current_page\"\r\n                            :page-size=\"pagination.per_page\"\r\n                        >\r\n                        </el-pagination>\r\n                    </div>\r\n                </div>\r\n            </div>\r\n        </div>\r\n        <whatsapp-form-report\r\n            :message.sync=\"messageReport\"\r\n            :resource=\"resourceReport\"\r\n            :showWhatsappForm.sync=\"showWhatsappForm\"\r\n        >\r\n        </whatsapp-form-report>\r\n    </div>\r\n</template>\r\n<style>\r\n.font-custom {\r\n    font-size: 15px !important;\r\n}\r\n</style>\r\n<script>\r\nimport moment from \"moment\";\r\nimport queryString from \"query-string\";\r\nimport WhatsappFormReport from \"../../../../../../resources/js/components/WhatsappModalReports.vue\";\r\nexport default {\r\n    props: {\r\n        resource: String,\r\n        applyCustomer: { type: Boolean, required: false, default: false }\r\n    },\r\n    components: { WhatsappFormReport },\r\n    data() {\r\n        return {\r\n            messageReport: \"\",\r\n            resourceReport: \"\",\r\n            showWhatsappForm: false,\r\n            loading_submit: false,\r\n            persons: [],\r\n            all_persons: [],\r\n            loading_search: false,\r\n            columns: [],\r\n            records: [],\r\n            headers: headers_token,\r\n            document_types: [],\r\n            pagination: {},\r\n            search: {},\r\n            totals: {},\r\n            establishment: null,\r\n            establishments: [],\r\n            state_types: [],\r\n            form: {},\r\n\r\n            pickerOptionsDates: {\r\n                disabledDate: time => {\r\n                    time = moment(time).format(\"YYYY-MM-DD\");\r\n                    return this.form.date_start > time;\r\n                }\r\n            },\r\n            pickerOptionsMonths: {\r\n                disabledDate: time => {\r\n                    time = moment(time).format(\"YYYY-MM\");\r\n                    return this.form.month_start > time;\r\n                }\r\n            },\r\n            sellers: []\r\n        };\r\n    },\r\n    computed: {},\r\n    created() {\r\n        this.initForm();\r\n        this.initTotals();\r\n        this.$eventHub.$on(\"reloadData\", () => {\r\n            this.getRecords();\r\n        });\r\n    },\r\n    async mounted() {\r\n        await this.$http.get(`/${this.resource}/filter`).then(response => {\r\n            this.establishments = response.data.establishments;\r\n            this.all_persons = response.data.persons;\r\n            this.sellers = response.data.sellers;\r\n        });\r\n\r\n        await this.getRecords();\r\n        await this.filterPersons();\r\n        // await this.getTotals()\r\n        this.form.type_person =\r\n            this.resource === \"reports/sales\" ? \"customers\" : \"suppliers\";\r\n    },\r\n    methods: {\r\n        clickOpenWhatsapp() {\r\n            let query = queryString.stringify({\r\n                ...this.form\r\n            });\r\n            this.resourceReport = `/${this.resource}/pdf?${query}`;\r\n            this.messageReport = `Reporte de consignamiento a la fecha ${moment().format(\r\n                \"DD-MM-YYYY\"\r\n            )}`;\r\n            this.showWhatsappForm = true;\r\n        },\r\n        changePersons() {\r\n            // this.form.type_person = this.resource === 'reports/sales' ? 'customers':'suppliers'\r\n        },\r\n        searchRemotePersons(input) {\r\n            if (input.length > 0) {\r\n                this.loading_search = true;\r\n                let parameters = `input=${input}`;\r\n\r\n                this.form.type_person = \"customers\";\r\n\r\n                this.$http\r\n                    .get(\r\n                        `/reports/data-table/persons/${this.form.type_person}?${parameters}`\r\n                    )\r\n                    .then(response => {\r\n                        this.persons = response.data.persons;\r\n                        this.loading_search = false;\r\n\r\n                        if (this.persons.length == 0) {\r\n                            this.filterPersons();\r\n                        }\r\n                    });\r\n            } else {\r\n                this.filterPersons();\r\n            }\r\n        },\r\n        filterPersons() {\r\n            this.persons = this.all_persons;\r\n            console.log(this.persons);\r\n        },\r\n\r\n        clickDownload(type) {\r\n            let query = queryString.stringify({\r\n                ...this.form\r\n            });\r\n            window.open(`/${this.resource}/${type}/?${query}`, \"_blank\");\r\n        },\r\n        initForm() {\r\n            this.form = {\r\n                date_of_end: null,\r\n                person_id: null,\r\n                period: \"month\",\r\n                date_start: moment().format(\"YYYY-MM-DD\"),\r\n                date_end: moment().format(\"YYYY-MM-DD\"),\r\n                month_start: moment().format(\"YYYY-MM\"),\r\n                month_end: moment().format(\"YYYY-MM\"),\r\n                liquidated: null\r\n            };\r\n        },\r\n        initTotals() {\r\n            this.totals = {\r\n                acum_total_taxed: 0,\r\n                acum_total_igv: 0,\r\n                acum_total: 0,\r\n                acum_total_exonerated: 0,\r\n                acum_total_unaffected: 0,\r\n                acum_total_free: 0,\r\n\r\n                acum_total_taxed_usd: 0,\r\n                acum_total_igv_usd: 0,\r\n                acum_total_usd: 0\r\n            };\r\n        },\r\n        customIndex(index) {\r\n            return (\r\n                this.pagination.per_page * (this.pagination.current_page - 1) +\r\n                index +\r\n                1\r\n            );\r\n        },\r\n        async getRecordsByFilter() {\r\n            this.loading_submit = await true;\r\n            await this.getRecords();\r\n            this.loading_submit = await false;\r\n        },\r\n        getRecords() {\r\n            return this.$http\r\n                .get(`/${this.resource}/records?${this.getQueryParameters()}`)\r\n                .then(response => {\r\n                    this.records = response.data.data;\r\n                    console.log(this.records);\r\n                    //sort records by dues property (int) in descending order\r\n                    // this.records.sort(function(a, b) {\r\n                    //     return b.dues - a.dues;\r\n                    // });\r\n\r\n                    this.pagination = response.data.meta;\r\n                    this.pagination.per_page = parseInt(\r\n                        response.data.meta.per_page\r\n                    );\r\n                    this.loading_submit = false;\r\n                    // this.initTotals()\r\n                  \r\n                });\r\n        },\r\n        getQueryParameters() {\r\n            return queryString.stringify({\r\n                page: this.pagination.current_page,\r\n                limit: this.limit,\r\n                ...this.form\r\n            });\r\n        },\r\n\r\n        changeDisabledDates() {\r\n            if (this.form.date_end < this.form.date_start) {\r\n                this.form.date_end = this.form.date_start;\r\n            }\r\n            // this.loadAll();\r\n        },\r\n        changeDisabledMonths() {\r\n            if (\r\n                this.form.month_end <\r\n                this.form.month_start\r\n            ) {\r\n                this.form.month_end = this.form.month_start;\r\n            }\r\n            // this.loadAll();\r\n        },\r\n        changePeriod() {\r\n            if (this.form.period === \"month\") {\r\n                this.form.month_start = moment().format(\r\n                    \"YYYY-MM\"\r\n                );\r\n                this.form.month_end = moment().format(\"YYYY-MM\");\r\n            }\r\n            if (this.form.period === \"between_months\") {\r\n                this.form.month_start = moment()\r\n                    .startOf(\"year\")\r\n                    .format(\"YYYY-MM\"); //'2019-01';\r\n                this.form.month_end = moment()\r\n                    .endOf(\"year\")\r\n                    .format(\"YYYY-MM\");\r\n            }\r\n            if (this.form.period === \"date\") {\r\n                this.form.date_start = moment().format(\"YYYY-MM-DD\");\r\n                this.form.date_end = moment().format(\"YYYY-MM-DD\");\r\n            }\r\n            if (this.form.period === \"between_dates\") {\r\n                this.form.date_start = moment()\r\n                    .startOf(\"month\")\r\n                    .format(\"YYYY-MM-DD\");\r\n                this.form.date_end = moment()\r\n                    .endOf(\"month\")\r\n                    .format(\"YYYY-MM-DD\");\r\n            }\r\n            // this.loadAll();\r\n        }\r\n    }\r\n};\r\n</script>\r\n"],"sourceRoot":""}]);
+
+// exports
+
 
 /***/ }),
 
@@ -86,7 +2011,97 @@ eval("exports = module.exports = __webpack_require__(\"./node_modules/css-loader
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-eval("/*\nobject-assign\n(c) Sindre Sorhus\n@license MIT\n*/\n\n\n/* eslint-disable no-unused-vars */\nvar getOwnPropertySymbols = Object.getOwnPropertySymbols;\nvar hasOwnProperty = Object.prototype.hasOwnProperty;\nvar propIsEnumerable = Object.prototype.propertyIsEnumerable;\n\nfunction toObject(val) {\n\tif (val === null || val === undefined) {\n\t\tthrow new TypeError('Object.assign cannot be called with null or undefined');\n\t}\n\n\treturn Object(val);\n}\n\nfunction shouldUseNative() {\n\ttry {\n\t\tif (!Object.assign) {\n\t\t\treturn false;\n\t\t}\n\n\t\t// Detect buggy property enumeration order in older V8 versions.\n\n\t\t// https://bugs.chromium.org/p/v8/issues/detail?id=4118\n\t\tvar test1 = new String('abc');  // eslint-disable-line no-new-wrappers\n\t\ttest1[5] = 'de';\n\t\tif (Object.getOwnPropertyNames(test1)[0] === '5') {\n\t\t\treturn false;\n\t\t}\n\n\t\t// https://bugs.chromium.org/p/v8/issues/detail?id=3056\n\t\tvar test2 = {};\n\t\tfor (var i = 0; i < 10; i++) {\n\t\t\ttest2['_' + String.fromCharCode(i)] = i;\n\t\t}\n\t\tvar order2 = Object.getOwnPropertyNames(test2).map(function (n) {\n\t\t\treturn test2[n];\n\t\t});\n\t\tif (order2.join('') !== '0123456789') {\n\t\t\treturn false;\n\t\t}\n\n\t\t// https://bugs.chromium.org/p/v8/issues/detail?id=3056\n\t\tvar test3 = {};\n\t\t'abcdefghijklmnopqrst'.split('').forEach(function (letter) {\n\t\t\ttest3[letter] = letter;\n\t\t});\n\t\tif (Object.keys(Object.assign({}, test3)).join('') !==\n\t\t\t\t'abcdefghijklmnopqrst') {\n\t\t\treturn false;\n\t\t}\n\n\t\treturn true;\n\t} catch (err) {\n\t\t// We don't expect any of the above to throw, but better to be safe.\n\t\treturn false;\n\t}\n}\n\nmodule.exports = shouldUseNative() ? Object.assign : function (target, source) {\n\tvar from;\n\tvar to = toObject(target);\n\tvar symbols;\n\n\tfor (var s = 1; s < arguments.length; s++) {\n\t\tfrom = Object(arguments[s]);\n\n\t\tfor (var key in from) {\n\t\t\tif (hasOwnProperty.call(from, key)) {\n\t\t\t\tto[key] = from[key];\n\t\t\t}\n\t\t}\n\n\t\tif (getOwnPropertySymbols) {\n\t\t\tsymbols = getOwnPropertySymbols(from);\n\t\t\tfor (var i = 0; i < symbols.length; i++) {\n\t\t\t\tif (propIsEnumerable.call(from, symbols[i])) {\n\t\t\t\t\tto[symbols[i]] = from[symbols[i]];\n\t\t\t\t}\n\t\t\t}\n\t\t}\n\t}\n\n\treturn to;\n};\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vLi9ub2RlX21vZHVsZXMvb2JqZWN0LWFzc2lnbi9pbmRleC5qcz8wNDQ0Il0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7O0FBRWE7QUFDYjtBQUNBO0FBQ0E7QUFDQTs7QUFFQTtBQUNBO0FBQ0E7QUFDQTs7QUFFQTtBQUNBOztBQUVBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7O0FBRUE7O0FBRUE7QUFDQSxnQ0FBZ0M7QUFDaEM7QUFDQTtBQUNBO0FBQ0E7O0FBRUE7QUFDQTtBQUNBLGlCQUFpQixRQUFRO0FBQ3pCO0FBQ0E7QUFDQTtBQUNBO0FBQ0EsR0FBRztBQUNIO0FBQ0E7QUFDQTs7QUFFQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLEdBQUc7QUFDSCxrQ0FBa0M7QUFDbEM7QUFDQTtBQUNBOztBQUVBO0FBQ0EsRUFBRTtBQUNGO0FBQ0E7QUFDQTtBQUNBOztBQUVBO0FBQ0E7QUFDQTtBQUNBOztBQUVBLGdCQUFnQixzQkFBc0I7QUFDdEM7O0FBRUE7QUFDQTtBQUNBO0FBQ0E7QUFDQTs7QUFFQTtBQUNBO0FBQ0Esa0JBQWtCLG9CQUFvQjtBQUN0QztBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7O0FBRUE7QUFDQSIsImZpbGUiOiIuL25vZGVfbW9kdWxlcy9vYmplY3QtYXNzaWduL2luZGV4LmpzLmpzIiwic291cmNlc0NvbnRlbnQiOlsiLypcbm9iamVjdC1hc3NpZ25cbihjKSBTaW5kcmUgU29yaHVzXG5AbGljZW5zZSBNSVRcbiovXG5cbid1c2Ugc3RyaWN0Jztcbi8qIGVzbGludC1kaXNhYmxlIG5vLXVudXNlZC12YXJzICovXG52YXIgZ2V0T3duUHJvcGVydHlTeW1ib2xzID0gT2JqZWN0LmdldE93blByb3BlcnR5U3ltYm9scztcbnZhciBoYXNPd25Qcm9wZXJ0eSA9IE9iamVjdC5wcm90b3R5cGUuaGFzT3duUHJvcGVydHk7XG52YXIgcHJvcElzRW51bWVyYWJsZSA9IE9iamVjdC5wcm90b3R5cGUucHJvcGVydHlJc0VudW1lcmFibGU7XG5cbmZ1bmN0aW9uIHRvT2JqZWN0KHZhbCkge1xuXHRpZiAodmFsID09PSBudWxsIHx8IHZhbCA9PT0gdW5kZWZpbmVkKSB7XG5cdFx0dGhyb3cgbmV3IFR5cGVFcnJvcignT2JqZWN0LmFzc2lnbiBjYW5ub3QgYmUgY2FsbGVkIHdpdGggbnVsbCBvciB1bmRlZmluZWQnKTtcblx0fVxuXG5cdHJldHVybiBPYmplY3QodmFsKTtcbn1cblxuZnVuY3Rpb24gc2hvdWxkVXNlTmF0aXZlKCkge1xuXHR0cnkge1xuXHRcdGlmICghT2JqZWN0LmFzc2lnbikge1xuXHRcdFx0cmV0dXJuIGZhbHNlO1xuXHRcdH1cblxuXHRcdC8vIERldGVjdCBidWdneSBwcm9wZXJ0eSBlbnVtZXJhdGlvbiBvcmRlciBpbiBvbGRlciBWOCB2ZXJzaW9ucy5cblxuXHRcdC8vIGh0dHBzOi8vYnVncy5jaHJvbWl1bS5vcmcvcC92OC9pc3N1ZXMvZGV0YWlsP2lkPTQxMThcblx0XHR2YXIgdGVzdDEgPSBuZXcgU3RyaW5nKCdhYmMnKTsgIC8vIGVzbGludC1kaXNhYmxlLWxpbmUgbm8tbmV3LXdyYXBwZXJzXG5cdFx0dGVzdDFbNV0gPSAnZGUnO1xuXHRcdGlmIChPYmplY3QuZ2V0T3duUHJvcGVydHlOYW1lcyh0ZXN0MSlbMF0gPT09ICc1Jykge1xuXHRcdFx0cmV0dXJuIGZhbHNlO1xuXHRcdH1cblxuXHRcdC8vIGh0dHBzOi8vYnVncy5jaHJvbWl1bS5vcmcvcC92OC9pc3N1ZXMvZGV0YWlsP2lkPTMwNTZcblx0XHR2YXIgdGVzdDIgPSB7fTtcblx0XHRmb3IgKHZhciBpID0gMDsgaSA8IDEwOyBpKyspIHtcblx0XHRcdHRlc3QyWydfJyArIFN0cmluZy5mcm9tQ2hhckNvZGUoaSldID0gaTtcblx0XHR9XG5cdFx0dmFyIG9yZGVyMiA9IE9iamVjdC5nZXRPd25Qcm9wZXJ0eU5hbWVzKHRlc3QyKS5tYXAoZnVuY3Rpb24gKG4pIHtcblx0XHRcdHJldHVybiB0ZXN0MltuXTtcblx0XHR9KTtcblx0XHRpZiAob3JkZXIyLmpvaW4oJycpICE9PSAnMDEyMzQ1Njc4OScpIHtcblx0XHRcdHJldHVybiBmYWxzZTtcblx0XHR9XG5cblx0XHQvLyBodHRwczovL2J1Z3MuY2hyb21pdW0ub3JnL3AvdjgvaXNzdWVzL2RldGFpbD9pZD0zMDU2XG5cdFx0dmFyIHRlc3QzID0ge307XG5cdFx0J2FiY2RlZmdoaWprbG1ub3BxcnN0Jy5zcGxpdCgnJykuZm9yRWFjaChmdW5jdGlvbiAobGV0dGVyKSB7XG5cdFx0XHR0ZXN0M1tsZXR0ZXJdID0gbGV0dGVyO1xuXHRcdH0pO1xuXHRcdGlmIChPYmplY3Qua2V5cyhPYmplY3QuYXNzaWduKHt9LCB0ZXN0MykpLmpvaW4oJycpICE9PVxuXHRcdFx0XHQnYWJjZGVmZ2hpamtsbW5vcHFyc3QnKSB7XG5cdFx0XHRyZXR1cm4gZmFsc2U7XG5cdFx0fVxuXG5cdFx0cmV0dXJuIHRydWU7XG5cdH0gY2F0Y2ggKGVycikge1xuXHRcdC8vIFdlIGRvbid0IGV4cGVjdCBhbnkgb2YgdGhlIGFib3ZlIHRvIHRocm93LCBidXQgYmV0dGVyIHRvIGJlIHNhZmUuXG5cdFx0cmV0dXJuIGZhbHNlO1xuXHR9XG59XG5cbm1vZHVsZS5leHBvcnRzID0gc2hvdWxkVXNlTmF0aXZlKCkgPyBPYmplY3QuYXNzaWduIDogZnVuY3Rpb24gKHRhcmdldCwgc291cmNlKSB7XG5cdHZhciBmcm9tO1xuXHR2YXIgdG8gPSB0b09iamVjdCh0YXJnZXQpO1xuXHR2YXIgc3ltYm9scztcblxuXHRmb3IgKHZhciBzID0gMTsgcyA8IGFyZ3VtZW50cy5sZW5ndGg7IHMrKykge1xuXHRcdGZyb20gPSBPYmplY3QoYXJndW1lbnRzW3NdKTtcblxuXHRcdGZvciAodmFyIGtleSBpbiBmcm9tKSB7XG5cdFx0XHRpZiAoaGFzT3duUHJvcGVydHkuY2FsbChmcm9tLCBrZXkpKSB7XG5cdFx0XHRcdHRvW2tleV0gPSBmcm9tW2tleV07XG5cdFx0XHR9XG5cdFx0fVxuXG5cdFx0aWYgKGdldE93blByb3BlcnR5U3ltYm9scykge1xuXHRcdFx0c3ltYm9scyA9IGdldE93blByb3BlcnR5U3ltYm9scyhmcm9tKTtcblx0XHRcdGZvciAodmFyIGkgPSAwOyBpIDwgc3ltYm9scy5sZW5ndGg7IGkrKykge1xuXHRcdFx0XHRpZiAocHJvcElzRW51bWVyYWJsZS5jYWxsKGZyb20sIHN5bWJvbHNbaV0pKSB7XG5cdFx0XHRcdFx0dG9bc3ltYm9sc1tpXV0gPSBmcm9tW3N5bWJvbHNbaV1dO1xuXHRcdFx0XHR9XG5cdFx0XHR9XG5cdFx0fVxuXHR9XG5cblx0cmV0dXJuIHRvO1xufTtcblxuXG5cbi8vLy8vLy8vLy8vLy8vLy8vL1xuLy8gV0VCUEFDSyBGT09URVJcbi8vIC4vbm9kZV9tb2R1bGVzL29iamVjdC1hc3NpZ24vaW5kZXguanNcbi8vIG1vZHVsZSBpZCA9IC4vbm9kZV9tb2R1bGVzL29iamVjdC1hc3NpZ24vaW5kZXguanNcbi8vIG1vZHVsZSBjaHVua3MgPSAxIDMgNCA1IDYgOCA5IDExIDE4IDE5IDI0IDI1IDI2IDI3IDI5IDMwIDMxIDMzIDM0IDM1IDM2IDM3IDM4IDM5IDQwIDQxIDQyIDQzIDQ0IDQ1IDQ2IDQ3IDQ4IDUwIDUxIDUyIDUzIDU0IDU1IDU2IDU3IDU4IDU5IDYwIDYxIDYyIDYzIDY0IDY1IDY2IDY3IDY4IDY5IDcwIDcxIDcyIDczIDc0IDc2IDc3IDc4IDg1IDk0IDk1Il0sInNvdXJjZVJvb3QiOiIifQ==\n//# sourceURL=webpack-internal:///./node_modules/object-assign/index.js\n");
+/*
+object-assign
+(c) Sindre Sorhus
+@license MIT
+*/
+
+
+/* eslint-disable no-unused-vars */
+var getOwnPropertySymbols = Object.getOwnPropertySymbols;
+var hasOwnProperty = Object.prototype.hasOwnProperty;
+var propIsEnumerable = Object.prototype.propertyIsEnumerable;
+
+function toObject(val) {
+	if (val === null || val === undefined) {
+		throw new TypeError('Object.assign cannot be called with null or undefined');
+	}
+
+	return Object(val);
+}
+
+function shouldUseNative() {
+	try {
+		if (!Object.assign) {
+			return false;
+		}
+
+		// Detect buggy property enumeration order in older V8 versions.
+
+		// https://bugs.chromium.org/p/v8/issues/detail?id=4118
+		var test1 = new String('abc');  // eslint-disable-line no-new-wrappers
+		test1[5] = 'de';
+		if (Object.getOwnPropertyNames(test1)[0] === '5') {
+			return false;
+		}
+
+		// https://bugs.chromium.org/p/v8/issues/detail?id=3056
+		var test2 = {};
+		for (var i = 0; i < 10; i++) {
+			test2['_' + String.fromCharCode(i)] = i;
+		}
+		var order2 = Object.getOwnPropertyNames(test2).map(function (n) {
+			return test2[n];
+		});
+		if (order2.join('') !== '0123456789') {
+			return false;
+		}
+
+		// https://bugs.chromium.org/p/v8/issues/detail?id=3056
+		var test3 = {};
+		'abcdefghijklmnopqrst'.split('').forEach(function (letter) {
+			test3[letter] = letter;
+		});
+		if (Object.keys(Object.assign({}, test3)).join('') !==
+				'abcdefghijklmnopqrst') {
+			return false;
+		}
+
+		return true;
+	} catch (err) {
+		// We don't expect any of the above to throw, but better to be safe.
+		return false;
+	}
+}
+
+module.exports = shouldUseNative() ? Object.assign : function (target, source) {
+	var from;
+	var to = toObject(target);
+	var symbols;
+
+	for (var s = 1; s < arguments.length; s++) {
+		from = Object(arguments[s]);
+
+		for (var key in from) {
+			if (hasOwnProperty.call(from, key)) {
+				to[key] = from[key];
+			}
+		}
+
+		if (getOwnPropertySymbols) {
+			symbols = getOwnPropertySymbols(from);
+			for (var i = 0; i < symbols.length; i++) {
+				if (propIsEnumerable.call(from, symbols[i])) {
+					to[symbols[i]] = from[symbols[i]];
+				}
+			}
+		}
+	}
+
+	return to;
+};
+
 
 /***/ }),
 
@@ -94,7 +2109,212 @@ eval("/*\nobject-assign\n(c) Sindre Sorhus\n@license MIT\n*/\n\n\n/* eslint-disa
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-eval("\nvar strictUriEncode = __webpack_require__(\"./node_modules/strict-uri-encode/index.js\");\nvar objectAssign = __webpack_require__(\"./node_modules/object-assign/index.js\");\n\nfunction encoderForArrayFormat(opts) {\n\tswitch (opts.arrayFormat) {\n\t\tcase 'index':\n\t\t\treturn function (key, value, index) {\n\t\t\t\treturn value === null ? [\n\t\t\t\t\tencode(key, opts),\n\t\t\t\t\t'[',\n\t\t\t\t\tindex,\n\t\t\t\t\t']'\n\t\t\t\t].join('') : [\n\t\t\t\t\tencode(key, opts),\n\t\t\t\t\t'[',\n\t\t\t\t\tencode(index, opts),\n\t\t\t\t\t']=',\n\t\t\t\t\tencode(value, opts)\n\t\t\t\t].join('');\n\t\t\t};\n\n\t\tcase 'bracket':\n\t\t\treturn function (key, value) {\n\t\t\t\treturn value === null ? encode(key, opts) : [\n\t\t\t\t\tencode(key, opts),\n\t\t\t\t\t'[]=',\n\t\t\t\t\tencode(value, opts)\n\t\t\t\t].join('');\n\t\t\t};\n\n\t\tdefault:\n\t\t\treturn function (key, value) {\n\t\t\t\treturn value === null ? encode(key, opts) : [\n\t\t\t\t\tencode(key, opts),\n\t\t\t\t\t'=',\n\t\t\t\t\tencode(value, opts)\n\t\t\t\t].join('');\n\t\t\t};\n\t}\n}\n\nfunction parserForArrayFormat(opts) {\n\tvar result;\n\n\tswitch (opts.arrayFormat) {\n\t\tcase 'index':\n\t\t\treturn function (key, value, accumulator) {\n\t\t\t\tresult = /\\[(\\d*)\\]$/.exec(key);\n\n\t\t\t\tkey = key.replace(/\\[\\d*\\]$/, '');\n\n\t\t\t\tif (!result) {\n\t\t\t\t\taccumulator[key] = value;\n\t\t\t\t\treturn;\n\t\t\t\t}\n\n\t\t\t\tif (accumulator[key] === undefined) {\n\t\t\t\t\taccumulator[key] = {};\n\t\t\t\t}\n\n\t\t\t\taccumulator[key][result[1]] = value;\n\t\t\t};\n\n\t\tcase 'bracket':\n\t\t\treturn function (key, value, accumulator) {\n\t\t\t\tresult = /(\\[\\])$/.exec(key);\n\t\t\t\tkey = key.replace(/\\[\\]$/, '');\n\n\t\t\t\tif (!result) {\n\t\t\t\t\taccumulator[key] = value;\n\t\t\t\t\treturn;\n\t\t\t\t} else if (accumulator[key] === undefined) {\n\t\t\t\t\taccumulator[key] = [value];\n\t\t\t\t\treturn;\n\t\t\t\t}\n\n\t\t\t\taccumulator[key] = [].concat(accumulator[key], value);\n\t\t\t};\n\n\t\tdefault:\n\t\t\treturn function (key, value, accumulator) {\n\t\t\t\tif (accumulator[key] === undefined) {\n\t\t\t\t\taccumulator[key] = value;\n\t\t\t\t\treturn;\n\t\t\t\t}\n\n\t\t\t\taccumulator[key] = [].concat(accumulator[key], value);\n\t\t\t};\n\t}\n}\n\nfunction encode(value, opts) {\n\tif (opts.encode) {\n\t\treturn opts.strict ? strictUriEncode(value) : encodeURIComponent(value);\n\t}\n\n\treturn value;\n}\n\nfunction keysSorter(input) {\n\tif (Array.isArray(input)) {\n\t\treturn input.sort();\n\t} else if (typeof input === 'object') {\n\t\treturn keysSorter(Object.keys(input)).sort(function (a, b) {\n\t\t\treturn Number(a) - Number(b);\n\t\t}).map(function (key) {\n\t\t\treturn input[key];\n\t\t});\n\t}\n\n\treturn input;\n}\n\nexports.extract = function (str) {\n\treturn str.split('?')[1] || '';\n};\n\nexports.parse = function (str, opts) {\n\topts = objectAssign({arrayFormat: 'none'}, opts);\n\n\tvar formatter = parserForArrayFormat(opts);\n\n\t// Create an object with no prototype\n\t// https://github.com/sindresorhus/query-string/issues/47\n\tvar ret = Object.create(null);\n\n\tif (typeof str !== 'string') {\n\t\treturn ret;\n\t}\n\n\tstr = str.trim().replace(/^(\\?|#|&)/, '');\n\n\tif (!str) {\n\t\treturn ret;\n\t}\n\n\tstr.split('&').forEach(function (param) {\n\t\tvar parts = param.replace(/\\+/g, ' ').split('=');\n\t\t// Firefox (pre 40) decodes `%3D` to `=`\n\t\t// https://github.com/sindresorhus/query-string/pull/37\n\t\tvar key = parts.shift();\n\t\tvar val = parts.length > 0 ? parts.join('=') : undefined;\n\n\t\t// missing `=` should be `null`:\n\t\t// http://w3.org/TR/2012/WD-url-20120524/#collect-url-parameters\n\t\tval = val === undefined ? null : decodeURIComponent(val);\n\n\t\tformatter(decodeURIComponent(key), val, ret);\n\t});\n\n\treturn Object.keys(ret).sort().reduce(function (result, key) {\n\t\tvar val = ret[key];\n\t\tif (Boolean(val) && typeof val === 'object' && !Array.isArray(val)) {\n\t\t\t// Sort object keys, not values\n\t\t\tresult[key] = keysSorter(val);\n\t\t} else {\n\t\t\tresult[key] = val;\n\t\t}\n\n\t\treturn result;\n\t}, Object.create(null));\n};\n\nexports.stringify = function (obj, opts) {\n\tvar defaults = {\n\t\tencode: true,\n\t\tstrict: true,\n\t\tarrayFormat: 'none'\n\t};\n\n\topts = objectAssign(defaults, opts);\n\n\tvar formatter = encoderForArrayFormat(opts);\n\n\treturn obj ? Object.keys(obj).sort().map(function (key) {\n\t\tvar val = obj[key];\n\n\t\tif (val === undefined) {\n\t\t\treturn '';\n\t\t}\n\n\t\tif (val === null) {\n\t\t\treturn encode(key, opts);\n\t\t}\n\n\t\tif (Array.isArray(val)) {\n\t\t\tvar result = [];\n\n\t\t\tval.slice().forEach(function (val2) {\n\t\t\t\tif (val2 === undefined) {\n\t\t\t\t\treturn;\n\t\t\t\t}\n\n\t\t\t\tresult.push(formatter(key, val2, result.length));\n\t\t\t});\n\n\t\t\treturn result.join('&');\n\t\t}\n\n\t\treturn encode(key, opts) + '=' + encode(val, opts);\n\t}).filter(function (x) {\n\t\treturn x.length > 0;\n\t}).join('&') : '';\n};\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vLi9ub2RlX21vZHVsZXMvcXVlcnktc3RyaW5nL2luZGV4LmpzPzM4MGMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQWE7QUFDYixzQkFBc0IsbUJBQU8sQ0FBQywyQ0FBbUI7QUFDakQsbUJBQW1CLG1CQUFPLENBQUMsdUNBQWU7O0FBRTFDO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7O0FBRUE7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTs7QUFFQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTs7QUFFQTtBQUNBOztBQUVBO0FBQ0E7QUFDQTtBQUNBOztBQUVBOztBQUVBO0FBQ0E7QUFDQTtBQUNBOztBQUVBO0FBQ0E7QUFDQTs7QUFFQTtBQUNBOztBQUVBO0FBQ0E7QUFDQTtBQUNBOztBQUVBO0FBQ0E7QUFDQTtBQUNBLEtBQUs7QUFDTDtBQUNBO0FBQ0E7O0FBRUE7QUFDQTs7QUFFQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7O0FBRUE7QUFDQTtBQUNBO0FBQ0E7O0FBRUE7QUFDQTtBQUNBO0FBQ0E7O0FBRUE7QUFDQTs7QUFFQTtBQUNBO0FBQ0E7QUFDQSxFQUFFO0FBQ0Y7QUFDQTtBQUNBLEdBQUc7QUFDSDtBQUNBLEdBQUc7QUFDSDs7QUFFQTtBQUNBOztBQUVBO0FBQ0E7QUFDQTs7QUFFQTtBQUNBLHNCQUFzQixvQkFBb0I7O0FBRTFDOztBQUVBO0FBQ0E7QUFDQTs7QUFFQTtBQUNBO0FBQ0E7O0FBRUE7O0FBRUE7QUFDQTtBQUNBOztBQUVBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTs7QUFFQTtBQUNBO0FBQ0E7O0FBRUE7QUFDQSxFQUFFOztBQUVGO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSxHQUFHO0FBQ0g7QUFDQTs7QUFFQTtBQUNBLEVBQUU7QUFDRjs7QUFFQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7O0FBRUE7O0FBRUE7O0FBRUE7QUFDQTs7QUFFQTtBQUNBO0FBQ0E7O0FBRUE7QUFDQTtBQUNBOztBQUVBO0FBQ0E7O0FBRUE7QUFDQTtBQUNBO0FBQ0E7O0FBRUE7QUFDQSxJQUFJOztBQUVKO0FBQ0E7O0FBRUE7QUFDQSxFQUFFO0FBQ0Y7QUFDQSxFQUFFO0FBQ0YiLCJmaWxlIjoiLi9ub2RlX21vZHVsZXMvcXVlcnktc3RyaW5nL2luZGV4LmpzLmpzIiwic291cmNlc0NvbnRlbnQiOlsiJ3VzZSBzdHJpY3QnO1xudmFyIHN0cmljdFVyaUVuY29kZSA9IHJlcXVpcmUoJ3N0cmljdC11cmktZW5jb2RlJyk7XG52YXIgb2JqZWN0QXNzaWduID0gcmVxdWlyZSgnb2JqZWN0LWFzc2lnbicpO1xuXG5mdW5jdGlvbiBlbmNvZGVyRm9yQXJyYXlGb3JtYXQob3B0cykge1xuXHRzd2l0Y2ggKG9wdHMuYXJyYXlGb3JtYXQpIHtcblx0XHRjYXNlICdpbmRleCc6XG5cdFx0XHRyZXR1cm4gZnVuY3Rpb24gKGtleSwgdmFsdWUsIGluZGV4KSB7XG5cdFx0XHRcdHJldHVybiB2YWx1ZSA9PT0gbnVsbCA/IFtcblx0XHRcdFx0XHRlbmNvZGUoa2V5LCBvcHRzKSxcblx0XHRcdFx0XHQnWycsXG5cdFx0XHRcdFx0aW5kZXgsXG5cdFx0XHRcdFx0J10nXG5cdFx0XHRcdF0uam9pbignJykgOiBbXG5cdFx0XHRcdFx0ZW5jb2RlKGtleSwgb3B0cyksXG5cdFx0XHRcdFx0J1snLFxuXHRcdFx0XHRcdGVuY29kZShpbmRleCwgb3B0cyksXG5cdFx0XHRcdFx0J109Jyxcblx0XHRcdFx0XHRlbmNvZGUodmFsdWUsIG9wdHMpXG5cdFx0XHRcdF0uam9pbignJyk7XG5cdFx0XHR9O1xuXG5cdFx0Y2FzZSAnYnJhY2tldCc6XG5cdFx0XHRyZXR1cm4gZnVuY3Rpb24gKGtleSwgdmFsdWUpIHtcblx0XHRcdFx0cmV0dXJuIHZhbHVlID09PSBudWxsID8gZW5jb2RlKGtleSwgb3B0cykgOiBbXG5cdFx0XHRcdFx0ZW5jb2RlKGtleSwgb3B0cyksXG5cdFx0XHRcdFx0J1tdPScsXG5cdFx0XHRcdFx0ZW5jb2RlKHZhbHVlLCBvcHRzKVxuXHRcdFx0XHRdLmpvaW4oJycpO1xuXHRcdFx0fTtcblxuXHRcdGRlZmF1bHQ6XG5cdFx0XHRyZXR1cm4gZnVuY3Rpb24gKGtleSwgdmFsdWUpIHtcblx0XHRcdFx0cmV0dXJuIHZhbHVlID09PSBudWxsID8gZW5jb2RlKGtleSwgb3B0cykgOiBbXG5cdFx0XHRcdFx0ZW5jb2RlKGtleSwgb3B0cyksXG5cdFx0XHRcdFx0Jz0nLFxuXHRcdFx0XHRcdGVuY29kZSh2YWx1ZSwgb3B0cylcblx0XHRcdFx0XS5qb2luKCcnKTtcblx0XHRcdH07XG5cdH1cbn1cblxuZnVuY3Rpb24gcGFyc2VyRm9yQXJyYXlGb3JtYXQob3B0cykge1xuXHR2YXIgcmVzdWx0O1xuXG5cdHN3aXRjaCAob3B0cy5hcnJheUZvcm1hdCkge1xuXHRcdGNhc2UgJ2luZGV4Jzpcblx0XHRcdHJldHVybiBmdW5jdGlvbiAoa2V5LCB2YWx1ZSwgYWNjdW11bGF0b3IpIHtcblx0XHRcdFx0cmVzdWx0ID0gL1xcWyhcXGQqKVxcXSQvLmV4ZWMoa2V5KTtcblxuXHRcdFx0XHRrZXkgPSBrZXkucmVwbGFjZSgvXFxbXFxkKlxcXSQvLCAnJyk7XG5cblx0XHRcdFx0aWYgKCFyZXN1bHQpIHtcblx0XHRcdFx0XHRhY2N1bXVsYXRvcltrZXldID0gdmFsdWU7XG5cdFx0XHRcdFx0cmV0dXJuO1xuXHRcdFx0XHR9XG5cblx0XHRcdFx0aWYgKGFjY3VtdWxhdG9yW2tleV0gPT09IHVuZGVmaW5lZCkge1xuXHRcdFx0XHRcdGFjY3VtdWxhdG9yW2tleV0gPSB7fTtcblx0XHRcdFx0fVxuXG5cdFx0XHRcdGFjY3VtdWxhdG9yW2tleV1bcmVzdWx0WzFdXSA9IHZhbHVlO1xuXHRcdFx0fTtcblxuXHRcdGNhc2UgJ2JyYWNrZXQnOlxuXHRcdFx0cmV0dXJuIGZ1bmN0aW9uIChrZXksIHZhbHVlLCBhY2N1bXVsYXRvcikge1xuXHRcdFx0XHRyZXN1bHQgPSAvKFxcW1xcXSkkLy5leGVjKGtleSk7XG5cdFx0XHRcdGtleSA9IGtleS5yZXBsYWNlKC9cXFtcXF0kLywgJycpO1xuXG5cdFx0XHRcdGlmICghcmVzdWx0KSB7XG5cdFx0XHRcdFx0YWNjdW11bGF0b3Jba2V5XSA9IHZhbHVlO1xuXHRcdFx0XHRcdHJldHVybjtcblx0XHRcdFx0fSBlbHNlIGlmIChhY2N1bXVsYXRvcltrZXldID09PSB1bmRlZmluZWQpIHtcblx0XHRcdFx0XHRhY2N1bXVsYXRvcltrZXldID0gW3ZhbHVlXTtcblx0XHRcdFx0XHRyZXR1cm47XG5cdFx0XHRcdH1cblxuXHRcdFx0XHRhY2N1bXVsYXRvcltrZXldID0gW10uY29uY2F0KGFjY3VtdWxhdG9yW2tleV0sIHZhbHVlKTtcblx0XHRcdH07XG5cblx0XHRkZWZhdWx0OlxuXHRcdFx0cmV0dXJuIGZ1bmN0aW9uIChrZXksIHZhbHVlLCBhY2N1bXVsYXRvcikge1xuXHRcdFx0XHRpZiAoYWNjdW11bGF0b3Jba2V5XSA9PT0gdW5kZWZpbmVkKSB7XG5cdFx0XHRcdFx0YWNjdW11bGF0b3Jba2V5XSA9IHZhbHVlO1xuXHRcdFx0XHRcdHJldHVybjtcblx0XHRcdFx0fVxuXG5cdFx0XHRcdGFjY3VtdWxhdG9yW2tleV0gPSBbXS5jb25jYXQoYWNjdW11bGF0b3Jba2V5XSwgdmFsdWUpO1xuXHRcdFx0fTtcblx0fVxufVxuXG5mdW5jdGlvbiBlbmNvZGUodmFsdWUsIG9wdHMpIHtcblx0aWYgKG9wdHMuZW5jb2RlKSB7XG5cdFx0cmV0dXJuIG9wdHMuc3RyaWN0ID8gc3RyaWN0VXJpRW5jb2RlKHZhbHVlKSA6IGVuY29kZVVSSUNvbXBvbmVudCh2YWx1ZSk7XG5cdH1cblxuXHRyZXR1cm4gdmFsdWU7XG59XG5cbmZ1bmN0aW9uIGtleXNTb3J0ZXIoaW5wdXQpIHtcblx0aWYgKEFycmF5LmlzQXJyYXkoaW5wdXQpKSB7XG5cdFx0cmV0dXJuIGlucHV0LnNvcnQoKTtcblx0fSBlbHNlIGlmICh0eXBlb2YgaW5wdXQgPT09ICdvYmplY3QnKSB7XG5cdFx0cmV0dXJuIGtleXNTb3J0ZXIoT2JqZWN0LmtleXMoaW5wdXQpKS5zb3J0KGZ1bmN0aW9uIChhLCBiKSB7XG5cdFx0XHRyZXR1cm4gTnVtYmVyKGEpIC0gTnVtYmVyKGIpO1xuXHRcdH0pLm1hcChmdW5jdGlvbiAoa2V5KSB7XG5cdFx0XHRyZXR1cm4gaW5wdXRba2V5XTtcblx0XHR9KTtcblx0fVxuXG5cdHJldHVybiBpbnB1dDtcbn1cblxuZXhwb3J0cy5leHRyYWN0ID0gZnVuY3Rpb24gKHN0cikge1xuXHRyZXR1cm4gc3RyLnNwbGl0KCc/JylbMV0gfHwgJyc7XG59O1xuXG5leHBvcnRzLnBhcnNlID0gZnVuY3Rpb24gKHN0ciwgb3B0cykge1xuXHRvcHRzID0gb2JqZWN0QXNzaWduKHthcnJheUZvcm1hdDogJ25vbmUnfSwgb3B0cyk7XG5cblx0dmFyIGZvcm1hdHRlciA9IHBhcnNlckZvckFycmF5Rm9ybWF0KG9wdHMpO1xuXG5cdC8vIENyZWF0ZSBhbiBvYmplY3Qgd2l0aCBubyBwcm90b3R5cGVcblx0Ly8gaHR0cHM6Ly9naXRodWIuY29tL3NpbmRyZXNvcmh1cy9xdWVyeS1zdHJpbmcvaXNzdWVzLzQ3XG5cdHZhciByZXQgPSBPYmplY3QuY3JlYXRlKG51bGwpO1xuXG5cdGlmICh0eXBlb2Ygc3RyICE9PSAnc3RyaW5nJykge1xuXHRcdHJldHVybiByZXQ7XG5cdH1cblxuXHRzdHIgPSBzdHIudHJpbSgpLnJlcGxhY2UoL14oXFw/fCN8JikvLCAnJyk7XG5cblx0aWYgKCFzdHIpIHtcblx0XHRyZXR1cm4gcmV0O1xuXHR9XG5cblx0c3RyLnNwbGl0KCcmJykuZm9yRWFjaChmdW5jdGlvbiAocGFyYW0pIHtcblx0XHR2YXIgcGFydHMgPSBwYXJhbS5yZXBsYWNlKC9cXCsvZywgJyAnKS5zcGxpdCgnPScpO1xuXHRcdC8vIEZpcmVmb3ggKHByZSA0MCkgZGVjb2RlcyBgJTNEYCB0byBgPWBcblx0XHQvLyBodHRwczovL2dpdGh1Yi5jb20vc2luZHJlc29yaHVzL3F1ZXJ5LXN0cmluZy9wdWxsLzM3XG5cdFx0dmFyIGtleSA9IHBhcnRzLnNoaWZ0KCk7XG5cdFx0dmFyIHZhbCA9IHBhcnRzLmxlbmd0aCA+IDAgPyBwYXJ0cy5qb2luKCc9JykgOiB1bmRlZmluZWQ7XG5cblx0XHQvLyBtaXNzaW5nIGA9YCBzaG91bGQgYmUgYG51bGxgOlxuXHRcdC8vIGh0dHA6Ly93My5vcmcvVFIvMjAxMi9XRC11cmwtMjAxMjA1MjQvI2NvbGxlY3QtdXJsLXBhcmFtZXRlcnNcblx0XHR2YWwgPSB2YWwgPT09IHVuZGVmaW5lZCA/IG51bGwgOiBkZWNvZGVVUklDb21wb25lbnQodmFsKTtcblxuXHRcdGZvcm1hdHRlcihkZWNvZGVVUklDb21wb25lbnQoa2V5KSwgdmFsLCByZXQpO1xuXHR9KTtcblxuXHRyZXR1cm4gT2JqZWN0LmtleXMocmV0KS5zb3J0KCkucmVkdWNlKGZ1bmN0aW9uIChyZXN1bHQsIGtleSkge1xuXHRcdHZhciB2YWwgPSByZXRba2V5XTtcblx0XHRpZiAoQm9vbGVhbih2YWwpICYmIHR5cGVvZiB2YWwgPT09ICdvYmplY3QnICYmICFBcnJheS5pc0FycmF5KHZhbCkpIHtcblx0XHRcdC8vIFNvcnQgb2JqZWN0IGtleXMsIG5vdCB2YWx1ZXNcblx0XHRcdHJlc3VsdFtrZXldID0ga2V5c1NvcnRlcih2YWwpO1xuXHRcdH0gZWxzZSB7XG5cdFx0XHRyZXN1bHRba2V5XSA9IHZhbDtcblx0XHR9XG5cblx0XHRyZXR1cm4gcmVzdWx0O1xuXHR9LCBPYmplY3QuY3JlYXRlKG51bGwpKTtcbn07XG5cbmV4cG9ydHMuc3RyaW5naWZ5ID0gZnVuY3Rpb24gKG9iaiwgb3B0cykge1xuXHR2YXIgZGVmYXVsdHMgPSB7XG5cdFx0ZW5jb2RlOiB0cnVlLFxuXHRcdHN0cmljdDogdHJ1ZSxcblx0XHRhcnJheUZvcm1hdDogJ25vbmUnXG5cdH07XG5cblx0b3B0cyA9IG9iamVjdEFzc2lnbihkZWZhdWx0cywgb3B0cyk7XG5cblx0dmFyIGZvcm1hdHRlciA9IGVuY29kZXJGb3JBcnJheUZvcm1hdChvcHRzKTtcblxuXHRyZXR1cm4gb2JqID8gT2JqZWN0LmtleXMob2JqKS5zb3J0KCkubWFwKGZ1bmN0aW9uIChrZXkpIHtcblx0XHR2YXIgdmFsID0gb2JqW2tleV07XG5cblx0XHRpZiAodmFsID09PSB1bmRlZmluZWQpIHtcblx0XHRcdHJldHVybiAnJztcblx0XHR9XG5cblx0XHRpZiAodmFsID09PSBudWxsKSB7XG5cdFx0XHRyZXR1cm4gZW5jb2RlKGtleSwgb3B0cyk7XG5cdFx0fVxuXG5cdFx0aWYgKEFycmF5LmlzQXJyYXkodmFsKSkge1xuXHRcdFx0dmFyIHJlc3VsdCA9IFtdO1xuXG5cdFx0XHR2YWwuc2xpY2UoKS5mb3JFYWNoKGZ1bmN0aW9uICh2YWwyKSB7XG5cdFx0XHRcdGlmICh2YWwyID09PSB1bmRlZmluZWQpIHtcblx0XHRcdFx0XHRyZXR1cm47XG5cdFx0XHRcdH1cblxuXHRcdFx0XHRyZXN1bHQucHVzaChmb3JtYXR0ZXIoa2V5LCB2YWwyLCByZXN1bHQubGVuZ3RoKSk7XG5cdFx0XHR9KTtcblxuXHRcdFx0cmV0dXJuIHJlc3VsdC5qb2luKCcmJyk7XG5cdFx0fVxuXG5cdFx0cmV0dXJuIGVuY29kZShrZXksIG9wdHMpICsgJz0nICsgZW5jb2RlKHZhbCwgb3B0cyk7XG5cdH0pLmZpbHRlcihmdW5jdGlvbiAoeCkge1xuXHRcdHJldHVybiB4Lmxlbmd0aCA+IDA7XG5cdH0pLmpvaW4oJyYnKSA6ICcnO1xufTtcblxuXG5cbi8vLy8vLy8vLy8vLy8vLy8vL1xuLy8gV0VCUEFDSyBGT09URVJcbi8vIC4vbm9kZV9tb2R1bGVzL3F1ZXJ5LXN0cmluZy9pbmRleC5qc1xuLy8gbW9kdWxlIGlkID0gLi9ub2RlX21vZHVsZXMvcXVlcnktc3RyaW5nL2luZGV4LmpzXG4vLyBtb2R1bGUgY2h1bmtzID0gMSAzIDQgNSA2IDggOSAxMSAxOCAxOSAyNCAyNSAyNiAyNyAyOSAzMCAzMSAzMyAzNCAzNSAzNiAzNyAzOCAzOSA0MCA0MSA0MiA0MyA0NCA0NSA0NiA0NyA0OCA1MCA1MSA1MiA1MyA1NCA1NSA1NiA1NyA1OCA1OSA2MCA2MSA2MiA2MyA2NCA2NSA2NiA2NyA2OCA2OSA3MCA3MSA3MiA3MyA3NCA3NiA3NyA3OCA4NSA5NCA5NSJdLCJzb3VyY2VSb290IjoiIn0=\n//# sourceURL=webpack-internal:///./node_modules/query-string/index.js\n");
+
+var strictUriEncode = __webpack_require__("./node_modules/strict-uri-encode/index.js");
+var objectAssign = __webpack_require__("./node_modules/object-assign/index.js");
+
+function encoderForArrayFormat(opts) {
+	switch (opts.arrayFormat) {
+		case 'index':
+			return function (key, value, index) {
+				return value === null ? [
+					encode(key, opts),
+					'[',
+					index,
+					']'
+				].join('') : [
+					encode(key, opts),
+					'[',
+					encode(index, opts),
+					']=',
+					encode(value, opts)
+				].join('');
+			};
+
+		case 'bracket':
+			return function (key, value) {
+				return value === null ? encode(key, opts) : [
+					encode(key, opts),
+					'[]=',
+					encode(value, opts)
+				].join('');
+			};
+
+		default:
+			return function (key, value) {
+				return value === null ? encode(key, opts) : [
+					encode(key, opts),
+					'=',
+					encode(value, opts)
+				].join('');
+			};
+	}
+}
+
+function parserForArrayFormat(opts) {
+	var result;
+
+	switch (opts.arrayFormat) {
+		case 'index':
+			return function (key, value, accumulator) {
+				result = /\[(\d*)\]$/.exec(key);
+
+				key = key.replace(/\[\d*\]$/, '');
+
+				if (!result) {
+					accumulator[key] = value;
+					return;
+				}
+
+				if (accumulator[key] === undefined) {
+					accumulator[key] = {};
+				}
+
+				accumulator[key][result[1]] = value;
+			};
+
+		case 'bracket':
+			return function (key, value, accumulator) {
+				result = /(\[\])$/.exec(key);
+				key = key.replace(/\[\]$/, '');
+
+				if (!result) {
+					accumulator[key] = value;
+					return;
+				} else if (accumulator[key] === undefined) {
+					accumulator[key] = [value];
+					return;
+				}
+
+				accumulator[key] = [].concat(accumulator[key], value);
+			};
+
+		default:
+			return function (key, value, accumulator) {
+				if (accumulator[key] === undefined) {
+					accumulator[key] = value;
+					return;
+				}
+
+				accumulator[key] = [].concat(accumulator[key], value);
+			};
+	}
+}
+
+function encode(value, opts) {
+	if (opts.encode) {
+		return opts.strict ? strictUriEncode(value) : encodeURIComponent(value);
+	}
+
+	return value;
+}
+
+function keysSorter(input) {
+	if (Array.isArray(input)) {
+		return input.sort();
+	} else if (typeof input === 'object') {
+		return keysSorter(Object.keys(input)).sort(function (a, b) {
+			return Number(a) - Number(b);
+		}).map(function (key) {
+			return input[key];
+		});
+	}
+
+	return input;
+}
+
+exports.extract = function (str) {
+	return str.split('?')[1] || '';
+};
+
+exports.parse = function (str, opts) {
+	opts = objectAssign({arrayFormat: 'none'}, opts);
+
+	var formatter = parserForArrayFormat(opts);
+
+	// Create an object with no prototype
+	// https://github.com/sindresorhus/query-string/issues/47
+	var ret = Object.create(null);
+
+	if (typeof str !== 'string') {
+		return ret;
+	}
+
+	str = str.trim().replace(/^(\?|#|&)/, '');
+
+	if (!str) {
+		return ret;
+	}
+
+	str.split('&').forEach(function (param) {
+		var parts = param.replace(/\+/g, ' ').split('=');
+		// Firefox (pre 40) decodes `%3D` to `=`
+		// https://github.com/sindresorhus/query-string/pull/37
+		var key = parts.shift();
+		var val = parts.length > 0 ? parts.join('=') : undefined;
+
+		// missing `=` should be `null`:
+		// http://w3.org/TR/2012/WD-url-20120524/#collect-url-parameters
+		val = val === undefined ? null : decodeURIComponent(val);
+
+		formatter(decodeURIComponent(key), val, ret);
+	});
+
+	return Object.keys(ret).sort().reduce(function (result, key) {
+		var val = ret[key];
+		if (Boolean(val) && typeof val === 'object' && !Array.isArray(val)) {
+			// Sort object keys, not values
+			result[key] = keysSorter(val);
+		} else {
+			result[key] = val;
+		}
+
+		return result;
+	}, Object.create(null));
+};
+
+exports.stringify = function (obj, opts) {
+	var defaults = {
+		encode: true,
+		strict: true,
+		arrayFormat: 'none'
+	};
+
+	opts = objectAssign(defaults, opts);
+
+	var formatter = encoderForArrayFormat(opts);
+
+	return obj ? Object.keys(obj).sort().map(function (key) {
+		var val = obj[key];
+
+		if (val === undefined) {
+			return '';
+		}
+
+		if (val === null) {
+			return encode(key, opts);
+		}
+
+		if (Array.isArray(val)) {
+			var result = [];
+
+			val.slice().forEach(function (val2) {
+				if (val2 === undefined) {
+					return;
+				}
+
+				result.push(formatter(key, val2, result.length));
+			});
+
+			return result.join('&');
+		}
+
+		return encode(key, opts) + '=' + encode(val, opts);
+	}).filter(function (x) {
+		return x.length > 0;
+	}).join('&') : '';
+};
+
 
 /***/ }),
 
@@ -102,64 +2322,1475 @@ eval("\nvar strictUriEncode = __webpack_require__(\"./node_modules/strict-uri-en
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-eval("\nmodule.exports = function (str) {\n\treturn encodeURIComponent(str).replace(/[!'()*]/g, function (c) {\n\t\treturn '%' + c.charCodeAt(0).toString(16).toUpperCase();\n\t});\n};\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vLi9ub2RlX21vZHVsZXMvc3RyaWN0LXVyaS1lbmNvZGUvaW5kZXguanM/YWU5YSJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBYTtBQUNiO0FBQ0E7QUFDQTtBQUNBLEVBQUU7QUFDRiIsImZpbGUiOiIuL25vZGVfbW9kdWxlcy9zdHJpY3QtdXJpLWVuY29kZS9pbmRleC5qcy5qcyIsInNvdXJjZXNDb250ZW50IjpbIid1c2Ugc3RyaWN0Jztcbm1vZHVsZS5leHBvcnRzID0gZnVuY3Rpb24gKHN0cikge1xuXHRyZXR1cm4gZW5jb2RlVVJJQ29tcG9uZW50KHN0cikucmVwbGFjZSgvWyEnKCkqXS9nLCBmdW5jdGlvbiAoYykge1xuXHRcdHJldHVybiAnJScgKyBjLmNoYXJDb2RlQXQoMCkudG9TdHJpbmcoMTYpLnRvVXBwZXJDYXNlKCk7XG5cdH0pO1xufTtcblxuXG5cbi8vLy8vLy8vLy8vLy8vLy8vL1xuLy8gV0VCUEFDSyBGT09URVJcbi8vIC4vbm9kZV9tb2R1bGVzL3N0cmljdC11cmktZW5jb2RlL2luZGV4LmpzXG4vLyBtb2R1bGUgaWQgPSAuL25vZGVfbW9kdWxlcy9zdHJpY3QtdXJpLWVuY29kZS9pbmRleC5qc1xuLy8gbW9kdWxlIGNodW5rcyA9IDEgMyA0IDUgNiA4IDkgMTEgMTggMTkgMjQgMjUgMjYgMjcgMjkgMzAgMzEgMzMgMzQgMzUgMzYgMzcgMzggMzkgNDAgNDEgNDIgNDMgNDQgNDUgNDYgNDcgNDggNTAgNTEgNTIgNTMgNTQgNTUgNTYgNTcgNTggNTkgNjAgNjEgNjIgNjMgNjQgNjUgNjYgNjcgNjggNjkgNzAgNzEgNzIgNzMgNzQgNzYgNzcgNzggODUgOTQgOTUiXSwic291cmNlUm9vdCI6IiJ9\n//# sourceURL=webpack-internal:///./node_modules/strict-uri-encode/index.js\n");
+
+module.exports = function (str) {
+	return encodeURIComponent(str).replace(/[!'()*]/g, function (c) {
+		return '%' + c.charCodeAt(0).toString(16).toUpperCase();
+	});
+};
+
 
 /***/ }),
 
 /***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-4d29955f\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Report/Resources/assets/js/components/DataTableReportsCredits.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
-eval("var render = function() {\n  var _vm = this\n  var _h = _vm.$createElement\n  var _c = _vm._self._c || _h\n  return _c(\n    \"div\",\n    [\n      _c(\"div\", { staticClass: \"row\" }, [\n        _c(\"div\", { staticClass: \"col-md-12 col-lg-12 col-xl-12 \" }, [\n          _c(\n            \"div\",\n            { staticClass: \"row mt-2\" },\n            [\n              _c(\n                \"div\",\n                { staticClass: \"col-md-3\" },\n                [\n                  _c(\"label\", { staticClass: \"control-label\" }, [\n                    _vm._v(\"Periodo (Fecha de emisión)\")\n                  ]),\n                  _vm._v(\" \"),\n                  _c(\n                    \"el-select\",\n                    {\n                      on: { change: _vm.changePeriod },\n                      model: {\n                        value: _vm.form.period,\n                        callback: function($$v) {\n                          _vm.$set(_vm.form, \"period\", $$v)\n                        },\n                        expression: \"form.period\"\n                      }\n                    },\n                    [\n                      _c(\"el-option\", {\n                        key: \"month\",\n                        attrs: { value: \"month\", label: \"Por mes\" }\n                      }),\n                      _vm._v(\" \"),\n                      _c(\"el-option\", {\n                        key: \"between_months\",\n                        attrs: { value: \"between_months\", label: \"Entre meses\" }\n                      }),\n                      _vm._v(\" \"),\n                      _c(\"el-option\", {\n                        key: \"date\",\n                        attrs: { value: \"date\", label: \"Por fecha\" }\n                      }),\n                      _vm._v(\" \"),\n                      _c(\"el-option\", {\n                        key: \"between_dates\",\n                        attrs: { value: \"between_dates\", label: \"Entre fechas\" }\n                      })\n                    ],\n                    1\n                  )\n                ],\n                1\n              ),\n              _vm._v(\" \"),\n              _vm.form.period === \"month\" ||\n              _vm.form.period === \"between_months\"\n                ? [\n                    _c(\n                      \"div\",\n                      { staticClass: \"col-md-2\" },\n                      [\n                        _c(\"label\", { staticClass: \"w-100 control-label\" }, [\n                          _vm._v(\"Mes de\")\n                        ]),\n                        _vm._v(\" \"),\n                        _c(\"el-date-picker\", {\n                          staticClass: \"w-100\",\n                          attrs: {\n                            type: \"month\",\n                            \"value-format\": \"yyyy-MM\",\n                            format: \"MM/yyyy\",\n                            clearable: false\n                          },\n                          on: { change: _vm.changeDisabledMonths },\n                          model: {\n                            value: _vm.form.month_start,\n                            callback: function($$v) {\n                              _vm.$set(_vm.form, \"month_start\", $$v)\n                            },\n                            expression: \"form.month_start\"\n                          }\n                        })\n                      ],\n                      1\n                    )\n                  ]\n                : _vm._e(),\n              _vm._v(\" \"),\n              _vm.form.period === \"between_months\"\n                ? [\n                    _c(\n                      \"div\",\n                      { staticClass: \"col-md-2\" },\n                      [\n                        _c(\"label\", { staticClass: \"w-100 control-label\" }, [\n                          _vm._v(\"Mes al\")\n                        ]),\n                        _vm._v(\" \"),\n                        _c(\"el-date-picker\", {\n                          staticClass: \"w-100\",\n                          attrs: {\n                            type: \"month\",\n                            \"picker-options\": _vm.pickerOptionsMonths,\n                            \"value-format\": \"yyyy-MM\",\n                            format: \"MM/yyyy\",\n                            clearable: false\n                          },\n                          model: {\n                            value: _vm.form.month_end,\n                            callback: function($$v) {\n                              _vm.$set(_vm.form, \"month_end\", $$v)\n                            },\n                            expression: \"form.month_end\"\n                          }\n                        })\n                      ],\n                      1\n                    )\n                  ]\n                : _vm._e(),\n              _vm._v(\" \"),\n              _vm.form.period === \"date\" || _vm.form.period === \"between_dates\"\n                ? [\n                    _c(\n                      \"div\",\n                      { staticClass: \"col-md-2\" },\n                      [\n                        _c(\"label\", { staticClass: \"w-100 control-label\" }, [\n                          _vm._v(\"Fecha del\")\n                        ]),\n                        _vm._v(\" \"),\n                        _c(\"el-date-picker\", {\n                          staticClass: \"w-100\",\n                          attrs: {\n                            type: \"date\",\n                            \"value-format\": \"yyyy-MM-dd\",\n                            format: \"dd/MM/yyyy\",\n                            clearable: false\n                          },\n                          on: { change: _vm.changeDisabledDates },\n                          model: {\n                            value: _vm.form.date_start,\n                            callback: function($$v) {\n                              _vm.$set(_vm.form, \"date_start\", $$v)\n                            },\n                            expression: \"form.date_start\"\n                          }\n                        })\n                      ],\n                      1\n                    )\n                  ]\n                : _vm._e(),\n              _vm._v(\" \"),\n              _vm.form.period === \"between_dates\"\n                ? [\n                    _c(\n                      \"div\",\n                      { staticClass: \"col-md-2\" },\n                      [\n                        _c(\"label\", { staticClass: \"w-100 control-label\" }, [\n                          _vm._v(\"Fecha al\")\n                        ]),\n                        _vm._v(\" \"),\n                        _c(\"el-date-picker\", {\n                          staticClass: \"w-100\",\n                          attrs: {\n                            type: \"date\",\n                            \"picker-options\": _vm.pickerOptionsDates,\n                            \"value-format\": \"yyyy-MM-dd\",\n                            format: \"dd/MM/yyyy\",\n                            clearable: false\n                          },\n                          model: {\n                            value: _vm.form.date_end,\n                            callback: function($$v) {\n                              _vm.$set(_vm.form, \"date_end\", $$v)\n                            },\n                            expression: \"form.date_end\"\n                          }\n                        })\n                      ],\n                      1\n                    )\n                  ]\n                : _vm._e(),\n              _vm._v(\" \"),\n              _c(\"div\", { staticClass: \"col-lg-4 col-md-4\" }, [\n                _c(\n                  \"div\",\n                  { staticClass: \"form-group\" },\n                  [\n                    _c(\"label\", { staticClass: \"w-100 control-label\" }, [\n                      _vm._v(\n                        \"\\n                            Clientes\\n                        \"\n                      )\n                    ]),\n                    _vm._v(\" \"),\n                    _c(\n                      \"el-select\",\n                      {\n                        staticClass: \"w-100\",\n                        attrs: {\n                          filterable: \"\",\n                          remote: \"\",\n                          \"popper-class\": \"el-select-customers\",\n                          clearable: \"\",\n                          placeholder: \"Nombre o número de documento\",\n                          \"remote-method\": _vm.searchRemotePersons,\n                          loading: _vm.loading_search\n                        },\n                        on: { change: _vm.changePersons },\n                        model: {\n                          value: _vm.form.person_id,\n                          callback: function($$v) {\n                            _vm.$set(_vm.form, \"person_id\", $$v)\n                          },\n                          expression: \"form.person_id\"\n                        }\n                      },\n                      _vm._l(_vm.persons, function(option) {\n                        return _c(\"el-option\", {\n                          key: option.id,\n                          attrs: { value: option.id, label: option.description }\n                        })\n                      }),\n                      1\n                    )\n                  ],\n                  1\n                )\n              ]),\n              _vm._v(\" \"),\n              _c(\n                \"div\",\n                {\n                  staticClass: \"d-flex\",\n                  staticStyle: { \"margin-top\": \"29px\" }\n                },\n                [\n                  _c(\n                    \"el-button\",\n                    {\n                      staticClass: \"submit\",\n                      attrs: {\n                        type: \"primary\",\n                        loading: _vm.loading_submit,\n                        icon: \"el-icon-search\"\n                      },\n                      on: {\n                        click: function($event) {\n                          $event.preventDefault()\n                          return _vm.getRecordsByFilter.apply(null, arguments)\n                        }\n                      }\n                    },\n                    [_vm._v(\"Buscar\")]\n                  ),\n                  _vm._v(\" \"),\n                  _vm.records.length > 0 &&\n                  _vm.resource !== \"reports/document-detractions\"\n                    ? [\n                        _c(\n                          \"el-button\",\n                          {\n                            staticClass: \"submit\",\n                            attrs: { type: \"danger\", icon: \"el-icon-tickets\" },\n                            on: {\n                              click: function($event) {\n                                $event.preventDefault()\n                                return _vm.clickDownload(\"pdf\")\n                              }\n                            }\n                          },\n                          [_vm._v(\"Exportar PDF\")]\n                        ),\n                        _vm._v(\" \"),\n                        _c(\n                          \"el-button\",\n                          {\n                            staticClass: \"submit\",\n                            attrs: { type: \"success\" },\n                            on: {\n                              click: function($event) {\n                                $event.preventDefault()\n                                return _vm.clickDownload(\"excel\")\n                              }\n                            }\n                          },\n                          [\n                            _c(\"i\", { staticClass: \"fa fa-file-excel\" }),\n                            _vm._v(\n                              \" Exportal\\n                            Excel\"\n                            )\n                          ]\n                        ),\n                        _vm._v(\" \"),\n                        _c(\n                          \"el-button\",\n                          {\n                            staticClass: \"submit\",\n                            on: {\n                              click: function($event) {\n                                $event.preventDefault()\n                                return _vm.clickOpenWhatsapp.apply(\n                                  null,\n                                  arguments\n                                )\n                              }\n                            }\n                          },\n                          [\n                            _c(\"i\", { staticClass: \"fa fa-whatsapp\" }),\n                            _vm._v(\n                              \" Enviar\\n                            whatsapp\"\n                            )\n                          ]\n                        )\n                      ]\n                    : _vm._e()\n                ],\n                2\n              )\n            ],\n            2\n          ),\n          _vm._v(\" \"),\n          _c(\"div\", { staticClass: \"row mt-1 mb-4\" })\n        ]),\n        _vm._v(\" \"),\n        _c(\"div\", { staticClass: \"col-md-12\" }, [\n          _c(\"div\", { staticClass: \"table-responsive\" }, [\n            _c(\"table\", { staticClass: \"table\" }, [\n              _c(\"thead\", [_vm._t(\"heading\")], 2),\n              _vm._v(\" \"),\n              _c(\n                \"tbody\",\n                [\n                  _vm._l(_vm.records, function(row, index) {\n                    return _vm._t(\"default\", null, {\n                      row: row,\n                      index: _vm.customIndex(index)\n                    })\n                  })\n                ],\n                2\n              ),\n              _vm._v(\" \"),\n              _vm.resource == \"reports/sales\" ||\n              _vm.resource == \"reports/purchases\"\n                ? _c(\"tfoot\", [\n                    _c(\"tr\", [\n                      _c(\"td\", {\n                        attrs: {\n                          colspan: _vm.resource == \"reports/sales\" ? 7 : 8\n                        }\n                      }),\n                      _vm._v(\" \"),\n                      _vm._m(0),\n                      _vm._v(\" \"),\n                      _c(\"td\", [_vm._v(_vm._s(_vm.totals.acum_total_taxed))]),\n                      _vm._v(\" \"),\n                      _c(\"td\", [_vm._v(_vm._s(_vm.totals.acum_total_igv))]),\n                      _vm._v(\" \"),\n                      _c(\"td\", [_vm._v(_vm._s(_vm.totals.acum_total))])\n                    ]),\n                    _vm._v(\" \"),\n                    _c(\"tr\", [\n                      _c(\"td\", {\n                        attrs: {\n                          colspan: _vm.resource == \"reports/sales\" ? 7 : 8\n                        }\n                      }),\n                      _vm._v(\" \"),\n                      _vm._m(1),\n                      _vm._v(\" \"),\n                      _c(\"td\", [\n                        _vm._v(_vm._s(_vm.totals.acum_total_taxed_usd))\n                      ]),\n                      _vm._v(\" \"),\n                      _c(\"td\", [_vm._v(_vm._s(_vm.totals.acum_total_igv_usd))]),\n                      _vm._v(\" \"),\n                      _c(\"td\", [_vm._v(_vm._s(_vm.totals.acum_total_usd))])\n                    ])\n                  ])\n                : _vm._e()\n            ]),\n            _vm._v(\" \"),\n            _c(\n              \"div\",\n              [\n                _c(\"el-pagination\", {\n                  attrs: {\n                    layout: \"total, prev, pager, next\",\n                    total: _vm.pagination.total,\n                    \"current-page\": _vm.pagination.current_page,\n                    \"page-size\": _vm.pagination.per_page\n                  },\n                  on: {\n                    \"current-change\": _vm.getRecords,\n                    \"update:currentPage\": function($event) {\n                      return _vm.$set(_vm.pagination, \"current_page\", $event)\n                    },\n                    \"update:current-page\": function($event) {\n                      return _vm.$set(_vm.pagination, \"current_page\", $event)\n                    }\n                  }\n                })\n              ],\n              1\n            )\n          ])\n        ])\n      ]),\n      _vm._v(\" \"),\n      _c(\"whatsapp-form-report\", {\n        attrs: {\n          message: _vm.messageReport,\n          resource: _vm.resourceReport,\n          showWhatsappForm: _vm.showWhatsappForm\n        },\n        on: {\n          \"update:message\": function($event) {\n            _vm.messageReport = $event\n          },\n          \"update:showWhatsappForm\": function($event) {\n            _vm.showWhatsappForm = $event\n          },\n          \"update:show-whatsapp-form\": function($event) {\n            _vm.showWhatsappForm = $event\n          }\n        }\n      })\n    ],\n    1\n  )\n}\nvar staticRenderFns = [\n  function() {\n    var _vm = this\n    var _h = _vm.$createElement\n    var _c = _vm._self._c || _h\n    return _c(\"td\", [_c(\"strong\", [_vm._v(\"Totales PEN\")])])\n  },\n  function() {\n    var _vm = this\n    var _h = _vm.$createElement\n    var _c = _vm._self._c || _h\n    return _c(\"td\", [_c(\"strong\", [_vm._v(\"Totales USD\")])])\n  }\n]\nrender._withStripped = true\nmodule.exports = { render: render, staticRenderFns: staticRenderFns }\nif (false) {\n  module.hot.accept()\n  if (module.hot.data) {\n    require(\"vue-hot-reload-api\")      .rerender(\"data-v-4d29955f\", module.exports)\n  }\n}//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vLi9tb2R1bGVzL1JlcG9ydC9SZXNvdXJjZXMvYXNzZXRzL2pzL2NvbXBvbmVudHMvRGF0YVRhYmxlUmVwb3J0c0NyZWRpdHMudnVlPzUwNjEiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSxpQkFBaUIscUJBQXFCO0FBQ3RDLG1CQUFtQixnREFBZ0Q7QUFDbkU7QUFDQTtBQUNBLGFBQWEsMEJBQTBCO0FBQ3ZDO0FBQ0E7QUFDQTtBQUNBLGlCQUFpQiwwQkFBMEI7QUFDM0M7QUFDQSwrQkFBK0IsK0JBQStCO0FBQzlEO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLDJCQUEyQiwyQkFBMkI7QUFDdEQ7QUFDQTtBQUNBO0FBQ0E7QUFDQSx5QkFBeUI7QUFDekI7QUFDQTtBQUNBLHFCQUFxQjtBQUNyQjtBQUNBO0FBQ0E7QUFDQSxnQ0FBZ0M7QUFDaEMsdUJBQXVCO0FBQ3ZCO0FBQ0E7QUFDQTtBQUNBLGdDQUFnQztBQUNoQyx1QkFBdUI7QUFDdkI7QUFDQTtBQUNBO0FBQ0EsZ0NBQWdDO0FBQ2hDLHVCQUF1QjtBQUN2QjtBQUNBO0FBQ0E7QUFDQSxnQ0FBZ0M7QUFDaEMsdUJBQXVCO0FBQ3ZCO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLHVCQUF1QiwwQkFBMEI7QUFDakQ7QUFDQSxxQ0FBcUMscUNBQXFDO0FBQzFFO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0EsMkJBQTJCO0FBQzNCLCtCQUErQixtQ0FBbUM7QUFDbEU7QUFDQTtBQUNBO0FBQ0E7QUFDQSw2QkFBNkI7QUFDN0I7QUFDQTtBQUNBLHlCQUF5QjtBQUN6QjtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLHVCQUF1QiwwQkFBMEI7QUFDakQ7QUFDQSxxQ0FBcUMscUNBQXFDO0FBQzFFO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSwyQkFBMkI7QUFDM0I7QUFDQTtBQUNBO0FBQ0E7QUFDQSw2QkFBNkI7QUFDN0I7QUFDQTtBQUNBLHlCQUF5QjtBQUN6QjtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLHVCQUF1QiwwQkFBMEI7QUFDakQ7QUFDQSxxQ0FBcUMscUNBQXFDO0FBQzFFO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0EsMkJBQTJCO0FBQzNCLCtCQUErQixrQ0FBa0M7QUFDakU7QUFDQTtBQUNBO0FBQ0E7QUFDQSw2QkFBNkI7QUFDN0I7QUFDQTtBQUNBLHlCQUF5QjtBQUN6QjtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLHVCQUF1QiwwQkFBMEI7QUFDakQ7QUFDQSxxQ0FBcUMscUNBQXFDO0FBQzFFO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSwyQkFBMkI7QUFDM0I7QUFDQTtBQUNBO0FBQ0E7QUFDQSw2QkFBNkI7QUFDN0I7QUFDQTtBQUNBLHlCQUF5QjtBQUN6QjtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSx5QkFBeUIsbUNBQW1DO0FBQzVEO0FBQ0E7QUFDQSxtQkFBbUIsNEJBQTRCO0FBQy9DO0FBQ0EsaUNBQWlDLHFDQUFxQztBQUN0RTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0EseUJBQXlCO0FBQ3pCLDZCQUE2Qiw0QkFBNEI7QUFDekQ7QUFDQTtBQUNBO0FBQ0E7QUFDQSwyQkFBMkI7QUFDM0I7QUFDQTtBQUNBLHVCQUF1QjtBQUN2QjtBQUNBO0FBQ0E7QUFDQSxrQ0FBa0M7QUFDbEMseUJBQXlCO0FBQ3pCLHVCQUF1QjtBQUN2QjtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0EsZ0NBQWdDO0FBQ2hDLGlCQUFpQjtBQUNqQjtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSx1QkFBdUI7QUFDdkI7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0EscUJBQXFCO0FBQ3JCO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0Esb0NBQW9DLDBDQUEwQztBQUM5RTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSwyQkFBMkI7QUFDM0I7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSxvQ0FBb0Msa0JBQWtCO0FBQ3REO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLDJCQUEyQjtBQUMzQjtBQUNBLHFDQUFxQyxrQ0FBa0M7QUFDdkU7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSwyQkFBMkI7QUFDM0I7QUFDQSxxQ0FBcUMsZ0NBQWdDO0FBQ3JFO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSxxQkFBcUIsK0JBQStCO0FBQ3BEO0FBQ0E7QUFDQSxtQkFBbUIsMkJBQTJCO0FBQzlDLHFCQUFxQixrQ0FBa0M7QUFDdkQseUJBQXlCLHVCQUF1QjtBQUNoRDtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSxxQkFBcUI7QUFDckIsbUJBQW1CO0FBQ25CO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLHVCQUF1QjtBQUN2QjtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSx1QkFBdUI7QUFDdkI7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0EsbUJBQW1CO0FBQ25CO0FBQ0E7QUFDQTtBQUNBO0FBQ0EscUJBQXFCO0FBQ3JCO0FBQ0E7QUFDQTtBQUNBO0FBQ0EsaUJBQWlCO0FBQ2pCO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLFNBQVM7QUFDVDtBQUNBO0FBQ0E7QUFDQSxXQUFXO0FBQ1g7QUFDQTtBQUNBLFdBQVc7QUFDWDtBQUNBO0FBQ0E7QUFDQTtBQUNBLE9BQU87QUFDUDtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLEdBQUc7QUFDSDtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0Esa0JBQWtCO0FBQ2xCLElBQUksS0FBVTtBQUNkO0FBQ0E7QUFDQTtBQUNBO0FBQ0EiLCJmaWxlIjoiLi9ub2RlX21vZHVsZXMvdnVlLWxvYWRlci9saWIvdGVtcGxhdGUtY29tcGlsZXIvaW5kZXguanM/e1wiaWRcIjpcImRhdGEtdi00ZDI5OTU1ZlwiLFwiaGFzU2NvcGVkXCI6ZmFsc2UsXCJidWJsZVwiOntcInRyYW5zZm9ybXNcIjp7fX19IS4vbm9kZV9tb2R1bGVzL3Z1ZS1sb2FkZXIvbGliL3NlbGVjdG9yLmpzP3R5cGU9dGVtcGxhdGUmaW5kZXg9MCEuL21vZHVsZXMvUmVwb3J0L1Jlc291cmNlcy9hc3NldHMvanMvY29tcG9uZW50cy9EYXRhVGFibGVSZXBvcnRzQ3JlZGl0cy52dWUuanMiLCJzb3VyY2VzQ29udGVudCI6WyJ2YXIgcmVuZGVyID0gZnVuY3Rpb24oKSB7XG4gIHZhciBfdm0gPSB0aGlzXG4gIHZhciBfaCA9IF92bS4kY3JlYXRlRWxlbWVudFxuICB2YXIgX2MgPSBfdm0uX3NlbGYuX2MgfHwgX2hcbiAgcmV0dXJuIF9jKFxuICAgIFwiZGl2XCIsXG4gICAgW1xuICAgICAgX2MoXCJkaXZcIiwgeyBzdGF0aWNDbGFzczogXCJyb3dcIiB9LCBbXG4gICAgICAgIF9jKFwiZGl2XCIsIHsgc3RhdGljQ2xhc3M6IFwiY29sLW1kLTEyIGNvbC1sZy0xMiBjb2wteGwtMTIgXCIgfSwgW1xuICAgICAgICAgIF9jKFxuICAgICAgICAgICAgXCJkaXZcIixcbiAgICAgICAgICAgIHsgc3RhdGljQ2xhc3M6IFwicm93IG10LTJcIiB9LFxuICAgICAgICAgICAgW1xuICAgICAgICAgICAgICBfYyhcbiAgICAgICAgICAgICAgICBcImRpdlwiLFxuICAgICAgICAgICAgICAgIHsgc3RhdGljQ2xhc3M6IFwiY29sLW1kLTNcIiB9LFxuICAgICAgICAgICAgICAgIFtcbiAgICAgICAgICAgICAgICAgIF9jKFwibGFiZWxcIiwgeyBzdGF0aWNDbGFzczogXCJjb250cm9sLWxhYmVsXCIgfSwgW1xuICAgICAgICAgICAgICAgICAgICBfdm0uX3YoXCJQZXJpb2RvIChGZWNoYSBkZSBlbWlzacOzbilcIilcbiAgICAgICAgICAgICAgICAgIF0pLFxuICAgICAgICAgICAgICAgICAgX3ZtLl92KFwiIFwiKSxcbiAgICAgICAgICAgICAgICAgIF9jKFxuICAgICAgICAgICAgICAgICAgICBcImVsLXNlbGVjdFwiLFxuICAgICAgICAgICAgICAgICAgICB7XG4gICAgICAgICAgICAgICAgICAgICAgb246IHsgY2hhbmdlOiBfdm0uY2hhbmdlUGVyaW9kIH0sXG4gICAgICAgICAgICAgICAgICAgICAgbW9kZWw6IHtcbiAgICAgICAgICAgICAgICAgICAgICAgIHZhbHVlOiBfdm0uZm9ybS5wZXJpb2QsXG4gICAgICAgICAgICAgICAgICAgICAgICBjYWxsYmFjazogZnVuY3Rpb24oJCR2KSB7XG4gICAgICAgICAgICAgICAgICAgICAgICAgIF92bS4kc2V0KF92bS5mb3JtLCBcInBlcmlvZFwiLCAkJHYpXG4gICAgICAgICAgICAgICAgICAgICAgICB9LFxuICAgICAgICAgICAgICAgICAgICAgICAgZXhwcmVzc2lvbjogXCJmb3JtLnBlcmlvZFwiXG4gICAgICAgICAgICAgICAgICAgICAgfVxuICAgICAgICAgICAgICAgICAgICB9LFxuICAgICAgICAgICAgICAgICAgICBbXG4gICAgICAgICAgICAgICAgICAgICAgX2MoXCJlbC1vcHRpb25cIiwge1xuICAgICAgICAgICAgICAgICAgICAgICAga2V5OiBcIm1vbnRoXCIsXG4gICAgICAgICAgICAgICAgICAgICAgICBhdHRyczogeyB2YWx1ZTogXCJtb250aFwiLCBsYWJlbDogXCJQb3IgbWVzXCIgfVxuICAgICAgICAgICAgICAgICAgICAgIH0pLFxuICAgICAgICAgICAgICAgICAgICAgIF92bS5fdihcIiBcIiksXG4gICAgICAgICAgICAgICAgICAgICAgX2MoXCJlbC1vcHRpb25cIiwge1xuICAgICAgICAgICAgICAgICAgICAgICAga2V5OiBcImJldHdlZW5fbW9udGhzXCIsXG4gICAgICAgICAgICAgICAgICAgICAgICBhdHRyczogeyB2YWx1ZTogXCJiZXR3ZWVuX21vbnRoc1wiLCBsYWJlbDogXCJFbnRyZSBtZXNlc1wiIH1cbiAgICAgICAgICAgICAgICAgICAgICB9KSxcbiAgICAgICAgICAgICAgICAgICAgICBfdm0uX3YoXCIgXCIpLFxuICAgICAgICAgICAgICAgICAgICAgIF9jKFwiZWwtb3B0aW9uXCIsIHtcbiAgICAgICAgICAgICAgICAgICAgICAgIGtleTogXCJkYXRlXCIsXG4gICAgICAgICAgICAgICAgICAgICAgICBhdHRyczogeyB2YWx1ZTogXCJkYXRlXCIsIGxhYmVsOiBcIlBvciBmZWNoYVwiIH1cbiAgICAgICAgICAgICAgICAgICAgICB9KSxcbiAgICAgICAgICAgICAgICAgICAgICBfdm0uX3YoXCIgXCIpLFxuICAgICAgICAgICAgICAgICAgICAgIF9jKFwiZWwtb3B0aW9uXCIsIHtcbiAgICAgICAgICAgICAgICAgICAgICAgIGtleTogXCJiZXR3ZWVuX2RhdGVzXCIsXG4gICAgICAgICAgICAgICAgICAgICAgICBhdHRyczogeyB2YWx1ZTogXCJiZXR3ZWVuX2RhdGVzXCIsIGxhYmVsOiBcIkVudHJlIGZlY2hhc1wiIH1cbiAgICAgICAgICAgICAgICAgICAgICB9KVxuICAgICAgICAgICAgICAgICAgICBdLFxuICAgICAgICAgICAgICAgICAgICAxXG4gICAgICAgICAgICAgICAgICApXG4gICAgICAgICAgICAgICAgXSxcbiAgICAgICAgICAgICAgICAxXG4gICAgICAgICAgICAgICksXG4gICAgICAgICAgICAgIF92bS5fdihcIiBcIiksXG4gICAgICAgICAgICAgIF92bS5mb3JtLnBlcmlvZCA9PT0gXCJtb250aFwiIHx8XG4gICAgICAgICAgICAgIF92bS5mb3JtLnBlcmlvZCA9PT0gXCJiZXR3ZWVuX21vbnRoc1wiXG4gICAgICAgICAgICAgICAgPyBbXG4gICAgICAgICAgICAgICAgICAgIF9jKFxuICAgICAgICAgICAgICAgICAgICAgIFwiZGl2XCIsXG4gICAgICAgICAgICAgICAgICAgICAgeyBzdGF0aWNDbGFzczogXCJjb2wtbWQtMlwiIH0sXG4gICAgICAgICAgICAgICAgICAgICAgW1xuICAgICAgICAgICAgICAgICAgICAgICAgX2MoXCJsYWJlbFwiLCB7IHN0YXRpY0NsYXNzOiBcInctMTAwIGNvbnRyb2wtbGFiZWxcIiB9LCBbXG4gICAgICAgICAgICAgICAgICAgICAgICAgIF92bS5fdihcIk1lcyBkZVwiKVxuICAgICAgICAgICAgICAgICAgICAgICAgXSksXG4gICAgICAgICAgICAgICAgICAgICAgICBfdm0uX3YoXCIgXCIpLFxuICAgICAgICAgICAgICAgICAgICAgICAgX2MoXCJlbC1kYXRlLXBpY2tlclwiLCB7XG4gICAgICAgICAgICAgICAgICAgICAgICAgIHN0YXRpY0NsYXNzOiBcInctMTAwXCIsXG4gICAgICAgICAgICAgICAgICAgICAgICAgIGF0dHJzOiB7XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgdHlwZTogXCJtb250aFwiLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIFwidmFsdWUtZm9ybWF0XCI6IFwieXl5eS1NTVwiLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIGZvcm1hdDogXCJNTS95eXl5XCIsXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgY2xlYXJhYmxlOiBmYWxzZVxuICAgICAgICAgICAgICAgICAgICAgICAgICB9LFxuICAgICAgICAgICAgICAgICAgICAgICAgICBvbjogeyBjaGFuZ2U6IF92bS5jaGFuZ2VEaXNhYmxlZE1vbnRocyB9LFxuICAgICAgICAgICAgICAgICAgICAgICAgICBtb2RlbDoge1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgIHZhbHVlOiBfdm0uZm9ybS5tb250aF9zdGFydCxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICBjYWxsYmFjazogZnVuY3Rpb24oJCR2KSB7XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICBfdm0uJHNldChfdm0uZm9ybSwgXCJtb250aF9zdGFydFwiLCAkJHYpXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgfSxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICBleHByZXNzaW9uOiBcImZvcm0ubW9udGhfc3RhcnRcIlxuICAgICAgICAgICAgICAgICAgICAgICAgICB9XG4gICAgICAgICAgICAgICAgICAgICAgICB9KVxuICAgICAgICAgICAgICAgICAgICAgIF0sXG4gICAgICAgICAgICAgICAgICAgICAgMVxuICAgICAgICAgICAgICAgICAgICApXG4gICAgICAgICAgICAgICAgICBdXG4gICAgICAgICAgICAgICAgOiBfdm0uX2UoKSxcbiAgICAgICAgICAgICAgX3ZtLl92KFwiIFwiKSxcbiAgICAgICAgICAgICAgX3ZtLmZvcm0ucGVyaW9kID09PSBcImJldHdlZW5fbW9udGhzXCJcbiAgICAgICAgICAgICAgICA/IFtcbiAgICAgICAgICAgICAgICAgICAgX2MoXG4gICAgICAgICAgICAgICAgICAgICAgXCJkaXZcIixcbiAgICAgICAgICAgICAgICAgICAgICB7IHN0YXRpY0NsYXNzOiBcImNvbC1tZC0yXCIgfSxcbiAgICAgICAgICAgICAgICAgICAgICBbXG4gICAgICAgICAgICAgICAgICAgICAgICBfYyhcImxhYmVsXCIsIHsgc3RhdGljQ2xhc3M6IFwidy0xMDAgY29udHJvbC1sYWJlbFwiIH0sIFtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgX3ZtLl92KFwiTWVzIGFsXCIpXG4gICAgICAgICAgICAgICAgICAgICAgICBdKSxcbiAgICAgICAgICAgICAgICAgICAgICAgIF92bS5fdihcIiBcIiksXG4gICAgICAgICAgICAgICAgICAgICAgICBfYyhcImVsLWRhdGUtcGlja2VyXCIsIHtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgc3RhdGljQ2xhc3M6IFwidy0xMDBcIixcbiAgICAgICAgICAgICAgICAgICAgICAgICAgYXR0cnM6IHtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICB0eXBlOiBcIm1vbnRoXCIsXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgXCJwaWNrZXItb3B0aW9uc1wiOiBfdm0ucGlja2VyT3B0aW9uc01vbnRocyxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICBcInZhbHVlLWZvcm1hdFwiOiBcInl5eXktTU1cIixcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICBmb3JtYXQ6IFwiTU0veXl5eVwiLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNsZWFyYWJsZTogZmFsc2VcbiAgICAgICAgICAgICAgICAgICAgICAgICAgfSxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgbW9kZWw6IHtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICB2YWx1ZTogX3ZtLmZvcm0ubW9udGhfZW5kLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNhbGxiYWNrOiBmdW5jdGlvbigkJHYpIHtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIF92bS4kc2V0KF92bS5mb3JtLCBcIm1vbnRoX2VuZFwiLCAkJHYpXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgfSxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICBleHByZXNzaW9uOiBcImZvcm0ubW9udGhfZW5kXCJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgfVxuICAgICAgICAgICAgICAgICAgICAgICAgfSlcbiAgICAgICAgICAgICAgICAgICAgICBdLFxuICAgICAgICAgICAgICAgICAgICAgIDFcbiAgICAgICAgICAgICAgICAgICAgKVxuICAgICAgICAgICAgICAgICAgXVxuICAgICAgICAgICAgICAgIDogX3ZtLl9lKCksXG4gICAgICAgICAgICAgIF92bS5fdihcIiBcIiksXG4gICAgICAgICAgICAgIF92bS5mb3JtLnBlcmlvZCA9PT0gXCJkYXRlXCIgfHwgX3ZtLmZvcm0ucGVyaW9kID09PSBcImJldHdlZW5fZGF0ZXNcIlxuICAgICAgICAgICAgICAgID8gW1xuICAgICAgICAgICAgICAgICAgICBfYyhcbiAgICAgICAgICAgICAgICAgICAgICBcImRpdlwiLFxuICAgICAgICAgICAgICAgICAgICAgIHsgc3RhdGljQ2xhc3M6IFwiY29sLW1kLTJcIiB9LFxuICAgICAgICAgICAgICAgICAgICAgIFtcbiAgICAgICAgICAgICAgICAgICAgICAgIF9jKFwibGFiZWxcIiwgeyBzdGF0aWNDbGFzczogXCJ3LTEwMCBjb250cm9sLWxhYmVsXCIgfSwgW1xuICAgICAgICAgICAgICAgICAgICAgICAgICBfdm0uX3YoXCJGZWNoYSBkZWxcIilcbiAgICAgICAgICAgICAgICAgICAgICAgIF0pLFxuICAgICAgICAgICAgICAgICAgICAgICAgX3ZtLl92KFwiIFwiKSxcbiAgICAgICAgICAgICAgICAgICAgICAgIF9jKFwiZWwtZGF0ZS1waWNrZXJcIiwge1xuICAgICAgICAgICAgICAgICAgICAgICAgICBzdGF0aWNDbGFzczogXCJ3LTEwMFwiLFxuICAgICAgICAgICAgICAgICAgICAgICAgICBhdHRyczoge1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgIHR5cGU6IFwiZGF0ZVwiLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIFwidmFsdWUtZm9ybWF0XCI6IFwieXl5eS1NTS1kZFwiLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIGZvcm1hdDogXCJkZC9NTS95eXl5XCIsXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgY2xlYXJhYmxlOiBmYWxzZVxuICAgICAgICAgICAgICAgICAgICAgICAgICB9LFxuICAgICAgICAgICAgICAgICAgICAgICAgICBvbjogeyBjaGFuZ2U6IF92bS5jaGFuZ2VEaXNhYmxlZERhdGVzIH0sXG4gICAgICAgICAgICAgICAgICAgICAgICAgIG1vZGVsOiB7XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgdmFsdWU6IF92bS5mb3JtLmRhdGVfc3RhcnQsXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgY2FsbGJhY2s6IGZ1bmN0aW9uKCQkdikge1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgX3ZtLiRzZXQoX3ZtLmZvcm0sIFwiZGF0ZV9zdGFydFwiLCAkJHYpXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgfSxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICBleHByZXNzaW9uOiBcImZvcm0uZGF0ZV9zdGFydFwiXG4gICAgICAgICAgICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgICAgICAgICAgICAgIH0pXG4gICAgICAgICAgICAgICAgICAgICAgXSxcbiAgICAgICAgICAgICAgICAgICAgICAxXG4gICAgICAgICAgICAgICAgICAgIClcbiAgICAgICAgICAgICAgICAgIF1cbiAgICAgICAgICAgICAgICA6IF92bS5fZSgpLFxuICAgICAgICAgICAgICBfdm0uX3YoXCIgXCIpLFxuICAgICAgICAgICAgICBfdm0uZm9ybS5wZXJpb2QgPT09IFwiYmV0d2Vlbl9kYXRlc1wiXG4gICAgICAgICAgICAgICAgPyBbXG4gICAgICAgICAgICAgICAgICAgIF9jKFxuICAgICAgICAgICAgICAgICAgICAgIFwiZGl2XCIsXG4gICAgICAgICAgICAgICAgICAgICAgeyBzdGF0aWNDbGFzczogXCJjb2wtbWQtMlwiIH0sXG4gICAgICAgICAgICAgICAgICAgICAgW1xuICAgICAgICAgICAgICAgICAgICAgICAgX2MoXCJsYWJlbFwiLCB7IHN0YXRpY0NsYXNzOiBcInctMTAwIGNvbnRyb2wtbGFiZWxcIiB9LCBbXG4gICAgICAgICAgICAgICAgICAgICAgICAgIF92bS5fdihcIkZlY2hhIGFsXCIpXG4gICAgICAgICAgICAgICAgICAgICAgICBdKSxcbiAgICAgICAgICAgICAgICAgICAgICAgIF92bS5fdihcIiBcIiksXG4gICAgICAgICAgICAgICAgICAgICAgICBfYyhcImVsLWRhdGUtcGlja2VyXCIsIHtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgc3RhdGljQ2xhc3M6IFwidy0xMDBcIixcbiAgICAgICAgICAgICAgICAgICAgICAgICAgYXR0cnM6IHtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICB0eXBlOiBcImRhdGVcIixcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICBcInBpY2tlci1vcHRpb25zXCI6IF92bS5waWNrZXJPcHRpb25zRGF0ZXMsXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgXCJ2YWx1ZS1mb3JtYXRcIjogXCJ5eXl5LU1NLWRkXCIsXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgZm9ybWF0OiBcImRkL01NL3l5eXlcIixcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICBjbGVhcmFibGU6IGZhbHNlXG4gICAgICAgICAgICAgICAgICAgICAgICAgIH0sXG4gICAgICAgICAgICAgICAgICAgICAgICAgIG1vZGVsOiB7XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgdmFsdWU6IF92bS5mb3JtLmRhdGVfZW5kLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNhbGxiYWNrOiBmdW5jdGlvbigkJHYpIHtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIF92bS4kc2V0KF92bS5mb3JtLCBcImRhdGVfZW5kXCIsICQkdilcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICB9LFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIGV4cHJlc3Npb246IFwiZm9ybS5kYXRlX2VuZFwiXG4gICAgICAgICAgICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgICAgICAgICAgICAgIH0pXG4gICAgICAgICAgICAgICAgICAgICAgXSxcbiAgICAgICAgICAgICAgICAgICAgICAxXG4gICAgICAgICAgICAgICAgICAgIClcbiAgICAgICAgICAgICAgICAgIF1cbiAgICAgICAgICAgICAgICA6IF92bS5fZSgpLFxuICAgICAgICAgICAgICBfdm0uX3YoXCIgXCIpLFxuICAgICAgICAgICAgICBfYyhcImRpdlwiLCB7IHN0YXRpY0NsYXNzOiBcImNvbC1sZy00IGNvbC1tZC00XCIgfSwgW1xuICAgICAgICAgICAgICAgIF9jKFxuICAgICAgICAgICAgICAgICAgXCJkaXZcIixcbiAgICAgICAgICAgICAgICAgIHsgc3RhdGljQ2xhc3M6IFwiZm9ybS1ncm91cFwiIH0sXG4gICAgICAgICAgICAgICAgICBbXG4gICAgICAgICAgICAgICAgICAgIF9jKFwibGFiZWxcIiwgeyBzdGF0aWNDbGFzczogXCJ3LTEwMCBjb250cm9sLWxhYmVsXCIgfSwgW1xuICAgICAgICAgICAgICAgICAgICAgIF92bS5fdihcbiAgICAgICAgICAgICAgICAgICAgICAgIFwiXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIENsaWVudGVzXFxuICAgICAgICAgICAgICAgICAgICAgICAgXCJcbiAgICAgICAgICAgICAgICAgICAgICApXG4gICAgICAgICAgICAgICAgICAgIF0pLFxuICAgICAgICAgICAgICAgICAgICBfdm0uX3YoXCIgXCIpLFxuICAgICAgICAgICAgICAgICAgICBfYyhcbiAgICAgICAgICAgICAgICAgICAgICBcImVsLXNlbGVjdFwiLFxuICAgICAgICAgICAgICAgICAgICAgIHtcbiAgICAgICAgICAgICAgICAgICAgICAgIHN0YXRpY0NsYXNzOiBcInctMTAwXCIsXG4gICAgICAgICAgICAgICAgICAgICAgICBhdHRyczoge1xuICAgICAgICAgICAgICAgICAgICAgICAgICBmaWx0ZXJhYmxlOiBcIlwiLFxuICAgICAgICAgICAgICAgICAgICAgICAgICByZW1vdGU6IFwiXCIsXG4gICAgICAgICAgICAgICAgICAgICAgICAgIFwicG9wcGVyLWNsYXNzXCI6IFwiZWwtc2VsZWN0LWN1c3RvbWVyc1wiLFxuICAgICAgICAgICAgICAgICAgICAgICAgICBjbGVhcmFibGU6IFwiXCIsXG4gICAgICAgICAgICAgICAgICAgICAgICAgIHBsYWNlaG9sZGVyOiBcIk5vbWJyZSBvIG7Dum1lcm8gZGUgZG9jdW1lbnRvXCIsXG4gICAgICAgICAgICAgICAgICAgICAgICAgIFwicmVtb3RlLW1ldGhvZFwiOiBfdm0uc2VhcmNoUmVtb3RlUGVyc29ucyxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgbG9hZGluZzogX3ZtLmxvYWRpbmdfc2VhcmNoXG4gICAgICAgICAgICAgICAgICAgICAgICB9LFxuICAgICAgICAgICAgICAgICAgICAgICAgb246IHsgY2hhbmdlOiBfdm0uY2hhbmdlUGVyc29ucyB9LFxuICAgICAgICAgICAgICAgICAgICAgICAgbW9kZWw6IHtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgdmFsdWU6IF92bS5mb3JtLnBlcnNvbl9pZCxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgY2FsbGJhY2s6IGZ1bmN0aW9uKCQkdikge1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgIF92bS4kc2V0KF92bS5mb3JtLCBcInBlcnNvbl9pZFwiLCAkJHYpXG4gICAgICAgICAgICAgICAgICAgICAgICAgIH0sXG4gICAgICAgICAgICAgICAgICAgICAgICAgIGV4cHJlc3Npb246IFwiZm9ybS5wZXJzb25faWRcIlxuICAgICAgICAgICAgICAgICAgICAgICAgfVxuICAgICAgICAgICAgICAgICAgICAgIH0sXG4gICAgICAgICAgICAgICAgICAgICAgX3ZtLl9sKF92bS5wZXJzb25zLCBmdW5jdGlvbihvcHRpb24pIHtcbiAgICAgICAgICAgICAgICAgICAgICAgIHJldHVybiBfYyhcImVsLW9wdGlvblwiLCB7XG4gICAgICAgICAgICAgICAgICAgICAgICAgIGtleTogb3B0aW9uLmlkLFxuICAgICAgICAgICAgICAgICAgICAgICAgICBhdHRyczogeyB2YWx1ZTogb3B0aW9uLmlkLCBsYWJlbDogb3B0aW9uLmRlc2NyaXB0aW9uIH1cbiAgICAgICAgICAgICAgICAgICAgICAgIH0pXG4gICAgICAgICAgICAgICAgICAgICAgfSksXG4gICAgICAgICAgICAgICAgICAgICAgMVxuICAgICAgICAgICAgICAgICAgICApXG4gICAgICAgICAgICAgICAgICBdLFxuICAgICAgICAgICAgICAgICAgMVxuICAgICAgICAgICAgICAgIClcbiAgICAgICAgICAgICAgXSksXG4gICAgICAgICAgICAgIF92bS5fdihcIiBcIiksXG4gICAgICAgICAgICAgIF9jKFxuICAgICAgICAgICAgICAgIFwiZGl2XCIsXG4gICAgICAgICAgICAgICAge1xuICAgICAgICAgICAgICAgICAgc3RhdGljQ2xhc3M6IFwiZC1mbGV4XCIsXG4gICAgICAgICAgICAgICAgICBzdGF0aWNTdHlsZTogeyBcIm1hcmdpbi10b3BcIjogXCIyOXB4XCIgfVxuICAgICAgICAgICAgICAgIH0sXG4gICAgICAgICAgICAgICAgW1xuICAgICAgICAgICAgICAgICAgX2MoXG4gICAgICAgICAgICAgICAgICAgIFwiZWwtYnV0dG9uXCIsXG4gICAgICAgICAgICAgICAgICAgIHtcbiAgICAgICAgICAgICAgICAgICAgICBzdGF0aWNDbGFzczogXCJzdWJtaXRcIixcbiAgICAgICAgICAgICAgICAgICAgICBhdHRyczoge1xuICAgICAgICAgICAgICAgICAgICAgICAgdHlwZTogXCJwcmltYXJ5XCIsXG4gICAgICAgICAgICAgICAgICAgICAgICBsb2FkaW5nOiBfdm0ubG9hZGluZ19zdWJtaXQsXG4gICAgICAgICAgICAgICAgICAgICAgICBpY29uOiBcImVsLWljb24tc2VhcmNoXCJcbiAgICAgICAgICAgICAgICAgICAgICB9LFxuICAgICAgICAgICAgICAgICAgICAgIG9uOiB7XG4gICAgICAgICAgICAgICAgICAgICAgICBjbGljazogZnVuY3Rpb24oJGV2ZW50KSB7XG4gICAgICAgICAgICAgICAgICAgICAgICAgICRldmVudC5wcmV2ZW50RGVmYXVsdCgpXG4gICAgICAgICAgICAgICAgICAgICAgICAgIHJldHVybiBfdm0uZ2V0UmVjb3Jkc0J5RmlsdGVyLmFwcGx5KG51bGwsIGFyZ3VtZW50cylcbiAgICAgICAgICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgICAgICAgICAgICB9XG4gICAgICAgICAgICAgICAgICAgIH0sXG4gICAgICAgICAgICAgICAgICAgIFtfdm0uX3YoXCJCdXNjYXJcIildXG4gICAgICAgICAgICAgICAgICApLFxuICAgICAgICAgICAgICAgICAgX3ZtLl92KFwiIFwiKSxcbiAgICAgICAgICAgICAgICAgIF92bS5yZWNvcmRzLmxlbmd0aCA+IDAgJiZcbiAgICAgICAgICAgICAgICAgIF92bS5yZXNvdXJjZSAhPT0gXCJyZXBvcnRzL2RvY3VtZW50LWRldHJhY3Rpb25zXCJcbiAgICAgICAgICAgICAgICAgICAgPyBbXG4gICAgICAgICAgICAgICAgICAgICAgICBfYyhcbiAgICAgICAgICAgICAgICAgICAgICAgICAgXCJlbC1idXR0b25cIixcbiAgICAgICAgICAgICAgICAgICAgICAgICAge1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgIHN0YXRpY0NsYXNzOiBcInN1Ym1pdFwiLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIGF0dHJzOiB7IHR5cGU6IFwiZGFuZ2VyXCIsIGljb246IFwiZWwtaWNvbi10aWNrZXRzXCIgfSxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICBvbjoge1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY2xpY2s6IGZ1bmN0aW9uKCRldmVudCkge1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAkZXZlbnQucHJldmVudERlZmF1bHQoKVxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZXR1cm4gX3ZtLmNsaWNrRG93bmxvYWQoXCJwZGZcIilcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgICAgICAgICAgICAgICAgICB9XG4gICAgICAgICAgICAgICAgICAgICAgICAgIH0sXG4gICAgICAgICAgICAgICAgICAgICAgICAgIFtfdm0uX3YoXCJFeHBvcnRhciBQREZcIildXG4gICAgICAgICAgICAgICAgICAgICAgICApLFxuICAgICAgICAgICAgICAgICAgICAgICAgX3ZtLl92KFwiIFwiKSxcbiAgICAgICAgICAgICAgICAgICAgICAgIF9jKFxuICAgICAgICAgICAgICAgICAgICAgICAgICBcImVsLWJ1dHRvblwiLFxuICAgICAgICAgICAgICAgICAgICAgICAgICB7XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgc3RhdGljQ2xhc3M6IFwic3VibWl0XCIsXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgYXR0cnM6IHsgdHlwZTogXCJzdWNjZXNzXCIgfSxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICBvbjoge1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY2xpY2s6IGZ1bmN0aW9uKCRldmVudCkge1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAkZXZlbnQucHJldmVudERlZmF1bHQoKVxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZXR1cm4gX3ZtLmNsaWNrRG93bmxvYWQoXCJleGNlbFwiKVxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfVxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgICAgICAgICAgICAgICAgfSxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgW1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgIF9jKFwiaVwiLCB7IHN0YXRpY0NsYXNzOiBcImZhIGZhLWZpbGUtZXhjZWxcIiB9KSxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICBfdm0uX3YoXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICBcIiBFeHBvcnRhbFxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICBFeGNlbFwiXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgKVxuICAgICAgICAgICAgICAgICAgICAgICAgICBdXG4gICAgICAgICAgICAgICAgICAgICAgICApLFxuICAgICAgICAgICAgICAgICAgICAgICAgX3ZtLl92KFwiIFwiKSxcbiAgICAgICAgICAgICAgICAgICAgICAgIF9jKFxuICAgICAgICAgICAgICAgICAgICAgICAgICBcImVsLWJ1dHRvblwiLFxuICAgICAgICAgICAgICAgICAgICAgICAgICB7XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgc3RhdGljQ2xhc3M6IFwic3VibWl0XCIsXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgb246IHtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNsaWNrOiBmdW5jdGlvbigkZXZlbnQpIHtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgJGV2ZW50LnByZXZlbnREZWZhdWx0KClcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmV0dXJuIF92bS5jbGlja09wZW5XaGF0c2FwcC5hcHBseShcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBudWxsLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGFyZ3VtZW50c1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICApXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICB9XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgfVxuICAgICAgICAgICAgICAgICAgICAgICAgICB9LFxuICAgICAgICAgICAgICAgICAgICAgICAgICBbXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgX2MoXCJpXCIsIHsgc3RhdGljQ2xhc3M6IFwiZmEgZmEtd2hhdHNhcHBcIiB9KSxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICBfdm0uX3YoXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICBcIiBFbnZpYXJcXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgd2hhdHNhcHBcIlxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIClcbiAgICAgICAgICAgICAgICAgICAgICAgICAgXVxuICAgICAgICAgICAgICAgICAgICAgICAgKVxuICAgICAgICAgICAgICAgICAgICAgIF1cbiAgICAgICAgICAgICAgICAgICAgOiBfdm0uX2UoKVxuICAgICAgICAgICAgICAgIF0sXG4gICAgICAgICAgICAgICAgMlxuICAgICAgICAgICAgICApXG4gICAgICAgICAgICBdLFxuICAgICAgICAgICAgMlxuICAgICAgICAgICksXG4gICAgICAgICAgX3ZtLl92KFwiIFwiKSxcbiAgICAgICAgICBfYyhcImRpdlwiLCB7IHN0YXRpY0NsYXNzOiBcInJvdyBtdC0xIG1iLTRcIiB9KVxuICAgICAgICBdKSxcbiAgICAgICAgX3ZtLl92KFwiIFwiKSxcbiAgICAgICAgX2MoXCJkaXZcIiwgeyBzdGF0aWNDbGFzczogXCJjb2wtbWQtMTJcIiB9LCBbXG4gICAgICAgICAgX2MoXCJkaXZcIiwgeyBzdGF0aWNDbGFzczogXCJ0YWJsZS1yZXNwb25zaXZlXCIgfSwgW1xuICAgICAgICAgICAgX2MoXCJ0YWJsZVwiLCB7IHN0YXRpY0NsYXNzOiBcInRhYmxlXCIgfSwgW1xuICAgICAgICAgICAgICBfYyhcInRoZWFkXCIsIFtfdm0uX3QoXCJoZWFkaW5nXCIpXSwgMiksXG4gICAgICAgICAgICAgIF92bS5fdihcIiBcIiksXG4gICAgICAgICAgICAgIF9jKFxuICAgICAgICAgICAgICAgIFwidGJvZHlcIixcbiAgICAgICAgICAgICAgICBbXG4gICAgICAgICAgICAgICAgICBfdm0uX2woX3ZtLnJlY29yZHMsIGZ1bmN0aW9uKHJvdywgaW5kZXgpIHtcbiAgICAgICAgICAgICAgICAgICAgcmV0dXJuIF92bS5fdChcImRlZmF1bHRcIiwgbnVsbCwge1xuICAgICAgICAgICAgICAgICAgICAgIHJvdzogcm93LFxuICAgICAgICAgICAgICAgICAgICAgIGluZGV4OiBfdm0uY3VzdG9tSW5kZXgoaW5kZXgpXG4gICAgICAgICAgICAgICAgICAgIH0pXG4gICAgICAgICAgICAgICAgICB9KVxuICAgICAgICAgICAgICAgIF0sXG4gICAgICAgICAgICAgICAgMlxuICAgICAgICAgICAgICApLFxuICAgICAgICAgICAgICBfdm0uX3YoXCIgXCIpLFxuICAgICAgICAgICAgICBfdm0ucmVzb3VyY2UgPT0gXCJyZXBvcnRzL3NhbGVzXCIgfHxcbiAgICAgICAgICAgICAgX3ZtLnJlc291cmNlID09IFwicmVwb3J0cy9wdXJjaGFzZXNcIlxuICAgICAgICAgICAgICAgID8gX2MoXCJ0Zm9vdFwiLCBbXG4gICAgICAgICAgICAgICAgICAgIF9jKFwidHJcIiwgW1xuICAgICAgICAgICAgICAgICAgICAgIF9jKFwidGRcIiwge1xuICAgICAgICAgICAgICAgICAgICAgICAgYXR0cnM6IHtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgY29sc3BhbjogX3ZtLnJlc291cmNlID09IFwicmVwb3J0cy9zYWxlc1wiID8gNyA6IDhcbiAgICAgICAgICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgICAgICAgICAgICB9KSxcbiAgICAgICAgICAgICAgICAgICAgICBfdm0uX3YoXCIgXCIpLFxuICAgICAgICAgICAgICAgICAgICAgIF92bS5fbSgwKSxcbiAgICAgICAgICAgICAgICAgICAgICBfdm0uX3YoXCIgXCIpLFxuICAgICAgICAgICAgICAgICAgICAgIF9jKFwidGRcIiwgW192bS5fdihfdm0uX3MoX3ZtLnRvdGFscy5hY3VtX3RvdGFsX3RheGVkKSldKSxcbiAgICAgICAgICAgICAgICAgICAgICBfdm0uX3YoXCIgXCIpLFxuICAgICAgICAgICAgICAgICAgICAgIF9jKFwidGRcIiwgW192bS5fdihfdm0uX3MoX3ZtLnRvdGFscy5hY3VtX3RvdGFsX2lndikpXSksXG4gICAgICAgICAgICAgICAgICAgICAgX3ZtLl92KFwiIFwiKSxcbiAgICAgICAgICAgICAgICAgICAgICBfYyhcInRkXCIsIFtfdm0uX3YoX3ZtLl9zKF92bS50b3RhbHMuYWN1bV90b3RhbCkpXSlcbiAgICAgICAgICAgICAgICAgICAgXSksXG4gICAgICAgICAgICAgICAgICAgIF92bS5fdihcIiBcIiksXG4gICAgICAgICAgICAgICAgICAgIF9jKFwidHJcIiwgW1xuICAgICAgICAgICAgICAgICAgICAgIF9jKFwidGRcIiwge1xuICAgICAgICAgICAgICAgICAgICAgICAgYXR0cnM6IHtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgY29sc3BhbjogX3ZtLnJlc291cmNlID09IFwicmVwb3J0cy9zYWxlc1wiID8gNyA6IDhcbiAgICAgICAgICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgICAgICAgICAgICB9KSxcbiAgICAgICAgICAgICAgICAgICAgICBfdm0uX3YoXCIgXCIpLFxuICAgICAgICAgICAgICAgICAgICAgIF92bS5fbSgxKSxcbiAgICAgICAgICAgICAgICAgICAgICBfdm0uX3YoXCIgXCIpLFxuICAgICAgICAgICAgICAgICAgICAgIF9jKFwidGRcIiwgW1xuICAgICAgICAgICAgICAgICAgICAgICAgX3ZtLl92KF92bS5fcyhfdm0udG90YWxzLmFjdW1fdG90YWxfdGF4ZWRfdXNkKSlcbiAgICAgICAgICAgICAgICAgICAgICBdKSxcbiAgICAgICAgICAgICAgICAgICAgICBfdm0uX3YoXCIgXCIpLFxuICAgICAgICAgICAgICAgICAgICAgIF9jKFwidGRcIiwgW192bS5fdihfdm0uX3MoX3ZtLnRvdGFscy5hY3VtX3RvdGFsX2lndl91c2QpKV0pLFxuICAgICAgICAgICAgICAgICAgICAgIF92bS5fdihcIiBcIiksXG4gICAgICAgICAgICAgICAgICAgICAgX2MoXCJ0ZFwiLCBbX3ZtLl92KF92bS5fcyhfdm0udG90YWxzLmFjdW1fdG90YWxfdXNkKSldKVxuICAgICAgICAgICAgICAgICAgICBdKVxuICAgICAgICAgICAgICAgICAgXSlcbiAgICAgICAgICAgICAgICA6IF92bS5fZSgpXG4gICAgICAgICAgICBdKSxcbiAgICAgICAgICAgIF92bS5fdihcIiBcIiksXG4gICAgICAgICAgICBfYyhcbiAgICAgICAgICAgICAgXCJkaXZcIixcbiAgICAgICAgICAgICAgW1xuICAgICAgICAgICAgICAgIF9jKFwiZWwtcGFnaW5hdGlvblwiLCB7XG4gICAgICAgICAgICAgICAgICBhdHRyczoge1xuICAgICAgICAgICAgICAgICAgICBsYXlvdXQ6IFwidG90YWwsIHByZXYsIHBhZ2VyLCBuZXh0XCIsXG4gICAgICAgICAgICAgICAgICAgIHRvdGFsOiBfdm0ucGFnaW5hdGlvbi50b3RhbCxcbiAgICAgICAgICAgICAgICAgICAgXCJjdXJyZW50LXBhZ2VcIjogX3ZtLnBhZ2luYXRpb24uY3VycmVudF9wYWdlLFxuICAgICAgICAgICAgICAgICAgICBcInBhZ2Utc2l6ZVwiOiBfdm0ucGFnaW5hdGlvbi5wZXJfcGFnZVxuICAgICAgICAgICAgICAgICAgfSxcbiAgICAgICAgICAgICAgICAgIG9uOiB7XG4gICAgICAgICAgICAgICAgICAgIFwiY3VycmVudC1jaGFuZ2VcIjogX3ZtLmdldFJlY29yZHMsXG4gICAgICAgICAgICAgICAgICAgIFwidXBkYXRlOmN1cnJlbnRQYWdlXCI6IGZ1bmN0aW9uKCRldmVudCkge1xuICAgICAgICAgICAgICAgICAgICAgIHJldHVybiBfdm0uJHNldChfdm0ucGFnaW5hdGlvbiwgXCJjdXJyZW50X3BhZ2VcIiwgJGV2ZW50KVxuICAgICAgICAgICAgICAgICAgICB9LFxuICAgICAgICAgICAgICAgICAgICBcInVwZGF0ZTpjdXJyZW50LXBhZ2VcIjogZnVuY3Rpb24oJGV2ZW50KSB7XG4gICAgICAgICAgICAgICAgICAgICAgcmV0dXJuIF92bS4kc2V0KF92bS5wYWdpbmF0aW9uLCBcImN1cnJlbnRfcGFnZVwiLCAkZXZlbnQpXG4gICAgICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgICAgICB9KVxuICAgICAgICAgICAgICBdLFxuICAgICAgICAgICAgICAxXG4gICAgICAgICAgICApXG4gICAgICAgICAgXSlcbiAgICAgICAgXSlcbiAgICAgIF0pLFxuICAgICAgX3ZtLl92KFwiIFwiKSxcbiAgICAgIF9jKFwid2hhdHNhcHAtZm9ybS1yZXBvcnRcIiwge1xuICAgICAgICBhdHRyczoge1xuICAgICAgICAgIG1lc3NhZ2U6IF92bS5tZXNzYWdlUmVwb3J0LFxuICAgICAgICAgIHJlc291cmNlOiBfdm0ucmVzb3VyY2VSZXBvcnQsXG4gICAgICAgICAgc2hvd1doYXRzYXBwRm9ybTogX3ZtLnNob3dXaGF0c2FwcEZvcm1cbiAgICAgICAgfSxcbiAgICAgICAgb246IHtcbiAgICAgICAgICBcInVwZGF0ZTptZXNzYWdlXCI6IGZ1bmN0aW9uKCRldmVudCkge1xuICAgICAgICAgICAgX3ZtLm1lc3NhZ2VSZXBvcnQgPSAkZXZlbnRcbiAgICAgICAgICB9LFxuICAgICAgICAgIFwidXBkYXRlOnNob3dXaGF0c2FwcEZvcm1cIjogZnVuY3Rpb24oJGV2ZW50KSB7XG4gICAgICAgICAgICBfdm0uc2hvd1doYXRzYXBwRm9ybSA9ICRldmVudFxuICAgICAgICAgIH0sXG4gICAgICAgICAgXCJ1cGRhdGU6c2hvdy13aGF0c2FwcC1mb3JtXCI6IGZ1bmN0aW9uKCRldmVudCkge1xuICAgICAgICAgICAgX3ZtLnNob3dXaGF0c2FwcEZvcm0gPSAkZXZlbnRcbiAgICAgICAgICB9XG4gICAgICAgIH1cbiAgICAgIH0pXG4gICAgXSxcbiAgICAxXG4gIClcbn1cbnZhciBzdGF0aWNSZW5kZXJGbnMgPSBbXG4gIGZ1bmN0aW9uKCkge1xuICAgIHZhciBfdm0gPSB0aGlzXG4gICAgdmFyIF9oID0gX3ZtLiRjcmVhdGVFbGVtZW50XG4gICAgdmFyIF9jID0gX3ZtLl9zZWxmLl9jIHx8IF9oXG4gICAgcmV0dXJuIF9jKFwidGRcIiwgW19jKFwic3Ryb25nXCIsIFtfdm0uX3YoXCJUb3RhbGVzIFBFTlwiKV0pXSlcbiAgfSxcbiAgZnVuY3Rpb24oKSB7XG4gICAgdmFyIF92bSA9IHRoaXNcbiAgICB2YXIgX2ggPSBfdm0uJGNyZWF0ZUVsZW1lbnRcbiAgICB2YXIgX2MgPSBfdm0uX3NlbGYuX2MgfHwgX2hcbiAgICByZXR1cm4gX2MoXCJ0ZFwiLCBbX2MoXCJzdHJvbmdcIiwgW192bS5fdihcIlRvdGFsZXMgVVNEXCIpXSldKVxuICB9XG5dXG5yZW5kZXIuX3dpdGhTdHJpcHBlZCA9IHRydWVcbm1vZHVsZS5leHBvcnRzID0geyByZW5kZXI6IHJlbmRlciwgc3RhdGljUmVuZGVyRm5zOiBzdGF0aWNSZW5kZXJGbnMgfVxuaWYgKG1vZHVsZS5ob3QpIHtcbiAgbW9kdWxlLmhvdC5hY2NlcHQoKVxuICBpZiAobW9kdWxlLmhvdC5kYXRhKSB7XG4gICAgcmVxdWlyZShcInZ1ZS1ob3QtcmVsb2FkLWFwaVwiKSAgICAgIC5yZXJlbmRlcihcImRhdGEtdi00ZDI5OTU1ZlwiLCBtb2R1bGUuZXhwb3J0cylcbiAgfVxufVxuXG5cbi8vLy8vLy8vLy8vLy8vLy8vL1xuLy8gV0VCUEFDSyBGT09URVJcbi8vIC4vbm9kZV9tb2R1bGVzL3Z1ZS1sb2FkZXIvbGliL3RlbXBsYXRlLWNvbXBpbGVyP3tcImlkXCI6XCJkYXRhLXYtNGQyOTk1NWZcIixcImhhc1Njb3BlZFwiOmZhbHNlLFwiYnVibGVcIjp7XCJ0cmFuc2Zvcm1zXCI6e319fSEuL25vZGVfbW9kdWxlcy92dWUtbG9hZGVyL2xpYi9zZWxlY3Rvci5qcz90eXBlPXRlbXBsYXRlJmluZGV4PTAhLi9tb2R1bGVzL1JlcG9ydC9SZXNvdXJjZXMvYXNzZXRzL2pzL2NvbXBvbmVudHMvRGF0YVRhYmxlUmVwb3J0c0NyZWRpdHMudnVlXG4vLyBtb2R1bGUgaWQgPSAuL25vZGVfbW9kdWxlcy92dWUtbG9hZGVyL2xpYi90ZW1wbGF0ZS1jb21waWxlci9pbmRleC5qcz97XCJpZFwiOlwiZGF0YS12LTRkMjk5NTVmXCIsXCJoYXNTY29wZWRcIjpmYWxzZSxcImJ1YmxlXCI6e1widHJhbnNmb3Jtc1wiOnt9fX0hLi9ub2RlX21vZHVsZXMvdnVlLWxvYWRlci9saWIvc2VsZWN0b3IuanM/dHlwZT10ZW1wbGF0ZSZpbmRleD0wIS4vbW9kdWxlcy9SZXBvcnQvUmVzb3VyY2VzL2Fzc2V0cy9qcy9jb21wb25lbnRzL0RhdGFUYWJsZVJlcG9ydHNDcmVkaXRzLnZ1ZVxuLy8gbW9kdWxlIGNodW5rcyA9IDEiXSwic291cmNlUm9vdCI6IiJ9\n//# sourceURL=webpack-internal:///./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-4d29955f\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Report/Resources/assets/js/components/DataTableReportsCredits.vue\n");
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    [
+      _c("div", { staticClass: "row" }, [
+        _c("div", { staticClass: "col-md-12 col-lg-12 col-xl-12 " }, [
+          _c(
+            "div",
+            { staticClass: "row mt-2" },
+            [
+              _c(
+                "div",
+                { staticClass: "col-md-3" },
+                [
+                  _c("label", { staticClass: "control-label" }, [
+                    _vm._v("Periodo (Fecha de emisión)")
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "el-select",
+                    {
+                      on: { change: _vm.changePeriod },
+                      model: {
+                        value: _vm.form.period,
+                        callback: function($$v) {
+                          _vm.$set(_vm.form, "period", $$v)
+                        },
+                        expression: "form.period"
+                      }
+                    },
+                    [
+                      _c("el-option", {
+                        key: "month",
+                        attrs: { value: "month", label: "Por mes" }
+                      }),
+                      _vm._v(" "),
+                      _c("el-option", {
+                        key: "between_months",
+                        attrs: { value: "between_months", label: "Entre meses" }
+                      }),
+                      _vm._v(" "),
+                      _c("el-option", {
+                        key: "date",
+                        attrs: { value: "date", label: "Por fecha" }
+                      }),
+                      _vm._v(" "),
+                      _c("el-option", {
+                        key: "between_dates",
+                        attrs: { value: "between_dates", label: "Entre fechas" }
+                      })
+                    ],
+                    1
+                  )
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _vm.form.period === "month" ||
+              _vm.form.period === "between_months"
+                ? [
+                    _c(
+                      "div",
+                      { staticClass: "col-md-2" },
+                      [
+                        _c("label", { staticClass: "w-100 control-label" }, [
+                          _vm._v("Mes de")
+                        ]),
+                        _vm._v(" "),
+                        _c("el-date-picker", {
+                          staticClass: "w-100",
+                          attrs: {
+                            type: "month",
+                            "value-format": "yyyy-MM",
+                            format: "MM/yyyy",
+                            clearable: false
+                          },
+                          on: { change: _vm.changeDisabledMonths },
+                          model: {
+                            value: _vm.form.month_start,
+                            callback: function($$v) {
+                              _vm.$set(_vm.form, "month_start", $$v)
+                            },
+                            expression: "form.month_start"
+                          }
+                        })
+                      ],
+                      1
+                    )
+                  ]
+                : _vm._e(),
+              _vm._v(" "),
+              _vm.form.period === "between_months"
+                ? [
+                    _c(
+                      "div",
+                      { staticClass: "col-md-2" },
+                      [
+                        _c("label", { staticClass: "w-100 control-label" }, [
+                          _vm._v("Mes al")
+                        ]),
+                        _vm._v(" "),
+                        _c("el-date-picker", {
+                          staticClass: "w-100",
+                          attrs: {
+                            type: "month",
+                            "picker-options": _vm.pickerOptionsMonths,
+                            "value-format": "yyyy-MM",
+                            format: "MM/yyyy",
+                            clearable: false
+                          },
+                          model: {
+                            value: _vm.form.month_end,
+                            callback: function($$v) {
+                              _vm.$set(_vm.form, "month_end", $$v)
+                            },
+                            expression: "form.month_end"
+                          }
+                        })
+                      ],
+                      1
+                    )
+                  ]
+                : _vm._e(),
+              _vm._v(" "),
+              _vm.form.period === "date" || _vm.form.period === "between_dates"
+                ? [
+                    _c(
+                      "div",
+                      { staticClass: "col-md-2" },
+                      [
+                        _c("label", { staticClass: "w-100 control-label" }, [
+                          _vm._v("Fecha del")
+                        ]),
+                        _vm._v(" "),
+                        _c("el-date-picker", {
+                          staticClass: "w-100",
+                          attrs: {
+                            type: "date",
+                            "value-format": "yyyy-MM-dd",
+                            format: "dd/MM/yyyy",
+                            clearable: false
+                          },
+                          on: { change: _vm.changeDisabledDates },
+                          model: {
+                            value: _vm.form.date_start,
+                            callback: function($$v) {
+                              _vm.$set(_vm.form, "date_start", $$v)
+                            },
+                            expression: "form.date_start"
+                          }
+                        })
+                      ],
+                      1
+                    )
+                  ]
+                : _vm._e(),
+              _vm._v(" "),
+              _vm.form.period === "between_dates"
+                ? [
+                    _c(
+                      "div",
+                      { staticClass: "col-md-2" },
+                      [
+                        _c("label", { staticClass: "w-100 control-label" }, [
+                          _vm._v("Fecha al")
+                        ]),
+                        _vm._v(" "),
+                        _c("el-date-picker", {
+                          staticClass: "w-100",
+                          attrs: {
+                            type: "date",
+                            "picker-options": _vm.pickerOptionsDates,
+                            "value-format": "yyyy-MM-dd",
+                            format: "dd/MM/yyyy",
+                            clearable: false
+                          },
+                          model: {
+                            value: _vm.form.date_end,
+                            callback: function($$v) {
+                              _vm.$set(_vm.form, "date_end", $$v)
+                            },
+                            expression: "form.date_end"
+                          }
+                        })
+                      ],
+                      1
+                    )
+                  ]
+                : _vm._e(),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-lg-4 col-md-4" }, [
+                _c(
+                  "div",
+                  { staticClass: "form-group" },
+                  [
+                    _c("label", { staticClass: "w-100 control-label" }, [
+                      _vm._v(
+                        "\n                            Clientes\n                        "
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _c(
+                      "el-select",
+                      {
+                        staticClass: "w-100",
+                        attrs: {
+                          filterable: "",
+                          remote: "",
+                          "popper-class": "el-select-customers",
+                          clearable: "",
+                          placeholder: "Nombre o número de documento",
+                          "remote-method": _vm.searchRemotePersons,
+                          loading: _vm.loading_search
+                        },
+                        on: { change: _vm.changePersons },
+                        model: {
+                          value: _vm.form.person_id,
+                          callback: function($$v) {
+                            _vm.$set(_vm.form, "person_id", $$v)
+                          },
+                          expression: "form.person_id"
+                        }
+                      },
+                      _vm._l(_vm.persons, function(option) {
+                        return _c("el-option", {
+                          key: option.id,
+                          attrs: { value: option.id, label: option.description }
+                        })
+                      }),
+                      1
+                    )
+                  ],
+                  1
+                )
+              ]),
+              _vm._v(" "),
+              _c(
+                "div",
+                {
+                  staticClass: "d-flex",
+                  staticStyle: { "margin-top": "29px" }
+                },
+                [
+                  _c(
+                    "el-button",
+                    {
+                      staticClass: "submit",
+                      attrs: {
+                        type: "primary",
+                        loading: _vm.loading_submit,
+                        icon: "el-icon-search"
+                      },
+                      on: {
+                        click: function($event) {
+                          $event.preventDefault()
+                          return _vm.getRecordsByFilter.apply(null, arguments)
+                        }
+                      }
+                    },
+                    [_vm._v("Buscar")]
+                  ),
+                  _vm._v(" "),
+                  _vm.records.length > 0 &&
+                  _vm.resource !== "reports/document-detractions"
+                    ? [
+                        _c(
+                          "el-button",
+                          {
+                            staticClass: "submit",
+                            attrs: { type: "danger", icon: "el-icon-tickets" },
+                            on: {
+                              click: function($event) {
+                                $event.preventDefault()
+                                return _vm.clickDownload("pdf")
+                              }
+                            }
+                          },
+                          [_vm._v("Exportar PDF")]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "el-button",
+                          {
+                            staticClass: "submit",
+                            attrs: { type: "success" },
+                            on: {
+                              click: function($event) {
+                                $event.preventDefault()
+                                return _vm.clickDownload("excel")
+                              }
+                            }
+                          },
+                          [
+                            _c("i", { staticClass: "fa fa-file-excel" }),
+                            _vm._v(
+                              " Exportal\n                            Excel"
+                            )
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "el-button",
+                          {
+                            staticClass: "submit",
+                            on: {
+                              click: function($event) {
+                                $event.preventDefault()
+                                return _vm.clickOpenWhatsapp.apply(
+                                  null,
+                                  arguments
+                                )
+                              }
+                            }
+                          },
+                          [
+                            _c("i", { staticClass: "fa fa-whatsapp" }),
+                            _vm._v(
+                              " Enviar\n                            whatsapp"
+                            )
+                          ]
+                        )
+                      ]
+                    : _vm._e()
+                ],
+                2
+              )
+            ],
+            2
+          ),
+          _vm._v(" "),
+          _c("div", { staticClass: "row mt-1 mb-4" })
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "col-md-12" }, [
+          _c("div", { staticClass: "table-responsive" }, [
+            _c("table", { staticClass: "table" }, [
+              _c("thead", [_vm._t("heading")], 2),
+              _vm._v(" "),
+              _c(
+                "tbody",
+                [
+                  _vm._l(_vm.records, function(row, index) {
+                    return _vm._t("default", null, {
+                      row: row,
+                      index: _vm.customIndex(index)
+                    })
+                  })
+                ],
+                2
+              ),
+              _vm._v(" "),
+              _vm.resource == "reports/sales" ||
+              _vm.resource == "reports/purchases"
+                ? _c("tfoot", [
+                    _c("tr", [
+                      _c("td", {
+                        attrs: {
+                          colspan: _vm.resource == "reports/sales" ? 7 : 8
+                        }
+                      }),
+                      _vm._v(" "),
+                      _vm._m(0),
+                      _vm._v(" "),
+                      _c("td", [_vm._v(_vm._s(_vm.totals.acum_total_taxed))]),
+                      _vm._v(" "),
+                      _c("td", [_vm._v(_vm._s(_vm.totals.acum_total_igv))]),
+                      _vm._v(" "),
+                      _c("td", [_vm._v(_vm._s(_vm.totals.acum_total))])
+                    ]),
+                    _vm._v(" "),
+                    _c("tr", [
+                      _c("td", {
+                        attrs: {
+                          colspan: _vm.resource == "reports/sales" ? 7 : 8
+                        }
+                      }),
+                      _vm._v(" "),
+                      _vm._m(1),
+                      _vm._v(" "),
+                      _c("td", [
+                        _vm._v(_vm._s(_vm.totals.acum_total_taxed_usd))
+                      ]),
+                      _vm._v(" "),
+                      _c("td", [_vm._v(_vm._s(_vm.totals.acum_total_igv_usd))]),
+                      _vm._v(" "),
+                      _c("td", [_vm._v(_vm._s(_vm.totals.acum_total_usd))])
+                    ])
+                  ])
+                : _vm._e()
+            ]),
+            _vm._v(" "),
+            _c(
+              "div",
+              [
+                _c("el-pagination", {
+                  attrs: {
+                    layout: "total, prev, pager, next",
+                    total: _vm.pagination.total,
+                    "current-page": _vm.pagination.current_page,
+                    "page-size": _vm.pagination.per_page
+                  },
+                  on: {
+                    "current-change": _vm.getRecords,
+                    "update:currentPage": function($event) {
+                      return _vm.$set(_vm.pagination, "current_page", $event)
+                    },
+                    "update:current-page": function($event) {
+                      return _vm.$set(_vm.pagination, "current_page", $event)
+                    }
+                  }
+                })
+              ],
+              1
+            )
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _c("whatsapp-form-report", {
+        attrs: {
+          message: _vm.messageReport,
+          resource: _vm.resourceReport,
+          showWhatsappForm: _vm.showWhatsappForm
+        },
+        on: {
+          "update:message": function($event) {
+            _vm.messageReport = $event
+          },
+          "update:showWhatsappForm": function($event) {
+            _vm.showWhatsappForm = $event
+          },
+          "update:show-whatsapp-form": function($event) {
+            _vm.showWhatsappForm = $event
+          }
+        }
+      })
+    ],
+    1
+  )
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("td", [_c("strong", [_vm._v("Totales PEN")])])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("td", [_c("strong", [_vm._v("Totales USD")])])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-4d29955f", module.exports)
+  }
+}
 
 /***/ }),
 
 /***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-6cc5a2f6\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Report/Resources/assets/js/views/credit/index.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
-eval("var render = function() {\n  var _vm = this\n  var _h = _vm.$createElement\n  var _c = _vm._self._c || _h\n  return _c(\"div\", { staticClass: \"card mb-0 pt-2 pt-md-0\" }, [\n    _vm._m(0),\n    _vm._v(\" \"),\n    _c(\"div\", { staticClass: \"card mb-0\" }, [\n      _c(\n        \"div\",\n        { staticClass: \"card-body\" },\n        [\n          _c(\n            \"data-table\",\n            {\n              attrs: { resource: _vm.resource },\n              scopedSlots: _vm._u([\n                {\n                  key: \"default\",\n                  fn: function(ref) {\n                    var index = ref.index\n                    var row = ref.row\n                    return _c(\"tr\", {}, [\n                      _c(\"td\", [_vm._v(_vm._s(index))]),\n                      _vm._v(\" \"),\n                      _c(\"td\", { staticClass: \"text-center\" }, [\n                        _vm._v(_vm._s(row.number))\n                      ]),\n                      _vm._v(\" \"),\n                      _c(\"td\", { staticClass: \"text-center\" }, [\n                        _vm._v(_vm._s(row.date_of_issue))\n                      ]),\n                      _vm._v(\" \"),\n                      _c(\"td\", { staticClass: \"text-center\" }, [\n                        _vm._v(_vm._s(row.customer.number))\n                      ]),\n                      _vm._v(\" \"),\n                      _c(\"td\", { staticClass: \"text-center\" }, [\n                        _vm._v(_vm._s(row.customer.name))\n                      ]),\n                      _vm._v(\" \"),\n                      _c(\"td\", { staticClass: \"text-center\" }, [\n                        _vm._v(_vm._s(row.dues))\n                      ]),\n                      _vm._v(\" \"),\n                      _c(\"td\", { staticClass: \"text-end\" }, [\n                        _vm._v(_vm._s(row.date_of_due))\n                      ]),\n                      _vm._v(\" \"),\n                      _c(\"td\", { staticClass: \"text-end\" }, [\n                        _vm._v(_vm._s(row.amount_due))\n                      ]),\n                      _vm._v(\" \"),\n                      _c(\"td\", { staticClass: \"text-end\" }, [\n                        _vm._v(_vm._s(row.differenc_days))\n                      ])\n                    ])\n                  }\n                }\n              ])\n            },\n            [\n              _c(\"tr\", { attrs: { slot: \"heading\" }, slot: \"heading\" }, [\n                _c(\"th\", [_vm._v(\"#\")]),\n                _vm._v(\" \"),\n                _c(\"th\", { staticClass: \"text-center\" }, [_vm._v(\"N/V\")]),\n                _vm._v(\" \"),\n                _c(\"th\", { staticClass: \"text-center\" }, [\n                  _vm._v(\"Fecha de emisión\")\n                ]),\n                _vm._v(\" \"),\n                _c(\"th\", { staticClass: \"text-center\" }, [_vm._v(\"DNI\")]),\n                _vm._v(\" \"),\n                _c(\"th\", { staticClass: \"text-center\" }, [_vm._v(\"Nombres\")]),\n                _vm._v(\" \"),\n                _c(\"th\", { staticClass: \"text-center\" }, [\n                  _vm._v(\"N° Cuotas Vencidas\")\n                ]),\n                _vm._v(\" \"),\n                _c(\"th\", { staticClass: \"text-end\" }, [\n                  _vm._v(\"Fecha de cobro\")\n                ]),\n                _vm._v(\" \"),\n                _c(\"th\", { staticClass: \"text-end\" }, [_vm._v(\"Monto\")]),\n                _vm._v(\" \"),\n                _c(\"th\", { staticClass: \"text-end\" }, [\n                  _vm._v(\"Días de atraso\")\n                ])\n              ]),\n              _vm._v(\" \"),\n              _c(\"tr\")\n            ]\n          )\n        ],\n        1\n      )\n    ])\n  ])\n}\nvar staticRenderFns = [\n  function() {\n    var _vm = this\n    var _h = _vm.$createElement\n    var _c = _vm._self._c || _h\n    return _c(\"div\", { staticClass: \"card-header bg-primary\" }, [\n      _c(\"h6\", { staticClass: \"my-0 text-white\" }, [\n        _vm._v(\"Consulta de Nota de venta\")\n      ])\n    ])\n  }\n]\nrender._withStripped = true\nmodule.exports = { render: render, staticRenderFns: staticRenderFns }\nif (false) {\n  module.hot.accept()\n  if (module.hot.data) {\n    require(\"vue-hot-reload-api\")      .rerender(\"data-v-6cc5a2f6\", module.exports)\n  }\n}//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vLi9tb2R1bGVzL1JlcG9ydC9SZXNvdXJjZXMvYXNzZXRzL2pzL3ZpZXdzL2NyZWRpdC9pbmRleC52dWU/M2QzNCJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLG9CQUFvQix3Q0FBd0M7QUFDNUQ7QUFDQTtBQUNBLGVBQWUsMkJBQTJCO0FBQzFDO0FBQ0E7QUFDQSxTQUFTLDJCQUEyQjtBQUNwQztBQUNBO0FBQ0E7QUFDQTtBQUNBLHNCQUFzQix5QkFBeUI7QUFDL0M7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0Esc0NBQXNDO0FBQ3RDO0FBQ0E7QUFDQSxnQ0FBZ0MsNkJBQTZCO0FBQzdEO0FBQ0E7QUFDQTtBQUNBLGdDQUFnQyw2QkFBNkI7QUFDN0Q7QUFDQTtBQUNBO0FBQ0EsZ0NBQWdDLDZCQUE2QjtBQUM3RDtBQUNBO0FBQ0E7QUFDQSxnQ0FBZ0MsNkJBQTZCO0FBQzdEO0FBQ0E7QUFDQTtBQUNBLGdDQUFnQyw2QkFBNkI7QUFDN0Q7QUFDQTtBQUNBO0FBQ0EsZ0NBQWdDLDBCQUEwQjtBQUMxRDtBQUNBO0FBQ0E7QUFDQSxnQ0FBZ0MsMEJBQTBCO0FBQzFEO0FBQ0E7QUFDQTtBQUNBLGdDQUFnQywwQkFBMEI7QUFDMUQ7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0EsYUFBYTtBQUNiO0FBQ0Esd0JBQXdCLFNBQVMsa0JBQWtCLG1CQUFtQjtBQUN0RTtBQUNBO0FBQ0EsMEJBQTBCLDZCQUE2QjtBQUN2RDtBQUNBLDBCQUEwQiw2QkFBNkI7QUFDdkQ7QUFDQTtBQUNBO0FBQ0EsMEJBQTBCLDZCQUE2QjtBQUN2RDtBQUNBLDBCQUEwQiw2QkFBNkI7QUFDdkQ7QUFDQSwwQkFBMEIsNkJBQTZCO0FBQ3ZEO0FBQ0E7QUFDQTtBQUNBLDBCQUEwQiwwQkFBMEI7QUFDcEQ7QUFDQTtBQUNBO0FBQ0EsMEJBQTBCLDBCQUEwQjtBQUNwRDtBQUNBLDBCQUEwQiwwQkFBMEI7QUFDcEQ7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0Esc0JBQXNCLHdDQUF3QztBQUM5RCxnQkFBZ0IsaUNBQWlDO0FBQ2pEO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLGtCQUFrQjtBQUNsQixJQUFJLEtBQVU7QUFDZDtBQUNBO0FBQ0E7QUFDQTtBQUNBIiwiZmlsZSI6Ii4vbm9kZV9tb2R1bGVzL3Z1ZS1sb2FkZXIvbGliL3RlbXBsYXRlLWNvbXBpbGVyL2luZGV4LmpzP3tcImlkXCI6XCJkYXRhLXYtNmNjNWEyZjZcIixcImhhc1Njb3BlZFwiOmZhbHNlLFwiYnVibGVcIjp7XCJ0cmFuc2Zvcm1zXCI6e319fSEuL25vZGVfbW9kdWxlcy92dWUtbG9hZGVyL2xpYi9zZWxlY3Rvci5qcz90eXBlPXRlbXBsYXRlJmluZGV4PTAhLi9tb2R1bGVzL1JlcG9ydC9SZXNvdXJjZXMvYXNzZXRzL2pzL3ZpZXdzL2NyZWRpdC9pbmRleC52dWUuanMiLCJzb3VyY2VzQ29udGVudCI6WyJ2YXIgcmVuZGVyID0gZnVuY3Rpb24oKSB7XG4gIHZhciBfdm0gPSB0aGlzXG4gIHZhciBfaCA9IF92bS4kY3JlYXRlRWxlbWVudFxuICB2YXIgX2MgPSBfdm0uX3NlbGYuX2MgfHwgX2hcbiAgcmV0dXJuIF9jKFwiZGl2XCIsIHsgc3RhdGljQ2xhc3M6IFwiY2FyZCBtYi0wIHB0LTIgcHQtbWQtMFwiIH0sIFtcbiAgICBfdm0uX20oMCksXG4gICAgX3ZtLl92KFwiIFwiKSxcbiAgICBfYyhcImRpdlwiLCB7IHN0YXRpY0NsYXNzOiBcImNhcmQgbWItMFwiIH0sIFtcbiAgICAgIF9jKFxuICAgICAgICBcImRpdlwiLFxuICAgICAgICB7IHN0YXRpY0NsYXNzOiBcImNhcmQtYm9keVwiIH0sXG4gICAgICAgIFtcbiAgICAgICAgICBfYyhcbiAgICAgICAgICAgIFwiZGF0YS10YWJsZVwiLFxuICAgICAgICAgICAge1xuICAgICAgICAgICAgICBhdHRyczogeyByZXNvdXJjZTogX3ZtLnJlc291cmNlIH0sXG4gICAgICAgICAgICAgIHNjb3BlZFNsb3RzOiBfdm0uX3UoW1xuICAgICAgICAgICAgICAgIHtcbiAgICAgICAgICAgICAgICAgIGtleTogXCJkZWZhdWx0XCIsXG4gICAgICAgICAgICAgICAgICBmbjogZnVuY3Rpb24ocmVmKSB7XG4gICAgICAgICAgICAgICAgICAgIHZhciBpbmRleCA9IHJlZi5pbmRleFxuICAgICAgICAgICAgICAgICAgICB2YXIgcm93ID0gcmVmLnJvd1xuICAgICAgICAgICAgICAgICAgICByZXR1cm4gX2MoXCJ0clwiLCB7fSwgW1xuICAgICAgICAgICAgICAgICAgICAgIF9jKFwidGRcIiwgW192bS5fdihfdm0uX3MoaW5kZXgpKV0pLFxuICAgICAgICAgICAgICAgICAgICAgIF92bS5fdihcIiBcIiksXG4gICAgICAgICAgICAgICAgICAgICAgX2MoXCJ0ZFwiLCB7IHN0YXRpY0NsYXNzOiBcInRleHQtY2VudGVyXCIgfSwgW1xuICAgICAgICAgICAgICAgICAgICAgICAgX3ZtLl92KF92bS5fcyhyb3cubnVtYmVyKSlcbiAgICAgICAgICAgICAgICAgICAgICBdKSxcbiAgICAgICAgICAgICAgICAgICAgICBfdm0uX3YoXCIgXCIpLFxuICAgICAgICAgICAgICAgICAgICAgIF9jKFwidGRcIiwgeyBzdGF0aWNDbGFzczogXCJ0ZXh0LWNlbnRlclwiIH0sIFtcbiAgICAgICAgICAgICAgICAgICAgICAgIF92bS5fdihfdm0uX3Mocm93LmRhdGVfb2ZfaXNzdWUpKVxuICAgICAgICAgICAgICAgICAgICAgIF0pLFxuICAgICAgICAgICAgICAgICAgICAgIF92bS5fdihcIiBcIiksXG4gICAgICAgICAgICAgICAgICAgICAgX2MoXCJ0ZFwiLCB7IHN0YXRpY0NsYXNzOiBcInRleHQtY2VudGVyXCIgfSwgW1xuICAgICAgICAgICAgICAgICAgICAgICAgX3ZtLl92KF92bS5fcyhyb3cuY3VzdG9tZXIubnVtYmVyKSlcbiAgICAgICAgICAgICAgICAgICAgICBdKSxcbiAgICAgICAgICAgICAgICAgICAgICBfdm0uX3YoXCIgXCIpLFxuICAgICAgICAgICAgICAgICAgICAgIF9jKFwidGRcIiwgeyBzdGF0aWNDbGFzczogXCJ0ZXh0LWNlbnRlclwiIH0sIFtcbiAgICAgICAgICAgICAgICAgICAgICAgIF92bS5fdihfdm0uX3Mocm93LmN1c3RvbWVyLm5hbWUpKVxuICAgICAgICAgICAgICAgICAgICAgIF0pLFxuICAgICAgICAgICAgICAgICAgICAgIF92bS5fdihcIiBcIiksXG4gICAgICAgICAgICAgICAgICAgICAgX2MoXCJ0ZFwiLCB7IHN0YXRpY0NsYXNzOiBcInRleHQtY2VudGVyXCIgfSwgW1xuICAgICAgICAgICAgICAgICAgICAgICAgX3ZtLl92KF92bS5fcyhyb3cuZHVlcykpXG4gICAgICAgICAgICAgICAgICAgICAgXSksXG4gICAgICAgICAgICAgICAgICAgICAgX3ZtLl92KFwiIFwiKSxcbiAgICAgICAgICAgICAgICAgICAgICBfYyhcInRkXCIsIHsgc3RhdGljQ2xhc3M6IFwidGV4dC1lbmRcIiB9LCBbXG4gICAgICAgICAgICAgICAgICAgICAgICBfdm0uX3YoX3ZtLl9zKHJvdy5kYXRlX29mX2R1ZSkpXG4gICAgICAgICAgICAgICAgICAgICAgXSksXG4gICAgICAgICAgICAgICAgICAgICAgX3ZtLl92KFwiIFwiKSxcbiAgICAgICAgICAgICAgICAgICAgICBfYyhcInRkXCIsIHsgc3RhdGljQ2xhc3M6IFwidGV4dC1lbmRcIiB9LCBbXG4gICAgICAgICAgICAgICAgICAgICAgICBfdm0uX3YoX3ZtLl9zKHJvdy5hbW91bnRfZHVlKSlcbiAgICAgICAgICAgICAgICAgICAgICBdKSxcbiAgICAgICAgICAgICAgICAgICAgICBfdm0uX3YoXCIgXCIpLFxuICAgICAgICAgICAgICAgICAgICAgIF9jKFwidGRcIiwgeyBzdGF0aWNDbGFzczogXCJ0ZXh0LWVuZFwiIH0sIFtcbiAgICAgICAgICAgICAgICAgICAgICAgIF92bS5fdihfdm0uX3Mocm93LmRpZmZlcmVuY19kYXlzKSlcbiAgICAgICAgICAgICAgICAgICAgICBdKVxuICAgICAgICAgICAgICAgICAgICBdKVxuICAgICAgICAgICAgICAgICAgfVxuICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgICAgXSlcbiAgICAgICAgICAgIH0sXG4gICAgICAgICAgICBbXG4gICAgICAgICAgICAgIF9jKFwidHJcIiwgeyBhdHRyczogeyBzbG90OiBcImhlYWRpbmdcIiB9LCBzbG90OiBcImhlYWRpbmdcIiB9LCBbXG4gICAgICAgICAgICAgICAgX2MoXCJ0aFwiLCBbX3ZtLl92KFwiI1wiKV0pLFxuICAgICAgICAgICAgICAgIF92bS5fdihcIiBcIiksXG4gICAgICAgICAgICAgICAgX2MoXCJ0aFwiLCB7IHN0YXRpY0NsYXNzOiBcInRleHQtY2VudGVyXCIgfSwgW192bS5fdihcIk4vVlwiKV0pLFxuICAgICAgICAgICAgICAgIF92bS5fdihcIiBcIiksXG4gICAgICAgICAgICAgICAgX2MoXCJ0aFwiLCB7IHN0YXRpY0NsYXNzOiBcInRleHQtY2VudGVyXCIgfSwgW1xuICAgICAgICAgICAgICAgICAgX3ZtLl92KFwiRmVjaGEgZGUgZW1pc2nDs25cIilcbiAgICAgICAgICAgICAgICBdKSxcbiAgICAgICAgICAgICAgICBfdm0uX3YoXCIgXCIpLFxuICAgICAgICAgICAgICAgIF9jKFwidGhcIiwgeyBzdGF0aWNDbGFzczogXCJ0ZXh0LWNlbnRlclwiIH0sIFtfdm0uX3YoXCJETklcIildKSxcbiAgICAgICAgICAgICAgICBfdm0uX3YoXCIgXCIpLFxuICAgICAgICAgICAgICAgIF9jKFwidGhcIiwgeyBzdGF0aWNDbGFzczogXCJ0ZXh0LWNlbnRlclwiIH0sIFtfdm0uX3YoXCJOb21icmVzXCIpXSksXG4gICAgICAgICAgICAgICAgX3ZtLl92KFwiIFwiKSxcbiAgICAgICAgICAgICAgICBfYyhcInRoXCIsIHsgc3RhdGljQ2xhc3M6IFwidGV4dC1jZW50ZXJcIiB9LCBbXG4gICAgICAgICAgICAgICAgICBfdm0uX3YoXCJOwrAgQ3VvdGFzIFZlbmNpZGFzXCIpXG4gICAgICAgICAgICAgICAgXSksXG4gICAgICAgICAgICAgICAgX3ZtLl92KFwiIFwiKSxcbiAgICAgICAgICAgICAgICBfYyhcInRoXCIsIHsgc3RhdGljQ2xhc3M6IFwidGV4dC1lbmRcIiB9LCBbXG4gICAgICAgICAgICAgICAgICBfdm0uX3YoXCJGZWNoYSBkZSBjb2Jyb1wiKVxuICAgICAgICAgICAgICAgIF0pLFxuICAgICAgICAgICAgICAgIF92bS5fdihcIiBcIiksXG4gICAgICAgICAgICAgICAgX2MoXCJ0aFwiLCB7IHN0YXRpY0NsYXNzOiBcInRleHQtZW5kXCIgfSwgW192bS5fdihcIk1vbnRvXCIpXSksXG4gICAgICAgICAgICAgICAgX3ZtLl92KFwiIFwiKSxcbiAgICAgICAgICAgICAgICBfYyhcInRoXCIsIHsgc3RhdGljQ2xhc3M6IFwidGV4dC1lbmRcIiB9LCBbXG4gICAgICAgICAgICAgICAgICBfdm0uX3YoXCJEw61hcyBkZSBhdHJhc29cIilcbiAgICAgICAgICAgICAgICBdKVxuICAgICAgICAgICAgICBdKSxcbiAgICAgICAgICAgICAgX3ZtLl92KFwiIFwiKSxcbiAgICAgICAgICAgICAgX2MoXCJ0clwiKVxuICAgICAgICAgICAgXVxuICAgICAgICAgIClcbiAgICAgICAgXSxcbiAgICAgICAgMVxuICAgICAgKVxuICAgIF0pXG4gIF0pXG59XG52YXIgc3RhdGljUmVuZGVyRm5zID0gW1xuICBmdW5jdGlvbigpIHtcbiAgICB2YXIgX3ZtID0gdGhpc1xuICAgIHZhciBfaCA9IF92bS4kY3JlYXRlRWxlbWVudFxuICAgIHZhciBfYyA9IF92bS5fc2VsZi5fYyB8fCBfaFxuICAgIHJldHVybiBfYyhcImRpdlwiLCB7IHN0YXRpY0NsYXNzOiBcImNhcmQtaGVhZGVyIGJnLXByaW1hcnlcIiB9LCBbXG4gICAgICBfYyhcImg2XCIsIHsgc3RhdGljQ2xhc3M6IFwibXktMCB0ZXh0LXdoaXRlXCIgfSwgW1xuICAgICAgICBfdm0uX3YoXCJDb25zdWx0YSBkZSBOb3RhIGRlIHZlbnRhXCIpXG4gICAgICBdKVxuICAgIF0pXG4gIH1cbl1cbnJlbmRlci5fd2l0aFN0cmlwcGVkID0gdHJ1ZVxubW9kdWxlLmV4cG9ydHMgPSB7IHJlbmRlcjogcmVuZGVyLCBzdGF0aWNSZW5kZXJGbnM6IHN0YXRpY1JlbmRlckZucyB9XG5pZiAobW9kdWxlLmhvdCkge1xuICBtb2R1bGUuaG90LmFjY2VwdCgpXG4gIGlmIChtb2R1bGUuaG90LmRhdGEpIHtcbiAgICByZXF1aXJlKFwidnVlLWhvdC1yZWxvYWQtYXBpXCIpICAgICAgLnJlcmVuZGVyKFwiZGF0YS12LTZjYzVhMmY2XCIsIG1vZHVsZS5leHBvcnRzKVxuICB9XG59XG5cblxuLy8vLy8vLy8vLy8vLy8vLy8vXG4vLyBXRUJQQUNLIEZPT1RFUlxuLy8gLi9ub2RlX21vZHVsZXMvdnVlLWxvYWRlci9saWIvdGVtcGxhdGUtY29tcGlsZXI/e1wiaWRcIjpcImRhdGEtdi02Y2M1YTJmNlwiLFwiaGFzU2NvcGVkXCI6ZmFsc2UsXCJidWJsZVwiOntcInRyYW5zZm9ybXNcIjp7fX19IS4vbm9kZV9tb2R1bGVzL3Z1ZS1sb2FkZXIvbGliL3NlbGVjdG9yLmpzP3R5cGU9dGVtcGxhdGUmaW5kZXg9MCEuL21vZHVsZXMvUmVwb3J0L1Jlc291cmNlcy9hc3NldHMvanMvdmlld3MvY3JlZGl0L2luZGV4LnZ1ZVxuLy8gbW9kdWxlIGlkID0gLi9ub2RlX21vZHVsZXMvdnVlLWxvYWRlci9saWIvdGVtcGxhdGUtY29tcGlsZXIvaW5kZXguanM/e1wiaWRcIjpcImRhdGEtdi02Y2M1YTJmNlwiLFwiaGFzU2NvcGVkXCI6ZmFsc2UsXCJidWJsZVwiOntcInRyYW5zZm9ybXNcIjp7fX19IS4vbm9kZV9tb2R1bGVzL3Z1ZS1sb2FkZXIvbGliL3NlbGVjdG9yLmpzP3R5cGU9dGVtcGxhdGUmaW5kZXg9MCEuL21vZHVsZXMvUmVwb3J0L1Jlc291cmNlcy9hc3NldHMvanMvdmlld3MvY3JlZGl0L2luZGV4LnZ1ZVxuLy8gbW9kdWxlIGNodW5rcyA9IDEiXSwic291cmNlUm9vdCI6IiJ9\n//# sourceURL=webpack-internal:///./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-6cc5a2f6\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Report/Resources/assets/js/views/credit/index.vue\n");
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "card mb-0 pt-2 pt-md-0" }, [
+    _vm._m(0),
+    _vm._v(" "),
+    _c("div", { staticClass: "card mb-0" }, [
+      _c(
+        "div",
+        { staticClass: "card-body" },
+        [
+          _c(
+            "data-table",
+            {
+              attrs: { resource: _vm.resource },
+              scopedSlots: _vm._u([
+                {
+                  key: "default",
+                  fn: function(ref) {
+                    var index = ref.index
+                    var row = ref.row
+                    return _c("tr", {}, [
+                      _c("td", [_vm._v(_vm._s(index))]),
+                      _vm._v(" "),
+                      _c("td", { staticClass: "text-center" }, [
+                        _vm._v(_vm._s(row.number))
+                      ]),
+                      _vm._v(" "),
+                      _c("td", { staticClass: "text-center" }, [
+                        _vm._v(_vm._s(row.date_of_issue))
+                      ]),
+                      _vm._v(" "),
+                      _c("td", { staticClass: "text-center" }, [
+                        _vm._v(_vm._s(row.customer.number))
+                      ]),
+                      _vm._v(" "),
+                      _c("td", { staticClass: "text-center" }, [
+                        _vm._v(_vm._s(row.customer.name))
+                      ]),
+                      _vm._v(" "),
+                      _c("td", { staticClass: "text-center" }, [
+                        _vm._v(_vm._s(row.dues))
+                      ]),
+                      _vm._v(" "),
+                      _c("td", { staticClass: "text-end" }, [
+                        _vm._v(_vm._s(row.date_of_due))
+                      ]),
+                      _vm._v(" "),
+                      _c("td", { staticClass: "text-end" }, [
+                        _vm._v(_vm._s(row.amount_due))
+                      ]),
+                      _vm._v(" "),
+                      _c("td", { staticClass: "text-end" }, [
+                        _vm._v(_vm._s(row.differenc_days))
+                      ])
+                    ])
+                  }
+                }
+              ])
+            },
+            [
+              _c("tr", { attrs: { slot: "heading" }, slot: "heading" }, [
+                _c("th", [_vm._v("#")]),
+                _vm._v(" "),
+                _c("th", { staticClass: "text-center" }, [_vm._v("N/V")]),
+                _vm._v(" "),
+                _c("th", { staticClass: "text-center" }, [
+                  _vm._v("Fecha de emisión")
+                ]),
+                _vm._v(" "),
+                _c("th", { staticClass: "text-center" }, [_vm._v("DNI")]),
+                _vm._v(" "),
+                _c("th", { staticClass: "text-center" }, [_vm._v("Nombres")]),
+                _vm._v(" "),
+                _c("th", { staticClass: "text-center" }, [
+                  _vm._v("N° Cuotas Vencidas")
+                ]),
+                _vm._v(" "),
+                _c("th", { staticClass: "text-end" }, [
+                  _vm._v("Fecha de cobro")
+                ]),
+                _vm._v(" "),
+                _c("th", { staticClass: "text-end" }, [_vm._v("Monto")]),
+                _vm._v(" "),
+                _c("th", { staticClass: "text-end" }, [
+                  _vm._v("Días de atraso")
+                ])
+              ]),
+              _vm._v(" "),
+              _c("tr")
+            ]
+          )
+        ],
+        1
+      )
+    ])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "card-header bg-primary" }, [
+      _c("h6", { staticClass: "my-0 text-white" }, [
+        _vm._v("Consulta de Nota de venta")
+      ])
+    ])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-6cc5a2f6", module.exports)
+  }
+}
 
 /***/ }),
 
 /***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-7ed86416\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Report/Resources/assets/js/views/consignment/index.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
-eval("var render = function() {\n  var _vm = this\n  var _h = _vm.$createElement\n  var _c = _vm._self._c || _h\n  return _c(\"div\", { staticClass: \"card mb-0 pt-2 pt-md-0\" }, [\n    _vm._m(0),\n    _vm._v(\" \"),\n    _c(\"div\", { staticClass: \"card mb-0\" }, [\n      _c(\n        \"div\",\n        { staticClass: \"card-body\" },\n        [\n          _c(\n            \"data-table\",\n            {\n              attrs: { resource: _vm.resource },\n              scopedSlots: _vm._u([\n                {\n                  key: \"default\",\n                  fn: function(ref) {\n                    var index = ref.index\n                    var row = ref.row\n                    return _c(\"tr\", {}, [\n                      _c(\"td\", [_vm._v(_vm._s(index))]),\n                      _vm._v(\" \"),\n                      _c(\"td\", { staticClass: \"text-center\" }, [\n                        _vm._v(_vm._s(row.number))\n                      ]),\n                      _vm._v(\" \"),\n                      _c(\"td\", { staticClass: \"text-center\" }, [\n                        _vm._v(_vm._s(row.user_name))\n                      ]),\n                      _vm._v(\" \"),\n                      _c(\"td\", { staticClass: \"text-center\" }, [\n                        _vm._v(_vm._s(row.user_liquidated_name))\n                      ]),\n                      _vm._v(\" \"),\n                      _c(\"td\", { staticClass: \"text-center\" }, [\n                        _vm._v(_vm._s(row.date_of_issue))\n                      ]),\n                      _vm._v(\" \"),\n                      _c(\"td\", { staticClass: \"text-center\" }, [\n                        _vm._v(_vm._s(row.date_of_end))\n                      ]),\n                      _vm._v(\" \"),\n                      _c(\"td\", { staticClass: \"text-left\" }, [\n                        _vm._v(\n                          \"\\n                        \" +\n                            _vm._s(row.person.name) +\n                            \"\\n                        \"\n                        ),\n                        _c(\"br\"),\n                        _vm._v(\" \"),\n                        _c(\"small\", [_vm._v(_vm._s(row.person.number))])\n                      ]),\n                      _vm._v(\" \"),\n                      _c(\"td\", { staticClass: \"text-center\" }, [\n                        _vm._v(_vm._s(row.penalty))\n                      ]),\n                      _vm._v(\" \"),\n                      _c(\"td\", { staticClass: \"text-end\" }, [\n                        _vm._v(_vm._s(row.count_items))\n                      ]),\n                      _vm._v(\" \"),\n                      _c(\"td\", { staticClass: \"text-end\" }, [\n                        _vm._v(_vm._s(row.total.toFixed(2)))\n                      ]),\n                      _vm._v(\" \"),\n                      _c(\"td\", { staticClass: \"text-end\" }, [\n                        _vm._v(_vm._s(row.liquidated))\n                      ])\n                    ])\n                  }\n                }\n              ])\n            },\n            [\n              _c(\"tr\", { attrs: { slot: \"heading\" }, slot: \"heading\" }, [\n                _c(\"th\", [_vm._v(\"#\")]),\n                _vm._v(\" \"),\n                _c(\"th\", { staticClass: \"text-center\" }, [_vm._v(\"N°\")]),\n                _vm._v(\" \"),\n                _c(\"th\", { staticClass: \"text-center\" }, [\n                  _vm._v(\"Creado por\")\n                ]),\n                _vm._v(\" \"),\n                _c(\"th\", { staticClass: \"text-center\" }, [\n                  _vm._v(\"Liquidado por\")\n                ]),\n                _vm._v(\" \"),\n                _c(\"th\", { staticClass: \"text-center\" }, [\n                  _vm._v(\"Fecha de emisión\")\n                ]),\n                _vm._v(\" \"),\n                _c(\"th\", { staticClass: \"text-center\" }, [\n                  _vm._v(\"Fecha de liquidación\")\n                ]),\n                _vm._v(\" \"),\n                _c(\"th\", { staticClass: \"text-left\" }, [\n                  _vm._v(\"Cliente/Vendedor\")\n                ]),\n                _vm._v(\" \"),\n                _c(\"th\", { staticClass: \"text-center\" }, [_vm._v(\"Penalidad\")]),\n                _vm._v(\" \"),\n                _c(\"th\", { staticClass: \"text-end\" }, [_vm._v(\"Productos\")]),\n                _vm._v(\" \"),\n                _c(\"th\", { staticClass: \"text-end\" }, [_vm._v(\"Monto\")]),\n                _vm._v(\" \"),\n                _c(\"th\", { staticClass: \"text-end\" }, [_vm._v(\"Estado\")])\n              ]),\n              _vm._v(\" \"),\n              _c(\"tr\")\n            ]\n          )\n        ],\n        1\n      )\n    ])\n  ])\n}\nvar staticRenderFns = [\n  function() {\n    var _vm = this\n    var _h = _vm.$createElement\n    var _c = _vm._self._c || _h\n    return _c(\"div\", { staticClass: \"card-header bg-primary\" }, [\n      _c(\"h6\", { staticClass: \"my-0 text-white\" }, [\n        _vm._v(\"Consulta de Consignamiento\")\n      ])\n    ])\n  }\n]\nrender._withStripped = true\nmodule.exports = { render: render, staticRenderFns: staticRenderFns }\nif (false) {\n  module.hot.accept()\n  if (module.hot.data) {\n    require(\"vue-hot-reload-api\")      .rerender(\"data-v-7ed86416\", module.exports)\n  }\n}//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vLi9tb2R1bGVzL1JlcG9ydC9SZXNvdXJjZXMvYXNzZXRzL2pzL3ZpZXdzL2NvbnNpZ25tZW50L2luZGV4LnZ1ZT9iNmQxIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0FBQ0E7QUFDQTtBQUNBO0FBQ0Esb0JBQW9CLHdDQUF3QztBQUM1RDtBQUNBO0FBQ0EsZUFBZSwyQkFBMkI7QUFDMUM7QUFDQTtBQUNBLFNBQVMsMkJBQTJCO0FBQ3BDO0FBQ0E7QUFDQTtBQUNBO0FBQ0Esc0JBQXNCLHlCQUF5QjtBQUMvQztBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSxzQ0FBc0M7QUFDdEM7QUFDQTtBQUNBLGdDQUFnQyw2QkFBNkI7QUFDN0Q7QUFDQTtBQUNBO0FBQ0EsZ0NBQWdDLDZCQUE2QjtBQUM3RDtBQUNBO0FBQ0E7QUFDQSxnQ0FBZ0MsNkJBQTZCO0FBQzdEO0FBQ0E7QUFDQTtBQUNBLGdDQUFnQyw2QkFBNkI7QUFDN0Q7QUFDQTtBQUNBO0FBQ0EsZ0NBQWdDLDZCQUE2QjtBQUM3RDtBQUNBO0FBQ0E7QUFDQSxnQ0FBZ0MsMkJBQTJCO0FBQzNEO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0EsZ0NBQWdDLDZCQUE2QjtBQUM3RDtBQUNBO0FBQ0E7QUFDQSxnQ0FBZ0MsMEJBQTBCO0FBQzFEO0FBQ0E7QUFDQTtBQUNBLGdDQUFnQywwQkFBMEI7QUFDMUQ7QUFDQTtBQUNBO0FBQ0EsZ0NBQWdDLDBCQUEwQjtBQUMxRDtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSxhQUFhO0FBQ2I7QUFDQSx3QkFBd0IsU0FBUyxrQkFBa0IsbUJBQW1CO0FBQ3RFO0FBQ0E7QUFDQSwwQkFBMEIsNkJBQTZCO0FBQ3ZEO0FBQ0EsMEJBQTBCLDZCQUE2QjtBQUN2RDtBQUNBO0FBQ0E7QUFDQSwwQkFBMEIsNkJBQTZCO0FBQ3ZEO0FBQ0E7QUFDQTtBQUNBLDBCQUEwQiw2QkFBNkI7QUFDdkQ7QUFDQTtBQUNBO0FBQ0EsMEJBQTBCLDZCQUE2QjtBQUN2RDtBQUNBO0FBQ0E7QUFDQSwwQkFBMEIsMkJBQTJCO0FBQ3JEO0FBQ0E7QUFDQTtBQUNBLDBCQUEwQiw2QkFBNkI7QUFDdkQ7QUFDQSwwQkFBMEIsMEJBQTBCO0FBQ3BEO0FBQ0EsMEJBQTBCLDBCQUEwQjtBQUNwRDtBQUNBLDBCQUEwQiwwQkFBMEI7QUFDcEQ7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSxzQkFBc0Isd0NBQXdDO0FBQzlELGdCQUFnQixpQ0FBaUM7QUFDakQ7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0Esa0JBQWtCO0FBQ2xCLElBQUksS0FBVTtBQUNkO0FBQ0E7QUFDQTtBQUNBO0FBQ0EiLCJmaWxlIjoiLi9ub2RlX21vZHVsZXMvdnVlLWxvYWRlci9saWIvdGVtcGxhdGUtY29tcGlsZXIvaW5kZXguanM/e1wiaWRcIjpcImRhdGEtdi03ZWQ4NjQxNlwiLFwiaGFzU2NvcGVkXCI6ZmFsc2UsXCJidWJsZVwiOntcInRyYW5zZm9ybXNcIjp7fX19IS4vbm9kZV9tb2R1bGVzL3Z1ZS1sb2FkZXIvbGliL3NlbGVjdG9yLmpzP3R5cGU9dGVtcGxhdGUmaW5kZXg9MCEuL21vZHVsZXMvUmVwb3J0L1Jlc291cmNlcy9hc3NldHMvanMvdmlld3MvY29uc2lnbm1lbnQvaW5kZXgudnVlLmpzIiwic291cmNlc0NvbnRlbnQiOlsidmFyIHJlbmRlciA9IGZ1bmN0aW9uKCkge1xuICB2YXIgX3ZtID0gdGhpc1xuICB2YXIgX2ggPSBfdm0uJGNyZWF0ZUVsZW1lbnRcbiAgdmFyIF9jID0gX3ZtLl9zZWxmLl9jIHx8IF9oXG4gIHJldHVybiBfYyhcImRpdlwiLCB7IHN0YXRpY0NsYXNzOiBcImNhcmQgbWItMCBwdC0yIHB0LW1kLTBcIiB9LCBbXG4gICAgX3ZtLl9tKDApLFxuICAgIF92bS5fdihcIiBcIiksXG4gICAgX2MoXCJkaXZcIiwgeyBzdGF0aWNDbGFzczogXCJjYXJkIG1iLTBcIiB9LCBbXG4gICAgICBfYyhcbiAgICAgICAgXCJkaXZcIixcbiAgICAgICAgeyBzdGF0aWNDbGFzczogXCJjYXJkLWJvZHlcIiB9LFxuICAgICAgICBbXG4gICAgICAgICAgX2MoXG4gICAgICAgICAgICBcImRhdGEtdGFibGVcIixcbiAgICAgICAgICAgIHtcbiAgICAgICAgICAgICAgYXR0cnM6IHsgcmVzb3VyY2U6IF92bS5yZXNvdXJjZSB9LFxuICAgICAgICAgICAgICBzY29wZWRTbG90czogX3ZtLl91KFtcbiAgICAgICAgICAgICAgICB7XG4gICAgICAgICAgICAgICAgICBrZXk6IFwiZGVmYXVsdFwiLFxuICAgICAgICAgICAgICAgICAgZm46IGZ1bmN0aW9uKHJlZikge1xuICAgICAgICAgICAgICAgICAgICB2YXIgaW5kZXggPSByZWYuaW5kZXhcbiAgICAgICAgICAgICAgICAgICAgdmFyIHJvdyA9IHJlZi5yb3dcbiAgICAgICAgICAgICAgICAgICAgcmV0dXJuIF9jKFwidHJcIiwge30sIFtcbiAgICAgICAgICAgICAgICAgICAgICBfYyhcInRkXCIsIFtfdm0uX3YoX3ZtLl9zKGluZGV4KSldKSxcbiAgICAgICAgICAgICAgICAgICAgICBfdm0uX3YoXCIgXCIpLFxuICAgICAgICAgICAgICAgICAgICAgIF9jKFwidGRcIiwgeyBzdGF0aWNDbGFzczogXCJ0ZXh0LWNlbnRlclwiIH0sIFtcbiAgICAgICAgICAgICAgICAgICAgICAgIF92bS5fdihfdm0uX3Mocm93Lm51bWJlcikpXG4gICAgICAgICAgICAgICAgICAgICAgXSksXG4gICAgICAgICAgICAgICAgICAgICAgX3ZtLl92KFwiIFwiKSxcbiAgICAgICAgICAgICAgICAgICAgICBfYyhcInRkXCIsIHsgc3RhdGljQ2xhc3M6IFwidGV4dC1jZW50ZXJcIiB9LCBbXG4gICAgICAgICAgICAgICAgICAgICAgICBfdm0uX3YoX3ZtLl9zKHJvdy51c2VyX25hbWUpKVxuICAgICAgICAgICAgICAgICAgICAgIF0pLFxuICAgICAgICAgICAgICAgICAgICAgIF92bS5fdihcIiBcIiksXG4gICAgICAgICAgICAgICAgICAgICAgX2MoXCJ0ZFwiLCB7IHN0YXRpY0NsYXNzOiBcInRleHQtY2VudGVyXCIgfSwgW1xuICAgICAgICAgICAgICAgICAgICAgICAgX3ZtLl92KF92bS5fcyhyb3cudXNlcl9saXF1aWRhdGVkX25hbWUpKVxuICAgICAgICAgICAgICAgICAgICAgIF0pLFxuICAgICAgICAgICAgICAgICAgICAgIF92bS5fdihcIiBcIiksXG4gICAgICAgICAgICAgICAgICAgICAgX2MoXCJ0ZFwiLCB7IHN0YXRpY0NsYXNzOiBcInRleHQtY2VudGVyXCIgfSwgW1xuICAgICAgICAgICAgICAgICAgICAgICAgX3ZtLl92KF92bS5fcyhyb3cuZGF0ZV9vZl9pc3N1ZSkpXG4gICAgICAgICAgICAgICAgICAgICAgXSksXG4gICAgICAgICAgICAgICAgICAgICAgX3ZtLl92KFwiIFwiKSxcbiAgICAgICAgICAgICAgICAgICAgICBfYyhcInRkXCIsIHsgc3RhdGljQ2xhc3M6IFwidGV4dC1jZW50ZXJcIiB9LCBbXG4gICAgICAgICAgICAgICAgICAgICAgICBfdm0uX3YoX3ZtLl9zKHJvdy5kYXRlX29mX2VuZCkpXG4gICAgICAgICAgICAgICAgICAgICAgXSksXG4gICAgICAgICAgICAgICAgICAgICAgX3ZtLl92KFwiIFwiKSxcbiAgICAgICAgICAgICAgICAgICAgICBfYyhcInRkXCIsIHsgc3RhdGljQ2xhc3M6IFwidGV4dC1sZWZ0XCIgfSwgW1xuICAgICAgICAgICAgICAgICAgICAgICAgX3ZtLl92KFxuICAgICAgICAgICAgICAgICAgICAgICAgICBcIlxcbiAgICAgICAgICAgICAgICAgICAgICAgIFwiICtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICBfdm0uX3Mocm93LnBlcnNvbi5uYW1lKSArXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgXCJcXG4gICAgICAgICAgICAgICAgICAgICAgICBcIlxuICAgICAgICAgICAgICAgICAgICAgICAgKSxcbiAgICAgICAgICAgICAgICAgICAgICAgIF9jKFwiYnJcIiksXG4gICAgICAgICAgICAgICAgICAgICAgICBfdm0uX3YoXCIgXCIpLFxuICAgICAgICAgICAgICAgICAgICAgICAgX2MoXCJzbWFsbFwiLCBbX3ZtLl92KF92bS5fcyhyb3cucGVyc29uLm51bWJlcikpXSlcbiAgICAgICAgICAgICAgICAgICAgICBdKSxcbiAgICAgICAgICAgICAgICAgICAgICBfdm0uX3YoXCIgXCIpLFxuICAgICAgICAgICAgICAgICAgICAgIF9jKFwidGRcIiwgeyBzdGF0aWNDbGFzczogXCJ0ZXh0LWNlbnRlclwiIH0sIFtcbiAgICAgICAgICAgICAgICAgICAgICAgIF92bS5fdihfdm0uX3Mocm93LnBlbmFsdHkpKVxuICAgICAgICAgICAgICAgICAgICAgIF0pLFxuICAgICAgICAgICAgICAgICAgICAgIF92bS5fdihcIiBcIiksXG4gICAgICAgICAgICAgICAgICAgICAgX2MoXCJ0ZFwiLCB7IHN0YXRpY0NsYXNzOiBcInRleHQtZW5kXCIgfSwgW1xuICAgICAgICAgICAgICAgICAgICAgICAgX3ZtLl92KF92bS5fcyhyb3cuY291bnRfaXRlbXMpKVxuICAgICAgICAgICAgICAgICAgICAgIF0pLFxuICAgICAgICAgICAgICAgICAgICAgIF92bS5fdihcIiBcIiksXG4gICAgICAgICAgICAgICAgICAgICAgX2MoXCJ0ZFwiLCB7IHN0YXRpY0NsYXNzOiBcInRleHQtZW5kXCIgfSwgW1xuICAgICAgICAgICAgICAgICAgICAgICAgX3ZtLl92KF92bS5fcyhyb3cudG90YWwudG9GaXhlZCgyKSkpXG4gICAgICAgICAgICAgICAgICAgICAgXSksXG4gICAgICAgICAgICAgICAgICAgICAgX3ZtLl92KFwiIFwiKSxcbiAgICAgICAgICAgICAgICAgICAgICBfYyhcInRkXCIsIHsgc3RhdGljQ2xhc3M6IFwidGV4dC1lbmRcIiB9LCBbXG4gICAgICAgICAgICAgICAgICAgICAgICBfdm0uX3YoX3ZtLl9zKHJvdy5saXF1aWRhdGVkKSlcbiAgICAgICAgICAgICAgICAgICAgICBdKVxuICAgICAgICAgICAgICAgICAgICBdKVxuICAgICAgICAgICAgICAgICAgfVxuICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgICAgXSlcbiAgICAgICAgICAgIH0sXG4gICAgICAgICAgICBbXG4gICAgICAgICAgICAgIF9jKFwidHJcIiwgeyBhdHRyczogeyBzbG90OiBcImhlYWRpbmdcIiB9LCBzbG90OiBcImhlYWRpbmdcIiB9LCBbXG4gICAgICAgICAgICAgICAgX2MoXCJ0aFwiLCBbX3ZtLl92KFwiI1wiKV0pLFxuICAgICAgICAgICAgICAgIF92bS5fdihcIiBcIiksXG4gICAgICAgICAgICAgICAgX2MoXCJ0aFwiLCB7IHN0YXRpY0NsYXNzOiBcInRleHQtY2VudGVyXCIgfSwgW192bS5fdihcIk7CsFwiKV0pLFxuICAgICAgICAgICAgICAgIF92bS5fdihcIiBcIiksXG4gICAgICAgICAgICAgICAgX2MoXCJ0aFwiLCB7IHN0YXRpY0NsYXNzOiBcInRleHQtY2VudGVyXCIgfSwgW1xuICAgICAgICAgICAgICAgICAgX3ZtLl92KFwiQ3JlYWRvIHBvclwiKVxuICAgICAgICAgICAgICAgIF0pLFxuICAgICAgICAgICAgICAgIF92bS5fdihcIiBcIiksXG4gICAgICAgICAgICAgICAgX2MoXCJ0aFwiLCB7IHN0YXRpY0NsYXNzOiBcInRleHQtY2VudGVyXCIgfSwgW1xuICAgICAgICAgICAgICAgICAgX3ZtLl92KFwiTGlxdWlkYWRvIHBvclwiKVxuICAgICAgICAgICAgICAgIF0pLFxuICAgICAgICAgICAgICAgIF92bS5fdihcIiBcIiksXG4gICAgICAgICAgICAgICAgX2MoXCJ0aFwiLCB7IHN0YXRpY0NsYXNzOiBcInRleHQtY2VudGVyXCIgfSwgW1xuICAgICAgICAgICAgICAgICAgX3ZtLl92KFwiRmVjaGEgZGUgZW1pc2nDs25cIilcbiAgICAgICAgICAgICAgICBdKSxcbiAgICAgICAgICAgICAgICBfdm0uX3YoXCIgXCIpLFxuICAgICAgICAgICAgICAgIF9jKFwidGhcIiwgeyBzdGF0aWNDbGFzczogXCJ0ZXh0LWNlbnRlclwiIH0sIFtcbiAgICAgICAgICAgICAgICAgIF92bS5fdihcIkZlY2hhIGRlIGxpcXVpZGFjacOzblwiKVxuICAgICAgICAgICAgICAgIF0pLFxuICAgICAgICAgICAgICAgIF92bS5fdihcIiBcIiksXG4gICAgICAgICAgICAgICAgX2MoXCJ0aFwiLCB7IHN0YXRpY0NsYXNzOiBcInRleHQtbGVmdFwiIH0sIFtcbiAgICAgICAgICAgICAgICAgIF92bS5fdihcIkNsaWVudGUvVmVuZGVkb3JcIilcbiAgICAgICAgICAgICAgICBdKSxcbiAgICAgICAgICAgICAgICBfdm0uX3YoXCIgXCIpLFxuICAgICAgICAgICAgICAgIF9jKFwidGhcIiwgeyBzdGF0aWNDbGFzczogXCJ0ZXh0LWNlbnRlclwiIH0sIFtfdm0uX3YoXCJQZW5hbGlkYWRcIildKSxcbiAgICAgICAgICAgICAgICBfdm0uX3YoXCIgXCIpLFxuICAgICAgICAgICAgICAgIF9jKFwidGhcIiwgeyBzdGF0aWNDbGFzczogXCJ0ZXh0LWVuZFwiIH0sIFtfdm0uX3YoXCJQcm9kdWN0b3NcIildKSxcbiAgICAgICAgICAgICAgICBfdm0uX3YoXCIgXCIpLFxuICAgICAgICAgICAgICAgIF9jKFwidGhcIiwgeyBzdGF0aWNDbGFzczogXCJ0ZXh0LWVuZFwiIH0sIFtfdm0uX3YoXCJNb250b1wiKV0pLFxuICAgICAgICAgICAgICAgIF92bS5fdihcIiBcIiksXG4gICAgICAgICAgICAgICAgX2MoXCJ0aFwiLCB7IHN0YXRpY0NsYXNzOiBcInRleHQtZW5kXCIgfSwgW192bS5fdihcIkVzdGFkb1wiKV0pXG4gICAgICAgICAgICAgIF0pLFxuICAgICAgICAgICAgICBfdm0uX3YoXCIgXCIpLFxuICAgICAgICAgICAgICBfYyhcInRyXCIpXG4gICAgICAgICAgICBdXG4gICAgICAgICAgKVxuICAgICAgICBdLFxuICAgICAgICAxXG4gICAgICApXG4gICAgXSlcbiAgXSlcbn1cbnZhciBzdGF0aWNSZW5kZXJGbnMgPSBbXG4gIGZ1bmN0aW9uKCkge1xuICAgIHZhciBfdm0gPSB0aGlzXG4gICAgdmFyIF9oID0gX3ZtLiRjcmVhdGVFbGVtZW50XG4gICAgdmFyIF9jID0gX3ZtLl9zZWxmLl9jIHx8IF9oXG4gICAgcmV0dXJuIF9jKFwiZGl2XCIsIHsgc3RhdGljQ2xhc3M6IFwiY2FyZC1oZWFkZXIgYmctcHJpbWFyeVwiIH0sIFtcbiAgICAgIF9jKFwiaDZcIiwgeyBzdGF0aWNDbGFzczogXCJteS0wIHRleHQtd2hpdGVcIiB9LCBbXG4gICAgICAgIF92bS5fdihcIkNvbnN1bHRhIGRlIENvbnNpZ25hbWllbnRvXCIpXG4gICAgICBdKVxuICAgIF0pXG4gIH1cbl1cbnJlbmRlci5fd2l0aFN0cmlwcGVkID0gdHJ1ZVxubW9kdWxlLmV4cG9ydHMgPSB7IHJlbmRlcjogcmVuZGVyLCBzdGF0aWNSZW5kZXJGbnM6IHN0YXRpY1JlbmRlckZucyB9XG5pZiAobW9kdWxlLmhvdCkge1xuICBtb2R1bGUuaG90LmFjY2VwdCgpXG4gIGlmIChtb2R1bGUuaG90LmRhdGEpIHtcbiAgICByZXF1aXJlKFwidnVlLWhvdC1yZWxvYWQtYXBpXCIpICAgICAgLnJlcmVuZGVyKFwiZGF0YS12LTdlZDg2NDE2XCIsIG1vZHVsZS5leHBvcnRzKVxuICB9XG59XG5cblxuLy8vLy8vLy8vLy8vLy8vLy8vXG4vLyBXRUJQQUNLIEZPT1RFUlxuLy8gLi9ub2RlX21vZHVsZXMvdnVlLWxvYWRlci9saWIvdGVtcGxhdGUtY29tcGlsZXI/e1wiaWRcIjpcImRhdGEtdi03ZWQ4NjQxNlwiLFwiaGFzU2NvcGVkXCI6ZmFsc2UsXCJidWJsZVwiOntcInRyYW5zZm9ybXNcIjp7fX19IS4vbm9kZV9tb2R1bGVzL3Z1ZS1sb2FkZXIvbGliL3NlbGVjdG9yLmpzP3R5cGU9dGVtcGxhdGUmaW5kZXg9MCEuL21vZHVsZXMvUmVwb3J0L1Jlc291cmNlcy9hc3NldHMvanMvdmlld3MvY29uc2lnbm1lbnQvaW5kZXgudnVlXG4vLyBtb2R1bGUgaWQgPSAuL25vZGVfbW9kdWxlcy92dWUtbG9hZGVyL2xpYi90ZW1wbGF0ZS1jb21waWxlci9pbmRleC5qcz97XCJpZFwiOlwiZGF0YS12LTdlZDg2NDE2XCIsXCJoYXNTY29wZWRcIjpmYWxzZSxcImJ1YmxlXCI6e1widHJhbnNmb3Jtc1wiOnt9fX0hLi9ub2RlX21vZHVsZXMvdnVlLWxvYWRlci9saWIvc2VsZWN0b3IuanM/dHlwZT10ZW1wbGF0ZSZpbmRleD0wIS4vbW9kdWxlcy9SZXBvcnQvUmVzb3VyY2VzL2Fzc2V0cy9qcy92aWV3cy9jb25zaWdubWVudC9pbmRleC52dWVcbi8vIG1vZHVsZSBjaHVua3MgPSAxIl0sInNvdXJjZVJvb3QiOiIifQ==\n//# sourceURL=webpack-internal:///./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-7ed86416\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Report/Resources/assets/js/views/consignment/index.vue\n");
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "card mb-0 pt-2 pt-md-0" }, [
+    _vm._m(0),
+    _vm._v(" "),
+    _c("div", { staticClass: "card mb-0" }, [
+      _c(
+        "div",
+        { staticClass: "card-body" },
+        [
+          _c(
+            "data-table",
+            {
+              attrs: { resource: _vm.resource },
+              scopedSlots: _vm._u([
+                {
+                  key: "default",
+                  fn: function(ref) {
+                    var index = ref.index
+                    var row = ref.row
+                    return _c("tr", {}, [
+                      _c("td", [_vm._v(_vm._s(index))]),
+                      _vm._v(" "),
+                      _c("td", { staticClass: "text-center" }, [
+                        _vm._v(_vm._s(row.number))
+                      ]),
+                      _vm._v(" "),
+                      _c("td", { staticClass: "text-center" }, [
+                        _vm._v(_vm._s(row.user_name))
+                      ]),
+                      _vm._v(" "),
+                      _c("td", { staticClass: "text-center" }, [
+                        _vm._v(_vm._s(row.user_liquidated_name))
+                      ]),
+                      _vm._v(" "),
+                      _c("td", { staticClass: "text-center" }, [
+                        _vm._v(_vm._s(row.date_of_issue))
+                      ]),
+                      _vm._v(" "),
+                      _c("td", { staticClass: "text-center" }, [
+                        _vm._v(_vm._s(row.date_of_end))
+                      ]),
+                      _vm._v(" "),
+                      _c("td", { staticClass: "text-left" }, [
+                        _vm._v(
+                          "\n                        " +
+                            _vm._s(row.person.name) +
+                            "\n                        "
+                        ),
+                        _c("br"),
+                        _vm._v(" "),
+                        _c("small", [_vm._v(_vm._s(row.person.number))])
+                      ]),
+                      _vm._v(" "),
+                      _c("td", { staticClass: "text-center" }, [
+                        _vm._v(_vm._s(row.penalty))
+                      ]),
+                      _vm._v(" "),
+                      _c("td", { staticClass: "text-end" }, [
+                        _vm._v(_vm._s(row.count_items))
+                      ]),
+                      _vm._v(" "),
+                      _c("td", { staticClass: "text-end" }, [
+                        _vm._v(_vm._s(row.total.toFixed(2)))
+                      ]),
+                      _vm._v(" "),
+                      _c("td", { staticClass: "text-end" }, [
+                        _vm._v(_vm._s(row.liquidated))
+                      ])
+                    ])
+                  }
+                }
+              ])
+            },
+            [
+              _c("tr", { attrs: { slot: "heading" }, slot: "heading" }, [
+                _c("th", [_vm._v("#")]),
+                _vm._v(" "),
+                _c("th", { staticClass: "text-center" }, [_vm._v("N°")]),
+                _vm._v(" "),
+                _c("th", { staticClass: "text-center" }, [
+                  _vm._v("Creado por")
+                ]),
+                _vm._v(" "),
+                _c("th", { staticClass: "text-center" }, [
+                  _vm._v("Liquidado por")
+                ]),
+                _vm._v(" "),
+                _c("th", { staticClass: "text-center" }, [
+                  _vm._v("Fecha de emisión")
+                ]),
+                _vm._v(" "),
+                _c("th", { staticClass: "text-center" }, [
+                  _vm._v("Fecha de liquidación")
+                ]),
+                _vm._v(" "),
+                _c("th", { staticClass: "text-left" }, [
+                  _vm._v("Cliente/Vendedor")
+                ]),
+                _vm._v(" "),
+                _c("th", { staticClass: "text-center" }, [_vm._v("Penalidad")]),
+                _vm._v(" "),
+                _c("th", { staticClass: "text-end" }, [_vm._v("Productos")]),
+                _vm._v(" "),
+                _c("th", { staticClass: "text-end" }, [_vm._v("Monto")]),
+                _vm._v(" "),
+                _c("th", { staticClass: "text-end" }, [_vm._v("Estado")])
+              ]),
+              _vm._v(" "),
+              _c("tr")
+            ]
+          )
+        ],
+        1
+      )
+    ])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "card-header bg-primary" }, [
+      _c("h6", { staticClass: "my-0 text-white" }, [
+        _vm._v("Consulta de Consignamiento")
+      ])
+    ])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-7ed86416", module.exports)
+  }
+}
 
 /***/ }),
 
 /***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-9a297822\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/js/components/WhatsappModalReports.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
-eval("var render = function() {\n  var _vm = this\n  var _h = _vm.$createElement\n  var _c = _vm._self._c || _h\n  return _c(\n    \"el-dialog\",\n    {\n      attrs: {\n        \"append-to-body\": \"\",\n        width: \"40%\",\n        title: \"Enviar reporte por whatsapp\",\n        visible: _vm.showWhatsappForm\n      },\n      on: { close: _vm.close, open: _vm.open }\n    },\n    [\n      _c(\n        \"div\",\n        {\n          directives: [\n            {\n              name: \"loading\",\n              rawName: \"v-loading\",\n              value: _vm.loading,\n              expression: \"loading\"\n            }\n          ],\n          staticClass: \"p-3\",\n          attrs: { \"element-loading-text\": \"Enviando..\" }\n        },\n        [\n          _c(\"label\", { attrs: { for: \"\" } }, [_vm._v(\"Número\")]),\n          _vm._v(\" \"),\n          _c(\"el-input\", {\n            staticStyle: { width: \"100%\" },\n            model: {\n              value: _vm.number,\n              callback: function($$v) {\n                _vm.number = $$v\n              },\n              expression: \"number\"\n            }\n          }),\n          _vm._v(\" \"),\n          _c(\n            \"div\",\n            { staticClass: \"d-flex justify-content-end p-1\" },\n            [_c(\"el-button\", { on: { click: _vm.send } }, [_vm._v(\"Enviar\")])],\n            1\n          )\n        ],\n        1\n      )\n    ]\n  )\n}\nvar staticRenderFns = []\nrender._withStripped = true\nmodule.exports = { render: render, staticRenderFns: staticRenderFns }\nif (false) {\n  module.hot.accept()\n  if (module.hot.data) {\n    require(\"vue-hot-reload-api\")      .rerender(\"data-v-9a297822\", module.exports)\n  }\n}//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vLi9yZXNvdXJjZXMvanMvY29tcG9uZW50cy9XaGF0c2FwcE1vZGFsUmVwb3J0cy52dWU/ZDA5ZiJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSxPQUFPO0FBQ1AsV0FBVztBQUNYLEtBQUs7QUFDTDtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLGtCQUFrQjtBQUNsQixTQUFTO0FBQ1Q7QUFDQSx1QkFBdUIsU0FBUyxVQUFVLEVBQUU7QUFDNUM7QUFDQTtBQUNBLDBCQUEwQixnQkFBZ0I7QUFDMUM7QUFDQTtBQUNBO0FBQ0E7QUFDQSxlQUFlO0FBQ2Y7QUFDQTtBQUNBLFdBQVc7QUFDWDtBQUNBO0FBQ0E7QUFDQSxhQUFhLGdEQUFnRDtBQUM3RCw4QkFBOEIsTUFBTSxrQkFBa0IsRUFBRTtBQUN4RDtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLGtCQUFrQjtBQUNsQixJQUFJLEtBQVU7QUFDZDtBQUNBO0FBQ0E7QUFDQTtBQUNBIiwiZmlsZSI6Ii4vbm9kZV9tb2R1bGVzL3Z1ZS1sb2FkZXIvbGliL3RlbXBsYXRlLWNvbXBpbGVyL2luZGV4LmpzP3tcImlkXCI6XCJkYXRhLXYtOWEyOTc4MjJcIixcImhhc1Njb3BlZFwiOmZhbHNlLFwiYnVibGVcIjp7XCJ0cmFuc2Zvcm1zXCI6e319fSEuL25vZGVfbW9kdWxlcy92dWUtbG9hZGVyL2xpYi9zZWxlY3Rvci5qcz90eXBlPXRlbXBsYXRlJmluZGV4PTAhLi9yZXNvdXJjZXMvanMvY29tcG9uZW50cy9XaGF0c2FwcE1vZGFsUmVwb3J0cy52dWUuanMiLCJzb3VyY2VzQ29udGVudCI6WyJ2YXIgcmVuZGVyID0gZnVuY3Rpb24oKSB7XG4gIHZhciBfdm0gPSB0aGlzXG4gIHZhciBfaCA9IF92bS4kY3JlYXRlRWxlbWVudFxuICB2YXIgX2MgPSBfdm0uX3NlbGYuX2MgfHwgX2hcbiAgcmV0dXJuIF9jKFxuICAgIFwiZWwtZGlhbG9nXCIsXG4gICAge1xuICAgICAgYXR0cnM6IHtcbiAgICAgICAgXCJhcHBlbmQtdG8tYm9keVwiOiBcIlwiLFxuICAgICAgICB3aWR0aDogXCI0MCVcIixcbiAgICAgICAgdGl0bGU6IFwiRW52aWFyIHJlcG9ydGUgcG9yIHdoYXRzYXBwXCIsXG4gICAgICAgIHZpc2libGU6IF92bS5zaG93V2hhdHNhcHBGb3JtXG4gICAgICB9LFxuICAgICAgb246IHsgY2xvc2U6IF92bS5jbG9zZSwgb3BlbjogX3ZtLm9wZW4gfVxuICAgIH0sXG4gICAgW1xuICAgICAgX2MoXG4gICAgICAgIFwiZGl2XCIsXG4gICAgICAgIHtcbiAgICAgICAgICBkaXJlY3RpdmVzOiBbXG4gICAgICAgICAgICB7XG4gICAgICAgICAgICAgIG5hbWU6IFwibG9hZGluZ1wiLFxuICAgICAgICAgICAgICByYXdOYW1lOiBcInYtbG9hZGluZ1wiLFxuICAgICAgICAgICAgICB2YWx1ZTogX3ZtLmxvYWRpbmcsXG4gICAgICAgICAgICAgIGV4cHJlc3Npb246IFwibG9hZGluZ1wiXG4gICAgICAgICAgICB9XG4gICAgICAgICAgXSxcbiAgICAgICAgICBzdGF0aWNDbGFzczogXCJwLTNcIixcbiAgICAgICAgICBhdHRyczogeyBcImVsZW1lbnQtbG9hZGluZy10ZXh0XCI6IFwiRW52aWFuZG8uLlwiIH1cbiAgICAgICAgfSxcbiAgICAgICAgW1xuICAgICAgICAgIF9jKFwibGFiZWxcIiwgeyBhdHRyczogeyBmb3I6IFwiXCIgfSB9LCBbX3ZtLl92KFwiTsO6bWVyb1wiKV0pLFxuICAgICAgICAgIF92bS5fdihcIiBcIiksXG4gICAgICAgICAgX2MoXCJlbC1pbnB1dFwiLCB7XG4gICAgICAgICAgICBzdGF0aWNTdHlsZTogeyB3aWR0aDogXCIxMDAlXCIgfSxcbiAgICAgICAgICAgIG1vZGVsOiB7XG4gICAgICAgICAgICAgIHZhbHVlOiBfdm0ubnVtYmVyLFxuICAgICAgICAgICAgICBjYWxsYmFjazogZnVuY3Rpb24oJCR2KSB7XG4gICAgICAgICAgICAgICAgX3ZtLm51bWJlciA9ICQkdlxuICAgICAgICAgICAgICB9LFxuICAgICAgICAgICAgICBleHByZXNzaW9uOiBcIm51bWJlclwiXG4gICAgICAgICAgICB9XG4gICAgICAgICAgfSksXG4gICAgICAgICAgX3ZtLl92KFwiIFwiKSxcbiAgICAgICAgICBfYyhcbiAgICAgICAgICAgIFwiZGl2XCIsXG4gICAgICAgICAgICB7IHN0YXRpY0NsYXNzOiBcImQtZmxleCBqdXN0aWZ5LWNvbnRlbnQtZW5kIHAtMVwiIH0sXG4gICAgICAgICAgICBbX2MoXCJlbC1idXR0b25cIiwgeyBvbjogeyBjbGljazogX3ZtLnNlbmQgfSB9LCBbX3ZtLl92KFwiRW52aWFyXCIpXSldLFxuICAgICAgICAgICAgMVxuICAgICAgICAgIClcbiAgICAgICAgXSxcbiAgICAgICAgMVxuICAgICAgKVxuICAgIF1cbiAgKVxufVxudmFyIHN0YXRpY1JlbmRlckZucyA9IFtdXG5yZW5kZXIuX3dpdGhTdHJpcHBlZCA9IHRydWVcbm1vZHVsZS5leHBvcnRzID0geyByZW5kZXI6IHJlbmRlciwgc3RhdGljUmVuZGVyRm5zOiBzdGF0aWNSZW5kZXJGbnMgfVxuaWYgKG1vZHVsZS5ob3QpIHtcbiAgbW9kdWxlLmhvdC5hY2NlcHQoKVxuICBpZiAobW9kdWxlLmhvdC5kYXRhKSB7XG4gICAgcmVxdWlyZShcInZ1ZS1ob3QtcmVsb2FkLWFwaVwiKSAgICAgIC5yZXJlbmRlcihcImRhdGEtdi05YTI5NzgyMlwiLCBtb2R1bGUuZXhwb3J0cylcbiAgfVxufVxuXG5cbi8vLy8vLy8vLy8vLy8vLy8vL1xuLy8gV0VCUEFDSyBGT09URVJcbi8vIC4vbm9kZV9tb2R1bGVzL3Z1ZS1sb2FkZXIvbGliL3RlbXBsYXRlLWNvbXBpbGVyP3tcImlkXCI6XCJkYXRhLXYtOWEyOTc4MjJcIixcImhhc1Njb3BlZFwiOmZhbHNlLFwiYnVibGVcIjp7XCJ0cmFuc2Zvcm1zXCI6e319fSEuL25vZGVfbW9kdWxlcy92dWUtbG9hZGVyL2xpYi9zZWxlY3Rvci5qcz90eXBlPXRlbXBsYXRlJmluZGV4PTAhLi9yZXNvdXJjZXMvanMvY29tcG9uZW50cy9XaGF0c2FwcE1vZGFsUmVwb3J0cy52dWVcbi8vIG1vZHVsZSBpZCA9IC4vbm9kZV9tb2R1bGVzL3Z1ZS1sb2FkZXIvbGliL3RlbXBsYXRlLWNvbXBpbGVyL2luZGV4LmpzP3tcImlkXCI6XCJkYXRhLXYtOWEyOTc4MjJcIixcImhhc1Njb3BlZFwiOmZhbHNlLFwiYnVibGVcIjp7XCJ0cmFuc2Zvcm1zXCI6e319fSEuL25vZGVfbW9kdWxlcy92dWUtbG9hZGVyL2xpYi9zZWxlY3Rvci5qcz90eXBlPXRlbXBsYXRlJmluZGV4PTAhLi9yZXNvdXJjZXMvanMvY29tcG9uZW50cy9XaGF0c2FwcE1vZGFsUmVwb3J0cy52dWVcbi8vIG1vZHVsZSBjaHVua3MgPSAxIDc3IDc4IDEzNiAxNDQiXSwic291cmNlUm9vdCI6IiJ9\n//# sourceURL=webpack-internal:///./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-9a297822\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/js/components/WhatsappModalReports.vue\n");
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "el-dialog",
+    {
+      attrs: {
+        "append-to-body": "",
+        width: "40%",
+        title: "Enviar reporte por whatsapp",
+        visible: _vm.showWhatsappForm
+      },
+      on: { close: _vm.close, open: _vm.open }
+    },
+    [
+      _c(
+        "div",
+        {
+          directives: [
+            {
+              name: "loading",
+              rawName: "v-loading",
+              value: _vm.loading,
+              expression: "loading"
+            }
+          ],
+          staticClass: "p-3",
+          attrs: { "element-loading-text": "Enviando.." }
+        },
+        [
+          _c("label", { attrs: { for: "" } }, [_vm._v("Número")]),
+          _vm._v(" "),
+          _c("el-input", {
+            staticStyle: { width: "100%" },
+            model: {
+              value: _vm.number,
+              callback: function($$v) {
+                _vm.number = $$v
+              },
+              expression: "number"
+            }
+          }),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "d-flex justify-content-end p-1" },
+            [_c("el-button", { on: { click: _vm.send } }, [_vm._v("Enviar")])],
+            1
+          )
+        ],
+        1
+      )
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-9a297822", module.exports)
+  }
+}
 
 /***/ }),
 
 /***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-a1f8963c\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Report/Resources/assets/js/components/DataTableReportsConsignment.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
-eval("var render = function() {\n  var _vm = this\n  var _h = _vm.$createElement\n  var _c = _vm._self._c || _h\n  return _c(\n    \"div\",\n    [\n      _c(\"div\", { staticClass: \"row\" }, [\n        _c(\"div\", { staticClass: \"col-md-12 col-lg-12 col-xl-12 \" }, [\n          _c(\n            \"div\",\n            { staticClass: \"row mt-2\" },\n            [\n              _c(\n                \"div\",\n                { staticClass: \"col-md-3\" },\n                [\n                  _c(\"label\", { staticClass: \"control-label\" }, [\n                    _vm._v(\"Fecha de consignación\")\n                  ]),\n                  _vm._v(\" \"),\n                  _c(\n                    \"el-select\",\n                    {\n                      on: { change: _vm.changePeriod },\n                      model: {\n                        value: _vm.form.period,\n                        callback: function($$v) {\n                          _vm.$set(_vm.form, \"period\", $$v)\n                        },\n                        expression: \"form.period\"\n                      }\n                    },\n                    [\n                      _c(\"el-option\", {\n                        key: \"month\",\n                        attrs: { value: \"month\", label: \"Por mes\" }\n                      }),\n                      _vm._v(\" \"),\n                      _c(\"el-option\", {\n                        key: \"between_months\",\n                        attrs: { value: \"between_months\", label: \"Entre meses\" }\n                      }),\n                      _vm._v(\" \"),\n                      _c(\"el-option\", {\n                        key: \"date\",\n                        attrs: { value: \"date\", label: \"Por fecha\" }\n                      }),\n                      _vm._v(\" \"),\n                      _c(\"el-option\", {\n                        key: \"between_dates\",\n                        attrs: { value: \"between_dates\", label: \"Entre fechas\" }\n                      })\n                    ],\n                    1\n                  )\n                ],\n                1\n              ),\n              _vm._v(\" \"),\n              _vm.form.period === \"month\" ||\n              _vm.form.period === \"between_months\"\n                ? [\n                    _c(\n                      \"div\",\n                      { staticClass: \"col-md-2\" },\n                      [\n                        _c(\"label\", { staticClass: \"w-100 control-label\" }, [\n                          _vm._v(\"Mes de\")\n                        ]),\n                        _vm._v(\" \"),\n                        _c(\"el-date-picker\", {\n                          staticClass: \"w-100\",\n                          attrs: {\n                            type: \"month\",\n                            \"value-format\": \"yyyy-MM\",\n                            format: \"MM/yyyy\",\n                            clearable: true\n                          },\n                          on: { change: _vm.changeDisabledMonths },\n                          model: {\n                            value: _vm.form.month_start,\n                            callback: function($$v) {\n                              _vm.$set(_vm.form, \"month_start\", $$v)\n                            },\n                            expression: \"form.month_start\"\n                          }\n                        })\n                      ],\n                      1\n                    )\n                  ]\n                : _vm._e(),\n              _vm._v(\" \"),\n              _vm.form.period === \"between_months\"\n                ? [\n                    _c(\n                      \"div\",\n                      { staticClass: \"col-md-2\" },\n                      [\n                        _c(\"label\", { staticClass: \"w-100 control-label\" }, [\n                          _vm._v(\"Mes al\")\n                        ]),\n                        _vm._v(\" \"),\n                        _c(\"el-date-picker\", {\n                          staticClass: \"w-100\",\n                          attrs: {\n                            type: \"month\",\n                            \"picker-options\": _vm.pickerOptionsMonths,\n                            \"value-format\": \"yyyy-MM\",\n                            format: \"MM/yyyy\",\n                            clearable: true\n                          },\n                          model: {\n                            value: _vm.form.month_end,\n                            callback: function($$v) {\n                              _vm.$set(_vm.form, \"month_end\", $$v)\n                            },\n                            expression: \"form.month_end\"\n                          }\n                        })\n                      ],\n                      1\n                    )\n                  ]\n                : _vm._e(),\n              _vm._v(\" \"),\n              _vm.form.period === \"date\" || _vm.form.period === \"between_dates\"\n                ? [\n                    _c(\n                      \"div\",\n                      { staticClass: \"col-md-2\" },\n                      [\n                        _c(\"label\", { staticClass: \"w-100 control-label\" }, [\n                          _vm._v(\"Fecha del\")\n                        ]),\n                        _vm._v(\" \"),\n                        _c(\"el-date-picker\", {\n                          staticClass: \"w-100\",\n                          attrs: {\n                            type: \"date\",\n                            \"value-format\": \"yyyy-MM-dd\",\n                            format: \"dd/MM/yyyy\",\n                            clearable: true\n                          },\n                          on: { change: _vm.changeDisabledDates },\n                          model: {\n                            value: _vm.form.date_start,\n                            callback: function($$v) {\n                              _vm.$set(_vm.form, \"date_start\", $$v)\n                            },\n                            expression: \"form.date_start\"\n                          }\n                        })\n                      ],\n                      1\n                    )\n                  ]\n                : _vm._e(),\n              _vm._v(\" \"),\n              _vm.form.period === \"between_dates\"\n                ? [\n                    _c(\n                      \"div\",\n                      { staticClass: \"col-md-2\" },\n                      [\n                        _c(\"label\", { staticClass: \"w-100 control-label\" }, [\n                          _vm._v(\"Fecha al\")\n                        ]),\n                        _vm._v(\" \"),\n                        _c(\"el-date-picker\", {\n                          staticClass: \"w-100\",\n                          attrs: {\n                            type: \"date\",\n                            \"picker-options\": _vm.pickerOptionsDates,\n                            \"value-format\": \"yyyy-MM-dd\",\n                            format: \"dd/MM/yyyy\",\n                            clearable: true\n                          },\n                          model: {\n                            value: _vm.form.date_end,\n                            callback: function($$v) {\n                              _vm.$set(_vm.form, \"date_end\", $$v)\n                            },\n                            expression: \"form.date_end\"\n                          }\n                        })\n                      ],\n                      1\n                    )\n                  ]\n                : _vm._e(),\n              _vm._v(\" \"),\n              _c(\"div\", { staticClass: \"col-lg-4 col-md-4\" }, [\n                _c(\n                  \"div\",\n                  { staticClass: \"form-group\" },\n                  [\n                    _c(\"label\", { staticClass: \"w-100 control-label\" }, [\n                      _vm._v(\n                        \"\\n                            Cliente\\n                        \"\n                      )\n                    ]),\n                    _vm._v(\" \"),\n                    _c(\n                      \"el-select\",\n                      {\n                        staticClass: \"w-100\",\n                        attrs: {\n                          filterable: \"\",\n                          remote: \"\",\n                          \"popper-class\": \"el-select-customers\",\n                          clearable: \"\",\n                          placeholder: \"Nombre o número de documento\",\n                          \"remote-method\": _vm.searchRemotePersons,\n                          loading: _vm.loading_search\n                        },\n                        on: { change: _vm.changePersons },\n                        model: {\n                          value: _vm.form.person_id,\n                          callback: function($$v) {\n                            _vm.$set(_vm.form, \"person_id\", $$v)\n                          },\n                          expression: \"form.person_id\"\n                        }\n                      },\n                      _vm._l(_vm.persons, function(option) {\n                        return _c(\"el-option\", {\n                          key: option.id,\n                          attrs: { value: option.id, label: option.description }\n                        })\n                      }),\n                      1\n                    )\n                  ],\n                  1\n                )\n              ]),\n              _vm._v(\" \"),\n              _c(\"div\", { staticClass: \"col-lg-3 col-md-3\" }, [\n                _c(\n                  \"div\",\n                  { staticClass: \"form-group\" },\n                  [\n                    _c(\"label\", { staticClass: \"w-100 control-label\" }, [\n                      _vm._v(\n                        \"\\n                            Estado\\n                        \"\n                      )\n                    ]),\n                    _vm._v(\" \"),\n                    _c(\n                      \"el-select\",\n                      {\n                        staticClass: \"w-100\",\n                        attrs: { clearable: \"\" },\n                        model: {\n                          value: _vm.form.liquidated,\n                          callback: function($$v) {\n                            _vm.$set(_vm.form, \"liquidated\", $$v)\n                          },\n                          expression: \"form.liquidated\"\n                        }\n                      },\n                      [\n                        _c(\"el-option\", {\n                          key: \"1\",\n                          attrs: { value: 1, label: \"Liquidado\" }\n                        }),\n                        _vm._v(\" \"),\n                        _c(\"el-option\", {\n                          key: \"2\",\n                          attrs: { value: 0, label: \"Por liquidar\" }\n                        })\n                      ],\n                      1\n                    )\n                  ],\n                  1\n                )\n              ]),\n              _vm._v(\" \"),\n              _c(\"div\", { staticClass: \"col-lg-3 col-md-3\" }, [\n                _c(\n                  \"div\",\n                  { staticClass: \"form-group\" },\n                  [\n                    _c(\"label\", { staticClass: \"w-100 control-label\" }, [\n                      _vm._v(\n                        \"\\n                            Fecha de liquidación\\n                        \"\n                      )\n                    ]),\n                    _vm._v(\" \"),\n                    _c(\"el-date-picker\", {\n                      staticClass: \"w-100\",\n                      attrs: {\n                        type: \"date\",\n                        \"value-format\": \"yyyy-MM-dd\",\n                        format: \"dd/MM/yyyy\",\n                        clearable: true\n                      },\n                      model: {\n                        value: _vm.form.date_of_end,\n                        callback: function($$v) {\n                          _vm.$set(_vm.form, \"date_of_end\", $$v)\n                        },\n                        expression: \"form.date_of_end\"\n                      }\n                    })\n                  ],\n                  1\n                )\n              ]),\n              _vm._v(\" \"),\n              _c(\n                \"div\",\n                {\n                  staticClass: \"d-flex\",\n                  staticStyle: { \"margin-top\": \"29px\" }\n                },\n                [\n                  _c(\n                    \"el-button\",\n                    {\n                      staticClass: \"submit\",\n                      attrs: {\n                        type: \"primary\",\n                        loading: _vm.loading_submit,\n                        icon: \"el-icon-search\"\n                      },\n                      on: {\n                        click: function($event) {\n                          $event.preventDefault()\n                          return _vm.getRecordsByFilter.apply(null, arguments)\n                        }\n                      }\n                    },\n                    [_vm._v(\"Buscar\")]\n                  ),\n                  _vm._v(\" \"),\n                  _vm.records.length > 0 &&\n                  _vm.resource !== \"reports/document-detractions\"\n                    ? [\n                        _c(\n                          \"el-button\",\n                          {\n                            staticClass: \"submit\",\n                            attrs: { type: \"danger\", icon: \"el-icon-tickets\" },\n                            on: {\n                              click: function($event) {\n                                $event.preventDefault()\n                                return _vm.clickDownload(\"pdf\")\n                              }\n                            }\n                          },\n                          [_vm._v(\"Exportar PDF\")]\n                        ),\n                        _vm._v(\" \"),\n                        _c(\n                          \"el-button\",\n                          {\n                            staticClass: \"submit\",\n                            attrs: { type: \"success\" },\n                            on: {\n                              click: function($event) {\n                                $event.preventDefault()\n                                return _vm.clickDownload(\"excel\")\n                              }\n                            }\n                          },\n                          [\n                            _c(\"i\", { staticClass: \"fa fa-file-excel\" }),\n                            _vm._v(\n                              \" Exportal\\n                            Excel\"\n                            )\n                          ]\n                        ),\n                        _vm._v(\" \"),\n                        _c(\n                          \"el-button\",\n                          {\n                            staticClass: \"submit\",\n                            on: {\n                              click: function($event) {\n                                $event.preventDefault()\n                                return _vm.clickOpenWhatsapp.apply(\n                                  null,\n                                  arguments\n                                )\n                              }\n                            }\n                          },\n                          [\n                            _c(\"i\", { staticClass: \"fa fa-whatsapp\" }),\n                            _vm._v(\n                              \" Enviar\\n                            whatsapp\"\n                            )\n                          ]\n                        )\n                      ]\n                    : _vm._e()\n                ],\n                2\n              )\n            ],\n            2\n          ),\n          _vm._v(\" \"),\n          _c(\"div\", { staticClass: \"row mt-1 mb-4\" })\n        ]),\n        _vm._v(\" \"),\n        _c(\"div\", { staticClass: \"col-md-12\" }, [\n          _c(\"div\", { staticClass: \"table-responsive\" }, [\n            _c(\"table\", { staticClass: \"table\" }, [\n              _c(\"thead\", [_vm._t(\"heading\")], 2),\n              _vm._v(\" \"),\n              _c(\n                \"tbody\",\n                [\n                  _vm._l(_vm.records, function(row, index) {\n                    return _vm._t(\"default\", null, {\n                      row: row,\n                      index: _vm.customIndex(index)\n                    })\n                  })\n                ],\n                2\n              ),\n              _vm._v(\" \"),\n              _vm.resource == \"reports/sales\" ||\n              _vm.resource == \"reports/purchases\"\n                ? _c(\"tfoot\", [\n                    _c(\"tr\", [\n                      _c(\"td\", {\n                        attrs: {\n                          colspan: _vm.resource == \"reports/sales\" ? 7 : 8\n                        }\n                      }),\n                      _vm._v(\" \"),\n                      _vm._m(0),\n                      _vm._v(\" \"),\n                      _c(\"td\", [_vm._v(_vm._s(_vm.totals.acum_total_taxed))]),\n                      _vm._v(\" \"),\n                      _c(\"td\", [_vm._v(_vm._s(_vm.totals.acum_total_igv))]),\n                      _vm._v(\" \"),\n                      _c(\"td\", [_vm._v(_vm._s(_vm.totals.acum_total))])\n                    ]),\n                    _vm._v(\" \"),\n                    _c(\"tr\", [\n                      _c(\"td\", {\n                        attrs: {\n                          colspan: _vm.resource == \"reports/sales\" ? 7 : 8\n                        }\n                      }),\n                      _vm._v(\" \"),\n                      _vm._m(1),\n                      _vm._v(\" \"),\n                      _c(\"td\", [\n                        _vm._v(_vm._s(_vm.totals.acum_total_taxed_usd))\n                      ]),\n                      _vm._v(\" \"),\n                      _c(\"td\", [_vm._v(_vm._s(_vm.totals.acum_total_igv_usd))]),\n                      _vm._v(\" \"),\n                      _c(\"td\", [_vm._v(_vm._s(_vm.totals.acum_total_usd))])\n                    ])\n                  ])\n                : _vm._e()\n            ]),\n            _vm._v(\" \"),\n            _c(\n              \"div\",\n              [\n                _c(\"el-pagination\", {\n                  attrs: {\n                    layout: \"total, prev, pager, next\",\n                    total: _vm.pagination.total,\n                    \"current-page\": _vm.pagination.current_page,\n                    \"page-size\": _vm.pagination.per_page\n                  },\n                  on: {\n                    \"current-change\": _vm.getRecords,\n                    \"update:currentPage\": function($event) {\n                      return _vm.$set(_vm.pagination, \"current_page\", $event)\n                    },\n                    \"update:current-page\": function($event) {\n                      return _vm.$set(_vm.pagination, \"current_page\", $event)\n                    }\n                  }\n                })\n              ],\n              1\n            )\n          ])\n        ])\n      ]),\n      _vm._v(\" \"),\n      _c(\"whatsapp-form-report\", {\n        attrs: {\n          message: _vm.messageReport,\n          resource: _vm.resourceReport,\n          showWhatsappForm: _vm.showWhatsappForm\n        },\n        on: {\n          \"update:message\": function($event) {\n            _vm.messageReport = $event\n          },\n          \"update:showWhatsappForm\": function($event) {\n            _vm.showWhatsappForm = $event\n          },\n          \"update:show-whatsapp-form\": function($event) {\n            _vm.showWhatsappForm = $event\n          }\n        }\n      })\n    ],\n    1\n  )\n}\nvar staticRenderFns = [\n  function() {\n    var _vm = this\n    var _h = _vm.$createElement\n    var _c = _vm._self._c || _h\n    return _c(\"td\", [_c(\"strong\", [_vm._v(\"Totales PEN\")])])\n  },\n  function() {\n    var _vm = this\n    var _h = _vm.$createElement\n    var _c = _vm._self._c || _h\n    return _c(\"td\", [_c(\"strong\", [_vm._v(\"Totales USD\")])])\n  }\n]\nrender._withStripped = true\nmodule.exports = { render: render, staticRenderFns: staticRenderFns }\nif (false) {\n  module.hot.accept()\n  if (module.hot.data) {\n    require(\"vue-hot-reload-api\")      .rerender(\"data-v-a1f8963c\", module.exports)\n  }\n}//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vLi9tb2R1bGVzL1JlcG9ydC9SZXNvdXJjZXMvYXNzZXRzL2pzL2NvbXBvbmVudHMvRGF0YVRhYmxlUmVwb3J0c0NvbnNpZ25tZW50LnZ1ZT8zMmExIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0EsaUJBQWlCLHFCQUFxQjtBQUN0QyxtQkFBbUIsZ0RBQWdEO0FBQ25FO0FBQ0E7QUFDQSxhQUFhLDBCQUEwQjtBQUN2QztBQUNBO0FBQ0E7QUFDQSxpQkFBaUIsMEJBQTBCO0FBQzNDO0FBQ0EsK0JBQStCLCtCQUErQjtBQUM5RDtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSwyQkFBMkIsMkJBQTJCO0FBQ3REO0FBQ0E7QUFDQTtBQUNBO0FBQ0EseUJBQXlCO0FBQ3pCO0FBQ0E7QUFDQSxxQkFBcUI7QUFDckI7QUFDQTtBQUNBO0FBQ0EsZ0NBQWdDO0FBQ2hDLHVCQUF1QjtBQUN2QjtBQUNBO0FBQ0E7QUFDQSxnQ0FBZ0M7QUFDaEMsdUJBQXVCO0FBQ3ZCO0FBQ0E7QUFDQTtBQUNBLGdDQUFnQztBQUNoQyx1QkFBdUI7QUFDdkI7QUFDQTtBQUNBO0FBQ0EsZ0NBQWdDO0FBQ2hDLHVCQUF1QjtBQUN2QjtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSx1QkFBdUIsMEJBQTBCO0FBQ2pEO0FBQ0EscUNBQXFDLHFDQUFxQztBQUMxRTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLDJCQUEyQjtBQUMzQiwrQkFBK0IsbUNBQW1DO0FBQ2xFO0FBQ0E7QUFDQTtBQUNBO0FBQ0EsNkJBQTZCO0FBQzdCO0FBQ0E7QUFDQSx5QkFBeUI7QUFDekI7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSx1QkFBdUIsMEJBQTBCO0FBQ2pEO0FBQ0EscUNBQXFDLHFDQUFxQztBQUMxRTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0EsMkJBQTJCO0FBQzNCO0FBQ0E7QUFDQTtBQUNBO0FBQ0EsNkJBQTZCO0FBQzdCO0FBQ0E7QUFDQSx5QkFBeUI7QUFDekI7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSx1QkFBdUIsMEJBQTBCO0FBQ2pEO0FBQ0EscUNBQXFDLHFDQUFxQztBQUMxRTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLDJCQUEyQjtBQUMzQiwrQkFBK0Isa0NBQWtDO0FBQ2pFO0FBQ0E7QUFDQTtBQUNBO0FBQ0EsNkJBQTZCO0FBQzdCO0FBQ0E7QUFDQSx5QkFBeUI7QUFDekI7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSx1QkFBdUIsMEJBQTBCO0FBQ2pEO0FBQ0EscUNBQXFDLHFDQUFxQztBQUMxRTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0EsMkJBQTJCO0FBQzNCO0FBQ0E7QUFDQTtBQUNBO0FBQ0EsNkJBQTZCO0FBQzdCO0FBQ0E7QUFDQSx5QkFBeUI7QUFDekI7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0EseUJBQXlCLG1DQUFtQztBQUM1RDtBQUNBO0FBQ0EsbUJBQW1CLDRCQUE0QjtBQUMvQztBQUNBLGlDQUFpQyxxQ0FBcUM7QUFDdEU7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLHlCQUF5QjtBQUN6Qiw2QkFBNkIsNEJBQTRCO0FBQ3pEO0FBQ0E7QUFDQTtBQUNBO0FBQ0EsMkJBQTJCO0FBQzNCO0FBQ0E7QUFDQSx1QkFBdUI7QUFDdkI7QUFDQTtBQUNBO0FBQ0Esa0NBQWtDO0FBQ2xDLHlCQUF5QjtBQUN6Qix1QkFBdUI7QUFDdkI7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSx5QkFBeUIsbUNBQW1DO0FBQzVEO0FBQ0E7QUFDQSxtQkFBbUIsNEJBQTRCO0FBQy9DO0FBQ0EsaUNBQWlDLHFDQUFxQztBQUN0RTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSxnQ0FBZ0MsZ0JBQWdCO0FBQ2hEO0FBQ0E7QUFDQTtBQUNBO0FBQ0EsMkJBQTJCO0FBQzNCO0FBQ0E7QUFDQSx1QkFBdUI7QUFDdkI7QUFDQTtBQUNBO0FBQ0Esa0NBQWtDO0FBQ2xDLHlCQUF5QjtBQUN6QjtBQUNBO0FBQ0E7QUFDQSxrQ0FBa0M7QUFDbEMseUJBQXlCO0FBQ3pCO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSx5QkFBeUIsbUNBQW1DO0FBQzVEO0FBQ0E7QUFDQSxtQkFBbUIsNEJBQTRCO0FBQy9DO0FBQ0EsaUNBQWlDLHFDQUFxQztBQUN0RTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSx1QkFBdUI7QUFDdkI7QUFDQTtBQUNBO0FBQ0E7QUFDQSx5QkFBeUI7QUFDekI7QUFDQTtBQUNBLHFCQUFxQjtBQUNyQjtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSxnQ0FBZ0M7QUFDaEMsaUJBQWlCO0FBQ2pCO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLHVCQUF1QjtBQUN2QjtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSxxQkFBcUI7QUFDckI7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSxvQ0FBb0MsMENBQTBDO0FBQzlFO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLDJCQUEyQjtBQUMzQjtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLG9DQUFvQyxrQkFBa0I7QUFDdEQ7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0EsMkJBQTJCO0FBQzNCO0FBQ0EscUNBQXFDLGtDQUFrQztBQUN2RTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLDJCQUEyQjtBQUMzQjtBQUNBLHFDQUFxQyxnQ0FBZ0M7QUFDckU7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLHFCQUFxQiwrQkFBK0I7QUFDcEQ7QUFDQTtBQUNBLG1CQUFtQiwyQkFBMkI7QUFDOUMscUJBQXFCLGtDQUFrQztBQUN2RCx5QkFBeUIsdUJBQXVCO0FBQ2hEO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLHFCQUFxQjtBQUNyQixtQkFBbUI7QUFDbkI7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0EsdUJBQXVCO0FBQ3ZCO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLHVCQUF1QjtBQUN2QjtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSxtQkFBbUI7QUFDbkI7QUFDQTtBQUNBO0FBQ0E7QUFDQSxxQkFBcUI7QUFDckI7QUFDQTtBQUNBO0FBQ0E7QUFDQSxpQkFBaUI7QUFDakI7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0EsU0FBUztBQUNUO0FBQ0E7QUFDQTtBQUNBLFdBQVc7QUFDWDtBQUNBO0FBQ0EsV0FBVztBQUNYO0FBQ0E7QUFDQTtBQUNBO0FBQ0EsT0FBTztBQUNQO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0EsR0FBRztBQUNIO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSxrQkFBa0I7QUFDbEIsSUFBSSxLQUFVO0FBQ2Q7QUFDQTtBQUNBO0FBQ0E7QUFDQSIsImZpbGUiOiIuL25vZGVfbW9kdWxlcy92dWUtbG9hZGVyL2xpYi90ZW1wbGF0ZS1jb21waWxlci9pbmRleC5qcz97XCJpZFwiOlwiZGF0YS12LWExZjg5NjNjXCIsXCJoYXNTY29wZWRcIjpmYWxzZSxcImJ1YmxlXCI6e1widHJhbnNmb3Jtc1wiOnt9fX0hLi9ub2RlX21vZHVsZXMvdnVlLWxvYWRlci9saWIvc2VsZWN0b3IuanM/dHlwZT10ZW1wbGF0ZSZpbmRleD0wIS4vbW9kdWxlcy9SZXBvcnQvUmVzb3VyY2VzL2Fzc2V0cy9qcy9jb21wb25lbnRzL0RhdGFUYWJsZVJlcG9ydHNDb25zaWdubWVudC52dWUuanMiLCJzb3VyY2VzQ29udGVudCI6WyJ2YXIgcmVuZGVyID0gZnVuY3Rpb24oKSB7XG4gIHZhciBfdm0gPSB0aGlzXG4gIHZhciBfaCA9IF92bS4kY3JlYXRlRWxlbWVudFxuICB2YXIgX2MgPSBfdm0uX3NlbGYuX2MgfHwgX2hcbiAgcmV0dXJuIF9jKFxuICAgIFwiZGl2XCIsXG4gICAgW1xuICAgICAgX2MoXCJkaXZcIiwgeyBzdGF0aWNDbGFzczogXCJyb3dcIiB9LCBbXG4gICAgICAgIF9jKFwiZGl2XCIsIHsgc3RhdGljQ2xhc3M6IFwiY29sLW1kLTEyIGNvbC1sZy0xMiBjb2wteGwtMTIgXCIgfSwgW1xuICAgICAgICAgIF9jKFxuICAgICAgICAgICAgXCJkaXZcIixcbiAgICAgICAgICAgIHsgc3RhdGljQ2xhc3M6IFwicm93IG10LTJcIiB9LFxuICAgICAgICAgICAgW1xuICAgICAgICAgICAgICBfYyhcbiAgICAgICAgICAgICAgICBcImRpdlwiLFxuICAgICAgICAgICAgICAgIHsgc3RhdGljQ2xhc3M6IFwiY29sLW1kLTNcIiB9LFxuICAgICAgICAgICAgICAgIFtcbiAgICAgICAgICAgICAgICAgIF9jKFwibGFiZWxcIiwgeyBzdGF0aWNDbGFzczogXCJjb250cm9sLWxhYmVsXCIgfSwgW1xuICAgICAgICAgICAgICAgICAgICBfdm0uX3YoXCJGZWNoYSBkZSBjb25zaWduYWNpw7NuXCIpXG4gICAgICAgICAgICAgICAgICBdKSxcbiAgICAgICAgICAgICAgICAgIF92bS5fdihcIiBcIiksXG4gICAgICAgICAgICAgICAgICBfYyhcbiAgICAgICAgICAgICAgICAgICAgXCJlbC1zZWxlY3RcIixcbiAgICAgICAgICAgICAgICAgICAge1xuICAgICAgICAgICAgICAgICAgICAgIG9uOiB7IGNoYW5nZTogX3ZtLmNoYW5nZVBlcmlvZCB9LFxuICAgICAgICAgICAgICAgICAgICAgIG1vZGVsOiB7XG4gICAgICAgICAgICAgICAgICAgICAgICB2YWx1ZTogX3ZtLmZvcm0ucGVyaW9kLFxuICAgICAgICAgICAgICAgICAgICAgICAgY2FsbGJhY2s6IGZ1bmN0aW9uKCQkdikge1xuICAgICAgICAgICAgICAgICAgICAgICAgICBfdm0uJHNldChfdm0uZm9ybSwgXCJwZXJpb2RcIiwgJCR2KVxuICAgICAgICAgICAgICAgICAgICAgICAgfSxcbiAgICAgICAgICAgICAgICAgICAgICAgIGV4cHJlc3Npb246IFwiZm9ybS5wZXJpb2RcIlxuICAgICAgICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgICAgICAgICAgfSxcbiAgICAgICAgICAgICAgICAgICAgW1xuICAgICAgICAgICAgICAgICAgICAgIF9jKFwiZWwtb3B0aW9uXCIsIHtcbiAgICAgICAgICAgICAgICAgICAgICAgIGtleTogXCJtb250aFwiLFxuICAgICAgICAgICAgICAgICAgICAgICAgYXR0cnM6IHsgdmFsdWU6IFwibW9udGhcIiwgbGFiZWw6IFwiUG9yIG1lc1wiIH1cbiAgICAgICAgICAgICAgICAgICAgICB9KSxcbiAgICAgICAgICAgICAgICAgICAgICBfdm0uX3YoXCIgXCIpLFxuICAgICAgICAgICAgICAgICAgICAgIF9jKFwiZWwtb3B0aW9uXCIsIHtcbiAgICAgICAgICAgICAgICAgICAgICAgIGtleTogXCJiZXR3ZWVuX21vbnRoc1wiLFxuICAgICAgICAgICAgICAgICAgICAgICAgYXR0cnM6IHsgdmFsdWU6IFwiYmV0d2Vlbl9tb250aHNcIiwgbGFiZWw6IFwiRW50cmUgbWVzZXNcIiB9XG4gICAgICAgICAgICAgICAgICAgICAgfSksXG4gICAgICAgICAgICAgICAgICAgICAgX3ZtLl92KFwiIFwiKSxcbiAgICAgICAgICAgICAgICAgICAgICBfYyhcImVsLW9wdGlvblwiLCB7XG4gICAgICAgICAgICAgICAgICAgICAgICBrZXk6IFwiZGF0ZVwiLFxuICAgICAgICAgICAgICAgICAgICAgICAgYXR0cnM6IHsgdmFsdWU6IFwiZGF0ZVwiLCBsYWJlbDogXCJQb3IgZmVjaGFcIiB9XG4gICAgICAgICAgICAgICAgICAgICAgfSksXG4gICAgICAgICAgICAgICAgICAgICAgX3ZtLl92KFwiIFwiKSxcbiAgICAgICAgICAgICAgICAgICAgICBfYyhcImVsLW9wdGlvblwiLCB7XG4gICAgICAgICAgICAgICAgICAgICAgICBrZXk6IFwiYmV0d2Vlbl9kYXRlc1wiLFxuICAgICAgICAgICAgICAgICAgICAgICAgYXR0cnM6IHsgdmFsdWU6IFwiYmV0d2Vlbl9kYXRlc1wiLCBsYWJlbDogXCJFbnRyZSBmZWNoYXNcIiB9XG4gICAgICAgICAgICAgICAgICAgICAgfSlcbiAgICAgICAgICAgICAgICAgICAgXSxcbiAgICAgICAgICAgICAgICAgICAgMVxuICAgICAgICAgICAgICAgICAgKVxuICAgICAgICAgICAgICAgIF0sXG4gICAgICAgICAgICAgICAgMVxuICAgICAgICAgICAgICApLFxuICAgICAgICAgICAgICBfdm0uX3YoXCIgXCIpLFxuICAgICAgICAgICAgICBfdm0uZm9ybS5wZXJpb2QgPT09IFwibW9udGhcIiB8fFxuICAgICAgICAgICAgICBfdm0uZm9ybS5wZXJpb2QgPT09IFwiYmV0d2Vlbl9tb250aHNcIlxuICAgICAgICAgICAgICAgID8gW1xuICAgICAgICAgICAgICAgICAgICBfYyhcbiAgICAgICAgICAgICAgICAgICAgICBcImRpdlwiLFxuICAgICAgICAgICAgICAgICAgICAgIHsgc3RhdGljQ2xhc3M6IFwiY29sLW1kLTJcIiB9LFxuICAgICAgICAgICAgICAgICAgICAgIFtcbiAgICAgICAgICAgICAgICAgICAgICAgIF9jKFwibGFiZWxcIiwgeyBzdGF0aWNDbGFzczogXCJ3LTEwMCBjb250cm9sLWxhYmVsXCIgfSwgW1xuICAgICAgICAgICAgICAgICAgICAgICAgICBfdm0uX3YoXCJNZXMgZGVcIilcbiAgICAgICAgICAgICAgICAgICAgICAgIF0pLFxuICAgICAgICAgICAgICAgICAgICAgICAgX3ZtLl92KFwiIFwiKSxcbiAgICAgICAgICAgICAgICAgICAgICAgIF9jKFwiZWwtZGF0ZS1waWNrZXJcIiwge1xuICAgICAgICAgICAgICAgICAgICAgICAgICBzdGF0aWNDbGFzczogXCJ3LTEwMFwiLFxuICAgICAgICAgICAgICAgICAgICAgICAgICBhdHRyczoge1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgIHR5cGU6IFwibW9udGhcIixcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICBcInZhbHVlLWZvcm1hdFwiOiBcInl5eXktTU1cIixcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICBmb3JtYXQ6IFwiTU0veXl5eVwiLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNsZWFyYWJsZTogdHJ1ZVxuICAgICAgICAgICAgICAgICAgICAgICAgICB9LFxuICAgICAgICAgICAgICAgICAgICAgICAgICBvbjogeyBjaGFuZ2U6IF92bS5jaGFuZ2VEaXNhYmxlZE1vbnRocyB9LFxuICAgICAgICAgICAgICAgICAgICAgICAgICBtb2RlbDoge1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgIHZhbHVlOiBfdm0uZm9ybS5tb250aF9zdGFydCxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICBjYWxsYmFjazogZnVuY3Rpb24oJCR2KSB7XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICBfdm0uJHNldChfdm0uZm9ybSwgXCJtb250aF9zdGFydFwiLCAkJHYpXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgfSxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICBleHByZXNzaW9uOiBcImZvcm0ubW9udGhfc3RhcnRcIlxuICAgICAgICAgICAgICAgICAgICAgICAgICB9XG4gICAgICAgICAgICAgICAgICAgICAgICB9KVxuICAgICAgICAgICAgICAgICAgICAgIF0sXG4gICAgICAgICAgICAgICAgICAgICAgMVxuICAgICAgICAgICAgICAgICAgICApXG4gICAgICAgICAgICAgICAgICBdXG4gICAgICAgICAgICAgICAgOiBfdm0uX2UoKSxcbiAgICAgICAgICAgICAgX3ZtLl92KFwiIFwiKSxcbiAgICAgICAgICAgICAgX3ZtLmZvcm0ucGVyaW9kID09PSBcImJldHdlZW5fbW9udGhzXCJcbiAgICAgICAgICAgICAgICA/IFtcbiAgICAgICAgICAgICAgICAgICAgX2MoXG4gICAgICAgICAgICAgICAgICAgICAgXCJkaXZcIixcbiAgICAgICAgICAgICAgICAgICAgICB7IHN0YXRpY0NsYXNzOiBcImNvbC1tZC0yXCIgfSxcbiAgICAgICAgICAgICAgICAgICAgICBbXG4gICAgICAgICAgICAgICAgICAgICAgICBfYyhcImxhYmVsXCIsIHsgc3RhdGljQ2xhc3M6IFwidy0xMDAgY29udHJvbC1sYWJlbFwiIH0sIFtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgX3ZtLl92KFwiTWVzIGFsXCIpXG4gICAgICAgICAgICAgICAgICAgICAgICBdKSxcbiAgICAgICAgICAgICAgICAgICAgICAgIF92bS5fdihcIiBcIiksXG4gICAgICAgICAgICAgICAgICAgICAgICBfYyhcImVsLWRhdGUtcGlja2VyXCIsIHtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgc3RhdGljQ2xhc3M6IFwidy0xMDBcIixcbiAgICAgICAgICAgICAgICAgICAgICAgICAgYXR0cnM6IHtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICB0eXBlOiBcIm1vbnRoXCIsXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgXCJwaWNrZXItb3B0aW9uc1wiOiBfdm0ucGlja2VyT3B0aW9uc01vbnRocyxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICBcInZhbHVlLWZvcm1hdFwiOiBcInl5eXktTU1cIixcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICBmb3JtYXQ6IFwiTU0veXl5eVwiLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNsZWFyYWJsZTogdHJ1ZVxuICAgICAgICAgICAgICAgICAgICAgICAgICB9LFxuICAgICAgICAgICAgICAgICAgICAgICAgICBtb2RlbDoge1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgIHZhbHVlOiBfdm0uZm9ybS5tb250aF9lbmQsXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgY2FsbGJhY2s6IGZ1bmN0aW9uKCQkdikge1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgX3ZtLiRzZXQoX3ZtLmZvcm0sIFwibW9udGhfZW5kXCIsICQkdilcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICB9LFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIGV4cHJlc3Npb246IFwiZm9ybS5tb250aF9lbmRcIlxuICAgICAgICAgICAgICAgICAgICAgICAgICB9XG4gICAgICAgICAgICAgICAgICAgICAgICB9KVxuICAgICAgICAgICAgICAgICAgICAgIF0sXG4gICAgICAgICAgICAgICAgICAgICAgMVxuICAgICAgICAgICAgICAgICAgICApXG4gICAgICAgICAgICAgICAgICBdXG4gICAgICAgICAgICAgICAgOiBfdm0uX2UoKSxcbiAgICAgICAgICAgICAgX3ZtLl92KFwiIFwiKSxcbiAgICAgICAgICAgICAgX3ZtLmZvcm0ucGVyaW9kID09PSBcImRhdGVcIiB8fCBfdm0uZm9ybS5wZXJpb2QgPT09IFwiYmV0d2Vlbl9kYXRlc1wiXG4gICAgICAgICAgICAgICAgPyBbXG4gICAgICAgICAgICAgICAgICAgIF9jKFxuICAgICAgICAgICAgICAgICAgICAgIFwiZGl2XCIsXG4gICAgICAgICAgICAgICAgICAgICAgeyBzdGF0aWNDbGFzczogXCJjb2wtbWQtMlwiIH0sXG4gICAgICAgICAgICAgICAgICAgICAgW1xuICAgICAgICAgICAgICAgICAgICAgICAgX2MoXCJsYWJlbFwiLCB7IHN0YXRpY0NsYXNzOiBcInctMTAwIGNvbnRyb2wtbGFiZWxcIiB9LCBbXG4gICAgICAgICAgICAgICAgICAgICAgICAgIF92bS5fdihcIkZlY2hhIGRlbFwiKVxuICAgICAgICAgICAgICAgICAgICAgICAgXSksXG4gICAgICAgICAgICAgICAgICAgICAgICBfdm0uX3YoXCIgXCIpLFxuICAgICAgICAgICAgICAgICAgICAgICAgX2MoXCJlbC1kYXRlLXBpY2tlclwiLCB7XG4gICAgICAgICAgICAgICAgICAgICAgICAgIHN0YXRpY0NsYXNzOiBcInctMTAwXCIsXG4gICAgICAgICAgICAgICAgICAgICAgICAgIGF0dHJzOiB7XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgdHlwZTogXCJkYXRlXCIsXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgXCJ2YWx1ZS1mb3JtYXRcIjogXCJ5eXl5LU1NLWRkXCIsXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgZm9ybWF0OiBcImRkL01NL3l5eXlcIixcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICBjbGVhcmFibGU6IHRydWVcbiAgICAgICAgICAgICAgICAgICAgICAgICAgfSxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgb246IHsgY2hhbmdlOiBfdm0uY2hhbmdlRGlzYWJsZWREYXRlcyB9LFxuICAgICAgICAgICAgICAgICAgICAgICAgICBtb2RlbDoge1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgIHZhbHVlOiBfdm0uZm9ybS5kYXRlX3N0YXJ0LFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNhbGxiYWNrOiBmdW5jdGlvbigkJHYpIHtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIF92bS4kc2V0KF92bS5mb3JtLCBcImRhdGVfc3RhcnRcIiwgJCR2KVxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIH0sXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgZXhwcmVzc2lvbjogXCJmb3JtLmRhdGVfc3RhcnRcIlxuICAgICAgICAgICAgICAgICAgICAgICAgICB9XG4gICAgICAgICAgICAgICAgICAgICAgICB9KVxuICAgICAgICAgICAgICAgICAgICAgIF0sXG4gICAgICAgICAgICAgICAgICAgICAgMVxuICAgICAgICAgICAgICAgICAgICApXG4gICAgICAgICAgICAgICAgICBdXG4gICAgICAgICAgICAgICAgOiBfdm0uX2UoKSxcbiAgICAgICAgICAgICAgX3ZtLl92KFwiIFwiKSxcbiAgICAgICAgICAgICAgX3ZtLmZvcm0ucGVyaW9kID09PSBcImJldHdlZW5fZGF0ZXNcIlxuICAgICAgICAgICAgICAgID8gW1xuICAgICAgICAgICAgICAgICAgICBfYyhcbiAgICAgICAgICAgICAgICAgICAgICBcImRpdlwiLFxuICAgICAgICAgICAgICAgICAgICAgIHsgc3RhdGljQ2xhc3M6IFwiY29sLW1kLTJcIiB9LFxuICAgICAgICAgICAgICAgICAgICAgIFtcbiAgICAgICAgICAgICAgICAgICAgICAgIF9jKFwibGFiZWxcIiwgeyBzdGF0aWNDbGFzczogXCJ3LTEwMCBjb250cm9sLWxhYmVsXCIgfSwgW1xuICAgICAgICAgICAgICAgICAgICAgICAgICBfdm0uX3YoXCJGZWNoYSBhbFwiKVxuICAgICAgICAgICAgICAgICAgICAgICAgXSksXG4gICAgICAgICAgICAgICAgICAgICAgICBfdm0uX3YoXCIgXCIpLFxuICAgICAgICAgICAgICAgICAgICAgICAgX2MoXCJlbC1kYXRlLXBpY2tlclwiLCB7XG4gICAgICAgICAgICAgICAgICAgICAgICAgIHN0YXRpY0NsYXNzOiBcInctMTAwXCIsXG4gICAgICAgICAgICAgICAgICAgICAgICAgIGF0dHJzOiB7XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgdHlwZTogXCJkYXRlXCIsXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgXCJwaWNrZXItb3B0aW9uc1wiOiBfdm0ucGlja2VyT3B0aW9uc0RhdGVzLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIFwidmFsdWUtZm9ybWF0XCI6IFwieXl5eS1NTS1kZFwiLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIGZvcm1hdDogXCJkZC9NTS95eXl5XCIsXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgY2xlYXJhYmxlOiB0cnVlXG4gICAgICAgICAgICAgICAgICAgICAgICAgIH0sXG4gICAgICAgICAgICAgICAgICAgICAgICAgIG1vZGVsOiB7XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgdmFsdWU6IF92bS5mb3JtLmRhdGVfZW5kLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNhbGxiYWNrOiBmdW5jdGlvbigkJHYpIHtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIF92bS4kc2V0KF92bS5mb3JtLCBcImRhdGVfZW5kXCIsICQkdilcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICB9LFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIGV4cHJlc3Npb246IFwiZm9ybS5kYXRlX2VuZFwiXG4gICAgICAgICAgICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgICAgICAgICAgICAgIH0pXG4gICAgICAgICAgICAgICAgICAgICAgXSxcbiAgICAgICAgICAgICAgICAgICAgICAxXG4gICAgICAgICAgICAgICAgICAgIClcbiAgICAgICAgICAgICAgICAgIF1cbiAgICAgICAgICAgICAgICA6IF92bS5fZSgpLFxuICAgICAgICAgICAgICBfdm0uX3YoXCIgXCIpLFxuICAgICAgICAgICAgICBfYyhcImRpdlwiLCB7IHN0YXRpY0NsYXNzOiBcImNvbC1sZy00IGNvbC1tZC00XCIgfSwgW1xuICAgICAgICAgICAgICAgIF9jKFxuICAgICAgICAgICAgICAgICAgXCJkaXZcIixcbiAgICAgICAgICAgICAgICAgIHsgc3RhdGljQ2xhc3M6IFwiZm9ybS1ncm91cFwiIH0sXG4gICAgICAgICAgICAgICAgICBbXG4gICAgICAgICAgICAgICAgICAgIF9jKFwibGFiZWxcIiwgeyBzdGF0aWNDbGFzczogXCJ3LTEwMCBjb250cm9sLWxhYmVsXCIgfSwgW1xuICAgICAgICAgICAgICAgICAgICAgIF92bS5fdihcbiAgICAgICAgICAgICAgICAgICAgICAgIFwiXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIENsaWVudGVcXG4gICAgICAgICAgICAgICAgICAgICAgICBcIlxuICAgICAgICAgICAgICAgICAgICAgIClcbiAgICAgICAgICAgICAgICAgICAgXSksXG4gICAgICAgICAgICAgICAgICAgIF92bS5fdihcIiBcIiksXG4gICAgICAgICAgICAgICAgICAgIF9jKFxuICAgICAgICAgICAgICAgICAgICAgIFwiZWwtc2VsZWN0XCIsXG4gICAgICAgICAgICAgICAgICAgICAge1xuICAgICAgICAgICAgICAgICAgICAgICAgc3RhdGljQ2xhc3M6IFwidy0xMDBcIixcbiAgICAgICAgICAgICAgICAgICAgICAgIGF0dHJzOiB7XG4gICAgICAgICAgICAgICAgICAgICAgICAgIGZpbHRlcmFibGU6IFwiXCIsXG4gICAgICAgICAgICAgICAgICAgICAgICAgIHJlbW90ZTogXCJcIixcbiAgICAgICAgICAgICAgICAgICAgICAgICAgXCJwb3BwZXItY2xhc3NcIjogXCJlbC1zZWxlY3QtY3VzdG9tZXJzXCIsXG4gICAgICAgICAgICAgICAgICAgICAgICAgIGNsZWFyYWJsZTogXCJcIixcbiAgICAgICAgICAgICAgICAgICAgICAgICAgcGxhY2Vob2xkZXI6IFwiTm9tYnJlIG8gbsO6bWVybyBkZSBkb2N1bWVudG9cIixcbiAgICAgICAgICAgICAgICAgICAgICAgICAgXCJyZW1vdGUtbWV0aG9kXCI6IF92bS5zZWFyY2hSZW1vdGVQZXJzb25zLFxuICAgICAgICAgICAgICAgICAgICAgICAgICBsb2FkaW5nOiBfdm0ubG9hZGluZ19zZWFyY2hcbiAgICAgICAgICAgICAgICAgICAgICAgIH0sXG4gICAgICAgICAgICAgICAgICAgICAgICBvbjogeyBjaGFuZ2U6IF92bS5jaGFuZ2VQZXJzb25zIH0sXG4gICAgICAgICAgICAgICAgICAgICAgICBtb2RlbDoge1xuICAgICAgICAgICAgICAgICAgICAgICAgICB2YWx1ZTogX3ZtLmZvcm0ucGVyc29uX2lkLFxuICAgICAgICAgICAgICAgICAgICAgICAgICBjYWxsYmFjazogZnVuY3Rpb24oJCR2KSB7XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgX3ZtLiRzZXQoX3ZtLmZvcm0sIFwicGVyc29uX2lkXCIsICQkdilcbiAgICAgICAgICAgICAgICAgICAgICAgICAgfSxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgZXhwcmVzc2lvbjogXCJmb3JtLnBlcnNvbl9pZFwiXG4gICAgICAgICAgICAgICAgICAgICAgICB9XG4gICAgICAgICAgICAgICAgICAgICAgfSxcbiAgICAgICAgICAgICAgICAgICAgICBfdm0uX2woX3ZtLnBlcnNvbnMsIGZ1bmN0aW9uKG9wdGlvbikge1xuICAgICAgICAgICAgICAgICAgICAgICAgcmV0dXJuIF9jKFwiZWwtb3B0aW9uXCIsIHtcbiAgICAgICAgICAgICAgICAgICAgICAgICAga2V5OiBvcHRpb24uaWQsXG4gICAgICAgICAgICAgICAgICAgICAgICAgIGF0dHJzOiB7IHZhbHVlOiBvcHRpb24uaWQsIGxhYmVsOiBvcHRpb24uZGVzY3JpcHRpb24gfVxuICAgICAgICAgICAgICAgICAgICAgICAgfSlcbiAgICAgICAgICAgICAgICAgICAgICB9KSxcbiAgICAgICAgICAgICAgICAgICAgICAxXG4gICAgICAgICAgICAgICAgICAgIClcbiAgICAgICAgICAgICAgICAgIF0sXG4gICAgICAgICAgICAgICAgICAxXG4gICAgICAgICAgICAgICAgKVxuICAgICAgICAgICAgICBdKSxcbiAgICAgICAgICAgICAgX3ZtLl92KFwiIFwiKSxcbiAgICAgICAgICAgICAgX2MoXCJkaXZcIiwgeyBzdGF0aWNDbGFzczogXCJjb2wtbGctMyBjb2wtbWQtM1wiIH0sIFtcbiAgICAgICAgICAgICAgICBfYyhcbiAgICAgICAgICAgICAgICAgIFwiZGl2XCIsXG4gICAgICAgICAgICAgICAgICB7IHN0YXRpY0NsYXNzOiBcImZvcm0tZ3JvdXBcIiB9LFxuICAgICAgICAgICAgICAgICAgW1xuICAgICAgICAgICAgICAgICAgICBfYyhcImxhYmVsXCIsIHsgc3RhdGljQ2xhc3M6IFwidy0xMDAgY29udHJvbC1sYWJlbFwiIH0sIFtcbiAgICAgICAgICAgICAgICAgICAgICBfdm0uX3YoXG4gICAgICAgICAgICAgICAgICAgICAgICBcIlxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICBFc3RhZG9cXG4gICAgICAgICAgICAgICAgICAgICAgICBcIlxuICAgICAgICAgICAgICAgICAgICAgIClcbiAgICAgICAgICAgICAgICAgICAgXSksXG4gICAgICAgICAgICAgICAgICAgIF92bS5fdihcIiBcIiksXG4gICAgICAgICAgICAgICAgICAgIF9jKFxuICAgICAgICAgICAgICAgICAgICAgIFwiZWwtc2VsZWN0XCIsXG4gICAgICAgICAgICAgICAgICAgICAge1xuICAgICAgICAgICAgICAgICAgICAgICAgc3RhdGljQ2xhc3M6IFwidy0xMDBcIixcbiAgICAgICAgICAgICAgICAgICAgICAgIGF0dHJzOiB7IGNsZWFyYWJsZTogXCJcIiB9LFxuICAgICAgICAgICAgICAgICAgICAgICAgbW9kZWw6IHtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgdmFsdWU6IF92bS5mb3JtLmxpcXVpZGF0ZWQsXG4gICAgICAgICAgICAgICAgICAgICAgICAgIGNhbGxiYWNrOiBmdW5jdGlvbigkJHYpIHtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICBfdm0uJHNldChfdm0uZm9ybSwgXCJsaXF1aWRhdGVkXCIsICQkdilcbiAgICAgICAgICAgICAgICAgICAgICAgICAgfSxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgZXhwcmVzc2lvbjogXCJmb3JtLmxpcXVpZGF0ZWRcIlxuICAgICAgICAgICAgICAgICAgICAgICAgfVxuICAgICAgICAgICAgICAgICAgICAgIH0sXG4gICAgICAgICAgICAgICAgICAgICAgW1xuICAgICAgICAgICAgICAgICAgICAgICAgX2MoXCJlbC1vcHRpb25cIiwge1xuICAgICAgICAgICAgICAgICAgICAgICAgICBrZXk6IFwiMVwiLFxuICAgICAgICAgICAgICAgICAgICAgICAgICBhdHRyczogeyB2YWx1ZTogMSwgbGFiZWw6IFwiTGlxdWlkYWRvXCIgfVxuICAgICAgICAgICAgICAgICAgICAgICAgfSksXG4gICAgICAgICAgICAgICAgICAgICAgICBfdm0uX3YoXCIgXCIpLFxuICAgICAgICAgICAgICAgICAgICAgICAgX2MoXCJlbC1vcHRpb25cIiwge1xuICAgICAgICAgICAgICAgICAgICAgICAgICBrZXk6IFwiMlwiLFxuICAgICAgICAgICAgICAgICAgICAgICAgICBhdHRyczogeyB2YWx1ZTogMCwgbGFiZWw6IFwiUG9yIGxpcXVpZGFyXCIgfVxuICAgICAgICAgICAgICAgICAgICAgICAgfSlcbiAgICAgICAgICAgICAgICAgICAgICBdLFxuICAgICAgICAgICAgICAgICAgICAgIDFcbiAgICAgICAgICAgICAgICAgICAgKVxuICAgICAgICAgICAgICAgICAgXSxcbiAgICAgICAgICAgICAgICAgIDFcbiAgICAgICAgICAgICAgICApXG4gICAgICAgICAgICAgIF0pLFxuICAgICAgICAgICAgICBfdm0uX3YoXCIgXCIpLFxuICAgICAgICAgICAgICBfYyhcImRpdlwiLCB7IHN0YXRpY0NsYXNzOiBcImNvbC1sZy0zIGNvbC1tZC0zXCIgfSwgW1xuICAgICAgICAgICAgICAgIF9jKFxuICAgICAgICAgICAgICAgICAgXCJkaXZcIixcbiAgICAgICAgICAgICAgICAgIHsgc3RhdGljQ2xhc3M6IFwiZm9ybS1ncm91cFwiIH0sXG4gICAgICAgICAgICAgICAgICBbXG4gICAgICAgICAgICAgICAgICAgIF9jKFwibGFiZWxcIiwgeyBzdGF0aWNDbGFzczogXCJ3LTEwMCBjb250cm9sLWxhYmVsXCIgfSwgW1xuICAgICAgICAgICAgICAgICAgICAgIF92bS5fdihcbiAgICAgICAgICAgICAgICAgICAgICAgIFwiXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIEZlY2hhIGRlIGxpcXVpZGFjacOzblxcbiAgICAgICAgICAgICAgICAgICAgICAgIFwiXG4gICAgICAgICAgICAgICAgICAgICAgKVxuICAgICAgICAgICAgICAgICAgICBdKSxcbiAgICAgICAgICAgICAgICAgICAgX3ZtLl92KFwiIFwiKSxcbiAgICAgICAgICAgICAgICAgICAgX2MoXCJlbC1kYXRlLXBpY2tlclwiLCB7XG4gICAgICAgICAgICAgICAgICAgICAgc3RhdGljQ2xhc3M6IFwidy0xMDBcIixcbiAgICAgICAgICAgICAgICAgICAgICBhdHRyczoge1xuICAgICAgICAgICAgICAgICAgICAgICAgdHlwZTogXCJkYXRlXCIsXG4gICAgICAgICAgICAgICAgICAgICAgICBcInZhbHVlLWZvcm1hdFwiOiBcInl5eXktTU0tZGRcIixcbiAgICAgICAgICAgICAgICAgICAgICAgIGZvcm1hdDogXCJkZC9NTS95eXl5XCIsXG4gICAgICAgICAgICAgICAgICAgICAgICBjbGVhcmFibGU6IHRydWVcbiAgICAgICAgICAgICAgICAgICAgICB9LFxuICAgICAgICAgICAgICAgICAgICAgIG1vZGVsOiB7XG4gICAgICAgICAgICAgICAgICAgICAgICB2YWx1ZTogX3ZtLmZvcm0uZGF0ZV9vZl9lbmQsXG4gICAgICAgICAgICAgICAgICAgICAgICBjYWxsYmFjazogZnVuY3Rpb24oJCR2KSB7XG4gICAgICAgICAgICAgICAgICAgICAgICAgIF92bS4kc2V0KF92bS5mb3JtLCBcImRhdGVfb2ZfZW5kXCIsICQkdilcbiAgICAgICAgICAgICAgICAgICAgICAgIH0sXG4gICAgICAgICAgICAgICAgICAgICAgICBleHByZXNzaW9uOiBcImZvcm0uZGF0ZV9vZl9lbmRcIlxuICAgICAgICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgICAgICAgICAgfSlcbiAgICAgICAgICAgICAgICAgIF0sXG4gICAgICAgICAgICAgICAgICAxXG4gICAgICAgICAgICAgICAgKVxuICAgICAgICAgICAgICBdKSxcbiAgICAgICAgICAgICAgX3ZtLl92KFwiIFwiKSxcbiAgICAgICAgICAgICAgX2MoXG4gICAgICAgICAgICAgICAgXCJkaXZcIixcbiAgICAgICAgICAgICAgICB7XG4gICAgICAgICAgICAgICAgICBzdGF0aWNDbGFzczogXCJkLWZsZXhcIixcbiAgICAgICAgICAgICAgICAgIHN0YXRpY1N0eWxlOiB7IFwibWFyZ2luLXRvcFwiOiBcIjI5cHhcIiB9XG4gICAgICAgICAgICAgICAgfSxcbiAgICAgICAgICAgICAgICBbXG4gICAgICAgICAgICAgICAgICBfYyhcbiAgICAgICAgICAgICAgICAgICAgXCJlbC1idXR0b25cIixcbiAgICAgICAgICAgICAgICAgICAge1xuICAgICAgICAgICAgICAgICAgICAgIHN0YXRpY0NsYXNzOiBcInN1Ym1pdFwiLFxuICAgICAgICAgICAgICAgICAgICAgIGF0dHJzOiB7XG4gICAgICAgICAgICAgICAgICAgICAgICB0eXBlOiBcInByaW1hcnlcIixcbiAgICAgICAgICAgICAgICAgICAgICAgIGxvYWRpbmc6IF92bS5sb2FkaW5nX3N1Ym1pdCxcbiAgICAgICAgICAgICAgICAgICAgICAgIGljb246IFwiZWwtaWNvbi1zZWFyY2hcIlxuICAgICAgICAgICAgICAgICAgICAgIH0sXG4gICAgICAgICAgICAgICAgICAgICAgb246IHtcbiAgICAgICAgICAgICAgICAgICAgICAgIGNsaWNrOiBmdW5jdGlvbigkZXZlbnQpIHtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgJGV2ZW50LnByZXZlbnREZWZhdWx0KClcbiAgICAgICAgICAgICAgICAgICAgICAgICAgcmV0dXJuIF92bS5nZXRSZWNvcmRzQnlGaWx0ZXIuYXBwbHkobnVsbCwgYXJndW1lbnRzKVxuICAgICAgICAgICAgICAgICAgICAgICAgfVxuICAgICAgICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgICAgICAgICAgfSxcbiAgICAgICAgICAgICAgICAgICAgW192bS5fdihcIkJ1c2NhclwiKV1cbiAgICAgICAgICAgICAgICAgICksXG4gICAgICAgICAgICAgICAgICBfdm0uX3YoXCIgXCIpLFxuICAgICAgICAgICAgICAgICAgX3ZtLnJlY29yZHMubGVuZ3RoID4gMCAmJlxuICAgICAgICAgICAgICAgICAgX3ZtLnJlc291cmNlICE9PSBcInJlcG9ydHMvZG9jdW1lbnQtZGV0cmFjdGlvbnNcIlxuICAgICAgICAgICAgICAgICAgICA/IFtcbiAgICAgICAgICAgICAgICAgICAgICAgIF9jKFxuICAgICAgICAgICAgICAgICAgICAgICAgICBcImVsLWJ1dHRvblwiLFxuICAgICAgICAgICAgICAgICAgICAgICAgICB7XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgc3RhdGljQ2xhc3M6IFwic3VibWl0XCIsXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgYXR0cnM6IHsgdHlwZTogXCJkYW5nZXJcIiwgaWNvbjogXCJlbC1pY29uLXRpY2tldHNcIiB9LFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIG9uOiB7XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjbGljazogZnVuY3Rpb24oJGV2ZW50KSB7XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICRldmVudC5wcmV2ZW50RGVmYXVsdCgpXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJldHVybiBfdm0uY2xpY2tEb3dubG9hZChcInBkZlwiKVxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfVxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgICAgICAgICAgICAgICAgfSxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgW192bS5fdihcIkV4cG9ydGFyIFBERlwiKV1cbiAgICAgICAgICAgICAgICAgICAgICAgICksXG4gICAgICAgICAgICAgICAgICAgICAgICBfdm0uX3YoXCIgXCIpLFxuICAgICAgICAgICAgICAgICAgICAgICAgX2MoXG4gICAgICAgICAgICAgICAgICAgICAgICAgIFwiZWwtYnV0dG9uXCIsXG4gICAgICAgICAgICAgICAgICAgICAgICAgIHtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICBzdGF0aWNDbGFzczogXCJzdWJtaXRcIixcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICBhdHRyczogeyB0eXBlOiBcInN1Y2Nlc3NcIiB9LFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIG9uOiB7XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjbGljazogZnVuY3Rpb24oJGV2ZW50KSB7XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICRldmVudC5wcmV2ZW50RGVmYXVsdCgpXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJldHVybiBfdm0uY2xpY2tEb3dubG9hZChcImV4Y2VsXCIpXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICB9XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgfVxuICAgICAgICAgICAgICAgICAgICAgICAgICB9LFxuICAgICAgICAgICAgICAgICAgICAgICAgICBbXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgX2MoXCJpXCIsIHsgc3RhdGljQ2xhc3M6IFwiZmEgZmEtZmlsZS1leGNlbFwiIH0pLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIF92bS5fdihcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFwiIEV4cG9ydGFsXFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIEV4Y2VsXCJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICApXG4gICAgICAgICAgICAgICAgICAgICAgICAgIF1cbiAgICAgICAgICAgICAgICAgICAgICAgICksXG4gICAgICAgICAgICAgICAgICAgICAgICBfdm0uX3YoXCIgXCIpLFxuICAgICAgICAgICAgICAgICAgICAgICAgX2MoXG4gICAgICAgICAgICAgICAgICAgICAgICAgIFwiZWwtYnV0dG9uXCIsXG4gICAgICAgICAgICAgICAgICAgICAgICAgIHtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICBzdGF0aWNDbGFzczogXCJzdWJtaXRcIixcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICBvbjoge1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY2xpY2s6IGZ1bmN0aW9uKCRldmVudCkge1xuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAkZXZlbnQucHJldmVudERlZmF1bHQoKVxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZXR1cm4gX3ZtLmNsaWNrT3BlbldoYXRzYXBwLmFwcGx5KFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIG51bGwsXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgYXJndW1lbnRzXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIClcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIH1cbiAgICAgICAgICAgICAgICAgICAgICAgICAgICB9XG4gICAgICAgICAgICAgICAgICAgICAgICAgIH0sXG4gICAgICAgICAgICAgICAgICAgICAgICAgIFtcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICBfYyhcImlcIiwgeyBzdGF0aWNDbGFzczogXCJmYSBmYS13aGF0c2FwcFwiIH0pLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIF92bS5fdihcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFwiIEVudmlhclxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICB3aGF0c2FwcFwiXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgKVxuICAgICAgICAgICAgICAgICAgICAgICAgICBdXG4gICAgICAgICAgICAgICAgICAgICAgICApXG4gICAgICAgICAgICAgICAgICAgICAgXVxuICAgICAgICAgICAgICAgICAgICA6IF92bS5fZSgpXG4gICAgICAgICAgICAgICAgXSxcbiAgICAgICAgICAgICAgICAyXG4gICAgICAgICAgICAgIClcbiAgICAgICAgICAgIF0sXG4gICAgICAgICAgICAyXG4gICAgICAgICAgKSxcbiAgICAgICAgICBfdm0uX3YoXCIgXCIpLFxuICAgICAgICAgIF9jKFwiZGl2XCIsIHsgc3RhdGljQ2xhc3M6IFwicm93IG10LTEgbWItNFwiIH0pXG4gICAgICAgIF0pLFxuICAgICAgICBfdm0uX3YoXCIgXCIpLFxuICAgICAgICBfYyhcImRpdlwiLCB7IHN0YXRpY0NsYXNzOiBcImNvbC1tZC0xMlwiIH0sIFtcbiAgICAgICAgICBfYyhcImRpdlwiLCB7IHN0YXRpY0NsYXNzOiBcInRhYmxlLXJlc3BvbnNpdmVcIiB9LCBbXG4gICAgICAgICAgICBfYyhcInRhYmxlXCIsIHsgc3RhdGljQ2xhc3M6IFwidGFibGVcIiB9LCBbXG4gICAgICAgICAgICAgIF9jKFwidGhlYWRcIiwgW192bS5fdChcImhlYWRpbmdcIildLCAyKSxcbiAgICAgICAgICAgICAgX3ZtLl92KFwiIFwiKSxcbiAgICAgICAgICAgICAgX2MoXG4gICAgICAgICAgICAgICAgXCJ0Ym9keVwiLFxuICAgICAgICAgICAgICAgIFtcbiAgICAgICAgICAgICAgICAgIF92bS5fbChfdm0ucmVjb3JkcywgZnVuY3Rpb24ocm93LCBpbmRleCkge1xuICAgICAgICAgICAgICAgICAgICByZXR1cm4gX3ZtLl90KFwiZGVmYXVsdFwiLCBudWxsLCB7XG4gICAgICAgICAgICAgICAgICAgICAgcm93OiByb3csXG4gICAgICAgICAgICAgICAgICAgICAgaW5kZXg6IF92bS5jdXN0b21JbmRleChpbmRleClcbiAgICAgICAgICAgICAgICAgICAgfSlcbiAgICAgICAgICAgICAgICAgIH0pXG4gICAgICAgICAgICAgICAgXSxcbiAgICAgICAgICAgICAgICAyXG4gICAgICAgICAgICAgICksXG4gICAgICAgICAgICAgIF92bS5fdihcIiBcIiksXG4gICAgICAgICAgICAgIF92bS5yZXNvdXJjZSA9PSBcInJlcG9ydHMvc2FsZXNcIiB8fFxuICAgICAgICAgICAgICBfdm0ucmVzb3VyY2UgPT0gXCJyZXBvcnRzL3B1cmNoYXNlc1wiXG4gICAgICAgICAgICAgICAgPyBfYyhcInRmb290XCIsIFtcbiAgICAgICAgICAgICAgICAgICAgX2MoXCJ0clwiLCBbXG4gICAgICAgICAgICAgICAgICAgICAgX2MoXCJ0ZFwiLCB7XG4gICAgICAgICAgICAgICAgICAgICAgICBhdHRyczoge1xuICAgICAgICAgICAgICAgICAgICAgICAgICBjb2xzcGFuOiBfdm0ucmVzb3VyY2UgPT0gXCJyZXBvcnRzL3NhbGVzXCIgPyA3IDogOFxuICAgICAgICAgICAgICAgICAgICAgICAgfVxuICAgICAgICAgICAgICAgICAgICAgIH0pLFxuICAgICAgICAgICAgICAgICAgICAgIF92bS5fdihcIiBcIiksXG4gICAgICAgICAgICAgICAgICAgICAgX3ZtLl9tKDApLFxuICAgICAgICAgICAgICAgICAgICAgIF92bS5fdihcIiBcIiksXG4gICAgICAgICAgICAgICAgICAgICAgX2MoXCJ0ZFwiLCBbX3ZtLl92KF92bS5fcyhfdm0udG90YWxzLmFjdW1fdG90YWxfdGF4ZWQpKV0pLFxuICAgICAgICAgICAgICAgICAgICAgIF92bS5fdihcIiBcIiksXG4gICAgICAgICAgICAgICAgICAgICAgX2MoXCJ0ZFwiLCBbX3ZtLl92KF92bS5fcyhfdm0udG90YWxzLmFjdW1fdG90YWxfaWd2KSldKSxcbiAgICAgICAgICAgICAgICAgICAgICBfdm0uX3YoXCIgXCIpLFxuICAgICAgICAgICAgICAgICAgICAgIF9jKFwidGRcIiwgW192bS5fdihfdm0uX3MoX3ZtLnRvdGFscy5hY3VtX3RvdGFsKSldKVxuICAgICAgICAgICAgICAgICAgICBdKSxcbiAgICAgICAgICAgICAgICAgICAgX3ZtLl92KFwiIFwiKSxcbiAgICAgICAgICAgICAgICAgICAgX2MoXCJ0clwiLCBbXG4gICAgICAgICAgICAgICAgICAgICAgX2MoXCJ0ZFwiLCB7XG4gICAgICAgICAgICAgICAgICAgICAgICBhdHRyczoge1xuICAgICAgICAgICAgICAgICAgICAgICAgICBjb2xzcGFuOiBfdm0ucmVzb3VyY2UgPT0gXCJyZXBvcnRzL3NhbGVzXCIgPyA3IDogOFxuICAgICAgICAgICAgICAgICAgICAgICAgfVxuICAgICAgICAgICAgICAgICAgICAgIH0pLFxuICAgICAgICAgICAgICAgICAgICAgIF92bS5fdihcIiBcIiksXG4gICAgICAgICAgICAgICAgICAgICAgX3ZtLl9tKDEpLFxuICAgICAgICAgICAgICAgICAgICAgIF92bS5fdihcIiBcIiksXG4gICAgICAgICAgICAgICAgICAgICAgX2MoXCJ0ZFwiLCBbXG4gICAgICAgICAgICAgICAgICAgICAgICBfdm0uX3YoX3ZtLl9zKF92bS50b3RhbHMuYWN1bV90b3RhbF90YXhlZF91c2QpKVxuICAgICAgICAgICAgICAgICAgICAgIF0pLFxuICAgICAgICAgICAgICAgICAgICAgIF92bS5fdihcIiBcIiksXG4gICAgICAgICAgICAgICAgICAgICAgX2MoXCJ0ZFwiLCBbX3ZtLl92KF92bS5fcyhfdm0udG90YWxzLmFjdW1fdG90YWxfaWd2X3VzZCkpXSksXG4gICAgICAgICAgICAgICAgICAgICAgX3ZtLl92KFwiIFwiKSxcbiAgICAgICAgICAgICAgICAgICAgICBfYyhcInRkXCIsIFtfdm0uX3YoX3ZtLl9zKF92bS50b3RhbHMuYWN1bV90b3RhbF91c2QpKV0pXG4gICAgICAgICAgICAgICAgICAgIF0pXG4gICAgICAgICAgICAgICAgICBdKVxuICAgICAgICAgICAgICAgIDogX3ZtLl9lKClcbiAgICAgICAgICAgIF0pLFxuICAgICAgICAgICAgX3ZtLl92KFwiIFwiKSxcbiAgICAgICAgICAgIF9jKFxuICAgICAgICAgICAgICBcImRpdlwiLFxuICAgICAgICAgICAgICBbXG4gICAgICAgICAgICAgICAgX2MoXCJlbC1wYWdpbmF0aW9uXCIsIHtcbiAgICAgICAgICAgICAgICAgIGF0dHJzOiB7XG4gICAgICAgICAgICAgICAgICAgIGxheW91dDogXCJ0b3RhbCwgcHJldiwgcGFnZXIsIG5leHRcIixcbiAgICAgICAgICAgICAgICAgICAgdG90YWw6IF92bS5wYWdpbmF0aW9uLnRvdGFsLFxuICAgICAgICAgICAgICAgICAgICBcImN1cnJlbnQtcGFnZVwiOiBfdm0ucGFnaW5hdGlvbi5jdXJyZW50X3BhZ2UsXG4gICAgICAgICAgICAgICAgICAgIFwicGFnZS1zaXplXCI6IF92bS5wYWdpbmF0aW9uLnBlcl9wYWdlXG4gICAgICAgICAgICAgICAgICB9LFxuICAgICAgICAgICAgICAgICAgb246IHtcbiAgICAgICAgICAgICAgICAgICAgXCJjdXJyZW50LWNoYW5nZVwiOiBfdm0uZ2V0UmVjb3JkcyxcbiAgICAgICAgICAgICAgICAgICAgXCJ1cGRhdGU6Y3VycmVudFBhZ2VcIjogZnVuY3Rpb24oJGV2ZW50KSB7XG4gICAgICAgICAgICAgICAgICAgICAgcmV0dXJuIF92bS4kc2V0KF92bS5wYWdpbmF0aW9uLCBcImN1cnJlbnRfcGFnZVwiLCAkZXZlbnQpXG4gICAgICAgICAgICAgICAgICAgIH0sXG4gICAgICAgICAgICAgICAgICAgIFwidXBkYXRlOmN1cnJlbnQtcGFnZVwiOiBmdW5jdGlvbigkZXZlbnQpIHtcbiAgICAgICAgICAgICAgICAgICAgICByZXR1cm4gX3ZtLiRzZXQoX3ZtLnBhZ2luYXRpb24sIFwiY3VycmVudF9wYWdlXCIsICRldmVudClcbiAgICAgICAgICAgICAgICAgICAgfVxuICAgICAgICAgICAgICAgICAgfVxuICAgICAgICAgICAgICAgIH0pXG4gICAgICAgICAgICAgIF0sXG4gICAgICAgICAgICAgIDFcbiAgICAgICAgICAgIClcbiAgICAgICAgICBdKVxuICAgICAgICBdKVxuICAgICAgXSksXG4gICAgICBfdm0uX3YoXCIgXCIpLFxuICAgICAgX2MoXCJ3aGF0c2FwcC1mb3JtLXJlcG9ydFwiLCB7XG4gICAgICAgIGF0dHJzOiB7XG4gICAgICAgICAgbWVzc2FnZTogX3ZtLm1lc3NhZ2VSZXBvcnQsXG4gICAgICAgICAgcmVzb3VyY2U6IF92bS5yZXNvdXJjZVJlcG9ydCxcbiAgICAgICAgICBzaG93V2hhdHNhcHBGb3JtOiBfdm0uc2hvd1doYXRzYXBwRm9ybVxuICAgICAgICB9LFxuICAgICAgICBvbjoge1xuICAgICAgICAgIFwidXBkYXRlOm1lc3NhZ2VcIjogZnVuY3Rpb24oJGV2ZW50KSB7XG4gICAgICAgICAgICBfdm0ubWVzc2FnZVJlcG9ydCA9ICRldmVudFxuICAgICAgICAgIH0sXG4gICAgICAgICAgXCJ1cGRhdGU6c2hvd1doYXRzYXBwRm9ybVwiOiBmdW5jdGlvbigkZXZlbnQpIHtcbiAgICAgICAgICAgIF92bS5zaG93V2hhdHNhcHBGb3JtID0gJGV2ZW50XG4gICAgICAgICAgfSxcbiAgICAgICAgICBcInVwZGF0ZTpzaG93LXdoYXRzYXBwLWZvcm1cIjogZnVuY3Rpb24oJGV2ZW50KSB7XG4gICAgICAgICAgICBfdm0uc2hvd1doYXRzYXBwRm9ybSA9ICRldmVudFxuICAgICAgICAgIH1cbiAgICAgICAgfVxuICAgICAgfSlcbiAgICBdLFxuICAgIDFcbiAgKVxufVxudmFyIHN0YXRpY1JlbmRlckZucyA9IFtcbiAgZnVuY3Rpb24oKSB7XG4gICAgdmFyIF92bSA9IHRoaXNcbiAgICB2YXIgX2ggPSBfdm0uJGNyZWF0ZUVsZW1lbnRcbiAgICB2YXIgX2MgPSBfdm0uX3NlbGYuX2MgfHwgX2hcbiAgICByZXR1cm4gX2MoXCJ0ZFwiLCBbX2MoXCJzdHJvbmdcIiwgW192bS5fdihcIlRvdGFsZXMgUEVOXCIpXSldKVxuICB9LFxuICBmdW5jdGlvbigpIHtcbiAgICB2YXIgX3ZtID0gdGhpc1xuICAgIHZhciBfaCA9IF92bS4kY3JlYXRlRWxlbWVudFxuICAgIHZhciBfYyA9IF92bS5fc2VsZi5fYyB8fCBfaFxuICAgIHJldHVybiBfYyhcInRkXCIsIFtfYyhcInN0cm9uZ1wiLCBbX3ZtLl92KFwiVG90YWxlcyBVU0RcIildKV0pXG4gIH1cbl1cbnJlbmRlci5fd2l0aFN0cmlwcGVkID0gdHJ1ZVxubW9kdWxlLmV4cG9ydHMgPSB7IHJlbmRlcjogcmVuZGVyLCBzdGF0aWNSZW5kZXJGbnM6IHN0YXRpY1JlbmRlckZucyB9XG5pZiAobW9kdWxlLmhvdCkge1xuICBtb2R1bGUuaG90LmFjY2VwdCgpXG4gIGlmIChtb2R1bGUuaG90LmRhdGEpIHtcbiAgICByZXF1aXJlKFwidnVlLWhvdC1yZWxvYWQtYXBpXCIpICAgICAgLnJlcmVuZGVyKFwiZGF0YS12LWExZjg5NjNjXCIsIG1vZHVsZS5leHBvcnRzKVxuICB9XG59XG5cblxuLy8vLy8vLy8vLy8vLy8vLy8vXG4vLyBXRUJQQUNLIEZPT1RFUlxuLy8gLi9ub2RlX21vZHVsZXMvdnVlLWxvYWRlci9saWIvdGVtcGxhdGUtY29tcGlsZXI/e1wiaWRcIjpcImRhdGEtdi1hMWY4OTYzY1wiLFwiaGFzU2NvcGVkXCI6ZmFsc2UsXCJidWJsZVwiOntcInRyYW5zZm9ybXNcIjp7fX19IS4vbm9kZV9tb2R1bGVzL3Z1ZS1sb2FkZXIvbGliL3NlbGVjdG9yLmpzP3R5cGU9dGVtcGxhdGUmaW5kZXg9MCEuL21vZHVsZXMvUmVwb3J0L1Jlc291cmNlcy9hc3NldHMvanMvY29tcG9uZW50cy9EYXRhVGFibGVSZXBvcnRzQ29uc2lnbm1lbnQudnVlXG4vLyBtb2R1bGUgaWQgPSAuL25vZGVfbW9kdWxlcy92dWUtbG9hZGVyL2xpYi90ZW1wbGF0ZS1jb21waWxlci9pbmRleC5qcz97XCJpZFwiOlwiZGF0YS12LWExZjg5NjNjXCIsXCJoYXNTY29wZWRcIjpmYWxzZSxcImJ1YmxlXCI6e1widHJhbnNmb3Jtc1wiOnt9fX0hLi9ub2RlX21vZHVsZXMvdnVlLWxvYWRlci9saWIvc2VsZWN0b3IuanM/dHlwZT10ZW1wbGF0ZSZpbmRleD0wIS4vbW9kdWxlcy9SZXBvcnQvUmVzb3VyY2VzL2Fzc2V0cy9qcy9jb21wb25lbnRzL0RhdGFUYWJsZVJlcG9ydHNDb25zaWdubWVudC52dWVcbi8vIG1vZHVsZSBjaHVua3MgPSAxIl0sInNvdXJjZVJvb3QiOiIifQ==\n//# sourceURL=webpack-internal:///./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-a1f8963c\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Report/Resources/assets/js/components/DataTableReportsConsignment.vue\n");
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    [
+      _c("div", { staticClass: "row" }, [
+        _c("div", { staticClass: "col-md-12 col-lg-12 col-xl-12 " }, [
+          _c(
+            "div",
+            { staticClass: "row mt-2" },
+            [
+              _c(
+                "div",
+                { staticClass: "col-md-3" },
+                [
+                  _c("label", { staticClass: "control-label" }, [
+                    _vm._v("Fecha de consignación")
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "el-select",
+                    {
+                      on: { change: _vm.changePeriod },
+                      model: {
+                        value: _vm.form.period,
+                        callback: function($$v) {
+                          _vm.$set(_vm.form, "period", $$v)
+                        },
+                        expression: "form.period"
+                      }
+                    },
+                    [
+                      _c("el-option", {
+                        key: "month",
+                        attrs: { value: "month", label: "Por mes" }
+                      }),
+                      _vm._v(" "),
+                      _c("el-option", {
+                        key: "between_months",
+                        attrs: { value: "between_months", label: "Entre meses" }
+                      }),
+                      _vm._v(" "),
+                      _c("el-option", {
+                        key: "date",
+                        attrs: { value: "date", label: "Por fecha" }
+                      }),
+                      _vm._v(" "),
+                      _c("el-option", {
+                        key: "between_dates",
+                        attrs: { value: "between_dates", label: "Entre fechas" }
+                      })
+                    ],
+                    1
+                  )
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _vm.form.period === "month" ||
+              _vm.form.period === "between_months"
+                ? [
+                    _c(
+                      "div",
+                      { staticClass: "col-md-2" },
+                      [
+                        _c("label", { staticClass: "w-100 control-label" }, [
+                          _vm._v("Mes de")
+                        ]),
+                        _vm._v(" "),
+                        _c("el-date-picker", {
+                          staticClass: "w-100",
+                          attrs: {
+                            type: "month",
+                            "value-format": "yyyy-MM",
+                            format: "MM/yyyy",
+                            clearable: true
+                          },
+                          on: { change: _vm.changeDisabledMonths },
+                          model: {
+                            value: _vm.form.month_start,
+                            callback: function($$v) {
+                              _vm.$set(_vm.form, "month_start", $$v)
+                            },
+                            expression: "form.month_start"
+                          }
+                        })
+                      ],
+                      1
+                    )
+                  ]
+                : _vm._e(),
+              _vm._v(" "),
+              _vm.form.period === "between_months"
+                ? [
+                    _c(
+                      "div",
+                      { staticClass: "col-md-2" },
+                      [
+                        _c("label", { staticClass: "w-100 control-label" }, [
+                          _vm._v("Mes al")
+                        ]),
+                        _vm._v(" "),
+                        _c("el-date-picker", {
+                          staticClass: "w-100",
+                          attrs: {
+                            type: "month",
+                            "picker-options": _vm.pickerOptionsMonths,
+                            "value-format": "yyyy-MM",
+                            format: "MM/yyyy",
+                            clearable: true
+                          },
+                          model: {
+                            value: _vm.form.month_end,
+                            callback: function($$v) {
+                              _vm.$set(_vm.form, "month_end", $$v)
+                            },
+                            expression: "form.month_end"
+                          }
+                        })
+                      ],
+                      1
+                    )
+                  ]
+                : _vm._e(),
+              _vm._v(" "),
+              _vm.form.period === "date" || _vm.form.period === "between_dates"
+                ? [
+                    _c(
+                      "div",
+                      { staticClass: "col-md-2" },
+                      [
+                        _c("label", { staticClass: "w-100 control-label" }, [
+                          _vm._v("Fecha del")
+                        ]),
+                        _vm._v(" "),
+                        _c("el-date-picker", {
+                          staticClass: "w-100",
+                          attrs: {
+                            type: "date",
+                            "value-format": "yyyy-MM-dd",
+                            format: "dd/MM/yyyy",
+                            clearable: true
+                          },
+                          on: { change: _vm.changeDisabledDates },
+                          model: {
+                            value: _vm.form.date_start,
+                            callback: function($$v) {
+                              _vm.$set(_vm.form, "date_start", $$v)
+                            },
+                            expression: "form.date_start"
+                          }
+                        })
+                      ],
+                      1
+                    )
+                  ]
+                : _vm._e(),
+              _vm._v(" "),
+              _vm.form.period === "between_dates"
+                ? [
+                    _c(
+                      "div",
+                      { staticClass: "col-md-2" },
+                      [
+                        _c("label", { staticClass: "w-100 control-label" }, [
+                          _vm._v("Fecha al")
+                        ]),
+                        _vm._v(" "),
+                        _c("el-date-picker", {
+                          staticClass: "w-100",
+                          attrs: {
+                            type: "date",
+                            "picker-options": _vm.pickerOptionsDates,
+                            "value-format": "yyyy-MM-dd",
+                            format: "dd/MM/yyyy",
+                            clearable: true
+                          },
+                          model: {
+                            value: _vm.form.date_end,
+                            callback: function($$v) {
+                              _vm.$set(_vm.form, "date_end", $$v)
+                            },
+                            expression: "form.date_end"
+                          }
+                        })
+                      ],
+                      1
+                    )
+                  ]
+                : _vm._e(),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-lg-4 col-md-4" }, [
+                _c(
+                  "div",
+                  { staticClass: "form-group" },
+                  [
+                    _c("label", { staticClass: "w-100 control-label" }, [
+                      _vm._v(
+                        "\n                            Cliente\n                        "
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _c(
+                      "el-select",
+                      {
+                        staticClass: "w-100",
+                        attrs: {
+                          filterable: "",
+                          remote: "",
+                          "popper-class": "el-select-customers",
+                          clearable: "",
+                          placeholder: "Nombre o número de documento",
+                          "remote-method": _vm.searchRemotePersons,
+                          loading: _vm.loading_search
+                        },
+                        on: { change: _vm.changePersons },
+                        model: {
+                          value: _vm.form.person_id,
+                          callback: function($$v) {
+                            _vm.$set(_vm.form, "person_id", $$v)
+                          },
+                          expression: "form.person_id"
+                        }
+                      },
+                      _vm._l(_vm.persons, function(option) {
+                        return _c("el-option", {
+                          key: option.id,
+                          attrs: { value: option.id, label: option.description }
+                        })
+                      }),
+                      1
+                    )
+                  ],
+                  1
+                )
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-lg-3 col-md-3" }, [
+                _c(
+                  "div",
+                  { staticClass: "form-group" },
+                  [
+                    _c("label", { staticClass: "w-100 control-label" }, [
+                      _vm._v(
+                        "\n                            Estado\n                        "
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _c(
+                      "el-select",
+                      {
+                        staticClass: "w-100",
+                        attrs: { clearable: "" },
+                        model: {
+                          value: _vm.form.liquidated,
+                          callback: function($$v) {
+                            _vm.$set(_vm.form, "liquidated", $$v)
+                          },
+                          expression: "form.liquidated"
+                        }
+                      },
+                      [
+                        _c("el-option", {
+                          key: "1",
+                          attrs: { value: 1, label: "Liquidado" }
+                        }),
+                        _vm._v(" "),
+                        _c("el-option", {
+                          key: "2",
+                          attrs: { value: 0, label: "Por liquidar" }
+                        })
+                      ],
+                      1
+                    )
+                  ],
+                  1
+                )
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-lg-3 col-md-3" }, [
+                _c(
+                  "div",
+                  { staticClass: "form-group" },
+                  [
+                    _c("label", { staticClass: "w-100 control-label" }, [
+                      _vm._v(
+                        "\n                            Fecha de liquidación\n                        "
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _c("el-date-picker", {
+                      staticClass: "w-100",
+                      attrs: {
+                        type: "date",
+                        "value-format": "yyyy-MM-dd",
+                        format: "dd/MM/yyyy",
+                        clearable: true
+                      },
+                      model: {
+                        value: _vm.form.date_of_end,
+                        callback: function($$v) {
+                          _vm.$set(_vm.form, "date_of_end", $$v)
+                        },
+                        expression: "form.date_of_end"
+                      }
+                    })
+                  ],
+                  1
+                )
+              ]),
+              _vm._v(" "),
+              _c(
+                "div",
+                {
+                  staticClass: "d-flex",
+                  staticStyle: { "margin-top": "29px" }
+                },
+                [
+                  _c(
+                    "el-button",
+                    {
+                      staticClass: "submit",
+                      attrs: {
+                        type: "primary",
+                        loading: _vm.loading_submit,
+                        icon: "el-icon-search"
+                      },
+                      on: {
+                        click: function($event) {
+                          $event.preventDefault()
+                          return _vm.getRecordsByFilter.apply(null, arguments)
+                        }
+                      }
+                    },
+                    [_vm._v("Buscar")]
+                  ),
+                  _vm._v(" "),
+                  _vm.records.length > 0 &&
+                  _vm.resource !== "reports/document-detractions"
+                    ? [
+                        _c(
+                          "el-button",
+                          {
+                            staticClass: "submit",
+                            attrs: { type: "danger", icon: "el-icon-tickets" },
+                            on: {
+                              click: function($event) {
+                                $event.preventDefault()
+                                return _vm.clickDownload("pdf")
+                              }
+                            }
+                          },
+                          [_vm._v("Exportar PDF")]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "el-button",
+                          {
+                            staticClass: "submit",
+                            attrs: { type: "success" },
+                            on: {
+                              click: function($event) {
+                                $event.preventDefault()
+                                return _vm.clickDownload("excel")
+                              }
+                            }
+                          },
+                          [
+                            _c("i", { staticClass: "fa fa-file-excel" }),
+                            _vm._v(
+                              " Exportal\n                            Excel"
+                            )
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "el-button",
+                          {
+                            staticClass: "submit",
+                            on: {
+                              click: function($event) {
+                                $event.preventDefault()
+                                return _vm.clickOpenWhatsapp.apply(
+                                  null,
+                                  arguments
+                                )
+                              }
+                            }
+                          },
+                          [
+                            _c("i", { staticClass: "fa fa-whatsapp" }),
+                            _vm._v(
+                              " Enviar\n                            whatsapp"
+                            )
+                          ]
+                        )
+                      ]
+                    : _vm._e()
+                ],
+                2
+              )
+            ],
+            2
+          ),
+          _vm._v(" "),
+          _c("div", { staticClass: "row mt-1 mb-4" })
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "col-md-12" }, [
+          _c("div", { staticClass: "table-responsive" }, [
+            _c("table", { staticClass: "table" }, [
+              _c("thead", [_vm._t("heading")], 2),
+              _vm._v(" "),
+              _c(
+                "tbody",
+                [
+                  _vm._l(_vm.records, function(row, index) {
+                    return _vm._t("default", null, {
+                      row: row,
+                      index: _vm.customIndex(index)
+                    })
+                  })
+                ],
+                2
+              ),
+              _vm._v(" "),
+              _vm.resource == "reports/sales" ||
+              _vm.resource == "reports/purchases"
+                ? _c("tfoot", [
+                    _c("tr", [
+                      _c("td", {
+                        attrs: {
+                          colspan: _vm.resource == "reports/sales" ? 7 : 8
+                        }
+                      }),
+                      _vm._v(" "),
+                      _vm._m(0),
+                      _vm._v(" "),
+                      _c("td", [_vm._v(_vm._s(_vm.totals.acum_total_taxed))]),
+                      _vm._v(" "),
+                      _c("td", [_vm._v(_vm._s(_vm.totals.acum_total_igv))]),
+                      _vm._v(" "),
+                      _c("td", [_vm._v(_vm._s(_vm.totals.acum_total))])
+                    ]),
+                    _vm._v(" "),
+                    _c("tr", [
+                      _c("td", {
+                        attrs: {
+                          colspan: _vm.resource == "reports/sales" ? 7 : 8
+                        }
+                      }),
+                      _vm._v(" "),
+                      _vm._m(1),
+                      _vm._v(" "),
+                      _c("td", [
+                        _vm._v(_vm._s(_vm.totals.acum_total_taxed_usd))
+                      ]),
+                      _vm._v(" "),
+                      _c("td", [_vm._v(_vm._s(_vm.totals.acum_total_igv_usd))]),
+                      _vm._v(" "),
+                      _c("td", [_vm._v(_vm._s(_vm.totals.acum_total_usd))])
+                    ])
+                  ])
+                : _vm._e()
+            ]),
+            _vm._v(" "),
+            _c(
+              "div",
+              [
+                _c("el-pagination", {
+                  attrs: {
+                    layout: "total, prev, pager, next",
+                    total: _vm.pagination.total,
+                    "current-page": _vm.pagination.current_page,
+                    "page-size": _vm.pagination.per_page
+                  },
+                  on: {
+                    "current-change": _vm.getRecords,
+                    "update:currentPage": function($event) {
+                      return _vm.$set(_vm.pagination, "current_page", $event)
+                    },
+                    "update:current-page": function($event) {
+                      return _vm.$set(_vm.pagination, "current_page", $event)
+                    }
+                  }
+                })
+              ],
+              1
+            )
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _c("whatsapp-form-report", {
+        attrs: {
+          message: _vm.messageReport,
+          resource: _vm.resourceReport,
+          showWhatsappForm: _vm.showWhatsappForm
+        },
+        on: {
+          "update:message": function($event) {
+            _vm.messageReport = $event
+          },
+          "update:showWhatsappForm": function($event) {
+            _vm.showWhatsappForm = $event
+          },
+          "update:show-whatsapp-form": function($event) {
+            _vm.showWhatsappForm = $event
+          }
+        }
+      })
+    ],
+    1
+  )
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("td", [_c("strong", [_vm._v("Totales PEN")])])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("td", [_c("strong", [_vm._v("Totales USD")])])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-a1f8963c", module.exports)
+  }
+}
 
 /***/ }),
 
 /***/ "./node_modules/vue-style-loader/index.js!./node_modules/css-loader/index.js?sourceMap!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-4d29955f\",\"scoped\":false,\"hasInlineConfig\":true}!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./modules/Report/Resources/assets/js/components/DataTableReportsCredits.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
-eval("// style-loader: Adds some css to the DOM by adding a <style> tag\n\n// load the styles\nvar content = __webpack_require__(\"./node_modules/css-loader/index.js?sourceMap!./node_modules/vue-loader/lib/style-compiler/index.js?{\\\"vue\\\":true,\\\"id\\\":\\\"data-v-4d29955f\\\",\\\"scoped\\\":false,\\\"hasInlineConfig\\\":true}!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./modules/Report/Resources/assets/js/components/DataTableReportsCredits.vue\");\nif(typeof content === 'string') content = [[module.i, content, '']];\nif(content.locals) module.exports = content.locals;\n// add the styles to the DOM\nvar update = __webpack_require__(\"./node_modules/vue-style-loader/lib/addStylesClient.js\")(\"338ae67e\", content, false, {});\n// Hot Module Replacement\nif(false) {\n // When the styles change, update the <style> tags\n if(!content.locals) {\n   module.hot.accept(\"!!../../../../../../node_modules/css-loader/index.js?sourceMap!../../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\\\"vue\\\":true,\\\"id\\\":\\\"data-v-4d29955f\\\",\\\"scoped\\\":false,\\\"hasInlineConfig\\\":true}!../../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./DataTableReportsCredits.vue\", function() {\n     var newContent = require(\"!!../../../../../../node_modules/css-loader/index.js?sourceMap!../../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\\\"vue\\\":true,\\\"id\\\":\\\"data-v-4d29955f\\\",\\\"scoped\\\":false,\\\"hasInlineConfig\\\":true}!../../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./DataTableReportsCredits.vue\");\n     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];\n     update(newContent);\n   });\n }\n // When the module is disposed, remove the <style> tags\n module.hot.dispose(function() { update(); });\n}//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vLi9tb2R1bGVzL1JlcG9ydC9SZXNvdXJjZXMvYXNzZXRzL2pzL2NvbXBvbmVudHMvRGF0YVRhYmxlUmVwb3J0c0NyZWRpdHMudnVlP2NhYTYiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7O0FBRUE7QUFDQSxjQUFjLG1CQUFPLENBQUMsa1VBQXNVO0FBQzVWLDRDQUE0QyxRQUFTO0FBQ3JEO0FBQ0E7QUFDQSxhQUFhLG1CQUFPLENBQUMsd0RBQXlFLGdDQUFnQztBQUM5SDtBQUNBLEdBQUcsS0FBVTtBQUNiO0FBQ0E7QUFDQSw0SkFBNEosa0ZBQWtGO0FBQzlPLHFLQUFxSyxrRkFBa0Y7QUFDdlA7QUFDQTtBQUNBLElBQUk7QUFDSjtBQUNBO0FBQ0EsZ0NBQWdDLFVBQVUsRUFBRTtBQUM1QyIsImZpbGUiOiIuL25vZGVfbW9kdWxlcy92dWUtc3R5bGUtbG9hZGVyL2luZGV4LmpzIS4vbm9kZV9tb2R1bGVzL2Nzcy1sb2FkZXIvaW5kZXguanM/c291cmNlTWFwIS4vbm9kZV9tb2R1bGVzL3Z1ZS1sb2FkZXIvbGliL3N0eWxlLWNvbXBpbGVyL2luZGV4LmpzP3tcInZ1ZVwiOnRydWUsXCJpZFwiOlwiZGF0YS12LTRkMjk5NTVmXCIsXCJzY29wZWRcIjpmYWxzZSxcImhhc0lubGluZUNvbmZpZ1wiOnRydWV9IS4vbm9kZV9tb2R1bGVzL3Z1ZS1sb2FkZXIvbGliL3NlbGVjdG9yLmpzP3R5cGU9c3R5bGVzJmluZGV4PTAhLi9tb2R1bGVzL1JlcG9ydC9SZXNvdXJjZXMvYXNzZXRzL2pzL2NvbXBvbmVudHMvRGF0YVRhYmxlUmVwb3J0c0NyZWRpdHMudnVlLmpzIiwic291cmNlc0NvbnRlbnQiOlsiLy8gc3R5bGUtbG9hZGVyOiBBZGRzIHNvbWUgY3NzIHRvIHRoZSBET00gYnkgYWRkaW5nIGEgPHN0eWxlPiB0YWdcblxuLy8gbG9hZCB0aGUgc3R5bGVzXG52YXIgY29udGVudCA9IHJlcXVpcmUoXCIhIS4uLy4uLy4uLy4uLy4uLy4uL25vZGVfbW9kdWxlcy9jc3MtbG9hZGVyL2luZGV4LmpzP3NvdXJjZU1hcCEuLi8uLi8uLi8uLi8uLi8uLi9ub2RlX21vZHVsZXMvdnVlLWxvYWRlci9saWIvc3R5bGUtY29tcGlsZXIvaW5kZXguanM/e1xcXCJ2dWVcXFwiOnRydWUsXFxcImlkXFxcIjpcXFwiZGF0YS12LTRkMjk5NTVmXFxcIixcXFwic2NvcGVkXFxcIjpmYWxzZSxcXFwiaGFzSW5saW5lQ29uZmlnXFxcIjp0cnVlfSEuLi8uLi8uLi8uLi8uLi8uLi9ub2RlX21vZHVsZXMvdnVlLWxvYWRlci9saWIvc2VsZWN0b3IuanM/dHlwZT1zdHlsZXMmaW5kZXg9MCEuL0RhdGFUYWJsZVJlcG9ydHNDcmVkaXRzLnZ1ZVwiKTtcbmlmKHR5cGVvZiBjb250ZW50ID09PSAnc3RyaW5nJykgY29udGVudCA9IFtbbW9kdWxlLmlkLCBjb250ZW50LCAnJ11dO1xuaWYoY29udGVudC5sb2NhbHMpIG1vZHVsZS5leHBvcnRzID0gY29udGVudC5sb2NhbHM7XG4vLyBhZGQgdGhlIHN0eWxlcyB0byB0aGUgRE9NXG52YXIgdXBkYXRlID0gcmVxdWlyZShcIiEuLi8uLi8uLi8uLi8uLi8uLi9ub2RlX21vZHVsZXMvdnVlLXN0eWxlLWxvYWRlci9saWIvYWRkU3R5bGVzQ2xpZW50LmpzXCIpKFwiMzM4YWU2N2VcIiwgY29udGVudCwgZmFsc2UsIHt9KTtcbi8vIEhvdCBNb2R1bGUgUmVwbGFjZW1lbnRcbmlmKG1vZHVsZS5ob3QpIHtcbiAvLyBXaGVuIHRoZSBzdHlsZXMgY2hhbmdlLCB1cGRhdGUgdGhlIDxzdHlsZT4gdGFnc1xuIGlmKCFjb250ZW50LmxvY2Fscykge1xuICAgbW9kdWxlLmhvdC5hY2NlcHQoXCIhIS4uLy4uLy4uLy4uLy4uLy4uL25vZGVfbW9kdWxlcy9jc3MtbG9hZGVyL2luZGV4LmpzP3NvdXJjZU1hcCEuLi8uLi8uLi8uLi8uLi8uLi9ub2RlX21vZHVsZXMvdnVlLWxvYWRlci9saWIvc3R5bGUtY29tcGlsZXIvaW5kZXguanM/e1xcXCJ2dWVcXFwiOnRydWUsXFxcImlkXFxcIjpcXFwiZGF0YS12LTRkMjk5NTVmXFxcIixcXFwic2NvcGVkXFxcIjpmYWxzZSxcXFwiaGFzSW5saW5lQ29uZmlnXFxcIjp0cnVlfSEuLi8uLi8uLi8uLi8uLi8uLi9ub2RlX21vZHVsZXMvdnVlLWxvYWRlci9saWIvc2VsZWN0b3IuanM/dHlwZT1zdHlsZXMmaW5kZXg9MCEuL0RhdGFUYWJsZVJlcG9ydHNDcmVkaXRzLnZ1ZVwiLCBmdW5jdGlvbigpIHtcbiAgICAgdmFyIG5ld0NvbnRlbnQgPSByZXF1aXJlKFwiISEuLi8uLi8uLi8uLi8uLi8uLi9ub2RlX21vZHVsZXMvY3NzLWxvYWRlci9pbmRleC5qcz9zb3VyY2VNYXAhLi4vLi4vLi4vLi4vLi4vLi4vbm9kZV9tb2R1bGVzL3Z1ZS1sb2FkZXIvbGliL3N0eWxlLWNvbXBpbGVyL2luZGV4LmpzP3tcXFwidnVlXFxcIjp0cnVlLFxcXCJpZFxcXCI6XFxcImRhdGEtdi00ZDI5OTU1ZlxcXCIsXFxcInNjb3BlZFxcXCI6ZmFsc2UsXFxcImhhc0lubGluZUNvbmZpZ1xcXCI6dHJ1ZX0hLi4vLi4vLi4vLi4vLi4vLi4vbm9kZV9tb2R1bGVzL3Z1ZS1sb2FkZXIvbGliL3NlbGVjdG9yLmpzP3R5cGU9c3R5bGVzJmluZGV4PTAhLi9EYXRhVGFibGVSZXBvcnRzQ3JlZGl0cy52dWVcIik7XG4gICAgIGlmKHR5cGVvZiBuZXdDb250ZW50ID09PSAnc3RyaW5nJykgbmV3Q29udGVudCA9IFtbbW9kdWxlLmlkLCBuZXdDb250ZW50LCAnJ11dO1xuICAgICB1cGRhdGUobmV3Q29udGVudCk7XG4gICB9KTtcbiB9XG4gLy8gV2hlbiB0aGUgbW9kdWxlIGlzIGRpc3Bvc2VkLCByZW1vdmUgdGhlIDxzdHlsZT4gdGFnc1xuIG1vZHVsZS5ob3QuZGlzcG9zZShmdW5jdGlvbigpIHsgdXBkYXRlKCk7IH0pO1xufVxuXG5cbi8vLy8vLy8vLy8vLy8vLy8vL1xuLy8gV0VCUEFDSyBGT09URVJcbi8vIC4vbm9kZV9tb2R1bGVzL3Z1ZS1zdHlsZS1sb2FkZXIhLi9ub2RlX21vZHVsZXMvY3NzLWxvYWRlcj9zb3VyY2VNYXAhLi9ub2RlX21vZHVsZXMvdnVlLWxvYWRlci9saWIvc3R5bGUtY29tcGlsZXI/e1widnVlXCI6dHJ1ZSxcImlkXCI6XCJkYXRhLXYtNGQyOTk1NWZcIixcInNjb3BlZFwiOmZhbHNlLFwiaGFzSW5saW5lQ29uZmlnXCI6dHJ1ZX0hLi9ub2RlX21vZHVsZXMvdnVlLWxvYWRlci9saWIvc2VsZWN0b3IuanM/dHlwZT1zdHlsZXMmaW5kZXg9MCEuL21vZHVsZXMvUmVwb3J0L1Jlc291cmNlcy9hc3NldHMvanMvY29tcG9uZW50cy9EYXRhVGFibGVSZXBvcnRzQ3JlZGl0cy52dWVcbi8vIG1vZHVsZSBpZCA9IC4vbm9kZV9tb2R1bGVzL3Z1ZS1zdHlsZS1sb2FkZXIvaW5kZXguanMhLi9ub2RlX21vZHVsZXMvY3NzLWxvYWRlci9pbmRleC5qcz9zb3VyY2VNYXAhLi9ub2RlX21vZHVsZXMvdnVlLWxvYWRlci9saWIvc3R5bGUtY29tcGlsZXIvaW5kZXguanM/e1widnVlXCI6dHJ1ZSxcImlkXCI6XCJkYXRhLXYtNGQyOTk1NWZcIixcInNjb3BlZFwiOmZhbHNlLFwiaGFzSW5saW5lQ29uZmlnXCI6dHJ1ZX0hLi9ub2RlX21vZHVsZXMvdnVlLWxvYWRlci9saWIvc2VsZWN0b3IuanM/dHlwZT1zdHlsZXMmaW5kZXg9MCEuL21vZHVsZXMvUmVwb3J0L1Jlc291cmNlcy9hc3NldHMvanMvY29tcG9uZW50cy9EYXRhVGFibGVSZXBvcnRzQ3JlZGl0cy52dWVcbi8vIG1vZHVsZSBjaHVua3MgPSAxIl0sInNvdXJjZVJvb3QiOiIifQ==\n//# sourceURL=webpack-internal:///./node_modules/vue-style-loader/index.js!./node_modules/css-loader/index.js?sourceMap!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-4d29955f\",\"scoped\":false,\"hasInlineConfig\":true}!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./modules/Report/Resources/assets/js/components/DataTableReportsCredits.vue\n");
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__("./node_modules/css-loader/index.js?sourceMap!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-4d29955f\",\"scoped\":false,\"hasInlineConfig\":true}!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./modules/Report/Resources/assets/js/components/DataTableReportsCredits.vue");
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__("./node_modules/vue-style-loader/lib/addStylesClient.js")("338ae67e", content, false, {});
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../../../node_modules/css-loader/index.js?sourceMap!../../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-4d29955f\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./DataTableReportsCredits.vue", function() {
+     var newContent = require("!!../../../../../../node_modules/css-loader/index.js?sourceMap!../../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-4d29955f\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./DataTableReportsCredits.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
 
 /***/ }),
 
 /***/ "./node_modules/vue-style-loader/index.js!./node_modules/css-loader/index.js?sourceMap!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-a1f8963c\",\"scoped\":false,\"hasInlineConfig\":true}!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./modules/Report/Resources/assets/js/components/DataTableReportsConsignment.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
-eval("// style-loader: Adds some css to the DOM by adding a <style> tag\n\n// load the styles\nvar content = __webpack_require__(\"./node_modules/css-loader/index.js?sourceMap!./node_modules/vue-loader/lib/style-compiler/index.js?{\\\"vue\\\":true,\\\"id\\\":\\\"data-v-a1f8963c\\\",\\\"scoped\\\":false,\\\"hasInlineConfig\\\":true}!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./modules/Report/Resources/assets/js/components/DataTableReportsConsignment.vue\");\nif(typeof content === 'string') content = [[module.i, content, '']];\nif(content.locals) module.exports = content.locals;\n// add the styles to the DOM\nvar update = __webpack_require__(\"./node_modules/vue-style-loader/lib/addStylesClient.js\")(\"711b5a59\", content, false, {});\n// Hot Module Replacement\nif(false) {\n // When the styles change, update the <style> tags\n if(!content.locals) {\n   module.hot.accept(\"!!../../../../../../node_modules/css-loader/index.js?sourceMap!../../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\\\"vue\\\":true,\\\"id\\\":\\\"data-v-a1f8963c\\\",\\\"scoped\\\":false,\\\"hasInlineConfig\\\":true}!../../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./DataTableReportsConsignment.vue\", function() {\n     var newContent = require(\"!!../../../../../../node_modules/css-loader/index.js?sourceMap!../../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\\\"vue\\\":true,\\\"id\\\":\\\"data-v-a1f8963c\\\",\\\"scoped\\\":false,\\\"hasInlineConfig\\\":true}!../../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./DataTableReportsConsignment.vue\");\n     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];\n     update(newContent);\n   });\n }\n // When the module is disposed, remove the <style> tags\n module.hot.dispose(function() { update(); });\n}//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vLi9tb2R1bGVzL1JlcG9ydC9SZXNvdXJjZXMvYXNzZXRzL2pzL2NvbXBvbmVudHMvRGF0YVRhYmxlUmVwb3J0c0NvbnNpZ25tZW50LnZ1ZT9iMGQyIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBOztBQUVBO0FBQ0EsY0FBYyxtQkFBTyxDQUFDLHNVQUEwVTtBQUNoVyw0Q0FBNEMsUUFBUztBQUNyRDtBQUNBO0FBQ0EsYUFBYSxtQkFBTyxDQUFDLHdEQUF5RSxnQ0FBZ0M7QUFDOUg7QUFDQSxHQUFHLEtBQVU7QUFDYjtBQUNBO0FBQ0EsNEpBQTRKLGtGQUFrRjtBQUM5TyxxS0FBcUssa0ZBQWtGO0FBQ3ZQO0FBQ0E7QUFDQSxJQUFJO0FBQ0o7QUFDQTtBQUNBLGdDQUFnQyxVQUFVLEVBQUU7QUFDNUMiLCJmaWxlIjoiLi9ub2RlX21vZHVsZXMvdnVlLXN0eWxlLWxvYWRlci9pbmRleC5qcyEuL25vZGVfbW9kdWxlcy9jc3MtbG9hZGVyL2luZGV4LmpzP3NvdXJjZU1hcCEuL25vZGVfbW9kdWxlcy92dWUtbG9hZGVyL2xpYi9zdHlsZS1jb21waWxlci9pbmRleC5qcz97XCJ2dWVcIjp0cnVlLFwiaWRcIjpcImRhdGEtdi1hMWY4OTYzY1wiLFwic2NvcGVkXCI6ZmFsc2UsXCJoYXNJbmxpbmVDb25maWdcIjp0cnVlfSEuL25vZGVfbW9kdWxlcy92dWUtbG9hZGVyL2xpYi9zZWxlY3Rvci5qcz90eXBlPXN0eWxlcyZpbmRleD0wIS4vbW9kdWxlcy9SZXBvcnQvUmVzb3VyY2VzL2Fzc2V0cy9qcy9jb21wb25lbnRzL0RhdGFUYWJsZVJlcG9ydHNDb25zaWdubWVudC52dWUuanMiLCJzb3VyY2VzQ29udGVudCI6WyIvLyBzdHlsZS1sb2FkZXI6IEFkZHMgc29tZSBjc3MgdG8gdGhlIERPTSBieSBhZGRpbmcgYSA8c3R5bGU+IHRhZ1xuXG4vLyBsb2FkIHRoZSBzdHlsZXNcbnZhciBjb250ZW50ID0gcmVxdWlyZShcIiEhLi4vLi4vLi4vLi4vLi4vLi4vbm9kZV9tb2R1bGVzL2Nzcy1sb2FkZXIvaW5kZXguanM/c291cmNlTWFwIS4uLy4uLy4uLy4uLy4uLy4uL25vZGVfbW9kdWxlcy92dWUtbG9hZGVyL2xpYi9zdHlsZS1jb21waWxlci9pbmRleC5qcz97XFxcInZ1ZVxcXCI6dHJ1ZSxcXFwiaWRcXFwiOlxcXCJkYXRhLXYtYTFmODk2M2NcXFwiLFxcXCJzY29wZWRcXFwiOmZhbHNlLFxcXCJoYXNJbmxpbmVDb25maWdcXFwiOnRydWV9IS4uLy4uLy4uLy4uLy4uLy4uL25vZGVfbW9kdWxlcy92dWUtbG9hZGVyL2xpYi9zZWxlY3Rvci5qcz90eXBlPXN0eWxlcyZpbmRleD0wIS4vRGF0YVRhYmxlUmVwb3J0c0NvbnNpZ25tZW50LnZ1ZVwiKTtcbmlmKHR5cGVvZiBjb250ZW50ID09PSAnc3RyaW5nJykgY29udGVudCA9IFtbbW9kdWxlLmlkLCBjb250ZW50LCAnJ11dO1xuaWYoY29udGVudC5sb2NhbHMpIG1vZHVsZS5leHBvcnRzID0gY29udGVudC5sb2NhbHM7XG4vLyBhZGQgdGhlIHN0eWxlcyB0byB0aGUgRE9NXG52YXIgdXBkYXRlID0gcmVxdWlyZShcIiEuLi8uLi8uLi8uLi8uLi8uLi9ub2RlX21vZHVsZXMvdnVlLXN0eWxlLWxvYWRlci9saWIvYWRkU3R5bGVzQ2xpZW50LmpzXCIpKFwiNzExYjVhNTlcIiwgY29udGVudCwgZmFsc2UsIHt9KTtcbi8vIEhvdCBNb2R1bGUgUmVwbGFjZW1lbnRcbmlmKG1vZHVsZS5ob3QpIHtcbiAvLyBXaGVuIHRoZSBzdHlsZXMgY2hhbmdlLCB1cGRhdGUgdGhlIDxzdHlsZT4gdGFnc1xuIGlmKCFjb250ZW50LmxvY2Fscykge1xuICAgbW9kdWxlLmhvdC5hY2NlcHQoXCIhIS4uLy4uLy4uLy4uLy4uLy4uL25vZGVfbW9kdWxlcy9jc3MtbG9hZGVyL2luZGV4LmpzP3NvdXJjZU1hcCEuLi8uLi8uLi8uLi8uLi8uLi9ub2RlX21vZHVsZXMvdnVlLWxvYWRlci9saWIvc3R5bGUtY29tcGlsZXIvaW5kZXguanM/e1xcXCJ2dWVcXFwiOnRydWUsXFxcImlkXFxcIjpcXFwiZGF0YS12LWExZjg5NjNjXFxcIixcXFwic2NvcGVkXFxcIjpmYWxzZSxcXFwiaGFzSW5saW5lQ29uZmlnXFxcIjp0cnVlfSEuLi8uLi8uLi8uLi8uLi8uLi9ub2RlX21vZHVsZXMvdnVlLWxvYWRlci9saWIvc2VsZWN0b3IuanM/dHlwZT1zdHlsZXMmaW5kZXg9MCEuL0RhdGFUYWJsZVJlcG9ydHNDb25zaWdubWVudC52dWVcIiwgZnVuY3Rpb24oKSB7XG4gICAgIHZhciBuZXdDb250ZW50ID0gcmVxdWlyZShcIiEhLi4vLi4vLi4vLi4vLi4vLi4vbm9kZV9tb2R1bGVzL2Nzcy1sb2FkZXIvaW5kZXguanM/c291cmNlTWFwIS4uLy4uLy4uLy4uLy4uLy4uL25vZGVfbW9kdWxlcy92dWUtbG9hZGVyL2xpYi9zdHlsZS1jb21waWxlci9pbmRleC5qcz97XFxcInZ1ZVxcXCI6dHJ1ZSxcXFwiaWRcXFwiOlxcXCJkYXRhLXYtYTFmODk2M2NcXFwiLFxcXCJzY29wZWRcXFwiOmZhbHNlLFxcXCJoYXNJbmxpbmVDb25maWdcXFwiOnRydWV9IS4uLy4uLy4uLy4uLy4uLy4uL25vZGVfbW9kdWxlcy92dWUtbG9hZGVyL2xpYi9zZWxlY3Rvci5qcz90eXBlPXN0eWxlcyZpbmRleD0wIS4vRGF0YVRhYmxlUmVwb3J0c0NvbnNpZ25tZW50LnZ1ZVwiKTtcbiAgICAgaWYodHlwZW9mIG5ld0NvbnRlbnQgPT09ICdzdHJpbmcnKSBuZXdDb250ZW50ID0gW1ttb2R1bGUuaWQsIG5ld0NvbnRlbnQsICcnXV07XG4gICAgIHVwZGF0ZShuZXdDb250ZW50KTtcbiAgIH0pO1xuIH1cbiAvLyBXaGVuIHRoZSBtb2R1bGUgaXMgZGlzcG9zZWQsIHJlbW92ZSB0aGUgPHN0eWxlPiB0YWdzXG4gbW9kdWxlLmhvdC5kaXNwb3NlKGZ1bmN0aW9uKCkgeyB1cGRhdGUoKTsgfSk7XG59XG5cblxuLy8vLy8vLy8vLy8vLy8vLy8vXG4vLyBXRUJQQUNLIEZPT1RFUlxuLy8gLi9ub2RlX21vZHVsZXMvdnVlLXN0eWxlLWxvYWRlciEuL25vZGVfbW9kdWxlcy9jc3MtbG9hZGVyP3NvdXJjZU1hcCEuL25vZGVfbW9kdWxlcy92dWUtbG9hZGVyL2xpYi9zdHlsZS1jb21waWxlcj97XCJ2dWVcIjp0cnVlLFwiaWRcIjpcImRhdGEtdi1hMWY4OTYzY1wiLFwic2NvcGVkXCI6ZmFsc2UsXCJoYXNJbmxpbmVDb25maWdcIjp0cnVlfSEuL25vZGVfbW9kdWxlcy92dWUtbG9hZGVyL2xpYi9zZWxlY3Rvci5qcz90eXBlPXN0eWxlcyZpbmRleD0wIS4vbW9kdWxlcy9SZXBvcnQvUmVzb3VyY2VzL2Fzc2V0cy9qcy9jb21wb25lbnRzL0RhdGFUYWJsZVJlcG9ydHNDb25zaWdubWVudC52dWVcbi8vIG1vZHVsZSBpZCA9IC4vbm9kZV9tb2R1bGVzL3Z1ZS1zdHlsZS1sb2FkZXIvaW5kZXguanMhLi9ub2RlX21vZHVsZXMvY3NzLWxvYWRlci9pbmRleC5qcz9zb3VyY2VNYXAhLi9ub2RlX21vZHVsZXMvdnVlLWxvYWRlci9saWIvc3R5bGUtY29tcGlsZXIvaW5kZXguanM/e1widnVlXCI6dHJ1ZSxcImlkXCI6XCJkYXRhLXYtYTFmODk2M2NcIixcInNjb3BlZFwiOmZhbHNlLFwiaGFzSW5saW5lQ29uZmlnXCI6dHJ1ZX0hLi9ub2RlX21vZHVsZXMvdnVlLWxvYWRlci9saWIvc2VsZWN0b3IuanM/dHlwZT1zdHlsZXMmaW5kZXg9MCEuL21vZHVsZXMvUmVwb3J0L1Jlc291cmNlcy9hc3NldHMvanMvY29tcG9uZW50cy9EYXRhVGFibGVSZXBvcnRzQ29uc2lnbm1lbnQudnVlXG4vLyBtb2R1bGUgY2h1bmtzID0gMSJdLCJzb3VyY2VSb290IjoiIn0=\n//# sourceURL=webpack-internal:///./node_modules/vue-style-loader/index.js!./node_modules/css-loader/index.js?sourceMap!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-a1f8963c\",\"scoped\":false,\"hasInlineConfig\":true}!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./modules/Report/Resources/assets/js/components/DataTableReportsConsignment.vue\n");
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__("./node_modules/css-loader/index.js?sourceMap!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-a1f8963c\",\"scoped\":false,\"hasInlineConfig\":true}!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./modules/Report/Resources/assets/js/components/DataTableReportsConsignment.vue");
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__("./node_modules/vue-style-loader/lib/addStylesClient.js")("711b5a59", content, false, {});
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../../../node_modules/css-loader/index.js?sourceMap!../../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-a1f8963c\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./DataTableReportsConsignment.vue", function() {
+     var newContent = require("!!../../../../../../node_modules/css-loader/index.js?sourceMap!../../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-a1f8963c\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./DataTableReportsConsignment.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
 
 /***/ }),
 
 /***/ "./resources/js/components/WhatsappModalReports.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
-eval("var disposed = false\nvar normalizeComponent = __webpack_require__(\"./node_modules/vue-loader/lib/component-normalizer.js\")\n/* script */\nvar __vue_script__ = __webpack_require__(\"./node_modules/babel-loader/lib/index.js?{\\\"cacheDirectory\\\":true,\\\"presets\\\":[[\\\"@babel/preset-env\\\",{\\\"modules\\\":false,\\\"targets\\\":{\\\"browsers\\\":[\\\"> 2%\\\"]},\\\"forceAllTransforms\\\":true}]],\\\"plugins\\\":[\\\"@babel/plugin-proposal-object-rest-spread\\\",[\\\"@babel/plugin-transform-runtime\\\",{\\\"helpers\\\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/js/components/WhatsappModalReports.vue\")\n/* template */\nvar __vue_template__ = __webpack_require__(\"./node_modules/vue-loader/lib/template-compiler/index.js?{\\\"id\\\":\\\"data-v-9a297822\\\",\\\"hasScoped\\\":false,\\\"buble\\\":{\\\"transforms\\\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/js/components/WhatsappModalReports.vue\")\n/* template functional */\nvar __vue_template_functional__ = false\n/* styles */\nvar __vue_styles__ = null\n/* scopeId */\nvar __vue_scopeId__ = null\n/* moduleIdentifier (server only) */\nvar __vue_module_identifier__ = null\nvar Component = normalizeComponent(\n  __vue_script__,\n  __vue_template__,\n  __vue_template_functional__,\n  __vue_styles__,\n  __vue_scopeId__,\n  __vue_module_identifier__\n)\nComponent.options.__file = \"resources/js/components/WhatsappModalReports.vue\"\n\n/* hot reload */\nif (false) {(function () {\n  var hotAPI = require(\"vue-hot-reload-api\")\n  hotAPI.install(require(\"vue\"), false)\n  if (!hotAPI.compatible) return\n  module.hot.accept()\n  if (!module.hot.data) {\n    hotAPI.createRecord(\"data-v-9a297822\", Component.options)\n  } else {\n    hotAPI.reload(\"data-v-9a297822\", Component.options)\n  }\n  module.hot.dispose(function (data) {\n    disposed = true\n  })\n})()}\n\nmodule.exports = Component.exports\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vLi9yZXNvdXJjZXMvanMvY29tcG9uZW50cy9XaGF0c2FwcE1vZGFsUmVwb3J0cy52dWU/M2FmOSJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtBQUNBLHlCQUF5QixtQkFBTyxDQUFDLHVEQUE0RDtBQUM3RjtBQUNBLHFCQUFxQixtQkFBTyxDQUFDLHVhQUF5WDtBQUN0WjtBQUNBLHVCQUF1QixtQkFBTyxDQUFDLDRQQUE4TztBQUM3UTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBOztBQUVBO0FBQ0EsSUFBSSxLQUFVLEdBQUc7QUFDakI7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0EsR0FBRztBQUNIO0FBQ0E7QUFDQTtBQUNBO0FBQ0EsR0FBRztBQUNILENBQUM7O0FBRUQiLCJmaWxlIjoiLi9yZXNvdXJjZXMvanMvY29tcG9uZW50cy9XaGF0c2FwcE1vZGFsUmVwb3J0cy52dWUuanMiLCJzb3VyY2VzQ29udGVudCI6WyJ2YXIgZGlzcG9zZWQgPSBmYWxzZVxudmFyIG5vcm1hbGl6ZUNvbXBvbmVudCA9IHJlcXVpcmUoXCIhLi4vLi4vLi4vbm9kZV9tb2R1bGVzL3Z1ZS1sb2FkZXIvbGliL2NvbXBvbmVudC1ub3JtYWxpemVyXCIpXG4vKiBzY3JpcHQgKi9cbnZhciBfX3Z1ZV9zY3JpcHRfXyA9IHJlcXVpcmUoXCIhIWJhYmVsLWxvYWRlcj97XFxcImNhY2hlRGlyZWN0b3J5XFxcIjp0cnVlLFxcXCJwcmVzZXRzXFxcIjpbW1xcXCJAYmFiZWwvcHJlc2V0LWVudlxcXCIse1xcXCJtb2R1bGVzXFxcIjpmYWxzZSxcXFwidGFyZ2V0c1xcXCI6e1xcXCJicm93c2Vyc1xcXCI6W1xcXCI+IDIlXFxcIl19LFxcXCJmb3JjZUFsbFRyYW5zZm9ybXNcXFwiOnRydWV9XV0sXFxcInBsdWdpbnNcXFwiOltcXFwiQGJhYmVsL3BsdWdpbi1wcm9wb3NhbC1vYmplY3QtcmVzdC1zcHJlYWRcXFwiLFtcXFwiQGJhYmVsL3BsdWdpbi10cmFuc2Zvcm0tcnVudGltZVxcXCIse1xcXCJoZWxwZXJzXFxcIjpmYWxzZX1dXX0hLi4vLi4vLi4vbm9kZV9tb2R1bGVzL3Z1ZS1sb2FkZXIvbGliL3NlbGVjdG9yP3R5cGU9c2NyaXB0JmluZGV4PTAhLi9XaGF0c2FwcE1vZGFsUmVwb3J0cy52dWVcIilcbi8qIHRlbXBsYXRlICovXG52YXIgX192dWVfdGVtcGxhdGVfXyA9IHJlcXVpcmUoXCIhIS4uLy4uLy4uL25vZGVfbW9kdWxlcy92dWUtbG9hZGVyL2xpYi90ZW1wbGF0ZS1jb21waWxlci9pbmRleD97XFxcImlkXFxcIjpcXFwiZGF0YS12LTlhMjk3ODIyXFxcIixcXFwiaGFzU2NvcGVkXFxcIjpmYWxzZSxcXFwiYnVibGVcXFwiOntcXFwidHJhbnNmb3Jtc1xcXCI6e319fSEuLi8uLi8uLi9ub2RlX21vZHVsZXMvdnVlLWxvYWRlci9saWIvc2VsZWN0b3I/dHlwZT10ZW1wbGF0ZSZpbmRleD0wIS4vV2hhdHNhcHBNb2RhbFJlcG9ydHMudnVlXCIpXG4vKiB0ZW1wbGF0ZSBmdW5jdGlvbmFsICovXG52YXIgX192dWVfdGVtcGxhdGVfZnVuY3Rpb25hbF9fID0gZmFsc2Vcbi8qIHN0eWxlcyAqL1xudmFyIF9fdnVlX3N0eWxlc19fID0gbnVsbFxuLyogc2NvcGVJZCAqL1xudmFyIF9fdnVlX3Njb3BlSWRfXyA9IG51bGxcbi8qIG1vZHVsZUlkZW50aWZpZXIgKHNlcnZlciBvbmx5KSAqL1xudmFyIF9fdnVlX21vZHVsZV9pZGVudGlmaWVyX18gPSBudWxsXG52YXIgQ29tcG9uZW50ID0gbm9ybWFsaXplQ29tcG9uZW50KFxuICBfX3Z1ZV9zY3JpcHRfXyxcbiAgX192dWVfdGVtcGxhdGVfXyxcbiAgX192dWVfdGVtcGxhdGVfZnVuY3Rpb25hbF9fLFxuICBfX3Z1ZV9zdHlsZXNfXyxcbiAgX192dWVfc2NvcGVJZF9fLFxuICBfX3Z1ZV9tb2R1bGVfaWRlbnRpZmllcl9fXG4pXG5Db21wb25lbnQub3B0aW9ucy5fX2ZpbGUgPSBcInJlc291cmNlcy9qcy9jb21wb25lbnRzL1doYXRzYXBwTW9kYWxSZXBvcnRzLnZ1ZVwiXG5cbi8qIGhvdCByZWxvYWQgKi9cbmlmIChtb2R1bGUuaG90KSB7KGZ1bmN0aW9uICgpIHtcbiAgdmFyIGhvdEFQSSA9IHJlcXVpcmUoXCJ2dWUtaG90LXJlbG9hZC1hcGlcIilcbiAgaG90QVBJLmluc3RhbGwocmVxdWlyZShcInZ1ZVwiKSwgZmFsc2UpXG4gIGlmICghaG90QVBJLmNvbXBhdGlibGUpIHJldHVyblxuICBtb2R1bGUuaG90LmFjY2VwdCgpXG4gIGlmICghbW9kdWxlLmhvdC5kYXRhKSB7XG4gICAgaG90QVBJLmNyZWF0ZVJlY29yZChcImRhdGEtdi05YTI5NzgyMlwiLCBDb21wb25lbnQub3B0aW9ucylcbiAgfSBlbHNlIHtcbiAgICBob3RBUEkucmVsb2FkKFwiZGF0YS12LTlhMjk3ODIyXCIsIENvbXBvbmVudC5vcHRpb25zKVxuICB9XG4gIG1vZHVsZS5ob3QuZGlzcG9zZShmdW5jdGlvbiAoZGF0YSkge1xuICAgIGRpc3Bvc2VkID0gdHJ1ZVxuICB9KVxufSkoKX1cblxubW9kdWxlLmV4cG9ydHMgPSBDb21wb25lbnQuZXhwb3J0c1xuXG5cblxuLy8vLy8vLy8vLy8vLy8vLy8vXG4vLyBXRUJQQUNLIEZPT1RFUlxuLy8gLi9yZXNvdXJjZXMvanMvY29tcG9uZW50cy9XaGF0c2FwcE1vZGFsUmVwb3J0cy52dWVcbi8vIG1vZHVsZSBpZCA9IC4vcmVzb3VyY2VzL2pzL2NvbXBvbmVudHMvV2hhdHNhcHBNb2RhbFJlcG9ydHMudnVlXG4vLyBtb2R1bGUgY2h1bmtzID0gMSA3NyA3OCAxMzYgMTQ0Il0sInNvdXJjZVJvb3QiOiIifQ==\n//# sourceURL=webpack-internal:///./resources/js/components/WhatsappModalReports.vue\n");
+var disposed = false
+var normalizeComponent = __webpack_require__("./node_modules/vue-loader/lib/component-normalizer.js")
+/* script */
+var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/js/components/WhatsappModalReports.vue")
+/* template */
+var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-9a297822\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/js/components/WhatsappModalReports.vue")
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/js/components/WhatsappModalReports.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-9a297822", Component.options)
+  } else {
+    hotAPI.reload("data-v-9a297822", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
 
 /***/ })
 
 });
+//# sourceMappingURL=report-credit-index.js.map

@@ -814,7 +814,6 @@ class CashController extends Controller
     }
     public function get_last_documents(Request $request)
     {
-        $is_note_sale =  $request->isNote == "true" ? true : false;
         $type_document = $request->typeDocument;
         $establishment_id = auth()->user()->establishment_id;
         $model = null;
@@ -835,7 +834,7 @@ class CashController extends Controller
         // $documents = $is_note_sale ?  SaleNote::where('establishment_id', $establishment_id) : Document::where('establishment_id', $establishment_id);
         $column = $request->column ?? "description";
         $value = $request->value;
-
+        $remain = $request->remain == "true" ? true : false;
         if ($value) {
             if ($column == 'date') {
                 $documents = $documents->whereDate('date_of_issue', $value);
@@ -849,6 +848,13 @@ class CashController extends Controller
                 });
             }
         }
+
+        if($remain && $type_document == "documents"){
+            $documents = $documents->where('payment_condition_id','02')
+            ->where('total_canceled',0)
+            ;
+        }
+        
         $documents->orderBy('date_of_issue', 'desc')->orderBy('id', 'desc');
         $result = null;
         switch ($type_document) {

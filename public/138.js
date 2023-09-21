@@ -3,7 +3,48 @@ webpackJsonp([138],{
 /***/ "./modules/Consignment/Resources/assets/js/views/partials/penalty_form.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
-eval("var disposed = false\nvar normalizeComponent = __webpack_require__(\"./node_modules/vue-loader/lib/component-normalizer.js\")\n/* script */\nvar __vue_script__ = __webpack_require__(\"./node_modules/babel-loader/lib/index.js?{\\\"cacheDirectory\\\":true,\\\"presets\\\":[[\\\"@babel/preset-env\\\",{\\\"modules\\\":false,\\\"targets\\\":{\\\"browsers\\\":[\\\"> 2%\\\"]},\\\"forceAllTransforms\\\":true}]],\\\"plugins\\\":[\\\"@babel/plugin-proposal-object-rest-spread\\\",[\\\"@babel/plugin-transform-runtime\\\",{\\\"helpers\\\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/Consignment/Resources/assets/js/views/partials/penalty_form.vue\")\n/* template */\nvar __vue_template__ = __webpack_require__(\"./node_modules/vue-loader/lib/template-compiler/index.js?{\\\"id\\\":\\\"data-v-2c2e76ba\\\",\\\"hasScoped\\\":false,\\\"buble\\\":{\\\"transforms\\\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Consignment/Resources/assets/js/views/partials/penalty_form.vue\")\n/* template functional */\nvar __vue_template_functional__ = false\n/* styles */\nvar __vue_styles__ = null\n/* scopeId */\nvar __vue_scopeId__ = null\n/* moduleIdentifier (server only) */\nvar __vue_module_identifier__ = null\nvar Component = normalizeComponent(\n  __vue_script__,\n  __vue_template__,\n  __vue_template_functional__,\n  __vue_styles__,\n  __vue_scopeId__,\n  __vue_module_identifier__\n)\nComponent.options.__file = \"modules/Consignment/Resources/assets/js/views/partials/penalty_form.vue\"\n\n/* hot reload */\nif (false) {(function () {\n  var hotAPI = require(\"vue-hot-reload-api\")\n  hotAPI.install(require(\"vue\"), false)\n  if (!hotAPI.compatible) return\n  module.hot.accept()\n  if (!module.hot.data) {\n    hotAPI.createRecord(\"data-v-2c2e76ba\", Component.options)\n  } else {\n    hotAPI.reload(\"data-v-2c2e76ba\", Component.options)\n  }\n  module.hot.dispose(function (data) {\n    disposed = true\n  })\n})()}\n\nmodule.exports = Component.exports\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vLi9tb2R1bGVzL0NvbnNpZ25tZW50L1Jlc291cmNlcy9hc3NldHMvanMvdmlld3MvcGFydGlhbHMvcGVuYWx0eV9mb3JtLnZ1ZT85ZGUxIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0FBQ0EseUJBQXlCLG1CQUFPLENBQUMsdURBQXdFO0FBQ3pHO0FBQ0EscUJBQXFCLG1CQUFPLENBQUMsOGJBQTZYO0FBQzFaO0FBQ0EsdUJBQXVCLG1CQUFPLENBQUMsbVJBQThQO0FBQzdSO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7O0FBRUE7QUFDQSxJQUFJLEtBQVUsR0FBRztBQUNqQjtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSxHQUFHO0FBQ0g7QUFDQTtBQUNBO0FBQ0E7QUFDQSxHQUFHO0FBQ0gsQ0FBQzs7QUFFRCIsImZpbGUiOiIuL21vZHVsZXMvQ29uc2lnbm1lbnQvUmVzb3VyY2VzL2Fzc2V0cy9qcy92aWV3cy9wYXJ0aWFscy9wZW5hbHR5X2Zvcm0udnVlLmpzIiwic291cmNlc0NvbnRlbnQiOlsidmFyIGRpc3Bvc2VkID0gZmFsc2VcbnZhciBub3JtYWxpemVDb21wb25lbnQgPSByZXF1aXJlKFwiIS4uLy4uLy4uLy4uLy4uLy4uLy4uL25vZGVfbW9kdWxlcy92dWUtbG9hZGVyL2xpYi9jb21wb25lbnQtbm9ybWFsaXplclwiKVxuLyogc2NyaXB0ICovXG52YXIgX192dWVfc2NyaXB0X18gPSByZXF1aXJlKFwiISFiYWJlbC1sb2FkZXI/e1xcXCJjYWNoZURpcmVjdG9yeVxcXCI6dHJ1ZSxcXFwicHJlc2V0c1xcXCI6W1tcXFwiQGJhYmVsL3ByZXNldC1lbnZcXFwiLHtcXFwibW9kdWxlc1xcXCI6ZmFsc2UsXFxcInRhcmdldHNcXFwiOntcXFwiYnJvd3NlcnNcXFwiOltcXFwiPiAyJVxcXCJdfSxcXFwiZm9yY2VBbGxUcmFuc2Zvcm1zXFxcIjp0cnVlfV1dLFxcXCJwbHVnaW5zXFxcIjpbXFxcIkBiYWJlbC9wbHVnaW4tcHJvcG9zYWwtb2JqZWN0LXJlc3Qtc3ByZWFkXFxcIixbXFxcIkBiYWJlbC9wbHVnaW4tdHJhbnNmb3JtLXJ1bnRpbWVcXFwiLHtcXFwiaGVscGVyc1xcXCI6ZmFsc2V9XV19IS4uLy4uLy4uLy4uLy4uLy4uLy4uL25vZGVfbW9kdWxlcy92dWUtbG9hZGVyL2xpYi9zZWxlY3Rvcj90eXBlPXNjcmlwdCZpbmRleD0wIS4vcGVuYWx0eV9mb3JtLnZ1ZVwiKVxuLyogdGVtcGxhdGUgKi9cbnZhciBfX3Z1ZV90ZW1wbGF0ZV9fID0gcmVxdWlyZShcIiEhLi4vLi4vLi4vLi4vLi4vLi4vLi4vbm9kZV9tb2R1bGVzL3Z1ZS1sb2FkZXIvbGliL3RlbXBsYXRlLWNvbXBpbGVyL2luZGV4P3tcXFwiaWRcXFwiOlxcXCJkYXRhLXYtMmMyZTc2YmFcXFwiLFxcXCJoYXNTY29wZWRcXFwiOmZhbHNlLFxcXCJidWJsZVxcXCI6e1xcXCJ0cmFuc2Zvcm1zXFxcIjp7fX19IS4uLy4uLy4uLy4uLy4uLy4uLy4uL25vZGVfbW9kdWxlcy92dWUtbG9hZGVyL2xpYi9zZWxlY3Rvcj90eXBlPXRlbXBsYXRlJmluZGV4PTAhLi9wZW5hbHR5X2Zvcm0udnVlXCIpXG4vKiB0ZW1wbGF0ZSBmdW5jdGlvbmFsICovXG52YXIgX192dWVfdGVtcGxhdGVfZnVuY3Rpb25hbF9fID0gZmFsc2Vcbi8qIHN0eWxlcyAqL1xudmFyIF9fdnVlX3N0eWxlc19fID0gbnVsbFxuLyogc2NvcGVJZCAqL1xudmFyIF9fdnVlX3Njb3BlSWRfXyA9IG51bGxcbi8qIG1vZHVsZUlkZW50aWZpZXIgKHNlcnZlciBvbmx5KSAqL1xudmFyIF9fdnVlX21vZHVsZV9pZGVudGlmaWVyX18gPSBudWxsXG52YXIgQ29tcG9uZW50ID0gbm9ybWFsaXplQ29tcG9uZW50KFxuICBfX3Z1ZV9zY3JpcHRfXyxcbiAgX192dWVfdGVtcGxhdGVfXyxcbiAgX192dWVfdGVtcGxhdGVfZnVuY3Rpb25hbF9fLFxuICBfX3Z1ZV9zdHlsZXNfXyxcbiAgX192dWVfc2NvcGVJZF9fLFxuICBfX3Z1ZV9tb2R1bGVfaWRlbnRpZmllcl9fXG4pXG5Db21wb25lbnQub3B0aW9ucy5fX2ZpbGUgPSBcIm1vZHVsZXMvQ29uc2lnbm1lbnQvUmVzb3VyY2VzL2Fzc2V0cy9qcy92aWV3cy9wYXJ0aWFscy9wZW5hbHR5X2Zvcm0udnVlXCJcblxuLyogaG90IHJlbG9hZCAqL1xuaWYgKG1vZHVsZS5ob3QpIHsoZnVuY3Rpb24gKCkge1xuICB2YXIgaG90QVBJID0gcmVxdWlyZShcInZ1ZS1ob3QtcmVsb2FkLWFwaVwiKVxuICBob3RBUEkuaW5zdGFsbChyZXF1aXJlKFwidnVlXCIpLCBmYWxzZSlcbiAgaWYgKCFob3RBUEkuY29tcGF0aWJsZSkgcmV0dXJuXG4gIG1vZHVsZS5ob3QuYWNjZXB0KClcbiAgaWYgKCFtb2R1bGUuaG90LmRhdGEpIHtcbiAgICBob3RBUEkuY3JlYXRlUmVjb3JkKFwiZGF0YS12LTJjMmU3NmJhXCIsIENvbXBvbmVudC5vcHRpb25zKVxuICB9IGVsc2Uge1xuICAgIGhvdEFQSS5yZWxvYWQoXCJkYXRhLXYtMmMyZTc2YmFcIiwgQ29tcG9uZW50Lm9wdGlvbnMpXG4gIH1cbiAgbW9kdWxlLmhvdC5kaXNwb3NlKGZ1bmN0aW9uIChkYXRhKSB7XG4gICAgZGlzcG9zZWQgPSB0cnVlXG4gIH0pXG59KSgpfVxuXG5tb2R1bGUuZXhwb3J0cyA9IENvbXBvbmVudC5leHBvcnRzXG5cblxuXG4vLy8vLy8vLy8vLy8vLy8vLy9cbi8vIFdFQlBBQ0sgRk9PVEVSXG4vLyAuL21vZHVsZXMvQ29uc2lnbm1lbnQvUmVzb3VyY2VzL2Fzc2V0cy9qcy92aWV3cy9wYXJ0aWFscy9wZW5hbHR5X2Zvcm0udnVlXG4vLyBtb2R1bGUgaWQgPSAuL21vZHVsZXMvQ29uc2lnbm1lbnQvUmVzb3VyY2VzL2Fzc2V0cy9qcy92aWV3cy9wYXJ0aWFscy9wZW5hbHR5X2Zvcm0udnVlXG4vLyBtb2R1bGUgY2h1bmtzID0gMTM4Il0sInNvdXJjZVJvb3QiOiIifQ==\n//# sourceURL=webpack-internal:///./modules/Consignment/Resources/assets/js/views/partials/penalty_form.vue\n");
+var disposed = false
+var normalizeComponent = __webpack_require__("./node_modules/vue-loader/lib/component-normalizer.js")
+/* script */
+var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/Consignment/Resources/assets/js/views/partials/penalty_form.vue")
+/* template */
+var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-2c2e76ba\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Consignment/Resources/assets/js/views/partials/penalty_form.vue")
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "modules/Consignment/Resources/assets/js/views/partials/penalty_form.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-2c2e76ba", Component.options)
+  } else {
+    hotAPI.reload("data-v-2c2e76ba", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
 
 /***/ }),
 
@@ -11,15 +52,314 @@ eval("var disposed = false\nvar normalizeComponent = __webpack_require__(\"./nod
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("Object.defineProperty(__webpack_exports__, \"__esModule\", { value: true });\n/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator__ = __webpack_require__(\"./node_modules/@babel/runtime/regenerator/index.js\");\n/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator__);\n\n\nfunction asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }\n\nfunction _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, \"next\", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, \"throw\", err); } _next(undefined); }); }; }\n\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n/* harmony default export */ __webpack_exports__[\"default\"] = ({\n  props: [\"showDialog\"],\n  data: function data() {\n    return {\n      resource: '/consignment/penalty',\n      loading: false,\n      form: {\n        id: null,\n        description: null,\n        type: 'percent',\n        amount: 0.0\n      }\n    };\n  },\n  methods: {\n    open: function open() {\n      this.form = {\n        id: null,\n        description: null,\n        type: 'percent',\n        amount: 0.0\n      };\n    },\n    close: function close() {\n      this.$emit('update:showDialog', false);\n    },\n    create: function create() {\n      var _this = this;\n\n      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee() {\n        var response;\n        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee$(_context) {\n          while (1) {\n            switch (_context.prev = _context.next) {\n              case 0:\n                _context.prev = 0;\n                _this.loading = true;\n                _context.next = 4;\n                return _this.$http.post(_this.resource, _this.form);\n\n              case 4:\n                response = _context.sent;\n\n                if (response.data.success) {\n                  _this.$message({\n                    type: 'success',\n                    message: 'Penalización creada correctamente'\n                  });\n\n                  _this.$emit('reloadPenalties', response.data.id);\n\n                  _this.close();\n                }\n\n                _context.next = 11;\n                break;\n\n              case 8:\n                _context.prev = 8;\n                _context.t0 = _context[\"catch\"](0);\n\n                _this.$message({\n                  type: 'error',\n                  message: 'Ocurrió un error al crear la penalización'\n                });\n\n              case 11:\n                _context.prev = 11;\n                _this.loading = false;\n                return _context.finish(11);\n\n              case 14:\n              case \"end\":\n                return _context.stop();\n            }\n          }\n        }, _callee, null, [[0, 8, 11, 14]]);\n      }))();\n    }\n  }\n});//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vbW9kdWxlcy9Db25zaWdubWVudC9SZXNvdXJjZXMvYXNzZXRzL2pzL3ZpZXdzL3BhcnRpYWxzL3BlbmFsdHlfZm9ybS52dWU/NTRjZCJdLCJuYW1lcyI6WyJwcm9wcyIsImRhdGEiLCJyZXNvdXJjZSIsImxvYWRpbmciLCJmb3JtIiwiaWQiLCJkZXNjcmlwdGlvbiIsInR5cGUiLCJhbW91bnQiLCJtZXRob2RzIiwib3BlbiIsImNsb3NlIiwiY3JlYXRlIiwicmVzcG9uc2UiLCJtZXNzYWdlIl0sIm1hcHBpbmdzIjoiOzs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7Ozs7O0FBdUVlO0FBQ2ZBLHVCQURBO0FBRUFDLE1BRkEsa0JBRUE7QUFDQTtBQUNBQyxzQ0FEQTtBQUVBQyxvQkFGQTtBQUdBQztBQUNBQyxnQkFEQTtBQUVBQyx5QkFGQTtBQUdBQyx1QkFIQTtBQUlBQztBQUpBO0FBSEE7QUFVQSxHQWJBO0FBY0FDO0FBQ0FDLFFBREEsa0JBQ0E7QUFDQTtBQUNBTCxnQkFEQTtBQUVBQyx5QkFGQTtBQUdBQyx1QkFIQTtBQUlBQztBQUpBO0FBTUEsS0FSQTtBQVNBRyxTQVRBLG1CQVNBO0FBQ0E7QUFDQSxLQVhBO0FBWUFDLFVBWkEsb0JBWUE7QUFBQTs7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUVBO0FBRkE7QUFBQSx1QkFHQSw0Q0FIQTs7QUFBQTtBQUdBQyx3QkFIQTs7QUFJQTtBQUNBO0FBQ0FOLG1DQURBO0FBRUFPO0FBRkE7O0FBSUE7O0FBQ0E7QUFFQTs7QUFaQTtBQUFBOztBQUFBO0FBQUE7QUFBQTs7QUFlQTtBQUNBUCwrQkFEQTtBQUVBTztBQUZBOztBQWZBO0FBQUE7QUFvQkE7QUFwQkE7O0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFBQTtBQUFBO0FBQUE7QUFzQkE7QUFsQ0E7QUFkQSIsImZpbGUiOiIuL25vZGVfbW9kdWxlcy9iYWJlbC1sb2FkZXIvbGliL2luZGV4LmpzP3tcImNhY2hlRGlyZWN0b3J5XCI6dHJ1ZSxcInByZXNldHNcIjpbW1wiQGJhYmVsL3ByZXNldC1lbnZcIix7XCJtb2R1bGVzXCI6ZmFsc2UsXCJ0YXJnZXRzXCI6e1wiYnJvd3NlcnNcIjpbXCI+IDIlXCJdfSxcImZvcmNlQWxsVHJhbnNmb3Jtc1wiOnRydWV9XV0sXCJwbHVnaW5zXCI6W1wiQGJhYmVsL3BsdWdpbi1wcm9wb3NhbC1vYmplY3QtcmVzdC1zcHJlYWRcIixbXCJAYmFiZWwvcGx1Z2luLXRyYW5zZm9ybS1ydW50aW1lXCIse1wiaGVscGVyc1wiOmZhbHNlfV1dfSEuL25vZGVfbW9kdWxlcy92dWUtbG9hZGVyL2xpYi9zZWxlY3Rvci5qcz90eXBlPXNjcmlwdCZpbmRleD0wIS4vbW9kdWxlcy9Db25zaWdubWVudC9SZXNvdXJjZXMvYXNzZXRzL2pzL3ZpZXdzL3BhcnRpYWxzL3BlbmFsdHlfZm9ybS52dWUuanMiLCJzb3VyY2VzQ29udGVudCI6WyI8dGVtcGxhdGU+XHJcbiAgICA8ZWwtZGlhbG9nXHJcbiAgICBAb3Blbj1cIm9wZW5cIlxyXG4gICAgQGNsb3NlPVwiY2xvc2VcIlxyXG4gICAgOnZpc2libGU9XCJzaG93RGlhbG9nXCJcclxuICAgIHRpdGxlPVwiQ3JlYWNpw7NuIGRlIHBlbmFsaXphY2nDs25cIlxyXG4gICAgYXBwZW5kLXRvLWJvZHlcclxuICAgIHdpZHRoPVwiNTAwcHhcIlxyXG4gICAgdi1sb2FkaW5nPVwibG9hZGluZ1wiXHJcbiAgICA+XHJcbiAgICA8ZGl2IGNsYXNzPVwicm93IG0tMlwiPlxyXG4gICAgICAgIDxkaXYgY2xhc3M9XCJjb2wtbWQtMTJcIj5cclxuICAgICAgICAgICAgPGxhYmVsIGZvcj1cImRlc2NyaXB0aW9uXCI+RGVzY3JpcGNpw7NuPC9sYWJlbD5cclxuICAgICAgICAgICAgPGVsLWlucHV0XHJcbiAgICAgICAgICAgICAgICB2LW1vZGVsPVwiZm9ybS5kZXNjcmlwdGlvblwiXHJcbiAgICAgICAgICAgICAgICBwbGFjZWhvbGRlcj1cIkRlc2NyaXBjacOzbiBkZSBsYSBwZW5hbGl6YWNpw7NuXCJcclxuICAgICAgICAgICAgICAgIHR5cGU9XCJ0ZXh0XCJcclxuICAgICAgICAgICAgICAgIGNsYXNzPVwidy0xMDBcIlxyXG4gICAgICAgICAgICAgICAgZHVzaz1cImRlc2NyaXB0aW9uXCJcclxuICAgICAgICAgICAgPjwvZWwtaW5wdXQ+XHJcbiAgICAgICAgPC9kaXY+XHJcbiAgICAgICAgPGRpdiBjbGFzcz1cImNvbC1tZC0xMlwiPlxyXG4gICAgICAgICAgICA8bGFiZWwgZm9yPVwidHlwZVwiPlRpcG88L2xhYmVsPlxyXG4gICAgICAgICAgICA8ZWwtc2VsZWN0XHJcbiAgICAgICAgICAgICAgICB2LW1vZGVsPVwiZm9ybS50eXBlXCJcclxuICAgICAgICAgICAgICAgIHBsYWNlaG9sZGVyPVwiU2VsZWNjaW9uZSB1biB0aXBvXCJcclxuICAgICAgICAgICAgICAgIGNsYXNzPVwidy0xMDBcIlxyXG4gICAgICAgICAgICAgICAgZHVzaz1cInR5cGVcIlxyXG4gICAgICAgICAgICA+XHJcbiAgICAgICAgICAgICAgICA8ZWwtb3B0aW9uXHJcbiAgICAgICAgICAgICAgICAgICAgbGFiZWw9XCJQb3JjZW50YWplXCJcclxuICAgICAgICAgICAgICAgICAgICB2YWx1ZT1cInBlcmNlbnRcIlxyXG4gICAgICAgICAgICAgICAgPjwvZWwtb3B0aW9uPlxyXG4gICAgICAgICAgICAgICAgPGVsLW9wdGlvblxyXG4gICAgICAgICAgICAgICAgICAgIGxhYmVsPVwiRmlqb1wiXHJcbiAgICAgICAgICAgICAgICAgICAgdmFsdWU9XCJmaXhlZFwiXHJcbiAgICAgICAgICAgICAgICA+PC9lbC1vcHRpb24+XHJcbiAgICAgICAgICAgIDwvZWwtc2VsZWN0PlxyXG4gICAgICAgIDwvZGl2PlxyXG4gICAgICAgIDxkaXYgY2xhc3M9XCJjb2wtbWQtMTJcIj5cclxuICAgICAgICAgICAgPGxhYmVsIGZvcj1cImFtb3VudFwiPlZhbG9yPC9sYWJlbD5cclxuICAgICAgICAgICAgPGVsLWlucHV0XHJcbiAgICAgICAgICAgICAgICB2LW1vZGVsPVwiZm9ybS5hbW91bnRcIlxyXG4gICAgICAgICAgICAgICAgcGxhY2Vob2xkZXI9XCJWYWxvciBkZSBsYSBwZW5hbGl6YWNpw7NuXCJcclxuICAgICAgICAgICAgICAgIHR5cGU9XCJudW1iZXJcIlxyXG4gICAgICAgICAgICAgICAgY2xhc3M9XCJ3LTEwMFwiXHJcbiAgICAgICAgICAgICAgICBkdXNrPVwiYW1vdW50XCJcclxuICAgICAgICAgICAgPjwvZWwtaW5wdXQ+XHJcbiAgICAgICAgPC9kaXY+XHJcbiAgICAgICAgICAgICAgXHJcbiAgICAgICAgPCEtLSA8ZGl2IGNsYXNzPVwiY29sLW1kLTEyIG10LTJcIj5cclxuICAgICAgICAgICAgPGVsLWJ1dHRvblxyXG4gICAgICAgICAgICB0eXBlPVwicHJpbWFyeVwiXHJcbiAgICAgICAgICAgIEBjbGljaz1cImNyZWF0ZVwiXHJcbiAgICAgICAgICAgID5cclxuICAgICAgICAgICAgICAgIENyZWFyXHJcbiAgICAgICAgICAgIDwvZWwtYnV0dG9uPlxyXG4gICAgICAgIDwvZGl2PiAtLT5cclxuICAgIDwvZGl2PlxyXG4gICAgIDxkaXYgc2xvdD1cImZvb3RlclwiIGNsYXNzPVwiZGlhbG9nLWZvb3RlclwiPlxyXG4gICAgICAgICAgICA8ZWwtYnV0dG9uIEBjbGljaz1cImNsb3NlXCI+Q2FuY2VsYXI8L2VsLWJ1dHRvbj5cclxuICAgICAgICAgICAgPGVsLWJ1dHRvblxyXG4gICAgICAgICAgICAgICAgdHlwZT1cInByaW1hcnlcIlxyXG4gICAgICAgICAgICAgICAgQGNsaWNrPVwiY3JlYXRlXCJcclxuICAgICAgICAgICAgICAgID5HdWFyZGFyPC9lbC1idXR0b25cclxuICAgICAgICAgICAgPlxyXG4gICAgICAgIDwvZGl2PlxyXG4gICAgPC9lbC1kaWFsb2c+XHJcbjwvdGVtcGxhdGU+XHJcblxyXG48c2NyaXB0PlxyXG5leHBvcnQgZGVmYXVsdCB7XHJcbiAgICBwcm9wczogW1wic2hvd0RpYWxvZ1wiXSxcclxuICAgIGRhdGEoKXtcclxuICAgICAgICByZXR1cm4ge1xyXG4gICAgICAgICAgICByZXNvdXJjZTogJy9jb25zaWdubWVudC9wZW5hbHR5JyxcclxuICAgICAgICAgICAgbG9hZGluZzpmYWxzZSxcclxuICAgICAgICAgICAgZm9ybTp7XHJcbiAgICAgICAgICAgICAgICBpZDogbnVsbCxcclxuICAgICAgICAgICAgICAgIGRlc2NyaXB0aW9uOiBudWxsLFxyXG4gICAgICAgICAgICAgICAgdHlwZToncGVyY2VudCcsXHJcbiAgICAgICAgICAgICAgICBhbW91bnQ6IDAuMCxcclxuICAgICAgICAgICAgfVxyXG4gICAgICAgIH1cclxuICAgIH0sXHJcbiAgICBtZXRob2RzOntcclxuICAgICAgICBvcGVuKCl7XHJcbiAgICAgICAgICAgIHRoaXMuZm9ybSA9IHtcclxuICAgICAgICAgICAgICAgIGlkOiBudWxsLFxyXG4gICAgICAgICAgICAgICAgZGVzY3JpcHRpb246IG51bGwsXHJcbiAgICAgICAgICAgICAgICB0eXBlOidwZXJjZW50JyxcclxuICAgICAgICAgICAgICAgIGFtb3VudDogMC4wLFxyXG4gICAgICAgICAgICB9XHJcbiAgICAgICAgfSxcclxuICAgICAgICBjbG9zZSgpe1xyXG4gICAgICAgICAgICB0aGlzLiRlbWl0KCd1cGRhdGU6c2hvd0RpYWxvZycsIGZhbHNlKVxyXG4gICAgICAgIH0sXHJcbiAgICAgICAgYXN5bmMgY3JlYXRlKCl7XHJcbiAgICAgICAgICAgIHRyeXtcclxuICAgICAgICAgICAgICAgIHRoaXMubG9hZGluZyA9IHRydWVcclxuICAgICAgICAgICAgICAgY29uc3QgcmVzcG9uc2UgPSBhd2FpdCB0aGlzLiRodHRwLnBvc3QodGhpcy5yZXNvdXJjZSwgdGhpcy5mb3JtKVxyXG4gICAgICAgICAgICAgICBpZihyZXNwb25zZS5kYXRhLnN1Y2Nlc3Mpe1xyXG4gICAgICAgICAgICAgICAgIHRoaXMuJG1lc3NhZ2Uoe1xyXG4gICAgICAgICAgICAgICAgICAgIHR5cGU6J3N1Y2Nlc3MnLFxyXG4gICAgICAgICAgICAgICAgICAgIG1lc3NhZ2U6J1BlbmFsaXphY2nDs24gY3JlYWRhIGNvcnJlY3RhbWVudGUnXHJcbiAgICAgICAgICAgICAgICB9KVxyXG4gICAgICAgICAgICAgICAgdGhpcy4kZW1pdCgncmVsb2FkUGVuYWx0aWVzJywgcmVzcG9uc2UuZGF0YS5pZCApXHJcbiAgICAgICAgICAgICAgICB0aGlzLmNsb3NlKCk7XHJcblxyXG4gICAgICAgICAgICAgICB9XHJcbiAgICAgICAgICAgICAgIFxyXG4gICAgICAgICAgICB9Y2F0Y2goZSl7XHJcbiAgICAgICAgICAgICAgICB0aGlzLiRtZXNzYWdlKHtcclxuICAgICAgICAgICAgICAgICAgICB0eXBlOidlcnJvcicsXHJcbiAgICAgICAgICAgICAgICAgICAgbWVzc2FnZTonT2N1cnJpw7MgdW4gZXJyb3IgYWwgY3JlYXIgbGEgcGVuYWxpemFjacOzbidcclxuICAgICAgICAgICAgICAgIH0pXHJcbiAgICAgICAgICAgIH1maW5hbGx5e1xyXG4gICAgICAgICAgICAgICAgdGhpcy5sb2FkaW5nID0gZmFsc2VcclxuICAgICAgICAgICAgfVxyXG4gICAgICAgIH0sICBcclxuICAgIH1cclxufVxyXG48L3NjcmlwdD5cblxuXG4vLyBXRUJQQUNLIEZPT1RFUiAvL1xuLy8gbW9kdWxlcy9Db25zaWdubWVudC9SZXNvdXJjZXMvYXNzZXRzL2pzL3ZpZXdzL3BhcnRpYWxzL3BlbmFsdHlfZm9ybS52dWUiXSwic291cmNlUm9vdCI6IiJ9\n//# sourceURL=webpack-internal:///./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/Consignment/Resources/assets/js/views/partials/penalty_form.vue\n");
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator__ = __webpack_require__("./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator__);
+
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: ["showDialog"],
+  data: function data() {
+    return {
+      resource: '/consignment/penalty',
+      loading: false,
+      form: {
+        id: null,
+        description: null,
+        type: 'percent',
+        amount: 0.0
+      }
+    };
+  },
+  methods: {
+    open: function open() {
+      this.form = {
+        id: null,
+        description: null,
+        type: 'percent',
+        amount: 0.0
+      };
+    },
+    close: function close() {
+      this.$emit('update:showDialog', false);
+    },
+    create: function create() {
+      var _this = this;
+
+      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee() {
+        var response;
+        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _context.prev = 0;
+                _this.loading = true;
+                _context.next = 4;
+                return _this.$http.post(_this.resource, _this.form);
+
+              case 4:
+                response = _context.sent;
+
+                if (response.data.success) {
+                  _this.$message({
+                    type: 'success',
+                    message: 'Penalización creada correctamente'
+                  });
+
+                  _this.$emit('reloadPenalties', response.data.id);
+
+                  _this.close();
+                }
+
+                _context.next = 11;
+                break;
+
+              case 8:
+                _context.prev = 8;
+                _context.t0 = _context["catch"](0);
+
+                _this.$message({
+                  type: 'error',
+                  message: 'Ocurrió un error al crear la penalización'
+                });
+
+              case 11:
+                _context.prev = 11;
+                _this.loading = false;
+                return _context.finish(11);
+
+              case 14:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee, null, [[0, 8, 11, 14]]);
+      }))();
+    }
+  }
+});
 
 /***/ }),
 
 /***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-2c2e76ba\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Consignment/Resources/assets/js/views/partials/penalty_form.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
-eval("var render = function() {\n  var _vm = this\n  var _h = _vm.$createElement\n  var _c = _vm._self._c || _h\n  return _c(\n    \"el-dialog\",\n    {\n      directives: [\n        {\n          name: \"loading\",\n          rawName: \"v-loading\",\n          value: _vm.loading,\n          expression: \"loading\"\n        }\n      ],\n      attrs: {\n        visible: _vm.showDialog,\n        title: \"Creación de penalización\",\n        \"append-to-body\": \"\",\n        width: \"500px\"\n      },\n      on: { open: _vm.open, close: _vm.close }\n    },\n    [\n      _c(\"div\", { staticClass: \"row m-2\" }, [\n        _c(\n          \"div\",\n          { staticClass: \"col-md-12\" },\n          [\n            _c(\"label\", { attrs: { for: \"description\" } }, [\n              _vm._v(\"Descripción\")\n            ]),\n            _vm._v(\" \"),\n            _c(\"el-input\", {\n              staticClass: \"w-100\",\n              attrs: {\n                placeholder: \"Descripción de la penalización\",\n                type: \"text\",\n                dusk: \"description\"\n              },\n              model: {\n                value: _vm.form.description,\n                callback: function($$v) {\n                  _vm.$set(_vm.form, \"description\", $$v)\n                },\n                expression: \"form.description\"\n              }\n            })\n          ],\n          1\n        ),\n        _vm._v(\" \"),\n        _c(\n          \"div\",\n          { staticClass: \"col-md-12\" },\n          [\n            _c(\"label\", { attrs: { for: \"type\" } }, [_vm._v(\"Tipo\")]),\n            _vm._v(\" \"),\n            _c(\n              \"el-select\",\n              {\n                staticClass: \"w-100\",\n                attrs: { placeholder: \"Seleccione un tipo\", dusk: \"type\" },\n                model: {\n                  value: _vm.form.type,\n                  callback: function($$v) {\n                    _vm.$set(_vm.form, \"type\", $$v)\n                  },\n                  expression: \"form.type\"\n                }\n              },\n              [\n                _c(\"el-option\", {\n                  attrs: { label: \"Porcentaje\", value: \"percent\" }\n                }),\n                _vm._v(\" \"),\n                _c(\"el-option\", { attrs: { label: \"Fijo\", value: \"fixed\" } })\n              ],\n              1\n            )\n          ],\n          1\n        ),\n        _vm._v(\" \"),\n        _c(\n          \"div\",\n          { staticClass: \"col-md-12\" },\n          [\n            _c(\"label\", { attrs: { for: \"amount\" } }, [_vm._v(\"Valor\")]),\n            _vm._v(\" \"),\n            _c(\"el-input\", {\n              staticClass: \"w-100\",\n              attrs: {\n                placeholder: \"Valor de la penalización\",\n                type: \"number\",\n                dusk: \"amount\"\n              },\n              model: {\n                value: _vm.form.amount,\n                callback: function($$v) {\n                  _vm.$set(_vm.form, \"amount\", $$v)\n                },\n                expression: \"form.amount\"\n              }\n            })\n          ],\n          1\n        )\n      ]),\n      _vm._v(\" \"),\n      _c(\n        \"div\",\n        {\n          staticClass: \"dialog-footer\",\n          attrs: { slot: \"footer\" },\n          slot: \"footer\"\n        },\n        [\n          _c(\"el-button\", { on: { click: _vm.close } }, [_vm._v(\"Cancelar\")]),\n          _vm._v(\" \"),\n          _c(\n            \"el-button\",\n            { attrs: { type: \"primary\" }, on: { click: _vm.create } },\n            [_vm._v(\"Guardar\")]\n          )\n        ],\n        1\n      )\n    ]\n  )\n}\nvar staticRenderFns = []\nrender._withStripped = true\nmodule.exports = { render: render, staticRenderFns: staticRenderFns }\nif (false) {\n  module.hot.accept()\n  if (module.hot.data) {\n    require(\"vue-hot-reload-api\")      .rerender(\"data-v-2c2e76ba\", module.exports)\n  }\n}//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vLi9tb2R1bGVzL0NvbnNpZ25tZW50L1Jlc291cmNlcy9hc3NldHMvanMvdmlld3MvcGFydGlhbHMvcGVuYWx0eV9mb3JtLnZ1ZT8wZjlkIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSxPQUFPO0FBQ1AsV0FBVztBQUNYLEtBQUs7QUFDTDtBQUNBLGlCQUFpQix5QkFBeUI7QUFDMUM7QUFDQTtBQUNBLFdBQVcsMkJBQTJCO0FBQ3RDO0FBQ0EseUJBQXlCLFNBQVMscUJBQXFCLEVBQUU7QUFDekQ7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0EsZUFBZTtBQUNmO0FBQ0E7QUFDQTtBQUNBO0FBQ0EsaUJBQWlCO0FBQ2pCO0FBQ0E7QUFDQSxhQUFhO0FBQ2I7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0EsV0FBVywyQkFBMkI7QUFDdEM7QUFDQSx5QkFBeUIsU0FBUyxjQUFjLEVBQUU7QUFDbEQ7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLHdCQUF3QixrREFBa0Q7QUFDMUU7QUFDQTtBQUNBO0FBQ0E7QUFDQSxtQkFBbUI7QUFDbkI7QUFDQTtBQUNBLGVBQWU7QUFDZjtBQUNBO0FBQ0EsMEJBQTBCO0FBQzFCLGlCQUFpQjtBQUNqQjtBQUNBLGlDQUFpQyxTQUFTLGdDQUFnQyxFQUFFO0FBQzVFO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBLFdBQVcsMkJBQTJCO0FBQ3RDO0FBQ0EseUJBQXlCLFNBQVMsZ0JBQWdCLEVBQUU7QUFDcEQ7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSxlQUFlO0FBQ2Y7QUFDQTtBQUNBO0FBQ0E7QUFDQSxpQkFBaUI7QUFDakI7QUFDQTtBQUNBLGFBQWE7QUFDYjtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQSxrQkFBa0IsaUJBQWlCO0FBQ25DO0FBQ0EsU0FBUztBQUNUO0FBQ0EsMkJBQTJCLE1BQU0sbUJBQW1CLEVBQUU7QUFDdEQ7QUFDQTtBQUNBO0FBQ0EsYUFBYSxTQUFTLGtCQUFrQixPQUFPLG9CQUFvQixFQUFFO0FBQ3JFO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0Esa0JBQWtCO0FBQ2xCLElBQUksS0FBVTtBQUNkO0FBQ0E7QUFDQTtBQUNBO0FBQ0EiLCJmaWxlIjoiLi9ub2RlX21vZHVsZXMvdnVlLWxvYWRlci9saWIvdGVtcGxhdGUtY29tcGlsZXIvaW5kZXguanM/e1wiaWRcIjpcImRhdGEtdi0yYzJlNzZiYVwiLFwiaGFzU2NvcGVkXCI6ZmFsc2UsXCJidWJsZVwiOntcInRyYW5zZm9ybXNcIjp7fX19IS4vbm9kZV9tb2R1bGVzL3Z1ZS1sb2FkZXIvbGliL3NlbGVjdG9yLmpzP3R5cGU9dGVtcGxhdGUmaW5kZXg9MCEuL21vZHVsZXMvQ29uc2lnbm1lbnQvUmVzb3VyY2VzL2Fzc2V0cy9qcy92aWV3cy9wYXJ0aWFscy9wZW5hbHR5X2Zvcm0udnVlLmpzIiwic291cmNlc0NvbnRlbnQiOlsidmFyIHJlbmRlciA9IGZ1bmN0aW9uKCkge1xuICB2YXIgX3ZtID0gdGhpc1xuICB2YXIgX2ggPSBfdm0uJGNyZWF0ZUVsZW1lbnRcbiAgdmFyIF9jID0gX3ZtLl9zZWxmLl9jIHx8IF9oXG4gIHJldHVybiBfYyhcbiAgICBcImVsLWRpYWxvZ1wiLFxuICAgIHtcbiAgICAgIGRpcmVjdGl2ZXM6IFtcbiAgICAgICAge1xuICAgICAgICAgIG5hbWU6IFwibG9hZGluZ1wiLFxuICAgICAgICAgIHJhd05hbWU6IFwidi1sb2FkaW5nXCIsXG4gICAgICAgICAgdmFsdWU6IF92bS5sb2FkaW5nLFxuICAgICAgICAgIGV4cHJlc3Npb246IFwibG9hZGluZ1wiXG4gICAgICAgIH1cbiAgICAgIF0sXG4gICAgICBhdHRyczoge1xuICAgICAgICB2aXNpYmxlOiBfdm0uc2hvd0RpYWxvZyxcbiAgICAgICAgdGl0bGU6IFwiQ3JlYWNpw7NuIGRlIHBlbmFsaXphY2nDs25cIixcbiAgICAgICAgXCJhcHBlbmQtdG8tYm9keVwiOiBcIlwiLFxuICAgICAgICB3aWR0aDogXCI1MDBweFwiXG4gICAgICB9LFxuICAgICAgb246IHsgb3BlbjogX3ZtLm9wZW4sIGNsb3NlOiBfdm0uY2xvc2UgfVxuICAgIH0sXG4gICAgW1xuICAgICAgX2MoXCJkaXZcIiwgeyBzdGF0aWNDbGFzczogXCJyb3cgbS0yXCIgfSwgW1xuICAgICAgICBfYyhcbiAgICAgICAgICBcImRpdlwiLFxuICAgICAgICAgIHsgc3RhdGljQ2xhc3M6IFwiY29sLW1kLTEyXCIgfSxcbiAgICAgICAgICBbXG4gICAgICAgICAgICBfYyhcImxhYmVsXCIsIHsgYXR0cnM6IHsgZm9yOiBcImRlc2NyaXB0aW9uXCIgfSB9LCBbXG4gICAgICAgICAgICAgIF92bS5fdihcIkRlc2NyaXBjacOzblwiKVxuICAgICAgICAgICAgXSksXG4gICAgICAgICAgICBfdm0uX3YoXCIgXCIpLFxuICAgICAgICAgICAgX2MoXCJlbC1pbnB1dFwiLCB7XG4gICAgICAgICAgICAgIHN0YXRpY0NsYXNzOiBcInctMTAwXCIsXG4gICAgICAgICAgICAgIGF0dHJzOiB7XG4gICAgICAgICAgICAgICAgcGxhY2Vob2xkZXI6IFwiRGVzY3JpcGNpw7NuIGRlIGxhIHBlbmFsaXphY2nDs25cIixcbiAgICAgICAgICAgICAgICB0eXBlOiBcInRleHRcIixcbiAgICAgICAgICAgICAgICBkdXNrOiBcImRlc2NyaXB0aW9uXCJcbiAgICAgICAgICAgICAgfSxcbiAgICAgICAgICAgICAgbW9kZWw6IHtcbiAgICAgICAgICAgICAgICB2YWx1ZTogX3ZtLmZvcm0uZGVzY3JpcHRpb24sXG4gICAgICAgICAgICAgICAgY2FsbGJhY2s6IGZ1bmN0aW9uKCQkdikge1xuICAgICAgICAgICAgICAgICAgX3ZtLiRzZXQoX3ZtLmZvcm0sIFwiZGVzY3JpcHRpb25cIiwgJCR2KVxuICAgICAgICAgICAgICAgIH0sXG4gICAgICAgICAgICAgICAgZXhwcmVzc2lvbjogXCJmb3JtLmRlc2NyaXB0aW9uXCJcbiAgICAgICAgICAgICAgfVxuICAgICAgICAgICAgfSlcbiAgICAgICAgICBdLFxuICAgICAgICAgIDFcbiAgICAgICAgKSxcbiAgICAgICAgX3ZtLl92KFwiIFwiKSxcbiAgICAgICAgX2MoXG4gICAgICAgICAgXCJkaXZcIixcbiAgICAgICAgICB7IHN0YXRpY0NsYXNzOiBcImNvbC1tZC0xMlwiIH0sXG4gICAgICAgICAgW1xuICAgICAgICAgICAgX2MoXCJsYWJlbFwiLCB7IGF0dHJzOiB7IGZvcjogXCJ0eXBlXCIgfSB9LCBbX3ZtLl92KFwiVGlwb1wiKV0pLFxuICAgICAgICAgICAgX3ZtLl92KFwiIFwiKSxcbiAgICAgICAgICAgIF9jKFxuICAgICAgICAgICAgICBcImVsLXNlbGVjdFwiLFxuICAgICAgICAgICAgICB7XG4gICAgICAgICAgICAgICAgc3RhdGljQ2xhc3M6IFwidy0xMDBcIixcbiAgICAgICAgICAgICAgICBhdHRyczogeyBwbGFjZWhvbGRlcjogXCJTZWxlY2Npb25lIHVuIHRpcG9cIiwgZHVzazogXCJ0eXBlXCIgfSxcbiAgICAgICAgICAgICAgICBtb2RlbDoge1xuICAgICAgICAgICAgICAgICAgdmFsdWU6IF92bS5mb3JtLnR5cGUsXG4gICAgICAgICAgICAgICAgICBjYWxsYmFjazogZnVuY3Rpb24oJCR2KSB7XG4gICAgICAgICAgICAgICAgICAgIF92bS4kc2V0KF92bS5mb3JtLCBcInR5cGVcIiwgJCR2KVxuICAgICAgICAgICAgICAgICAgfSxcbiAgICAgICAgICAgICAgICAgIGV4cHJlc3Npb246IFwiZm9ybS50eXBlXCJcbiAgICAgICAgICAgICAgICB9XG4gICAgICAgICAgICAgIH0sXG4gICAgICAgICAgICAgIFtcbiAgICAgICAgICAgICAgICBfYyhcImVsLW9wdGlvblwiLCB7XG4gICAgICAgICAgICAgICAgICBhdHRyczogeyBsYWJlbDogXCJQb3JjZW50YWplXCIsIHZhbHVlOiBcInBlcmNlbnRcIiB9XG4gICAgICAgICAgICAgICAgfSksXG4gICAgICAgICAgICAgICAgX3ZtLl92KFwiIFwiKSxcbiAgICAgICAgICAgICAgICBfYyhcImVsLW9wdGlvblwiLCB7IGF0dHJzOiB7IGxhYmVsOiBcIkZpam9cIiwgdmFsdWU6IFwiZml4ZWRcIiB9IH0pXG4gICAgICAgICAgICAgIF0sXG4gICAgICAgICAgICAgIDFcbiAgICAgICAgICAgIClcbiAgICAgICAgICBdLFxuICAgICAgICAgIDFcbiAgICAgICAgKSxcbiAgICAgICAgX3ZtLl92KFwiIFwiKSxcbiAgICAgICAgX2MoXG4gICAgICAgICAgXCJkaXZcIixcbiAgICAgICAgICB7IHN0YXRpY0NsYXNzOiBcImNvbC1tZC0xMlwiIH0sXG4gICAgICAgICAgW1xuICAgICAgICAgICAgX2MoXCJsYWJlbFwiLCB7IGF0dHJzOiB7IGZvcjogXCJhbW91bnRcIiB9IH0sIFtfdm0uX3YoXCJWYWxvclwiKV0pLFxuICAgICAgICAgICAgX3ZtLl92KFwiIFwiKSxcbiAgICAgICAgICAgIF9jKFwiZWwtaW5wdXRcIiwge1xuICAgICAgICAgICAgICBzdGF0aWNDbGFzczogXCJ3LTEwMFwiLFxuICAgICAgICAgICAgICBhdHRyczoge1xuICAgICAgICAgICAgICAgIHBsYWNlaG9sZGVyOiBcIlZhbG9yIGRlIGxhIHBlbmFsaXphY2nDs25cIixcbiAgICAgICAgICAgICAgICB0eXBlOiBcIm51bWJlclwiLFxuICAgICAgICAgICAgICAgIGR1c2s6IFwiYW1vdW50XCJcbiAgICAgICAgICAgICAgfSxcbiAgICAgICAgICAgICAgbW9kZWw6IHtcbiAgICAgICAgICAgICAgICB2YWx1ZTogX3ZtLmZvcm0uYW1vdW50LFxuICAgICAgICAgICAgICAgIGNhbGxiYWNrOiBmdW5jdGlvbigkJHYpIHtcbiAgICAgICAgICAgICAgICAgIF92bS4kc2V0KF92bS5mb3JtLCBcImFtb3VudFwiLCAkJHYpXG4gICAgICAgICAgICAgICAgfSxcbiAgICAgICAgICAgICAgICBleHByZXNzaW9uOiBcImZvcm0uYW1vdW50XCJcbiAgICAgICAgICAgICAgfVxuICAgICAgICAgICAgfSlcbiAgICAgICAgICBdLFxuICAgICAgICAgIDFcbiAgICAgICAgKVxuICAgICAgXSksXG4gICAgICBfdm0uX3YoXCIgXCIpLFxuICAgICAgX2MoXG4gICAgICAgIFwiZGl2XCIsXG4gICAgICAgIHtcbiAgICAgICAgICBzdGF0aWNDbGFzczogXCJkaWFsb2ctZm9vdGVyXCIsXG4gICAgICAgICAgYXR0cnM6IHsgc2xvdDogXCJmb290ZXJcIiB9LFxuICAgICAgICAgIHNsb3Q6IFwiZm9vdGVyXCJcbiAgICAgICAgfSxcbiAgICAgICAgW1xuICAgICAgICAgIF9jKFwiZWwtYnV0dG9uXCIsIHsgb246IHsgY2xpY2s6IF92bS5jbG9zZSB9IH0sIFtfdm0uX3YoXCJDYW5jZWxhclwiKV0pLFxuICAgICAgICAgIF92bS5fdihcIiBcIiksXG4gICAgICAgICAgX2MoXG4gICAgICAgICAgICBcImVsLWJ1dHRvblwiLFxuICAgICAgICAgICAgeyBhdHRyczogeyB0eXBlOiBcInByaW1hcnlcIiB9LCBvbjogeyBjbGljazogX3ZtLmNyZWF0ZSB9IH0sXG4gICAgICAgICAgICBbX3ZtLl92KFwiR3VhcmRhclwiKV1cbiAgICAgICAgICApXG4gICAgICAgIF0sXG4gICAgICAgIDFcbiAgICAgIClcbiAgICBdXG4gIClcbn1cbnZhciBzdGF0aWNSZW5kZXJGbnMgPSBbXVxucmVuZGVyLl93aXRoU3RyaXBwZWQgPSB0cnVlXG5tb2R1bGUuZXhwb3J0cyA9IHsgcmVuZGVyOiByZW5kZXIsIHN0YXRpY1JlbmRlckZuczogc3RhdGljUmVuZGVyRm5zIH1cbmlmIChtb2R1bGUuaG90KSB7XG4gIG1vZHVsZS5ob3QuYWNjZXB0KClcbiAgaWYgKG1vZHVsZS5ob3QuZGF0YSkge1xuICAgIHJlcXVpcmUoXCJ2dWUtaG90LXJlbG9hZC1hcGlcIikgICAgICAucmVyZW5kZXIoXCJkYXRhLXYtMmMyZTc2YmFcIiwgbW9kdWxlLmV4cG9ydHMpXG4gIH1cbn1cblxuXG4vLy8vLy8vLy8vLy8vLy8vLy9cbi8vIFdFQlBBQ0sgRk9PVEVSXG4vLyAuL25vZGVfbW9kdWxlcy92dWUtbG9hZGVyL2xpYi90ZW1wbGF0ZS1jb21waWxlcj97XCJpZFwiOlwiZGF0YS12LTJjMmU3NmJhXCIsXCJoYXNTY29wZWRcIjpmYWxzZSxcImJ1YmxlXCI6e1widHJhbnNmb3Jtc1wiOnt9fX0hLi9ub2RlX21vZHVsZXMvdnVlLWxvYWRlci9saWIvc2VsZWN0b3IuanM/dHlwZT10ZW1wbGF0ZSZpbmRleD0wIS4vbW9kdWxlcy9Db25zaWdubWVudC9SZXNvdXJjZXMvYXNzZXRzL2pzL3ZpZXdzL3BhcnRpYWxzL3BlbmFsdHlfZm9ybS52dWVcbi8vIG1vZHVsZSBpZCA9IC4vbm9kZV9tb2R1bGVzL3Z1ZS1sb2FkZXIvbGliL3RlbXBsYXRlLWNvbXBpbGVyL2luZGV4LmpzP3tcImlkXCI6XCJkYXRhLXYtMmMyZTc2YmFcIixcImhhc1Njb3BlZFwiOmZhbHNlLFwiYnVibGVcIjp7XCJ0cmFuc2Zvcm1zXCI6e319fSEuL25vZGVfbW9kdWxlcy92dWUtbG9hZGVyL2xpYi9zZWxlY3Rvci5qcz90eXBlPXRlbXBsYXRlJmluZGV4PTAhLi9tb2R1bGVzL0NvbnNpZ25tZW50L1Jlc291cmNlcy9hc3NldHMvanMvdmlld3MvcGFydGlhbHMvcGVuYWx0eV9mb3JtLnZ1ZVxuLy8gbW9kdWxlIGNodW5rcyA9IDEzOCJdLCJzb3VyY2VSb290IjoiIn0=\n//# sourceURL=webpack-internal:///./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-2c2e76ba\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Consignment/Resources/assets/js/views/partials/penalty_form.vue\n");
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "el-dialog",
+    {
+      directives: [
+        {
+          name: "loading",
+          rawName: "v-loading",
+          value: _vm.loading,
+          expression: "loading"
+        }
+      ],
+      attrs: {
+        visible: _vm.showDialog,
+        title: "Creación de penalización",
+        "append-to-body": "",
+        width: "500px"
+      },
+      on: { open: _vm.open, close: _vm.close }
+    },
+    [
+      _c("div", { staticClass: "row m-2" }, [
+        _c(
+          "div",
+          { staticClass: "col-md-12" },
+          [
+            _c("label", { attrs: { for: "description" } }, [
+              _vm._v("Descripción")
+            ]),
+            _vm._v(" "),
+            _c("el-input", {
+              staticClass: "w-100",
+              attrs: {
+                placeholder: "Descripción de la penalización",
+                type: "text",
+                dusk: "description"
+              },
+              model: {
+                value: _vm.form.description,
+                callback: function($$v) {
+                  _vm.$set(_vm.form, "description", $$v)
+                },
+                expression: "form.description"
+              }
+            })
+          ],
+          1
+        ),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "col-md-12" },
+          [
+            _c("label", { attrs: { for: "type" } }, [_vm._v("Tipo")]),
+            _vm._v(" "),
+            _c(
+              "el-select",
+              {
+                staticClass: "w-100",
+                attrs: { placeholder: "Seleccione un tipo", dusk: "type" },
+                model: {
+                  value: _vm.form.type,
+                  callback: function($$v) {
+                    _vm.$set(_vm.form, "type", $$v)
+                  },
+                  expression: "form.type"
+                }
+              },
+              [
+                _c("el-option", {
+                  attrs: { label: "Porcentaje", value: "percent" }
+                }),
+                _vm._v(" "),
+                _c("el-option", { attrs: { label: "Fijo", value: "fixed" } })
+              ],
+              1
+            )
+          ],
+          1
+        ),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "col-md-12" },
+          [
+            _c("label", { attrs: { for: "amount" } }, [_vm._v("Valor")]),
+            _vm._v(" "),
+            _c("el-input", {
+              staticClass: "w-100",
+              attrs: {
+                placeholder: "Valor de la penalización",
+                type: "number",
+                dusk: "amount"
+              },
+              model: {
+                value: _vm.form.amount,
+                callback: function($$v) {
+                  _vm.$set(_vm.form, "amount", $$v)
+                },
+                expression: "form.amount"
+              }
+            })
+          ],
+          1
+        )
+      ]),
+      _vm._v(" "),
+      _c(
+        "div",
+        {
+          staticClass: "dialog-footer",
+          attrs: { slot: "footer" },
+          slot: "footer"
+        },
+        [
+          _c("el-button", { on: { click: _vm.close } }, [_vm._v("Cancelar")]),
+          _vm._v(" "),
+          _c(
+            "el-button",
+            { attrs: { type: "primary" }, on: { click: _vm.create } },
+            [_vm._v("Guardar")]
+          )
+        ],
+        1
+      )
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-2c2e76ba", module.exports)
+  }
+}
 
 /***/ })
 
 });
+//# sourceMappingURL=138.js.map

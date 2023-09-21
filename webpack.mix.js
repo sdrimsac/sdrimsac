@@ -48,11 +48,12 @@ mix.webpackConfig({
     },
     
 })
-    .sourceMaps()
-    // .sourceMaps(false, "source-map")
+    // .sourceMaps()
+    .sourceMaps(false, "source-map")
     .version();
 
 if (mix.inProduction()) {
+    mix.sourceMaps();
     mix.version();
     mix.webpackConfig({
         output: {

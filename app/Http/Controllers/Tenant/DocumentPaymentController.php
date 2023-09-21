@@ -143,7 +143,9 @@ class DocumentPaymentController extends Controller
                 $documents_rows = $type_document . " N° " . $document_save->series . " - " . $document_save->number;
                 $boxes->description = "PAGO DE " . $documents_rows;
                 $boxes->soap_type_id = $company->soap_type_id;
+
                 $boxes->save();
+                $document_save->canceled();
             }
         });
         return [

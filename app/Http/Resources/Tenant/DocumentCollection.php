@@ -102,6 +102,8 @@ class DocumentCollection extends ResourceCollection
                 if($sum < $row->total){
                     $remain = $row->total - $sum;
                     $paid = false;
+                }else{
+                    $row->canceled();
                 }
             }
 
