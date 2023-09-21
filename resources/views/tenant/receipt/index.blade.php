@@ -55,7 +55,7 @@
         }
 
         .full-width {
-            width: 85%;
+            width: 100%;
         }
 
         .margin-right {
@@ -153,7 +153,7 @@
 </head>
 
 <body>
-    <table border="0" class="full-width">
+    <table border="0" style="width: 90%">
         <tr>
             <td height="80px" valign="top">
                 <table border="0" class="full-width">
