@@ -52,7 +52,8 @@
                         $serie_affec = '';
                         $acum_total_exonerado=0;
                         $acum_total_inafecto=0;
-
+                        $acum_total_remain = 0;
+                        $acum_total_remain_usd = 0;
                         $acum_total_free=0;
 
                         $acum_total_taxed_usd = 0;
@@ -76,6 +77,7 @@
                                 <th>Total Gratuito</th>
                                 <th>Total Gravado</th>
                                 <th>Total IGV</th>
+                                <th>Saldo</th>
                                 <th>Total</th>
                             </tr>
                         </thead>
@@ -125,6 +127,15 @@
                                 <td class="celda">{{($signal == '07' || ($signal!='07' && $state =='11')) ? "-" : ""  }}{{$value->total_taxed}}</td>
                                 
                                 <td class="celda">{{($signal == '07' || ($signal!='07' && $state =='11')) ? "-" : ""  }}{{$value->total_igv}}</td>
+                                @php
+                                    $remain = "";
+                                    if($value->payment_condition_id == "02"){
+                                        $boxes = \App\Models\Tenant\Box::where('document_id',$value->id)->sum('amount');
+                                        $remain = $value->total - $boxes;
+                                        $acum_total_remain += $remain;
+                                    }
+                                @endphp
+                                <td class="celda">{{$remain}}</td>
                                 <td class="celda">{{($signal == '07' || ($signal!='07' && $state =='11')) ? "-" : ""  }}{{$value->total}}</td>
                             @php
                               
@@ -221,6 +232,9 @@
 
                                 <td>{{$acum_total_taxed}}</td>
                                 <td>{{$acum_total_igv}}</td>
+                                <td>
+                                    {{$acum_total_remain}}
+                                </td>
                                 <td>{{$acum_total}}</td>
                             </tr>
                             <tr>
@@ -231,6 +245,9 @@
                                 <td></td>
                                 <td>{{$acum_total_taxed_usd}}</td>
                                 <td>{{$acum_total_igv_usd}}</td>
+                                <td>
+                                    {{$acum_total_remain_usd}}
+                                </td>
                                 <td>{{$acum_total_usd}}</td>
                             </tr>
                         </tbody>
