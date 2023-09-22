@@ -919,78 +919,88 @@
 
                             <div class="row">
                                 <div class="col-md-12 col-lg-6 col-12">
-                                          <table
-                                v-if="form.fee.length > 0"
-                                class="text-left table"
-                            >
-                                <thead>
-                                    <tr>
-                                        <th
-                                            class="text-left"
-                                            style="width: 100px"
-                                        >
-                                            Fecha
-                                        </th>
-                                        <th
-                                            class="text-left"
-                                            style="width: 100px"
-                                        >
-                                            Monto
-                                        </th>
-                                        <th style="width: 30px"></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr
-                                        v-for="(row, index) in form.fee"
-                                        :key="index"
+                                    <table
+                                        v-if="form.fee.length > 0"
+                                        class="text-left table"
                                     >
-                                        <td>
-                                            <el-date-picker
-                                                v-model="row.date"
-                                                :clearable="false"
-                                                format="dd/MM/yyyy"
-                                                type="date"
-                                                value-format="yyyy-MM-dd"
-                                            ></el-date-picker>
-                                        </td>
-                                        <td>
-                                            <el-input
-                                                v-model="row.amount"
-                                            ></el-input>
-                                        </td>
-                                        <td class="text-center">
-                                            <button
-                                                v-if="index > 0"
-                                                class="btn waves-effect waves-light btn-sm btn-danger"
-                                                type="button"
-                                                @click.prevent="
-                                                    clickRemoveFee(index)
-                                                "
-                                            >
-                                                <i class="fa fa-trash"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="5">
-                                            <label class="control-label">
-                                                <a
-                                                    class=""
-                                                    href="#"
-                                                    @click.prevent="clickAddFee"
-                                                    ><i
-                                                        class="fa fa-plus font-weight-bold text-info"
-                                                    ></i>
-                                                    <span style="color: #777777"
-                                                        >Agregar cuota</span
-                                                    ></a
+                                        <thead>
+                                            <tr>
+                                                <th
+                                                    class="text-left"
+                                                    style="width: 100px"
                                                 >
-                                            </label>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                                                    Fecha
+                                                </th>
+                                                <th
+                                                    class="text-left"
+                                                    style="width: 100px"
+                                                >
+                                                    Monto
+                                                </th>
+                                                <th style="width: 30px"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr
+                                                v-for="(row, index) in form.fee"
+                                                :key="index"
+                                            >
+                                                <td>
+                                                    <el-date-picker
+                                                        v-model="row.date"
+                                                        :clearable="false"
+                                                        format="dd/MM/yyyy"
+                                                        type="date"
+                                                        value-format="yyyy-MM-dd"
+                                                    ></el-date-picker>
+                                                </td>
+                                                <td>
+                                                    <el-input
+                                                        v-model="row.amount"
+                                                    ></el-input>
+                                                </td>
+                                                <td class="text-center">
+                                                    <button
+                                                        v-if="index > 0"
+                                                        class="btn waves-effect waves-light btn-sm btn-danger"
+                                                        type="button"
+                                                        @click.prevent="
+                                                            clickRemoveFee(
+                                                                index
+                                                            )
+                                                        "
+                                                    >
+                                                        <i
+                                                            class="fa fa-trash"
+                                                        ></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="5">
+                                                    <label
+                                                        class="control-label"
+                                                    >
+                                                        <a
+                                                            class=""
+                                                            href="#"
+                                                            @click.prevent="
+                                                                clickAddFee
+                                                            "
+                                                            ><i
+                                                                class="fa fa-plus font-weight-bold text-info"
+                                                            ></i>
+                                                            <span
+                                                                style="color: #777777"
+                                                                >Agregar
+                                                                cuota</span
+                                                            ></a
+                                                        >
+                                                    </label>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         </template>
@@ -1844,60 +1854,8 @@ export default {
     },
 
     async created() {
-        
-        const itemsFromNotes = localStorage.getItem("itemsForNotes");
-        if (itemsFromNotes) {
-            const itemsParsed = JSON.parse(itemsFromNotes);
-            const items = itemsParsed.map(i => i.id);
-            const params = {
-                items_id: items
-            };
-            localStorage.removeItem("itemsForNotes");
-            await this.$http
-                .get("/documents/search-items", { params })
-                .then(response => {
-                    const itemsResponse = response.data.items.map(i => {
-                        return this.setItemFromResponse(i, itemsParsed);
-                    });
-                    console.log("🚀 ~ file: invoice.vue:1862 ~ itemsResponse ~ itemsResponse:", itemsResponse)
-                    
-                    this.form.items = itemsResponse.map(i => {
-                        return calculateRowItem(
-                            i,
-                            this.form.currency_type_id,
-                            this.form.exchange_rate_sale,
-                            this.percentage_igv || 0.18
-                        );
-                    });
-                });
-        }
-
-        //parse items from multiple sale notes not group
-        // this.processItemsForNotesNotGroup();
-
-        const clientfromDispatchesOrNotes = localStorage.getItem("client");
-        if (clientfromDispatchesOrNotes) {
-            const client = JSON.parse(clientfromDispatchesOrNotes);
-            if (client.identity_document_type_id == 1) {
-                this.form.document_type_id = "03";
-            } else if (client.identity_document_type_id == 6) {
-                this.form.document_type_id = "01";
-            }
-
-            this.searchRemoteCustomers(client.number);
-            this.form.customer_id = client.id;
-            this.changeEstablishment();
-            this.filterSeries();
-            this.filterCustomers();
-            this.changeCurrencyType();
-            localStorage.removeItem("client");
-        }
-       
-        const notesNumbersFromNotes = localStorage.getItem("notes");
-        if (notesNumbersFromNotes) {
-            this.form.sale_notes_relateds = JSON.parse(notesNumbersFromNotes);
-            localStorage.removeItem("notes");
-        }
+        await this.initForm();
+    
 
         qz.security.setCertificatePromise((resolve, reject) => {
             this.$http
@@ -1924,7 +1882,7 @@ export default {
             };
         });
 
-        await this.initForm();
+        // await this.initForm();
 
         await this.$http.get(`/documents/tables`).then(response => {
             this.sellers = response.data.sellers;
@@ -2018,10 +1976,66 @@ export default {
         };
         const response = await this.$http.post("/get_igv", form_data);
         this.percentage_igv = response.data;
+
+            const itemsFromNotes = localStorage.getItem("itemsForNotes");
+        if (itemsFromNotes) {
+            const itemsParsed = JSON.parse(itemsFromNotes);
+            const items = itemsParsed.map(i => i.id);
+            const params = {
+                items_id: items
+            };
+            localStorage.removeItem("itemsForNotes");
+            const response = await this.$http.get("/documents/search-items", {
+                params
+            });
+
+            const itemsResponse = response.data.map(i => {
+                return this.setItemFromResponse(i, itemsParsed);
+            });
+       
+
+            this.form.items = itemsResponse.map(i => {
+                return calculateRowItem(
+                    i,
+                    this.form.currency_type_id,
+                    this.form.exchange_rate_sale,
+                    this.percentage_igv || 0.18
+                );
+            });
+        }
+
+        //parse items from multiple sale notes not group
+        // this.processItemsForNotesNotGroup();
+
+        const clientfromDispatchesOrNotes = localStorage.getItem("client");
+        if (clientfromDispatchesOrNotes) {
+            const client = JSON.parse(clientfromDispatchesOrNotes);
+            if (client.identity_document_type_id == 1) {
+                this.form.document_type_id = "03";
+            } else if (client.identity_document_type_id == 6) {
+                this.form.document_type_id = "01";
+            }
+
+            await this.searchRemoteCustomers(client.number);
+            this.form.customer_id = client.id;
+        
+            this.changeEstablishment();
+            this.filterSeries();
+            // this.filterCustomers();
+            this.changeCurrencyType();
+            localStorage.removeItem("client");
+            
+        }
+
+        const notesNumbersFromNotes = localStorage.getItem("notes");
+        if (notesNumbersFromNotes) {
+            this.form.sale_notes_relateds = JSON.parse(notesNumbersFromNotes);
+            localStorage.removeItem("notes");
+        }
     },
 
     methods: {
-             setItemFromResponse(item, itemsParsed) {
+        setItemFromResponse(item, itemsParsed) {
             /* Obtiene el igv del item, si no existe, coloca el gravado*/
             if (item.sale_affectation_igv_type !== undefined) {
                 item.affectation_igv_type = item.sale_affectation_igv_type;
@@ -2550,7 +2564,7 @@ export default {
         },
         changeIsReceivable() {},
         clickAddBoxes(reset = false) {
-            if(reset){
+            if (reset) {
                 this.form.boxes = [];
             }
             let cash_id = null;
@@ -2586,24 +2600,23 @@ export default {
             this.showDialogAddItem = true;
         },
 
-        searchRemoteCustomers(input) {
+        async searchRemoteCustomers(input) {
             if (input.length > 0) {
                 // if (input!="") {
 
                 this.loading_search = true;
                 let parameters = `input=${input}&document_type_id=${this.form.document_type_id}&operation_type_id=${this.form.operation_type_id}&seller_id=${this.form.user_id}`;
-                this.$http
-                    .get(`/${this.resource}/search/customers?${parameters}`)
-                    .then(response => {
-                        this.customers = response.data.customers;
-                        this.loading_search = false;
-                        this.input_person.number = null;
+                const response = await this.$http.get(
+                    `/${this.resource}/search/customers?${parameters}`
+                );
+                this.customers = response.data.customers;
+                this.loading_search = false;
+                this.input_person.number = null;
 
-                        if (this.customers.length == 0) {
-                            this.filterCustomers();
-                            this.input_person.number = input;
-                        }
-                    });
+                if (this.customers.length == 0) {
+                    this.filterCustomers();
+                    this.input_person.number = input;
+                }
             } else {
                 // this.customers = []
                 this.filterCustomers();
@@ -2987,7 +3000,6 @@ export default {
                 id: this.form.currency_type_id
             });
             let items = [];
-                console.log("🚀 ~ file: invoice.vue:2994 ~ changeCurrencyType ~ this.form:", this.form)
             this.form.items.forEach(row => {
                 items.push(
                     calculateRowItem(
@@ -3084,7 +3096,7 @@ export default {
                 Math.round(parseFloat(this.form.total) * 10) / 10;
         },
         setTotalDefaultPayment() {
-            if (this.form.payments.length > 0) {
+            if (this.form.payments && this.form.payments.length > 0) {
                 this.form.payments[0].payment = this.form.total;
             }
         },
@@ -3187,7 +3199,12 @@ export default {
                     this.validarForm = false;
                 }
             }
-
+            if(this.payment_condition_id == '01'){
+                let sum = this.boxes.reduce((a, b) => a + (b['amount'] || 0), 0);
+                if(sum == 0){
+                    return this.$toast.error('El monto de pago debe ser mayor a 0');
+                }
+            }
             if (this.is_receivable) {
                 this.form.payments = [];
             } else {
@@ -3225,8 +3242,8 @@ export default {
                     `/efectivo`,
                     form_efectivo
                 );
-        if (this.form.payment_condition_id === "03")
-                this.form.payment_condition_id = "02";
+                if (this.form.payment_condition_id === "03")
+                    this.form.payment_condition_id = "02";
                 this.loading_submit = true;
                 this.$http
                     .post(`/${this.resource}`, this.form)
@@ -3544,7 +3561,6 @@ export default {
     },
     mounted() {
         // this.teclasInit();
-        console.log(this.documentinfo);
         if (this.id != null) {
             this.editandoDocument = true;
         }

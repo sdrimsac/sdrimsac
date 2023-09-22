@@ -19,6 +19,7 @@ use App\Models\Tenant\Catalogs\PaymentMethodType as CatPaymentMethodType;
 use App\Traits\OfflineTrait;
 use Modules\Inventory\Models\Warehouse as ModuleWarehouse;
 use App\Models\Tenant\Item;
+use App\Models\Tenant\Warehouse;
 use Modules\Document\Traits\SearchTrait;
 
 class DocumentController extends Controller
@@ -241,7 +242,14 @@ class DocumentController extends Controller
         return $prepayment_documents;
 
     }
-
+    public static function TransformToModal($items, Warehouse $warehouse = null)
+    {
+        /** @var Item[]|\Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection|Builder[]|Collection|mixed $items */
+        return $items->transform(function ($row) use ($warehouse) {
+            /** @var Item $row */
+            return $row->getDataToItemModal($warehouse);
+        });
+    }
 
     public function searchItems(Request $request)
     {
@@ -252,6 +260,7 @@ class DocumentController extends Controller
 
         $items_not_services = $this->getItemsNotServices($request);
         $items_services = $this->getItemsServices($request);
+        return self::TransformToModal($items_not_services->merge($items_services));
         $all_items = $items_not_services->merge($items_services);
 
         $items = collect($all_items)->transform(function($row) use($warehouse){

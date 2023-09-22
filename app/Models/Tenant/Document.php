@@ -98,7 +98,8 @@ class Document extends ModelTenant
         'total_payment',
         'afectar_caja',
         'payment',
-        'dispatch_id'
+        'dispatch_id',
+  
     ];
 
     protected $casts = [

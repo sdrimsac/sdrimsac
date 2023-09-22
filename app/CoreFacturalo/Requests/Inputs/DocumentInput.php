@@ -151,6 +151,7 @@ class DocumentInput
             'total_free' => Functions::valueKeyInArray($inputs, 'total_free', 0),
             'total_taxed' => $inputs['total_taxed'],
             'total_taxes' => $inputs['total_taxed'],
+            'sale_notes_relateds' => Functions::valueKeyInArray($inputs, 'sale_notes_relateds', []),
             'total_unaffected' => $inputs['total_unaffected'],
             'total_exonerated' => $inputs['total_exonerated'],
             'total_igv' => $inputs['total_igv'],

@@ -835,6 +835,7 @@ class DocumentController extends Controller
             return $facturalo;
         });
         $document = $fact->getDocument();
+        $this->associateSaleNoteToDocument($request, $document->id);
         Box::where('document_id', $document->id)->delete();
         // $Payments = DocumentPayment::where('document_id', $document->id)->first();
 
@@ -1506,7 +1507,26 @@ class DocumentController extends Controller
 
         return $records;
     }
-
+    private function associateSaleNoteToDocument(Request $request, int $documentId)
+    {
+        if ($request->sale_note_id) {
+            SaleNote::where('id', $request->sale_note_id)
+                ->update(['document_id' => $documentId]);
+        }
+        $notes = $request->sale_notes_relateds;
+        if ($notes) {
+            foreach ($notes as $note) {
+                $sale_note_id = $note['id'] ?? null;
+                if ($sale_note_id) {
+                    $sale_note = SaleNote::find($sale_note_id);
+                    if (!empty($sale_note)) {
+                        $sale_note->document_id = $documentId;
+                        $sale_note->push();
+                    }
+                }
+            }
+        }
+    }
     public function data_table()
     {
 
@@ -1673,10 +1693,10 @@ class DocumentController extends Controller
                                 $quantity = $quantity * $unit_type->quantity_unit;
                             }
                         }
-                        $warehouse = Warehouse::where('establishment_id', $establishment_id)->first();
-                        $warehouse_id = ($warehouse) ? $warehouse->id : null;
-                        ItemWarehouse::where('item_id', $it->item_id)->where('warehouse_id', $warehouse_id)->increment('stock', $quantity);
-                        ItemWarehouse::where('item_id', $it->item_id)->increment('stock', $quantity);
+                        // $warehouse = Warehouse::where('establishment_id', $establishment_id)->first();
+                        // $warehouse_id = ($warehouse) ? $warehouse->id : null;
+                        // ItemWarehouse::where('item_id', $it->item_id)->where('warehouse_id', $warehouse_id)->increment('stock', $quantity);
+                        // dump($quantity);
                     }
                     Box::where('document_id', $document_id)->delete();
                     $orden = Orden::where('document_id', $document_id)->first();

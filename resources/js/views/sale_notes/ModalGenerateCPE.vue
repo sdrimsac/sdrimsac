@@ -255,7 +255,7 @@ export default {
       let total=0;
       this.notes.map((d) => {
         if (d.selected) {
-          total+=d.total;
+          total+=Number(d.total);
           this.form.selecteds.push(d.id);
         }
       });

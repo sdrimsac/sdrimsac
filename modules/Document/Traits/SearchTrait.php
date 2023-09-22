@@ -9,26 +9,42 @@ trait SearchTrait
 
     public function getItemsServices($request){
 
-        return Item::where('description','like', "%{$request->input}%")
-                    ->orWhere('internal_id','like', "%{$request->input}%")
+        $items = Item::query();
+        if($request->input){
+
+            $items = $items->where('description','like', "%{$request->input}%")
+                        ->orWhere('internal_id','like', "%{$request->input}%");
+        }
+        if($request->items_id){
+            $items = $items->whereIn('id', $request->items_id);
+        }
                     // ->orWhereHas('category', function($query) use($request) {
                     //     $query->where('name', 'like', '%' . $request->input . '%');
                     // })
                     // ->orWhereHas('brand', function($query) use($request) {
                     //     $query->where('name', 'like', '%' . $request->input . '%');
                     // })
-                    ->where('unit_type_id','ZZ')
+                    $items =  $items->where('unit_type_id','ZZ')
                     ->whereNotIsSet()
                     ->whereIsActive()
                     ->orderBy('description')
                     ->get();
 
+                    return $items;
+
     }
 
     public function getItemsNotServices($request){
 
-        return Item::where('description','like', "%{$request->input}%")
-                    ->orWhere('internal_id','like', "%{$request->input}%")
+        $items = Item::query();
+        if($request->input){
+
+            $items = $items->where('description','like', "%{$request->input}%")
+                        ->orWhere('internal_id','like', "%{$request->input}%");
+        }
+        if($request->items_id){
+            $items = $items->whereIn('id', $request->items_id);
+        }
                     // ->orWhereHas('category', function($query) use($request) {
                     //     $query->where('name', 'like', '%' . $request->input . '%');
                     // })
@@ -36,10 +52,12 @@ trait SearchTrait
                     //     $query->where('name', 'like', '%' . $request->input . '%');
                     // })
                     // ->whereWarehouse()
-                    ->whereNotIsSet()
+                   $items = $items->whereNotIsSet()
                     ->whereIsActive()
                     ->orderBy('description')
                     ->get();
+
+                    return $items;
 
     }
 

@@ -82,7 +82,272 @@ class Item extends ModelTenant
             $builder->where('active', 1);
         });
     }*/
+    public function getCurrentItemWarehouse($warehouse_id)
+    {
+        return $this->warehouses()->where('warehouse_id', $warehouse_id);
+    }
+    public function getDataToItemModal($warehouse = null,$with_lots_has_sale = false,$extended_description = false,$series = null,$search_item_by_series = false,$aditional_data = true) {
+        $configuration = Configuration::first();
+        if ($warehouse == null) {
+            $establishment_id = auth()->user()->establishment_id;
+            $warehouse = Warehouse::where('establishment_id', $establishment_id)->first();
+        }
+        $detail = $this->getFullDescription($warehouse, $extended_description);
+        $realtion_item_unit_types = $this->item_unit_types;
+        $lots_grp = $this->lots_group;
 
+        $lots = $this->getLotsBySerie($warehouse, $series, $search_item_by_series);
+        $blank = [];
+        $currentColors = collect($blank);
+        $ItemUnitsPerPackage = collect($blank);
+        $ItemMoldProperty = collect($blank);
+        $ItemProductFamily = collect($blank);
+        $ItemMoldCavity = collect($blank);
+        $ItemPackageMeasurement = collect($blank);
+        $ItemStatus = collect($blank);
+        $ItemSize = collect($blank);
+        $ItemUnitBusiness = collect($blank);
+
+        if ($aditional_data === true) {
+            $currentColors = [];
+            $ItemUnitsPerPackage = [];
+            $ItemMoldProperty = [];
+
+
+            $ItemProductFamily = [];
+            $ItemMoldCavity = [];
+            $ItemPackageMeasurement = [];
+            $ItemStatus = [];
+            $ItemUnitBusiness = [];
+
+            $ItemSize = [];
+        }
+
+        if ($with_lots_has_sale == true) {
+            $lots = $this->item_lots->where('has_sale', false)->transform(function ($row) {
+                return [
+                    'id'           => $row->id,
+                    'series'       => $row->series,
+                    'date'         => $row->date,
+                    'item_id'      => $row->item_id,
+                    'warehouse_id' => $row->warehouse_id,
+                    'has_sale'     => (bool)$row->has_sale,
+                    'lot_code'     => ($row->item_loteable_type)
+                        ?
+                        (isset($row->item_loteable->lot_code)
+                            ?
+                            $row->item_loteable->lot_code
+                            :
+                            null)
+                        :
+                        null,
+                ];
+            })->values();
+        }
+        $stock = $detail['stock'];
+
+        // Obtiene el stock basado el en almacen itemwarehouse
+        $stockItemWarehouse = $this->getCurrentItemWarehouse($warehouse->id)->first();
+        if (is_object($stockItemWarehouse)) {
+            $stock = $stockItemWarehouse->stock;
+        }
+
+        $stockPerCategory = ItemMovement::getStockByCategory($this->id, auth()->user()->establishment_id);
+        $currency = $this->currency_type;
+        if (empty($currency)) {
+            $currency = new CurrencyType();
+        }
+
+        $purchase_unit_price = $this->purchase_unit_price;
+        $purchase_unit_value = $this->purchase_unit_price;
+        if ($this->purchase_has_igv) {
+            $purchase_unit_value = round($purchase_unit_price / 1.18, 8);
+        } else {
+            $purchase_unit_price = $purchase_unit_value * 1.18;
+        }
+
+        $data = [
+            'id'                               => $this->id,
+            'item_code'                    => $this->item_code,
+            'full_description'                 => $detail['full_description'],
+            'model'                            => $this->model,
+            'brand'                            => $detail['brand'],
+            'text_filter' => $this->text_filter,
+            'stock_by_extra'                            =>  $stockPerCategory,
+            'warehouse_description'            => $detail['warehouse_description'],
+            'extra'                         => collect([
+                'colors' => null,
+                'CatItemUnitsPerPackage' => null,
+                'CatItemMoldProperty' => null,
+                'CatItemProductFamily' => null,
+                'CatItemMoldCavity' => null,
+                'CatItemPackageMeasurement' => null,
+                'CatItemStatus' => null,
+                'CatItemSize' => null,
+                'CatItemUnitBusiness' => null,
+            ]),
+            'category'                         => $detail['category'],
+            'stock'                            => $stock,
+            'internal_id'                      => $this->internal_id,
+            'description'                      => $this->description,
+            'info_link'                       => $this->info_link,
+            'currency_type_id'                 => $this->currency_type_id,
+            'currency_type_symbol'             => $currency->symbol,
+            'has_igv'                          => (bool)$this->has_igv,
+            //number_format($row->total, $configuration->decimal_quantity, ".", ""),
+            'sale_unit_price'                  => number_format(self::getSaleUnitPriceByWarehouse($this, $warehouse->id), $configuration->decimal_quantity, ".", ""),
+            'purchase_has_igv'                 => $this->purchase_has_igv,
+            'purchase_unit_value'              => $purchase_unit_value,
+            'purchase_unit_price'              => $purchase_unit_price,
+            'unit_type_id'                     => $this->unit_type_id,
+            'original_unit_type_id'                     => $this->unit_type_id,
+            'sale_affectation_igv_type'     => $this->sale_affectation_igv_type,
+            'sale_affectation_igv_type_id'     => $this->sale_affectation_igv_type_id,
+            'purchase_affectation_igv_type_id' => $this->purchase_affectation_igv_type_id,
+            'calculate_quantity'               => (bool)$this->calculate_quantity,
+            'has_plastic_bag_taxes'            => (bool)$this->has_plastic_bag_taxes,
+            'amount_plastic_bag_taxes'         => $this->amount_plastic_bag_taxes,
+            'colors' => $currentColors,
+            'CatItemUnitsPerPackage' => $ItemUnitsPerPackage,
+            'CatItemMoldProperty' => $ItemMoldProperty,
+            'CatItemProductFamily' => $ItemProductFamily,
+            'CatItemMoldCavity' => $ItemMoldCavity,
+            'CatItemPackageMeasurement' => $ItemPackageMeasurement,
+            'CatItemStatus' => $ItemStatus,
+            'CatItemSize' => $ItemSize,
+            'CatItemUnitBusiness' => $ItemUnitBusiness,
+            'item_unit_types'                  => $this->item_unit_types->transform(function ($item_unit_types) {
+                if (is_array($item_unit_types)) {
+                    return $item_unit_types;
+                }
+                return [
+                    'id'            => $item_unit_types->id,
+                    'description'   => "{$item_unit_types->description}",
+                    'item_id'       => $item_unit_types->item_id,
+                    'unit_type_id'  => $item_unit_types->unit_type_id,
+                    'quantity_unit' => $item_unit_types->quantity_unit,
+                    'price1'        => $item_unit_types->price1,
+                    'price2'        => $item_unit_types->price2,
+                    'price3'        => $item_unit_types->price3,
+                    'price_default' => $item_unit_types->price_default,
+                    'factor_default' => (bool) $item_unit_types->factor_default,
+                    'barcode' => $item_unit_types->barcode,
+                ];
+            }),
+            'warehouses' => collect($this->warehouses)->transform(function ($warehouses) use ($warehouse) {
+                return [
+                    'warehouse_description' => $warehouses->warehouse->description,
+                    'stock'                 => (!empty($warehouses->stock)) ? $warehouses->stock : 0,
+                    'warehouse_id'          => $warehouses->warehouse_id,
+                    'checked'               => ($warehouses->warehouse_id == $warehouse->id) ? true : false,
+                ];
+            }),
+            // se listaran atributos necesarios en pdf de otra forma
+            'attributes'     => $this->getAttributesAttribute($this->attributes['attributes']),
+            'lots_group'     => collect($lots_grp)->transform(function ($lots_group) {
+                return [
+                    'id'          => $lots_group->id,
+                    'code'        => $lots_group->code,
+                    'quantity'    => $lots_group->quantity,
+                    'date_of_due' => $lots_group->date_of_due,
+                    'checked'     => false,
+                    'compromise_quantity' => 0
+                ];
+            }),
+            'lots'           => $lots,
+            'lots_enabled'   => (bool)$this->lots_enabled,
+            'series_enabled' => (bool)$this->series_enabled,
+            'is_set'         => (bool)$this->is_set,
+
+            'lot_code'    => $this->lot_code,
+            'date_of_due' => $this->date_of_due,
+            'barcode'     => $this->barcode,
+            'change_free_affectation_igv'     => false,
+            'original_affectation_igv_type_id'     => $this->sale_affectation_igv_type_id,
+
+            'has_isc' => (bool)$this->has_isc,
+            'system_isc_type_id' => $this->system_isc_type_id,
+            'percentage_isc' => $this->percentage_isc,
+            'is_for_production' => false,
+            'subject_to_detraction' => $this->subject_to_detraction,
+            'exchange_points' => $this->exchange_points,
+            'quantity_of_points' => $this->quantity_of_points,
+            'exchanged_for_points' => false, //para determinar si desea canjear el producto
+            'used_points_for_exchange' => null, //total de puntos
+            'factory_code' => $this->factory_code,
+            'restrict_sale_cpe' => $this->restrict_sale_cpe,
+
+        ];
+
+        // El nombre de producto, por defecto, sera la misma descripcion.
+        // $data['name_product_pdf'] =$data['description'];
+
+        return $data;
+    }
+    private function getLotsBySerie($warehouse, $series,  $search_item_by_series)
+    {
+        $lots = [];
+
+
+        if ($search_item_by_series) {
+
+            $lots = $this->item_lots()->where('has_sale', false)
+                ->where('warehouse_id', $warehouse->id)
+                ->where('series', $series)
+                ->take(1)
+                ->get();
+
+            // dd($search_item_by_series, $lots, $this->item_lots);
+        }
+
+        return $lots;
+    }
+    public function getFullDescription($warehouse, $extended = false)
+    {
+
+        $desc = ($this->internal_id) ? $this->internal_id . ' - ' . $this->description : $this->description;
+        $category = ($this->category) ? "{$this->category->name}" : '';
+        $brand = ($this->brand) ? "{$this->brand->name}" : '';
+        if ($this->unit_type_id != 'ZZ') {
+            if (isset($this['stock'])) {
+                $warehouse_stock = number_format($this['stock'], 2);
+            } else {
+                $warehouse_stock = ($this->warehouses && $warehouse)
+                    ?
+                    number_format($this->warehouses->where('warehouse_id', $warehouse->id)->first()->stock, 2)
+                    :
+                    0;
+            }
+            $stock = ($this->warehouses && $warehouse) ? "{$warehouse_stock}" : '';
+        } else {
+            $stock = '';
+        }
+        if ($extended == false) {
+            $desc = "{$desc} - {$brand}";
+        } else {
+            $desc = "{$desc} - {$category} - {$brand}";
+        }
+        return [
+            'full_description'      => $desc,
+            'brand'                 => $brand,
+            'category'              => $category,
+            'stock'                 => $stock,
+            'warehouse_description' => $warehouse->description,
+        ];
+    }
+    public function warehousePrices()
+    {
+        return $this->hasMany(ItemWarehousePrice::class, 'item_id')->select('id', 'item_id', 'price', 'warehouse_id');
+    }
+    public static function getSaleUnitPriceByWarehouse(Item $item, int $warehouseId): string
+    {
+        $warehousePrice = $item->warehousePrices->where('item_id', $item->id)
+            ->where('warehouse_id', $warehouseId)
+            ->first();
+
+        $price = $warehousePrice->price ?? $item->sale_unit_price;
+        return number_format($price, 4, ".", "");
+    }
     public function food(){
         return $this->hasOne(Food::class);
     }
