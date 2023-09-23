@@ -1040,8 +1040,8 @@ export default {
                 await this.$http
                     .get(`/${this.resource}/search-items/?${parameters}`)
                     .then(response => {
-                        this.items_select = response.data.items[0];
-                        this.items = response.data.items;
+                        this.items_select = response.data[0];
+                        this.items = response.data;
 
                         this.loading_search = false;
 

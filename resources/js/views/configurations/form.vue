@@ -1620,7 +1620,7 @@ export default {
                 await this.$http
                     .get(`/documents/search-items/?${parameters}`)
                     .then(response => {
-                        this.items = response.data.items;
+                        this.items = response.data;
                         this.loading_search = false;
                     });
             }
