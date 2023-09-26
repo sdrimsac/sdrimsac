@@ -32,6 +32,7 @@ use Modules\Restaurant\Models\OrdenItem;
 use Modules\Restaurant\Events\StockEvent;
 use App\Models\Tenant\Item;
 use App\Models\Tenant\ItemWarehouse;
+use App\Models\Tenant\NumberActivity;
 use App\Models\Tenant\Seller;
 use Barryvdh\DomPDF\Facade as PDF;
 use Exception;
@@ -368,6 +369,11 @@ class PosController extends Controller
                 $number = $configuration->number_activity;
                 $message = "Usuario *$user_name* ha solicitado consulta para visualización en Ventas del Dìa";
                 (new WhatsappController)->sendMessage($message, $number);
+                $numbers = NumberActivity::all();
+                foreach ($numbers as $number) {
+                    $number = $number->number;
+                    (new WhatsappController)->sendMessage($message, $number);
+                }
             }
             return compact('total_sales');
         } else {

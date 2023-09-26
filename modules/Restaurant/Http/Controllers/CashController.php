@@ -34,6 +34,7 @@ use App\Models\Tenant\Configuration;
 use App\Models\Tenant\Establishment;
 use App\Models\Tenant\Item;
 use App\Models\Tenant\ItemUnitType;
+use App\Models\Tenant\NumberActivity;
 use App\Models\Tenant\Quotation;
 use App\Models\Tenant\Receipt;
 use App\Models\Tenant\SaleNoteItem;
@@ -849,12 +850,11 @@ class CashController extends Controller
             }
         }
 
-        if($remain && $type_document == "documents"){
-            $documents = $documents->where('payment_condition_id','02')
-            ->where('total_canceled',0)
-            ;
+        if ($remain && $type_document == "documents") {
+            $documents = $documents->where('payment_condition_id', '02')
+                ->where('total_canceled', 0);
         }
-        
+
         $documents->orderBy('date_of_issue', 'desc')->orderBy('id', 'desc');
         $result = null;
         switch ($type_document) {
@@ -1412,20 +1412,25 @@ class CashController extends Controller
         $user_name = $cash->user->name;
         $configuration = Configuration::first();
         $number_activity = $configuration->number_activity;
+        $hostname =  app(Environment::class)->hostname();
+        $resource = "http://" . $hostname->fqdn . "/caja/report-boxes/reports_resumen_type?cash_id=" . $id;
+        $request = new Request(
+            [
+                'from_server' => true,
+                'sender' => 'sdrimsac',
+                'number' => $number_activity,
+                'resource' => $resource,
+                'file_name' => 'Reporte_Caja' . Carbon::now()->format("Y-m-d"),
+                'message' => "Caja cerrada por " . $user_name
+            ]
+        );
         if ($number_activity) {
-            $hostname =  app(Environment::class)->hostname();
-            $resource ="http://".$hostname->fqdn."/caja/report-boxes/reports_resumen_type?cash_id=".$id;
-            $request = new Request(
-                [
-                    'from_server' => true,
-                    'sender' => 'sdrimsac',
-                    'number' => $number_activity,
-                    'resource' => $resource,
-                    'file_name' => 'Reporte_Caja' . Carbon::now()->format("Y-m-d"),
-                    'message' => "Caja cerrada por " . $user_name
-                ]
-            );
 
+            (new WhatsappController)->sendHistorial($request);
+        }
+        $numbers = NumberActivity::all();
+        foreach ($numbers as $number) {
+            $request['number'] = $number->number;
             (new WhatsappController)->sendHistorial($request);
         }
 

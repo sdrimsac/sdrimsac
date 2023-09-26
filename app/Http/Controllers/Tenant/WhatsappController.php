@@ -14,15 +14,70 @@ use App\Models\Tenant\Configuration;
 use App\Models\Tenant\Quotation;
 use Illuminate\Support\Facades\Storage;
 use App\Models\System\Configuration as Config;
+use App\Models\Tenant\NumberActivity;
 use Exception;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use PhpOffice\PhpSpreadsheet\Style\NumberFormat\Wizard\Number;
 
 class WhatsappController extends Controller
 {
     protected $client;
 
+    public function getNumbers()
+    {
+        $numbers_activity = NumberActivity::all();
+        return response()->json([
+            'success' => true,
+            'data' => $numbers_activity
+        ], 200);
+    }
+    public function removeWhatsapp(Request $request)
+    {
+        $number = $request->number;
+        $number_activity = NumberActivity::where('number', $number)->first();
+        if ($number_activity) {
+            $number_activity->delete();
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'El número no se encuentra registrado'
+            ], 400);
+        }
+        return response()->json([
+            'success' => true,
+            'message' => 'Número eliminado con éxito'
+        ], 200);
+    }
+    public function saveWhatsapp(Request $request)
+    {
+        $number = $request->number;
+        $number_activity = NumberActivity::where('number', $number)->first();
+        if (!$number_activity) {
+            $configuration = Configuration::first();
+            $number_activity = $configuration->number_activity;
+            if (!$number_activity || $number_activity != $number) {
+                NumberActivity::create([
+                    'number' => $number
+                ]);
+            } else {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'El número ya se encuentra registrado'
+                ], 400);
+            }
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'El número ya se encuentra registrado'
+            ], 400);
+        }
+        return response()->json([
+            'success' => true,
+            'message' => 'Número registrado con éxito'
+        ], 200);
+    }
     public function sendMessage($message, $number = null)
     {
         if ($number == null) {
@@ -51,8 +106,8 @@ class WhatsappController extends Controller
             return [
                 "success" => $status == 200,
                 "message" => $body
-                
-                
+
+
             ];
         } catch (\Exception $e) {
 
@@ -266,7 +321,7 @@ class WhatsappController extends Controller
         $number = $request->number;
         $from_server = $request->from_server ?? false;
         $file_name = (strpos($file_name, '.') !== false) ? $file_name : $file_name . ".pdf";
-       
+
         if ($from_server) {
 
             $content_file = file_get_contents($resource, 0, stream_context_create(["http" => ["timeout" => 60]]));
@@ -308,7 +363,7 @@ class WhatsappController extends Controller
             ob_get_clean();
             return  $response->getBody()->getContents();
         } catch (\Exception $e) {
-Log::warning($e->getMessage());
+            Log::warning($e->getMessage());
             return response([
                 "message" => $e->getMessage(),
                 "line" => $e->getLine(),

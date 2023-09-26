@@ -23,7 +23,8 @@ use Modules\Inventory\Http\Requests\InventoryRequest;
 use Modules\Inventory\Http\Resources\InventoryResource;
 use Modules\Inventory\Http\Resources\InventoryCollection;
 use App\Http\Controllers\Tenant\WhatsappController;
-
+use App\Models\Tenant\NumberActivity;
+use PhpOffice\PhpSpreadsheet\Style\NumberFormat\Wizard\Number;
 
 class InventoryController extends Controller
 {
@@ -203,12 +204,16 @@ class InventoryController extends Controller
         $item->stock = $item->stock - $quantity + $quantity_real;
         $item->save();
         $user = auth()->user();
-        if($configuration->number_activity && $configuration->personal_phone == 0){
-            $message = 'El usuario '.$user->name.' ha actualizado el stock del producto '.$item->description.' a '.$quantity_real.' en el almacén '.$inventory->warehouse->description;
-            if($inventory->detail != null){
-                $message = $message.' con el comentario '.$inventory->detail;
+        if ($configuration->number_activity && $configuration->personal_phone == 0) {
+            $message = 'El usuario ' . $user->name . ' ha actualizado el stock del producto ' . $item->description . ' a ' . $quantity_real . ' en el almacén ' . $inventory->warehouse->description;
+            if ($inventory->detail != null) {
+                $message = $message . ' con el comentario ' . $inventory->detail;
             }
             (new WhatsappController)->sendMessage($message);
+            $numbers = NumberActivity::all();
+            foreach ($numbers as $key => $number) {
+                (new WhatsappController)->sendMessage($message, $number->number);
+            }
         }
 
 

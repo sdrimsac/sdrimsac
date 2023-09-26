@@ -189,7 +189,7 @@
                                             ></small>
                                         </div>
                                     </div>
-                                       <!-- <div class="col-md-6 mt-4">
+                                    <!-- <div class="col-md-6 mt-4">
                                         <div
                                             class="form-group"
                                             :class="{
@@ -930,14 +930,38 @@
                                     <div class="col-md-6 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
-                                                >N° de whatsapp para enviar
+                                                >Números de whatsapp para enviar
                                                 actividad
+                                                <a
+                                                v-if="form.number_activity"
+                                                    href="#"
+                                                    @click.prevent="
+                                                        addNumberWhatsapp
+                                                    "
+                                                    >[Agregar +]</a
+                                                >
                                             </label>
                                             <el-input
                                                 @input="changeNumberActivity"
                                                 v-model="form.number_activity"
                                             >
                                             </el-input>
+                                            <small >
+                                                <el-tag
+                                                class="mt-1"
+                                                    v-for="(number,
+                                                    idx) in numbers"
+                                                    :key="idx"
+                                                    closable
+                                                    @close="
+                                                        removeNumberWhatsapp(
+                                                            idx
+                                                        )
+                                                    "
+                                                >
+                                                {{number.number}}
+                                                </el-tag>
+                                            </small>
                                         </div>
                                     </div>
                                     <div class="col-md-6 mt-4">
@@ -1285,7 +1309,7 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                    
+
                                     <div class="col-md-6 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
@@ -1300,7 +1324,7 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                      <div class="col-md-6 mt-4">
+                                    <div class="col-md-6 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
                                                 >Permitir ajuste de stock
@@ -1313,7 +1337,7 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                           <div class="col-md-6 mt-4">
+                                    <div class="col-md-6 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
                                                 >Vendedores en caja
@@ -1326,22 +1350,22 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                        <div class="col-md-6 mt-4">
+                                    <div class="col-md-6 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
                                                 >Acciones en caja
-                                                 <el-tooltip
-                                                class="item"
-                                                effect="dark"
-                                                content="Acciones, como anulación de comprobantes, pagos, nota de crédito"
-                                                placement="top-start"
-                                            >
-                                                <i
-                                                    class="fa fa-info-circle"
-                                                ></i>
-                                            </el-tooltip>
+                                                <el-tooltip
+                                                    class="item"
+                                                    effect="dark"
+                                                    content="Acciones, como anulación de comprobantes, pagos, nota de crédito"
+                                                    placement="top-start"
+                                                >
+                                                    <i
+                                                        class="fa fa-info-circle"
+                                                    ></i>
+                                                </el-tooltip>
                                             </label>
-                                              
+
                                             <el-switch
                                                 v-model="form.caja_actions"
                                                 active-text="Si"
@@ -1379,7 +1403,6 @@
                                     <div class="col-md-6 mt-2">
                                         <label class="control-label w-100">
                                             Orientación A5
-                                        
                                         </label>
                                         <el-switch
                                             v-model="form.a5_orientation"
@@ -1481,7 +1504,7 @@
                                     </div>
                                 </div>
                             </el-tab-pane>
-                               <el-tab-pane label="Consumo">
+                            <el-tab-pane label="Consumo">
                                 <div class="row">
                                     <div class="col-md-6">
                                         <label class="control-label w-100">
@@ -1510,11 +1533,9 @@
                                             Primer texto
                                         </label>
                                         <el-input
-                                        :disabled="!form.text_comanda"
-                                        class="w-100"
-                                            v-model="
-                                                form.text_one
-                                            "
+                                            :disabled="!form.text_comanda"
+                                            class="w-100"
+                                            v-model="form.text_one"
                                             placeholder="Texto 1"
                                             size="normal"
                                             @input="saveSubmitDebounce"
@@ -1525,11 +1546,9 @@
                                             Segundo texto
                                         </label>
                                         <el-input
-                                        :disabled="!form.text_comanda"
-                                        class="w-100"
-                                            v-model="
-                                                form.text_two
-                                            "
+                                            :disabled="!form.text_comanda"
+                                            class="w-100"
+                                            v-model="form.text_two"
                                             placeholder="Texto 2"
                                             size="normal"
                                             @input="saveSubmitDebounce"
@@ -1541,6 +1560,29 @@
                     </div>
                 </form>
             </div>
+            <el-dialog
+                :visible.sync="showAddNumberwhatsapp"
+                @close="showAddNumberwhatsapp = false"
+                title="Agregar número de whatsapp"
+            >
+                <div class="row mt-2">
+                    <div class="col-12">
+                        <el-input 
+                        :maxlength="9"
+                        v-model="numberWhatsapp"> </el-input>
+                    </div>
+
+                   
+                </div>
+                 <span slot="footer" class="dialog-footer">
+                        <el-button @click="showAddNumberwhatsapp = false"
+                            >Cancelar</el-button
+                        >
+                        <el-button type="primary" @click="sendNumberWhatsapp"
+                            >Agregar</el-button
+                        >
+                    </span>
+            </el-dialog>
         </div>
     </div>
 </template>
@@ -1554,6 +1596,8 @@ export default {
     //
     data() {
         return {
+            showAddNumberwhatsapp: false,
+            numberWhatsapp: null,
             timer: null,
             loading_search: false,
             showDialogTermsCondition: false,
@@ -1564,6 +1608,7 @@ export default {
             affectation_igv_types: [],
             placeholder: "",
             items: [],
+            numbers: [],
             days: [
                 { id: 1, value: 1 },
                 { id: 2, value: 2 },
@@ -1587,9 +1632,54 @@ export default {
         });
     },
     methods: {
+        getNumbers() {
+            this.$http.get("/whatsapp/numbers").then(response => {
+                this.numbers = response.data.data;
+                console.log("🚀 ~ file: form.vue:1633 ~ this.$http.get ~ this.numbers:", this.numbers)
+                
+            });
+        },
+        async removeNumberWhatsapp(idx) {
+            let {number} = this.numbers[idx];
+            const response = await this.$http.post("/whatsapp/remove", {
+                number
+            });
+            if (response.status == 200) {
+                this.$toast.success("Número eliminado correctamente");
+                this.showAddNumberwhatsapp = false;
+                this.numberWhatsapp = null;
+                this.getNumbers();
+            } else {
+                this.$toast.error("Ocurrió un error al eliminar el número");
+            }
+        },
+        async sendNumberWhatsapp() {
+           try{
+             const response = await this.$http.post("/whatsapp/save", {
+                number: this.numberWhatsapp
+            });
+            if (response.status == 200) {
+                this.$toast.success("Número agregado correctamente");
+                this.showAddNumberwhatsapp = false;
+                this.numberWhatsapp = null;
+                this.getNumbers();
+            } else {
+                this.$toast.error("Ocurrió un error al agregar el número");
+            }
+           }catch(e){
+                let {message} = e.response.data;
+                if(message){
+                    this.$toast.error(message);
+                }else{
+                    this.$toast.error("Ocurrió un error al agregar el número");
+                }
+           }
+        },
+        addNumberWhatsapp() {
+            this.showAddNumberwhatsapp = true;
+        },
         saveSubmitDebounce() {
-            if(this.timer!=null)
-            clearTimeout(this.timer);
+            if (this.timer != null) clearTimeout(this.timer);
             this.timer = setTimeout(() => {
                 this.submit();
             }, 700);
@@ -1641,6 +1731,7 @@ export default {
                     ];
                 }
             });
+            this.getNumbers();
         },
         initForm() {
             this.errors = {};
