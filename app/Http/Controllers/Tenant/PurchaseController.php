@@ -341,7 +341,7 @@ class PurchaseController extends Controller
                     $p_item->purchase_id = $doc->id;
                     $p_item->save();
                     $item = Item::findOrFail($row['item_id']);
-                    if($row['sale_unit_price']!=0){
+                    if($row['sale_unit_price']!=0 && $row['sale_unit_price']!=null){
                         $item->sale_unit_price = $row['sale_unit_price'] ;
                         Food::where('item_id', $row['item_id'])->update(['price' => $row['sale_unit_price']]);
                         ItemWarehousePrice::where('item_id', $row['item_id'])
