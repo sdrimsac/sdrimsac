@@ -341,12 +341,15 @@ class PurchaseController extends Controller
                     $p_item->purchase_id = $doc->id;
                     $p_item->save();
                     $item = Item::findOrFail($row['item_id']);
-                    $item->sale_unit_price = $row['sale_unit_price'];
+                    if($row['sale_unit_price']){
+                        $item->sale_unit_price = $row['sale_unit_price'] ;
+                        Food::where('item_id', $row['item_id'])->update(['price' => $row['sale_unit_price']]);
+                        ItemWarehousePrice::where('item_id', $row['item_id'])
+                        ->where('warehouse_id', $doc->establishment_id)->update(['price' => $row['sale_unit_price']]);
+                    }
                     $item->purchase_affectation_igv_type_id = $row['affectation_igv_type_id'];
                     $item->save();
-                    Food::where('item_id', $row['item_id'])->update(['price' => $row['sale_unit_price']]);
-                    ItemWarehousePrice::where('item_id', $row['item_id'])
-                    ->where('warehouse_id', $doc->establishment_id)->update(['price' => $row['sale_unit_price']]);
+                 
                     if (array_key_exists('lots', $row)) {
                         foreach ($row['lots'] as $lot) {
                             // Verificar si el lote existe en la tabla item_lots
