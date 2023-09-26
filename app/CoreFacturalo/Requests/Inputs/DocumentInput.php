@@ -100,10 +100,15 @@ class DocumentInput
             foreach ($payments as $payment) {
                 $total_payment += $payment['payment'];
             }
+        }   
+        $has_related_sale_note = false;
+        $sale_notes_relateds = Functions::valueKeyInArray($inputs, 'sale_notes_relateds', []);
+        if(count($sale_notes_relateds) > 0){
+            $has_related_sale_note = true;
         }
         // $from_dispatch = array_key_exists('dispatch_id', $inputs);
         return [
-
+            'has_related_sale_note' => $has_related_sale_note,
             'discount_variant' => Functions::valueKeyInArray($inputs, 'discount_variant', null),
             'college' => Functions::valueKeyInArray($inputs, 'college', false),
             'variation' => Functions::valueKeyInArray($inputs, 'variation', false),

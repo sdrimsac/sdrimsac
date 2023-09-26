@@ -72,6 +72,7 @@ use App\Models\Tenant\ItemUnitType;
 use App\Models\Tenant\SaleNoteCredit;
 use App\Models\Tenant\Seller;
 use Modules\Restaurant\Events\OrdenReadyEvent;
+use Modules\Restaurant\Models\Food;
 use Modules\Restaurant\Models\OrdenItem;
 use Modules\Restaurant\Models\Table;
 use Mpdf\Mpdf;
@@ -85,7 +86,39 @@ class SaleNoteController extends Controller
     protected $apply_change;
     protected $document;
     protected $configuration;
+    public function getItemsFromNotesCaja(Request $request)
+    {
+        $request->validate([
+            'notes_id' => 'required|array',
+        ]);
 
+            $result = [];
+            $items = SaleNoteItem::whereIn('sale_note_id', $request->notes_id)->get();
+        
+            foreach ($items as $key => $item) {
+                $item_id = $item->item_id;
+                $food = Food::where('item_id', $item_id)->first();
+                $quantity = $item->quantity;
+                $price = $item->unit_price;
+                $series = [];
+                $lotes = [];
+                $result[]=[
+                    "id" => $item->id,
+                    "item_id" => $item->item_id,
+                    "food" => $food,
+                    "quantity" => number_format($quantity, 2),
+                    "price" => number_format($price, 2),
+                    "series" => $series,
+                    "lotes" => $lotes,
+                ];
+            }
+
+
+        return response()->json([
+            'success' => true,
+            'data' => $result,
+        ], 200);
+    }
     public function getItemsFromNotes(Request $request)
     {
         $request->validate([

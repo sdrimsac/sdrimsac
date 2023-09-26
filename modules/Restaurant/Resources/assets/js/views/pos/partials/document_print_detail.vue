@@ -19,6 +19,9 @@
                         <th>
                             Cliente
                         </th>
+                        <th v-if="type == 'documents'">
+                            N/V
+                        </th>
                         <th>
                             Estado
                         </th>
@@ -448,6 +451,15 @@
                                         }}</span
                                     >
                                 </small>
+                            </template>
+                        </td>
+                        <td v-if="type == 'documents'">
+                            <template
+                                v-for="(row, index) in data.sale_note_related"
+                            >
+                                <small class="d-block" :key="index">{{
+                                    row.number
+                                }}</small>
                             </template>
                         </td>
                         <td

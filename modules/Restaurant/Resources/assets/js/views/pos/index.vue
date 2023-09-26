@@ -846,6 +846,7 @@
                 <div class="col-5 col-sm-7 col-lg-6 col-md-7 col-xl-5">
                     <div class="card-body p-2">
                         <list-orden
+                            :clientSaleNoteNumber.sync="clientSaleNoteNumber"
                             :sellers="sellers"
                             @sendOrdensAllTables="sendOrdensAllTables"
                             ref="list_orden"
@@ -1402,6 +1403,7 @@
 
         <template>
             <payment-form
+                :clientSaleNoteNumber.sync="clientSaleNoteNumber"
                 :sellers.sync="sellers"
                 :ordens_all_table.sync="ordens_all_table"
                 :consignment_id="consignment_id"
@@ -1487,6 +1489,7 @@
             :company="company"
             :showDialog.sync="showDocumentsPrint"
             :config.sync="config"
+            @sendItems="sendItems"
             :establishment.sync="establishments"
         ></documents-print>
         <PromotionCanje
@@ -1678,7 +1681,8 @@ export default {
 
     data() {
         return {
-            sellers:[],
+            clientSaleNoteNumber: null,
+            sellers: [],
             searchSeries: false,
             showDialogItemSet: false,
             products_to_due: 0,
@@ -1877,6 +1881,15 @@ export default {
     sockets: {},
     computed: {},
     methods: {
+        sendItems(items, clientNumber,notes) {
+            console.log("🚀 ~ file: index.vue:1885 ~ sendItems ~ notes:", notes)
+            for (let index = 0; index < items.length; index++) {
+                let element = items[index];
+                this.insertOrden(element, element.id, null);
+            }
+            this.clientSaleNoteNumber = clientNumber;
+            this.form.sale_notes_relateds = notes;
+        },
         setMenuOptions() {
             this.optionsMenu = [
                 {
@@ -2534,6 +2547,7 @@ export default {
             this.showDialogViewItems = true;
         },
         cancelOrden() {
+            this.clientSaleNoteNumber = null;
             this.isConsignment = false;
             this.localOrden = [];
             this.ordensItems = [];
@@ -2801,6 +2815,7 @@ export default {
             }
             return price;
         },
+        async insertItemFromNoteSales() {},
         insertOrden(orden, food_id, type, selectSerie = false) {
             //esto ya no me puede traer solo uno
             //ya que podré agregar más de una vez un producto
@@ -2921,13 +2936,13 @@ export default {
                     let {
                         food: { series }
                     } = orden;
-              
+
                     //si es original, seguir agregando uno
                     let indexFind = this.localOrden.findIndex(
                         p => p.id == food_id && p.type_id == null
                     );
                     if (indexFind != -1) {
-                            if (selectSerie) {
+                        if (selectSerie) {
                             let serie = this.input_item.toLowerCase();
                             let serieFind = series.find(s =>
                                 s.series.toLowerCase().includes(serie)
@@ -2941,11 +2956,12 @@ export default {
                                         ...this.localOrden[indexFind].series,
                                         serieFind
                                     ];
-                                }else{
-                                    this.$toast.warning("La serie ya fue agregada");
+                                } else {
+                                    this.$toast.warning(
+                                        "La serie ya fue agregada"
+                                    );
                                     return;
                                 }
-                               
                             }
                         }
                         //actualizamos el elemento que agregamos, pero lo sacamos del objeot y lo volvemos a colocar de primero, de esta manera podemos saber si ya esta el producto que estamos agregando a la lista y saber cuanto tenemos en total
@@ -2954,7 +2970,6 @@ export default {
                         let itemAwait = this.localOrden[indexFind];
                         this.localOrden.splice(indexFind, 1);
                         this.localOrden.unshift(itemAwait);
-                    
                     } else {
                         orden.to_carry = false;
                         orden.change_subtotal = false;
@@ -4521,6 +4536,7 @@ export default {
             });
         },
         async limpiarForm() {
+            this.clientSaleNoteNumber = null;
             this.ordens_all_table = false;
             this.isConsignment = false;
             this.selectOption = 4;

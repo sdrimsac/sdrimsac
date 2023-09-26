@@ -18,6 +18,7 @@ class Document extends ModelTenant
     protected $with = ['user', 'establecimientos', 'soap_type', 'user', 'state_type', 'document_type', 'currency_type', 'group', 'items', 'invoice', 'payments'];
     public $timestamps = true;
     protected $fillable = [
+        'has_related_sale_note',
         'cash_id',
         'seller_id',
         'discount_variant',
@@ -392,7 +393,9 @@ class Document extends ModelTenant
     {
         return $this->morphMany(InventoryKardex::class, 'inventory_kardexable');
     }
-
+    public function sale_note_related(){
+        return $this->hasMany(SaleNote::class,'document_id');
+    }
     public function quotation()
     {
         return $this->belongsTo(Quotation::class);

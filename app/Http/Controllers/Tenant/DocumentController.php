@@ -715,7 +715,8 @@ class DocumentController extends Controller
             'stock' => $stock,
         ];
     }
-    public function getRecord($id){
+    public function getRecord($id)
+    {
         $record = Document::find($id);
         return $record;
     }
@@ -843,7 +844,7 @@ class DocumentController extends Controller
         $company = Company::first();
         //&& $request->afectar_caja === true
 
-        if ($request->variation == false && $request->payment_condition_id === "01") {
+        if (!$request->has_related_sale_note && $request->variation == false && $request->payment_condition_id === "01") {
             if ($request->boxes) {
                 foreach ($request->boxes as $currentBox) {
                     $box = new Box;
@@ -861,7 +862,7 @@ class DocumentController extends Controller
                     $box->user_id = auth()->user()->id;
                     $box->establishment_id = auth()->user()->establishment_id;
                     $document_save = Document::where('id', $document->id)->first();
-                    $document_save->cash_id = $request->cash_id; 
+                    $document_save->cash_id = $request->cash_id;
                     switch ($document_save->document_type_id) {
                         case "01":
                             $type_document = "FACTURA ELECTRONICA";
@@ -1516,12 +1517,24 @@ class DocumentController extends Controller
         $notes = $request->sale_notes_relateds;
         if ($notes) {
             foreach ($notes as $note) {
-                $sale_note_id = $note['id'] ?? null;
-                if ($sale_note_id) {
-                    $sale_note = SaleNote::find($sale_note_id);
-                    if (!empty($sale_note)) {
-                        $sale_note->document_id = $documentId;
-                        $sale_note->push();
+                //si note es un numero 
+                if (is_numeric($note)) {
+                    $sale_note_id = $note;
+                    if ($sale_note_id) {
+                        $sale_note = SaleNote::find($sale_note_id);
+                        if (!empty($sale_note)) {
+                            $sale_note->document_id = $documentId;
+                            $sale_note->push();
+                        }
+                    }
+                } else {
+                    $sale_note_id = $note['id'] ?? null;
+                    if ($sale_note_id) {
+                        $sale_note = SaleNote::find($sale_note_id);
+                        if (!empty($sale_note)) {
+                            $sale_note->document_id = $documentId;
+                            $sale_note->push();
+                        }
                     }
                 }
             }

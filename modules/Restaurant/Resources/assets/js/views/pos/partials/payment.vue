@@ -56,7 +56,9 @@
                                                 </template>
                                                 <el-radio-button
                                                     v-if="
-                                                        !variation && sale_note
+                                                        !variation &&
+                                                            sale_note &&
+                                                            !clientSaleNoteNumber
                                                     "
                                                     label="80"
                                                 >
@@ -1254,6 +1256,7 @@ export default {
     },
 
     props: [
+        "clientSaleNoteNumber",
         "ordens_all_table",
         "consignment_id",
         "isConsignment",
@@ -1733,12 +1736,12 @@ export default {
                         return;
                     }
                 }
-             
+
                 let days = this.currentPayments.length + 1;
-                
-                let date = moment().add(5,"hours")
-                    .add(days, "days")
-                  ;
+
+                let date = moment()
+                    .add(5, "hours")
+                    .add(days, "days");
                 this.currentPayments.push({
                     id,
                     method_payment_id: this.method_payments,
@@ -1764,7 +1767,7 @@ export default {
         },
         add_customer(value) {},
         reloadDataPersons() {},
-        keyupCustomer(e) {
+        async keyupCustomer(e) {
             //buscar
             if (this.time) {
                 clearTimeout(this.time);
@@ -1792,10 +1795,20 @@ export default {
                     persons.push(person);
                 }
             }
-            let newData = [...this.all_customers, ...persons];
+            let newData = [];
+            if (this.clientSaleNoteNumber) {
+                newData = personsFromServer;
+            } else {
+                newData = [...this.all_customers, ...persons];
+            }
 
             if (persons.length != 0) {
                 await this.$emit("update:all_customers", newData);
+                if (newData.length == 1) {
+                    this.value = newData[0].id;
+                    this.form.customer_id = newData[0].id;
+                    this.changeCustomer();
+                }
             }
         },
         changeCustomer() {
@@ -1824,6 +1837,9 @@ export default {
 
                 this.form.customer_telephone = customer.phone;
                 this.setLocalStorageIndex("customer", this.customer);
+                if (this.clientSaleNoteNumber) {
+                    this.form.document_type_id = "03";
+                }
             }
             this.setSeries();
         },
@@ -1923,6 +1939,14 @@ export default {
             //     `/efectivo`,
             //     form_efectivo
             // );
+            if (this.clientSaleNoteNumber) {
+                setTimeout(() => {
+                    this.$refs.select_person.$el.getElementsByTagName(
+                        "input"
+                    )[0].value = this.clientSaleNoteNumber;
+                    this.keyupCustomer();
+                }, 800);
+            }
             this.checkTotal("01");
         },
         checkCustomerDocument(type) {
@@ -2917,7 +2941,6 @@ export default {
             }
 
             if (this.form.payment_condition_id !== "01") {
-           
                 form.fee = this.currentPayments.map(b => ({
                     id: null,
                     currency_type_id: "PEN",
@@ -2925,8 +2948,8 @@ export default {
                     date: b.date
                 }));
                 form.payment_condition_id = "02";
-            }else{
-                     this.addPayment();
+            } else {
+                this.addPayment();
             }
             if (this.checkLimitReceipt()) {
                 this.$toast.error(

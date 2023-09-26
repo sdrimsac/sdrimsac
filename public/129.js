@@ -100,6 +100,54 @@ module.exports = Component.exports
 
 /***/ }),
 
+/***/ "./modules/Restaurant/Resources/assets/js/views/pos/partials/modal_generate_cpe.vue":
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__("./node_modules/vue-loader/lib/component-normalizer.js")
+/* script */
+var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/Restaurant/Resources/assets/js/views/pos/partials/modal_generate_cpe.vue")
+/* template */
+var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-c4c906fe\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Restaurant/Resources/assets/js/views/pos/partials/modal_generate_cpe.vue")
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "modules/Restaurant/Resources/assets/js/views/pos/partials/modal_generate_cpe.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-c4c906fe", Component.options)
+  } else {
+    hotAPI.reload("data-v-c4c906fe", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+
 /***/ "./modules/Restaurant/Resources/assets/js/views/pos/partials/whatsapp_modal.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -166,6 +214,18 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -1043,6 +1103,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__document_print_detail_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__document_print_detail_vue__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_query_string__ = __webpack_require__("./node_modules/query-string/index.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_query_string___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_query_string__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__modal_generate_cpe_vue__ = __webpack_require__("./modules/Restaurant/Resources/assets/js/views/pos/partials/modal_generate_cpe.vue");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__modal_generate_cpe_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__modal_generate_cpe_vue__);
 
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -1180,11 +1242,36 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
-    DocumentPrintDetail: __WEBPACK_IMPORTED_MODULE_1__document_print_detail_vue___default.a
+    DocumentPrintDetail: __WEBPACK_IMPORTED_MODULE_1__document_print_detail_vue___default.a,
+    ModalGenerateCpe: __WEBPACK_IMPORTED_MODULE_3__modal_generate_cpe_vue___default.a
   },
   props: ["showDialog", "company", "sender", "config", "establishment"],
   data: function data() {
@@ -1204,12 +1291,23 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       },
       printer: null,
       lastDocument: null,
-      activeName: "documents"
+      activeName: "documents",
+      showModalGenerateCPE: false
     };
   },
   methods: {
+    closeCpe: function closeCpe() {
+      this.showModalGenerateCPE = false;
+      this.close();
+    },
+    onOpenModalGenerateCPE: function onOpenModalGenerateCPE() {
+      this.showModalGenerateCPE = true;
+    },
     getRecordsInput: function getRecordsInput() {
       this.getRecords();
+    },
+    sendItems: function sendItems(items, clientNumber, notes) {
+      this.$emit("sendItems", items, clientNumber, notes);
     },
     printEvent: function printEvent(url) {
       var _this = this;
@@ -1613,6 +1711,351 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/Restaurant/Resources/assets/js/views/pos/partials/modal_generate_cpe.vue":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_moment__ = __webpack_require__("./node_modules/moment/moment.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_moment___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_moment__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: {
+    show: {
+      required: true,
+      type: Boolean
+    }
+  },
+  data: function data() {
+    return {
+      title: "",
+      loading: false,
+      clients: [],
+      filter: {
+        type: "name",
+        name: null
+      },
+      form: {
+        client_id: null,
+        selecteds: []
+      },
+      notes: [],
+      errors: {},
+      group_items_generate_document: false,
+      sum_total: null
+    };
+  },
+  methods: {
+    getObjectForNote: function getObjectForNote(data) {
+      return {
+        number_full: "".concat(data.series, "-").concat(data.number),
+        id: data.id,
+        items: data.items
+      };
+    },
+    onFetchNoteItems: function onFetchNoteItems() {
+      var _this = this;
+
+      if (this.form.selecteds.length === 0) {
+        this.$message({
+          message: "Seleccione una o más notas de venta por favor",
+          type: "warning"
+        });
+        return;
+      }
+
+      this.loading = true; //   if(this.group_items_generate_document){
+
+      if (true) {
+        var data = {
+          notes_id: this.form.selecteds
+        };
+        this.$http.post("/sale-notes/items_caja", data).then(function (response) {
+          console.log("🚀 ~ file: modal_generate_cpe.vue:197 ~ onFetchNoteItems ~ response:", response);
+          var data = response.data.data;
+          var client_id = _this.form.client_id;
+
+          var client = _this.clients.find(function (c) {
+            return c.id === client_id;
+          });
+
+          var clientNumber = client.number;
+
+          _this.$emit("sendItems", data, clientNumber, _this.form.selecteds); // localStorage.setItem("client", JSON.stringify(client));
+
+
+          localStorage.setItem("itemsForNotes", JSON.stringify(data));
+
+          _this.$emit("close"); // localStorage.setItem("notes", JSON.stringify(notes));
+          // this.onClose();
+
+        })["catch"](function (error) {
+          return console.log(error);
+        })["finally"](function () {
+          return _this.loading = false;
+        });
+      }
+    },
+    processNotGroupItems: function processNotGroupItems() {
+      var _this2 = this;
+
+      var data = {
+        notes_id: this.form.selecteds,
+        select_all: true
+      };
+      this.$http.post("/sale-notes/items", data).then(function (response) {
+        var notes = [];
+
+        _this2.notes.map(function (d) {
+          if (d.selected) {
+            // notes.push(`${d.series}-${d.number}`);
+            notes.push(_this2.getObjectForNote(d));
+          }
+        });
+
+        var items = response.data.data;
+
+        var client = _this2.clients.find(function (c) {
+          return c.id === _this2.form.client_id;
+        });
+
+        localStorage.setItem("client", JSON.stringify(client));
+        localStorage.setItem("itemsNotGroupForNotes", JSON.stringify(items));
+        localStorage.setItem("notes", JSON.stringify(notes));
+
+        _this2.onClose();
+
+        window.location.href = "/documents/create";
+      })["catch"](function (error) {
+        return _this2.axiosError(error);
+      })["finally"](function () {
+        return _this2.loading = false;
+      });
+    },
+    onFillSelectedNotes: function onFillSelectedNotes() {
+      var _this3 = this;
+
+      this.form.selecteds = [];
+      this.sum_total = 0;
+      var total = 0;
+      this.notes.map(function (d) {
+        if (d.selected) {
+          total += Number(d.total);
+
+          _this3.form.selecteds.push(d.id);
+        }
+      });
+      this.sum_total += total;
+    },
+    onFindNotes: function onFindNotes() {
+      var _this4 = this;
+
+      this.form.selecteds = [];
+      this.loading = true;
+      var params = this.form;
+      this.$http.get("/sale-notes/list-by-client", {
+        params: params
+      }).then(function (response) {
+        /* this.sum_total = response.data.sum_total; */
+        _this4.notes = response.data.data.map(function (d) {
+          d.selected = false;
+          d.date_of_issue = __WEBPACK_IMPORTED_MODULE_0_moment___default()(d.date_of_issue).format("YYYY-MM-DD");
+          d.items = d.items.map(function (item) {
+            return {
+              id: item.id,
+              item_id: item.item_id
+            };
+          });
+          return d;
+        });
+      })["finally"](function () {
+        return _this4.loading = false;
+      });
+    },
+    onFindClients: function onFindClients(query) {
+      this.filter.name = query;
+      this.onFetchClients();
+    },
+    onFetchClients: function onFetchClients() {
+      var _this5 = this;
+
+      this.loading = true;
+      this.notes = [];
+      this.form.selecteds = [];
+      var params = this.filter;
+      this.$http.get("/customers/list", {
+        params: params
+      }).then(function (response) {
+        _this5.clients = response.data.data;
+      })["finally"](function () {
+        return _this5.loading = false;
+      });
+    },
+    onOpened: function onOpened() {
+      this.filter.type = "name";
+      this.filter.name = null;
+      this.form.client_id = null;
+      this.sum_total = 0;
+      this.onFetchClients(); //   this.getConfigGroupItems();
+    },
+    getConfigGroupItems: function getConfigGroupItems() {
+      var _this6 = this;
+
+      this.$http.get("/sale-notes/config-group-items").then(function (response) {
+        // console.log(response)
+        _this6.group_items_generate_document = response.data.group_items_generate_document;
+      });
+    },
+    onClose: function onClose() {
+      this.notes = [];
+      this.$emit("update:show", false);
+    }
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/Restaurant/Resources/assets/js/views/pos/partials/whatsapp_modal.vue":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -1797,7 +2240,7 @@ exports = module.exports = __webpack_require__("./node_modules/css-loader/lib/cs
 
 
 // module
-exports.push([module.i, "\n.el-dialog__header {\r\n    background-color: var(--primary) !important;\n}\n.el-dialog__title {\r\n    color: var(--light-text) !important;\n}\n.el-dialog__headerbtn .el-dialog__close {\r\n    color: white !important;\n}\r\n", "", {"version":3,"sources":["D:/laragon/www/sdrimsac-tenant/modules/Restaurant/Resources/assets/js/views/pos/partials/modules/Restaurant/Resources/assets/js/views/pos/partials/documents_print.vue"],"names":[],"mappings":";AAyHA;IACA,4CAAA;CACA;AACA;IACA,oCAAA;CACA;AACA;IACA,wBAAA;CACA","file":"documents_print.vue","sourcesContent":["<template>\r\n    <el-dialog\r\n        :visible=\"showDialog\"\r\n        append-to-body\r\n        @close=\"close\"\r\n        @open=\"open\"\r\n        width=\"60%\"\r\n        v-loading=\"loading\"\r\n        title=\"Imprimir documento\"\r\n    >\r\n        <div class=\"card p-2\">\r\n            <div class=\"d-flex\">\r\n                <div class=\"col-6 p-1 col-md-3\">\r\n                    <el-select v-model=\"typeSearch\">\r\n                        <el-option value=\"document\" label=\"N° documento\">\r\n                        </el-option>\r\n                        <el-option value=\"client\" label=\"Cliente\"></el-option>\r\n                        <el-option value=\"date\" label=\"Fecha\"></el-option>\r\n                    </el-select>\r\n                </div>\r\n                <div class=\"col-6 p-1 col-md-3\">\r\n                    <el-input\r\n                        @input=\"getRecordsInput\"\r\n                        v-if=\"typeSearch != 'date'\"\r\n                        v-model=\"value\"\r\n                    ></el-input>\r\n                    <el-date-picker\r\n                        value-format=\"yyyy-MM-dd\"\r\n                        @change=\"getRecordsInput\"\r\n                        v-else\r\n                        v-model=\"value\"\r\n                    ></el-date-picker>\r\n                </div>\r\n                <div class=\"col-6 p-1-col-md-3\r\n                d-flex align-items-end justify-content-start\r\n                \"\r\n\r\n                v-if=\"activeName == 'documents'\"\r\n                >\r\n                <el-checkbox\r\n                    v-model=\"remain\"\r\n                    @change=\"getRecordsInput\"\r\n                    >Saldos</el-checkbox\r\n                >\r\n                </div>\r\n            </div>\r\n            <div class=\"d-flex align-items-center justify-content-end\">\r\n                <span class=\"p-1\"\r\n                    >Ultimo documento emitido:\r\n                    {{\r\n                        lastDocument\r\n                            ? lastDocument.numberPrint\r\n                            : \"No se encontró\"\r\n                    }}</span\r\n                >\r\n                <el-button\r\n                    class=\"btn btn-primary\"\r\n                    @click=\"\r\n                        printData(\r\n                            lastDocument.external_id,\r\n                            lastDocument.document_type_id\r\n                        )\r\n                    \"\r\n                >\r\n                    <i class=\"fas fa-print\"></i>\r\n                </el-button>\r\n            </div>\r\n            <div>\r\n                <el-tabs v-model=\"activeName\" @tab-click=\"handleClick\">\r\n                    <el-tab-pane label=\"Notas de venta\" name=\"saleNotes\">\r\n                        <document-print-detail\r\n                        :configuration=\"config\"\r\n                            :company=\"company\"\r\n                            @getRecords=\"getRecords\"\r\n                            @printData=\"printData\"\r\n                            :records.sync=\"saleNotes\"\r\n                            :pagination.sync=\"pagination.saleNotes\"\r\n                            :type=\"'saleNotes'\"\r\n                            :sender=\"sender\"\r\n                            :establishment.sync=\"establishment\"\r\n                        >\r\n                        </document-print-detail>\r\n                    </el-tab-pane>\r\n                    <el-tab-pane\r\n                        v-if=\"company.soap_type_id != '03'\"\r\n                        label=\"Facturas - Boletas\"\r\n                        name=\"documents\"\r\n                    >\r\n                        <document-print-detail\r\n                        :configuration=\"config\"\r\n                            :sender=\"sender\"\r\n                            :company=\"company\"\r\n                            @getRecords=\"getRecords\"\r\n                            @printData=\"printData\"\r\n                            :records.sync=\"documents\"\r\n                            :pagination.sync=\"pagination.documents\"\r\n                            :type=\"'documents'\"\r\n                            :establishment.sync=\"establishment\"\r\n                        >\r\n                        </document-print-detail>\r\n                    </el-tab-pane>\r\n                    <el-tab-pane v-if=\"config.quotation\" label=\"Cotizaciones\" name=\"quotations\">\r\n                        <document-print-detail\r\n                        :configuration=\"config\"\r\n                            :sender=\"sender\"\r\n                            :company=\"company\"\r\n                            @getRecords=\"getRecords\"\r\n                            @printData=\"printData\"\r\n                            :records.sync=\"quotations\"\r\n                            :pagination.sync=\"pagination.quotations\"\r\n                            :type=\"'quotations'\"\r\n                            :establishment.sync=\"establishment\"\r\n                        >\r\n                        </document-print-detail>\r\n                    </el-tab-pane>\r\n                </el-tabs>\r\n            </div>\r\n        </div>\r\n    </el-dialog>\r\n</template>\r\n<style>\r\n.el-dialog__header {\r\n    background-color: var(--primary) !important;\r\n}\r\n.el-dialog__title {\r\n    color: var(--light-text) !important;\r\n}\r\n.el-dialog__headerbtn .el-dialog__close {\r\n    color: white !important;\r\n}\r\n</style>\r\n<script>\r\nimport DocumentPrintDetail from \"./document_print_detail.vue\";\r\nimport queryString from \"query-string\";\r\nexport default {\r\n    components: { DocumentPrintDetail },\r\n    props: [\"showDialog\", \"company\", \"sender\", \"config\", \"establishment\"],\r\n    data() {\r\n        return {\r\n            remain:false,\r\n            time: null,\r\n            loading: false,\r\n            value: null,\r\n            typeSearch: \"document\",\r\n            saleNotes: [],\r\n            documents: [],\r\n            quotations: [],\r\n            pagination: {\r\n                saleNotes: {},\r\n                documents: {},\r\n                quotations: {}\r\n            },\r\n            printer: null,\r\n            lastDocument: null,\r\n            activeName: \"documents\"\r\n        };\r\n    },\r\n    methods: {\r\n        getRecordsInput() {\r\n            this.getRecords();\r\n        },\r\n        async printEvent(url) {\r\n            console.log(url);\r\n               let paperConfig = {\r\n                scaleContent: false\r\n            };\r\n            let partsUrl = url.split(\"/\");\r\n            let document = partsUrl[partsUrl.length - 1];\r\n            let isTicket = document.toLowerCase().includes(\"ticket\");\r\n            let isA4 = document.toLowerCase().includes(\"a4\");\r\n            let isA5 = document.toLowerCase().includes(\"a5\");\r\n            let tipoBandejaImpresora = this.config.new_old_printer;\r\n            if (isA4) {\r\n                if (tipoBandejaImpresora == 1) {\r\n                    paperConfig.density = 700;\r\n                    paperConfig.orientation = \"portrait\";\r\n                } else {\r\n                    paperConfig.density = 350;\r\n                    paperConfig.orientation = \"portrait\";\r\n                }\r\n            } else {\r\n                let orientation = \"portrait\";\r\n                if (isA5) {\r\n                    let { a5_orientation } = this.config;\r\n                    orientation = a5_orientation ? \"landscape\" : \"portrait\";\r\n                }\r\n                if (!isTicket && tipoBandejaImpresora == 1) {\r\n                    //opciones que permiten hacer una impresion correcta en impresoras nuevas\r\n                    paperConfig.density = 600;\r\n                    paperConfig.orientation = orientation;\r\n                    paperConfig.margins = { left: 2 };\r\n                } else if (!isTicket && tipoBandejaImpresora == 0) {\r\n                    paperConfig.density = 350;\r\n                    paperConfig.orientation = orientation;\r\n                    let margins = {};\r\n                    if (orientation == \"landscape\") {\r\n                        margins = {\r\n                            top: 1.1,\r\n                            left: 0.95,\r\n                            right: 0.3,\r\n                            bottom: 1.1\r\n                        };\r\n                    } else {\r\n                        margins = {\r\n                            left: 1.5\r\n                        };\r\n                    }\r\n                    paperConfig.margins = margins;\r\n                }\r\n            }\r\n\r\n            try {\r\n                let config = qz.configs.create(this.printer, paperConfig);\r\n                if (!qz.websocket.isActive()) {\r\n                    await qz.websocket.connect(config);\r\n                }\r\n                let data = [\r\n                    {\r\n                        type: \"pdf\",\r\n                        format: \"file\",\r\n                        data: url\r\n                    }\r\n                ];\r\n                qz.print(config, data).catch(e => {\r\n                    this.$toast.error(e.message);\r\n                });\r\n            } catch (e) {}\r\n        },\r\n        async printData(external_id, type) {\r\n            console.log(external_id, type);\r\n            let typePrint = this.establishment.format_printer;\r\n            let url = \"\";\r\n            //colocar una condicion para cada caso desde impresira de 80mm hasta las a4 y a5\r\n            if (typePrint == \"1\") {\r\n                //tamaño a4\r\n                if (type == \"80\") {\r\n                    url = `/sale-notes/print/${external_id}/a4`;\r\n                } else if (type == \"03\" || type == \"01\") {\r\n                    url = `/print/document/${external_id}/a4`;\r\n                } else {\r\n                    url = `/quotations/print/${external_id}/a4`;\r\n                }\r\n            }\r\n            if (typePrint == \"2\") {\r\n                //tamaño a5\r\n                if (type == \"80\") {\r\n                    url = `/sale-notes/print/${external_id}/a5`;\r\n                } else if (type == \"03\" || type == \"01\") {\r\n                    url = `/print/document/${external_id}/a5`;\r\n                } else {\r\n                    url = `/quotations/print/${external_id}/a5`;\r\n                }\r\n            }\r\n            if (typePrint == \"3\" || typePrint == null) {\r\n                //tamaño 80mm\r\n                if (type == \"80\") {\r\n                    url = `/sale-notes/print/${external_id}/ticket`;\r\n                } else if (type == \"03\" || type == \"01\") {\r\n                    url = `/print/document/${external_id}/ticket`;\r\n                } else {\r\n                    url = `/quotations/print/${external_id}/ticket`;\r\n                }\r\n            }\r\n            if (typePrint == \"4\") {\r\n                //tamaño 50mm\r\n                if (type == \"80\") {\r\n                    url = `/sale-notes/print/${external_id}/ticket_50`;\r\n                } else if (type == \"03\" || type == \"01\") {\r\n                    url = `/print/document/${external_id}/ticket_50`;\r\n                } else {\r\n                    url = `/quotations/print/${external_id}/ticket_50`;\r\n                }\r\n            }\r\n            //console.log(config.direct_printing)\r\n\r\n            if (this.establishment.direct_printing == 0) {\r\n                window.open(url, \"_blank\");\r\n            } else {\r\n                await this.printEvent(url);\r\n            }\r\n        },\r\n        async getLastDocument() {\r\n            try {\r\n                this.loading = true;\r\n                const response = await this.$http(`/caja/worker/print_last_document`);\r\n\r\n                if (response.status == 200) {\r\n                    const {\r\n                        data: { document }\r\n                    } = response;\r\n                    this.lastDocument = document;\r\n                    let filename = this.lastDocument.filename.split(\"-\");\r\n                    this.lastDocument.numberPrint =\r\n                        filename[2] + \"-\" + filename[3];\r\n                }\r\n            } catch (e) {\r\n                this.$toast.error(\"No se pudo obtener el ultimo documento\");\r\n            } finally {\r\n                this.loading = false;\r\n            }\r\n        },\r\n        async getPrinter() {\r\n            const response = await this.$http(\r\n                `/caja/worker/cash/get_printer/${this.area_id}`\r\n            );\r\n\r\n            let {\r\n                data: { printer }\r\n            } = response;\r\n            this.printer = printer;\r\n        },\r\n        getRecords(page = 1) {\r\n            if (this.activeName == \"saleNotes\") {\r\n                this.pagination.saleNotes.current_page = Number(page);\r\n            } else {\r\n                this.pagination.documents.current_page = Number(page);\r\n            }\r\n            if (this.time) {\r\n                clearTimeout(this.time);\r\n            }\r\n            this.time = setTimeout(async () => {\r\n                await this.getLastDocuments();\r\n            }, 500);\r\n        },\r\n        getQueryParameters(form = {}) {\r\n            let page =\r\n                this.activeName == \"saleNotes\"\r\n                    ? this.pagination.saleNotes.current_page\r\n                    : this.pagination.documents.current_page;\r\n            return queryString.stringify({\r\n                page:\r\n                    this.activeName == \"saleNotes\"\r\n                        ? this.pagination.saleNotes.current_page\r\n                        : this.pagination.documents.current_page,\r\n                isNote: this.activeName == \"saleNotes\",\r\n                typeDocument: this.activeName,\r\n                column: this.typeSearch,\r\n                value: this.value,\r\n                remain:this.remain\r\n\r\n                // limit: this.limit\r\n            });\r\n        },\r\n        handleClick() {\r\n            this.remain = false;\r\n            if (\r\n                this.saleNotes.length == 0 ||\r\n                this.documents.length == 0 ||\r\n                this.quotations.length == 0\r\n            ) {\r\n                this.getLastDocuments();\r\n            }\r\n        },\r\n        async open() {\r\n            console.log(this.config);\r\n            await this.getLastDocument();\r\n            await this.getLastDocuments();\r\n            await this.getPrinter();\r\n        },\r\n        close() {\r\n            this.$emit(\"update:showDialog\", false);\r\n        },\r\n\r\n        async getLastDocuments() {\r\n            //\"/sale-notes/print/{$doc->external_id}/ticket\r\n            //\"/print/document/{$doc->external_id}/ticket\";\r\n\r\n            try {\r\n                this.loading = true;\r\n                const response = await this.$http(\r\n                    `/caja/worker/cash/get_last_documents?${this.getQueryParameters()}`\r\n                );\r\n\r\n                if (response.status != 200) {\r\n                    this.$toast.error(\"No se pudo imprimir\");\r\n                } else {\r\n                    const { data, meta } = response.data;\r\n                    if (this.activeName == \"saleNotes\") {\r\n                        this.saleNotes = data;\r\n                        this.pagination.saleNotes = meta;\r\n                    } else if (this.activeName == \"quotations\") {\r\n                        this.quotations = data;\r\n                        this.pagination.quotations = meta;\r\n                    } else {\r\n                        this.documents = data;\r\n                        if(this.remain){\r\n                            this.documents = this.documents.filter((document)=>document.remain>0)\r\n                        }\r\n                        this.pagination.documents = meta;\r\n                    }\r\n                }\r\n            } catch (e) {\r\n                console.log(e);\r\n                this.$toast.error(\"No se pudo imprimir\");\r\n            } finally {\r\n                this.loading = false;\r\n            }\r\n        }\r\n    }\r\n};\r\n</script>\r\n"],"sourceRoot":""}]);
+exports.push([module.i, "\n.el-dialog__header {\r\n    background-color: var(--primary) !important;\n}\n.el-dialog__title {\r\n    color: var(--light-text) !important;\n}\n.el-dialog__headerbtn .el-dialog__close {\r\n    color: white !important;\n}\r\n", "", {"version":3,"sources":["D:/laragon/www/sdrimsac-tenant/modules/Restaurant/Resources/assets/js/views/pos/partials/modules/Restaurant/Resources/assets/js/views/pos/partials/documents_print.vue"],"names":[],"mappings":";AAgJA;IACA,4CAAA;CACA;AACA;IACA,oCAAA;CACA;AACA;IACA,wBAAA;CACA","file":"documents_print.vue","sourcesContent":["<template>\r\n    <el-dialog\r\n        :visible=\"showDialog\"\r\n        append-to-body\r\n        @close=\"close\"\r\n        @open=\"open\"\r\n        width=\"60%\"\r\n        v-loading=\"loading\"\r\n        title=\"Imprimir documento\"\r\n    >\r\n        <div class=\"card p-2\">\r\n            <div class=\"d-flex\">\r\n                <div class=\"col-6 p-1 col-md-3\">\r\n                    <el-select v-model=\"typeSearch\">\r\n                        <el-option value=\"document\" label=\"N° documento\">\r\n                        </el-option>\r\n                        <el-option value=\"client\" label=\"Cliente\"></el-option>\r\n                        <el-option value=\"date\" label=\"Fecha\"></el-option>\r\n                    </el-select>\r\n                </div>\r\n                <div class=\"col-6 p-1 col-md-3\">\r\n                    <el-input\r\n                        @input=\"getRecordsInput\"\r\n                        v-if=\"typeSearch != 'date'\"\r\n                        v-model=\"value\"\r\n                    ></el-input>\r\n                    <el-date-picker\r\n                        value-format=\"yyyy-MM-dd\"\r\n                        @change=\"getRecordsInput\"\r\n                        v-else\r\n                        v-model=\"value\"\r\n                    ></el-date-picker>\r\n                </div>\r\n                <div\r\n                    class=\"col-6 p-1-col-md-3\r\n                d-flex align-items-end justify-content-start\r\n                \"\r\n                    v-if=\"activeName == 'documents'\"\r\n                >\r\n                    <el-checkbox v-model=\"remain\" @change=\"getRecordsInput\"\r\n                        >Saldos</el-checkbox\r\n                    >\r\n                </div>\r\n            </div>\r\n            <div class=\"mt-1 d-flex align-items-center justify-content-between\">\r\n                <div>\r\n                    <button\r\n                    v-if=\"activeName == 'saleNotes'\"\r\n                        @click.prevent=\"onOpenModalGenerateCPE\"\r\n                        type=\"button\"\r\n                        class=\"btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto\"\r\n                    >\r\n                        <span>\r\n                            Generar comprobante desde múltiples Notas\r\n                        </span>\r\n                    </button>\r\n                </div>\r\n                <div>\r\n                    <span class=\"p-1\"\r\n                        >Ultimo documento emitido:\r\n                        {{\r\n                            lastDocument\r\n                                ? lastDocument.numberPrint\r\n                                : \"No se encontró\"\r\n                        }}</span\r\n                    >\r\n                    <el-button\r\n                        class=\"btn btn-primary\"\r\n                        @click=\"\r\n                            printData(\r\n                                lastDocument.external_id,\r\n                                lastDocument.document_type_id\r\n                            )\r\n                        \"\r\n                    >\r\n                        <i class=\"fas fa-print\"></i>\r\n                    </el-button>\r\n                </div>\r\n            </div>\r\n            <div>\r\n                <el-tabs v-model=\"activeName\" @tab-click=\"handleClick\">\r\n                    <el-tab-pane label=\"Notas de venta\" name=\"saleNotes\">\r\n                        <document-print-detail\r\n                            :configuration=\"config\"\r\n                            :company=\"company\"\r\n                            @getRecords=\"getRecords\"\r\n                            @printData=\"printData\"\r\n                            :records.sync=\"saleNotes\"\r\n                            :pagination.sync=\"pagination.saleNotes\"\r\n                            :type=\"'saleNotes'\"\r\n                            :sender=\"sender\"\r\n                            :establishment.sync=\"establishment\"\r\n                        >\r\n                        </document-print-detail>\r\n                    </el-tab-pane>\r\n                    <el-tab-pane\r\n                        v-if=\"company.soap_type_id != '03'\"\r\n                        label=\"Facturas - Boletas\"\r\n                        name=\"documents\"\r\n                    >\r\n                        <document-print-detail\r\n                            :configuration=\"config\"\r\n                            :sender=\"sender\"\r\n                            :company=\"company\"\r\n                            @getRecords=\"getRecords\"\r\n                            @printData=\"printData\"\r\n                            :records.sync=\"documents\"\r\n                            :pagination.sync=\"pagination.documents\"\r\n                            :type=\"'documents'\"\r\n                            :establishment.sync=\"establishment\"\r\n                        >\r\n                        </document-print-detail>\r\n                    </el-tab-pane>\r\n                    <el-tab-pane\r\n                        v-if=\"config.quotation\"\r\n                        label=\"Cotizaciones\"\r\n                        name=\"quotations\"\r\n                    >\r\n                        <document-print-detail\r\n                            :configuration=\"config\"\r\n                            :sender=\"sender\"\r\n                            :company=\"company\"\r\n                            @getRecords=\"getRecords\"\r\n                            @printData=\"printData\"\r\n                            :records.sync=\"quotations\"\r\n                            :pagination.sync=\"pagination.quotations\"\r\n                            :type=\"'quotations'\"\r\n                            :establishment.sync=\"establishment\"\r\n                        >\r\n                        </document-print-detail>\r\n                    </el-tab-pane>\r\n                </el-tabs>\r\n            </div>\r\n            <modal-generate-cpe\r\n            :show.sync=\"showModalGenerateCPE\"\r\n            @sendItems=\"sendItems\"\r\n            @close=\"closeCpe\"\r\n            >\r\n\r\n            </modal-generate-cpe>\r\n        </div>\r\n    </el-dialog>\r\n</template>\r\n<style>\r\n.el-dialog__header {\r\n    background-color: var(--primary) !important;\r\n}\r\n.el-dialog__title {\r\n    color: var(--light-text) !important;\r\n}\r\n.el-dialog__headerbtn .el-dialog__close {\r\n    color: white !important;\r\n}\r\n</style>\r\n<script>\r\nimport DocumentPrintDetail from \"./document_print_detail.vue\";\r\nimport queryString from \"query-string\";\r\nimport ModalGenerateCpe from \"./modal_generate_cpe.vue\";\r\n\r\nexport default {\r\n    components: { DocumentPrintDetail,ModalGenerateCpe },\r\n    props: [\"showDialog\", \"company\", \"sender\", \"config\", \"establishment\"],\r\n    data() {\r\n        return {\r\n            remain: false,\r\n            time: null,\r\n            loading: false,\r\n            value: null,\r\n            typeSearch: \"document\",\r\n            saleNotes: [],\r\n            documents: [],\r\n            quotations: [],\r\n            pagination: {\r\n                saleNotes: {},\r\n                documents: {},\r\n                quotations: {}\r\n            },\r\n            printer: null,\r\n            lastDocument: null,\r\n            activeName: \"documents\",\r\n            showModalGenerateCPE:false,\r\n        };\r\n    },\r\n    methods: {\r\n        closeCpe(){\r\n             this.showModalGenerateCPE = false;\r\n             this.close();\r\n        },\r\n        onOpenModalGenerateCPE() {\r\n               this.showModalGenerateCPE = true;\r\n        },\r\n        getRecordsInput() {\r\n            this.getRecords();\r\n        },\r\n        sendItems(items,clientNumber,notes){\r\n            this.$emit(\"sendItems\", items,clientNumber,notes);\r\n        },\r\n        async printEvent(url) {\r\n            console.log(url);\r\n            let paperConfig = {\r\n                scaleContent: false\r\n            };\r\n            let partsUrl = url.split(\"/\");\r\n            let document = partsUrl[partsUrl.length - 1];\r\n            let isTicket = document.toLowerCase().includes(\"ticket\");\r\n            let isA4 = document.toLowerCase().includes(\"a4\");\r\n            let isA5 = document.toLowerCase().includes(\"a5\");\r\n            let tipoBandejaImpresora = this.config.new_old_printer;\r\n            if (isA4) {\r\n                if (tipoBandejaImpresora == 1) {\r\n                    paperConfig.density = 700;\r\n                    paperConfig.orientation = \"portrait\";\r\n                } else {\r\n                    paperConfig.density = 350;\r\n                    paperConfig.orientation = \"portrait\";\r\n                }\r\n            } else {\r\n                let orientation = \"portrait\";\r\n                if (isA5) {\r\n                    let { a5_orientation } = this.config;\r\n                    orientation = a5_orientation ? \"landscape\" : \"portrait\";\r\n                }\r\n                if (!isTicket && tipoBandejaImpresora == 1) {\r\n                    //opciones que permiten hacer una impresion correcta en impresoras nuevas\r\n                    paperConfig.density = 600;\r\n                    paperConfig.orientation = orientation;\r\n                    paperConfig.margins = { left: 2 };\r\n                } else if (!isTicket && tipoBandejaImpresora == 0) {\r\n                    paperConfig.density = 350;\r\n                    paperConfig.orientation = orientation;\r\n                    let margins = {};\r\n                    if (orientation == \"landscape\") {\r\n                        margins = {\r\n                            top: 1.1,\r\n                            left: 0.95,\r\n                            right: 0.3,\r\n                            bottom: 1.1\r\n                        };\r\n                    } else {\r\n                        margins = {\r\n                            left: 1.5\r\n                        };\r\n                    }\r\n                    paperConfig.margins = margins;\r\n                }\r\n            }\r\n\r\n            try {\r\n                let config = qz.configs.create(this.printer, paperConfig);\r\n                if (!qz.websocket.isActive()) {\r\n                    await qz.websocket.connect(config);\r\n                }\r\n                let data = [\r\n                    {\r\n                        type: \"pdf\",\r\n                        format: \"file\",\r\n                        data: url\r\n                    }\r\n                ];\r\n                qz.print(config, data).catch(e => {\r\n                    this.$toast.error(e.message);\r\n                });\r\n            } catch (e) {}\r\n        },\r\n        async printData(external_id, type) {\r\n            console.log(external_id, type);\r\n            let typePrint = this.establishment.format_printer;\r\n            let url = \"\";\r\n            //colocar una condicion para cada caso desde impresira de 80mm hasta las a4 y a5\r\n            if (typePrint == \"1\") {\r\n                //tamaño a4\r\n                if (type == \"80\") {\r\n                    url = `/sale-notes/print/${external_id}/a4`;\r\n                } else if (type == \"03\" || type == \"01\") {\r\n                    url = `/print/document/${external_id}/a4`;\r\n                } else {\r\n                    url = `/quotations/print/${external_id}/a4`;\r\n                }\r\n            }\r\n            if (typePrint == \"2\") {\r\n                //tamaño a5\r\n                if (type == \"80\") {\r\n                    url = `/sale-notes/print/${external_id}/a5`;\r\n                } else if (type == \"03\" || type == \"01\") {\r\n                    url = `/print/document/${external_id}/a5`;\r\n                } else {\r\n                    url = `/quotations/print/${external_id}/a5`;\r\n                }\r\n            }\r\n            if (typePrint == \"3\" || typePrint == null) {\r\n                //tamaño 80mm\r\n                if (type == \"80\") {\r\n                    url = `/sale-notes/print/${external_id}/ticket`;\r\n                } else if (type == \"03\" || type == \"01\") {\r\n                    url = `/print/document/${external_id}/ticket`;\r\n                } else {\r\n                    url = `/quotations/print/${external_id}/ticket`;\r\n                }\r\n            }\r\n            if (typePrint == \"4\") {\r\n                //tamaño 50mm\r\n                if (type == \"80\") {\r\n                    url = `/sale-notes/print/${external_id}/ticket_50`;\r\n                } else if (type == \"03\" || type == \"01\") {\r\n                    url = `/print/document/${external_id}/ticket_50`;\r\n                } else {\r\n                    url = `/quotations/print/${external_id}/ticket_50`;\r\n                }\r\n            }\r\n            //console.log(config.direct_printing)\r\n\r\n            if (this.establishment.direct_printing == 0) {\r\n                window.open(url, \"_blank\");\r\n            } else {\r\n                await this.printEvent(url);\r\n            }\r\n        },\r\n        async getLastDocument() {\r\n            try {\r\n                this.loading = true;\r\n                const response = await this.$http(\r\n                    `/caja/worker/print_last_document`\r\n                );\r\n\r\n                if (response.status == 200) {\r\n                    const {\r\n                        data: { document }\r\n                    } = response;\r\n                    this.lastDocument = document;\r\n                    let filename = this.lastDocument.filename.split(\"-\");\r\n                    this.lastDocument.numberPrint =\r\n                        filename[2] + \"-\" + filename[3];\r\n                }\r\n            } catch (e) {\r\n                this.$toast.error(\"No se pudo obtener el ultimo documento\");\r\n            } finally {\r\n                this.loading = false;\r\n            }\r\n        },\r\n        async getPrinter() {\r\n            const response = await this.$http(\r\n                `/caja/worker/cash/get_printer/${this.area_id}`\r\n            );\r\n\r\n            let {\r\n                data: { printer }\r\n            } = response;\r\n            this.printer = printer;\r\n        },\r\n        getRecords(page = 1) {\r\n            if (this.activeName == \"saleNotes\") {\r\n                this.pagination.saleNotes.current_page = Number(page);\r\n            } else {\r\n                this.pagination.documents.current_page = Number(page);\r\n            }\r\n            if (this.time) {\r\n                clearTimeout(this.time);\r\n            }\r\n            this.time = setTimeout(async () => {\r\n                await this.getLastDocuments();\r\n            }, 500);\r\n        },\r\n        getQueryParameters(form = {}) {\r\n            let page =\r\n                this.activeName == \"saleNotes\"\r\n                    ? this.pagination.saleNotes.current_page\r\n                    : this.pagination.documents.current_page;\r\n            return queryString.stringify({\r\n                page:\r\n                    this.activeName == \"saleNotes\"\r\n                        ? this.pagination.saleNotes.current_page\r\n                        : this.pagination.documents.current_page,\r\n                isNote: this.activeName == \"saleNotes\",\r\n                typeDocument: this.activeName,\r\n                column: this.typeSearch,\r\n                value: this.value,\r\n                remain: this.remain\r\n\r\n                // limit: this.limit\r\n            });\r\n        },\r\n        handleClick() {\r\n            this.remain = false;\r\n            if (\r\n                this.saleNotes.length == 0 ||\r\n                this.documents.length == 0 ||\r\n                this.quotations.length == 0\r\n            ) {\r\n                this.getLastDocuments();\r\n            }\r\n        },\r\n        async open() {\r\n            console.log(this.config);\r\n            await this.getLastDocument();\r\n            await this.getLastDocuments();\r\n            await this.getPrinter();\r\n        },\r\n        close() {\r\n            this.$emit(\"update:showDialog\", false);\r\n        },\r\n\r\n        async getLastDocuments() {\r\n            //\"/sale-notes/print/{$doc->external_id}/ticket\r\n            //\"/print/document/{$doc->external_id}/ticket\";\r\n\r\n            try {\r\n                this.loading = true;\r\n                const response = await this.$http(\r\n                    `/caja/worker/cash/get_last_documents?${this.getQueryParameters()}`\r\n                );\r\n\r\n                if (response.status != 200) {\r\n                    this.$toast.error(\"No se pudo imprimir\");\r\n                } else {\r\n                    const { data, meta } = response.data;\r\n                    if (this.activeName == \"saleNotes\") {\r\n                        this.saleNotes = data;\r\n                        this.pagination.saleNotes = meta;\r\n                    } else if (this.activeName == \"quotations\") {\r\n                        this.quotations = data;\r\n                        this.pagination.quotations = meta;\r\n                    } else {\r\n                        this.documents = data;\r\n                        if (this.remain) {\r\n                            this.documents = this.documents.filter(\r\n                                document => document.remain > 0\r\n                            );\r\n                        }\r\n                        this.pagination.documents = meta;\r\n                    }\r\n                }\r\n            } catch (e) {\r\n                console.log(e);\r\n                this.$toast.error(\"No se pudo imprimir\");\r\n            } finally {\r\n                this.loading = false;\r\n            }\r\n        }\r\n    }\r\n};\r\n</script>\r\n"],"sourceRoot":""}]);
 
 // exports
 
@@ -1862,6 +2305,14 @@ var render = function() {
                     "\n                        Cliente\n                    "
                   )
                 ]),
+                _vm._v(" "),
+                _vm.type == "documents"
+                  ? _c("th", [
+                      _vm._v(
+                        "\n                        N/V\n                    "
+                      )
+                    ])
+                  : _vm._e(),
                 _vm._v(" "),
                 _c("th", [
                   _vm._v(
@@ -2568,6 +3019,27 @@ var render = function() {
                       2
                     ),
                     _vm._v(" "),
+                    _vm.type == "documents"
+                      ? _c(
+                          "td",
+                          [
+                            _vm._l(data.sale_note_related, function(
+                              row,
+                              index
+                            ) {
+                              return [
+                                _c(
+                                  "small",
+                                  { key: index, staticClass: "d-block" },
+                                  [_vm._v(_vm._s(row.number))]
+                                )
+                              ]
+                            })
+                          ],
+                          2
+                        )
+                      : _vm._e(),
+                    _vm._v(" "),
                     _c(
                       "td",
                       {
@@ -2894,267 +3366,324 @@ var render = function() {
       on: { close: _vm.close, open: _vm.open }
     },
     [
-      _c("div", { staticClass: "card p-2" }, [
-        _c("div", { staticClass: "d-flex" }, [
-          _c(
-            "div",
-            { staticClass: "col-6 p-1 col-md-3" },
-            [
-              _c(
-                "el-select",
-                {
-                  model: {
-                    value: _vm.typeSearch,
-                    callback: function($$v) {
-                      _vm.typeSearch = $$v
-                    },
-                    expression: "typeSearch"
-                  }
-                },
-                [
-                  _c("el-option", {
-                    attrs: { value: "document", label: "N° documento" }
-                  }),
-                  _vm._v(" "),
-                  _c("el-option", {
-                    attrs: { value: "client", label: "Cliente" }
-                  }),
-                  _vm._v(" "),
-                  _c("el-option", { attrs: { value: "date", label: "Fecha" } })
-                ],
-                1
-              )
-            ],
-            1
-          ),
-          _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "col-6 p-1 col-md-3" },
-            [
-              _vm.typeSearch != "date"
-                ? _c("el-input", {
-                    on: { input: _vm.getRecordsInput },
-                    model: {
-                      value: _vm.value,
-                      callback: function($$v) {
-                        _vm.value = $$v
-                      },
-                      expression: "value"
-                    }
-                  })
-                : _c("el-date-picker", {
-                    attrs: { "value-format": "yyyy-MM-dd" },
-                    on: { change: _vm.getRecordsInput },
-                    model: {
-                      value: _vm.value,
-                      callback: function($$v) {
-                        _vm.value = $$v
-                      },
-                      expression: "value"
-                    }
-                  })
-            ],
-            1
-          ),
-          _vm._v(" "),
-          _vm.activeName == "documents"
-            ? _c(
-                "div",
-                {
-                  staticClass:
-                    "col-6 p-1-col-md-3\n            d-flex align-items-end justify-content-start\n            "
-                },
-                [
-                  _c(
-                    "el-checkbox",
-                    {
-                      on: { change: _vm.getRecordsInput },
-                      model: {
-                        value: _vm.remain,
-                        callback: function($$v) {
-                          _vm.remain = $$v
-                        },
-                        expression: "remain"
-                      }
-                    },
-                    [_vm._v("Saldos")]
-                  )
-                ],
-                1
-              )
-            : _vm._e()
-        ]),
-        _vm._v(" "),
-        _c(
-          "div",
-          { staticClass: "d-flex align-items-center justify-content-end" },
-          [
-            _c("span", { staticClass: "p-1" }, [
-              _vm._v(
-                "Ultimo documento emitido:\n                " +
-                  _vm._s(
-                    _vm.lastDocument
-                      ? _vm.lastDocument.numberPrint
-                      : "No se encontró"
-                  )
-              )
-            ]),
-            _vm._v(" "),
+      _c(
+        "div",
+        { staticClass: "card p-2" },
+        [
+          _c("div", { staticClass: "d-flex" }, [
             _c(
-              "el-button",
-              {
-                staticClass: "btn btn-primary",
-                on: {
-                  click: function($event) {
-                    return _vm.printData(
-                      _vm.lastDocument.external_id,
-                      _vm.lastDocument.document_type_id
-                    )
-                  }
-                }
-              },
-              [_c("i", { staticClass: "fas fa-print" })]
-            )
-          ],
-          1
-        ),
-        _vm._v(" "),
-        _c(
-          "div",
-          [
-            _c(
-              "el-tabs",
-              {
-                on: { "tab-click": _vm.handleClick },
-                model: {
-                  value: _vm.activeName,
-                  callback: function($$v) {
-                    _vm.activeName = $$v
-                  },
-                  expression: "activeName"
-                }
-              },
+              "div",
+              { staticClass: "col-6 p-1 col-md-3" },
               [
                 _c(
-                  "el-tab-pane",
-                  { attrs: { label: "Notas de venta", name: "saleNotes" } },
-                  [
-                    _c("document-print-detail", {
-                      attrs: {
-                        configuration: _vm.config,
-                        company: _vm.company,
-                        records: _vm.saleNotes,
-                        pagination: _vm.pagination.saleNotes,
-                        type: "saleNotes",
-                        sender: _vm.sender,
-                        establishment: _vm.establishment
+                  "el-select",
+                  {
+                    model: {
+                      value: _vm.typeSearch,
+                      callback: function($$v) {
+                        _vm.typeSearch = $$v
                       },
-                      on: {
-                        getRecords: _vm.getRecords,
-                        printData: _vm.printData,
-                        "update:records": function($event) {
-                          _vm.saleNotes = $event
-                        },
-                        "update:pagination": function($event) {
-                          return _vm.$set(_vm.pagination, "saleNotes", $event)
-                        },
-                        "update:establishment": function($event) {
-                          _vm.establishment = $event
-                        }
-                      }
+                      expression: "typeSearch"
+                    }
+                  },
+                  [
+                    _c("el-option", {
+                      attrs: { value: "document", label: "N° documento" }
+                    }),
+                    _vm._v(" "),
+                    _c("el-option", {
+                      attrs: { value: "client", label: "Cliente" }
+                    }),
+                    _vm._v(" "),
+                    _c("el-option", {
+                      attrs: { value: "date", label: "Fecha" }
                     })
                   ],
                   1
-                ),
-                _vm._v(" "),
-                _vm.company.soap_type_id != "03"
-                  ? _c(
-                      "el-tab-pane",
+                )
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "col-6 p-1 col-md-3" },
+              [
+                _vm.typeSearch != "date"
+                  ? _c("el-input", {
+                      on: { input: _vm.getRecordsInput },
+                      model: {
+                        value: _vm.value,
+                        callback: function($$v) {
+                          _vm.value = $$v
+                        },
+                        expression: "value"
+                      }
+                    })
+                  : _c("el-date-picker", {
+                      attrs: { "value-format": "yyyy-MM-dd" },
+                      on: { change: _vm.getRecordsInput },
+                      model: {
+                        value: _vm.value,
+                        callback: function($$v) {
+                          _vm.value = $$v
+                        },
+                        expression: "value"
+                      }
+                    })
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _vm.activeName == "documents"
+              ? _c(
+                  "div",
+                  {
+                    staticClass:
+                      "col-6 p-1-col-md-3\n            d-flex align-items-end justify-content-start\n            "
+                  },
+                  [
+                    _c(
+                      "el-checkbox",
                       {
-                        attrs: {
-                          label: "Facturas - Boletas",
-                          name: "documents"
+                        on: { change: _vm.getRecordsInput },
+                        model: {
+                          value: _vm.remain,
+                          callback: function($$v) {
+                            _vm.remain = $$v
+                          },
+                          expression: "remain"
+                        }
+                      },
+                      [_vm._v("Saldos")]
+                    )
+                  ],
+                  1
+                )
+              : _vm._e()
+          ]),
+          _vm._v(" "),
+          _c(
+            "div",
+            {
+              staticClass:
+                "mt-1 d-flex align-items-center justify-content-between"
+            },
+            [
+              _c("div", [
+                _vm.activeName == "saleNotes"
+                  ? _c(
+                      "button",
+                      {
+                        staticClass:
+                          "btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto",
+                        attrs: { type: "button" },
+                        on: {
+                          click: function($event) {
+                            $event.preventDefault()
+                            return _vm.onOpenModalGenerateCPE.apply(
+                              null,
+                              arguments
+                            )
+                          }
                         }
                       },
                       [
-                        _c("document-print-detail", {
-                          attrs: {
-                            configuration: _vm.config,
-                            sender: _vm.sender,
-                            company: _vm.company,
-                            records: _vm.documents,
-                            pagination: _vm.pagination.documents,
-                            type: "documents",
-                            establishment: _vm.establishment
-                          },
-                          on: {
-                            getRecords: _vm.getRecords,
-                            printData: _vm.printData,
-                            "update:records": function($event) {
-                              _vm.documents = $event
-                            },
-                            "update:pagination": function($event) {
-                              return _vm.$set(
-                                _vm.pagination,
-                                "documents",
-                                $event
-                              )
-                            },
-                            "update:establishment": function($event) {
-                              _vm.establishment = $event
-                            }
-                          }
-                        })
-                      ],
-                      1
-                    )
-                  : _vm._e(),
-                _vm._v(" "),
-                _vm.config.quotation
-                  ? _c(
-                      "el-tab-pane",
-                      { attrs: { label: "Cotizaciones", name: "quotations" } },
-                      [
-                        _c("document-print-detail", {
-                          attrs: {
-                            configuration: _vm.config,
-                            sender: _vm.sender,
-                            company: _vm.company,
-                            records: _vm.quotations,
-                            pagination: _vm.pagination.quotations,
-                            type: "quotations",
-                            establishment: _vm.establishment
-                          },
-                          on: {
-                            getRecords: _vm.getRecords,
-                            printData: _vm.printData,
-                            "update:records": function($event) {
-                              _vm.quotations = $event
-                            },
-                            "update:pagination": function($event) {
-                              return _vm.$set(
-                                _vm.pagination,
-                                "quotations",
-                                $event
-                              )
-                            },
-                            "update:establishment": function($event) {
-                              _vm.establishment = $event
-                            }
-                          }
-                        })
-                      ],
-                      1
+                        _c("span", [
+                          _vm._v(
+                            "\n                        Generar comprobante desde múltiples Notas\n                    "
+                          )
+                        ])
+                      ]
                     )
                   : _vm._e()
-              ],
-              1
-            )
-          ],
-          1
-        )
-      ])
+              ]),
+              _vm._v(" "),
+              _c(
+                "div",
+                [
+                  _c("span", { staticClass: "p-1" }, [
+                    _vm._v(
+                      "Ultimo documento emitido:\n                    " +
+                        _vm._s(
+                          _vm.lastDocument
+                            ? _vm.lastDocument.numberPrint
+                            : "No se encontró"
+                        )
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "el-button",
+                    {
+                      staticClass: "btn btn-primary",
+                      on: {
+                        click: function($event) {
+                          return _vm.printData(
+                            _vm.lastDocument.external_id,
+                            _vm.lastDocument.document_type_id
+                          )
+                        }
+                      }
+                    },
+                    [_c("i", { staticClass: "fas fa-print" })]
+                  )
+                ],
+                1
+              )
+            ]
+          ),
+          _vm._v(" "),
+          _c(
+            "div",
+            [
+              _c(
+                "el-tabs",
+                {
+                  on: { "tab-click": _vm.handleClick },
+                  model: {
+                    value: _vm.activeName,
+                    callback: function($$v) {
+                      _vm.activeName = $$v
+                    },
+                    expression: "activeName"
+                  }
+                },
+                [
+                  _c(
+                    "el-tab-pane",
+                    { attrs: { label: "Notas de venta", name: "saleNotes" } },
+                    [
+                      _c("document-print-detail", {
+                        attrs: {
+                          configuration: _vm.config,
+                          company: _vm.company,
+                          records: _vm.saleNotes,
+                          pagination: _vm.pagination.saleNotes,
+                          type: "saleNotes",
+                          sender: _vm.sender,
+                          establishment: _vm.establishment
+                        },
+                        on: {
+                          getRecords: _vm.getRecords,
+                          printData: _vm.printData,
+                          "update:records": function($event) {
+                            _vm.saleNotes = $event
+                          },
+                          "update:pagination": function($event) {
+                            return _vm.$set(_vm.pagination, "saleNotes", $event)
+                          },
+                          "update:establishment": function($event) {
+                            _vm.establishment = $event
+                          }
+                        }
+                      })
+                    ],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _vm.company.soap_type_id != "03"
+                    ? _c(
+                        "el-tab-pane",
+                        {
+                          attrs: {
+                            label: "Facturas - Boletas",
+                            name: "documents"
+                          }
+                        },
+                        [
+                          _c("document-print-detail", {
+                            attrs: {
+                              configuration: _vm.config,
+                              sender: _vm.sender,
+                              company: _vm.company,
+                              records: _vm.documents,
+                              pagination: _vm.pagination.documents,
+                              type: "documents",
+                              establishment: _vm.establishment
+                            },
+                            on: {
+                              getRecords: _vm.getRecords,
+                              printData: _vm.printData,
+                              "update:records": function($event) {
+                                _vm.documents = $event
+                              },
+                              "update:pagination": function($event) {
+                                return _vm.$set(
+                                  _vm.pagination,
+                                  "documents",
+                                  $event
+                                )
+                              },
+                              "update:establishment": function($event) {
+                                _vm.establishment = $event
+                              }
+                            }
+                          })
+                        ],
+                        1
+                      )
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _vm.config.quotation
+                    ? _c(
+                        "el-tab-pane",
+                        {
+                          attrs: { label: "Cotizaciones", name: "quotations" }
+                        },
+                        [
+                          _c("document-print-detail", {
+                            attrs: {
+                              configuration: _vm.config,
+                              sender: _vm.sender,
+                              company: _vm.company,
+                              records: _vm.quotations,
+                              pagination: _vm.pagination.quotations,
+                              type: "quotations",
+                              establishment: _vm.establishment
+                            },
+                            on: {
+                              getRecords: _vm.getRecords,
+                              printData: _vm.printData,
+                              "update:records": function($event) {
+                                _vm.quotations = $event
+                              },
+                              "update:pagination": function($event) {
+                                return _vm.$set(
+                                  _vm.pagination,
+                                  "quotations",
+                                  $event
+                                )
+                              },
+                              "update:establishment": function($event) {
+                                _vm.establishment = $event
+                              }
+                            }
+                          })
+                        ],
+                        1
+                      )
+                    : _vm._e()
+                ],
+                1
+              )
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c("modal-generate-cpe", {
+            attrs: { show: _vm.showModalGenerateCPE },
+            on: {
+              "update:show": function($event) {
+                _vm.showModalGenerateCPE = $event
+              },
+              sendItems: _vm.sendItems,
+              close: _vm.closeCpe
+            }
+          })
+        ],
+        1
+      )
     ]
   )
 }
@@ -3270,6 +3799,295 @@ if (false) {
   module.hot.accept()
   if (module.hot.data) {
     require("vue-hot-reload-api")      .rerender("data-v-6dcfd6a1", module.exports)
+  }
+}
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-c4c906fe\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Restaurant/Resources/assets/js/views/pos/partials/modal_generate_cpe.vue":
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    [
+      _c(
+        "el-dialog",
+        {
+          attrs: {
+            "append-to-body": "",
+            title: "Generar comprobante desde múltiples notas",
+            visible: _vm.show,
+            "close-on-click-modal": false,
+            "close-on-press-escape": false
+          },
+          on: { open: _vm.onOpened, close: _vm.onClose }
+        },
+        [
+          _c("div", { staticClass: "row mt-2" }, [
+            _c(
+              "div",
+              { staticClass: "col-2" },
+              [
+                _c(
+                  "el-select",
+                  {
+                    attrs: { disabled: _vm.loading },
+                    on: { click: _vm.onFetchClients },
+                    model: {
+                      value: _vm.filter.type,
+                      callback: function($$v) {
+                        _vm.$set(_vm.filter, "type", $$v)
+                      },
+                      expression: "filter.type"
+                    }
+                  },
+                  [
+                    _c("el-option", {
+                      key: "document",
+                      attrs: { value: "document", label: "# de documento" }
+                    }),
+                    _vm._v(" "),
+                    _c("el-option", {
+                      key: "name",
+                      attrs: { value: "name", label: "Nombres" }
+                    })
+                  ],
+                  1
+                )
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "col-3 form-group" },
+              [
+                _c(
+                  "el-select",
+                  {
+                    attrs: {
+                      filterable: "",
+                      remote: "",
+                      "reserve-keyword": "",
+                      placeholder: "Ingrese uno más caracteres",
+                      "remote-method": _vm.onFindClients,
+                      loading: _vm.loading
+                    },
+                    model: {
+                      value: _vm.form.client_id,
+                      callback: function($$v) {
+                        _vm.$set(_vm.form, "client_id", $$v)
+                      },
+                      expression: "form.client_id"
+                    }
+                  },
+                  _vm._l(_vm.clients, function(item) {
+                    return _c("el-option", {
+                      key: item.id,
+                      attrs: { label: item.name, value: item.id }
+                    })
+                  }),
+                  1
+                )
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "col-3 form-group" },
+              [
+                _c("el-date-picker", {
+                  staticStyle: { width: "100%" },
+                  attrs: {
+                    type: "date",
+                    placeholder: "Inicio Fecha de emisión",
+                    "value-format": "yyyy-MM-dd"
+                  },
+                  model: {
+                    value: _vm.form.date_of_issue,
+                    callback: function($$v) {
+                      _vm.$set(_vm.form, "date_of_issue", $$v)
+                    },
+                    expression: "form.date_of_issue"
+                  }
+                })
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "col-3 form-group" },
+              [
+                _c("el-date-picker", {
+                  staticStyle: { width: "100%" },
+                  attrs: {
+                    type: "date",
+                    placeholder: "Final Fecha de emisión",
+                    "value-format": "yyyy-MM-dd"
+                  },
+                  model: {
+                    value: _vm.form.date_of_due,
+                    callback: function($$v) {
+                      _vm.$set(_vm.form, "date_of_due", $$v)
+                    },
+                    expression: "form.date_of_due"
+                  }
+                })
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "col-2 form-group" },
+              [
+                _c(
+                  "el-button",
+                  {
+                    staticClass: "btn-block",
+                    attrs: { type: "primary" },
+                    on: { click: _vm.onFindNotes }
+                  },
+                  [_c("i", { staticClass: "fa fa-search" })]
+                )
+              ],
+              1
+            )
+          ]),
+          _vm._v(" "),
+          _vm.notes
+            ? _c("div", { staticClass: "table-responsive pt-5" }, [
+                _c("span", [
+                  _vm._v(
+                    "Seleccione una o más notas de venta para poder\n                continuar"
+                  )
+                ]),
+                _vm._v(" "),
+                _vm.errors.notes_id
+                  ? _c(
+                      "div",
+                      {
+                        staticClass: "alert alert-warning",
+                        attrs: { role: "alert" }
+                      },
+                      [
+                        _vm._v(
+                          "\n                " +
+                            _vm._s(_vm.errors.notes_id[0]) +
+                            "\n            "
+                        )
+                      ]
+                    )
+                  : _vm._e(),
+                _vm._v(" "),
+                _c("table", { staticClass: "table table-hover table-stripe" }, [
+                  _c("thead", [
+                    _c("tr", [
+                      _c("th"),
+                      _vm._v(" "),
+                      _c("th", [_vm._v("Nota")]),
+                      _vm._v(" "),
+                      _c("th", [_vm._v("Fecha de emisión")]),
+                      _vm._v(" "),
+                      _c("th", [_vm._v("Monto")])
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "tbody",
+                    [
+                      _vm._l(_vm.notes, function(dis) {
+                        return _c("tr", { key: dis.id }, [
+                          _c(
+                            "td",
+                            [
+                              _c("el-switch", {
+                                on: { change: _vm.onFillSelectedNotes },
+                                model: {
+                                  value: dis.selected,
+                                  callback: function($$v) {
+                                    _vm.$set(dis, "selected", $$v)
+                                  },
+                                  expression: "dis.selected"
+                                }
+                              })
+                            ],
+                            1
+                          ),
+                          _vm._v(" "),
+                          _c("td", [
+                            _c("span", [_vm._v(_vm._s(dis.series))]),
+                            _vm._v("-\n                            "),
+                            _c("span", [_vm._v(_vm._s(dis.number))])
+                          ]),
+                          _vm._v(" "),
+                          _c("td", [_vm._v(_vm._s(dis.date_of_issue))]),
+                          _vm._v(" "),
+                          _c("td", [_vm._v(_vm._s(dis.total))])
+                        ])
+                      }),
+                      _vm._v(" "),
+                      _c("tr", [
+                        _c("td"),
+                        _vm._v(" "),
+                        _c("td"),
+                        _vm._v(" "),
+                        _c("td", [_vm._v("Total")]),
+                        _vm._v(" "),
+                        _c("td", [_vm._v(_vm._s(this.sum_total))])
+                      ])
+                    ],
+                    2
+                  )
+                ]),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  { staticClass: "text-center" },
+                  [
+                    _vm.form.selecteds.length > 0
+                      ? _c(
+                          "el-button",
+                          {
+                            attrs: { type: "primary", disabled: _vm.loading },
+                            on: { click: _vm.onFetchNoteItems }
+                          },
+                          [_vm._v("Generar CPE")]
+                        )
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _c(
+                      "el-button",
+                      {
+                        attrs: { disabled: _vm.loading },
+                        on: { click: _vm.onClose }
+                      },
+                      [_vm._v("Cerrar")]
+                    )
+                  ],
+                  1
+                )
+              ])
+            : _vm._e()
+        ]
+      )
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-c4c906fe", module.exports)
   }
 }
 

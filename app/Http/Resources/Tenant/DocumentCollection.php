@@ -108,7 +108,14 @@ class DocumentCollection extends ResourceCollection
             }
 
             $boxes = $boxes->get();
+
+            $sale_note_related = $row->sale_note_related->transform(function ($sale_note){
+                return[
+                    "number" => $sale_note->getNumberFullAttribute(),
+                ];
+            });
             return [
+                'sale_note_related' => $sale_note_related,
                 'remain' => $remain,
                 'paid' => $paid,
                 'is_credit' => $row->payment_condition_id == "02",

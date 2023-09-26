@@ -152,6 +152,9 @@
                                     </th>
                                     <th>Cliente</th>
                                     <th>Número</th>
+                                            <th v-if="columns.sale_note.visible">
+                                        Nota de venta
+                                    </th>
                                     <th v-if="columns.dispatch.visible">
                                         Guía de Remisión
                                     </th>
@@ -509,6 +512,18 @@
                                             v-if="row.affected_document"
                                             v-text="row.affected_document"
                                         ></small>
+                                    </td>
+                                        <td v-if="columns.sale_note.visible">
+                                        <template
+                                            v-for="(row,
+                                            index) in row.sale_note_related"
+                                        >
+                                            <small
+                                                class="d-block"
+                                                :key="index"
+                                                >{{ row.number }}</small
+                                            >
+                                        </template>
                                     </td>
                                     <td v-if="columns.dispatch.visible">
                                         <template
@@ -914,6 +929,10 @@ export default {
             editDocument: false,
             print: false,
             columns: {
+                 sale_note: {
+                    title: "Nota de venta",
+                    visible: true
+                },
                 dispatch: {
                     title: "Guia de remisión",
                     visible: true

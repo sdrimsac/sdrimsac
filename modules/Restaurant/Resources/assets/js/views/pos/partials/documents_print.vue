@@ -31,45 +31,57 @@
                         v-model="value"
                     ></el-date-picker>
                 </div>
-                <div class="col-6 p-1-col-md-3
+                <div
+                    class="col-6 p-1-col-md-3
                 d-flex align-items-end justify-content-start
                 "
-
-                v-if="activeName == 'documents'"
+                    v-if="activeName == 'documents'"
                 >
-                <el-checkbox
-                    v-model="remain"
-                    @change="getRecordsInput"
-                    >Saldos</el-checkbox
-                >
+                    <el-checkbox v-model="remain" @change="getRecordsInput"
+                        >Saldos</el-checkbox
+                    >
                 </div>
             </div>
-            <div class="d-flex align-items-center justify-content-end">
-                <span class="p-1"
-                    >Ultimo documento emitido:
-                    {{
-                        lastDocument
-                            ? lastDocument.numberPrint
-                            : "No se encontró"
-                    }}</span
-                >
-                <el-button
-                    class="btn btn-primary"
-                    @click="
-                        printData(
-                            lastDocument.external_id,
-                            lastDocument.document_type_id
-                        )
-                    "
-                >
-                    <i class="fas fa-print"></i>
-                </el-button>
+            <div class="mt-1 d-flex align-items-center justify-content-between">
+                <div>
+                    <button
+                    v-if="activeName == 'saleNotes'"
+                        @click.prevent="onOpenModalGenerateCPE"
+                        type="button"
+                        class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto"
+                    >
+                        <span>
+                            Generar comprobante desde múltiples Notas
+                        </span>
+                    </button>
+                </div>
+                <div>
+                    <span class="p-1"
+                        >Ultimo documento emitido:
+                        {{
+                            lastDocument
+                                ? lastDocument.numberPrint
+                                : "No se encontró"
+                        }}</span
+                    >
+                    <el-button
+                        class="btn btn-primary"
+                        @click="
+                            printData(
+                                lastDocument.external_id,
+                                lastDocument.document_type_id
+                            )
+                        "
+                    >
+                        <i class="fas fa-print"></i>
+                    </el-button>
+                </div>
             </div>
             <div>
                 <el-tabs v-model="activeName" @tab-click="handleClick">
                     <el-tab-pane label="Notas de venta" name="saleNotes">
                         <document-print-detail
-                        :configuration="config"
+                            :configuration="config"
                             :company="company"
                             @getRecords="getRecords"
                             @printData="printData"
@@ -87,7 +99,7 @@
                         name="documents"
                     >
                         <document-print-detail
-                        :configuration="config"
+                            :configuration="config"
                             :sender="sender"
                             :company="company"
                             @getRecords="getRecords"
@@ -99,9 +111,13 @@
                         >
                         </document-print-detail>
                     </el-tab-pane>
-                    <el-tab-pane v-if="config.quotation" label="Cotizaciones" name="quotations">
+                    <el-tab-pane
+                        v-if="config.quotation"
+                        label="Cotizaciones"
+                        name="quotations"
+                    >
                         <document-print-detail
-                        :configuration="config"
+                            :configuration="config"
                             :sender="sender"
                             :company="company"
                             @getRecords="getRecords"
@@ -115,6 +131,13 @@
                     </el-tab-pane>
                 </el-tabs>
             </div>
+            <modal-generate-cpe
+            :show.sync="showModalGenerateCPE"
+            @sendItems="sendItems"
+            @close="closeCpe"
+            >
+
+            </modal-generate-cpe>
         </div>
     </el-dialog>
 </template>
@@ -132,12 +155,14 @@
 <script>
 import DocumentPrintDetail from "./document_print_detail.vue";
 import queryString from "query-string";
+import ModalGenerateCpe from "./modal_generate_cpe.vue";
+
 export default {
-    components: { DocumentPrintDetail },
+    components: { DocumentPrintDetail,ModalGenerateCpe },
     props: ["showDialog", "company", "sender", "config", "establishment"],
     data() {
         return {
-            remain:false,
+            remain: false,
             time: null,
             loading: false,
             value: null,
@@ -152,16 +177,27 @@ export default {
             },
             printer: null,
             lastDocument: null,
-            activeName: "documents"
+            activeName: "documents",
+            showModalGenerateCPE:false,
         };
     },
     methods: {
+        closeCpe(){
+             this.showModalGenerateCPE = false;
+             this.close();
+        },
+        onOpenModalGenerateCPE() {
+               this.showModalGenerateCPE = true;
+        },
         getRecordsInput() {
             this.getRecords();
         },
+        sendItems(items,clientNumber,notes){
+            this.$emit("sendItems", items,clientNumber,notes);
+        },
         async printEvent(url) {
             console.log(url);
-               let paperConfig = {
+            let paperConfig = {
                 scaleContent: false
             };
             let partsUrl = url.split("/");
@@ -282,7 +318,9 @@ export default {
         async getLastDocument() {
             try {
                 this.loading = true;
-                const response = await this.$http(`/caja/worker/print_last_document`);
+                const response = await this.$http(
+                    `/caja/worker/print_last_document`
+                );
 
                 if (response.status == 200) {
                     const {
@@ -336,7 +374,7 @@ export default {
                 typeDocument: this.activeName,
                 column: this.typeSearch,
                 value: this.value,
-                remain:this.remain
+                remain: this.remain
 
                 // limit: this.limit
             });
@@ -383,8 +421,10 @@ export default {
                         this.pagination.quotations = meta;
                     } else {
                         this.documents = data;
-                        if(this.remain){
-                            this.documents = this.documents.filter((document)=>document.remain>0)
+                        if (this.remain) {
+                            this.documents = this.documents.filter(
+                                document => document.remain > 0
+                            );
                         }
                         this.pagination.documents = meta;
                     }

@@ -2207,6 +2207,7 @@ export default {
         QuotationForm
     },
     props: [
+     
         "sellers",
         "affectation_igv_types",
         "all_series",
@@ -3239,7 +3240,7 @@ export default {
             items.forEach(obj => {
                 const key = `${obj.food.id}-${Number(obj.price).toFixed(2)}`;
                 if (resultado[key]) {
-                    resultado[key].quantity += obj.quantity;
+                    resultado[key].quantity += Number(obj.quantity);
                 } else {
                     resultado[key] = { ...obj };
                 }
