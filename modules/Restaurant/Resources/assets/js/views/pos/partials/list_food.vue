@@ -553,7 +553,6 @@ export default {
                     pass = false;
                 }
             }
-            console.log(response);
             return pass;
         },
        async addFood(index = 0, type = null, selectSerie = false) {

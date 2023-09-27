@@ -854,7 +854,6 @@ export default {
     },
 
     async created() {
-        console.log(this.configuration);
         // console.log(this.establishments, " xdl");
         this.conf = this.establishments.conf ?? {};
         this.cashId = this.cash_id;
@@ -921,7 +920,6 @@ export default {
                     this.formSuspension
                 );
 
-                console.log(response);
                 this.getRecords();
             } catch (e) {
                 console.log(e);
@@ -1048,7 +1046,6 @@ export default {
         openChangeDate(row) {
             this.currentRecord = row;
             this.currentDate = row.date_value;
-            console.log(this.currentDate);
             let startDate = new Date(this.currentDate);
             startDate.setDate(startDate.getDate() + 1);
             this.pickerEndOptions = {

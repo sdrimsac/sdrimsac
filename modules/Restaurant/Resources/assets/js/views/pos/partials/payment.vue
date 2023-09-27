@@ -2965,6 +2965,7 @@ export default {
             if (this.isConsignment) {
                 this.form.from_consignment = true;
             }
+          
             try {
                 let form_efectivo = {
                     enter_amount: form.enter_amount,

@@ -1882,7 +1882,6 @@ export default {
     computed: {},
     methods: {
         sendItems(items, clientNumber,notes) {
-            console.log("🚀 ~ file: index.vue:1885 ~ sendItems ~ notes:", notes)
             for (let index = 0; index < items.length; index++) {
                 let element = items[index];
                 this.insertOrden(element, element.id, null);
@@ -2174,9 +2173,7 @@ export default {
             this.showDialogCollege = true;
         },
         changeCategory(category) {
-            console.log(
-                `cambiando la categoria de ${this.category} a ${category}`
-            );
+
             //change;
         },
 
@@ -2216,13 +2213,11 @@ export default {
                 this.showMessage(message);
             });
             this.socket.on("authenticated", ({ message, sender }) => {
-                console.log(sender, " xddd");
                 this.sender = sender;
                 this.showMessage(message);
             });
             this.socket.on("connected", ({ message }) => {
                 this.$toast.success(message, { icon: "fab fa-whatsapp fa-2x" });
-                console.log("La url ", url);
                 this.socket.emit("getStatus", url);
             });
             this.socket.on("setStatus", ({ status, sender }) => {
@@ -2303,7 +2298,6 @@ export default {
                         msg = response.data.message;
                     }
                 }
-                console.log(msg);
                 this.$message.error(msg);
                 console.log(e);
             } finally {
@@ -2729,7 +2723,6 @@ export default {
                 if (this.variation) {
                     this.isNoteIsDefault();
                 }
-                console.log(this.form.items);
                 this.is_payment = true;
             }
         },
@@ -4466,7 +4459,6 @@ export default {
             await this.$http.get(`/${this.resource}/tables`).then(response => {
                 // this.all_items = response.data.items;
                 this.sellers = response.data.sellers;
-                console.log(response, " response pos");
                 this.products_to_due = response.data.products_to_due;
                 this.categories = response.data.categories;
                 this.areas = response.data.areas;
@@ -4803,7 +4795,6 @@ export default {
             this.showdialogPromocion = true;
         },
         sidebarmodal() {
-            console.log("abriendo modal sidebar");
             this.showcustomModal = true;
         },
         formatUrlImage(url) {
@@ -4812,8 +4803,6 @@ export default {
             return `/${formated}`;
         },
         addFood(index = 0, type = null) {
-            console.log();
-
             if (this.blockAdd && !this.configuration.box_orden) {
                 this.$toast.error("No puede agregar productos a esta orden.");
                 return;
