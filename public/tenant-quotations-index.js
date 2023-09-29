@@ -1,4 +1,4 @@
-webpackJsonp([37,165],{
+webpackJsonp([37,166],{
 
 /***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/js/components/DataTable.vue":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
@@ -1258,13 +1258,18 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
 var DocumentOptions = function DocumentOptions() {
-  return __webpack_require__.e/* import() */(169).then(__webpack_require__.bind(null, "./resources/js/views/documents/partials/options.vue"));
+  return __webpack_require__.e/* import() */(170).then(__webpack_require__.bind(null, "./resources/js/views/documents/partials/options.vue"));
 }; // import DocumentOptions from "../../documents/partials/options.vue";
 
 
 var SaleNoteOptions = function SaleNoteOptions() {
-  return __webpack_require__.e/* import() */(164).then(__webpack_require__.bind(null, "./resources/js/views/sale_notes/partials/options.vue"));
+  return __webpack_require__.e/* import() */(165).then(__webpack_require__.bind(null, "./resources/js/views/sale_notes/partials/options.vue"));
 }; // import SaleNoteOptions from "../../sale_notes/partials/options.vue";
 
 
@@ -1273,7 +1278,7 @@ var SaleNoteOptions = function SaleNoteOptions() {
     DocumentOptions: DocumentOptions,
     SaleNoteOptions: SaleNoteOptions
   },
-  props: ["showDialog", "recordId", "showClose", "showGenerate", "type", "typeUser"],
+  props: ["external", "showDialog", "recordId", "showClose", "showGenerate", "type", "typeUser"],
   data: function data() {
     return {
       customer_email: "",
@@ -1598,6 +1603,11 @@ var SaleNoteOptions = function SaleNoteOptions() {
     },
     clickClose: function clickClose() {
       this.$emit("update:showDialog", false);
+
+      if (this.external) {
+        this.$emit("close");
+      }
+
       this.initForm();
       this.resetDocument();
     },
@@ -3649,54 +3659,64 @@ var render = function() {
               slot: "footer"
             },
             [
-              _vm.showClose
+              !_vm.external
                 ? [
-                    _c("el-button", { on: { click: _vm.clickClose } }, [
-                      _vm._v("Cerrar")
-                    ]),
-                    _vm._v(" "),
-                    _vm.generate
-                      ? _c(
-                          "el-button",
-                          {
-                            staticClass: "submit",
-                            attrs: {
-                              type: "primary",
-                              loading: _vm.loading_submit
+                    _vm.showClose
+                      ? [
+                          _c("el-button", { on: { click: _vm.clickClose } }, [
+                            _vm._v("Cerrar")
+                          ]),
+                          _vm._v(" "),
+                          _vm.generate
+                            ? _c(
+                                "el-button",
+                                {
+                                  staticClass: "submit",
+                                  attrs: {
+                                    type: "primary",
+                                    loading: _vm.loading_submit
+                                  },
+                                  on: { click: _vm.submit }
+                                },
+                                [_vm._v("Generar")]
+                              )
+                            : _vm._e()
+                        ]
+                      : [
+                          _vm.generate
+                            ? _c(
+                                "el-button",
+                                {
+                                  staticClass: "submit",
+                                  attrs: {
+                                    type: "primary",
+                                    plain: "",
+                                    loading: _vm.loading_submit
+                                  },
+                                  on: { click: _vm.submit }
+                                },
+                                [_vm._v("Generar comprobante")]
+                              )
+                            : _c(
+                                "el-button",
+                                { on: { click: _vm.clickFinalize } },
+                                [_vm._v("Ir al listado")]
+                              ),
+                          _vm._v(" "),
+                          _c(
+                            "el-button",
+                            {
+                              attrs: { type: "primary" },
+                              on: { click: _vm.clickNewQuotation }
                             },
-                            on: { click: _vm.submit }
-                          },
-                          [_vm._v("Generar")]
-                        )
-                      : _vm._e()
+                            [_vm._v("Nueva cotización")]
+                          )
+                        ]
                   ]
                 : [
-                    _vm.generate
-                      ? _c(
-                          "el-button",
-                          {
-                            staticClass: "submit",
-                            attrs: {
-                              type: "primary",
-                              plain: "",
-                              loading: _vm.loading_submit
-                            },
-                            on: { click: _vm.submit }
-                          },
-                          [_vm._v("Generar comprobante")]
-                        )
-                      : _c("el-button", { on: { click: _vm.clickFinalize } }, [
-                          _vm._v("Ir al listado")
-                        ]),
-                    _vm._v(" "),
-                    _c(
-                      "el-button",
-                      {
-                        attrs: { type: "primary" },
-                        on: { click: _vm.clickNewQuotation }
-                      },
-                      [_vm._v("Nueva cotización")]
-                    )
+                    _c("el-button", { on: { click: _vm.clickClose } }, [
+                      _vm._v("Cerrar")
+                    ])
                   ]
             ],
             2

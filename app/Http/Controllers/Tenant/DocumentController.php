@@ -78,6 +78,7 @@ use  Modules\Inventory\Models\InventoryConfiguration;
 use App\CoreFacturalo\Helpers\Storage\StorageDocument;
 use App\CoreFacturalo\Requests\Inputs\Functions;
 use App\Exports\DocumentExport;
+use App\Models\Tenant\BankAccount;
 use App\Models\Tenant\Cash;
 use Modules\Inventory\Models\Warehouse as ModuleWarehouse;
 use App\Models\Tenant\Catalogs\PaymentMethodType as CatPaymentMethodType;
@@ -847,9 +848,13 @@ class DocumentController extends Controller
         if (!$request->has_related_sale_note && $request->variation == false && $request->payment_condition_id === "01") {
             if ($request->boxes) {
                 foreach ($request->boxes as $currentBox) {
+                    $bank_account_id = Functions::valueKeyInArray($currentBox, 'bank_account_id');
+                    $bank_account_operation = Functions::valueKeyInArray($currentBox, 'number_operation');
                     $box = new Box;
                     $box->group_id = 1;
                     $box->method = $currentBox['method'];
+                    $box->bank_account_id = $bank_account_id;
+                    $box->bank_account_operation = $bank_account_operation;
                     $box->category_id = 1;
                     $box->subcategory_id = 1;
                     $box->amount = $currentBox['amount'];
@@ -873,6 +878,12 @@ class DocumentController extends Controller
                     }
                     $documents_rows = $type_document . " N° " . $document_save->series . " - " . $document_save->number;
                     $box->description = "VENTAS " . $documents_rows;
+                    if($bank_account_id){
+                        $bank_account = BankAccount::findOrFail($bank_account_id);
+                        $bank_account->balance = $bank_account->balance + $currentBox['amount'];
+                        $bank_account->save();
+                        $box->description = "VENTAS " . $documents_rows . " - " . $bank_account->bank->description . " - " . $bank_account->currency_type->description;
+                    }
                     $box->soap_type_id = $company->soap_type_id;
                     $box->soap_type_id = $company->soap_type_id;
                     $box->save();

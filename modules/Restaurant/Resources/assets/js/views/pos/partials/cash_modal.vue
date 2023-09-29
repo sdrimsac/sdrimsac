@@ -6,6 +6,7 @@
         @close="close"
         width="30%"
         @open="open"
+        title="Detalle de caja"
     >
         <div v-loading="loadingPrint" element-loading-text="Imprimiendo...">
             <div class="d-flex justify-content-end">
@@ -233,6 +234,13 @@
                 </tr>
                   <tr>
                     <td></td>
+                    <td class="text-left lead-font-weight-700 h6">BANCOS</td>
+                    <td class="text-right h6">
+                        {{ formatedMoney(bankAmount) }}
+                    </td>
+                </tr>
+                  <tr>
+                    <td></td>
                     <td class="text-left lead-font-weight-700 h6">GASTOS</td>
                     <td   v-if="form.incomes_expenses_cash" class="text-right h6">
                         {{  formatedMoney(
@@ -244,7 +252,7 @@
                     <td></td>
                     <td class="text-left lead-font-weight-700 h6">TOTAL</td>
                     <td   v-if="form.incomes_expenses_cash" class="text-right h6">
-                        {{ formatedMoney(Number(virtualAmount) + Number(cashAmount) + Number(cash.beginning_balance) - Number(form.incomes_expenses_cash.expenses.amount)) }}
+                        {{ formatedMoney(Number(virtualAmount) + Number(bankAmount) + Number(cashAmount) + Number(cash.beginning_balance) - Number(form.incomes_expenses_cash.expenses.amount)) }}
                     </td>
                 </tr>
             </table>
@@ -278,6 +286,7 @@ export default {
             counter: [],
             totalCoins: 0,
             virtualAmount: 0,
+            bankAmount: 0,
             dateNow: moment().format("D/M/Y"),
             timeNow: moment().format("H:m")
         };
@@ -297,6 +306,7 @@ export default {
             this.counter = [];
             this.totalCoins = 0;
             this.virtualAmount = 0;
+            this.bankAmount = 0;
             this.cashAmount = 0;
         },
         async print() {
@@ -369,8 +379,11 @@ export default {
                 let { sales_detail } = data;
 
                 Object.keys(sales_detail).forEach((k, idx) => {
-                    if (k != "cash") {
+                    if (k != "cash" && !sales_detail[k].is_bank) {
                         this.virtualAmount += Number(sales_detail[k].sum);
+                    }
+                    if(sales_detail[k].is_bank){
+                        this.bankAmount += Number(sales_detail[k].sum);
                     }
                     if(k == "cash"){
                         this.cashAmount = Number(sales_detail[k].sum);

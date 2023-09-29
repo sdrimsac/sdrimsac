@@ -533,13 +533,13 @@
                         <br />
                     @endif
 
-                    <br>
+                    {{-- <br>
                     @if (in_array($document->document_type->id, ['01', '03']))
                         @foreach ($accounts as $account)
                             <p><span class="font-bold">{{ $account->bank->description }}</span>
                                 {{ $account->currency_type->description }} {{ $account->number }}</p>
                         @endforeach
-                    @endif
+                    @endif --}}
                 </td>
             </tr>
             <tr>
@@ -718,7 +718,7 @@
                     </tr>
                     @foreach ($boxes as $box)
                         <tr>
-                            <td colspan="4" class="text-left font-bold desc">Total {{ $box->method }}:
+                            <td colspan="4" class="text-left font-bold desc">{{ $box->method }}:
                                 {{ $document->currency_type->symbol }}</td>
                             <td class="text-left font-bold desc">{{ number_format(abs($box->amount), 2, '.', '') }}
                             </td>

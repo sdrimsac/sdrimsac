@@ -37,11 +37,18 @@
                             <small class="form-control-feedback" v-if="errors.currency_type_id" v-text="errors.currency_type_id[0]"></small>
                         </div>
                     </div>
-                    <div class="col-md-8">
+                    <!-- <div class="col-md-8">
                         <div class="form-group" :class="{'has-danger': errors.cci}">
                             <label class="control-label">CCI</label>
                             <el-input v-model="form.cci"> <i slot="prefix" class="el-icon-edit-outline"></i></el-input>
                             <small class="form-control-feedback" v-if="errors.cci" v-text="errors.cci[0]"></small>
+                        </div>
+                    </div> -->
+                      <div class="col-md-4">
+                        <div class="form-group" :class="{'has-danger': errors.balance}">
+                            <label class="control-label">Balance</label>
+                            <el-input v-model="form.balance" type="number"> <i slot="prefix" class="el-icon-edit-outline"></i></el-input>
+                            <small class="form-control-feedback" v-if="errors.balance" v-text="errors.balance[0]"></small>
                         </div>
                     </div>
                 </div>

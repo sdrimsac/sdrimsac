@@ -1,14 +1,14 @@
 webpackJsonp([215],{
 
-/***/ "./modules/College/Resources/assets/js/views/plans/form.vue":
+/***/ "./modules/College/Resources/assets/js/views/registers/form.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__("./node_modules/vue-loader/lib/component-normalizer.js")
 /* script */
-var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/College/Resources/assets/js/views/plans/form.vue")
+var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/College/Resources/assets/js/views/registers/form.vue")
 /* template */
-var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-7c5d8c08\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/College/Resources/assets/js/views/plans/form.vue")
+var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-6520f114\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/College/Resources/assets/js/views/registers/form.vue")
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -25,7 +25,7 @@ var Component = normalizeComponent(
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "modules/College/Resources/assets/js/views/plans/form.vue"
+Component.options.__file = "modules/College/Resources/assets/js/views/registers/form.vue"
 
 /* hot reload */
 if (false) {(function () {
@@ -34,9 +34,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-7c5d8c08", Component.options)
+    hotAPI.createRecord("data-v-6520f114", Component.options)
   } else {
-    hotAPI.reload("data-v-7c5d8c08", Component.options)
+    hotAPI.reload("data-v-6520f114", Component.options)
   }
   module.hot.dispose(function (data) {
     disposed = true
@@ -48,7 +48,7 @@ module.exports = Component.exports
 
 /***/ }),
 
-/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/College/Resources/assets/js/views/plans/form.vue":
+/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/College/Resources/assets/js/views/registers/form.vue":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -217,102 +217,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-var FormService = function FormService() {
-  return __webpack_require__.e/* import() */(141/* duplicate */).then(__webpack_require__.bind(null, "./modules/College/Resources/assets/js/components/service_create.vue"));
-};
-
 /* harmony default export */ __webpack_exports__["default"] = ({
-  components: {
-    FormService: FormService
-  },
   props: ["showDialog", "record"],
   data: function data() {
     return {
-      showFormCreateService: false,
       title: "Crear nuevo",
       loading: false,
       resource: "plans",
@@ -323,11 +231,7 @@ var FormService = function FormService() {
       items: [],
       loading_search_item: false,
       timer: null,
-      price: null,
-      penalties: [],
-      types: [],
-      currentPenalty: null,
-      disabled: false
+      price: null
     };
   },
   created: function created() {
@@ -350,32 +254,6 @@ var FormService = function FormService() {
     }))();
   },
   methods: {
-    changePenalty: function changePenalty() {
-      var penalty_id = this.form.penalty_id;
-
-      if (penalty_id) {
-        var penalty = this.penalties.find(function (p) {
-          return p.id == penalty_id;
-        });
-        console.log(penalty);
-        var type = penalty.type,
-            percentage = penalty.percentage;
-
-        if (type == "percentage") {
-          this.currentPenalty = "Por d\xEDa: ".concat(percentage, " %");
-        } else {
-          this.currentPenalty = "Por d\xEDa: S/ ".concat(percentage);
-        }
-      }
-    },
-    add: function add(data) {
-      this.items = [].concat(_toConsumableArray(this.items), [data]);
-      this.form.item_id = data.id;
-      this.changeItem();
-    },
-    openCreateService: function openCreateService() {
-      this.showFormCreateService = true;
-    },
     initItemForm: function initItemForm() {
       this.form.item_id = null;
       this.form.disabled = false;
@@ -394,23 +272,27 @@ var FormService = function FormService() {
       });
       var sale_unit_price = item.sale_unit_price;
       this.price = Number(sale_unit_price).toFixed(2);
+      console.log(item);
     },
     addItem: function addItem() {
       var _this3 = this;
 
       var item = this.items.find(function (i) {
         return i.id == _this3.form.item_id;
-      }); // let { id } = item;
-      // if (this.services.some(s => s.item_id == id)) {
-      //     return this.$toast.error("Ya agregó ese servicio");
-      // }
+      });
+      var id = item.id;
 
-      this.services = [// ...this.services,
-      {
+      if (this.services.some(function (s) {
+        return s.item_id == id;
+      })) {
+        return this.$toast.error("Ya agregó ese servicio");
+      }
+
+      this.services = [].concat(_toConsumableArray(this.services), [{
         price: this.price,
         item: item,
         item_id: item.id
-      }];
+      }]);
       this.initItemForm();
     },
     searchRemoteItems: function searchRemoteItems(input) {
@@ -436,7 +318,7 @@ var FormService = function FormService() {
                             parameters = "input=".concat(input);
                             _this4.loading_search = true;
                             _context2.next = 5;
-                            return _this4.$http.get("/documents/data-table/items?service=1&".concat(parameters));
+                            return _this4.$http.get("/documents/data-table/items?series=1&".concat(parameters));
 
                           case 5:
                             response = _context2.sent;
@@ -475,7 +357,7 @@ var FormService = function FormService() {
       var _this5 = this;
 
       return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee4() {
-        var response, _response$data, periods, items, types, penalties;
+        var response, _response$data, periods, items;
 
         return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee4$(_context4) {
           while (1) {
@@ -488,76 +370,32 @@ var FormService = function FormService() {
 
               case 4:
                 response = _context4.sent;
-                _response$data = response.data, periods = _response$data.periods, items = _response$data.items, types = _response$data.types, penalties = _response$data.penalties;
+                _response$data = response.data, periods = _response$data.periods, items = _response$data.items;
                 _this5.items = items;
-                _this5.penalties = penalties;
                 _this5.periods = periods;
-                _this5.types = types;
-                _context4.next = 16;
+                console.log(response);
+                _context4.next = 15;
                 break;
 
-              case 12:
-                _context4.prev = 12;
+              case 11:
+                _context4.prev = 11;
                 _context4.t0 = _context4["catch"](0);
                 console.log(_context4.t0);
 
                 _this5.$toast.error("Ocurrió un problema");
 
-              case 16:
-                _context4.prev = 16;
+              case 15:
+                _context4.prev = 15;
                 _this5.loading = false;
-                return _context4.finish(16);
+                return _context4.finish(15);
 
-              case 19:
+              case 18:
               case "end":
                 return _context4.stop();
             }
           }
-        }, _callee4, null, [[0, 12, 16, 19]]);
+        }, _callee4, null, [[0, 11, 15, 18]]);
       }))();
-    },
-    validate: function validate() {
-      var fail = false;
-      var _this$form = this.form,
-          name = _this$form.name,
-          description = _this$form.description,
-          period_id = _this$form.period_id,
-          type_id = _this$form.type_id,
-          payment_date = _this$form.payment_date;
-
-      if (this.services.length == 0) {
-        this.$toast.error("Debe agregar un servicio");
-        fail = true;
-      }
-
-      if (!name) {
-        this.$toast.error("Debe ingresar un nombre");
-        fail = true;
-      }
-
-      if (!description) {
-        this.$toast.error("Debe ingresar una descripción");
-        fail = true;
-      }
-
-      if (!period_id) {
-        this.$toast.error("Debe elegir un periodo");
-        fail = true;
-      }
-
-      if (!type_id) {
-        this.$toast.error("Debe elegir un tipo");
-        fail = true;
-      }
-
-      if (type_id == 2) {
-        if (!payment_date) {
-          this.$toast.error("La fecha de pago es obligatoria");
-          fail = true;
-        }
-      }
-
-      return fail;
     },
     submit: function submit() {
       var _this6 = this;
@@ -569,23 +407,15 @@ var FormService = function FormService() {
           while (1) {
             switch (_context5.prev = _context5.next) {
               case 0:
-                if (!_this6.validate()) {
-                  _context5.next = 2;
-                  break;
-                }
-
-                return _context5.abrupt("return");
-
-              case 2:
-                _context5.prev = 2;
+                _context5.prev = 0;
                 _this6.loading = true;
                 _this6.form.services = _this6.services;
-                _context5.next = 7;
+                _context5.next = 5;
                 return _this6.$http.post("".concat(_this6.resource), _objectSpread(_objectSpread({}, _this6.form), {}, {
                   id: _this6.record ? _this6.record.id : null
                 }));
 
-              case 7:
+              case 5:
                 response = _context5.sent;
                 _response$data2 = response.data, message = _response$data2.message, success = _response$data2.success;
 
@@ -597,54 +427,44 @@ var FormService = function FormService() {
                   _this6.$toast.error(message);
                 }
 
-                _context5.next = 16;
+                console.log(response);
+                _context5.next = 15;
                 break;
 
-              case 12:
-                _context5.prev = 12;
-                _context5.t0 = _context5["catch"](2);
+              case 11:
+                _context5.prev = 11;
+                _context5.t0 = _context5["catch"](0);
                 console.log(_context5.t0);
 
                 _this6.$toast.error("Ocurrió un problema");
 
-              case 16:
-                _context5.prev = 16;
+              case 15:
+                _context5.prev = 15;
                 _this6.loading = false;
 
                 _this6.close();
 
-                return _context5.finish(16);
+                return _context5.finish(15);
 
-              case 20:
+              case 19:
               case "end":
                 return _context5.stop();
             }
           }
-        }, _callee5, null, [[2, 12, 16, 20]]);
+        }, _callee5, null, [[0, 11, 15, 19]]);
       }))();
     },
     close: function close() {
       this.$emit("update:showDialog");
     },
     open: function open() {
-      this.currentPenalty = null;
-      this.services = [];
-      this.price = null;
       this.form = {
-        default_count: 1,
-        days_extension: 0
+        default_count: 1
       };
 
       if (this.record) {
-        this.form = _objectSpread({}, this.record); // this.form.penalty_id = this.form.penalty.id;
-
-        this.services = _toConsumableArray(this.form.services);
-
-        if (this.form.payment_date) {
-          this.form.payment_date = this.form.payment_date.split("/").reverse().join("-");
-          this.changePenalty();
-        }
-
+        this.form = _objectSpread({}, this.record);
+        this.services = _objectSpread({}, this.form.services);
         this.title = "Editar plan";
       } else {
         this.title = "Crear nuevo plan";
@@ -655,7 +475,7 @@ var FormService = function FormService() {
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-7c5d8c08\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/College/Resources/assets/js/views/plans/form.vue":
+/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-6520f114\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/College/Resources/assets/js/views/registers/form.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -769,165 +589,6 @@ var render = function() {
                         )
                       ],
                       1
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "div",
-                      { staticClass: "col-md-6 col-12" },
-                      [
-                        _c("label", [_vm._v("Tipo")]),
-                        _vm._v(" "),
-                        _c(
-                          "el-select",
-                          {
-                            model: {
-                              value: _vm.form.type_id,
-                              callback: function($$v) {
-                                _vm.$set(_vm.form, "type_id", $$v)
-                              },
-                              expression: "form.type_id"
-                            }
-                          },
-                          _vm._l(_vm.types, function(type, idx) {
-                            return _c("el-option", {
-                              key: idx,
-                              attrs: { label: type.description, value: type.id }
-                            })
-                          }),
-                          1
-                        )
-                      ],
-                      1
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "div",
-                      { staticClass: "col-md-6 col-12 mt-1" },
-                      [
-                        _c("label", { staticClass: "label-control w-100" }, [
-                          _vm._v("Penalidad")
-                        ]),
-                        _vm._v(" "),
-                        _c(
-                          "el-select",
-                          {
-                            on: { change: _vm.changePenalty },
-                            model: {
-                              value: _vm.form.penalty_id,
-                              callback: function($$v) {
-                                _vm.$set(_vm.form, "penalty_id", $$v)
-                              },
-                              expression: "form.penalty_id"
-                            }
-                          },
-                          _vm._l(_vm.penalties, function(penalty, idx) {
-                            return _c("el-option", {
-                              key: idx,
-                              attrs: {
-                                label: penalty.description,
-                                value: penalty.id
-                              }
-                            })
-                          }),
-                          1
-                        ),
-                        _vm._v(" "),
-                        _vm.currentPenalty
-                          ? _c("small", { staticClass: "text-primary" }, [
-                              _vm._v(_vm._s(_vm.currentPenalty))
-                            ])
-                          : _vm._e()
-                      ],
-                      1
-                    ),
-                    _vm._v(" "),
-                    _vm.form.penalty_id
-                      ? _c(
-                          "div",
-                          { staticClass: "col-md-6 col-12 mt-1" },
-                          [
-                            _c(
-                              "label",
-                              {
-                                staticClass: "label-control w-100",
-                                attrs: { for: "" }
-                              },
-                              [
-                                _vm._v(
-                                  "\n                                Días de prorroga\n                            "
-                                )
-                              ]
-                            ),
-                            _vm._v(" "),
-                            _c("el-input-number", {
-                              staticStyle: { width: "100%" },
-                              attrs: {
-                                precision: 0,
-                                "controls-position": "right"
-                              },
-                              model: {
-                                value: _vm.form.days_extension,
-                                callback: function($$v) {
-                                  _vm.$set(_vm.form, "days_extension", $$v)
-                                },
-                                expression: "form.days_extension"
-                              }
-                            })
-                          ],
-                          1
-                        )
-                      : _vm._e(),
-                    _vm._v(" "),
-                    _c(
-                      "div",
-                      { staticClass: "col-md-6 col-12 mt-1" },
-                      [
-                        _c("label", { staticClass: "label-control w-100" }, [
-                          _vm._v("Fecha de pago")
-                        ]),
-                        _vm._v(" "),
-                        _c("el-date-picker", {
-                          staticClass: "w-100",
-                          attrs: {
-                            format: "dd/MM/yyyy",
-                            "value-format": "yyyy-MM-dd"
-                          },
-                          model: {
-                            value: _vm.form.payment_date,
-                            callback: function($$v) {
-                              _vm.$set(_vm.form, "payment_date", $$v)
-                            },
-                            expression: "form.payment_date"
-                          }
-                        })
-                      ],
-                      1
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "div",
-                      { staticClass: "col-md-6 col-12 mt-1" },
-                      [
-                        _c("label", { staticClass: "label-control w-100" }, [
-                          _vm._v("Vigencia")
-                        ]),
-                        _vm._v(" "),
-                        _c("el-date-picker", {
-                          staticClass: "w-100",
-                          attrs: {
-                            format: "dd/MM/yyyy",
-                            "value-format": "yyyy-MM-dd"
-                          },
-                          model: {
-                            value: _vm.form.validity_date,
-                            callback: function($$v) {
-                              _vm.$set(_vm.form, "validity_date", $$v)
-                            },
-                            expression: "form.validity_date"
-                          }
-                        })
-                      ],
-                      1
                     )
                   ])
                 ])
@@ -947,21 +608,7 @@ var render = function() {
                       { staticClass: "col-md-5" },
                       [
                         _c("label", { staticClass: "control-label w-100" }, [
-                          _vm._v("Servicio\n                                "),
-                          _c(
-                            "a",
-                            {
-                              staticClass:
-                                "control-label font-weight-bold text-info",
-                              attrs: { href: "#" },
-                              on: { click: _vm.openCreateService }
-                            },
-                            [
-                              _vm._v(
-                                "\n                                    [ + Nuevo]"
-                              )
-                            ]
-                          )
+                          _vm._v("Servicio")
                         ]),
                         _vm._v(" "),
                         _c(
@@ -1015,7 +662,7 @@ var render = function() {
                         ),
                         _vm._v(" "),
                         _c("el-input", {
-                          attrs: { disabled: !_vm.disabled },
+                          attrs: { disabled: !_vm.form.disabled },
                           model: {
                             value: _vm.price,
                             callback: function($$v) {
@@ -1032,11 +679,11 @@ var render = function() {
                               {
                                 staticClass: "mt-1",
                                 model: {
-                                  value: _vm.disabled,
+                                  value: _vm.form.disabled,
                                   callback: function($$v) {
-                                    _vm.disabled = $$v
+                                    _vm.$set(_vm.form, "disabled", $$v)
                                   },
-                                  expression: "disabled"
+                                  expression: "form.disabled"
                                 }
                               },
                               [_vm._v("Editar")]
@@ -1141,20 +788,7 @@ var render = function() {
           )
         ],
         1
-      ),
-      _vm._v(" "),
-      _c("form-service", {
-        attrs: { showDialog: _vm.showFormCreateService },
-        on: {
-          add: _vm.add,
-          "update:showDialog": function($event) {
-            _vm.showFormCreateService = $event
-          },
-          "update:show-dialog": function($event) {
-            _vm.showFormCreateService = $event
-          }
-        }
-      })
+      )
     ],
     1
   )
@@ -1165,7 +799,7 @@ module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-7c5d8c08", module.exports)
+    require("vue-hot-reload-api")      .rerender("data-v-6520f114", module.exports)
   }
 }
 

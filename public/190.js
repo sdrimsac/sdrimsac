@@ -1,14 +1,14 @@
 webpackJsonp([190],{
 
-/***/ "./modules/Restaurant/Resources/assets/js/views/pos/partials/consignment_list_modal.vue":
+/***/ "./modules/Restaurant/Resources/assets/js/views/pos/partials/consignment_modal.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__("./node_modules/vue-loader/lib/component-normalizer.js")
 /* script */
-var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/Restaurant/Resources/assets/js/views/pos/partials/consignment_list_modal.vue")
+var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/Restaurant/Resources/assets/js/views/pos/partials/consignment_modal.vue")
 /* template */
-var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-50b06be2\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Restaurant/Resources/assets/js/views/pos/partials/consignment_list_modal.vue")
+var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-a39b9b8c\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Restaurant/Resources/assets/js/views/pos/partials/consignment_modal.vue")
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -25,7 +25,7 @@ var Component = normalizeComponent(
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "modules/Restaurant/Resources/assets/js/views/pos/partials/consignment_list_modal.vue"
+Component.options.__file = "modules/Restaurant/Resources/assets/js/views/pos/partials/consignment_modal.vue"
 
 /* hot reload */
 if (false) {(function () {
@@ -34,9 +34,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-50b06be2", Component.options)
+    hotAPI.createRecord("data-v-a39b9b8c", Component.options)
   } else {
-    hotAPI.reload("data-v-50b06be2", Component.options)
+    hotAPI.reload("data-v-a39b9b8c", Component.options)
   }
   module.hot.dispose(function (data) {
     disposed = true
@@ -48,15 +48,13 @@ module.exports = Component.exports
 
 /***/ }),
 
-/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/Restaurant/Resources/assets/js/views/pos/partials/consignment_list_modal.vue":
+/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/Restaurant/Resources/assets/js/views/pos/partials/consignment_modal.vue":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator__ = __webpack_require__("./node_modules/@babel/runtime/regenerator/index.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_query_string__ = __webpack_require__("./node_modules/query-string/index.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_query_string___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_query_string__);
 
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -158,349 +156,240 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
+var PersonForm = function PersonForm() {
+  return __webpack_require__.e/* import() */(125/* duplicate */).then(__webpack_require__.bind(null, "./resources/js/views/persons/form.vue"));
+};
 
-
-var ItemsModal = function ItemsModal() {
-  return __webpack_require__.e/* import() */(210).then(__webpack_require__.bind(null, "./modules/Consignment/Resources/assets/js/views/partials/items.vue"));
+var PenaltyForm = function PenaltyForm() {
+  return __webpack_require__.e/* import() */(139/* duplicate */).then(__webpack_require__.bind(null, "./modules/Consignment/Resources/assets/js/views/partials/penalty_form.vue"));
 };
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ["showDialog"],
+  props: ["showDialog", "items", "all_customers", "establishments"],
   components: {
-    ItemsModal: ItemsModal
+    PersonForm: PersonForm,
+    PenaltyForm: PenaltyForm
   },
   data: function data() {
     return {
       loading: false,
-      showDialogItems: false,
-      showDialogDetail: false,
-      recordId: null,
+      showDialogNewPenalty: false,
+      showDialogNewPerson: false,
       form: {},
-      records: [],
-      loading_search: false,
-      resource: "/consignment",
-      pagination: {},
-      search: {},
-      columns: {
-        person_id: "Cliente",
-        date_of_issue: "Fecha de consignación",
-        date_of_end: "Fecha de liquidación"
-      }
+      customers: [],
+      penalties: [],
+      loading_search: false
     };
   },
+  created: function created() {
+    this.getPenalties();
+  },
   methods: {
-    clickDelete: function clickDelete(consignment) {
+    initForm: function initForm() {
+      this.form = {
+        person_id: null,
+        date_of_issue: null,
+        date_of_end: null,
+        penalty_id: null
+      };
+    },
+    getPenalties: function getPenalties() {
       var _this = this;
 
+      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee() {
+        var response;
+        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _context.next = 2;
+                return _this.$http("/consignment/penalty/records");
+
+              case 2:
+                response = _context.sent;
+                _this.penalties = response.data;
+
+              case 4:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee);
+      }))();
+    },
+    formatedItems: function formatedItems() {
+      var formatted = [];
+
+      for (var i = 0; i < this.items.length; i++) {
+        var item = this.items[i];
+        var newItem = {};
+        newItem.establishment_id = this.establishments.id;
+        newItem.id = item.food.item.id;
+        newItem.quantity = item.quantity;
+        newItem.price = item.price;
+        newItem.has_lots = item.series.length > 0;
+        newItem.lots = item.series.map(function (s) {
+          return {
+            series: s.series,
+            date: s.date,
+            id: s.id
+          };
+        });
+        formatted.push(newItem);
+      }
+
+      return formatted;
+    },
+    validate: function validate() {
+      var hasError = false;
+      var _this$form = this.form,
+          person_id = _this$form.person_id,
+          date_of_issue = _this$form.date_of_issue,
+          date_of_end = _this$form.date_of_end;
+
+      if (!person_id) {
+        this.$toast.error("Debe seleccionar un cliente/vendedor");
+        hasError = true;
+      }
+
+      if (!date_of_issue) {
+        this.$toast.error("Debe seleccionar una fecha de consignación");
+        hasError = true;
+      }
+
+      if (!date_of_end) {
+        this.$toast.error("Debe seleccionar una fecha de liquidación");
+        hasError = true;
+      }
+
+      return hasError;
+    },
+    submit: function submit() {
+      var _this2 = this;
+
       return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee2() {
+        var items, response, _response$data, success, message, id;
+
         return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
-                _this.$confirm("¿Está seguro de eliminar la consignación?", "Advertencia", {
-                  confirmButtonText: "Aceptar",
-                  cancelButtonText: "Cancelar",
-                  type: "warning"
-                }).then( /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee() {
-                  var response;
-                  return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee$(_context) {
-                    while (1) {
-                      switch (_context.prev = _context.next) {
-                        case 0:
-                          _context.next = 2;
-                          return _this.$http.get("".concat(_this.resource, "/delete/").concat(consignment.id));
+                if (!_this2.validate()) {
+                  _context2.next = 2;
+                  break;
+                }
 
-                        case 2:
-                          response = _context.sent;
+                return _context2.abrupt("return");
 
-                          if (response.status == 200) {
-                            if (response.data.success) {
-                              _this.$toast.success(response.data.message);
+              case 2:
+                _context2.prev = 2;
+                _this2.loading = true;
+                items = _this2.formatedItems();
+                _this2.form.items = items;
+                _context2.next = 8;
+                return _this2.$http.post("/consignment", _this2.form);
 
-                              _this.getRecords();
-                            } else {
-                              _this.$toast.error(response.data.message);
-                            }
-                          } else {
-                            _this.$toast.error("Ocurrió un error al eliminar la consignación");
-                          }
+              case 8:
+                response = _context2.sent;
 
-                        case 4:
-                        case "end":
-                          return _context.stop();
-                      }
-                    }
-                  }, _callee);
-                })))["catch"](function (e) {
-                  console.log(e);
-                });
+                if (response.status == 200) {
+                  _response$data = response.data, success = _response$data.success, message = _response$data.message, id = _response$data.id;
 
-              case 1:
+                  if (success) {
+                    _this2.$toast.success(message);
+
+                    _this2.$emit("update:showDialog", false);
+
+                    _this2.$emit("limpiarForm");
+                  } else {
+                    _this2.$toast.error(message);
+                  }
+                }
+
+                console.log(response);
+                _context2.next = 17;
+                break;
+
+              case 13:
+                _context2.prev = 13;
+                _context2.t0 = _context2["catch"](2);
+
+                _this2.$message.error("Ocurrió un error al crear la consignación");
+
+                console.log(_context2.t0);
+
+              case 17:
+                _context2.prev = 17;
+                _this2.loading = false;
+                return _context2.finish(17);
+
+              case 20:
               case "end":
                 return _context2.stop();
             }
           }
-        }, _callee2);
+        }, _callee2, null, [[2, 13, 17, 20]]);
       }))();
     },
-    getQueryParameters: function getQueryParameters() {
-      return __WEBPACK_IMPORTED_MODULE_1_query_string___default.a.stringify({
-        page: this.pagination.current_page,
-        limit: this.limit,
-        value: this.search.value,
-        column: this.search.column
-      });
+    clickNewPenalty: function clickNewPenalty() {
+      this.showDialogNewPenalty = true;
     },
-    clickDownload: function clickDownload(consignment) {
-      window.open(consignment.download_url, "_blank");
+    clickNewPerson: function clickNewPerson() {
+      this.showDialogNewPerson = true; // this.$emit('clickNewPerson');
     },
-    changeClearInput: function changeClearInput() {},
-    clickSendMessage: function clickSendMessage(id) {
-      var _this2 = this;
+    reloadPenalties: function reloadPenalties(id) {
+      var _this3 = this;
 
       return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee3() {
-        var response;
         return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee3$(_context3) {
           while (1) {
             switch (_context3.prev = _context3.next) {
               case 0:
-                _context3.prev = 0;
-                _this2.loading = true;
-                _context3.next = 4;
-                return _this2.$http("".concat(_this2.resource, "/message/").concat(id));
+                _context3.next = 2;
+                return _this3.getPenalties();
 
-              case 4:
-                response = _context3.sent;
+              case 2:
+                _this3.form.penalty_id = id;
 
-                if (response.status == 200) {
-                  if (response.data.success) {
-                    _this2.$toast.success(response.data.message);
-                  } else {
-                    _this2.$toast.error(response.data.message);
-                  }
-                } else {
-                  _this2.$toast.error("Ocurrió un error al enviar el mensaje");
-                }
-
-                _context3.next = 11;
-                break;
-
-              case 8:
-                _context3.prev = 8;
-                _context3.t0 = _context3["catch"](0);
-
-                _this2.$toast.error(_context3.t0.message);
-
-              case 11:
-                _context3.prev = 11;
-                _this2.loading = false;
-                return _context3.finish(11);
-
-              case 14:
+              case 3:
               case "end":
                 return _context3.stop();
             }
           }
-        }, _callee3, null, [[0, 8, 11, 14]]);
-      }))();
-    },
-    clickFormat: function clickFormat(id) {
-      window.open("/consignment/format/".concat(id), "_blank");
-    },
-    clickDetail: function clickDetail(consignment) {
-      var _this3 = this;
-
-      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee4() {
-        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee4$(_context4) {
-          while (1) {
-            switch (_context4.prev = _context4.next) {
-              case 0:
-                _this3.recordId = consignment.id;
-                _this3.showDialogDetail = true;
-
-              case 2:
-              case "end":
-                return _context4.stop();
-            }
-          }
-        }, _callee4);
-      }))();
-    },
-    clickLiquidate: function clickLiquidate(consignment) {
-      var _this4 = this;
-
-      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee5() {
-        var response, foods;
-        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee5$(_context5) {
-          while (1) {
-            switch (_context5.prev = _context5.next) {
-              case 0:
-                _context5.next = 2;
-                return _this4.$http("".concat(_this4.resource, "/liquidate/").concat(consignment.id));
-
-              case 2:
-                response = _context5.sent;
-
-                if (response.status == 200) {
-                  if (response.data.success) {
-                    foods = response.data.foods;
-                    foods = foods.map(function (food) {
-                      food.toWarehouse = 0;
-                      food.originalQuantity = food.quantity;
-                      return food;
-                    });
-
-                    _this4.$emit("setItemsToLiquidate", foods, consignment.id);
-
-                    _this4.close();
-                  } else {
-                    _this4.$toast.error(response.data.message);
-                  }
-                } else {
-                  _this4.$toast.error("Ocurrió un error al liquidar la consignación");
-                }
-
-              case 4:
-              case "end":
-                return _context5.stop();
-            }
-          }
-        }, _callee5);
-      }))();
-    },
-    clickShowProducts: function clickShowProducts(consignment) {
-      this.recordId = consignment.id;
-      this.showDialogItems = true;
-    },
-    customIndex: function customIndex(index) {
-      return this.pagination.per_page * (this.pagination.current_page - 1) + index + 1;
-    },
-    getRecords: function getRecords() {
-      var _this5 = this;
-
-      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee6() {
-        var response;
-        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee6$(_context6) {
-          while (1) {
-            switch (_context6.prev = _context6.next) {
-              case 0:
-                _context6.prev = 0;
-                _this5.loading = true;
-                _context6.next = 4;
-                return _this5.$http("".concat(_this5.resource, "/records?").concat(_this5.getQueryParameters()));
-
-              case 4:
-                response = _context6.sent;
-                console.log(response);
-                _this5.records = response.data.data;
-                _this5.pagination = response.data.meta;
-                _context6.next = 13;
-                break;
-
-              case 10:
-                _context6.prev = 10;
-                _context6.t0 = _context6["catch"](0);
-
-                _this5.$toast.error(_context6.t0.message);
-
-              case 13:
-                _context6.prev = 13;
-                _this5.loading = false;
-                return _context6.finish(13);
-
-              case 16:
-              case "end":
-                return _context6.stop();
-            }
-          }
-        }, _callee6, null, [[0, 10, 13, 16]]);
+        }, _callee3);
       }))();
     },
     open: function open() {
-      this.getRecords();
+      this.customers = this.all_customers;
+      this.initForm();
     },
     close: function close() {
       this.$emit("update:showDialog", false);
+    },
+    searchRemoteCustomers: function searchRemoteCustomers(input) {
+      var _this4 = this;
+
+      if (input.length > 0) {
+        this.loading_search = true;
+        var parameters = "input=".concat(input);
+        this.$http.get("/quotations/search/customers?".concat(parameters)).then(function (response) {
+          _this4.customers = response.data.customers;
+          _this4.loading_search = false;
+
+          if (_this4.customers.length == 0) {
+            _this4.customers = _this4.all_customers;
+          }
+        });
+      } else {
+        this.customers = this.all_customers;
+      }
     }
   }
 });
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-50b06be2\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Restaurant/Resources/assets/js/views/pos/partials/consignment_list_modal.vue":
+/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-a39b9b8c\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Restaurant/Resources/assets/js/views/pos/partials/consignment_modal.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -518,110 +407,181 @@ var render = function() {
           expression: "loading"
         }
       ],
-      attrs: {
-        visible: _vm.showDialog,
-        title: "Lista de Consignaciones",
-        width: "90%"
-      },
+      attrs: { visible: _vm.showDialog, title: "Consignación" },
       on: { open: _vm.open, close: _vm.close }
     },
     [
-      _c("div", { staticClass: "row mt-2" }, [
-        _c(
-          "div",
-          { staticClass: "col-md-3" },
-          [
-            _c("label", { staticClass: "w-100", attrs: { for: "filter" } }, [
-              _vm._v("Filtrar por:")
-            ]),
-            _vm._v(" "),
-            _c(
-              "el-select",
-              {
-                attrs: { placeholder: "Selecccionar" },
-                model: {
-                  value: _vm.search.column,
-                  callback: function($$v) {
-                    _vm.$set(_vm.search, "column", $$v)
-                  },
-                  expression: "search.column"
-                }
-              },
-              _vm._l(_vm.columns, function(label, key) {
-                return _c("el-option", {
-                  key: key,
-                  attrs: { value: key, label: label }
-                })
-              }),
-              1
-            )
-          ],
-          1
-        ),
-        _vm._v(" "),
-        _c(
-          "div",
-          { staticClass: "col-md-3" },
-          [
-            _c("label", { staticClass: "w-100", attrs: { for: "filter" } }, [
-              _vm._v("Buscar:")
-            ]),
-            _vm._v(" "),
-            _vm.search.column == "date_of_issue" ||
-            _vm.search.column == "date_of_end"
-              ? [
-                  _c("el-date-picker", {
-                    staticStyle: { width: "100%" },
-                    attrs: {
-                      type: "date",
-                      placeholder: "Buscar",
-                      "value-format": "yyyy-MM-dd"
-                    },
-                    on: { change: _vm.getRecords },
-                    model: {
-                      value: _vm.search.value,
-                      callback: function($$v) {
-                        _vm.$set(_vm.search, "value", $$v)
-                      },
-                      expression: "search.value"
-                    }
-                  })
-                ]
-              : [
-                  _c("el-input", {
-                    attrs: { placeholder: "Buscar" },
-                    on: { input: _vm.getRecords },
-                    model: {
-                      value: _vm.search.value,
-                      callback: function($$v) {
-                        _vm.$set(_vm.search, "value", $$v)
-                      },
-                      expression: "search.value"
-                    }
-                  })
-                ]
-          ],
-          2
-        )
-      ]),
-      _vm._v(" "),
       _c(
         "div",
+        { staticClass: "row m-2" },
         [
-          _c("el-pagination", {
+          _c(
+            "div",
+            { staticClass: "col-md-6 col-12" },
+            [
+              _c("label", { attrs: { for: "person_id" } }, [
+                _vm._v("Cliente\n\n                "),
+                _c(
+                  "a",
+                  { attrs: { href: "#" }, on: { click: _vm.clickNewPerson } },
+                  [
+                    _vm._v(
+                      "\n                    [ + Nuevo ]\n                "
+                    )
+                  ]
+                )
+              ]),
+              _vm._v(" "),
+              _c(
+                "el-select",
+                {
+                  staticClass: "border-left rounded-left border-info",
+                  attrs: {
+                    filterable: "",
+                    remote: "",
+                    "popper-class": "el-select-customers",
+                    dusk: "customer_id",
+                    placeholder:
+                      "Escriba el nombre o número de documento del cliente",
+                    "remote-method": _vm.searchRemoteCustomers,
+                    loading: _vm.loading_search
+                  },
+                  model: {
+                    value: _vm.form.person_id,
+                    callback: function($$v) {
+                      _vm.$set(_vm.form, "person_id", $$v)
+                    },
+                    expression: "form.person_id"
+                  }
+                },
+                _vm._l(_vm.customers, function(option) {
+                  return _c("el-option", {
+                    key: option.id,
+                    attrs: { value: option.id, label: option.name }
+                  })
+                }),
+                1
+              )
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "col-md-3 col-12" },
+            [
+              _c("label", { attrs: { for: "date_of_issue" } }, [
+                _vm._v("Fecha de consignación")
+              ]),
+              _vm._v(" "),
+              _c("el-date-picker", {
+                staticClass: "w-100",
+                attrs: { type: "date", placeholder: "Seleccione una fecha" },
+                model: {
+                  value: _vm.form.date_of_issue,
+                  callback: function($$v) {
+                    _vm.$set(_vm.form, "date_of_issue", $$v)
+                  },
+                  expression: "form.date_of_issue"
+                }
+              })
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "col-md-3 col-12" },
+            [
+              _c("label", { attrs: { for: "date_of_end" } }, [
+                _vm._v("Fecha de liquidación")
+              ]),
+              _vm._v(" "),
+              _c("el-date-picker", {
+                staticClass: "w-100",
+                attrs: { type: "date", placeholder: "Seleccione una fecha" },
+                model: {
+                  value: _vm.form.date_of_end,
+                  callback: function($$v) {
+                    _vm.$set(_vm.form, "date_of_end", $$v)
+                  },
+                  expression: "form.date_of_end"
+                }
+              })
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "col-md-4 col-12" },
+            [
+              _c("label", { attrs: { for: "date_of_end" } }, [
+                _vm._v("Penalización\n                "),
+                _c(
+                  "a",
+                  { attrs: { href: "#" }, on: { click: _vm.clickNewPenalty } },
+                  [
+                    _vm._v(
+                      "\n                    [ + Nuevo ]\n                "
+                    )
+                  ]
+                )
+              ]),
+              _vm._v(" "),
+              _c(
+                "el-select",
+                {
+                  staticClass: "w-100",
+                  attrs: {
+                    placeholder: "Seleccione una penalización",
+                    dusk: "penalty_id"
+                  },
+                  model: {
+                    value: _vm.form.penalty_id,
+                    callback: function($$v) {
+                      _vm.$set(_vm.form, "penalty_id", $$v)
+                    },
+                    expression: "form.penalty_id"
+                  }
+                },
+                _vm._l(_vm.penalties, function(option) {
+                  return _c("el-option", {
+                    key: option.id,
+                    attrs: { value: option.id, label: option.description }
+                  })
+                }),
+                1
+              )
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c("person-form", {
             attrs: {
-              layout: "total, prev, pager, next",
-              total: _vm.pagination.total,
-              "current-page": _vm.pagination.current_page,
-              "page-size": Number(_vm.pagination.per_page)
+              showDialog: _vm.showDialogNewPerson,
+              type: "customers",
+              external: true
             },
             on: {
-              "current-change": _vm.getRecords,
-              "update:currentPage": function($event) {
-                return _vm.$set(_vm.pagination, "current_page", $event)
+              "update:showDialog": function($event) {
+                _vm.showDialogNewPerson = $event
               },
-              "update:current-page": function($event) {
-                return _vm.$set(_vm.pagination, "current_page", $event)
+              "update:show-dialog": function($event) {
+                _vm.showDialogNewPerson = $event
+              }
+            }
+          }),
+          _vm._v(" "),
+          _c("penalty-form", {
+            attrs: { showDialog: _vm.showDialogNewPenalty },
+            on: {
+              reloadPenalties: _vm.reloadPenalties,
+              "update:showDialog": function($event) {
+                _vm.showDialogNewPenalty = $event
+              },
+              "update:show-dialog": function($event) {
+                _vm.showDialogNewPenalty = $event
               }
             }
           })
@@ -631,240 +591,19 @@ var render = function() {
       _vm._v(" "),
       _c(
         "div",
-        { staticClass: "row mt-2" },
+        {
+          staticClass: "dialog-footer",
+          attrs: { slot: "footer" },
+          slot: "footer"
+        },
         [
-          _c(
-            "table",
-            { staticClass: "table table-responsive table-striped table-hover" },
-            [
-              _c("thead", [
-                _c("tr", [
-                  _c("th", [_vm._v("#")]),
-                  _vm._v(" "),
-                  _c("th", [_vm._v("Usuario")]),
-                  _vm._v(" "),
-                  _c("th", [_vm._v("Cliente")]),
-                  _vm._v(" "),
-                  _c("th", [_vm._v("Fecha de consignación")]),
-                  _vm._v(" "),
-                  _c("th", [_vm._v("Fecha de liquidación")]),
-                  _vm._v(" "),
-                  _c("th", [_vm._v("Productos")]),
-                  _vm._v(" "),
-                  _c("th", [_vm._v("Total")]),
-                  _vm._v(" "),
-                  _c("th", [_vm._v("Penalidad")]),
-                  _vm._v(" "),
-                  _c("th"),
-                  _vm._v(" "),
-                  _c("th")
-                ])
-              ]),
-              _vm._v(" "),
-              _c(
-                "tbody",
-                _vm._l(_vm.records, function(consignment, idx) {
-                  return _c("tr", { key: idx }, [
-                    _c("td", [_vm._v(_vm._s(_vm.customIndex(idx)))]),
-                    _vm._v(" "),
-                    _c(
-                      "td",
-                      { staticClass: "text-small " },
-                      [
-                        consignment.user_name
-                          ? [
-                              _c("strong", [_vm._v("CREADO:")]),
-                              _vm._v(
-                                "\n                            " +
-                                  _vm._s(consignment.user_name) +
-                                  " "
-                              ),
-                              _c("br")
-                            ]
-                          : _vm._e(),
-                        _vm._v(" "),
-                        consignment.user_liquidated_name
-                          ? [
-                              _c("strong", [_vm._v("LIQUIDADO:")]),
-                              _vm._v(
-                                "\n                            " +
-                                  _vm._s(consignment.user_liquidated_name) +
-                                  "\n                        "
-                              )
-                            ]
-                          : _vm._e()
-                      ],
-                      2
-                    ),
-                    _vm._v(" "),
-                    _c("td", [_vm._v(_vm._s(consignment.person.name))]),
-                    _vm._v(" "),
-                    _c("td", [_vm._v(_vm._s(consignment.date_of_issue))]),
-                    _vm._v(" "),
-                    _c("td", [_vm._v(_vm._s(consignment.date_of_end))]),
-                    _vm._v(" "),
-                    _c(
-                      "td",
-                      [
-                        _c(
-                          "el-button",
-                          {
-                            attrs: { type: "primary", icon: "el-icon-search" },
-                            on: {
-                              click: function($event) {
-                                return _vm.clickShowProducts(consignment)
-                              }
-                            }
-                          },
-                          [_vm._v(_vm._s(consignment.stock))]
-                        )
-                      ],
-                      1
-                    ),
-                    _vm._v(" "),
-                    _c("td", [_vm._v(_vm._s(consignment.total))]),
-                    _vm._v(" "),
-                    _c("td", [
-                      _vm._v(
-                        "\n                        " +
-                          _vm._s(consignment.penalty) +
-                          "\n                    "
-                      )
-                    ]),
-                    _vm._v(" "),
-                    _c(
-                      "td",
-                      [
-                        consignment.expired
-                          ? _c(
-                              "el-tooltip",
-                              {
-                                attrs: {
-                                  content:
-                                    "Enviar mensaje de vencimiento al número de contacto del cliente"
-                                }
-                              },
-                              [
-                                _c(
-                                  "el-button",
-                                  {
-                                    attrs: { type: "success" },
-                                    on: {
-                                      click: function($event) {
-                                        return _vm.clickSendMessage(
-                                          consignment.id
-                                        )
-                                      }
-                                    }
-                                  },
-                                  [_c("i", { staticClass: "el-icon-message" })]
-                                )
-                              ],
-                              1
-                            )
-                          : _vm._e(),
-                        _vm._v(" "),
-                        _c(
-                          "el-button",
-                          {
-                            attrs: { type: "primary" },
-                            on: {
-                              click: function($event) {
-                                return _vm.clickFormat(consignment.id)
-                              }
-                            }
-                          },
-                          [_c("i", { staticClass: "el-icon-s-order" })]
-                        )
-                      ],
-                      1
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "td",
-                      [
-                        consignment.liquidated && consignment.download_url
-                          ? [
-                              _c(
-                                "el-button",
-                                {
-                                  attrs: { type: "success" },
-                                  on: {
-                                    click: function($event) {
-                                      return _vm.clickDownload(consignment)
-                                    }
-                                  }
-                                },
-                                [
-                                  _vm._v(
-                                    "\n                                " +
-                                      _vm._s(consignment.number_document) +
-                                      "\n                            "
-                                  )
-                                ]
-                              )
-                            ]
-                          : _vm._e(),
-                        _vm._v(" "),
-                        !consignment.liquidated
-                          ? _c(
-                              "el-button",
-                              {
-                                attrs: { type: "success" },
-                                on: {
-                                  click: function($event) {
-                                    return _vm.clickLiquidate(consignment)
-                                  }
-                                }
-                              },
-                              [
-                                _c("i", { staticClass: "el-icon-cash" }),
-                                _vm._v(
-                                  "\n                            Liquidar\n                        "
-                                )
-                              ]
-                            )
-                          : _vm._e(),
-                        _vm._v(" "),
-                        !consignment.liquidated
-                          ? _c(
-                              "el-button",
-                              {
-                                attrs: { size: "mini", type: "danger" },
-                                on: {
-                                  click: function($event) {
-                                    return _vm.clickDelete(consignment)
-                                  }
-                                }
-                              },
-                              [_c("i", { staticClass: "el-icon-delete" })]
-                            )
-                          : _c("span", [
-                              _vm._v(
-                                "\n                            Liquidado\n                        "
-                              )
-                            ])
-                      ],
-                      2
-                    )
-                  ])
-                }),
-                0
-              )
-            ]
-          ),
+          _c("el-button", { on: { click: _vm.close } }, [_vm._v("Cancelar")]),
           _vm._v(" "),
-          _c("items-modal", {
-            attrs: { showDialog: _vm.showDialogItems, recordId: _vm.recordId },
-            on: {
-              "update:showDialog": function($event) {
-                _vm.showDialogItems = $event
-              },
-              "update:show-dialog": function($event) {
-                _vm.showDialogItems = $event
-              }
-            }
-          })
+          _c(
+            "el-button",
+            { attrs: { type: "primary" }, on: { click: _vm.submit } },
+            [_vm._v("Guardar")]
+          )
         ],
         1
       )
@@ -877,7 +616,7 @@ module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-50b06be2", module.exports)
+    require("vue-hot-reload-api")      .rerender("data-v-a39b9b8c", module.exports)
   }
 }
 

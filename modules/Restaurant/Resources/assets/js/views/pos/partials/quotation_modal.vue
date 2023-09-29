@@ -97,25 +97,37 @@
             :external="true"
         >
         </person-form>
+         <quotation-options
+            :showDialog.sync="showDialogOptions"
+            :recordId="quotationNewId"
+            :showGenerate="false"
+            :showClose="true"
+            :external="true"
+            @close="close"
+        ></quotation-options>
     </el-dialog>
 </template>
 
 <script>
 import moment from "moment";
+const QuotationOptions = () =>
+    import("../../../../../../../../resources/js/views/quotations/partials/options.vue");
 const PersonForm = () =>
     import("../../../../../../../../resources/js/views/persons/form.vue");
 export default {
     props: ["items", "cash_id", "all_customers", "showDialog","sellers"],
-    components: { PersonForm },
+    components: { PersonForm,QuotationOptions },
     data() {
         return {
+            quotationNewId: null,
             form: {},
             showDialogNewPerson: false,
             customers: [],
             resource: "quotations",
             loading_search: false,
             percentage_igv: 18,
-            loading: false
+            loading: false,
+            showDialogOptions: false,
         };
     },
     created() {
@@ -309,8 +321,9 @@ export default {
                     this.form
                 );
                 if (response.status == 200) {
+                               this.quotationNewId = response.data.data.id;
                     this.$emit("limpiarForm");
-                    this.close();
+                              this.showDialogOptions = true;
                     this.$toast.success('Cotizacion creada con exito');
                 }
             } catch (e) {

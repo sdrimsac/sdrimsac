@@ -888,7 +888,12 @@ const app = new Vue({
             import(
                 /*webpackChunkName:"reporte-series-vendidas"*/
                 "./views/sellers/index.vue"
-            )
+            ),
+                "tenant-bank_accounts-index": ()=>
+
+                import(
+                    /*webpackChunkName:"bank_accounts"*/
+                    "./views/bank_accounts/index.vue")
             
     },
  

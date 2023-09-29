@@ -1,6 +1,17 @@
 <template>
     <div class="card">
-        <div class="card-header bg-primary">
+        <div class="row d-flex justify-content-end">
+            <button
+                @click.prevent="addNewAccount"
+                type="button"
+                class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto m-2"
+            >
+                <span>
+                    Agregar nueva cuenta
+                </span>
+            </button>
+        </div>
+        <div class="card-header bg-primary mt-1">
             <h6 class="my-0 text-white">Listado de cuentas bancarias</h6>
         </div>
         <div class="card-body">
@@ -11,7 +22,7 @@
                             <th>#</th>
                             <th>Descripción</th>
                             <th class="text-end">Número</th>
-                            <!-- <th class="text-end">CCI</th> -->
+                            <th class="text-end">Balance</th>
                             <th class="text-end">Acciones</th>
                         </tr>
                     </thead>
@@ -20,7 +31,7 @@
                             <td>{{ index + 1 }}</td>
                             <td>{{ row.description }}</td>
                             <td class="text-end">{{ row.number }}</td>
-                            <!-- <td class="text-end">{{ row.cci }}</td> -->
+                            <td class="text-end">{{ row.balance }}</td>
                             <td class="text-end">
                                 <button
                                     type="button"
@@ -81,7 +92,7 @@ export default {
             showDialog: false,
             resource: "bank_accounts",
             recordId: null,
-            records: []
+            records: [],
         };
     },
     created() {
@@ -91,6 +102,9 @@ export default {
         this.getData();
     },
     methods: {
+        addNewAccount(){
+            this.showDialog = true;
+        },
         getData() {
             this.$http.get(`/${this.resource}/records`).then(response => {
                 this.records = response.data.data;

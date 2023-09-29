@@ -222,6 +222,7 @@
 @php
     $digital = $total_coins_virtual;
     $transfer = $total_coins_transfert;
+    $bank =$total_coins_bank;
     function get_coin($coin, $counter)
     {
         if (array_key_exists($coin, $counter)) {
@@ -455,6 +456,16 @@
                         </tr>
                         <tr>
                             <td>
+                                <span class="f12">VENTAS BANCO</span>
+                            </td>
+                            <td class="right">
+                                <span class="f12">
+                                    {{ number_format(round($bank * 10) / 10, 2) }}
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
                                 <span class="f12">TRANSFERENCIAS</span>
                             </td>
                             <td class="right">
@@ -491,7 +502,7 @@
                             </td>
                             <td class="right">
                                 @php
-                                    $total_cierre = $transfer + $digital + $sales_detail['cash']['sum'] + $cash->beginning_balance + $incomes_expenses_cash['incomes']['amount'] - $incomes_expenses_cash['expenses']['amount'];
+                                    $total_cierre = $transfer + $bank + $digital + $sales_detail['cash']['sum'] + $cash->beginning_balance + $incomes_expenses_cash['incomes']['amount'] - $incomes_expenses_cash['expenses']['amount'];
                                 @endphp
                                 <span class="f12">S/ {{ number_format($total_cierre, 2) }}</span>
                             </td>

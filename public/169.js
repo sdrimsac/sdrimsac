@@ -1,12 +1,13 @@
 webpackJsonp([169],{
 
-/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/js/views/documents/partials/options.vue":
+/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/js/views/documents/partials/payments.vue":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator__ = __webpack_require__("./node_modules/@babel/runtime/regenerator/index.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__mixins_deletable__ = __webpack_require__("./resources/js/mixins/deletable.js");
 
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -187,20 +188,204 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ["company", "showDialog", "recordId", "configuration", "showClose", "isContingency", "generatDispatch", "dispatchId", "editDocument", "print"],
+  props: ["showDialog", "documentId", "external"],
+  mixins: [__WEBPACK_IMPORTED_MODULE_1__mixins_deletable__["a" /* deletable */]],
   data: function data() {
     return {
-      titleDialog: null,
-      loading: false,
-      resource: "documents",
-      errors: {},
-      form: {},
-      // company: {},
-      locked_emission: {},
-      loading_print: false,
-      message: "",
-      sender: null
+      title: null,
+      resource: "document_payments",
+      records: [],
+      payment_destinations: [],
+      headers: headers_token,
+      fileList: [],
+      payment_method_types: [],
+      showAddButton: true,
+      document: {},
+      index_file: null
     };
   },
   created: function created() {
@@ -211,10 +396,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
-              _this.initForm();
-
-              _this.socketWhatsappConfig();
-
               qz.security.setCertificatePromise(function (resolve, reject) {
                 _this.$http.get("/api/qz/crt/override", {
                   responseType: "text"
@@ -234,13 +415,18 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                     reject(error.data);
                   });
                 };
-              }); // await this.$http.get(`/companies/record`).then(response => {
-              //     if (response.data !== "") {
-              //         this.company = response.data.data;
-              //     }
-              // });
+              });
+              _context.next = 4;
+              return _this.initForm();
 
             case 4:
+              _context.next = 6;
+              return _this.$http.get("/".concat(_this.resource, "/tables")).then(function (response) {
+                _this.payment_method_types = response.data.payment_method_types;
+                _this.payment_destinations = response.data.payment_destinations; //this.initDocumentTypes()
+              });
+
+            case 6:
             case "end":
               return _context.stop();
           }
@@ -248,224 +434,88 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }, _callee);
     }))();
   },
-  mounted: function mounted() {},
   methods: {
-    socketWhatsappConfig: function socketWhatsappConfig() {
+    clickPrintPos: function clickPrintPos(printerName, formatoPdf) {
       var _this2 = this;
 
-      var hostName = window.location.hostname;
-      var url = "https://".concat(hostName);
-      this.sender = hostName.replace(/https?\:\/\//, "").replace("/", "").split(".").join("");
-
-      try {
-        this.socket = io.connect(this.$socketUrl);
-      } catch (e) {
-        console.log(e);
-      }
-
-      this.socket.on("ready", function (message) {
-        _this2.showMessage(message);
-      });
-      this.socket.on("authenticated", function (_ref) {
-        var message = _ref.message,
-            sender = _ref.sender;
-        _this2.sender = sender;
-        console.log(sender, " xddd");
-
-        _this2.showMessage(message);
-      });
-      this.socket.on("connected", function (_ref2) {
-        var message = _ref2.message;
-
-        // this.$message.success(message);
-        _this2.socket.emit("getStatus", url);
-      });
-      this.socket.on("setStatus", function (_ref3) {
-        var status = _ref3.status,
-            sender = _ref3.sender;
-        _this2.sender = sender || 'sdrimsac'; // if (!status) {
-        //     this.sender = "sdrimsac";
-        //     this.$message.warning("Sesión iniciada con SDRIMSAC");
-        // } else {
-        //     this.sender = sender;
-        //     this.$message.success("Whatsapp Listo!");
-        // }
-      }); //MessageResponse
-    },
-    clickSendWhatsapp: function clickSendWhatsapp() {
-      var _this3 = this;
-
-      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee2() {
-        var formWhatsapp, response;
-        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee2$(_context2) {
-          while (1) {
-            switch (_context2.prev = _context2.next) {
-              case 0:
-                if (!(_this3.form.customer_telephone != null)) {
-                  _context2.next = 22;
-                  break;
-                }
-
-                formWhatsapp = {
-                  id: _this3.recordId,
-                  sender: _this3.sender,
-                  document_id: _this3.recordId,
-                  document_type_id: _this3.form.document_type_id,
-                  customer_telephone: _this3.form.customer_telephone,
-                  mensaje: "Su comprobante de pago electrónico " + _this3.form.number + " por S/" + _this3.form.total + " de *" + _this3.form.establishment_description + "*, ha sido generado correctamente a través del facturador electrónico de " + "*" + _this3.$desarrollador + "*"
-                };
-                _context2.prev = 2;
-                _this3.loading = true;
-                _context2.next = 6;
-                return _this3.$http.post("/whatsapp", formWhatsapp);
-
-              case 6:
-                response = _context2.sent;
-
-                if (response.status == 200) {
-                  _this3.$toast.success("Mensaje enviado");
-
-                  _this3.loading = false;
-                }
-
-                if (!_this3.configuration.xml_whatsapp) {
-                  _context2.next = 14;
-                  break;
-                }
-
-                formWhatsapp.xml = true;
-                _context2.next = 12;
-                return _this3.$http.post("/whatsapp", formWhatsapp);
-
-              case 12:
-                response = _context2.sent;
-
-                if (response.status == 200) {
-                  _this3.$toast.success("Mensaje enviado");
-
-                  _this3.loading = false;
-                }
-
-              case 14:
-                _context2.next = 19;
-                break;
-
-              case 16:
-                _context2.prev = 16;
-                _context2.t0 = _context2["catch"](2);
-                console.log(_context2.t0, " error");
-
-              case 19:
-                _context2.prev = 19;
-                _this3.loading = false;
-                return _context2.finish(19);
-
-              case 22:
-              case "end":
-                return _context2.stop();
-            }
-          }
-        }, _callee2, null, [[2, 16, 19, 22]]);
-      }))();
-    },
-    initForm: function initForm() {
-      this.errors = {};
-      this.form = {
-        customer_email: null,
-        download_pdf: null,
-        external_id: null,
-        number: null,
-        image_detraction: null,
-        id: null,
-        response_message: null,
-        response_type: null,
-        customer_telephone: null,
-        message_text: null
-      };
-      this.locked_emission = {
-        success: true,
-        message: null
-      };
-    },
-    print_pdf: function print_pdf(PrinterName, FileLink) {
-      var _this4 = this;
-
       return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee3() {
-        var config, data;
         return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee3$(_context3) {
           while (1) {
             switch (_context3.prev = _context3.next) {
               case 0:
-                _context3.prev = 0;
-                config = qz.configs.create(PrinterName, {
-                  scaleContent: false
+                _this2.$confirm("Elija una de las opciones", "Imprimir", {
+                  confirmButtonText: "Impresión directa",
+                  cancelButtonText: "Descargar PDF",
+                  type: "warning"
+                }).then( /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee2() {
+                  var paperConfig, config, data;
+                  return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee2$(_context2) {
+                    while (1) {
+                      switch (_context2.prev = _context2.next) {
+                        case 0:
+                          _context2.prev = 0;
+                          paperConfig = {
+                            scaleContent: false
+                          };
+                          config = qz.configs.create(printerName, paperConfig);
+
+                          if (qz.websocket.isActive()) {
+                            _context2.next = 6;
+                            break;
+                          }
+
+                          _context2.next = 6;
+                          return qz.websocket.connect(config);
+
+                        case 6:
+                          data = [{
+                            type: "pdf",
+                            format: "file",
+                            data: formatoPdf
+                          }];
+                          qz.print(config, data)["catch"](function (e) {
+                            _this2.$toast.error(e.message);
+                          });
+                          _context2.next = 13;
+                          break;
+
+                        case 10:
+                          _context2.prev = 10;
+                          _context2.t0 = _context2["catch"](0);
+
+                          _this2.$toast.error(_context2.t0.message);
+
+                        case 13:
+                        case "end":
+                          return _context2.stop();
+                      }
+                    }
+                  }, _callee2, null, [[0, 10]]);
+                })))["catch"](function () {
+                  window.open(formatoPdf, "_blank");
+
+                  _this2.clickClose();
                 });
 
-                if (qz.websocket.isActive()) {
-                  _context3.next = 5;
-                  break;
-                }
-
-                _context3.next = 5;
-                return qz.websocket.connect(config);
-
-              case 5:
-                data = [{
-                  type: "pdf",
-                  format: "file",
-                  data: FileLink
-                }];
-                qz.print(config, data)["catch"](function (e) {
-                  _this4.$toast.error(e.message);
-                });
-                _context3.next = 12;
-                break;
-
-              case 9:
-                _context3.prev = 9;
-                _context3.t0 = _context3["catch"](0);
-
-                _this4.$toast.error(_context3.t0.message);
-
-              case 12:
+              case 1:
               case "end":
                 return _context3.stop();
             }
           }
-        }, _callee3, null, [[0, 9]]);
+        }, _callee3);
       }))();
     },
-    create: function create() {
-      var _this5 = this;
+    clickReceipt: function clickReceipt(receipt, printer) {
+      var _this3 = this;
 
       return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee4() {
-        var printer_directo, printer, formatoPdf;
         return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee4$(_context4) {
           while (1) {
             switch (_context4.prev = _context4.next) {
               case 0:
-                _this5.loading_print = true;
-                _this5.message = "Cargando la información del Comprobante";
-                printer_directo = null;
-                printer = null;
-                formatoPdf = null;
-                _context4.next = 7;
-                return _this5.$http.get("/".concat(_this5.resource, "/record/").concat(_this5.recordId)).then(function (response) {
-                  _this5.form = response.data.data;
-                  _this5.titleDialog = "Comprobante: " + _this5.form.number;
-                  _this5.loading_print = false; // }
+                _this3.clickPrintPos(printer, receipt);
 
-                  // }
-                  if (_this5.generatDispatch) window.open("/dispatches/create/".concat(_this5.form.id, "/i/").concat(_this5.dispatchId));
-                });
-
-              case 7:
-                _context4.next = 9;
-                return _this5.$http.get("/".concat(_this5.resource, "/locked_emission")).then(function (response) {
-                  _this5.locked_emission = response.data;
-                });
-
-              case 9:
+              case 1:
               case "end":
                 return _context4.stop();
             }
@@ -473,220 +523,167 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee4);
       }))();
     },
-    clickPrintPos: function clickPrintPos(printerName, formatoPdf) {
-      var _this6 = this;
+    clickDownloadFile: function clickDownloadFile(filename) {
+      window.open("/finances/payment-file/download-file/".concat(filename, "/documents"), "_blank");
+    },
+    onSuccess: function onSuccess(response, file, fileList) {
+      // console.log(response, file, fileList)
+      this.fileList = fileList;
 
-      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee6() {
-        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee6$(_context6) {
+      if (response.success) {
+        this.index_file = response.data.index;
+        this.records[this.index_file].filename = response.data.filename;
+        this.records[this.index_file].temp_path = response.data.temp_path;
+      } else {
+        this.$toast.error(response.message);
+      } // console.log(this.records)
+
+    },
+    handleRemove: function handleRemove(file, fileList) {
+      this.records[this.index_file].filename = null;
+      this.records[this.index_file].temp_path = null;
+      this.fileList = [];
+      this.index_file = null;
+    },
+    initForm: function initForm() {
+      this.records = [];
+      this.fileList = [];
+      this.showAddButton = true;
+    },
+    getData: function getData() {
+      var _this4 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee5() {
+        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee5$(_context5) {
           while (1) {
-            switch (_context6.prev = _context6.next) {
+            switch (_context5.prev = _context5.next) {
               case 0:
-                _this6.$confirm("Elija una de las opciones", "Imprimir", {
-                  confirmButtonText: "Impresión directa",
-                  cancelButtonText: "Descargar PDF",
-                  type: "warning"
-                }).then( /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee5() {
-                  var paperConfig, partsUrl, document, isTicket, isA4, isA5, tipoBandejaImpresora, orientation, a5_orientation, margins, config, data;
-                  return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee5$(_context5) {
-                    while (1) {
-                      switch (_context5.prev = _context5.next) {
-                        case 0:
-                          _context5.prev = 0;
-                          paperConfig = {
-                            scaleContent: false
-                          };
-                          partsUrl = formatoPdf.split("/");
-                          document = partsUrl[partsUrl.length - 1];
-                          isTicket = document.toLowerCase().includes("ticket");
-                          isA4 = document.toLowerCase().includes("a4");
-                          isA5 = document.toLowerCase().includes("a5");
-                          console.log(_this6.configuration, " configuraccion");
-                          tipoBandejaImpresora = _this6.configuration.new_old_printer;
+                _this4.initForm();
 
-                          if (isA4) {
-                            if (tipoBandejaImpresora == 1) {
-                              paperConfig.density = 700;
-                              paperConfig.orientation = "portrait";
-                            } else {
-                              paperConfig.density = 350;
-                              paperConfig.orientation = "portrait";
-                            }
-                          } else {
-                            orientation = "portrait";
-
-                            if (isA5) {
-                              a5_orientation = _this6.configuration.a5_orientation;
-                              orientation = a5_orientation ? "landscape" : "portrait";
-                            }
-
-                            if (!isTicket && tipoBandejaImpresora == 1) {
-                              //opciones que permiten hacer una impresion correcta en impresoras nuevas
-                              paperConfig.density = 600;
-                              paperConfig.orientation = orientation;
-                              paperConfig.margins = {
-                                left: 2
-                              };
-                            } else if (!isTicket && tipoBandejaImpresora == 0) {
-                              paperConfig.density = 350;
-                              paperConfig.orientation = orientation;
-                              margins = {};
-
-                              if (orientation == "landscape") {
-                                margins = {
-                                  top: 1.1,
-                                  left: 0.95,
-                                  right: 0.3,
-                                  bottom: 1.1
-                                };
-                              } else {
-                                margins = {
-                                  left: 1.5
-                                };
-                              }
-
-                              paperConfig.margins = margins;
-                            }
-                          }
-
-                          _this6.message = "Espere imprimiendo el Comprobante " + _this6.form.number;
-                          _this6.loading_print = true;
-                          config = qz.configs.create(printerName, paperConfig, {
-                            jobName: _this6.form.number
-                          });
-
-                          if (qz.websocket.isActive()) {
-                            _context5.next = 16;
-                            break;
-                          }
-
-                          _context5.next = 16;
-                          return qz.websocket.connect(config);
-
-                        case 16:
-                          data = [{
-                            type: "pdf",
-                            format: "file",
-                            data: formatoPdf
-                          }];
-                          qz.print(config, data)["catch"](function (e) {
-                            _this6.$toast.error(e.message);
-                          });
-                          _this6.loading_print = false;
-
-                          _this6.clickClose();
-
-                          _context5.next = 25;
-                          break;
-
-                        case 22:
-                          _context5.prev = 22;
-                          _context5.t0 = _context5["catch"](0);
-
-                          _this6.$toast.error(_context5.t0.message);
-
-                        case 25:
-                        case "end":
-                          return _context5.stop();
-                      }
-                    }
-                  }, _callee5, null, [[0, 22]]);
-                })))["catch"](function () {
-                  window.open(formatoPdf, "_blank");
-
-                  _this6.clickClose();
+                _context5.next = 3;
+                return _this4.$http.get("/".concat(_this4.resource, "/document/").concat(_this4.documentId)).then(function (response) {
+                  _this4.document = response.data;
+                  _this4.title = "Pagos del comprobante: " + _this4.document.number_full;
                 });
 
-              case 1:
+              case 3:
+                _context5.next = 5;
+                return _this4.$http.get("/".concat(_this4.resource, "/records/").concat(_this4.documentId)).then(function (response) {
+                  _this4.records = response.data.data;
+                  console.log("🚀 ~ file: payments.vue:262 ~ getData ~ this.records:", _this4.records);
+                });
+
+              case 5:
+                _this4.$eventHub.$emit("reloadDataUnpaid");
+
+              case 6:
               case "end":
-                return _context6.stop();
+                return _context5.stop();
             }
           }
-        }, _callee6);
+        }, _callee5);
       }))();
     },
-    clickPrint: function clickPrint(format) {
-      if (format == "a4") {
-        this.clickPrintPos(this.form.printer, this.form.print_a4);
-      }
-
-      if (format == "a5") {
-        this.clickPrintPos(this.form.printer, this.form.print_a5);
-      }
-
-      if (format == "ticket") {
-        console.log(this.form);
-        this.clickPrintPos(this.form.printer, this.form.ticket);
-      }
-
-      if (format == "ticket_50") {
-        this.clickPrintPos(this.form.printer, this.form.ticket_50);
-      }
+    clickAddRow: function clickAddRow() {
+      this.records.push({
+        id: null,
+        date_of_payment: moment().format("YYYY-MM-DD"),
+        payment_method_type_id: "01",
+        payment_destination_id: "cash",
+        reference: null,
+        filename: null,
+        temp_path: null,
+        payment: 0,
+        errors: {},
+        loading: false
+      });
+      this.showAddButton = false;
     },
-    clickDownloadImage: function clickDownloadImage() {
-      window.open("".concat(this.form.image_detraction), "_blank");
+    clickCancel: function clickCancel(index) {
+      this.records.splice(index, 1);
+      this.fileList = [];
+      this.showAddButton = true;
     },
-    clickDownload: function clickDownload(format) {
-      window.open("".concat(this.form.download_pdf, "/").concat(format), "_blank");
-    },
-    clickSendEmail: function clickSendEmail() {
-      var _this7 = this;
+    clickSubmit: function clickSubmit(index) {
+      var _this5 = this;
 
-      this.loading = true;
-      this.$http.post("/".concat(this.resource, "/email"), {
-        customer_email: this.form.customer_email,
-        id: this.form.id
-      }).then(function (response) {
+      if (this.records[index].payment > parseFloat(this.document.total_difference)) {
+        this.$toast.error("El monto ingresado supera al monto pendiente de pago, verifique.");
+        return;
+      }
+
+      var form = {
+        id: this.records[index].id,
+        document_id: this.documentId,
+        date_of_payment: this.records[index].date_of_payment,
+        payment_method_type_id: this.records[index].payment_method_type_id,
+        payment_destination_id: this.records[index].payment_destination_id,
+        reference: this.records[index].reference,
+        filename: this.records[index].filename,
+        temp_path: this.records[index].temp_path,
+        payment: this.records[index].payment
+      };
+      this.$http.post("/".concat(this.resource), form).then(function (response) {
         if (response.data.success) {
-          _this7.$toast.success("El correo fue enviado satisfactoriamente");
+          _this5.$toast.success(response.data.message);
+
+          _this5.getData(); // this.initDocumentTypes()
+
+
+          _this5.showAddButton = true;
+
+          _this5.$eventHub.$emit("reloadData");
+
+          if (_this5.external) {
+            _this5.$emit("getRecords");
+          }
         } else {
-          _this7.$toast.error("Error al enviar el correo");
+          _this5.$toast.error(response.data.message);
         }
       })["catch"](function (error) {
         if (error.response.status === 422) {
-          _this7.errors = error.response.data.errors;
+          _this5.records[index].errors = error.response.data;
         } else {
-          _this7.$toast.error(error.response.data.message);
+          console.log(error);
         }
-      }).then(function () {
-        _this7.loading = false;
       });
     },
-    clickConsultCdr: function clickConsultCdr(document_id) {
-      var _this8 = this;
+    // filterDocumentType(row){
+    //
+    //     if(row.contingency){
+    //         this.document_types = _.filter(this.all_document_types, item => (item.id == '01' || item.id =='03'))
+    //         row.document_type_id = (this.document_types.length > 0)?this.document_types[0].id:null
+    //     }else{
+    //         row.document_type_id = null
+    //         this.document_types = this.all_document_types
+    //     }
+    // },
+    // initDocumentTypes(){
+    //     this.document_types = (this.all_document_types.length > 0) ? this.all_document_types : []
+    // },
+    close: function close() {
+      this.$emit("update:showDialog", false); // this.initDocumentTypes()
+      // this.initForm()
+    },
+    clickDelete: function clickDelete(id) {
+      var _this6 = this;
 
-      this.$http.get("/".concat(this.resource, "/consultarcdr/").concat(document_id)).then(function (response) {
-        if (response.data.success) {
-          _this8.$toast.success(response.data.message);
+      this.destroy("/".concat(this.resource, "/").concat(id)).then(function () {
+        _this6.getData();
 
-          _this8.$eventHub.$emit("reloadData");
-        } else {
-          _this8.$toast.error(response.data.message);
-        }
-      })["catch"](function (error) {
-        _this8.$toast.error(error.response.data.message);
+        _this6.$eventHub.$emit("reloadData"); // this.initDocumentTypes()
+
       });
     },
-    clickFinalize: function clickFinalize() {
-      location.href = this.isContingency ? "/contingencies" : "/".concat(this.resource);
-    },
-    clickNewDocument: function clickNewDocument() {
-      this.clickClose();
-    },
-    clickClose: function clickClose() {
-      this.$emit("update:showDialog", false);
-
-      if (this.editDocument == true) {
-        location.href = "/".concat(this.resource);
-      }
-
-      this.initForm();
+    clickDownloadReport: function clickDownloadReport(id) {
+      window.open("/".concat(this.resource, "/report/").concat(this.documentId), "_blank");
     }
   }
 });
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-6b0da757\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/js/views/documents/partials/options.vue":
+/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-52081a44\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/js/views/documents/partials/payments.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -696,342 +693,647 @@ var render = function() {
   return _c(
     "el-dialog",
     {
-      directives: [
-        {
-          name: "loading",
-          rawName: "v-loading",
-          value: _vm.loading_print,
-          expression: "loading_print"
-        }
-      ],
       attrs: {
-        "element-loading-text": _vm.message,
-        title: _vm.titleDialog,
+        title: _vm.title,
         visible: _vm.showDialog,
-        "close-on-click-modal": false,
-        "close-on-press-escape": false,
-        "show-close": false,
+        width: "65%",
         "append-to-body": ""
       },
-      on: { open: _vm.create }
+      on: { close: _vm.close, open: _vm.getData }
     },
     [
-      _vm.form.response_message
-        ? _c("div", { staticClass: "row mb-4" }, [
-            _c(
-              "div",
-              { staticClass: "col-md-12" },
-              [
-                _c("el-alert", {
-                  attrs: {
-                    title: _vm.form.response_message,
-                    type: _vm.form.response_type,
-                    "show-icon": ""
-                  }
-                })
-              ],
-              1
-            )
-          ])
-        : _vm._e(),
-      _vm._v(" "),
-      _c("div", { staticClass: "row" }, [
-        !_vm.locked_emission.success
-          ? _c(
-              "div",
-              {
-                staticClass:
-                  "col-lg-12 col-md-12 col-sm-12 text-center font-weight-bold"
-              },
-              [
-                _c("el-alert", {
-                  attrs: {
-                    title: _vm.locked_emission.message,
-                    type: "warning",
-                    "show-icon": ""
-                  }
-                })
-              ],
-              1
-            )
-          : _vm._e(),
-        _vm._v(" "),
-        _c(
-          "div",
-          {
-            staticClass:
-              "col-lg-3 col-md-3 col-sm-12 text-center font-weight-bold mt-3"
-          },
-          [
-            _c(
-              "button",
-              {
-                staticClass: "btn btn-lg btn-info waves-effect waves-light",
-                attrs: { type: "button" },
-                on: {
-                  click: function($event) {
-                    return _vm.clickPrint("a4")
-                  }
-                }
-              },
-              [_c("i", { staticClass: "fa fa-file-alt" })]
-            ),
-            _vm._v(" "),
-            _c("p", [_vm._v("Imprimir A4")])
-          ]
-        ),
-        _vm._v(" "),
-        _c(
-          "div",
-          {
-            staticClass:
-              "col-lg-3 col-md-3 col-sm-12 text-center font-weight-bold mt-3"
-          },
-          [
-            _c(
-              "button",
-              {
-                staticClass: "btn btn-lg btn-info waves-effect waves-light",
-                attrs: { type: "button" },
-                on: {
-                  click: function($event) {
-                    return _vm.clickPrint("a5")
-                  }
-                }
-              },
-              [_c("i", { staticClass: "fa fa-receipt" })]
-            ),
-            _vm._v(" "),
-            _c("p", [_vm._v("Imprimir A5")])
-          ]
-        ),
-        _vm._v(" "),
-        _c(
-          "div",
-          {
-            staticClass:
-              "col-lg-3 col-md-3 col-sm-12 text-center font-weight-bold mt-3"
-          },
-          [
-            _c(
-              "button",
-              {
-                staticClass: "btn btn-lg btn-info waves-effect waves-light",
-                attrs: { type: "button" },
-                on: {
-                  click: function($event) {
-                    return _vm.clickPrint("ticket")
-                  }
-                }
-              },
-              [_c("i", { staticClass: "fa fa-receipt" })]
-            ),
-            _vm._v(" "),
-            _c("p", [_vm._v("Imprimir Ticket 80MM")])
-          ]
-        ),
-        _vm._v(" "),
-        _c(
-          "div",
-          {
-            staticClass:
-              "col-lg-3 col-md-3 col-sm-12 text-center font-weight-bold mt-3"
-          },
-          [
-            _c(
-              "button",
-              {
-                staticClass: "btn btn-lg btn-info waves-effect waves-light",
-                attrs: { type: "button" },
-                on: {
-                  click: function($event) {
-                    return _vm.clickPrint("ticket_50")
-                  }
-                }
-              },
-              [_c("i", { staticClass: "fa fa-receipt" })]
-            ),
-            _vm._v(" "),
-            _c("p", [_vm._v("Imprimir Ticket 50MM")])
-          ]
-        ),
-        _vm._v(" "),
-        _vm.form.image_detraction
-          ? _c(
-              "div",
-              {
-                staticClass:
-                  "col-lg-12 col-md-12 col-sm-12 text-center font-weight-bold mt-3"
-              },
-              [
-                _c(
-                  "a",
-                  {
-                    staticClass: "text-center font-weight-bold ",
-                    attrs: {
-                      href: "" + this.form.image_detraction,
-                      download: ""
-                    }
-                  },
-                  [_vm._v("Descargar constancia de pago - detracción")]
-                )
-              ]
-            )
-          : _vm._e()
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "row mt-3" }, [
-        _c(
-          "div",
-          { staticClass: "col-md-12" },
-          [
-            _c(
-              "el-input",
-              {
-                model: {
-                  value: _vm.form.customer_email,
-                  callback: function($$v) {
-                    _vm.$set(_vm.form, "customer_email", $$v)
-                  },
-                  expression: "form.customer_email"
-                }
-              },
-              [
-                _c(
-                  "el-button",
-                  {
-                    attrs: {
-                      slot: "append",
-                      icon: "el-icon-message",
-                      loading: _vm.loading
-                    },
-                    on: { click: _vm.clickSendEmail },
-                    slot: "append"
-                  },
-                  [_vm._v("Enviar")]
-                ),
-                _vm._v(" "),
-                _c("i", {
-                  staticClass: "el-icon-edit-outline",
-                  attrs: { slot: "prefix" },
-                  slot: "prefix"
-                })
-              ],
-              1
-            ),
-            _vm._v(" "),
-            _vm.errors.customer_email
-              ? _c("small", {
-                  staticClass: "form-control-feedback",
-                  domProps: {
-                    textContent: _vm._s(_vm.errors.customer_email[0])
-                  }
-                })
-              : _vm._e()
-          ],
-          1
-        )
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "row mt-3" }, [
-        _c(
-          "div",
-          { staticClass: "col-md-12" },
-          [
-            _c(
-              "el-input",
-              {
-                model: {
-                  value: _vm.form.customer_telephone,
-                  callback: function($$v) {
-                    _vm.$set(_vm.form, "customer_telephone", $$v)
-                  },
-                  expression: "form.customer_telephone"
-                }
-              },
-              [
-                _c("template", { slot: "prepend" }, [_vm._v("+51")]),
-                _vm._v(" "),
-                _c(
-                  "el-button",
-                  {
-                    attrs: { slot: "append" },
-                    on: { click: _vm.clickSendWhatsapp },
-                    slot: "append"
-                  },
-                  [
-                    _vm._v("Enviar\n                    "),
+      _c("div", { staticClass: "form-body" }, [
+        _c("div", { staticClass: "row" }, [
+          _vm.records.length > 0
+            ? _c("div", { staticClass: "col-md-12" }, [
+                _c("div", { staticClass: "table-responsive" }, [
+                  _c("table", { staticClass: "table" }, [
+                    _c("thead", [
+                      _c("tr", [
+                        _c("th", [_vm._v("#")]),
+                        _vm._v(" "),
+                        _c("th", [_vm._v("Fecha de pago")]),
+                        _vm._v(" "),
+                        _c("th", [_vm._v("Método de pago")]),
+                        _vm._v(" "),
+                        _c("th", [_vm._v("Destino")]),
+                        _vm._v(" "),
+                        _c("th", [_vm._v("Referencia")]),
+                        _vm._v(" "),
+                        _c("th", [_vm._v("Archivo")]),
+                        _vm._v(" "),
+                        _c("th", { staticClass: "text-end" }, [
+                          _vm._v("Monto")
+                        ]),
+                        _vm._v(" "),
+                        _c("th")
+                      ])
+                    ]),
+                    _vm._v(" "),
                     _c(
-                      "el-tooltip",
-                      {
-                        staticClass: "item",
-                        attrs: {
-                          effect: "dark",
-                          content: "Es necesario tener aperturado Whatsapp web",
-                          placement: "top-start"
-                        }
-                      },
-                      [_c("i", { staticClass: "fab fa-whatsapp" })]
-                    )
-                  ],
-                  1
-                ),
-                _vm._v(" "),
-                _c("i", {
-                  staticClass: "el-icon-edit-outline",
-                  attrs: { slot: "prefix" },
-                  slot: "prefix"
-                })
-              ],
-              2
-            ),
-            _vm._v(" "),
-            _vm.errors.customer_telephone
-              ? _c("small", {
-                  staticClass: "form-control-feedback",
-                  domProps: {
-                    textContent: _vm._s(_vm.errors.customer_telephone[0])
-                  }
-                })
-              : _vm._e()
-          ],
-          1
-        )
-      ]),
-      _vm._v(" "),
-      _c(
-        "span",
-        {
-          staticClass: "dialog-footer",
-          attrs: { slot: "footer" },
-          slot: "footer"
-        },
-        [
-          _vm.showClose
-            ? [
-                _c("el-button", { on: { click: _vm.clickClose } }, [
-                  _vm._v("Cerrar")
+                      "tbody",
+                      _vm._l(_vm.records, function(row, index) {
+                        return _c(
+                          "tr",
+                          { key: index },
+                          [
+                            row.id
+                              ? [
+                                  _c(
+                                    "td",
+                                    [
+                                      row.receipt
+                                        ? [
+                                            _vm._v(
+                                              "\n                                            " +
+                                                _vm._s(row.receipt) +
+                                                "\n                                        "
+                                            )
+                                          ]
+                                        : [
+                                            _vm._v(
+                                              "\n                                            PAGO-" +
+                                                _vm._s(row.id) +
+                                                "\n                                        "
+                                            )
+                                          ]
+                                    ],
+                                    2
+                                  ),
+                                  _vm._v(" "),
+                                  _c("td", [
+                                    _vm._v(_vm._s(row.date_of_payment))
+                                  ]),
+                                  _vm._v(" "),
+                                  _c("td", [
+                                    _vm._v(
+                                      "\n                                        " +
+                                        _vm._s(
+                                          row.payment_method_type_description
+                                        ) +
+                                        "\n                                    "
+                                    )
+                                  ]),
+                                  _vm._v(" "),
+                                  _c("td", [
+                                    _vm._v(
+                                      "\n                                        " +
+                                        _vm._s(row.destination_description) +
+                                        "\n                                    "
+                                    )
+                                  ]),
+                                  _vm._v(" "),
+                                  _c("td", [_vm._v(_vm._s(row.reference))]),
+                                  _vm._v(" "),
+                                  _c("td", { staticClass: "text-center" }, [
+                                    row.filename
+                                      ? _c(
+                                          "button",
+                                          {
+                                            staticClass:
+                                              "btn waves-effect waves-light btn-sm btn-primary",
+                                            attrs: { type: "button" },
+                                            on: {
+                                              click: function($event) {
+                                                $event.preventDefault()
+                                                return _vm.clickDownloadFile(
+                                                  row.filename
+                                                )
+                                              }
+                                            }
+                                          },
+                                          [
+                                            _c("i", {
+                                              staticClass:
+                                                "fas fa-file-download"
+                                            })
+                                          ]
+                                        )
+                                      : _vm._e()
+                                  ]),
+                                  _vm._v(" "),
+                                  _c("td", { staticClass: "text-end" }, [
+                                    _vm._v(
+                                      "\n                                        " +
+                                        _vm._s(row.payment) +
+                                        "\n                                    "
+                                    )
+                                  ]),
+                                  _vm._v(" "),
+                                  _c(
+                                    "td",
+                                    {
+                                      staticClass:
+                                        "series-table-actions text-end"
+                                    },
+                                    [
+                                      row.receipt_file
+                                        ? _c(
+                                            "button",
+                                            {
+                                              staticClass:
+                                                "btn waves-effect waves-light btn-sm btn-success",
+                                              attrs: { type: "button" },
+                                              on: {
+                                                click: function($event) {
+                                                  $event.preventDefault()
+                                                  return _vm.clickReceipt(
+                                                    row.receipt_file,
+                                                    row.printer
+                                                  )
+                                                }
+                                              }
+                                            },
+                                            [
+                                              _vm._v(
+                                                "\n                                            Recibo\n                                        "
+                                              )
+                                            ]
+                                          )
+                                        : _vm._e(),
+                                      _vm._v(" "),
+                                      _c(
+                                        "button",
+                                        {
+                                          staticClass:
+                                            "btn waves-effect waves-light btn-sm btn-danger",
+                                          attrs: { type: "button" },
+                                          on: {
+                                            click: function($event) {
+                                              $event.preventDefault()
+                                              return _vm.clickDelete(row.id)
+                                            }
+                                          }
+                                        },
+                                        [
+                                          _vm._v(
+                                            "\n                                            Eliminar\n                                        "
+                                          )
+                                        ]
+                                      )
+                                    ]
+                                  )
+                                ]
+                              : [
+                                  _c("td"),
+                                  _vm._v(" "),
+                                  _c("td", [
+                                    _c(
+                                      "div",
+                                      {
+                                        staticClass: "form-group mb-0",
+                                        class: {
+                                          "has-danger":
+                                            row.errors.date_of_payment
+                                        }
+                                      },
+                                      [
+                                        _c("el-date-picker", {
+                                          attrs: {
+                                            type: "date",
+                                            clearable: false,
+                                            format: "dd/MM/yyyy",
+                                            "value-format": "yyyy-MM-dd"
+                                          },
+                                          model: {
+                                            value: row.date_of_payment,
+                                            callback: function($$v) {
+                                              _vm.$set(
+                                                row,
+                                                "date_of_payment",
+                                                $$v
+                                              )
+                                            },
+                                            expression:
+                                              "\n                                                    row.date_of_payment\n                                                "
+                                          }
+                                        }),
+                                        _vm._v(" "),
+                                        row.errors.date_of_payment
+                                          ? _c("small", {
+                                              staticClass:
+                                                "form-control-feedback",
+                                              domProps: {
+                                                textContent: _vm._s(
+                                                  row.errors.date_of_payment[0]
+                                                )
+                                              }
+                                            })
+                                          : _vm._e()
+                                      ],
+                                      1
+                                    )
+                                  ]),
+                                  _vm._v(" "),
+                                  _c("td", [
+                                    _c(
+                                      "div",
+                                      {
+                                        staticClass: "form-group mb-0",
+                                        class: {
+                                          "has-danger":
+                                            row.errors.payment_method_type_id
+                                        }
+                                      },
+                                      [
+                                        _c(
+                                          "el-select",
+                                          {
+                                            model: {
+                                              value: row.payment_method_type_id,
+                                              callback: function($$v) {
+                                                _vm.$set(
+                                                  row,
+                                                  "payment_method_type_id",
+                                                  $$v
+                                                )
+                                              },
+                                              expression:
+                                                "\n                                                    row.payment_method_type_id\n                                                "
+                                            }
+                                          },
+                                          _vm._l(
+                                            _vm.payment_method_types,
+                                            function(option) {
+                                              return _c("el-option", {
+                                                key: option.id,
+                                                attrs: {
+                                                  value: option.id,
+                                                  label: option.description
+                                                }
+                                              })
+                                            }
+                                          ),
+                                          1
+                                        ),
+                                        _vm._v(" "),
+                                        row.errors.payment_method_type_id
+                                          ? _c("small", {
+                                              staticClass:
+                                                "form-control-feedback",
+                                              domProps: {
+                                                textContent: _vm._s(
+                                                  row.errors
+                                                    .payment_method_type_id[0]
+                                                )
+                                              }
+                                            })
+                                          : _vm._e()
+                                      ],
+                                      1
+                                    )
+                                  ]),
+                                  _vm._v(" "),
+                                  _c("td", [
+                                    _c(
+                                      "div",
+                                      {
+                                        staticClass: "form-group mb-0",
+                                        class: {
+                                          "has-danger":
+                                            row.errors.payment_destination_id
+                                        }
+                                      },
+                                      [
+                                        _c(
+                                          "el-select",
+                                          {
+                                            attrs: {
+                                              filterable: "",
+                                              disabled:
+                                                row.payment_destination_disabled
+                                            },
+                                            model: {
+                                              value: row.payment_destination_id,
+                                              callback: function($$v) {
+                                                _vm.$set(
+                                                  row,
+                                                  "payment_destination_id",
+                                                  $$v
+                                                )
+                                              },
+                                              expression:
+                                                "\n                                                    row.payment_destination_id\n                                                "
+                                            }
+                                          },
+                                          _vm._l(
+                                            _vm.payment_destinations,
+                                            function(option) {
+                                              return _c("el-option", {
+                                                key: option.id,
+                                                attrs: {
+                                                  value: option.id,
+                                                  label: option.description
+                                                }
+                                              })
+                                            }
+                                          ),
+                                          1
+                                        ),
+                                        _vm._v(" "),
+                                        row.errors.payment_destination_id
+                                          ? _c("small", {
+                                              staticClass:
+                                                "form-control-feedback",
+                                              domProps: {
+                                                textContent: _vm._s(
+                                                  row.errors
+                                                    .payment_destination_id[0]
+                                                )
+                                              }
+                                            })
+                                          : _vm._e()
+                                      ],
+                                      1
+                                    )
+                                  ]),
+                                  _vm._v(" "),
+                                  _c("td", [
+                                    _c(
+                                      "div",
+                                      {
+                                        staticClass: "form-group mb-0",
+                                        class: {
+                                          "has-danger": row.errors.reference
+                                        }
+                                      },
+                                      [
+                                        _c(
+                                          "el-input",
+                                          {
+                                            model: {
+                                              value: row.reference,
+                                              callback: function($$v) {
+                                                _vm.$set(row, "reference", $$v)
+                                              },
+                                              expression: "row.reference"
+                                            }
+                                          },
+                                          [
+                                            _c("i", {
+                                              staticClass:
+                                                "el-icon-edit-outline",
+                                              attrs: { slot: "prefix" },
+                                              slot: "prefix"
+                                            })
+                                          ]
+                                        ),
+                                        _vm._v(" "),
+                                        row.errors.reference
+                                          ? _c("small", {
+                                              staticClass:
+                                                "form-control-feedback",
+                                              domProps: {
+                                                textContent: _vm._s(
+                                                  row.errors.reference[0]
+                                                )
+                                              }
+                                            })
+                                          : _vm._e()
+                                      ],
+                                      1
+                                    )
+                                  ]),
+                                  _vm._v(" "),
+                                  _c("td", [
+                                    _c(
+                                      "div",
+                                      { staticClass: "form-group mb-0" },
+                                      [
+                                        _c(
+                                          "el-upload",
+                                          {
+                                            attrs: {
+                                              data: { index: index },
+                                              headers: _vm.headers,
+                                              multiple: false,
+                                              "on-remove": _vm.handleRemove,
+                                              action:
+                                                "/finances/payment-file/upload",
+                                              "show-file-list": true,
+                                              "file-list": _vm.fileList,
+                                              "on-success": _vm.onSuccess,
+                                              limit: 1
+                                            }
+                                          },
+                                          [
+                                            _c(
+                                              "el-button",
+                                              {
+                                                attrs: {
+                                                  slot: "trigger",
+                                                  type: "primary"
+                                                },
+                                                slot: "trigger"
+                                              },
+                                              [
+                                                _vm._v(
+                                                  "Seleccione un\n                                                    archivo"
+                                                )
+                                              ]
+                                            )
+                                          ],
+                                          1
+                                        )
+                                      ],
+                                      1
+                                    )
+                                  ]),
+                                  _vm._v(" "),
+                                  _c("td", [
+                                    _c(
+                                      "div",
+                                      {
+                                        staticClass: "form-group mb-0",
+                                        class: {
+                                          "has-danger": row.errors.payment
+                                        }
+                                      },
+                                      [
+                                        _c(
+                                          "el-input",
+                                          {
+                                            model: {
+                                              value: row.payment,
+                                              callback: function($$v) {
+                                                _vm.$set(row, "payment", $$v)
+                                              },
+                                              expression: "row.payment"
+                                            }
+                                          },
+                                          [
+                                            _c("i", {
+                                              staticClass:
+                                                "el-icon-edit-outline",
+                                              attrs: { slot: "prefix" },
+                                              slot: "prefix"
+                                            })
+                                          ]
+                                        ),
+                                        _vm._v(" "),
+                                        row.errors.payment
+                                          ? _c("small", {
+                                              staticClass:
+                                                "form-control-feedback",
+                                              domProps: {
+                                                textContent: _vm._s(
+                                                  row.errors.payment[0]
+                                                )
+                                              }
+                                            })
+                                          : _vm._e()
+                                      ],
+                                      1
+                                    )
+                                  ]),
+                                  _vm._v(" "),
+                                  _c(
+                                    "td",
+                                    {
+                                      staticClass:
+                                        "series-table-actions text-end"
+                                    },
+                                    [
+                                      _c(
+                                        "button",
+                                        {
+                                          staticClass:
+                                            "btn waves-effect waves-light btn-sm btn-info",
+                                          attrs: { type: "button" },
+                                          on: {
+                                            click: function($event) {
+                                              $event.preventDefault()
+                                              return _vm.clickSubmit(index)
+                                            }
+                                          }
+                                        },
+                                        [
+                                          _c("i", {
+                                            staticClass: "fa fa-check"
+                                          })
+                                        ]
+                                      ),
+                                      _vm._v(" "),
+                                      _c(
+                                        "button",
+                                        {
+                                          staticClass:
+                                            "btn waves-effect waves-light btn-sm btn-danger",
+                                          attrs: { type: "button" },
+                                          on: {
+                                            click: function($event) {
+                                              $event.preventDefault()
+                                              return _vm.clickCancel(index)
+                                            }
+                                          }
+                                        },
+                                        [
+                                          _c("i", {
+                                            staticClass: "fa fa-trash"
+                                          })
+                                        ]
+                                      )
+                                    ]
+                                  )
+                                ]
+                          ],
+                          2
+                        )
+                      }),
+                      0
+                    ),
+                    _vm._v(" "),
+                    _c("tfoot", [
+                      _c("tr", [
+                        _c(
+                          "td",
+                          { staticClass: "text-end", attrs: { colspan: "6" } },
+                          [
+                            _vm._v(
+                              "\n                                    TOTAL PAGADO\n                                "
+                            )
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c("td", { staticClass: "text-end" }, [
+                          _vm._v(
+                            "\n                                    " +
+                              _vm._s(_vm.document.total_paid) +
+                              "\n                                "
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c("td")
+                      ]),
+                      _vm._v(" "),
+                      _c("tr", [
+                        _c(
+                          "td",
+                          { staticClass: "text-end", attrs: { colspan: "6" } },
+                          [
+                            _vm._v(
+                              "\n                                    TOTAL A PAGAR\n                                "
+                            )
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c("td", { staticClass: "text-end" }, [
+                          _vm._v(
+                            "\n                                    " +
+                              _vm._s(_vm.document.total) +
+                              "\n                                "
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c("td")
+                      ]),
+                      _vm._v(" "),
+                      _c("tr", [
+                        _c(
+                          "td",
+                          { staticClass: "text-end", attrs: { colspan: "6" } },
+                          [
+                            _vm._v(
+                              "\n                                    PENDIENTE DE PAGO\n                                "
+                            )
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c("td", { staticClass: "text-end" }, [
+                          _vm._v(
+                            "\n                                    " +
+                              _vm._s(_vm.document.total_difference) +
+                              "\n                                "
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c("td")
+                      ])
+                    ])
+                  ])
                 ])
-              ]
-            : [
-                _c(
-                  "el-button",
-                  { staticClass: "list", on: { click: _vm.clickFinalize } },
-                  [_vm._v("Ir al listado")]
-                ),
-                _vm._v(" "),
-                _c(
-                  "el-button",
-                  {
-                    attrs: { type: "primary" },
-                    on: { click: _vm.clickNewDocument }
-                  },
-                  [_vm._v("Nuevo comprobante")]
-                )
-              ]
-        ],
-        2
-      )
+              ])
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.showAddButton && _vm.document.total_difference > 0
+            ? _c(
+                "div",
+                { staticClass: "col-md-12 text-center pt-2" },
+                [
+                  _c(
+                    "el-button",
+                    {
+                      attrs: { type: "primary", icon: "el-icon-plus" },
+                      on: { click: _vm.clickAddRow }
+                    },
+                    [_vm._v("Nuevo")]
+                  )
+                ],
+                1
+              )
+            : _vm._e()
+        ])
+      ])
     ]
   )
 }
@@ -1041,21 +1343,21 @@ module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-6b0da757", module.exports)
+    require("vue-hot-reload-api")      .rerender("data-v-52081a44", module.exports)
   }
 }
 
 /***/ }),
 
-/***/ "./resources/js/views/documents/partials/options.vue":
+/***/ "./resources/js/views/documents/partials/payments.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__("./node_modules/vue-loader/lib/component-normalizer.js")
 /* script */
-var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/js/views/documents/partials/options.vue")
+var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/js/views/documents/partials/payments.vue")
 /* template */
-var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-6b0da757\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/js/views/documents/partials/options.vue")
+var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-52081a44\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/js/views/documents/partials/payments.vue")
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -1072,7 +1374,7 @@ var Component = normalizeComponent(
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "resources/js/views/documents/partials/options.vue"
+Component.options.__file = "resources/js/views/documents/partials/payments.vue"
 
 /* hot reload */
 if (false) {(function () {
@@ -1081,9 +1383,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-6b0da757", Component.options)
+    hotAPI.createRecord("data-v-52081a44", Component.options)
   } else {
-    hotAPI.reload("data-v-6b0da757", Component.options)
+    hotAPI.reload("data-v-52081a44", Component.options)
   }
   module.hot.dispose(function (data) {
     disposed = true

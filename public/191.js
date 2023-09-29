@@ -1,14 +1,14 @@
 webpackJsonp([191],{
 
-/***/ "./modules/Restaurant/Resources/assets/js/views/pos/partials/college.vue":
+/***/ "./modules/Restaurant/Resources/assets/js/views/pos/partials/consignment_list_modal.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__("./node_modules/vue-loader/lib/component-normalizer.js")
 /* script */
-var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/Restaurant/Resources/assets/js/views/pos/partials/college.vue")
+var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/Restaurant/Resources/assets/js/views/pos/partials/consignment_list_modal.vue")
 /* template */
-var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-08a54e86\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Restaurant/Resources/assets/js/views/pos/partials/college.vue")
+var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-50b06be2\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Restaurant/Resources/assets/js/views/pos/partials/consignment_list_modal.vue")
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -25,7 +25,7 @@ var Component = normalizeComponent(
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "modules/Restaurant/Resources/assets/js/views/pos/partials/college.vue"
+Component.options.__file = "modules/Restaurant/Resources/assets/js/views/pos/partials/consignment_list_modal.vue"
 
 /* hot reload */
 if (false) {(function () {
@@ -34,9 +34,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-08a54e86", Component.options)
+    hotAPI.createRecord("data-v-50b06be2", Component.options)
   } else {
-    hotAPI.reload("data-v-08a54e86", Component.options)
+    hotAPI.reload("data-v-50b06be2", Component.options)
   }
   module.hot.dispose(function (data) {
     disposed = true
@@ -48,13 +48,15 @@ module.exports = Component.exports
 
 /***/ }),
 
-/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/Restaurant/Resources/assets/js/views/pos/partials/college.vue":
+/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/Restaurant/Resources/assets/js/views/pos/partials/consignment_list_modal.vue":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator__ = __webpack_require__("./node_modules/@babel/runtime/regenerator/index.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_query_string__ = __webpack_require__("./node_modules/query-string/index.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_query_string___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_query_string__);
 
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -219,169 +221,276 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
-var CreateForm = function CreateForm() {
-  return __webpack_require__.e/* import() */(140/* duplicate */).then(__webpack_require__.bind(null, "./modules/College/Resources/assets/js/views/classrooms/form.vue"));
-};
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
-var CreateRegisterForm = function CreateRegisterForm() {
-  return __webpack_require__.e/* import() */(128/* duplicate */).then(__webpack_require__.bind(null, "./modules/College/Resources/assets/js/views/classrooms/register_form.vue"));
-};
 
-var StudentView = function StudentView() {
-  return __webpack_require__.e/* import() */(139/* duplicate */).then(__webpack_require__.bind(null, "./modules/College/Resources/assets/js/views/classrooms/student_view.vue"));
-};
-
-var PaymentForm = function PaymentForm() {
-  return __webpack_require__.e/* import() */(125/* duplicate */).then(__webpack_require__.bind(null, "./modules/College/Resources/assets/js/components/payment_college.vue"));
+var ItemsModal = function ItemsModal() {
+  return __webpack_require__.e/* import() */(211).then(__webpack_require__.bind(null, "./modules/Consignment/Resources/assets/js/views/partials/items.vue"));
 };
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ["showDialog", "configuration"],
+  props: ["showDialog"],
   components: {
-    CreateForm: CreateForm,
-    CreateRegisterForm: CreateRegisterForm,
-    PaymentForm: PaymentForm,
-    StudentView: StudentView
-  },
-  created: function created() {
-    this.getTables();
+    ItemsModal: ItemsModal
   },
   data: function data() {
     return {
       loading: false,
-      classes: [],
+      showDialogItems: false,
+      showDialogDetail: false,
+      recordId: null,
+      form: {},
+      records: [],
+      loading_search: false,
+      resource: "/consignment",
       pagination: {},
-      levels: [],
-      degrees: [],
-      sections: [],
-      turns: [],
       search: {},
-      recordViewStudent: null,
-      showStudentsView: false,
-      recordCreateRegisterForm: null,
-      showPayment: false,
-      paymentTitle: null
+      columns: {
+        person_id: "Cliente",
+        date_of_issue: "Fecha de consignación",
+        date_of_end: "Fecha de liquidación"
+      }
     };
   },
   methods: {
-    clickRegister: function clickRegister(record) {
-      this.recordCreateRegisterForm = record;
-      this.showPayment = true;
-      this.paymentTitle = "Matricula ".concat(record.level, " | ").concat(record.degree, "-").concat(record.section, " | ").concat(record.turn);
-    },
-    clickCreate: function clickCreate() {},
-    desactive: function desactive() {},
-    viewStudents: function viewStudents(record) {
-      this.showStudentsView = true;
-      this.recordViewStudent = record;
-    },
-    query: function query() {
+    clickDelete: function clickDelete(consignment) {
       var _this = this;
 
-      var q = "?";
-      Object.keys(this.search).forEach(function (s) {
-        q += "".concat(s, "=").concat(_this.search[s], "&");
-      });
-      return q;
-    },
-    getRecords: function getRecords() {
-      var _this2 = this;
-
-      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee() {
-        var response, data;
-        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee$(_context) {
-          while (1) {
-            switch (_context.prev = _context.next) {
-              case 0:
-                _context.prev = 0;
-                _this2.loading = true;
-                _context.next = 4;
-                return _this2.$http("/college/classrooms/records".concat(_this2.query()));
-
-              case 4:
-                response = _context.sent;
-                data = response.data.data;
-                _this2.classes = data;
-                _context.next = 11;
-                break;
-
-              case 9:
-                _context.prev = 9;
-                _context.t0 = _context["catch"](0);
-
-              case 11:
-                _context.prev = 11;
-                _this2.loading = false;
-                return _context.finish(11);
-
-              case 14:
-              case "end":
-                return _context.stop();
-            }
-          }
-        }, _callee, null, [[0, 9, 11, 14]]);
-      }))();
-    },
-    getTables: function getTables() {
-      var _this3 = this;
-
       return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee2() {
-        var response, data;
         return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
-                _context2.prev = 0;
-                _this3.loading = true;
-                _context2.next = 4;
-                return _this3.$http("/college/classrooms/tables");
+                _this.$confirm("¿Está seguro de eliminar la consignación?", "Advertencia", {
+                  confirmButtonText: "Aceptar",
+                  cancelButtonText: "Cancelar",
+                  type: "warning"
+                }).then( /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee() {
+                  var response;
+                  return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee$(_context) {
+                    while (1) {
+                      switch (_context.prev = _context.next) {
+                        case 0:
+                          _context.next = 2;
+                          return _this.$http.get("".concat(_this.resource, "/delete/").concat(consignment.id));
 
-              case 4:
-                response = _context2.sent;
-                data = response.data;
-                _this3.levels = data.levels;
-                _this3.degrees = data.degrees;
-                _this3.sections = data.sections;
-                _this3.turns = data.turns;
-                _context2.next = 15;
-                break;
+                        case 2:
+                          response = _context.sent;
 
-              case 12:
-                _context2.prev = 12;
-                _context2.t0 = _context2["catch"](0);
-                console.log(_context2.t0);
+                          if (response.status == 200) {
+                            if (response.data.success) {
+                              _this.$toast.success(response.data.message);
 
-              case 15:
-                _context2.prev = 15;
-                _this3.loading = false;
-                return _context2.finish(15);
+                              _this.getRecords();
+                            } else {
+                              _this.$toast.error(response.data.message);
+                            }
+                          } else {
+                            _this.$toast.error("Ocurrió un error al eliminar la consignación");
+                          }
 
-              case 18:
+                        case 4:
+                        case "end":
+                          return _context.stop();
+                      }
+                    }
+                  }, _callee);
+                })))["catch"](function (e) {
+                  console.log(e);
+                });
+
+              case 1:
               case "end":
                 return _context2.stop();
             }
           }
-        }, _callee2, null, [[0, 12, 15, 18]]);
+        }, _callee2);
       }))();
     },
-    open: function open() {
-      var _this4 = this;
+    getQueryParameters: function getQueryParameters() {
+      return __WEBPACK_IMPORTED_MODULE_1_query_string___default.a.stringify({
+        page: this.pagination.current_page,
+        limit: this.limit,
+        value: this.search.value,
+        column: this.search.column
+      });
+    },
+    clickDownload: function clickDownload(consignment) {
+      window.open(consignment.download_url, "_blank");
+    },
+    changeClearInput: function changeClearInput() {},
+    clickSendMessage: function clickSendMessage(id) {
+      var _this2 = this;
 
       return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee3() {
+        var response;
         return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee3$(_context3) {
           while (1) {
             switch (_context3.prev = _context3.next) {
               case 0:
-                _context3.next = 2;
-                return _this4.getRecords();
+                _context3.prev = 0;
+                _this2.loading = true;
+                _context3.next = 4;
+                return _this2.$http("".concat(_this2.resource, "/message/").concat(id));
 
-              case 2:
+              case 4:
+                response = _context3.sent;
+
+                if (response.status == 200) {
+                  if (response.data.success) {
+                    _this2.$toast.success(response.data.message);
+                  } else {
+                    _this2.$toast.error(response.data.message);
+                  }
+                } else {
+                  _this2.$toast.error("Ocurrió un error al enviar el mensaje");
+                }
+
+                _context3.next = 11;
+                break;
+
+              case 8:
+                _context3.prev = 8;
+                _context3.t0 = _context3["catch"](0);
+
+                _this2.$toast.error(_context3.t0.message);
+
+              case 11:
+                _context3.prev = 11;
+                _this2.loading = false;
+                return _context3.finish(11);
+
+              case 14:
               case "end":
                 return _context3.stop();
             }
           }
-        }, _callee3);
+        }, _callee3, null, [[0, 8, 11, 14]]);
       }))();
+    },
+    clickFormat: function clickFormat(id) {
+      window.open("/consignment/format/".concat(id), "_blank");
+    },
+    clickDetail: function clickDetail(consignment) {
+      var _this3 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee4() {
+        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee4$(_context4) {
+          while (1) {
+            switch (_context4.prev = _context4.next) {
+              case 0:
+                _this3.recordId = consignment.id;
+                _this3.showDialogDetail = true;
+
+              case 2:
+              case "end":
+                return _context4.stop();
+            }
+          }
+        }, _callee4);
+      }))();
+    },
+    clickLiquidate: function clickLiquidate(consignment) {
+      var _this4 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee5() {
+        var response, foods;
+        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee5$(_context5) {
+          while (1) {
+            switch (_context5.prev = _context5.next) {
+              case 0:
+                _context5.next = 2;
+                return _this4.$http("".concat(_this4.resource, "/liquidate/").concat(consignment.id));
+
+              case 2:
+                response = _context5.sent;
+
+                if (response.status == 200) {
+                  if (response.data.success) {
+                    foods = response.data.foods;
+                    foods = foods.map(function (food) {
+                      food.toWarehouse = 0;
+                      food.originalQuantity = food.quantity;
+                      return food;
+                    });
+
+                    _this4.$emit("setItemsToLiquidate", foods, consignment.id);
+
+                    _this4.close();
+                  } else {
+                    _this4.$toast.error(response.data.message);
+                  }
+                } else {
+                  _this4.$toast.error("Ocurrió un error al liquidar la consignación");
+                }
+
+              case 4:
+              case "end":
+                return _context5.stop();
+            }
+          }
+        }, _callee5);
+      }))();
+    },
+    clickShowProducts: function clickShowProducts(consignment) {
+      this.recordId = consignment.id;
+      this.showDialogItems = true;
+    },
+    customIndex: function customIndex(index) {
+      return this.pagination.per_page * (this.pagination.current_page - 1) + index + 1;
+    },
+    getRecords: function getRecords() {
+      var _this5 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee6() {
+        var response;
+        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee6$(_context6) {
+          while (1) {
+            switch (_context6.prev = _context6.next) {
+              case 0:
+                _context6.prev = 0;
+                _this5.loading = true;
+                _context6.next = 4;
+                return _this5.$http("".concat(_this5.resource, "/records?").concat(_this5.getQueryParameters()));
+
+              case 4:
+                response = _context6.sent;
+                console.log(response);
+                _this5.records = response.data.data;
+                _this5.pagination = response.data.meta;
+                _context6.next = 13;
+                break;
+
+              case 10:
+                _context6.prev = 10;
+                _context6.t0 = _context6["catch"](0);
+
+                _this5.$toast.error(_context6.t0.message);
+
+              case 13:
+                _context6.prev = 13;
+                _this5.loading = false;
+                return _context6.finish(13);
+
+              case 16:
+              case "end":
+                return _context6.stop();
+            }
+          }
+        }, _callee6, null, [[0, 10, 13, 16]]);
+      }))();
+    },
+    open: function open() {
+      this.getRecords();
     },
     close: function close() {
       this.$emit("update:showDialog", false);
@@ -391,7 +500,7 @@ var PaymentForm = function PaymentForm() {
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-08a54e86\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Restaurant/Resources/assets/js/views/pos/partials/college.vue":
+/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-50b06be2\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Restaurant/Resources/assets/js/views/pos/partials/consignment_list_modal.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -410,39 +519,38 @@ var render = function() {
         }
       ],
       attrs: {
-        title: "Matriculas/Mensualidades",
         visible: _vm.showDialog,
-        "append-to-body": ""
+        title: "Lista de Consignaciones",
+        width: "90%"
       },
       on: { open: _vm.open, close: _vm.close }
     },
     [
-      _c("div", { staticClass: "row mt-3" }, [
+      _c("div", { staticClass: "row mt-2" }, [
         _c(
           "div",
-          { staticClass: "col-12 col-md-3" },
+          { staticClass: "col-md-3" },
           [
-            _c("label", { staticClass: "label-control w-100" }, [
-              _vm._v("\n                Nivel\n            ")
+            _c("label", { staticClass: "w-100", attrs: { for: "filter" } }, [
+              _vm._v("Filtrar por:")
             ]),
             _vm._v(" "),
             _c(
               "el-select",
               {
-                attrs: { clearable: "" },
-                on: { change: _vm.getRecords },
+                attrs: { placeholder: "Selecccionar" },
                 model: {
-                  value: _vm.search.level_id,
+                  value: _vm.search.column,
                   callback: function($$v) {
-                    _vm.$set(_vm.search, "level_id", $$v)
+                    _vm.$set(_vm.search, "column", $$v)
                   },
-                  expression: "search.level_id"
+                  expression: "search.column"
                 }
               },
-              _vm._l(_vm.levels, function(level) {
+              _vm._l(_vm.columns, function(label, key) {
                 return _c("el-option", {
-                  key: level.id,
-                  attrs: { value: level.id, label: level.description }
+                  key: key,
+                  attrs: { value: key, label: label }
                 })
               }),
               1
@@ -453,264 +561,314 @@ var render = function() {
         _vm._v(" "),
         _c(
           "div",
-          { staticClass: "col-12 col-md-3" },
+          { staticClass: "col-md-3" },
           [
-            _c("label", { staticClass: "label-control w-100" }, [
-              _vm._v("\n                Turno\n            ")
+            _c("label", { staticClass: "w-100", attrs: { for: "filter" } }, [
+              _vm._v("Buscar:")
             ]),
             _vm._v(" "),
-            _c(
-              "el-select",
-              {
-                attrs: { clearable: "" },
-                on: { change: _vm.getRecords },
-                model: {
-                  value: _vm.search.turn_id,
-                  callback: function($$v) {
-                    _vm.$set(_vm.search, "turn_id", $$v)
-                  },
-                  expression: "search.turn_id"
-                }
-              },
-              _vm._l(_vm.turns, function(turn) {
-                return _c("el-option", {
-                  key: turn.id,
-                  attrs: { value: turn.id, label: turn.description }
-                })
-              }),
-              1
-            )
+            _vm.search.column == "date_of_issue" ||
+            _vm.search.column == "date_of_end"
+              ? [
+                  _c("el-date-picker", {
+                    staticStyle: { width: "100%" },
+                    attrs: {
+                      type: "date",
+                      placeholder: "Buscar",
+                      "value-format": "yyyy-MM-dd"
+                    },
+                    on: { change: _vm.getRecords },
+                    model: {
+                      value: _vm.search.value,
+                      callback: function($$v) {
+                        _vm.$set(_vm.search, "value", $$v)
+                      },
+                      expression: "search.value"
+                    }
+                  })
+                ]
+              : [
+                  _c("el-input", {
+                    attrs: { placeholder: "Buscar" },
+                    on: { input: _vm.getRecords },
+                    model: {
+                      value: _vm.search.value,
+                      callback: function($$v) {
+                        _vm.$set(_vm.search, "value", $$v)
+                      },
+                      expression: "search.value"
+                    }
+                  })
+                ]
           ],
-          1
-        ),
-        _vm._v(" "),
-        _c(
-          "div",
-          { staticClass: "col-12 col-md-3" },
-          [
-            _c("label", { staticClass: "label-control w-100" }, [
-              _vm._v("\n                Grado\n            ")
-            ]),
-            _vm._v(" "),
-            _c(
-              "el-select",
-              {
-                attrs: { clearable: "" },
-                on: { change: _vm.getRecords },
-                model: {
-                  value: _vm.search.degree_id,
-                  callback: function($$v) {
-                    _vm.$set(_vm.search, "degree_id", $$v)
-                  },
-                  expression: "search.degree_id"
-                }
-              },
-              _vm._l(_vm.degrees, function(degree) {
-                return _c("el-option", {
-                  key: degree.id,
-                  attrs: { value: degree.id, label: degree.description }
-                })
-              }),
-              1
-            )
-          ],
-          1
-        ),
-        _vm._v(" "),
-        _c(
-          "div",
-          { staticClass: "col-12 col-md-3" },
-          [
-            _c("label", { staticClass: "label-control w-100" }, [
-              _vm._v("\n                Sección\n            ")
-            ]),
-            _vm._v(" "),
-            _c(
-              "el-select",
-              {
-                attrs: { clearable: "" },
-                on: { change: _vm.getRecords },
-                model: {
-                  value: _vm.search.section_id,
-                  callback: function($$v) {
-                    _vm.$set(_vm.search, "section_id", $$v)
-                  },
-                  expression: "search.section_id"
-                }
-              },
-              _vm._l(_vm.sections, function(section) {
-                return _c("el-option", {
-                  key: section.id,
-                  attrs: { value: section.id, label: section.description }
-                })
-              }),
-              1
-            )
-          ],
-          1
+          2
         )
       ]),
       _vm._v(" "),
-      _c("table", { staticClass: "table" }, [
-        _c("thead", [
-          _c("tr", [
-            _c("th", [_vm._v("#")]),
-            _vm._v(" "),
-            _c("th", [_vm._v("\n                    SALON\n                ")]),
-            _vm._v(" "),
-            _c("th", [_vm._v("ALUMNOS")]),
-            _vm._v(" "),
-            _c("th")
-          ])
-        ]),
-        _vm._v(" "),
-        _c(
-          "tbody",
-          _vm._l(_vm.classes, function(classroom, idx) {
-            return _c("tr", { key: idx }, [
-              _c("td", [_vm._v(_vm._s(idx + 1))]),
-              _vm._v(" "),
-              _c("td", [
-                _c("span", { staticClass: "d-block" }, [
-                  _vm._v(
-                    "\n                        " +
-                      _vm._s(classroom.degree) +
-                      " " +
-                      _vm._s(classroom.section)
-                  )
-                ]),
-                _vm._v(" "),
-                _c("span", { staticClass: "small" }, [
-                  _vm._v(
-                    "\n                        " +
-                      _vm._s(classroom.level) +
-                      " " +
-                      _vm._s(classroom.turn) +
-                      "\n                    "
-                  )
+      _c(
+        "div",
+        [
+          _c("el-pagination", {
+            attrs: {
+              layout: "total, prev, pager, next",
+              total: _vm.pagination.total,
+              "current-page": _vm.pagination.current_page,
+              "page-size": Number(_vm.pagination.per_page)
+            },
+            on: {
+              "current-change": _vm.getRecords,
+              "update:currentPage": function($event) {
+                return _vm.$set(_vm.pagination, "current_page", $event)
+              },
+              "update:current-page": function($event) {
+                return _vm.$set(_vm.pagination, "current_page", $event)
+              }
+            }
+          })
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "div",
+        { staticClass: "row mt-2" },
+        [
+          _c(
+            "table",
+            { staticClass: "table table-responsive table-striped table-hover" },
+            [
+              _c("thead", [
+                _c("tr", [
+                  _c("th", [_vm._v("#")]),
+                  _vm._v(" "),
+                  _c("th", [_vm._v("Usuario")]),
+                  _vm._v(" "),
+                  _c("th", [_vm._v("Cliente")]),
+                  _vm._v(" "),
+                  _c("th", [_vm._v("Fecha de consignación")]),
+                  _vm._v(" "),
+                  _c("th", [_vm._v("Fecha de liquidación")]),
+                  _vm._v(" "),
+                  _c("th", [_vm._v("Productos")]),
+                  _vm._v(" "),
+                  _c("th", [_vm._v("Total")]),
+                  _vm._v(" "),
+                  _c("th", [_vm._v("Penalidad")]),
+                  _vm._v(" "),
+                  _c("th"),
+                  _vm._v(" "),
+                  _c("th")
                 ])
               ]),
               _vm._v(" "),
               _c(
-                "td",
-                [
-                  _c(
-                    "el-button",
-                    {
-                      attrs: { icon: "el-icon-search" },
-                      on: {
-                        click: function($event) {
-                          return _vm.viewStudents(classroom.id)
-                        }
-                      }
-                    },
-                    [
-                      _vm._v(
-                        "\n                        " +
-                          _vm._s(classroom.students.length) +
-                          "/\n                        " +
-                          _vm._s(classroom.places) +
-                          "\n                    "
-                      )
-                    ]
-                  )
-                ],
-                1
-              ),
-              _vm._v(" "),
-              _c("td", [
-                _c(
-                  "div",
-                  { staticClass: "d-flex justify-content-end" },
-                  [
-                    classroom.students.length != classroom.places
-                      ? _c(
+                "tbody",
+                _vm._l(_vm.records, function(consignment, idx) {
+                  return _c("tr", { key: idx }, [
+                    _c("td", [_vm._v(_vm._s(_vm.customIndex(idx)))]),
+                    _vm._v(" "),
+                    _c(
+                      "td",
+                      { staticClass: "text-small " },
+                      [
+                        consignment.user_name
+                          ? [
+                              _c("strong", [_vm._v("CREADO:")]),
+                              _vm._v(
+                                "\n                            " +
+                                  _vm._s(consignment.user_name) +
+                                  " "
+                              ),
+                              _c("br")
+                            ]
+                          : _vm._e(),
+                        _vm._v(" "),
+                        consignment.user_liquidated_name
+                          ? [
+                              _c("strong", [_vm._v("LIQUIDADO:")]),
+                              _vm._v(
+                                "\n                            " +
+                                  _vm._s(consignment.user_liquidated_name) +
+                                  "\n                        "
+                              )
+                            ]
+                          : _vm._e()
+                      ],
+                      2
+                    ),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(consignment.person.name))]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(consignment.date_of_issue))]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(consignment.date_of_end))]),
+                    _vm._v(" "),
+                    _c(
+                      "td",
+                      [
+                        _c(
                           "el-button",
                           {
-                            attrs: { size: "mini", type: "primary" },
+                            attrs: { type: "primary", icon: "el-icon-search" },
                             on: {
                               click: function($event) {
-                                return _vm.clickRegister(classroom)
+                                return _vm.clickShowProducts(consignment)
                               }
                             }
                           },
-                          [_vm._v("Matricular")]
+                          [_vm._v(_vm._s(consignment.stock))]
                         )
-                      : _vm._e(),
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(consignment.total))]),
+                    _vm._v(" "),
+                    _c("td", [
+                      _vm._v(
+                        "\n                        " +
+                          _vm._s(consignment.penalty) +
+                          "\n                    "
+                      )
+                    ]),
                     _vm._v(" "),
                     _c(
-                      "el-button",
-                      {
-                        attrs: { size: "mini", type: "primary" },
-                        on: {
-                          click: function($event) {
-                            return _vm.clickCreate(classroom)
-                          }
-                        }
-                      },
-                      [_vm._v("Editar")]
+                      "td",
+                      [
+                        consignment.expired
+                          ? _c(
+                              "el-tooltip",
+                              {
+                                attrs: {
+                                  content:
+                                    "Enviar mensaje de vencimiento al número de contacto del cliente"
+                                }
+                              },
+                              [
+                                _c(
+                                  "el-button",
+                                  {
+                                    attrs: { type: "success" },
+                                    on: {
+                                      click: function($event) {
+                                        return _vm.clickSendMessage(
+                                          consignment.id
+                                        )
+                                      }
+                                    }
+                                  },
+                                  [_c("i", { staticClass: "el-icon-message" })]
+                                )
+                              ],
+                              1
+                            )
+                          : _vm._e(),
+                        _vm._v(" "),
+                        _c(
+                          "el-button",
+                          {
+                            attrs: { type: "primary" },
+                            on: {
+                              click: function($event) {
+                                return _vm.clickFormat(consignment.id)
+                              }
+                            }
+                          },
+                          [_c("i", { staticClass: "el-icon-s-order" })]
+                        )
+                      ],
+                      1
                     ),
                     _vm._v(" "),
                     _c(
-                      "el-button",
-                      {
-                        attrs: {
-                          size: "mini",
-                          type: classroom.active ? "danger" : "success"
-                        },
-                        on: {
-                          click: function($event) {
-                            return _vm.desactive(classroom)
-                          }
-                        }
-                      },
+                      "td",
                       [
-                        _vm._v(
-                          _vm._s(classroom.active ? "Desactivar" : "Activar")
-                        )
-                      ]
+                        consignment.liquidated && consignment.download_url
+                          ? [
+                              _c(
+                                "el-button",
+                                {
+                                  attrs: { type: "success" },
+                                  on: {
+                                    click: function($event) {
+                                      return _vm.clickDownload(consignment)
+                                    }
+                                  }
+                                },
+                                [
+                                  _vm._v(
+                                    "\n                                " +
+                                      _vm._s(consignment.number_document) +
+                                      "\n                            "
+                                  )
+                                ]
+                              )
+                            ]
+                          : _vm._e(),
+                        _vm._v(" "),
+                        !consignment.liquidated
+                          ? _c(
+                              "el-button",
+                              {
+                                attrs: { type: "success" },
+                                on: {
+                                  click: function($event) {
+                                    return _vm.clickLiquidate(consignment)
+                                  }
+                                }
+                              },
+                              [
+                                _c("i", { staticClass: "el-icon-cash" }),
+                                _vm._v(
+                                  "\n                            Liquidar\n                        "
+                                )
+                              ]
+                            )
+                          : _vm._e(),
+                        _vm._v(" "),
+                        !consignment.liquidated
+                          ? _c(
+                              "el-button",
+                              {
+                                attrs: { size: "mini", type: "danger" },
+                                on: {
+                                  click: function($event) {
+                                    return _vm.clickDelete(consignment)
+                                  }
+                                }
+                              },
+                              [_c("i", { staticClass: "el-icon-delete" })]
+                            )
+                          : _c("span", [
+                              _vm._v(
+                                "\n                            Liquidado\n                        "
+                              )
+                            ])
+                      ],
+                      2
                     )
-                  ],
-                  1
-                )
-              ])
-            ])
-          }),
-          0
-        )
-      ]),
-      _vm._v(" "),
-      _c("student-view", {
-        attrs: {
-          showDialog: _vm.showStudentsView,
-          classroomId: _vm.recordViewStudent
-        },
-        on: {
-          "update:showDialog": function($event) {
-            _vm.showStudentsView = $event
-          },
-          "update:show-dialog": function($event) {
-            _vm.showStudentsView = $event
-          }
-        }
-      }),
-      _vm._v(" "),
-      _c("payment-form", {
-        attrs: {
-          type: "register",
-          title: _vm.paymentTitle,
-          record: _vm.recordCreateRegisterForm,
-          is_payment: _vm.showPayment
-        },
-        on: {
-          "update:is_payment": function($event) {
-            _vm.showPayment = $event
-          },
-          getRecords: _vm.getRecords
-        }
-      })
-    ],
-    1
+                  ])
+                }),
+                0
+              )
+            ]
+          ),
+          _vm._v(" "),
+          _c("items-modal", {
+            attrs: { showDialog: _vm.showDialogItems, recordId: _vm.recordId },
+            on: {
+              "update:showDialog": function($event) {
+                _vm.showDialogItems = $event
+              },
+              "update:show-dialog": function($event) {
+                _vm.showDialogItems = $event
+              }
+            }
+          })
+        ],
+        1
+      )
+    ]
   )
 }
 var staticRenderFns = []
@@ -719,7 +877,7 @@ module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-08a54e86", module.exports)
+    require("vue-hot-reload-api")      .rerender("data-v-50b06be2", module.exports)
   }
 }
 

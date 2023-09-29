@@ -1,7 +1,7 @@
 <template>
     <div>
         <el-dialog
-        append-to-body
+            append-to-body
             :title="titleDialog"
             :visible="showDialog"
             @open="create"
@@ -209,7 +209,7 @@
                         ></small>
                     </div>
                 </div>
-              
+
                 <br />
                 <div class="col-lg-4">
                     <div
@@ -325,33 +325,38 @@
             </div>
 
             <span slot="footer" class="dialog-footer">
-                <template v-if="showClose">
-                    <el-button @click="clickClose">Cerrar</el-button>
-                    <el-button
-                        class="submit"
-                        type="primary"
-                        @click="submit"
-                        :loading="loading_submit"
-                        v-if="generate"
-                        >Generar</el-button
-                    >
+                <template v-if="!external">
+                    <template v-if="showClose">
+                        <el-button @click="clickClose">Cerrar</el-button>
+                        <el-button
+                            class="submit"
+                            type="primary"
+                            @click="submit"
+                            :loading="loading_submit"
+                            v-if="generate"
+                            >Generar</el-button
+                        >
+                    </template>
+                    <template v-else>
+                        <el-button
+                            class="submit"
+                            type="primary"
+                            plain
+                            @click="submit"
+                            :loading="loading_submit"
+                            v-if="generate"
+                            >Generar comprobante</el-button
+                        >
+                        <el-button @click="clickFinalize" v-else
+                            >Ir al listado</el-button
+                        >
+                        <el-button type="primary" @click="clickNewQuotation"
+                            >Nueva cotización</el-button
+                        >
+                    </template>
                 </template>
                 <template v-else>
-                    <el-button
-                        class="submit"
-                        type="primary"
-                        plain
-                        @click="submit"
-                        :loading="loading_submit"
-                        v-if="generate"
-                        >Generar comprobante</el-button
-                    >
-                    <el-button @click="clickFinalize" v-else
-                        >Ir al listado</el-button
-                    >
-                    <el-button type="primary" @click="clickNewQuotation"
-                        >Nueva cotización</el-button
-                    >
+                    <el-button @click="clickClose">Cerrar</el-button>
                 </template>
             </span>
         </el-dialog>
@@ -382,6 +387,7 @@ export default {
     components: { DocumentOptions, SaleNoteOptions },
 
     props: [
+        "external",
         "showDialog",
         "recordId",
         "showClose",
@@ -422,7 +428,6 @@ export default {
         this.clickAddPayment();
     },
     methods: {
-
         clickCancel(index) {
             this.document.payments.splice(index, 1);
         },
@@ -700,6 +705,9 @@ export default {
         },
         clickClose() {
             this.$emit("update:showDialog", false);
+            if (this.external) {
+                this.$emit("close");
+            }
             this.initForm();
             this.resetDocument();
         },

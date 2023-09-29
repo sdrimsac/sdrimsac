@@ -1,14 +1,14 @@
 webpackJsonp([192],{
 
-/***/ "./modules/Restaurant/Resources/assets/js/views/cash/form.vue":
+/***/ "./modules/Restaurant/Resources/assets/js/views/pos/partials/college.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__("./node_modules/vue-loader/lib/component-normalizer.js")
 /* script */
-var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/Restaurant/Resources/assets/js/views/cash/form.vue")
+var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/Restaurant/Resources/assets/js/views/pos/partials/college.vue")
 /* template */
-var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-7326d5df\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Restaurant/Resources/assets/js/views/cash/form.vue")
+var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-08a54e86\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Restaurant/Resources/assets/js/views/pos/partials/college.vue")
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -25,7 +25,7 @@ var Component = normalizeComponent(
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "modules/Restaurant/Resources/assets/js/views/cash/form.vue"
+Component.options.__file = "modules/Restaurant/Resources/assets/js/views/pos/partials/college.vue"
 
 /* hot reload */
 if (false) {(function () {
@@ -34,9 +34,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-7326d5df", Component.options)
+    hotAPI.createRecord("data-v-08a54e86", Component.options)
   } else {
-    hotAPI.reload("data-v-7326d5df", Component.options)
+    hotAPI.reload("data-v-08a54e86", Component.options)
   }
   module.hot.dispose(function (data) {
     disposed = true
@@ -48,7 +48,7 @@ module.exports = Component.exports
 
 /***/ }),
 
-/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/Restaurant/Resources/assets/js/views/cash/form.vue":
+/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/Restaurant/Resources/assets/js/views/pos/partials/college.vue":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -156,123 +156,215 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var CreateForm = function CreateForm() {
+  return __webpack_require__.e/* import() */(141/* duplicate */).then(__webpack_require__.bind(null, "./modules/College/Resources/assets/js/views/classrooms/form.vue"));
+};
+
+var CreateRegisterForm = function CreateRegisterForm() {
+  return __webpack_require__.e/* import() */(129/* duplicate */).then(__webpack_require__.bind(null, "./modules/College/Resources/assets/js/views/classrooms/register_form.vue"));
+};
+
+var StudentView = function StudentView() {
+  return __webpack_require__.e/* import() */(140/* duplicate */).then(__webpack_require__.bind(null, "./modules/College/Resources/assets/js/views/classrooms/student_view.vue"));
+};
+
+var PaymentForm = function PaymentForm() {
+  return __webpack_require__.e/* import() */(126/* duplicate */).then(__webpack_require__.bind(null, "./modules/College/Resources/assets/js/components/payment_college.vue"));
+};
+
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ["showDialog", "recordId", "typeUser", "fromBox"],
-  data: function data() {
-    return {
-      loading_submit: false,
-      titleDialog: null,
-      resource: "caja/worker/cash",
-      errors: {},
-      form: {},
-      user: {},
-      all_departments: [],
-      all_provinces: [],
-      all_districts: [],
-      provinces: [],
-      districts: [],
-      identity_document_types: [],
-      users: [],
-      turnsTable: [],
-      dontClose: false
-    };
+  props: ["showDialog", "configuration"],
+  components: {
+    CreateForm: CreateForm,
+    CreateRegisterForm: CreateRegisterForm,
+    PaymentForm: PaymentForm,
+    StudentView: StudentView
   },
   created: function created() {
-    var _this = this;
-
-    return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee() {
-      return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee$(_context) {
-        while (1) {
-          switch (_context.prev = _context.next) {
-            case 0:
-              _context.next = 2;
-              return _this.$http.get("/".concat(_this.resource, "/tables")).then(function (response) {
-                _this.users = response.data.users;
-                _this.user = response.data.user;
-                _this.turnsTable = response.data.turnsTable;
-              });
-
-            case 2:
-              _this.initForm();
-
-            case 3:
-            case "end":
-              return _context.stop();
-          }
-        }
-      }, _callee);
-    }))();
+    this.getTables();
   },
-  computed: {
-    disableUser: function disableUser() {
-      if (this.typeUser == "admin" || this.typeUser === "superadmin") {
-        return false;
-      }
-
-      return true;
-    }
+  data: function data() {
+    return {
+      loading: false,
+      classes: [],
+      pagination: {},
+      levels: [],
+      degrees: [],
+      sections: [],
+      turns: [],
+      search: {},
+      recordViewStudent: null,
+      showStudentsView: false,
+      recordCreateRegisterForm: null,
+      showPayment: false,
+      paymentTitle: null
+    };
   },
   methods: {
-    ocultarBoton: function ocultarBoton() {
-      this.$emit("ocultarBoton");
+    clickRegister: function clickRegister(record) {
+      this.recordCreateRegisterForm = record;
+      this.showPayment = true;
+      this.paymentTitle = "Matricula ".concat(record.level, " | ").concat(record.degree, "-").concat(record.section, " | ").concat(record.turn);
     },
-    initForm: function initForm() {
-      this.errors = {};
-      this.form = {
-        id: null,
-        user_id: this.user.id,
-        // user: null,
-        date_opening: null,
-        time_opening: null,
-        date_closed: null,
-        time_closed: null,
-        beginning_balance: 0,
-        final_balance: 0,
-        income: 0,
-        state: true,
-        reference_number: null
-      };
+    clickCreate: function clickCreate() {},
+    desactive: function desactive() {},
+    viewStudents: function viewStudents(record) {
+      this.showStudentsView = true;
+      this.recordViewStudent = record;
     },
-    create: function create() {
+    query: function query() {
+      var _this = this;
+
+      var q = "?";
+      Object.keys(this.search).forEach(function (s) {
+        q += "".concat(s, "=").concat(_this.search[s], "&");
+      });
+      return q;
+    },
+    getRecords: function getRecords() {
       var _this2 = this;
 
-      this.titleDialog = this.recordId ? "Editar Caja" : "Aperturar Caja";
+      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee() {
+        var response, data;
+        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _context.prev = 0;
+                _this2.loading = true;
+                _context.next = 4;
+                return _this2.$http("/college/classrooms/records".concat(_this2.query()));
 
-      if (this.recordId) {
-        this.$http.get("/".concat(this.resource, "/record/").concat(this.recordId)).then(function (response) {
-          _this2.form = response.data.data;
-        });
-      } else {
-        this.form.user_id = this.user.id; //sesion
-        //this.form.user = this.user.name
-      }
+              case 4:
+                response = _context.sent;
+                data = response.data.data;
+                _this2.classes = data;
+                _context.next = 11;
+                break;
+
+              case 9:
+                _context.prev = 9;
+                _context.t0 = _context["catch"](0);
+
+              case 11:
+                _context.prev = 11;
+                _this2.loading = false;
+                return _context.finish(11);
+
+              case 14:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee, null, [[0, 9, 11, 14]]);
+      }))();
     },
-    openingCashCkeck: function openingCashCkeck() {
+    getTables: function getTables() {
       var _this3 = this;
 
       return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee2() {
-        var response, cash;
+        var response, data;
         return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
-                _context2.next = 2;
-                return _this3.$http.get("/".concat(_this3.resource, "/opening_cash_check/").concat(_this3.form.user_id));
+                _context2.prev = 0;
+                _this3.loading = true;
+                _context2.next = 4;
+                return _this3.$http("/college/classrooms/tables");
 
-              case 2:
+              case 4:
                 response = _context2.sent;
-                cash = response.data.cash;
-                return _context2.abrupt("return", cash ? true : false);
+                data = response.data;
+                _this3.levels = data.levels;
+                _this3.degrees = data.degrees;
+                _this3.sections = data.sections;
+                _this3.turns = data.turns;
+                _context2.next = 15;
+                break;
 
-              case 5:
+              case 12:
+                _context2.prev = 12;
+                _context2.t0 = _context2["catch"](0);
+                console.log(_context2.t0);
+
+              case 15:
+                _context2.prev = 15;
+                _this3.loading = false;
+                return _context2.finish(15);
+
+              case 18:
               case "end":
                 return _context2.stop();
             }
           }
-        }, _callee2);
+        }, _callee2, null, [[0, 12, 15, 18]]);
       }))();
     },
-    submit: function submit() {
+    open: function open() {
       var _this4 = this;
 
       return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee3() {
@@ -280,71 +372,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           while (1) {
             switch (_context3.prev = _context3.next) {
               case 0:
-                _this4.loading_submit = true;
+                _context3.next = 2;
+                return _this4.getRecords();
 
-                if (!(_this4.form.turn_id == undefined)) {
-                  _context3.next = 5;
-                  break;
-                }
-
-                _this4.$toast.warning("La opcion 'Seleccionar turno de apertura' no puede ser un campo vacio, por favor seleccione una opcion");
-
-                _this4.loading_submit = false;
-                return _context3.abrupt("return", false);
-
-              case 5:
-                if (_this4.recordId) {
-                  _context3.next = 12;
-                  break;
-                }
-
-                _context3.next = 8;
-                return _this4.openingCashCkeck();
-
-              case 8:
-                if (!_context3.sent) {
-                  _context3.next = 12;
-                  break;
-                }
-
-                _this4.$toast.warning("No puede crear caja, porfavor cierre caja para el usuario definido");
-
-                _this4.loading_submit = false;
-                return _context3.abrupt("return", false);
-
-              case 12:
-                _this4.$http.post("/".concat(_this4.resource), _this4.form).then(function (response) {
-                  console.log(response);
-
-                  if (response.data.success) {
-                    _this4.$toast.success(response.data.message);
-
-                    if (_this4.form.user_id === _this4.user.id) _this4.$eventHub.$emit("openCash");
-
-                    _this4.$eventHub.$emit("reloadData");
-
-                    if (_this4.fromBox) {
-                      _this4.$emit("updateCashId", response.data.cash_id);
-                    } // window.open('/pos/init')
-
-
-                    _this4.close();
-
-                    _this4.ocultarBoton();
-                  } else {
-                    _this4.$toast.error(response.data.message);
-                  }
-                })["catch"](function (error) {
-                  if (error.response.status === 422) {
-                    _this4.errors = error.response.data;
-                  } else {
-                    console.log(error);
-                  }
-                }).then(function () {
-                  _this4.loading_submit = false;
-                });
-
-              case 13:
+              case 2:
               case "end":
                 return _context3.stop();
             }
@@ -354,14 +385,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     },
     close: function close() {
       this.$emit("update:showDialog", false);
-      this.initForm();
     }
   }
 });
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-7326d5df\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Restaurant/Resources/assets/js/views/cash/form.vue":
+/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-08a54e86\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Restaurant/Resources/assets/js/views/pos/partials/college.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -371,199 +401,316 @@ var render = function() {
   return _c(
     "el-dialog",
     {
+      directives: [
+        {
+          name: "loading",
+          rawName: "v-loading",
+          value: _vm.loading,
+          expression: "loading"
+        }
+      ],
       attrs: {
-        title: _vm.titleDialog,
+        title: "Matriculas/Mensualidades",
         visible: _vm.showDialog,
-        "data-keyboard": false,
-        closeOnPressEscape: _vm.dontClose,
-        closeOnClickModal: _vm.dontClose
+        "append-to-body": ""
       },
-      on: { close: _vm.close, open: _vm.create }
+      on: { open: _vm.open, close: _vm.close }
     },
     [
-      _c(
-        "form",
-        {
-          attrs: { autocomplete: "off" },
-          on: {
-            submit: function($event) {
-              $event.preventDefault()
-              return _vm.submit.apply(null, arguments)
-            }
-          }
-        },
-        [
-          _c("div", { staticClass: "form-body" }, [
-            _c("div", { staticClass: "row" }, [
-              _c("div", { staticClass: "col-md-6" }, [
-                _c(
-                  "div",
-                  { staticClass: "form-group" },
-                  [
-                    _c("label", { staticClass: "control-label" }, [
-                      _vm._v("Cajero ")
-                    ]),
-                    _vm._v(" "),
-                    _c(
-                      "el-select",
-                      {
-                        attrs: { disabled: _vm.disableUser },
-                        model: {
-                          value: _vm.form.user_id,
-                          callback: function($$v) {
-                            _vm.$set(_vm.form, "user_id", $$v)
-                          },
-                          expression: "form.user_id"
-                        }
-                      },
-                      _vm._l(_vm.users, function(option) {
-                        return _c("el-option", {
-                          key: option.id,
-                          attrs: { value: option.id, label: option.name }
-                        })
-                      }),
-                      1
-                    ),
-                    _vm._v(" "),
-                    _vm.errors.user
-                      ? _c("small", {
-                          staticClass: "form-control-feedback",
-                          domProps: { textContent: _vm._s(_vm.errors.user[0]) }
-                        })
-                      : _vm._e()
-                  ],
-                  1
-                )
+      _c("div", { staticClass: "row mt-3" }, [
+        _c(
+          "div",
+          { staticClass: "col-12 col-md-3" },
+          [
+            _c("label", { staticClass: "label-control w-100" }, [
+              _vm._v("\n                Nivel\n            ")
+            ]),
+            _vm._v(" "),
+            _c(
+              "el-select",
+              {
+                attrs: { clearable: "" },
+                on: { change: _vm.getRecords },
+                model: {
+                  value: _vm.search.level_id,
+                  callback: function($$v) {
+                    _vm.$set(_vm.search, "level_id", $$v)
+                  },
+                  expression: "search.level_id"
+                }
+              },
+              _vm._l(_vm.levels, function(level) {
+                return _c("el-option", {
+                  key: level.id,
+                  attrs: { value: level.id, label: level.description }
+                })
+              }),
+              1
+            )
+          ],
+          1
+        ),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "col-12 col-md-3" },
+          [
+            _c("label", { staticClass: "label-control w-100" }, [
+              _vm._v("\n                Turno\n            ")
+            ]),
+            _vm._v(" "),
+            _c(
+              "el-select",
+              {
+                attrs: { clearable: "" },
+                on: { change: _vm.getRecords },
+                model: {
+                  value: _vm.search.turn_id,
+                  callback: function($$v) {
+                    _vm.$set(_vm.search, "turn_id", $$v)
+                  },
+                  expression: "search.turn_id"
+                }
+              },
+              _vm._l(_vm.turns, function(turn) {
+                return _c("el-option", {
+                  key: turn.id,
+                  attrs: { value: turn.id, label: turn.description }
+                })
+              }),
+              1
+            )
+          ],
+          1
+        ),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "col-12 col-md-3" },
+          [
+            _c("label", { staticClass: "label-control w-100" }, [
+              _vm._v("\n                Grado\n            ")
+            ]),
+            _vm._v(" "),
+            _c(
+              "el-select",
+              {
+                attrs: { clearable: "" },
+                on: { change: _vm.getRecords },
+                model: {
+                  value: _vm.search.degree_id,
+                  callback: function($$v) {
+                    _vm.$set(_vm.search, "degree_id", $$v)
+                  },
+                  expression: "search.degree_id"
+                }
+              },
+              _vm._l(_vm.degrees, function(degree) {
+                return _c("el-option", {
+                  key: degree.id,
+                  attrs: { value: degree.id, label: degree.description }
+                })
+              }),
+              1
+            )
+          ],
+          1
+        ),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "col-12 col-md-3" },
+          [
+            _c("label", { staticClass: "label-control w-100" }, [
+              _vm._v("\n                Sección\n            ")
+            ]),
+            _vm._v(" "),
+            _c(
+              "el-select",
+              {
+                attrs: { clearable: "" },
+                on: { change: _vm.getRecords },
+                model: {
+                  value: _vm.search.section_id,
+                  callback: function($$v) {
+                    _vm.$set(_vm.search, "section_id", $$v)
+                  },
+                  expression: "search.section_id"
+                }
+              },
+              _vm._l(_vm.sections, function(section) {
+                return _c("el-option", {
+                  key: section.id,
+                  attrs: { value: section.id, label: section.description }
+                })
+              }),
+              1
+            )
+          ],
+          1
+        )
+      ]),
+      _vm._v(" "),
+      _c("table", { staticClass: "table" }, [
+        _c("thead", [
+          _c("tr", [
+            _c("th", [_vm._v("#")]),
+            _vm._v(" "),
+            _c("th", [_vm._v("\n                    SALON\n                ")]),
+            _vm._v(" "),
+            _c("th", [_vm._v("ALUMNOS")]),
+            _vm._v(" "),
+            _c("th")
+          ])
+        ]),
+        _vm._v(" "),
+        _c(
+          "tbody",
+          _vm._l(_vm.classes, function(classroom, idx) {
+            return _c("tr", { key: idx }, [
+              _c("td", [_vm._v(_vm._s(idx + 1))]),
+              _vm._v(" "),
+              _c("td", [
+                _c("span", { staticClass: "d-block" }, [
+                  _vm._v(
+                    "\n                        " +
+                      _vm._s(classroom.degree) +
+                      " " +
+                      _vm._s(classroom.section)
+                  )
+                ]),
+                _vm._v(" "),
+                _c("span", { staticClass: "small" }, [
+                  _vm._v(
+                    "\n                        " +
+                      _vm._s(classroom.level) +
+                      " " +
+                      _vm._s(classroom.turn) +
+                      "\n                    "
+                  )
+                ])
               ]),
               _vm._v(" "),
-              _c("div", { staticClass: "col-md-6" }, [
+              _c(
+                "td",
+                [
+                  _c(
+                    "el-button",
+                    {
+                      attrs: { icon: "el-icon-search" },
+                      on: {
+                        click: function($event) {
+                          return _vm.viewStudents(classroom.id)
+                        }
+                      }
+                    },
+                    [
+                      _vm._v(
+                        "\n                        " +
+                          _vm._s(classroom.students.length) +
+                          "/\n                        " +
+                          _vm._s(classroom.places) +
+                          "\n                    "
+                      )
+                    ]
+                  )
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c("td", [
                 _c(
                   "div",
-                  {
-                    staticClass: "form-group",
-                    class: { "has-danger": _vm.errors.beginning_balance }
-                  },
+                  { staticClass: "d-flex justify-content-end" },
                   [
-                    _c("label", { staticClass: "control-label" }, [
-                      _vm._v(
-                        "Saldo inicial de Apertura\n                        "
-                      )
-                    ]),
+                    classroom.students.length != classroom.places
+                      ? _c(
+                          "el-button",
+                          {
+                            attrs: { size: "mini", type: "primary" },
+                            on: {
+                              click: function($event) {
+                                return _vm.clickRegister(classroom)
+                              }
+                            }
+                          },
+                          [_vm._v("Matricular")]
+                        )
+                      : _vm._e(),
                     _vm._v(" "),
                     _c(
-                      "el-input",
+                      "el-button",
                       {
-                        model: {
-                          value: _vm.form.beginning_balance,
-                          callback: function($$v) {
-                            _vm.$set(_vm.form, "beginning_balance", $$v)
-                          },
-                          expression: "form.beginning_balance"
+                        attrs: { size: "mini", type: "primary" },
+                        on: {
+                          click: function($event) {
+                            return _vm.clickCreate(classroom)
+                          }
+                        }
+                      },
+                      [_vm._v("Editar")]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "el-button",
+                      {
+                        attrs: {
+                          size: "mini",
+                          type: classroom.active ? "danger" : "success"
+                        },
+                        on: {
+                          click: function($event) {
+                            return _vm.desactive(classroom)
+                          }
                         }
                       },
                       [
-                        _c("i", {
-                          staticClass: "el-icon-edit-outline",
-                          attrs: { slot: "prefix" },
-                          slot: "prefix"
-                        })
+                        _vm._v(
+                          _vm._s(classroom.active ? "Desactivar" : "Activar")
+                        )
                       ]
-                    ),
-                    _vm._v(" "),
-                    _vm.errors.beginning_balance
-                      ? _c("small", {
-                          staticClass: "form-control-feedback",
-                          domProps: {
-                            textContent: _vm._s(_vm.errors.beginning_balance[0])
-                          }
-                        })
-                      : _vm._e()
-                  ],
-                  1
-                )
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "col-md-6" }, [
-                _c(
-                  "div",
-                  {
-                    staticClass: "form-group",
-                    class: { "has-danger": _vm.errors.reference_number }
-                  },
-                  [
-                    _c("label", { staticClass: "control-label" }, [
-                      _vm._v("Seleccionar Turno de Apertura")
-                    ]),
-                    _vm._v(" "),
-                    _c(
-                      "el-select",
-                      {
-                        model: {
-                          value: _vm.form.turn_id,
-                          callback: function($$v) {
-                            _vm.$set(_vm.form, "turn_id", $$v)
-                          },
-                          expression: "form.turn_id"
-                        }
-                      },
-                      _vm._l(_vm.turnsTable, function(option) {
-                        return _c("el-option", {
-                          key: option.id,
-                          attrs: { value: option.id, label: option.turn_desc }
-                        })
-                      }),
-                      1
-                    ),
-                    _vm._v(" "),
-                    _vm.errors.reference_number
-                      ? _c("small", {
-                          staticClass: "form-control-feedback",
-                          domProps: {
-                            textContent: _vm._s(_vm.errors.reference_number[0])
-                          }
-                        })
-                      : _vm._e()
+                    )
                   ],
                   1
                 )
               ])
             ])
-          ]),
-          _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "form-actions text-end pt-2 pb-2" },
-            [
-              _c(
-                "el-button",
-                {
-                  on: {
-                    click: function($event) {
-                      $event.preventDefault()
-                      return _vm.close()
-                    }
-                  }
-                },
-                [_vm._v("Cancelar")]
-              ),
-              _vm._v(" "),
-              _c(
-                "el-button",
-                {
-                  attrs: {
-                    type: "primary",
-                    "native-type": "submit",
-                    loading: _vm.loading_submit
-                  }
-                },
-                [_vm._v("Guardar")]
-              )
-            ],
-            1
-          )
-        ]
-      )
-    ]
+          }),
+          0
+        )
+      ]),
+      _vm._v(" "),
+      _c("student-view", {
+        attrs: {
+          showDialog: _vm.showStudentsView,
+          classroomId: _vm.recordViewStudent
+        },
+        on: {
+          "update:showDialog": function($event) {
+            _vm.showStudentsView = $event
+          },
+          "update:show-dialog": function($event) {
+            _vm.showStudentsView = $event
+          }
+        }
+      }),
+      _vm._v(" "),
+      _c("payment-form", {
+        attrs: {
+          type: "register",
+          title: _vm.paymentTitle,
+          record: _vm.recordCreateRegisterForm,
+          is_payment: _vm.showPayment
+        },
+        on: {
+          "update:is_payment": function($event) {
+            _vm.showPayment = $event
+          },
+          getRecords: _vm.getRecords
+        }
+      })
+    ],
+    1
   )
 }
 var staticRenderFns = []
@@ -572,7 +719,7 @@ module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-7326d5df", module.exports)
+    require("vue-hot-reload-api")      .rerender("data-v-08a54e86", module.exports)
   }
 }
 

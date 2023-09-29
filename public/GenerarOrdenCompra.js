@@ -1,4 +1,4 @@
-webpackJsonp([194],{
+webpackJsonp([195],{
 
 /***/ "./modules/Inventory/Resources/assets/js/stockminReport/genOrdenCompra.vue":
 /***/ (function(module, exports, __webpack_require__) {

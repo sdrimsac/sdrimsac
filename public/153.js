@@ -1,14 +1,14 @@
-webpackJsonp([153],{
+webpackJsonp([153,174],{
 
-/***/ "./modules/Internet/Resources/assets/js/view/pos/partials/drawer.vue":
+/***/ "./modules/Restaurant/Resources/assets/js/views/pos/partials/drawer.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__("./node_modules/vue-loader/lib/component-normalizer.js")
 /* script */
-var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/Internet/Resources/assets/js/view/pos/partials/drawer.vue")
+var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/Restaurant/Resources/assets/js/views/pos/partials/drawer.vue")
 /* template */
-var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-6922ab75\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Internet/Resources/assets/js/view/pos/partials/drawer.vue")
+var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-79ad535c\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Restaurant/Resources/assets/js/views/pos/partials/drawer.vue")
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -25,7 +25,7 @@ var Component = normalizeComponent(
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "modules/Internet/Resources/assets/js/view/pos/partials/drawer.vue"
+Component.options.__file = "modules/Restaurant/Resources/assets/js/views/pos/partials/drawer.vue"
 
 /* hot reload */
 if (false) {(function () {
@@ -34,9 +34,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-6922ab75", Component.options)
+    hotAPI.createRecord("data-v-79ad535c", Component.options)
   } else {
-    hotAPI.reload("data-v-6922ab75", Component.options)
+    hotAPI.reload("data-v-79ad535c", Component.options)
   }
   module.hot.dispose(function (data) {
     disposed = true
@@ -48,15 +48,15 @@ module.exports = Component.exports
 
 /***/ }),
 
-/***/ "./modules/Internet/Resources/assets/js/view/pos/partials/split_payment.vue":
+/***/ "./modules/Restaurant/Resources/assets/js/views/pos/partials/split_payment.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__("./node_modules/vue-loader/lib/component-normalizer.js")
 /* script */
-var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/Internet/Resources/assets/js/view/pos/partials/split_payment.vue")
+var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/Restaurant/Resources/assets/js/views/pos/partials/split_payment.vue")
 /* template */
-var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-8babbbe6\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Internet/Resources/assets/js/view/pos/partials/split_payment.vue")
+var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-6293f490\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Restaurant/Resources/assets/js/views/pos/partials/split_payment.vue")
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -73,7 +73,7 @@ var Component = normalizeComponent(
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "modules/Internet/Resources/assets/js/view/pos/partials/split_payment.vue"
+Component.options.__file = "modules/Restaurant/Resources/assets/js/views/pos/partials/split_payment.vue"
 
 /* hot reload */
 if (false) {(function () {
@@ -82,9 +82,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-8babbbe6", Component.options)
+    hotAPI.createRecord("data-v-6293f490", Component.options)
   } else {
-    hotAPI.reload("data-v-8babbbe6", Component.options)
+    hotAPI.reload("data-v-6293f490", Component.options)
   }
   module.hot.dispose(function (data) {
     disposed = true
@@ -96,14 +96,14 @@ module.exports = Component.exports
 
 /***/ }),
 
-/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/Internet/Resources/assets/js/view/pos/partials/drawer.vue":
+/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/Restaurant/Resources/assets/js/views/pos/partials/drawer.vue":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator__ = __webpack_require__("./node_modules/@babel/runtime/regenerator/index.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__split_payment_vue__ = __webpack_require__("./modules/Internet/Resources/assets/js/view/pos/partials/split_payment.vue");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__split_payment_vue__ = __webpack_require__("./modules/Restaurant/Resources/assets/js/views/pos/partials/split_payment.vue");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__split_payment_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__split_payment_vue__);
 var _props$created$data$w;
 
@@ -1023,7 +1023,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 /***/ }),
 
-/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/Internet/Resources/assets/js/view/pos/partials/split_payment.vue":
+/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/Restaurant/Resources/assets/js/views/pos/partials/split_payment.vue":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -1527,7 +1527,428 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-6922ab75\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Internet/Resources/assets/js/view/pos/partials/drawer.vue":
+/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-6293f490\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Restaurant/Resources/assets/js/views/pos/partials/split_payment.vue":
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "el-dialog",
+    {
+      attrs: {
+        "append-to-body": "",
+        visible: _vm.showSplitPayment,
+        title: "Dividir pago: S/. " + _vm.total,
+        width: "70%"
+      },
+      on: { open: _vm.open, close: _vm.close }
+    },
+    [
+      _c("div", { staticClass: "d-flex flex-column p-2" }, [
+        _c("div", { staticClass: "d-flex flex-row align-items-end" }, [
+          _c(
+            "div",
+            [
+              _c("label", { attrs: { for: "" } }, [_vm._v("Dividir entre:")]),
+              _c("br"),
+              _vm._v(" "),
+              _vm.splitByAmount == "1"
+                ? _c("el-input-number", {
+                    attrs: { max: 10 },
+                    on: { input: _vm.updatePayments },
+                    model: {
+                      value: _vm.number,
+                      callback: function($$v) {
+                        _vm.number = $$v
+                      },
+                      expression: "number"
+                    }
+                  })
+                : _c("el-input-number", {
+                    attrs: { max: _vm.items.length },
+                    on: { input: _vm.updatePayments },
+                    model: {
+                      value: _vm.numberProduct,
+                      callback: function($$v) {
+                        _vm.numberProduct = $$v
+                      },
+                      expression: "numberProduct"
+                    }
+                  })
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticStyle: { "margin-left": "10px" } },
+            [
+              _c(
+                "el-radio-group",
+                {
+                  on: { change: _vm.updatePayments },
+                  model: {
+                    value: _vm.splitByAmount,
+                    callback: function($$v) {
+                      _vm.splitByAmount = $$v
+                    },
+                    expression: "splitByAmount"
+                  }
+                },
+                [
+                  _c("el-radio-button", { attrs: { label: "1" } }, [
+                    _vm._v("Por cuotas")
+                  ]),
+                  _vm._v(" "),
+                  _c("el-radio-button", { attrs: { label: "2" } }, [
+                    _vm._v("Por producto")
+                  ])
+                ],
+                1
+              )
+            ],
+            1
+          )
+        ]),
+        _vm._v(" "),
+        _vm.splitByAmount == "1"
+          ? _c(
+              "div",
+              { staticClass: "d-flex flex-wrap " },
+              _vm._l(_vm.payments, function(payment, idx) {
+                return _c("div", { key: idx, staticClass: "col-3" }, [
+                  _c(
+                    "div",
+                    {
+                      staticStyle: {
+                        "margin-top": "10px",
+                        "margin-right": "5px"
+                      }
+                    },
+                    [
+                      _c("h2", { staticClass: "text-muted text-small" }, [
+                        _vm._v(
+                          "\n                        Cuota " +
+                            _vm._s(idx + 1) +
+                            "\n                    "
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("el-input", {
+                        attrs: { readonly: "" },
+                        model: {
+                          value: payment.amount,
+                          callback: function($$v) {
+                            _vm.$set(payment, "amount", $$v)
+                          },
+                          expression: "payment.amount"
+                        }
+                      })
+                    ],
+                    1
+                  )
+                ])
+              }),
+              0
+            )
+          : _c("div", [
+              _c(
+                "div",
+                { staticClass: "d-flex flex-wrap" },
+                _vm._l(_vm.items, function(item, idx) {
+                  return _c("div", { key: idx, staticClass: "col-2" }, [
+                    _c(
+                      "div",
+                      {
+                        staticClass: "card p-1",
+                        staticStyle: {
+                          "margin-top": "10px",
+                          "margin-right": "5px"
+                        },
+                        attrs: { role: "button" },
+                        on: {
+                          click: function($event) {
+                            return _vm.addItem(item)
+                          }
+                        }
+                      },
+                      [
+                        _c("h2", { staticClass: "text-muted text-small" }, [
+                          _vm._v(
+                            "\n                            " +
+                              _vm._s(item.food.description) +
+                              "\n                        "
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c("h3", { staticClass: "text-muted text-small" }, [
+                          _vm._v(
+                            "\n                            S/. " +
+                              _vm._s(item.price) +
+                              "\n                        "
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c(
+                          "h3",
+                          {
+                            class:
+                              " text-small " +
+                              (item.quantity == 0
+                                ? "text-danger"
+                                : "text-muted")
+                          },
+                          [
+                            _vm._v(
+                              "\n                            Cantidad: " +
+                                _vm._s(item.quantity) +
+                                "\n                        "
+                            )
+                          ]
+                        )
+                      ]
+                    )
+                  ])
+                }),
+                0
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
+                {
+                  staticClass: "d-flex flex-wrap justify-content-center",
+                  staticStyle: { "margin-top": "15px" }
+                },
+                _vm._l(_vm.payments, function(payment, idx) {
+                  return _c(
+                    "div",
+                    {
+                      key: idx,
+                      staticClass: "col-3 ",
+                      staticStyle: { margin: "5px" }
+                    },
+                    [
+                      _c("table", { staticClass: "col-12" }, [
+                        _c("thead", [
+                          _c(
+                            "tr",
+                            {
+                              class:
+                                "" +
+                                (payment.selected
+                                  ? "bg-primary text-white border rounded-top"
+                                  : "border rounded-top"),
+                              attrs: { role: "button" },
+                              on: {
+                                click: function($event) {
+                                  return _vm.selectAccount(idx)
+                                }
+                              }
+                            },
+                            [
+                              _c(
+                                "th",
+                                {
+                                  staticClass: "text-center",
+                                  attrs: { colspan: "3" }
+                                },
+                                [
+                                  _c("b", [
+                                    _vm._v(" CUENTA " + _vm._s(idx + 1) + " ")
+                                  ])
+                                ]
+                              )
+                            ]
+                          )
+                        ]),
+                        _vm._v(" "),
+                        payment.products && payment.products.length > 0
+                          ? _c(
+                              "tbody",
+                              { staticClass: "border rounded-top " },
+                              [
+                                _vm._l(payment.products, function(
+                                  product,
+                                  idx
+                                ) {
+                                  return _c("tr", { key: idx }, [
+                                    _c("td", [
+                                      _c(
+                                        "h3",
+                                        {
+                                          staticClass: "text-muted text-small"
+                                        },
+                                        [
+                                          _vm._v(
+                                            "\n                                        " +
+                                              _vm._s(product.quantity) +
+                                              "\n                                    "
+                                          )
+                                        ]
+                                      )
+                                    ]),
+                                    _vm._v(" "),
+                                    _c("td", [
+                                      _c(
+                                        "h3",
+                                        {
+                                          staticClass: "text-muted text-small"
+                                        },
+                                        [
+                                          _vm._v(
+                                            "\n                                        " +
+                                              _vm._s(product.description) +
+                                              "\n                                    "
+                                          )
+                                        ]
+                                      )
+                                    ]),
+                                    _vm._v(" "),
+                                    _c(
+                                      "td",
+                                      {
+                                        staticStyle: { "text-align": "right" }
+                                      },
+                                      [
+                                        _c(
+                                          "h3",
+                                          {
+                                            staticClass: "text-muted text-small"
+                                          },
+                                          [
+                                            _vm._v(
+                                              "\n                                        " +
+                                                _vm._s(
+                                                  product.price *
+                                                    product.quantity
+                                                ) +
+                                                "\n\n                                        "
+                                            ),
+                                            _c(
+                                              "b",
+                                              {
+                                                staticClass: "text-danger",
+                                                attrs: { role: "button" },
+                                                on: {
+                                                  click: function($event) {
+                                                    return _vm.removeItem(
+                                                      product.id
+                                                    )
+                                                  }
+                                                }
+                                              },
+                                              [
+                                                _vm._v(
+                                                  "\n                                            x\n                                        "
+                                                )
+                                              ]
+                                            )
+                                          ]
+                                        )
+                                      ]
+                                    )
+                                  ])
+                                }),
+                                _vm._v(" "),
+                                _c("tr", [
+                                  _c(
+                                    "td",
+                                    {
+                                      staticClass: "text-muted text-small",
+                                      staticStyle: { "text-align": "right" },
+                                      attrs: { colspan: "2" }
+                                    },
+                                    [
+                                      _c("b", [
+                                        _vm._v(
+                                          "\n                                        Total\n                                    "
+                                        )
+                                      ])
+                                    ]
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "td",
+                                    { staticClass: "text-muted text-small" },
+                                    [
+                                      _vm._v(
+                                        "\n                                    S/.\n                                    " +
+                                          _vm._s(
+                                            _vm.totalItemSelected(
+                                              payment.products
+                                            )
+                                          ) +
+                                          "\n                                "
+                                      )
+                                    ]
+                                  )
+                                ])
+                              ],
+                              2
+                            )
+                          : _c("tbody", { staticClass: "border" }, [
+                              _c("tr", [
+                                _c(
+                                  "td",
+                                  {
+                                    staticClass: "text-center",
+                                    attrs: { colspan: "3" }
+                                  },
+                                  [
+                                    _c(
+                                      "h3",
+                                      { staticClass: "text-muted text-small" },
+                                      [
+                                        _vm._v(
+                                          "\n                                        Sin productos seleccionados\n                                    "
+                                        )
+                                      ]
+                                    )
+                                  ]
+                                )
+                              ])
+                            ])
+                      ])
+                    ]
+                  )
+                }),
+                0
+              )
+            ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "row d-flex m-2 justify-content-end" }, [
+          _c(
+            "div",
+            { staticClass: "col-3 d-flex justify-content-end" },
+            [
+              _c(
+                "el-button",
+                { attrs: { type: "primary" }, on: { click: _vm.sendPayments } },
+                [_vm._v("Listo")]
+              )
+            ],
+            1
+          )
+        ])
+      ])
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-6293f490", module.exports)
+  }
+}
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-79ad535c\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Restaurant/Resources/assets/js/views/pos/partials/drawer.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -2182,428 +2603,7 @@ module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-6922ab75", module.exports)
-  }
-}
-
-/***/ }),
-
-/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-8babbbe6\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Internet/Resources/assets/js/view/pos/partials/split_payment.vue":
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "el-dialog",
-    {
-      attrs: {
-        "append-to-body": "",
-        visible: _vm.showSplitPayment,
-        title: "Dividir pago: S/. " + _vm.total,
-        width: "70%"
-      },
-      on: { open: _vm.open, close: _vm.close }
-    },
-    [
-      _c("div", { staticClass: "d-flex flex-column p-2" }, [
-        _c("div", { staticClass: "d-flex flex-row align-items-end" }, [
-          _c(
-            "div",
-            [
-              _c("label", { attrs: { for: "" } }, [_vm._v("Dividir entre:")]),
-              _c("br"),
-              _vm._v(" "),
-              _vm.splitByAmount == "1"
-                ? _c("el-input-number", {
-                    attrs: { max: 10 },
-                    on: { input: _vm.updatePayments },
-                    model: {
-                      value: _vm.number,
-                      callback: function($$v) {
-                        _vm.number = $$v
-                      },
-                      expression: "number"
-                    }
-                  })
-                : _c("el-input-number", {
-                    attrs: { max: _vm.items.length },
-                    on: { input: _vm.updatePayments },
-                    model: {
-                      value: _vm.numberProduct,
-                      callback: function($$v) {
-                        _vm.numberProduct = $$v
-                      },
-                      expression: "numberProduct"
-                    }
-                  })
-            ],
-            1
-          ),
-          _vm._v(" "),
-          _c(
-            "div",
-            { staticStyle: { "margin-left": "10px" } },
-            [
-              _c(
-                "el-radio-group",
-                {
-                  on: { change: _vm.updatePayments },
-                  model: {
-                    value: _vm.splitByAmount,
-                    callback: function($$v) {
-                      _vm.splitByAmount = $$v
-                    },
-                    expression: "splitByAmount"
-                  }
-                },
-                [
-                  _c("el-radio-button", { attrs: { label: "1" } }, [
-                    _vm._v("Por cuotas")
-                  ]),
-                  _vm._v(" "),
-                  _c("el-radio-button", { attrs: { label: "2" } }, [
-                    _vm._v("Por producto")
-                  ])
-                ],
-                1
-              )
-            ],
-            1
-          )
-        ]),
-        _vm._v(" "),
-        _vm.splitByAmount == "1"
-          ? _c(
-              "div",
-              { staticClass: "d-flex flex-wrap " },
-              _vm._l(_vm.payments, function(payment, idx) {
-                return _c("div", { key: idx, staticClass: "col-3" }, [
-                  _c(
-                    "div",
-                    {
-                      staticStyle: {
-                        "margin-top": "10px",
-                        "margin-right": "5px"
-                      }
-                    },
-                    [
-                      _c("h2", { staticClass: "text-muted text-small" }, [
-                        _vm._v(
-                          "\n                        Cuota " +
-                            _vm._s(idx + 1) +
-                            "\n                    "
-                        )
-                      ]),
-                      _vm._v(" "),
-                      _c("el-input", {
-                        attrs: { readonly: "" },
-                        model: {
-                          value: payment.amount,
-                          callback: function($$v) {
-                            _vm.$set(payment, "amount", $$v)
-                          },
-                          expression: "payment.amount"
-                        }
-                      })
-                    ],
-                    1
-                  )
-                ])
-              }),
-              0
-            )
-          : _c("div", [
-              _c(
-                "div",
-                { staticClass: "d-flex flex-wrap" },
-                _vm._l(_vm.items, function(item, idx) {
-                  return _c("div", { key: idx, staticClass: "col-2" }, [
-                    _c(
-                      "div",
-                      {
-                        staticClass: "card p-1",
-                        staticStyle: {
-                          "margin-top": "10px",
-                          "margin-right": "5px"
-                        },
-                        attrs: { role: "button" },
-                        on: {
-                          click: function($event) {
-                            return _vm.addItem(item)
-                          }
-                        }
-                      },
-                      [
-                        _c("h2", { staticClass: "text-muted text-small" }, [
-                          _vm._v(
-                            "\n                            " +
-                              _vm._s(item.food.description) +
-                              "\n                        "
-                          )
-                        ]),
-                        _vm._v(" "),
-                        _c("h3", { staticClass: "text-muted text-small" }, [
-                          _vm._v(
-                            "\n                            S/. " +
-                              _vm._s(item.price) +
-                              "\n                        "
-                          )
-                        ]),
-                        _vm._v(" "),
-                        _c(
-                          "h3",
-                          {
-                            class:
-                              " text-small " +
-                              (item.quantity == 0
-                                ? "text-danger"
-                                : "text-muted")
-                          },
-                          [
-                            _vm._v(
-                              "\n                            Cantidad: " +
-                                _vm._s(item.quantity) +
-                                "\n                        "
-                            )
-                          ]
-                        )
-                      ]
-                    )
-                  ])
-                }),
-                0
-              ),
-              _vm._v(" "),
-              _c(
-                "div",
-                {
-                  staticClass: "d-flex flex-wrap justify-content-center",
-                  staticStyle: { "margin-top": "15px" }
-                },
-                _vm._l(_vm.payments, function(payment, idx) {
-                  return _c(
-                    "div",
-                    {
-                      key: idx,
-                      staticClass: "col-3 ",
-                      staticStyle: { margin: "5px" }
-                    },
-                    [
-                      _c("table", { staticClass: "col-12" }, [
-                        _c("thead", [
-                          _c(
-                            "tr",
-                            {
-                              class:
-                                "" +
-                                (payment.selected
-                                  ? "bg-primary text-white border rounded-top"
-                                  : "border rounded-top"),
-                              attrs: { role: "button" },
-                              on: {
-                                click: function($event) {
-                                  return _vm.selectAccount(idx)
-                                }
-                              }
-                            },
-                            [
-                              _c(
-                                "th",
-                                {
-                                  staticClass: "text-center",
-                                  attrs: { colspan: "3" }
-                                },
-                                [
-                                  _c("b", [
-                                    _vm._v(" CUENTA " + _vm._s(idx + 1) + " ")
-                                  ])
-                                ]
-                              )
-                            ]
-                          )
-                        ]),
-                        _vm._v(" "),
-                        payment.products && payment.products.length > 0
-                          ? _c(
-                              "tbody",
-                              { staticClass: "border rounded-top " },
-                              [
-                                _vm._l(payment.products, function(
-                                  product,
-                                  idx
-                                ) {
-                                  return _c("tr", { key: idx }, [
-                                    _c("td", [
-                                      _c(
-                                        "h3",
-                                        {
-                                          staticClass: "text-muted text-small"
-                                        },
-                                        [
-                                          _vm._v(
-                                            "\n                                        " +
-                                              _vm._s(product.quantity) +
-                                              "\n                                    "
-                                          )
-                                        ]
-                                      )
-                                    ]),
-                                    _vm._v(" "),
-                                    _c("td", [
-                                      _c(
-                                        "h3",
-                                        {
-                                          staticClass: "text-muted text-small"
-                                        },
-                                        [
-                                          _vm._v(
-                                            "\n                                        " +
-                                              _vm._s(product.description) +
-                                              "\n                                    "
-                                          )
-                                        ]
-                                      )
-                                    ]),
-                                    _vm._v(" "),
-                                    _c(
-                                      "td",
-                                      {
-                                        staticStyle: { "text-align": "right" }
-                                      },
-                                      [
-                                        _c(
-                                          "h3",
-                                          {
-                                            staticClass: "text-muted text-small"
-                                          },
-                                          [
-                                            _vm._v(
-                                              "\n                                        " +
-                                                _vm._s(
-                                                  product.price *
-                                                    product.quantity
-                                                ) +
-                                                "\n\n                                        "
-                                            ),
-                                            _c(
-                                              "b",
-                                              {
-                                                staticClass: "text-danger",
-                                                attrs: { role: "button" },
-                                                on: {
-                                                  click: function($event) {
-                                                    return _vm.removeItem(
-                                                      product.id
-                                                    )
-                                                  }
-                                                }
-                                              },
-                                              [
-                                                _vm._v(
-                                                  "\n                                            x\n                                        "
-                                                )
-                                              ]
-                                            )
-                                          ]
-                                        )
-                                      ]
-                                    )
-                                  ])
-                                }),
-                                _vm._v(" "),
-                                _c("tr", [
-                                  _c(
-                                    "td",
-                                    {
-                                      staticClass: "text-muted text-small",
-                                      staticStyle: { "text-align": "right" },
-                                      attrs: { colspan: "2" }
-                                    },
-                                    [
-                                      _c("b", [
-                                        _vm._v(
-                                          "\n                                        Total\n                                    "
-                                        )
-                                      ])
-                                    ]
-                                  ),
-                                  _vm._v(" "),
-                                  _c(
-                                    "td",
-                                    { staticClass: "text-muted text-small" },
-                                    [
-                                      _vm._v(
-                                        "\n                                    S/.\n                                    " +
-                                          _vm._s(
-                                            _vm.totalItemSelected(
-                                              payment.products
-                                            )
-                                          ) +
-                                          "\n                                "
-                                      )
-                                    ]
-                                  )
-                                ])
-                              ],
-                              2
-                            )
-                          : _c("tbody", { staticClass: "border" }, [
-                              _c("tr", [
-                                _c(
-                                  "td",
-                                  {
-                                    staticClass: "text-center",
-                                    attrs: { colspan: "3" }
-                                  },
-                                  [
-                                    _c(
-                                      "h3",
-                                      { staticClass: "text-muted text-small" },
-                                      [
-                                        _vm._v(
-                                          "\n                                        Sin productos seleccionados\n                                    "
-                                        )
-                                      ]
-                                    )
-                                  ]
-                                )
-                              ])
-                            ])
-                      ])
-                    ]
-                  )
-                }),
-                0
-              )
-            ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "row d-flex m-2 justify-content-end" }, [
-          _c(
-            "div",
-            { staticClass: "col-3 d-flex justify-content-end" },
-            [
-              _c(
-                "el-button",
-                { attrs: { type: "primary" }, on: { click: _vm.sendPayments } },
-                [_vm._v("Listo")]
-              )
-            ],
-            1
-          )
-        ])
-      ])
-    ]
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-8babbbe6", module.exports)
+    require("vue-hot-reload-api")      .rerender("data-v-79ad535c", module.exports)
   }
 }
 

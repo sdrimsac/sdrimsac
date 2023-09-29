@@ -214,7 +214,7 @@ if ($hostname) {
 
                 //travels------------------------------------------------------viajes
                 //Bank Accounts
-                Route::get('bank_accounts', [App\Http\Controllers\Tenant\BankAccountController::class, 'index'])->name('tenant.bank_accounts.index')->middleware('just.admin');
+                Route::get('bank_accounts', [App\Http\Controllers\Tenant\BankAccountController::class, 'index'])->name('tenant.bank_accounts.index');
                 Route::get('bank_accounts/records', [App\Http\Controllers\Tenant\BankAccountController::class, 'records']);
                 Route::get('bank_accounts/create', [App\Http\Controllers\Tenant\BankAccountController::class, 'create']);
                 Route::get('bank_accounts/tables', [App\Http\Controllers\Tenant\BankAccountController::class, 'tables']);

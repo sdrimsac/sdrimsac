@@ -1,4 +1,4 @@
-webpackJsonp([34,210],{
+webpackJsonp([34,211],{
 
 /***/ "./modules/Consignment/Resources/assets/js/views/index.vue":
 /***/ (function(module, exports, __webpack_require__) {
@@ -1038,15 +1038,15 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 var LotItem = function LotItem() {
-  return __webpack_require__.e/* import() */(209).then(__webpack_require__.bind(null, "./modules/Consignment/Resources/assets/js/views/partials/lot_item.vue"));
+  return __webpack_require__.e/* import() */(210).then(__webpack_require__.bind(null, "./modules/Consignment/Resources/assets/js/views/partials/lot_item.vue"));
 };
 
 var PenaltyForm = function PenaltyForm() {
-  return __webpack_require__.e/* import() */(138/* duplicate */).then(__webpack_require__.bind(null, "./modules/Consignment/Resources/assets/js/views/partials/penalty_form.vue"));
+  return __webpack_require__.e/* import() */(139/* duplicate */).then(__webpack_require__.bind(null, "./modules/Consignment/Resources/assets/js/views/partials/penalty_form.vue"));
 };
 
 var PersonForm = function PersonForm() {
-  return __webpack_require__.e/* import() */(124/* duplicate */).then(__webpack_require__.bind(null, "./resources/js/views/persons/form.vue"));
+  return __webpack_require__.e/* import() */(125/* duplicate */).then(__webpack_require__.bind(null, "./resources/js/views/persons/form.vue"));
 };
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -1396,7 +1396,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 var ItemsLotView = function ItemsLotView() {
-  return __webpack_require__.e/* import() */(208).then(__webpack_require__.bind(null, "./modules/Consignment/Resources/assets/js/views/partials/lot_item_view.vue"));
+  return __webpack_require__.e/* import() */(209).then(__webpack_require__.bind(null, "./modules/Consignment/Resources/assets/js/views/partials/lot_item_view.vue"));
 };
 
 /* harmony default export */ __webpack_exports__["default"] = ({

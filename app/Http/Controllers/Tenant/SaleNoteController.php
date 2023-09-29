@@ -67,6 +67,7 @@ use App\CoreFacturalo\Requests\Inputs\Common\PersonInput;
 use App\CoreFacturalo\Requests\Inputs\Common\EstablishmentInput;
 use App\CoreFacturalo\Requests\Inputs\Functions;
 use App\Exports\SaleNoteExport;
+use App\Models\Tenant\BankAccount;
 use App\Models\Tenant\Cash;
 use App\Models\Tenant\ItemUnitType;
 use App\Models\Tenant\SaleNoteCredit;
@@ -92,26 +93,26 @@ class SaleNoteController extends Controller
             'notes_id' => 'required|array',
         ]);
 
-            $result = [];
-            $items = SaleNoteItem::whereIn('sale_note_id', $request->notes_id)->get();
-        
-            foreach ($items as $key => $item) {
-                $item_id = $item->item_id;
-                $food = Food::where('item_id', $item_id)->first();
-                $quantity = $item->quantity;
-                $price = $item->unit_price;
-                $series = [];
-                $lotes = [];
-                $result[]=[
-                    "id" => $item->id,
-                    "item_id" => $item->item_id,
-                    "food" => $food,
-                    "quantity" => number_format($quantity, 2),
-                    "price" => number_format($price, 2),
-                    "series" => $series,
-                    "lotes" => $lotes,
-                ];
-            }
+        $result = [];
+        $items = SaleNoteItem::whereIn('sale_note_id', $request->notes_id)->get();
+
+        foreach ($items as $key => $item) {
+            $item_id = $item->item_id;
+            $food = Food::where('item_id', $item_id)->first();
+            $quantity = $item->quantity;
+            $price = $item->unit_price;
+            $series = [];
+            $lotes = [];
+            $result[] = [
+                "id" => $item->id,
+                "item_id" => $item->item_id,
+                "food" => $food,
+                "quantity" => number_format($quantity, 2),
+                "price" => number_format($price, 2),
+                "series" => $series,
+                "lotes" => $lotes,
+            ];
+        }
 
 
         return response()->json([
@@ -600,6 +601,8 @@ class SaleNoteController extends Controller
 
                 if ($request->boxes) {
                     foreach ($request->boxes as $currentBox) {
+                        $bank_account_id = Functions::valueKeyInArray($currentBox, 'bank_account_id');
+                        $bank_account_operation = Functions::valueKeyInArray($currentBox, 'number_operation');
                         $cajas    = new Box;
                         $cajas->group_id = 1;
                         $cajas->category_id = 1;
@@ -609,11 +612,19 @@ class SaleNoteController extends Controller
                         $cajas->type = '1';
                         $cajas->state = '1';
                         $cajas->method =  $currentBox['method'];
+                        $cajas->bank_account_id = $bank_account_id;
+                        $cajas->bank_account_operation = $bank_account_operation;
                         $cajas->sale_note_id = $this->sale_note->id;
                         $cajas->orden_id =  $request->orden_id;
                         $cajas->cash_id = $request->cash_id;
                         $cajas->user_id = auth()->user()->id;
                         $cajas->description = "VENTAS " . $document;
+                        if ($bank_account_id) {
+                            $bank_account = BankAccount::findOrFail($bank_account_id);
+                            $bank_account->balance = $bank_account->balance + $currentBox["amount"];
+                            $bank_account->save();
+                            $cajas->description = "VENTAS " . $document . " - " . $bank_account->bank->description . " - " . $bank_account->currency_type->description;
+                        }
                         $cajas->soap_type_id = $company->soap_type_id;
                         $cajas->establishment_id = auth()->user()->establishment_id;
                         $cajas->save();

@@ -1,14 +1,14 @@
 webpackJsonp([189],{
 
-/***/ "./modules/Restaurant/Resources/assets/js/views/pos/partials/consignment_modal.vue":
+/***/ "./modules/Restaurant/Resources/assets/js/views/pos/partials/create_dispatch.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__("./node_modules/vue-loader/lib/component-normalizer.js")
 /* script */
-var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/Restaurant/Resources/assets/js/views/pos/partials/consignment_modal.vue")
+var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/Restaurant/Resources/assets/js/views/pos/partials/create_dispatch.vue")
 /* template */
-var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-a39b9b8c\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Restaurant/Resources/assets/js/views/pos/partials/consignment_modal.vue")
+var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-387cf968\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Restaurant/Resources/assets/js/views/pos/partials/create_dispatch.vue")
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -25,7 +25,7 @@ var Component = normalizeComponent(
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "modules/Restaurant/Resources/assets/js/views/pos/partials/consignment_modal.vue"
+Component.options.__file = "modules/Restaurant/Resources/assets/js/views/pos/partials/create_dispatch.vue"
 
 /* hot reload */
 if (false) {(function () {
@@ -34,9 +34,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-a39b9b8c", Component.options)
+    hotAPI.createRecord("data-v-387cf968", Component.options)
   } else {
-    hotAPI.reload("data-v-a39b9b8c", Component.options)
+    hotAPI.reload("data-v-387cf968", Component.options)
   }
   module.hot.dispose(function (data) {
     disposed = true
@@ -48,7 +48,7 @@ module.exports = Component.exports
 
 /***/ }),
 
-/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/Restaurant/Resources/assets/js/views/pos/partials/consignment_modal.vue":
+/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/Restaurant/Resources/assets/js/views/pos/partials/create_dispatch.vue":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -85,131 +85,52 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-var PersonForm = function PersonForm() {
-  return __webpack_require__.e/* import() */(124/* duplicate */).then(__webpack_require__.bind(null, "./resources/js/views/persons/form.vue"));
-};
-
-var PenaltyForm = function PenaltyForm() {
-  return __webpack_require__.e/* import() */(138/* duplicate */).then(__webpack_require__.bind(null, "./modules/Consignment/Resources/assets/js/views/partials/penalty_form.vue"));
+var DispatchCreate = function DispatchCreate() {
+  return __webpack_require__.e/* import() */(0/* duplicate */).then(__webpack_require__.bind(null, "./resources/js/views/dispatches/create.vue"));
 };
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ["showDialog", "items", "all_customers", "establishments"],
+  props: ['showDialog', 'type', 'recordId', 'configuration'],
   components: {
-    PersonForm: PersonForm,
-    PenaltyForm: PenaltyForm
+    DispatchCreate: DispatchCreate
   },
   data: function data() {
     return {
-      loading: false,
-      showDialogNewPenalty: false,
-      showDialogNewPerson: false,
-      form: {},
-      customers: [],
-      penalties: [],
-      loading_search: false
+      parentId: null,
+      parentTable: null,
+      document: null
     };
   },
   created: function created() {
-    this.getPenalties();
+    console.log("la conf", this.configuration);
   },
   methods: {
-    initForm: function initForm() {
-      this.form = {
-        person_id: null,
-        date_of_issue: null,
-        date_of_end: null,
-        penalty_id: null
-      };
-    },
-    getPenalties: function getPenalties() {
+    getData: function getData() {
       var _this = this;
 
       return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee() {
-        var response;
+        var table, id, response, data;
         return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                _context.next = 2;
-                return _this.$http("/consignment/penalty/records");
+                table = _this.type == '80' ? 'sale_note' : 'document';
+                id = _this.recordId; //create_new_info/{table}/{id}
 
-              case 2:
-                response = _context.sent;
-                _this.penalties = response.data;
+                _context.next = 4;
+                return _this.$http("/dispatches/create_new_info/".concat(table, "/").concat(id));
 
               case 4:
+                response = _context.sent;
+
+                if (response.status == 200) {
+                  data = response.data;
+                  _this.parentId = data.parentId;
+                  _this.parentTable = data.parentTable;
+                  _this.document = data.document;
+                }
+
+              case 6:
               case "end":
                 return _context.stop();
             }
@@ -217,179 +138,42 @@ var PenaltyForm = function PenaltyForm() {
         }, _callee);
       }))();
     },
-    formatedItems: function formatedItems() {
-      var formatted = [];
-
-      for (var i = 0; i < this.items.length; i++) {
-        var item = this.items[i];
-        var newItem = {};
-        newItem.establishment_id = this.establishments.id;
-        newItem.id = item.food.item.id;
-        newItem.quantity = item.quantity;
-        newItem.price = item.price;
-        newItem.has_lots = item.series.length > 0;
-        newItem.lots = item.series.map(function (s) {
-          return {
-            series: s.series,
-            date: s.date,
-            id: s.id
-          };
-        });
-        formatted.push(newItem);
-      }
-
-      return formatted;
+    close: function close() {
+      this.$emit('update:showDialog', false);
     },
-    validate: function validate() {
-      var hasError = false;
-      var _this$form = this.form,
-          person_id = _this$form.person_id,
-          date_of_issue = _this$form.date_of_issue,
-          date_of_end = _this$form.date_of_end;
-
-      if (!person_id) {
-        this.$toast.error("Debe seleccionar un cliente/vendedor");
-        hasError = true;
-      }
-
-      if (!date_of_issue) {
-        this.$toast.error("Debe seleccionar una fecha de consignación");
-        hasError = true;
-      }
-
-      if (!date_of_end) {
-        this.$toast.error("Debe seleccionar una fecha de liquidación");
-        hasError = true;
-      }
-
-      return hasError;
-    },
-    submit: function submit() {
+    open: function open() {
       var _this2 = this;
 
       return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee2() {
-        var items, response, _response$data, success, message, id;
-
+        var parentId;
         return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
-                if (!_this2.validate()) {
-                  _context2.next = 2;
-                  break;
-                }
-
-                return _context2.abrupt("return");
+                _context2.next = 2;
+                return _this2.getData();
 
               case 2:
-                _context2.prev = 2;
-                _this2.loading = true;
-                items = _this2.formatedItems();
-                _this2.form.items = items;
-                _context2.next = 8;
-                return _this2.$http.post("/consignment", _this2.form);
+                parentId = _this2.$refs.dispatchCreate.parentId;
+                console.log(parentId);
+                console.log(parentId == _this2.parentId);
 
-              case 8:
-                response = _context2.sent;
+                _this2.$refs.dispatchCreate.mountedMethod();
 
-                if (response.status == 200) {
-                  _response$data = response.data, success = _response$data.success, message = _response$data.message, id = _response$data.id;
-
-                  if (success) {
-                    _this2.$toast.success(message);
-
-                    _this2.$emit("update:showDialog", false);
-
-                    _this2.$emit("limpiarForm");
-                  } else {
-                    _this2.$toast.error(message);
-                  }
-                }
-
-                console.log(response);
-                _context2.next = 17;
-                break;
-
-              case 13:
-                _context2.prev = 13;
-                _context2.t0 = _context2["catch"](2);
-
-                _this2.$message.error("Ocurrió un error al crear la consignación");
-
-                console.log(_context2.t0);
-
-              case 17:
-                _context2.prev = 17;
-                _this2.loading = false;
-                return _context2.finish(17);
-
-              case 20:
+              case 6:
               case "end":
                 return _context2.stop();
             }
           }
-        }, _callee2, null, [[2, 13, 17, 20]]);
+        }, _callee2);
       }))();
-    },
-    clickNewPenalty: function clickNewPenalty() {
-      this.showDialogNewPenalty = true;
-    },
-    clickNewPerson: function clickNewPerson() {
-      this.showDialogNewPerson = true; // this.$emit('clickNewPerson');
-    },
-    reloadPenalties: function reloadPenalties(id) {
-      var _this3 = this;
-
-      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee3() {
-        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee3$(_context3) {
-          while (1) {
-            switch (_context3.prev = _context3.next) {
-              case 0:
-                _context3.next = 2;
-                return _this3.getPenalties();
-
-              case 2:
-                _this3.form.penalty_id = id;
-
-              case 3:
-              case "end":
-                return _context3.stop();
-            }
-          }
-        }, _callee3);
-      }))();
-    },
-    open: function open() {
-      this.customers = this.all_customers;
-      this.initForm();
-    },
-    close: function close() {
-      this.$emit("update:showDialog", false);
-    },
-    searchRemoteCustomers: function searchRemoteCustomers(input) {
-      var _this4 = this;
-
-      if (input.length > 0) {
-        this.loading_search = true;
-        var parameters = "input=".concat(input);
-        this.$http.get("/quotations/search/customers?".concat(parameters)).then(function (response) {
-          _this4.customers = response.data.customers;
-          _this4.loading_search = false;
-
-          if (_this4.customers.length == 0) {
-            _this4.customers = _this4.all_customers;
-          }
-        });
-      } else {
-        this.customers = this.all_customers;
-      }
     }
   }
 });
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-a39b9b8c\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Restaurant/Resources/assets/js/views/pos/partials/consignment_modal.vue":
+/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-387cf968\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Restaurant/Resources/assets/js/views/pos/partials/create_dispatch.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -399,215 +183,30 @@ var render = function() {
   return _c(
     "el-dialog",
     {
-      directives: [
-        {
-          name: "loading",
-          rawName: "v-loading",
-          value: _vm.loading,
-          expression: "loading"
-        }
-      ],
-      attrs: { visible: _vm.showDialog, title: "Consignación" },
-      on: { open: _vm.open, close: _vm.close }
+      attrs: {
+        visible: _vm.showDialog,
+        title: "Crear guia de remision",
+        width: "80%",
+        "close-on-click-modal": false,
+        "close-on-press-escape": false,
+        "append-to-body": ""
+      },
+      on: { close: _vm.close, open: _vm.open }
     },
     [
-      _c(
-        "div",
-        { staticClass: "row m-2" },
-        [
-          _c(
-            "div",
-            { staticClass: "col-md-6 col-12" },
-            [
-              _c("label", { attrs: { for: "person_id" } }, [
-                _vm._v("Cliente\n\n                "),
-                _c(
-                  "a",
-                  { attrs: { href: "#" }, on: { click: _vm.clickNewPerson } },
-                  [
-                    _vm._v(
-                      "\n                    [ + Nuevo ]\n                "
-                    )
-                  ]
-                )
-              ]),
-              _vm._v(" "),
-              _c(
-                "el-select",
-                {
-                  staticClass: "border-left rounded-left border-info",
-                  attrs: {
-                    filterable: "",
-                    remote: "",
-                    "popper-class": "el-select-customers",
-                    dusk: "customer_id",
-                    placeholder:
-                      "Escriba el nombre o número de documento del cliente",
-                    "remote-method": _vm.searchRemoteCustomers,
-                    loading: _vm.loading_search
-                  },
-                  model: {
-                    value: _vm.form.person_id,
-                    callback: function($$v) {
-                      _vm.$set(_vm.form, "person_id", $$v)
-                    },
-                    expression: "form.person_id"
-                  }
-                },
-                _vm._l(_vm.customers, function(option) {
-                  return _c("el-option", {
-                    key: option.id,
-                    attrs: { value: option.id, label: option.name }
-                  })
-                }),
-                1
-              )
-            ],
-            1
-          ),
-          _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "col-md-3 col-12" },
-            [
-              _c("label", { attrs: { for: "date_of_issue" } }, [
-                _vm._v("Fecha de consignación")
-              ]),
-              _vm._v(" "),
-              _c("el-date-picker", {
-                staticClass: "w-100",
-                attrs: { type: "date", placeholder: "Seleccione una fecha" },
-                model: {
-                  value: _vm.form.date_of_issue,
-                  callback: function($$v) {
-                    _vm.$set(_vm.form, "date_of_issue", $$v)
-                  },
-                  expression: "form.date_of_issue"
-                }
-              })
-            ],
-            1
-          ),
-          _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "col-md-3 col-12" },
-            [
-              _c("label", { attrs: { for: "date_of_end" } }, [
-                _vm._v("Fecha de liquidación")
-              ]),
-              _vm._v(" "),
-              _c("el-date-picker", {
-                staticClass: "w-100",
-                attrs: { type: "date", placeholder: "Seleccione una fecha" },
-                model: {
-                  value: _vm.form.date_of_end,
-                  callback: function($$v) {
-                    _vm.$set(_vm.form, "date_of_end", $$v)
-                  },
-                  expression: "form.date_of_end"
-                }
-              })
-            ],
-            1
-          ),
-          _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "col-md-4 col-12" },
-            [
-              _c("label", { attrs: { for: "date_of_end" } }, [
-                _vm._v("Penalización\n                "),
-                _c(
-                  "a",
-                  { attrs: { href: "#" }, on: { click: _vm.clickNewPenalty } },
-                  [
-                    _vm._v(
-                      "\n                    [ + Nuevo ]\n                "
-                    )
-                  ]
-                )
-              ]),
-              _vm._v(" "),
-              _c(
-                "el-select",
-                {
-                  staticClass: "w-100",
-                  attrs: {
-                    placeholder: "Seleccione una penalización",
-                    dusk: "penalty_id"
-                  },
-                  model: {
-                    value: _vm.form.penalty_id,
-                    callback: function($$v) {
-                      _vm.$set(_vm.form, "penalty_id", $$v)
-                    },
-                    expression: "form.penalty_id"
-                  }
-                },
-                _vm._l(_vm.penalties, function(option) {
-                  return _c("el-option", {
-                    key: option.id,
-                    attrs: { value: option.id, label: option.description }
-                  })
-                }),
-                1
-              )
-            ],
-            1
-          ),
-          _vm._v(" "),
-          _c("person-form", {
-            attrs: {
-              showDialog: _vm.showDialogNewPerson,
-              type: "customers",
-              external: true
-            },
-            on: {
-              "update:showDialog": function($event) {
-                _vm.showDialogNewPerson = $event
-              },
-              "update:show-dialog": function($event) {
-                _vm.showDialogNewPerson = $event
-              }
-            }
-          }),
-          _vm._v(" "),
-          _c("penalty-form", {
-            attrs: { showDialog: _vm.showDialogNewPenalty },
-            on: {
-              reloadPenalties: _vm.reloadPenalties,
-              "update:showDialog": function($event) {
-                _vm.showDialogNewPenalty = $event
-              },
-              "update:show-dialog": function($event) {
-                _vm.showDialogNewPenalty = $event
-              }
-            }
-          })
-        ],
-        1
-      ),
-      _vm._v(" "),
-      _c(
-        "div",
-        {
-          staticClass: "dialog-footer",
-          attrs: { slot: "footer" },
-          slot: "footer"
+      _c("dispatch-create", {
+        ref: "dispatchCreate",
+        attrs: {
+          parentId: _vm.parentId,
+          parentTable: _vm.parentTable,
+          document: _vm.document,
+          configuration: _vm.configuration,
+          pos: true
         },
-        [
-          _c("el-button", { on: { click: _vm.close } }, [_vm._v("Cancelar")]),
-          _vm._v(" "),
-          _c(
-            "el-button",
-            { attrs: { type: "primary" }, on: { click: _vm.submit } },
-            [_vm._v("Guardar")]
-          )
-        ],
-        1
-      )
-    ]
+        on: { closeDispatch: _vm.close }
+      })
+    ],
+    1
   )
 }
 var staticRenderFns = []
@@ -616,7 +215,7 @@ module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-a39b9b8c", module.exports)
+    require("vue-hot-reload-api")      .rerender("data-v-387cf968", module.exports)
   }
 }
 

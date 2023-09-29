@@ -310,8 +310,29 @@
                 <td colspan="7" height="18px"><b>OBSERVACION: </b>{{ trim($document->observation) }}</td>
             </tr> --}}
         </tbody>
+      
     </table>
+    <table class="full-width">
+        <tr>
+            <td>
+                <strong>PAGOS:</strong>
+            </td>
+        </tr>
+        @foreach ($boxes as $box)
+            <tr>
+                <td colspan="7" class="text-left font-bold border_detalles">{{ $box->method }}   @if($box->bank_account_operation)
+                    
+                    <small>N° Op: {{$box->bank_account_operation}}</small>
+                    @endif
+                    :
+                    {{ $document->currency_type->symbol }}</td>
+                <td class="text-right font-bold desc">{{ number_format(abs($box->amount), 2, '.', '') }}
+                </td>
+            </tr>
+        @endforeach
 
+
+</table>
     {{-- <table align="center" width="70%" style="margin-top:50px">
         <tr>
             <td align="center" width="45%" style="border-top:1px solid #000;font-weight:bold">Recibi

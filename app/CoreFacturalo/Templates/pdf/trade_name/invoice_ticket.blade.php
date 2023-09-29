@@ -755,9 +755,14 @@
             </tr>
             @foreach ($boxes as $box)
             <tr>
-                <td colspan="4" class="text-left font-bold desc">Total {{ $box->method }}:
+                <td colspan="4" class="text-left font-bold desc">{{ $box->method }}
+                    @if($box->bank_account_operation)
+                    <br>
+                    <small>N° Op: {{$box->bank_account_operation}}</small>
+                    @endif
+                    :
                     {{ $document->currency_type->symbol }}</td>
-                <td class="text-left font-bold desc">{{ number_format(abs($box->amount), 2, '.', '') }}</td>
+                <td valign='bottom' class="text-left font-bold desc">{{ number_format(abs($box->amount), 2, '.', '') }}</td>
             </tr>
             @endforeach
             {{-- @foreach ($payments as $row)

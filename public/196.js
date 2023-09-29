@@ -1,14 +1,14 @@
 webpackJsonp([196],{
 
-/***/ "./modules/Internet/Resources/assets/js/view/pos/partials/tables.vue":
+/***/ "./modules/Internet/Resources/assets/js/view/pos/partials/transfer_modal.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__("./node_modules/vue-loader/lib/component-normalizer.js")
 /* script */
-var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/Internet/Resources/assets/js/view/pos/partials/tables.vue")
+var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/Internet/Resources/assets/js/view/pos/partials/transfer_modal.vue")
 /* template */
-var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-118dd22e\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Internet/Resources/assets/js/view/pos/partials/tables.vue")
+var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-447e4bdd\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Internet/Resources/assets/js/view/pos/partials/transfer_modal.vue")
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -25,7 +25,7 @@ var Component = normalizeComponent(
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "modules/Internet/Resources/assets/js/view/pos/partials/tables.vue"
+Component.options.__file = "modules/Internet/Resources/assets/js/view/pos/partials/transfer_modal.vue"
 
 /* hot reload */
 if (false) {(function () {
@@ -34,9 +34,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-118dd22e", Component.options)
+    hotAPI.createRecord("data-v-447e4bdd", Component.options)
   } else {
-    hotAPI.reload("data-v-118dd22e", Component.options)
+    hotAPI.reload("data-v-447e4bdd", Component.options)
   }
   module.hot.dispose(function (data) {
     disposed = true
@@ -48,7 +48,7 @@ module.exports = Component.exports
 
 /***/ }),
 
-/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/Internet/Resources/assets/js/view/pos/partials/tables.vue":
+/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/Internet/Resources/assets/js/view/pos/partials/transfer_modal.vue":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -133,223 +133,152 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  //tabla color verde
-  props: ["showTables", "table"],
+  props: ["showDialog"],
   data: function data() {
     return {
-      addingOrden: false,
-      ordens: [],
       loading: false,
-      resource: "/caja/tables/tables",
-      tables: [],
-      showOrdens: false,
-      ordensSaved: [],
-      top: "rounded-top",
-      screenWidth: 0
+      code: null,
+      pin: null,
+      transfer: null,
+      time: null
     };
   },
   methods: {
-    handleResize: function handleResize() {
-      this.screenWidth = window.innerWidth;
-    },
-    addOrden: function addOrden() {
-      this.addingOrden = !this.addingOrden;
-    },
-    closeOrden: function closeOrden() {
-      this.ordens = [];
-    },
-    sendOrdens: function sendOrdens(orden) {
-      this.$emit("sendOrdens", orden);
-      this.close();
-    },
-    selectTable: function selectTable(table) {
+    acceptTransfers: function acceptTransfers() {
       var _this = this;
 
       return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee() {
-        var response, ordens;
+        var form, response, _response$data, success, message;
+
         return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                if (!_this.addingOrden) {
-                  _context.next = 4;
-                  break;
-                }
+                _context.prev = 0;
+                _this.loading = true;
+                form = {
+                  code: _this.code,
+                  pin: _this.pin
+                };
+                _context.next = 5;
+                return _this.$http.post("/transfers/accept_transfer", form);
 
-                _this.$emit("creatingOrden", table.number, table.id);
+              case 5:
+                response = _context.sent;
+                _response$data = response.data, success = _response$data.success, message = _response$data.message;
+
+                if (success) {
+                  _this.$toast.success(message);
+                } else {
+                  _this.$toast.error(message);
+                }
 
                 _this.close();
 
-                return _context.abrupt("return");
-
-              case 4:
-                if (!(table.status_table_id == 1)) {
-                  _context.next = 7;
-                  break;
-                }
-
-                _this.$toast.warning("La mesa no tiene ordenes");
-
-                return _context.abrupt("return");
-
-              case 7:
-                _this.loading = true;
-                _this.tableSelectedNumber = table.number;
-                _context.prev = 9;
-                _context.next = 12;
-                return _this.$http("/caja/tables/orden/".concat(table.id));
-
-              case 12:
-                response = _context.sent;
-
-                if (response.status == 200) {
-                  ordens = response.data.ordens;
-                  _this.ordens = ordens;
-
-                  if (ordens.length == 1) {
-                    _this.sendOrdens(_this.ordens[0]);
-                  } else {
-                    _this.showOrdens = true;
-                  }
-                }
-
-                _this.loading = false;
-                _context.next = 21;
+                _context.next = 15;
                 break;
 
-              case 17:
-                _context.prev = 17;
-                _context.t0 = _context["catch"](9);
-                _this.loading = false;
+              case 11:
+                _context.prev = 11;
+                _context.t0 = _context["catch"](0);
+
+                _this.$toast.error("Ocurri\xF3 un error ".concat(_context.t0));
+
                 console.log(_context.t0);
 
-              case 21:
+              case 15:
+                _context.prev = 15;
+                _this.loading = false;
+                return _context.finish(15);
+
+              case 18:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, null, [[9, 17]]);
+        }, _callee, null, [[0, 11, 15, 18]]);
       }))();
     },
-    open: function open() {
+    getTransfer: function getTransfer() {
       var _this2 = this;
 
-      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee2() {
-        var response, tables;
-        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee2$(_context2) {
+      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee3() {
+        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee3$(_context3) {
           while (1) {
-            switch (_context2.prev = _context2.next) {
+            switch (_context3.prev = _context3.next) {
               case 0:
-                _this2.closeOrden();
+                if (_this2.code.length == 5) {
+                  if (_this2.time) {
+                    clearTimeout(_this2.time);
+                  }
 
-                _context2.prev = 1;
-                _this2.loading = true;
-                _context2.next = 5;
-                return _this2.$http(_this2.resource);
+                  _this2.time = setTimeout( /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee2() {
+                    var response, _response$data2, message, success, transfer;
 
-              case 5:
-                response = _context2.sent;
+                    return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee2$(_context2) {
+                      while (1) {
+                        switch (_context2.prev = _context2.next) {
+                          case 0:
+                            _context2.prev = 0;
+                            _this2.loading = true;
+                            _context2.next = 4;
+                            return _this2.$http("/transfers/places?code=".concat(_this2.code));
 
-                if (response.status == 200) {
-                  tables = response.data.tables; //  this.tables = tables.filter(f => f.number != "caja");
+                          case 4:
+                            response = _context2.sent;
+                            _response$data2 = response.data, message = _response$data2.message, success = _response$data2.success, transfer = _response$data2.transfer;
 
-                  _this2.tables = tables;
-                } else {
-                  _this2.$toast.warning("Ocurrió un error");
+                            if (success) {
+                              _this2.transfer = transfer;
+                              console.log(_this2.transfer);
+                            } else {
+                              _this2.$toast.warning(message);
+                            }
+
+                            _context2.next = 12;
+                            break;
+
+                          case 9:
+                            _context2.prev = 9;
+                            _context2.t0 = _context2["catch"](0);
+                            console.log(_context2.t0);
+
+                          case 12:
+                            _context2.prev = 12;
+                            _this2.loading = false;
+                            return _context2.finish(12);
+
+                          case 15:
+                          case "end":
+                            return _context2.stop();
+                        }
+                      }
+                    }, _callee2, null, [[0, 9, 12, 15]]);
+                  })), 500);
                 }
 
-                _this2.loading = false;
-                _context2.next = 15;
-                break;
-
-              case 10:
-                _context2.prev = 10;
-                _context2.t0 = _context2["catch"](1);
-                _this2.loading = false;
-                console.log(_context2.t0);
-
-                _this2.$toast.warning("Ocurrió un error");
-
-              case 15:
+              case 1:
               case "end":
-                return _context2.stop();
+                return _context3.stop();
             }
           }
-        }, _callee2, null, [[1, 10]]);
+        }, _callee3);
       }))();
     },
     close: function close() {
-      this.addingOrden = false;
-      this.$emit("update:showTables", false);
+      this.$emit("update:showDialog", false);
+      this.code = null;
+      this.pin = null;
+      this.transfer = null;
+      this.time = null;
     }
-  },
-  mounted: function mounted() {
-    this.screenWidth = window.innerWidth;
-    window.addEventListener("resize", this.handleResize);
   }
 });
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-118dd22e\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Internet/Resources/assets/js/view/pos/partials/tables.vue":
+/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-447e4bdd\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Internet/Resources/assets/js/view/pos/partials/transfer_modal.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -359,163 +288,161 @@ var render = function() {
   return _c(
     "el-dialog",
     {
-      directives: [
-        {
-          name: "loading",
-          rawName: "v-loading",
-          value: _vm.loading,
-          expression: "loading"
-        }
-      ],
-      class: { top: _vm.top },
       attrs: {
-        visible: _vm.showTables,
-        width: "70%",
-        title: "ZONA DE ATENCIÓN ",
-        "close-on-click-modal": false
+        "close-on-click-modal": false,
+        width: "40%",
+        visible: _vm.showDialog,
+        title: "Aceptar Mercaderia "
       },
-      on: { open: _vm.open, close: _vm.close }
+      on: { close: _vm.close }
     },
     [
-      _vm.ordens.length == 0
-        ? _c("div", { staticClass: "card" }, [
-            _c("div", { staticClass: "d-flex justify-content-end p-2" }, [
-              _c(
-                "button",
-                {
-                  class:
-                    "btn " + (_vm.addingOrden ? "btn-danger" : "btn-primary"),
-                  attrs: { type: "button" },
-                  on: { click: _vm.addOrden }
-                },
-                [
-                  _vm._v(
-                    "\n                " +
-                      _vm._s(
-                        _vm.addingOrden ? "Seleccione mesa" : "Nueva orden"
-                      ) +
-                      "\n            "
-                  )
-                ]
-              ),
-              _vm._v(" "),
-              _c(
-                "button",
-                {
-                  staticClass: "btn btn-light",
-                  staticStyle: { "margin-left": "15px" },
-                  attrs: { type: "button" },
-                  on: { click: _vm.close }
-                },
-                [_vm._v("\n                Cerrar\n            ")]
-              )
-            ]),
+      _c(
+        "div",
+        {
+          directives: [
+            {
+              name: "loading",
+              rawName: "v-loading",
+              value: _vm.loading,
+              expression: "loading"
+            }
+          ],
+          staticClass: "p-2"
+        },
+        [
+          _c("div", { staticClass: "row" }, [
+            _c(
+              "div",
+              { staticClass: "col-md-4" },
+              [
+                _c("span", [_vm._v("Código de transferencia")]),
+                _vm._v(" "),
+                _c("el-input", {
+                  on: { input: _vm.getTransfer },
+                  model: {
+                    value: _vm.code,
+                    callback: function($$v) {
+                      _vm.code = $$v
+                    },
+                    expression: "code"
+                  }
+                })
+              ],
+              1
+            ),
             _vm._v(" "),
-            _vm.tables.length > 0
+            _c(
+              "div",
+              { staticClass: "col-md-4" },
+              [
+                _c("span", [_vm._v("PIN")]),
+                _vm._v(" "),
+                _c("el-input", {
+                  attrs: { disabled: !_vm.transfer, "show-password": "" },
+                  model: {
+                    value: _vm.pin,
+                    callback: function($$v) {
+                      _vm.pin = $$v
+                    },
+                    expression: "pin"
+                  }
+                })
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _vm.transfer
               ? _c(
-                  "div",
-                  { staticClass: "d-flex flex-wrap justify-content-center" },
-                  _vm._l(_vm.tables, function(table, idx) {
-                    return _c(
-                      "div",
-                      {
-                        key: idx,
-                        staticClass:
-                          " col-2 btn   m-1 d-flex flex-column justify-content-center align-items-center ",
-                        class:
-                          "" +
-                          (table.status_table_id == 1
-                            ? "btn-primary"
-                            : "btn-danger"),
-                        staticStyle: {
-                          "max-height": "136px",
-                          "max-width": "135px"
-                        },
-                        on: {
-                          click: function($event) {
-                            return _vm.selectTable(table)
-                          }
-                        }
-                      },
-                      [
-                        _c("strong", { staticClass: "h3 text-white  " }, [
-                          _vm._v("Mesa")
-                        ]),
-                        _vm._v(" "),
-                        _c("i", {
-                          staticClass: "icofont-dining-table icofont-4x"
-                        }),
-                        _vm._v(" "),
-                        _c("span", { staticClass: "h2  text-white" }, [
-                          _vm._v(
-                            "\n                    " +
-                              _vm._s(table.number) +
-                              "\n                "
-                          )
-                        ])
-                      ]
-                    )
-                  }),
-                  0
-                )
-              : _c(
                   "div",
                   {
                     staticClass:
-                      "h-25 d-flex justify-content-center align-items-center"
+                      "col-md-4 d-flex align-items-end justify-content-start"
                   },
-                  [_c("span", [_vm._v("Sin mesas")])]
+                  [
+                    _c(
+                      "el-button",
+                      {
+                        attrs: { type: "primary" },
+                        on: { click: _vm.acceptTransfers }
+                      },
+                      [
+                        _vm._v(
+                          "\n                    Aceptar\n                "
+                        )
+                      ]
+                    )
+                  ],
+                  1
                 )
-          ])
-        : _vm._e(),
-      _vm._v(" "),
-      _vm.ordens.length > 0
-        ? _c("div", { staticClass: "card-body p-2" }, [
-            _c(
-              "div",
-              { staticClass: "d-flex flex-wrap justify-content-left" },
-              _vm._l(_vm.ordens, function(ord, idx) {
-                return _c("div", { key: idx, staticClass: "col-3" }, [
-                  _c(
-                    "button",
-                    {
-                      staticClass: "btn btn-primary p-1 m-1 ",
-                      attrs: { type: "button" },
-                      on: {
-                        click: function($event) {
-                          return _vm.sendOrdens(ord)
-                        }
-                      }
-                    },
-                    [
-                      _c("span", { staticClass: "h3 text-white" }, [
-                        _vm._v("#" + _vm._s(ord.id))
-                      ]),
-                      _c("br"),
-                      _vm._v(" "),
-                      _c("span", { staticClass: "h4 text-white" }, [
-                        _vm._v(_vm._s(ord.ref ? ord.ref : "Sin referencia"))
+              : _vm._e()
+          ]),
+          _vm._v(" "),
+          _vm.transfer
+            ? [
+                _c(
+                  "div",
+                  {
+                    staticClass: "d-flex flex-column",
+                    staticStyle: { "margin-top": "10px" }
+                  },
+                  [
+                    _c("h5", [
+                      _vm._v("\n                    De:\n                    "),
+                      _c("strong", [
+                        _vm._v(_vm._s(_vm.transfer.warehouse.description))
                       ])
-                    ]
-                  )
-                ])
-              }),
-              0
-            ),
-            _vm._v(" "),
-            _c("div", { staticClass: "d-flex justify-content-end" }, [
-              _c(
-                "button",
-                {
-                  staticClass: "btn btn-light",
-                  attrs: { type: "button" },
-                  on: { click: _vm.closeOrden }
-                },
-                [_vm._v("\n                Regresar\n            ")]
-              )
-            ])
-          ])
-        : _vm._e()
+                    ]),
+                    _vm._v(" "),
+                    _c("h5", [
+                      _vm._v("\n                    A:\n                    "),
+                      _c("strong", [
+                        _vm._v(
+                          _vm._s(_vm.transfer.warehouse_destination.description)
+                        )
+                      ])
+                    ])
+                  ]
+                ),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  { staticClass: "row", staticStyle: { "margin-top": "10px" } },
+                  [
+                    _c("table", [
+                      _c("thead", [
+                        _c("tr", [
+                          _c("th", [_vm._v("#")]),
+                          _vm._v(" "),
+                          _c("th", [_vm._v("Producto")]),
+                          _vm._v(" "),
+                          _c("th", [_vm._v("Cantidad")])
+                        ])
+                      ]),
+                      _vm._v(" "),
+                      _c(
+                        "tbody",
+                        _vm._l(_vm.transfer.detail, function(data, idx) {
+                          return _c("tr", { key: idx }, [
+                            _c("td", [_vm._v(_vm._s(idx + 1))]),
+                            _vm._v(" "),
+                            _c("td", [_vm._v(_vm._s(data.item.description))]),
+                            _vm._v(" "),
+                            _c("td", [_vm._v(_vm._s(data.quantity))])
+                          ])
+                        }),
+                        0
+                      )
+                    ])
+                  ]
+                )
+              ]
+            : _vm._e(),
+          _vm._v(" "),
+          _c("div", { staticClass: "p-3" })
+        ],
+        2
+      )
     ]
   )
 }
@@ -525,7 +452,7 @@ module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-118dd22e", module.exports)
+    require("vue-hot-reload-api")      .rerender("data-v-447e4bdd", module.exports)
   }
 }
 

@@ -31,6 +31,7 @@ use App\Models\Tenant\Catalogs\AttributeType;
 use App\Models\Tenant\Catalogs\SystemIscType;
 use App\Models\Tenant\Catalogs\AffectationIgvType;
 use App\Models\Tenant\Configuration;
+use App\Models\Tenant\DocumentPayment;
 use App\Models\Tenant\Establishment;
 use App\Models\Tenant\Item;
 use App\Models\Tenant\ItemUnitType;
@@ -1032,6 +1033,10 @@ class CashController extends Controller
         $sales_niubiz_quantity = $sales_niubiz->count();
         $sales_niubiz_records = $sales_niubiz->get();
 
+        $sales_openpay = Box::where('type', '1')->where('method', 'TARJETA: OPENPAY')->where('expenses', 0)->where('incomes', 0)->where('state', 0)->where('cash_id', $cash_id)->OrderBy('date', 'asc');
+        $sales_openpay_sum = $sales_openpay->sum('amount');
+        $sales_openpay_quantity = $sales_openpay->count();
+        $sales_openpay_records = $sales_openpay->get();
 
         $sales_transfer = Box::where('type', '1')->where('method', 'Transferencia')->where('expenses', 0)->where('incomes', 0)->where('state', 0)->where('cash_id', $cash_id)->OrderBy('date', 'asc');
         $sales_transfer_sum = $sales_transfer->sum('amount');
@@ -1129,11 +1134,38 @@ class CashController extends Controller
                 "desc" => "Niubiz",
                 "quantity" => $sales_niubiz_quantity,
                 "sum" => $sales_niubiz_sum,
+            ],
+            "openpay" => [
+                "desc" => "Openpay",
+                "quantity" => $sales_openpay_quantity,
+                "sum" => $sales_openpay_sum,
             ]
 
 
 
         ];
+        $banks = Box::where('type','1')
+        ->whereNotNull('bank_account_id')
+        ->where('cash_id', $cash_id)
+        
+        ;
+        $total_coins_bank = $banks->sum('amount');
+        
+        $bank_accounts = $banks->get();
+        foreach($bank_accounts as $bank_account){
+            $method = $bank_account->method;
+            if(isset($sales_detail[$method])){
+                $sales_detail[$method]["quantity"] += 1;
+                $sales_detail[$method]["sum"] += $bank_account->amount;
+            }else{
+                $sales_detail[$method] = [
+                    "desc" => $bank_account->method,
+                    "quantity" => 1,
+                    "sum" => $bank_account->amount,
+                    "is_bank" => true,
+                ];
+            }
+        }
         $incomes_expenses_cash = [
             "incomes" => [
                 "quantity" => $incomes_cash_quantity,
@@ -1158,7 +1190,9 @@ class CashController extends Controller
             $sales_plin_sum +
             $sales_culqui_sum +
             $sales_izypay_sum +
-            $sales_niubiz_sum;
+            $sales_niubiz_sum +
+            $sales_openpay_sum 
+            ;
         $counter_length = 0;
         if ($counter != null) {
             $counter_length = count($counter);
@@ -1179,6 +1213,7 @@ class CashController extends Controller
                 'user',
                 'establishment',
                 "total_coins_virtual",
+                "total_coins_bank",
                 "total_coins",
                 "total_cash",
                 "sales_quantity",
@@ -1193,7 +1228,7 @@ class CashController extends Controller
                 "time",
                 "counter"
             ))
-                ->setPaper(array(0, 0, 249.45, 300 + (60 + $counter_length * 10)));
+                ->setPaper(array(0, 0, 249.45, 300 + (100 + $counter_length * 15)));
         } catch (Exception $e) {
             return ['m' => $e->getMessage()];
         }
@@ -1211,18 +1246,33 @@ class CashController extends Controller
                 $customer_number = $customer->number;
                 $customer_name = $customer->name;
                 $sale_note_id = $row->sale_note_id;
-                $box = Box::where('sale_note_id', $row->sale_note_id)
+                $document_id = $row->document_id;
+                if($sale_note_id){
+                    $box = Box::where('sale_note_id', $row->sale_note_id)
                     ->where('sale_note_payment_id', $row->sale_note_payment_id)
                     ->first();
+                }else{
+                    $box = Box::where('document_id', $row->document_id)
+                    ->where('document_payment_id', $row->document_payment_id)
+                    ->first();
+                }
+                
                 $method  = null;
 
                 if ($box) {
                     $method = $box->method;
                 }
                 $amount = $row->amount;
-                $paid = (bool) $row->sale_note->paid;
-                $amount_payment = SaleNotePayment::where('sale_note_id', $sale_note_id)->sum('payment');
-                $remaining = number_format($row->sale_note->total - $amount_payment, 2, ".", "");
+                if($row->sale_note){
+                    $paid = (bool) $row->sale_note->paid;
+                    $amount_payment = SaleNotePayment::where('sale_note_id', $sale_note_id)->sum('payment');
+                    $remaining = number_format($row->sale_note->total - $amount_payment, 2, ".", "");
+                }else{
+                    $paid = (bool)$row->document->total_canceled;
+                    $amount_payment = DocumentPayment::where('document_id', $row->document_id)->sum('payment');
+                    $remaining = number_format($row->document->total - $amount_payment, 2, ".", "");
+                }
+            
                 return
                     [
                         "id" => $row->id,

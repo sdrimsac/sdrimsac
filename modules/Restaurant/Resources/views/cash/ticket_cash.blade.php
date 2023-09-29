@@ -272,6 +272,15 @@
             <tr>
 
                 <td colspan="2" class="text-left lead-font-weight-700">
+                    BANCO
+                </td>
+                <td class="text-left ">
+                    {{ formatMoney($total_coins_bank) }}
+                </td>
+            </tr>
+            <tr>
+
+                <td colspan="2" class="text-left lead-font-weight-700">
                     GASTOS
                 </td>
                 <td class="text-left ">
@@ -284,7 +293,8 @@
                     TOTAL
                 </td>
                 <td class="text-left ">
-                    {{ formatMoney($total_cash + $total_coins_virtual +$cash->beginning_balance -  $incomes_expenses_cash['expenses']['amount']) }}
+                    {{ formatMoney($total_cash +
+                    $total_coins_bank + $total_coins_virtual +$cash->beginning_balance -  $incomes_expenses_cash['expenses']['amount']) }}
                 </td>
             </tr>
         </table>

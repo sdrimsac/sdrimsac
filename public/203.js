@@ -1,14 +1,14 @@
 webpackJsonp([203],{
 
-/***/ "./modules/Internet/Resources/assets/js/view/pos/partials/change_data_modal.vue":
+/***/ "./modules/Internet/Resources/assets/js/view/pos/partials/create_variation_form.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__("./node_modules/vue-loader/lib/component-normalizer.js")
 /* script */
-var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/Internet/Resources/assets/js/view/pos/partials/change_data_modal.vue")
+var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/Internet/Resources/assets/js/view/pos/partials/create_variation_form.vue")
 /* template */
-var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-0838561a\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Internet/Resources/assets/js/view/pos/partials/change_data_modal.vue")
+var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-5c9e583f\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Internet/Resources/assets/js/view/pos/partials/create_variation_form.vue")
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -25,7 +25,7 @@ var Component = normalizeComponent(
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "modules/Internet/Resources/assets/js/view/pos/partials/change_data_modal.vue"
+Component.options.__file = "modules/Internet/Resources/assets/js/view/pos/partials/create_variation_form.vue"
 
 /* hot reload */
 if (false) {(function () {
@@ -34,9 +34,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-0838561a", Component.options)
+    hotAPI.createRecord("data-v-5c9e583f", Component.options)
   } else {
-    hotAPI.reload("data-v-0838561a", Component.options)
+    hotAPI.reload("data-v-5c9e583f", Component.options)
   }
   module.hot.dispose(function (data) {
     disposed = true
@@ -48,64 +48,25 @@ module.exports = Component.exports
 
 /***/ }),
 
-/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/Internet/Resources/assets/js/view/pos/partials/change_data_modal.vue":
+/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/Internet/Resources/assets/js/view/pos/partials/create_variation_form.vue":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator__ = __webpack_require__("./node_modules/@babel/runtime/regenerator/index.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator__);
-function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
-
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
 
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 //
 //
 //
@@ -139,217 +100,86 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ["showDialog", "record"],
+  props: ["dataVariation", "showDialog"],
   data: function data() {
-    return {
-      form: {},
-      loading: false
-    };
+    var _ref;
+
+    return _ref = {
+      title: null,
+      form: {}
+    }, _defineProperty(_ref, "title", "Nuevo"), _defineProperty(_ref, "loading", false), _ref;
   },
   methods: {
-    transformMac: function transformMac(mac) {
-      mac = mac.replace(/:/g, "");
-      var regex = /\b([\w:]+)\b/g;
-      var words = [];
-      mac.replace(regex, function (_, word) {
-        if (/^[a-zA-Z0-9:]+$/.test(word)) {
-          words.push(word);
-        }
-      });
-      var formatedMac = words.map(function (word) {
-        if (word.length > 2) {
-          var chars = word.split("");
-          var two = [];
-
-          for (var i = 0; i < chars.length; i += 2) {
-            two.push(chars.slice(i, i + 2).join(""));
-          }
-
-          return two.join(":");
-        } else {
-          return word;
-        }
-      }).join(" ");
-      this.form.mac = formatedMac;
-    },
-    getRecord: function getRecord() {
+    submit: function submit() {
       var _this = this;
 
       return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee() {
-        var response, register;
+        var response;
         return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
                 _context.prev = 0;
                 _this.loading = true;
-                _context.next = 4;
-                return _this.$http("/internet/register/data/".concat(_this.record.id));
+                _this.form.type_id = _this.dataVariation.typeId;
+                _context.next = 5;
+                return _this.$http.post("/internet/".concat(_this.dataVariation.type, "/variation"), _this.form);
 
-              case 4:
+              case 5:
                 response = _context.sent;
 
                 if (response.status == 200) {
-                  register = response.data.register;
-                  _this.form = register;
+                  _this.$toast.success("Creado con exito.");
+
+                  _this.$emit("addVariation", _objectSpread(_objectSpread({}, _this.form), {}, {
+                    type: _this.dataVariation.type
+                  }));
+
+                  _this.close();
+                } else {
+                  _this.$toast.warnig("Ocurrió un error.");
                 }
 
-                _context.next = 11;
+                _context.next = 13;
                 break;
 
-              case 8:
-                _context.prev = 8;
+              case 9:
+                _context.prev = 9;
                 _context.t0 = _context["catch"](0);
                 console.log(_context.t0);
 
-              case 11:
-                _context.prev = 11;
-                _this.loading = false;
-                return _context.finish(11);
+                _this.$toast.error("Ocurrió un error.");
 
-              case 14:
+              case 13:
+                _context.prev = 13;
+                _this.loading = false;
+                return _context.finish(13);
+
+              case 16:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, null, [[0, 8, 11, 14]]);
+        }, _callee, null, [[0, 9, 13, 16]]);
       }))();
     },
-    openDialog: function openDialog() {
-      this.getRecord();
+    open: function open() {
+      this.form = {};
+      var type = this.dataVariation.type;
+
+      if (type) {
+        this.title = type == "plan" ? "Nuevo plan" : "Nuevo concepto";
+      }
     },
-    closeDialog: function closeDialog() {
+    close: function close() {
       this.$emit("update:showDialog", false);
-    },
-    validate: function validate() {
-      var fail = false;
-      var errors = {
-        type: "El tipo de instalación es obligatorio",
-        mac: "La MAC es obligatoria",
-        installation_address: "La dirección es obligatoria",
-        identifier: "El id es obligatorio",
-        supplie: "El suministro eléctrico es obligatorio"
-      };
-
-      var _iterator = _createForOfIteratorHelper(Object.keys(errors).reverse()),
-          _step;
-
-      try {
-        for (_iterator.s(); !(_step = _iterator.n()).done;) {
-          var error = _step.value;
-
-          if (!this.form[error]) {
-            fail = true;
-            this.$toast.error(errors[error]);
-          }
-        }
-      } catch (err) {
-        _iterator.e(err);
-      } finally {
-        _iterator.f();
-      }
-
-      if (!this.form.telephone) {
-        fail = true;
-        this.$toast.error("El teléfono es obligatorio");
-      } else {
-        if (this.form.telephone.length != 9) {
-          fail = true;
-          this.$toast.error("El teléfono debe tener 9 dígitos");
-        }
-      }
-
-      if (this.form.mac) {
-        var mac = this.form.mac;
-        mac = mac.split(":");
-
-        if (mac.length != 6) {
-          fail = true;
-          this.$toast.error("La MAC debe tener 6 pares de caracteres separados por dos puntos (:)");
-        } else {
-          for (var i = 0; i < mac.length; i++) {
-            if (mac[i].length != 2) {
-              fail = true;
-              this.$toast.error("La MAC debe tener 6 pares de caracteres separados por dos puntos (:)");
-            }
-          }
-        }
-      }
-
-      if (this.form.supplie) {
-        if (Number.isNaN(this.form.supplie)) {
-          fail = true;
-          this.$toast.error("El suministro debe ser numérico");
-        }
-
-        if (this.form.supplie.toString().length != 8) {
-          fail = true;
-          this.$toast.error("El suministro debe tener 8 dígitos");
-        }
-      }
-
-      return fail;
-    },
-    submit: function submit() {
-      var _this2 = this;
-
-      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee2() {
-        var response;
-        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee2$(_context2) {
-          while (1) {
-            switch (_context2.prev = _context2.next) {
-              case 0:
-                if (!_this2.validate()) {
-                  _context2.next = 2;
-                  break;
-                }
-
-                return _context2.abrupt("return");
-
-              case 2:
-                _context2.prev = 2;
-                _this2.loading = true;
-                _context2.next = 6;
-                return _this2.$http.post("/internet/register/data", _this2.form);
-
-              case 6:
-                response = _context2.sent;
-
-                if (response.status == 200) {
-                  _this2.$toast.success("Datos actualizados");
-
-                  _this2.$emit("getRecords");
-
-                  _this2.$emit("update:showDialog", false);
-                }
-
-                _context2.next = 13;
-                break;
-
-              case 10:
-                _context2.prev = 10;
-                _context2.t0 = _context2["catch"](2);
-                console.log(_context2.t0);
-
-              case 13:
-                _context2.prev = 13;
-                _this2.loading = false;
-                return _context2.finish(13);
-
-              case 16:
-              case "end":
-                return _context2.stop();
-            }
-          }
-        }, _callee2, null, [[2, 10, 13, 16]]);
-      }))();
     }
   }
 });
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-0838561a\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Internet/Resources/assets/js/view/pos/partials/change_data_modal.vue":
+/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-5c9e583f\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Internet/Resources/assets/js/view/pos/partials/create_variation_form.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -369,102 +199,28 @@ var render = function() {
       ],
       attrs: {
         visible: _vm.showDialog,
-        title: "Actualizar datos",
-        "append-to-body": ""
+        "append-to-body": "",
+        title: _vm.title
       },
-      on: { open: _vm.openDialog, close: _vm.closeDialog }
+      on: { open: _vm.open, close: _vm.close }
     },
     [
       _c("div", { staticClass: "row mt-2" }, [
         _c(
           "div",
-          { staticClass: "col-md-6" },
+          { staticClass: "col-md-8" },
           [
-            _c("label", { attrs: { for: "type" } }, [_vm._v("Tipo")]),
-            _vm._v(" "),
-            _c(
-              "el-select",
-              {
-                model: {
-                  value: _vm.form.type,
-                  callback: function($$v) {
-                    _vm.$set(_vm.form, "type", $$v)
-                  },
-                  expression: "form.type"
-                }
-              },
-              [
-                _c("el-option", {
-                  attrs: { value: "antena", label: "Antena", id: "antena" }
-                }),
-                _vm._v(" "),
-                _c("el-option", {
-                  attrs: { value: "fibra", label: "Fibra", id: "fibra" }
-                })
-              ],
-              1
-            )
-          ],
-          1
-        ),
-        _vm._v(" "),
-        _c(
-          "div",
-          { staticClass: "col-md-6" },
-          [
-            _c("label", { attrs: { for: "id" } }, [_vm._v("Id Precinto")]),
-            _vm._v(" "),
-            _c("el-input", {
-              attrs: { placeholder: "Id Precinto" },
-              model: {
-                value: _vm.form.identifier,
-                callback: function($$v) {
-                  _vm.$set(_vm.form, "identifier", $$v)
-                },
-                expression: "form.identifier"
-              }
-            })
-          ],
-          1
-        ),
-        _vm._v(" "),
-        _c(
-          "div",
-          { staticClass: "col-md-6" },
-          [
-            _c("label", { attrs: { for: "mac" } }, [_vm._v("MAC")]),
-            _vm._v(" "),
-            _c("el-input", {
-              attrs: { placeholder: "MAC" },
-              on: { input: _vm.transformMac },
-              model: {
-                value: _vm.form.mac,
-                callback: function($$v) {
-                  _vm.$set(_vm.form, "mac", $$v)
-                },
-                expression: "form.mac"
-              }
-            })
-          ],
-          1
-        ),
-        _vm._v(" "),
-        _c(
-          "div",
-          { staticClass: "col-md-6" },
-          [
-            _c("label", { attrs: { for: "supplie" } }, [
-              _vm._v("Suministro eléctrico")
+            _c("label", { attrs: { for: "description" } }, [
+              _vm._v("Descripción")
             ]),
             _vm._v(" "),
             _c("el-input", {
-              attrs: { placeholder: "Suministro eléctrico" },
               model: {
-                value: _vm.form.supplie,
+                value: _vm.form.description,
                 callback: function($$v) {
-                  _vm.$set(_vm.form, "supplie", $$v)
+                  _vm.$set(_vm.form, "description", $$v)
                 },
-                expression: "form.supplie"
+                expression: "form.description"
               }
             })
           ],
@@ -473,58 +229,19 @@ var render = function() {
         _vm._v(" "),
         _c(
           "div",
-          { staticClass: "col-md-6" },
+          { staticClass: "col-md-4" },
           [
-            _c("label", { attrs: { for: "ip" } }, [_vm._v("Dirección")]),
+            _c("label", { attrs: { for: "price" } }, [_vm._v("Precio")]),
             _vm._v(" "),
-            _c("el-input", {
-              attrs: { placeholder: "Dirección" },
+            _c("el-input-number", {
+              staticClass: "w-100",
+              attrs: { controls: false },
               model: {
-                value: _vm.form.installation_address,
+                value: _vm.form.price,
                 callback: function($$v) {
-                  _vm.$set(_vm.form, "installation_address", $$v)
+                  _vm.$set(_vm.form, "price", $$v)
                 },
-                expression: "form.installation_address"
-              }
-            })
-          ],
-          1
-        ),
-        _vm._v(" "),
-        _c(
-          "div",
-          { staticClass: "col-md-6" },
-          [
-            _c("label", { attrs: { for: "ip" } }, [_vm._v("Referencia")]),
-            _vm._v(" "),
-            _c("el-input", {
-              attrs: { placeholder: "Referencia" },
-              model: {
-                value: _vm.form.reference_installation_address,
-                callback: function($$v) {
-                  _vm.$set(_vm.form, "reference_installation_address", $$v)
-                },
-                expression: "form.reference_installation_address"
-              }
-            })
-          ],
-          1
-        ),
-        _vm._v(" "),
-        _c(
-          "div",
-          { staticClass: "col-md-6" },
-          [
-            _c("label", { attrs: { for: "ip" } }, [_vm._v("Celular")]),
-            _vm._v(" "),
-            _c("el-input", {
-              attrs: { placeholder: "Celular" },
-              model: {
-                value: _vm.form.telephone,
-                callback: function($$v) {
-                  _vm.$set(_vm.form, "telephone", $$v)
-                },
-                expression: "form.telephone"
+                expression: "form.price"
               }
             })
           ],
@@ -540,9 +257,7 @@ var render = function() {
           slot: "footer"
         },
         [
-          _c("el-button", { on: { click: _vm.closeDialog } }, [
-            _vm._v("Cancelar")
-          ]),
+          _c("el-button", { on: { click: _vm.close } }, [_vm._v("Cancelar")]),
           _vm._v(" "),
           _c(
             "el-button",
@@ -561,7 +276,7 @@ module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-0838561a", module.exports)
+    require("vue-hot-reload-api")      .rerender("data-v-5c9e583f", module.exports)
   }
 }
 

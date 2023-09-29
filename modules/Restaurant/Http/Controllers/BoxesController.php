@@ -783,6 +783,8 @@ class BoxesController extends Controller
         // $sales_cash_records = $sales_cash->get();
 
         //TARJETA: NIUBIZ
+      
+        
 
         $sales_izypay = Box::where('type', '1')->where('method', 'TARJETA: IZYPAY')->where('expenses', 0)->where('incomes', 0)->where('state', 0)->where('cash_id', $cash_id)->OrderBy('date', 'asc');
         $sales_izypay_sum = $sales_izypay->sum('amount');
@@ -792,6 +794,10 @@ class BoxesController extends Controller
         $sales_niubiz_sum = $sales_niubiz->sum('amount');
         $sales_niubiz_quantity = $sales_niubiz->count();
 
+        
+        $sales_openpay = Box::where('type', '1')->where('method', 'TARJETA: OPENPAY')->where('expenses', 0)->where('incomes', 0)->where('state', 0)->where('cash_id', $cash_id)->OrderBy('date', 'asc');
+        $sales_openpay_sum = $sales_openpay->sum('amount');
+        $sales_openpay_quantity = $sales_openpay->count();
 
         $sales_transfer = Box::where('type', '1')->where('method', 'Transferencia')->where('expenses', 0)->where('incomes', 0)->where('state', 0)->where('cash_id', $cash_id)->OrderBy('date', 'asc');
         $sales_transfer_sum = $sales_transfer->sum('amount');
@@ -922,6 +928,12 @@ class BoxesController extends Controller
                 "quantity" => $sales_niubiz_quantity,
                 "sum" => $sales_niubiz_sum,
             ],
+            "openpay" => [
+                "desc" => "Openpay",
+                "quantity" => $sales_openpay_quantity,
+                "sum" => $sales_openpay_sum,
+            ],
+            
             "bbva" => [
                 "desc" => "BBVA",
                 "quantity" => $sales_bbva_quantity,
@@ -946,6 +958,27 @@ class BoxesController extends Controller
 
 
         ];
+        $banks = Box::where('type','1')
+        ->whereNotNull('bank_account_id')
+        ->where('cash_id', $cash_id)
+        
+        ;
+        $total_coins_bank = $banks->sum('amount');
+        
+        $bank_accounts = $banks->get();
+        foreach($bank_accounts as $bank_account){
+            $method = $bank_account->method;
+            if(isset($sales_detail[$method])){
+                $sales_detail[$method]["quantity"] += 1;
+                $sales_detail[$method]["sum"] += $bank_account->amount;
+            }else{
+                $sales_detail[$method] = [
+                    "desc" => $bank_account->method,
+                    "quantity" => 1,
+                    "sum" => $bank_account->amount,
+                ];
+            }
+        }
         $incomes_expenses_cash = [
             "incomes" => [
                 "quantity" => $incomes_cash_quantity,
@@ -967,6 +1000,7 @@ class BoxesController extends Controller
             $sales_plin_sum +
             $sales_culqui_sum +
             $sales_izypay_sum +
+            $sales_openpay_sum +
             $sales_niubiz_sum;
         $total_coins_transfert = $sales_bbva_sum
             + $sales_bcp_sum + $sales_nacion_sum + $sales_scotiabank_sum;
@@ -1058,6 +1092,7 @@ class BoxesController extends Controller
                 "establishment",
                 "total_coins_virtual",
                 "total_coins_transfert",
+                "total_coins_bank",
                 "total_coins",
                 "sales_quantity",
                 "sales_amount",
@@ -1477,6 +1512,9 @@ class BoxesController extends Controller
         $sales_card_sum = $sales_card->sum('amount');
         $sales_card_quantity = $sales_card->count();
 
+        $sales_openpay = Box::where('type', '1')->where('method', 'TARJETA: OPENPAY')->where('expenses', 0)->where('incomes', 0)->where('state', 0)->where('cash_id', $cash_id)->OrderBy('date', 'asc');
+        $sales_openpay_sum = $sales_openpay->sum('amount');
+        $sales_openpay_quantity = $sales_openpay->count();
 
         $sales_yape = Box::where('type', '1')->where('method', 'Yape')->where('expenses', 0)->where('incomes', 0)->where('state', 0)->where('cash_id', $cash_id)->OrderBy('date', 'asc');
         $sales_yape_sum = $sales_yape->sum('amount');
@@ -1595,9 +1633,36 @@ class BoxesController extends Controller
                 "sum" => $sales_scotiabank_sum,
             ],
 
-
+           "openpay" => [
+                "desc" => "Openpay",
+                "quantity" => $sales_openpay_quantity,
+                "sum" => $sales_openpay_sum,
+            ],
+            
 
         ];
+        $banks = Box::where('type','1')
+        ->whereNotNull('bank_account_id')
+        ->where('cash_id', $cash_id)
+        
+        ;
+        $total_coins_bank = $banks->sum('amount');
+        
+        $bank_accounts = $banks->get();
+        foreach($bank_accounts as $bank_account){
+            $method = $bank_account->method;
+            if(isset($sales_detail[$method])){
+                $sales_detail[$method]["quantity"] += 1;
+                $sales_detail[$method]["sum"] += $bank_account->amount;
+            }else{
+                $sales_detail[$method] = [
+                    "desc" => $bank_account->method,
+                    "quantity" => 1,
+                    "sum" => $bank_account->amount,
+                    "is_bank" => true,
+                ];
+            }
+        }
         $incomes_expenses_cash = [
             "incomes" => [
                 "quantity" => $incomes_cash_quantity,

@@ -1,4 +1,4 @@
-webpackJsonp([1,136],{
+webpackJsonp([1,137],{
 
 /***/ "./modules/Report/Resources/assets/js/components/DataTableReportsConsignment.vue":
 /***/ (function(module, exports, __webpack_require__) {

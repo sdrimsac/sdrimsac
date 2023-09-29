@@ -154,11 +154,17 @@
                         </li>
                     @endif
                     <li>
-                <a class="{{$path[0] === 'sellers' && $path[1] === ''  ? 'active' : '' }}"
-                    href="{{ route('tenant.sellers.index') }}">
-                    <i class="icofont-id-card"></i>  Vendedores
-                </a>
-            </li>
+                        <a class="{{ $path[0] === 'bank_accounts' && $path[1] === '' ? 'active' : '' }}"
+                            href="{{ route('tenant.bank_accounts.index') }}">
+                            <i class="icofont-bank-alt"></i> Ctas bancarias
+                        </a>
+                    </li>
+                    <li>
+                        <a class="{{ $path[0] === 'sellers' && $path[1] === '' ? 'active' : '' }}"
+                            href="{{ route('tenant.sellers.index') }}">
+                            <i class="icofont-id-card"></i> Vendedores
+                        </a>
+                    </li>
                     <li>
                         <a class="{{ $path[0] === 'registers' ? 'active' : '' }}"
                             href="{{ route('tenant.registers.index') }}">

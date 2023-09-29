@@ -18,6 +18,8 @@ class Box extends ModelTenant
     protected $primarykey = "id";
     // protected $hidden = ["created_at", "updated_at"];
     protected $fillable = [
+        'bank_account_operation',
+        'bank_account_id',
         'user_id',
         'group_id',                         //grupos
         'category_id',                     //categorias

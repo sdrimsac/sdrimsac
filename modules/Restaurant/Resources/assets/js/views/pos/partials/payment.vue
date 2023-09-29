@@ -7,7 +7,7 @@
         :modal-append-to-body="true"
         :show-close="false"
         :append-to-body="true"
-        width="770px"
+        width="850px"
         top="2vh"
         :title="`MODULO DE COBRO ${variation ? '- Variación' : ''}`"
         class="algunaClase"
@@ -272,7 +272,7 @@
                                 class=" text-center text-dark card  bg-light  "
                             >
                                 <div class="row">
-                                    <div class="  col-lg-12 ">
+                                    <div class="  col-lg-6 ">
                                         <div class=" align-items-start ">
                                             <label class="control-label"
                                                 >Medios de Pago</label
@@ -289,6 +289,9 @@
                                                 class="input-container2 border rounded-sm"
                                             >
                                                 <input
+                                                    :disabled="
+                                                        form_payment.is_bank
+                                                    "
                                                     id="cash"
                                                     v-model="method_payments"
                                                     class="radio-button2"
@@ -318,6 +321,9 @@
                                                 class="input-container2 border rounded-sm"
                                             >
                                                 <input
+                                                    :disabled="
+                                                        form_payment.is_bank
+                                                    "
                                                     id="culqui"
                                                     v-model="method_payments"
                                                     class="radio-button2"
@@ -345,6 +351,9 @@
                                                 class="input-container2 border rounded-sm"
                                             >
                                                 <input
+                                                    :disabled="
+                                                        form_payment.is_bank
+                                                    "
                                                     id="plin"
                                                     v-model="method_payments"
                                                     class="radio-button2"
@@ -370,10 +379,45 @@
                                                     ></label>
                                                 </div>
                                             </div>
+                                              <div
+                                                class="input-container2 border rounded-sm"
+                                            >
+                                                <input
+                                                    :disabled="
+                                                        form_payment.is_bank
+                                                    "
+                                                    id="plin"
+                                                    v-model="method_payments"
+                                                    class="radio-button2"
+                                                    type="radio"
+                                                    name="method_payment"
+                                                    value="07"
+                                                    @change="
+                                                        method_payment(
+                                                            'TARJETA: OPENPAY'
+                                                        )
+                                                    "
+                                                />
+                                                <div
+                                                    class="radio-tile2"
+                                                    style="background-image: url('../../images/botonOpenpay.png') ; background-size: contain ; background-repeat: no-repeat; "
+                                                >
+                                                    <div
+                                                        class="icon bike-icon"
+                                                    ></div>
+                                                    <label
+                                                        for="Tarjeta"
+                                                        class="radio-tile-label2"
+                                                    ></label>
+                                                </div>
+                                            </div>
                                             <div
                                                 class="input-container2 border rounded-sm"
                                             >
                                                 <input
+                                                    :disabled="
+                                                        form_payment.is_bank
+                                                    "
                                                     id="plin"
                                                     v-model="method_payments"
                                                     class="radio-button2"
@@ -403,6 +447,9 @@
                                                 class="input-container2 border rounded-sm"
                                             >
                                                 <input
+                                                    :disabled="
+                                                        form_payment.is_bank
+                                                    "
                                                     id="yape"
                                                     v-model="method_payments"
                                                     class="radio-button2"
@@ -430,6 +477,9 @@
                                                 class="input-container2 border rounded-sm"
                                             >
                                                 <input
+                                                    :disabled="
+                                                        form_payment.is_bank
+                                                    "
                                                     id="plin"
                                                     v-model="method_payments"
                                                     class="radio-button2"
@@ -528,92 +578,133 @@
                                                     </label>
                                                 </div>
                                             </div>
-                                            <div class="row">
-                                                <div
-                                                    class="col-lg-4 col-md-5 col-xl-6"
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <template
+                                            v-if="bank_accounts.length != 0"
+                                        >
+                                            <label for="banks">
+                                                <el-checkbox
+                                                    v-model="
+                                                        form_payment.is_bank
+                                                    "
+                                                ></el-checkbox>
+                                                Transferencia / Depositos</label
+                                            >
+                                            <el-select
+                                                :disabled="
+                                                    !form_payment.is_bank
+                                                "
+                                                v-model="form.bank_account_id"
+                                                @change="changeBankAccount"
+                                            >
+                                                <el-option
+                                                    v-for="bank in bank_accounts"
+                                                    :key="bank.id"
+                                                    :label="
+                                                        `${bank.description}-${bank.number}`
+                                                    "
+                                                    :value="bank.id"
                                                 >
-                                                    <label
-                                                        class="control-label text-left  d-flex align-items-start justify-content-start"
-                                                    >
-                                                        Ingrese Nro Celular
-                                                    </label>
-                                                    <el-input
-                                                        v-model="
-                                                            form.customer_telephone
-                                                        "
-                                                    >
-                                                        <template slot="prepend"
-                                                            ><i
-                                                                class="fab fa-whatsapp fa-2x"
+                                                </el-option>
+                                            </el-select>
+                                            <el-input
+                                                :disabled="
+                                                    !form_payment.is_bank
+                                                "
+                                                class="mt-1"
+                                                placeholder="Nro Operación"
+                                                v-model="form.reference_number"
+                                            ></el-input
+                                        ></template>
+                                        <template v-else>
+                                            <span class="text-danger"
+                                                >No hay cuentas bancarias
+                                                registradas</span
+                                            >
+                                        </template>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <div class="row">
+                                            <div
+                                                class="col-lg-4 col-md-5 col-xl-6"
+                                            >
+                                                <label
+                                                    class="control-label text-left  d-flex align-items-start justify-content-start"
+                                                >
+                                                    Ingrese Nro Celular
+                                                </label>
+                                                <el-input
+                                                    v-model="
+                                                        form.customer_telephone
+                                                    "
+                                                >
+                                                    <template slot="prepend"
+                                                        ><i
+                                                            class="fab fa-whatsapp fa-2x"
+                                                        ></i>
+                                                    </template>
+                                                </el-input>
+                                            </div>
+                                            <div
+                                                class="radio-tile-group2 col-lg-6 col-xl-6 d "
+                                                style="padding-top: 12px;"
+                                            >
+                                                <div
+                                                    class="input-container2 border rounded-sm col-lg-3"
+                                                >
+                                                    <input
+                                                        id="imprimir"
+                                                        v-model="printerOn"
+                                                        class="radio-button2"
+                                                        type="radio"
+                                                        name="imprimir"
+                                                        value="1"
+                                                    />
+                                                    <div class="radio-tile2">
+                                                        <div
+                                                            class="icon walk-icon"
+                                                        >
+                                                            <i
+                                                                class="fa fa-print"
                                                             ></i>
-                                                        </template>
-                                                    </el-input>
+                                                        </div>
+                                                        <label
+                                                            for="cash"
+                                                            class="radio-tile-label2"
+                                                            >Imprimir</label
+                                                        >
+                                                    </div>
                                                 </div>
                                                 <div
-                                                    class="radio-tile-group2 col-lg-6 col-xl-6 d "
-                                                    style="padding-top: 12px;"
+                                                    class="input-container2 border rounded-sm col-lg-3"
                                                 >
-                                                    <div
-                                                        class="input-container2 border rounded-sm col-lg-3"
-                                                    >
-                                                        <input
-                                                            id="imprimir"
-                                                            v-model="printerOn"
-                                                            class="radio-button2"
-                                                            type="radio"
-                                                            name="imprimir"
-                                                            value="1"
-                                                        />
+                                                    <input
+                                                        id="noimprimir"
+                                                        v-model="printerOn"
+                                                        class="radio-button2"
+                                                        type="radio"
+                                                        name="noimprimir"
+                                                        value="0"
+                                                    />
+                                                    <div class="radio-tile2">
                                                         <div
-                                                            class="radio-tile2"
+                                                            class="icon bike-icon"
                                                         >
-                                                            <div
-                                                                class="icon walk-icon"
-                                                            >
-                                                                <i
-                                                                    class="fa fa-print"
-                                                                ></i>
-                                                            </div>
-                                                            <label
-                                                                for="cash"
-                                                                class="radio-tile-label2"
-                                                                >Imprimir</label
-                                                            >
+                                                            <i
+                                                                class="fa fa-print"
+                                                            ></i>
                                                         </div>
-                                                    </div>
-                                                    <div
-                                                        class="input-container2 border rounded-sm col-lg-3"
-                                                    >
-                                                        <input
-                                                            id="noimprimir"
-                                                            v-model="printerOn"
-                                                            class="radio-button2"
-                                                            type="radio"
-                                                            name="noimprimir"
-                                                            value="0"
-                                                        />
-                                                        <div
-                                                            class="radio-tile2"
+                                                        <label
+                                                            for="Tarjeta"
+                                                            class="radio-tile-label2"
+                                                            >No Imprimir</label
                                                         >
-                                                            <div
-                                                                class="icon bike-icon"
-                                                            >
-                                                                <i
-                                                                    class="fa fa-print"
-                                                                ></i>
-                                                            </div>
-                                                            <label
-                                                                for="Tarjeta"
-                                                                class="radio-tile-label2"
-                                                                >No
-                                                                Imprimir</label
-                                                            >
-                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-
                                         <div class="row">
                                             <div
                                                 class="col-lg-8  d-flex flex-row align-items-end"
@@ -1342,7 +1433,8 @@ export default {
                 "03": "Yape",
                 "04": "PLIN",
                 "05": "TARJETA: IZYPAY",
-                "06": "TARJETA: NIUBIZ"
+                "06": "TARJETA: NIUBIZ",
+                "07": "TARJETA: OPENPAY"
             },
             last_number: {},
             showDialogNewPerson: false,
@@ -1367,7 +1459,9 @@ export default {
             printerOn: 0,
             button_payment: false,
             input_item: "",
-            form_payment: {},
+            form_payment: {
+                is_bank: false
+            },
             series: [],
             cards_brand: [],
             cancel: false,
@@ -1387,7 +1481,8 @@ export default {
             activeColo: "black",
             students: [],
             bank: null,
-            hasExceedBank: false
+            hasExceedBank: false,
+            bank_accounts: []
             // percentage_igv: 18
         };
     },
@@ -1454,9 +1549,38 @@ export default {
         if ((conf && conf.pos_quick_sale) || this.ordens_all_table) {
             this.sendPayment(null, this.form);
         }
+        this.getBankAccounts();
     },
     mounted() {},
     methods: {
+        changeBankAccount() {
+            if (this.form_payment.is_bank) {
+                let bank_account = this.bank_accounts.find(
+                    b => b.id == this.form.bank_account_id
+                );
+
+                this.form.boxes = [
+                    {
+                        id: null,
+                        bank_account_id: bank_account.id,
+                        number_operation: this.form.reference_number,
+                        amount: this.form.total,
+                        method: `${bank_account.description}-${bank_account.number}`,
+                    }
+                ];
+            } else {
+                this.form.boxes = [];
+            }
+        },
+        async getBankAccounts() {
+            const response = await this.$http.get(`/bank_accounts/records`);
+            if (response.status == 200) {
+                this.bank_accounts = response.data.data;
+                if(this.bank_accounts.length > 0){
+                    this.form.bank_account_id = this.bank_accounts[0].id;
+                }
+            }
+        },
         checkLimitReceipt() {
             let { customer_id, document_type_id, total } = this.form;
             if (total > 699 && document_type_id == "03") {
@@ -2843,7 +2967,27 @@ export default {
             });
             return total == this.form.total;
         },
+        checkBankAccount(){
+            let pass = true;
+            let {is_bank}  = this.form_payment;
+            if(is_bank){
+                if(!this.form.bank_account_id){
+                    this.$toast.error("Debe seleccionar una cuenta bancaria");
+                    pass = false;
+                }
+                if(!this.form.reference_number){
+                    this.$toast.error("Debe ingresar el número de operación");
+                    pass = false;
+                }
+            }
+
+            return pass;
+        },
         async clickPayment(form) {
+            if (!this.checkBankAccount()) {
+                return;
+            }
+    
             let how_is;
             this.reCalculateTotal();
             // return;
@@ -2932,6 +3076,9 @@ export default {
             form.cash_id = this.cash_id;
             if (this.form.payment_condition_id == "01") {
                 form.boxes = this.currentPayments;
+                if(this.form_payment.is_bank){
+                    this.changeBankAccount();
+                }
             } else {
                 let isOk = this.checkPaymentsIsOk();
                 if (!isOk) {
@@ -2957,7 +3104,7 @@ export default {
                 );
                 return;
             }
-
+      
             this.loading_submit = true;
             this.form.items = this.form.items.filter(
                 item => Number(item.quantity) > 0
@@ -2965,7 +3112,7 @@ export default {
             if (this.isConsignment) {
                 this.form.from_consignment = true;
             }
-          
+
             try {
                 let form_efectivo = {
                     enter_amount: form.enter_amount,
