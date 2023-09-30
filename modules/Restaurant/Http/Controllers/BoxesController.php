@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\DB;
 use Modules\Restaurant\Models\Area;
 use Modules\Restaurant\Models\Orden;
 use App\Http\Resources\Tenant\BoxCollection;
+use App\Models\Tenant\BankAccount;
 use App\Models\Tenant\DocumentPayment;
 use App\Models\Tenant\Receipt;
 use App\Models\Tenant\SaleNoteCredit;
@@ -1655,8 +1656,10 @@ class BoxesController extends Controller
                 $sales_detail[$method]["quantity"] += 1;
                 $sales_detail[$method]["sum"] += $bank_account->amount;
             }else{
+                $bank_account = BankAccount::find($bank_account->bank_account_id);
+                $bank_description = $bank_account->bank->description;
                 $sales_detail[$method] = [
-                    "desc" => $bank_account->method,
+                    "desc" =>$bank_description." ". $bank_account->method,
                     "quantity" => 1,
                     "sum" => $bank_account->amount,
                     "is_bank" => true,
