@@ -67,11 +67,16 @@ class ReceiptController extends Controller
         $receipt->fill($request->all());
         $receipt->user_id = $request->user_id;
         $receipt->date = Carbon::parse($request->date)->format('Y-m-d');
-        $number_receipt = Receipt::select(DB::raw('MAX(number) AS number'))->first();
+        $last_receipt = Receipt::orderBy('id', 'desc')->first();
+        $number_receipt = null;
+        if($last_receipt){
+            $number_receipt = intval($last_receipt->number);
+        }
+        
         if ($number_receipt !== null) {
-            $number = str_pad(($number_receipt->number + 1), 7, "0", STR_PAD_LEFT);
+            $number = str_pad(($number_receipt + 1), 7, "0", STR_PAD_LEFT);
         } else {
-            $number = "1";
+            $number = str_pad(1, 7, "0", STR_PAD_LEFT);
         }
         $receipt->number = $number;
         $receipt->external_id = Str::uuid()->toString();

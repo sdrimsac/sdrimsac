@@ -146,14 +146,19 @@ class SaleNotePaymentController extends Controller
         $receipt->detail = "PAGO DE NOTA DE VENTA" . " N° " . $document_save->series . " - " . $document_save->number;
         $receipt->hour = date('H:i:s');
         $receipt->date_of_issue = Carbon::parse($request->date)->format('Y-m-d');
-        $number_receipt = Receipt::select(DB::raw('MAX(number) AS number'))->first();
-        if ($number_receipt !== null) {
-            $number = str_pad(($number_receipt->number + 1), 7, "0", STR_PAD_LEFT);
-        } else {
-            $number = "1";
+        $last_receipt = Receipt::orderBy('id', 'desc')->first();
+        $number_receipt = null;
+        if($last_receipt){
+            $number_receipt = intval($last_receipt->number);
         }
-        $receipt->amount = $request->input('payment');
+        
+        if ($number_receipt !== null) {
+            $number = str_pad(($number_receipt + 1), 7, "0", STR_PAD_LEFT);
+        } else {
+            $number = str_pad(1, 7, "0", STR_PAD_LEFT);
+        }
         $receipt->number = $number;
+        $receipt->amount = $request->input('payment');
         $receipt->external_id = Str::uuid()->toString();
         $receipt->save();
         $payment = Payment::where('sale_note_id', $request->sale_note_id)
