@@ -973,8 +973,8 @@ class BoxesController extends Controller
                 $sales_detail[$method]["quantity"] += 1;
                 $sales_detail[$method]["sum"] += $bank_account->amount;
             }else{
-                $bank_account = BankAccount::find($bank_account->bank_account_id);
-                $bank_description = $bank_account->bank->description;
+                $bk_account = BankAccount::find($bank_account->bank_account_id);
+                $bank_description = $bk_account->bank->description;
                 $sales_detail[$method] = [
                     "desc" =>$bank_description." ". $bank_account->method,
                     "quantity" => 1,
@@ -1658,10 +1658,10 @@ class BoxesController extends Controller
                 $sales_detail[$method]["quantity"] += 1;
                 $sales_detail[$method]["sum"] += $bank_account->amount;
             }else{
-                $bank_account = BankAccount::find($bank_account->bank_account_id);
-                $bank_description = $bank_account->bank->description;
+                $bk_account = BankAccount::find($bank_account->bank_account_id);
+                $bank_description = $bk_account->bank->description;
                 $sales_detail[$method] = [
-                    "desc" =>$bank_description." ". $bank_account->method,
+                    "desc" =>$bank_description." ".$bank_account->method,
                     "quantity" => 1,
                     "sum" => $bank_account->amount,
                     "is_bank" => true,

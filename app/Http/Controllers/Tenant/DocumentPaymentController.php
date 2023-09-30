@@ -76,8 +76,7 @@ class DocumentPaymentController extends Controller
         $receipt->detail = "PAGO DE ".$type. " N° " . $document_save->series . " - " . $document_save->number;
         $receipt->hour = date('H:i:s');
         $receipt->date_of_issue = Carbon::parse($request->date)->format('Y-m-d');
-        // $number_receipt = Receipt::select(DB::raw('MAX(number) AS number'))->first();
-        //get last record by id
+
         $last_receipt = Receipt::orderBy('id', 'desc')->first();
         $number_receipt = null;
         if($last_receipt){
