@@ -26,18 +26,17 @@
                     <div class="col-md-6">
                         <div
                             class="form-group"
-                            v-if="configuration.view_daily_cash ||  configuration.view_daily_cash_pin"
+                            v-if="
+                                configuration.view_daily_cash ||
+                                    configuration.view_daily_cash_pin
+                            "
                         >
                             <label class="control-label disabled w-100"
                                 >Total V. Efectivo</label
                             >
                             <template v-if="configuration.view_daily_cash_pin">
                                 <h3>
-                                    {{
-                                        returnTextObfuscated(
-                                            "123456"
-                                        )
-                                    }}
+                                    {{ returnTextObfuscated("123456") }}
                                 </h3>
                             </template>
                             <template v-else>
@@ -443,14 +442,19 @@
                         <el-input :value="final_balance.toFixed(2)" readonly>
                         </el-input>
                     </div>
-                    <div v-if="configuration.view_daily_cash ||  configuration.view_daily_cash_pin" class="col-md-4">
+                    <div
+                        v-if="
+                            configuration.view_daily_cash ||
+                                configuration.view_daily_cash_pin
+                        "
+                        class="col-md-4"
+                    >
                         <label class="w-100">
                             Diferencia
                         </label>
                         <template v-if="configuration.view_daily_cash_pin">
                             <el-input
-                                :value="
-                                    returnTextObfuscated('123456')"
+                                :value="returnTextObfuscated('123456')"
                                 readonly
                             >
                             </el-input>
@@ -519,7 +523,7 @@ export default {
     },
 
     methods: {
-                returnTextObfuscated(text){
+        returnTextObfuscated(text) {
             let textObfuscated = "";
             for (let i = 0; i < text.length; i++) {
                 textObfuscated += "*";
@@ -559,7 +563,7 @@ export default {
             this.final_balance = _.round(this.sumCount(), 2);
             this.difference = (this.totalSales - this.final_balance).toFixed(2);
         },
-        clickCloseCash() {
+        async clickCloseCash() {
             const h = this.$createElement;
             this.$msgbox({
                 title: "Cerrar caja",
@@ -579,10 +583,13 @@ export default {
                 showCancelButton: true,
                 confirmButtonText: "Aceptar",
                 cancelButtonText: "Cancelar",
-                beforeClose: (action, instance, done) => {
+                beforeClose: async (action, instance, done) => {
                     if (action === "confirm") {
+                        instance.confirmButtonLoading = true;
+                        instance.confirmButtonText = "Cerrando...";
                         //  console.log(this.count);
-                        this.createRegister(instance, done);
+                        await this.createRegister(instance, done);
+                        instance.confirmButtonLoading = false;
                     } else {
                         done();
                     }
@@ -623,6 +630,7 @@ export default {
                 difference: this.difference
             };
             try {
+                this.loading = true;
                 const response = await this.$http.post(
                     `/${this.resource}/close`,
                     body
@@ -644,6 +652,7 @@ export default {
             } finally {
                 instance.confirmButtonLoading = false;
                 instance.confirmButtonText = "Iniciar prueba";
+                this.loading = false;
                 done();
             }
 

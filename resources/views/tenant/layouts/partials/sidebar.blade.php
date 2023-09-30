@@ -13,124 +13,7 @@
 <div class="menu-container flex-grow-1" style="margin-top:20px; ">
     <ul id="menu" class="menu">
 
-        {{--  <li>
-            <a href="{{ route('tenant.dashboard.index') }}" class="{{ $path[0] === 'dashboard' ? 'active' : '' }}">
-            <i data-cs-icon="home" class="icon" data-cs-size="18"></i>
-            <span class="label">Dashboard</span>
-            </a>
-        </li>
-        <li class="mega">
-            <a href="#restaurant" data-bs-toggle="collapse" data-role="button"
-              aria-expanded="{{($path[0] === 'persons' && $path[1] === 'customers') ? true:false }}{{ ($path[0] === 'brands') ? true:false }}{{ ($path[0] === 'restaurant') ? true:false }} {{ ($path[0] === 'points') ? true:false }} {{ ($path[0] === 'items') ? true:false }}{{ ($path[0] === 'item-sets') ? true:false }}{{ ($path[0] === 'category') ? true:false }}"
-              class="{{($path[0] === 'persons' && $path[1] === 'customers') ? 'active':'' }}{{ ($path[0] === 'brands') ? 'active':'' }}{{ ($path[0] === 'restaurant') ? 'active':'' }}{{ ($path[0] === 'points') ? 'active':'' }}{{ ($path[0] === 'items') ? 'active':'' }}{{ ($path[0] === 'item-sets') ? 'active':'' }}{{ ($path[0] === 'category') ? 'active':'' }}"
-              data-clicked="{{($path[0] === 'persons' && $path[1] === 'customers') ? true:false }}{{ ($path[0] === 'brands') ? true:false }}{{ ($path[0] === 'restaurant') ? true:false }} {{ ($path[0] === 'points') ? true:false }}{{ ($path[0] === 'items') ? true:false }}{{ ($path[0] === 'item-sets') ? true:false }}{{ ($path[0] === 'category') ? true:false }}" >
-              <i class="icofont-restaurant icon-parent"></i>
-              <span class="label">Ventas</span>
-            </a>
-
-            <ul id="restaurant"
-            class="collapse {{ ($path[0] === 'items') ? 'show':'' }} {{ ($path[0] === 'points') ? 'show':'' }}{{ ($path[0] === 'persons' && $path[1] === 'customers') ? 'show':'' }}{{ ($path[0] === 'brands') ? 'show':'' }}{{ ($path[0] === 'category') ? 'show':'' }}">
-                <li>
-                    <a class="{{ $path[0] === 'points' ? 'active' : '' }}"
-                        href="{{ route('tenant.point.index') }}">
-                        <i class="icofont-clip-board"></i> Punto de Caja
-                    </a>
-                </li>
-
-                <li>
-                    <a href="{{ route('restaurant.cash') }}" class="{{ $path[1] === 'cashes' ? 'active' : '' }}">
-                        <i class="icofont-pay icon-parent"></i>
-                      <span class="label">Apertura - Cierre de Caja</span>
-                    </a>
-                </li>
-                <li>
-                <a href="#restaurantComponents"
-                data-bs-toggle="collapse" data-role="button"
-                aria-expanded="{{($path[0] === 'persons' && $path[1] === 'customers') ? true:false }}{{ ($path[0] === 'brands') ? true:false }}{{ ($path[0] === 'category') ? true:false }}{{ ($path[0] === 'items') ? true:false }}{{ ($path[0] === 'item-sets') ? true:false }} {{ ($path[0] === 'restaurant' && $path[1] === 'workers') ? true:false }}  {{ ($path[0] === 'restaurant' && $path[1] === 'workers-type') ? true:false }}{{ ($path[0] === 'restaurant' && $path[1] === 'areas') ? true:false }}{{ ($path[0] === 'restaurant' && $path[1] === 'tables') ? true:false }}{{ ($path[0] === 'restaurant' && $path[1] === 'status-orden') ? true:false }}{{ ($path[0] === 'restaurant' && $path[1] === 'status-tables') ? true:false }}"
-                class="{{($path[0] === 'persons' && $path[1] === 'customers') ?  'active':'' }} {{ ($path[0] === 'brands' ) ? 'active':'' }}{{ ($path[0] === 'category' ) ? 'active':'' }}{{ ($path[0] === 'items' ) ? 'active':'' }}{{ ($path[0] === 'item-sets' ) ? 'active':'' }}{{ ($path[0] === 'restaurant' && $path[1] === 'workers') ? 'active':'' }} {{ ($path[0] === 'restaurant' && $path[1] === 'workers-type') ? 'active':'' }}{{ ($path[0] === 'restaurant' && $path[1] === 'areas') ? 'active':'' }}{{ ($path[0] === 'restaurant' && $path[1] === 'tables') ? 'active':'' }}{{ ($path[0] === 'restaurant'  && $path[1] === 'status-orden') ? 'active':'' }}{{ ($path[0] === 'restaurant' && $path[1] === 'status-tables') ? 'active':'' }}"
-                data-clicked="{{($path[0] === 'persons' && $path[1] === 'customers') ? true:false }}{{ ($path[0] === 'brands') ? true:false }}{{ ($path[0] === 'category') ? true:false }}{{ ($path[0] === 'items') ? true:false }}{{ ($path[0] === 'item-sets') ? true:false }} {{ ($path[0] === 'restaurant' && $path[1] === 'workers') ? true:false }} {{ ($path[0] === 'restaurant' && $path[1] === 'workers-type') ? true:false }}{{ ($path[0] === 'restaurant' && $path[1] === 'areas') ? true:false }}{{ ($path[0] === 'restaurant' && $path[1] === 'tables') ? true:false }}{{ ($path[0] === 'restaurant'  && $path[1] === 'status-orden') ? true:false }}{{ ($path[0] === 'restaurant' && $path[1] === 'status-tables') ? true:false }}">
-                  <span class="label"><i class="icofont-fix-tools icon-parent"></i> Mantenimiento</span>
-                </a>
-                <ul id="restaurantComponents" class="collapse {{ ($path[0] === 'items') ? 'show':'' }}{{ ($path[0] === 'persons' && $path[1] === 'customers') ? 'show':'' }}{{ ($path[0] === 'brands') ? 'show':'' }}{{ ($path[0] === 'category') ? 'show':'' }}">
-                    <li>
-                        <a class="{{ $path[0] === 'restaurant' && $path[1] === 'workers' ? 'active' : '' }}"
-                            href="{{ route('restaurant.workers') }}">
-                            <i class="icofont-users-alt-1"></i> Usuarios
-                        </a>
-                    </li>
-                    <li>
-                        <a class="{{ $path[0] === 'restaurant' && $path[1] === 'workers-type' ? 'active' : '' }}"
-                            href="{{ route('restaurant.workers_type') }}">
-                            <i class="icofont-company"></i> Tipo Usuario
-                        </a>
-                    </li>
-                    <li>
-                        <a class="{{$path[0] === 'items' && $path[1] === ''  ? 'active' : '' }}"
-                            href="{{ route('tenant.items.index') }}">
-                            <i class="icofont-soft-drinks"></i>  Productos
-                        </a>
-                    </li>
-
-                    <li>
-                        <a class="{{$path[0] === 'item-sets' && $path[1] === ''  ? 'active' : '' }}"
-                            href="{{ route('tenant.item_sets.index') }}">
-                            <i class="icofont-price"></i> Promocion / Ofertas
-                        </a>
-                    </li>
-                    <li>
-                        <a class="{{$path[0] === 'category'  ? 'active' : '' }}"
-                            href="{{ route('tenant.categories.index') }}">
-                            <i class="icofont-chart-flow"></i> Categorias
-                        </a>
-                    </li>
-                    <li>
-                        <a class="{{$path[0] === 'etiqueta'  ? 'active' : '' }}"
-                            href="{{ route('etiquetas.index') }}">
-                            <i class="icofont-label"></i> Etiquetas
-                        </a>
-                    </li>
-                    <li>
-                        <a class="{{ $path[0] === 'brands' ? 'active' : '' }}"
-                            href="{{ route('tenant.brands.index') }}">
-                            <i class="icofont-xing"></i> Marcas
-                        </a>
-                    </li>
-                    <li>
-                        <a class="{{ $path[0] === 'persons' && $path[1] === 'customers' ? 'active' : '' }}"
-                            href="{{ route('tenant.persons.index', ['type' => 'customers']) }}">
-                            <i class="icofont-business-man"></i> Clientes
-                        </a>
-                    </li>
-
-                    <li>
-                        <a class="{{ $path[0] === 'restaurant' && $path[1] === 'areas' ? 'active' : '' }}"
-                            href="{{ route('restaurant.areas') }}">
-                            <i class="icofont-billboard"></i> Áreas
-                        </a>
-                    </li>
-                    <li>
-                        <a class="{{ $path[0] === 'restaurant' && $path[1] === 'tables' ? 'active' : '' }}"
-                            href="{{ route('restaurant.tables') }}">
-                            <i class="icofont-dining-table"></i> Mesas
-                        </a>
-                    </li>
-                    <li>
-                        <a class="{{ $path[0] === 'restaurant' && $path[1] === 'status-orden' ? 'active' : '' }}"
-                            href="{{ route('restaurant.status_orden') }}">
-                            <i class="icofont-read-book"></i> Estados de pedidos
-                        </a>
-                    </li>
-                    <li>
-                        <a class="{{ $path[0] === 'restaurant' && $path[1] === 'status-tables' ? 'active' : '' }}"
-                            href="{{ route('restaurant.status_table') }}">
-                            <i class="icofont-dining-table"></i> Estados de mesas
-                        </a>
-                    </li>
-
-                </ul>
-              </li>
-          </ul>
-    </li> --}}
+        
         @inject('roleService', 'App\Services\RoleService')
         @if (!$roleService->isAccountant($user->worker_type_id))
 
@@ -156,7 +39,14 @@
                     <li>
                         <a class="{{ $path[0] === 'bank_accounts' && $path[1] === '' ? 'active' : '' }}"
                             href="{{ route('tenant.bank_accounts.index') }}">
-                            <i class="icofont-bank-alt"></i> Ctas bancarias
+                            <i class="icofont-bank"></i>
+                            Ctas bancarias
+                        </a>
+                    </li>
+                    <li>
+                        <a class="{{ $path[0] === 'banks' && $path[1] === '' ? 'active' : '' }}"
+                            href="{{ route('tenant.banks.index') }}">
+                            <i class="icofont-bank-alt"></i> Bancos 
                         </a>
                     </li>
                     <li>

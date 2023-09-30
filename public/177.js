@@ -182,7 +182,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 
 var QuotationOptions = function QuotationOptions() {
-  return __webpack_require__.e/* import() */(166/* duplicate */).then(__webpack_require__.bind(null, "./resources/js/views/quotations/partials/options.vue"));
+  return __webpack_require__.e/* import() */(137/* duplicate */).then(__webpack_require__.bind(null, "./resources/js/views/quotations/partials/options.vue"));
 };
 
 var PersonForm = function PersonForm() {

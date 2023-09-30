@@ -73,7 +73,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 var TenantQuotationsEdit = function TenantQuotationsEdit() {
-  return __webpack_require__.e/* import() */(143).then(__webpack_require__.bind(null, "./resources/js/views/quotations/form_edit.vue"));
+  return __webpack_require__.e/* import() */(144).then(__webpack_require__.bind(null, "./resources/js/views/quotations/form_edit.vue"));
 };
 
 /* harmony default export */ __webpack_exports__["default"] = ({

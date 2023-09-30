@@ -220,7 +220,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 var CreateForm = function CreateForm() {
-  return __webpack_require__.e/* import() */(141/* duplicate */).then(__webpack_require__.bind(null, "./modules/College/Resources/assets/js/views/classrooms/form.vue"));
+  return __webpack_require__.e/* import() */(142/* duplicate */).then(__webpack_require__.bind(null, "./modules/College/Resources/assets/js/views/classrooms/form.vue"));
 };
 
 var CreateRegisterForm = function CreateRegisterForm() {
@@ -228,7 +228,7 @@ var CreateRegisterForm = function CreateRegisterForm() {
 };
 
 var StudentView = function StudentView() {
-  return __webpack_require__.e/* import() */(140/* duplicate */).then(__webpack_require__.bind(null, "./modules/College/Resources/assets/js/views/classrooms/student_view.vue"));
+  return __webpack_require__.e/* import() */(141/* duplicate */).then(__webpack_require__.bind(null, "./modules/College/Resources/assets/js/views/classrooms/student_view.vue"));
 };
 
 var PaymentForm = function PaymentForm() {

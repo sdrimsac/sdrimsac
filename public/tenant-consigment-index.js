@@ -1042,7 +1042,7 @@ var LotItem = function LotItem() {
 };
 
 var PenaltyForm = function PenaltyForm() {
-  return __webpack_require__.e/* import() */(139/* duplicate */).then(__webpack_require__.bind(null, "./modules/Consignment/Resources/assets/js/views/partials/penalty_form.vue"));
+  return __webpack_require__.e/* import() */(140/* duplicate */).then(__webpack_require__.bind(null, "./modules/Consignment/Resources/assets/js/views/partials/penalty_form.vue"));
 };
 
 var PersonForm = function PersonForm() {

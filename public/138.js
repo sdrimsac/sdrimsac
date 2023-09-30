@@ -1,54 +1,6 @@
 webpackJsonp([138],{
 
-/***/ "./modules/Internet/Resources/assets/js/view/cash/form.vue":
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__("./node_modules/vue-loader/lib/component-normalizer.js")
-/* script */
-var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/Internet/Resources/assets/js/view/cash/form.vue")
-/* template */
-var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-230eaac2\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Internet/Resources/assets/js/view/cash/form.vue")
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "modules/Internet/Resources/assets/js/view/cash/form.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-230eaac2", Component.options)
-  } else {
-    hotAPI.reload("data-v-230eaac2", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-
-/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/Internet/Resources/assets/js/view/cash/form.vue":
+/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/js/components/WhatsappModalReports.vue":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -81,100 +33,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ["showDialog", "recordId", "typeUser", "fromBox"],
+  props: ["resource", "message", "showWhatsappForm"],
   data: function data() {
     return {
-      loading_submit: false,
-      titleDialog: null,
-      resource: "caja/worker/cash",
-      errors: {},
-      form: {},
-      user: {},
-      all_departments: [],
-      all_provinces: [],
-      all_districts: [],
-      provinces: [],
-      districts: [],
-      identity_document_types: [],
-      users: [],
-      turnsTable: [],
-      dontClose: false
+      loading: false,
+      number: null,
+      configuration: {}
     };
   },
   created: function created() {
@@ -185,15 +50,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
-              _context.next = 2;
-              return _this.$http.get("/".concat(_this.resource, "/tables")).then(function (response) {
-                _this.users = response.data.users;
-                _this.user = response.data.user;
-                _this.turnsTable = response.data.turnsTable;
-              });
+              _this.socketWhatsappConfig();
 
-            case 2:
-              _this.initForm();
+              _context.next = 3;
+              return _this.getConfiguration();
 
             case 3:
             case "end":
@@ -203,68 +63,32 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }, _callee);
     }))();
   },
-  computed: {
-    disableUser: function disableUser() {
-      if (this.typeUser == "admin" || this.typeUser === "superadmin") {
-        return false;
-      }
-
-      return true;
-    }
-  },
   methods: {
-    ocultarBoton: function ocultarBoton() {
-      this.$emit("ocultarBoton");
-    },
-    initForm: function initForm() {
-      this.errors = {};
-      this.form = {
-        id: null,
-        user_id: this.user.id,
-        // user: null,
-        date_opening: null,
-        time_opening: null,
-        date_closed: null,
-        time_closed: null,
-        beginning_balance: 0,
-        final_balance: 0,
-        income: 0,
-        state: true,
-        reference_number: null
-      };
-    },
-    create: function create() {
+    send: function send() {
       var _this2 = this;
 
-      this.titleDialog = this.recordId ? "Editar Caja" : "Aperturar Caja";
-
-      if (this.recordId) {
-        this.$http.get("/".concat(this.resource, "/record/").concat(this.recordId)).then(function (response) {
-          _this2.form = response.data.data;
-        });
-      } else {
-        this.form.user_id = this.user.id; //sesion
-        //this.form.user = this.user.name
-      }
-    },
-    openingCashCkeck: function openingCashCkeck() {
-      var _this3 = this;
-
       return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee2() {
-        var response, cash;
         return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
-                _context2.next = 2;
-                return _this3.$http.get("/".concat(_this3.resource, "/opening_cash_check/").concat(_this3.form.user_id));
+                if (!(_this2.sender == "sdrimsac")) {
+                  _context2.next = 5;
+                  break;
+                }
 
-              case 2:
-                response = _context2.sent;
-                cash = response.data.cash;
-                return _context2.abrupt("return", cash ? true : false);
+                _context2.next = 3;
+                return _this2.sendWhatsapp();
+
+              case 3:
+                _context2.next = 7;
+                break;
 
               case 5:
+                _context2.next = 7;
+                return _this2.sendFile();
+
+              case 7:
               case "end":
                 return _context2.stop();
             }
@@ -272,96 +96,267 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee2);
       }))();
     },
-    submit: function submit() {
-      var _this4 = this;
+    getConfiguration: function getConfiguration() {
+      var _this3 = this;
 
       return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee3() {
+        var response, data;
         return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee3$(_context3) {
           while (1) {
             switch (_context3.prev = _context3.next) {
               case 0:
-                _this4.loading_submit = true;
+                _context3.prev = 0;
+                _context3.next = 3;
+                return _this3.$http("/configurations/record");
 
-                if (!(_this4.form.turn_id == undefined)) {
-                  _context3.next = 5;
-                  break;
-                }
-
-                _this4.$toast.warning("La opcion 'Seleccionar turno de apertura' no puede ser un campo vacio, por favor seleccione una opcion");
-
-                _this4.loading_submit = false;
-                return _context3.abrupt("return", false);
-
-              case 5:
-                if (_this4.recordId) {
-                  _context3.next = 12;
-                  break;
-                }
-
-                _context3.next = 8;
-                return _this4.openingCashCkeck();
+              case 3:
+                response = _context3.sent;
+                data = response.data.data;
+                _this3.configuration = data;
+                _context3.next = 11;
+                break;
 
               case 8:
-                if (!_context3.sent) {
-                  _context3.next = 12;
-                  break;
-                }
+                _context3.prev = 8;
+                _context3.t0 = _context3["catch"](0);
 
-                _this4.$toast.warning("No puede crear caja, porfavor cierre caja para el usuario definido");
+                _this3.$toast.error("No se pudo obtener la configuración");
 
-                _this4.loading_submit = false;
-                return _context3.abrupt("return", false);
-
-              case 12:
-                _this4.$http.post("/".concat(_this4.resource), _this4.form).then(function (response) {
-                  console.log(response);
-
-                  if (response.data.success) {
-                    _this4.$toast.success(response.data.message);
-
-                    if (_this4.form.user_id === _this4.user.id) _this4.$eventHub.$emit("openCash");
-
-                    _this4.$eventHub.$emit("reloadData");
-
-                    if (_this4.fromBox) {
-                      _this4.$emit("updateCashId", response.data.cash_id);
-                    } // window.open('/pos/init')
-
-
-                    _this4.close();
-
-                    _this4.ocultarBoton();
-                  } else {
-                    _this4.$toast.error(response.data.message);
-                  }
-                })["catch"](function (error) {
-                  if (error.response.status === 422) {
-                    _this4.errors = error.response.data;
-                  } else {
-                    console.log(error);
-                  }
-                }).then(function () {
-                  _this4.loading_submit = false;
-                });
-
-              case 13:
+              case 11:
               case "end":
                 return _context3.stop();
             }
           }
-        }, _callee3);
+        }, _callee3, null, [[0, 8]]);
+      }))();
+    },
+    open: function open() {},
+    socketWhatsappConfig: function socketWhatsappConfig() {
+      var _this4 = this;
+
+      var hostName = window.location.hostname;
+      var url = "https://".concat(hostName);
+      this.sender = hostName.replace(/https?\:\/\//, "").replace("/", "").split(".").join("");
+
+      try {
+        this.socket = io.connect(this.$socketUrl);
+      } catch (e) {
+        console.log(e);
+      }
+
+      this.socket.on("ready", function (message) {
+        _this4.showMessage(message);
+      });
+      this.socket.on("authenticated", function (_ref) {
+        var message = _ref.message,
+            sender = _ref.sender;
+        _this4.sender = sender;
+
+        _this4.showMessage(message);
+      });
+      this.socket.on("connected", function (_ref2) {
+        var message = _ref2.message;
+
+        _this4.$message.success(message);
+
+        _this4.socket.emit("getStatus", url);
+      });
+      this.socket.on("setStatus", function (_ref3) {
+        var status = _ref3.status,
+            sender = _ref3.sender;
+
+        if (!status) {
+          _this4.sender = "sdrimsac";
+
+          _this4.$message.warning("Sesión iniciada con SDRIMSAC");
+        } else {
+          _this4.sender = sender;
+
+          _this4.$message.success("Whatsapp Listo!");
+        }
+      }); //MessageResponse
+
+      this.socket.on("MessageResponse", function (_ref4) {
+        var success = _ref4.success,
+            message = _ref4.message;
+
+        if (success) {
+          _this4.$message.success(message);
+        } else {
+          _this4.$message.error(message);
+        }
+      });
+    },
+    getBase64FromUrl: function getBase64FromUrl(url) {
+      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee4() {
+        var data, blob;
+        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee4$(_context4) {
+          while (1) {
+            switch (_context4.prev = _context4.next) {
+              case 0:
+                _context4.next = 2;
+                return fetch(url);
+
+              case 2:
+                data = _context4.sent;
+                _context4.next = 5;
+                return data.blob();
+
+              case 5:
+                blob = _context4.sent;
+                return _context4.abrupt("return", new Promise(function (resolve) {
+                  var reader = new FileReader();
+                  reader.readAsDataURL(blob);
+
+                  reader.onloadend = function () {
+                    var base64data = reader.result;
+                    resolve(base64data);
+                  };
+                }));
+
+              case 7:
+              case "end":
+                return _context4.stop();
+            }
+          }
+        }, _callee4);
+      }))();
+    },
+    sendFile: function sendFile() {
+      var _this5 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee5() {
+        var b64, extension, msg;
+        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee5$(_context5) {
+          while (1) {
+            switch (_context5.prev = _context5.next) {
+              case 0:
+                _context5.prev = 0;
+
+                if (!(!_this5.number || _this5.number.length != 9 || isNaN(_this5.number))) {
+                  _context5.next = 3;
+                  break;
+                }
+
+                return _context5.abrupt("return", _this5.$toast.error("Ingrese un número válido"));
+
+              case 3:
+                _this5.loading = true;
+                _context5.next = 6;
+                return _this5.getBase64FromUrl(_this5.resource);
+
+              case 6:
+                b64 = _context5.sent;
+                extension = ".pdf";
+                b64 = b64.split(",")[1];
+
+                _this5.socket.emit("sendFile", {
+                  file: b64,
+                  name: "".concat(_this5.message.split(" ").join("-")).concat(_this5.message.includes(".xlsx") ? "" : extension),
+                  number: "51".concat(_this5.number),
+                  sender: _this5.sender
+                });
+
+                _this5.$toast.success("Se envió el mensaje");
+
+                _this5.close();
+
+                _context5.next = 19;
+                break;
+
+              case 14:
+                _context5.prev = 14;
+                _context5.t0 = _context5["catch"](0);
+                msg = "Ocurrió un error";
+                console.log(_context5.t0);
+
+                _this5.$toast.error(msg);
+
+              case 19:
+                _context5.prev = 19;
+                _this5.loading = false;
+                return _context5.finish(19);
+
+              case 22:
+              case "end":
+                return _context5.stop();
+            }
+          }
+        }, _callee5, null, [[0, 14, 19, 22]]);
+      }))();
+    },
+    sendWhatsapp: function sendWhatsapp() {
+      var _this6 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee6() {
+        var response;
+        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee6$(_context6) {
+          while (1) {
+            switch (_context6.prev = _context6.next) {
+              case 0:
+                if (!(!_this6.number || _this6.number.length != 9 || isNaN(_this6.number))) {
+                  _context6.next = 2;
+                  break;
+                }
+
+                return _context6.abrupt("return", _this6.$toast.error("Ingrese un número válido"));
+
+              case 2:
+                _this6.loading = true;
+                _context6.prev = 3;
+                _context6.next = 6;
+                return _this6.$http.post("/whatsapp/historial", {
+                  number: _this6.number,
+                  message: _this6.message,
+                  resource: _this6.resource,
+                  file_name: _this6.message.split(" ").join("-"),
+                  sender: _this6.sender
+                });
+
+              case 6:
+                response = _context6.sent;
+
+                if (response.status == 200) {
+                  _this6.$toast.success("Mensaje enviado");
+                }
+
+                _context6.next = 14;
+                break;
+
+              case 10:
+                _context6.prev = 10;
+                _context6.t0 = _context6["catch"](3);
+
+                _this6.$toast.error("Mensaje no enviado");
+
+                console.log(_context6.t0);
+
+              case 14:
+                _context6.prev = 14;
+                _this6.loading = false;
+
+                _this6.close();
+
+                return _context6.finish(14);
+
+              case 18:
+              case "end":
+                return _context6.stop();
+            }
+          }
+        }, _callee6, null, [[3, 10, 14, 18]]);
       }))();
     },
     close: function close() {
-      this.$emit("update:showDialog", false);
-      this.initForm();
+      this.number = null;
+      this.$emit("update:showWhatsappForm", false);
     }
   }
 });
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-230eaac2\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Internet/Resources/assets/js/view/cash/form.vue":
+/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-9a297822\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/js/components/WhatsappModalReports.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -372,196 +367,50 @@ var render = function() {
     "el-dialog",
     {
       attrs: {
-        title: _vm.titleDialog,
-        visible: _vm.showDialog,
-        "data-keyboard": false,
-        closeOnPressEscape: _vm.dontClose,
-        closeOnClickModal: _vm.dontClose
+        "append-to-body": "",
+        width: "40%",
+        title: "Enviar reporte por whatsapp",
+        visible: _vm.showWhatsappForm
       },
-      on: { close: _vm.close, open: _vm.create }
+      on: { close: _vm.close, open: _vm.open }
     },
     [
       _c(
-        "form",
+        "div",
         {
-          attrs: { autocomplete: "off" },
-          on: {
-            submit: function($event) {
-              $event.preventDefault()
-              return _vm.submit.apply(null, arguments)
+          directives: [
+            {
+              name: "loading",
+              rawName: "v-loading",
+              value: _vm.loading,
+              expression: "loading"
             }
-          }
+          ],
+          staticClass: "p-3",
+          attrs: { "element-loading-text": "Enviando.." }
         },
         [
-          _c("div", { staticClass: "form-body" }, [
-            _c("div", { staticClass: "row" }, [
-              _c("div", { staticClass: "col-md-6" }, [
-                _c(
-                  "div",
-                  { staticClass: "form-group" },
-                  [
-                    _c("label", { staticClass: "control-label" }, [
-                      _vm._v("Cajero ")
-                    ]),
-                    _vm._v(" "),
-                    _c(
-                      "el-select",
-                      {
-                        attrs: { disabled: _vm.disableUser },
-                        model: {
-                          value: _vm.form.user_id,
-                          callback: function($$v) {
-                            _vm.$set(_vm.form, "user_id", $$v)
-                          },
-                          expression: "form.user_id"
-                        }
-                      },
-                      _vm._l(_vm.users, function(option) {
-                        return _c("el-option", {
-                          key: option.id,
-                          attrs: { value: option.id, label: option.name }
-                        })
-                      }),
-                      1
-                    ),
-                    _vm._v(" "),
-                    _vm.errors.user
-                      ? _c("small", {
-                          staticClass: "form-control-feedback",
-                          domProps: { textContent: _vm._s(_vm.errors.user[0]) }
-                        })
-                      : _vm._e()
-                  ],
-                  1
-                )
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "col-md-6" }, [
-                _c(
-                  "div",
-                  {
-                    staticClass: "form-group",
-                    class: { "has-danger": _vm.errors.beginning_balance }
-                  },
-                  [
-                    _c("label", { staticClass: "control-label" }, [
-                      _vm._v(
-                        "Saldo inicial de Apertura\n                        "
-                      )
-                    ]),
-                    _vm._v(" "),
-                    _c(
-                      "el-input",
-                      {
-                        model: {
-                          value: _vm.form.beginning_balance,
-                          callback: function($$v) {
-                            _vm.$set(_vm.form, "beginning_balance", $$v)
-                          },
-                          expression: "form.beginning_balance"
-                        }
-                      },
-                      [
-                        _c("i", {
-                          staticClass: "el-icon-edit-outline",
-                          attrs: { slot: "prefix" },
-                          slot: "prefix"
-                        })
-                      ]
-                    ),
-                    _vm._v(" "),
-                    _vm.errors.beginning_balance
-                      ? _c("small", {
-                          staticClass: "form-control-feedback",
-                          domProps: {
-                            textContent: _vm._s(_vm.errors.beginning_balance[0])
-                          }
-                        })
-                      : _vm._e()
-                  ],
-                  1
-                )
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "col-md-6" }, [
-                _c(
-                  "div",
-                  {
-                    staticClass: "form-group",
-                    class: { "has-danger": _vm.errors.reference_number }
-                  },
-                  [
-                    _c("label", { staticClass: "control-label" }, [
-                      _vm._v("Seleccionar Turno de Apertura")
-                    ]),
-                    _vm._v(" "),
-                    _c(
-                      "el-select",
-                      {
-                        model: {
-                          value: _vm.form.turn_id,
-                          callback: function($$v) {
-                            _vm.$set(_vm.form, "turn_id", $$v)
-                          },
-                          expression: "form.turn_id"
-                        }
-                      },
-                      _vm._l(_vm.turnsTable, function(option) {
-                        return _c("el-option", {
-                          key: option.id,
-                          attrs: { value: option.id, label: option.turn_desc }
-                        })
-                      }),
-                      1
-                    ),
-                    _vm._v(" "),
-                    _vm.errors.reference_number
-                      ? _c("small", {
-                          staticClass: "form-control-feedback",
-                          domProps: {
-                            textContent: _vm._s(_vm.errors.reference_number[0])
-                          }
-                        })
-                      : _vm._e()
-                  ],
-                  1
-                )
-              ])
-            ])
-          ]),
+          _c("label", { attrs: { for: "" } }, [_vm._v("Número")]),
+          _vm._v(" "),
+          _c("el-input", {
+            staticStyle: { width: "100%" },
+            model: {
+              value: _vm.number,
+              callback: function($$v) {
+                _vm.number = $$v
+              },
+              expression: "number"
+            }
+          }),
           _vm._v(" "),
           _c(
             "div",
-            { staticClass: "form-actions text-end pt-2 pb-2" },
-            [
-              _c(
-                "el-button",
-                {
-                  on: {
-                    click: function($event) {
-                      $event.preventDefault()
-                      return _vm.close()
-                    }
-                  }
-                },
-                [_vm._v("Cancelar")]
-              ),
-              _vm._v(" "),
-              _c(
-                "el-button",
-                {
-                  attrs: {
-                    type: "primary",
-                    "native-type": "submit",
-                    loading: _vm.loading_submit
-                  }
-                },
-                [_vm._v("Guardar")]
-              )
-            ],
+            { staticClass: "d-flex justify-content-end p-1" },
+            [_c("el-button", { on: { click: _vm.send } }, [_vm._v("Enviar")])],
             1
           )
-        ]
+        ],
+        1
       )
     ]
   )
@@ -572,9 +421,57 @@ module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-230eaac2", module.exports)
+    require("vue-hot-reload-api")      .rerender("data-v-9a297822", module.exports)
   }
 }
+
+/***/ }),
+
+/***/ "./resources/js/components/WhatsappModalReports.vue":
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__("./node_modules/vue-loader/lib/component-normalizer.js")
+/* script */
+var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/js/components/WhatsappModalReports.vue")
+/* template */
+var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-9a297822\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/js/components/WhatsappModalReports.vue")
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/js/components/WhatsappModalReports.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-9a297822", Component.options)
+  } else {
+    hotAPI.reload("data-v-9a297822", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
 
 /***/ })
 

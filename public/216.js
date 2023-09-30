@@ -302,7 +302,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 var FormService = function FormService() {
-  return __webpack_require__.e/* import() */(142/* duplicate */).then(__webpack_require__.bind(null, "./modules/College/Resources/assets/js/components/service_create.vue"));
+  return __webpack_require__.e/* import() */(143/* duplicate */).then(__webpack_require__.bind(null, "./modules/College/Resources/assets/js/components/service_create.vue"));
 };
 
 /* harmony default export */ __webpack_exports__["default"] = ({

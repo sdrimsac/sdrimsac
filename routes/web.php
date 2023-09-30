@@ -465,6 +465,7 @@ if ($hostname) {
                 Route::delete('detraction_types/{code}', [App\Http\Controllers\Tenant\DetractionTypeController::class, 'destroy']);
 
                 //Banks
+                Route::get('banks', [App\Http\Controllers\Tenant\BankController::class, 'index'])->name('tenant.banks.index')->middleware('just.admin');
                 Route::get('banks/records', [App\Http\Controllers\Tenant\BankController::class, 'records']);
                 Route::get('banks/record/{bank}', [App\Http\Controllers\Tenant\BankController::class, 'record']);
                 Route::post('banks', [App\Http\Controllers\Tenant\BankController::class, 'store']);

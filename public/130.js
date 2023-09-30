@@ -808,11 +808,11 @@ var QuotationEditModal = function QuotationEditModal() {
 };
 
 var QuotationOptions = function QuotationOptions() {
-  return __webpack_require__.e/* import() */(166).then(__webpack_require__.bind(null, "./resources/js/views/quotations/partials/options.vue"));
+  return __webpack_require__.e/* import() */(137/* duplicate */).then(__webpack_require__.bind(null, "./resources/js/views/quotations/partials/options.vue"));
 };
 
 var SaleNoteGenerate = function SaleNoteGenerate() {
-  return __webpack_require__.e/* import() */(147).then(__webpack_require__.bind(null, "./resources/js/views/sale_notes/partials/option_documents.vue"));
+  return __webpack_require__.e/* import() */(148).then(__webpack_require__.bind(null, "./resources/js/views/sale_notes/partials/option_documents.vue"));
 };
 
 var CreateDispatch = function CreateDispatch() {
@@ -820,7 +820,7 @@ var CreateDispatch = function CreateDispatch() {
 };
 
 var NoteModal = function NoteModal() {
-  return __webpack_require__.e/* import() */(144).then(__webpack_require__.bind(null, "./modules/Restaurant/Resources/assets/js/views/pos/partials/note_modal.vue"));
+  return __webpack_require__.e/* import() */(145).then(__webpack_require__.bind(null, "./modules/Restaurant/Resources/assets/js/views/pos/partials/note_modal.vue"));
 };
 
 /* harmony default export */ __webpack_exports__["default"] = ({

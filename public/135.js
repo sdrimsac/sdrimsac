@@ -910,7 +910,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
  // const RegisterForm = () => import("../views/classrooms/register_form.vue");
 
 var ServiceForm = function ServiceForm() {
-  return __webpack_require__.e/* import() */(160).then(__webpack_require__.bind(null, "./modules/Internet/Resources/assets/js/view/pos/partials/service_form.vue"));
+  return __webpack_require__.e/* import() */(161).then(__webpack_require__.bind(null, "./modules/Internet/Resources/assets/js/view/pos/partials/service_form.vue"));
 }; // const IncompleteForm = () =>
 //     import("../../js/components/payment_incomplete.vue");
 

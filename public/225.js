@@ -1,66 +1,14 @@
 webpackJsonp([225],{
 
-/***/ "./modules/Restaurant/Resources/assets/js/views/ordens/index.vue":
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-function injectStyle (ssrContext) {
-  if (disposed) return
-  __webpack_require__("./node_modules/vue-style-loader/index.js!./node_modules/css-loader/index.js?sourceMap!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-7645ebbd\",\"scoped\":true,\"hasInlineConfig\":true}!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./modules/Restaurant/Resources/assets/js/views/ordens/index.vue")
-}
-var normalizeComponent = __webpack_require__("./node_modules/vue-loader/lib/component-normalizer.js")
-/* script */
-var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/Restaurant/Resources/assets/js/views/ordens/index.vue")
-/* template */
-var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-7645ebbd\",\"hasScoped\":true,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Restaurant/Resources/assets/js/views/ordens/index.vue")
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = injectStyle
-/* scopeId */
-var __vue_scopeId__ = "data-v-7645ebbd"
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "modules/Restaurant/Resources/assets/js/views/ordens/index.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-7645ebbd", Component.options)
-  } else {
-    hotAPI.reload("data-v-7645ebbd", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-
-/***/ "./modules/Restaurant/Resources/assets/js/views/ordens/items.vue":
+/***/ "./modules/Restaurant/Resources/assets/js/views/configuration/form.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__("./node_modules/vue-loader/lib/component-normalizer.js")
 /* script */
-var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/Restaurant/Resources/assets/js/views/ordens/items.vue")
+var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/Restaurant/Resources/assets/js/views/configuration/form.vue")
 /* template */
-var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-27d383ab\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Restaurant/Resources/assets/js/views/ordens/items.vue")
+var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-07de1de4\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Restaurant/Resources/assets/js/views/configuration/form.vue")
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -77,7 +25,7 @@ var Component = normalizeComponent(
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "modules/Restaurant/Resources/assets/js/views/ordens/items.vue"
+Component.options.__file = "modules/Restaurant/Resources/assets/js/views/configuration/form.vue"
 
 /* hot reload */
 if (false) {(function () {
@@ -86,9 +34,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-27d383ab", Component.options)
+    hotAPI.createRecord("data-v-07de1de4", Component.options)
   } else {
-    hotAPI.reload("data-v-27d383ab", Component.options)
+    hotAPI.reload("data-v-07de1de4", Component.options)
   }
   module.hot.dispose(function (data) {
     disposed = true
@@ -100,15 +48,15 @@ module.exports = Component.exports
 
 /***/ }),
 
-/***/ "./modules/Restaurant/Resources/assets/js/views/ordens/listFoods.vue":
+/***/ "./modules/Restaurant/Resources/assets/js/views/configuration/formTableMassive.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__("./node_modules/vue-loader/lib/component-normalizer.js")
 /* script */
-var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/Restaurant/Resources/assets/js/views/ordens/listFoods.vue")
+var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/Restaurant/Resources/assets/js/views/configuration/formTableMassive.vue")
 /* template */
-var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-50e168c2\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Restaurant/Resources/assets/js/views/ordens/listFoods.vue")
+var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-61ad8238\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Restaurant/Resources/assets/js/views/configuration/formTableMassive.vue")
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -125,7 +73,7 @@ var Component = normalizeComponent(
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "modules/Restaurant/Resources/assets/js/views/ordens/listFoods.vue"
+Component.options.__file = "modules/Restaurant/Resources/assets/js/views/configuration/formTableMassive.vue"
 
 /* hot reload */
 if (false) {(function () {
@@ -134,9 +82,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-50e168c2", Component.options)
+    hotAPI.createRecord("data-v-61ad8238", Component.options)
   } else {
-    hotAPI.reload("data-v-50e168c2", Component.options)
+    hotAPI.reload("data-v-61ad8238", Component.options)
   }
   module.hot.dispose(function (data) {
     disposed = true
@@ -148,27 +96,967 @@ module.exports = Component.exports
 
 /***/ }),
 
-/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/Restaurant/Resources/assets/js/views/ordens/index.vue":
+/***/ "./modules/Restaurant/Resources/assets/js/views/configuration/items.vue":
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__("./node_modules/vue-loader/lib/component-normalizer.js")
+/* script */
+var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/Restaurant/Resources/assets/js/views/configuration/items.vue")
+/* template */
+var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-c38a0634\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Restaurant/Resources/assets/js/views/configuration/items.vue")
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "modules/Restaurant/Resources/assets/js/views/configuration/items.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-c38a0634", Component.options)
+  } else {
+    hotAPI.reload("data-v-c38a0634", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/Restaurant/Resources/assets/js/views/configuration/form.vue":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: ["showDialog", "recordId", "type", "areas", "statusTable", "configurations", "establishments"],
+  data: function data() {
+    return {
+      loading_submit: false,
+      titleDialog: null,
+      resource: this.type,
+      errors: {},
+      form: {},
+      options: []
+    };
+  },
+  created: function created() {
+    this.initForm();
+  },
+  methods: {
+    initForm: function initForm() {
+      this.errors = {};
+      this.form = {
+        id: null,
+        description: null,
+        printer: null,
+        copies: null,
+        active: 1
+      };
+    },
+    create: function create() {
+      var _this = this;
+
+      this.titleDialog = this.recordId ? "Modificar Registro" : "Nuevo Registro";
+      console.log("this.recordId", this.recordId);
+      this.initForm();
+
+      if (this.recordId) {
+        this.$http.get("/".concat(this.resource, "/record/").concat(this.recordId)).then(function (response) {
+          _this.form = response.data.data;
+        });
+      }
+    },
+    submit: function submit() {
+      var _this2 = this;
+
+      this.loading_submit = true;
+      this.$http.post("/".concat(this.resource), this.form).then(function (response) {
+        if (response.data.success) {
+          _this2.$toast.success(response.data.message);
+
+          _this2.$eventHub.$emit("reloadData");
+
+          _this2.close();
+        } else {
+          _this2.$toast.error(response.data.message);
+        }
+      })["catch"](function (error) {
+        if (error.response.status === 422) {
+          _this2.errors = error.response.data;
+        } else {
+          console.log(error);
+        }
+      }).then(function () {
+        _this2.loading_submit = false;
+      });
+    },
+    close: function close() {
+      this.$emit("update:showDialog", false);
+      this.initForm();
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/Restaurant/Resources/assets/js/views/configuration/formTableMassive.vue":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: ["showDialog", "recordId", "type", "areas", "statusTable", "configurations", "establishments"],
+  data: function data() {
+    return {
+      loading_submit: false,
+      titleDialog: null,
+      resource: this.type,
+      errors: {},
+      form: {},
+      options: []
+    };
+  },
+  created: function created() {
+    this.initForm();
+  },
+  methods: {
+    initForm: function initForm() {
+      this.errors = {};
+      this.form = {
+        id: null,
+        description: null,
+        printer: null,
+        copies: null,
+        active: 1
+      };
+    },
+    create: function create() {
+      this.titleDialog = "Nuevo Registro Masivo";
+      this.initForm();
+    },
+    valid: function valid() {
+      var pass = true;
+      var _this$form = this.form,
+          initNumberTable = _this$form.initNumberTable,
+          finalNumberTable = _this$form.finalNumberTable,
+          area_id = _this$form.area_id,
+          establishment_id = _this$form.establishment_id;
+
+      if (initNumberTable > finalNumberTable) {
+        this.$toast.error("El número inicial de mesa no puede ser mayor al número final de mesa");
+        pass = false;
+      }
+
+      if (area_id == null) {
+        this.$toast.error("Debe seleccionar un área");
+        pass = false;
+      }
+
+      if (establishment_id == null) {
+        this.$toast.error("Debe seleccionar un establecimiento");
+        pass = false;
+      }
+
+      return pass;
+    },
+    createNumbers: function createNumbers() {
+      var _this$form2 = this.form,
+          initNumberTable = _this$form2.initNumberTable,
+          finalNumberTable = _this$form2.finalNumberTable;
+      var numbers = [];
+
+      for (var i = initNumberTable; i <= finalNumberTable; i++) {
+        numbers.push(i);
+      }
+
+      return numbers;
+    },
+    submit: function submit() {
+      var _this = this;
+
+      if (!this.valid()) {
+        return;
+      }
+
+      this.loading_submit = true;
+      this.form.numbers = this.createNumbers();
+      this.$http.post("/".concat(this.resource, "/massive"), this.form).then(function (response) {
+        if (response.data.success) {
+          _this.$toast.success(response.data.message);
+
+          _this.$eventHub.$emit("reloadData");
+
+          _this.close();
+        } else {
+          _this.$toast.error(response.data.message);
+        }
+      })["catch"](function (error) {
+        if (error.response.status === 422) {
+          _this.errors = error.response.data;
+        } else {
+          console.log(error);
+        }
+      }).then(function () {
+        _this.loading_submit = false;
+      });
+    },
+    close: function close() {
+      this.$emit("update:showDialog", false);
+      this.initForm();
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/Restaurant/Resources/assets/js/views/configuration/items.vue":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator__ = __webpack_require__("./node_modules/@babel/runtime/regenerator/index.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_query_string__ = __webpack_require__("./node_modules/query-string/index.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_query_string___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_query_string__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__listFoods_vue__ = __webpack_require__("./modules/Restaurant/Resources/assets/js/views/ordens/listFoods.vue");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__listFoods_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__listFoods_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__resources_js_mixins_deletable__ = __webpack_require__("./resources/js/mixins/deletable.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__items_vue__ = __webpack_require__("./modules/Restaurant/Resources/assets/js/views/ordens/items.vue");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__items_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__items_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_moment__ = __webpack_require__("./node_modules/moment/moment.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_moment___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_moment__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__form_vue__ = __webpack_require__("./modules/Restaurant/Resources/assets/js/views/configuration/form.vue");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__form_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__form_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__formTableMassive_vue__ = __webpack_require__("./modules/Restaurant/Resources/assets/js/views/configuration/formTableMassive.vue");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__formTableMassive_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__formTableMassive_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__resources_js_components_DataTable_vue__ = __webpack_require__("./resources/js/components/DataTable.vue");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__resources_js_components_DataTable_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__resources_js_components_DataTable_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__resources_js_mixins_deletable__ = __webpack_require__("./resources/js/mixins/deletable.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_query_string__ = __webpack_require__("./node_modules/query-string/index.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_query_string___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_query_string__);
+
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: ["type", "title", "configurations"],
+  mixins: [__WEBPACK_IMPORTED_MODULE_4__resources_js_mixins_deletable__["a" /* deletable */]],
+  components: {
+    DataTable: __WEBPACK_IMPORTED_MODULE_3__resources_js_components_DataTable_vue___default.a,
+    CreateForm: __WEBPACK_IMPORTED_MODULE_1__form_vue___default.a,
+    CreateFormMassive: __WEBPACK_IMPORTED_MODULE_2__formTableMassive_vue___default.a
+  },
+  data: function data() {
+    return {
+      showDialog: false,
+      showDialogMassive: false,
+      resource: this.type,
+      recordId: null,
+      areas: [],
+      statusTable: [],
+      ascending: false,
+      sortColumn: "",
+      search: {
+        column: null,
+        value: null
+      },
+      active_column: "",
+      columns: [],
+      records: [],
+      establishments: [],
+      pagination: {},
+      loading_data: false,
+      disabled_next: false,
+      disabled_previos: false,
+      myOptions: ["op1", "op2", "op3"]
+    };
+  },
+  created: function created() {
+    var _this = this;
+
+    if (this.type == "caja/tables") {
+      this.getTables();
+    } // this.getData();
+
+
+    this.$eventHub.$on("reloadData", function () {
+      _this.getData(); //   this.recordId =null
+
+    });
+  },
+  methods: {
+    clickCreateMassive: function clickCreateMassive() {
+      this.showDialogMassive = true;
+    },
+    getQueryParameters: function getQueryParameters() {
+      return __WEBPACK_IMPORTED_MODULE_5_query_string___default.a.stringify(_objectSpread({
+        page: this.pagination.current_page,
+        limit: this.limit
+      }, this.search));
+    },
+    getData: function getData() {
+      var _arguments = arguments,
+          _this2 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee() {
+        var page;
+        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                page = _arguments.length > 0 && _arguments[0] !== undefined ? _arguments[0] : 1;
+                _this2.pagination.current_page = parseInt(page);
+                _this2.pagination.per_page = parseInt(page);
+                _this2.loading_data = true;
+                return _context.abrupt("return", _this2.$http.get("/".concat(_this2.resource, "/records?").concat(_this2.getQueryParameters())).then(function (response) {
+                  _this2.records = response.data.data;
+                  _this2.pagination = response.data.meta;
+                  _this2.pagination.per_page = parseInt(response.data.meta.per_page);
+                  _this2.loading_data = false;
+                }));
+
+              case 5:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee);
+      }))();
+    },
+    getTables: function getTables() {
+      var _this3 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee2() {
+        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                _this3.$http.get("/caja/areas/records?column=description&page=1&value").then(function (response) {
+                  _this3.areas = response.data.data;
+                });
+
+                _this3.$http.get("/caja/status-tables/records?column=description&page=1&value").then(function (response) {
+                  _this3.statusTable = response.data.data;
+                });
+
+                _this3.$http.get("/establishments/records").then(function (response) {
+                  _this3.establishments = response.data.data;
+                  console.log(_this3.establishments);
+                });
+
+              case 3:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2);
+      }))();
+    },
+    updateSearchPrint: function updateSearchPrint(row) {
+      var _this4 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee3() {
+        var response;
+        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                _context3.prev = 0;
+                _this4.loading_data = true;
+                _context3.next = 4;
+                return _this4.$http.post("/".concat(_this4.resource), row);
+
+              case 4:
+                response = _context3.sent;
+
+                if (response.status == 200) {
+                  _this4.$toast.success("Area actualizada");
+                } else {
+                  _this4.$toast.warning("Ocurrió un error");
+                }
+
+                _context3.next = 12;
+                break;
+
+              case 8:
+                _context3.prev = 8;
+                _context3.t0 = _context3["catch"](0);
+                console.log(_context3.t0);
+
+                _this4.$toast.error("error");
+
+              case 12:
+                _context3.prev = 12;
+                _this4.loading_data = false;
+                return _context3.finish(12);
+
+              case 15:
+              case "end":
+                return _context3.stop();
+            }
+          }
+        }, _callee3, null, [[0, 8, 12, 15]]);
+      }))();
+    },
+    clickCreate: function clickCreate() {
+      var recordId = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+      this.recordId = recordId;
+      this.showDialog = true;
+    },
+    clickDelete: function clickDelete(id) {
+      var _this5 = this;
+
+      this.destroy("/".concat(this.resource, "/").concat(id)).then(function () {
+        return _this5.$eventHub.$emit("reloadData");
+      });
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/js/components/DataTable.vue":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator__ = __webpack_require__("./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_moment__ = __webpack_require__("./node_modules/moment/moment.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_moment___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_moment__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_query_string__ = __webpack_require__("./node_modules/query-string/index.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_query_string___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_query_string__);
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 
 
 
@@ -362,426 +1250,142 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-
-
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  components: {
-    ViewItems: __WEBPACK_IMPORTED_MODULE_4__items_vue___default.a,
-    ListFood: __WEBPACK_IMPORTED_MODULE_2__listFoods_vue___default.a
+  props: {
+    sellers: {
+      type: Array,
+      "default": function _default() {
+        return [];
+      }
+    },
+    resource: String,
+    applyFilter: {
+      type: Boolean,
+      "default": true,
+      required: false
+    },
+    fromAdmin: {
+      type: Boolean,
+      "default": false,
+      required: false
+    },
+    config: Object
   },
-  mixins: [__WEBPACK_IMPORTED_MODULE_3__resources_js_mixins_deletable__["a" /* deletable */]],
-  props: ["configuration"],
   data: function data() {
     return {
-      allRecords: [],
-      listFoods: {},
-      columns: [{
-        id: 1,
-        value: "id",
-        label: "Número de orden"
-      }, {
-        id: 2,
-        value: "date",
-        label: "Fecha"
-      }, {
-        id: 3,
-        value: "client",
-        label: "Cliente (DNI / RUC)"
-      }],
       search: {
-        column: "date",
-        value: __WEBPACK_IMPORTED_MODULE_5_moment___default()().format("YYYY-MM-DD")
+        column: null,
+        value: null
       },
-      date_start: __WEBPACK_IMPORTED_MODULE_5_moment___default()().format("YYYY-MM-DD"),
-      loading: false,
-      showDialog: false,
-      resource: "ordens",
-      currentRow: null,
-      showImage: false,
-      currentRecord: null,
-      currentImage: null,
-      areas: [],
-      pagination: {},
-      statusTable: [],
+      columns: [],
       records: [],
-      totals_notas: 0,
-      totals_facturas: 0,
-      totals_efectivos: 0,
-      showDialogFoods: false
+      pagination: {},
+      array_district: [],
+      time: null
     };
   },
+  computed: {},
   created: function created() {
     var _this = this;
 
     this.$eventHub.$on("reloadData", function () {
-      _this.getData();
+      _this.getRecords();
     });
-    this.getData();
+  },
+  mounted: function mounted() {
+    var _this2 = this;
+
+    return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee() {
+      var column_resource;
+      return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              column_resource = _this2.resource; // _.split(this.resource, '/')
+
+              _context.next = 3;
+              return _this2.$http.get("/".concat(_this2.resource, "/columns")).then(function (response) {
+                _this2.columns = response.data;
+                _this2.search.column = _.head(Object.keys(_this2.columns));
+              });
+
+            case 3:
+              _context.next = 5;
+              return _this2.getRecords();
+
+            case 5:
+            case "end":
+              return _context.stop();
+          }
+        }
+      }, _callee);
+    }))();
   },
   methods: {
-    viewItems: function viewItems(row) {
-      this.currentRow = row;
-      this.showDialog = true;
+    clickDownload: function clickDownload() {
+      this.$emit("clickReport", this.search);
     },
-    anular_command: function anular_command(id) {
-      var _this2 = this;
-
-      this.anular_comanda("/caja/worker/destroyorden/".concat(id), id).then(function () {
-        return _this2.$eventHub.$emit("reloadData");
-      });
+    customIndex: function customIndex(index) {
+      return this.pagination.per_page * (this.pagination.current_page - 1) + index + 1;
     },
-    DataFoods: function DataFoods() {
+    getRecords: function getRecords() {
       var _this3 = this;
 
-      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee() {
-        var response;
-        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee$(_context) {
-          while (1) {
-            switch (_context.prev = _context.next) {
-              case 0:
-                _context.next = 2;
-                return _this3.$http.get("".concat(_this3.resource, "/listfoods/").concat(_this3.search.value));
+      if (this.time) {
+        clearTimeout(this.time);
+      } //   this.$http.get(`/filtrar_distritos/records`)
+      // .then(response => {
+      //     this.array_district = response.data.district
+      // })
 
-              case 2:
-                response = _context.sent;
-                _this3.listFoods = response.data;
-                _this3.showDialogFoods = true;
 
-              case 5:
-              case "end":
-                return _context.stop();
-            }
-          }
-        }, _callee);
-      }))();
-    },
-    viewFile: function viewFile(row) {
-      var url = "";
-
-      if (row.document) {
-        var external_id = row.document.external_id;
-        url = "/downloads/document/pdf/".concat(external_id);
-      }
-
-      if (row.sale_note) {
-        var _external_id = row.sale_note.external_id;
-        url = "/sale-notes/print/".concat(_external_id, "/a4");
-      }
-
-      window.open(url, "_blank");
-    },
-    total: function total(row) {
-      if (row.document) {
-        return row.document.total;
-      }
-
-      if (row.sale_note) {
-        return row.sale_note.total;
-      }
-
-      return 0.0;
-    },
-    getQueryParameters: function getQueryParameters() {
-      return __WEBPACK_IMPORTED_MODULE_1_query_string___default.a.stringify(_objectSpread({
-        page: this.pagination.current_page,
-        limit: this.limit
-      }, this.search));
-    },
-    reset: function reset() {
-      this.search.value = "";
-    },
-    Totals: function Totals() {
-      var facturas = _.filter(this.records, {
-        document_type_id: "01"
-      });
-
-      var notas_venta = _.filter(this.records, {
-        document_type_id: "80"
-      });
-
-      console.log("notas_venta", notas_venta);
-      console.log("facturas", facturas);
-      console.log("this.records", this.records);
-      this.totals_facturas = _.sumBy(facturas, function (it) {
-        return parseFloat(it.total);
-      });
-      this.totals_notas = _.sumBy(notas_venta, function (it) {
-        return parseFloat(it.total);
-      });
-      this.totals_efectivos = _.round(this.totals_facturas + this.totals_notas, 2);
-    },
-    getData: function getData() {
-      var _this4 = this;
-
-      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee2() {
-        var response;
+      this.time = setTimeout( /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee2() {
+        var url;
         return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
-                _this4.loading = true; //let query = queryString.stringify(this.search);
+                url = "/".concat(_this3.resource, "/records?").concat(_this3.getQueryParameters());
 
-                _context2.next = 3;
-                return _this4.$http.get("".concat(_this4.resource, "/records?").concat(_this4.getQueryParameters()));
+                if (_this3.fromAdmin) {
+                  url = "/".concat(_this3.resource, "/records?").concat(_this3.getQueryParameters(), "&fromAdmin=true");
+                }
+
+                return _context2.abrupt("return", _this3.$http.get(url).then(function (response) {
+                  _this3.records = response.data.data;
+                  _this3.pagination = response.data.meta;
+                  _this3.pagination.per_page = parseInt(response.data.meta.per_page);
+                }));
 
               case 3:
-                response = _context2.sent;
-                _this4.pagination = response.data.meta;
-                _this4.pagination.per_page = parseInt(response.data.meta.per_page);
-                _this4.records = response.data.data;
-                _this4.loading = false;
-
-                _this4.Totals();
-
-              case 9:
               case "end":
                 return _context2.stop();
             }
           }
         }, _callee2);
-      }))();
+      })), 350);
     },
-    clickDelete: function clickDelete(id) {
-      var _this5 = this;
+    getQueryParameters: function getQueryParameters() {
+      if (this.search.column == "date" && this.search.value && _typeof(this.search.value) == "object") {
+        this.search.value = this.search.value.join(",");
+      }
 
-      this.destroy("/".concat(this.resource, "/").concat(id)).then(function () {
-        return _this5.$eventHub.$emit("reloadData");
+      return __WEBPACK_IMPORTED_MODULE_2_query_string___default.a.stringify({
+        page: this.pagination.current_page,
+        limit: this.limit,
+        value: this.search.value,
+        column: this.search.column,
+        end_date: this.search.end_date
       });
-    }
-  }
-});
-
-/***/ }),
-
-/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/Restaurant/Resources/assets/js/views/ordens/items.vue":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-/* harmony default export */ __webpack_exports__["default"] = ({
-  props: ["showDialog", "row"],
-  data: function data() {
-    return {
-      total: 0.0
-    };
-  },
-  created: function created() {
-    this.getTotal();
-  },
-  methods: {
-    open: function open() {
-      this.getTotal();
     },
-    close: function close() {
-      this.$emit("update:showDialog", false);
-    },
-    getTotal: function getTotal() {
-      if (this.row.document) {
-        this.total = this.row.document.total;
-      }
-
-      if (this.row.sale_note) {
-        this.total = this.row.sale_note.total;
-      }
+    changeClearInput: function changeClearInput() {
+      this.search.value = "";
+      this.getRecords();
     }
   }
 });
-
-/***/ }),
-
-/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/Restaurant/Resources/assets/js/views/ordens/listFoods.vue":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-/* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['showDialogFoods', "listFoods"],
-  data: function data() {
-    return {
-      showDialog: false,
-      open_cash: true,
-      errors: {},
-      resource: 'caja/worker/cash',
-      date_closed: moment().format('YYYY-MM-DD'),
-      date_start: moment().format('YYYY-MM-DD'),
-      month_start: moment().format('YYYY-MM'),
-      final_balance: 0,
-      cash: null,
-      loading: false
-    };
-  },
-  methods: {
-    closeDialog: function closeDialog() {
-      this.$emit('update:showDialogFoods', false);
-    }
-  }
-});
-
-/***/ }),
-
-/***/ "./node_modules/css-loader/index.js?sourceMap!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-7645ebbd\",\"scoped\":true,\"hasInlineConfig\":true}!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./modules/Restaurant/Resources/assets/js/views/ordens/index.vue":
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__("./node_modules/css-loader/lib/css-base.js")(true);
-// imports
-
-
-// module
-exports.push([module.i, "\n.file1[data-v-7645ebbd] {\r\n    visibility: hidden;\r\n    position: absolute;\n}\r\n", "", {"version":3,"sources":["D:/laragon/www/sdrimsac-tenant/modules/Restaurant/Resources/assets/js/views/ordens/modules/Restaurant/Resources/assets/js/views/ordens/index.vue"],"names":[],"mappings":";AA4PA;IACA,mBAAA;IACA,mBAAA;CACA","file":"index.vue","sourcesContent":["<template>\r\n    <div>\r\n        <div class=\"container-fluid p-l-0 p-r-0\">\r\n            <div class=\"page-header\">\r\n                <div class=\"row\">\r\n                    <div class=\"col-sm-6\">\r\n                        <h6><span>Lista de Ordenes atentidas</span></h6>\r\n                        <ol class=\"breadcrumb\">\r\n                            <li class=\"breadcrumb-item\">\r\n                                <a href=\"/dashboard\">Dashboard</a>\r\n                            </li>\r\n                            <li class=\"breadcrumb-item active\">\r\n                                <span class=\"text-muted\"\r\n                                    >Lista de Ordenes atentidas</span\r\n                                >\r\n                            </li>\r\n                        </ol>\r\n                    </div>\r\n                    <!-- <div class=\"col-12 col-md-6 d-flex align-items-start justify-content-end\">\r\n                 <button type=\"button\" class=\"btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto\" @click.prevent=\"clickCreate()\">\r\n                <i class=\"icofont-plus-circle\"></i>\r\n                <span>Nuevo</span>\r\n                </button>\r\n             </div> -->\r\n                </div>\r\n            </div>\r\n        </div>\r\n        <div class=\"container-fluid p-l-0 p-r-0\">\r\n            <div class=\"card\" v-loading=\"loading\">\r\n                <div class=\"card-header bg-primary\">\r\n                    <h6 class=\"my-0 text-white\">Lista de Ordenes atentidas</h6>\r\n                </div>\r\n                <div class=\"card-body\">\r\n                    <div class=\"col-md-12 col-lg-12 col-xl-12 mb-2\">\r\n                        <div class=\"row\">\r\n                            <div class=\"col-md-4 col col-lg-4\">\r\n                                <label class=\"control-label\">Buscar por</label>\r\n                                <el-select\r\n                                    @change=\"reset\"\r\n                                    v-model=\"search.column\"\r\n                                    :key=\"1\"\r\n                                >\r\n                                    <el-option\r\n                                        v-for=\"(data, index) in columns\"\r\n                                        :key=\"index\"\r\n                                        :label=\"data.label\"\r\n                                        :value=\"data.value\"\r\n                                    ></el-option>\r\n                                </el-select>\r\n                            </div>\r\n                            <div\r\n                                v-if=\"search.column !== 'date'\"\r\n                                class=\"col-md-4 col col-lg-4 d-flex align-items-end\"\r\n                            >\r\n                                <el-input\r\n                                    :placeholder=\"\r\n                                        `${\r\n                                            search.column == 'orden'\r\n                                                ? 'N° de orden'\r\n                                                : 'Nombre / N° documento del cliente'\r\n                                        }`\r\n                                    \"\r\n                                    v-model=\"search.value\"\r\n                                >\r\n                                    <i\r\n                                        slot=\"prefix\"\r\n                                        class=\"el-icon-edit-outline\"\r\n                                    ></i\r\n                                ></el-input>\r\n                            </div>\r\n                            <div\r\n                                v-if=\"search.column == 'date'\"\r\n                                class=\"col-md-4 col col-lg-4 d-flex align-items-end\"\r\n                            >\r\n                                <el-date-picker\r\n                                    class=\"w-100\"\r\n                                    format=\"d/MM/yy\"\r\n                                    value-format=\"yyyy-MM-dd\"\r\n                                    v-model=\"search.value\"\r\n                                    type=\"date\"\r\n                                >\r\n                                </el-date-picker>\r\n                            </div>\r\n                            <div\r\n                                class=\"col-md-4 col col-lg-4 d-flex align-items-end\"\r\n                            >\r\n                                <button\r\n                                    @click=\"getData\"\r\n                                    class=\"btn btn-primary btn-sm\"\r\n                                    :loading=\"loading\"\r\n                                >\r\n                                    Buscar\r\n                                </button>\r\n                                <button\r\n                                    @click=\"DataFoods\"\r\n                                    class=\"btn btn-success btn-sm\"\r\n                                    :loading=\"loading\"\r\n                                >\r\n                                    Platos atentidos\r\n                                </button>\r\n                            </div>\r\n                        </div>\r\n                    </div>\r\n                    <div class=\"table-responsive\">\r\n                        <div>\r\n                            <el-pagination\r\n                                @current-change=\"getData\"\r\n                                layout=\"total, prev, pager, next\"\r\n                                :total=\"pagination.total\"\r\n                                :current-page.sync=\"pagination.current_page\"\r\n                                :page-size=\"pagination.per_page\"\r\n                            >\r\n                            </el-pagination>\r\n                        </div>\r\n                        <table class=\"table\" v-loading=\"loading\">\r\n                            <thead>\r\n                                <tr>\r\n                                    <th class=\"text-center\">#</th>\r\n                                    <th class=\"text-center\">N° de Comanda</th>\r\n                                    <th class=\"text-center\">Cliente</th>\r\n                                    <th class=\"text-center\">Detalle</th>\r\n                                    <th class=\"text-center\">Documento</th>\r\n                                    <th class=\"text-center\">Estado</th>\r\n                                    <th class=\"text-center\">Acciones</th>\r\n                                    <th class=\"text-center\">Total Pagado</th>\r\n                                </tr>\r\n                            </thead>\r\n                            <tbody>\r\n                                <tr\r\n                                    v-for=\"(row, index) in records\"\r\n                                    :key=\"index\"\r\n                                    :class=\"{\r\n                                        'bg bg-dark':\r\n                                            row.status_orden_id === '1',\r\n                                        'bg bg-secondary':\r\n                                            row.status_orden_id === '2',\r\n                                        'bg bg-warning':\r\n                                            row.status_orden_id === '3',\r\n                                        'bg-success':\r\n                                            row.status_orden_id === '4',\r\n                                        'bg bg-danger':\r\n                                            row.status_orden_id === '5'\r\n                                    }\"\r\n                                >\r\n                                    <td class=\"text-center\">{{ index + 1 }}</td>\r\n                                    <td class=\"text-center\">\r\n                                        {{ row.id }}\r\n                                    </td>\r\n\r\n                                    <td class=\"text-center\">\r\n                                        {{ row.customer }}\r\n                                    </td>\r\n\r\n                                    <td class=\"text-center\">\r\n                                        <button\r\n                                            class=\"btn btn-sm btn-primary\"\r\n                                            @click=\"viewItems(row)\"\r\n                                        >\r\n                                            <i class=\"fas fa-list\"></i>\r\n                                        </button>\r\n                                    </td>\r\n\r\n                                    <td class=\"text-center\">\r\n                                        {{ row.document_type }}<br />\r\n                                        <span\r\n                                            class=\"badge rounded-pill  text-dark\"\r\n                                        >\r\n                                            {{ row.document_number }}</span\r\n                                        ><br />\r\n\r\n                                        <button\r\n                                            class=\"btn btn-sm btn-success\"\r\n                                            @click=\"viewFile(row)\"\r\n                                            v-if=\"row.status_orden_id == 4\"\r\n                                        >\r\n                                            <i class=\"fas fa-file\"></i>\r\n                                            Descargar\r\n                                        </button>\r\n                                    </td>\r\n\r\n                                    <td class=\"text-center\">\r\n                                        {{ row.status }}\r\n                                    </td>\r\n\r\n                                    <td class=\"text-center\">\r\n                                        <el-button\r\n                                            v-if=\"\r\n                                                row.status_id == 1 ||\r\n                                                    row.status_id == 2\r\n                                            \"\r\n                                            type=\"danger\"\r\n                                            @click=\"anular_command(row.id)\"\r\n                                        >\r\n                                            Anular</el-button\r\n                                        >\r\n                                    </td>\r\n                                    <td class=\"text-center\">\r\n                                        {{ total(row) }}\r\n                                    </td>\r\n                                </tr>\r\n                            </tbody>\r\n                            <tr>\r\n                                <td colspan=\"7\" class=\"text-end\">\r\n                                    Total de Nota de Venta\r\n                                </td>\r\n                                <td class=\"text-center\">\r\n                                    {{ totals_notas.toFixed(2) }}\r\n                                </td>\r\n                            </tr>\r\n                            <tr>\r\n                                <td colspan=\"7\" class=\"text-end\">\r\n                                    Total de Boletas - Facturas\r\n                                </td>\r\n                                <td class=\"text-center\">\r\n                                    {{ totals_facturas.toFixed(2) }}\r\n                                </td>\r\n                            </tr>\r\n                            <tr>\r\n                                <td colspan=\"7\" class=\"text-end\">Total</td>\r\n                                <td class=\"text-center\">\r\n                                    {{ totals_efectivos.toFixed(2) }}\r\n                                </td>\r\n                            </tr>\r\n                        </table>\r\n\r\n                        <div>\r\n                            <el-pagination\r\n                                @current-change=\"getData\"\r\n                                layout=\"total, prev, pager, next\"\r\n                                :total=\"pagination.total\"\r\n                                :current-page.sync=\"pagination.current_page\"\r\n                                :page-size=\"pagination.per_page\"\r\n                            >\r\n                            </el-pagination>\r\n                        </div>\r\n                    </div>\r\n                </div>\r\n                <view-items\r\n                    v-if=\"currentRow\"\r\n                    :row=\"currentRow\"\r\n                    :showDialog.sync=\"showDialog\"\r\n                >\r\n                </view-items>\r\n                <ListFood\r\n                    :showDialogFoods.sync=\"showDialogFoods\"\r\n                    :listFoods.sync=\"listFoods\"\r\n                ></ListFood>\r\n            </div>\r\n        </div>\r\n    </div>\r\n</template>\r\n<style scoped>\r\n.file1 {\r\n    visibility: hidden;\r\n    position: absolute;\r\n}\r\n</style>\r\n<script>\r\nimport queryString from \"query-string\";\r\n\r\nimport ListFood from \"./listFoods.vue\";\r\nimport { deletable } from \"../../../../../../../resources/js/mixins/deletable\";\r\nimport ViewItems from \"./items.vue\";\r\nimport moment from \"moment\";\r\nexport default {\r\n    components: { ViewItems, ListFood },\r\n    mixins: [deletable],\r\n    props: [\"configuration\"],\r\n    data() {\r\n        return {\r\n            allRecords: [],\r\n            listFoods: {},\r\n            columns: [\r\n                {\r\n                    id: 1,\r\n                    value: \"id\",\r\n                    label: \"Número de orden\"\r\n                },\r\n                {\r\n                    id: 2,\r\n                    value: \"date\",\r\n                    label: \"Fecha\"\r\n                },\r\n                {\r\n                    id: 3,\r\n                    value: \"client\",\r\n                    label: \"Cliente (DNI / RUC)\"\r\n                }\r\n            ],\r\n            search: { column: \"date\", value: moment().format(\"YYYY-MM-DD\") },\r\n            date_start: moment().format(\"YYYY-MM-DD\"),\r\n            loading: false,\r\n            showDialog: false,\r\n            resource: \"ordens\",\r\n            currentRow: null,\r\n            showImage: false,\r\n            currentRecord: null,\r\n            currentImage: null,\r\n            areas: [],\r\n            pagination: {},\r\n            statusTable: [],\r\n            records: [],\r\n            totals_notas: 0,\r\n            totals_facturas: 0,\r\n            totals_efectivos: 0,\r\n            showDialogFoods: false\r\n        };\r\n    },\r\n    created() {\r\n        this.$eventHub.$on(\"reloadData\", () => {\r\n            this.getData();\r\n        });\r\n\r\n        this.getData();\r\n    },\r\n    methods: {\r\n        viewItems(row) {\r\n            this.currentRow = row;\r\n            this.showDialog = true;\r\n        },\r\n        anular_command(id) {\r\n            this.anular_comanda(\r\n                `/caja/worker/destroyorden/${id}`,\r\n                id\r\n            ).then(() => this.$eventHub.$emit(\"reloadData\"));\r\n        },\r\n        async DataFoods() {\r\n            const response = await this.$http.get(\r\n                `${this.resource}/listfoods/${this.search.value}`\r\n            );\r\n            this.listFoods = response.data;\r\n            this.showDialogFoods = true;\r\n        },\r\n        viewFile(row) {\r\n            let url = \"\";\r\n            if (row.document) {\r\n                let external_id = row.document.external_id;\r\n                url = `/downloads/document/pdf/${external_id}`;\r\n            }\r\n            if (row.sale_note) {\r\n                let external_id = row.sale_note.external_id;\r\n                url = `/sale-notes/print/${external_id}/a4`;\r\n            }\r\n            window.open(url, \"_blank\");\r\n        },\r\n        total(row) {\r\n            if (row.document) {\r\n                return row.document.total;\r\n            }\r\n            if (row.sale_note) {\r\n                return row.sale_note.total;\r\n            }\r\n            return 0.0;\r\n        },\r\n        getQueryParameters() {\r\n            return queryString.stringify({\r\n                page: this.pagination.current_page,\r\n                limit: this.limit,\r\n                ...this.search\r\n            });\r\n        },\r\n        reset() {\r\n            this.search.value = \"\";\r\n        },\r\n        Totals() {\r\n            let facturas = _.filter(this.records, { document_type_id: \"01\" });\r\n\r\n            let notas_venta = _.filter(this.records, {\r\n                document_type_id: \"80\"\r\n            });\r\n            console.log(\"notas_venta\", notas_venta);\r\n            console.log(\"facturas\", facturas);\r\n            console.log(\"this.records\", this.records);\r\n            this.totals_facturas = _.sumBy(facturas, it =>\r\n                parseFloat(it.total)\r\n            );\r\n            this.totals_notas = _.sumBy(notas_venta, it =>\r\n                parseFloat(it.total)\r\n            );\r\n            this.totals_efectivos = _.round(\r\n                this.totals_facturas + this.totals_notas,\r\n                2\r\n            );\r\n        },\r\n        async getData() {\r\n            this.loading = true;\r\n            //let query = queryString.stringify(this.search);\r\n            const response = await this.$http.get(\r\n                `${this.resource}/records?${this.getQueryParameters()}`\r\n            );\r\n            this.pagination = response.data.meta;\r\n            this.pagination.per_page = parseInt(response.data.meta.per_page);\r\n            this.records = response.data.data;\r\n            this.loading = false;\r\n            this.Totals();\r\n        },\r\n\r\n        clickDelete(id) {\r\n            this.destroy(`/${this.resource}/${id}`).then(() =>\r\n                this.$eventHub.$emit(\"reloadData\")\r\n            );\r\n        }\r\n    }\r\n};\r\n</script>\r\n"],"sourceRoot":""}]);
-
-// exports
-
 
 /***/ }),
 
@@ -1110,7 +1714,7 @@ module.exports = function (str) {
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-27d383ab\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Restaurant/Resources/assets/js/views/ordens/items.vue":
+/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-07de1de4\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Restaurant/Resources/assets/js/views/configuration/form.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -1120,50 +1724,367 @@ var render = function() {
   return _c(
     "el-dialog",
     {
-      attrs: {
-        visible: _vm.showDialog,
-        title: "Detalle Orden N° " + _vm.row.id
-      },
-      on: { open: _vm.open, close: _vm.close }
+      attrs: { title: _vm.titleDialog, visible: _vm.showDialog },
+      on: { close: _vm.close, open: _vm.create }
     },
     [
-      _vm._l(_vm.row.orden_items, function(data, idx) {
-        return _c("div", { key: idx, staticClass: "row" }, [
-          _c("div", { staticClass: "col-2 text-center" }, [
-            _vm._v("\n            " + _vm._s(data.quantity) + "\n        ")
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "col-5 text-start" }, [
-            _vm._v(
-              "\n            " + _vm._s(data.food.description) + "\n        "
+      _c(
+        "form",
+        {
+          attrs: { autocomplete: "off" },
+          on: {
+            submit: function($event) {
+              $event.preventDefault()
+              return _vm.submit.apply(null, arguments)
+            }
+          }
+        },
+        [
+          _c("div", { staticClass: "form-body" }, [
+            _c(
+              "div",
+              { staticClass: "row" },
+              [
+                _vm.type !== "caja/tables"
+                  ? _c("div", { staticClass: "col-md-12" }, [
+                      _c(
+                        "div",
+                        {
+                          staticClass: "form-group",
+                          class: { "has-danger": _vm.errors.description }
+                        },
+                        [
+                          _c("label", { staticClass: "control-label" }, [
+                            _vm._v("Descripción")
+                          ]),
+                          _vm._v(" "),
+                          _c("el-input", {
+                            model: {
+                              value: _vm.form.description,
+                              callback: function($$v) {
+                                _vm.$set(_vm.form, "description", $$v)
+                              },
+                              expression: "form.description"
+                            }
+                          }),
+                          _vm._v(" "),
+                          _vm.errors.description
+                            ? _c("small", {
+                                staticClass: "text-danger",
+                                domProps: {
+                                  textContent: _vm._s(_vm.errors.description[0])
+                                }
+                              })
+                            : _vm._e()
+                        ],
+                        1
+                      )
+                    ])
+                  : _vm._e(),
+                _vm._v(" "),
+                _vm.type == "caja/areas" &&
+                _vm.configurations.multiple_boxes === 1
+                  ? _c("div", { staticClass: "col-md-6" }, [
+                      _c(
+                        "div",
+                        {
+                          staticClass: "form-group",
+                          class: { "has-danger": _vm.errors.printer }
+                        },
+                        [
+                          _c("label", { staticClass: "control-label" }, [
+                            _vm._v("Impresora")
+                          ]),
+                          _vm._v(" "),
+                          _c("el-input", {
+                            model: {
+                              value: _vm.form.printer,
+                              callback: function($$v) {
+                                _vm.$set(_vm.form, "printer", $$v)
+                              },
+                              expression: "form.printer"
+                            }
+                          }),
+                          _vm._v(" "),
+                          _vm.errors.printer
+                            ? _c("small", {
+                                staticClass: "text-danger",
+                                domProps: {
+                                  textContent: _vm._s(_vm.errors.printer[0])
+                                }
+                              })
+                            : _vm._e()
+                        ],
+                        1
+                      )
+                    ])
+                  : _vm._e(),
+                _vm._v(" "),
+                _vm.type == "caja/areas" &&
+                _vm.configurations.multiple_boxes === 1
+                  ? _c("div", { staticClass: "col-md-6" }, [
+                      _c(
+                        "div",
+                        {
+                          staticClass: "form-group",
+                          class: { "has-danger": _vm.errors.printer }
+                        },
+                        [
+                          _c("label", { staticClass: "control-label" }, [
+                            _vm._v("Nº COPIAS")
+                          ]),
+                          _vm._v(" "),
+                          _c("el-input", {
+                            model: {
+                              value: _vm.form.copies,
+                              callback: function($$v) {
+                                _vm.$set(_vm.form, "copies", $$v)
+                              },
+                              expression: "form.copies"
+                            }
+                          }),
+                          _vm._v(" "),
+                          _vm.errors.copies
+                            ? _c("small", {
+                                staticClass: "text-danger",
+                                domProps: {
+                                  textContent: _vm._s(_vm.errors.copies[0])
+                                }
+                              })
+                            : _vm._e()
+                        ],
+                        1
+                      )
+                    ])
+                  : _vm._e(),
+                _vm._v(" "),
+                _vm.type == "caja/tables"
+                  ? [
+                      _c("div", { staticClass: "col-md-4" }, [
+                        _c(
+                          "div",
+                          {
+                            staticClass: "form-group",
+                            class: { "has-danger": _vm.errors.number }
+                          },
+                          [
+                            _c("label", { staticClass: "control-label" }, [
+                              _vm._v("Número de mesa")
+                            ]),
+                            _vm._v(" "),
+                            _c("el-input", {
+                              model: {
+                                value: _vm.form.number,
+                                callback: function($$v) {
+                                  _vm.$set(_vm.form, "number", $$v)
+                                },
+                                expression: "form.number"
+                              }
+                            }),
+                            _vm._v(" "),
+                            _vm.errors.number
+                              ? _c("small", {
+                                  staticClass: "form-control-feedback",
+                                  domProps: {
+                                    textContent: _vm._s(_vm.errors.number[0])
+                                  }
+                                })
+                              : _vm._e()
+                          ],
+                          1
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "col-md-4" }, [
+                        _c(
+                          "div",
+                          {
+                            staticClass: "form-group",
+                            class: {
+                              "has-danger": _vm.errors.status_table_id
+                            }
+                          },
+                          [
+                            _c("label", { staticClass: "control-label" }, [
+                              _vm._v("Estado de mesa")
+                            ]),
+                            _vm._v(" "),
+                            _c(
+                              "el-select",
+                              {
+                                model: {
+                                  value: _vm.form.status_table_id,
+                                  callback: function($$v) {
+                                    _vm.$set(_vm.form, "status_table_id", $$v)
+                                  },
+                                  expression: "form.status_table_id"
+                                }
+                              },
+                              _vm._l(_vm.statusTable, function(data, index) {
+                                return _c("el-option", {
+                                  key: index,
+                                  attrs: {
+                                    label: data.description,
+                                    value: data.id
+                                  }
+                                })
+                              }),
+                              1
+                            ),
+                            _vm._v(" "),
+                            _vm.errors.status_table_id
+                              ? _c("small", {
+                                  staticClass: "form-control-feedback",
+                                  domProps: {
+                                    textContent: _vm._s(
+                                      _vm.errors.status_table_id[0]
+                                    )
+                                  }
+                                })
+                              : _vm._e()
+                          ],
+                          1
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "col-md-4" }, [
+                        _c(
+                          "div",
+                          {
+                            staticClass: "form-group",
+                            class: { "has-danger": _vm.errors.area_id }
+                          },
+                          [
+                            _c("label", { staticClass: "control-label" }, [
+                              _vm._v("Área de mesa")
+                            ]),
+                            _vm._v(" "),
+                            _c(
+                              "el-select",
+                              {
+                                model: {
+                                  value: _vm.form.area_id,
+                                  callback: function($$v) {
+                                    _vm.$set(_vm.form, "area_id", $$v)
+                                  },
+                                  expression: "form.area_id"
+                                }
+                              },
+                              _vm._l(_vm.areas, function(data, index) {
+                                return _c("el-option", {
+                                  key: index,
+                                  attrs: {
+                                    label: data.description,
+                                    value: data.id
+                                  }
+                                })
+                              }),
+                              1
+                            ),
+                            _vm._v(" "),
+                            _vm.errors.area_id
+                              ? _c("small", {
+                                  staticClass: "text-danger",
+                                  domProps: {
+                                    textContent: _vm._s(_vm.errors.area_id[0])
+                                  }
+                                })
+                              : _vm._e()
+                          ],
+                          1
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "col-md-4" }, [
+                        _c(
+                          "div",
+                          {
+                            staticClass: "form-group",
+                            class: { "has-danger": _vm.errors.establishment_id }
+                          },
+                          [
+                            _c("label", { staticClass: "control-label" }, [
+                              _vm._v("Establecimiento")
+                            ]),
+                            _vm._v(" "),
+                            _c(
+                              "el-select",
+                              {
+                                model: {
+                                  value: _vm.form.establishment_id,
+                                  callback: function($$v) {
+                                    _vm.$set(_vm.form, "establishment_id", $$v)
+                                  },
+                                  expression: "form.establishment_id"
+                                }
+                              },
+                              _vm._l(_vm.establishments, function(data, index) {
+                                return _c("el-option", {
+                                  key: index,
+                                  attrs: {
+                                    label: data.description,
+                                    value: data.id
+                                  }
+                                })
+                              }),
+                              1
+                            ),
+                            _vm._v(" "),
+                            _vm.errors.establishment_id
+                              ? _c("small", {
+                                  staticClass: "text-danger",
+                                  domProps: {
+                                    textContent: _vm._s(
+                                      _vm.errors.establishment_id[0]
+                                    )
+                                  }
+                                })
+                              : _vm._e()
+                          ],
+                          1
+                        )
+                      ])
+                    ]
+                  : _vm._e()
+              ],
+              2
             )
           ]),
           _vm._v(" "),
-          _c("div", { staticClass: "col-2 text-end" }, [
-            _vm._v("\n            " + _vm._s(data.food.price) + "\n        ")
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "col-3 text-end" }, [
-            _vm._v(
-              "\n            " +
-                _vm._s((data.food.price * data.quantity).toFixed(2)) +
-                "\n        "
-            )
-          ])
-        ])
-      }),
-      _vm._v(" "),
-      _c("div", { staticClass: "row" }, [_c("hr")]),
-      _vm._v(" "),
-      _c("div", { staticClass: "row" }, [
-        _c("div", { staticClass: "col-9" }),
-        _vm._v(" "),
-        _c("div", { staticClass: "col-3 text-end" }, [
-          _vm._v("S/ " + _vm._s(this.total))
-        ])
-      ])
-    ],
-    2
+          _c(
+            "div",
+            { staticClass: "form-actions text-end pt-2 pb-2" },
+            [
+              _c(
+                "el-button",
+                {
+                  on: {
+                    click: function($event) {
+                      $event.preventDefault()
+                      return _vm.close()
+                    }
+                  }
+                },
+                [_vm._v("Cancelar")]
+              ),
+              _vm._v(" "),
+              _c(
+                "el-button",
+                {
+                  attrs: {
+                    type: "primary",
+                    "native-type": "submit",
+                    loading: _vm.loading_submit
+                  }
+                },
+                [_vm._v("Guardar")]
+              )
+            ],
+            1
+          )
+        ]
+      )
+    ]
   )
 }
 var staticRenderFns = []
@@ -1172,13 +2093,13 @@ module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-27d383ab", module.exports)
+    require("vue-hot-reload-api")      .rerender("data-v-07de1de4", module.exports)
   }
 }
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-50e168c2\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Restaurant/Resources/assets/js/views/ordens/listFoods.vue":
+/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-4b997e69\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/js/components/DataTable.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -1186,239 +2107,107 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
-    _c(
-      "div",
-      { staticClass: "row" },
-      [
-        _c(
-          "el-dialog",
-          {
-            attrs: {
-              title: "Platos Atendidos",
-              visible: _vm.showDialogFoods,
-              "before-close": _vm.closeDialog
-            },
-            on: {
-              "update:visible": function($event) {
-                _vm.showDialogFoods = $event
-              }
-            }
-          },
-          [
-            _c("span", [
+    _c("div", { staticClass: "row " }, [
+      _c("div", { staticClass: "col-md-12 col-lg-12 col-xl-12 " }, [
+        _vm.applyFilter
+          ? _c("div", { staticClass: "row" }, [
               _c(
-                "form",
-                {
-                  attrs: { autocomplete: "off" },
-                  on: {
-                    submit: function($event) {
-                      $event.preventDefault()
-                      return _vm.submit.apply(null, arguments)
-                    }
-                  }
-                },
+                "div",
+                { staticClass: "col-lg-4 col-md-4 col-sm-12 pb-2" },
                 [
-                  _c("div", { staticClass: "form-body" }, [
-                    _c(
-                      "div",
-                      {
-                        directives: [
-                          {
-                            name: "loading",
-                            rawName: "v-loading",
-                            value: _vm.loading,
-                            expression: "loading"
-                          }
-                        ],
-                        staticClass: "row"
-                      },
-                      [
-                        _c(
-                          "div",
-                          { staticClass: "col-md-12" },
-                          [
-                            _vm.listFoods.length > 0
-                              ? [
-                                  _c(
-                                    "table",
-                                    { staticClass: "table table-responsive" },
-                                    [
-                                      _c("thead", [
-                                        _c("tr", [
-                                          _c(
-                                            "th",
-                                            { staticClass: "text-center" },
-                                            [_vm._v("Cantidad")]
-                                          ),
-                                          _vm._v(" "),
-                                          _c("th", [_vm._v("Producto")])
-                                        ])
-                                      ]),
-                                      _vm._v(" "),
-                                      _c(
-                                        "tbody",
-                                        _vm._l(_vm.listFoods, function(
-                                          row,
-                                          index
-                                        ) {
-                                          return _c("tr", { key: index }, [
-                                            _c(
-                                              "td",
-                                              { staticClass: "text-center" },
-                                              [
-                                                _vm._v(
-                                                  _vm._s(row.move_quantity)
-                                                )
-                                              ]
-                                            ),
-                                            _vm._v(" "),
-                                            _c("td", [
-                                              _vm._v(_vm._s(row.description))
-                                            ])
-                                          ])
-                                        }),
-                                        0
-                                      )
-                                    ]
-                                  )
-                                ]
-                              : [
-                                  _vm._v(
-                                    "\n                                        No hay Productos\n                            "
-                                  )
-                                ]
-                          ],
-                          2
-                        )
-                      ]
+                  _c("label", { staticStyle: { width: "100%" } }, [
+                    _vm._v(
+                      "\n                            Filtrar por:\n                        "
                     )
-                  ])
-                ]
-              )
-            ]),
-            _vm._v(" "),
-            _c(
-              "span",
-              {
-                staticClass: "dialog-footer",
-                attrs: { slot: "footer" },
-                slot: "footer"
-              },
-              [
-                _c(
-                  "el-button",
-                  {
-                    on: {
-                      click: function($event) {
-                        return _vm.closeDialog()
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "el-select",
+                    {
+                      attrs: { placeholder: "Select" },
+                      on: { change: _vm.changeClearInput },
+                      model: {
+                        value: _vm.search.column,
+                        callback: function($$v) {
+                          _vm.$set(_vm.search, "column", $$v)
+                        },
+                        expression: "search.column"
                       }
-                    }
-                  },
-                  [_vm._v("Cerrar")]
-                )
-              ],
-              1
-            )
-          ]
-        )
-      ],
-      1
-    )
-  ])
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-50e168c2", module.exports)
-  }
-}
-
-/***/ }),
-
-/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-7645ebbd\",\"hasScoped\":true,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Restaurant/Resources/assets/js/views/ordens/index.vue":
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c("div", [
-    _vm._m(0),
-    _vm._v(" "),
-    _c("div", { staticClass: "container-fluid p-l-0 p-r-0" }, [
-      _c(
-        "div",
-        {
-          directives: [
-            {
-              name: "loading",
-              rawName: "v-loading",
-              value: _vm.loading,
-              expression: "loading"
-            }
-          ],
-          staticClass: "card"
-        },
-        [
-          _vm._m(1),
-          _vm._v(" "),
-          _c("div", { staticClass: "card-body" }, [
-            _c("div", { staticClass: "col-md-12 col-lg-12 col-xl-12 mb-2" }, [
-              _c("div", { staticClass: "row" }, [
-                _c(
-                  "div",
-                  { staticClass: "col-md-4 col col-lg-4" },
-                  [
-                    _c("label", { staticClass: "control-label" }, [
-                      _vm._v("Buscar por")
-                    ]),
-                    _vm._v(" "),
-                    _c(
-                      "el-select",
-                      {
-                        key: 1,
-                        on: { change: _vm.reset },
-                        model: {
-                          value: _vm.search.column,
-                          callback: function($$v) {
-                            _vm.$set(_vm.search, "column", $$v)
-                          },
-                          expression: "search.column"
-                        }
-                      },
-                      _vm._l(_vm.columns, function(data, index) {
-                        return _c("el-option", {
-                          key: index,
-                          attrs: { label: data.label, value: data.value }
-                        })
-                      }),
-                      1
+                    },
+                    _vm._l(_vm.columns, function(label, key) {
+                      return _c("el-option", {
+                        key: key,
+                        attrs: { value: key, label: label }
+                      })
+                    }),
+                    1
+                  )
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "col-lg-3 col-md-4 col-sm-12 pb-2" },
+                [
+                  _c("label", { attrs: { for: "value" } }, [
+                    _vm._v(
+                      "\n                        Buscar\n                    "
                     )
-                  ],
-                  1
-                ),
-                _vm._v(" "),
-                _vm.search.column !== "date"
-                  ? _c(
-                      "div",
-                      {
-                        staticClass:
-                          "col-md-4 col col-lg-4 d-flex align-items-end"
-                      },
-                      [
+                  ]),
+                  _vm._v(" "),
+                  _vm.search.column == "date_of_issue" ||
+                  _vm.search.column == "date_of_due" ||
+                  _vm.search.column == "date_of_payment" ||
+                  _vm.search.column == "delivery_date" ||
+                  _vm.search.column == "date"
+                    ? [
+                        _vm.resource != "caja/worker/expenses"
+                          ? [
+                              _c("el-date-picker", {
+                                staticStyle: { width: "100%" },
+                                attrs: {
+                                  type: "date",
+                                  placeholder: "Buscar",
+                                  "value-format": "yyyy-MM-dd"
+                                },
+                                on: { change: _vm.getRecords },
+                                model: {
+                                  value: _vm.search.value,
+                                  callback: function($$v) {
+                                    _vm.$set(_vm.search, "value", $$v)
+                                  },
+                                  expression: "search.value"
+                                }
+                              })
+                            ]
+                          : [
+                              _c("el-date-picker", {
+                                attrs: {
+                                  type: "daterange",
+                                  "range-separator": "A",
+                                  "start-placeholder": "Desde",
+                                  "value-format": "yyyy-MM-dd",
+                                  "end-placeholder": "Hasta"
+                                },
+                                on: { change: _vm.getRecords },
+                                model: {
+                                  value: _vm.search.value,
+                                  callback: function($$v) {
+                                    _vm.$set(_vm.search, "value", $$v)
+                                  },
+                                  expression: "search.value"
+                                }
+                              })
+                            ]
+                      ]
+                    : _vm.search.column == "district_id"
+                    ? [
                         _c(
-                          "el-input",
+                          "el-select",
                           {
-                            attrs: {
-                              placeholder:
-                                "" +
-                                (_vm.search.column == "orden"
-                                  ? "N° de orden"
-                                  : "Nombre / N° documento del cliente")
-                            },
+                            attrs: { placeholder: "Seleccione el Distrito" },
+                            on: { change: _vm.getRecords },
                             model: {
                               value: _vm.search.value,
                               callback: function($$v) {
@@ -1427,34 +2216,47 @@ var render = function() {
                               expression: "search.value"
                             }
                           },
-                          [
-                            _c("i", {
-                              staticClass: "el-icon-edit-outline",
-                              attrs: { slot: "prefix" },
-                              slot: "prefix"
+                          _vm._l(_vm.array_district, function(item) {
+                            return _c("el-option", {
+                              key: item.id,
+                              attrs: { label: item.description, value: item.id }
                             })
-                          ]
+                          }),
+                          1
                         )
-                      ],
-                      1
-                    )
-                  : _vm._e(),
-                _vm._v(" "),
-                _vm.search.column == "date"
-                  ? _c(
-                      "div",
-                      {
-                        staticClass:
-                          "col-md-4 col col-lg-4 d-flex align-items-end"
-                      },
-                      [
-                        _c("el-date-picker", {
-                          staticClass: "w-100",
-                          attrs: {
-                            format: "d/MM/yy",
-                            "value-format": "yyyy-MM-dd",
-                            type: "date"
+                      ]
+                    : _vm.search.column == "seller_id"
+                    ? [
+                        _c(
+                          "el-select",
+                          {
+                            attrs: { placeholder: "Seleccione el vendedor" },
+                            on: { change: _vm.getRecords },
+                            model: {
+                              value: _vm.search.value,
+                              callback: function($$v) {
+                                _vm.$set(_vm.search, "value", $$v)
+                              },
+                              expression: "search.value"
+                            }
                           },
+                          _vm._l(_vm.sellers, function(item, idx) {
+                            return _c("el-option", {
+                              key: idx,
+                              attrs: { label: item.name, value: item.id }
+                            })
+                          }),
+                          1
+                        )
+                      ]
+                    : [
+                        _c("el-input", {
+                          staticStyle: { width: "100%" },
+                          attrs: {
+                            placeholder: "Buscar",
+                            "prefix-icon": "el-icon-search"
+                          },
+                          on: { input: _vm.getRecords },
                           model: {
                             value: _vm.search.value,
                             callback: function($$v) {
@@ -1463,343 +2265,910 @@ var render = function() {
                             expression: "search.value"
                           }
                         })
-                      ],
-                      1
-                    )
-                  : _vm._e(),
-                _vm._v(" "),
-                _c(
+                      ]
+                ],
+                2
+              ),
+              _vm._v(" "),
+              _vm.search.column == "date_of_issue" ||
+              _vm.search.column == "date_of_due" ||
+              _vm.search.column == "date_of_payment" ||
+              _vm.search.column == "delivery_date" ||
+              (_vm.search.column == "date" &&
+                _vm.resource == "purchases" &&
+                _vm.search.value)
+                ? _c(
+                    "div",
+                    { staticClass: "col-lg-3 col-md-4 col-sm-12 pb-2" },
+                    [
+                      _c("label", { attrs: { for: "value" } }, [
+                        _vm._v(
+                          "\n                        Hasta\n                    "
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("el-date-picker", {
+                        staticStyle: { width: "100%" },
+                        attrs: {
+                          type: "date",
+                          placeholder: "Buscar",
+                          "value-format": "yyyy-MM-dd"
+                        },
+                        on: { change: _vm.getRecords },
+                        model: {
+                          value: _vm.search.end_date,
+                          callback: function($$v) {
+                            _vm.$set(_vm.search, "end_date", $$v)
+                          },
+                          expression: "search.end_date"
+                        }
+                      })
+                    ],
+                    1
+                  )
+                : _vm._e()
+            ])
+          : _vm._e()
+      ]),
+      _vm._v(" "),
+      _vm.resource == "caja/worker/expenses" ||
+      ("purchases" && _vm.records.length != 0)
+        ? _c("div", { staticClass: "row" }, [
+            _vm.resource == "caja/worker/expenses"
+              ? _c(
                   "div",
-                  {
-                    staticClass: "col-md-4 col col-lg-4 d-flex align-items-end"
-                  },
+                  { staticClass: "col-md-3" },
                   [
                     _c(
-                      "button",
+                      "el-button",
                       {
-                        staticClass: "btn btn-primary btn-sm",
-                        attrs: { loading: _vm.loading },
-                        on: { click: _vm.getData }
-                      },
-                      [
-                        _vm._v(
-                          "\n                                Buscar\n                            "
-                        )
-                      ]
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "button",
-                      {
-                        staticClass: "btn btn-success btn-sm",
-                        attrs: { loading: _vm.loading },
-                        on: { click: _vm.DataFoods }
-                      },
-                      [
-                        _vm._v(
-                          "\n                                Platos atentidos\n                            "
-                        )
-                      ]
-                    )
-                  ]
-                )
-              ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "table-responsive" }, [
-              _c(
-                "div",
-                [
-                  _c("el-pagination", {
-                    attrs: {
-                      layout: "total, prev, pager, next",
-                      total: _vm.pagination.total,
-                      "current-page": _vm.pagination.current_page,
-                      "page-size": _vm.pagination.per_page
-                    },
-                    on: {
-                      "current-change": _vm.getData,
-                      "update:currentPage": function($event) {
-                        return _vm.$set(_vm.pagination, "current_page", $event)
-                      },
-                      "update:current-page": function($event) {
-                        return _vm.$set(_vm.pagination, "current_page", $event)
-                      }
-                    }
-                  })
-                ],
-                1
-              ),
-              _vm._v(" "),
-              _c(
-                "table",
-                {
-                  directives: [
-                    {
-                      name: "loading",
-                      rawName: "v-loading",
-                      value: _vm.loading,
-                      expression: "loading"
-                    }
-                  ],
-                  staticClass: "table"
-                },
-                [
-                  _vm._m(2),
-                  _vm._v(" "),
-                  _c(
-                    "tbody",
-                    _vm._l(_vm.records, function(row, index) {
-                      return _c(
-                        "tr",
-                        {
-                          key: index,
-                          class: {
-                            "bg bg-dark": row.status_orden_id === "1",
-                            "bg bg-secondary": row.status_orden_id === "2",
-                            "bg bg-warning": row.status_orden_id === "3",
-                            "bg-success": row.status_orden_id === "4",
-                            "bg bg-danger": row.status_orden_id === "5"
+                        staticClass: "submit",
+                        attrs: { type: "danger", icon: "el-icon-tickets" },
+                        on: {
+                          click: function($event) {
+                            $event.preventDefault()
+                            return _vm.clickDownload("pdf")
                           }
-                        },
-                        [
-                          _c("td", { staticClass: "text-center" }, [
-                            _vm._v(_vm._s(index + 1))
-                          ]),
-                          _vm._v(" "),
-                          _c("td", { staticClass: "text-center" }, [
-                            _vm._v(
-                              "\n                                    " +
-                                _vm._s(row.id) +
-                                "\n                                "
-                            )
-                          ]),
-                          _vm._v(" "),
-                          _c("td", { staticClass: "text-center" }, [
-                            _vm._v(
-                              "\n                                    " +
-                                _vm._s(row.customer) +
-                                "\n                                "
-                            )
-                          ]),
-                          _vm._v(" "),
-                          _c("td", { staticClass: "text-center" }, [
-                            _c(
-                              "button",
-                              {
-                                staticClass: "btn btn-sm btn-primary",
-                                on: {
-                                  click: function($event) {
-                                    return _vm.viewItems(row)
-                                  }
-                                }
-                              },
-                              [_c("i", { staticClass: "fas fa-list" })]
-                            )
-                          ]),
-                          _vm._v(" "),
-                          _c("td", { staticClass: "text-center" }, [
-                            _vm._v(
-                              "\n                                    " +
-                                _vm._s(row.document_type)
-                            ),
-                            _c("br"),
-                            _vm._v(" "),
-                            _c(
-                              "span",
-                              { staticClass: "badge rounded-pill  text-dark" },
-                              [
-                                _vm._v(
-                                  "\n                                        " +
-                                    _vm._s(row.document_number)
-                                )
-                              ]
-                            ),
-                            _c("br"),
-                            _vm._v(" "),
-                            row.status_orden_id == 4
-                              ? _c(
-                                  "button",
-                                  {
-                                    staticClass: "btn btn-sm btn-success",
-                                    on: {
-                                      click: function($event) {
-                                        return _vm.viewFile(row)
-                                      }
-                                    }
-                                  },
-                                  [
-                                    _c("i", { staticClass: "fas fa-file" }),
-                                    _vm._v(
-                                      "\n                                        Descargar\n                                    "
-                                    )
-                                  ]
-                                )
-                              : _vm._e()
-                          ]),
-                          _vm._v(" "),
-                          _c("td", { staticClass: "text-center" }, [
-                            _vm._v(
-                              "\n                                    " +
-                                _vm._s(row.status) +
-                                "\n                                "
-                            )
-                          ]),
-                          _vm._v(" "),
-                          _c(
-                            "td",
-                            { staticClass: "text-center" },
-                            [
-                              row.status_id == 1 || row.status_id == 2
-                                ? _c(
-                                    "el-button",
-                                    {
-                                      attrs: { type: "danger" },
-                                      on: {
-                                        click: function($event) {
-                                          return _vm.anular_command(row.id)
-                                        }
-                                      }
-                                    },
-                                    [
-                                      _vm._v(
-                                        "\n                                        Anular"
-                                      )
-                                    ]
-                                  )
-                                : _vm._e()
-                            ],
-                            1
-                          ),
-                          _vm._v(" "),
-                          _c("td", { staticClass: "text-center" }, [
-                            _vm._v(
-                              "\n                                    " +
-                                _vm._s(_vm.total(row)) +
-                                "\n                                "
-                            )
-                          ])
-                        ]
-                      )
-                    }),
-                    0
-                  ),
-                  _vm._v(" "),
-                  _c("tr", [
-                    _c(
-                      "td",
-                      { staticClass: "text-end", attrs: { colspan: "7" } },
-                      [
-                        _vm._v(
-                          "\n                                Total de Nota de Venta\n                            "
-                        )
-                      ]
-                    ),
-                    _vm._v(" "),
-                    _c("td", { staticClass: "text-center" }, [
-                      _vm._v(
-                        "\n                                " +
-                          _vm._s(_vm.totals_notas.toFixed(2)) +
-                          "\n                            "
-                      )
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("tr", [
-                    _c(
-                      "td",
-                      { staticClass: "text-end", attrs: { colspan: "7" } },
-                      [
-                        _vm._v(
-                          "\n                                Total de Boletas - Facturas\n                            "
-                        )
-                      ]
-                    ),
-                    _vm._v(" "),
-                    _c("td", { staticClass: "text-center" }, [
-                      _vm._v(
-                        "\n                                " +
-                          _vm._s(_vm.totals_facturas.toFixed(2)) +
-                          "\n                            "
-                      )
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("tr", [
-                    _c(
-                      "td",
-                      { staticClass: "text-end", attrs: { colspan: "7" } },
-                      [_vm._v("Total")]
-                    ),
-                    _vm._v(" "),
-                    _c("td", { staticClass: "text-center" }, [
-                      _vm._v(
-                        "\n                                " +
-                          _vm._s(_vm.totals_efectivos.toFixed(2)) +
-                          "\n                            "
-                      )
-                    ])
-                  ])
-                ]
-              ),
-              _vm._v(" "),
-              _c(
-                "div",
-                [
-                  _c("el-pagination", {
-                    attrs: {
-                      layout: "total, prev, pager, next",
-                      total: _vm.pagination.total,
-                      "current-page": _vm.pagination.current_page,
-                      "page-size": _vm.pagination.per_page
-                    },
-                    on: {
-                      "current-change": _vm.getData,
-                      "update:currentPage": function($event) {
-                        return _vm.$set(_vm.pagination, "current_page", $event)
+                        }
                       },
-                      "update:current-page": function($event) {
-                        return _vm.$set(_vm.pagination, "current_page", $event)
+                      [_vm._v("Exportar PDF")]
+                    )
+                  ],
+                  1
+                )
+              : _vm._e(),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "col-md-3" },
+              [
+                _c(
+                  "el-button",
+                  {
+                    staticClass: "submit",
+                    attrs: { type: "success", icon: "el-icon-tickets" },
+                    on: {
+                      click: function($event) {
+                        $event.preventDefault()
+                        return _vm.clickDownload("excel")
                       }
                     }
+                  },
+                  [_vm._v("Exportar Excel")]
+                )
+              ],
+              1
+            )
+          ])
+        : _vm._e(),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-md-12" }, [
+        _c("div", { staticClass: "table-responsive" }, [
+          _c("table", { staticClass: "table" }, [
+            _c("thead", [_vm._t("heading")], 2),
+            _vm._v(" "),
+            _c(
+              "tbody",
+              [
+                _vm._l(_vm.records, function(row, index) {
+                  return _vm._t("default", null, {
+                    row: row,
+                    index: _vm.customIndex(index)
                   })
-                ],
-                1
-              )
-            ])
+                })
+              ],
+              2
+            )
           ]),
           _vm._v(" "),
-          _vm.currentRow
-            ? _c("view-items", {
-                attrs: { row: _vm.currentRow, showDialog: _vm.showDialog },
+          _c(
+            "div",
+            [
+              _c("el-pagination", {
+                attrs: {
+                  layout: "total, prev, pager, next",
+                  total: _vm.pagination.total,
+                  "current-page": _vm.pagination.current_page,
+                  "page-size": _vm.pagination.per_page
+                },
                 on: {
-                  "update:showDialog": function($event) {
-                    _vm.showDialog = $event
+                  "current-change": _vm.getRecords,
+                  "update:currentPage": function($event) {
+                    return _vm.$set(_vm.pagination, "current_page", $event)
                   },
-                  "update:show-dialog": function($event) {
-                    _vm.showDialog = $event
+                  "update:current-page": function($event) {
+                    return _vm.$set(_vm.pagination, "current_page", $event)
                   }
                 }
               })
-            : _vm._e(),
+            ],
+            1
+          )
+        ])
+      ])
+    ])
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-4b997e69", module.exports)
+  }
+}
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-61ad8238\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Restaurant/Resources/assets/js/views/configuration/formTableMassive.vue":
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "el-dialog",
+    {
+      attrs: { title: _vm.titleDialog, visible: _vm.showDialog },
+      on: { close: _vm.close, open: _vm.create }
+    },
+    [
+      _c(
+        "form",
+        {
+          attrs: { autocomplete: "off" },
+          on: {
+            submit: function($event) {
+              $event.preventDefault()
+              return _vm.submit.apply(null, arguments)
+            }
+          }
+        },
+        [
+          _c("div", { staticClass: "form-body" }, [
+            _c(
+              "div",
+              { staticClass: "row" },
+              [
+                _vm.type !== "caja/tables"
+                  ? _c("div", { staticClass: "col-md-12" }, [
+                      _c(
+                        "div",
+                        {
+                          staticClass: "form-group",
+                          class: { "has-danger": _vm.errors.description }
+                        },
+                        [
+                          _c("label", { staticClass: "control-label" }, [
+                            _vm._v("Descripción")
+                          ]),
+                          _vm._v(" "),
+                          _c("el-input", {
+                            model: {
+                              value: _vm.form.description,
+                              callback: function($$v) {
+                                _vm.$set(_vm.form, "description", $$v)
+                              },
+                              expression: "form.description"
+                            }
+                          }),
+                          _vm._v(" "),
+                          _vm.errors.description
+                            ? _c("small", {
+                                staticClass: "text-danger",
+                                domProps: {
+                                  textContent: _vm._s(_vm.errors.description[0])
+                                }
+                              })
+                            : _vm._e()
+                        ],
+                        1
+                      )
+                    ])
+                  : _vm._e(),
+                _vm._v(" "),
+                _vm.type == "caja/areas" &&
+                _vm.configurations.multiple_boxes === 1
+                  ? _c("div", { staticClass: "col-md-6" }, [
+                      _c(
+                        "div",
+                        {
+                          staticClass: "form-group",
+                          class: { "has-danger": _vm.errors.printer }
+                        },
+                        [
+                          _c("label", { staticClass: "control-label" }, [
+                            _vm._v("Impresora")
+                          ]),
+                          _vm._v(" "),
+                          _c("el-input", {
+                            model: {
+                              value: _vm.form.printer,
+                              callback: function($$v) {
+                                _vm.$set(_vm.form, "printer", $$v)
+                              },
+                              expression: "form.printer"
+                            }
+                          }),
+                          _vm._v(" "),
+                          _vm.errors.printer
+                            ? _c("small", {
+                                staticClass: "text-danger",
+                                domProps: {
+                                  textContent: _vm._s(_vm.errors.printer[0])
+                                }
+                              })
+                            : _vm._e()
+                        ],
+                        1
+                      )
+                    ])
+                  : _vm._e(),
+                _vm._v(" "),
+                _vm.type == "caja/areas" &&
+                _vm.configurations.multiple_boxes === 1
+                  ? _c("div", { staticClass: "col-md-6" }, [
+                      _c(
+                        "div",
+                        {
+                          staticClass: "form-group",
+                          class: { "has-danger": _vm.errors.printer }
+                        },
+                        [
+                          _c("label", { staticClass: "control-label" }, [
+                            _vm._v("Nº COPIAS")
+                          ]),
+                          _vm._v(" "),
+                          _c("el-input", {
+                            model: {
+                              value: _vm.form.copies,
+                              callback: function($$v) {
+                                _vm.$set(_vm.form, "copies", $$v)
+                              },
+                              expression: "form.copies"
+                            }
+                          }),
+                          _vm._v(" "),
+                          _vm.errors.copies
+                            ? _c("small", {
+                                staticClass: "text-danger",
+                                domProps: {
+                                  textContent: _vm._s(_vm.errors.copies[0])
+                                }
+                              })
+                            : _vm._e()
+                        ],
+                        1
+                      )
+                    ])
+                  : _vm._e(),
+                _vm._v(" "),
+                _vm.type == "caja/tables"
+                  ? [
+                      _c("div", { staticClass: "col-md-4" }, [
+                        _c(
+                          "div",
+                          {
+                            staticClass: "form-group",
+                            class: {
+                              "has-danger": _vm.errors.status_table_id
+                            }
+                          },
+                          [
+                            _c("label", { staticClass: "control-label" }, [
+                              _vm._v("Estado de mesa")
+                            ]),
+                            _vm._v(" "),
+                            _c(
+                              "el-select",
+                              {
+                                model: {
+                                  value: _vm.form.status_table_id,
+                                  callback: function($$v) {
+                                    _vm.$set(_vm.form, "status_table_id", $$v)
+                                  },
+                                  expression: "form.status_table_id"
+                                }
+                              },
+                              _vm._l(_vm.statusTable, function(data, index) {
+                                return _c("el-option", {
+                                  key: index,
+                                  attrs: {
+                                    label: data.description,
+                                    value: data.id
+                                  }
+                                })
+                              }),
+                              1
+                            ),
+                            _vm._v(" "),
+                            _vm.errors.status_table_id
+                              ? _c("small", {
+                                  staticClass: "form-control-feedback",
+                                  domProps: {
+                                    textContent: _vm._s(
+                                      _vm.errors.status_table_id[0]
+                                    )
+                                  }
+                                })
+                              : _vm._e()
+                          ],
+                          1
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "col-md-4" }, [
+                        _c(
+                          "div",
+                          {
+                            staticClass: "form-group",
+                            class: { "has-danger": _vm.errors.area_id }
+                          },
+                          [
+                            _c("label", { staticClass: "control-label" }, [
+                              _vm._v("Área de mesa")
+                            ]),
+                            _vm._v(" "),
+                            _c(
+                              "el-select",
+                              {
+                                model: {
+                                  value: _vm.form.area_id,
+                                  callback: function($$v) {
+                                    _vm.$set(_vm.form, "area_id", $$v)
+                                  },
+                                  expression: "form.area_id"
+                                }
+                              },
+                              _vm._l(_vm.areas, function(data, index) {
+                                return _c("el-option", {
+                                  key: index,
+                                  attrs: {
+                                    label: data.description,
+                                    value: data.id
+                                  }
+                                })
+                              }),
+                              1
+                            ),
+                            _vm._v(" "),
+                            _vm.errors.area_id
+                              ? _c("small", {
+                                  staticClass: "text-danger",
+                                  domProps: {
+                                    textContent: _vm._s(_vm.errors.area_id[0])
+                                  }
+                                })
+                              : _vm._e()
+                          ],
+                          1
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "col-md-4" }, [
+                        _c(
+                          "div",
+                          {
+                            staticClass: "form-group",
+                            class: {
+                              "has-danger": _vm.errors.establishment_id
+                            }
+                          },
+                          [
+                            _c("label", { staticClass: "control-label" }, [
+                              _vm._v("Establecimiento")
+                            ]),
+                            _vm._v(" "),
+                            _c(
+                              "el-select",
+                              {
+                                model: {
+                                  value: _vm.form.establishment_id,
+                                  callback: function($$v) {
+                                    _vm.$set(_vm.form, "establishment_id", $$v)
+                                  },
+                                  expression: "form.establishment_id"
+                                }
+                              },
+                              _vm._l(_vm.establishments, function(data, index) {
+                                return _c("el-option", {
+                                  key: index,
+                                  attrs: {
+                                    label: data.description,
+                                    value: data.id
+                                  }
+                                })
+                              }),
+                              1
+                            ),
+                            _vm._v(" "),
+                            _vm.errors.establishment_id
+                              ? _c("small", {
+                                  staticClass: "text-danger",
+                                  domProps: {
+                                    textContent: _vm._s(
+                                      _vm.errors.establishment_id[0]
+                                    )
+                                  }
+                                })
+                              : _vm._e()
+                          ],
+                          1
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "col-md-4" }, [
+                        _c(
+                          "div",
+                          { staticClass: "form-group" },
+                          [
+                            _c(
+                              "label",
+                              { staticClass: "control-label w-100" },
+                              [_vm._v("Número inicial de mesa")]
+                            ),
+                            _vm._v(" "),
+                            _c("el-input-number", {
+                              staticClass: "w-100",
+                              model: {
+                                value: _vm.form.initNumberTable,
+                                callback: function($$v) {
+                                  _vm.$set(_vm.form, "initNumberTable", $$v)
+                                },
+                                expression: "form.initNumberTable"
+                              }
+                            })
+                          ],
+                          1
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "col-md-4" }, [
+                        _c(
+                          "div",
+                          { staticClass: "form-group" },
+                          [
+                            _c(
+                              "label",
+                              { staticClass: "control-label w-100" },
+                              [_vm._v("Número final de mesa")]
+                            ),
+                            _vm._v(" "),
+                            _c("el-input-number", {
+                              staticClass: "w-100",
+                              model: {
+                                value: _vm.form.finalNumberTable,
+                                callback: function($$v) {
+                                  _vm.$set(_vm.form, "finalNumberTable", $$v)
+                                },
+                                expression: "form.finalNumberTable"
+                              }
+                            })
+                          ],
+                          1
+                        )
+                      ])
+                    ]
+                  : _vm._e()
+              ],
+              2
+            )
+          ]),
           _vm._v(" "),
-          _c("ListFood", {
+          _c(
+            "div",
+            { staticClass: "form-actions text-end pt-2 pb-2" },
+            [
+              _c(
+                "el-button",
+                {
+                  on: {
+                    click: function($event) {
+                      $event.preventDefault()
+                      return _vm.close()
+                    }
+                  }
+                },
+                [_vm._v("Cancelar")]
+              ),
+              _vm._v(" "),
+              _c(
+                "el-button",
+                {
+                  attrs: {
+                    type: "primary",
+                    "native-type": "submit",
+                    loading: _vm.loading_submit
+                  }
+                },
+                [_vm._v("Guardar")]
+              )
+            ],
+            1
+          )
+        ]
+      )
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-61ad8238", module.exports)
+  }
+}
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-c38a0634\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Restaurant/Resources/assets/js/views/configuration/items.vue":
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _c("div", { staticClass: "container-fluid p-l-0 p-r-0" }, [
+      _c("div", { staticClass: "page-header" }, [
+        _c("div", { staticClass: "row" }, [
+          _c("div", { staticClass: "col-sm-6" }, [
+            _c("h6", [_c("span", [_vm._v(_vm._s(_vm.title))])]),
+            _vm._v(" "),
+            _c("ol", { staticClass: "breadcrumb" }, [
+              _c("li", { staticClass: "breadcrumb-item" }, [
+                _c("a", { attrs: { href: "/dashboard" } }, [
+                  _vm._v(_vm._s(_vm.title))
+                ])
+              ]),
+              _vm._v(" "),
+              _vm._m(0)
+            ])
+          ]),
+          _vm._v(" "),
+          _c(
+            "div",
+            {
+              staticClass:
+                "col-12 col-md-6 d-flex align-items-start justify-content-end"
+            },
+            [
+              _c(
+                "button",
+                {
+                  staticClass:
+                    "btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto",
+                  attrs: { type: "button" },
+                  on: {
+                    click: function($event) {
+                      $event.preventDefault()
+                      return _vm.clickCreate()
+                    }
+                  }
+                },
+                [
+                  _c("i", { staticClass: "icofont-plus-circle" }),
+                  _vm._v(" "),
+                  _c("span", [_vm._v("Nuevo")])
+                ]
+              ),
+              _vm._v(" "),
+              _vm.resource == "caja/tables"
+                ? _c(
+                    "button",
+                    {
+                      staticClass:
+                        "btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto m-l-5",
+                      attrs: { type: "button" },
+                      on: {
+                        click: function($event) {
+                          $event.preventDefault()
+                          return _vm.clickCreateMassive()
+                        }
+                      }
+                    },
+                    [
+                      _c("i", { staticClass: "icofont-plus-circle" }),
+                      _vm._v(" "),
+                      _c("span", [_vm._v("Crear masivamente")])
+                    ]
+                  )
+                : _vm._e()
+            ]
+          )
+        ])
+      ])
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "container-fluid p-l-0 p-r-0" }, [
+      _c(
+        "div",
+        { staticClass: "card mb-0" },
+        [
+          _c("div", { staticClass: "card-header bg-primary" }, [
+            _c("h6", { staticClass: "my-0 text-white" }, [
+              _vm._v("Listado de " + _vm._s(_vm.title))
+            ])
+          ]),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "card-body" },
+            [
+              _c(
+                "data-table",
+                {
+                  attrs: { resource: _vm.resource },
+                  scopedSlots: _vm._u([
+                    {
+                      key: "default",
+                      fn: function(ref) {
+                        var index = ref.index
+                        var row = ref.row
+                        return _c("tr", {}, [
+                          _c("td", [_vm._v(_vm._s(index))]),
+                          _vm._v(" "),
+                          _vm.type != "caja/tables"
+                            ? _c("td", [
+                                _vm._v(
+                                  "\n                            " +
+                                    _vm._s(row.description) +
+                                    "\n                        "
+                                )
+                              ])
+                            : _vm._e(),
+                          _vm._v(" "),
+                          _vm.type == "caja/tables"
+                            ? _c("td", [
+                                _vm._v(
+                                  "\n                            " +
+                                    _vm._s(row.number) +
+                                    "\n                        "
+                                )
+                              ])
+                            : _vm._e(),
+                          _vm._v(" "),
+                          _vm.type == "caja/tables"
+                            ? _c("td", [
+                                _vm._v(
+                                  "\n                            " +
+                                    _vm._s(row.area.description) +
+                                    "\n                        "
+                                )
+                              ])
+                            : _vm._e(),
+                          _vm._v(" "),
+                          _vm.type == "caja/tables"
+                            ? _c("td", [
+                                _vm._v(
+                                  "\n                            " +
+                                    _vm._s(row.establishment) +
+                                    "\n                        "
+                                )
+                              ])
+                            : _vm._e(),
+                          _vm._v(" "),
+                          _vm.type == "caja/areas"
+                            ? _c("td", [
+                                _vm._v(
+                                  "\n                            " +
+                                    _vm._s(row.printer) +
+                                    "\n                        "
+                                )
+                              ])
+                            : _vm._e(),
+                          _vm._v(" "),
+                          _vm.type == "caja/areas"
+                            ? _c(
+                                "td",
+                                [
+                                  row.printer == null
+                                    ? _c("el-switch", {
+                                        on: {
+                                          change: function($event) {
+                                            return _vm.updateSearchPrint(row)
+                                          }
+                                        },
+                                        model: {
+                                          value: row.search_print,
+                                          callback: function($$v) {
+                                            _vm.$set(row, "search_print", $$v)
+                                          },
+                                          expression: "row.search_print"
+                                        }
+                                      })
+                                    : _vm._e()
+                                ],
+                                1
+                              )
+                            : _vm._e(),
+                          _vm._v(" "),
+                          _c("td", { staticClass: "text-end" }, [
+                            _c(
+                              "button",
+                              {
+                                staticClass:
+                                  "btn waves-effect waves-light btn-sm btn-info",
+                                attrs: { type: "button" },
+                                on: {
+                                  click: function($event) {
+                                    $event.preventDefault()
+                                    return _vm.clickCreate(row.id)
+                                  }
+                                }
+                              },
+                              [
+                                _vm._v(
+                                  "\n                                Editar\n                            "
+                                )
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "button",
+                              {
+                                staticClass:
+                                  "btn waves-effect waves-light btn-sm btn-danger",
+                                attrs: { type: "button" },
+                                on: {
+                                  click: function($event) {
+                                    $event.preventDefault()
+                                    return _vm.clickDelete(row.id)
+                                  }
+                                }
+                              },
+                              [
+                                _vm._v(
+                                  "\n                                Eliminar\n                            "
+                                )
+                              ]
+                            )
+                          ])
+                        ])
+                      }
+                    }
+                  ])
+                },
+                [
+                  _c("tr", { attrs: { slot: "heading" }, slot: "heading" }, [
+                    _c("th", [_vm._v("#")]),
+                    _vm._v(" "),
+                    _vm.type != "caja/tables"
+                      ? _c("th", [
+                          _vm._v(
+                            "\n                            Descripción\n                        "
+                          )
+                        ])
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _vm.type == "caja/tables"
+                      ? _c("th", [
+                          _vm._v(
+                            "\n                            Número\n                        "
+                          )
+                        ])
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _vm.type == "caja/tables"
+                      ? _c("th", [
+                          _vm._v(
+                            "\n                            Área\n                        "
+                          )
+                        ])
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _vm.type == "caja/tables"
+                      ? _c("th", [
+                          _vm._v(
+                            "\n                            Establecimiento\n                        "
+                          )
+                        ])
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _vm.type == "caja/areas"
+                      ? _c("th", [
+                          _vm._v(
+                            "\n                            Impresora\n                        "
+                          )
+                        ])
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _vm.type == "caja/areas"
+                      ? _c("th", [
+                          _vm._v(
+                            "\n                            Forzar impresión\n                        "
+                          )
+                        ])
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _c("th", { staticClass: "text-end" }, [_vm._v("Acciones")])
+                  ]),
+                  _vm._v(" "),
+                  _c("tr")
+                ]
+              )
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c("create-form", {
             attrs: {
-              showDialogFoods: _vm.showDialogFoods,
-              listFoods: _vm.listFoods
+              showDialog: _vm.showDialog,
+              areas: _vm.areas,
+              type: _vm.type,
+              configurations: _vm.configurations,
+              recordId: _vm.recordId,
+              statusTable: _vm.statusTable,
+              establishments: _vm.establishments
             },
             on: {
-              "update:showDialogFoods": function($event) {
-                _vm.showDialogFoods = $event
+              "update:showDialog": function($event) {
+                _vm.showDialog = $event
               },
-              "update:show-dialog-foods": function($event) {
-                _vm.showDialogFoods = $event
+              "update:show-dialog": function($event) {
+                _vm.showDialog = $event
               },
-              "update:listFoods": function($event) {
-                _vm.listFoods = $event
+              "update:configurations": function($event) {
+                _vm.configurations = $event
               },
-              "update:list-foods": function($event) {
-                _vm.listFoods = $event
+              "update:recordId": function($event) {
+                _vm.recordId = $event
+              },
+              "update:record-id": function($event) {
+                _vm.recordId = $event
+              }
+            }
+          }),
+          _vm._v(" "),
+          _c("create-form-massive", {
+            attrs: {
+              showDialog: _vm.showDialogMassive,
+              areas: _vm.areas,
+              type: _vm.type,
+              configurations: _vm.configurations,
+              recordId: _vm.recordId,
+              statusTable: _vm.statusTable,
+              establishments: _vm.establishments
+            },
+            on: {
+              "update:showDialog": function($event) {
+                _vm.showDialogMassive = $event
+              },
+              "update:show-dialog": function($event) {
+                _vm.showDialogMassive = $event
+              },
+              "update:configurations": function($event) {
+                _vm.configurations = $event
+              },
+              "update:recordId": function($event) {
+                _vm.recordId = $event
+              },
+              "update:record-id": function($event) {
+                _vm.recordId = $event
               }
             }
           })
@@ -1814,62 +3183,8 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "container-fluid p-l-0 p-r-0" }, [
-      _c("div", { staticClass: "page-header" }, [
-        _c("div", { staticClass: "row" }, [
-          _c("div", { staticClass: "col-sm-6" }, [
-            _c("h6", [_c("span", [_vm._v("Lista de Ordenes atentidas")])]),
-            _vm._v(" "),
-            _c("ol", { staticClass: "breadcrumb" }, [
-              _c("li", { staticClass: "breadcrumb-item" }, [
-                _c("a", { attrs: { href: "/dashboard" } }, [
-                  _vm._v("Dashboard")
-                ])
-              ]),
-              _vm._v(" "),
-              _c("li", { staticClass: "breadcrumb-item active" }, [
-                _c("span", { staticClass: "text-muted" }, [
-                  _vm._v("Lista de Ordenes atentidas")
-                ])
-              ])
-            ])
-          ])
-        ])
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "card-header bg-primary" }, [
-      _c("h6", { staticClass: "my-0 text-white" }, [
-        _vm._v("Lista de Ordenes atentidas")
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("thead", [
-      _c("tr", [
-        _c("th", { staticClass: "text-center" }, [_vm._v("#")]),
-        _vm._v(" "),
-        _c("th", { staticClass: "text-center" }, [_vm._v("N° de Comanda")]),
-        _vm._v(" "),
-        _c("th", { staticClass: "text-center" }, [_vm._v("Cliente")]),
-        _vm._v(" "),
-        _c("th", { staticClass: "text-center" }, [_vm._v("Detalle")]),
-        _vm._v(" "),
-        _c("th", { staticClass: "text-center" }, [_vm._v("Documento")]),
-        _vm._v(" "),
-        _c("th", { staticClass: "text-center" }, [_vm._v("Estado")]),
-        _vm._v(" "),
-        _c("th", { staticClass: "text-center" }, [_vm._v("Acciones")]),
-        _vm._v(" "),
-        _c("th", { staticClass: "text-center" }, [_vm._v("Total Pagado")])
-      ])
+    return _c("li", { staticClass: "breadcrumb-item active" }, [
+      _c("span", { staticClass: "text-muted" }, [_vm._v("Marcas")])
     ])
   }
 ]
@@ -1878,36 +3193,57 @@ module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-7645ebbd", module.exports)
+    require("vue-hot-reload-api")      .rerender("data-v-c38a0634", module.exports)
   }
 }
 
 /***/ }),
 
-/***/ "./node_modules/vue-style-loader/index.js!./node_modules/css-loader/index.js?sourceMap!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-7645ebbd\",\"scoped\":true,\"hasInlineConfig\":true}!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./modules/Restaurant/Resources/assets/js/views/ordens/index.vue":
+/***/ "./resources/js/components/DataTable.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
-// style-loader: Adds some css to the DOM by adding a <style> tag
+var disposed = false
+var normalizeComponent = __webpack_require__("./node_modules/vue-loader/lib/component-normalizer.js")
+/* script */
+var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/js/components/DataTable.vue")
+/* template */
+var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-4b997e69\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/js/components/DataTable.vue")
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/js/components/DataTable.vue"
 
-// load the styles
-var content = __webpack_require__("./node_modules/css-loader/index.js?sourceMap!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-7645ebbd\",\"scoped\":true,\"hasInlineConfig\":true}!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./modules/Restaurant/Resources/assets/js/views/ordens/index.vue");
-if(typeof content === 'string') content = [[module.i, content, '']];
-if(content.locals) module.exports = content.locals;
-// add the styles to the DOM
-var update = __webpack_require__("./node_modules/vue-style-loader/lib/addStylesClient.js")("4cef2b83", content, false, {});
-// Hot Module Replacement
-if(false) {
- // When the styles change, update the <style> tags
- if(!content.locals) {
-   module.hot.accept("!!../../../../../../../node_modules/css-loader/index.js?sourceMap!../../../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-7645ebbd\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./index.vue", function() {
-     var newContent = require("!!../../../../../../../node_modules/css-loader/index.js?sourceMap!../../../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-7645ebbd\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./index.vue");
-     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-     update(newContent);
-   });
- }
- // When the module is disposed, remove the <style> tags
- module.hot.dispose(function() { update(); });
-}
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-4b997e69", Component.options)
+  } else {
+    hotAPI.reload("data-v-4b997e69", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
 
 /***/ })
 

@@ -10,6 +10,9 @@ use Exception;
 
 class BankController extends Controller
 {
+    public function index(){
+        return view('tenant.banks.index');
+    }
     public function records()
     {
         $records = Bank::all();

@@ -894,6 +894,12 @@ const app = new Vue({
                 import(
                     /*webpackChunkName:"bank_accounts"*/
                     "./views/bank_accounts/index.vue")
+            ,
+            "tenant-banks-index": ()=>
+            import(
+                /*webpackChunkName:"banks"*/
+                "./views/banks/index.vue")
+            ,
             
     },
  

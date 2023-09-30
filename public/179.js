@@ -137,7 +137,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 var WhatsappModal = function WhatsappModal() {
-  return __webpack_require__.e/* import() */(137/* duplicate */).then(__webpack_require__.bind(null, "./resources/js/components/WhatsappModalReports.vue"));
+  return __webpack_require__.e/* import() */(138/* duplicate */).then(__webpack_require__.bind(null, "./resources/js/components/WhatsappModalReports.vue"));
 };
 
 /* harmony default export */ __webpack_exports__["default"] = ({
