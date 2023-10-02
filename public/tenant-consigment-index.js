@@ -1,4 +1,4 @@
-webpackJsonp([34,211],{
+webpackJsonp([35,211],{
 
 /***/ "./modules/Consignment/Resources/assets/js/views/index.vue":
 /***/ (function(module, exports, __webpack_require__) {

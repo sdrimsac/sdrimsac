@@ -192,8 +192,8 @@ export default {
         getRecordsInput() {
             this.getRecords();
         },
-        sendItems(items,clientNumber,notes){
-            this.$emit("sendItems", items,clientNumber,notes);
+        sendItems(items,clientNumber,notes,dscto_global){
+            this.$emit("sendItems", items,clientNumber,notes,dscto_global);
         },
         async printEvent(url) {
             console.log(url);

@@ -1,4 +1,4 @@
-webpackJsonp([21,98,125,128,137],{
+webpackJsonp([22,98,125,128,137],{
 
 /***/ "./node_modules/@ckeditor/ckeditor5-build-classic/build/ckeditor.js":
 /***/ (function(module, exports, __webpack_require__) {

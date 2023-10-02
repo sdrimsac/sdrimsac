@@ -92,6 +92,7 @@ class SaleNoteController extends Controller
         $request->validate([
             'notes_id' => 'required|array',
         ]);
+        $dscto_global = SaleNote::whereIn('id', $request->notes_id)->sum('total_discount');
 
         $result = [];
         $items = SaleNoteItem::whereIn('sale_note_id', $request->notes_id)->get();
@@ -118,6 +119,7 @@ class SaleNoteController extends Controller
         return response()->json([
             'success' => true,
             'data' => $result,
+            'dscto_global' => $dscto_global,
         ], 200);
     }
     public function getItemsFromNotes(Request $request)

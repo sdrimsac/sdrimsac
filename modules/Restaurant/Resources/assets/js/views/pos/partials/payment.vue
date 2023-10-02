@@ -227,7 +227,7 @@
                                         ></el-input>
                                     </div>
                                 </div>
-                                <div class="row">
+                                <div class="row" v-if="form.document_type_id!='80'">
                                     <div class="col-md-4 form-group">
                                         <label class="control-label"
                                             >Monto Descuento</label
@@ -1348,6 +1348,7 @@ export default {
 
     props: [
         "clientSaleNoteNumber",
+        "clientSaleNoteDiscount",
         "ordens_all_table",
         "consignment_id",
         "isConsignment",
@@ -2070,6 +2071,10 @@ export default {
                     )[0].value = this.clientSaleNoteNumber;
                     this.keyupCustomer();
                 }, 800);
+                this.discount_amount = this.clientSaleNoteDiscount;
+                this.inputDiscountAmount();
+                this.discountTotal = true;
+                this.reCalculateTotal();
             }
             this.checkTotal("01");
         },
@@ -3548,6 +3553,10 @@ export default {
             }
 
             this.changeCustomer();
+            if(this.form.document_type_id == "80"){
+                this.discount_amount = 0;
+                this.inputDiscountAmount();
+            }
         }
     }
 };

@@ -188,20 +188,20 @@ export default {
             //   if(this.group_items_generate_document){
             if (true) {
                 const data = {
-                    notes_id: this.form.selecteds
+                    notes_id: this.form.selecteds,
                 };
                 
                 this.$http
                     .post("/sale-notes/items_caja", data)
                     .then(response => {
-                        console.log("🚀 ~ file: modal_generate_cpe.vue:197 ~ onFetchNoteItems ~ response:", response)
-                        const {data} = response.data;
+                        const {data,dscto_global} = response.data;
+                      
                         const {client_id} = this.form;
                         let client = this.clients.find(
                             c => c.id === client_id
                         );
                         let clientNumber = client.number;
-                        this.$emit("sendItems", data, clientNumber,this.form.selecteds);
+                        this.$emit("sendItems", data, clientNumber,this.form.selecteds,dscto_global);
 
                         // localStorage.setItem("client", JSON.stringify(client));
                         localStorage.setItem(

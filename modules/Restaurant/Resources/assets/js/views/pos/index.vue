@@ -847,6 +847,7 @@
                     <div class="card-body p-2">
                         <list-orden
                             :clientSaleNoteNumber.sync="clientSaleNoteNumber"
+                            :clientSaleNoteDiscount.sync="clientSaleNoteDiscount"
                             :sellers="sellers"
                             @sendOrdensAllTables="sendOrdensAllTables"
                             ref="list_orden"
@@ -1404,6 +1405,7 @@
         <template>
             <payment-form
                 :clientSaleNoteNumber.sync="clientSaleNoteNumber"
+                :clientSaleNoteDiscount.sync="clientSaleNoteDiscount"
                 :sellers.sync="sellers"
                 :ordens_all_table.sync="ordens_all_table"
                 :consignment_id="consignment_id"
@@ -1682,6 +1684,7 @@ export default {
     data() {
         return {
             clientSaleNoteNumber: null,
+            clientSaleNoteDiscount: 0,
             sellers: [],
             searchSeries: false,
             showDialogItemSet: false,
@@ -1881,12 +1884,13 @@ export default {
     sockets: {},
     computed: {},
     methods: {
-        sendItems(items, clientNumber,notes) {
+        sendItems(items, clientNumber,notes,dscto_global) {
             for (let index = 0; index < items.length; index++) {
                 let element = items[index];
                 this.insertOrden(element, element.id, null);
             }
             this.clientSaleNoteNumber = clientNumber;
+            this.clientSaleNoteDiscount = dscto_global;
             this.form.sale_notes_relateds = notes;
         },
         setMenuOptions() {
@@ -2542,6 +2546,7 @@ export default {
         },
         cancelOrden() {
             this.clientSaleNoteNumber = null;
+            this.clientSaleNoteDiscount = 0;
             this.isConsignment = false;
             this.localOrden = [];
             this.ordensItems = [];
@@ -4529,6 +4534,7 @@ export default {
         },
         async limpiarForm() {
             this.clientSaleNoteNumber = null;
+            this.clientSaleNoteDiscount = 0;
             this.ordens_all_table = false;
             this.isConsignment = false;
             this.selectOption = 4;
