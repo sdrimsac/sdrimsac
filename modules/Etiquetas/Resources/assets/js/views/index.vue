@@ -59,13 +59,13 @@
                         >
                             Subir imagen
                         </el-button>
-                        <el-button v-if="imageSaved"
+                        <el-button
+                            v-if="imageSaved"
                             class="m-2"
                             type="danger"
-
                             @click="delete_image"
                         >
-                        <i class="el-icon-delete"></i>
+                            <i class="el-icon-delete"></i>
                         </el-button>
                         <p><em>JPG, PNG, JPEG | 150x150 </em></p>
                         <input
@@ -107,10 +107,7 @@
                                 placeholder="Buscar producto"
                                 popper-class="el-select-items"
                             ></el-input>
-                            <el-checkbox
-                            v-model="lector_barcode"
-                            >
-
+                            <el-checkbox v-model="lector_barcode">
                                 Lector de código de barras
                             </el-checkbox>
                         </div>
@@ -531,13 +528,68 @@
                         </div>
                     </div>
                 </div>
+                <template v-if="typeUser == 'superadmin'">
+                    <div class="row">
+                        <div class="col-md-6 col-12">
+                            <label for="density">Densidad</label>
+                            <el-input type="number" v-model="config.density">
+                            </el-input>
+                        </div>
 
+                        <div class="col-md-6 col-12">
+                            <label for="orientation">Orientación</label>
+                            <el-select v-model="config.orientation">
+                                <el-option
+                                    label="Vertical"
+                                    value="portrait"
+                                ></el-option>
+                                <el-option
+                                    label="Horizontal"
+                                    value="landscape"
+                                ></el-option>
+                            </el-select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3 col-12">
+                            <label for="top">Arriba</label>
+                            <el-input
+                                type="number"
+                                v-model="config.margins.top"
+                            >
+                            </el-input>
+                        </div>
+                        <div class="col-md-3 col-12">
+                            <label for="left">Izquierda</label>
+                            <el-input
+                                type="number"
+                                v-model="config.margins.left"
+                            >
+                            </el-input>
+                        </div>
+                        <div class="col-md-3 col-12">
+                            <label for="right">Derecha</label>
+                            <el-input
+                                type="number"
+                                v-model="config.margins.right"
+                            >
+                            </el-input>
+                        </div>
+                        <div class="col-md-3 col-12">
+                            <label for="bottom">Abajo</label>
+                            <el-input
+                                type="number"
+                                v-model="config.margins.bottom"
+                            >
+                            </el-input>
+                        </div>
+                    </div>
+                </template>
                 <div class="d-flex justify-content-center">
                     <div v-if="product_id" class="col-4 text-center">
                         <el-button type="success" @click="generate">
                             Generar
                         </el-button>
-                        
                     </div>
                 </div>
             </div>
@@ -560,16 +612,27 @@
 import FormWord from "./form.vue";
 import JsBarcode from "jsbarcode";
 export default {
-    props: ["configuration"],
+    props: ["configuration", "typeUser"],
     components: { FormWord },
     data() {
         return {
             establishment: null,
-            lector_barcode:false,
+            lector_barcode: false,
             item_for_barcode: null,
             limitFormat: false,
             QSticker: 1,
             paperType: 1,
+            config: {
+                scaleContent: false,
+                density: 350,
+                orientation: "portrait",
+                margins: {
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0
+                }
+            },
             loading: false,
             imageSaved: null,
             image: null,
@@ -598,8 +661,7 @@ export default {
             resource: "etiquetas"
         };
     },
-        async created() {
- 
+    async created() {
         qz.security.setCertificatePromise((resolve, reject) => {
             this.$http
                 .get("/api/qz/crt/override", {
@@ -626,13 +688,12 @@ export default {
                     });
             };
         });
-
     },
     async mounted() {
         await this.getTables();
     },
     methods: {
-        async delete_image(){
+        async delete_image() {
             try {
                 this.loading = true;
                 const response = await this.$http.get(
@@ -707,7 +768,7 @@ export default {
                 this.$toast.error("La cantidad es obligatoria.");
                 return;
             }
-            
+
             if (
                 this.sale_code == undefined ||
                 this.purchase_code == undefined
@@ -760,24 +821,24 @@ export default {
                 )}&type_barcode=${encodeURIComponent(
                     this.typeBarcode
                 )}&location=${this.product.location || ""}`;
-                let {print_direct} = this.configuration;
-                let {etiquetadora } = this.establishment;
-                if(print_direct && etiquetadora){
+                let { print_direct } = this.configuration;
+                let { etiquetadora } = this.establishment;
+                if (print_direct && etiquetadora) {
                     this.Printer(etiquetadora, endPoint);
-                }else{
-                const response = await axios.get(endPoint, config);
-                console.log(response);
-                console.log(this.configuration);
-                const url = window.URL.createObjectURL(
-                    new Blob([response.data])
-                );
-                const link = document.createElement("a");
-                link.href = url;
-                link.setAttribute("download", "file.pdf");
-                document.body.appendChild(link);
-                link.click();
+                } else {
+                    const response = await axios.get(endPoint, config);
+                    console.log(response);
+                    console.log(this.configuration);
+                    const url = window.URL.createObjectURL(
+                        new Blob([response.data])
+                    );
+                    const link = document.createElement("a");
+                    link.href = url;
+                    link.setAttribute("download", "file.pdf");
+                    document.body.appendChild(link);
+                    link.click();
                 }
-            
+
                 this.loading = false;
             } catch (e) {
                 const {
@@ -787,29 +848,18 @@ export default {
                 this.loading = false;
             }
         },
-          async Printer(
-            Printer,
-            linkpdf,
+        async Printer(Printer, linkpdf) {
+            // let paperConfig = {
+            //     scaleContent: false
+            // };
+            // let partsUrl = linkpdf.split("/");
+            // let document = partsUrl[partsUrl.length - 1];
 
-        ) {
-            let paperConfig = {
-                scaleContent: false
-            };
-            let partsUrl = linkpdf.split("/");
-            let document = partsUrl[partsUrl.length - 1];
-            let isTicket = document.toLowerCase().includes("ticket");
-
-            let tipoBandejaImpresora = this.configuration.new_old_printer;
-
-            // if (!isTicket && tipoBandejaImpresora == 1) {
-            //     paperConfig.density = 600;
-            //     paperConfig.orientation = "portrait";
-            //     paperConfig.margins = { left: 2 };
-            // } else if (!isTicket && tipoBandejaImpresora == 0) {
-            //     paperConfig.density = 350;
-            //     paperConfig.orientation = "portrait";
-            // }
-            let config = qz.configs.create(Printer, paperConfig);
+            let config = qz.configs.create(Printer, this.config);
+            console.log(
+                "🚀 ~ file: index.vue:868 ~ Printer ~ linkpdf:",
+                linkpdf
+            );
 
             if (!qz.websocket.isActive()) {
                 await qz.websocket.connect(config);
@@ -825,7 +875,6 @@ export default {
             qz.print(config, data).catch(e => {
                 this.$toast.error(e.message);
             });
-         
         },
         changeFormat(quantity) {
             if (this.limitFormat && quantity != 1) {
@@ -999,7 +1048,7 @@ export default {
                 }
             }
         },
-           async searchItems() {
+        async searchItems() {
             let input = this.item_for_barcode;
             if (input.length > 2) {
                 this.loading_search = true;
@@ -1010,7 +1059,7 @@ export default {
                     );
                     let { items } = response.data;
                     this.items = items;
-                    if(items.length == 1){
+                    if (items.length == 1) {
                         this.product_id = items[0].id;
                         this.changeItem();
                     }
