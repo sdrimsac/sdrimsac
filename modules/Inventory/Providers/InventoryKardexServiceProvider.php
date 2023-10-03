@@ -56,7 +56,7 @@ class InventoryKardexServiceProvider extends ServiceProvider
     {
         DocumentItem::created(function ($document_item) {
             $document = Document::whereIn('document_type_id', ['01', '03'])->find($document_item->document_id);
-            if($document->has_related_sale_note) return;
+            if(isset($document->has_related_sale_note)) return;
             $warehouse = ($document_item->warehouse_id) ? $this->findWarehouse($this->findWarehouseById($document_item->warehouse_id)->establishment_id) : $this->findWarehouse();
             $presentationQuantity = (!empty($document_item->item->presentation)) ? $document_item->item->presentation->quantity_unit : 1;
 
