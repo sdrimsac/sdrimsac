@@ -35,7 +35,7 @@ class KardexServiceProvider extends ServiceProvider
         //   if($document_item->item->is_stock=='Si'){
         DocumentItem::created(function ($document_item) {
             $document = Document::whereIn('document_type_id', ['01', '03'])->find($document_item->document_id);
-            if($document->has_related_sale_note) return;
+            if(isset($document->has_related_sale_note)) return;
             $quantity = $document_item->quantity;
 
             if (isset($document_item->item->has_unit_type)) {
