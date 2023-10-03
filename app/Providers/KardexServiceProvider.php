@@ -35,7 +35,8 @@ class KardexServiceProvider extends ServiceProvider
         //   if($document_item->item->is_stock=='Si'){
         DocumentItem::created(function ($document_item) {
             $document = Document::whereIn('document_type_id', ['01', '03'])->find($document_item->document_id);
-            if(isset($document->has_related_sale_note)) return;
+            if(isset($document->has_related_sale_note) && $document->has_related_sale_note == 1) return;
+   
             $quantity = $document_item->quantity;
 
             if (isset($document_item->item->has_unit_type)) {
@@ -53,11 +54,11 @@ class KardexServiceProvider extends ServiceProvider
 
                     if ($document->state_type_id != 11) {
                         if(!$document_item->document->from_consignment)
-                        $this->updateStock($document_item->item_id, $quantity, true);
+                        $this->updateStock($document_item->item_id, $quantity, "Si");
                     }
                     $itemSet = ItemSet::where("item_id", $document_item->item_id)->get();
                     foreach ($itemSet as  $value) {
-                        $this->updateStock($value->individual_item_id, $value->quantity, true);
+                        $this->updateStock($value->individual_item_id, $value->quantity, "Si");
                     }
                 }
             }
@@ -71,7 +72,7 @@ class KardexServiceProvider extends ServiceProvider
         PurchaseItem::created(function ($purchase_item) {
             $kardex = $this->saveKardex('purchase', $purchase_item->item_id, $purchase_item->purchase_id, $purchase_item->quantity, 'purchase');
 
-            $this->updateStock($purchase_item->item_id, $kardex->quantity, false);
+            $this->updateStock($purchase_item->item_id, $kardex->quantity, "Si");
         });
     }
 
@@ -90,7 +91,7 @@ class KardexServiceProvider extends ServiceProvider
             $kardex = $this->saveKardex('sale', $sale_note_item->item_id, $sale_note_item->sale_note_id, $quantity, 'sale_note');
            
            if(!$sale_note_item->sale_note->from_consignment)
-            $this->updateStock($sale_note_item->item_id, $quantity, true);
+            $this->updateStock($sale_note_item->item_id, $quantity, "Si");
         });
     }
 
