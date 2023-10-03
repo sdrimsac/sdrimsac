@@ -3222,7 +3222,8 @@ export default {
             }
             this.loading = false;
             this.disableSend = false;
-
+                console.log("🚀 ~ file: list_ordens.vue:3229 ~ payOrden ~ form_submit:", form_submit)
+            
             if (this.variation) {
                 this.$emit("paymentsOrden", form_submit, this.foodDefaults);
             } else {

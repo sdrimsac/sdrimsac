@@ -10,7 +10,7 @@
             @close="onClose"
         >
             <div class="row mt-2">
-                <div class="col-2">
+                <!-- <div class="col-2">
                     <el-select
                         v-model="filter.type"
                         @click="onFetchClients"
@@ -27,14 +27,14 @@
                             label="Nombres"
                         ></el-option>
                     </el-select>
-                </div>
-                <div class="col-3 form-group">
+                </div> -->
+                <div  class="col-3 form-group">
                     <el-select
                         v-model="form.client_id"
                         filterable
                         remote
                         reserve-keyword
-                        placeholder="Ingrese uno más caracteres"
+                        placeholder="Nombre del cliente"
                         :remote-method="onFindClients"
                         :loading="loading"
                     >
@@ -46,6 +46,14 @@
                         >
                         </el-option>
                     </el-select>
+                </div>
+                <div  class="col-2 form-group">
+
+                        <el-input
+                            placeholder="N° de nota"
+                            v-model="form.number"
+                            :disabled="loading"
+                        ></el-input>
                 </div>
                 <div class="col-3 form-group">
                     <el-date-picker
@@ -159,7 +167,8 @@ export default {
             },
             form: {
                 client_id: null,
-                selecteds: []
+                selecteds: [],
+                number:null,
             },
             notes: [],
             errors: {},
@@ -307,6 +316,7 @@ export default {
             this.filter.type = "name";
             this.filter.name = null;
             this.form.client_id = null;
+            this.form.number = null;
             this.sum_total = 0;
             this.onFetchClients();
             //   this.getConfigGroupItems();

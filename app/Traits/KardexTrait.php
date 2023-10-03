@@ -11,7 +11,11 @@ trait KardexTrait
 {
 
     public function saveKardex($type, $item_id, $id, $quantity, $relation, $afectar_stock = 'Si')
+    
+    
     {
+
+        
         if ($afectar_stock == 'Si') {
             $kardex = Kardex::create([
                 'type' => $type,

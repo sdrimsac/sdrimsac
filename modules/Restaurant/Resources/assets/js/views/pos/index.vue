@@ -847,7 +847,9 @@
                     <div class="card-body p-2">
                         <list-orden
                             :clientSaleNoteNumber.sync="clientSaleNoteNumber"
-                            :clientSaleNoteDiscount.sync="clientSaleNoteDiscount"
+                            :clientSaleNoteDiscount.sync="
+                                clientSaleNoteDiscount
+                            "
                             :sellers="sellers"
                             @sendOrdensAllTables="sendOrdensAllTables"
                             ref="list_orden"
@@ -1884,14 +1886,15 @@ export default {
     sockets: {},
     computed: {},
     methods: {
-        sendItems(items, clientNumber,notes,dscto_global) {
-            for (let index = 0; index < items.length; index++) {
-                let element = items[index];
-                this.insertOrden(element, element.id, null);
-            }
+        sendItems(items, clientNumber, notes, dscto_global) {
+         
             this.clientSaleNoteNumber = clientNumber;
             this.clientSaleNoteDiscount = dscto_global;
             this.form.sale_notes_relateds = notes;
+               for (let index = 0; index < items.length; index++) {
+                let element = items[index];
+                this.insertOrden(element, element.id, null);
+            }
         },
         setMenuOptions() {
             this.optionsMenu = [
@@ -2177,7 +2180,6 @@ export default {
             this.showDialogCollege = true;
         },
         changeCategory(category) {
-
             //change;
         },
 
@@ -2827,7 +2829,14 @@ export default {
             if (ordenAdded.length == 0) {
                 orden.to_carry = false;
                 orden.change_subtotal = false;
-                orden.series = [];
+                if (this.clientSaleNoteNumber) {
+                    console.log(
+                        "🚀 ~ file: index.vue:2835 ~ insertOrden ~ orden.series:",
+                        orden.series
+                    );
+                } else {
+                    orden.series = [];
+                }
 
                 orden.lotes = [];
                 let added = false;

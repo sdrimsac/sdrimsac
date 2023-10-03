@@ -227,7 +227,7 @@
                                         ></el-input>
                                     </div>
                                 </div>
-                                <div class="row" v-if="form.document_type_id!='80'">
+                                <div class="row">
                                     <div class="col-md-4 form-group">
                                         <label class="control-label"
                                             >Monto Descuento</label
@@ -379,7 +379,7 @@
                                                     ></label>
                                                 </div>
                                             </div>
-                                              <div
+                                            <div
                                                 class="input-container2 border rounded-sm"
                                             >
                                                 <input
@@ -1390,6 +1390,7 @@ export default {
     },
     data() {
         return {
+            gotClient: false,
             showListItems: false,
             discountTotal: false,
             paymentCondition: "01",
@@ -1551,6 +1552,11 @@ export default {
             this.sendPayment(null, this.form);
         }
         this.getBankAccounts();
+
+        if(!this.configuration.discount_with_base_variant){
+            
+            this.discountTotal = true;
+        }
     },
     mounted() {},
     methods: {
@@ -1566,7 +1572,7 @@ export default {
                         bank_account_id: bank_account.id,
                         number_operation: this.form.reference_number,
                         amount: this.form.total,
-                        method: `${bank_account.description}-${bank_account.number}`,
+                        method: `${bank_account.description}-${bank_account.number}`
                     }
                 ];
             } else {
@@ -1577,7 +1583,7 @@ export default {
             const response = await this.$http.get(`/bank_accounts/records`);
             if (response.status == 200) {
                 this.bank_accounts = response.data.data;
-                if(this.bank_accounts.length > 0){
+                if (this.bank_accounts.length > 0) {
                     this.form.bank_account_id = this.bank_accounts[0].id;
                 }
             }
@@ -2065,16 +2071,19 @@ export default {
             //     form_efectivo
             // );
             if (this.clientSaleNoteNumber) {
-                setTimeout(() => {
-                    this.$refs.select_person.$el.getElementsByTagName(
-                        "input"
-                    )[0].value = this.clientSaleNoteNumber;
-                    this.keyupCustomer();
-                }, 800);
-                this.discount_amount = this.clientSaleNoteDiscount;
-                this.inputDiscountAmount();
-                this.discountTotal = true;
-                this.reCalculateTotal();
+                if (!this.gotClient) {
+                    setTimeout(() => {
+                        this.$refs.select_person.$el.getElementsByTagName(
+                            "input"
+                        )[0].value = this.clientSaleNoteNumber;
+                        this.keyupCustomer();
+                    }, 800);
+                    this.discount_amount = this.clientSaleNoteDiscount;
+                    this.inputDiscountAmount();
+                    this.discountTotal = true;
+                    this.reCalculateTotal();
+                    this.gotClient = true;
+                }
             }
             this.checkTotal("01");
         },
@@ -2972,15 +2981,15 @@ export default {
             });
             return total == this.form.total;
         },
-        checkBankAccount(){
+        checkBankAccount() {
             let pass = true;
-            let {is_bank}  = this.form_payment;
-            if(is_bank){
-                if(!this.form.bank_account_id){
+            let { is_bank } = this.form_payment;
+            if (is_bank) {
+                if (!this.form.bank_account_id) {
                     this.$toast.error("Debe seleccionar una cuenta bancaria");
                     pass = false;
                 }
-                if(!this.form.reference_number){
+                if (!this.form.reference_number) {
                     this.$toast.error("Debe ingresar el número de operación");
                     pass = false;
                 }
@@ -2992,7 +3001,7 @@ export default {
             if (!this.checkBankAccount()) {
                 return;
             }
-    
+
             let how_is;
             this.reCalculateTotal();
             // return;
@@ -3081,7 +3090,7 @@ export default {
             form.cash_id = this.cash_id;
             if (this.form.payment_condition_id == "01") {
                 form.boxes = this.currentPayments;
-                if(this.form_payment.is_bank){
+                if (this.form_payment.is_bank) {
                     this.changeBankAccount();
                 }
             } else {
@@ -3109,7 +3118,7 @@ export default {
                 );
                 return;
             }
-      
+
             this.loading_submit = true;
             this.form.items = this.form.items.filter(
                 item => Number(item.quantity) > 0
@@ -3423,7 +3432,10 @@ export default {
             );
         },
         checkCustomers() {
-            if (this.form.document_type_id == "01") {
+            if (
+                this.form.document_type_id == "01" ||
+                this.form.document_type_id == "03"
+            ) {
                 return this.customers.some(
                     c => c.identity_document_type_id == "6"
                 );
@@ -3505,6 +3517,7 @@ export default {
                         this.form.customer_telephone = currentClient.phone;
                         return;
                     }
+                    console.log("aqyu");
                     this.value = this.customers[0].id;
                     this.form.customer_telephone = this.customers[0].phone;
                 }
@@ -3553,7 +3566,7 @@ export default {
             }
 
             this.changeCustomer();
-            if(this.form.document_type_id == "80"){
+            if (this.form.document_type_id == "80") {
                 this.discount_amount = 0;
                 this.inputDiscountAmount();
             }

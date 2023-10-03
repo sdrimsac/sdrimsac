@@ -102,7 +102,7 @@ class SaleNoteController extends Controller
             $food = Food::where('item_id', $item_id)->first();
             $quantity = $item->quantity;
             $price = $item->unit_price;
-            $series = [];
+            $series = $item->item->lots;
             $lotes = [];
             $result[] = [
                 "id" => $item->id,
@@ -147,14 +147,25 @@ class SaleNoteController extends Controller
     }
     public function saleNotesByClient(Request $request)
     {
-        $request->validate([
-            'client_id' => 'required|numeric|min:1',
-        ]);
+        
+        $number = $request->number;
+        if($number == null){
+            $request->validate([
+                'client_id' => 'required|numeric|min:1',
+            ]);
+        }
+
         $clientId = $request->client_id;
         $records = SaleNote::without(['user', 'soap_type', 'state_type', 'currency_type', 'payments'])
-            ->select('series', 'number', 'id', 'date_of_issue', 'total')
-            ->where('customer_id', $clientId)
-            ->whereNull('document_id')
+            ->select('series', 'number', 'id', 'date_of_issue', 'total');
+            if($clientId){
+                $records = $records->where('customer_id', $clientId);
+            }
+            if($number){
+                $records = $records->where('number', 'like', "%{$number}%");
+            }
+         
+            $records  = $records->whereNull('document_id')
             ->whereIn('state_type_id', ['01', '03', '05'])
             ->orderBy('number', 'desc');
 
@@ -1224,7 +1235,7 @@ class SaleNoteController extends Controller
                         'lots_enabled' => (bool) $row->lots_enabled,
                         'series_enabled' => (bool) $row->series_enabled,
                         'is_set' => (bool) $row->is_set,
-                        'is_stock' => true,
+                        'is_stock' => "Si",
                         'warehouses' => collect($row->warehouses)->transform(function ($row) {
                             return [
                                 'warehouse_id' => $row->warehouse->id,

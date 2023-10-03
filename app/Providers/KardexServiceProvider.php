@@ -49,7 +49,7 @@ class KardexServiceProvider extends ServiceProvider
             $document = Document::whereIn('document_type_id', ['01', '03'])->find($document_item->document_id);
             if ($document) {
                 if ($document_item->item->is_stock == 'Si') {
-                    $kardex = $this->saveKardex('sale', $document_item->item_id, $document_item->document_id, $quantity, 'document', $document_item->is_stock);
+                    $kardex = $this->saveKardex('sale', $document_item->item_id, $document_item->document_id, $quantity, 'document');
 
                     if ($document->state_type_id != 11) {
                         if(!$document_item->document->from_consignment)
@@ -87,7 +87,7 @@ class KardexServiceProvider extends ServiceProvider
                     $quantity = $quantity * $unit_type->quantity_unit;
                 }
             }
-            $kardex = $this->saveKardex('sale', $sale_note_item->item_id, $sale_note_item->sale_note_id, $quantity, 'sale_note', $sale_note_item->is_stock);
+            $kardex = $this->saveKardex('sale', $sale_note_item->item_id, $sale_note_item->sale_note_id, $quantity, 'sale_note');
            
            if(!$sale_note_item->sale_note->from_consignment)
             $this->updateStock($sale_note_item->item_id, $quantity, true);

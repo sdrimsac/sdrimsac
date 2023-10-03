@@ -1859,6 +1859,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
@@ -1878,7 +1886,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       },
       form: {
         client_id: null,
-        selecteds: []
+        selecteds: [],
+        number: null
       },
       notes: [],
       errors: {},
@@ -2037,6 +2046,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       this.filter.type = "name";
       this.filter.name = null;
       this.form.client_id = null;
+      this.form.number = null;
       this.sum_total = 0;
       this.onFetchClients(); //   this.getConfigGroupItems();
     },
@@ -3831,40 +3841,6 @@ var render = function() {
           _c("div", { staticClass: "row mt-2" }, [
             _c(
               "div",
-              { staticClass: "col-2" },
-              [
-                _c(
-                  "el-select",
-                  {
-                    attrs: { disabled: _vm.loading },
-                    on: { click: _vm.onFetchClients },
-                    model: {
-                      value: _vm.filter.type,
-                      callback: function($$v) {
-                        _vm.$set(_vm.filter, "type", $$v)
-                      },
-                      expression: "filter.type"
-                    }
-                  },
-                  [
-                    _c("el-option", {
-                      key: "document",
-                      attrs: { value: "document", label: "# de documento" }
-                    }),
-                    _vm._v(" "),
-                    _c("el-option", {
-                      key: "name",
-                      attrs: { value: "name", label: "Nombres" }
-                    })
-                  ],
-                  1
-                )
-              ],
-              1
-            ),
-            _vm._v(" "),
-            _c(
-              "div",
               { staticClass: "col-3 form-group" },
               [
                 _c(
@@ -3874,7 +3850,7 @@ var render = function() {
                       filterable: "",
                       remote: "",
                       "reserve-keyword": "",
-                      placeholder: "Ingrese uno más caracteres",
+                      placeholder: "Nombre del cliente",
                       "remote-method": _vm.onFindClients,
                       loading: _vm.loading
                     },
@@ -3894,6 +3870,24 @@ var render = function() {
                   }),
                   1
                 )
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "col-2 form-group" },
+              [
+                _c("el-input", {
+                  attrs: { placeholder: "N° de nota", disabled: _vm.loading },
+                  model: {
+                    value: _vm.form.number,
+                    callback: function($$v) {
+                      _vm.$set(_vm.form, "number", $$v)
+                    },
+                    expression: "form.number"
+                  }
+                })
               ],
               1
             ),
