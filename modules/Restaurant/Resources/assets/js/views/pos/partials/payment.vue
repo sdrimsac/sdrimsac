@@ -3515,7 +3515,7 @@ export default {
                     f => f.identity_document_type_id == "6"
                 );
                 if (this.customers.length == 0) {
-                    this.$toast.warning("Digite el número de RsUC");
+                    this.$toast.warning("Digite el número de RUC");
                     this.form.document_type_id = "03";
 
                     // this.customers = this.all_customers;
