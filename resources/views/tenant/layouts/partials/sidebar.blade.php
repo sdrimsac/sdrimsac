@@ -36,6 +36,14 @@
                             </a>
                         </li>
                     @endif
+
+                    <li>
+                        <a class="{{ $path[0] === 'bank_accounts' && $path[1] === '' ? 'active' : '' }}"
+                            href="{{ route('tenant.commercial_treatment.index') }}">
+                            <i class="fas fa-layer-group"></i>
+                            Tratamiento comercial
+                        </a>
+                    </li>
                     <li>
                         <a class="{{ $path[0] === 'bank_accounts' && $path[1] === '' ? 'active' : '' }}"
                             href="{{ route('tenant.bank_accounts.index') }}">

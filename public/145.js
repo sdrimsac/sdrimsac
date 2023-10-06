@@ -1,52 +1,4 @@
-webpackJsonp([145,128,170],{
-
-/***/ "./modules/Restaurant/Resources/assets/js/views/pos/partials/note_modal.vue":
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__("./node_modules/vue-loader/lib/component-normalizer.js")
-/* script */
-var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/Restaurant/Resources/assets/js/views/pos/partials/note_modal.vue")
-/* template */
-var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-60d99cfe\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Restaurant/Resources/assets/js/views/pos/partials/note_modal.vue")
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "modules/Restaurant/Resources/assets/js/views/pos/partials/note_modal.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-60d99cfe", Component.options)
-  } else {
-    hotAPI.reload("data-v-60d99cfe", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
+webpackJsonp([145,99,126,129,138],{
 
 /***/ "./node_modules/@ckeditor/ckeditor5-build-classic/build/ckeditor.js":
 /***/ (function(module, exports, __webpack_require__) {
@@ -60,21 +12,11 @@ module.exports = Component.exports
 
 /***/ }),
 
-/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/Restaurant/Resources/assets/js/views/pos/partials/note_modal.vue":
+/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/js/views/companies/logo.vue":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator__ = __webpack_require__("./node_modules/@babel/runtime/regenerator/index.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__resources_js_views_documents_note_vue__ = __webpack_require__("./resources/js/views/documents/note.vue");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__resources_js_views_documents_note_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__resources_js_views_documents_note_vue__);
-
-
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-
 //
 //
 //
@@ -94,3291 +36,58 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
-
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ["recordId", "configuration", "showDialog"],
-  components: {
-    NoteForm: __WEBPACK_IMPORTED_MODULE_1__resources_js_views_documents_note_vue___default.a
-  },
+  props: ['url', 'path_logo'],
   data: function data() {
     return {
-      document_affected: null
-    };
-  },
-  methods: {
-    getDocument: function getDocument() {
-      var _this = this;
-
-      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee() {
-        var response, data;
-        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee$(_context) {
-          while (1) {
-            switch (_context.prev = _context.next) {
-              case 0:
-                _context.next = 2;
-                return _this.$http.get("/documents/get_record/".concat(_this.recordId));
-
-              case 2:
-                response = _context.sent;
-
-                if (response.status == 200) {
-                  data = response.data;
-                  _this.document_affected = data;
-                  setTimeout(function () {
-                    _this.$refs.noteForm.initComponent();
-                  }, 50);
-                }
-
-              case 4:
-              case "end":
-                return _context.stop();
-            }
-          }
-        }, _callee);
-      }))();
-    },
-    success: function success() {
-      this.close();
-      this.$emit("getRecords");
-    },
-    open: function open() {
-      this.getDocument();
-    },
-    close: function close() {
-      this.$emit("update:showDialog", false);
-    }
-  }
-});
-
-/***/ }),
-
-/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/js/views/documents/note.vue":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator__ = __webpack_require__("./node_modules/@babel/runtime/regenerator/index.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__partials_item_vue__ = __webpack_require__("./resources/js/views/documents/partials/item.vue");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__partials_item_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__partials_item_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__documents_partials_options_vue__ = __webpack_require__("./resources/js/views/documents/partials/options.vue");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__documents_partials_options_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__documents_partials_options_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__mixins_functions__ = __webpack_require__("./resources/js/mixins/functions.js");
-
-
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-  components: {
-    DocumentFormItem: __WEBPACK_IMPORTED_MODULE_1__partials_item_vue___default.a,
-    DocumentOptions: __WEBPACK_IMPORTED_MODULE_2__documents_partials_options_vue___default.a
-  },
-  mixins: [__WEBPACK_IMPORTED_MODULE_3__mixins_functions__["b" /* functions */], __WEBPACK_IMPORTED_MODULE_3__mixins_functions__["a" /* exchangeRate */]],
-  props: ["document_affected", "configuration", "external"],
-  data: function data() {
-    return {
-      recordItem: null,
-      isEditItemNote: false,
-      showDialogAddItem: false,
-      showDialogOptions: false,
-      loading_submit: false,
-      resource: "documents",
-      errors: {},
-      form: {},
-      document_types: [],
-      currency_types: [],
-      customers: [],
-      all_series: [],
-      series: [],
-      currency_type: {},
-      documentNewId: null,
-      note_credit_types: [],
-      note_debit_types: [],
-      user: {},
-      document: {},
-      operation_types: [],
-      is_contingency: false,
-      isCreditNote: true
+      headers: headers_token,
+      dialogVisible: false,
+      load: false,
+      imageUrl: ''
     };
   },
   computed: {
-    hasDiscounts: function hasDiscounts() {
-      return parseFloat(this.document_affected.total_discount) > 0;
-    }
-  },
-  created: function created() {
-    this.initComponent();
-  },
-  mounted: function mounted() {},
-  methods: {
-    initComponent: function initComponent() {
-      var _this = this;
-
-      this.document = this.document_affected;
-      this.initForm();
-      this.$http.get("/".concat(this.resource, "/tables")).then(function (response) {
-        _this.document_types = response.data.document_types_note;
-        _this.currency_types = response.data.currency_types;
-        _this.all_series = response.data.series; // this.customers = response.data.customers
-
-        _this.note_credit_types = response.data.note_credit_types;
-        _this.note_debit_types = response.data.note_debit_types;
-        _this.operation_types = response.data.operation_types;
-        _this.user = response.data.user;
-        _this.currency_type = _.find(_this.currency_types, {
-          id: _this.form.currency_type_id
-        });
-        _this.form.document_type_id = _this.document_types.length > 0 ? _this.document_types[0].id : null;
-        _this.form.operation_type_id = _this.operation_types.length > 0 ? _this.operation_types[0].id : null;
-
-        _this.changeDocumentType();
-
-        _this.changeDateOfIssue();
-      });
-      this.getCustomer();
-    },
-    initForm: function initForm() {
-      var _this2 = this;
-
-      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee() {
-        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee$(_context) {
-          while (1) {
-            switch (_context.prev = _context.next) {
-              case 0:
-                _this2.errors = {};
-                _this2.form = {
-                  user_id: 1,
-                  afectar_caja: false,
-                  additional_information: null,
-                  establishment_id: _this2.document.establishment_id,
-                  document_type_id: null,
-                  series_id: null,
-                  number: "#",
-                  total_rounded: 0,
-                  total_payment: 0,
-                  date_of_issue: moment().format("YYYY-MM-DD"),
-                  date_of_due: moment().format("YYYY-MM-DD"),
-                  time_of_issue: moment().format("HH:mm:ss"),
-                  customer_id: _this2.document.customer_id,
-                  currency_type_id: _this2.document.currency_type_id,
-                  purchase_order: null,
-                  exchange_rate_sale: 0,
-                  total_prepayment: _this2.document.total_prepayment,
-                  total_charge: _this2.document.total_charge,
-                  total_discount: 0,
-                  total_exportation: _this2.document.total_exportation,
-                  total_free: _this2.document.total_free,
-                  total_taxed: _this2.document.total_taxed,
-                  total_unaffected: _this2.document.total_unaffected,
-                  total_exonerated: _this2.document.total_exonerated,
-                  total_igv: _this2.document.total_igv,
-                  total_base_isc: _this2.document.total_base_isc,
-                  total_isc: _this2.document.total_isc,
-                  total_base_other_taxes: _this2.document.total_base_other_taxes,
-                  total_other_taxes: _this2.document.total_other_taxes,
-                  total_plastic_bag_taxes: _this2.document.total_plastic_bag_taxes,
-                  total_taxes: _this2.document.total_taxes,
-                  total_value: _this2.document.total_value,
-                  total: _this2.document.total,
-                  items: _this2.document.items,
-                  affected_document_id: _this2.document.id,
-                  note_credit_or_debit_type_id: null,
-                  note_description: null,
-                  actions: {
-                    format_pdf: "a4"
-                  },
-                  operation_type_id: null,
-                  hotel: {}
-                };
-                _context.next = 4;
-                return _this2.form.items.forEach(function (item) {
-                  item.input_unit_price_value = item.unit_price;
-                  item.additional_information = null;
-                  item.IdLoteSelected = item.item.IdLoteSelected;
-                });
-
-              case 4:
-                _this2.validateHasDiscounts();
-
-              case 5:
-              case "end":
-                return _context.stop();
-            }
-          }
-        }, _callee);
-      }))();
-    },
-    clickAddItemNote: function clickAddItemNote() {
-      this.recordItem = null;
-      this.isEditItemNote = false;
-      this.showDialogAddItem = true;
-    },
-    ediItem: function ediItem(row, index) {
-      row.indexi = index;
-      this.recordItem = row;
-      this.isEditItemNote = true;
-      this.showDialogAddItem = true;
-    },
-    resetForm: function resetForm() {
-      var _this3 = this;
-
-      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee2() {
-        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee2$(_context2) {
-          while (1) {
-            switch (_context2.prev = _context2.next) {
-              case 0:
-                _context2.next = 2;
-                return _this3.getNote();
-
-              case 2:
-                _context2.next = 4;
-                return _this3.initForm();
-
-              case 4:
-                _this3.form.operation_type_id = _this3.operation_types.length > 0 ? _this3.operation_types[0].id : null;
-                _this3.form.document_type_id = _this3.document_types.length > 0 ? _this3.document_types[0].id : null;
-
-                _this3.changeDocumentType();
-
-                _this3.changeDateOfIssue();
-
-              case 8:
-              case "end":
-                return _context2.stop();
-            }
-          }
-        }, _callee2);
-      }))();
-    },
-    getNote: function getNote() {
-      var _this4 = this;
-
-      this.$http.get("/".concat(this.resource, "/note/record/").concat(this.form.affected_document_id)).then(function (response) {
-        // console.log(response)
-        _this4.document = response.data;
-      });
-    },
-    changeDocumentType: function changeDocumentType() {
-      this.form.note_credit_or_debit_type_id = null;
-      this.form.series_id = null;
-
-      if (this.is_contingency) {
-        this.series = _.filter(this.all_series, {
-          document_type_id: this.form.document_type_id,
-          contingency: this.is_contingency
-        });
-      } else {
-        var document_type = _.find(this.document_types, {
-          id: this.form.document_type_id
-        });
-
-        var firstChar = this.document.group_id === "01" ? "F" : "B";
-        this.series = _.filter(this.all_series, function (s) {
-          return s.document_type_id === document_type.id && s.number.substr(0, 1) === firstChar;
-        });
-      }
-
-      this.form.series_id = this.series.length > 0 ? this.series[0].id : null;
-      this.isCreditNote = this.form.document_type_id == "07";
-    },
-    changeDateOfIssue: function changeDateOfIssue() {
-      var _this5 = this;
-
-      this.searchExchangeRateByDate(this.form.date_of_issue).then(function (response) {
-        _this5.form.exchange_rate_sale = response;
-      });
-    },
-    addRow: function addRow(row) {
-      if (this.recordItem) {
-        this.form.items[this.recordItem.indexi] = row;
-        this.recordItem = null;
-      } else {
-        this.form.items.push(JSON.parse(JSON.stringify(row)));
-      } // this.form.items.push(row)
-
-
-      this.calculateTotal();
-    },
-    clickRemoveItem: function clickRemoveItem(index) {
-      this.form.items.splice(index, 1);
-      this.calculateTotal();
-    },
-    calculateTotal: function calculateTotal() {
-      var total_discount = 0;
-      var total_charge = 0;
-      var total_exportation = 0;
-      var total_taxed = 0;
-      var total_exonerated = 0;
-      var total_unaffected = 0;
-      var total_free = 0;
-      var total_igv = 0;
-      var total_value = 0;
-      var total = 0;
-      var total_plastic_bag_taxes = 0;
-      this.form.items.forEach(function (row) {
-        total_discount += parseFloat(row.total_discount);
-        total_charge += parseFloat(row.total_charge);
-
-        if (row.affectation_igv_type_id === "10") {
-          total_taxed += parseFloat(row.total_value);
-        }
-
-        if (row.affectation_igv_type_id === "20") {
-          total_exonerated += parseFloat(row.total_value);
-        }
-
-        if (row.affectation_igv_type_id === "30") {
-          total_unaffected += parseFloat(row.total_value);
-        }
-
-        if (row.affectation_igv_type_id === "40") {
-          total_exportation += parseFloat(row.total_value);
-        }
-
-        if (["10", "20", "30", "40"].indexOf(row.affectation_igv_type_id) < 0) {
-          total_free += parseFloat(row.total_value);
-        }
-
-        total_value += parseFloat(row.total_value);
-        total_igv += parseFloat(row.total_igv);
-        total += parseFloat(row.total);
-        total_plastic_bag_taxes += parseFloat(row.total_plastic_bag_taxes);
-      });
-      this.form.total_exportation = _.round(total_exportation, 2);
-      this.form.total_taxed = _.round(total_taxed, 2);
-      this.form.total_exonerated = _.round(total_exonerated, 2);
-      this.form.total_unaffected = _.round(total_unaffected, 2);
-      this.form.total_free = _.round(total_free, 2);
-      this.form.total_igv = _.round(total_igv, 2);
-      this.form.total_value = _.round(total_value, 2);
-      this.form.total_taxes = _.round(total_igv, 2);
-      this.form.total_plastic_bag_taxes = _.round(total_plastic_bag_taxes, 2); // this.form.total = _.round(total, 2)
-
-      this.form.total = _.round(total, 2) + this.form.total_plastic_bag_taxes;
-    },
-    validateHasDiscounts: function validateHasDiscounts() {
-      console.log(this.isCreditNote, " ", this.hasDiscounts);
-
-      if (this.isCreditNote && this.hasDiscounts) {
-        this.$toast.error("El comprobante relacionado tiene descuentos, debe agregar los productos");
-        this.form.items = [];
-        this.calculateTotal();
-      }
-    },
-    submit: function submit() {
-      var _this6 = this;
-
-      if (this.isCreditNote && this.hasDiscounts && this.form.total > this.document.total) {
-        return this.$toast.error("El monto total de la nota de credito debe ser menor o igual al monto del documento relacionado (".concat(this.document.total, ")"));
-      }
-
-      this.loading_submit = true;
-      this.$http.post("/".concat(this.resource), this.form).then(function (response) {
-        if (response.data.success) {
-          if (!_this6.external) {
-            _this6.resetForm();
-
-            _this6.documentNewId = response.data.data.id;
-            _this6.showDialogOptions = true;
-          } else {
-            _this6.$emit("success");
-          }
-        } else {
-          _this6.$toast.error(response.data.message);
-        }
-      })["catch"](function (error) {
-        if (error.response.status === 422) {
-          _this6.errors = error.response.data;
-        } else {
-          _this6.$toast.error(error.response.data.message);
-        }
-      }).then(function () {
-        _this6.loading_submit = false;
-      });
-    },
-    getCustomer: function getCustomer() {
-      var _this7 = this;
-
-      this.$http.get("/".concat(this.resource, "/search/customer/").concat(this.document.customer_id)).then(function (response) {
-        _this7.customers = response.data.customers;
-        _this7.form.customer_id = _this7.document.customer_id;
-      });
-    },
-    close: function close() {
-      if (this.external) {
-        this.$emit("close");
-      } else {
-        location.href = "/documents";
-      }
-    }
-  }
-});
-
-/***/ }),
-
-/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/js/views/documents/partials/item.vue":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator__ = __webpack_require__("./node_modules/@babel/runtime/regenerator/index.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__items_form_vue__ = __webpack_require__("./resources/js/views/items/form.vue");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__items_form_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__items_form_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lots_group_vue__ = __webpack_require__("./resources/js/views/documents/partials/lots_group.vue");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lots_group_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__lots_group_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__helpers_functions__ = __webpack_require__("./resources/js/helpers/functions.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__select_warehouses_vue__ = __webpack_require__("./resources/js/views/documents/partials/select_warehouses.vue");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__select_warehouses_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__select_warehouses_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__lots_vue__ = __webpack_require__("./resources/js/views/documents/partials/lots.vue");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__lots_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5__lots_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__ckeditor_ckeditor5_build_classic__ = __webpack_require__("./node_modules/@ckeditor/ckeditor5-build-classic/build/ckeditor.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__ckeditor_ckeditor5_build_classic___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6__ckeditor_ckeditor5_build_classic__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_vue_ckeditor5__ = __webpack_require__("./node_modules/vue-ckeditor5/dist/vue-ckeditor5.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_vue_ckeditor5___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_7_vue_ckeditor5__);
-var _methods;
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-
-
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-
- //'../../../../helpers/functions'
-
-
-
-
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['recordItem', 'showDialog', 'percentage_igv', 'operationTypeId', 'currencyTypeIdActive', 'exchangeRateSale', 'typeUser', 'isEditItemNote', 'configuration', 'restringir_stock'],
-  components: {
-    ItemForm: __WEBPACK_IMPORTED_MODULE_1__items_form_vue___default.a,
-    WarehousesDetail: __WEBPACK_IMPORTED_MODULE_4__select_warehouses_vue___default.a,
-    LotsGroup: __WEBPACK_IMPORTED_MODULE_2__lots_group_vue___default.a,
-    SelectLotsForm: __WEBPACK_IMPORTED_MODULE_5__lots_vue___default.a,
-    "vue-ckeditor": __WEBPACK_IMPORTED_MODULE_7_vue_ckeditor5___default.a.component
-  },
-  data: function data() {
-    return {
-      loading_search: false,
-      titleAction: '',
-      is_client: false,
-      titleDialog: '',
-      resource: 'documents',
-      showDialogNewItem: false,
-      has_list_prices: false,
-      errors: {},
-      form: {},
-      input_item: "",
-      all_items: [],
-      items: [],
-      items_select: [],
-      operation_types: [],
-      all_affectation_igv_types: [],
-      affectation_igv_types: [],
-      system_isc_types: [],
-      discount_types: [],
-      charge_types: [],
-      attribute_types: [],
-      use_price: 1,
-      change_affectation_igv_type_id: false,
-      activePanel: 0,
-      total_item: 0,
-      item_unit_types: [],
-      showWarehousesDetail: false,
-      warehousesDetail: [],
-      showListStock: false,
-      search_item_by_barcode: false,
-      isUpdateWarehouseId: null,
-      showDialogLots: false,
-      showDialogSelectLots: false,
-      lots: [],
-      item_select: null,
-      agregar_item: false,
-      form_control: {},
-      editors: {
-        classic: __WEBPACK_IMPORTED_MODULE_6__ckeditor_ckeditor5_build_classic___default.a
-      } //item_unit_type: {}
-
-    };
-  },
-  created: function created() {
-    var _this = this;
-
-    return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee() {
-      return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee$(_context) {
-        while (1) {
-          switch (_context.prev = _context.next) {
-            case 0:
-              _this.initForm();
-
-              _this.$http.get("/".concat(_this.resource, "/item/tables")).then(function (response) {
-                _this.all_items = response.data.items;
-                _this.operation_types = response.data.operation_types;
-                _this.all_affectation_igv_types = response.data.affectation_igv_types;
-                _this.affectation_igv_types = response.data.affectation_igv_types;
-                _this.system_isc_types = response.data.system_isc_types;
-                _this.discount_types = response.data.discount_types;
-                _this.charge_types = response.data.charge_types;
-                _this.attribute_types = response.data.attribute_types;
-                _this.is_client = response.data.is_client; //  this.restringir_stock= response.data.restringir_stock;
-
-                _this.filterItems();
-              });
-
-              _this.$eventHub.$on('reloadDataItems', function (item_id) {
-                _this.reloadDataItems(item_id);
-              });
-
-              _this.$eventHub.$on('selectWarehouseId', function (warehouse_id) {
-                // console.log(warehouse_id)
-                _this.form.warehouse_id = warehouse_id;
-              });
-
-            case 4:
-            case "end":
-              return _context.stop();
-          }
-        }
-      }, _callee);
-    }))();
-  },
-  methods: (_methods = {
-    searchRemoteItems: function searchRemoteItems(input) {
-      var _this2 = this;
-
-      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee2() {
-        var parameters;
-        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee2$(_context2) {
-          while (1) {
-            switch (_context2.prev = _context2.next) {
-              case 0:
-                if (!(input.length > 2)) {
-                  _context2.next = 7;
-                  break;
-                }
-
-                _this2.loading_search = true;
-                parameters = "input=".concat(input);
-                _context2.next = 5;
-                return _this2.$http.get("/".concat(_this2.resource, "/search-items/?").concat(parameters)).then(function (response) {
-                  _this2.items_select = response.data[0];
-                  _this2.items = response.data;
-                  _this2.loading_search = false;
-
-                  _this2.enabledSearchItemsBarcode();
-
-                  if (_this2.items.length == 0) {
-                    _this2.filterItems();
-                  }
-                });
-
-              case 5:
-                _context2.next = 9;
-                break;
-
-              case 7:
-                _context2.next = 9;
-                return _this2.filterItems();
-
-              case 9:
-              case "end":
-                return _context2.stop();
-            }
-          }
-        }, _callee2);
-      }))();
-    },
-    keyupTabCustomer: function keyupTabCustomer(e) {
-      // console.log(e.keyCode)
-      if (e.keyCode === 9) {
-        this.$refs.select_person.$el.getElementsByTagName("input")[0].focus();
-      }
-    },
-    focusProducto: function focusProducto() {
-      this.calculateQuantity();
-      this.$nextTick(function () {
-        this.$refs.ref_search_items.$el.querySelector('input').focus();
-      });
-      this.input_item = "";
-    },
-    addNewItem: function addNewItem(data) {
-      this.form.item_id = data.id;
-      this.items.push(data);
-      this.searchRemoteItems(data.description);
-      this.form.item = _.find(this.items, {
-        'id': data.id
-      });
-
-      var precios = _.filter(this.items, {
-        'id': this.form.item_id
-      })[0];
-
-      this.form.unit_price_value = this.form.item.sale_unit_price; ///////////////////////////////////////////////////////////////////////////
-
-      this.lots = this.form.item.lots;
-      this.form.stock_disp = this.form.item.stock;
-      this.form.has_igv = this.form.item.has_igv;
-      this.form.affectation_igv_type_id = this.form.item.sale_affectation_igv_type_id;
-      this.form.quantity = 1; ///////////////////////////////////////////////////////////////////////////
-
-      this.cleanTotalItem();
-      this.showListStock = true;
-      this.calculateQuantity(); //this.changeItem()
-    },
-    focusPrecio: function focusPrecio() {
-      //   this.$refs.precio.$el.getElementsByTagName('input')[0].focus()
-      //  this.$refs.precio.$el.querySelector('input').focus();
-      this.calculateQuantity();
-      this.$nextTick(function () {
-        this.$refs.precio.$el.querySelector('input').focus();
-      });
-    },
-    stock: function stock() {
-      var _this3 = this;
-
-      if (this.form.stock == 'Si') {
-        this.form_control.stock_control = true;
-      } else {
-        this.form_control.stock_control = false;
-      }
-
-      this.$http.post('/inventories/configuration', this.form_control).then(function (response) {
-        if (response.data.success) {
-          _this3.$toast.success(response.data.message);
-        } else {
-          _this3.$toast.error(response.data.message);
-        }
-      })["catch"](function (error) {
-        if (error.response.status === 422) {
-          _this3.errors = error.response.data.errors;
-        } else {
-          console.log(error);
-        }
-      }).then(function () {//this.loading_submit = false;
-      });
-    },
-    filterItems: function filterItems() {
-      this.items = this.all_items;
-    },
-    enabledSearchItemsBarcode: function enabledSearchItemsBarcode() {
-      if (this.search_item_by_barcode) {
-        if (this.items.length == 1) {
-          this.form.item_id = this.items[0].id;
-          this.changeItem();
-        }
-      }
-    },
-    filterMethod: function filterMethod(query) {
-      var item = _.find(this.items, {
-        'internal_id': query
-      });
-
-      if (item) {
-        this.form.item_id = item.id;
-        this.changeItem();
-      } // console.log(item)
-
-    },
-    clickWarehouseDetail: function clickWarehouseDetail() {
-      if (!this.form.item_id) {
-        return this.$toast.error('Seleccione un item');
-      }
-
-      var item = _.find(this.items, {
-        'id': this.form.item_id
-      });
-
-      this.warehousesDetail = item.warehouses;
-      this.showWarehousesDetail = true;
-    }
-  }, _defineProperty(_methods, "filterItems", function filterItems() {
-    this.items = this.all_items;
-  }), _defineProperty(_methods, "searchItemsBarcode", function searchItemsBarcode() {
-    var _this4 = this;
-
-    return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee3() {
-      var parameters;
-      return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee3$(_context3) {
-        while (1) {
-          switch (_context3.prev = _context3.next) {
-            case 0:
-              if (!(_this4.input_item.length > 1)) {
-                _context3.next = 7;
-                break;
-              }
-
-              _this4.loading_search = true;
-              parameters = "input=".concat(_this4.input_item);
-              _context3.next = 5;
-              return _this4.$http.get("/".concat(_this4.resource, "/search-items?").concat(parameters)).then(function (response) {
-                _this4.items_select = response.data.items[0];
-                console.log("response.data.items[0]", response.data.items[0]);
-                _this4.items = response.data.items;
-                _this4.form.item_id = response.data.items[0].id;
-                _this4.loading_search = false;
-                _this4.input_item = response.data.items[0].full_description;
-
-                _this4.focusTotalItem();
-
-                _this4.changeItem(); //this.enabledSearchItemsBarcode()
-
-
-                //this.enabledSearchItemsBarcode()
-                if (_this4.items.length == 0) {
-                  _this4.filterItems();
-                }
-              });
-
-            case 5:
-              _context3.next = 9;
-              break;
-
-            case 7:
-              _context3.next = 9;
-              return _this4.filterItems();
-
-            case 9:
-            case "end":
-              return _context3.stop();
-          }
-        }
-      }, _callee3);
-    }))();
-  }), _defineProperty(_methods, "enabledSearchItemsBarcode", function enabledSearchItemsBarcode() {
-    if (this.search_item_by_barcode) {
-      // if (this.items.length == 1) {
-      //     // console.log(this.items)
-      //     this.clickAddItem(this.items[0], 0);
-      //     this.filterItems();
-      // }
-      this.cleanInput();
-    }
-  }), _defineProperty(_methods, "changeSearchItemBarcode", function changeSearchItemBarcode() {
-    this.cleanInput();
-    this.$nextTick(function () {
-      this.$refs.ref_search_items.$el.querySelector('input').focus();
-    });
-  }), _defineProperty(_methods, "cleanInput", function cleanInput() {
-    this.input_item = null;
-  }), _defineProperty(_methods, "initForm", function initForm() {
-    this.errors = {};
-    this.form = {
-      // category_id: [1],
-      // edit: false,
-      item_id: null,
-      item: {},
-      affectation_igv_type_id: null,
-      affectation_igv_type: {},
-      has_isc: false,
-      system_isc_type_id: null,
-      percentage_isc: 0,
-      suggested_price: 0,
-      quantity: 1,
-      unit_price_value: 0,
-      input_unit_price_value: 0,
-      unit_price: 0,
-      charges: [],
-      discounts: [],
-      attributes: [],
-      has_igv: null,
-      item_unit_types: [],
-      has_plastic_bag_taxes: false,
-      warehouse_id: null,
-      lots_group: [],
-      IdLoteSelected: null,
-      stock: "Si",
-      stock_disp: null,
-      name_product_pdf: null
-    };
-    this.activePanel = 0;
-    this.total_item = 0;
-    this.item_unit_type = {};
-    this.has_list_prices = false;
-  }), _defineProperty(_methods, "create", function create() {
-    var _this5 = this;
-
-    return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee4() {
-      var operation_type;
-      return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee4$(_context4) {
-        while (1) {
-          switch (_context4.prev = _context4.next) {
-            case 0:
-              console.log("xxxx", _this5.percentage_igv);
-              _this5.titleDialog = _this5.recordItem ? ' Modificar Producto o Servicio' : ' Agregar Producto o Servicio';
-              _this5.titleAction = _this5.recordItem ? ' Modificar' : 'Agregar';
-              _context4.next = 5;
-              return _.find(_this5.operation_types, {
-                id: _this5.operationTypeId
-              });
-
-            case 5:
-              operation_type = _context4.sent;
-
-              if (!_this5.recordItem) {
-                _context4.next = 28;
-                break;
-              }
-
-              _context4.next = 9;
-              return _this5.recordItem.item_id;
-
-            case 9:
-              _this5.form.item_id = _context4.sent;
-              _this5.form.unit_price = _this5.recordItem.unit_price;
-              _context4.next = 13;
-              return _this5.searchRemoteItems(_this5.recordItem.item.description);
-
-            case 13:
-              _context4.next = 15;
-              return _this5.changeItem();
-
-            case 15:
-              _this5.form.quantity = _this5.recordItem.quantity;
-              _this5.form.name_product_pdf = _this5.recordItem.name_product_pdf;
-              _this5.form.unit_price_value = _this5.recordItem.unit_price;
-              _this5.form.amount = _.round(_this5.form.quantity * _this5.form.unit_price_value, 4);
-              _this5.form.stock = _this5.recordItem.item.is_stock;
-              _this5.form.has_plastic_bag_taxes = _this5.recordItem.total_plastic_bag_taxes > 0 ? true : false;
-              _this5.form.warehouse_id = _this5.recordItem.warehouse_id;
-              _this5.isUpdateWarehouseId = _this5.recordItem.warehouse_id;
-              _this5.item_select = _this5.recordItem;
-
-              if (_this5.isEditItemNote) {
-                _this5.form.item.currency_type_id = _this5.currencyTypeIdActive;
-                _this5.form.item.currency_type_symbol = _this5.currencyTypeIdActive == 'PEN' ? 'S/' : '$';
-              }
-
-              _this5.calculateQuantity();
-
-              _context4.next = 29;
-              break;
-
-            case 28:
-              _this5.isUpdateWarehouseId = null;
-
-            case 29:
-            case "end":
-              return _context4.stop();
-          }
-        }
-      }, _callee4);
-    }))();
-  }), _defineProperty(_methods, "clickAddDiscount", function clickAddDiscount() {
-    this.form.discounts.push({
-      discount_type_id: null,
-      discount_type: null,
-      description: null,
-      percentage: 0,
-      factor: 0,
-      amount: 0,
-      base: 0,
-      is_amount: false
-    });
-  }), _defineProperty(_methods, "clickRemoveDiscount", function clickRemoveDiscount(index) {
-    this.form.discounts.splice(index, 1);
-  }), _defineProperty(_methods, "changeDiscountType", function changeDiscountType(index) {
-    var discount_type_id = this.form.discounts[index].discount_type_id;
-    this.form.discounts[index].discount_type = _.find(this.discount_types, {
-      id: discount_type_id
-    });
-  }), _defineProperty(_methods, "clickAddCharge", function clickAddCharge() {
-    this.form.charges.push({
-      charge_type_id: null,
-      charge_type: null,
-      description: null,
-      percentage: 0,
-      factor: 0,
-      amount: 0,
-      base: 0
-    });
-  }), _defineProperty(_methods, "clickRemoveCharge", function clickRemoveCharge(index) {
-    this.form.charges.splice(index, 1);
-  }), _defineProperty(_methods, "changeChargeType", function changeChargeType(index) {
-    var charge_type_id = this.form.charges[index].charge_type_id;
-    this.form.charges[index].charge_type = _.find(this.charge_types, {
-      id: charge_type_id
-    });
-  }), _defineProperty(_methods, "clickAddAttribute", function clickAddAttribute() {
-    this.form.attributes.push({
-      attribute_type_id: null,
-      description: null,
-      value: null,
-      start_date: null,
-      end_date: null,
-      duration: null
-    });
-  }), _defineProperty(_methods, "clickRemoveAttribute", function clickRemoveAttribute(index) {
-    this.form.attributes.splice(index, 1);
-  }), _defineProperty(_methods, "changeAttributeType", function changeAttributeType(index) {
-    var attribute_type_id = this.form.attributes[index].attribute_type_id;
-
-    var attribute_type = _.find(this.attribute_types, {
-      id: attribute_type_id
-    });
-
-    this.form.attributes[index].description = attribute_type.description;
-    this.inputAttribute(index);
-  }), _defineProperty(_methods, "inputAttribute", function inputAttribute(index) {
-    var value = this.form.attributes[index].value;
-    var hotelAttributes = ['4003', '4004'];
-    this.form.attributes[index].start_date = hotelAttributes.includes(this.form.attributes[index].attribute_type_id) ? value : null;
-  }), _defineProperty(_methods, "close", function close() {
-    this.initForm();
-    this.$emit('update:showDialog', false);
-  }), _defineProperty(_methods, "changeItem", function changeItem() {
-    var _this6 = this;
-
-    return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee5() {
-      var precios, contex;
-      return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee5$(_context5) {
-        while (1) {
-          switch (_context5.prev = _context5.next) {
-            case 0:
-              if (_this6.recordItem) {
-                _this6.form.item = _this6.items_select;
-              } else {
-                _this6.form.item = _.find(_this6.items, {
-                  'id': _this6.form.item_id
-                });
-              }
-
-              precios = _.filter(_this6.items, {
-                'id': _this6.form.item_id
-              })[0];
-              _this6.form.item_unit_types = precios.item_unit_types;
-              _this6.form.unit_price_value = _this6.form.item.sale_unit_price;
-              _this6.lots = _this6.form.item.lots;
-              _this6.form.stock_disp = _this6.form.item.stock;
-              _this6.form.has_igv = _this6.form.item.has_igv;
-              _this6.form.affectation_igv_type_id = _this6.form.item.sale_affectation_igv_type_id;
-              _this6.form.quantity = 1;
-
-              _this6.cleanTotalItem();
-
-              _this6.showListStock = true;
-
-              if (_this6.form.item.attributes.length > 0) {
-                contex = _this6;
-
-                _this6.form.item.attributes.forEach(function (row) {
-                  contex.form.attributes.push({
-                    attribute_type_id: row.attribute_type_id,
-                    description: row.description,
-                    value: row.value,
-                    start_date: row.start_date,
-                    end_date: row.end_date,
-                    duration: row.duration
-                  });
-                });
-              }
-
-              _this6.form.lots_group = _this6.form.item.lots_group;
-
-              _this6.calculateQuantity();
-
-            case 14:
-            case "end":
-              return _context5.stop();
-          }
-        }
-      }, _callee5);
-    }))();
-  }), _defineProperty(_methods, "focusTotalItem", function focusTotalItem(change) {
-    //  if(!change && this.form.item.calculate_quantity) {
-    this.$refs.cantidad.$el.getElementsByTagName('input')[0].focus(); //this.total_item = this.form.unit_price_value
-    // }
-  }), _defineProperty(_methods, "calculateQuantity", function calculateQuantity() {
-    if (this.restringir_stock === true && this.form.item_id !== null) {
-      if (this.form.stock_disp < this.form.quantity && this.form.stock == 'Si' && this.form.item_id != null) {
-        this.agregar_item = false;
-        this.$toast.error('Stock Insuficiente...');
-      } else {
-        this.agregar_item = true;
-      }
-    } else {
-      this.agregar_item = true;
-    }
-
-    if (this.form.item.calculate_quantity) {
-      this.form.quantity = _.round(this.total_item / this.form.unit_price_value, 4);
-    } // this.form.amount=_.round(this.form.quantity*this.form.unit_price_value, 4)
-
-
-    this.form.amount = _.round(Math.round(parseFloat(this.form.quantity) * parseFloat(this.form.unit_price_value) * 10) / 10, 4);
-  }), _defineProperty(_methods, "updateprice", function updateprice() {
-    var _this7 = this;
-
-    if (this.configuration.refresh_price_sales == true) {
-      var form_price_sales = {
-        id: this.form.item_id,
-        sale_unit_price: this.form.unit_price_value
-      };
-      this.$http.post("/items/updateprice", form_price_sales).then(function (response) {
-        if (response.data.success == true) {
-          _this7.$toast.success(response.data.message);
-        } else {
-          _this7.$toast.error("Ocurrio un error al actualizar el precio de venta");
-        }
-      });
-    }
-  }), _defineProperty(_methods, "cleanTotalItem", function cleanTotalItem() {
-    this.total_item = null;
-  }), _defineProperty(_methods, "clickAddItem", function clickAddItem() {
-    var _this8 = this;
-
-    return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee6() {
-      var unit_price, IdLoteSelected, select_lots, un_select_lots;
-      return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee6$(_context6) {
-        while (1) {
-          switch (_context6.prev = _context6.next) {
-            case 0:
-              _this8.form.item.is_stock = _this8.form.stock;
-
-              if (!_this8.form.item.lots_enabled) {
-                _context6.next = 4;
-                break;
-              }
-
-              if (_this8.form.IdLoteSelected) {
-                _context6.next = 4;
-                break;
-              }
-
-              return _context6.abrupt("return", _this8.$toast.error('Debe seleccionar un lote.'));
-
-            case 4:
-              if (!_this8.validateTotalItem().total_item) {
-                _context6.next = 6;
-                break;
-              }
-
-              return _context6.abrupt("return");
-
-            case 6:
-              unit_price = _this8.form.has_igv ? _this8.form.unit_price_value : _this8.form.unit_price_value * (1 + _this8.percentage_igv / 100);
-              _this8.form.input_unit_price_value = _this8.form.unit_price_value;
-              _this8.form.unit_price = unit_price;
-              _this8.form.item.unit_price = unit_price;
-              _this8.form.item.presentation = _this8.item_unit_type;
-              _this8.form.affectation_igv_type = _.find(_this8.affectation_igv_types, {
-                'id': _this8.form.affectation_igv_type_id
-              });
-              IdLoteSelected = _this8.form.IdLoteSelected; // return
-              // console.logc
-
-              _this8.row = Object(__WEBPACK_IMPORTED_MODULE_3__helpers_functions__["a" /* calculateRowItem */])(_this8.form, _this8.currencyTypeIdActive, _this8.exchangeRateSale, _this8.percentage_igv / 100);
-              console.log(JSON.stringify(_this8.row));
-              _context6.next = 17;
-              return _.filter(_this8.row.item.lots, {
-                'has_sale': true
-              });
-
-            case 17:
-              select_lots = _context6.sent;
-              _context6.next = 20;
-              return _.filter(_this8.row.item.lots, {
-                'has_sale': false
-              });
-
-            case 20:
-              un_select_lots = _context6.sent;
-
-              if (!_this8.form.item.series_enabled) {
-                _context6.next = 24;
-                break;
-              }
-
-              if (!(select_lots.length != _this8.form.quantity)) {
-                _context6.next = 24;
-                break;
-              }
-
-              return _context6.abrupt("return", _this8.$toast.error('La cantidad de series seleccionadas son diferentes a la cantidad a vender'));
-
-            case 24:
-              // this.row.edit = false;
-              _this8.initForm(); //this.initializeFields()
-
-
-              if (_this8.recordItem) {
-                _this8.row.indexi = _this8.recordItem.indexi;
-              }
-
-              _this8.row.IdLoteSelected = IdLoteSelected;
-              _this8.row.item.lots = _this8.lots;
-
-              _this8.$emit('add', _this8.row);
-
-              _this8.agregar_item = false;
-
-              if (_this8.recordItem) {
-                _this8.close();
-              }
-
-            case 31:
-            case "end":
-              return _context6.stop();
-          }
-        }
-      }, _callee6);
-    }))();
-  }), _defineProperty(_methods, "validateTotalItem", function validateTotalItem() {
-    this.errors = {};
-
-    if (this.form.item.calculate_quantity) {
-      if (this.total_item < 0.01) this.$set(this.errors, 'total_item', ['total venta item debe ser mayor a 0.01']);
-    }
-
-    return this.errors;
-  }), _defineProperty(_methods, "reloadDataItems", function reloadDataItems(item_id) {
-    var _this9 = this;
-
-    return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee7() {
-      var resp, data;
-      return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee7$(_context7) {
-        while (1) {
-          switch (_context7.prev = _context7.next) {
-            case 0:
-              if (item_id) {
-                _context7.next = 4;
-                break;
-              }
-
-              _this9.$http.get("/".concat(_this9.resource, "/table/items")).then(function (response) {
-                _this9.items = response.data;
-                _this9.form.item_id = item_id; // if(item_id) this.changeItem()
-                // this.filterItems()
-              });
-
-              _context7.next = 8;
-              break;
-
-            case 4:
-              _context7.next = 6;
-              return _this9.$http.get("/".concat(_this9.resource, "/search/item/").concat(item_id));
-
-            case 6:
-              resp = _context7.sent;
-
-              if (resp.data.items.length > 0) {
-                data = resp.data.items[0];
-                _this9.items = resp.data.items[0];
-                _this9.form.item_id = item_id; // this.form.item.stock=resp.data.items[0].stock
-                // this.form.unit_price_value=resp.data.items[0].sale_unit_price
-                // this.searchRemoteItems(resp.data.items[0].description);
-                // this.form.item.stock=resp.data.items[0].stock
-                // this.$refs.cantidad.$el.getElementsByTagName('input')[0].focus()
-                // this.changeItem()
-              } //.then((response) => {
-              //  })
-
-
-            case 8:
-            case "end":
-              return _context7.stop();
-          }
-        }
-      }, _callee7);
-    }))();
-  }), _defineProperty(_methods, "changePresentation", function changePresentation() {
-    var price = 0;
-    this.item_unit_type = _.find(this.form.item.item_unit_types, {
-      'id': this.form.item_unit_type_id
-    });
-
-    switch (this.item_unit_type.price_default) {
-      case 1:
-        price = this.item_unit_type.price1;
-        break;
-
-      case 2:
-        price = this.item_unit_type.price2;
-        break;
-
-      case 3:
-        price = this.item_unit_type.price3;
-        break;
-    }
-
-    this.form.unit_price_value = price;
-    this.form.item.unit_type_id = this.item_unit_type.unit_type_id;
-  }), _defineProperty(_methods, "selectedPrice", function selectedPrice(row) {
-    var valor = 0;
-
-    switch (row.price_default) {
-      case 1:
-        valor = row.price1;
-        break;
-
-      case 2:
-        valor = row.price2;
-        break;
-
-      case 3:
-        valor = row.price3;
-        break;
-    }
-
-    this.form.item_unit_type_id = row.id;
-    this.item_unit_type = row;
-    this.form.unit_price_value = valor;
-    this.form.item.unit_type_id = row.unit_type_id;
-    this.calculateQuantity();
-  }), _defineProperty(_methods, "addRow", function addRow(row) {// this.searchRemoteItems(row.description)
-  }), _defineProperty(_methods, "addRowLotGroup", function addRowLotGroup(id) {
-    this.form.IdLoteSelected = id;
-  }), _defineProperty(_methods, "clickLotGroup", function clickLotGroup() {
-    this.showDialogLots = true;
-  }), _defineProperty(_methods, "clickSelectLots", function clickSelectLots() {
-    var _this10 = this;
-
-    return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee8() {
-      return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee8$(_context8) {
-        while (1) {
-          switch (_context8.prev = _context8.next) {
-            case 0:
-              _this10.showDialogSelectLots = true;
-
-            case 1:
-            case "end":
-              return _context8.stop();
-          }
-        }
-      }, _callee8);
-    }))();
-  }), _defineProperty(_methods, "addRowSelectLot", function addRowSelectLot(lots) {
-    lots = lots.filter(function (item) {
-      return item.has_sale == true;
-    });
-    this.lots = lots;
-  }), _methods)
-});
-
-/***/ }),
-
-/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/js/views/documents/partials/lots.vue":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator__ = __webpack_require__("./node_modules/@babel/runtime/regenerator/index.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator__);
-
-
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-/* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['showDialog', 'lots', 'stock', 'recordId'],
-  data: function data() {
-    return {
-      titleDialog: 'Series',
-      loading: false,
-      errors: {},
-      form: {},
-      search: '',
-      lots_: []
-    };
-  },
-  created: function created() {
-    return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee() {
-      return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee$(_context) {
-        while (1) {
-          switch (_context.prev = _context.next) {
-            case 0:
-            case "end":
-              return _context.stop();
-          }
-        }
-      }, _callee);
-    }))();
-  },
-  watch: {
-    lots: function lots(val) {
-      this.lots_ = val;
+    src: function src() {
+      if (this.path_logo != '') return this.path_logo;
+      return '/logo/ 700x300.png';
     }
   },
   methods: {
-    filter: function filter() {
-      var _this = this;
-
-      if (this.search) {
-        // this.lots_ = this.lots.filter( x => x.series.toUpperCase().includes(this.search.toUpperCase()))
-        this.lots_ = _.filter(this.lots, function (x) {
-          return x.series.toUpperCase().includes(_this.search.toUpperCase());
-        });
-      } else {
-        this.lots_ = this.lots;
-      }
+    beforeUpload: function beforeUpload(file) {
+      var isIMG = file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/jpg';
+      var isLt2M = file.size / 1024 / 1024 < 2;
+      if (!isIMG) this.$toast.error('La imagen no es valida!');
+      if (!isLt2M) this.$toast.error('La imagen excede los 2MB!');
+      return isIMG && isLt2M;
     },
-    create: function create() {},
-    submit: function submit() {// let val_lots = await this.validateLots()
-      // if(!val_lots.success)
-      //     return this.$toast.error(val_lots.message);
-      // await this.$emit('addRowLot', this.lots);
-      // await this.$emit('update:showDialog', false)
-
-      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee2() {
-        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee2$(_context2) {
-          while (1) {
-            switch (_context2.prev = _context2.next) {
-              case 0:
-              case "end":
-                return _context2.stop();
-            }
-          }
-        }, _callee2);
-      }))();
+    preview: function preview(file) {
+      this.imageUrl = URL.createObjectURL(file.raw);
     },
-    close: function close() {
-      this.$emit('update:showDialog', false);
-      this.$emit('addRowSelectLot', this.lots_);
+    upload: function upload() {
+      this.$refs.upload.submit();
     },
-    clickCancelSubmit: function clickCancelSubmit() {// this.$emit('addRowLot', []);
-      // await this.$emit('update:showDialog', false)
+    successUpload: function successUpload(response, file, fileList) {
+      this.imageUrl = URL.createObjectURL(file.raw);
 
-      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee3() {
-        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee3$(_context3) {
-          while (1) {
-            switch (_context3.prev = _context3.next) {
-              case 0:
-              case "end":
-                return _context3.stop();
-            }
-          }
-        }, _callee3);
-      }))();
-    }
-  }
-});
+      if (response.success) {
+        this.$toast.success(response.message);
+        location.href = this.url; //                    this.load = true;
 
-/***/ }),
-
-/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/js/views/documents/partials/lots_group.vue":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator__ = __webpack_require__("./node_modules/@babel/runtime/regenerator/index.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator__);
-
-
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-/* harmony default export */ __webpack_exports__["default"] = ({
-  props: ["showDialog", "lots_group", "stock", "recordId", "quantity"],
-  data: function data() {
-    return {
-      titleDialog: "Lotes",
-      loading: false,
-      errors: {},
-      form: {},
-      states: ["Activo", "Inactivo", "Desactivado", "Voz", "M2m"],
-      idSelected: null
-    };
-  },
-  created: function created() {// await this.$http.get(`/pos/payment_tables`)
-    //     .then(response => {
-    //         this.payment_method_types = response.data.payment_method_types
-    //         this.cards_brand = response.data.cards_brand
-    //         this.clickAddLot()
-    //     })
-
-    return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee() {
-      return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee$(_context) {
-        while (1) {
-          switch (_context.prev = _context.next) {
-            case 0:
-            case "end":
-              return _context.stop();
-          }
-        }
-      }, _callee);
-    }))();
-  },
-  methods: {
-    changeSelect: function changeSelect(index, id, quantity_lot) {
-      if (this.quantity > quantity_lot) {
-        this.lots_group[index].checked = false;
-      } else {
-        this.lots_group.forEach(function (row) {
-          row.checked = false;
-        });
-        this.lots_group[index].checked = true;
-        this.idSelected = id;
-      }
-    },
-    handleSelectionChange: function handleSelectionChange(val) {
-      //this.$refs.multipleTable.clearSelection();
-      var row = val[val.length - 1];
-      this.multipleSelection = [row];
-    },
-    create: function create() {},
-    submit: function submit() {
-      var _this = this;
-
-      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee2() {
-        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee2$(_context2) {
-          while (1) {
-            switch (_context2.prev = _context2.next) {
-              case 0:
-                _context2.next = 2;
-                return _this.$emit("addRowLotGroup", _this.idSelected);
-
-              case 2:
-                _context2.next = 4;
-                return _this.$emit("update:showDialog", false);
-
-              case 4:
-              case "end":
-                return _context2.stop();
-            }
-          }
-        }, _callee2);
-      }))();
-    },
-    clickCancel: function clickCancel(item) {
-      //this.lots.splice(index, 1);
-      item.deleted = true;
-      this.$emit("addRowLotGroup", this.lots);
-    },
-    clickCancelSubmit: function clickCancelSubmit() {
-      var _this2 = this;
-
-      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee3() {
-        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee3$(_context3) {
-          while (1) {
-            switch (_context3.prev = _context3.next) {
-              case 0:
-                _this2.$emit("addRowLotGroup", []);
-
-                _context3.next = 3;
-                return _this2.$emit("update:showDialog", false);
-
-              case 3:
-              case "end":
-                return _context3.stop();
-            }
-          }
-        }, _callee3);
-      }))();
-    },
-    close: function close() {
-      this.$emit("update:showDialog", false);
-    }
-  }
-});
-
-/***/ }),
-
-/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/js/views/documents/partials/options.vue":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator__ = __webpack_require__("./node_modules/@babel/runtime/regenerator/index.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator__);
-
-
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-/* harmony default export */ __webpack_exports__["default"] = ({
-  props: ["company", "showDialog", "recordId", "configuration", "showClose", "isContingency", "generatDispatch", "dispatchId", "editDocument", "print"],
-  data: function data() {
-    return {
-      titleDialog: null,
-      loading: false,
-      resource: "documents",
-      errors: {},
-      form: {},
-      // company: {},
-      locked_emission: {},
-      loading_print: false,
-      message: "",
-      sender: null
-    };
-  },
-  created: function created() {
-    var _this = this;
-
-    return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee() {
-      return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee$(_context) {
-        while (1) {
-          switch (_context.prev = _context.next) {
-            case 0:
-              _this.initForm();
-
-              _this.socketWhatsappConfig();
-
-              qz.security.setCertificatePromise(function (resolve, reject) {
-                _this.$http.get("/api/qz/crt/override", {
-                  responseType: "text"
-                }).then(function (response) {
-                  resolve(response.data);
-                })["catch"](function (error) {
-                  reject(error.data);
-                });
-              });
-              qz.security.setSignaturePromise(function (toSign) {
-                return function (resolve, reject) {
-                  _this.$http.post("/api/qz/signing", {
-                    request: toSign
-                  }).then(function (response) {
-                    resolve(response.data);
-                  })["catch"](function (error) {
-                    reject(error.data);
-                  });
-                };
-              }); // await this.$http.get(`/companies/record`).then(response => {
-              //     if (response.data !== "") {
-              //         this.company = response.data.data;
-              //     }
-              // });
-
-            case 4:
-            case "end":
-              return _context.stop();
-          }
-        }
-      }, _callee);
-    }))();
-  },
-  mounted: function mounted() {},
-  methods: {
-    socketWhatsappConfig: function socketWhatsappConfig() {
-      var _this2 = this;
-
-      var hostName = window.location.hostname;
-      var url = "https://".concat(hostName);
-      this.sender = hostName.replace(/https?\:\/\//, "").replace("/", "").split(".").join("");
-
-      try {
-        this.socket = io.connect(this.$socketUrl);
-      } catch (e) {
-        console.log(e);
+        return;
       }
 
-      this.socket.on("ready", function (message) {
-        _this2.showMessage(message);
-      });
-      this.socket.on("authenticated", function (_ref) {
-        var message = _ref.message,
-            sender = _ref.sender;
-        _this2.sender = sender;
-        console.log(sender, " xddd");
+      this.$toast.error('Error al subir el archivo');
+      this.imageUrl = '';
+    } //            closed() {
+    //                this.dialogVisible = false;
+    //
+    //                if (this.load) location.href = this.url;
+    //            }
 
-        _this2.showMessage(message);
-      });
-      this.socket.on("connected", function (_ref2) {
-        var message = _ref2.message;
-
-        // this.$message.success(message);
-        _this2.socket.emit("getStatus", url);
-      });
-      this.socket.on("setStatus", function (_ref3) {
-        var status = _ref3.status,
-            sender = _ref3.sender;
-        _this2.sender = sender || 'sdrimsac'; // if (!status) {
-        //     this.sender = "sdrimsac";
-        //     this.$message.warning("Sesión iniciada con SDRIMSAC");
-        // } else {
-        //     this.sender = sender;
-        //     this.$message.success("Whatsapp Listo!");
-        // }
-      }); //MessageResponse
-    },
-    clickSendWhatsapp: function clickSendWhatsapp() {
-      var _this3 = this;
-
-      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee2() {
-        var formWhatsapp, response;
-        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee2$(_context2) {
-          while (1) {
-            switch (_context2.prev = _context2.next) {
-              case 0:
-                if (!(_this3.form.customer_telephone != null)) {
-                  _context2.next = 22;
-                  break;
-                }
-
-                formWhatsapp = {
-                  id: _this3.recordId,
-                  sender: _this3.sender,
-                  document_id: _this3.recordId,
-                  document_type_id: _this3.form.document_type_id,
-                  customer_telephone: _this3.form.customer_telephone,
-                  mensaje: "Su comprobante de pago electrónico " + _this3.form.number + " por S/" + _this3.form.total + " de *" + _this3.form.establishment_description + "*, ha sido generado correctamente a través del facturador electrónico de " + "*" + _this3.$desarrollador + "*"
-                };
-                _context2.prev = 2;
-                _this3.loading = true;
-                _context2.next = 6;
-                return _this3.$http.post("/whatsapp", formWhatsapp);
-
-              case 6:
-                response = _context2.sent;
-
-                if (response.status == 200) {
-                  _this3.$toast.success("Mensaje enviado");
-
-                  _this3.loading = false;
-                }
-
-                if (!_this3.configuration.xml_whatsapp) {
-                  _context2.next = 14;
-                  break;
-                }
-
-                formWhatsapp.xml = true;
-                _context2.next = 12;
-                return _this3.$http.post("/whatsapp", formWhatsapp);
-
-              case 12:
-                response = _context2.sent;
-
-                if (response.status == 200) {
-                  _this3.$toast.success("Mensaje enviado");
-
-                  _this3.loading = false;
-                }
-
-              case 14:
-                _context2.next = 19;
-                break;
-
-              case 16:
-                _context2.prev = 16;
-                _context2.t0 = _context2["catch"](2);
-                console.log(_context2.t0, " error");
-
-              case 19:
-                _context2.prev = 19;
-                _this3.loading = false;
-                return _context2.finish(19);
-
-              case 22:
-              case "end":
-                return _context2.stop();
-            }
-          }
-        }, _callee2, null, [[2, 16, 19, 22]]);
-      }))();
-    },
-    initForm: function initForm() {
-      this.errors = {};
-      this.form = {
-        customer_email: null,
-        download_pdf: null,
-        external_id: null,
-        number: null,
-        image_detraction: null,
-        id: null,
-        response_message: null,
-        response_type: null,
-        customer_telephone: null,
-        message_text: null
-      };
-      this.locked_emission = {
-        success: true,
-        message: null
-      };
-    },
-    print_pdf: function print_pdf(PrinterName, FileLink) {
-      var _this4 = this;
-
-      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee3() {
-        var config, data;
-        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee3$(_context3) {
-          while (1) {
-            switch (_context3.prev = _context3.next) {
-              case 0:
-                _context3.prev = 0;
-                config = qz.configs.create(PrinterName, {
-                  scaleContent: false
-                });
-
-                if (qz.websocket.isActive()) {
-                  _context3.next = 5;
-                  break;
-                }
-
-                _context3.next = 5;
-                return qz.websocket.connect(config);
-
-              case 5:
-                data = [{
-                  type: "pdf",
-                  format: "file",
-                  data: FileLink
-                }];
-                qz.print(config, data)["catch"](function (e) {
-                  _this4.$toast.error(e.message);
-                });
-                _context3.next = 12;
-                break;
-
-              case 9:
-                _context3.prev = 9;
-                _context3.t0 = _context3["catch"](0);
-
-                _this4.$toast.error(_context3.t0.message);
-
-              case 12:
-              case "end":
-                return _context3.stop();
-            }
-          }
-        }, _callee3, null, [[0, 9]]);
-      }))();
-    },
-    create: function create() {
-      var _this5 = this;
-
-      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee4() {
-        var printer_directo, printer, formatoPdf;
-        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee4$(_context4) {
-          while (1) {
-            switch (_context4.prev = _context4.next) {
-              case 0:
-                _this5.loading_print = true;
-                _this5.message = "Cargando la información del Comprobante";
-                printer_directo = null;
-                printer = null;
-                formatoPdf = null;
-                _context4.next = 7;
-                return _this5.$http.get("/".concat(_this5.resource, "/record/").concat(_this5.recordId)).then(function (response) {
-                  _this5.form = response.data.data;
-                  _this5.titleDialog = "Comprobante: " + _this5.form.number;
-                  _this5.loading_print = false; // }
-
-                  // }
-                  if (_this5.generatDispatch) window.open("/dispatches/create/".concat(_this5.form.id, "/i/").concat(_this5.dispatchId));
-                });
-
-              case 7:
-                _context4.next = 9;
-                return _this5.$http.get("/".concat(_this5.resource, "/locked_emission")).then(function (response) {
-                  _this5.locked_emission = response.data;
-                });
-
-              case 9:
-              case "end":
-                return _context4.stop();
-            }
-          }
-        }, _callee4);
-      }))();
-    },
-    clickPrintPos: function clickPrintPos(printerName, formatoPdf) {
-      var _this6 = this;
-
-      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee6() {
-        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee6$(_context6) {
-          while (1) {
-            switch (_context6.prev = _context6.next) {
-              case 0:
-                _this6.$confirm("Elija una de las opciones", "Imprimir", {
-                  confirmButtonText: "Impresión directa",
-                  cancelButtonText: "Descargar PDF",
-                  type: "warning"
-                }).then( /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee5() {
-                  var paperConfig, partsUrl, document, isTicket, isA4, isA5, tipoBandejaImpresora, orientation, a5_orientation, margins, config, data;
-                  return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee5$(_context5) {
-                    while (1) {
-                      switch (_context5.prev = _context5.next) {
-                        case 0:
-                          _context5.prev = 0;
-                          paperConfig = {
-                            scaleContent: false
-                          };
-                          partsUrl = formatoPdf.split("/");
-                          document = partsUrl[partsUrl.length - 1];
-                          isTicket = document.toLowerCase().includes("ticket");
-                          isA4 = document.toLowerCase().includes("a4");
-                          isA5 = document.toLowerCase().includes("a5");
-                          console.log(_this6.configuration, " configuraccion");
-                          tipoBandejaImpresora = _this6.configuration.new_old_printer;
-
-                          if (isA4) {
-                            if (tipoBandejaImpresora == 1) {
-                              paperConfig.density = 700;
-                              paperConfig.orientation = "portrait";
-                            } else {
-                              paperConfig.density = 350;
-                              paperConfig.orientation = "portrait";
-                            }
-                          } else {
-                            orientation = "portrait";
-
-                            if (isA5) {
-                              a5_orientation = _this6.configuration.a5_orientation;
-                              orientation = a5_orientation ? "landscape" : "portrait";
-                            }
-
-                            if (!isTicket && tipoBandejaImpresora == 1) {
-                              //opciones que permiten hacer una impresion correcta en impresoras nuevas
-                              paperConfig.density = 600;
-                              paperConfig.orientation = orientation;
-                              paperConfig.margins = {
-                                left: 2
-                              };
-                            } else if (!isTicket && tipoBandejaImpresora == 0) {
-                              paperConfig.density = 350;
-                              paperConfig.orientation = orientation;
-                              margins = {};
-
-                              if (orientation == "landscape") {
-                                margins = {
-                                  top: 1.1,
-                                  left: 0.95,
-                                  right: 0.3,
-                                  bottom: 1.1
-                                };
-                              } else {
-                                margins = {
-                                  left: 1.5
-                                };
-                              }
-
-                              paperConfig.margins = margins;
-                            }
-                          }
-
-                          _this6.message = "Espere imprimiendo el Comprobante " + _this6.form.number;
-                          _this6.loading_print = true;
-                          config = qz.configs.create(printerName, paperConfig, {
-                            jobName: _this6.form.number
-                          });
-
-                          if (qz.websocket.isActive()) {
-                            _context5.next = 16;
-                            break;
-                          }
-
-                          _context5.next = 16;
-                          return qz.websocket.connect(config);
-
-                        case 16:
-                          data = [{
-                            type: "pdf",
-                            format: "file",
-                            data: formatoPdf
-                          }];
-                          qz.print(config, data)["catch"](function (e) {
-                            _this6.$toast.error(e.message);
-                          });
-                          _this6.loading_print = false;
-
-                          _this6.clickClose();
-
-                          _context5.next = 25;
-                          break;
-
-                        case 22:
-                          _context5.prev = 22;
-                          _context5.t0 = _context5["catch"](0);
-
-                          _this6.$toast.error(_context5.t0.message);
-
-                        case 25:
-                        case "end":
-                          return _context5.stop();
-                      }
-                    }
-                  }, _callee5, null, [[0, 22]]);
-                })))["catch"](function () {
-                  window.open(formatoPdf, "_blank");
-
-                  _this6.clickClose();
-                });
-
-              case 1:
-              case "end":
-                return _context6.stop();
-            }
-          }
-        }, _callee6);
-      }))();
-    },
-    clickPrint: function clickPrint(format) {
-      if (format == "a4") {
-        this.clickPrintPos(this.form.printer, this.form.print_a4);
-      }
-
-      if (format == "a5") {
-        this.clickPrintPos(this.form.printer, this.form.print_a5);
-      }
-
-      if (format == "ticket") {
-        console.log(this.form);
-        this.clickPrintPos(this.form.printer, this.form.ticket);
-      }
-
-      if (format == "ticket_50") {
-        this.clickPrintPos(this.form.printer, this.form.ticket_50);
-      }
-    },
-    clickDownloadImage: function clickDownloadImage() {
-      window.open("".concat(this.form.image_detraction), "_blank");
-    },
-    clickDownload: function clickDownload(format) {
-      window.open("".concat(this.form.download_pdf, "/").concat(format), "_blank");
-    },
-    clickSendEmail: function clickSendEmail() {
-      var _this7 = this;
-
-      this.loading = true;
-      this.$http.post("/".concat(this.resource, "/email"), {
-        customer_email: this.form.customer_email,
-        id: this.form.id
-      }).then(function (response) {
-        if (response.data.success) {
-          _this7.$toast.success("El correo fue enviado satisfactoriamente");
-        } else {
-          _this7.$toast.error("Error al enviar el correo");
-        }
-      })["catch"](function (error) {
-        if (error.response.status === 422) {
-          _this7.errors = error.response.data.errors;
-        } else {
-          _this7.$toast.error(error.response.data.message);
-        }
-      }).then(function () {
-        _this7.loading = false;
-      });
-    },
-    clickConsultCdr: function clickConsultCdr(document_id) {
-      var _this8 = this;
-
-      this.$http.get("/".concat(this.resource, "/consultarcdr/").concat(document_id)).then(function (response) {
-        if (response.data.success) {
-          _this8.$toast.success(response.data.message);
-
-          _this8.$eventHub.$emit("reloadData");
-        } else {
-          _this8.$toast.error(response.data.message);
-        }
-      })["catch"](function (error) {
-        _this8.$toast.error(error.response.data.message);
-      });
-    },
-    clickFinalize: function clickFinalize() {
-      location.href = this.isContingency ? "/contingencies" : "/".concat(this.resource);
-    },
-    clickNewDocument: function clickNewDocument() {
-      this.clickClose();
-    },
-    clickClose: function clickClose() {
-      this.$emit("update:showDialog", false);
-
-      if (this.editDocument == true) {
-        location.href = "/".concat(this.resource);
-      }
-
-      this.initForm();
-    }
-  }
-});
-
-/***/ }),
-
-/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/js/views/documents/partials/select_warehouses.vue":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator__ = __webpack_require__("./node_modules/@babel/runtime/regenerator/index.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator__);
-
-
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-/* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['showDialog', 'warehouses', 'isUpdateWarehouseId'],
-  data: function data() {
-    return {
-      showImportDialog: false,
-      resource: 'items',
-      recordId: null,
-      titleDialog: 'Almacenes/Stock',
-      my_warehouses: [],
-      warehouse_id: null
-    };
-  },
-  created: function created() {// console.log(this.typeUser)
-  },
-  methods: {
-    create: function create() {
-      var _this = this;
-
-      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee() {
-        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee$(_context) {
-          while (1) {
-            switch (_context.prev = _context.next) {
-              case 0:
-                _this.warehouse_id = null; // console.log(this.isUpdateWarehouseId)
-
-                if (!_this.isUpdateWarehouseId) {
-                  _context.next = 4;
-                  break;
-                }
-
-                _context.next = 4;
-                return _this.warehouses.forEach(function (it) {
-                  if (it.warehouse_id == _this.isUpdateWarehouseId) {
-                    it.checked = true;
-                  } else {
-                    it.checked = false;
-                  }
-                });
-
-              case 4:
-              case "end":
-                return _context.stop();
-            }
-          }
-        }, _callee);
-      }))();
-    },
-    changeWarehouse: function changeWarehouse(index) {
-      var _this2 = this;
-
-      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee2() {
-        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee2$(_context2) {
-          while (1) {
-            switch (_context2.prev = _context2.next) {
-              case 0:
-                _context2.next = 2;
-                return _this2.warehouses.forEach(function (it, ind) {
-                  // console.log(ind, index)
-                  if (ind != index) {
-                    it.checked = false;
-                  }
-                });
-
-              case 2:
-                _context2.next = 4;
-                return _this2.selectWarehouseId();
-
-              case 4:
-              case "end":
-                return _context2.stop();
-            }
-          }
-        }, _callee2);
-      }))();
-    },
-    selectWarehouseId: function selectWarehouseId() {
-      var _this3 = this;
-
-      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee3() {
-        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee3$(_context3) {
-          while (1) {
-            switch (_context3.prev = _context3.next) {
-              case 0:
-                _context3.next = 2;
-                return _this3.warehouses.forEach(function (it, ind) {
-                  if (it.checked) {
-                    _this3.warehouse_id = it.warehouse_id;
-                  }
-                });
-
-              case 2:
-              case "end":
-                return _context3.stop();
-            }
-          }
-        }, _callee3);
-      }))();
-    },
-    close: function close() {
-      var _this4 = this;
-
-      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee4() {
-        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee4$(_context4) {
-          while (1) {
-            switch (_context4.prev = _context4.next) {
-              case 0:
-                _context4.next = 2;
-                return _this4.selectWarehouseId();
-
-              case 2:
-                if (_this4.warehouse_id) {
-                  _context4.next = 4;
-                  break;
-                }
-
-                return _context4.abrupt("return", _this4.$toast.error('Debe seleccionar un almacén'));
-
-              case 4:
-                _context4.next = 6;
-                return _this4.$eventHub.$emit('selectWarehouseId', _this4.warehouse_id);
-
-              case 6:
-                _context4.next = 8;
-                return _this4.$emit('update:showDialog', false);
-
-              case 8:
-              case "end":
-                return _context4.stop();
-            }
-          }
-        }, _callee4);
-      }))();
-    }
   }
 });
 
@@ -6117,7 +2826,5100 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 /***/ }),
 
-/***/ "./node_modules/css-loader/index.js?sourceMap!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-0b847aaa\",\"scoped\":false,\"hasInlineConfig\":true}!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./resources/js/views/documents/partials/item.vue":
+/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/js/views/persons/form.vue":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator__ = __webpack_require__("./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__mixins_functions__ = __webpack_require__("./resources/js/mixins/functions.js");
+
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  mixins: [__WEBPACK_IMPORTED_MODULE_1__mixins_functions__["c" /* serviceNumber */]],
+  props: ["worker", "showDialog", "type", "recordId", "external", "document_type_id", "input_person", "user_id", "newTech"],
+  data: function data() {
+    return {
+      zones: [],
+      social_medias: [],
+      loading_submit: false,
+      titleDialog: null,
+      resource: this.worker ? "caja/worker/persons" : "persons",
+      errors: {},
+      api_service_token: false,
+      form: {},
+      countries: [],
+      all_departments: [],
+      all_provinces: [],
+      all_districts: [],
+      provinces: [],
+      districts: [],
+      locations: [],
+      person_types: [],
+      identity_document_types: [],
+      all_users: []
+    };
+  },
+  created: function created() {
+    var _this = this;
+
+    return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee() {
+      return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              console.log(_this.newTech, " a");
+              _context.next = 3;
+              return _this.initForm();
+
+            case 3:
+              _context.next = 5;
+              return _this.$http.get("/".concat(_this.resource, "/tables")).then(function (response) {
+                _this.api_service_token = response.data.api_service_token;
+                _this.social_medias = response.data.social_media;
+                _this.all_users = response.data.users;
+                _this.countries = response.data.countries;
+                _this.all_departments = response.data.departments;
+                _this.all_provinces = response.data.provinces;
+                _this.zones = response.data.zones;
+                _this.all_districts = response.data.districts;
+                _this.identity_document_types = response.data.identity_document_types;
+                _this.locations = response.data.locations;
+                _this.person_types = response.data.person_types;
+              });
+
+            case 5:
+            case "end":
+              return _context.stop();
+          }
+        }
+      }, _callee);
+    }))();
+  },
+  computed: {
+    maxLength: function maxLength() {
+      if (this.form.identity_document_type_id === "6") {
+        return 11;
+      }
+
+      if (this.form.identity_document_type_id === "1") {
+        return 8;
+      }
+    }
+  },
+  methods: {
+    nuevoMetodo: function nuevoMetodo() {
+      var admin = this.all_users.find(function (user) {
+        return user.type == "admin";
+      });
+
+      if (admin) {
+        this.form.seller_id = admin.id;
+      } else {
+        if (this.all_users.length != 0) {
+          this.form.seller_id = this.all_users[0].id;
+        }
+      }
+    },
+    initForm: function initForm() {
+      this.errors = {};
+      this.form = {
+        id: null,
+        type: this.type,
+        identity_document_type_id: "6",
+        number: "",
+        name: null,
+        trade_name: null,
+        country_id: "PE",
+        department_id: null,
+        province_id: null,
+        district_id: null,
+        address: null,
+        telephone: null,
+        condition: null,
+        state: null,
+        email: null,
+        perception_agent: false,
+        percentage_perception: 0,
+        person_type_id: null,
+        comment: null,
+        addresses: [],
+        seller_id: null
+      };
+    },
+    opened: function opened() {
+      var _this2 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee2() {
+        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                if (!(_this2.external && _this2.input_person)) {
+                  _context2.next = 8;
+                  break;
+                }
+
+                if (!(_this2.form.number.length === 8 || _this2.form.number.length === 11)) {
+                  _context2.next = 8;
+                  break;
+                }
+
+                if (!(_this2.api_service_token != false)) {
+                  _context2.next = 7;
+                  break;
+                }
+
+                _context2.next = 5;
+                return _this2.$eventHub.$emit("enableClickSearch");
+
+              case 5:
+                _context2.next = 8;
+                break;
+
+              case 7:
+                _this2.searchCustomer();
+
+              case 8:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2);
+      }))();
+    },
+    create: function create() {
+      var _this3 = this;
+
+      if (this.external) {
+        if (this.document_type_id === "01") {
+          this.form.identity_document_type_id = "6";
+        }
+
+        if (this.document_type_id === "03") {
+          this.form.identity_document_type_id = "1";
+        }
+
+        if (this.input_person) {
+          this.form.identity_document_type_id = this.input_person.identity_document_type_id ? this.input_person.identity_document_type_id : this.form.identity_document_type_id;
+          this.form.number = this.input_person.number ? this.input_person.number : "";
+        }
+      }
+
+      if (this.type == undefined) {
+        this.titleDialog = this.newTech ? "Nuevo Técnico" : "Nuevo Cliente";
+      }
+
+      if (this.type === "customers") {
+        this.titleDialog = this.recordId ? "Editar Cliente" : "Nuevo Cliente";
+      }
+
+      if (this.type === "suppliers") {
+        this.titleDialog = this.recordId ? "Editar Proveedor" : "Nuevo Proveedor";
+      }
+
+      if (this.recordId) {
+        this.$http.get("/".concat(this.resource, "/record/").concat(this.recordId)).then(function (response) {
+          _this3.form = response.data.data;
+
+          _this3.filterProvinces();
+
+          _this3.filterDistricts();
+        });
+      }
+    },
+    clickAddAddress: function clickAddAddress() {
+      /* this.form.more_address.push({
+              location_id: [],
+              address: null,
+          })*/
+      this.form.addresses.push({
+        id: null,
+        country_id: "PE",
+        location_id: [],
+        address: null,
+        email: null,
+        phone: null,
+        main: false
+      });
+    },
+    submit: function submit() {
+      var _this4 = this;
+
+      this.nuevoMetodo();
+
+      if (!this.form.seller_id) {
+        this.$toast.error("Debe seleccionar un asesor");
+        return;
+      }
+
+      if (this.form.identity_document_type_id == "6" && this.form.number.length != 11) {
+        this.$toast.error("La longitud del RUC debe ser de 11");
+        return;
+      }
+
+      if (this.form.identity_document_type_id == "1" && this.form.number.length != 8) {
+        this.$toast.error("La longitud del DNI debe ser de 8");
+        return;
+      }
+
+      this.loading_submit = true;
+      this.$http.post("/".concat(this.resource), this.form).then(function (response) {
+        if (response.data.success) {
+          _this4.$toast.success(response.data.message);
+
+          _this4.$emit("add_customer", response.data.id);
+
+          if (_this4.external) {
+            _this4.$eventHub.$emit("reloadDataPersons", response.data.id);
+          } else {
+            _this4.$eventHub.$emit("reloadData");
+          }
+
+          _this4.close();
+        } else {
+          _this4.$toast.error(response.data.message);
+        }
+      })["catch"](function (error) {
+        if (error.response.status === 422) {
+          console.log(error.response.data.errors);
+          _this4.errors = error.response.data.errors;
+        } else {
+          console.log(error);
+        }
+      }).then(function () {
+        _this4.loading_submit = false;
+      });
+    },
+    changeIdentityDocType: function changeIdentityDocType() {
+      this.recordId == null ? this.setDataDefaultCustomer() : null;
+    },
+    setDataDefaultCustomer: function setDataDefaultCustomer() {
+      if (this.form.identity_document_type_id == "0") {
+        this.form.number = "99999999";
+        this.form.name = "Clientes - Varios";
+      } else {
+        this.form.number = "";
+        this.form.name = null;
+      }
+    },
+    close: function close() {
+      this.$eventHub.$emit("initInputPerson");
+      this.$emit("update:showDialog", false);
+      this.initForm();
+    },
+    searchCustomer: function searchCustomer() {
+      this.searchServiceNumberByType();
+    },
+    searchNumber: function searchNumber(data) {
+      this.form.district_id = data.ubigeo[2];
+      this.filterDistricts();
+      this.form.name = this.form.identity_document_type_id === "1" ? data.nombre_completo : data.nombre_o_razon_social;
+      this.form.trade_name = this.form.identity_document_type_id === "6" ? data.nombre_o_razon_social : "";
+      this.form.location_id = data.ubigeo;
+      this.form.department_id = data.ubigeo ? data.ubigeo[0] : null;
+      this.form.province_id = data.ubigeo ? data.ubigeo[1] : null;
+      this.form.district_id = data.ubigeo ? data.ubigeo[2] : null;
+      this.filterProvinces();
+      this.filterDistricts();
+      this.form.address = data.direccion;
+      this.form.condition = data.condicion;
+      this.form.state = data.estado;
+    },
+    clickRemoveAddress: function clickRemoveAddress(index) {
+      this.form.addresses.splice(index, 1);
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/js/views/quotations/form_edit.vue":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator__ = __webpack_require__("./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__partials_terms_condition_vue__ = __webpack_require__("./resources/js/views/quotations/partials/terms_condition.vue");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__partials_terms_condition_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__partials_terms_condition_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__partials_item_vue__ = __webpack_require__("./resources/js/views/quotations/partials/item.vue");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__partials_item_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__partials_item_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__persons_form_vue__ = __webpack_require__("./resources/js/views/persons/form.vue");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__persons_form_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__persons_form_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__quotations_partials_options_vue__ = __webpack_require__("./resources/js/views/quotations/partials/options.vue");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__quotations_partials_options_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__quotations_partials_options_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__mixins_functions__ = __webpack_require__("./resources/js/mixins/functions.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__helpers_functions__ = __webpack_require__("./resources/js/helpers/functions.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__companies_logo_vue__ = __webpack_require__("./resources/js/views/companies/logo.vue");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__companies_logo_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_7__companies_logo_vue__);
+
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  components: {
+    QuotationFormItem: __WEBPACK_IMPORTED_MODULE_2__partials_item_vue___default.a,
+    PersonForm: __WEBPACK_IMPORTED_MODULE_3__persons_form_vue___default.a,
+    QuotationOptions: __WEBPACK_IMPORTED_MODULE_4__quotations_partials_options_vue___default.a,
+    Logo: __WEBPACK_IMPORTED_MODULE_7__companies_logo_vue___default.a,
+    TermsCondition: __WEBPACK_IMPORTED_MODULE_1__partials_terms_condition_vue___default.a
+  },
+  props: {
+    external: {
+      "default": false
+    },
+    resourceId: {
+      required: true,
+      "default": 0
+    },
+    typeUser: {
+      required: true
+    }
+  },
+  mixins: [__WEBPACK_IMPORTED_MODULE_5__mixins_functions__["b" /* functions */], __WEBPACK_IMPORTED_MODULE_5__mixins_functions__["a" /* exchangeRate */]],
+  data: function data() {
+    return {
+      showDialogTermsCondition: false,
+      type: "edit",
+      resource: "quotations",
+      showDialogAddItem: false,
+      showDialogNewPerson: false,
+      showDialogOptions: false,
+      loading_submit: false,
+      loading_form: false,
+      errors: {},
+      form: {},
+      currency_types: [],
+      discount_types: [],
+      charges_types: [],
+      all_customers: [],
+      customers: [],
+      company: null,
+      establishments: [],
+      establishment: null,
+      currency_type: {},
+      quotationNewId: null,
+      payment_method_types: [],
+      activePanel: 0,
+      payment_destinations: [],
+      loading_search: false,
+      recordItem: null
+    };
+  },
+  created: function created() {
+    var _this = this;
+
+    return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee() {
+      return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              if (!_this.external) {
+                _this.initialize();
+              }
+
+            case 1:
+            case "end":
+              return _context.stop();
+          }
+        }
+      }, _callee);
+    }))();
+  },
+  methods: {
+    initialize: function initialize() {
+      var _this2 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee2() {
+        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                _context2.next = 2;
+                return _this2.initForm();
+
+              case 2:
+                _context2.next = 4;
+                return _this2.$http.get("/".concat(_this2.resource, "/tables")).then(function (response) {
+                  _this2.currency_types = response.data.currency_types;
+                  _this2.establishments = response.data.establishments;
+                  _this2.all_customers = response.data.customers;
+                  _this2.discount_types = response.data.discount_types;
+                  _this2.charges_types = response.data.charges_types;
+                  _this2.company = response.data.company;
+                  _this2.form.currency_type_id = _this2.currency_types.length > 0 ? _this2.currency_types[0].id : null;
+                  _this2.form.establishment_id = _this2.establishments.length > 0 ? _this2.establishments[0].id : null;
+                  _this2.payment_method_types = response.data.payment_method_types;
+                  _this2.payment_destinations = response.data.payment_destinations;
+
+                  _this2.changeEstablishment();
+
+                  _this2.changeDateOfIssue();
+
+                  _this2.changeCurrencyType();
+
+                  _this2.allCustomers();
+
+                  _this2.initRecord();
+                });
+
+              case 4:
+                _this2.$eventHub.$on("reloadDataPersons", function (customer_id) {
+                  _this2.reloadDataCustomers(customer_id);
+                });
+
+                _this2.loading_form = true;
+
+              case 6:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2);
+      }))();
+    },
+    changeTermsCondition: function changeTermsCondition() {
+      if (this.form.active_terms_condition) {
+        this.showDialogTermsCondition = true;
+      } else {
+        this.form.terms_condition = null;
+      }
+    },
+    clickAddPayment: function clickAddPayment() {
+      this.form.payments.push({
+        id: null,
+        document_id: null,
+        date_of_payment: moment().format("YYYY-MM-DD"),
+        payment_method_type_id: "01",
+        reference: null,
+        payment_destination_id: "cash",
+        payment: 0
+      });
+    },
+    clickCancel: function clickCancel(index) {
+      this.form.payments.splice(index, 1);
+    },
+    getFormatUnitPriceRow: function getFormatUnitPriceRow(unit_price) {
+      return _.round(unit_price, 6); // return unit_price.toFixed(6)
+    },
+    ediItem: function ediItem(row, index) {
+      row.indexi = index;
+      this.recordItem = row;
+      this.showDialogAddItem = true;
+    },
+    changePaymentMethodType: function changePaymentMethodType() {
+      var _arguments = arguments,
+          _this3 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee3() {
+        var flag_submit, payment_method_type;
+        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                flag_submit = _arguments.length > 0 && _arguments[0] !== undefined ? _arguments[0] : true;
+                _context3.next = 3;
+                return _.find(_this3.payment_method_types, {
+                  id: _this3.form.payment_method_type_id
+                });
+
+              case 3:
+                payment_method_type = _context3.sent;
+
+                if (payment_method_type) {
+                  if (payment_method_type.number_days) {
+                    _this3.form.date_of_issue = moment().add(payment_method_type.number_days, "days").format("YYYY-MM-DD");
+
+                    _this3.changeDateOfIssue();
+                  } // else{
+                  //     if(flag_submit){
+                  //         this.form.date_of_issue = moment().format('YYYY-MM-DD')
+                  //         this.changeDateOfIssue()
+                  //     }
+                  // }
+
+                }
+
+              case 5:
+              case "end":
+                return _context3.stop();
+            }
+          }
+        }, _callee3);
+      }))();
+    },
+    initRecord: function initRecord() {
+      var _this4 = this;
+
+      this.$http.get("/".concat(this.resource, "/record/").concat(this.resourceId)).then(function (response) {
+        var dato = response.data.data.quotation; //  console.log(dato)
+
+        _this4.form.id = dato.id;
+        _this4.form.customer_id = dato.customer_id;
+        _this4.form.currency_type_id = dato.currency_type_id;
+        _this4.form.payment_method_type_id = dato.payment_method_type_id;
+        _this4.form.date_of_due = dato.date_of_due;
+        _this4.form.date_of_issue = dato.date_of_issue;
+        _this4.form.delivery_date = dato.delivery_date;
+        _this4.form.exchange_rate_sale = dato.exchange_rate_sale;
+        _this4.form.description = dato.description;
+        _this4.form.shipping_address = dato.shipping_address;
+        _this4.form.account_number = dato.account_number;
+        _this4.form.terms_condition = dato.terms_condition;
+        _this4.form.active_terms_condition = dato.terms_condition ? true : false;
+        _this4.form.items = dato.items;
+        _this4.form.payments = dato.payments;
+
+        _this4.calculateTotal(); //console.log(response.data)
+
+      });
+    },
+    searchRemoteCustomers: function searchRemoteCustomers(input) {
+      var _this5 = this;
+
+      if (input.length > 0) {
+        this.loading_search = true;
+        var parameters = "input=".concat(input);
+        this.$http.get("/".concat(this.resource, "/search/customers?").concat(parameters)).then(function (response) {
+          _this5.customers = response.data.customers;
+          _this5.loading_search = false;
+
+          if (_this5.customers.length == 0) {
+            _this5.allCustomers();
+          }
+        });
+      } else {
+        this.allCustomers();
+      }
+    },
+    initForm: function initForm() {
+      this.errors = {};
+      this.form = {
+        id: 0,
+        description: "",
+        prefix: "COT",
+        establishment_id: null,
+        date_of_issue: moment().format("YYYY-MM-DD"),
+        time_of_issue: moment().format("HH:mm:ss"),
+        customer_id: null,
+        currency_type_id: null,
+        purchase_order: null,
+        exchange_rate_sale: 0,
+        total_prepayment: 0,
+        total_charge: 0,
+        total_discount: 0,
+        total_exportation: 0,
+        total_free: 0,
+        total_taxed: 0,
+        total_unaffected: 0,
+        total_exonerated: 0,
+        total_igv: 0,
+        total_base_isc: 0,
+        total_isc: 0,
+        total_base_other_taxes: 0,
+        total_other_taxes: 0,
+        total_taxes: 0,
+        total_value: 0,
+        total: 0,
+        payment_method_type_id: null,
+        operation_type_id: null,
+        date_of_due: moment().format("YYYY-MM-DD"),
+        delivery_date: null,
+        items: [],
+        charges: [],
+        discounts: [],
+        attributes: [],
+        guides: [],
+        shipping_address: null,
+        additional_information: null,
+        account_number: null,
+        terms_condition: null,
+        active_terms_condition: false,
+        payments: [],
+        actions: {
+          format_pdf: "a4"
+        }
+      };
+      this.clickAddPayment();
+    },
+    resetForm: function resetForm() {
+      this.activePanel = 0;
+      this.initForm();
+      this.form.currency_type_id = this.currency_types.length > 0 ? this.currency_types[0].id : null;
+      this.form.establishment_id = this.establishments.length > 0 ? this.establishments[0].id : null;
+      this.changeEstablishment();
+      this.changeDateOfIssue();
+      this.changeCurrencyType();
+      this.allCustomers();
+    },
+    changeEstablishment: function changeEstablishment() {
+      this.establishment = _.find(this.establishments, {
+        id: this.form.establishment_id
+      });
+    },
+    cleanCustomer: function cleanCustomer() {
+      this.form.customer_id = null;
+    },
+    changeDateOfIssue: function changeDateOfIssue() {
+      var _this6 = this;
+
+      this.form.date_of_due = this.form.date_of_issue;
+      this.searchExchangeRateByDate(this.form.date_of_issue).then(function (response) {
+        _this6.form.exchange_rate_sale = response;
+      });
+    },
+    allCustomers: function allCustomers() {
+      this.customers = this.all_customers;
+    },
+    addRow: function addRow(row) {
+      if (this.recordItem) {
+        //this.form.items.$set(this.recordItem.indexi, row)
+        this.form.items[this.recordItem.indexi] = row;
+        this.recordItem = null;
+      } else {
+        this.form.items.push(JSON.parse(JSON.stringify(row)));
+      }
+
+      this.calculateTotal();
+    },
+    clickRemoveItem: function clickRemoveItem(index) {
+      this.form.items.splice(index, 1);
+      this.calculateTotal();
+    },
+    changeCurrencyType: function changeCurrencyType() {
+      var _this7 = this;
+
+      this.currency_type = _.find(this.currency_types, {
+        id: this.form.currency_type_id
+      });
+      var items = [];
+      this.form.items.forEach(function (row) {
+        items.push(Object(__WEBPACK_IMPORTED_MODULE_6__helpers_functions__["a" /* calculateRowItem */])(row, _this7.form.currency_type_id, _this7.form.exchange_rate_sale));
+      });
+      this.form.items = items;
+      this.calculateTotal();
+    },
+    calculateTotal: function calculateTotal() {
+      var total_discount = 0;
+      var total_charge = 0;
+      var total_exportation = 0;
+      var total_taxed = 0;
+      var total_exonerated = 0;
+      var total_unaffected = 0;
+      var total_free = 0;
+      var total_igv = 0;
+      var total_value = 0;
+      var total = 0;
+      this.form.items.forEach(function (row) {
+        total_discount += parseFloat(row.total_discount);
+        total_charge += parseFloat(row.total_charge);
+
+        if (row.affectation_igv_type_id === "10") {
+          total_taxed += parseFloat(row.total_value);
+        }
+
+        if (row.affectation_igv_type_id === "20") {
+          total_exonerated += parseFloat(row.total_value);
+        }
+
+        if (row.affectation_igv_type_id === "30") {
+          total_unaffected += parseFloat(row.total_value);
+        }
+
+        if (row.affectation_igv_type_id === "40") {
+          total_exportation += parseFloat(row.total_value);
+        }
+
+        if (["10", "20", "30", "40"].indexOf(row.affectation_igv_type_id) < 0) {
+          total_free += parseFloat(row.total_value);
+        }
+
+        if (["10", "20", "30", "40"].indexOf(row.affectation_igv_type_id) > -1) {
+          total_igv += parseFloat(row.total_igv);
+          total += parseFloat(row.total);
+        }
+
+        total_value += parseFloat(row.total_value);
+      });
+      this.form.total_exportation = _.round(total_exportation, 2);
+      this.form.total_taxed = _.round(total_taxed, 2);
+      this.form.total_exonerated = _.round(total_exonerated, 2);
+      this.form.total_unaffected = _.round(total_unaffected, 2);
+      this.form.total_free = _.round(total_free, 2);
+      this.form.total_igv = _.round(total_igv, 2);
+      this.form.total_value = _.round(total_value, 2);
+      this.form.total_taxes = _.round(total_igv, 2);
+      this.form.total = _.round(total, 2);
+    },
+    validate_payments: function validate_payments() {
+      //eliminando items de pagos
+      for (var index = 0; index < this.form.payments.length; index++) {
+        if (parseFloat(this.form.payments[index].payment) === 0) this.form.payments.splice(index, 1);
+      }
+
+      var error_by_item = 0;
+      var acum_total = 0;
+      this.form.payments.forEach(function (item) {
+        acum_total += parseFloat(item.payment);
+        if (item.payment <= 0 || item.payment == null) error_by_item++;
+      });
+      return {
+        error_by_item: error_by_item,
+        acum_total: acum_total
+      };
+    },
+    submit: function submit() {
+      var _this8 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee4() {
+        var validate;
+        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee4$(_context4) {
+          while (1) {
+            switch (_context4.prev = _context4.next) {
+              case 0:
+                _context4.next = 2;
+                return _this8.validate_payments();
+
+              case 2:
+                validate = _context4.sent;
+
+                if (!(validate.acum_total > parseFloat(_this8.form.total) || validate.error_by_item > 0)) {
+                  _context4.next = 5;
+                  break;
+                }
+
+                return _context4.abrupt("return", _this8.$message.error("Los montos ingresados superan al monto a pagar o son incorrectos"));
+
+              case 5:
+                if (!(_this8.form.date_of_issue > _this8.form.date_of_due)) {
+                  _context4.next = 7;
+                  break;
+                }
+
+                return _context4.abrupt("return", _this8.$message.error("La fecha de emisión no puede ser posterior a la de vencimiento"));
+
+              case 7:
+                if (!(_this8.form.date_of_issue > _this8.form.delivery_date)) {
+                  _context4.next = 9;
+                  break;
+                }
+
+                return _context4.abrupt("return", _this8.$message.error("La fecha de emisión no puede ser posterior a la de entrega"));
+
+              case 9:
+                _this8.loading_submit = true;
+                _context4.next = 12;
+                return _this8.$http.post("/".concat(_this8.resource, "/update"), _this8.form).then(function (response) {
+                  if (response.data.success) {
+                    _this8.resetForm();
+
+                    _this8.quotationNewId = response.data.data.id;
+
+                    _this8.$message.success("Se guardaron los cambios correctamente.");
+
+                    if (_this8.external) {
+                      _this8.$emit("close");
+                    } else {
+                      _this8.showDialogOptions = true;
+                    }
+                  } else {
+                    _this8.$message.error(response.data.message);
+                  }
+                })["catch"](function (error) {
+                  if (error.response.status === 422) {
+                    _this8.errors = error.response.data;
+                  } else {
+                    _this8.$message.error(error.response.data.message);
+                  }
+                }).then(function () {
+                  _this8.loading_submit = false;
+                });
+
+              case 12:
+              case "end":
+                return _context4.stop();
+            }
+          }
+        }, _callee4);
+      }))();
+    },
+    close: function close() {
+      if (this.external) {
+        this.$emit("close");
+      } else {
+        location.href = "/quotations";
+      }
+    },
+    reloadDataCustomers: function reloadDataCustomers(customer_id) {
+      var _this9 = this;
+
+      this.$http.get("/".concat(this.resource, "/search/customer/").concat(customer_id)).then(function (response) {
+        _this9.customers = response.data.customers;
+        _this9.form.customer_id = customer_id;
+      });
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/js/views/quotations/partials/item.vue":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator__ = __webpack_require__("./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__items_form_vue__ = __webpack_require__("./resources/js/views/items/form.vue");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__items_form_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__items_form_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lots_group_vue__ = __webpack_require__("./resources/js/views/quotations/partials/lots_group.vue");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__lots_group_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__lots_group_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__helpers_functions__ = __webpack_require__("./resources/js/helpers/functions.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__select_warehouses_vue__ = __webpack_require__("./resources/js/views/quotations/partials/select_warehouses.vue");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__select_warehouses_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__select_warehouses_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__lots_vue__ = __webpack_require__("./resources/js/views/quotations/partials/lots.vue");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__lots_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5__lots_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__ckeditor_ckeditor5_build_classic__ = __webpack_require__("./node_modules/@ckeditor/ckeditor5-build-classic/build/ckeditor.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__ckeditor_ckeditor5_build_classic___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6__ckeditor_ckeditor5_build_classic__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_vue_ckeditor5__ = __webpack_require__("./node_modules/vue-ckeditor5/dist/vue-ckeditor5.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7_vue_ckeditor5___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_7_vue_ckeditor5__);
+
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: ["recordItem", "showDialog", "operationTypeId", "currencyTypeIdActive", "exchangeRateSale", "typeUser", "isEditItemNote", "configuration", "restringir_stock"],
+  components: {
+    ItemForm: __WEBPACK_IMPORTED_MODULE_1__items_form_vue___default.a,
+    WarehousesDetail: __WEBPACK_IMPORTED_MODULE_4__select_warehouses_vue___default.a,
+    LotsGroup: __WEBPACK_IMPORTED_MODULE_2__lots_group_vue___default.a,
+    SelectLotsForm: __WEBPACK_IMPORTED_MODULE_5__lots_vue___default.a,
+    "vue-ckeditor": __WEBPACK_IMPORTED_MODULE_7_vue_ckeditor5___default.a.component
+  },
+  data: function data() {
+    return {
+      loading_search: false,
+      titleAction: "",
+      is_client: false,
+      titleDialog: "",
+      resource: "documents",
+      showDialogNewItem: false,
+      has_list_prices: false,
+      errors: {},
+      form: {},
+      all_items: [],
+      items: [],
+      items_select: [],
+      operation_types: [],
+      all_affectation_igv_types: [],
+      affectation_igv_types: [],
+      system_isc_types: [],
+      discount_types: [],
+      charge_types: [],
+      attribute_types: [],
+      use_price: 1,
+      change_affectation_igv_type_id: false,
+      activePanel: 0,
+      total_item: 0,
+      item_unit_types: [],
+      showWarehousesDetail: false,
+      warehousesDetail: [],
+      showListStock: false,
+      search_item_by_barcode: false,
+      isUpdateWarehouseId: null,
+      showDialogLots: false,
+      showDialogSelectLots: false,
+      lots: [],
+      item_select: null,
+      agregar_item: false,
+      form_control: {},
+      editors: {
+        classic: __WEBPACK_IMPORTED_MODULE_6__ckeditor_ckeditor5_build_classic___default.a
+      } //item_unit_type: {}
+
+    };
+  },
+  created: function created() {
+    var _this = this;
+
+    return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee() {
+      return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              _this.initForm();
+
+              _this.$http.get("/".concat(_this.resource, "/item/tables")).then(function (response) {
+                _this.all_items = response.data.items;
+                _this.operation_types = response.data.operation_types;
+                _this.all_affectation_igv_types = response.data.affectation_igv_types;
+                _this.affectation_igv_types = response.data.affectation_igv_types;
+                _this.system_isc_types = response.data.system_isc_types;
+                _this.discount_types = response.data.discount_types;
+                _this.charge_types = response.data.charge_types;
+                _this.attribute_types = response.data.attribute_types;
+                _this.is_client = response.data.is_client; //  this.restringir_stock= response.data.restringir_stock;
+
+                _this.filterItems();
+              });
+
+              _this.$eventHub.$on("reloadDataItems", function (item_id) {
+                _this.reloadDataItems(item_id);
+              });
+
+              _this.$eventHub.$on("selectWarehouseId", function (warehouse_id) {
+                // console.log(warehouse_id)
+                _this.form.warehouse_id = warehouse_id;
+              });
+
+            case 4:
+            case "end":
+              return _context.stop();
+          }
+        }
+      }, _callee);
+    }))();
+  },
+  methods: {
+    searchRemoteItems: function searchRemoteItems(input) {
+      var _this2 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee2() {
+        var parameters;
+        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                if (!(input.length > 2)) {
+                  _context2.next = 7;
+                  break;
+                }
+
+                _this2.loading_search = true;
+                parameters = "input=".concat(input);
+                _context2.next = 5;
+                return _this2.$http.get("/".concat(_this2.resource, "/search-items/?").concat(parameters)).then(function (response) {
+                  _this2.items_select = response.data[0];
+                  _this2.items = response.data;
+                  _this2.loading_search = false;
+
+                  _this2.enabledSearchItemsBarcode();
+
+                  if (_this2.items.length == 0) {
+                    _this2.filterItems();
+                  }
+                });
+
+              case 5:
+                _context2.next = 9;
+                break;
+
+              case 7:
+                _context2.next = 9;
+                return _this2.filterItems();
+
+              case 9:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2);
+      }))();
+    },
+    focusProducto: function focusProducto() {
+      this.calculateQuantity();
+      this.$nextTick(function () {
+        this.$refs.producto.$el.querySelector("input").focus();
+      });
+    },
+    addNewItem: function addNewItem(data) {
+      this.form.item_id = data.id;
+      this.items.push(data);
+      this.searchRemoteItems(data.description);
+      this.form.item = _.find(this.items, {
+        id: data.id
+      });
+
+      var precios = _.filter(this.items, {
+        id: this.form.item_id
+      })[0];
+
+      this.form.unit_price_value = this.form.item.sale_unit_price; ///////////////////////////////////////////////////////////////////////////
+
+      this.lots = this.form.item.lots;
+      this.form.stock_disp = this.form.item.stock;
+      this.form.has_igv = this.form.item.has_igv;
+      this.form.affectation_igv_type_id = this.form.item.sale_affectation_igv_type_id;
+      this.form.quantity = 1; ///////////////////////////////////////////////////////////////////////////
+
+      this.cleanTotalItem();
+      this.showListStock = true;
+      this.calculateQuantity(); //this.changeItem()
+    },
+    focusPrecio: function focusPrecio() {
+      //   this.$refs.precio.$el.getElementsByTagName('input')[0].focus()
+      //  this.$refs.precio.$el.querySelector('input').focus();
+      this.calculateQuantity();
+      this.$nextTick(function () {
+        this.$refs.precio.$el.querySelector("input").focus();
+      });
+    },
+    stock: function stock() {
+      var _this3 = this;
+
+      if (this.form.stock == "Si") {
+        this.form_control.stock_control = true;
+      } else {
+        this.form_control.stock_control = false;
+      }
+
+      this.$http.post("/inventories/configuration", this.form_control).then(function (response) {
+        if (response.data.success) {
+          _this3.$message.success(response.data.message);
+        } else {
+          _this3.$message.error(response.data.message);
+        }
+      })["catch"](function (error) {
+        if (error.response.status === 422) {
+          _this3.errors = error.response.data.errors;
+        } else {
+          console.log(error);
+        }
+      }).then(function () {//this.loading_submit = false;
+      });
+    },
+    filterItems: function filterItems() {
+      this.items = this.all_items;
+    },
+    enabledSearchItemsBarcode: function enabledSearchItemsBarcode() {
+      if (this.search_item_by_barcode) {
+        if (this.items.length == 1) {
+          this.form.item_id = this.items[0].id;
+          this.changeItem();
+        }
+      }
+    },
+    filterMethod: function filterMethod(query) {
+      var item = _.find(this.items, {
+        internal_id: query
+      });
+
+      if (item) {
+        this.form.item_id = item.id;
+        this.changeItem();
+      } // console.log(item)
+
+    },
+    clickWarehouseDetail: function clickWarehouseDetail() {
+      if (!this.form.item_id) {
+        return this.$message.error("Seleccione un item");
+      }
+
+      var item = _.find(this.items, {
+        id: this.form.item_id
+      });
+
+      this.warehousesDetail = item.warehouses;
+      this.showWarehousesDetail = true;
+    },
+    // filterItems(){
+    //     this.items = this.items.filter(item => item.warehouses.length >0)
+    // },
+    initForm: function initForm() {
+      this.errors = {};
+      this.form = {
+        // category_id: [1],
+        // edit: false,
+        item_id: null,
+        item: {},
+        affectation_igv_type_id: null,
+        affectation_igv_type: {},
+        has_isc: false,
+        system_isc_type_id: null,
+        percentage_isc: 0,
+        suggested_price: 0,
+        quantity: 1,
+        unit_price_value: 0,
+        input_unit_price_value: 0,
+        unit_price: 0,
+        charges: [],
+        discounts: [],
+        attributes: [],
+        has_igv: null,
+        item_unit_types: [],
+        has_plastic_bag_taxes: false,
+        warehouse_id: null,
+        lots_group: [],
+        IdLoteSelected: null,
+        stock: "Si",
+        stock_disp: null,
+        name_product_pdf: ""
+      };
+      this.activePanel = 0;
+      this.total_item = 0;
+      this.item_unit_type = {};
+      this.has_list_prices = false;
+    },
+    // initializeFields() {
+    //     this.form.affectation_igv_type_id = this.affectation_igv_types[0].id
+    // },
+    create: function create() {
+      var _this4 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee3() {
+        var operation_type;
+        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                _this4.titleDialog = _this4.recordItem ? " Modificar Producto o Servicio" : " Agregar Producto o Servicio";
+                _this4.titleAction = _this4.recordItem ? " Modificar" : "Agregar";
+                _context3.next = 4;
+                return _.find(_this4.operation_types, {
+                  id: _this4.operationTypeId
+                });
+
+              case 4:
+                operation_type = _context3.sent;
+
+                if (!_this4.recordItem) {
+                  _context3.next = 26;
+                  break;
+                }
+
+                _context3.next = 8;
+                return _this4.recordItem.item_id;
+
+              case 8:
+                _this4.form.item_id = _context3.sent;
+                _this4.form.unit_price = _this4.recordItem.unit_price;
+                _context3.next = 12;
+                return _this4.searchRemoteItems(_this4.recordItem.item.description);
+
+              case 12:
+                _context3.next = 14;
+                return _this4.changeItem();
+
+              case 14:
+                _this4.form.quantity = _this4.recordItem.quantity;
+                _this4.form.unit_price_value = _this4.recordItem.unit_price;
+                _this4.form.amount = _.round(_this4.form.quantity * _this4.form.unit_price_value, 4);
+                _this4.form.stock = _this4.recordItem.item.is_stock;
+                _this4.form.has_plastic_bag_taxes = _this4.recordItem.total_plastic_bag_taxes > 0 ? true : false;
+                _this4.form.warehouse_id = _this4.recordItem.warehouse_id;
+                _this4.isUpdateWarehouseId = _this4.recordItem.warehouse_id;
+                _this4.item_select = _this4.recordItem;
+
+                if (_this4.isEditItemNote) {
+                  _this4.form.item.currency_type_id = _this4.currencyTypeIdActive;
+                  _this4.form.item.currency_type_symbol = _this4.currencyTypeIdActive == "PEN" ? "S/" : "$";
+                }
+
+                _this4.calculateQuantity();
+
+                _context3.next = 27;
+                break;
+
+              case 26:
+                _this4.isUpdateWarehouseId = null;
+
+              case 27:
+              case "end":
+                return _context3.stop();
+            }
+          }
+        }, _callee3);
+      }))();
+    },
+    clickAddDiscount: function clickAddDiscount() {
+      this.form.discounts.push({
+        discount_type_id: null,
+        discount_type: null,
+        description: null,
+        percentage: 0,
+        factor: 0,
+        amount: 0,
+        base: 0,
+        is_amount: false
+      });
+    },
+    clickRemoveDiscount: function clickRemoveDiscount(index) {
+      this.form.discounts.splice(index, 1);
+    },
+    changeDiscountType: function changeDiscountType(index) {
+      var discount_type_id = this.form.discounts[index].discount_type_id;
+      this.form.discounts[index].discount_type = _.find(this.discount_types, {
+        id: discount_type_id
+      });
+    },
+    clickAddCharge: function clickAddCharge() {
+      this.form.charges.push({
+        charge_type_id: null,
+        charge_type: null,
+        description: null,
+        percentage: 0,
+        factor: 0,
+        amount: 0,
+        base: 0
+      });
+    },
+    clickRemoveCharge: function clickRemoveCharge(index) {
+      this.form.charges.splice(index, 1);
+    },
+    changeChargeType: function changeChargeType(index) {
+      var charge_type_id = this.form.charges[index].charge_type_id;
+      this.form.charges[index].charge_type = _.find(this.charge_types, {
+        id: charge_type_id
+      });
+    },
+    clickAddAttribute: function clickAddAttribute() {
+      this.form.attributes.push({
+        attribute_type_id: null,
+        description: null,
+        value: null,
+        start_date: null,
+        end_date: null,
+        duration: null
+      });
+    },
+    clickRemoveAttribute: function clickRemoveAttribute(index) {
+      this.form.attributes.splice(index, 1);
+    },
+    changeAttributeType: function changeAttributeType(index) {
+      var attribute_type_id = this.form.attributes[index].attribute_type_id;
+
+      var attribute_type = _.find(this.attribute_types, {
+        id: attribute_type_id
+      });
+
+      this.form.attributes[index].description = attribute_type.description;
+      this.inputAttribute(index);
+    },
+    inputAttribute: function inputAttribute(index) {
+      var value = this.form.attributes[index].value;
+      var hotelAttributes = ["4003", "4004"];
+      this.form.attributes[index].start_date = hotelAttributes.includes(this.form.attributes[index].attribute_type_id) ? value : null;
+    },
+    close: function close() {
+      this.initForm();
+      this.$emit("update:showDialog", false);
+    },
+    changeItem: function changeItem() {
+      var _this5 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee4() {
+        var precios, contex;
+        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee4$(_context4) {
+          while (1) {
+            switch (_context4.prev = _context4.next) {
+              case 0:
+                if (_this5.recordItem) {
+                  _this5.form.item = _this5.items_select;
+                } else {
+                  _this5.form.item = _.find(_this5.items, {
+                    id: _this5.form.item_id
+                  });
+                }
+
+                precios = _.filter(_this5.items, {
+                  id: _this5.form.item_id
+                })[0];
+                _this5.form.item_unit_types = precios.item_unit_types;
+                _this5.form.unit_price_value = _this5.form.item.sale_unit_price;
+                _this5.lots = _this5.form.item.lots;
+                _this5.form.stock_disp = _this5.form.item.stock;
+                _this5.form.has_igv = _this5.form.item.has_igv;
+                _this5.form.affectation_igv_type_id = _this5.form.item.sale_affectation_igv_type_id;
+                _this5.form.quantity = 1;
+
+                _this5.cleanTotalItem();
+
+                _this5.showListStock = true;
+
+                if (_this5.form.item.attributes.length > 0) {
+                  contex = _this5;
+
+                  _this5.form.item.attributes.forEach(function (row) {
+                    contex.form.attributes.push({
+                      attribute_type_id: row.attribute_type_id,
+                      description: row.description,
+                      value: row.value,
+                      start_date: row.start_date,
+                      end_date: row.end_date,
+                      duration: row.duration
+                    });
+                  });
+                }
+
+                _this5.form.lots_group = _this5.form.item.lots_group;
+
+                _this5.calculateQuantity(); // if (!this.recordItem) {
+                //     await this.form.item.warehouses.forEach(element => {
+                //         if(element.checked){
+                //             this.form.warehouse_id = element.warehouse_id
+                //         }
+                //     });
+                // }
+                // this.item_unit_types = this.form.item.item_unit_types;
+                // (this.item_unit_types.length > 0) ? this.has_list_prices = true : this.has_list_prices = false;
+
+
+              case 14:
+              case "end":
+                return _context4.stop();
+            }
+          }
+        }, _callee4);
+      }))();
+    },
+    focusTotalItem: function focusTotalItem(change) {
+      //  if(!change && this.form.item.calculate_quantity) {
+      this.$refs.cantidad.$el.getElementsByTagName("input")[0].focus(); //this.total_item = this.form.unit_price_value
+      // }
+    },
+    calculateQuantity: function calculateQuantity() {
+      // debugger
+      if (this.restringir_stock === true && this.form.item_id !== null) {
+        if (this.form.stock_disp < this.form.quantity && this.form.stock == "Si" && this.form.item_id != null) {
+          this.agregar_item = false;
+          this.$message.error("Stock Insuficiente...");
+        } else {
+          this.agregar_item = true;
+        }
+      } else {
+        this.agregar_item = true;
+      }
+
+      if (this.form.item.calculate_quantity) {
+        this.form.quantity = _.round(this.total_item / this.form.unit_price_value, 4);
+      }
+
+      this.form.amount = _.round(this.form.quantity * this.form.unit_price_value, 4);
+    },
+    cleanTotalItem: function cleanTotalItem() {
+      this.total_item = null;
+    },
+    clickAddItem: function clickAddItem() {
+      var _this6 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee5() {
+        var unit_price, IdLoteSelected, select_lots, un_select_lots;
+        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee5$(_context5) {
+          while (1) {
+            switch (_context5.prev = _context5.next) {
+              case 0:
+                _this6.form.item.is_stock = _this6.form.stock;
+
+                if (!_this6.form.item.lots_enabled) {
+                  _context5.next = 4;
+                  break;
+                }
+
+                if (_this6.form.IdLoteSelected) {
+                  _context5.next = 4;
+                  break;
+                }
+
+                return _context5.abrupt("return", _this6.$message.error("Debe seleccionar un lote."));
+
+              case 4:
+                if (!_this6.validateTotalItem().total_item) {
+                  _context5.next = 6;
+                  break;
+                }
+
+                return _context5.abrupt("return");
+
+              case 6:
+                unit_price = _this6.form.has_igv ? _this6.form.unit_price_value : _this6.form.unit_price_value * 1.18;
+                _this6.form.input_unit_price_value = _this6.form.unit_price_value;
+                _this6.form.unit_price = unit_price;
+                _this6.form.item.unit_price = unit_price;
+                _this6.form.item.presentation = _this6.item_unit_type;
+                _this6.form.affectation_igv_type = _.find(_this6.affectation_igv_types, {
+                  id: _this6.form.affectation_igv_type_id
+                });
+                IdLoteSelected = _this6.form.IdLoteSelected; // console.log(this.form)
+                // return
+                // console.log
+
+                _this6.row = Object(__WEBPACK_IMPORTED_MODULE_3__helpers_functions__["a" /* calculateRowItem */])(_this6.form, _this6.currencyTypeIdActive, _this6.exchangeRateSale);
+                _this6.row.item.name_product_pdf = _this6.row.name_product_pdf || "";
+                _context5.next = 17;
+                return _.filter(_this6.row.item.lots, {
+                  has_sale: true
+                });
+
+              case 17:
+                select_lots = _context5.sent;
+                _context5.next = 20;
+                return _.filter(_this6.row.item.lots, {
+                  has_sale: false
+                });
+
+              case 20:
+                un_select_lots = _context5.sent;
+
+                if (!_this6.form.item.series_enabled) {
+                  _context5.next = 24;
+                  break;
+                }
+
+                if (!(select_lots.length != _this6.form.quantity)) {
+                  _context5.next = 24;
+                  break;
+                }
+
+                return _context5.abrupt("return", _this6.$message.error("La cantidad de series seleccionadas son diferentes a la cantidad a vender"));
+
+              case 24:
+                // this.row.edit = false;
+                _this6.initForm(); //this.initializeFields()
+
+
+                if (_this6.recordItem) {
+                  _this6.row.indexi = _this6.recordItem.indexi;
+                }
+
+                _this6.row.IdLoteSelected = IdLoteSelected;
+
+                _this6.$emit("add", _this6.row);
+
+                _this6.agregar_item = false;
+
+                if (_this6.recordItem) {
+                  _this6.close();
+                }
+
+              case 30:
+              case "end":
+                return _context5.stop();
+            }
+          }
+        }, _callee5);
+      }))();
+    },
+    validateTotalItem: function validateTotalItem() {
+      this.errors = {};
+
+      if (this.form.item.calculate_quantity) {
+        if (this.total_item < 0.01) this.$set(this.errors, "total_item", ["total venta item debe ser mayor a 0.01"]);
+      }
+
+      return this.errors;
+    },
+    reloadDataItems: function reloadDataItems(item_id) {
+      var _this7 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee6() {
+        var resp, data;
+        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee6$(_context6) {
+          while (1) {
+            switch (_context6.prev = _context6.next) {
+              case 0:
+                if (item_id) {
+                  _context6.next = 4;
+                  break;
+                }
+
+                _this7.$http.get("/".concat(_this7.resource, "/table/items")).then(function (response) {
+                  _this7.items = response.data;
+                  _this7.form.item_id = item_id; // if(item_id) this.changeItem()
+                  // this.filterItems()
+                });
+
+                _context6.next = 8;
+                break;
+
+              case 4:
+                _context6.next = 6;
+                return _this7.$http.get("/".concat(_this7.resource, "/search/item/").concat(item_id));
+
+              case 6:
+                resp = _context6.sent;
+
+                if (resp.data.items.length > 0) {
+                  data = resp.data.items[0];
+                  _this7.items = resp.data.items[0];
+                  _this7.form.item_id = item_id; // this.form.item.stock=resp.data.items[0].stock
+                  // this.form.unit_price_value=resp.data.items[0].sale_unit_price
+                  // this.searchRemoteItems(resp.data.items[0].description);
+                  // this.form.item.stock=resp.data.items[0].stock
+                  // this.$refs.cantidad.$el.getElementsByTagName('input')[0].focus()
+                  // this.changeItem()
+                } //.then((response) => {
+                //  })
+
+
+              case 8:
+              case "end":
+                return _context6.stop();
+            }
+          }
+        }, _callee6);
+      }))();
+    },
+    changePresentation: function changePresentation() {
+      var price = 0;
+      this.item_unit_type = _.find(this.form.item.item_unit_types, {
+        id: this.form.item_unit_type_id
+      });
+
+      switch (this.item_unit_type.price_default) {
+        case 1:
+          price = this.item_unit_type.price1;
+          break;
+
+        case 2:
+          price = this.item_unit_type.price2;
+          break;
+
+        case 3:
+          price = this.item_unit_type.price3;
+          break;
+      }
+
+      this.form.unit_price_value = price;
+      this.form.item.unit_type_id = this.item_unit_type.unit_type_id;
+    },
+    selectedPrice: function selectedPrice(row) {
+      var valor = 0;
+
+      switch (row.price_default) {
+        case 1:
+          valor = row.price1;
+          break;
+
+        case 2:
+          valor = row.price2;
+          break;
+
+        case 3:
+          valor = row.price3;
+          break;
+      }
+
+      this.form.item_unit_type_id = row.id;
+      this.item_unit_type = row;
+      this.form.unit_price_value = valor;
+      this.form.item.unit_type_id = row.unit_type_id;
+      this.calculateQuantity();
+    },
+    addRow: function addRow(row) {// this.searchRemoteItems(row.description)
+    },
+    addRowLotGroup: function addRowLotGroup(id) {
+      this.form.IdLoteSelected = id;
+    },
+    clickLotGroup: function clickLotGroup() {
+      this.showDialogLots = true;
+    },
+    clickSelectLots: function clickSelectLots() {
+      var _this8 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee7() {
+        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee7$(_context7) {
+          while (1) {
+            switch (_context7.prev = _context7.next) {
+              case 0:
+                _this8.showDialogSelectLots = true;
+
+              case 1:
+              case "end":
+                return _context7.stop();
+            }
+          }
+        }, _callee7);
+      }))();
+    },
+    addRowSelectLot: function addRowSelectLot(lots) {
+      this.lots = lots;
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/js/views/quotations/partials/lots.vue":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator__ = __webpack_require__("./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator__);
+
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: ['showDialog', 'lots', 'stock', 'recordId'],
+  data: function data() {
+    return {
+      titleDialog: 'Series',
+      loading: false,
+      errors: {},
+      form: {},
+      search: '',
+      lots_: []
+    };
+  },
+  created: function created() {
+    return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee() {
+      return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+            case "end":
+              return _context.stop();
+          }
+        }
+      }, _callee);
+    }))();
+  },
+  watch: {
+    lots: function lots(val) {
+      this.lots_ = val;
+    }
+  },
+  methods: {
+    filter: function filter() {
+      var _this = this;
+
+      if (this.search) {
+        // this.lots_ = this.lots.filter( x => x.series.toUpperCase().includes(this.search.toUpperCase()))
+        this.lots_ = _.filter(this.lots, function (x) {
+          return x.series.toUpperCase().includes(_this.search.toUpperCase());
+        });
+      } else {
+        this.lots_ = this.lots;
+      }
+    },
+    create: function create() {},
+    submit: function submit() {// let val_lots = await this.validateLots()
+      // if(!val_lots.success)
+      //     return this.$message.error(val_lots.message);
+      // await this.$emit('addRowLot', this.lots);
+      // await this.$emit('update:showDialog', false)
+
+      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee2() {
+        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2);
+      }))();
+    },
+    close: function close() {
+      this.$emit('update:showDialog', false);
+      this.$emit('addRowSelectLot', this.lots_);
+    },
+    clickCancelSubmit: function clickCancelSubmit() {// this.$emit('addRowLot', []);
+      // await this.$emit('update:showDialog', false)
+
+      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee3() {
+        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+              case "end":
+                return _context3.stop();
+            }
+          }
+        }, _callee3);
+      }))();
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/js/views/quotations/partials/lots_group.vue":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator__ = __webpack_require__("./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator__);
+
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: ["showDialog", "lots_group", "stock", "recordId", "quantity"],
+  data: function data() {
+    return {
+      titleDialog: "Lotes",
+      loading: false,
+      errors: {},
+      form: {},
+      states: ["Activo", "Inactivo", "Desactivado", "Voz", "M2m"],
+      idSelected: null
+    };
+  },
+  created: function created() {// await this.$http.get(`/pos/payment_tables`)
+    //     .then(response => {
+    //         this.payment_method_types = response.data.payment_method_types
+    //         this.cards_brand = response.data.cards_brand
+    //         this.clickAddLot()
+    //     })
+
+    return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee() {
+      return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+            case "end":
+              return _context.stop();
+          }
+        }
+      }, _callee);
+    }))();
+  },
+  methods: {
+    changeSelect: function changeSelect(index, id, quantity_lot) {
+      if (this.quantity > quantity_lot) {
+        this.lots_group[index].checked = false;
+      } else {
+        this.lots_group.forEach(function (row) {
+          row.checked = false;
+        });
+        this.lots_group[index].checked = true;
+        this.idSelected = id;
+      }
+    },
+    handleSelectionChange: function handleSelectionChange(val) {
+      //this.$refs.multipleTable.clearSelection();
+      var row = val[val.length - 1];
+      this.multipleSelection = [row];
+    },
+    create: function create() {},
+    submit: function submit() {
+      var _this = this;
+
+      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee2() {
+        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                _context2.next = 2;
+                return _this.$emit("addRowLotGroup", _this.idSelected);
+
+              case 2:
+                _context2.next = 4;
+                return _this.$emit("update:showDialog", false);
+
+              case 4:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2);
+      }))();
+    },
+    clickCancel: function clickCancel(item) {
+      //this.lots.splice(index, 1);
+      item.deleted = true;
+      this.$emit("addRowLotGroup", this.lots);
+    },
+    clickCancelSubmit: function clickCancelSubmit() {
+      var _this2 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee3() {
+        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                _this2.$emit("addRowLotGroup", []);
+
+                _context3.next = 3;
+                return _this2.$emit("update:showDialog", false);
+
+              case 3:
+              case "end":
+                return _context3.stop();
+            }
+          }
+        }, _callee3);
+      }))();
+    },
+    close: function close() {
+      this.$emit("update:showDialog", false);
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/js/views/quotations/partials/options.vue":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator__ = __webpack_require__("./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator__);
+
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var DocumentOptions = function DocumentOptions() {
+  return __webpack_require__.e/* import() */(171).then(__webpack_require__.bind(null, "./resources/js/views/documents/partials/options.vue"));
+}; // import DocumentOptions from "../../documents/partials/options.vue";
+
+
+var SaleNoteOptions = function SaleNoteOptions() {
+  return __webpack_require__.e/* import() */(167).then(__webpack_require__.bind(null, "./resources/js/views/sale_notes/partials/options.vue"));
+}; // import SaleNoteOptions from "../../sale_notes/partials/options.vue";
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  components: {
+    DocumentOptions: DocumentOptions,
+    SaleNoteOptions: SaleNoteOptions
+  },
+  props: ["external", "showDialog", "recordId", "showClose", "showGenerate", "type", "typeUser"],
+  data: function data() {
+    return {
+      customer_email: "",
+      titleDialog: null,
+      loading: false,
+      resource: "quotations",
+      resource_documents: "documents",
+      errors: {},
+      form: {},
+      document: {},
+      document_types: [],
+      all_document_types: [],
+      all_series: [],
+      series: [],
+      customers: [],
+      generate: false,
+      loading_submit: false,
+      showDialogDocumentOptions: false,
+      showDialogSaleNoteOptions: false,
+      documentNewId: null,
+      is_document_type_invoice: true,
+      payment_destinations: [],
+      loading_search: false,
+      payment_method_types: [],
+      configuration: {}
+    };
+  },
+  created: function created() {
+    this.initForm();
+    this.initDocument();
+    this.clickAddPayment();
+  },
+  methods: {
+    clickCancel: function clickCancel(index) {
+      this.document.payments.splice(index, 1);
+    },
+    clickAddPayment: function clickAddPayment() {
+      this.document.payments.push({
+        id: null,
+        document_id: null,
+        date_of_payment: moment().format("YYYY-MM-DD"),
+        payment_method_type_id: "01",
+        payment_destination_id: "cash",
+        reference: null,
+        payment: 0
+      });
+    },
+    initForm: function initForm() {
+      this.generate = this.showGenerate ? true : false;
+      this.errors = {};
+      this.form = {
+        id: null,
+        external_id: null,
+        identifier: null,
+        date_of_issue: null,
+        quotation: null
+      };
+    },
+    getCustomer: function getCustomer() {
+      var _this = this;
+
+      this.$http.get("/".concat(this.resource_documents, "/search/customer/").concat(this.form.quotation.customer_id)).then(function (response) {
+        _this.customers = response.data.customers;
+        _this.document.customer_id = _this.form.quotation.customer_id;
+
+        _this.changeCustomer();
+      });
+    },
+    changeCustomer: function changeCustomer() {
+      this.validateIdentityDocumentType();
+    },
+    searchRemoteCustomers: function searchRemoteCustomers(input) {
+      var _this2 = this;
+
+      if (input.length > 0) {
+        this.loading_search = true;
+        var parameters = "input=".concat(input, "&document_type_id=").concat(this.form.document_type_id, "&operation_type_id=").concat(this.form.operation_type_id);
+        this.$http.get("/".concat(this.resource, "/search/customers?").concat(parameters)).then(function (response) {
+          _this2.customers = response.data.customers;
+          _this2.loading_search = false;
+        });
+      }
+    },
+    initDocument: function initDocument() {
+      this.document = {
+        document_type_id: null,
+        series_id: null,
+        establishment_id: null,
+        number: "#",
+        date_of_issue: moment().format("YYYY-MM-DD"),
+        time_of_issue: null,
+        customer_id: null,
+        currency_type_id: null,
+        purchase_order: null,
+        exchange_rate_sale: 0,
+        total_prepayment: 0,
+        total_charge: 0,
+        total_discount: 0,
+        total_exportation: 0,
+        total_free: 0,
+        total_taxed: 0,
+        total_unaffected: 0,
+        total_exonerated: 0,
+        total_igv: 0,
+        total_base_isc: 0,
+        total_isc: 0,
+        total_base_other_taxes: 0,
+        total_other_taxes: 0,
+        total_taxes: 0,
+        total_value: 0,
+        total: 0,
+        operation_type_id: null,
+        date_of_due: moment().format("YYYY-MM-DD"),
+        items: [],
+        charges: [],
+        discounts: [],
+        attributes: [],
+        guides: [],
+        additional_information: null,
+        actions: {
+          format_pdf: "a4"
+        },
+        quotation_id: null,
+        is_receivable: false,
+        payments: [],
+        hotel: {}
+      };
+    },
+    changeDateOfIssue: function changeDateOfIssue() {
+      this.document.date_of_due = this.document.date_of_issue;
+    },
+    resetDocument: function resetDocument() {
+      this.generate = this.showGenerate ? true : false;
+      this.initDocument();
+      this.document.document_type_id = this.document_types.length > 0 ? this.document_types[0].id : null;
+      this.changeDocumentType();
+    },
+    submit: function submit() {
+      var _this3 = this;
+
+      this.loading_submit = true;
+      this.assignDocument();
+
+      if (this.document.document_type_id === "nv") {
+        this.document.prefix = "NV";
+        this.resource_documents = "sale-notes";
+      } else {
+        this.document.prefix = null;
+        this.resource_documents = "documents";
+      }
+
+      this.$http.post("/".concat(this.resource_documents), this.document).then(function (response) {
+        if (response.data.success) {
+          _this3.documentNewId = response.data.data.id;
+
+          _this3.$http.get("/".concat(_this3.resource, "/changed/").concat(_this3.form.id)).then(function () {
+            _this3.$eventHub.$emit("reloadData");
+          }); // console.log(this.document.document_type_id)
+
+
+          if (_this3.document.document_type_id === "nv") {
+            _this3.showDialogSaleNoteOptions = true;
+          } else {
+            _this3.showDialogDocumentOptions = true;
+          }
+
+          _this3.$eventHub.$emit("reloadData");
+
+          _this3.resetDocument();
+
+          _this3.document.customer_id = _this3.form.quotation.customer_id;
+
+          _this3.changeCustomer();
+
+          _this3.clickClose();
+        } else {
+          _this3.$message.error(response.data.message);
+        }
+      })["catch"](function (error) {
+        if (error.response.status === 422) {
+          _this3.errors = error.response.data;
+        } else {
+          _this3.$message.error(error.response.data.message);
+        }
+      }).then(function () {
+        _this3.loading_submit = false;
+      });
+    },
+    assignDocument: function assignDocument() {
+      var q = this.form.quotation;
+      this.document.establishment_id = q.establishment_id; // this.document.date_of_issue = q.date_of_issue
+
+      this.document.time_of_issue = moment().format("HH:mm:ss"); // this.document.customer_id = q.customer_id
+
+      this.document.currency_type_id = q.currency_type_id;
+      this.document.purchase_order = null;
+      this.document.exchange_rate_sale = q.exchange_rate_sale;
+      this.document.total_prepayment = q.total_prepayment;
+      this.document.total_charge = q.total_charge;
+      this.document.total_discount = q.total_discount;
+      this.document.total_exportation = q.total_exportation;
+      this.document.total_free = q.total_free;
+      this.document.total_taxed = q.total_taxed;
+      this.document.total_unaffected = q.total_unaffected;
+      this.document.total_exonerated = q.total_exonerated;
+      this.document.total_igv = q.total_igv;
+      this.document.total_base_isc = q.total_base_isc;
+      this.document.total_isc = q.total_isc;
+      this.document.total_base_other_taxes = q.total_base_other_taxes;
+      this.document.total_other_taxes = q.total_other_taxes;
+      this.document.total_taxes = q.total_taxes;
+      this.document.total_value = q.total_value;
+      this.document.total = q.total;
+      this.document.seller_id = q.seller_id;
+      this.document.operation_type_id = "0101"; // this.document.date_of_due = q.date_of_issue
+
+      this.document.items = q.items;
+      this.document.charges = q.charges;
+      this.document.discounts = q.discounts;
+      this.document.attributes = []; // this.document.payments = q.payments;
+
+      this.document.guides = q.guides;
+      this.document.additional_information = null;
+      this.document.actions = {
+        format_pdf: "a4"
+      };
+      this.document.quotation_id = this.form.id;
+    },
+    create: function create() {
+      var _this4 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee() {
+        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _context.next = 2;
+                return _this4.$http.get("/".concat(_this4.resource, "/option/tables")).then(function (response) {
+                  _this4.all_document_types = response.data.document_types_invoice;
+                  _this4.all_series = response.data.series;
+                  _this4.payment_destinations = response.data.payment_destinations;
+                  _this4.payment_method_types = response.data.payment_method_types; // this.document.document_type_id = (this.all_document_types.length > 0)?this.all_document_types[0].id:null
+                  // this.changeDocumentType()
+                });
+
+              case 2:
+                _context.next = 4;
+                return _this4.$http.get("/".concat(_this4.resource, "/record2/").concat(_this4.recordId)).then(function (response) {
+                  _this4.form = response.data.data;
+                  _this4.document.payments = response.data.data.quotation.payments; // console.log(this.form)
+                  // this.validateIdentityDocumentType()
+
+                  // console.log(this.form)
+                  // this.validateIdentityDocumentType()
+                  _this4.getCustomer();
+
+                  var type = _this4.type == "edit" ? "editada" : "registrada";
+                  _this4.titleDialog = "Cotizaci\xF3n ".concat(type, ": ") + _this4.form.identifier;
+                });
+
+              case 4:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee);
+      }))();
+    },
+    changeDocumentType: function changeDocumentType() {
+      // this.filterSeries()
+      this.document.is_receivable = false;
+      this.series = [];
+      this.filterSeries();
+    },
+    validateIdentityDocumentType: function validateIdentityDocumentType() {
+      var _this5 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee2() {
+        var identity_document_types, customer;
+        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                identity_document_types = ["0", "1"]; // console.log(this.document)
+
+                customer = _.find(_this5.customers, {
+                  id: _this5.document.customer_id
+                });
+
+                if (identity_document_types.includes(customer.identity_document_type_id)) {
+                  _this5.document_types = _.filter(_this5.all_document_types, {
+                    id: "03"
+                  });
+                } else {
+                  _this5.document_types = _this5.all_document_types;
+                }
+
+                _this5.document.document_type_id = _this5.document_types.length > 0 ? _this5.document_types[0].id : null;
+                _context2.next = 6;
+                return _this5.changeDocumentType();
+
+              case 6:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2);
+      }))();
+    },
+    filterSeries: function filterSeries() {
+      this.document.series_id = null;
+      this.series = _.filter(this.all_series, {
+        document_type_id: this.document.document_type_id
+      });
+      this.document.series_id = this.series.length > 0 ? this.series[0].id : null;
+    },
+    clickFinalize: function clickFinalize() {
+      location.href = "/".concat(this.resource);
+    },
+    clickNewQuotation: function clickNewQuotation() {
+      this.clickClose();
+    },
+    clickClose: function clickClose() {
+      this.$emit("update:showDialog", false);
+
+      if (this.external) {
+        this.$emit("close");
+      }
+
+      this.initForm();
+      this.resetDocument();
+    },
+    clickToPrint: function clickToPrint(format) {
+      window.open("/".concat(this.resource, "/print/").concat(this.form.external_id, "/").concat(format), "_blank");
+    },
+    clickSendEmail: function clickSendEmail() {
+      var _this6 = this;
+
+      this.loading = true;
+      this.$http.post("/".concat(this.resource, "/email"), {
+        customer_email: this.customer_email,
+        id: this.form.id,
+        customer_id: this.form.quotation.customer_id
+      }).then(function (response) {
+        if (response.data.success) {
+          _this6.$message.success("El correo fue enviado satisfactoriamente");
+        } else {
+          _this6.$message.error("Error al enviar el correo");
+        }
+      })["catch"](function (error) {
+        _this6.$message.error("Error al enviar el correo");
+      }).then(function () {
+        _this6.loading = false;
+      });
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/js/views/quotations/partials/select_warehouses.vue":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator__ = __webpack_require__("./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator__);
+
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: ['showDialog', 'warehouses', 'isUpdateWarehouseId'],
+  data: function data() {
+    return {
+      showImportDialog: false,
+      resource: 'items',
+      recordId: null,
+      titleDialog: 'Almacenes/Stock',
+      my_warehouses: [],
+      warehouse_id: null
+    };
+  },
+  created: function created() {// console.log(this.typeUser)
+  },
+  methods: {
+    create: function create() {
+      var _this = this;
+
+      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee() {
+        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _this.warehouse_id = null; // console.log(this.isUpdateWarehouseId)
+
+                if (!_this.isUpdateWarehouseId) {
+                  _context.next = 4;
+                  break;
+                }
+
+                _context.next = 4;
+                return _this.warehouses.forEach(function (it) {
+                  if (it.warehouse_id == _this.isUpdateWarehouseId) {
+                    it.checked = true;
+                  } else {
+                    it.checked = false;
+                  }
+                });
+
+              case 4:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee);
+      }))();
+    },
+    changeWarehouse: function changeWarehouse(index) {
+      var _this2 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee2() {
+        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                _context2.next = 2;
+                return _this2.warehouses.forEach(function (it, ind) {
+                  // console.log(ind, index)
+                  if (ind != index) {
+                    it.checked = false;
+                  }
+                });
+
+              case 2:
+                _context2.next = 4;
+                return _this2.selectWarehouseId();
+
+              case 4:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2);
+      }))();
+    },
+    selectWarehouseId: function selectWarehouseId() {
+      var _this3 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee3() {
+        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                _context3.next = 2;
+                return _this3.warehouses.forEach(function (it, ind) {
+                  if (it.checked) {
+                    _this3.warehouse_id = it.warehouse_id;
+                  }
+                });
+
+              case 2:
+              case "end":
+                return _context3.stop();
+            }
+          }
+        }, _callee3);
+      }))();
+    },
+    close: function close() {
+      var _this4 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee4() {
+        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee4$(_context4) {
+          while (1) {
+            switch (_context4.prev = _context4.next) {
+              case 0:
+                _context4.next = 2;
+                return _this4.selectWarehouseId();
+
+              case 2:
+                if (_this4.warehouse_id) {
+                  _context4.next = 4;
+                  break;
+                }
+
+                return _context4.abrupt("return", _this4.$message.error('Debe seleccionar un almacén'));
+
+              case 4:
+                _context4.next = 6;
+                return _this4.$eventHub.$emit('selectWarehouseId', _this4.warehouse_id);
+
+              case 6:
+                _context4.next = 8;
+                return _this4.$emit('update:showDialog', false);
+
+              case 8:
+              case "end":
+                return _context4.stop();
+            }
+          }
+        }, _callee4);
+      }))();
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/js/views/quotations/partials/terms_condition.vue":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: ['showDialog', 'form'],
+  data: function data() {
+    return {
+      showImportDialog: false,
+      resource: 'items',
+      recordId: null,
+      titleDialog: 'Términos y condiciones'
+    };
+  },
+  created: function created() {},
+  methods: {
+    clickSubmit: function clickSubmit() {
+      this.$eventHub.$emit('submitFormConfigurations', this.form);
+      this.close();
+    },
+    create: function create() {// console.log(this.form)
+    },
+    close: function close() {
+      this.$emit('update:showDialog', false);
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/index.js?sourceMap!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-16a47e47\",\"scoped\":false,\"hasInlineConfig\":true}!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./resources/js/views/quotations/partials/item.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__("./node_modules/css-loader/lib/css-base.js")(true);
@@ -6125,7 +7927,22 @@ exports = module.exports = __webpack_require__("./node_modules/css-loader/lib/cs
 
 
 // module
-exports.push([module.i, "\n.el-select-dropdown {\r\n    max-width: 80% !important;\r\n    margin-right: 5% !important;\n}\r\n", "", {"version":3,"sources":["D:/laragon/www/sdrimsac-tenant/resources/js/views/documents/partials/resources/js/views/documents/partials/item.vue"],"names":[],"mappings":";AAkVA;IACA,0BAAA;IACA,4BAAA;CACA","file":"item.vue","sourcesContent":["<template>\r\n    <el-dialog :title=\"titleDialog\" :visible=\"showDialog\" @open=\"create\" @close=\"close\" top=\"7vh\" :close-on-click-modal=\"false\">\r\n        <form autocomplete=\"off\">\r\n            <div class=\"form-body\">\r\n                <div class=\"row\">\r\n                    <div class=\"col-md-7 col-lg-7 col-xl-7 col-sm-7\">\r\n                        <div class=\"form-group\" id=\"custom-select\" :class=\"{'has-danger': errors.item_id}\">\r\n                            <label class=\"control-label\">\r\n                                Producto/Servicio\r\n                                <a class=\"text-primary\" v-if=\"typeUser != 'seller'\" href=\"#\" @click.prevent=\"showDialogNewItem = true\">[+ Nuevo]</a>\r\n                            </label>\r\n\r\n                            <template v-if=\"!search_item_by_barcode\" id=\"select-append\">\r\n                                <div class=\"el-input el-input-group el-input-group--append\">\r\n                                    <el-select :disabled=\"recordItem != null\"\r\n                                           @focus=\"$event.target.select()\"\r\n                                           ref=\"producto\"\r\n                                            v-model=\"form.item_id\"\r\n                                            @change=\"changeItem\"\r\n                                            filterable\r\n                                            remote\r\n                                            placeholder=\"Buscar......\"\r\n                                            popper-class=\"el-select-items\"\r\n                                            @visible-change=\"focusTotalItem\"\r\n                                            slot=\"prepend\"\r\n                                            id=\"select-width\"\r\n                                            :remote-method=\"searchRemoteItems\"\r\n                                            :loading=\"loading_search\">\r\n\r\n                                     <el-option v-for=\"option in items\"  :key=\"option.id\" :value=\"option.id\" :label=\"option.full_description\"></el-option>\r\n                                    </el-select>\r\n                                    <el-tooltip slot=\"append\" class=\"item\" effect=\"dark\" content=\"Ver Stock del Producto\" placement=\"bottom\" :disabled=\"recordItem != null\">\r\n                                         <div class=\"el-input-group__append\">\r\n                                            <el-button :disabled=\"isEditItemNote\"  @click.prevent=\"clickWarehouseDetail()\"><i class=\"fa fa-search\"></i></el-button>\r\n                                        </div>\r\n                                    </el-tooltip>\r\n                                 </div>\r\n                             </template>\r\n                            <template v-else>\r\n                                    <el-input\r\n                                        placeholder=\"Buscar productos por Codigo\"\r\n                                        v-model=\"input_item\"\r\n                                        @input=\"searchItemsBarcode\"\r\n                                        class=\"m-bottom\"\r\n                                        ref=\"ref_search_items\"\r\n                                    >\r\n\r\n                                    <el-tooltip slot=\"append\" class=\"item\" effect=\"dark\" content=\"Ver Stock del Producto\" placement=\"bottom\" :disabled=\"recordItem != null\">\r\n                                        <el-button :disabled=\"isEditItemNote\"  @click.prevent=\"clickWarehouseDetail()\"><i class=\"fa fa-search\"></i></el-button>\r\n                                    </el-tooltip>\r\n                                    </el-input>\r\n\r\n                            </template>\r\n                            <small class=\"badge text-primary w-100\" v-if=\"form.item_id!=null\">Ubicacion: {{form.item.location}}<br></small>\r\n                            <template v-if=\"!is_client\">\r\n                                <el-checkbox class=\"m-t-10\"  v-model=\"search_item_by_barcode\" :disabled=\"recordItem != null\" @change=\"changeSearchItemBarcode\">Buscar por código de barras</el-checkbox><br>\r\n                            </template>\r\n                            <!-- <el-checkbox v-model=\"form.has_plastic_bag_taxes\" :disabled=\"isEditItemNote\" >Impuesto a la Bolsa Plástica</el-checkbox> -->\r\n                            <small class=\"txt-danger\" v-if=\"errors.item_id\" v-text=\"errors.item_id[0]\"></small>\r\n                        </div>\r\n                    </div>\r\n                    <div class=\"col-md-2 col-lg-2 col-xl-2 col-sm-2\" >\r\n                        <div class=\"form-group\">\r\n                            <label class=\"control-label text-left\">Stock </label><br>\r\n                           <b><h6 class=\"text-center\" style=\"font-size:14px\">{{form.stock_disp}}</h6></b>\r\n                        </div>\r\n                    </div>\r\n                    <div class=\"col-md-3\">\r\n                        <div class=\"form-group\" :class=\"{'has-danger': errors.affectation_igv_type_id}\">\r\n                            <label class=\"control-label\">Afectación Igv</label>\r\n                            <el-select v-model=\"form.affectation_igv_type_id\" :disabled=\"!change_affectation_igv_type_id\" filterable>\r\n                                <el-option v-for=\"option in affectation_igv_types\" :key=\"option.id\" :value=\"option.id\" :label=\"option.description\"></el-option>\r\n                            </el-select>\r\n                            <el-checkbox :disabled=\"recordItem != null\" v-model=\"change_affectation_igv_type_id\">Editar</el-checkbox>\r\n                            <small class=\"txt-danger\" v-if=\"errors.affectation_igv_type_id\" v-text=\"errors.affectation_igv_type_id[0]\"></small>\r\n                        </div>\r\n                    </div>\r\n                    <div class=\"col-md-3 col-sm-3\">\r\n                        <div class=\"form-group\" :class=\"{'has-danger': errors.quantity}\">\r\n                            <label class=\"control-label w-100\">Cantidad</label>\r\n\r\n                            <el-input-number  @focus=\"$event.target.select()\" ref=\"cantidad\" v-model=\"form.quantity\" :min=\"0.01\" :precision=\"4\" @keyup.enter.native=\"focusPrecio();calculateQuantity();updateprice()\" @input=\"calculateQuantity()\"></el-input-number>\r\n                            <small class=\"txt-danger\" v-if=\"errors.quantity\" v-text=\"errors.quantity[0]\"></small>\r\n                        </div>\r\n                    </div>\r\n                    <div class=\"col-md-3 col-sm-3\">\r\n                        <div class=\"form-group\" :class=\"{'has-danger': errors.unit_price_value}\">\r\n                            <label class=\"control-label\">Precio Unitario</label>\r\n                            <el-input ref=\"precio\" v-model=\"form.unit_price_value\" @input=\"calculateQuantity()\"  @focus=\"$event.target.select()\" @keyup.enter.native=\"clickAddItem();focusProducto()\" :readonly=\"typeUser === ''\">\r\n                                <template slot=\"prepend\" >{{form.item.currency_type_symbol}}</template>\r\n                              </el-input>\r\n                            <small class=\"txt-danger\" v-if=\"errors.unit_price_value\" v-text=\"errors.unit_price[0]\"></small>\r\n                        </div>\r\n                    </div>\r\n                    <div class=\"col-md-3 col-sm-3\">\r\n                        <div class=\"form-group\" :class=\"{'has-danger': errors.amount}\">\r\n                            <label class=\"control-label\">Importe Total</label>\r\n                            <el-input v-model=\"form.amount\" :readonly=\"typeUser === ''\">\r\n                                <template slot=\"prepend\" >{{form.item.currency_type_symbol}}</template>\r\n                              </el-input>\r\n\r\n                        </div>\r\n                    </div>\r\n                    <div class=\"col-md-3 col-sm-3\" v-if=\"form.item_id!=null\">\r\n                            <div class=\"form-group\">\r\n\r\n                            <label class=\"control-label\">Descontar stock</label><br/>\r\n                            <el-radio-group v-model=\"form.stock\" size=\"mini\" @change=\"stock()\">\r\n                            <el-radio-button label=\"Si\"></el-radio-button>\r\n                            <el-radio-button label=\"No\"></el-radio-button>\r\n                        </el-radio-group>\r\n\r\n                        </div>\r\n                    </div>\r\n\r\n                    <!--<div class=\"col-md-3 col-sm-3\" v-if=\"form.item.lots_enabled && form.lots_group.length > 0\">\r\n                        <div class=\"form-group\" >\r\n                             <label class=\"control-label\">\r\n                                Seleccione el lote\r\n                            </label>\r\n                            <el-button style=\"margin-top:2%;\" type=\"primary\" icon=\"el-icon-edit-outline\"  @click.prevent=\"clickLotGroup\"></el-button>\r\n                        </div>\r\n                    </div>-->\r\n\r\n                    <div style=\"padding-top: 1%;\" class=\"col-md-2 col-sm-2\" v-if=\"form.item_id && form.item.lots_enabled && form.lots_group.length > 0\">\r\n                        <a href=\"#\"  class=\"text-center font-weight-bold text-info\" @click.prevent=\"clickLotGroup\">[&#10004; Seleccionar lote]</a>\r\n                    </div>\r\n\r\n                    <div style=\"padding-top: 1%;\" class=\"col-md-3 col-sm-3\" v-if=\"form.item_id && form.item.series_enabled\">\r\n                        <!-- <el-button type=\"primary\" native-type=\"submit\" icon=\"el-icon-check\">Elegir serie</el-button> -->\r\n                        <a href=\"#\"  class=\"text-center font-weight-bold text-info\" @click.prevent=\"clickSelectLots\">[&#10004; Seleccionar series]</a>\r\n                    </div>\r\n\r\n\r\n\r\n                    <div v-if=\"configuration.edit_name_product\" class=\"col-md-12 col-sm-12\">\r\n                        <div class=\"form-group\">\r\n\r\n                            <label class=\"control-label\">Nombre producto en PDF</label>\r\n                            <!-- <el-input type=\"textarea\" v-model=\"form.name_product_pdf\"> <i slot=\"prefix\" class=\"el-icon-edit-outline\"></i></el-input> -->\r\n                              <vue-ckeditor\r\n                                v-model=\"form.name_product_pdf\"\r\n                                :editors=\"editors\"\r\n                                type=\"classic\">\r\n                            </vue-ckeditor>\r\n                        </div>\r\n                    </div>\r\n                    <template v-if=\"!is_client\">\r\n\r\n                        <div class=\"col-md-12\"  v-if=\"form.item_unit_types.length > 0\">\r\n                            <div style=\"margin:3px\" class=\"table-responsive\">\r\n                                <h6 class=\"separator-title\">\r\n                                    Lista de Precios\r\n                                    <el-tooltip class=\"item\" effect=\"dark\" content=\"Aplica para realizar compra/venta en presentacion de diferentes precios y/o cantidades\" placement=\"top\">\r\n                                        <i class=\"fa fa-info-circle\"></i>\r\n                                    </el-tooltip>\r\n                                </h6>\r\n                                <table class=\"table\">\r\n                                <thead>\r\n                                <tr>\r\n                                    <th class=\"text-center\">Unidad</th>\r\n                                    <th class=\"text-center\">Descripción</th>\r\n                                    <th class=\"text-center\">Factor</th>\r\n                                    <th class=\"text-center\">Precio 1</th>\r\n                                    <th class=\"text-center\">Precio 2</th>\r\n                                    <th class=\"text-center\">Precio 3</th>\r\n                                    <th class=\"text-center\">Precio Default</th>\r\n                                    <th></th>\r\n                                </tr>\r\n                                </thead>\r\n                                <tbody>\r\n                                <tr v-for=\"(row, index) in form.item_unit_types\">\r\n\r\n                                        <td class=\"text-center\">{{row.unit_type_id}}</td>\r\n                                        <td class=\"text-center\">{{row.description}}</td>\r\n                                        <td class=\"text-center\">{{row.quantity_unit}}</td>\r\n                                        <td class=\"text-center\">{{row.price1}}</td>\r\n                                        <td class=\"text-center\">{{row.price2}}</td>\r\n                                        <td class=\"text-center\">{{row.price3}}</td>\r\n                                        <td class=\"text-center\">Precio {{row.price_default}}</td>\r\n                                        <td class=\"series-table-actions text-end\">\r\n                                        <button type=\"button\" class=\"btn waves-effect waves-light btn-xs btn-success\" @click.prevent=\"selectedPrice(row)\">\r\n                                                <i class=\"el-icon-check\"></i>\r\n                                            </button>\r\n                                        </td>\r\n                                </tr>\r\n                                </tbody>\r\n                            </table>\r\n                            </div>\r\n                        </div>\r\n\r\n                        <div class=\"col-md-12 mt-2\">\r\n                            <el-collapse  v-model=\"activePanel\">\r\n                                <!-- <el-collapse-item :disabled=\"recordItem != null\" title=\"Información adicional atributos UBL 2.1\" name=\"1\"> -->\r\n                                <el-collapse-item :disabled=\"recordItem != null\" title=\"+ Agregar Descuentos/Cargos/Atributos especiales\" name=\"1\">\r\n                                <!--<div>-->\r\n                                    <!--<div class=\"row\">-->\r\n                                        <div v-if=\"discount_types.length > 0\">\r\n                                            <label class=\"control-label\">\r\n                                                Descuentos\r\n                                                <a href=\"#\" @click.prevent=\"clickAddDiscount\">[+ Agregar]</a>\r\n                                            </label>\r\n                                            <table class=\"table\">\r\n                                                <thead>\r\n                                                <tr>\r\n                                                    <th>Tipo</th>\r\n                                                    <th>Descripción</th>\r\n                                                    <th>Porcentaje</th>\r\n                                                    <th></th>\r\n                                                </tr>\r\n                                                </thead>\r\n                                                <tbody>\r\n                                                <tr v-for=\"(row, index) in form.discounts\">\r\n                                                    <td>\r\n                                                        <el-select v-model=\"row.discount_type_id\" @change=\"changeDiscountType(index)\">\r\n                                                            <el-option v-for=\"option in discount_types\" :key=\"option.id\" :value=\"option.id\" :label=\"option.description\"></el-option>\r\n                                                        </el-select>\r\n                                                    </td>\r\n                                                    <td>\r\n                                                        <el-input v-model=\"row.description\"> <i slot=\"prefix\" class=\"el-icon-edit-outline\"></i></el-input>\r\n                                                    </td>\r\n                                                    <td>\r\n                                                        <el-checkbox v-model=\"row.is_amount\">Ingresar monto fijo</el-checkbox><br>\r\n                                                        <el-input v-model=\"row.percentage\"> <i slot=\"prefix\" class=\"el-icon-edit-outline\"></i></el-input>\r\n                                                    </td>\r\n                                                    <td>\r\n                                                        <button type=\"button\" class=\"btn btn-danger\" @click.prevent=\"clickRemoveDiscount(index)\">x</button>\r\n                                                    </td>\r\n                                                </tr>\r\n                                                </tbody>\r\n                                            </table>\r\n                                        </div>\r\n                                        <div v-if=\"charge_types.length > 0\">\r\n                                            <label class=\"control-label\">\r\n                                                Cargos\r\n                                                <a href=\"#\" @click.prevent=\"clickAddCharge\">[+ Agregar]</a>\r\n                                            </label>\r\n                                            <table class=\"table\">\r\n                                                <thead>\r\n                                                <tr>\r\n                                                    <th>Tipo</th>\r\n                                                    <th>Descripción</th>\r\n                                                    <th>Porcentaje</th>\r\n                                                    <th></th>\r\n                                                </tr>\r\n                                                </thead>\r\n                                                <tbody>\r\n                                                <tr v-for=\"(row, index) in form.charges\">\r\n                                                    <td>\r\n                                                        <el-select v-model=\"row.charge_type_id\" @change=\"changeChargeType(index)\">\r\n                                                            <el-option v-for=\"option in charge_types\" :key=\"option.id\" :value=\"option.id\" :label=\"option.description\"></el-option>\r\n                                                        </el-select>\r\n                                                    </td>\r\n                                                    <td>\r\n                                                        <el-input v-model=\"row.description\"> <i slot=\"prefix\" class=\"el-icon-edit-outline\"></i></el-input>\r\n                                                    </td>\r\n                                                    <td>\r\n                                                        <el-input v-model=\"row.percentage\"> <i slot=\"prefix\" class=\"el-icon-edit-outline\"></i></el-input>\r\n                                                    </td>\r\n                                                    <td>\r\n                                                        <button type=\"button\" class=\"btn btn-danger\" @click.prevent=\"clickRemoveCharge(index)\">x</button>\r\n                                                    </td>\r\n                                                </tr>\r\n                                                </tbody>\r\n                                            </table>\r\n                                        </div>\r\n                                        <div v-if=\"attribute_types.length > 0\">\r\n                                            <label class=\"control-label\">\r\n                                                Atributos\r\n                                                <a href=\"#\" @click.prevent=\"clickAddAttribute\">[+ Agregar]</a>\r\n                                            </label>\r\n                                            <table class=\"table\">\r\n                                                <thead>\r\n                                                <tr>\r\n                                                    <th>Tipo</th>\r\n                                                    <th>Descripción</th>\r\n                                                    <th></th>\r\n                                                </tr>\r\n                                                </thead>\r\n                                                <tbody>\r\n                                                <tr v-for=\"(row, index) in form.attributes\">\r\n                                                    <td>\r\n                                                        <el-select v-model=\"row.attribute_type_id\" filterable @change=\"changeAttributeType(index)\">\r\n                                                            <el-option v-for=\"option in attribute_types\" :key=\"option.id\" :value=\"option.id\" :label=\"option.description\"></el-option>\r\n                                                        </el-select>\r\n                                                    </td>\r\n                                                    <td>\r\n                                                        <el-input v-model=\"row.value\" @input=\"inputAttribute(index)\"> <i slot=\"prefix\" class=\"el-icon-edit-outline\"></i></el-input>\r\n                                                    </td>\r\n                                                    <td>\r\n                                                        <button type=\"button\" class=\"btn btn-danger\" @click.prevent=\"clickRemoveAttribute(index)\">x</button>\r\n                                                    </td>\r\n                                                </tr>\r\n                                                </tbody>\r\n                                            </table>\r\n                                        </div>\r\n\r\n                                    <!--</div>-->\r\n                                </el-collapse-item>\r\n                            </el-collapse>\r\n\r\n                        </div>\r\n                    </template>\r\n                </div>\r\n            </div>\r\n           <div class=\"form-actions text-end pt-2 pb-2\">\r\n\r\n                <el-button @click.prevent=\"close()\">Cerrar</el-button>\r\n                <el-button class=\"add\" type=\"primary\" @click=\"clickAddItem()\" v-if=\"agregar_item\">{{titleAction}}</el-button>\r\n            </div>\r\n        </form>\r\n        <item-form :showDialog.sync=\"showDialogNewItem\"\r\n                   :external=\"true\" @add=\"addNewItem\"></item-form>\r\n\r\n\r\n        <warehouses-detail\r\n                :showDialog.sync=\"showWarehousesDetail\"\r\n                :isUpdateWarehouseId=\"isUpdateWarehouseId\"\r\n                :warehouses=\"warehousesDetail\">\r\n            </warehouses-detail>\r\n\r\n        <lots-group\r\n            :quantity=\"form.quantity\"\r\n            :showDialog.sync=\"showDialogLots\"\r\n            :lots_group=\"form.lots_group\"\r\n            @addRowLotGroup=\"addRowLotGroup\">\r\n        </lots-group>\r\n\r\n        <select-lots-form\r\n            :showDialog.sync=\"showDialogSelectLots\"\r\n            :lots=\"lots\"\r\n            @addRowSelectLot=\"addRowSelectLot\">\r\n        </select-lots-form>\r\n\r\n\r\n    </el-dialog>\r\n</template>\r\n<style>\r\n.el-select-dropdown {\r\n    max-width: 80% !important;\r\n    margin-right: 5% !important;\r\n}\r\n</style>\r\n\r\n<script>\r\n\r\n    import ItemForm from '../../items/form.vue'\r\n    import LotsGroup from './lots_group.vue'\r\n    import {calculateRowItem} from \"../../../helpers/functions\"\r\n    //'../../../../helpers/functions'\r\n    import WarehousesDetail from './select_warehouses.vue'\r\n    import SelectLotsForm from './lots.vue'\r\n    import ClassicEditor from \"@ckeditor/ckeditor5-build-classic\";\r\n    import VueCkeditor from \"vue-ckeditor5\";\r\n\r\n    export default {\r\n        props: ['recordItem','showDialog','percentage_igv', 'operationTypeId', 'currencyTypeIdActive', 'exchangeRateSale', 'typeUser', 'isEditItemNote', 'configuration','restringir_stock'],\r\n        components: {ItemForm, WarehousesDetail, LotsGroup, SelectLotsForm,\"vue-ckeditor\": VueCkeditor.component,},\r\n        data() {\r\n            return {\r\n                loading_search:false,\r\n                titleAction: '',\r\n                is_client:false,\r\n                titleDialog: '',\r\n                resource: 'documents',\r\n                showDialogNewItem: false,\r\n                has_list_prices: false,\r\n                errors: {},\r\n                form: {},\r\n                input_item:\"\",\r\n                all_items: [],\r\n                items: [],\r\n                items_select:[],\r\n                operation_types: [],\r\n                all_affectation_igv_types: [],\r\n                affectation_igv_types: [],\r\n                system_isc_types: [],\r\n                discount_types: [],\r\n                charge_types: [],\r\n                attribute_types: [],\r\n                use_price: 1,\r\n                change_affectation_igv_type_id: false,\r\n                activePanel: 0,\r\n                total_item: 0,\r\n                item_unit_types: [],\r\n                showWarehousesDetail: false,\r\n                warehousesDetail:[],\r\n                showListStock:false,\r\n                search_item_by_barcode:false,\r\n                isUpdateWarehouseId:null,\r\n                showDialogLots: false,\r\n                showDialogSelectLots: false,\r\n                lots:[],\r\n\r\n                item_select:null,\r\n                agregar_item:false,\r\n                form_control:{},\r\n                 editors: {\r\n                    classic: ClassicEditor,\r\n                }\r\n                //item_unit_type: {}\r\n            }\r\n        },\r\n            async created() {\r\n            this.initForm()\r\n            this.$http.get(`/${this.resource}/item/tables`).then(response => {\r\n                this.all_items = response.data.items\r\n                this.operation_types = response.data.operation_types\r\n                this.all_affectation_igv_types = response.data.affectation_igv_types\r\n                this.affectation_igv_types = response.data.affectation_igv_types\r\n                this.system_isc_types = response.data.system_isc_types\r\n                this.discount_types = response.data.discount_types\r\n                this.charge_types = response.data.charge_types\r\n                this.attribute_types = response.data.attribute_types\r\n                this.is_client = response.data.is_client;\r\n              //  this.restringir_stock= response.data.restringir_stock;\r\n                this.filterItems()\r\n\r\n            })\r\n\r\n            this.$eventHub.$on('reloadDataItems', (item_id) => {\r\n                this.reloadDataItems(item_id)\r\n            })\r\n\r\n            this.$eventHub.$on('selectWarehouseId', (warehouse_id) => {\r\n                // console.log(warehouse_id)\r\n                this.form.warehouse_id = warehouse_id\r\n            })\r\n\r\n        },\r\n        methods: {\r\n            async searchRemoteItems(input) {\r\n                if (input.length > 2) {\r\n                    this.loading_search = true\r\n                    let parameters = `input=${input}`\r\n                    await this.$http.get(`/${this.resource}/search-items/?${parameters}`)\r\n                            .then(response => {\r\n                                this.items_select=response.data[0]\r\n\r\n                                this.items = response.data\r\n                                this.loading_search = false\r\n\r\n                                this.enabledSearchItemsBarcode()\r\n\r\n                                if(this.items.length == 0){\r\n                                    this.filterItems()\r\n                                }\r\n                            })\r\n                } else {\r\n                    await this.filterItems()\r\n                }\r\n            },\r\n            keyupTabCustomer(e) {\r\n            // console.log(e.keyCode)\r\n                if (e.keyCode === 9) {\r\n                    this.$refs.select_person.$el\r\n                        .getElementsByTagName(\"input\")[0]\r\n                        .focus();\r\n                }\r\n            },\r\n\r\n             focusProducto(){\r\n                    this.calculateQuantity()\r\n                    this.$nextTick(function () {\r\n                        this.$refs.ref_search_items.$el.querySelector('input').focus();\r\n                    });\r\n                    this.input_item=\"\"\r\n            },\r\n            addNewItem(data){\r\n                this.form.item_id=data.id\r\n                this.items.push(data);\r\n                this.searchRemoteItems(data.description)\r\n                this.form.item = _.find(this.items, {'id': data.id})\r\n                let precios=_.filter(this.items, {'id': this.form.item_id})[0]\r\n                this.form.unit_price_value = this.form.item.sale_unit_price;\r\n                  ///////////////////////////////////////////////////////////////////////////\r\n                 this.lots = this.form.item.lots\r\n                this.form.stock_disp=this.form.item.stock\r\n                this.form.has_igv = this.form.item.has_igv;\r\n                this.form.affectation_igv_type_id = this.form.item.sale_affectation_igv_type_id;\r\n                this.form.quantity = 1;\r\n                ///////////////////////////////////////////////////////////////////////////\r\n                this.cleanTotalItem();\r\n                this.showListStock = true\r\n\r\n                this.calculateQuantity()\r\n                //this.changeItem()\r\n\r\n\r\n\r\n            },\r\n            focusPrecio(){\r\n                     //   this.$refs.precio.$el.getElementsByTagName('input')[0].focus()\r\n                   //  this.$refs.precio.$el.querySelector('input').focus();\r\n                   this.calculateQuantity()\r\n                    this.$nextTick(function () {\r\n                        this.$refs.precio.$el.querySelector('input').focus();\r\n\r\n                    });\r\n            },\r\n            stock(){\r\n                if(this.form.stock=='Si'){\r\n                    this.form_control.stock_control=true;\r\n                }else{\r\n                    this.form_control.stock_control=false\r\n                }\r\n                this.$http.post('/inventories/configuration', this.form_control).then(response => {\r\n                    if (response.data.success) {\r\n                        this.$toast.success(response.data.message);\r\n                    }\r\n                    else {\r\n                        this.$toast.error(response.data.message);\r\n                    }\r\n                }).catch(error => {\r\n                    if (error.response.status === 422) {\r\n                        this.errors = error.response.data.errors;\r\n                    }\r\n                    else {\r\n                        console.log(error);\r\n                    }\r\n                }).then(() => {\r\n                    //this.loading_submit = false;\r\n                });\r\n            },\r\n            filterItems() {\r\n                this.items = this.all_items\r\n            },\r\n            enabledSearchItemsBarcode(){\r\n\r\n                if(this.search_item_by_barcode){\r\n\r\n                    if (this.items.length == 1){\r\n\r\n                        this.form.item_id = this.items[0].id\r\n                        this.changeItem()\r\n                    }\r\n                }\r\n            },\r\n            filterMethod(query){\r\n\r\n                let item = _.find(this.items, {'internal_id': query});\r\n\r\n                if(item){\r\n                    this.form.item_id = item.id\r\n                    this.changeItem()\r\n                }\r\n                // console.log(item)\r\n            },\r\n            clickWarehouseDetail(){\r\n                if(!this.form.item_id){\r\n                    return this.$toast.error('Seleccione un item');\r\n                }\r\n                let item = _.find(this.items, {'id': this.form.item_id});\r\n                this.warehousesDetail = item.warehouses\r\n                this.showWarehousesDetail = true\r\n            },\r\n                filterItems(){\r\n                     this.items = this.all_items;\r\n                },\r\n                async searchItemsBarcode() {\r\n                    if (this.input_item.length > 1) {\r\n                    this.loading_search = true\r\n                    let parameters = `input=${this.input_item}`\r\n                    await this.$http.get(`/${this.resource}/search-items?${parameters}`)\r\n                            .then(response => {\r\n                                this.items_select=response.data.items[0]\r\n                                console.log(\"response.data.items[0]\",response.data.items[0])\r\n                                this.items = response.data.items;\r\n                                this.form.item_id=response.data.items[0].id\r\n                                this.loading_search = false\r\n                                this.input_item=response.data.items[0].full_description\r\n                                this.focusTotalItem()\r\n                                this.changeItem()\r\n                                //this.enabledSearchItemsBarcode()\r\n                                if(this.items.length == 0){\r\n                                    this.filterItems()\r\n                                }\r\n                            })\r\n                } else {\r\n                    await this.filterItems()\r\n                }\r\n\r\n                // if (this.input_item.length > 1) {\r\n                //     this.loading = true;\r\n                //     let parameters = `input_item=${this.input_item}`;\r\n                //     await this.$http\r\n                //         .get(`/${this.resource}/search_items?${parameters}`)\r\n                //         .then(response => {\r\n                //              this.items = response.data.items;\r\n                //              this.enabledSearchItemsBarcode();\r\n                //             this.loading = false;\r\n                //             if (this.items.length == 0) {\r\n                //                 this.filterItems();\r\n                //             }\r\n                //         });\r\n                // } else {\r\n                //     await this.filterItems();\r\n                // }\r\n            },\r\n            enabledSearchItemsBarcode() {\r\n                if (this.search_item_by_barcode) {\r\n                    // if (this.items.length == 1) {\r\n                    //     // console.log(this.items)\r\n                    //     this.clickAddItem(this.items[0], 0);\r\n                    //     this.filterItems();\r\n                    // }\r\n\r\n                    this.cleanInput();\r\n                }\r\n            },\r\n            changeSearchItemBarcode() {\r\n                this.cleanInput();\r\n                this.$nextTick(function () {\r\n                    this.$refs.ref_search_items.$el.querySelector('input').focus();\r\n                });\r\n            },\r\n            cleanInput() {\r\n                this.input_item = null;\r\n            },\r\n\r\n            initForm() {\r\n                this.errors = {};\r\n\r\n                this.form = {\r\n                   // category_id: [1],\r\n                   // edit: false,\r\n                    item_id: null,\r\n                    item: {},\r\n                    affectation_igv_type_id: null,\r\n                    affectation_igv_type: {},\r\n                    has_isc: false,\r\n                    system_isc_type_id: null,\r\n                    percentage_isc: 0,\r\n                    suggested_price: 0,\r\n                    quantity: 1,\r\n                    unit_price_value: 0,\r\n                    input_unit_price_value: 0,\r\n                    unit_price: 0,\r\n                    charges: [],\r\n                    discounts: [],\r\n                    attributes: [],\r\n                    has_igv: null,\r\n                    item_unit_types: [],\r\n                    has_plastic_bag_taxes:false,\r\n                    warehouse_id:null,\r\n                    lots_group: [],\r\n                    IdLoteSelected: null,\r\n                    stock:\"Si\",\r\n                    stock_disp:null,\r\n                    name_product_pdf:null\r\n                };\r\n\r\n                this.activePanel = 0;\r\n                this.total_item = 0;\r\n                this.item_unit_type = {};\r\n                this.has_list_prices = false;\r\n            },\r\n            // initializeFields() {\r\n            //     this.form.affectation_igv_type_id = this.affectation_igv_types[0].id\r\n            // },\r\n            async create() {\r\n                console.log(\"xxxx\",this.percentage_igv)\r\n                this.titleDialog = (this.recordItem) ? ' Modificar Producto o Servicio' : ' Agregar Producto o Servicio';\r\n                this.titleAction = (this.recordItem) ? ' Modificar' : 'Agregar';\r\n                let operation_type = await _.find(this.operation_types, {id: this.operationTypeId})\r\n\r\n                if (this.recordItem) {\r\n\r\n                    this.form.item_id = await this.recordItem.item_id\r\n                    this.form.unit_price=this.recordItem.unit_price\r\n                    await this.searchRemoteItems(this.recordItem.item.description)\r\n                    await this.changeItem()\r\n                    this.form.quantity = this.recordItem.quantity\r\n                    this.form.name_product_pdf=this.recordItem.name_product_pdf\r\n                    this.form.unit_price_value = this.recordItem.unit_price\r\n                    this.form.amount=_.round(this.form.quantity*this.form.unit_price_value,4)\r\n                     this.form.stock=this.recordItem.item.is_stock\r\n                    this.form.has_plastic_bag_taxes = (this.recordItem.total_plastic_bag_taxes > 0) ? true : false\r\n                    this.form.warehouse_id = this.recordItem.warehouse_id\r\n                    this.isUpdateWarehouseId = this.recordItem.warehouse_id\r\n                    this.item_select= this.recordItem\r\n                    if(this.isEditItemNote){\r\n                        this.form.item.currency_type_id = this.currencyTypeIdActive\r\n                        this.form.item.currency_type_symbol = (this.currencyTypeIdActive == 'PEN') ? 'S/':'$'\r\n                    }\r\n\r\n\r\n                    this.calculateQuantity()\r\n                }else{\r\n                    this.isUpdateWarehouseId = null\r\n                }\r\n\r\n            },\r\n            clickAddDiscount() {\r\n                this.form.discounts.push({\r\n                    discount_type_id: null,\r\n                    discount_type: null,\r\n                    description: null,\r\n                    percentage: 0,\r\n                    factor: 0,\r\n                    amount: 0,\r\n                    base: 0,\r\n                    is_amount: false\r\n                })\r\n            },\r\n            clickRemoveDiscount(index) {\r\n                this.form.discounts.splice(index, 1)\r\n            },\r\n            changeDiscountType(index) {\r\n                let discount_type_id = this.form.discounts[index].discount_type_id\r\n                this.form.discounts[index].discount_type = _.find(this.discount_types, {id: discount_type_id})\r\n            },\r\n            clickAddCharge() {\r\n                this.form.charges.push({\r\n                    charge_type_id: null,\r\n                    charge_type: null,\r\n                    description: null,\r\n                    percentage: 0,\r\n                    factor: 0,\r\n                    amount: 0,\r\n                    base: 0\r\n                })\r\n            },\r\n            clickRemoveCharge(index) {\r\n                this.form.charges.splice(index, 1)\r\n            },\r\n            changeChargeType(index) {\r\n                let charge_type_id = this.form.charges[index].charge_type_id\r\n                this.form.charges[index].charge_type = _.find(this.charge_types, {id: charge_type_id})\r\n            },\r\n            clickAddAttribute() {\r\n                this.form.attributes.push({\r\n                    attribute_type_id: null,\r\n                    description: null,\r\n                    value: null,\r\n                    start_date: null,\r\n                    end_date: null,\r\n                    duration: null,\r\n                })\r\n            },\r\n            clickRemoveAttribute(index) {\r\n                this.form.attributes.splice(index, 1)\r\n            },\r\n            changeAttributeType(index) {\r\n                let attribute_type_id = this.form.attributes[index].attribute_type_id\r\n                let attribute_type = _.find(this.attribute_types, {id: attribute_type_id})\r\n                this.form.attributes[index].description = attribute_type.description\r\n                this.inputAttribute(index)\r\n            },\r\n            inputAttribute(index){\r\n\r\n                let value = this.form.attributes[index].value\r\n                let hotelAttributes = ['4003', '4004']\r\n\r\n                this.form.attributes[index].start_date = (hotelAttributes.includes(this.form.attributes[index].attribute_type_id)) ? value:null\r\n\r\n            },\r\n            close() {\r\n                this.initForm()\r\n                this.$emit('update:showDialog', false)\r\n            },\r\n            async changeItem() {\r\n               if(this.recordItem){\r\n                 this.form.item =this.items_select;\r\n               }else{\r\n                this.form.item = _.find(this.items, {'id': this.form.item_id})\r\n\r\n               }\r\n                 let precios=_.filter(this.items, {'id': this.form.item_id})[0]\r\n                this.form.item_unit_types = precios.item_unit_types\r\n                this.form.unit_price_value = this.form.item.sale_unit_price;\r\n                this.lots = this.form.item.lots\r\n                this.form.stock_disp=this.form.item.stock\r\n                this.form.has_igv = this.form.item.has_igv;\r\n                this.form.affectation_igv_type_id = this.form.item.sale_affectation_igv_type_id;\r\n                this.form.quantity = 1;\r\n                this.cleanTotalItem();\r\n                this.showListStock = true\r\n\r\n                if(this.form.item.attributes.length > 0)\r\n                {\r\n                    const contex = this\r\n                    this.form.item.attributes.forEach((row)=>{\r\n\r\n                        contex.form.attributes.push({\r\n                            attribute_type_id: row.attribute_type_id,\r\n                            description: row.description,\r\n                            value: row.value,\r\n                            start_date: row.start_date,\r\n                            end_date: row.end_date,\r\n                            duration: row.duration ,\r\n                        })\r\n                    })\r\n                }\r\n\r\n                this.form.lots_group = this.form.item.lots_group\r\n                this.calculateQuantity()\r\n\r\n            },\r\n            focusTotalItem(change) {\r\n              //  if(!change && this.form.item.calculate_quantity) {\r\n                    this.$refs.cantidad.$el.getElementsByTagName('input')[0].focus()\r\n                    //this.total_item = this.form.unit_price_value\r\n               // }\r\n            },\r\n            calculateQuantity() {\r\n              if(this.restringir_stock===true && this.form.item_id!==null){\r\n                    if(this.form.stock_disp<this.form.quantity && this.form.stock=='Si'  && this.form.item_id!=null){\r\n                        this.agregar_item=false\r\n                        this.$toast.error('Stock Insuficiente...');\r\n                    } else{\r\n                        this.agregar_item=true\r\n                    }\r\n                }else{\r\n                     this.agregar_item=true\r\n                }\r\n\r\n                if(this.form.item.calculate_quantity) {\r\n\r\n                    this.form.quantity = _.round((this.total_item / this.form.unit_price_value), 4)\r\n                }\r\n               // this.form.amount=_.round(this.form.quantity*this.form.unit_price_value, 4)\r\n                this.form.amount=_.round(Math.round(parseFloat(this.form.quantity) * parseFloat(this.form.unit_price_value)* 10) / 10, 4)\r\n\r\n            },\r\n            updateprice(){\r\n                    if(this.configuration.refresh_price_sales==true){\r\n                let form_price_sales={\r\n                    id: this.form.item_id,\r\n                    sale_unit_price:this.form.unit_price_value\r\n                }\r\n                 this.$http.post(`/items/updateprice`,form_price_sales).then((response) => {\r\n                        if(response.data.success==true){\r\n                            this.$toast.success(response.data.message);\r\n                        }else{\r\n                            this.$toast.error(\"Ocurrio un error al actualizar el precio de venta\");\r\n                        }\r\n                    })\r\n            }\r\n            },\r\n            cleanTotalItem(){\r\n                this.total_item = null\r\n            },\r\n            async clickAddItem() {\r\n\r\n\r\n              this.form.item.is_stock=this.form.stock\r\n                if(this.form.item.lots_enabled){\r\n                    if(!this.form.IdLoteSelected)\r\n                        return this.$toast.error('Debe seleccionar un lote.');\r\n                }\r\n                if (this.validateTotalItem().total_item) return;\r\n\r\n                let unit_price = (this.form.has_igv)?this.form.unit_price_value:this.form.unit_price_value*(1+(this.percentage_igv/100));\r\n\r\n                this.form.input_unit_price_value = this.form.unit_price_value;\r\n\r\n                this.form.unit_price = unit_price;\r\n                this.form.item.unit_price = unit_price;\r\n                this.form.item.presentation = this.item_unit_type;\r\n                this.form.affectation_igv_type = _.find(this.affectation_igv_types, {'id': this.form.affectation_igv_type_id});\r\n\r\n                let IdLoteSelected = this.form.IdLoteSelected\r\n\r\n                // return\r\n                // console.logc\r\n                this.row = calculateRowItem(this.form, this.currencyTypeIdActive, this.exchangeRateSale,this.percentage_igv/100);\r\n            console.log(JSON.stringify(this.row));\r\n\r\n                let select_lots = await _.filter(this.row.item.lots, {'has_sale':true})\r\n                let un_select_lots = await _.filter(this.row.item.lots, {'has_sale':false})\r\n\r\n                if(this.form.item.series_enabled){\r\n                    if(select_lots.length != this.form.quantity)\r\n                        return this.$toast.error('La cantidad de series seleccionadas son diferentes a la cantidad a vender');\r\n                }\r\n\r\n               // this.row.edit = false;\r\n                this.initForm();\r\n                //this.initializeFields()\r\n                if (this.recordItem)\r\n                {\r\n                    this.row.indexi = this.recordItem.indexi\r\n                }\r\n                this.row.IdLoteSelected = IdLoteSelected\r\n                this.row.item.lots = this.lots;\r\n                this.$emit('add', this.row);\r\n\r\n                this.agregar_item=false\r\n                if (this.recordItem)\r\n                {\r\n                    this.close()\r\n                }\r\n            },\r\n            validateTotalItem(){\r\n\r\n                this.errors = {}\r\n\r\n                if(this.form.item.calculate_quantity){\r\n                    if(this.total_item < 0.01)\r\n                        this.$set(this.errors, 'total_item', ['total venta item debe ser mayor a 0.01']);\r\n                }\r\n\r\n                return this.errors\r\n            },\r\n           async reloadDataItems(item_id) {\r\n\r\n                if(!item_id){\r\n\r\n                    this.$http.get(`/${this.resource}/table/items`).then((response) => {\r\n                        this.items = response.data\r\n                        this.form.item_id = item_id\r\n                        // if(item_id) this.changeItem()\r\n                        // this.filterItems()\r\n                    })\r\n\r\n                }else{\r\n\r\n                 const resp= await this.$http.get(`/${this.resource}/search/item/${item_id}`)\r\n                 if(resp.data.items.length > 0){\r\n                        let data= resp.data.items[0]\r\n                         this.items = resp.data.items[0]\r\n                         this.form.item_id = item_id\r\n\r\n\r\n                        // this.form.item.stock=resp.data.items[0].stock\r\n                        // this.form.unit_price_value=resp.data.items[0].sale_unit_price\r\n                        // this.searchRemoteItems(resp.data.items[0].description);\r\n                        // this.form.item.stock=resp.data.items[0].stock\r\n                        // this.$refs.cantidad.$el.getElementsByTagName('input')[0].focus()\r\n                        // this.changeItem()\r\n\r\n                 }\r\n                 //.then((response) => {\r\n\r\n\r\n                  //  })\r\n                }\r\n\r\n            },\r\n            changePresentation() {\r\n                let price = 0;\r\n\r\n                this.item_unit_type = _.find(this.form.item.item_unit_types, {'id': this.form.item_unit_type_id});\r\n\r\n                switch (this.item_unit_type.price_default) {\r\n                    case 1: price = this.item_unit_type.price1\r\n                        break;\r\n                    case 2: price = this.item_unit_type.price2\r\n                        break;\r\n                    case 3: price = this.item_unit_type.price3\r\n                        break;\r\n                }\r\n\r\n                this.form.unit_price_value = price;\r\n                this.form.item.unit_type_id = this.item_unit_type.unit_type_id;\r\n            },\r\n            selectedPrice(row)\r\n            {\r\n\r\n\r\n                let valor = 0\r\n                switch(row.price_default)\r\n                {\r\n                    case 1:\r\n                        valor = row.price1\r\n                        break\r\n                    case 2:\r\n                         valor = row.price2\r\n                        break\r\n                    case 3:\r\n                         valor = row.price3\r\n                        break\r\n\r\n                }\r\n                this.form.item_unit_type_id = row.id\r\n                this.item_unit_type = row\r\n\r\n                this.form.unit_price_value = valor\r\n                this.form.item.unit_type_id = row.unit_type_id\r\n                this.calculateQuantity()\r\n            },\r\n            addRow(row){\r\n\r\n               // this.searchRemoteItems(row.description)\r\n            },\r\n            addRowLotGroup(id)\r\n            {\r\n                this.form.IdLoteSelected =  id\r\n            },\r\n            clickLotGroup()\r\n            {\r\n                this.showDialogLots = true\r\n            },\r\n            async clickSelectLots(){\r\n                this.showDialogSelectLots = true\r\n            },\r\n            addRowSelectLot(lots){\r\n                lots =  lots.filter(item => item.has_sale == true)\r\n                this.lots = lots\r\n            },\r\n        }\r\n    }\r\n\r\n</script>\r\n"],"sourceRoot":""}]);
+exports.push([module.i, "\n.el-select-dropdown {\r\n    max-width: 80% !important;\r\n    margin-right: 5% !important;\n}\r\n", "", {"version":3,"sources":["D:/laragon/www/sdrimsac-tenant/resources/js/views/quotations/partials/resources/js/views/quotations/partials/item.vue"],"names":[],"mappings":";AAsxBA;IACA,0BAAA;IACA,4BAAA;CACA","file":"item.vue","sourcesContent":["<template>\r\n    <el-dialog\r\n        :title=\"titleDialog\"\r\n        :visible=\"showDialog\"\r\n        @open=\"create\"\r\n        @close=\"close\"\r\n        top=\"7vh\"\r\n        :close-on-click-modal=\"false\"\r\n    >\r\n        <form autocomplete=\"off\">\r\n            <div class=\"form-body\">\r\n                <div class=\"row\">\r\n                    <div class=\"col-md-7 col-lg-7 col-xl-7 col-sm-7\">\r\n                        <div\r\n                            class=\"form-group\"\r\n                            id=\"custom-select\"\r\n                            :class=\"{ 'has-danger': errors.item_id }\"\r\n                        >\r\n                            <label class=\"control-label\">\r\n                                Producto/Servicio\r\n                                <a\r\n                                    class=\"text-primary\"\r\n                                    v-if=\"typeUser != 'seller'\"\r\n                                    href=\"#\"\r\n                                    @click.prevent=\"showDialogNewItem = true\"\r\n                                    >[+ Nuevo]</a\r\n                                >\r\n                            </label>\r\n\r\n                            <template\r\n                                v-if=\"!search_item_by_barcode\"\r\n                                id=\"select-append\"\r\n                            >\r\n                                <div\r\n                                    class=\"el-input el-input-group el-input-group--append\"\r\n                                >\r\n                                    <el-select\r\n                                        :disabled=\"recordItem != null\"\r\n                                        @focus=\"$event.target.select()\"\r\n                                        ref=\"producto\"\r\n                                        v-model=\"form.item_id\"\r\n                                        @change=\"changeItem\"\r\n                                        filterable\r\n                                        remote\r\n                                        placeholder=\"Buscar\"\r\n                                        popper-class=\"el-select-items\"\r\n                                        @visible-change=\"focusTotalItem\"\r\n                                        slot=\"prepend\"\r\n                                        id=\"select-width\"\r\n                                        :remote-method=\"searchRemoteItems\"\r\n                                        :loading=\"loading_search\"\r\n                                    >\r\n                                        <el-option\r\n                                            v-for=\"option in items\"\r\n                                            :key=\"option.id\"\r\n                                            :value=\"option.id\"\r\n                                            :label=\"option.full_description\"\r\n                                        ></el-option>\r\n                                    </el-select>\r\n                                    <el-tooltip\r\n                                        slot=\"append\"\r\n                                        class=\"item\"\r\n                                        effect=\"dark\"\r\n                                        content=\"Ver Stock del Producto\"\r\n                                        placement=\"bottom\"\r\n                                        :disabled=\"recordItem != null\"\r\n                                    >\r\n                                        <div class=\"el-input-group__append\">\r\n                                            <el-button\r\n                                                :disabled=\"isEditItemNote\"\r\n                                                @click.prevent=\"\r\n                                                    clickWarehouseDetail()\r\n                                                \"\r\n                                                ><i class=\"fa fa-search\"></i\r\n                                            ></el-button>\r\n                                        </div>\r\n                                    </el-tooltip>\r\n                                </div>\r\n                            </template>\r\n                            <template v-else>\r\n                                <div\r\n                                    class=\"el-input el-input-group el-input-group--append\"\r\n                                >\r\n                                    <el-select\r\n                                        :disabled=\"recordItem != null\"\r\n                                        v-model=\"form.item_id\"\r\n                                        @change=\"changeItem\"\r\n                                        filterable\r\n                                        ref=\"productos\"\r\n                                        placeholder=\"Buscar\"\r\n                                        popper-class=\"el-select-items\"\r\n                                        dusk=\"item_id\"\r\n                                        @visible-change=\"focusTotalItem\"\r\n                                        slot=\"prepend\"\r\n                                        id=\"select-width\"\r\n                                        remote\r\n                                        :remote-method=\"searchRemoteItems\"\r\n                                        :loading=\"loading_search\"\r\n                                    >\r\n                                        <el-option\r\n                                            v-for=\"option in items\"\r\n                                            :key=\"option.id\"\r\n                                            :value=\"option.id\"\r\n                                            :label=\"option.full_description\"\r\n                                        ></el-option>\r\n                                    </el-select>\r\n                                    <el-tooltip\r\n                                        slot=\"append\"\r\n                                        class=\"item\"\r\n                                        effect=\"dark\"\r\n                                        content=\"Ver Stock del Producto\"\r\n                                        placement=\"bottom\"\r\n                                        :disabled=\"recordItem != null\"\r\n                                    >\r\n                                        <div class=\"el-input-group__append\">\r\n                                            <el-button\r\n                                                :disabled=\"isEditItemNote\"\r\n                                                @click.prevent=\"\r\n                                                    clickWarehouseDetail()\r\n                                                \"\r\n                                                ><i class=\"fa fa-search\"></i\r\n                                            ></el-button>\r\n                                        </div>\r\n                                    </el-tooltip>\r\n                                </div>\r\n                            </template>\r\n\r\n                            <template v-if=\"!is_client\">\r\n                                <el-checkbox\r\n                                    v-model=\"search_item_by_barcode\"\r\n                                    :disabled=\"recordItem != null\"\r\n                                    >Buscar por código de barras</el-checkbox\r\n                                ><br />\r\n                            </template>\r\n                            <el-checkbox\r\n                                v-model=\"form.has_plastic_bag_taxes\"\r\n                                :disabled=\"isEditItemNote\"\r\n                                >Impuesto a la Bolsa Plástica</el-checkbox\r\n                            >\r\n                            <small\r\n                                class=\"form-control-feedback\"\r\n                                v-if=\"errors.item_id\"\r\n                                v-text=\"errors.item_id[0]\"\r\n                            ></small>\r\n                        </div>\r\n                    </div>\r\n                    <div class=\"col-md-2 col-lg-2 col-xl-2 col-sm-2\">\r\n                        <div class=\"form-group\">\r\n                            <label class=\"control-label text-center\"\r\n                                >Stock Dispo.</label\r\n                            ><br />\r\n                            <b\r\n                                ><h6 class=\"text-center\" style=\"font-size:14px\">\r\n                                    {{ form.stock_disp }}\r\n                                </h6></b\r\n                            >\r\n                        </div>\r\n                    </div>\r\n                    <div class=\"col-md-3\">\r\n                        <div\r\n                            class=\"form-group\"\r\n                            :class=\"{\r\n                                'has-danger': errors.affectation_igv_type_id\r\n                            }\"\r\n                        >\r\n                            <label class=\"control-label\">Afectación Igv</label>\r\n                            <el-select\r\n                                v-model=\"form.affectation_igv_type_id\"\r\n                                :disabled=\"!change_affectation_igv_type_id\"\r\n                                filterable\r\n                            >\r\n                                <el-option\r\n                                    v-for=\"option in affectation_igv_types\"\r\n                                    :key=\"option.id\"\r\n                                    :value=\"option.id\"\r\n                                    :label=\"option.description\"\r\n                                ></el-option>\r\n                            </el-select>\r\n                            <el-checkbox\r\n                                :disabled=\"recordItem != null\"\r\n                                v-model=\"change_affectation_igv_type_id\"\r\n                                >Editar</el-checkbox\r\n                            >\r\n                            <small\r\n                                class=\"form-control-feedback\"\r\n                                v-if=\"errors.affectation_igv_type_id\"\r\n                                v-text=\"errors.affectation_igv_type_id[0]\"\r\n                            ></small>\r\n                        </div>\r\n                    </div>\r\n                    <div class=\"col-md-3 col-sm-3\">\r\n                        <div\r\n                            class=\"form-group\"\r\n                            :class=\"{ 'has-danger': errors.quantity }\"\r\n                        >\r\n                            <label class=\"control-label\">Cantidad</label>\r\n\r\n                            <el-input-number\r\n                                @focus=\"$event.target.select()\"\r\n                                ref=\"cantidad\"\r\n                                v-model=\"form.quantity\"\r\n                                :min=\"0.01\"\r\n                                :precision=\"4\"\r\n                                @keyup.enter.native=\"\r\n                                    focusPrecio();\r\n                                    calculateQuantity();\r\n                                \"\r\n                                @input=\"calculateQuantity()\"\r\n                            ></el-input-number>\r\n                            <small\r\n                                class=\"form-control-feedback\"\r\n                                v-if=\"errors.quantity\"\r\n                                v-text=\"errors.quantity[0]\"\r\n                            ></small>\r\n                        </div>\r\n                    </div>\r\n                    <div class=\"col-md-3 col-sm-3\">\r\n                        <div\r\n                            class=\"form-group\"\r\n                            :class=\"{ 'has-danger': errors.unit_price_value }\"\r\n                        >\r\n                            <label class=\"control-label\">Precio Unitario</label>\r\n                            <el-input\r\n                                ref=\"precio\"\r\n                                v-model=\"form.unit_price_value\"\r\n                                @focus=\"$event.target.select()\"\r\n                                @keyup.enter.native=\"\r\n                                    clickAddItem();\r\n                                    focusProducto();\r\n                                \"\r\n                                :readonly=\"typeUser === ''\"\r\n                            >\r\n                                <template slot=\"prepend\">{{\r\n                                    form.item.currency_type_symbol\r\n                                }}</template>\r\n                                <i\r\n                                    slot=\"prefix\"\r\n                                    class=\"el-icon-edit-outline\"\r\n                                ></i\r\n                            ></el-input>\r\n                            <small\r\n                                class=\"form-control-feedback\"\r\n                                v-if=\"errors.unit_price_value\"\r\n                                v-text=\"errors.unit_price[0]\"\r\n                            ></small>\r\n                        </div>\r\n                    </div>\r\n                    <div class=\"col-md-3 col-sm-3\">\r\n                        <div\r\n                            class=\"form-group\"\r\n                            :class=\"{ 'has-danger': errors.amount }\"\r\n                        >\r\n                            <label class=\"control-label\">Importe Total</label>\r\n                            <el-input\r\n                                v-model=\"form.amount\"\r\n                                :readonly=\"typeUser === ''\"\r\n                            >\r\n                                <template slot=\"prepend\">{{\r\n                                    form.item.currency_type_symbol\r\n                                }}</template>\r\n                                <i\r\n                                    slot=\"prefix\"\r\n                                    class=\"el-icon-edit-outline\"\r\n                                ></i\r\n                            ></el-input>\r\n                        </div>\r\n                    </div>\r\n                    <div class=\"col-md-3 col-sm-3\" v-if=\"form.item_id != null\">\r\n                        <div class=\"form-group\">\r\n                            <label class=\"control-label\">Descontar stock</label\r\n                            ><br />\r\n                            <el-radio-group\r\n                                v-model=\"form.stock\"\r\n                                size=\"mini\"\r\n                                @change=\"stock()\"\r\n                            >\r\n                                <el-radio-button label=\"Si\"></el-radio-button>\r\n                                <el-radio-button label=\"No\"></el-radio-button>\r\n                            </el-radio-group>\r\n                        </div>\r\n                    </div>\r\n\r\n                    <!--<div class=\"col-md-3 col-sm-3\" v-if=\"form.item.lots_enabled && form.lots_group.length > 0\">\r\n                        <div class=\"form-group\" >\r\n                             <label class=\"control-label\">\r\n                                Seleccione el lote\r\n                            </label>\r\n                            <el-button style=\"margin-top:2%;\" type=\"primary\" icon=\"el-icon-edit-outline\"  @click.prevent=\"clickLotGroup\"></el-button>\r\n                        </div>\r\n                    </div>-->\r\n\r\n                    <div\r\n                        style=\"padding-top: 1%;\"\r\n                        class=\"col-md-2 col-sm-2\"\r\n                        v-if=\"\r\n                            form.item_id &&\r\n                                form.item.lots_enabled &&\r\n                                form.lots_group.length > 0\r\n                        \"\r\n                    >\r\n                        <a\r\n                            href=\"#\"\r\n                            class=\"text-center font-weight-bold text-info\"\r\n                            @click.prevent=\"clickLotGroup\"\r\n                            >[&#10004; Seleccionar lote]</a\r\n                        >\r\n                    </div>\r\n\r\n                    <div\r\n                        style=\"padding-top: 1%;\"\r\n                        class=\"col-md-3 col-sm-3\"\r\n                        v-if=\"form.item_id && form.item.series_enabled\"\r\n                    >\r\n                        <!-- <el-button type=\"primary\" native-type=\"submit\" icon=\"el-icon-check\">Elegir serie</el-button> -->\r\n                        <a\r\n                            href=\"#\"\r\n                            class=\"text-center font-weight-bold text-info\"\r\n                            @click.prevent=\"clickSelectLots\"\r\n                            >[&#10004; Seleccionar series]</a\r\n                        >\r\n                    </div>\r\n\r\n                    <div class=\"col-md-12 col-sm-12\">\r\n                        <div class=\"form-group\">\r\n                            <label class=\"control-label\"\r\n                                >Nombre producto en PDF</label\r\n                            >\r\n                            <vue-ckeditor\r\n                                v-model=\"form.name_product_pdf\"\r\n                                :editors=\"editors\"\r\n                                type=\"classic\"\r\n                            >\r\n                            </vue-ckeditor>\r\n                        </div>\r\n                    </div>\r\n                    <template v-if=\"!is_client\">\r\n                        <div\r\n                            class=\"col-md-12\"\r\n                            v-if=\"form.item_unit_types.length > 0\"\r\n                        >\r\n                            <div style=\"margin:3px\" class=\"table-responsive\">\r\n                                <h6 class=\"separator-title\">\r\n                                    Lista de Precios\r\n                                    <el-tooltip\r\n                                        class=\"item\"\r\n                                        effect=\"dark\"\r\n                                        content=\"Aplica para realizar compra/venta en presentacion de diferentes precios y/o cantidades\"\r\n                                        placement=\"top\"\r\n                                    >\r\n                                        <i class=\"fa fa-info-circle\"></i>\r\n                                    </el-tooltip>\r\n                                </h6>\r\n                                <table class=\"table\">\r\n                                    <thead>\r\n                                        <tr>\r\n                                            <th class=\"text-center\">Unidad</th>\r\n                                            <th class=\"text-center\">\r\n                                                Descripción\r\n                                            </th>\r\n                                            <th class=\"text-center\">Factor</th>\r\n                                            <th class=\"text-center\">\r\n                                                Precio 1\r\n                                            </th>\r\n                                            <th class=\"text-center\">\r\n                                                Precio 2\r\n                                            </th>\r\n                                            <th class=\"text-center\">\r\n                                                Precio 3\r\n                                            </th>\r\n                                            <th class=\"text-center\">\r\n                                                Precio Default\r\n                                            </th>\r\n                                            <th></th>\r\n                                        </tr>\r\n                                    </thead>\r\n                                    <tbody>\r\n                                        <tr\r\n                                            v-for=\"(row,\r\n                                            index) in form.item_unit_types\"\r\n                                            :key=\"index\"\r\n                                        >\r\n                                            <td class=\"text-center\">\r\n                                                {{ row.unit_type_id }}\r\n                                            </td>\r\n                                            <td class=\"text-center\">\r\n                                                {{ row.description }}\r\n                                            </td>\r\n                                            <td class=\"text-center\">\r\n                                                {{ row.quantity_unit }}\r\n                                            </td>\r\n                                            <td class=\"text-center\">\r\n                                                {{ row.price1 }}\r\n                                            </td>\r\n                                            <td class=\"text-center\">\r\n                                                {{ row.price2 }}\r\n                                            </td>\r\n                                            <td class=\"text-center\">\r\n                                                {{ row.price3 }}\r\n                                            </td>\r\n                                            <td class=\"text-center\">\r\n                                                Precio {{ row.price_default }}\r\n                                            </td>\r\n                                            <td\r\n                                                class=\"series-table-actions text-end\"\r\n                                            >\r\n                                                <button\r\n                                                    type=\"button\"\r\n                                                    class=\"btn waves-effect waves-light btn-xs btn-success\"\r\n                                                    @click.prevent=\"\r\n                                                        selectedPrice(row)\r\n                                                    \"\r\n                                                >\r\n                                                    <i\r\n                                                        class=\"el-icon-check\"\r\n                                                    ></i>\r\n                                                </button>\r\n                                            </td>\r\n                                        </tr>\r\n                                    </tbody>\r\n                                </table>\r\n                            </div>\r\n                        </div>\r\n                        <!--<div class=\"col-md-3 center-el-checkbox\">-->\r\n                        <!--<div class=\"form-group\" :class=\"{'has-danger': errors.has_igv}\">-->\r\n                        <!--<el-checkbox v-model=\"form.has_igv\">Incluye Igv</el-checkbox><br>-->\r\n                        <!--<small class=\"form-control-feedback\" v-if=\"errors.has_igv\" v-text=\"errors.has_igv[0]\"></small>-->\r\n                        <!--</div>-->\r\n                        <!--</div>-->\r\n                        <!--</div>-->\r\n                        <!-- <div class=\"col-md-4 center-el-checkbox\">\r\n                            <div class=\"form-group\" :class=\"{'has-danger': errors.has_igv}\">\r\n                                <el-checkbox v-model=\"form.has_plastic_bag_taxes\">Impuesto a la Bolsa Plástica</el-checkbox><br>\r\n                            </div>\r\n                        </div>  -->\r\n                        <!--<div class=\"col-md-6\" v-show=\"has_list_prices\">\r\n                            <div class=\"form-group\" :class=\"{'has-danger': errors.item_unit_type_id}\">\r\n                                <label class=\"control-label\">Presentación</label>\r\n                                <el-select v-model=\"form.item_unit_type_id\" filterable @change=\"changePresentation\">\r\n                                    <el-option v-for=\"option in item_unit_types\" :key=\"option.id\" :value=\"option.id\" :label=\"option.description\"></el-option>\r\n                                </el-select>\r\n                                <el-radio-group v-if=\"form.item_unit_type_id\" v-model=\"item_unit_type.price_default\" @change=\"changePresentation\">\r\n                                    <el-radio :label=\"1\">Precio 1</el-radio>\r\n                                    <el-radio :label=\"2\">Precio 2</el-radio>\r\n                                    <el-radio :label=\"3\">Precio 3</el-radio>\r\n                                </el-radio-group>\r\n                                <small class=\"form-control-feedback\" v-if=\"errors.item_unit_type_id\" v-text=\"errors.item_unit_type_id[0]\"></small>\r\n                            </div>\r\n                        </div>-->\r\n                        <!-- <div class=\"col-md-12 mt-2\" v-if=\"form.item.warehouses\">\r\n                            <table class=\"table\">\r\n                                <thead>\r\n                                <tr>\r\n                                    <th>Ubicación</th>\r\n                                    <th class=\"text-end\">Stock</th>\r\n                                </tr>\r\n                                </thead>\r\n                                <tbody>\r\n                                <tr v-for=\"row in form.item.warehouses\">\r\n                                    <th>{{ row.warehouse_description }}</th>\r\n                                    <th class=\"text-end\">{{ row.stock }}</th>\r\n                                </tr>\r\n                                </tbody>\r\n                            </table>\r\n                        </div> -->\r\n\r\n                        <div class=\"col-md-12 mt-2\">\r\n                            <el-collapse v-model=\"activePanel\">\r\n                                <!-- <el-collapse-item :disabled=\"recordItem != null\" title=\"Información adicional atributos UBL 2.1\" name=\"1\"> -->\r\n                                <el-collapse-item\r\n                                    :disabled=\"recordItem != null\"\r\n                                    title=\"+ Agregar Descuentos/Cargos/Atributos especiales\"\r\n                                    name=\"1\"\r\n                                >\r\n                                    <!--<div>-->\r\n                                    <!--<div class=\"row\">-->\r\n                                    <div v-if=\"discount_types.length > 0\">\r\n                                        <label class=\"control-label\">\r\n                                            Descuentos\r\n                                            <a\r\n                                                href=\"#\"\r\n                                                @click.prevent=\"\r\n                                                    clickAddDiscount\r\n                                                \"\r\n                                                >[+ Agregar]</a\r\n                                            >\r\n                                        </label>\r\n                                        <table class=\"table\">\r\n                                            <thead>\r\n                                                <tr>\r\n                                                    <th>Tipo</th>\r\n                                                    <th>Descripción</th>\r\n                                                    <th>Porcentaje</th>\r\n                                                    <th></th>\r\n                                                </tr>\r\n                                            </thead>\r\n                                            <tbody>\r\n                                                <tr\r\n                                                    v-for=\"(row,\r\n                                                    index) in form.discounts\"\r\n                                                    :key=\"index\"\r\n                                                >\r\n                                                    <td>\r\n                                                        <el-select\r\n                                                            v-model=\"\r\n                                                                row.discount_type_id\r\n                                                            \"\r\n                                                            @change=\"\r\n                                                                changeDiscountType(\r\n                                                                    index\r\n                                                                )\r\n                                                            \"\r\n                                                        >\r\n                                                            <el-option\r\n                                                                v-for=\"option in discount_types\"\r\n                                                                :key=\"option.id\"\r\n                                                                :value=\"\r\n                                                                    option.id\r\n                                                                \"\r\n                                                                :label=\"\r\n                                                                    option.description\r\n                                                                \"\r\n                                                            ></el-option>\r\n                                                        </el-select>\r\n                                                    </td>\r\n                                                    <td>\r\n                                                        <el-input\r\n                                                            v-model=\"\r\n                                                                row.description\r\n                                                            \"\r\n                                                        >\r\n                                                            <i\r\n                                                                slot=\"prefix\"\r\n                                                                class=\"el-icon-edit-outline\"\r\n                                                            ></i\r\n                                                        ></el-input>\r\n                                                    </td>\r\n                                                    <td>\r\n                                                        <el-checkbox\r\n                                                            v-model=\"\r\n                                                                row.is_amount\r\n                                                            \"\r\n                                                            >Ingresar monto\r\n                                                            fijo</el-checkbox\r\n                                                        ><br />\r\n                                                        <el-input\r\n                                                            v-model=\"\r\n                                                                row.percentage\r\n                                                            \"\r\n                                                        >\r\n                                                            <i\r\n                                                                slot=\"prefix\"\r\n                                                                class=\"el-icon-edit-outline\"\r\n                                                            ></i\r\n                                                        ></el-input>\r\n                                                    </td>\r\n                                                    <td>\r\n                                                        <button\r\n                                                            type=\"button\"\r\n                                                            class=\"btn btn-danger\"\r\n                                                            @click.prevent=\"\r\n                                                                clickRemoveDiscount(\r\n                                                                    index\r\n                                                                )\r\n                                                            \"\r\n                                                        >\r\n                                                            x\r\n                                                        </button>\r\n                                                    </td>\r\n                                                </tr>\r\n                                            </tbody>\r\n                                        </table>\r\n                                    </div>\r\n                                    <div v-if=\"charge_types.length > 0\">\r\n                                        <label class=\"control-label\">\r\n                                            Cargos\r\n                                            <a\r\n                                                href=\"#\"\r\n                                                @click.prevent=\"clickAddCharge\"\r\n                                                >[+ Agregar]</a\r\n                                            >\r\n                                        </label>\r\n                                        <table class=\"table\">\r\n                                            <thead>\r\n                                                <tr>\r\n                                                    <th>Tipo</th>\r\n                                                    <th>Descripción</th>\r\n                                                    <th>Porcentaje</th>\r\n                                                    <th></th>\r\n                                                </tr>\r\n                                            </thead>\r\n                                            <tbody>\r\n                                                <tr\r\n                                                    v-for=\"(row,\r\n                                                    index) in form.charges\"\r\n                                                    :key=\"index\"\r\n                                                >\r\n                                                    <td>\r\n                                                        <el-select\r\n                                                            v-model=\"\r\n                                                                row.charge_type_id\r\n                                                            \"\r\n                                                            @change=\"\r\n                                                                changeChargeType(\r\n                                                                    index\r\n                                                                )\r\n                                                            \"\r\n                                                        >\r\n                                                            <el-option\r\n                                                                v-for=\"option in charge_types\"\r\n                                                                :key=\"option.id\"\r\n                                                                :value=\"\r\n                                                                    option.id\r\n                                                                \"\r\n                                                                :label=\"\r\n                                                                    option.description\r\n                                                                \"\r\n                                                            ></el-option>\r\n                                                        </el-select>\r\n                                                    </td>\r\n                                                    <td>\r\n                                                        <el-input\r\n                                                            v-model=\"\r\n                                                                row.description\r\n                                                            \"\r\n                                                        >\r\n                                                            <i\r\n                                                                slot=\"prefix\"\r\n                                                                class=\"el-icon-edit-outline\"\r\n                                                            ></i\r\n                                                        ></el-input>\r\n                                                    </td>\r\n                                                    <td>\r\n                                                        <el-input\r\n                                                            v-model=\"\r\n                                                                row.percentage\r\n                                                            \"\r\n                                                        >\r\n                                                            <i\r\n                                                                slot=\"prefix\"\r\n                                                                class=\"el-icon-edit-outline\"\r\n                                                            ></i\r\n                                                        ></el-input>\r\n                                                    </td>\r\n                                                    <td>\r\n                                                        <button\r\n                                                            type=\"button\"\r\n                                                            class=\"btn btn-danger\"\r\n                                                            @click.prevent=\"\r\n                                                                clickRemoveCharge(\r\n                                                                    index\r\n                                                                )\r\n                                                            \"\r\n                                                        >\r\n                                                            x\r\n                                                        </button>\r\n                                                    </td>\r\n                                                </tr>\r\n                                            </tbody>\r\n                                        </table>\r\n                                    </div>\r\n                                    <div v-if=\"attribute_types.length > 0\">\r\n                                        <label class=\"control-label\">\r\n                                            Atributos\r\n                                            <a\r\n                                                href=\"#\"\r\n                                                @click.prevent=\"\r\n                                                    clickAddAttribute\r\n                                                \"\r\n                                                >[+ Agregar]</a\r\n                                            >\r\n                                        </label>\r\n                                        <table class=\"table\">\r\n                                            <thead>\r\n                                                <tr>\r\n                                                    <th>Tipo</th>\r\n                                                    <th>Descripción</th>\r\n                                                    <th></th>\r\n                                                </tr>\r\n                                            </thead>\r\n                                            <tbody>\r\n                                                <tr\r\n                                                    v-for=\"(row,\r\n                                                    index) in form.attributes\"\r\n                                                    :key=\"index\"\r\n                                                >\r\n                                                    <td>\r\n                                                        <el-select\r\n                                                            v-model=\"\r\n                                                                row.attribute_type_id\r\n                                                            \"\r\n                                                            filterable\r\n                                                            @change=\"\r\n                                                                changeAttributeType(\r\n                                                                    index\r\n                                                                )\r\n                                                            \"\r\n                                                        >\r\n                                                            <el-option\r\n                                                                v-for=\"option in attribute_types\"\r\n                                                                :key=\"option.id\"\r\n                                                                :value=\"\r\n                                                                    option.id\r\n                                                                \"\r\n                                                                :label=\"\r\n                                                                    option.description\r\n                                                                \"\r\n                                                            ></el-option>\r\n                                                        </el-select>\r\n                                                    </td>\r\n                                                    <td>\r\n                                                        <el-input\r\n                                                            v-model=\"row.value\"\r\n                                                            @input=\"\r\n                                                                inputAttribute(\r\n                                                                    index\r\n                                                                )\r\n                                                            \"\r\n                                                        >\r\n                                                            <i\r\n                                                                slot=\"prefix\"\r\n                                                                class=\"el-icon-edit-outline\"\r\n                                                            ></i\r\n                                                        ></el-input>\r\n                                                    </td>\r\n                                                    <td>\r\n                                                        <button\r\n                                                            type=\"button\"\r\n                                                            class=\"btn btn-danger\"\r\n                                                            @click.prevent=\"\r\n                                                                clickRemoveAttribute(\r\n                                                                    index\r\n                                                                )\r\n                                                            \"\r\n                                                        >\r\n                                                            x\r\n                                                        </button>\r\n                                                    </td>\r\n                                                </tr>\r\n                                            </tbody>\r\n                                        </table>\r\n                                    </div>\r\n\r\n                                    <!--</div>-->\r\n                                </el-collapse-item>\r\n                            </el-collapse>\r\n                        </div>\r\n                    </template>\r\n                </div>\r\n            </div>\r\n            <div class=\"form-actions text-end pt-2 pb-2\">\r\n                <el-button @click.prevent=\"close()\">Cerrar</el-button>\r\n                <el-button\r\n                    class=\"add\"\r\n                    type=\"primary\"\r\n                    @click=\"clickAddItem()\"\r\n                    v-if=\"agregar_item\"\r\n                    >{{ titleAction }}</el-button\r\n                >\r\n            </div>\r\n        </form>\r\n        <item-form\r\n            :showDialog.sync=\"showDialogNewItem\"\r\n            :external=\"true\"\r\n            @add=\"addNewItem\"\r\n        ></item-form>\r\n\r\n        <warehouses-detail\r\n            :showDialog.sync=\"showWarehousesDetail\"\r\n            :isUpdateWarehouseId=\"isUpdateWarehouseId\"\r\n            :warehouses=\"warehousesDetail\"\r\n        >\r\n        </warehouses-detail>\r\n\r\n        <lots-group\r\n            :quantity=\"form.quantity\"\r\n            :showDialog.sync=\"showDialogLots\"\r\n            :lots_group=\"form.lots_group\"\r\n            @addRowLotGroup=\"addRowLotGroup\"\r\n        >\r\n        </lots-group>\r\n\r\n        <select-lots-form\r\n            :showDialog.sync=\"showDialogSelectLots\"\r\n            :lots=\"lots\"\r\n            @addRowSelectLot=\"addRowSelectLot\"\r\n        >\r\n        </select-lots-form>\r\n    </el-dialog>\r\n</template>\r\n<style>\r\n.el-select-dropdown {\r\n    max-width: 80% !important;\r\n    margin-right: 5% !important;\r\n}\r\n</style>\r\n\r\n<script>\r\nimport ItemForm from \"../../items/form.vue\";\r\nimport LotsGroup from \"./lots_group.vue\";\r\nimport { calculateRowItem } from \"../../../helpers/functions\";\r\nimport WarehousesDetail from \"./select_warehouses.vue\";\r\nimport SelectLotsForm from \"./lots.vue\";\r\nimport ClassicEditor from \"@ckeditor/ckeditor5-build-classic\";\r\nimport VueCkeditor from \"vue-ckeditor5\";\r\n\r\nexport default {\r\n    props: [\r\n        \"recordItem\",\r\n        \"showDialog\",\r\n        \"operationTypeId\",\r\n        \"currencyTypeIdActive\",\r\n        \"exchangeRateSale\",\r\n        \"typeUser\",\r\n        \"isEditItemNote\",\r\n        \"configuration\",\r\n        \"restringir_stock\"\r\n    ],\r\n    components: {\r\n        ItemForm,\r\n        WarehousesDetail,\r\n        LotsGroup,\r\n        SelectLotsForm,\r\n        \"vue-ckeditor\": VueCkeditor.component\r\n    },\r\n    data() {\r\n        return {\r\n            loading_search: false,\r\n            titleAction: \"\",\r\n            is_client: false,\r\n            titleDialog: \"\",\r\n            resource: \"documents\",\r\n            showDialogNewItem: false,\r\n            has_list_prices: false,\r\n            errors: {},\r\n            form: {},\r\n            all_items: [],\r\n            items: [],\r\n            items_select: [],\r\n            operation_types: [],\r\n            all_affectation_igv_types: [],\r\n            affectation_igv_types: [],\r\n            system_isc_types: [],\r\n            discount_types: [],\r\n            charge_types: [],\r\n            attribute_types: [],\r\n            use_price: 1,\r\n            change_affectation_igv_type_id: false,\r\n            activePanel: 0,\r\n            total_item: 0,\r\n            item_unit_types: [],\r\n            showWarehousesDetail: false,\r\n            warehousesDetail: [],\r\n            showListStock: false,\r\n            search_item_by_barcode: false,\r\n            isUpdateWarehouseId: null,\r\n            showDialogLots: false,\r\n            showDialogSelectLots: false,\r\n            lots: [],\r\n            item_select: null,\r\n            agregar_item: false,\r\n            form_control: {},\r\n            editors: {\r\n                classic: ClassicEditor\r\n            }\r\n            //item_unit_type: {}\r\n        };\r\n    },\r\n    async created() {\r\n        this.initForm();\r\n        this.$http.get(`/${this.resource}/item/tables`).then(response => {\r\n            this.all_items = response.data.items;\r\n            this.operation_types = response.data.operation_types;\r\n            this.all_affectation_igv_types =\r\n                response.data.affectation_igv_types;\r\n            this.affectation_igv_types = response.data.affectation_igv_types;\r\n            this.system_isc_types = response.data.system_isc_types;\r\n            this.discount_types = response.data.discount_types;\r\n            this.charge_types = response.data.charge_types;\r\n            this.attribute_types = response.data.attribute_types;\r\n            this.is_client = response.data.is_client;\r\n            //  this.restringir_stock= response.data.restringir_stock;\r\n            this.filterItems();\r\n        });\r\n\r\n        this.$eventHub.$on(\"reloadDataItems\", item_id => {\r\n            this.reloadDataItems(item_id);\r\n        });\r\n\r\n        this.$eventHub.$on(\"selectWarehouseId\", warehouse_id => {\r\n            // console.log(warehouse_id)\r\n            this.form.warehouse_id = warehouse_id;\r\n        });\r\n    },\r\n    methods: {\r\n        async searchRemoteItems(input) {\r\n            if (input.length > 2) {\r\n                this.loading_search = true;\r\n                let parameters = `input=${input}`;\r\n                await this.$http\r\n                    .get(`/${this.resource}/search-items/?${parameters}`)\r\n                    .then(response => {\r\n                        this.items_select = response.data[0];\r\n\r\n                        this.items = response.data;\r\n                        this.loading_search = false;\r\n\r\n                        this.enabledSearchItemsBarcode();\r\n\r\n                        if (this.items.length == 0) {\r\n                            this.filterItems();\r\n                        }\r\n                    });\r\n            } else {\r\n                await this.filterItems();\r\n            }\r\n        },\r\n        focusProducto() {\r\n            this.calculateQuantity();\r\n            this.$nextTick(function() {\r\n                this.$refs.producto.$el.querySelector(\"input\").focus();\r\n            });\r\n        },\r\n        addNewItem(data) {\r\n            this.form.item_id = data.id;\r\n            this.items.push(data);\r\n            this.searchRemoteItems(data.description);\r\n            this.form.item = _.find(this.items, { id: data.id });\r\n            let precios = _.filter(this.items, { id: this.form.item_id })[0];\r\n            this.form.unit_price_value = this.form.item.sale_unit_price;\r\n            ///////////////////////////////////////////////////////////////////////////\r\n            this.lots = this.form.item.lots;\r\n            this.form.stock_disp = this.form.item.stock;\r\n            this.form.has_igv = this.form.item.has_igv;\r\n            this.form.affectation_igv_type_id = this.form.item.sale_affectation_igv_type_id;\r\n            this.form.quantity = 1;\r\n            ///////////////////////////////////////////////////////////////////////////\r\n            this.cleanTotalItem();\r\n            this.showListStock = true;\r\n\r\n            this.calculateQuantity();\r\n            //this.changeItem()\r\n        },\r\n        focusPrecio() {\r\n            //   this.$refs.precio.$el.getElementsByTagName('input')[0].focus()\r\n            //  this.$refs.precio.$el.querySelector('input').focus();\r\n            this.calculateQuantity();\r\n            this.$nextTick(function() {\r\n                this.$refs.precio.$el.querySelector(\"input\").focus();\r\n            });\r\n        },\r\n        stock() {\r\n            if (this.form.stock == \"Si\") {\r\n                this.form_control.stock_control = true;\r\n            } else {\r\n                this.form_control.stock_control = false;\r\n            }\r\n            this.$http\r\n                .post(\"/inventories/configuration\", this.form_control)\r\n                .then(response => {\r\n                    if (response.data.success) {\r\n                        this.$message.success(response.data.message);\r\n                    } else {\r\n                        this.$message.error(response.data.message);\r\n                    }\r\n                })\r\n                .catch(error => {\r\n                    if (error.response.status === 422) {\r\n                        this.errors = error.response.data.errors;\r\n                    } else {\r\n                        console.log(error);\r\n                    }\r\n                })\r\n                .then(() => {\r\n                    //this.loading_submit = false;\r\n                });\r\n        },\r\n        filterItems() {\r\n            this.items = this.all_items;\r\n        },\r\n        enabledSearchItemsBarcode() {\r\n            if (this.search_item_by_barcode) {\r\n                if (this.items.length == 1) {\r\n                    this.form.item_id = this.items[0].id;\r\n                    this.changeItem();\r\n                }\r\n            }\r\n        },\r\n        filterMethod(query) {\r\n            let item = _.find(this.items, { internal_id: query });\r\n\r\n            if (item) {\r\n                this.form.item_id = item.id;\r\n                this.changeItem();\r\n            }\r\n            // console.log(item)\r\n        },\r\n        clickWarehouseDetail() {\r\n            if (!this.form.item_id) {\r\n                return this.$message.error(\"Seleccione un item\");\r\n            }\r\n\r\n            let item = _.find(this.items, { id: this.form.item_id });\r\n\r\n            this.warehousesDetail = item.warehouses;\r\n            this.showWarehousesDetail = true;\r\n        },\r\n        // filterItems(){\r\n        //     this.items = this.items.filter(item => item.warehouses.length >0)\r\n        // },\r\n        initForm() {\r\n            this.errors = {};\r\n\r\n            this.form = {\r\n                // category_id: [1],\r\n                // edit: false,\r\n                item_id: null,\r\n                item: {},\r\n                affectation_igv_type_id: null,\r\n                affectation_igv_type: {},\r\n                has_isc: false,\r\n                system_isc_type_id: null,\r\n                percentage_isc: 0,\r\n                suggested_price: 0,\r\n                quantity: 1,\r\n                unit_price_value: 0,\r\n                input_unit_price_value: 0,\r\n                unit_price: 0,\r\n                charges: [],\r\n                discounts: [],\r\n                attributes: [],\r\n                has_igv: null,\r\n                item_unit_types: [],\r\n                has_plastic_bag_taxes: false,\r\n                warehouse_id: null,\r\n                lots_group: [],\r\n                IdLoteSelected: null,\r\n                stock: \"Si\",\r\n                stock_disp: null,\r\n                name_product_pdf: \"\"\r\n            };\r\n\r\n            this.activePanel = 0;\r\n            this.total_item = 0;\r\n            this.item_unit_type = {};\r\n            this.has_list_prices = false;\r\n        },\r\n        // initializeFields() {\r\n        //     this.form.affectation_igv_type_id = this.affectation_igv_types[0].id\r\n        // },\r\n        async create() {\r\n            this.titleDialog = this.recordItem\r\n                ? \" Modificar Producto o Servicio\"\r\n                : \" Agregar Producto o Servicio\";\r\n            this.titleAction = this.recordItem ? \" Modificar\" : \"Agregar\";\r\n            let operation_type = await _.find(this.operation_types, {\r\n                id: this.operationTypeId\r\n            });\r\n            //  this. =affectation_igv_types await _.filter(this.all_affectation_igv_types, {exportation: operation_type.exportation})\r\n\r\n            if (this.recordItem) {\r\n                this.form.item_id = await this.recordItem.item_id;\r\n                this.form.unit_price = this.recordItem.unit_price;\r\n                await this.searchRemoteItems(this.recordItem.item.description);\r\n                await this.changeItem();\r\n                this.form.quantity = this.recordItem.quantity;\r\n\r\n                this.form.unit_price_value = this.recordItem.unit_price;\r\n                this.form.amount = _.round(\r\n                    this.form.quantity * this.form.unit_price_value,\r\n                    4\r\n                );\r\n                this.form.stock = this.recordItem.item.is_stock;\r\n                this.form.has_plastic_bag_taxes =\r\n                    this.recordItem.total_plastic_bag_taxes > 0 ? true : false;\r\n                this.form.warehouse_id = this.recordItem.warehouse_id;\r\n                this.isUpdateWarehouseId = this.recordItem.warehouse_id;\r\n                this.item_select = this.recordItem;\r\n                if (this.isEditItemNote) {\r\n                    this.form.item.currency_type_id = this.currencyTypeIdActive;\r\n                    this.form.item.currency_type_symbol =\r\n                        this.currencyTypeIdActive == \"PEN\" ? \"S/\" : \"$\";\r\n                }\r\n\r\n                this.calculateQuantity();\r\n            } else {\r\n                this.isUpdateWarehouseId = null;\r\n            }\r\n            // if (this.recordItem.item.name_product_pdf) {\r\n            //      this.form.name_product_pdf = this.recordItem.item.name_product_pdf;\r\n            // }\r\n        },\r\n        clickAddDiscount() {\r\n            this.form.discounts.push({\r\n                discount_type_id: null,\r\n                discount_type: null,\r\n                description: null,\r\n                percentage: 0,\r\n                factor: 0,\r\n                amount: 0,\r\n                base: 0,\r\n                is_amount: false\r\n            });\r\n        },\r\n        clickRemoveDiscount(index) {\r\n            this.form.discounts.splice(index, 1);\r\n        },\r\n        changeDiscountType(index) {\r\n            let discount_type_id = this.form.discounts[index].discount_type_id;\r\n            this.form.discounts[index].discount_type = _.find(\r\n                this.discount_types,\r\n                { id: discount_type_id }\r\n            );\r\n        },\r\n        clickAddCharge() {\r\n            this.form.charges.push({\r\n                charge_type_id: null,\r\n                charge_type: null,\r\n                description: null,\r\n                percentage: 0,\r\n                factor: 0,\r\n                amount: 0,\r\n                base: 0\r\n            });\r\n        },\r\n        clickRemoveCharge(index) {\r\n            this.form.charges.splice(index, 1);\r\n        },\r\n        changeChargeType(index) {\r\n            let charge_type_id = this.form.charges[index].charge_type_id;\r\n            this.form.charges[index].charge_type = _.find(this.charge_types, {\r\n                id: charge_type_id\r\n            });\r\n        },\r\n        clickAddAttribute() {\r\n            this.form.attributes.push({\r\n                attribute_type_id: null,\r\n                description: null,\r\n                value: null,\r\n                start_date: null,\r\n                end_date: null,\r\n                duration: null\r\n            });\r\n        },\r\n        clickRemoveAttribute(index) {\r\n            this.form.attributes.splice(index, 1);\r\n        },\r\n        changeAttributeType(index) {\r\n            let attribute_type_id = this.form.attributes[index]\r\n                .attribute_type_id;\r\n            let attribute_type = _.find(this.attribute_types, {\r\n                id: attribute_type_id\r\n            });\r\n            this.form.attributes[index].description =\r\n                attribute_type.description;\r\n            this.inputAttribute(index);\r\n        },\r\n        inputAttribute(index) {\r\n            let value = this.form.attributes[index].value;\r\n            let hotelAttributes = [\"4003\", \"4004\"];\r\n\r\n            this.form.attributes[index].start_date = hotelAttributes.includes(\r\n                this.form.attributes[index].attribute_type_id\r\n            )\r\n                ? value\r\n                : null;\r\n        },\r\n        close() {\r\n            this.initForm();\r\n            this.$emit(\"update:showDialog\", false);\r\n        },\r\n        async changeItem() {\r\n            if (this.recordItem) {\r\n                this.form.item = this.items_select;\r\n            } else {\r\n                this.form.item = _.find(this.items, { id: this.form.item_id });\r\n            }\r\n            let precios = _.filter(this.items, { id: this.form.item_id })[0];\r\n            this.form.item_unit_types = precios.item_unit_types;\r\n            this.form.unit_price_value = this.form.item.sale_unit_price;\r\n            this.lots = this.form.item.lots;\r\n            this.form.stock_disp = this.form.item.stock;\r\n            this.form.has_igv = this.form.item.has_igv;\r\n            this.form.affectation_igv_type_id = this.form.item.sale_affectation_igv_type_id;\r\n            this.form.quantity = 1;\r\n            this.cleanTotalItem();\r\n            this.showListStock = true;\r\n\r\n            if (this.form.item.attributes.length > 0) {\r\n                const contex = this;\r\n                this.form.item.attributes.forEach(row => {\r\n                    contex.form.attributes.push({\r\n                        attribute_type_id: row.attribute_type_id,\r\n                        description: row.description,\r\n                        value: row.value,\r\n                        start_date: row.start_date,\r\n                        end_date: row.end_date,\r\n                        duration: row.duration\r\n                    });\r\n                });\r\n            }\r\n\r\n            this.form.lots_group = this.form.item.lots_group;\r\n            this.calculateQuantity();\r\n\r\n            // if (!this.recordItem) {\r\n            //     await this.form.item.warehouses.forEach(element => {\r\n            //         if(element.checked){\r\n            //             this.form.warehouse_id = element.warehouse_id\r\n            //         }\r\n            //     });\r\n            // }\r\n\r\n            // this.item_unit_types = this.form.item.item_unit_types;\r\n            // (this.item_unit_types.length > 0) ? this.has_list_prices = true : this.has_list_prices = false;\r\n        },\r\n        focusTotalItem(change) {\r\n            //  if(!change && this.form.item.calculate_quantity) {\r\n            this.$refs.cantidad.$el.getElementsByTagName(\"input\")[0].focus();\r\n            //this.total_item = this.form.unit_price_value\r\n            // }\r\n        },\r\n        calculateQuantity() {\r\n            // debugger\r\n            if (this.restringir_stock === true && this.form.item_id !== null) {\r\n                if (\r\n                    this.form.stock_disp < this.form.quantity &&\r\n                    this.form.stock == \"Si\" &&\r\n                    this.form.item_id != null\r\n                ) {\r\n                    this.agregar_item = false;\r\n                    this.$message.error(\"Stock Insuficiente...\");\r\n                } else {\r\n                    this.agregar_item = true;\r\n                }\r\n            } else {\r\n                this.agregar_item = true;\r\n            }\r\n\r\n            if (this.form.item.calculate_quantity) {\r\n                this.form.quantity = _.round(\r\n                    this.total_item / this.form.unit_price_value,\r\n                    4\r\n                );\r\n            }\r\n            this.form.amount = _.round(\r\n                this.form.quantity * this.form.unit_price_value,\r\n                4\r\n            );\r\n        },\r\n        cleanTotalItem() {\r\n            this.total_item = null;\r\n        },\r\n        async clickAddItem() {\r\n            this.form.item.is_stock = this.form.stock;\r\n            if (this.form.item.lots_enabled) {\r\n                if (!this.form.IdLoteSelected)\r\n                    return this.$message.error(\"Debe seleccionar un lote.\");\r\n            }\r\n            if (this.validateTotalItem().total_item) return;\r\n\r\n            let unit_price = this.form.has_igv\r\n                ? this.form.unit_price_value\r\n                : this.form.unit_price_value * 1.18;\r\n\r\n            this.form.input_unit_price_value = this.form.unit_price_value;\r\n\r\n            this.form.unit_price = unit_price;\r\n            this.form.item.unit_price = unit_price;\r\n            this.form.item.presentation = this.item_unit_type;\r\n            this.form.affectation_igv_type = _.find(\r\n                this.affectation_igv_types,\r\n                { id: this.form.affectation_igv_type_id }\r\n            );\r\n\r\n            let IdLoteSelected = this.form.IdLoteSelected;\r\n\r\n            // console.log(this.form)\r\n            // return\r\n            // console.log\r\n            this.row = calculateRowItem(\r\n                this.form,\r\n                this.currencyTypeIdActive,\r\n                this.exchangeRateSale\r\n            );\r\n            this.row.item.name_product_pdf = this.row.name_product_pdf || \"\";\r\n            let select_lots = await _.filter(this.row.item.lots, {\r\n                has_sale: true\r\n            });\r\n            let un_select_lots = await _.filter(this.row.item.lots, {\r\n                has_sale: false\r\n            });\r\n\r\n            if (this.form.item.series_enabled) {\r\n                if (select_lots.length != this.form.quantity)\r\n                    return this.$message.error(\r\n                        \"La cantidad de series seleccionadas son diferentes a la cantidad a vender\"\r\n                    );\r\n            }\r\n\r\n            // this.row.edit = false;\r\n            this.initForm();\r\n            //this.initializeFields()\r\n            if (this.recordItem) {\r\n                this.row.indexi = this.recordItem.indexi;\r\n            }\r\n\r\n            this.row.IdLoteSelected = IdLoteSelected;\r\n            this.$emit(\"add\", this.row);\r\n\r\n            this.agregar_item = false;\r\n            if (this.recordItem) {\r\n                this.close();\r\n            }\r\n        },\r\n        validateTotalItem() {\r\n            this.errors = {};\r\n\r\n            if (this.form.item.calculate_quantity) {\r\n                if (this.total_item < 0.01)\r\n                    this.$set(this.errors, \"total_item\", [\r\n                        \"total venta item debe ser mayor a 0.01\"\r\n                    ]);\r\n            }\r\n\r\n            return this.errors;\r\n        },\r\n        async reloadDataItems(item_id) {\r\n            if (!item_id) {\r\n                this.$http\r\n                    .get(`/${this.resource}/table/items`)\r\n                    .then(response => {\r\n                        this.items = response.data;\r\n                        this.form.item_id = item_id;\r\n                        // if(item_id) this.changeItem()\r\n                        // this.filterItems()\r\n                    });\r\n            } else {\r\n                const resp = await this.$http.get(\r\n                    `/${this.resource}/search/item/${item_id}`\r\n                );\r\n                if (resp.data.items.length > 0) {\r\n                    let data = resp.data.items[0];\r\n                    this.items = resp.data.items[0];\r\n                    this.form.item_id = item_id;\r\n\r\n                    // this.form.item.stock=resp.data.items[0].stock\r\n                    // this.form.unit_price_value=resp.data.items[0].sale_unit_price\r\n                    // this.searchRemoteItems(resp.data.items[0].description);\r\n                    // this.form.item.stock=resp.data.items[0].stock\r\n                    // this.$refs.cantidad.$el.getElementsByTagName('input')[0].focus()\r\n                    // this.changeItem()\r\n                }\r\n                //.then((response) => {\r\n\r\n                //  })\r\n            }\r\n        },\r\n        changePresentation() {\r\n            let price = 0;\r\n\r\n            this.item_unit_type = _.find(this.form.item.item_unit_types, {\r\n                id: this.form.item_unit_type_id\r\n            });\r\n\r\n            switch (this.item_unit_type.price_default) {\r\n                case 1:\r\n                    price = this.item_unit_type.price1;\r\n                    break;\r\n                case 2:\r\n                    price = this.item_unit_type.price2;\r\n                    break;\r\n                case 3:\r\n                    price = this.item_unit_type.price3;\r\n                    break;\r\n            }\r\n\r\n            this.form.unit_price_value = price;\r\n            this.form.item.unit_type_id = this.item_unit_type.unit_type_id;\r\n        },\r\n        selectedPrice(row) {\r\n            let valor = 0;\r\n            switch (row.price_default) {\r\n                case 1:\r\n                    valor = row.price1;\r\n                    break;\r\n                case 2:\r\n                    valor = row.price2;\r\n                    break;\r\n                case 3:\r\n                    valor = row.price3;\r\n                    break;\r\n            }\r\n            this.form.item_unit_type_id = row.id;\r\n            this.item_unit_type = row;\r\n\r\n            this.form.unit_price_value = valor;\r\n            this.form.item.unit_type_id = row.unit_type_id;\r\n            this.calculateQuantity();\r\n        },\r\n        addRow(row) {\r\n            // this.searchRemoteItems(row.description)\r\n        },\r\n        addRowLotGroup(id) {\r\n            this.form.IdLoteSelected = id;\r\n        },\r\n        clickLotGroup() {\r\n            this.showDialogLots = true;\r\n        },\r\n        async clickSelectLots() {\r\n            this.showDialogSelectLots = true;\r\n        },\r\n        addRowSelectLot(lots) {\r\n            this.lots = lots;\r\n        }\r\n    }\r\n};\r\n</script>\r\n"],"sourceRoot":""}]);
+
+// exports
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/index.js?sourceMap!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-d083b6c4\",\"scoped\":false,\"hasInlineConfig\":true}!./node_modules/sass-loader/lib/loader.js!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./resources/js/views/companies/logo.vue":
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__("./node_modules/css-loader/lib/css-base.js")(true);
+// imports
+
+
+// module
+exports.push([module.i, "\n.uploader .el-upload {\n  border: 1px dashed #d9d9d9;\n  border-radius: 6px;\n  cursor: pointer;\n  position: relative;\n  overflow: hidden;\n}\n.uploader .el-upload:hover {\n  border-color: #409EFF;\n}\n.uploader-icon {\n  font-size: 28px;\n  color: #8c939d;\n  width: 178px;\n  height: 178px;\n  line-height: 178px;\n  text-align: center;\n}\n.avatar {\n  width: 178px;\n  height: 178px;\n  display: block;\n}\n", "", {"version":3,"sources":["D:/laragon/www/sdrimsac-tenant/resources/js/views/companies/logo.vue"],"names":[],"mappings":";AAAA;EACE,2BAA2B;EAC3B,mBAAmB;EACnB,gBAAgB;EAChB,mBAAmB;EACnB,iBAAiB;CAAE;AAErB;EACE,sBAAsB;CAAE;AAE1B;EACE,gBAAgB;EAChB,eAAe;EACf,aAAa;EACb,cAAc;EACd,mBAAmB;EACnB,mBAAmB;CAAE;AAEvB;EACE,aAAa;EACb,cAAc;EACd,eAAe;CAAE","file":"logo.vue","sourcesContent":[".uploader .el-upload {\n  border: 1px dashed #d9d9d9;\n  border-radius: 6px;\n  cursor: pointer;\n  position: relative;\n  overflow: hidden; }\n\n.uploader .el-upload:hover {\n  border-color: #409EFF; }\n\n.uploader-icon {\n  font-size: 28px;\n  color: #8c939d;\n  width: 178px;\n  height: 178px;\n  line-height: 178px;\n  text-align: center; }\n\n.avatar {\n  width: 178px;\n  height: 178px;\n  display: block; }\n"],"sourceRoot":""}]);
 
 // exports
 
@@ -6140,7 +7957,2534 @@ exports.push([module.i, "\n.el-select-dropdown {\r\n    max-width: 80% !importan
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-0763bba8\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/js/views/documents/partials/select_warehouses.vue":
+/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-0d92229a\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/js/views/quotations/partials/options.vue":
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    [
+      _c(
+        "el-dialog",
+        {
+          attrs: {
+            "append-to-body": "",
+            title: _vm.titleDialog,
+            visible: _vm.showDialog,
+            width: "650px",
+            "close-on-click-modal": false,
+            "close-on-press-escape": false,
+            "show-close": false
+          },
+          on: { open: _vm.create, close: _vm.clickClose }
+        },
+        [
+          _c(
+            "div",
+            {
+              directives: [
+                {
+                  name: "show",
+                  rawName: "v-show",
+                  value: !_vm.showGenerate,
+                  expression: "!showGenerate"
+                }
+              ],
+              staticClass: "row"
+            },
+            [
+              _c(
+                "div",
+                {
+                  staticClass:
+                    "col-lg-4 col-md-4 col-sm-4 text-center font-weight-bold"
+                },
+                [
+                  _c("p", [_vm._v("Imprimir A4")]),
+                  _vm._v(" "),
+                  _c(
+                    "button",
+                    {
+                      staticClass:
+                        "btn btn-lg btn-info waves-effect waves-light",
+                      attrs: { type: "button" },
+                      on: {
+                        click: function($event) {
+                          return _vm.clickToPrint("a4")
+                        }
+                      }
+                    },
+                    [_c("i", { staticClass: "fa fa-file-alt" })]
+                  )
+                ]
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
+                {
+                  staticClass:
+                    "col-lg-4 col-md-4 col-sm-4 text-center font-weight-bold"
+                },
+                [
+                  _c("p", [_vm._v("Imprimir A5")]),
+                  _vm._v(" "),
+                  _c(
+                    "button",
+                    {
+                      staticClass:
+                        "btn btn-lg btn-info waves-effect waves-light",
+                      attrs: { type: "button" },
+                      on: {
+                        click: function($event) {
+                          return _vm.clickToPrint("a5")
+                        }
+                      }
+                    },
+                    [_c("i", { staticClass: "fa fa-file-alt" })]
+                  )
+                ]
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
+                {
+                  staticClass:
+                    "col-lg-4 col-md-4 col-sm-4 text-center font-weight-bold"
+                },
+                [
+                  _c("p", [_vm._v("Imprimir Ticket")]),
+                  _vm._v(" "),
+                  _c(
+                    "button",
+                    {
+                      staticClass:
+                        "btn btn-lg btn-info waves-effect waves-light",
+                      attrs: { type: "button" },
+                      on: {
+                        click: function($event) {
+                          return _vm.clickToPrint("ticket")
+                        }
+                      }
+                    },
+                    [_c("i", { staticClass: "fa fa-receipt" })]
+                  )
+                ]
+              )
+            ]
+          ),
+          _vm._v(" "),
+          _c("br"),
+          _vm._v(" "),
+          _c(
+            "div",
+            {
+              directives: [
+                {
+                  name: "show",
+                  rawName: "v-show",
+                  value: !_vm.showGenerate,
+                  expression: "!showGenerate"
+                }
+              ],
+              staticClass: "row"
+            },
+            [
+              _c(
+                "div",
+                { staticClass: "col-md-12" },
+                [
+                  _c(
+                    "el-input",
+                    {
+                      model: {
+                        value: _vm.customer_email,
+                        callback: function($$v) {
+                          _vm.customer_email = $$v
+                        },
+                        expression: "customer_email"
+                      }
+                    },
+                    [
+                      _c(
+                        "el-button",
+                        {
+                          attrs: {
+                            slot: "append",
+                            icon: "el-icon-message",
+                            loading: _vm.loading
+                          },
+                          on: { click: _vm.clickSendEmail },
+                          slot: "append"
+                        },
+                        [_vm._v("Enviar")]
+                      ),
+                      _vm._v(" "),
+                      _c("i", {
+                        staticClass: "el-icon-edit-outline",
+                        attrs: { slot: "prefix" },
+                        slot: "prefix"
+                      })
+                    ],
+                    1
+                  )
+                ],
+                1
+              )
+            ]
+          ),
+          _vm._v(" "),
+          _c("br"),
+          _vm._v(" "),
+          _vm.typeUser == "admin"
+            ? _c("div", { staticClass: "row" }, [
+                _c(
+                  "div",
+                  {
+                    directives: [
+                      {
+                        name: "show",
+                        rawName: "v-show",
+                        value: !_vm.showGenerate,
+                        expression: "!showGenerate"
+                      }
+                    ],
+                    staticClass: "col-md-9"
+                  },
+                  [
+                    _c(
+                      "div",
+                      { staticClass: "form-group" },
+                      [
+                        _c(
+                          "el-checkbox",
+                          {
+                            model: {
+                              value: _vm.generate,
+                              callback: function($$v) {
+                                _vm.generate = $$v
+                              },
+                              expression: "generate"
+                            }
+                          },
+                          [_vm._v("Generar comprobante electrónico")]
+                        )
+                      ],
+                      1
+                    )
+                  ]
+                )
+              ])
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.generate
+            ? _c("div", { staticClass: "row" }, [
+                _c("div", { staticClass: "col-lg-12 pb-2" }, [
+                  _c(
+                    "div",
+                    { staticClass: "form-group" },
+                    [
+                      _c(
+                        "label",
+                        {
+                          staticClass:
+                            "control-label font-weight-bold text-primary"
+                        },
+                        [
+                          _vm._v(
+                            "\n                        Cliente\n                        "
+                          )
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "el-select",
+                        {
+                          staticClass: "border-left rounded-left border-info",
+                          attrs: {
+                            filterable: "",
+                            remote: "",
+                            "popper-class": "el-select-customers",
+                            dusk: "customer_id",
+                            placeholder:
+                              "Escriba el nombre o número de documento del cliente",
+                            "remote-method": _vm.searchRemoteCustomers,
+                            loading: _vm.loading_search
+                          },
+                          on: { change: _vm.changeCustomer },
+                          model: {
+                            value: _vm.document.customer_id,
+                            callback: function($$v) {
+                              _vm.$set(_vm.document, "customer_id", $$v)
+                            },
+                            expression: "document.customer_id"
+                          }
+                        },
+                        _vm._l(_vm.customers, function(option) {
+                          return _c("el-option", {
+                            key: option.id,
+                            attrs: {
+                              value: option.id,
+                              label: option.description
+                            }
+                          })
+                        }),
+                        1
+                      ),
+                      _vm._v(" "),
+                      _vm.errors.customer_id
+                        ? _c("small", {
+                            staticClass: "form-control-feedback",
+                            domProps: {
+                              textContent: _vm._s(_vm.errors.customer_id[0])
+                            }
+                          })
+                        : _vm._e()
+                    ],
+                    1
+                  )
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "col-lg-8" }, [
+                  _c(
+                    "div",
+                    {
+                      staticClass: "form-group",
+                      class: { "has-danger": _vm.errors.document_type_id }
+                    },
+                    [
+                      _c("label", { staticClass: "control-label" }, [
+                        _vm._v("Tipo comprobante")
+                      ]),
+                      _vm._v(" "),
+                      _c(
+                        "el-select",
+                        {
+                          staticClass: "border-left rounded-left border-info",
+                          attrs: {
+                            "popper-class": "el-select-document_type",
+                            dusk: "document_type_id"
+                          },
+                          on: { change: _vm.changeDocumentType },
+                          model: {
+                            value: _vm.document.document_type_id,
+                            callback: function($$v) {
+                              _vm.$set(_vm.document, "document_type_id", $$v)
+                            },
+                            expression: "document.document_type_id"
+                          }
+                        },
+                        [
+                          _vm._l(_vm.document_types, function(option) {
+                            return _c("el-option", {
+                              key: option.id,
+                              attrs: {
+                                value: option.id,
+                                label: option.description
+                              }
+                            })
+                          }),
+                          _vm._v(" "),
+                          _c("el-option", {
+                            key: "nv",
+                            attrs: { value: "80", label: "NOTA DE VENTA" }
+                          })
+                        ],
+                        2
+                      ),
+                      _vm._v(" "),
+                      _vm.errors.document_type_id
+                        ? _c("small", {
+                            staticClass: "form-control-feedback",
+                            domProps: {
+                              textContent: _vm._s(
+                                _vm.errors.document_type_id[0]
+                              )
+                            }
+                          })
+                        : _vm._e()
+                    ],
+                    1
+                  )
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "col-lg-4" }, [
+                  _c(
+                    "div",
+                    {
+                      staticClass: "form-group",
+                      class: { "has-danger": _vm.errors.series_id }
+                    },
+                    [
+                      _c("label", { staticClass: "control-label" }, [
+                        _vm._v("Serie")
+                      ]),
+                      _vm._v(" "),
+                      _c(
+                        "el-select",
+                        {
+                          model: {
+                            value: _vm.document.series_id,
+                            callback: function($$v) {
+                              _vm.$set(_vm.document, "series_id", $$v)
+                            },
+                            expression: "document.series_id"
+                          }
+                        },
+                        _vm._l(_vm.series, function(option) {
+                          return _c("el-option", {
+                            key: option.id,
+                            attrs: { value: option.id, label: option.number }
+                          })
+                        }),
+                        1
+                      ),
+                      _vm._v(" "),
+                      _vm.errors.series_id
+                        ? _c("small", {
+                            staticClass: "form-control-feedback",
+                            domProps: {
+                              textContent: _vm._s(_vm.errors.series_id[0])
+                            }
+                          })
+                        : _vm._e()
+                    ],
+                    1
+                  )
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "col-lg-6" }, [
+                  _c(
+                    "div",
+                    {
+                      staticClass: "form-group",
+                      class: { "has-danger": _vm.errors.date_of_issue }
+                    },
+                    [
+                      _c("label", { staticClass: "control-label" }, [
+                        _vm._v("Fecha de emisión")
+                      ]),
+                      _vm._v(" "),
+                      _c("el-date-picker", {
+                        attrs: {
+                          readonly: "",
+                          type: "date",
+                          "value-format": "yyyy-MM-dd",
+                          clearable: false
+                        },
+                        on: { change: _vm.changeDateOfIssue },
+                        model: {
+                          value: _vm.document.date_of_issue,
+                          callback: function($$v) {
+                            _vm.$set(_vm.document, "date_of_issue", $$v)
+                          },
+                          expression: "document.date_of_issue"
+                        }
+                      }),
+                      _vm._v(" "),
+                      _vm.errors.date_of_issue
+                        ? _c("small", {
+                            staticClass: "form-control-feedback",
+                            domProps: {
+                              textContent: _vm._s(_vm.errors.date_of_issue[0])
+                            }
+                          })
+                        : _vm._e()
+                    ],
+                    1
+                  )
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "col-lg-6" }, [
+                  _c(
+                    "div",
+                    {
+                      staticClass: "form-group",
+                      class: { "has-danger": _vm.errors.date_of_issue }
+                    },
+                    [
+                      _c("label", { staticClass: "control-label" }, [
+                        _vm._v("Fecha de vencimiento")
+                      ]),
+                      _vm._v(" "),
+                      _c("el-date-picker", {
+                        attrs: {
+                          type: "date",
+                          "value-format": "yyyy-MM-dd",
+                          clearable: false
+                        },
+                        model: {
+                          value: _vm.document.date_of_due,
+                          callback: function($$v) {
+                            _vm.$set(_vm.document, "date_of_due", $$v)
+                          },
+                          expression: "document.date_of_due"
+                        }
+                      }),
+                      _vm._v(" "),
+                      _vm.errors.date_of_due
+                        ? _c("small", {
+                            staticClass: "form-control-feedback",
+                            domProps: {
+                              textContent: _vm._s(_vm.errors.date_of_due[0])
+                            }
+                          })
+                        : _vm._e()
+                    ],
+                    1
+                  )
+                ]),
+                _vm._v(" "),
+                _c("br"),
+                _vm._v(" "),
+                _c("div", { staticClass: "col-lg-4" }, [
+                  _c(
+                    "div",
+                    {
+                      directives: [
+                        {
+                          name: "show",
+                          rawName: "v-show",
+                          value: _vm.document.document_type_id == "03",
+                          expression: "document.document_type_id == '03'"
+                        }
+                      ],
+                      staticClass: "form-group"
+                    },
+                    [
+                      _c(
+                        "el-checkbox",
+                        {
+                          staticClass: "font-weight-bold",
+                          model: {
+                            value: _vm.document.is_receivable,
+                            callback: function($$v) {
+                              _vm.$set(_vm.document, "is_receivable", $$v)
+                            },
+                            expression: "document.is_receivable"
+                          }
+                        },
+                        [_vm._v("¿Es venta por cobrar?")]
+                      )
+                    ],
+                    1
+                  )
+                ]),
+                _vm._v(" "),
+                _c("br"),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  {
+                    directives: [
+                      {
+                        name: "show",
+                        rawName: "v-show",
+                        value: _vm.is_document_type_invoice,
+                        expression: "is_document_type_invoice"
+                      }
+                    ],
+                    staticClass: "col-lg-12"
+                  },
+                  [
+                    _c("table", [
+                      _c("thead", [
+                        _c("tr", { attrs: { width: "100%" } }, [
+                          _vm.document.payments.length > 0
+                            ? _c("th", [
+                                _vm._v(
+                                  "\n                                M.Pago\n                            "
+                                )
+                              ])
+                            : _vm._e(),
+                          _vm._v(" "),
+                          _vm.document.payments.length > 0
+                            ? _c("th", [
+                                _vm._v(
+                                  "\n                                Destino\n                            "
+                                )
+                              ])
+                            : _vm._e(),
+                          _vm._v(" "),
+                          _vm.document.payments.length > 0
+                            ? _c("th", [
+                                _vm._v(
+                                  "\n                                Referencia\n                            "
+                                )
+                              ])
+                            : _vm._e(),
+                          _vm._v(" "),
+                          _vm.document.payments.length > 0
+                            ? _c("th", [
+                                _vm._v(
+                                  "\n                                Monto\n                            "
+                                )
+                              ])
+                            : _vm._e(),
+                          _vm._v(" "),
+                          _c("th", { attrs: { width: "5%" } }, [
+                            _c(
+                              "a",
+                              {
+                                staticClass:
+                                  "text-center font-weight-bold text-center text-info",
+                                staticStyle: { "font-size": "18px" },
+                                attrs: { href: "#" },
+                                on: {
+                                  click: function($event) {
+                                    $event.preventDefault()
+                                    return _vm.clickAddPayment.apply(
+                                      null,
+                                      arguments
+                                    )
+                                  }
+                                }
+                              },
+                              [_vm._v("[+]")]
+                            )
+                          ])
+                        ])
+                      ]),
+                      _vm._v(" "),
+                      _c(
+                        "tbody",
+                        _vm._l(_vm.document.payments, function(row, index) {
+                          return _c("tr", { key: index }, [
+                            _c("td", [
+                              _c(
+                                "div",
+                                { staticClass: "form-group mb-2 mr-2" },
+                                [
+                                  _c(
+                                    "el-select",
+                                    {
+                                      model: {
+                                        value: row.payment_method_type_id,
+                                        callback: function($$v) {
+                                          _vm.$set(
+                                            row,
+                                            "payment_method_type_id",
+                                            $$v
+                                          )
+                                        },
+                                        expression: "row.payment_method_type_id"
+                                      }
+                                    },
+                                    _vm._l(_vm.payment_method_types, function(
+                                      option
+                                    ) {
+                                      return _c("el-option", {
+                                        key: option.id,
+                                        attrs: {
+                                          value: option.id,
+                                          label: option.description
+                                        }
+                                      })
+                                    }),
+                                    1
+                                  )
+                                ],
+                                1
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("td", [
+                              _c(
+                                "div",
+                                { staticClass: "form-group mb-2 mr-2" },
+                                [
+                                  _c(
+                                    "el-select",
+                                    {
+                                      attrs: {
+                                        filterable: "",
+                                        disabled:
+                                          row.payment_destination_disabled
+                                      },
+                                      model: {
+                                        value: row.payment_destination_id,
+                                        callback: function($$v) {
+                                          _vm.$set(
+                                            row,
+                                            "payment_destination_id",
+                                            $$v
+                                          )
+                                        },
+                                        expression: "row.payment_destination_id"
+                                      }
+                                    },
+                                    _vm._l(_vm.payment_destinations, function(
+                                      option
+                                    ) {
+                                      return _c("el-option", {
+                                        key: option.id,
+                                        attrs: {
+                                          value: option.id,
+                                          label: option.description
+                                        }
+                                      })
+                                    }),
+                                    1
+                                  )
+                                ],
+                                1
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("td", [
+                              _c(
+                                "div",
+                                { staticClass: "form-group mb-2 mr-2" },
+                                [
+                                  _c(
+                                    "el-input",
+                                    {
+                                      model: {
+                                        value: row.reference,
+                                        callback: function($$v) {
+                                          _vm.$set(row, "reference", $$v)
+                                        },
+                                        expression: "row.reference"
+                                      }
+                                    },
+                                    [
+                                      _c("i", {
+                                        staticClass: "el-icon-edit-outline",
+                                        attrs: { slot: "prefix" },
+                                        slot: "prefix"
+                                      })
+                                    ]
+                                  )
+                                ],
+                                1
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("td", [
+                              _c(
+                                "div",
+                                { staticClass: "form-group mb-2 mr-2" },
+                                [
+                                  _c(
+                                    "el-input",
+                                    {
+                                      model: {
+                                        value: row.payment,
+                                        callback: function($$v) {
+                                          _vm.$set(row, "payment", $$v)
+                                        },
+                                        expression: "row.payment"
+                                      }
+                                    },
+                                    [
+                                      _c("i", {
+                                        staticClass: "el-icon-edit-outline",
+                                        attrs: { slot: "prefix" },
+                                        slot: "prefix"
+                                      })
+                                    ]
+                                  )
+                                ],
+                                1
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              {
+                                staticClass: "series-table-actions text-center"
+                              },
+                              [
+                                _c(
+                                  "button",
+                                  {
+                                    staticClass:
+                                      "btn waves-effect waves-light btn-xs btn-danger",
+                                    attrs: { type: "button" },
+                                    on: {
+                                      click: function($event) {
+                                        $event.preventDefault()
+                                        return _vm.clickCancel(index)
+                                      }
+                                    }
+                                  },
+                                  [_c("i", { staticClass: "fa fa-trash" })]
+                                )
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c("br")
+                          ])
+                        }),
+                        0
+                      )
+                    ])
+                  ]
+                )
+              ])
+            : _vm._e(),
+          _vm._v(" "),
+          _c(
+            "span",
+            {
+              staticClass: "dialog-footer",
+              attrs: { slot: "footer" },
+              slot: "footer"
+            },
+            [
+              !_vm.external
+                ? [
+                    _vm.showClose
+                      ? [
+                          _c("el-button", { on: { click: _vm.clickClose } }, [
+                            _vm._v("Cerrar")
+                          ]),
+                          _vm._v(" "),
+                          _vm.generate
+                            ? _c(
+                                "el-button",
+                                {
+                                  staticClass: "submit",
+                                  attrs: {
+                                    type: "primary",
+                                    loading: _vm.loading_submit
+                                  },
+                                  on: { click: _vm.submit }
+                                },
+                                [_vm._v("Generar")]
+                              )
+                            : _vm._e()
+                        ]
+                      : [
+                          _vm.generate
+                            ? _c(
+                                "el-button",
+                                {
+                                  staticClass: "submit",
+                                  attrs: {
+                                    type: "primary",
+                                    plain: "",
+                                    loading: _vm.loading_submit
+                                  },
+                                  on: { click: _vm.submit }
+                                },
+                                [_vm._v("Generar comprobante")]
+                              )
+                            : _c(
+                                "el-button",
+                                { on: { click: _vm.clickFinalize } },
+                                [_vm._v("Ir al listado")]
+                              ),
+                          _vm._v(" "),
+                          _c(
+                            "el-button",
+                            {
+                              attrs: { type: "primary" },
+                              on: { click: _vm.clickNewQuotation }
+                            },
+                            [_vm._v("Nueva cotización")]
+                          )
+                        ]
+                  ]
+                : [
+                    _c("el-button", { on: { click: _vm.clickClose } }, [
+                      _vm._v("Cerrar")
+                    ])
+                  ]
+            ],
+            2
+          )
+        ]
+      ),
+      _vm._v(" "),
+      _c("document-options", {
+        attrs: {
+          showDialog: _vm.showDialogDocumentOptions,
+          recordId: _vm.documentNewId,
+          isContingency: false,
+          showClose: true
+        },
+        on: {
+          "update:showDialog": function($event) {
+            _vm.showDialogDocumentOptions = $event
+          },
+          "update:show-dialog": function($event) {
+            _vm.showDialogDocumentOptions = $event
+          }
+        }
+      }),
+      _vm._v(" "),
+      _c("sale-note-options", {
+        attrs: {
+          configuration: _vm.configuration,
+          showDialog: _vm.showDialogSaleNoteOptions,
+          recordId: _vm.documentNewId,
+          showClose: true
+        },
+        on: {
+          "update:showDialog": function($event) {
+            _vm.showDialogSaleNoteOptions = $event
+          },
+          "update:show-dialog": function($event) {
+            _vm.showDialogSaleNoteOptions = $event
+          }
+        }
+      })
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-0d92229a", module.exports)
+  }
+}
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-16a47e47\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/js/views/quotations/partials/item.vue":
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "el-dialog",
+    {
+      attrs: {
+        title: _vm.titleDialog,
+        visible: _vm.showDialog,
+        top: "7vh",
+        "close-on-click-modal": false
+      },
+      on: { open: _vm.create, close: _vm.close }
+    },
+    [
+      _c("form", { attrs: { autocomplete: "off" } }, [
+        _c("div", { staticClass: "form-body" }, [
+          _c(
+            "div",
+            { staticClass: "row" },
+            [
+              _c(
+                "div",
+                { staticClass: "col-md-7 col-lg-7 col-xl-7 col-sm-7" },
+                [
+                  _c(
+                    "div",
+                    {
+                      staticClass: "form-group",
+                      class: { "has-danger": _vm.errors.item_id },
+                      attrs: { id: "custom-select" }
+                    },
+                    [
+                      _c("label", { staticClass: "control-label" }, [
+                        _vm._v(
+                          "\n                            Producto/Servicio\n                            "
+                        ),
+                        _vm.typeUser != "seller"
+                          ? _c(
+                              "a",
+                              {
+                                staticClass: "text-primary",
+                                attrs: { href: "#" },
+                                on: {
+                                  click: function($event) {
+                                    $event.preventDefault()
+                                    _vm.showDialogNewItem = true
+                                  }
+                                }
+                              },
+                              [_vm._v("[+ Nuevo]")]
+                            )
+                          : _vm._e()
+                      ]),
+                      _vm._v(" "),
+                      !_vm.search_item_by_barcode
+                        ? [
+                            _c(
+                              "div",
+                              {
+                                staticClass:
+                                  "el-input el-input-group el-input-group--append"
+                              },
+                              [
+                                _c(
+                                  "el-select",
+                                  {
+                                    ref: "producto",
+                                    attrs: {
+                                      slot: "prepend",
+                                      disabled: _vm.recordItem != null,
+                                      filterable: "",
+                                      remote: "",
+                                      placeholder: "Buscar",
+                                      "popper-class": "el-select-items",
+                                      id: "select-width",
+                                      "remote-method": _vm.searchRemoteItems,
+                                      loading: _vm.loading_search
+                                    },
+                                    on: {
+                                      focus: function($event) {
+                                        return $event.target.select()
+                                      },
+                                      change: _vm.changeItem,
+                                      "visible-change": _vm.focusTotalItem
+                                    },
+                                    slot: "prepend",
+                                    model: {
+                                      value: _vm.form.item_id,
+                                      callback: function($$v) {
+                                        _vm.$set(_vm.form, "item_id", $$v)
+                                      },
+                                      expression: "form.item_id"
+                                    }
+                                  },
+                                  _vm._l(_vm.items, function(option) {
+                                    return _c("el-option", {
+                                      key: option.id,
+                                      attrs: {
+                                        value: option.id,
+                                        label: option.full_description
+                                      }
+                                    })
+                                  }),
+                                  1
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "el-tooltip",
+                                  {
+                                    staticClass: "item",
+                                    attrs: {
+                                      slot: "append",
+                                      effect: "dark",
+                                      content: "Ver Stock del Producto",
+                                      placement: "bottom",
+                                      disabled: _vm.recordItem != null
+                                    },
+                                    slot: "append"
+                                  },
+                                  [
+                                    _c(
+                                      "div",
+                                      { staticClass: "el-input-group__append" },
+                                      [
+                                        _c(
+                                          "el-button",
+                                          {
+                                            attrs: {
+                                              disabled: _vm.isEditItemNote
+                                            },
+                                            on: {
+                                              click: function($event) {
+                                                $event.preventDefault()
+                                                return _vm.clickWarehouseDetail()
+                                              }
+                                            }
+                                          },
+                                          [
+                                            _c("i", {
+                                              staticClass: "fa fa-search"
+                                            })
+                                          ]
+                                        )
+                                      ],
+                                      1
+                                    )
+                                  ]
+                                )
+                              ],
+                              1
+                            )
+                          ]
+                        : [
+                            _c(
+                              "div",
+                              {
+                                staticClass:
+                                  "el-input el-input-group el-input-group--append"
+                              },
+                              [
+                                _c(
+                                  "el-select",
+                                  {
+                                    ref: "productos",
+                                    attrs: {
+                                      slot: "prepend",
+                                      disabled: _vm.recordItem != null,
+                                      filterable: "",
+                                      placeholder: "Buscar",
+                                      "popper-class": "el-select-items",
+                                      dusk: "item_id",
+                                      id: "select-width",
+                                      remote: "",
+                                      "remote-method": _vm.searchRemoteItems,
+                                      loading: _vm.loading_search
+                                    },
+                                    on: {
+                                      change: _vm.changeItem,
+                                      "visible-change": _vm.focusTotalItem
+                                    },
+                                    slot: "prepend",
+                                    model: {
+                                      value: _vm.form.item_id,
+                                      callback: function($$v) {
+                                        _vm.$set(_vm.form, "item_id", $$v)
+                                      },
+                                      expression: "form.item_id"
+                                    }
+                                  },
+                                  _vm._l(_vm.items, function(option) {
+                                    return _c("el-option", {
+                                      key: option.id,
+                                      attrs: {
+                                        value: option.id,
+                                        label: option.full_description
+                                      }
+                                    })
+                                  }),
+                                  1
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "el-tooltip",
+                                  {
+                                    staticClass: "item",
+                                    attrs: {
+                                      slot: "append",
+                                      effect: "dark",
+                                      content: "Ver Stock del Producto",
+                                      placement: "bottom",
+                                      disabled: _vm.recordItem != null
+                                    },
+                                    slot: "append"
+                                  },
+                                  [
+                                    _c(
+                                      "div",
+                                      { staticClass: "el-input-group__append" },
+                                      [
+                                        _c(
+                                          "el-button",
+                                          {
+                                            attrs: {
+                                              disabled: _vm.isEditItemNote
+                                            },
+                                            on: {
+                                              click: function($event) {
+                                                $event.preventDefault()
+                                                return _vm.clickWarehouseDetail()
+                                              }
+                                            }
+                                          },
+                                          [
+                                            _c("i", {
+                                              staticClass: "fa fa-search"
+                                            })
+                                          ]
+                                        )
+                                      ],
+                                      1
+                                    )
+                                  ]
+                                )
+                              ],
+                              1
+                            )
+                          ],
+                      _vm._v(" "),
+                      !_vm.is_client
+                        ? [
+                            _c(
+                              "el-checkbox",
+                              {
+                                attrs: { disabled: _vm.recordItem != null },
+                                model: {
+                                  value: _vm.search_item_by_barcode,
+                                  callback: function($$v) {
+                                    _vm.search_item_by_barcode = $$v
+                                  },
+                                  expression: "search_item_by_barcode"
+                                }
+                              },
+                              [_vm._v("Buscar por código de barras")]
+                            ),
+                            _c("br")
+                          ]
+                        : _vm._e(),
+                      _vm._v(" "),
+                      _c(
+                        "el-checkbox",
+                        {
+                          attrs: { disabled: _vm.isEditItemNote },
+                          model: {
+                            value: _vm.form.has_plastic_bag_taxes,
+                            callback: function($$v) {
+                              _vm.$set(_vm.form, "has_plastic_bag_taxes", $$v)
+                            },
+                            expression: "form.has_plastic_bag_taxes"
+                          }
+                        },
+                        [_vm._v("Impuesto a la Bolsa Plástica")]
+                      ),
+                      _vm._v(" "),
+                      _vm.errors.item_id
+                        ? _c("small", {
+                            staticClass: "form-control-feedback",
+                            domProps: {
+                              textContent: _vm._s(_vm.errors.item_id[0])
+                            }
+                          })
+                        : _vm._e()
+                    ],
+                    2
+                  )
+                ]
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "col-md-2 col-lg-2 col-xl-2 col-sm-2" },
+                [
+                  _c("div", { staticClass: "form-group" }, [
+                    _c("label", { staticClass: "control-label text-center" }, [
+                      _vm._v("Stock Dispo.")
+                    ]),
+                    _c("br"),
+                    _vm._v(" "),
+                    _c("b", [
+                      _c(
+                        "h6",
+                        {
+                          staticClass: "text-center",
+                          staticStyle: { "font-size": "14px" }
+                        },
+                        [
+                          _vm._v(
+                            "\n                                " +
+                              _vm._s(_vm.form.stock_disp) +
+                              "\n                            "
+                          )
+                        ]
+                      )
+                    ])
+                  ])
+                ]
+              ),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-md-3" }, [
+                _c(
+                  "div",
+                  {
+                    staticClass: "form-group",
+                    class: {
+                      "has-danger": _vm.errors.affectation_igv_type_id
+                    }
+                  },
+                  [
+                    _c("label", { staticClass: "control-label" }, [
+                      _vm._v("Afectación Igv")
+                    ]),
+                    _vm._v(" "),
+                    _c(
+                      "el-select",
+                      {
+                        attrs: {
+                          disabled: !_vm.change_affectation_igv_type_id,
+                          filterable: ""
+                        },
+                        model: {
+                          value: _vm.form.affectation_igv_type_id,
+                          callback: function($$v) {
+                            _vm.$set(_vm.form, "affectation_igv_type_id", $$v)
+                          },
+                          expression: "form.affectation_igv_type_id"
+                        }
+                      },
+                      _vm._l(_vm.affectation_igv_types, function(option) {
+                        return _c("el-option", {
+                          key: option.id,
+                          attrs: { value: option.id, label: option.description }
+                        })
+                      }),
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "el-checkbox",
+                      {
+                        attrs: { disabled: _vm.recordItem != null },
+                        model: {
+                          value: _vm.change_affectation_igv_type_id,
+                          callback: function($$v) {
+                            _vm.change_affectation_igv_type_id = $$v
+                          },
+                          expression: "change_affectation_igv_type_id"
+                        }
+                      },
+                      [_vm._v("Editar")]
+                    ),
+                    _vm._v(" "),
+                    _vm.errors.affectation_igv_type_id
+                      ? _c("small", {
+                          staticClass: "form-control-feedback",
+                          domProps: {
+                            textContent: _vm._s(
+                              _vm.errors.affectation_igv_type_id[0]
+                            )
+                          }
+                        })
+                      : _vm._e()
+                  ],
+                  1
+                )
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-md-3 col-sm-3" }, [
+                _c(
+                  "div",
+                  {
+                    staticClass: "form-group",
+                    class: { "has-danger": _vm.errors.quantity }
+                  },
+                  [
+                    _c("label", { staticClass: "control-label" }, [
+                      _vm._v("Cantidad")
+                    ]),
+                    _vm._v(" "),
+                    _c("el-input-number", {
+                      ref: "cantidad",
+                      attrs: { min: 0.01, precision: 4 },
+                      on: {
+                        focus: function($event) {
+                          return $event.target.select()
+                        },
+                        input: function($event) {
+                          return _vm.calculateQuantity()
+                        }
+                      },
+                      nativeOn: {
+                        keyup: function($event) {
+                          if (
+                            !$event.type.indexOf("key") &&
+                            _vm._k(
+                              $event.keyCode,
+                              "enter",
+                              13,
+                              $event.key,
+                              "Enter"
+                            )
+                          ) {
+                            return null
+                          }
+                          _vm.focusPrecio()
+                          _vm.calculateQuantity()
+                        }
+                      },
+                      model: {
+                        value: _vm.form.quantity,
+                        callback: function($$v) {
+                          _vm.$set(_vm.form, "quantity", $$v)
+                        },
+                        expression: "form.quantity"
+                      }
+                    }),
+                    _vm._v(" "),
+                    _vm.errors.quantity
+                      ? _c("small", {
+                          staticClass: "form-control-feedback",
+                          domProps: {
+                            textContent: _vm._s(_vm.errors.quantity[0])
+                          }
+                        })
+                      : _vm._e()
+                  ],
+                  1
+                )
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-md-3 col-sm-3" }, [
+                _c(
+                  "div",
+                  {
+                    staticClass: "form-group",
+                    class: { "has-danger": _vm.errors.unit_price_value }
+                  },
+                  [
+                    _c("label", { staticClass: "control-label" }, [
+                      _vm._v("Precio Unitario")
+                    ]),
+                    _vm._v(" "),
+                    _c(
+                      "el-input",
+                      {
+                        ref: "precio",
+                        attrs: { readonly: _vm.typeUser === "" },
+                        on: {
+                          focus: function($event) {
+                            return $event.target.select()
+                          }
+                        },
+                        nativeOn: {
+                          keyup: function($event) {
+                            if (
+                              !$event.type.indexOf("key") &&
+                              _vm._k(
+                                $event.keyCode,
+                                "enter",
+                                13,
+                                $event.key,
+                                "Enter"
+                              )
+                            ) {
+                              return null
+                            }
+                            _vm.clickAddItem()
+                            _vm.focusProducto()
+                          }
+                        },
+                        model: {
+                          value: _vm.form.unit_price_value,
+                          callback: function($$v) {
+                            _vm.$set(_vm.form, "unit_price_value", $$v)
+                          },
+                          expression: "form.unit_price_value"
+                        }
+                      },
+                      [
+                        _c("template", { slot: "prepend" }, [
+                          _vm._v(_vm._s(_vm.form.item.currency_type_symbol))
+                        ]),
+                        _vm._v(" "),
+                        _c("i", {
+                          staticClass: "el-icon-edit-outline",
+                          attrs: { slot: "prefix" },
+                          slot: "prefix"
+                        })
+                      ],
+                      2
+                    ),
+                    _vm._v(" "),
+                    _vm.errors.unit_price_value
+                      ? _c("small", {
+                          staticClass: "form-control-feedback",
+                          domProps: {
+                            textContent: _vm._s(_vm.errors.unit_price[0])
+                          }
+                        })
+                      : _vm._e()
+                  ],
+                  1
+                )
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-md-3 col-sm-3" }, [
+                _c(
+                  "div",
+                  {
+                    staticClass: "form-group",
+                    class: { "has-danger": _vm.errors.amount }
+                  },
+                  [
+                    _c("label", { staticClass: "control-label" }, [
+                      _vm._v("Importe Total")
+                    ]),
+                    _vm._v(" "),
+                    _c(
+                      "el-input",
+                      {
+                        attrs: { readonly: _vm.typeUser === "" },
+                        model: {
+                          value: _vm.form.amount,
+                          callback: function($$v) {
+                            _vm.$set(_vm.form, "amount", $$v)
+                          },
+                          expression: "form.amount"
+                        }
+                      },
+                      [
+                        _c("template", { slot: "prepend" }, [
+                          _vm._v(_vm._s(_vm.form.item.currency_type_symbol))
+                        ]),
+                        _vm._v(" "),
+                        _c("i", {
+                          staticClass: "el-icon-edit-outline",
+                          attrs: { slot: "prefix" },
+                          slot: "prefix"
+                        })
+                      ],
+                      2
+                    )
+                  ],
+                  1
+                )
+              ]),
+              _vm._v(" "),
+              _vm.form.item_id != null
+                ? _c("div", { staticClass: "col-md-3 col-sm-3" }, [
+                    _c(
+                      "div",
+                      { staticClass: "form-group" },
+                      [
+                        _c("label", { staticClass: "control-label" }, [
+                          _vm._v("Descontar stock")
+                        ]),
+                        _c("br"),
+                        _vm._v(" "),
+                        _c(
+                          "el-radio-group",
+                          {
+                            attrs: { size: "mini" },
+                            on: {
+                              change: function($event) {
+                                return _vm.stock()
+                              }
+                            },
+                            model: {
+                              value: _vm.form.stock,
+                              callback: function($$v) {
+                                _vm.$set(_vm.form, "stock", $$v)
+                              },
+                              expression: "form.stock"
+                            }
+                          },
+                          [
+                            _c("el-radio-button", { attrs: { label: "Si" } }),
+                            _vm._v(" "),
+                            _c("el-radio-button", { attrs: { label: "No" } })
+                          ],
+                          1
+                        )
+                      ],
+                      1
+                    )
+                  ])
+                : _vm._e(),
+              _vm._v(" "),
+              _vm.form.item_id &&
+              _vm.form.item.lots_enabled &&
+              _vm.form.lots_group.length > 0
+                ? _c(
+                    "div",
+                    {
+                      staticClass: "col-md-2 col-sm-2",
+                      staticStyle: { "padding-top": "1%" }
+                    },
+                    [
+                      _c(
+                        "a",
+                        {
+                          staticClass: "text-center font-weight-bold text-info",
+                          attrs: { href: "#" },
+                          on: {
+                            click: function($event) {
+                              $event.preventDefault()
+                              return _vm.clickLotGroup.apply(null, arguments)
+                            }
+                          }
+                        },
+                        [_vm._v("[✔ Seleccionar lote]")]
+                      )
+                    ]
+                  )
+                : _vm._e(),
+              _vm._v(" "),
+              _vm.form.item_id && _vm.form.item.series_enabled
+                ? _c(
+                    "div",
+                    {
+                      staticClass: "col-md-3 col-sm-3",
+                      staticStyle: { "padding-top": "1%" }
+                    },
+                    [
+                      _c(
+                        "a",
+                        {
+                          staticClass: "text-center font-weight-bold text-info",
+                          attrs: { href: "#" },
+                          on: {
+                            click: function($event) {
+                              $event.preventDefault()
+                              return _vm.clickSelectLots.apply(null, arguments)
+                            }
+                          }
+                        },
+                        [_vm._v("[✔ Seleccionar series]")]
+                      )
+                    ]
+                  )
+                : _vm._e(),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-md-12 col-sm-12" }, [
+                _c(
+                  "div",
+                  { staticClass: "form-group" },
+                  [
+                    _c("label", { staticClass: "control-label" }, [
+                      _vm._v("Nombre producto en PDF")
+                    ]),
+                    _vm._v(" "),
+                    _c("vue-ckeditor", {
+                      attrs: { editors: _vm.editors, type: "classic" },
+                      model: {
+                        value: _vm.form.name_product_pdf,
+                        callback: function($$v) {
+                          _vm.$set(_vm.form, "name_product_pdf", $$v)
+                        },
+                        expression: "form.name_product_pdf"
+                      }
+                    })
+                  ],
+                  1
+                )
+              ]),
+              _vm._v(" "),
+              !_vm.is_client
+                ? [
+                    _vm.form.item_unit_types.length > 0
+                      ? _c("div", { staticClass: "col-md-12" }, [
+                          _c(
+                            "div",
+                            {
+                              staticClass: "table-responsive",
+                              staticStyle: { margin: "3px" }
+                            },
+                            [
+                              _c(
+                                "h6",
+                                { staticClass: "separator-title" },
+                                [
+                                  _vm._v(
+                                    "\n                                Lista de Precios\n                                "
+                                  ),
+                                  _c(
+                                    "el-tooltip",
+                                    {
+                                      staticClass: "item",
+                                      attrs: {
+                                        effect: "dark",
+                                        content:
+                                          "Aplica para realizar compra/venta en presentacion de diferentes precios y/o cantidades",
+                                        placement: "top"
+                                      }
+                                    },
+                                    [
+                                      _c("i", {
+                                        staticClass: "fa fa-info-circle"
+                                      })
+                                    ]
+                                  )
+                                ],
+                                1
+                              ),
+                              _vm._v(" "),
+                              _c("table", { staticClass: "table" }, [
+                                _c("thead", [
+                                  _c("tr", [
+                                    _c("th", { staticClass: "text-center" }, [
+                                      _vm._v("Unidad")
+                                    ]),
+                                    _vm._v(" "),
+                                    _c("th", { staticClass: "text-center" }, [
+                                      _vm._v(
+                                        "\n                                            Descripción\n                                        "
+                                      )
+                                    ]),
+                                    _vm._v(" "),
+                                    _c("th", { staticClass: "text-center" }, [
+                                      _vm._v("Factor")
+                                    ]),
+                                    _vm._v(" "),
+                                    _c("th", { staticClass: "text-center" }, [
+                                      _vm._v(
+                                        "\n                                            Precio 1\n                                        "
+                                      )
+                                    ]),
+                                    _vm._v(" "),
+                                    _c("th", { staticClass: "text-center" }, [
+                                      _vm._v(
+                                        "\n                                            Precio 2\n                                        "
+                                      )
+                                    ]),
+                                    _vm._v(" "),
+                                    _c("th", { staticClass: "text-center" }, [
+                                      _vm._v(
+                                        "\n                                            Precio 3\n                                        "
+                                      )
+                                    ]),
+                                    _vm._v(" "),
+                                    _c("th", { staticClass: "text-center" }, [
+                                      _vm._v(
+                                        "\n                                            Precio Default\n                                        "
+                                      )
+                                    ]),
+                                    _vm._v(" "),
+                                    _c("th")
+                                  ])
+                                ]),
+                                _vm._v(" "),
+                                _c(
+                                  "tbody",
+                                  _vm._l(_vm.form.item_unit_types, function(
+                                    row,
+                                    index
+                                  ) {
+                                    return _c("tr", { key: index }, [
+                                      _c("td", { staticClass: "text-center" }, [
+                                        _vm._v(
+                                          "\n                                            " +
+                                            _vm._s(row.unit_type_id) +
+                                            "\n                                        "
+                                        )
+                                      ]),
+                                      _vm._v(" "),
+                                      _c("td", { staticClass: "text-center" }, [
+                                        _vm._v(
+                                          "\n                                            " +
+                                            _vm._s(row.description) +
+                                            "\n                                        "
+                                        )
+                                      ]),
+                                      _vm._v(" "),
+                                      _c("td", { staticClass: "text-center" }, [
+                                        _vm._v(
+                                          "\n                                            " +
+                                            _vm._s(row.quantity_unit) +
+                                            "\n                                        "
+                                        )
+                                      ]),
+                                      _vm._v(" "),
+                                      _c("td", { staticClass: "text-center" }, [
+                                        _vm._v(
+                                          "\n                                            " +
+                                            _vm._s(row.price1) +
+                                            "\n                                        "
+                                        )
+                                      ]),
+                                      _vm._v(" "),
+                                      _c("td", { staticClass: "text-center" }, [
+                                        _vm._v(
+                                          "\n                                            " +
+                                            _vm._s(row.price2) +
+                                            "\n                                        "
+                                        )
+                                      ]),
+                                      _vm._v(" "),
+                                      _c("td", { staticClass: "text-center" }, [
+                                        _vm._v(
+                                          "\n                                            " +
+                                            _vm._s(row.price3) +
+                                            "\n                                        "
+                                        )
+                                      ]),
+                                      _vm._v(" "),
+                                      _c("td", { staticClass: "text-center" }, [
+                                        _vm._v(
+                                          "\n                                            Precio " +
+                                            _vm._s(row.price_default) +
+                                            "\n                                        "
+                                        )
+                                      ]),
+                                      _vm._v(" "),
+                                      _c(
+                                        "td",
+                                        {
+                                          staticClass:
+                                            "series-table-actions text-end"
+                                        },
+                                        [
+                                          _c(
+                                            "button",
+                                            {
+                                              staticClass:
+                                                "btn waves-effect waves-light btn-xs btn-success",
+                                              attrs: { type: "button" },
+                                              on: {
+                                                click: function($event) {
+                                                  $event.preventDefault()
+                                                  return _vm.selectedPrice(row)
+                                                }
+                                              }
+                                            },
+                                            [
+                                              _c("i", {
+                                                staticClass: "el-icon-check"
+                                              })
+                                            ]
+                                          )
+                                        ]
+                                      )
+                                    ])
+                                  }),
+                                  0
+                                )
+                              ])
+                            ]
+                          )
+                        ])
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "col-md-12 mt-2" },
+                      [
+                        _c(
+                          "el-collapse",
+                          {
+                            model: {
+                              value: _vm.activePanel,
+                              callback: function($$v) {
+                                _vm.activePanel = $$v
+                              },
+                              expression: "activePanel"
+                            }
+                          },
+                          [
+                            _c(
+                              "el-collapse-item",
+                              {
+                                attrs: {
+                                  disabled: _vm.recordItem != null,
+                                  title:
+                                    "+ Agregar Descuentos/Cargos/Atributos especiales",
+                                  name: "1"
+                                }
+                              },
+                              [
+                                _vm.discount_types.length > 0
+                                  ? _c("div", [
+                                      _c(
+                                        "label",
+                                        { staticClass: "control-label" },
+                                        [
+                                          _vm._v(
+                                            "\n                                        Descuentos\n                                        "
+                                          ),
+                                          _c(
+                                            "a",
+                                            {
+                                              attrs: { href: "#" },
+                                              on: {
+                                                click: function($event) {
+                                                  $event.preventDefault()
+                                                  return _vm.clickAddDiscount.apply(
+                                                    null,
+                                                    arguments
+                                                  )
+                                                }
+                                              }
+                                            },
+                                            [_vm._v("[+ Agregar]")]
+                                          )
+                                        ]
+                                      ),
+                                      _vm._v(" "),
+                                      _c("table", { staticClass: "table" }, [
+                                        _c("thead", [
+                                          _c("tr", [
+                                            _c("th", [_vm._v("Tipo")]),
+                                            _vm._v(" "),
+                                            _c("th", [_vm._v("Descripción")]),
+                                            _vm._v(" "),
+                                            _c("th", [_vm._v("Porcentaje")]),
+                                            _vm._v(" "),
+                                            _c("th")
+                                          ])
+                                        ]),
+                                        _vm._v(" "),
+                                        _c(
+                                          "tbody",
+                                          _vm._l(_vm.form.discounts, function(
+                                            row,
+                                            index
+                                          ) {
+                                            return _c("tr", { key: index }, [
+                                              _c(
+                                                "td",
+                                                [
+                                                  _c(
+                                                    "el-select",
+                                                    {
+                                                      on: {
+                                                        change: function(
+                                                          $event
+                                                        ) {
+                                                          return _vm.changeDiscountType(
+                                                            index
+                                                          )
+                                                        }
+                                                      },
+                                                      model: {
+                                                        value:
+                                                          row.discount_type_id,
+                                                        callback: function(
+                                                          $$v
+                                                        ) {
+                                                          _vm.$set(
+                                                            row,
+                                                            "discount_type_id",
+                                                            $$v
+                                                          )
+                                                        },
+                                                        expression:
+                                                          "\n                                                            row.discount_type_id\n                                                        "
+                                                      }
+                                                    },
+                                                    _vm._l(
+                                                      _vm.discount_types,
+                                                      function(option) {
+                                                        return _c("el-option", {
+                                                          key: option.id,
+                                                          attrs: {
+                                                            value: option.id,
+                                                            label:
+                                                              option.description
+                                                          }
+                                                        })
+                                                      }
+                                                    ),
+                                                    1
+                                                  )
+                                                ],
+                                                1
+                                              ),
+                                              _vm._v(" "),
+                                              _c(
+                                                "td",
+                                                [
+                                                  _c(
+                                                    "el-input",
+                                                    {
+                                                      model: {
+                                                        value: row.description,
+                                                        callback: function(
+                                                          $$v
+                                                        ) {
+                                                          _vm.$set(
+                                                            row,
+                                                            "description",
+                                                            $$v
+                                                          )
+                                                        },
+                                                        expression:
+                                                          "\n                                                            row.description\n                                                        "
+                                                      }
+                                                    },
+                                                    [
+                                                      _c("i", {
+                                                        staticClass:
+                                                          "el-icon-edit-outline",
+                                                        attrs: {
+                                                          slot: "prefix"
+                                                        },
+                                                        slot: "prefix"
+                                                      })
+                                                    ]
+                                                  )
+                                                ],
+                                                1
+                                              ),
+                                              _vm._v(" "),
+                                              _c(
+                                                "td",
+                                                [
+                                                  _c(
+                                                    "el-checkbox",
+                                                    {
+                                                      model: {
+                                                        value: row.is_amount,
+                                                        callback: function(
+                                                          $$v
+                                                        ) {
+                                                          _vm.$set(
+                                                            row,
+                                                            "is_amount",
+                                                            $$v
+                                                          )
+                                                        },
+                                                        expression:
+                                                          "\n                                                            row.is_amount\n                                                        "
+                                                      }
+                                                    },
+                                                    [
+                                                      _vm._v(
+                                                        "Ingresar monto\n                                                        fijo"
+                                                      )
+                                                    ]
+                                                  ),
+                                                  _c("br"),
+                                                  _vm._v(" "),
+                                                  _c(
+                                                    "el-input",
+                                                    {
+                                                      model: {
+                                                        value: row.percentage,
+                                                        callback: function(
+                                                          $$v
+                                                        ) {
+                                                          _vm.$set(
+                                                            row,
+                                                            "percentage",
+                                                            $$v
+                                                          )
+                                                        },
+                                                        expression:
+                                                          "\n                                                            row.percentage\n                                                        "
+                                                      }
+                                                    },
+                                                    [
+                                                      _c("i", {
+                                                        staticClass:
+                                                          "el-icon-edit-outline",
+                                                        attrs: {
+                                                          slot: "prefix"
+                                                        },
+                                                        slot: "prefix"
+                                                      })
+                                                    ]
+                                                  )
+                                                ],
+                                                1
+                                              ),
+                                              _vm._v(" "),
+                                              _c("td", [
+                                                _c(
+                                                  "button",
+                                                  {
+                                                    staticClass:
+                                                      "btn btn-danger",
+                                                    attrs: { type: "button" },
+                                                    on: {
+                                                      click: function($event) {
+                                                        $event.preventDefault()
+                                                        return _vm.clickRemoveDiscount(
+                                                          index
+                                                        )
+                                                      }
+                                                    }
+                                                  },
+                                                  [
+                                                    _vm._v(
+                                                      "\n                                                        x\n                                                    "
+                                                    )
+                                                  ]
+                                                )
+                                              ])
+                                            ])
+                                          }),
+                                          0
+                                        )
+                                      ])
+                                    ])
+                                  : _vm._e(),
+                                _vm._v(" "),
+                                _vm.charge_types.length > 0
+                                  ? _c("div", [
+                                      _c(
+                                        "label",
+                                        { staticClass: "control-label" },
+                                        [
+                                          _vm._v(
+                                            "\n                                        Cargos\n                                        "
+                                          ),
+                                          _c(
+                                            "a",
+                                            {
+                                              attrs: { href: "#" },
+                                              on: {
+                                                click: function($event) {
+                                                  $event.preventDefault()
+                                                  return _vm.clickAddCharge.apply(
+                                                    null,
+                                                    arguments
+                                                  )
+                                                }
+                                              }
+                                            },
+                                            [_vm._v("[+ Agregar]")]
+                                          )
+                                        ]
+                                      ),
+                                      _vm._v(" "),
+                                      _c("table", { staticClass: "table" }, [
+                                        _c("thead", [
+                                          _c("tr", [
+                                            _c("th", [_vm._v("Tipo")]),
+                                            _vm._v(" "),
+                                            _c("th", [_vm._v("Descripción")]),
+                                            _vm._v(" "),
+                                            _c("th", [_vm._v("Porcentaje")]),
+                                            _vm._v(" "),
+                                            _c("th")
+                                          ])
+                                        ]),
+                                        _vm._v(" "),
+                                        _c(
+                                          "tbody",
+                                          _vm._l(_vm.form.charges, function(
+                                            row,
+                                            index
+                                          ) {
+                                            return _c("tr", { key: index }, [
+                                              _c(
+                                                "td",
+                                                [
+                                                  _c(
+                                                    "el-select",
+                                                    {
+                                                      on: {
+                                                        change: function(
+                                                          $event
+                                                        ) {
+                                                          return _vm.changeChargeType(
+                                                            index
+                                                          )
+                                                        }
+                                                      },
+                                                      model: {
+                                                        value:
+                                                          row.charge_type_id,
+                                                        callback: function(
+                                                          $$v
+                                                        ) {
+                                                          _vm.$set(
+                                                            row,
+                                                            "charge_type_id",
+                                                            $$v
+                                                          )
+                                                        },
+                                                        expression:
+                                                          "\n                                                            row.charge_type_id\n                                                        "
+                                                      }
+                                                    },
+                                                    _vm._l(
+                                                      _vm.charge_types,
+                                                      function(option) {
+                                                        return _c("el-option", {
+                                                          key: option.id,
+                                                          attrs: {
+                                                            value: option.id,
+                                                            label:
+                                                              option.description
+                                                          }
+                                                        })
+                                                      }
+                                                    ),
+                                                    1
+                                                  )
+                                                ],
+                                                1
+                                              ),
+                                              _vm._v(" "),
+                                              _c(
+                                                "td",
+                                                [
+                                                  _c(
+                                                    "el-input",
+                                                    {
+                                                      model: {
+                                                        value: row.description,
+                                                        callback: function(
+                                                          $$v
+                                                        ) {
+                                                          _vm.$set(
+                                                            row,
+                                                            "description",
+                                                            $$v
+                                                          )
+                                                        },
+                                                        expression:
+                                                          "\n                                                            row.description\n                                                        "
+                                                      }
+                                                    },
+                                                    [
+                                                      _c("i", {
+                                                        staticClass:
+                                                          "el-icon-edit-outline",
+                                                        attrs: {
+                                                          slot: "prefix"
+                                                        },
+                                                        slot: "prefix"
+                                                      })
+                                                    ]
+                                                  )
+                                                ],
+                                                1
+                                              ),
+                                              _vm._v(" "),
+                                              _c(
+                                                "td",
+                                                [
+                                                  _c(
+                                                    "el-input",
+                                                    {
+                                                      model: {
+                                                        value: row.percentage,
+                                                        callback: function(
+                                                          $$v
+                                                        ) {
+                                                          _vm.$set(
+                                                            row,
+                                                            "percentage",
+                                                            $$v
+                                                          )
+                                                        },
+                                                        expression:
+                                                          "\n                                                            row.percentage\n                                                        "
+                                                      }
+                                                    },
+                                                    [
+                                                      _c("i", {
+                                                        staticClass:
+                                                          "el-icon-edit-outline",
+                                                        attrs: {
+                                                          slot: "prefix"
+                                                        },
+                                                        slot: "prefix"
+                                                      })
+                                                    ]
+                                                  )
+                                                ],
+                                                1
+                                              ),
+                                              _vm._v(" "),
+                                              _c("td", [
+                                                _c(
+                                                  "button",
+                                                  {
+                                                    staticClass:
+                                                      "btn btn-danger",
+                                                    attrs: { type: "button" },
+                                                    on: {
+                                                      click: function($event) {
+                                                        $event.preventDefault()
+                                                        return _vm.clickRemoveCharge(
+                                                          index
+                                                        )
+                                                      }
+                                                    }
+                                                  },
+                                                  [
+                                                    _vm._v(
+                                                      "\n                                                        x\n                                                    "
+                                                    )
+                                                  ]
+                                                )
+                                              ])
+                                            ])
+                                          }),
+                                          0
+                                        )
+                                      ])
+                                    ])
+                                  : _vm._e(),
+                                _vm._v(" "),
+                                _vm.attribute_types.length > 0
+                                  ? _c("div", [
+                                      _c(
+                                        "label",
+                                        { staticClass: "control-label" },
+                                        [
+                                          _vm._v(
+                                            "\n                                        Atributos\n                                        "
+                                          ),
+                                          _c(
+                                            "a",
+                                            {
+                                              attrs: { href: "#" },
+                                              on: {
+                                                click: function($event) {
+                                                  $event.preventDefault()
+                                                  return _vm.clickAddAttribute.apply(
+                                                    null,
+                                                    arguments
+                                                  )
+                                                }
+                                              }
+                                            },
+                                            [_vm._v("[+ Agregar]")]
+                                          )
+                                        ]
+                                      ),
+                                      _vm._v(" "),
+                                      _c("table", { staticClass: "table" }, [
+                                        _c("thead", [
+                                          _c("tr", [
+                                            _c("th", [_vm._v("Tipo")]),
+                                            _vm._v(" "),
+                                            _c("th", [_vm._v("Descripción")]),
+                                            _vm._v(" "),
+                                            _c("th")
+                                          ])
+                                        ]),
+                                        _vm._v(" "),
+                                        _c(
+                                          "tbody",
+                                          _vm._l(_vm.form.attributes, function(
+                                            row,
+                                            index
+                                          ) {
+                                            return _c("tr", { key: index }, [
+                                              _c(
+                                                "td",
+                                                [
+                                                  _c(
+                                                    "el-select",
+                                                    {
+                                                      attrs: { filterable: "" },
+                                                      on: {
+                                                        change: function(
+                                                          $event
+                                                        ) {
+                                                          return _vm.changeAttributeType(
+                                                            index
+                                                          )
+                                                        }
+                                                      },
+                                                      model: {
+                                                        value:
+                                                          row.attribute_type_id,
+                                                        callback: function(
+                                                          $$v
+                                                        ) {
+                                                          _vm.$set(
+                                                            row,
+                                                            "attribute_type_id",
+                                                            $$v
+                                                          )
+                                                        },
+                                                        expression:
+                                                          "\n                                                            row.attribute_type_id\n                                                        "
+                                                      }
+                                                    },
+                                                    _vm._l(
+                                                      _vm.attribute_types,
+                                                      function(option) {
+                                                        return _c("el-option", {
+                                                          key: option.id,
+                                                          attrs: {
+                                                            value: option.id,
+                                                            label:
+                                                              option.description
+                                                          }
+                                                        })
+                                                      }
+                                                    ),
+                                                    1
+                                                  )
+                                                ],
+                                                1
+                                              ),
+                                              _vm._v(" "),
+                                              _c(
+                                                "td",
+                                                [
+                                                  _c(
+                                                    "el-input",
+                                                    {
+                                                      on: {
+                                                        input: function(
+                                                          $event
+                                                        ) {
+                                                          return _vm.inputAttribute(
+                                                            index
+                                                          )
+                                                        }
+                                                      },
+                                                      model: {
+                                                        value: row.value,
+                                                        callback: function(
+                                                          $$v
+                                                        ) {
+                                                          _vm.$set(
+                                                            row,
+                                                            "value",
+                                                            $$v
+                                                          )
+                                                        },
+                                                        expression: "row.value"
+                                                      }
+                                                    },
+                                                    [
+                                                      _c("i", {
+                                                        staticClass:
+                                                          "el-icon-edit-outline",
+                                                        attrs: {
+                                                          slot: "prefix"
+                                                        },
+                                                        slot: "prefix"
+                                                      })
+                                                    ]
+                                                  )
+                                                ],
+                                                1
+                                              ),
+                                              _vm._v(" "),
+                                              _c("td", [
+                                                _c(
+                                                  "button",
+                                                  {
+                                                    staticClass:
+                                                      "btn btn-danger",
+                                                    attrs: { type: "button" },
+                                                    on: {
+                                                      click: function($event) {
+                                                        $event.preventDefault()
+                                                        return _vm.clickRemoveAttribute(
+                                                          index
+                                                        )
+                                                      }
+                                                    }
+                                                  },
+                                                  [
+                                                    _vm._v(
+                                                      "\n                                                        x\n                                                    "
+                                                    )
+                                                  ]
+                                                )
+                                              ])
+                                            ])
+                                          }),
+                                          0
+                                        )
+                                      ])
+                                    ])
+                                  : _vm._e()
+                              ]
+                            )
+                          ],
+                          1
+                        )
+                      ],
+                      1
+                    )
+                  ]
+                : _vm._e()
+            ],
+            2
+          )
+        ]),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "form-actions text-end pt-2 pb-2" },
+          [
+            _c(
+              "el-button",
+              {
+                on: {
+                  click: function($event) {
+                    $event.preventDefault()
+                    return _vm.close()
+                  }
+                }
+              },
+              [_vm._v("Cerrar")]
+            ),
+            _vm._v(" "),
+            _vm.agregar_item
+              ? _c(
+                  "el-button",
+                  {
+                    staticClass: "add",
+                    attrs: { type: "primary" },
+                    on: {
+                      click: function($event) {
+                        return _vm.clickAddItem()
+                      }
+                    }
+                  },
+                  [_vm._v(_vm._s(_vm.titleAction))]
+                )
+              : _vm._e()
+          ],
+          1
+        )
+      ]),
+      _vm._v(" "),
+      _c("item-form", {
+        attrs: { showDialog: _vm.showDialogNewItem, external: true },
+        on: {
+          "update:showDialog": function($event) {
+            _vm.showDialogNewItem = $event
+          },
+          "update:show-dialog": function($event) {
+            _vm.showDialogNewItem = $event
+          },
+          add: _vm.addNewItem
+        }
+      }),
+      _vm._v(" "),
+      _c("warehouses-detail", {
+        attrs: {
+          showDialog: _vm.showWarehousesDetail,
+          isUpdateWarehouseId: _vm.isUpdateWarehouseId,
+          warehouses: _vm.warehousesDetail
+        },
+        on: {
+          "update:showDialog": function($event) {
+            _vm.showWarehousesDetail = $event
+          },
+          "update:show-dialog": function($event) {
+            _vm.showWarehousesDetail = $event
+          }
+        }
+      }),
+      _vm._v(" "),
+      _c("lots-group", {
+        attrs: {
+          quantity: _vm.form.quantity,
+          showDialog: _vm.showDialogLots,
+          lots_group: _vm.form.lots_group
+        },
+        on: {
+          "update:showDialog": function($event) {
+            _vm.showDialogLots = $event
+          },
+          "update:show-dialog": function($event) {
+            _vm.showDialogLots = $event
+          },
+          addRowLotGroup: _vm.addRowLotGroup
+        }
+      }),
+      _vm._v(" "),
+      _c("select-lots-form", {
+        attrs: { showDialog: _vm.showDialogSelectLots, lots: _vm.lots },
+        on: {
+          "update:showDialog": function($event) {
+            _vm.showDialogSelectLots = $event
+          },
+          "update:show-dialog": function($event) {
+            _vm.showDialogSelectLots = $event
+          },
+          addRowSelectLot: _vm.addRowSelectLot
+        }
+      })
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-16a47e47", module.exports)
+  }
+}
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-238fa5af\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/js/views/quotations/partials/select_warehouses.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -6283,1545 +10627,13 @@ module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-0763bba8", module.exports)
+    require("vue-hot-reload-api")      .rerender("data-v-238fa5af", module.exports)
   }
 }
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-0b847aaa\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/js/views/documents/partials/item.vue":
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "el-dialog",
-    {
-      attrs: {
-        title: _vm.titleDialog,
-        visible: _vm.showDialog,
-        top: "7vh",
-        "close-on-click-modal": false
-      },
-      on: { open: _vm.create, close: _vm.close }
-    },
-    [
-      _c("form", { attrs: { autocomplete: "off" } }, [
-        _c("div", { staticClass: "form-body" }, [
-          _c(
-            "div",
-            { staticClass: "row" },
-            [
-              _c(
-                "div",
-                { staticClass: "col-md-7 col-lg-7 col-xl-7 col-sm-7" },
-                [
-                  _c(
-                    "div",
-                    {
-                      staticClass: "form-group",
-                      class: { "has-danger": _vm.errors.item_id },
-                      attrs: { id: "custom-select" }
-                    },
-                    [
-                      _c("label", { staticClass: "control-label" }, [
-                        _vm._v(
-                          "\n                            Producto/Servicio\n                            "
-                        ),
-                        _vm.typeUser != "seller"
-                          ? _c(
-                              "a",
-                              {
-                                staticClass: "text-primary",
-                                attrs: { href: "#" },
-                                on: {
-                                  click: function($event) {
-                                    $event.preventDefault()
-                                    _vm.showDialogNewItem = true
-                                  }
-                                }
-                              },
-                              [_vm._v("[+ Nuevo]")]
-                            )
-                          : _vm._e()
-                      ]),
-                      _vm._v(" "),
-                      !_vm.search_item_by_barcode
-                        ? [
-                            _c(
-                              "div",
-                              {
-                                staticClass:
-                                  "el-input el-input-group el-input-group--append"
-                              },
-                              [
-                                _c(
-                                  "el-select",
-                                  {
-                                    ref: "producto",
-                                    attrs: {
-                                      slot: "prepend",
-                                      disabled: _vm.recordItem != null,
-                                      filterable: "",
-                                      remote: "",
-                                      placeholder: "Buscar......",
-                                      "popper-class": "el-select-items",
-                                      id: "select-width",
-                                      "remote-method": _vm.searchRemoteItems,
-                                      loading: _vm.loading_search
-                                    },
-                                    on: {
-                                      focus: function($event) {
-                                        return $event.target.select()
-                                      },
-                                      change: _vm.changeItem,
-                                      "visible-change": _vm.focusTotalItem
-                                    },
-                                    slot: "prepend",
-                                    model: {
-                                      value: _vm.form.item_id,
-                                      callback: function($$v) {
-                                        _vm.$set(_vm.form, "item_id", $$v)
-                                      },
-                                      expression: "form.item_id"
-                                    }
-                                  },
-                                  _vm._l(_vm.items, function(option) {
-                                    return _c("el-option", {
-                                      key: option.id,
-                                      attrs: {
-                                        value: option.id,
-                                        label: option.full_description
-                                      }
-                                    })
-                                  }),
-                                  1
-                                ),
-                                _vm._v(" "),
-                                _c(
-                                  "el-tooltip",
-                                  {
-                                    staticClass: "item",
-                                    attrs: {
-                                      slot: "append",
-                                      effect: "dark",
-                                      content: "Ver Stock del Producto",
-                                      placement: "bottom",
-                                      disabled: _vm.recordItem != null
-                                    },
-                                    slot: "append"
-                                  },
-                                  [
-                                    _c(
-                                      "div",
-                                      { staticClass: "el-input-group__append" },
-                                      [
-                                        _c(
-                                          "el-button",
-                                          {
-                                            attrs: {
-                                              disabled: _vm.isEditItemNote
-                                            },
-                                            on: {
-                                              click: function($event) {
-                                                $event.preventDefault()
-                                                return _vm.clickWarehouseDetail()
-                                              }
-                                            }
-                                          },
-                                          [
-                                            _c("i", {
-                                              staticClass: "fa fa-search"
-                                            })
-                                          ]
-                                        )
-                                      ],
-                                      1
-                                    )
-                                  ]
-                                )
-                              ],
-                              1
-                            )
-                          ]
-                        : [
-                            _c(
-                              "el-input",
-                              {
-                                ref: "ref_search_items",
-                                staticClass: "m-bottom",
-                                attrs: {
-                                  placeholder: "Buscar productos por Codigo"
-                                },
-                                on: { input: _vm.searchItemsBarcode },
-                                model: {
-                                  value: _vm.input_item,
-                                  callback: function($$v) {
-                                    _vm.input_item = $$v
-                                  },
-                                  expression: "input_item"
-                                }
-                              },
-                              [
-                                _c(
-                                  "el-tooltip",
-                                  {
-                                    staticClass: "item",
-                                    attrs: {
-                                      slot: "append",
-                                      effect: "dark",
-                                      content: "Ver Stock del Producto",
-                                      placement: "bottom",
-                                      disabled: _vm.recordItem != null
-                                    },
-                                    slot: "append"
-                                  },
-                                  [
-                                    _c(
-                                      "el-button",
-                                      {
-                                        attrs: { disabled: _vm.isEditItemNote },
-                                        on: {
-                                          click: function($event) {
-                                            $event.preventDefault()
-                                            return _vm.clickWarehouseDetail()
-                                          }
-                                        }
-                                      },
-                                      [_c("i", { staticClass: "fa fa-search" })]
-                                    )
-                                  ],
-                                  1
-                                )
-                              ],
-                              1
-                            )
-                          ],
-                      _vm._v(" "),
-                      _vm.form.item_id != null
-                        ? _c(
-                            "small",
-                            { staticClass: "badge text-primary w-100" },
-                            [
-                              _vm._v(
-                                "Ubicacion: " + _vm._s(_vm.form.item.location)
-                              ),
-                              _c("br")
-                            ]
-                          )
-                        : _vm._e(),
-                      _vm._v(" "),
-                      !_vm.is_client
-                        ? [
-                            _c(
-                              "el-checkbox",
-                              {
-                                staticClass: "m-t-10",
-                                attrs: { disabled: _vm.recordItem != null },
-                                on: { change: _vm.changeSearchItemBarcode },
-                                model: {
-                                  value: _vm.search_item_by_barcode,
-                                  callback: function($$v) {
-                                    _vm.search_item_by_barcode = $$v
-                                  },
-                                  expression: "search_item_by_barcode"
-                                }
-                              },
-                              [_vm._v("Buscar por código de barras")]
-                            ),
-                            _c("br")
-                          ]
-                        : _vm._e(),
-                      _vm._v(" "),
-                      _vm.errors.item_id
-                        ? _c("small", {
-                            staticClass: "txt-danger",
-                            domProps: {
-                              textContent: _vm._s(_vm.errors.item_id[0])
-                            }
-                          })
-                        : _vm._e()
-                    ],
-                    2
-                  )
-                ]
-              ),
-              _vm._v(" "),
-              _c(
-                "div",
-                { staticClass: "col-md-2 col-lg-2 col-xl-2 col-sm-2" },
-                [
-                  _c("div", { staticClass: "form-group" }, [
-                    _c("label", { staticClass: "control-label text-left" }, [
-                      _vm._v("Stock ")
-                    ]),
-                    _c("br"),
-                    _vm._v(" "),
-                    _c("b", [
-                      _c(
-                        "h6",
-                        {
-                          staticClass: "text-center",
-                          staticStyle: { "font-size": "14px" }
-                        },
-                        [_vm._v(_vm._s(_vm.form.stock_disp))]
-                      )
-                    ])
-                  ])
-                ]
-              ),
-              _vm._v(" "),
-              _c("div", { staticClass: "col-md-3" }, [
-                _c(
-                  "div",
-                  {
-                    staticClass: "form-group",
-                    class: { "has-danger": _vm.errors.affectation_igv_type_id }
-                  },
-                  [
-                    _c("label", { staticClass: "control-label" }, [
-                      _vm._v("Afectación Igv")
-                    ]),
-                    _vm._v(" "),
-                    _c(
-                      "el-select",
-                      {
-                        attrs: {
-                          disabled: !_vm.change_affectation_igv_type_id,
-                          filterable: ""
-                        },
-                        model: {
-                          value: _vm.form.affectation_igv_type_id,
-                          callback: function($$v) {
-                            _vm.$set(_vm.form, "affectation_igv_type_id", $$v)
-                          },
-                          expression: "form.affectation_igv_type_id"
-                        }
-                      },
-                      _vm._l(_vm.affectation_igv_types, function(option) {
-                        return _c("el-option", {
-                          key: option.id,
-                          attrs: { value: option.id, label: option.description }
-                        })
-                      }),
-                      1
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "el-checkbox",
-                      {
-                        attrs: { disabled: _vm.recordItem != null },
-                        model: {
-                          value: _vm.change_affectation_igv_type_id,
-                          callback: function($$v) {
-                            _vm.change_affectation_igv_type_id = $$v
-                          },
-                          expression: "change_affectation_igv_type_id"
-                        }
-                      },
-                      [_vm._v("Editar")]
-                    ),
-                    _vm._v(" "),
-                    _vm.errors.affectation_igv_type_id
-                      ? _c("small", {
-                          staticClass: "txt-danger",
-                          domProps: {
-                            textContent: _vm._s(
-                              _vm.errors.affectation_igv_type_id[0]
-                            )
-                          }
-                        })
-                      : _vm._e()
-                  ],
-                  1
-                )
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "col-md-3 col-sm-3" }, [
-                _c(
-                  "div",
-                  {
-                    staticClass: "form-group",
-                    class: { "has-danger": _vm.errors.quantity }
-                  },
-                  [
-                    _c("label", { staticClass: "control-label w-100" }, [
-                      _vm._v("Cantidad")
-                    ]),
-                    _vm._v(" "),
-                    _c("el-input-number", {
-                      ref: "cantidad",
-                      attrs: { min: 0.01, precision: 4 },
-                      on: {
-                        focus: function($event) {
-                          return $event.target.select()
-                        },
-                        input: function($event) {
-                          return _vm.calculateQuantity()
-                        }
-                      },
-                      nativeOn: {
-                        keyup: function($event) {
-                          if (
-                            !$event.type.indexOf("key") &&
-                            _vm._k(
-                              $event.keyCode,
-                              "enter",
-                              13,
-                              $event.key,
-                              "Enter"
-                            )
-                          ) {
-                            return null
-                          }
-                          _vm.focusPrecio()
-                          _vm.calculateQuantity()
-                          _vm.updateprice()
-                        }
-                      },
-                      model: {
-                        value: _vm.form.quantity,
-                        callback: function($$v) {
-                          _vm.$set(_vm.form, "quantity", $$v)
-                        },
-                        expression: "form.quantity"
-                      }
-                    }),
-                    _vm._v(" "),
-                    _vm.errors.quantity
-                      ? _c("small", {
-                          staticClass: "txt-danger",
-                          domProps: {
-                            textContent: _vm._s(_vm.errors.quantity[0])
-                          }
-                        })
-                      : _vm._e()
-                  ],
-                  1
-                )
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "col-md-3 col-sm-3" }, [
-                _c(
-                  "div",
-                  {
-                    staticClass: "form-group",
-                    class: { "has-danger": _vm.errors.unit_price_value }
-                  },
-                  [
-                    _c("label", { staticClass: "control-label" }, [
-                      _vm._v("Precio Unitario")
-                    ]),
-                    _vm._v(" "),
-                    _c(
-                      "el-input",
-                      {
-                        ref: "precio",
-                        attrs: { readonly: _vm.typeUser === "" },
-                        on: {
-                          input: function($event) {
-                            return _vm.calculateQuantity()
-                          },
-                          focus: function($event) {
-                            return $event.target.select()
-                          }
-                        },
-                        nativeOn: {
-                          keyup: function($event) {
-                            if (
-                              !$event.type.indexOf("key") &&
-                              _vm._k(
-                                $event.keyCode,
-                                "enter",
-                                13,
-                                $event.key,
-                                "Enter"
-                              )
-                            ) {
-                              return null
-                            }
-                            _vm.clickAddItem()
-                            _vm.focusProducto()
-                          }
-                        },
-                        model: {
-                          value: _vm.form.unit_price_value,
-                          callback: function($$v) {
-                            _vm.$set(_vm.form, "unit_price_value", $$v)
-                          },
-                          expression: "form.unit_price_value"
-                        }
-                      },
-                      [
-                        _c("template", { slot: "prepend" }, [
-                          _vm._v(_vm._s(_vm.form.item.currency_type_symbol))
-                        ])
-                      ],
-                      2
-                    ),
-                    _vm._v(" "),
-                    _vm.errors.unit_price_value
-                      ? _c("small", {
-                          staticClass: "txt-danger",
-                          domProps: {
-                            textContent: _vm._s(_vm.errors.unit_price[0])
-                          }
-                        })
-                      : _vm._e()
-                  ],
-                  1
-                )
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "col-md-3 col-sm-3" }, [
-                _c(
-                  "div",
-                  {
-                    staticClass: "form-group",
-                    class: { "has-danger": _vm.errors.amount }
-                  },
-                  [
-                    _c("label", { staticClass: "control-label" }, [
-                      _vm._v("Importe Total")
-                    ]),
-                    _vm._v(" "),
-                    _c(
-                      "el-input",
-                      {
-                        attrs: { readonly: _vm.typeUser === "" },
-                        model: {
-                          value: _vm.form.amount,
-                          callback: function($$v) {
-                            _vm.$set(_vm.form, "amount", $$v)
-                          },
-                          expression: "form.amount"
-                        }
-                      },
-                      [
-                        _c("template", { slot: "prepend" }, [
-                          _vm._v(_vm._s(_vm.form.item.currency_type_symbol))
-                        ])
-                      ],
-                      2
-                    )
-                  ],
-                  1
-                )
-              ]),
-              _vm._v(" "),
-              _vm.form.item_id != null
-                ? _c("div", { staticClass: "col-md-3 col-sm-3" }, [
-                    _c(
-                      "div",
-                      { staticClass: "form-group" },
-                      [
-                        _c("label", { staticClass: "control-label" }, [
-                          _vm._v("Descontar stock")
-                        ]),
-                        _c("br"),
-                        _vm._v(" "),
-                        _c(
-                          "el-radio-group",
-                          {
-                            attrs: { size: "mini" },
-                            on: {
-                              change: function($event) {
-                                return _vm.stock()
-                              }
-                            },
-                            model: {
-                              value: _vm.form.stock,
-                              callback: function($$v) {
-                                _vm.$set(_vm.form, "stock", $$v)
-                              },
-                              expression: "form.stock"
-                            }
-                          },
-                          [
-                            _c("el-radio-button", { attrs: { label: "Si" } }),
-                            _vm._v(" "),
-                            _c("el-radio-button", { attrs: { label: "No" } })
-                          ],
-                          1
-                        )
-                      ],
-                      1
-                    )
-                  ])
-                : _vm._e(),
-              _vm._v(" "),
-              _vm.form.item_id &&
-              _vm.form.item.lots_enabled &&
-              _vm.form.lots_group.length > 0
-                ? _c(
-                    "div",
-                    {
-                      staticClass: "col-md-2 col-sm-2",
-                      staticStyle: { "padding-top": "1%" }
-                    },
-                    [
-                      _c(
-                        "a",
-                        {
-                          staticClass: "text-center font-weight-bold text-info",
-                          attrs: { href: "#" },
-                          on: {
-                            click: function($event) {
-                              $event.preventDefault()
-                              return _vm.clickLotGroup.apply(null, arguments)
-                            }
-                          }
-                        },
-                        [_vm._v("[✔ Seleccionar lote]")]
-                      )
-                    ]
-                  )
-                : _vm._e(),
-              _vm._v(" "),
-              _vm.form.item_id && _vm.form.item.series_enabled
-                ? _c(
-                    "div",
-                    {
-                      staticClass: "col-md-3 col-sm-3",
-                      staticStyle: { "padding-top": "1%" }
-                    },
-                    [
-                      _c(
-                        "a",
-                        {
-                          staticClass: "text-center font-weight-bold text-info",
-                          attrs: { href: "#" },
-                          on: {
-                            click: function($event) {
-                              $event.preventDefault()
-                              return _vm.clickSelectLots.apply(null, arguments)
-                            }
-                          }
-                        },
-                        [_vm._v("[✔ Seleccionar series]")]
-                      )
-                    ]
-                  )
-                : _vm._e(),
-              _vm._v(" "),
-              _vm.configuration.edit_name_product
-                ? _c("div", { staticClass: "col-md-12 col-sm-12" }, [
-                    _c(
-                      "div",
-                      { staticClass: "form-group" },
-                      [
-                        _c("label", { staticClass: "control-label" }, [
-                          _vm._v("Nombre producto en PDF")
-                        ]),
-                        _vm._v(" "),
-                        _c("vue-ckeditor", {
-                          attrs: { editors: _vm.editors, type: "classic" },
-                          model: {
-                            value: _vm.form.name_product_pdf,
-                            callback: function($$v) {
-                              _vm.$set(_vm.form, "name_product_pdf", $$v)
-                            },
-                            expression: "form.name_product_pdf"
-                          }
-                        })
-                      ],
-                      1
-                    )
-                  ])
-                : _vm._e(),
-              _vm._v(" "),
-              !_vm.is_client
-                ? [
-                    _vm.form.item_unit_types.length > 0
-                      ? _c("div", { staticClass: "col-md-12" }, [
-                          _c(
-                            "div",
-                            {
-                              staticClass: "table-responsive",
-                              staticStyle: { margin: "3px" }
-                            },
-                            [
-                              _c(
-                                "h6",
-                                { staticClass: "separator-title" },
-                                [
-                                  _vm._v(
-                                    "\n                                Lista de Precios\n                                "
-                                  ),
-                                  _c(
-                                    "el-tooltip",
-                                    {
-                                      staticClass: "item",
-                                      attrs: {
-                                        effect: "dark",
-                                        content:
-                                          "Aplica para realizar compra/venta en presentacion de diferentes precios y/o cantidades",
-                                        placement: "top"
-                                      }
-                                    },
-                                    [
-                                      _c("i", {
-                                        staticClass: "fa fa-info-circle"
-                                      })
-                                    ]
-                                  )
-                                ],
-                                1
-                              ),
-                              _vm._v(" "),
-                              _c("table", { staticClass: "table" }, [
-                                _c("thead", [
-                                  _c("tr", [
-                                    _c("th", { staticClass: "text-center" }, [
-                                      _vm._v("Unidad")
-                                    ]),
-                                    _vm._v(" "),
-                                    _c("th", { staticClass: "text-center" }, [
-                                      _vm._v("Descripción")
-                                    ]),
-                                    _vm._v(" "),
-                                    _c("th", { staticClass: "text-center" }, [
-                                      _vm._v("Factor")
-                                    ]),
-                                    _vm._v(" "),
-                                    _c("th", { staticClass: "text-center" }, [
-                                      _vm._v("Precio 1")
-                                    ]),
-                                    _vm._v(" "),
-                                    _c("th", { staticClass: "text-center" }, [
-                                      _vm._v("Precio 2")
-                                    ]),
-                                    _vm._v(" "),
-                                    _c("th", { staticClass: "text-center" }, [
-                                      _vm._v("Precio 3")
-                                    ]),
-                                    _vm._v(" "),
-                                    _c("th", { staticClass: "text-center" }, [
-                                      _vm._v("Precio Default")
-                                    ]),
-                                    _vm._v(" "),
-                                    _c("th")
-                                  ])
-                                ]),
-                                _vm._v(" "),
-                                _c(
-                                  "tbody",
-                                  _vm._l(_vm.form.item_unit_types, function(
-                                    row,
-                                    index
-                                  ) {
-                                    return _c("tr", [
-                                      _c("td", { staticClass: "text-center" }, [
-                                        _vm._v(_vm._s(row.unit_type_id))
-                                      ]),
-                                      _vm._v(" "),
-                                      _c("td", { staticClass: "text-center" }, [
-                                        _vm._v(_vm._s(row.description))
-                                      ]),
-                                      _vm._v(" "),
-                                      _c("td", { staticClass: "text-center" }, [
-                                        _vm._v(_vm._s(row.quantity_unit))
-                                      ]),
-                                      _vm._v(" "),
-                                      _c("td", { staticClass: "text-center" }, [
-                                        _vm._v(_vm._s(row.price1))
-                                      ]),
-                                      _vm._v(" "),
-                                      _c("td", { staticClass: "text-center" }, [
-                                        _vm._v(_vm._s(row.price2))
-                                      ]),
-                                      _vm._v(" "),
-                                      _c("td", { staticClass: "text-center" }, [
-                                        _vm._v(_vm._s(row.price3))
-                                      ]),
-                                      _vm._v(" "),
-                                      _c("td", { staticClass: "text-center" }, [
-                                        _vm._v(
-                                          "Precio " + _vm._s(row.price_default)
-                                        )
-                                      ]),
-                                      _vm._v(" "),
-                                      _c(
-                                        "td",
-                                        {
-                                          staticClass:
-                                            "series-table-actions text-end"
-                                        },
-                                        [
-                                          _c(
-                                            "button",
-                                            {
-                                              staticClass:
-                                                "btn waves-effect waves-light btn-xs btn-success",
-                                              attrs: { type: "button" },
-                                              on: {
-                                                click: function($event) {
-                                                  $event.preventDefault()
-                                                  return _vm.selectedPrice(row)
-                                                }
-                                              }
-                                            },
-                                            [
-                                              _c("i", {
-                                                staticClass: "el-icon-check"
-                                              })
-                                            ]
-                                          )
-                                        ]
-                                      )
-                                    ])
-                                  }),
-                                  0
-                                )
-                              ])
-                            ]
-                          )
-                        ])
-                      : _vm._e(),
-                    _vm._v(" "),
-                    _c(
-                      "div",
-                      { staticClass: "col-md-12 mt-2" },
-                      [
-                        _c(
-                          "el-collapse",
-                          {
-                            model: {
-                              value: _vm.activePanel,
-                              callback: function($$v) {
-                                _vm.activePanel = $$v
-                              },
-                              expression: "activePanel"
-                            }
-                          },
-                          [
-                            _c(
-                              "el-collapse-item",
-                              {
-                                attrs: {
-                                  disabled: _vm.recordItem != null,
-                                  title:
-                                    "+ Agregar Descuentos/Cargos/Atributos especiales",
-                                  name: "1"
-                                }
-                              },
-                              [
-                                _vm.discount_types.length > 0
-                                  ? _c("div", [
-                                      _c(
-                                        "label",
-                                        { staticClass: "control-label" },
-                                        [
-                                          _vm._v(
-                                            "\n                                            Descuentos\n                                            "
-                                          ),
-                                          _c(
-                                            "a",
-                                            {
-                                              attrs: { href: "#" },
-                                              on: {
-                                                click: function($event) {
-                                                  $event.preventDefault()
-                                                  return _vm.clickAddDiscount.apply(
-                                                    null,
-                                                    arguments
-                                                  )
-                                                }
-                                              }
-                                            },
-                                            [_vm._v("[+ Agregar]")]
-                                          )
-                                        ]
-                                      ),
-                                      _vm._v(" "),
-                                      _c("table", { staticClass: "table" }, [
-                                        _c("thead", [
-                                          _c("tr", [
-                                            _c("th", [_vm._v("Tipo")]),
-                                            _vm._v(" "),
-                                            _c("th", [_vm._v("Descripción")]),
-                                            _vm._v(" "),
-                                            _c("th", [_vm._v("Porcentaje")]),
-                                            _vm._v(" "),
-                                            _c("th")
-                                          ])
-                                        ]),
-                                        _vm._v(" "),
-                                        _c(
-                                          "tbody",
-                                          _vm._l(_vm.form.discounts, function(
-                                            row,
-                                            index
-                                          ) {
-                                            return _c("tr", [
-                                              _c(
-                                                "td",
-                                                [
-                                                  _c(
-                                                    "el-select",
-                                                    {
-                                                      on: {
-                                                        change: function(
-                                                          $event
-                                                        ) {
-                                                          return _vm.changeDiscountType(
-                                                            index
-                                                          )
-                                                        }
-                                                      },
-                                                      model: {
-                                                        value:
-                                                          row.discount_type_id,
-                                                        callback: function(
-                                                          $$v
-                                                        ) {
-                                                          _vm.$set(
-                                                            row,
-                                                            "discount_type_id",
-                                                            $$v
-                                                          )
-                                                        },
-                                                        expression:
-                                                          "row.discount_type_id"
-                                                      }
-                                                    },
-                                                    _vm._l(
-                                                      _vm.discount_types,
-                                                      function(option) {
-                                                        return _c("el-option", {
-                                                          key: option.id,
-                                                          attrs: {
-                                                            value: option.id,
-                                                            label:
-                                                              option.description
-                                                          }
-                                                        })
-                                                      }
-                                                    ),
-                                                    1
-                                                  )
-                                                ],
-                                                1
-                                              ),
-                                              _vm._v(" "),
-                                              _c(
-                                                "td",
-                                                [
-                                                  _c(
-                                                    "el-input",
-                                                    {
-                                                      model: {
-                                                        value: row.description,
-                                                        callback: function(
-                                                          $$v
-                                                        ) {
-                                                          _vm.$set(
-                                                            row,
-                                                            "description",
-                                                            $$v
-                                                          )
-                                                        },
-                                                        expression:
-                                                          "row.description"
-                                                      }
-                                                    },
-                                                    [
-                                                      _c("i", {
-                                                        staticClass:
-                                                          "el-icon-edit-outline",
-                                                        attrs: {
-                                                          slot: "prefix"
-                                                        },
-                                                        slot: "prefix"
-                                                      })
-                                                    ]
-                                                  )
-                                                ],
-                                                1
-                                              ),
-                                              _vm._v(" "),
-                                              _c(
-                                                "td",
-                                                [
-                                                  _c(
-                                                    "el-checkbox",
-                                                    {
-                                                      model: {
-                                                        value: row.is_amount,
-                                                        callback: function(
-                                                          $$v
-                                                        ) {
-                                                          _vm.$set(
-                                                            row,
-                                                            "is_amount",
-                                                            $$v
-                                                          )
-                                                        },
-                                                        expression:
-                                                          "row.is_amount"
-                                                      }
-                                                    },
-                                                    [
-                                                      _vm._v(
-                                                        "Ingresar monto fijo"
-                                                      )
-                                                    ]
-                                                  ),
-                                                  _c("br"),
-                                                  _vm._v(" "),
-                                                  _c(
-                                                    "el-input",
-                                                    {
-                                                      model: {
-                                                        value: row.percentage,
-                                                        callback: function(
-                                                          $$v
-                                                        ) {
-                                                          _vm.$set(
-                                                            row,
-                                                            "percentage",
-                                                            $$v
-                                                          )
-                                                        },
-                                                        expression:
-                                                          "row.percentage"
-                                                      }
-                                                    },
-                                                    [
-                                                      _c("i", {
-                                                        staticClass:
-                                                          "el-icon-edit-outline",
-                                                        attrs: {
-                                                          slot: "prefix"
-                                                        },
-                                                        slot: "prefix"
-                                                      })
-                                                    ]
-                                                  )
-                                                ],
-                                                1
-                                              ),
-                                              _vm._v(" "),
-                                              _c("td", [
-                                                _c(
-                                                  "button",
-                                                  {
-                                                    staticClass:
-                                                      "btn btn-danger",
-                                                    attrs: { type: "button" },
-                                                    on: {
-                                                      click: function($event) {
-                                                        $event.preventDefault()
-                                                        return _vm.clickRemoveDiscount(
-                                                          index
-                                                        )
-                                                      }
-                                                    }
-                                                  },
-                                                  [_vm._v("x")]
-                                                )
-                                              ])
-                                            ])
-                                          }),
-                                          0
-                                        )
-                                      ])
-                                    ])
-                                  : _vm._e(),
-                                _vm._v(" "),
-                                _vm.charge_types.length > 0
-                                  ? _c("div", [
-                                      _c(
-                                        "label",
-                                        { staticClass: "control-label" },
-                                        [
-                                          _vm._v(
-                                            "\n                                            Cargos\n                                            "
-                                          ),
-                                          _c(
-                                            "a",
-                                            {
-                                              attrs: { href: "#" },
-                                              on: {
-                                                click: function($event) {
-                                                  $event.preventDefault()
-                                                  return _vm.clickAddCharge.apply(
-                                                    null,
-                                                    arguments
-                                                  )
-                                                }
-                                              }
-                                            },
-                                            [_vm._v("[+ Agregar]")]
-                                          )
-                                        ]
-                                      ),
-                                      _vm._v(" "),
-                                      _c("table", { staticClass: "table" }, [
-                                        _c("thead", [
-                                          _c("tr", [
-                                            _c("th", [_vm._v("Tipo")]),
-                                            _vm._v(" "),
-                                            _c("th", [_vm._v("Descripción")]),
-                                            _vm._v(" "),
-                                            _c("th", [_vm._v("Porcentaje")]),
-                                            _vm._v(" "),
-                                            _c("th")
-                                          ])
-                                        ]),
-                                        _vm._v(" "),
-                                        _c(
-                                          "tbody",
-                                          _vm._l(_vm.form.charges, function(
-                                            row,
-                                            index
-                                          ) {
-                                            return _c("tr", [
-                                              _c(
-                                                "td",
-                                                [
-                                                  _c(
-                                                    "el-select",
-                                                    {
-                                                      on: {
-                                                        change: function(
-                                                          $event
-                                                        ) {
-                                                          return _vm.changeChargeType(
-                                                            index
-                                                          )
-                                                        }
-                                                      },
-                                                      model: {
-                                                        value:
-                                                          row.charge_type_id,
-                                                        callback: function(
-                                                          $$v
-                                                        ) {
-                                                          _vm.$set(
-                                                            row,
-                                                            "charge_type_id",
-                                                            $$v
-                                                          )
-                                                        },
-                                                        expression:
-                                                          "row.charge_type_id"
-                                                      }
-                                                    },
-                                                    _vm._l(
-                                                      _vm.charge_types,
-                                                      function(option) {
-                                                        return _c("el-option", {
-                                                          key: option.id,
-                                                          attrs: {
-                                                            value: option.id,
-                                                            label:
-                                                              option.description
-                                                          }
-                                                        })
-                                                      }
-                                                    ),
-                                                    1
-                                                  )
-                                                ],
-                                                1
-                                              ),
-                                              _vm._v(" "),
-                                              _c(
-                                                "td",
-                                                [
-                                                  _c(
-                                                    "el-input",
-                                                    {
-                                                      model: {
-                                                        value: row.description,
-                                                        callback: function(
-                                                          $$v
-                                                        ) {
-                                                          _vm.$set(
-                                                            row,
-                                                            "description",
-                                                            $$v
-                                                          )
-                                                        },
-                                                        expression:
-                                                          "row.description"
-                                                      }
-                                                    },
-                                                    [
-                                                      _c("i", {
-                                                        staticClass:
-                                                          "el-icon-edit-outline",
-                                                        attrs: {
-                                                          slot: "prefix"
-                                                        },
-                                                        slot: "prefix"
-                                                      })
-                                                    ]
-                                                  )
-                                                ],
-                                                1
-                                              ),
-                                              _vm._v(" "),
-                                              _c(
-                                                "td",
-                                                [
-                                                  _c(
-                                                    "el-input",
-                                                    {
-                                                      model: {
-                                                        value: row.percentage,
-                                                        callback: function(
-                                                          $$v
-                                                        ) {
-                                                          _vm.$set(
-                                                            row,
-                                                            "percentage",
-                                                            $$v
-                                                          )
-                                                        },
-                                                        expression:
-                                                          "row.percentage"
-                                                      }
-                                                    },
-                                                    [
-                                                      _c("i", {
-                                                        staticClass:
-                                                          "el-icon-edit-outline",
-                                                        attrs: {
-                                                          slot: "prefix"
-                                                        },
-                                                        slot: "prefix"
-                                                      })
-                                                    ]
-                                                  )
-                                                ],
-                                                1
-                                              ),
-                                              _vm._v(" "),
-                                              _c("td", [
-                                                _c(
-                                                  "button",
-                                                  {
-                                                    staticClass:
-                                                      "btn btn-danger",
-                                                    attrs: { type: "button" },
-                                                    on: {
-                                                      click: function($event) {
-                                                        $event.preventDefault()
-                                                        return _vm.clickRemoveCharge(
-                                                          index
-                                                        )
-                                                      }
-                                                    }
-                                                  },
-                                                  [_vm._v("x")]
-                                                )
-                                              ])
-                                            ])
-                                          }),
-                                          0
-                                        )
-                                      ])
-                                    ])
-                                  : _vm._e(),
-                                _vm._v(" "),
-                                _vm.attribute_types.length > 0
-                                  ? _c("div", [
-                                      _c(
-                                        "label",
-                                        { staticClass: "control-label" },
-                                        [
-                                          _vm._v(
-                                            "\n                                            Atributos\n                                            "
-                                          ),
-                                          _c(
-                                            "a",
-                                            {
-                                              attrs: { href: "#" },
-                                              on: {
-                                                click: function($event) {
-                                                  $event.preventDefault()
-                                                  return _vm.clickAddAttribute.apply(
-                                                    null,
-                                                    arguments
-                                                  )
-                                                }
-                                              }
-                                            },
-                                            [_vm._v("[+ Agregar]")]
-                                          )
-                                        ]
-                                      ),
-                                      _vm._v(" "),
-                                      _c("table", { staticClass: "table" }, [
-                                        _c("thead", [
-                                          _c("tr", [
-                                            _c("th", [_vm._v("Tipo")]),
-                                            _vm._v(" "),
-                                            _c("th", [_vm._v("Descripción")]),
-                                            _vm._v(" "),
-                                            _c("th")
-                                          ])
-                                        ]),
-                                        _vm._v(" "),
-                                        _c(
-                                          "tbody",
-                                          _vm._l(_vm.form.attributes, function(
-                                            row,
-                                            index
-                                          ) {
-                                            return _c("tr", [
-                                              _c(
-                                                "td",
-                                                [
-                                                  _c(
-                                                    "el-select",
-                                                    {
-                                                      attrs: { filterable: "" },
-                                                      on: {
-                                                        change: function(
-                                                          $event
-                                                        ) {
-                                                          return _vm.changeAttributeType(
-                                                            index
-                                                          )
-                                                        }
-                                                      },
-                                                      model: {
-                                                        value:
-                                                          row.attribute_type_id,
-                                                        callback: function(
-                                                          $$v
-                                                        ) {
-                                                          _vm.$set(
-                                                            row,
-                                                            "attribute_type_id",
-                                                            $$v
-                                                          )
-                                                        },
-                                                        expression:
-                                                          "row.attribute_type_id"
-                                                      }
-                                                    },
-                                                    _vm._l(
-                                                      _vm.attribute_types,
-                                                      function(option) {
-                                                        return _c("el-option", {
-                                                          key: option.id,
-                                                          attrs: {
-                                                            value: option.id,
-                                                            label:
-                                                              option.description
-                                                          }
-                                                        })
-                                                      }
-                                                    ),
-                                                    1
-                                                  )
-                                                ],
-                                                1
-                                              ),
-                                              _vm._v(" "),
-                                              _c(
-                                                "td",
-                                                [
-                                                  _c(
-                                                    "el-input",
-                                                    {
-                                                      on: {
-                                                        input: function(
-                                                          $event
-                                                        ) {
-                                                          return _vm.inputAttribute(
-                                                            index
-                                                          )
-                                                        }
-                                                      },
-                                                      model: {
-                                                        value: row.value,
-                                                        callback: function(
-                                                          $$v
-                                                        ) {
-                                                          _vm.$set(
-                                                            row,
-                                                            "value",
-                                                            $$v
-                                                          )
-                                                        },
-                                                        expression: "row.value"
-                                                      }
-                                                    },
-                                                    [
-                                                      _c("i", {
-                                                        staticClass:
-                                                          "el-icon-edit-outline",
-                                                        attrs: {
-                                                          slot: "prefix"
-                                                        },
-                                                        slot: "prefix"
-                                                      })
-                                                    ]
-                                                  )
-                                                ],
-                                                1
-                                              ),
-                                              _vm._v(" "),
-                                              _c("td", [
-                                                _c(
-                                                  "button",
-                                                  {
-                                                    staticClass:
-                                                      "btn btn-danger",
-                                                    attrs: { type: "button" },
-                                                    on: {
-                                                      click: function($event) {
-                                                        $event.preventDefault()
-                                                        return _vm.clickRemoveAttribute(
-                                                          index
-                                                        )
-                                                      }
-                                                    }
-                                                  },
-                                                  [_vm._v("x")]
-                                                )
-                                              ])
-                                            ])
-                                          }),
-                                          0
-                                        )
-                                      ])
-                                    ])
-                                  : _vm._e()
-                              ]
-                            )
-                          ],
-                          1
-                        )
-                      ],
-                      1
-                    )
-                  ]
-                : _vm._e()
-            ],
-            2
-          )
-        ]),
-        _vm._v(" "),
-        _c(
-          "div",
-          { staticClass: "form-actions text-end pt-2 pb-2" },
-          [
-            _c(
-              "el-button",
-              {
-                on: {
-                  click: function($event) {
-                    $event.preventDefault()
-                    return _vm.close()
-                  }
-                }
-              },
-              [_vm._v("Cerrar")]
-            ),
-            _vm._v(" "),
-            _vm.agregar_item
-              ? _c(
-                  "el-button",
-                  {
-                    staticClass: "add",
-                    attrs: { type: "primary" },
-                    on: {
-                      click: function($event) {
-                        return _vm.clickAddItem()
-                      }
-                    }
-                  },
-                  [_vm._v(_vm._s(_vm.titleAction))]
-                )
-              : _vm._e()
-          ],
-          1
-        )
-      ]),
-      _vm._v(" "),
-      _c("item-form", {
-        attrs: { showDialog: _vm.showDialogNewItem, external: true },
-        on: {
-          "update:showDialog": function($event) {
-            _vm.showDialogNewItem = $event
-          },
-          "update:show-dialog": function($event) {
-            _vm.showDialogNewItem = $event
-          },
-          add: _vm.addNewItem
-        }
-      }),
-      _vm._v(" "),
-      _c("warehouses-detail", {
-        attrs: {
-          showDialog: _vm.showWarehousesDetail,
-          isUpdateWarehouseId: _vm.isUpdateWarehouseId,
-          warehouses: _vm.warehousesDetail
-        },
-        on: {
-          "update:showDialog": function($event) {
-            _vm.showWarehousesDetail = $event
-          },
-          "update:show-dialog": function($event) {
-            _vm.showWarehousesDetail = $event
-          }
-        }
-      }),
-      _vm._v(" "),
-      _c("lots-group", {
-        attrs: {
-          quantity: _vm.form.quantity,
-          showDialog: _vm.showDialogLots,
-          lots_group: _vm.form.lots_group
-        },
-        on: {
-          "update:showDialog": function($event) {
-            _vm.showDialogLots = $event
-          },
-          "update:show-dialog": function($event) {
-            _vm.showDialogLots = $event
-          },
-          addRowLotGroup: _vm.addRowLotGroup
-        }
-      }),
-      _vm._v(" "),
-      _c("select-lots-form", {
-        attrs: { showDialog: _vm.showDialogSelectLots, lots: _vm.lots },
-        on: {
-          "update:showDialog": function($event) {
-            _vm.showDialogSelectLots = $event
-          },
-          "update:show-dialog": function($event) {
-            _vm.showDialogSelectLots = $event
-          },
-          addRowSelectLot: _vm.addRowSelectLot
-        }
-      })
-    ],
-    1
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-0b847aaa", module.exports)
-  }
-}
-
-/***/ }),
-
-/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-46f3cb28\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/js/views/documents/note.vue":
+/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-25cb47fc\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/js/views/quotations/form_edit.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -7830,935 +10642,1269 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
-    { staticClass: "card mb-0" },
+    { staticClass: "card mb-0 pt-2 pt-md-0" },
     [
-      _c("div", { staticClass: "card-header bg-primary text-white" }, [
-        _vm._v(
-          "\n        Nueva Nota (" +
-            _vm._s(_vm.document.series) +
-            "-" +
-            _vm._s(_vm.document.number) +
-            ")\n    "
-        )
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "card-body" }, [
-        _c(
-          "form",
-          {
-            attrs: { autocomplete: "off" },
-            on: {
-              submit: function($event) {
-                $event.preventDefault()
-                return _vm.submit.apply(null, arguments)
-              }
-            }
-          },
-          [
-            _c("div", { staticClass: "form-body" }, [
-              _c("div", { staticClass: "row" }, [
-                _c(
-                  "div",
-                  { staticClass: "col-md-12 text-end" },
-                  [
-                    _c(
-                      "el-checkbox",
-                      {
-                        on: { change: _vm.changeDocumentType },
-                        model: {
-                          value: _vm.is_contingency,
-                          callback: function($$v) {
-                            _vm.is_contingency = $$v
-                          },
-                          expression: "is_contingency"
-                        }
-                      },
-                      [_vm._v("¿Es comprobante de contigencia?")]
-                    )
-                  ],
-                  1
-                )
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "row" }, [
-                _c("div", { staticClass: "col-md-2" }, [
+      _vm.loading_form
+        ? _c("div", { staticClass: "tab-content" }, [
+            _c("div", { staticClass: "invoice" }, [
+              _c("header", { staticClass: "clearfix" }, [
+                _c("div", { staticClass: "row" }, [
                   _c(
                     "div",
-                    {
-                      staticClass: "form-group",
-                      class: {
-                        "has-danger": _vm.errors.document_type_id
-                      }
-                    },
+                    { staticClass: "col-sm-2 text-center mt-3 mb-0" },
                     [
-                      _c("label", { staticClass: "control-label" }, [
-                        _vm._v("Tipo comprobante")
-                      ]),
-                      _vm._v(" "),
-                      _c(
-                        "el-select",
-                        {
-                          on: { change: _vm.changeDocumentType },
-                          model: {
-                            value: _vm.form.document_type_id,
-                            callback: function($$v) {
-                              _vm.$set(_vm.form, "document_type_id", $$v)
-                            },
-                            expression: "form.document_type_id"
-                          }
-                        },
-                        _vm._l(_vm.document_types, function(option) {
-                          return _c("el-option", {
-                            key: option.id,
-                            attrs: {
-                              value: option.id,
-                              label: option.description
-                            }
-                          })
-                        }),
-                        1
-                      ),
-                      _vm._v(" "),
-                      _vm.errors.document_type_id
-                        ? _c("small", {
-                            staticClass: "form-control-feedback",
-                            domProps: {
-                              textContent: _vm._s(
-                                _vm.errors.document_type_id[0]
-                              )
-                            }
-                          })
-                        : _vm._e()
-                    ],
-                    1
-                  )
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "col-md-2" }, [
-                  _c(
-                    "div",
-                    {
-                      staticClass: "form-group",
-                      class: { "has-danger": _vm.errors.series_id }
-                    },
-                    [
-                      _c("label", { staticClass: "control-label" }, [
-                        _vm._v("Serie")
-                      ]),
-                      _vm._v(" "),
-                      _c(
-                        "el-select",
-                        {
-                          model: {
-                            value: _vm.form.series_id,
-                            callback: function($$v) {
-                              _vm.$set(_vm.form, "series_id", $$v)
-                            },
-                            expression: "form.series_id"
-                          }
-                        },
-                        _vm._l(_vm.series, function(option) {
-                          return _c("el-option", {
-                            key: option.id,
-                            attrs: { value: option.id, label: option.number }
-                          })
-                        }),
-                        1
-                      ),
-                      _vm._v(" "),
-                      _vm.errors.series_id
-                        ? _c("small", {
-                            staticClass: "form-control-feedback",
-                            domProps: {
-                              textContent: _vm._s(_vm.errors.series_id[0])
-                            }
-                          })
-                        : _vm._e()
-                    ],
-                    1
-                  )
-                ]),
-                _vm._v(" "),
-                _c(
-                  "div",
-                  { staticClass: "col-md-2" },
-                  [
-                    _vm.form.document_type_id === "08"
-                      ? [
-                          _c(
-                            "div",
-                            {
-                              staticClass: "form-group",
-                              class: {
-                                "has-danger":
-                                  _vm.errors["note.note_debit_type_id"]
-                              }
-                            },
-                            [
-                              _c("label", { staticClass: "control-label" }, [
-                                _vm._v("Tipo nota de débito")
-                              ]),
-                              _vm._v(" "),
-                              _c(
-                                "el-select",
-                                {
-                                  model: {
-                                    value:
-                                      _vm.form.note_credit_or_debit_type_id,
-                                    callback: function($$v) {
-                                      _vm.$set(
-                                        _vm.form,
-                                        "note_credit_or_debit_type_id",
-                                        $$v
-                                      )
-                                    },
-                                    expression:
-                                      "\n                                        form.note_credit_or_debit_type_id\n                                    "
-                                  }
-                                },
-                                _vm._l(_vm.note_debit_types, function(option) {
-                                  return _c("el-option", {
-                                    key: option.id,
-                                    attrs: {
-                                      value: option.id,
-                                      label: option.description
-                                    }
-                                  })
-                                }),
-                                1
-                              ),
-                              _vm._v(" "),
-                              _vm.errors["note.note_debit_type_id"]
-                                ? _c("small", {
-                                    staticClass: "form-control-feedback",
-                                    domProps: {
-                                      textContent: _vm._s(
-                                        _vm.errors["note.note_debit_type_id"][0]
-                                      )
-                                    }
-                                  })
-                                : _vm._e()
-                            ],
-                            1
-                          )
-                        ]
-                      : [
-                          _c(
-                            "div",
-                            {
-                              staticClass: "form-group",
-                              class: {
-                                "has-danger":
-                                  _vm.errors["note.note_credit_type_id"]
-                              }
-                            },
-                            [
-                              _c("label", { staticClass: "control-label" }, [
-                                _vm._v("Tipo nota de crédito")
-                              ]),
-                              _vm._v(" "),
-                              _c(
-                                "el-select",
-                                {
-                                  model: {
-                                    value:
-                                      _vm.form.note_credit_or_debit_type_id,
-                                    callback: function($$v) {
-                                      _vm.$set(
-                                        _vm.form,
-                                        "note_credit_or_debit_type_id",
-                                        $$v
-                                      )
-                                    },
-                                    expression:
-                                      "\n                                        form.note_credit_or_debit_type_id\n                                    "
-                                  }
-                                },
-                                _vm._l(_vm.note_credit_types, function(option) {
-                                  return _c("el-option", {
-                                    key: option.id,
-                                    attrs: {
-                                      value: option.id,
-                                      label: option.description
-                                    }
-                                  })
-                                }),
-                                1
-                              ),
-                              _vm._v(" "),
-                              _vm.errors["note.note_credit_type_id"]
-                                ? _c("small", {
-                                    staticClass: "form-control-feedback",
-                                    domProps: {
-                                      textContent: _vm._s(
-                                        _vm.errors[
-                                          "note.note_credit_type_id"
-                                        ][0]
-                                      )
-                                    }
-                                  })
-                                : _vm._e()
-                            ],
-                            1
-                          )
-                        ]
-                  ],
-                  2
-                ),
-                _vm._v(" "),
-                _c("div", { staticClass: "col-lg-4 col-md-6" }, [
-                  _c(
-                    "div",
-                    {
-                      staticClass: "form-group",
-                      class: {
-                        "has-danger": _vm.errors["note.note_description"]
-                      }
-                    },
-                    [
-                      _c("label", { staticClass: "control-label" }, [
-                        _vm._v("Descripción")
-                      ]),
-                      _vm._v(" "),
-                      _c(
-                        "el-input",
-                        {
-                          model: {
-                            value: _vm.form.note_description,
-                            callback: function($$v) {
-                              _vm.$set(_vm.form, "note_description", $$v)
-                            },
-                            expression: "form.note_description"
-                          }
-                        },
-                        [
-                          _c("i", {
-                            staticClass: "el-icon-edit-outline",
-                            attrs: { slot: "prefix" },
-                            slot: "prefix"
-                          })
-                        ]
-                      ),
-                      _vm._v(" "),
-                      _vm.errors["note.note_description"]
-                        ? _c("small", {
-                            staticClass: "form-control-feedback",
-                            domProps: {
-                              textContent: _vm._s(
-                                _vm.errors["note.note_description"][0]
-                              )
-                            }
-                          })
-                        : _vm._e()
-                    ],
-                    1
-                  )
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "col-lg-2 col-md-6" }, [
-                  _c(
-                    "div",
-                    { staticClass: "form-group" },
-                    [
-                      _c("label", { staticClass: "control-label" }, [
-                        _vm._v("Formato de PDF")
-                      ]),
-                      _vm._v(" "),
-                      _c(
-                        "el-select",
-                        {
-                          model: {
-                            value: _vm.form.actions.format_pdf,
-                            callback: function($$v) {
-                              _vm.$set(_vm.form.actions, "format_pdf", $$v)
-                            },
-                            expression: "form.actions.format_pdf"
-                          }
-                        },
-                        [
-                          _c("el-option", {
-                            key: "a4",
-                            attrs: { value: "a4", label: "Tamaño A4" }
-                          }),
-                          _vm._v(" "),
-                          _c("el-option", {
-                            key: "ticket",
-                            attrs: { value: "ticket", label: "Tamaño Ticket" }
-                          })
-                        ],
-                        1
-                      )
-                    ],
-                    1
-                  )
-                ])
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "row" }, [
-                _c("div", { staticClass: "col-md-6" }, [
-                  _c(
-                    "div",
-                    {
-                      staticClass: "form-group",
-                      class: { "has-danger": _vm.errors.customer_id }
-                    },
-                    [
-                      _c("label", { staticClass: "control-label" }, [
-                        _vm._v("Cliente")
-                      ]),
-                      _vm._v(" "),
-                      _c(
-                        "el-select",
-                        {
-                          attrs: { filterable: "", disabled: true },
-                          model: {
-                            value: _vm.form.customer_id,
-                            callback: function($$v) {
-                              _vm.$set(_vm.form, "customer_id", $$v)
-                            },
-                            expression: "form.customer_id"
-                          }
-                        },
-                        _vm._l(_vm.customers, function(option) {
-                          return _c("el-option", {
-                            key: option.id,
-                            attrs: {
-                              value: option.id,
-                              label: option.description
-                            }
-                          })
-                        }),
-                        1
-                      ),
-                      _vm._v(" "),
-                      _vm.errors.customer_id
-                        ? _c("small", {
-                            staticClass: "form-control-feedback",
-                            domProps: {
-                              textContent: _vm._s(_vm.errors.customer_id[0])
-                            }
-                          })
-                        : _vm._e()
-                    ],
-                    1
-                  )
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "col-md-2" }, [
-                  _c(
-                    "div",
-                    {
-                      staticClass: "form-group",
-                      class: {
-                        "has-danger": _vm.errors.currency_type_id
-                      }
-                    },
-                    [
-                      _c("label", { staticClass: "control-label" }, [
-                        _vm._v("Moneda")
-                      ]),
-                      _vm._v(" "),
-                      _c(
-                        "el-select",
-                        {
-                          attrs: { disabled: true },
-                          model: {
-                            value: _vm.form.currency_type_id,
-                            callback: function($$v) {
-                              _vm.$set(_vm.form, "currency_type_id", $$v)
-                            },
-                            expression: "form.currency_type_id"
-                          }
-                        },
-                        _vm._l(_vm.currency_types, function(option) {
-                          return _c("el-option", {
-                            key: option.id,
-                            attrs: {
-                              value: option.id,
-                              label: option.description
-                            }
-                          })
-                        }),
-                        1
-                      ),
-                      _vm._v(" "),
-                      _vm.errors.currency_type_id
-                        ? _c("small", {
-                            staticClass: "form-control-feedback",
-                            domProps: {
-                              textContent: _vm._s(
-                                _vm.errors.currency_type_id[0]
-                              )
-                            }
-                          })
-                        : _vm._e()
-                    ],
-                    1
-                  )
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "col-md-2" }, [
-                  _c(
-                    "div",
-                    {
-                      staticClass: "form-group",
-                      class: { "has-danger": _vm.errors.date_of_issue }
-                    },
-                    [
-                      _c("label", { staticClass: "control-label" }, [
-                        _vm._v("Fec. Emisión")
-                      ]),
-                      _vm._v(" "),
-                      _c("el-date-picker", {
+                      _c("logo", {
                         attrs: {
-                          type: "date",
-                          "value-format": "yyyy-MM-dd",
-                          clearable: false
-                        },
-                        on: { change: _vm.changeDateOfIssue },
-                        model: {
-                          value: _vm.form.date_of_issue,
-                          callback: function($$v) {
-                            _vm.$set(_vm.form, "date_of_issue", $$v)
-                          },
-                          expression: "form.date_of_issue"
+                          url: "/",
+                          path_logo:
+                            _vm.company.logo != null
+                              ? "/storage/uploads/logos/" + _vm.company.logo
+                              : ""
                         }
-                      }),
-                      _vm._v(" "),
-                      _vm.errors.date_of_issue
-                        ? _c("small", {
-                            staticClass: "form-control-feedback",
-                            domProps: {
-                              textContent: _vm._s(_vm.errors.date_of_issue[0])
-                            }
-                          })
-                        : _vm._e()
+                      })
                     ],
                     1
-                  )
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "col-md-2" }, [
-                  _c(
-                    "div",
-                    {
-                      staticClass: "form-group",
-                      class: { "has-danger": _vm.errors.purchase_order }
-                    },
-                    [
-                      _c("label", { staticClass: "control-label" }, [
-                        _vm._v("Orden Compra")
+                  ),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col-sm-6 text-left mt-3 mb-0" }, [
+                    _c("address", { staticClass: "ib mr-2" }, [
+                      _c("span", { staticClass: "font-weight-bold d-block" }, [
+                        _vm._v("COTIZACIÓN")
                       ]),
                       _vm._v(" "),
-                      _c(
-                        "el-input",
-                        {
-                          model: {
-                            value: _vm.form.purchase_order,
-                            callback: function($$v) {
-                              _vm.$set(_vm.form, "purchase_order", $$v)
-                            },
-                            expression: "form.purchase_order"
-                          }
-                        },
-                        [
-                          _c("i", {
-                            staticClass: "el-icon-edit-outline",
-                            attrs: { slot: "prefix" },
-                            slot: "prefix"
-                          })
-                        ]
-                      ),
+                      _c("span", { staticClass: "font-weight-bold d-block" }, [
+                        _vm._v("COT-XXX")
+                      ]),
                       _vm._v(" "),
-                      _vm.errors.purchase_order
-                        ? _c("small", {
-                            staticClass: "form-control-feedback",
-                            domProps: {
-                              textContent: _vm._s(_vm.errors.purchase_order[0])
-                            }
-                          })
+                      _c("span", { staticClass: "font-weight-bold" }, [
+                        _vm._v(_vm._s(_vm.company.name))
+                      ]),
+                      _vm._v(" "),
+                      _c("br"),
+                      _vm._v(" "),
+                      _vm.establishment.address != "-"
+                        ? _c("div", [
+                            _vm._v(
+                              "\n                                " +
+                                _vm._s(_vm.establishment.address) +
+                                ",\n                            "
+                            )
+                          ])
+                        : _vm._e(),
+                      _vm._v(
+                        "\n                            " +
+                          _vm._s(_vm.establishment.district.description) +
+                          ",\n                            " +
+                          _vm._s(_vm.establishment.province.description) +
+                          ",\n                            " +
+                          _vm._s(_vm.establishment.department.description) +
+                          " -\n                            " +
+                          _vm._s(_vm.establishment.country.description) +
+                          "\n                            "
+                      ),
+                      _c("br"),
+                      _vm._v(
+                        "\n                            " +
+                          _vm._s(_vm.establishment.email) +
+                          " -\n                            "
+                      ),
+                      _vm.establishment.telephone != "-"
+                        ? _c("span", [
+                            _vm._v(_vm._s(_vm.establishment.telephone))
+                          ])
                         : _vm._e()
-                    ],
-                    1
-                  )
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "col-md-2" }, [
-                  _c(
-                    "div",
-                    {
-                      staticClass: "form-group",
-                      class: {
-                        "has-danger": _vm.errors.exchange_rate_sale
-                      }
-                    },
-                    [
-                      _c(
-                        "label",
-                        { staticClass: "control-label" },
-                        [
-                          _vm._v(
-                            "Tipo de cambio\n                                "
-                          ),
-                          _c(
-                            "el-tooltip",
-                            {
-                              staticClass: "item",
-                              attrs: {
-                                effect: "dark",
-                                content:
-                                  "Tipo de cambio del día, extraído de SUNAT",
-                                placement: "top-end"
-                              }
-                            },
-                            [_c("i", { staticClass: "fa fa-info-circle" })]
-                          )
-                        ],
-                        1
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "el-input",
-                        {
-                          model: {
-                            value: _vm.form.exchange_rate_sale,
-                            callback: function($$v) {
-                              _vm.$set(_vm.form, "exchange_rate_sale", $$v)
-                            },
-                            expression: "form.exchange_rate_sale"
-                          }
-                        },
-                        [
-                          _c("i", {
-                            staticClass: "el-icon-edit-outline",
-                            attrs: { slot: "prefix" },
-                            slot: "prefix"
-                          })
-                        ]
-                      ),
-                      _vm._v(" "),
-                      _vm.errors.exchange_rate_sale
-                        ? _c("small", {
-                            staticClass: "form-control-feedback",
-                            domProps: {
-                              textContent: _vm._s(
-                                _vm.errors.exchange_rate_sale[0]
-                              )
-                            }
-                          })
-                        : _vm._e()
-                    ],
-                    1
-                  )
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col-sm-4" })
                 ])
               ]),
               _vm._v(" "),
-              _c("div", { staticClass: "row" }, [
-                _c(
-                  "div",
-                  {
-                    staticClass: "col-lg-2 col-md-6 d-flex align-items-end pt-2"
-                  },
-                  [
-                    _c("div", { staticClass: "form-group" }, [
-                      _c(
-                        "button",
-                        {
-                          staticClass:
-                            "btn waves-effect waves-light btn-primary",
-                          attrs: { type: "button" },
-                          on: {
-                            click: function($event) {
-                              $event.preventDefault()
-                              return _vm.clickAddItemNote()
+              _c(
+                "form",
+                {
+                  attrs: { autocomplete: "off" },
+                  on: {
+                    submit: function($event) {
+                      $event.preventDefault()
+                      return _vm.submit.apply(null, arguments)
+                    }
+                  }
+                },
+                [
+                  _c("div", { staticClass: "form-body" }, [
+                    _c("div", { staticClass: "row mt-1" }, [
+                      _c("div", { staticClass: "col-lg-6 pb-2" }, [
+                        _c(
+                          "div",
+                          {
+                            staticClass: "form-group",
+                            class: {
+                              "has-danger": _vm.errors.customer_id
                             }
-                          }
-                        },
-                        [
-                          _vm._v(
-                            "\n                                + Agregar Producto\n                            "
-                          )
-                        ]
-                      )
-                    ])
-                  ]
-                )
-              ]),
-              _vm._v(" "),
-              _vm.form.items.length > 0
-                ? _c("div", { staticClass: "row" }, [
-                    _c("div", { staticClass: "col-md-12" }, [
-                      _c("div", { staticClass: "table-responsive" }, [
-                        _c("table", { staticClass: "table" }, [
-                          _vm._m(0),
+                          },
+                          [
+                            _c(
+                              "label",
+                              {
+                                staticClass:
+                                  "control-label font-weight-bold text-primary"
+                              },
+                              [
+                                _vm._v(
+                                  "\n                                    Cliente\n                                    "
+                                ),
+                                _c(
+                                  "a",
+                                  {
+                                    attrs: { href: "#" },
+                                    on: {
+                                      click: function($event) {
+                                        $event.preventDefault()
+                                        _vm.showDialogNewPerson = true
+                                      }
+                                    }
+                                  },
+                                  [_vm._v("[+ Nuevo]")]
+                                )
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "el-select",
+                              {
+                                staticClass:
+                                  "border-left rounded-left border-info",
+                                attrs: {
+                                  filterable: "",
+                                  remote: "",
+                                  "popper-class": "el-select-customers",
+                                  dusk: "customer_id",
+                                  placeholder:
+                                    "Escriba el nombre o número de documento del cliente",
+                                  "remote-method": _vm.searchRemoteCustomers,
+                                  loading: _vm.loading_search
+                                },
+                                model: {
+                                  value: _vm.form.customer_id,
+                                  callback: function($$v) {
+                                    _vm.$set(_vm.form, "customer_id", $$v)
+                                  },
+                                  expression: "form.customer_id"
+                                }
+                              },
+                              _vm._l(_vm.customers, function(option) {
+                                return _c("el-option", {
+                                  key: option.id,
+                                  attrs: {
+                                    value: option.id,
+                                    label: option.description
+                                  }
+                                })
+                              }),
+                              1
+                            ),
+                            _vm._v(" "),
+                            _vm.errors.customer_id
+                              ? _c("small", {
+                                  staticClass: "form-control-feedback",
+                                  domProps: {
+                                    textContent: _vm._s(
+                                      _vm.errors.customer_id[0]
+                                    )
+                                  }
+                                })
+                              : _vm._e()
+                          ],
+                          1
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "col-4 col-lg-2" }, [
+                        _c(
+                          "div",
+                          {
+                            staticClass: "form-group",
+                            class: {
+                              "has-danger": _vm.errors.date_of_issue
+                            }
+                          },
+                          [
+                            _c("label", { staticClass: "control-label" }, [
+                              _vm._v("Fec. Emisión")
+                            ]),
+                            _vm._v(" "),
+                            _c("el-date-picker", {
+                              staticClass: "w-100",
+                              attrs: {
+                                type: "date",
+                                "value-format": "yyyy-MM-dd",
+                                clearable: false
+                              },
+                              on: { change: _vm.changeDateOfIssue },
+                              model: {
+                                value: _vm.form.date_of_issue,
+                                callback: function($$v) {
+                                  _vm.$set(_vm.form, "date_of_issue", $$v)
+                                },
+                                expression: "form.date_of_issue"
+                              }
+                            }),
+                            _vm._v(" "),
+                            _vm.errors.date_of_issue
+                              ? _c("small", {
+                                  staticClass: "form-control-feedback",
+                                  domProps: {
+                                    textContent: _vm._s(
+                                      _vm.errors.date_of_issue[0]
+                                    )
+                                  }
+                                })
+                              : _vm._e()
+                          ],
+                          1
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "col-4 col-lg-2" }, [
+                        _c(
+                          "div",
+                          {
+                            staticClass: "form-group",
+                            class: {
+                              "has-danger": _vm.errors.date_of_due
+                            }
+                          },
+                          [
+                            _c("label", { staticClass: "control-label" }, [
+                              _vm._v("Fec. Vencimiento")
+                            ]),
+                            _vm._v(" "),
+                            _c("el-date-picker", {
+                              staticClass: "w-100",
+                              attrs: {
+                                type: "date",
+                                "value-format": "yyyy-MM-dd",
+                                clearable: true
+                              },
+                              model: {
+                                value: _vm.form.date_of_due,
+                                callback: function($$v) {
+                                  _vm.$set(_vm.form, "date_of_due", $$v)
+                                },
+                                expression: "form.date_of_due"
+                              }
+                            }),
+                            _vm._v(" "),
+                            _vm.errors.date_of_due
+                              ? _c("small", {
+                                  staticClass: "form-control-feedback",
+                                  domProps: {
+                                    textContent: _vm._s(
+                                      _vm.errors.date_of_due[0]
+                                    )
+                                  }
+                                })
+                              : _vm._e()
+                          ],
+                          1
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "col-md-4 col-lg-2" }, [
+                        _c(
+                          "div",
+                          {
+                            staticClass: "form-group",
+                            class: {
+                              "has-danger": _vm.errors.delivery_date
+                            }
+                          },
+                          [
+                            _c("label", { staticClass: "control-label" }, [
+                              _vm._v("Fec. Entrega")
+                            ]),
+                            _vm._v(" "),
+                            _c("el-date-picker", {
+                              staticClass: "w-100",
+                              attrs: {
+                                type: "date",
+                                "value-format": "yyyy-MM-dd",
+                                clearable: true
+                              },
+                              model: {
+                                value: _vm.form.delivery_date,
+                                callback: function($$v) {
+                                  _vm.$set(_vm.form, "delivery_date", $$v)
+                                },
+                                expression: "form.delivery_date"
+                              }
+                            }),
+                            _vm._v(" "),
+                            _vm.errors.delivery_date
+                              ? _c("small", {
+                                  staticClass: "form-control-feedback",
+                                  domProps: {
+                                    textContent: _vm._s(
+                                      _vm.errors.delivery_date[0]
+                                    )
+                                  }
+                                })
+                              : _vm._e()
+                          ],
+                          1
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "col-lg-4" }, [
+                        _c(
+                          "div",
+                          { staticClass: "form-group" },
+                          [
+                            _c("label", { staticClass: "control-label" }, [
+                              _vm._v(
+                                "Dirección de envío\n                                "
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c(
+                              "el-input",
+                              {
+                                model: {
+                                  value: _vm.form.shipping_address,
+                                  callback: function($$v) {
+                                    _vm.$set(_vm.form, "shipping_address", $$v)
+                                  },
+                                  expression: "form.shipping_address"
+                                }
+                              },
+                              [
+                                _c("i", {
+                                  staticClass: "el-icon-edit-outline",
+                                  attrs: { slot: "prefix" },
+                                  slot: "prefix"
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _vm.errors.shipping_address
+                              ? _c("small", {
+                                  staticClass: "form-control-feedback",
+                                  domProps: {
+                                    textContent: _vm._s(
+                                      _vm.errors.shipping_address[0]
+                                    )
+                                  }
+                                })
+                              : _vm._e()
+                          ],
+                          1
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "col-lg-2" }, [
+                        _c(
+                          "div",
+                          {
+                            staticClass: "form-group",
+                            class: {
+                              "has-danger": _vm.errors.payment_method_type_id
+                            }
+                          },
+                          [
+                            _c("label", { staticClass: "control-label" }, [
+                              _vm._v(
+                                "\n                                    Término de pago\n                                "
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c(
+                              "el-select",
+                              {
+                                attrs: { filterable: "" },
+                                on: { change: _vm.changePaymentMethodType },
+                                model: {
+                                  value: _vm.form.payment_method_type_id,
+                                  callback: function($$v) {
+                                    _vm.$set(
+                                      _vm.form,
+                                      "payment_method_type_id",
+                                      $$v
+                                    )
+                                  },
+                                  expression: "form.payment_method_type_id"
+                                }
+                              },
+                              _vm._l(_vm.payment_method_types, function(
+                                option
+                              ) {
+                                return _c("el-option", {
+                                  key: option.id,
+                                  attrs: {
+                                    value: option.id,
+                                    label: option.description
+                                  }
+                                })
+                              }),
+                              1
+                            ),
+                            _vm._v(" "),
+                            _vm.errors.payment_method_type_id
+                              ? _c("small", {
+                                  staticClass: "form-control-feedback",
+                                  domProps: {
+                                    textContent: _vm._s(
+                                      _vm.errors.payment_method_type_id[0]
+                                    )
+                                  }
+                                })
+                              : _vm._e()
+                          ],
+                          1
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "col-lg-2" }, [
+                        _c(
+                          "div",
+                          { staticClass: "form-group" },
+                          [
+                            _c("label", { staticClass: "control-label" }, [
+                              _vm._v(
+                                "Número de cuenta\n                                "
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c(
+                              "el-input",
+                              {
+                                model: {
+                                  value: _vm.form.account_number,
+                                  callback: function($$v) {
+                                    _vm.$set(_vm.form, "account_number", $$v)
+                                  },
+                                  expression: "form.account_number"
+                                }
+                              },
+                              [
+                                _c("i", {
+                                  staticClass: "el-icon-edit-outline",
+                                  attrs: { slot: "prefix" },
+                                  slot: "prefix"
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _vm.errors.account_number
+                              ? _c("small", {
+                                  staticClass: "form-control-feedback",
+                                  domProps: {
+                                    textContent: _vm._s(
+                                      _vm.errors.account_number[0]
+                                    )
+                                  }
+                                })
+                              : _vm._e()
+                          ],
+                          1
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "col-lg-2" }, [
+                        _c(
+                          "div",
+                          {
+                            staticClass: "form-group",
+                            class: {
+                              "has-danger": _vm.errors.currency_type_id
+                            }
+                          },
+                          [
+                            _c("label", { staticClass: "control-label" }, [
+                              _vm._v("Moneda")
+                            ]),
+                            _vm._v(" "),
+                            _c(
+                              "el-select",
+                              {
+                                on: { change: _vm.changeCurrencyType },
+                                model: {
+                                  value: _vm.form.currency_type_id,
+                                  callback: function($$v) {
+                                    _vm.$set(_vm.form, "currency_type_id", $$v)
+                                  },
+                                  expression: "form.currency_type_id"
+                                }
+                              },
+                              _vm._l(_vm.currency_types, function(option) {
+                                return _c("el-option", {
+                                  key: option.id,
+                                  attrs: {
+                                    value: option.id,
+                                    label: option.description
+                                  }
+                                })
+                              }),
+                              1
+                            ),
+                            _vm._v(" "),
+                            _vm.errors.currency_type_id
+                              ? _c("small", {
+                                  staticClass: "form-control-feedback",
+                                  domProps: {
+                                    textContent: _vm._s(
+                                      _vm.errors.currency_type_id[0]
+                                    )
+                                  }
+                                })
+                              : _vm._e()
+                          ],
+                          1
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "col-lg-2" }, [
+                        _c(
+                          "div",
+                          {
+                            staticClass: "form-group",
+                            class: {
+                              "has-danger": _vm.errors.exchange_rate_sale
+                            }
+                          },
+                          [
+                            _c(
+                              "label",
+                              { staticClass: "control-label" },
+                              [
+                                _vm._v(
+                                  "Tipo de cambio\n                                    "
+                                ),
+                                _c(
+                                  "el-tooltip",
+                                  {
+                                    staticClass: "item",
+                                    attrs: {
+                                      effect: "dark",
+                                      content:
+                                        "Tipo de cambio del día, extraído de SUNAT",
+                                      placement: "top-end"
+                                    }
+                                  },
+                                  [
+                                    _c("i", {
+                                      staticClass: "fa fa-info-circle"
+                                    })
+                                  ]
+                                )
+                              ],
+                              1
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "el-input",
+                              {
+                                model: {
+                                  value: _vm.form.exchange_rate_sale,
+                                  callback: function($$v) {
+                                    _vm.$set(
+                                      _vm.form,
+                                      "exchange_rate_sale",
+                                      $$v
+                                    )
+                                  },
+                                  expression: "form.exchange_rate_sale"
+                                }
+                              },
+                              [
+                                _c("i", {
+                                  staticClass: "el-icon-edit-outline",
+                                  attrs: { slot: "prefix" },
+                                  slot: "prefix"
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _vm.errors.exchange_rate_sale
+                              ? _c("small", {
+                                  staticClass: "form-control-feedback",
+                                  domProps: {
+                                    textContent: _vm._s(
+                                      _vm.errors.exchange_rate_sale[0]
+                                    )
+                                  }
+                                })
+                              : _vm._e()
+                          ],
+                          1
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "col-lg-8 mt-2" }, [
+                        _c("table", [
+                          _c("thead", [
+                            _c("tr", { attrs: { width: "100%" } }, [
+                              _vm.form.payments.length > 0
+                                ? _c("th", { staticClass: "pb-2" }, [
+                                    _vm._v(
+                                      "\n                                            Método de pago\n                                        "
+                                    )
+                                  ])
+                                : _vm._e(),
+                              _vm._v(" "),
+                              _vm.form.payments.length > 0
+                                ? _c("th", { staticClass: "pb-2" }, [
+                                    _vm._v(
+                                      "\n                                            Destino\n                                        "
+                                    )
+                                  ])
+                                : _vm._e(),
+                              _vm._v(" "),
+                              _vm.form.payments.length > 0
+                                ? _c("th", { staticClass: "pb-2" }, [
+                                    _vm._v(
+                                      "\n                                            Referencia\n                                        "
+                                    )
+                                  ])
+                                : _vm._e(),
+                              _vm._v(" "),
+                              _vm.form.payments.length > 0
+                                ? _c("th", { staticClass: "pb-2" }, [
+                                    _vm._v(
+                                      "\n                                            Monto\n                                        "
+                                    )
+                                  ])
+                                : _vm._e(),
+                              _vm._v(" "),
+                              _c("th", { attrs: { width: "15%" } }, [
+                                _c(
+                                  "a",
+                                  {
+                                    staticClass:
+                                      "text-center font-weight-bold text-info",
+                                    attrs: { href: "#" },
+                                    on: {
+                                      click: function($event) {
+                                        $event.preventDefault()
+                                        return _vm.clickAddPayment.apply(
+                                          null,
+                                          arguments
+                                        )
+                                      }
+                                    }
+                                  },
+                                  [_vm._v("[+ Agregar]")]
+                                )
+                              ])
+                            ])
+                          ]),
                           _vm._v(" "),
                           _c(
                             "tbody",
-                            _vm._l(_vm.form.items, function(row, index) {
-                              return _c("tr", [
-                                _c("td", [_vm._v(_vm._s(index + 1))]),
-                                _vm._v(" "),
+                            _vm._l(_vm.form.payments, function(row, index) {
+                              return _c("tr", { key: index }, [
                                 _c("td", [
-                                  _vm._v(
-                                    "\n                                            " +
-                                      _vm._s(row.item.description)
-                                  ),
-                                  _c("br"),
-                                  _c("small", [
-                                    _vm._v(
-                                      _vm._s(
-                                        row.affectation_igv_type.description
-                                      )
-                                    )
-                                  ])
-                                ]),
-                                _vm._v(" "),
-                                _c("td", { staticClass: "text-center" }, [
-                                  _vm._v(
-                                    "\n                                            " +
-                                      _vm._s(row.item.unit_type_id) +
-                                      "\n                                        "
-                                  )
-                                ]),
-                                _vm._v(" "),
-                                _c("td", { staticClass: "text-end" }, [
-                                  _vm._v(
-                                    "\n                                            " +
-                                      _vm._s(row.quantity) +
-                                      "\n                                        "
-                                  )
-                                ]),
-                                _vm._v(" "),
-                                _c("td", { staticClass: "text-end" }, [
-                                  _vm._v(
-                                    "\n                                            " +
-                                      _vm._s(_vm.currency_type.symbol) +
-                                      "\n                                            " +
-                                      _vm._s(row.unit_price) +
-                                      "\n                                        "
-                                  )
-                                ]),
-                                _vm._v(" "),
-                                _c("td", { staticClass: "text-end" }, [
-                                  _vm._v(
-                                    "\n                                            " +
-                                      _vm._s(_vm.currency_type.symbol) +
-                                      "\n                                            " +
-                                      _vm._s(row.total_discount) +
-                                      "\n                                        "
-                                  )
-                                ]),
-                                _vm._v(" "),
-                                _c("td", { staticClass: "text-end" }, [
-                                  _vm._v(
-                                    "\n                                            " +
-                                      _vm._s(_vm.currency_type.symbol) +
-                                      "\n                                            " +
-                                      _vm._s(row.total_charge) +
-                                      "\n                                        "
-                                  )
-                                ]),
-                                _vm._v(" "),
-                                _c("td", { staticClass: "text-end" }, [
-                                  _vm._v(
-                                    "\n                                            " +
-                                      _vm._s(_vm.currency_type.symbol) +
-                                      "\n                                            " +
-                                      _vm._s(row.total) +
-                                      "\n                                        "
-                                  )
-                                ]),
-                                _vm._v(" "),
-                                _c("td", { staticClass: "text-end" }, [
                                   _c(
-                                    "button",
-                                    {
-                                      staticClass:
-                                        "btn waves-effect waves-light btn-sm btn-danger",
-                                      attrs: { type: "button" },
-                                      on: {
-                                        click: function($event) {
-                                          $event.preventDefault()
-                                          return _vm.clickRemoveItem(index)
-                                        }
-                                      }
-                                    },
-                                    [
-                                      _vm._v(
-                                        "\n                                                x\n                                            "
-                                      )
-                                    ]
-                                  ),
-                                  _vm._v(" "),
-                                  _c(
-                                    "button",
-                                    {
-                                      staticClass:
-                                        "btn waves-effect waves-light btn-sm btn-info",
-                                      attrs: { type: "button" },
-                                      on: {
-                                        click: function($event) {
-                                          $event.preventDefault()
-                                          return _vm.ediItem(row, index)
-                                        }
-                                      }
-                                    },
+                                    "div",
+                                    { staticClass: "form-group mb-2 mr-2" },
                                     [
                                       _c(
-                                        "span",
+                                        "el-select",
                                         {
-                                          staticStyle: { "font-size": "10px" }
+                                          model: {
+                                            value: row.payment_method_type_id,
+                                            callback: function($$v) {
+                                              _vm.$set(
+                                                row,
+                                                "payment_method_type_id",
+                                                $$v
+                                              )
+                                            },
+                                            expression:
+                                              "\n                                                        row.payment_method_type_id\n                                                    "
+                                          }
                                         },
-                                        [_vm._v("✎")]
+                                        _vm._l(
+                                          _vm.payment_method_types,
+                                          function(option) {
+                                            return _c("el-option", {
+                                              key: option.id,
+                                              attrs: {
+                                                value: option.id,
+                                                label: option.description
+                                              }
+                                            })
+                                          }
+                                        ),
+                                        1
                                       )
-                                    ]
+                                    ],
+                                    1
                                   )
-                                ])
+                                ]),
+                                _vm._v(" "),
+                                _c("td", [
+                                  _c(
+                                    "div",
+                                    { staticClass: "form-group mb-2 mr-2" },
+                                    [
+                                      _c(
+                                        "el-select",
+                                        {
+                                          attrs: { filterable: "" },
+                                          model: {
+                                            value: row.payment_destination_id,
+                                            callback: function($$v) {
+                                              _vm.$set(
+                                                row,
+                                                "payment_destination_id",
+                                                $$v
+                                              )
+                                            },
+                                            expression:
+                                              "\n                                                        row.payment_destination_id\n                                                    "
+                                          }
+                                        },
+                                        _vm._l(
+                                          _vm.payment_destinations,
+                                          function(option) {
+                                            return _c("el-option", {
+                                              key: option.id,
+                                              attrs: {
+                                                value: option.id,
+                                                label: option.description
+                                              }
+                                            })
+                                          }
+                                        ),
+                                        1
+                                      )
+                                    ],
+                                    1
+                                  )
+                                ]),
+                                _vm._v(" "),
+                                _c("td", [
+                                  _c(
+                                    "div",
+                                    { staticClass: "form-group mb-2 mr-2" },
+                                    [
+                                      _c(
+                                        "el-input",
+                                        {
+                                          model: {
+                                            value: row.reference,
+                                            callback: function($$v) {
+                                              _vm.$set(row, "reference", $$v)
+                                            },
+                                            expression: "row.reference"
+                                          }
+                                        },
+                                        [
+                                          _c("i", {
+                                            staticClass: "el-icon-edit-outline",
+                                            attrs: { slot: "prefix" },
+                                            slot: "prefix"
+                                          })
+                                        ]
+                                      )
+                                    ],
+                                    1
+                                  )
+                                ]),
+                                _vm._v(" "),
+                                _c("td", [
+                                  _c(
+                                    "div",
+                                    { staticClass: "form-group mb-2 mr-2" },
+                                    [
+                                      _c(
+                                        "el-input",
+                                        {
+                                          model: {
+                                            value: row.payment,
+                                            callback: function($$v) {
+                                              _vm.$set(row, "payment", $$v)
+                                            },
+                                            expression: "row.payment"
+                                          }
+                                        },
+                                        [
+                                          _c("i", {
+                                            staticClass: "el-icon-edit-outline",
+                                            attrs: { slot: "prefix" },
+                                            slot: "prefix"
+                                          })
+                                        ]
+                                      )
+                                    ],
+                                    1
+                                  )
+                                ]),
+                                _vm._v(" "),
+                                _c(
+                                  "td",
+                                  {
+                                    staticClass:
+                                      "series-table-actions text-center"
+                                  },
+                                  [
+                                    _c(
+                                      "button",
+                                      {
+                                        staticClass:
+                                          "btn waves-effect waves-light btn-xs btn-danger",
+                                        attrs: { type: "button" },
+                                        on: {
+                                          click: function($event) {
+                                            $event.preventDefault()
+                                            return _vm.clickCancel(index)
+                                          }
+                                        }
+                                      },
+                                      [_c("i", { staticClass: "fa fa-trash" })]
+                                    )
+                                  ]
+                                ),
+                                _vm._v(" "),
+                                _c("br")
                               ])
                             }),
                             0
                           )
                         ])
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "col-lg-12" }, [
+                        _c(
+                          "div",
+                          {
+                            staticClass: "form-group",
+                            class: {
+                              "has-danger": _vm.errors.exchange_rate_sale
+                            }
+                          },
+                          [
+                            _c("label", { staticClass: "control-label" }, [
+                              _vm._v(
+                                "Descripcion\n                                "
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c(
+                              "el-input",
+                              {
+                                attrs: { type: "textarea", rows: 3 },
+                                model: {
+                                  value: _vm.form.description,
+                                  callback: function($$v) {
+                                    _vm.$set(_vm.form, "description", $$v)
+                                  },
+                                  expression: "form.description"
+                                }
+                              },
+                              [
+                                _c("i", {
+                                  staticClass: "el-icon-edit-outline",
+                                  attrs: { slot: "prefix" },
+                                  slot: "prefix"
+                                })
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _vm.errors.description
+                              ? _c("small", {
+                                  staticClass: "form-control-feedback",
+                                  domProps: {
+                                    textContent: _vm._s(
+                                      _vm.errors.description[0]
+                                    )
+                                  }
+                                })
+                              : _vm._e()
+                          ],
+                          1
+                        )
                       ])
                     ]),
                     _vm._v(" "),
-                    _c("div", { staticClass: "col-md-12" }, [
-                      _vm.form.total_exportation > 0
-                        ? _c("p", { staticClass: "text-end" }, [
-                            _vm._v(
-                              "\n                            OP.EXPORTACIÓN: " +
-                                _vm._s(_vm.currency_type.symbol) +
-                                "\n                            " +
-                                _vm._s(_vm.form.total_exportation) +
-                                "\n                        "
-                            )
+                    _c("div", { staticClass: "row mt-2" }, [
+                      _c("div", { staticClass: "col-md-12" }, [
+                        _c("div", { staticClass: "table-responsive" }, [
+                          _c("table", { staticClass: "table" }, [
+                            _c("thead", [
+                              _c("tr", [
+                                _c("th", [_vm._v("#")]),
+                                _vm._v(" "),
+                                _c("th", { staticClass: "font-weight-bold" }, [
+                                  _vm._v(
+                                    "\n                                                Descripción\n                                            "
+                                  )
+                                ]),
+                                _vm._v(" "),
+                                _c(
+                                  "th",
+                                  {
+                                    staticClass: "text-center font-weight-bold"
+                                  },
+                                  [
+                                    _vm._v(
+                                      "\n                                                Unidad\n                                            "
+                                    )
+                                  ]
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "th",
+                                  { staticClass: "text-end font-weight-bold" },
+                                  [
+                                    _vm._v(
+                                      "\n                                                Cantidad\n                                            "
+                                    )
+                                  ]
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "th",
+                                  { staticClass: "text-end font-weight-bold" },
+                                  [
+                                    _vm._v(
+                                      "\n                                                Precio Unitario\n                                            "
+                                    )
+                                  ]
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "th",
+                                  { staticClass: "text-end font-weight-bold" },
+                                  [
+                                    _vm._v(
+                                      "\n                                                Subtotal\n                                            "
+                                    )
+                                  ]
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "th",
+                                  { staticClass: "text-end font-weight-bold" },
+                                  [
+                                    _vm._v(
+                                      "\n                                                Total\n                                            "
+                                    )
+                                  ]
+                                ),
+                                _vm._v(" "),
+                                _c("th", [
+                                  _c(
+                                    "button",
+                                    {
+                                      staticClass:
+                                        "btn waves-effect waves-light btn-xs btn-primary",
+                                      attrs: { type: "button" },
+                                      on: {
+                                        click: function($event) {
+                                          $event.preventDefault()
+                                          _vm.showDialogAddItem = true
+                                        }
+                                      }
+                                    },
+                                    [
+                                      _vm._v(
+                                        "\n                                                    + Agregar Producto\n                                                "
+                                      )
+                                    ]
+                                  )
+                                ])
+                              ])
+                            ]),
+                            _vm._v(" "),
+                            _vm.form.items.length > 0
+                              ? _c(
+                                  "tbody",
+                                  [
+                                    _vm._l(_vm.form.items, function(
+                                      row,
+                                      index
+                                    ) {
+                                      return _c("tr", { key: index }, [
+                                        _c("td", [_vm._v(_vm._s(index + 1))]),
+                                        _vm._v(" "),
+                                        _c("td", [
+                                          _vm._v(
+                                            "\n                                                " +
+                                              _vm._s(row.item.description) +
+                                              "\n                                                " +
+                                              _vm._s(
+                                                row.item.presentation &&
+                                                  row.item.presentation.hasOwnProperty(
+                                                    "description"
+                                                  )
+                                                  ? row.item.presentation
+                                                      .description
+                                                  : ""
+                                              )
+                                          ),
+                                          _c("br"),
+                                          _c("small", [
+                                            _vm._v(
+                                              _vm._s(
+                                                row.affectation_igv_type
+                                                  .description
+                                              )
+                                            )
+                                          ])
+                                        ]),
+                                        _vm._v(" "),
+                                        _c(
+                                          "td",
+                                          { staticClass: "text-center" },
+                                          [
+                                            _vm._v(
+                                              "\n                                                " +
+                                                _vm._s(row.item.unit_type_id) +
+                                                "\n                                            "
+                                            )
+                                          ]
+                                        ),
+                                        _vm._v(" "),
+                                        _c("td", { staticClass: "text-end" }, [
+                                          _vm._v(
+                                            "\n                                                " +
+                                              _vm._s(row.quantity) +
+                                              "\n                                            "
+                                          )
+                                        ]),
+                                        _vm._v(" "),
+                                        _c("td", { staticClass: "text-end" }, [
+                                          _vm._v(
+                                            "\n                                                " +
+                                              _vm._s(_vm.currency_type.symbol) +
+                                              "\n                                                " +
+                                              _vm._s(
+                                                _vm.getFormatUnitPriceRow(
+                                                  row.unit_price
+                                                )
+                                              ) +
+                                              "\n                                            "
+                                          )
+                                        ]),
+                                        _vm._v(" "),
+                                        _c("td", { staticClass: "text-end" }, [
+                                          _vm._v(
+                                            "\n                                                " +
+                                              _vm._s(_vm.currency_type.symbol) +
+                                              "\n                                                " +
+                                              _vm._s(row.total_value) +
+                                              "\n                                            "
+                                          )
+                                        ]),
+                                        _vm._v(" "),
+                                        _c("td", { staticClass: "text-end" }, [
+                                          _vm._v(
+                                            "\n                                                " +
+                                              _vm._s(_vm.currency_type.symbol) +
+                                              "\n                                                " +
+                                              _vm._s(row.total) +
+                                              "\n                                            "
+                                          )
+                                        ]),
+                                        _vm._v(" "),
+                                        _c("td", { staticClass: "text-end" }, [
+                                          _c(
+                                            "button",
+                                            {
+                                              staticClass:
+                                                "btn waves-effect waves-light btn-xs btn-danger",
+                                              attrs: { type: "button" },
+                                              on: {
+                                                click: function($event) {
+                                                  $event.preventDefault()
+                                                  return _vm.clickRemoveItem(
+                                                    index
+                                                  )
+                                                }
+                                              }
+                                            },
+                                            [
+                                              _vm._v(
+                                                "\n                                                    x\n                                                "
+                                              )
+                                            ]
+                                          ),
+                                          _vm._v(" "),
+                                          _c(
+                                            "button",
+                                            {
+                                              staticClass:
+                                                "btn waves-effect waves-light btn-xs btn-info",
+                                              attrs: { type: "button" },
+                                              on: {
+                                                click: function($event) {
+                                                  return _vm.ediItem(row, index)
+                                                }
+                                              }
+                                            },
+                                            [
+                                              _c(
+                                                "span",
+                                                {
+                                                  staticStyle: {
+                                                    "font-size": "10px"
+                                                  }
+                                                },
+                                                [_vm._v("✎")]
+                                              )
+                                            ]
+                                          )
+                                        ])
+                                      ])
+                                    }),
+                                    _vm._v(" "),
+                                    _vm._m(0)
+                                  ],
+                                  2
+                                )
+                              : _vm._e()
                           ])
-                        : _vm._e(),
+                        ])
+                      ]),
                       _vm._v(" "),
-                      _vm.form.total_free > 0
-                        ? _c("p", { staticClass: "text-end" }, [
-                            _vm._v(
-                              "\n                            OP.GRATUITAS: " +
-                                _vm._s(_vm.currency_type.symbol) +
-                                "\n                            " +
-                                _vm._s(_vm.form.total_free) +
-                                "\n                        "
-                            )
-                          ])
-                        : _vm._e(),
+                      _c("div", { staticClass: "col-md-8 mt-3" }),
                       _vm._v(" "),
-                      _vm.form.total_unaffected > 0
-                        ? _c("p", { staticClass: "text-end" }, [
-                            _vm._v(
-                              "\n                            OP.INAFECTAS: " +
+                      _c("div", { staticClass: "col-md-4" }, [
+                        _vm.form.total_exportation > 0
+                          ? _c("p", { staticClass: "text-end" }, [
+                              _vm._v(
+                                "\n                                OP.EXPORTACIÓN: " +
+                                  _vm._s(_vm.currency_type.symbol) +
+                                  "\n                                " +
+                                  _vm._s(_vm.form.total_exportation) +
+                                  "\n                            "
+                              )
+                            ])
+                          : _vm._e(),
+                        _vm._v(" "),
+                        _vm.form.total_free > 0
+                          ? _c("p", { staticClass: "text-end" }, [
+                              _vm._v(
+                                "\n                                OP.GRATUITAS: " +
+                                  _vm._s(_vm.currency_type.symbol) +
+                                  "\n                                " +
+                                  _vm._s(_vm.form.total_free) +
+                                  "\n                            "
+                              )
+                            ])
+                          : _vm._e(),
+                        _vm._v(" "),
+                        _vm.form.total_unaffected > 0
+                          ? _c("p", { staticClass: "text-end" }, [
+                              _vm._v(
+                                "\n                                OP.INAFECTAS: " +
+                                  _vm._s(_vm.currency_type.symbol) +
+                                  "\n                                " +
+                                  _vm._s(_vm.form.total_unaffected) +
+                                  "\n                            "
+                              )
+                            ])
+                          : _vm._e(),
+                        _vm._v(" "),
+                        _vm.form.total_exonerated > 0
+                          ? _c("p", { staticClass: "text-end" }, [
+                              _vm._v(
+                                "\n                                OP.EXONERADAS: " +
+                                  _vm._s(_vm.currency_type.symbol) +
+                                  "\n                                " +
+                                  _vm._s(_vm.form.total_exonerated) +
+                                  "\n                            "
+                              )
+                            ])
+                          : _vm._e(),
+                        _vm._v(" "),
+                        _vm.form.total_taxed > 0
+                          ? _c("p", { staticClass: "text-end" }, [
+                              _vm._v(
+                                "\n                                OP.GRAVADA: " +
+                                  _vm._s(_vm.currency_type.symbol) +
+                                  "\n                                " +
+                                  _vm._s(_vm.form.total_taxed) +
+                                  "\n                            "
+                              )
+                            ])
+                          : _vm._e(),
+                        _vm._v(" "),
+                        _vm.form.total_igv > 0
+                          ? _c("p", { staticClass: "text-end" }, [
+                              _vm._v(
+                                "\n                                IGV: " +
+                                  _vm._s(_vm.currency_type.symbol) +
+                                  "\n                                " +
+                                  _vm._s(_vm.form.total_igv) +
+                                  "\n                            "
+                              )
+                            ])
+                          : _vm._e(),
+                        _vm._v(" "),
+                        _vm.form.total > 0
+                          ? _c("h6", { staticClass: "text-end" }, [
+                              _c("b", [_vm._v("TOTAL A PAGAR: ")]),
+                              _vm._v(
                                 _vm._s(_vm.currency_type.symbol) +
-                                "\n                            " +
-                                _vm._s(_vm.form.total_unaffected) +
-                                "\n                        "
-                            )
-                          ])
-                        : _vm._e(),
-                      _vm._v(" "),
-                      _vm.form.total_exonerated > 0
-                        ? _c("p", { staticClass: "text-end" }, [
-                            _vm._v(
-                              "\n                            OP.EXONERADAS: " +
-                                _vm._s(_vm.currency_type.symbol) +
-                                "\n                            " +
-                                _vm._s(_vm.form.total_exonerated) +
-                                "\n                        "
-                            )
-                          ])
-                        : _vm._e(),
-                      _vm._v(" "),
-                      _vm.form.total_taxed > 0
-                        ? _c("p", { staticClass: "text-end" }, [
-                            _vm._v(
-                              "\n                            OP.GRAVADA: " +
-                                _vm._s(_vm.currency_type.symbol) +
-                                "\n                            " +
-                                _vm._s(_vm.form.total_taxed) +
-                                "\n                        "
-                            )
-                          ])
-                        : _vm._e(),
-                      _vm._v(" "),
-                      _vm.form.total_igv > 0
-                        ? _c("p", { staticClass: "text-end" }, [
-                            _vm._v(
-                              "\n                            IGV: " +
-                                _vm._s(_vm.currency_type.symbol) +
-                                "\n                            " +
-                                _vm._s(_vm.form.total_igv) +
-                                "\n                        "
-                            )
-                          ])
-                        : _vm._e(),
-                      _vm._v(" "),
-                      _vm.form.total > 0
-                        ? _c("h6", { staticClass: "text-end" }, [
-                            _c("b", [_vm._v("TOTAL A PAGAR: ")]),
-                            _vm._v(
-                              _vm._s(_vm.currency_type.symbol) +
-                                " " +
-                                _vm._s(_vm.form.total) +
-                                "\n                        "
-                            )
-                          ])
-                        : _vm._e()
+                                  " " +
+                                  _vm._s(_vm.form.total) +
+                                  "\n                            "
+                              )
+                            ])
+                          : _vm._e()
+                      ])
                     ])
-                  ])
-                : _vm._e()
-            ]),
-            _vm._v(" "),
-            _c(
-              "div",
-              { staticClass: "form-actions text-end pt-2 pb-2" },
-              [
-                _c(
-                  "el-button",
-                  {
-                    on: {
-                      click: function($event) {
-                        $event.preventDefault()
-                        return _vm.close()
-                      }
-                    }
-                  },
-                  [_vm._v("Cancelar")]
-                ),
-                _vm._v(" "),
-                _vm.form.items.length > 0 && _vm.form.total > 0
-                  ? _c(
-                      "el-button",
-                      {
-                        attrs: {
-                          type: "primary",
-                          "native-type": "submit",
-                          loading: _vm.loading_submit
-                        }
-                      },
-                      [_vm._v("Generar")]
-                    )
-                  : _vm._e()
-              ],
-              1
-            )
-          ]
-        )
-      ]),
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    { staticClass: "form-actions text-end pt-2 pb-2" },
+                    [
+                      _c(
+                        "el-button",
+                        {
+                          on: {
+                            click: function($event) {
+                              $event.preventDefault()
+                              return _vm.close()
+                            }
+                          }
+                        },
+                        [_vm._v("Cancelar")]
+                      ),
+                      _vm._v(" "),
+                      _vm.form.items.length > 0
+                        ? _c(
+                            "el-button",
+                            {
+                              staticClass: "submit",
+                              attrs: {
+                                type: "primary",
+                                "native-type": "submit",
+                                loading: _vm.loading_submit
+                              }
+                            },
+                            [_vm._v("Guardar cambios")]
+                          )
+                        : _vm._e()
+                    ],
+                    1
+                  )
+                ]
+              )
+            ])
+          ])
+        : _vm._e(),
       _vm._v(" "),
-      _c("document-form-item", {
+      _c("quotation-form-item", {
         attrs: {
           showDialog: _vm.showDialogAddItem,
           recordItem: _vm.recordItem,
-          isEditItemNote: _vm.isEditItemNote,
-          "operation-type-id": _vm.form.operation_type_id,
           "currency-type-id-active": _vm.form.currency_type_id,
-          user: _vm.user,
-          "exchange-rate-sale": _vm.form.exchange_rate_sale,
-          configuration: _vm.configuration,
-          editNameProduct: _vm.configuration.edit_name_product
+          "exchange-rate-sale": _vm.form.exchange_rate_sale
         },
         on: {
           "update:showDialog": function($event) {
@@ -8771,10 +11917,30 @@ var render = function() {
         }
       }),
       _vm._v(" "),
-      _c("document-options", {
+      _c("person-form", {
         attrs: {
+          showDialog: _vm.showDialogNewPerson,
+          type: "customers",
+          external: true,
+          document_type_id: _vm.form.document_type_id
+        },
+        on: {
+          "update:showDialog": function($event) {
+            _vm.showDialogNewPerson = $event
+          },
+          "update:show-dialog": function($event) {
+            _vm.showDialogNewPerson = $event
+          }
+        }
+      }),
+      _vm._v(" "),
+      _c("quotation-options", {
+        attrs: {
+          type: _vm.type,
           showDialog: _vm.showDialogOptions,
-          recordId: _vm.documentNewId,
+          recordId: _vm.quotationNewId,
+          showGenerate: false,
+          typeUser: _vm.typeUser,
           showClose: false
         },
         on: {
@@ -8783,6 +11949,22 @@ var render = function() {
           },
           "update:show-dialog": function($event) {
             _vm.showDialogOptions = $event
+          }
+        }
+      }),
+      _vm._v(" "),
+      _c("terms-condition", {
+        attrs: {
+          showDialog: _vm.showDialogTermsCondition,
+          form: _vm.form,
+          showClose: false
+        },
+        on: {
+          "update:showDialog": function($event) {
+            _vm.showDialogTermsCondition = $event
+          },
+          "update:show-dialog": function($event) {
+            _vm.showDialogTermsCondition = $event
           }
         }
       })
@@ -8795,31 +11977,7 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("thead", [
-      _c("tr", [
-        _c("th", [_vm._v("#")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Descripción")]),
-        _vm._v(" "),
-        _c("th", { staticClass: "text-center" }, [_vm._v("Unidad")]),
-        _vm._v(" "),
-        _c("th", { staticClass: "text-end" }, [_vm._v("Cantidad")]),
-        _vm._v(" "),
-        _c("th", { staticClass: "text-end" }, [
-          _vm._v(
-            "\n                                            Precio Unitario\n                                        "
-          )
-        ]),
-        _vm._v(" "),
-        _c("th", { staticClass: "text-end" }, [_vm._v("Descuento")]),
-        _vm._v(" "),
-        _c("th", { staticClass: "text-end" }, [_vm._v("Cargo")]),
-        _vm._v(" "),
-        _c("th", { staticClass: "text-end" }, [_vm._v("Total")]),
-        _vm._v(" "),
-        _c("th")
-      ])
-    ])
+    return _c("tr", [_c("td", { attrs: { colspan: "8" } })])
   }
 ]
 render._withStripped = true
@@ -8827,13 +11985,13 @@ module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-46f3cb28", module.exports)
+    require("vue-hot-reload-api")      .rerender("data-v-25cb47fc", module.exports)
   }
 }
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-4e7b47ce\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/js/views/documents/partials/lots_group.vue":
+/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-2fc675f6\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/js/views/quotations/partials/lots_group.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -8964,13 +12122,129 @@ module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-4e7b47ce", module.exports)
+    require("vue-hot-reload-api")      .rerender("data-v-2fc675f6", module.exports)
   }
 }
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-54961759\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/js/views/documents/partials/lots.vue":
+/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-4ae841df\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/js/views/quotations/partials/terms_condition.vue":
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "el-dialog",
+    {
+      attrs: {
+        title: _vm.titleDialog,
+        visible: _vm.showDialog,
+        width: "30%",
+        "append-to-body": "",
+        top: "7vh"
+      },
+      on: { close: _vm.close, open: _vm.create }
+    },
+    [
+      _c(
+        "form",
+        {
+          attrs: { autocomplete: "off" },
+          on: {
+            submit: function($event) {
+              $event.preventDefault()
+              return _vm.submit.apply(null, arguments)
+            }
+          }
+        },
+        [
+          _c("div", { staticClass: "form-body" }, [
+            _c("div", { staticClass: "row" }, [
+              _c("div", { staticClass: "col-md-12" }, [
+                _c(
+                  "div",
+                  { staticClass: "form-group" },
+                  [
+                    _c(
+                      "el-input",
+                      {
+                        attrs: { type: "textarea", rows: 3 },
+                        model: {
+                          value: _vm.form.terms_condition,
+                          callback: function($$v) {
+                            _vm.$set(_vm.form, "terms_condition", $$v)
+                          },
+                          expression: "form.terms_condition"
+                        }
+                      },
+                      [
+                        _c("i", {
+                          staticClass: "el-icon-edit-outline",
+                          attrs: { slot: "prefix" },
+                          slot: "prefix"
+                        })
+                      ]
+                    )
+                  ],
+                  1
+                )
+              ])
+            ])
+          ]),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "form-actions text-end pt-2 pb-2" },
+            [
+              _c(
+                "el-button",
+                {
+                  on: {
+                    click: function($event) {
+                      $event.preventDefault()
+                      return _vm.close()
+                    }
+                  }
+                },
+                [_vm._v("Cerrar")]
+              ),
+              _vm._v(" "),
+              _c(
+                "el-button",
+                {
+                  attrs: { type: "primary" },
+                  on: {
+                    click: function($event) {
+                      $event.preventDefault()
+                      return _vm.clickSubmit.apply(null, arguments)
+                    }
+                  }
+                },
+                [_vm._v("Guardar")]
+              )
+            ],
+            1
+          )
+        ]
+      )
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-4ae841df", module.exports)
+  }
+}
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-5fb61af6\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/js/views/quotations/partials/lots.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -9126,13 +12400,13 @@ module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-54961759", module.exports)
+    require("vue-hot-reload-api")      .rerender("data-v-5fb61af6", module.exports)
   }
 }
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-60d99cfe\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Restaurant/Resources/assets/js/views/pos/partials/note_modal.vue":
+/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-7cc91674\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/js/views/persons/form.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -9143,394 +12417,1171 @@ var render = function() {
     "el-dialog",
     {
       attrs: {
-        visible: _vm.showDialog,
-        "append-to-body": "",
-        title: "Emitir nota",
-        width: "80%"
-      },
-      on: { close: _vm.close, open: _vm.open }
-    },
-    [
-      !_vm.document_affected
-        ? void 0
-        : [
-            _c("note-form", {
-              ref: "noteForm",
-              attrs: {
-                external: true,
-                document_affected: _vm.document_affected,
-                configuration: _vm.configuration
-              },
-              on: {
-                success: _vm.success,
-                close: _vm.close,
-                "update:document_affected": function($event) {
-                  _vm.document_affected = $event
-                }
-              }
-            })
-          ]
-    ],
-    2
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-60d99cfe", module.exports)
-  }
-}
-
-/***/ }),
-
-/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-6b0da757\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/js/views/documents/partials/options.vue":
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "el-dialog",
-    {
-      directives: [
-        {
-          name: "loading",
-          rawName: "v-loading",
-          value: _vm.loading_print,
-          expression: "loading_print"
-        }
-      ],
-      attrs: {
-        "element-loading-text": _vm.message,
         title: _vm.titleDialog,
         visible: _vm.showDialog,
-        "close-on-click-modal": false,
-        "close-on-press-escape": false,
-        "show-close": false,
-        "append-to-body": ""
+        "append-to-body": "",
+        "close-on-click-modal": false
       },
-      on: { open: _vm.create }
+      on: { close: _vm.close, open: _vm.create, opened: _vm.opened }
     },
     [
-      _vm.form.response_message
-        ? _c("div", { staticClass: "row mb-4" }, [
-            _c(
-              "div",
-              { staticClass: "col-md-12" },
-              [
-                _c("el-alert", {
-                  attrs: {
-                    title: _vm.form.response_message,
-                    type: _vm.form.response_type,
-                    "show-icon": ""
-                  }
-                })
-              ],
-              1
-            )
-          ])
-        : _vm._e(),
-      _vm._v(" "),
-      _c("div", { staticClass: "row" }, [
-        !_vm.locked_emission.success
-          ? _c(
-              "div",
-              {
-                staticClass:
-                  "col-lg-12 col-md-12 col-sm-12 text-center font-weight-bold"
-              },
-              [
-                _c("el-alert", {
-                  attrs: {
-                    title: _vm.locked_emission.message,
-                    type: "warning",
-                    "show-icon": ""
-                  }
-                })
-              ],
-              1
-            )
-          : _vm._e(),
-        _vm._v(" "),
-        _c(
-          "div",
-          {
-            staticClass:
-              "col-lg-3 col-md-3 col-sm-12 text-center font-weight-bold mt-3"
-          },
-          [
-            _c(
-              "button",
-              {
-                staticClass: "btn btn-lg btn-info waves-effect waves-light",
-                attrs: { type: "button" },
-                on: {
-                  click: function($event) {
-                    return _vm.clickPrint("a4")
-                  }
-                }
-              },
-              [_c("i", { staticClass: "fa fa-file-alt" })]
-            ),
-            _vm._v(" "),
-            _c("p", [_vm._v("Imprimir A4")])
-          ]
-        ),
-        _vm._v(" "),
-        _c(
-          "div",
-          {
-            staticClass:
-              "col-lg-3 col-md-3 col-sm-12 text-center font-weight-bold mt-3"
-          },
-          [
-            _c(
-              "button",
-              {
-                staticClass: "btn btn-lg btn-info waves-effect waves-light",
-                attrs: { type: "button" },
-                on: {
-                  click: function($event) {
-                    return _vm.clickPrint("a5")
-                  }
-                }
-              },
-              [_c("i", { staticClass: "fa fa-receipt" })]
-            ),
-            _vm._v(" "),
-            _c("p", [_vm._v("Imprimir A5")])
-          ]
-        ),
-        _vm._v(" "),
-        _c(
-          "div",
-          {
-            staticClass:
-              "col-lg-3 col-md-3 col-sm-12 text-center font-weight-bold mt-3"
-          },
-          [
-            _c(
-              "button",
-              {
-                staticClass: "btn btn-lg btn-info waves-effect waves-light",
-                attrs: { type: "button" },
-                on: {
-                  click: function($event) {
-                    return _vm.clickPrint("ticket")
-                  }
-                }
-              },
-              [_c("i", { staticClass: "fa fa-receipt" })]
-            ),
-            _vm._v(" "),
-            _c("p", [_vm._v("Imprimir Ticket 80MM")])
-          ]
-        ),
-        _vm._v(" "),
-        _c(
-          "div",
-          {
-            staticClass:
-              "col-lg-3 col-md-3 col-sm-12 text-center font-weight-bold mt-3"
-          },
-          [
-            _c(
-              "button",
-              {
-                staticClass: "btn btn-lg btn-info waves-effect waves-light",
-                attrs: { type: "button" },
-                on: {
-                  click: function($event) {
-                    return _vm.clickPrint("ticket_50")
-                  }
-                }
-              },
-              [_c("i", { staticClass: "fa fa-receipt" })]
-            ),
-            _vm._v(" "),
-            _c("p", [_vm._v("Imprimir Ticket 50MM")])
-          ]
-        ),
-        _vm._v(" "),
-        _vm.form.image_detraction
-          ? _c(
-              "div",
-              {
-                staticClass:
-                  "col-lg-12 col-md-12 col-sm-12 text-center font-weight-bold mt-3"
-              },
-              [
-                _c(
-                  "a",
-                  {
-                    staticClass: "text-center font-weight-bold ",
-                    attrs: {
-                      href: "" + this.form.image_detraction,
-                      download: ""
-                    }
-                  },
-                  [_vm._v("Descargar constancia de pago - detracción")]
-                )
-              ]
-            )
-          : _vm._e()
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "row mt-3" }, [
-        _c(
-          "div",
-          { staticClass: "col-md-12" },
-          [
-            _c(
-              "el-input",
-              {
-                model: {
-                  value: _vm.form.customer_email,
-                  callback: function($$v) {
-                    _vm.$set(_vm.form, "customer_email", $$v)
-                  },
-                  expression: "form.customer_email"
-                }
-              },
-              [
-                _c(
-                  "el-button",
-                  {
-                    attrs: {
-                      slot: "append",
-                      icon: "el-icon-message",
-                      loading: _vm.loading
-                    },
-                    on: { click: _vm.clickSendEmail },
-                    slot: "append"
-                  },
-                  [_vm._v("Enviar")]
-                ),
-                _vm._v(" "),
-                _c("i", {
-                  staticClass: "el-icon-edit-outline",
-                  attrs: { slot: "prefix" },
-                  slot: "prefix"
-                })
-              ],
-              1
-            ),
-            _vm._v(" "),
-            _vm.errors.customer_email
-              ? _c("small", {
-                  staticClass: "form-control-feedback",
-                  domProps: {
-                    textContent: _vm._s(_vm.errors.customer_email[0])
-                  }
-                })
-              : _vm._e()
-          ],
-          1
-        )
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "row mt-3" }, [
-        _c(
-          "div",
-          { staticClass: "col-md-12" },
-          [
-            _c(
-              "el-input",
-              {
-                model: {
-                  value: _vm.form.customer_telephone,
-                  callback: function($$v) {
-                    _vm.$set(_vm.form, "customer_telephone", $$v)
-                  },
-                  expression: "form.customer_telephone"
-                }
-              },
-              [
-                _c("template", { slot: "prepend" }, [_vm._v("+51")]),
-                _vm._v(" "),
-                _c(
-                  "el-button",
-                  {
-                    attrs: { slot: "append" },
-                    on: { click: _vm.clickSendWhatsapp },
-                    slot: "append"
-                  },
-                  [
-                    _vm._v("Enviar\n                    "),
-                    _c(
-                      "el-tooltip",
-                      {
-                        staticClass: "item",
-                        attrs: {
-                          effect: "dark",
-                          content: "Es necesario tener aperturado Whatsapp web",
-                          placement: "top-start"
-                        }
-                      },
-                      [_c("i", { staticClass: "fab fa-whatsapp" })]
-                    )
-                  ],
-                  1
-                ),
-                _vm._v(" "),
-                _c("i", {
-                  staticClass: "el-icon-edit-outline",
-                  attrs: { slot: "prefix" },
-                  slot: "prefix"
-                })
-              ],
-              2
-            ),
-            _vm._v(" "),
-            _vm.errors.customer_telephone
-              ? _c("small", {
-                  staticClass: "form-control-feedback",
-                  domProps: {
-                    textContent: _vm._s(_vm.errors.customer_telephone[0])
-                  }
-                })
-              : _vm._e()
-          ],
-          1
-        )
-      ]),
-      _vm._v(" "),
       _c(
-        "span",
+        "form",
         {
-          staticClass: "dialog-footer",
-          attrs: { slot: "footer" },
-          slot: "footer"
+          attrs: { autocomplete: "off" },
+          on: {
+            submit: function($event) {
+              $event.preventDefault()
+              return _vm.submit.apply(null, arguments)
+            }
+          }
         },
         [
-          _vm.showClose
-            ? [
-                _c("el-button", { on: { click: _vm.clickClose } }, [
-                  _vm._v("Cerrar")
-                ])
-              ]
-            : [
-                _c(
-                  "el-button",
-                  { staticClass: "list", on: { click: _vm.clickFinalize } },
-                  [_vm._v("Ir al listado")]
-                ),
+          _c(
+            "div",
+            { staticClass: "form-body" },
+            [
+              _c("div", { staticClass: "row" }, [
+                _c("div", { staticClass: "col-md-4" }, [
+                  _c(
+                    "div",
+                    {
+                      staticClass: "form-group",
+                      class: {
+                        "has-danger": _vm.errors.identity_document_type_id
+                      }
+                    },
+                    [
+                      _c("label", { staticClass: "control-label" }, [
+                        _vm._v(
+                          "Tipo Doc. Identidad\n                            "
+                        ),
+                        _c("span", { staticClass: "text-danger" }, [
+                          _vm._v("*")
+                        ])
+                      ]),
+                      _vm._v(" "),
+                      _c(
+                        "el-select",
+                        {
+                          attrs: {
+                            filterable: "",
+                            "popper-class": "el-select-identity_document_type",
+                            dusk: "identity_document_type_id"
+                          },
+                          on: { change: _vm.changeIdentityDocType },
+                          model: {
+                            value: _vm.form.identity_document_type_id,
+                            callback: function($$v) {
+                              _vm.$set(
+                                _vm.form,
+                                "identity_document_type_id",
+                                $$v
+                              )
+                            },
+                            expression: "form.identity_document_type_id"
+                          }
+                        },
+                        _vm._l(_vm.identity_document_types, function(option) {
+                          return _c("el-option", {
+                            key: option.id,
+                            attrs: {
+                              value: option.id,
+                              label: option.description
+                            }
+                          })
+                        }),
+                        1
+                      ),
+                      _vm._v(" "),
+                      _vm.errors.identity_document_type_id
+                        ? _c("small", {
+                            staticClass: "text-danger",
+                            domProps: {
+                              textContent: _vm._s(
+                                _vm.errors.identity_document_type_id[0]
+                              )
+                            }
+                          })
+                        : _vm._e()
+                    ],
+                    1
+                  )
+                ]),
                 _vm._v(" "),
-                _c(
-                  "el-button",
-                  {
-                    attrs: { type: "primary" },
-                    on: { click: _vm.clickNewDocument }
-                  },
-                  [_vm._v("Nuevo comprobante")]
-                )
-              ]
-        ],
-        2
+                _c("div", { staticClass: "col-md-4" }, [
+                  _c(
+                    "div",
+                    {
+                      staticClass: "form-group",
+                      class: { "has-danger": _vm.errors.number }
+                    },
+                    [
+                      _c("label", { staticClass: "control-label" }, [
+                        _vm._v("Número\n                            "),
+                        _c("span", { staticClass: "text-danger" }, [
+                          _vm._v("*")
+                        ])
+                      ]),
+                      _vm._v(" "),
+                      _vm.api_service_token != false
+                        ? _c(
+                            "div",
+                            [
+                              _c("x-input-service", {
+                                attrs: {
+                                  identity_document_type_id:
+                                    _vm.form.identity_document_type_id
+                                },
+                                on: { search: _vm.searchNumber },
+                                model: {
+                                  value: _vm.form.number,
+                                  callback: function($$v) {
+                                    _vm.$set(_vm.form, "number", $$v)
+                                  },
+                                  expression: "form.number"
+                                }
+                              })
+                            ],
+                            1
+                          )
+                        : _c(
+                            "div",
+                            [
+                              _c(
+                                "el-input",
+                                {
+                                  attrs: {
+                                    maxlength: _vm.maxLength,
+                                    dusk: "number"
+                                  },
+                                  model: {
+                                    value: _vm.form.number,
+                                    callback: function($$v) {
+                                      _vm.$set(_vm.form, "number", $$v)
+                                    },
+                                    expression: "form.number"
+                                  }
+                                },
+                                [
+                                  _vm.form.identity_document_type_id === "6" ||
+                                  _vm.form.identity_document_type_id === "1"
+                                    ? [
+                                        _c("el-button", {
+                                          attrs: {
+                                            slot: "append",
+                                            type: "primary",
+                                            loading: _vm.loading_search,
+                                            icon: "el-icon-search"
+                                          },
+                                          on: {
+                                            click: function($event) {
+                                              $event.preventDefault()
+                                              return _vm.searchCustomer.apply(
+                                                null,
+                                                arguments
+                                              )
+                                            }
+                                          },
+                                          slot: "append"
+                                        })
+                                      ]
+                                    : _vm._e(),
+                                  _vm._v(" "),
+                                  _c("i", {
+                                    staticClass: "el-icon-edit-outline",
+                                    attrs: { slot: "prefix" },
+                                    slot: "prefix"
+                                  })
+                                ],
+                                2
+                              )
+                            ],
+                            1
+                          ),
+                      _vm._v(" "),
+                      _vm.errors.number
+                        ? _c("small", {
+                            staticClass: "text-danger",
+                            domProps: {
+                              textContent: _vm._s(_vm.errors.number[0])
+                            }
+                          })
+                        : _vm._e()
+                    ]
+                  )
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "col-md-4" }, [
+                  _c(
+                    "div",
+                    {
+                      staticClass: "form-group",
+                      class: { "has-danger": _vm.errors.name }
+                    },
+                    [
+                      _c("label", { staticClass: "control-label" }, [
+                        _vm._v("Nombre\n                            "),
+                        _c("span", { staticClass: "text-danger" }, [
+                          _vm._v("*")
+                        ])
+                      ]),
+                      _vm._v(" "),
+                      _c(
+                        "el-input",
+                        {
+                          attrs: { dusk: "name" },
+                          model: {
+                            value: _vm.form.name,
+                            callback: function($$v) {
+                              _vm.$set(_vm.form, "name", $$v)
+                            },
+                            expression: "form.name"
+                          }
+                        },
+                        [
+                          _c("i", {
+                            staticClass: "el-icon-edit-outline",
+                            attrs: { slot: "prefix" },
+                            slot: "prefix"
+                          })
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _vm.errors.name
+                        ? _c("small", {
+                            staticClass: "text-danger",
+                            domProps: {
+                              textContent: _vm._s(_vm.errors.name[0])
+                            }
+                          })
+                        : _vm._e()
+                    ],
+                    1
+                  )
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "row" }, [
+                _c("div", { staticClass: "col-md-12" }, [
+                  _c(
+                    "div",
+                    {
+                      staticClass: "form-group",
+                      class: { "has-danger": _vm.errors.trade_name }
+                    },
+                    [
+                      _c("label", { staticClass: "control-label" }, [
+                        _vm._v("Nombre comercial")
+                      ]),
+                      _vm._v(" "),
+                      _c(
+                        "el-input",
+                        {
+                          attrs: { dusk: "trade_name" },
+                          model: {
+                            value: _vm.form.trade_name,
+                            callback: function($$v) {
+                              _vm.$set(_vm.form, "trade_name", $$v)
+                            },
+                            expression: "form.trade_name"
+                          }
+                        },
+                        [
+                          _c("i", {
+                            staticClass: "el-icon-edit-outline",
+                            attrs: { slot: "prefix" },
+                            slot: "prefix"
+                          })
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _vm.errors.trade_name
+                        ? _c("small", {
+                            staticClass: "text-danger",
+                            domProps: {
+                              textContent: _vm._s(_vm.errors.trade_name[0])
+                            }
+                          })
+                        : _vm._e()
+                    ],
+                    1
+                  )
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "row" }, [
+                _c("div", { staticClass: "col-md-3" }, [
+                  _c(
+                    "div",
+                    {
+                      staticClass: "form-group",
+                      class: { "has-danger": _vm.errors.country_id }
+                    },
+                    [
+                      _c("label", { staticClass: "control-label" }, [
+                        _vm._v("País")
+                      ]),
+                      _vm._v(" "),
+                      _c(
+                        "el-select",
+                        {
+                          attrs: { filterable: "", dusk: "country_id" },
+                          model: {
+                            value: _vm.form.country_id,
+                            callback: function($$v) {
+                              _vm.$set(_vm.form, "country_id", $$v)
+                            },
+                            expression: "form.country_id"
+                          }
+                        },
+                        _vm._l(_vm.countries, function(option) {
+                          return _c("el-option", {
+                            key: option.id,
+                            attrs: {
+                              value: option.id,
+                              label: option.description
+                            }
+                          })
+                        }),
+                        1
+                      ),
+                      _vm._v(" "),
+                      _vm.errors.country_id
+                        ? _c("small", {
+                            staticClass: "text-danger",
+                            domProps: {
+                              textContent: _vm._s(_vm.errors.country_id[0])
+                            }
+                          })
+                        : _vm._e()
+                    ],
+                    1
+                  )
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "col-md-3" }, [
+                  _c(
+                    "div",
+                    {
+                      staticClass: "form-group",
+                      class: { "has-danger": _vm.errors.department_id }
+                    },
+                    [
+                      _c("label", { staticClass: "control-label" }, [
+                        _vm._v("Departamento")
+                      ]),
+                      _vm._v(" "),
+                      _c(
+                        "el-select",
+                        {
+                          attrs: {
+                            filterable: "",
+                            "popper-class": "el-select-departments",
+                            dusk: "department_id"
+                          },
+                          on: { change: _vm.filterProvince },
+                          model: {
+                            value: _vm.form.department_id,
+                            callback: function($$v) {
+                              _vm.$set(_vm.form, "department_id", $$v)
+                            },
+                            expression: "form.department_id"
+                          }
+                        },
+                        _vm._l(_vm.all_departments, function(option) {
+                          return _c("el-option", {
+                            key: option.id,
+                            attrs: {
+                              value: option.id,
+                              label: option.description
+                            }
+                          })
+                        }),
+                        1
+                      ),
+                      _vm._v(" "),
+                      _vm.errors.department_id
+                        ? _c("small", {
+                            staticClass: "text-danger",
+                            domProps: {
+                              textContent: _vm._s(_vm.errors.department_id[0])
+                            }
+                          })
+                        : _vm._e()
+                    ],
+                    1
+                  )
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "col-md-3" }, [
+                  _c(
+                    "div",
+                    {
+                      staticClass: "form-group",
+                      class: { "has-danger": _vm.errors.province_id }
+                    },
+                    [
+                      _c("label", { staticClass: "control-label" }, [
+                        _vm._v("Provincia")
+                      ]),
+                      _vm._v(" "),
+                      _c(
+                        "el-select",
+                        {
+                          attrs: {
+                            filterable: "",
+                            "popper-class": "el-select-provinces",
+                            dusk: "province_id"
+                          },
+                          on: { change: _vm.filterDistrict },
+                          model: {
+                            value: _vm.form.province_id,
+                            callback: function($$v) {
+                              _vm.$set(_vm.form, "province_id", $$v)
+                            },
+                            expression: "form.province_id"
+                          }
+                        },
+                        _vm._l(_vm.provinces, function(option) {
+                          return _c("el-option", {
+                            key: option.id,
+                            attrs: {
+                              value: option.id,
+                              label: option.description
+                            }
+                          })
+                        }),
+                        1
+                      ),
+                      _vm._v(" "),
+                      _vm.errors.province_id
+                        ? _c("small", {
+                            staticClass: "text-danger",
+                            domProps: {
+                              textContent: _vm._s(_vm.errors.province_id[0])
+                            }
+                          })
+                        : _vm._e()
+                    ],
+                    1
+                  )
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "col-md-3" }, [
+                  _c(
+                    "div",
+                    {
+                      staticClass: "form-group",
+                      class: { "has-danger": _vm.errors.province_id }
+                    },
+                    [
+                      _c("label", { staticClass: "control-label" }, [
+                        _vm._v("Distrito")
+                      ]),
+                      _vm._v(" "),
+                      _c(
+                        "el-select",
+                        {
+                          attrs: {
+                            filterable: "",
+                            "popper-class": "el-select-districts",
+                            dusk: "district_id"
+                          },
+                          model: {
+                            value: _vm.form.district_id,
+                            callback: function($$v) {
+                              _vm.$set(_vm.form, "district_id", $$v)
+                            },
+                            expression: "form.district_id"
+                          }
+                        },
+                        _vm._l(_vm.districts, function(option) {
+                          return _c("el-option", {
+                            key: option.id,
+                            attrs: {
+                              value: option.id,
+                              label: option.description
+                            }
+                          })
+                        }),
+                        1
+                      ),
+                      _vm._v(" "),
+                      _vm.errors.district_id
+                        ? _c("small", {
+                            staticClass: "text-danger",
+                            domProps: {
+                              textContent: _vm._s(_vm.errors.district_id[0])
+                            }
+                          })
+                        : _vm._e()
+                    ],
+                    1
+                  )
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "row" }, [
+                _c("div", { staticClass: "col-md-12" }, [
+                  _c(
+                    "div",
+                    {
+                      staticClass: "form-group",
+                      class: { "has-danger": _vm.errors.address }
+                    },
+                    [
+                      _c("label", { staticClass: "control-label" }, [
+                        _vm._v("Dirección")
+                      ]),
+                      _vm._v(" "),
+                      _c(
+                        "el-input",
+                        {
+                          attrs: { dusk: "address" },
+                          model: {
+                            value: _vm.form.address,
+                            callback: function($$v) {
+                              _vm.$set(_vm.form, "address", $$v)
+                            },
+                            expression: "form.address"
+                          }
+                        },
+                        [
+                          _c("i", {
+                            staticClass: "el-icon-edit-outline",
+                            attrs: { slot: "prefix" },
+                            slot: "prefix"
+                          })
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _vm.errors.address
+                        ? _c("small", {
+                            staticClass: "text-danger",
+                            domProps: {
+                              textContent: _vm._s(_vm.errors.address[0])
+                            }
+                          })
+                        : _vm._e()
+                    ],
+                    1
+                  )
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "row" }, [
+                _c("div", { staticClass: "col-md-4" }, [
+                  _c(
+                    "div",
+                    {
+                      staticClass: "form-group",
+                      class: { "has-danger": _vm.errors.client_zone_id }
+                    },
+                    [
+                      _c("label", { staticClass: "control-label" }, [
+                        _vm._v("Zona")
+                      ]),
+                      _vm._v(" "),
+                      _c(
+                        "el-select",
+                        {
+                          attrs: { filterable: "", dusk: "client_zone_id" },
+                          model: {
+                            value: _vm.form.client_zone_id,
+                            callback: function($$v) {
+                              _vm.$set(_vm.form, "client_zone_id", $$v)
+                            },
+                            expression: "form.client_zone_id"
+                          }
+                        },
+                        _vm._l(_vm.zones, function(option) {
+                          return _c("el-option", {
+                            key: option.id,
+                            attrs: {
+                              value: option.id,
+                              label: option.description
+                            }
+                          })
+                        }),
+                        1
+                      ),
+                      _vm._v(" "),
+                      _vm.errors.client_zone_id
+                        ? _c("small", {
+                            staticClass: "text-danger",
+                            domProps: {
+                              textContent: _vm._s(_vm.errors.client_zone_id[0])
+                            }
+                          })
+                        : _vm._e()
+                    ],
+                    1
+                  )
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "col-md-4" }, [
+                  _c(
+                    "div",
+                    {
+                      staticClass: "form-group",
+                      class: { "has-danger": _vm.errors.telephone }
+                    },
+                    [
+                      _c("label", { staticClass: "control-label" }, [
+                        _vm._v("Teléfono")
+                      ]),
+                      _vm._v(" "),
+                      _c(
+                        "el-input",
+                        {
+                          attrs: { dusk: "telephone" },
+                          model: {
+                            value: _vm.form.telephone,
+                            callback: function($$v) {
+                              _vm.$set(_vm.form, "telephone", $$v)
+                            },
+                            expression: "form.telephone"
+                          }
+                        },
+                        [
+                          _c("i", {
+                            staticClass: "el-icon-edit-outline",
+                            attrs: { slot: "prefix" },
+                            slot: "prefix"
+                          })
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _vm.errors.telephone
+                        ? _c("small", {
+                            staticClass: "text-danger",
+                            domProps: {
+                              textContent: _vm._s(_vm.errors.telephone[0])
+                            }
+                          })
+                        : _vm._e()
+                    ],
+                    1
+                  )
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "col-md-4" }, [
+                  _c(
+                    "div",
+                    {
+                      staticClass: "form-group",
+                      class: { "has-danger": _vm.errors.email }
+                    },
+                    [
+                      _c("label", { staticClass: "control-label" }, [
+                        _vm._v("Correo electrónico")
+                      ]),
+                      _vm._v(" "),
+                      _c(
+                        "el-input",
+                        {
+                          attrs: { dusk: "email" },
+                          model: {
+                            value: _vm.form.email,
+                            callback: function($$v) {
+                              _vm.$set(_vm.form, "email", $$v)
+                            },
+                            expression: "form.email"
+                          }
+                        },
+                        [
+                          _c("i", {
+                            staticClass: "el-icon-edit-outline",
+                            attrs: { slot: "prefix" },
+                            slot: "prefix"
+                          })
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _vm.errors.email
+                        ? _c("small", {
+                            staticClass: "text-danger",
+                            domProps: {
+                              textContent: _vm._s(_vm.errors.email[0])
+                            }
+                          })
+                        : _vm._e()
+                    ],
+                    1
+                  )
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "row" }, [
+                _vm.form.state
+                  ? _c("div", { staticClass: "col-md-6" }, [
+                      _c(
+                        "div",
+                        { staticClass: "form-group" },
+                        [
+                          _c("label", { staticClass: "control-label" }, [
+                            _vm._v("Estado del Contribuyente")
+                          ]),
+                          _vm._v(" "),
+                          _vm.form.state == "ACTIVO"
+                            ? [
+                                _c("el-alert", {
+                                  attrs: {
+                                    title: "" + _vm.form.state,
+                                    type: "success",
+                                    "show-icon": "",
+                                    closable: false
+                                  }
+                                })
+                              ]
+                            : [
+                                _c("el-alert", {
+                                  attrs: {
+                                    title: "" + _vm.form.state,
+                                    type: "error",
+                                    "show-icon": "",
+                                    closable: false
+                                  }
+                                })
+                              ]
+                        ],
+                        2
+                      )
+                    ])
+                  : _vm._e(),
+                _vm._v(" "),
+                _vm.form.condition
+                  ? _c("div", { staticClass: "col-md-6" }, [
+                      _c(
+                        "div",
+                        { staticClass: "form-group" },
+                        [
+                          _c("label", { staticClass: "control-label" }, [
+                            _vm._v("Condición del Contribuyente")
+                          ]),
+                          _vm._v(" "),
+                          _vm.form.condition == "HABIDO"
+                            ? [
+                                _c("el-alert", {
+                                  attrs: {
+                                    title: "" + _vm.form.condition,
+                                    type: "success",
+                                    "show-icon": "",
+                                    closable: false
+                                  }
+                                })
+                              ]
+                            : [
+                                _c("el-alert", {
+                                  attrs: {
+                                    title: "" + _vm.form.condition,
+                                    type: "error",
+                                    "show-icon": "",
+                                    closable: false
+                                  }
+                                })
+                              ]
+                        ],
+                        2
+                      )
+                    ])
+                  : _vm._e()
+              ]),
+              _vm._v(" "),
+              _vm.type === "suppliers"
+                ? _c("div", { staticClass: "row mt-2" }, [
+                    _c("div", { staticClass: "col-md-6 center-el-checkbox" }, [
+                      _c(
+                        "div",
+                        {
+                          staticClass: "form-group",
+                          class: { "has-danger": _vm.errors.perception_agent }
+                        },
+                        [
+                          _c(
+                            "el-checkbox",
+                            {
+                              model: {
+                                value: _vm.form.perception_agent,
+                                callback: function($$v) {
+                                  _vm.$set(_vm.form, "perception_agent", $$v)
+                                },
+                                expression: "form.perception_agent"
+                              }
+                            },
+                            [_vm._v("¿Es agente de percepción?")]
+                          ),
+                          _c("br"),
+                          _vm._v(" "),
+                          _vm.errors.perception_agent
+                            ? _c("small", {
+                                staticClass: "text-danger",
+                                domProps: {
+                                  textContent: _vm._s(
+                                    _vm.errors.perception_agent[0]
+                                  )
+                                }
+                              })
+                            : _vm._e()
+                        ],
+                        1
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _vm.type === "suppliers"
+                      ? _c(
+                          "div",
+                          {
+                            directives: [
+                              {
+                                name: "show",
+                                rawName: "v-show",
+                                value: _vm.form.perception_agent,
+                                expression: "form.perception_agent"
+                              }
+                            ],
+                            staticClass: "col-md-6"
+                          },
+                          [
+                            _c(
+                              "div",
+                              { staticClass: "form-group" },
+                              [
+                                _c("label", { staticClass: "control-label" }, [
+                                  _vm._v("Porcentaje de percepción")
+                                ]),
+                                _vm._v(" "),
+                                _c(
+                                  "el-input",
+                                  {
+                                    model: {
+                                      value: _vm.form.percentage_perception,
+                                      callback: function($$v) {
+                                        _vm.$set(
+                                          _vm.form,
+                                          "percentage_perception",
+                                          $$v
+                                        )
+                                      },
+                                      expression: "form.percentage_perception"
+                                    }
+                                  },
+                                  [
+                                    _c("i", {
+                                      staticClass: "el-icon-edit-outline",
+                                      attrs: { slot: "prefix" },
+                                      slot: "prefix"
+                                    })
+                                  ]
+                                )
+                              ],
+                              1
+                            )
+                          ]
+                        )
+                      : _vm._e()
+                  ])
+                : _vm._e(),
+              _vm._v(" "),
+              _vm._l(_vm.form.addresses, function(row, index) {
+                return _c("div", { key: index, staticClass: "row m-t-10" }, [
+                  _c("div", { staticClass: "col-md-12" }, [
+                    index === 0
+                      ? _c("label", { staticClass: "control-label" }, [
+                          _vm._v(
+                            "\n                        Dirección principal\n                    "
+                          )
+                        ])
+                      : _c(
+                          "label",
+                          { staticClass: "control-label" },
+                          [
+                            _vm._v(
+                              "\n                        Dirección secundaria # " +
+                                _vm._s(index) +
+                                "\n                        "
+                            ),
+                            _c(
+                              "el-button",
+                              {
+                                staticClass: "btn-default-danger",
+                                attrs: { size: "mini", icon: "el-icon-minus" },
+                                on: {
+                                  click: function($event) {
+                                    $event.preventDefault()
+                                    return _vm.clickRemoveAddress(index)
+                                  }
+                                }
+                              },
+                              [_vm._v("Eliminar dirección")]
+                            )
+                          ],
+                          1
+                        )
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col-md-4" }, [
+                    _c(
+                      "div",
+                      {
+                        staticClass: "form-group",
+                        class: { "has-danger": _vm.errors.country_id }
+                      },
+                      [
+                        _c("label", { staticClass: "control-label" }, [
+                          _vm._v("País")
+                        ]),
+                        _vm._v(" "),
+                        _c(
+                          "el-select",
+                          {
+                            attrs: { filterable: "" },
+                            model: {
+                              value: row.country_id,
+                              callback: function($$v) {
+                                _vm.$set(row, "country_id", $$v)
+                              },
+                              expression: "row.country_id"
+                            }
+                          },
+                          _vm._l(_vm.countries, function(option) {
+                            return _c("el-option", {
+                              key: option.id,
+                              attrs: {
+                                value: option.id,
+                                label: option.description
+                              }
+                            })
+                          }),
+                          1
+                        ),
+                        _vm._v(" "),
+                        _vm.errors.country_id
+                          ? _c("small", {
+                              staticClass: "text-danger",
+                              domProps: {
+                                textContent: _vm._s(_vm.errors.country_id[0])
+                              }
+                            })
+                          : _vm._e()
+                      ],
+                      1
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col-md-8" }, [
+                    _c(
+                      "div",
+                      {
+                        staticClass: "form-group",
+                        class: { "has-danger": _vm.errors.location_id }
+                      },
+                      [
+                        _c("label", { staticClass: "control-label" }, [
+                          _vm._v("Ubigeo")
+                        ]),
+                        _vm._v(" "),
+                        _c("el-cascader", {
+                          attrs: {
+                            options: _vm.locations,
+                            clearable: true,
+                            filterable: ""
+                          },
+                          model: {
+                            value: row.location_id,
+                            callback: function($$v) {
+                              _vm.$set(row, "location_id", $$v)
+                            },
+                            expression: "row.location_id"
+                          }
+                        }),
+                        _vm._v(" "),
+                        _vm.errors.location_id
+                          ? _c("small", {
+                              staticClass: "text-danger",
+                              domProps: {
+                                textContent: _vm._s(_vm.errors.location_id[0])
+                              }
+                            })
+                          : _vm._e()
+                      ],
+                      1
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col-md-12" }, [
+                    _c(
+                      "div",
+                      {
+                        staticClass: "form-group",
+                        class: { "has-danger": _vm.errors.address }
+                      },
+                      [
+                        _c("label", { staticClass: "control-label" }, [
+                          _vm._v("Dirección")
+                        ]),
+                        _vm._v(" "),
+                        _c(
+                          "el-input",
+                          {
+                            model: {
+                              value: row.address,
+                              callback: function($$v) {
+                                _vm.$set(row, "address", $$v)
+                              },
+                              expression: "row.address"
+                            }
+                          },
+                          [
+                            _c("i", {
+                              staticClass: "el-icon-edit-outline",
+                              attrs: { slot: "prefix" },
+                              slot: "prefix"
+                            })
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _vm.errors.address
+                          ? _c("small", {
+                              staticClass: "text-danger",
+                              domProps: {
+                                textContent: _vm._s(_vm.errors.address[0])
+                              }
+                            })
+                          : _vm._e()
+                      ],
+                      1
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col-md-6" }, [
+                    _c(
+                      "div",
+                      {
+                        staticClass: "form-group",
+                        class: { "has-danger": _vm.errors.phone }
+                      },
+                      [
+                        _c("label", { staticClass: "control-label" }, [
+                          _vm._v("Teléfono")
+                        ]),
+                        _vm._v(" "),
+                        _c(
+                          "el-input",
+                          {
+                            model: {
+                              value: row.phone,
+                              callback: function($$v) {
+                                _vm.$set(row, "phone", $$v)
+                              },
+                              expression: "row.phone"
+                            }
+                          },
+                          [
+                            _c("i", {
+                              staticClass: "el-icon-edit-outline",
+                              attrs: { slot: "prefix" },
+                              slot: "prefix"
+                            })
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _vm.errors.phone
+                          ? _c("small", {
+                              staticClass: "text-danger",
+                              domProps: {
+                                textContent: _vm._s(_vm.errors.phone[0])
+                              }
+                            })
+                          : _vm._e()
+                      ],
+                      1
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col-md-6" }, [
+                    _c(
+                      "div",
+                      {
+                        staticClass: "form-group",
+                        class: { "has-danger": _vm.errors.email }
+                      },
+                      [
+                        _c("label", { staticClass: "control-label" }, [
+                          _vm._v("Correo electrónico")
+                        ]),
+                        _vm._v(" "),
+                        _c(
+                          "el-input",
+                          {
+                            model: {
+                              value: row.email,
+                              callback: function($$v) {
+                                _vm.$set(row, "email", $$v)
+                              },
+                              expression: "row.email"
+                            }
+                          },
+                          [
+                            _c("i", {
+                              staticClass: "el-icon-edit-outline",
+                              attrs: { slot: "prefix" },
+                              slot: "prefix"
+                            })
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _vm.errors.email
+                          ? _c("small", {
+                              staticClass: "text-danger",
+                              domProps: {
+                                textContent: _vm._s(_vm.errors.email[0])
+                              }
+                            })
+                          : _vm._e()
+                      ],
+                      1
+                    )
+                  ])
+                ])
+              })
+            ],
+            2
+          ),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "form-actions text-end pt-2 pb-2" },
+            [
+              _c(
+                "el-button",
+                {
+                  on: {
+                    click: function($event) {
+                      $event.preventDefault()
+                      return _vm.close()
+                    }
+                  }
+                },
+                [_vm._v("Cancelar")]
+              ),
+              _vm._v(" "),
+              _c(
+                "el-button",
+                {
+                  attrs: {
+                    type: "primary",
+                    "native-type": "submit",
+                    loading: _vm.loading_submit
+                  }
+                },
+                [_vm._v("Guardar")]
+              )
+            ],
+            1
+          )
+        ]
       )
     ]
   )
@@ -9541,7 +13592,7 @@ module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-6b0da757", module.exports)
+    require("vue-hot-reload-api")      .rerender("data-v-7cc91674", module.exports)
   }
 }
 
@@ -12705,6 +16756,139 @@ if (false) {
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-d083b6c4\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/js/views/companies/logo.vue":
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _c(
+      "div",
+      {
+        staticClass: "text-center",
+        staticStyle: { color: "#CCC", cursor: "pointer" },
+        on: {
+          click: function($event) {
+            _vm.dialogVisible = true
+          }
+        }
+      },
+      [
+        _c("img", {
+          staticClass: "img-fluid",
+          staticStyle: { "max-height": "70px" },
+          attrs: { src: _vm.src }
+        })
+      ]
+    ),
+    _vm._v(" "),
+    _c(
+      "div",
+      {},
+      [
+        _c(
+          "el-dialog",
+          {
+            staticClass: "text-left",
+            attrs: { title: "Logo", visible: _vm.dialogVisible },
+            on: {
+              "update:visible": function($event) {
+                _vm.dialogVisible = $event
+              }
+            }
+          },
+          [
+            _c("p", { staticClass: "text-center" }, [
+              _vm._v("* Se recomienda resoluciones 700x300.")
+            ]),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "text-center" },
+              [
+                _c(
+                  "el-upload",
+                  {
+                    ref: "upload",
+                    staticClass: "uploader",
+                    attrs: {
+                      slot: "append",
+                      "auto-upload": false,
+                      headers: _vm.headers,
+                      data: { type: "logo" },
+                      action: "/companies/uploads",
+                      "show-file-list": false,
+                      "before-upload": _vm.beforeUpload,
+                      "on-success": _vm.successUpload,
+                      "on-change": _vm.preview
+                    },
+                    slot: "append"
+                  },
+                  [
+                    _vm.imageUrl
+                      ? _c("img", {
+                          attrs: { width: "100%", src: _vm.imageUrl, alt: "" }
+                        })
+                      : _c("i", { staticClass: "el-icon-plus uploader-icon" })
+                  ]
+                )
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c(
+              "span",
+              {
+                staticClass: "dialog-footer",
+                attrs: { slot: "footer" },
+                slot: "footer"
+              },
+              [
+                _c(
+                  "el-button",
+                  {
+                    on: {
+                      click: function($event) {
+                        _vm.dialogVisible = false
+                      }
+                    }
+                  },
+                  [_vm._v("Cerrar")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "el-button",
+                  {
+                    staticClass: "submit",
+                    attrs: { type: "primary", disabled: _vm.imageUrl == "" },
+                    on: { click: _vm.upload }
+                  },
+                  [_vm._v("Aplicar")]
+                )
+              ],
+              1
+            )
+          ]
+        )
+      ],
+      1
+    )
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-d083b6c4", module.exports)
+  }
+}
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-f9fd823e\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/js/views/items/partials/lots.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -12942,23 +17126,23 @@ if (false) {
 
 /***/ }),
 
-/***/ "./node_modules/vue-style-loader/index.js!./node_modules/css-loader/index.js?sourceMap!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-0b847aaa\",\"scoped\":false,\"hasInlineConfig\":true}!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./resources/js/views/documents/partials/item.vue":
+/***/ "./node_modules/vue-style-loader/index.js!./node_modules/css-loader/index.js?sourceMap!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-16a47e47\",\"scoped\":false,\"hasInlineConfig\":true}!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./resources/js/views/quotations/partials/item.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__("./node_modules/css-loader/index.js?sourceMap!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-0b847aaa\",\"scoped\":false,\"hasInlineConfig\":true}!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./resources/js/views/documents/partials/item.vue");
+var content = __webpack_require__("./node_modules/css-loader/index.js?sourceMap!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-16a47e47\",\"scoped\":false,\"hasInlineConfig\":true}!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./resources/js/views/quotations/partials/item.vue");
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
-var update = __webpack_require__("./node_modules/vue-style-loader/lib/addStylesClient.js")("41311a95", content, false, {});
+var update = __webpack_require__("./node_modules/vue-style-loader/lib/addStylesClient.js")("5e477d8b", content, false, {});
 // Hot Module Replacement
 if(false) {
  // When the styles change, update the <style> tags
  if(!content.locals) {
-   module.hot.accept("!!../../../../../node_modules/css-loader/index.js?sourceMap!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-0b847aaa\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./item.vue", function() {
-     var newContent = require("!!../../../../../node_modules/css-loader/index.js?sourceMap!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-0b847aaa\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./item.vue");
+   module.hot.accept("!!../../../../../node_modules/css-loader/index.js?sourceMap!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-16a47e47\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./item.vue", function() {
+     var newContent = require("!!../../../../../node_modules/css-loader/index.js?sourceMap!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-16a47e47\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./item.vue");
      if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
      update(newContent);
    });
@@ -12969,67 +17153,46 @@ if(false) {
 
 /***/ }),
 
-/***/ "./resources/js/views/documents/note.vue":
+/***/ "./node_modules/vue-style-loader/index.js!./node_modules/css-loader/index.js?sourceMap!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-d083b6c4\",\"scoped\":false,\"hasInlineConfig\":true}!./node_modules/sass-loader/lib/loader.js!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./resources/js/views/companies/logo.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
-var disposed = false
-var normalizeComponent = __webpack_require__("./node_modules/vue-loader/lib/component-normalizer.js")
-/* script */
-var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/js/views/documents/note.vue")
-/* template */
-var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-46f3cb28\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/js/views/documents/note.vue")
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources/js/views/documents/note.vue"
+// style-loader: Adds some css to the DOM by adding a <style> tag
 
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-46f3cb28", Component.options)
-  } else {
-    hotAPI.reload("data-v-46f3cb28", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
+// load the styles
+var content = __webpack_require__("./node_modules/css-loader/index.js?sourceMap!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-d083b6c4\",\"scoped\":false,\"hasInlineConfig\":true}!./node_modules/sass-loader/lib/loader.js!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./resources/js/views/companies/logo.vue");
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__("./node_modules/vue-style-loader/lib/addStylesClient.js")("2b32c3e2", content, false, {});
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../node_modules/css-loader/index.js?sourceMap!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-d083b6c4\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../node_modules/sass-loader/lib/loader.js!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./logo.vue", function() {
+     var newContent = require("!!../../../../node_modules/css-loader/index.js?sourceMap!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-d083b6c4\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../node_modules/sass-loader/lib/loader.js!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./logo.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
 
 /***/ }),
 
-/***/ "./resources/js/views/documents/partials/item.vue":
+/***/ "./resources/js/views/companies/logo.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__("./node_modules/vue-style-loader/index.js!./node_modules/css-loader/index.js?sourceMap!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-0b847aaa\",\"scoped\":false,\"hasInlineConfig\":true}!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./resources/js/views/documents/partials/item.vue")
+  __webpack_require__("./node_modules/vue-style-loader/index.js!./node_modules/css-loader/index.js?sourceMap!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-d083b6c4\",\"scoped\":false,\"hasInlineConfig\":true}!./node_modules/sass-loader/lib/loader.js!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./resources/js/views/companies/logo.vue")
 }
 var normalizeComponent = __webpack_require__("./node_modules/vue-loader/lib/component-normalizer.js")
 /* script */
-var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/js/views/documents/partials/item.vue")
+var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/js/views/companies/logo.vue")
 /* template */
-var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-0b847aaa\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/js/views/documents/partials/item.vue")
+var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-d083b6c4\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/js/views/companies/logo.vue")
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -13046,7 +17209,7 @@ var Component = normalizeComponent(
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "resources/js/views/documents/partials/item.vue"
+Component.options.__file = "resources/js/views/companies/logo.vue"
 
 /* hot reload */
 if (false) {(function () {
@@ -13055,201 +17218,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-0b847aaa", Component.options)
+    hotAPI.createRecord("data-v-d083b6c4", Component.options)
   } else {
-    hotAPI.reload("data-v-0b847aaa", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-
-/***/ "./resources/js/views/documents/partials/lots.vue":
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__("./node_modules/vue-loader/lib/component-normalizer.js")
-/* script */
-var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/js/views/documents/partials/lots.vue")
-/* template */
-var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-54961759\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/js/views/documents/partials/lots.vue")
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources/js/views/documents/partials/lots.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-54961759", Component.options)
-  } else {
-    hotAPI.reload("data-v-54961759", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-
-/***/ "./resources/js/views/documents/partials/lots_group.vue":
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__("./node_modules/vue-loader/lib/component-normalizer.js")
-/* script */
-var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/js/views/documents/partials/lots_group.vue")
-/* template */
-var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-4e7b47ce\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/js/views/documents/partials/lots_group.vue")
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources/js/views/documents/partials/lots_group.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-4e7b47ce", Component.options)
-  } else {
-    hotAPI.reload("data-v-4e7b47ce", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-
-/***/ "./resources/js/views/documents/partials/options.vue":
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__("./node_modules/vue-loader/lib/component-normalizer.js")
-/* script */
-var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/js/views/documents/partials/options.vue")
-/* template */
-var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-6b0da757\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/js/views/documents/partials/options.vue")
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources/js/views/documents/partials/options.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-6b0da757", Component.options)
-  } else {
-    hotAPI.reload("data-v-6b0da757", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-
-/***/ "./resources/js/views/documents/partials/select_warehouses.vue":
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__("./node_modules/vue-loader/lib/component-normalizer.js")
-/* script */
-var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/js/views/documents/partials/select_warehouses.vue")
-/* template */
-var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-0763bba8\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/js/views/documents/partials/select_warehouses.vue")
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources/js/views/documents/partials/select_warehouses.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-0763bba8", Component.options)
-  } else {
-    hotAPI.reload("data-v-0763bba8", Component.options)
+    hotAPI.reload("data-v-d083b6c4", Component.options)
   }
   module.hot.dispose(function (data) {
     disposed = true
@@ -13346,6 +17317,394 @@ if (false) {(function () {
     hotAPI.createRecord("data-v-f9fd823e", Component.options)
   } else {
     hotAPI.reload("data-v-f9fd823e", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+
+/***/ "./resources/js/views/persons/form.vue":
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__("./node_modules/vue-loader/lib/component-normalizer.js")
+/* script */
+var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/js/views/persons/form.vue")
+/* template */
+var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-7cc91674\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/js/views/persons/form.vue")
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/js/views/persons/form.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-7cc91674", Component.options)
+  } else {
+    hotAPI.reload("data-v-7cc91674", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+
+/***/ "./resources/js/views/quotations/form_edit.vue":
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__("./node_modules/vue-loader/lib/component-normalizer.js")
+/* script */
+var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/js/views/quotations/form_edit.vue")
+/* template */
+var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-25cb47fc\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/js/views/quotations/form_edit.vue")
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/js/views/quotations/form_edit.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-25cb47fc", Component.options)
+  } else {
+    hotAPI.reload("data-v-25cb47fc", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+
+/***/ "./resources/js/views/quotations/partials/item.vue":
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__("./node_modules/vue-style-loader/index.js!./node_modules/css-loader/index.js?sourceMap!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-16a47e47\",\"scoped\":false,\"hasInlineConfig\":true}!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./resources/js/views/quotations/partials/item.vue")
+}
+var normalizeComponent = __webpack_require__("./node_modules/vue-loader/lib/component-normalizer.js")
+/* script */
+var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/js/views/quotations/partials/item.vue")
+/* template */
+var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-16a47e47\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/js/views/quotations/partials/item.vue")
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/js/views/quotations/partials/item.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-16a47e47", Component.options)
+  } else {
+    hotAPI.reload("data-v-16a47e47", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+
+/***/ "./resources/js/views/quotations/partials/lots.vue":
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__("./node_modules/vue-loader/lib/component-normalizer.js")
+/* script */
+var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/js/views/quotations/partials/lots.vue")
+/* template */
+var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-5fb61af6\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/js/views/quotations/partials/lots.vue")
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/js/views/quotations/partials/lots.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-5fb61af6", Component.options)
+  } else {
+    hotAPI.reload("data-v-5fb61af6", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+
+/***/ "./resources/js/views/quotations/partials/lots_group.vue":
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__("./node_modules/vue-loader/lib/component-normalizer.js")
+/* script */
+var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/js/views/quotations/partials/lots_group.vue")
+/* template */
+var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-2fc675f6\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/js/views/quotations/partials/lots_group.vue")
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/js/views/quotations/partials/lots_group.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-2fc675f6", Component.options)
+  } else {
+    hotAPI.reload("data-v-2fc675f6", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+
+/***/ "./resources/js/views/quotations/partials/options.vue":
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__("./node_modules/vue-loader/lib/component-normalizer.js")
+/* script */
+var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/js/views/quotations/partials/options.vue")
+/* template */
+var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-0d92229a\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/js/views/quotations/partials/options.vue")
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/js/views/quotations/partials/options.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-0d92229a", Component.options)
+  } else {
+    hotAPI.reload("data-v-0d92229a", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+
+/***/ "./resources/js/views/quotations/partials/select_warehouses.vue":
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__("./node_modules/vue-loader/lib/component-normalizer.js")
+/* script */
+var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/js/views/quotations/partials/select_warehouses.vue")
+/* template */
+var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-238fa5af\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/js/views/quotations/partials/select_warehouses.vue")
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/js/views/quotations/partials/select_warehouses.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-238fa5af", Component.options)
+  } else {
+    hotAPI.reload("data-v-238fa5af", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+
+/***/ "./resources/js/views/quotations/partials/terms_condition.vue":
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__("./node_modules/vue-loader/lib/component-normalizer.js")
+/* script */
+var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/js/views/quotations/partials/terms_condition.vue")
+/* template */
+var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-4ae841df\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/js/views/quotations/partials/terms_condition.vue")
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/js/views/quotations/partials/terms_condition.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-4ae841df", Component.options)
+  } else {
+    hotAPI.reload("data-v-4ae841df", Component.options)
   }
   module.hot.dispose(function (data) {
     disposed = true

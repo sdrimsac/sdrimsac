@@ -585,6 +585,24 @@
                                 </span>
                             </el-checkbox>
                         </template>
+                        <template v-if="commercialTreatments.length > 0">
+                            <el-select
+                            style="margin-bottom: 5px;"
+                                clearable
+                                v-model="commercialTreatmentId"
+                                placeholder="Seleccione un tratamiento comercial"
+                                @change="getCommercialTreatment"
+                                @clear="clearCommercialTreatment"
+                            >
+                                <el-option
+                                    v-for="(item,
+                                    index) in commercialTreatments"
+                                    :key="index"
+                                    :label="item.description"
+                                    :value="item.id"
+                                ></el-option>
+                            </el-select>
+                        </template>
                         <template>
                             <el-input
                                 v-if="
@@ -2207,7 +2225,6 @@ export default {
         QuotationForm
     },
     props: [
-     
         "sellers",
         "affectation_igv_types",
         "all_series",
@@ -2233,6 +2250,7 @@ export default {
 
     data() {
         return {
+            commercialTreatmentId: null,
             quotation_stock: false,
             name_pdf: null,
             showChangeName: false,
@@ -2292,7 +2310,9 @@ export default {
             screenWidth: 0,
             printing: false,
             foodDefaults: [],
-            currentFoodDefault: null
+            currentFoodDefault: null,
+            commercialTreatments: [],
+            currentCommercialTreatment: null
         };
     },
 
@@ -2407,8 +2427,73 @@ export default {
         });
 
         await this.getTags();
+        this.getCommercialTreatments();
     },
     methods: {
+        clearCommercialTreatment() {
+              let ordens = [...this.localOrden];
+            ordens.forEach(orden => {
+                if (orden.original_price) {
+                    orden.price = orden.original_price;
+                }
+            });
+        },
+        getCommercialTreatment() {
+            if (this.commercialTreatmentId) {
+                let commercialTreatment = this.commercialTreatments.find(
+                    c => c.id == this.commercialTreatmentId
+                );
+                if (commercialTreatment) {
+                    let {
+                        commercial_treatment_categories
+                    } = commercialTreatment;
+                    if (commercial_treatment_categories.length > 0) {
+                        let is_amount = commercialTreatment.is_amount == 1;
+                        let ordens = [...this.localOrden];
+                        ordens.forEach(orden => {
+                            let {
+                                food: { category }
+                            } = orden;
+                            let category_id = category.id;
+                            if (!orden.original_price) {
+                                orden.original_price = orden.price;
+                            }
+                            let price = orden.original_price;
+                            let factor = commercial_treatment_categories.find(
+                                c => c.category_item_id == category_id
+                            );
+                            if (factor) {
+                                let amount = Number(factor.amount);                                
+                                if (is_amount) {
+                                    if(price >= amount){
+                                        orden.price = price - factor.amount;
+                                    }
+                                } else {
+                                    orden.price = price /  (1+(factor.amount / 100));
+                                   
+                                }
+                                    orden.price = Number((Number(orden.price)).toFixed(2));
+                            }
+                        });
+                    }
+                }
+            }
+        },
+
+        getCommercialTreatments() {
+            this.$http
+                .get("/commercial_treatment/records?all=true")
+                .then(res => {
+                    this.commercialTreatments = res.data;
+                    console.log(
+                        "🚀 ~ file: list_ordens.vue:2419 ~ getCommercialTreatments ~ this.commercialTreatments:",
+                        this.commercialTreatments
+                    );
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+        },
         setQuotationStock() {
             let quotation_stock = this.quotation_stock ? 1 : 0;
             localStorage.setItem("quotation_stock", quotation_stock);
@@ -2766,12 +2851,13 @@ export default {
             this.$emit("update:localOrden", ord);
         },
         verifyStock(orden, idx) {
-              let current_orden = this.localOrden.filter(
-                    o => o.id == orden.id
-                );
+            let current_orden = this.localOrden.filter(o => o.id == orden.id);
             let unit_type_id = current_orden[0].food.item.unit_type_id;
-            if (this.configuration.sales_stock && !this.quotation_stock && unit_type_id != 'ZZ') {
-              
+            if (
+                this.configuration.sales_stock &&
+                !this.quotation_stock &&
+                unit_type_id != "ZZ"
+            ) {
                 let qty = current_orden.reduce(
                     (a, b) => a + Number(b.quantity),
                     0
@@ -2822,7 +2908,8 @@ export default {
             let unit_type_id = orden.food.item.unit_type_id;
             if (
                 this.configuration.sales_stock == true &&
-                !this.quotation_stock && unit_type_id != 'ZZ'
+                !this.quotation_stock &&
+                unit_type_id != "ZZ"
             ) {
                 if (qty > stock) {
                     return true;
@@ -3209,21 +3296,22 @@ export default {
             form_submit.items = this.mergeItems(form_submit.items);
             this.loading = true;
 
-
             this.commands_fisico = "";
             this.to_carry = false;
 
-
             this.loading = false;
             this.disableSend = false;
-         
+
             if (this.variation) {
                 form_submit.variationItems = this.foodDefaults;
             }
             this.loading = false;
             this.disableSend = false;
-                console.log("🚀 ~ file: list_ordens.vue:3229 ~ payOrden ~ form_submit:", form_submit)
-            
+            console.log(
+                "🚀 ~ file: list_ordens.vue:3229 ~ payOrden ~ form_submit:",
+                form_submit
+            );
+
             if (this.variation) {
                 this.$emit("paymentsOrden", form_submit, this.foodDefaults);
             } else {
@@ -3242,7 +3330,7 @@ export default {
                 if (resultado[key]) {
                     resultado[key].quantity += Number(obj.quantity);
                 } else {
-                    resultado[key] = { ...obj,quantity: Number(obj.quantity) };
+                    resultado[key] = { ...obj, quantity: Number(obj.quantity) };
                 }
             });
 
@@ -3254,7 +3342,7 @@ export default {
             let formated = "storage/uploads/items/" + url;
             return `/${formated}`;
         },
-    
+
         calculateTotal(w = null) {
             this.totalOrdenItems = 0.0;
             this.total = 0.0;

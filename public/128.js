@@ -1,19 +1,89 @@
 webpackJsonp([128],{
 
-/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/js/views/items/form.vue":
+/***/ "./modules/College/Resources/assets/js/views/persons/form.vue":
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__("./node_modules/vue-style-loader/index.js!./node_modules/css-loader/index.js?sourceMap!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-bf046f30\",\"scoped\":false,\"hasInlineConfig\":true}!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./modules/College/Resources/assets/js/views/persons/form.vue")
+}
+var normalizeComponent = __webpack_require__("./node_modules/vue-loader/lib/component-normalizer.js")
+/* script */
+var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/College/Resources/assets/js/views/persons/form.vue")
+/* template */
+var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-bf046f30\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/College/Resources/assets/js/views/persons/form.vue")
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "modules/College/Resources/assets/js/views/persons/form.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-bf046f30", Component.options)
+  } else {
+    hotAPI.reload("data-v-bf046f30", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/College/Resources/assets/js/views/persons/form.vue":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator__ = __webpack_require__("./node_modules/@babel/runtime/regenerator/index.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__partials_lots_vue__ = __webpack_require__("./resources/js/views/items/partials/lots.vue");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__partials_lots_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__partials_lots_vue__);
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]; if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
 
 
@@ -501,1192 +571,47 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-// import PercentagePerception from './partials/percentage_perception.vue'
+var PersonForm = function PersonForm() {
+  return __webpack_require__.e/* import() */(126/* duplicate */).then(__webpack_require__.bind(null, "./resources/js/views/persons/form.vue"));
+};
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ["showDialog", "recordId", "external", "worker"],
+  props: ["showDialog", "recordId", "extern", "fromPerson"],
   components: {
-    LotsForm: __WEBPACK_IMPORTED_MODULE_1__partials_lots_vue___default.a
+    PersonForm: PersonForm
   },
   data: function data() {
     return {
-      loading: true,
-      allEstablishment: false,
-      showDialogLots: false,
-      form_category: {
-        add: false,
-        name: null,
-        id: null
+      identityDocuments: [],
+      tab: "parent",
+      title: "Nuevo registro",
+      loading: false,
+      showDialogNewPerson: false,
+      loading_search: false,
+      children: [],
+      form: {},
+      resource: "college/persons",
+      documentNumber: null,
+      documentNumberChildren: null,
+      documentTypeChildren: null,
+      departments: [],
+      provinces: [],
+      currentPersonId: null,
+      form_attorney: {
+        add: false
       },
-      form_brand: {
-        add: false,
-        name: null,
-        id: null
-      },
-      warehouses: [],
-      loading_submit: false,
-      showPercentagePerception: false,
-      has_percentage_perception: false,
-      percentage_perception: null,
-      enabled_percentage_of_profit: false,
-      titleDialog: null,
-      resource: "items",
+      countries: [],
+      districts: [],
+      all_departments: [],
+      all_provinces: [],
+      all_countries: [],
+      all_districts: [],
       errors: {},
-      headers: headers_token,
-      form: {
-        promotion_count: null
+      types: [],
+      form_children: {
+        name: ""
       },
-      configuration: {},
-      unit_types: [],
-      areas: [],
-      currency_types: [],
-      system_isc_types: [],
-      affectation_igv_types: [],
-      categories: [],
-      brands: [],
-      accounts: [],
-      show_has_igv: true,
-      have_account: false,
-      showSeries: false,
-      item_unit_type: {
-        id: null,
-        unit_type_id: null,
-        quantity_unit: 0,
-        price1: 0,
-        price2: 0,
-        price3: 0,
-        price_default: 2
-      },
-      attribute_types: [],
-      area_id: 2
+      timer: null
     };
   },
   created: function created() {
@@ -1698,70 +623,20 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           switch (_context.prev = _context.next) {
             case 0:
               _context.next = 2;
-              return _this.initForm();
+              return _this.getTables();
 
             case 2:
               _context.next = 4;
-              return _this.$http.get("/".concat(_this.resource, "/tables")).then(function (response) {
-                _this.unit_types = response.data.unit_types;
-                _this.accounts = response.data.accounts;
-                _this.currency_types = response.data.currency_types;
-                _this.system_isc_types = response.data.system_isc_types;
-                _this.affectation_igv_types = response.data.affectation_igv_types;
-                _this.warehouses = response.data.warehouses;
-
-                if (_this.warehouses.length > 0) {
-                  _this.form.warehouse_id = _this.warehouses[0].id;
-                  _this.form.warehouse_prices = _this.warehouses.map(function (w) {
-                    return {
-                      id: null,
-                      item_id: null,
-                      warehouse_id: w.id,
-                      price: null,
-                      warehouse: w.description
-                    };
-                  });
-                }
-
-                if (_this.worker) {
-                  _this.warehouses = _this.warehouses.filter(function (w) {
-                    return w.establishment_id == _this.worker.establishment_id;
-                  });
-                  _this.form.warehouse_id = _this.warehouses[0].id;
-                }
-
-                _this.categories = response.data.categories;
-                _this.brands = response.data.brands;
-                _this.attribute_types = response.data.attribute_types;
-                _this.configuration = response.data.configuration;
-                _this.areas = response.data.areas;
-                _this.form.sale_affectation_igv_type_id = _this.affectation_igv_types.length > 0 ? _this.affectation_igv_types[0].id : null;
-                _this.form.purchase_affectation_igv_type_id = _this.affectation_igv_types.length > 0 ? _this.affectation_igv_types[0].id : null;
-
-                if (!_this.configuration.restaurant) {
-                  _this.areas = _this.areas.filter(function (a) {
-                    return !["BARRA", "COCINA", "MOZO", "MESA"].some(function (p) {
-                      return p == a.description;
-                    });
-                  });
-                } //agregar opciones para entorno restaurante
-
-              });
+              return _this.getAttorneyTypes();
 
             case 4:
-              _this.$eventHub.$on("submitPercentagePerception", function (data) {
-                _this.form.percentage_perception = data;
-                if (!_this.form.percentage_perception) _this.has_percentage_perception = false;
+              _this.initForm();
+
+              _this.$eventHub.$on("reloadData", function () {
+                _this.open();
               });
 
-              _this.$eventHub.$on("reloadTables", function () {
-                _this.reloadTables();
-              });
-
-              _context.next = 8;
-              return _this.setDefaultConfiguration();
-
-            case 8:
+            case 6:
             case "end":
               return _context.stop();
           }
@@ -1770,342 +645,220 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     }))();
   },
   methods: {
-    selectedMax: function selectedMax(idx) {
-      var selected = this.form.item_unit_types[idx].selected;
-
-      for (var i = 0; i < this.form.item_unit_types.length; i++) {
-        var it = this.form.item_unit_types[i];
-        it.selected = false;
-      }
-
-      this.form.item_unit_types[idx].selected = selected;
-
-      if (selected) {
-        var qty = Number(this.form.item_unit_types[idx].quantity_unit);
-        !isNaN(qty) && (this.form.max_quantity = qty);
-      } else {
-        this.form.max_quantity = null;
-      }
-
+    editPerson: function editPerson(child) {
+      this.currentPersonId = child.id;
+      this.showDialogNewPerson = true;
+    },
+    updateAll: function updateAll() {
       this.$forceUpdate();
     },
-    undToTotal: function undToTotal(idx, amount, qty) {
-      var arr = this.form.item_unit_types;
-
-      if (qty > 0) {
-        arr[idx].total = Number(amount) * Number(qty);
-      } else {
-        this.$toast.warning("Ingrese una cantidad válida");
-        arr[idx].price2 = 0;
-      }
-    },
-    totalToUnd: function totalToUnd(idx, amount, qty) {
-      var arr = this.form.item_unit_types;
-
-      if (qty > 0) {
-        arr[idx].price2 = Number(amount) / Number(qty);
-      } else {
-        this.$toast.warning("Ingrese una cantidad válida");
-        arr[idx].total = 0;
-      }
-    },
-    setDefaultConfiguration: function setDefaultConfiguration() {
+    sendData: function sendData() {
       var _this2 = this;
 
-      this.form.sale_affectation_igv_type_id = this.configuration ? this.configuration.affectation_igv_type_id : "10";
-      this.$http.get("/configurations/record").then(function (response) {
-        _this2.form.has_igv = response.data.data.include_igv;
-      });
-      this.changeAffectationIgvType();
-    },
-    clickAddAttribute: function clickAddAttribute() {
-      this.form.attributes.push({
-        attribute_type_id: null,
-        description: null,
-        value: null,
-        start_date: null,
-        end_date: null,
-        duration: null
-      });
-    },
-    reloadTables: function reloadTables() {
-      var _this3 = this;
-
       return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee2() {
+        var response, _response$data, success, message;
+
         return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
-                _context2.next = 2;
-                return _this3.$http.get("/".concat(_this3.resource, "/tables")).then(function (response) {
-                  _this3.unit_types = response.data.unit_types;
-                  _this3.accounts = response.data.accounts;
-                  _this3.currency_types = response.data.currency_types;
-                  _this3.system_isc_types = response.data.system_isc_types;
-                  _this3.affectation_igv_types = response.data.affectation_igv_types;
-                  _this3.warehouses = response.data.warehouses;
-                  _this3.categories = response.data.categories;
-                  _this3.brands = response.data.brands;
-                  _this3.form.sale_affectation_igv_type_id = _this3.affectation_igv_types.length > 0 ? _this3.affectation_igv_types[0].id : null;
-                  _this3.form.purchase_affectation_igv_type_id = _this3.affectation_igv_types.length > 0 ? _this3.affectation_igv_types[0].id : null;
-                });
+                if (!_this2.validForm()) {
+                  _context2.next = 2;
+                  break;
+                }
+
+                return _context2.abrupt("return");
 
               case 2:
+                _this2.form.children = _this2.children;
+                _this2.form.number = _this2.documentNumber;
+                _context2.prev = 4;
+                _this2.loading = true;
+                _context2.next = 8;
+                return _this2.$http.post("/".concat(_this2.resource).concat(_this2.recordId ? "/update" : ""), _this2.form);
+
+              case 8:
+                response = _context2.sent;
+
+                if (response.status == 200) {
+                  _response$data = response.data, success = _response$data.success, message = _response$data.message;
+
+                  if (success) {
+                    _this2.$toast.success(message);
+
+                    _this2.$emit("memberCreated", _this2.form.number);
+
+                    _this2.close();
+                  } else {
+                    _this2.$toast.error(message);
+                  }
+                }
+
+                _context2.next = 16;
+                break;
+
+              case 12:
+                _context2.prev = 12;
+                _context2.t0 = _context2["catch"](4);
+
+                _this2.$toast.error("Ocurrió un error");
+
+                console.log(_context2.t0);
+
+              case 16:
+                _context2.prev = 16;
+                _this2.loading = false;
+                return _context2.finish(16);
+
+              case 19:
               case "end":
                 return _context2.stop();
             }
           }
-        }, _callee2);
+        }, _callee2, null, [[4, 12, 16, 19]]);
       }))();
     },
-    changeLotsEnabled: function changeLotsEnabled() {// if(!this.form.lots_enabled){
-      //     this.form.lot_code = null
-      //     this.form.lots = []
-      // }
-    },
-    addRowLot: function addRowLot(lots) {
-      this.form.lots = lots;
-    },
-    clickLotcode: function clickLotcode() {
-      // if(this.form.stock <= 0)
-      //     return this.$toast.error('El stock debe ser mayor a 0')
-      this.showDialogLots = true;
-    },
-    changeHaveAccount: function changeHaveAccount() {
-      if (!this.have_account) this.form.account_id = null;
-    },
-    changeEnabledPercentageOfProfit: function changeEnabledPercentageOfProfit() {// if(!this.enabled_percentage_of_profit) this.form.percentage_of_profit = 0
-    },
-    clickDelete: function clickDelete(id) {
-      var _this4 = this;
-
-      this.$http["delete"]("/".concat(this.resource, "/item-unit-type/").concat(id)).then(function (res) {
-        if (res.data.success) {
-          _this4.loadRecord();
-
-          _this4.$toast.success("Se eliminó correctamente el registro");
-        }
-      })["catch"](function (error) {
-        if (error.response.status === 500) {
-          _this4.$toast.error("Error al intentar eliminar");
-        } else {
-          console.log(error.response.data.message);
-        }
-      });
-    },
-    changeHasPerception: function changeHasPerception() {
-      if (!this.form.has_perception) {
-        this.form.percentage_perception = null;
-      }
-    },
-    clickAddRow: function clickAddRow() {
-      this.form.item_unit_types.push({
-        id: null,
-        description: null,
-        unit_type_id: "NIU",
-        quantity_unit: 0,
-        price1: 0,
-        price2: 0,
-        price3: 0,
-        price_default: 2,
-        warehouse_id: null
-      });
-    },
-    clickCancel: function clickCancel(index) {
-      this.form.item_unit_types.splice(index, 1); // this.initDocumentTypes()
-      // this.showAddButton = true
+    getDocumentType: function getDocumentType(id) {
+      return this.identityDocuments.find(function (i) {
+        return i.id == id;
+      }).description;
     },
     initForm: function initForm() {
-      this.loading_submit = false, this.errors = {};
       this.form = {
-        id: null,
-        item_type_id: "01",
-        location: null,
-        internal_id: null,
-        item_code: null,
-        item_code_gs1: null,
-        description: null,
-        name: null,
-        second_name: null,
-        unit_type_id: "NIU",
-        currency_type_id: "PEN",
-        sale_unit_price: 0,
-        purchase_unit_price: 0,
-        has_isc: false,
-        system_isc_type_id: null,
-        percentage_isc: 0,
-        suggested_price: 0,
-        sale_affectation_igv_type_id: null,
-        purchase_affectation_igv_type_id: null,
-        calculate_quantity: false,
-        stock: 0,
-        stock_min: 1,
-        has_igv: true,
-        has_perception: false,
-        item_unit_types: [],
-        percentage_of_profit: 0,
-        percentage_perception: 0,
-        image: null,
-        image_url: null,
-        temp_path: null,
-        is_set: false,
-        account_id: null,
-        category_id: null,
-        brand_id: null,
-        date_of_due: null,
-        lot_code: null,
-        lots_enabled: false,
-        lots: [],
-        attributes: [],
-        series_enabled: false,
-        area_id: 2
+        country_id: "PE",
+        identity_document_type_id: "1",
+        type: "mother"
       };
-      this.show_has_igv = true;
-      this.enabled_percentage_of_profit = false;
+      this.children = [];
+      this.documentTypeChildren = "1";
+      this.documentNumber = null;
+      this.documentNumber = null;
+      this.documentNumberChildren = null;
+      this.form_children.name = null;
     },
-    onSuccess: function onSuccess(response, file, fileList) {
-      if (response.success) {
-        this.form.image = response.data.filename;
-        this.form.image_url = response.data.temp_image;
-        this.form.temp_path = response.data.temp_path;
+    validForm: function validForm() {
+      var error = false;
+      var _this$form = this.form,
+          name = _this$form.name,
+          department_id = _this$form.department_id,
+          province_id = _this$form.province_id,
+          district_id = _this$form.district_id,
+          address = _this$form.address,
+          phone = _this$form.phone,
+          attorney_id = _this$form.attorney_id,
+          type = _this$form.type;
+
+      if (!name) {
+        error = true;
+        this.$toast.error("El nombre es obligatorio");
+      }
+
+      if (!this.documentNumber) {
+        error = true;
+        this.$toast.error("El documento es obligatorio");
+      }
+
+      if (!department_id) {
+        error = true;
+        this.$toast.error("El departamento es obligatorio");
+      }
+
+      if (!province_id) {
+        error = true;
+        this.$toast.error("La provincia es obligatorio");
+      }
+
+      if (!district_id) {
+        error = true;
+        this.$toast.error("El distrito es obligatorio");
+      }
+
+      if (!address) {
+        error = true;
+        this.$toast.error("La dirección es obligatorio");
+      }
+
+      if (!phone) {
+        error = true;
+        this.$toast.error("El teléfono es obligatorio");
+      }
+
+      if (type == "attorney") {
+        if (!attorney_id) {
+          error = true;
+          this.$toast.error("Elija un parentezco");
+        }
+      }
+
+      if (this.children.length == 0) {
+        error = true;
+        this.$toast.error("Debe registrar al menos un estudiante");
+      }
+
+      return error;
+    },
+    addChildren: function addChildren() {
+      var _this3 = this;
+
+      if (!this.documentNumberChildren) {
+        return this.$toast.error("Documento obligatorio");
+      }
+
+      if (!this.form_children.name) {
+        return this.$toast.error("Nombre obligatorio");
+      }
+
+      this.children = [].concat(_toConsumableArray(this.children.filter(function (c) {
+        return c.number != _this3.documentNumberChildren;
+      })), [_objectSpread(_objectSpread({}, this.form_children), {}, {
+        identity_document_type_id: this.documentTypeChildren,
+        number: this.documentNumberChildren,
+        id: null
+      })]);
+      this.form_children.name = "";
+      this.documentNumberChildren = null;
+    },
+    deleteChild: function deleteChild(child) {
+      var number = child.number,
+          id = child.id;
+
+      if (id) {
+        console.log("No se puede borrar");
       } else {
-        this.$toast.error(response.message);
+        this.children = _toConsumableArray(this.children.filter(function (c) {
+          return c.number != number;
+        }));
       }
     },
-    changeAffectationIgvType: function changeAffectationIgvType() {
-      var affectation_igv_type_exonerated = [20, 21, 30, 31, 32, 33, 34, 35, 36, 37];
-      var is_exonerated = affectation_igv_type_exonerated.includes(parseInt(this.form.sale_affectation_igv_type_id));
-
-      if (is_exonerated) {
-        this.show_has_igv = false;
-        this.form.has_igv = true;
-      } else {
-        this.show_has_igv = true;
-      }
-    },
-    resetForm: function resetForm() {
-      this.initForm();
-      this.form.sale_affectation_igv_type_id = this.affectation_igv_types.length > 0 ? this.affectation_igv_types[0].id : null;
-      this.form.purchase_affectation_igv_type_id = this.affectation_igv_types.length > 0 ? this.affectation_igv_types[0].id : null;
-      this.setDefaultConfiguration();
-    },
-    generateCode: function generateCode() {
-      var _this5 = this;
-
-      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee3() {
-        var response;
-        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee3$(_context3) {
-          while (1) {
-            switch (_context3.prev = _context3.next) {
-              case 0:
-                _this5.loading = true;
-                _context3.next = 3;
-                return _this5.$http("/items/generate_code");
-
-              case 3:
-                response = _context3.sent;
-                _this5.form.internal_id = response.data;
-                _this5.loading = false;
-
-              case 6:
-              case "end":
-                return _context3.stop();
-            }
-          }
-        }, _callee3);
-      }))();
-    },
-    create: function create() {
-      var _this6 = this;
+    searchType: function searchType() {
+      var _this4 = this;
 
       return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee4() {
         return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee4$(_context4) {
           while (1) {
             switch (_context4.prev = _context4.next) {
               case 0:
-                _this6.titleDialog = _this6.recordId ? "Editar Productos" : "Nuevo Producto";
-
-                if (!_this6.recordId) {
-                  _context4.next = 5;
-                  break;
+                if (_this4.timer) {
+                  clearTimeout(_this4.timer);
                 }
 
-                _this6.$http.get("/".concat(_this6.resource, "/record/").concat(_this6.recordId)).then(function (response) {
-                  _this6.form = response.data.data;
+                _this4.timer = setTimeout( /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee3() {
+                  return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee3$(_context3) {
+                    while (1) {
+                      switch (_context3.prev = _context3.next) {
+                        case 0:
+                          _context3.next = 2;
+                          return _this4.getAttorneyTypes();
 
-                  if (_this6.form.warehouse_prices.length == 0) {
-                    if (_this6.warehouses.length > 0) {
-                      _this6.form.warehouse_id = _this6.warehouses[0].id;
-                      _this6.form.warehouse_prices = _this6.warehouses.map(function (w) {
-                        return {
-                          id: null,
-                          item_id: null,
-                          warehouse_id: w.id,
-                          price: null,
-                          warehouse: w.description
-                        };
-                      });
-                    }
-                  } else {
-                    _this6.form.warehouse_prices = _this6.warehouses.map(function (w) {
-                      var exist = _this6.form.warehouse_prices.find(function (ww) {
-                        return ww.warehouse_id == w.id;
-                      });
-
-                      if (exist) {
-                        return exist;
+                        case 2:
+                        case "end":
+                          return _context3.stop();
                       }
+                    }
+                  }, _callee3);
+                })), 250);
 
-                      return {
-                        id: null,
-                        item_id: null,
-                        warehouse_id: w.id,
-                        price: null,
-                        warehouse: w.description
-                      };
-                    });
-                  }
-
-                  if (_this6.form.item_unit_types.length != 0) {
-                    _this6.restoreUnitTypes();
-                  }
-
-                  _this6.has_percentage_perception = _this6.form.percentage_perception ? true : false;
-
-                  _this6.changeAffectationIgvType();
-
-                  _this6.showSeries = true;
-
-                  if (_this6.form.series_enabled == 1) {
-                    _this6.form.series_enabled = true;
-                  } else _this6.form.series_enabled = false;
-                });
-
-                _context4.next = 10;
-                break;
-
-              case 5:
-                if (_this6.warehouses.length > 0) {
-                  _this6.form.warehouse_id = _this6.warehouses[0].id;
-                  _this6.form.warehouse_prices = _this6.warehouses.map(function (w) {
-                    return {
-                      id: null,
-                      item_id: null,
-                      warehouse_id: w.id,
-                      price: null,
-                      warehouse: w.description
-                    };
-                  });
-                }
-
-                _context4.next = 8;
-                return _this6.generateCode();
-
-              case 8:
-                _this6.showSeries = true;
-                _this6.form.area_id = 2;
-
-              case 10:
+              case 2:
               case "end":
                 return _context4.stop();
             }
@@ -2113,627 +866,375 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee4);
       }))();
     },
-    restoreUnitTypes: function restoreUnitTypes() {
-      var _this7 = this;
-
-      var hasSelected = false;
-      this.form.item_unit_types = this.form.item_unit_types.map(function (i) {
-        var selected = false;
-
-        if (!hasSelected && Number(_this7.form.max_quantity) == Number(i.quantity_unit)) {
-          selected = true;
-          hasSelected = true;
-        }
-
-        return _objectSpread(_objectSpread({}, i), {}, {
-          selected: selected,
-          total: (Number(i.price2) * Number(i.quantity_unit)).toFixed(2)
-        });
-      });
-    },
-    loadRecord: function loadRecord() {
-      var _this8 = this;
-
-      if (this.recordId) {
-        this.$http.get("/".concat(this.resource, "/record/").concat(this.recordId)).then(function (response) {
-          _this8.form = response.data.data;
-
-          _this8.changeAffectationIgvType();
-        });
-      }
-    },
-    changeWarehouse: function changeWarehouse() {
-      var _this9 = this;
-
-      this.$toast.warning("Cambió el destino del producto, verifique los PRECIOS DE ALMACÉN");
-      var w = this.form.warehouse_prices.find(function (ww) {
-        return ww.warehouse_id == _this9.form.warehouse_id;
-      });
-
-      if (w) {
-        w.price = this.form.sale_unit_price;
-      }
-
-      this.$forceUpdate();
-    },
-    calculatePercentageOfProfitBySale: function calculatePercentageOfProfitBySale() {
-      var _this10 = this;
-
-      var w = this.form.warehouse_prices.find(function (ww) {
-        return ww.warehouse_id == _this10.form.warehouse_id;
-      });
-
-      if (w) {
-        w.price = this.form.sale_unit_price;
-      }
-
-      var difference = parseFloat(this.form.sale_unit_price) - parseFloat(this.form.purchase_unit_price);
-
-      if (parseFloat(this.form.purchase_unit_price) === 0) {
-        this.form.percentage_of_profit = 0;
-      } else {
-        if (this.enabled_percentage_of_profit) this.form.percentage_of_profit = difference / parseFloat(this.form.purchase_unit_price) * 100;
-      }
-    },
-    calculatePercentageOfProfitByPurchase: function calculatePercentageOfProfitByPurchase() {
-      if (this.form.percentage_of_profit === "") {
-        this.form.percentage_of_profit = 0;
-      }
-
-      if (this.enabled_percentage_of_profit) this.form.sale_unit_price = this.form.purchase_unit_price * (100 + parseFloat(this.form.percentage_of_profit)) / 100;
-    },
-    calculatePercentageOfProfitByPercentage: function calculatePercentageOfProfitByPercentage() {
-      if (this.form.percentage_of_profit === "") {
-        this.form.percentage_of_profit = 0;
-      }
-
-      if (this.enabled_percentage_of_profit) this.form.sale_unit_price = this.form.purchase_unit_price * (100 + parseFloat(this.form.percentage_of_profit)) / 100;
-    },
-    submit: function submit() {
-      var _this11 = this;
+    getAttorneyTypes: function getAttorneyTypes() {
+      var _this5 = this;
 
       return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee5() {
+        var response, records;
         return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee5$(_context5) {
           while (1) {
             switch (_context5.prev = _context5.next) {
               case 0:
-                if (!(_this11.form.max_quantity && !_this11.form.max_quantity_description)) {
-                  _context5.next = 3;
-                  break;
+                _context5.prev = 0;
+                _this5.loading = true;
+                _context5.next = 4;
+                return _this5.$http.get("/".concat(_this5.resource, "/attorney/records?description=").concat(_this5.form_attorney.name ? _this5.form_attorney.name : ""));
+
+              case 4:
+                response = _context5.sent;
+
+                if (response.status == 200) {
+                  records = response.data.records;
+                  _this5.types = records;
                 }
 
-                _this11.$toast.warning("Ingrese una descripción del contenedor para la cantidad máxima");
+                _context5.next = 11;
+                break;
 
-                return _context5.abrupt("return", false);
-
-              case 3:
-                if (_this11.form.category_id) {
-                  _context5.next = 6;
-                  break;
-                }
-
-                _this11.$toast.warning("Seleccione una categoria");
-
-                return _context5.abrupt("return", false);
-
-              case 6:
-                if (!(_this11.form.internal_id == null || _this11.form.internal_id == "")) {
-                  _context5.next = 9;
-                  break;
-                }
-
-                _this11.$refs.internal_id.$el.querySelector("input").focus();
-
-                return _context5.abrupt("return", _this11.$toast.warning("No puede guardar Un nuevo Producto sin codigo interno "));
-
-              case 9:
-                if (!(_this11.form.has_perception && !_this11.form.percentage_perception)) {
-                  _context5.next = 11;
-                  break;
-                }
-
-                return _context5.abrupt("return", _this11.$toast.error("Ingrese un porcentaje"));
+              case 8:
+                _context5.prev = 8;
+                _context5.t0 = _context5["catch"](0);
+                console.log(_context5.t0);
 
               case 11:
-                if (_this11.form.warehouse_id) {
-                  _context5.next = 13;
-                  break;
-                }
+                _context5.prev = 11;
+                _this5.loading = false;
+                return _context5.finish(11);
 
-                return _context5.abrupt("return", _this11.$toast.error("Seleccione un almacen"));
-
-              case 13:
-                if (!_this11.recordId && _this11.form.lots_enabled) {// if (!this.form.lot_code)
-                  //     return this.$toast.error("Código de lote es requerido");
-                  // if (!this.form.date_of_due)
-                  //     return this.$toast.error(
-                  //         "Fecha de vencimiento es requerido si lotes esta habilitado."
-                  //     );
-                }
-
-                if (!(!_this11.recordId && _this11.form.series_enabled)) {
-                  _context5.next = 19;
-                  break;
-                }
-
-                if (!(_this11.form.lots.length > _this11.form.stock)) {
-                  _context5.next = 17;
-                  break;
-                }
-
-                return _context5.abrupt("return", _this11.$toast.error("La cantidad de series registradas es superior al stock"));
-
-              case 17:
-                if (!(_this11.form.lots.length != _this11.form.stock)) {
-                  _context5.next = 19;
-                  break;
-                }
-
-                return _context5.abrupt("return", _this11.$toast.error("La cantidad de series registradas son diferentes al stock"));
-
-              case 19:
-                _this11.loading_submit = true;
-                _this11.form.all_establishment = _this11.allEstablishment;
-                _context5.next = 23;
-                return _this11.$http.post("/".concat(_this11.resource), _this11.form).then(function (response) {
-                  if (response.data.success) {
-                    _this11.$toast.success(response.data.message);
-
-                    if (_this11.external) {
-                      _this11.$emit("add", response.data.data); //this.$eventHub.$emit('reloadDataItems', response.data.id)
-
-                    } else {
-                      _this11.$eventHub.$emit("reloadData");
-                    }
-
-                    _this11.close();
-                  } else {
-                    _this11.$toast.error(response.data.message);
-                  }
-                })["catch"](function (error) {
-                  if (error.response.status === 422) {
-                    _this11.errors = error.response.data.errors;
-                  } else {
-                    console.log(error);
-                  }
-                }).then(function () {
-                  _this11.loading_submit = false;
-                });
-
-              case 23:
+              case 14:
               case "end":
                 return _context5.stop();
             }
           }
-        }, _callee5);
+        }, _callee5, null, [[0, 8, 11, 14]]);
+      }))();
+    },
+    saveType: function saveType() {
+      var _this6 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee6() {
+        var response, _response$data2, id, message, success;
+
+        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee6$(_context6) {
+          while (1) {
+            switch (_context6.prev = _context6.next) {
+              case 0:
+                _context6.prev = 0;
+                _this6.loading = true;
+                _context6.next = 4;
+                return _this6.$http.post("/".concat(_this6.resource, "/attorney"), {
+                  description: _this6.form_attorney.name
+                });
+
+              case 4:
+                response = _context6.sent;
+
+                if (response.status == 200) {
+                  _response$data2 = response.data, id = _response$data2.id, message = _response$data2.message, success = _response$data2.success;
+
+                  if (success) {
+                    _this6.form.attorney_id = id;
+
+                    _this6.$toast.success(message);
+
+                    _this6.getAttorneyTypes();
+
+                    _this6.form_attorney.add = false;
+                    _this6.form_attorney.name = null;
+                  } else {
+                    _this6.$toast.error(message);
+                  }
+                }
+
+                _context6.next = 11;
+                break;
+
+              case 8:
+                _context6.prev = 8;
+                _context6.t0 = _context6["catch"](0);
+                console.log(_context6.t0);
+
+              case 11:
+                _context6.prev = 11;
+                _this6.loading = false;
+                return _context6.finish(11);
+
+              case 14:
+              case "end":
+                return _context6.stop();
+            }
+          }
+        }, _callee6, null, [[0, 8, 11, 14]]);
+      }))();
+    },
+    getTables: function getTables() {
+      var _this7 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee7() {
+        var response, _response$data3, departments, provinces, countries, districts, identity_documents;
+
+        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee7$(_context7) {
+          while (1) {
+            switch (_context7.prev = _context7.next) {
+              case 0:
+                _context7.prev = 0;
+                _this7.loading = true;
+                _context7.next = 4;
+                return _this7.$http("/".concat(_this7.resource, "/tables"));
+
+              case 4:
+                response = _context7.sent;
+
+                if (response.status == 200) {
+                  _response$data3 = response.data, departments = _response$data3.departments, provinces = _response$data3.provinces, countries = _response$data3.countries, districts = _response$data3.districts, identity_documents = _response$data3.identity_documents;
+                  _this7.all_departments = departments;
+                  _this7.all_provinces = provinces;
+                  _this7.all_countries = countries;
+                  _this7.all_districts = districts;
+                  _this7.identityDocuments = identity_documents;
+                  _this7.departments = departments;
+                  _this7.provinces = provinces;
+                  _this7.countries = countries;
+                  _this7.districts = districts;
+                }
+
+                _this7.form.identity_document_type_id = "1"; // this.form_children.identity_document_type_id = "1";
+
+                _this7.documentTypeChildren = "1";
+                _context7.next = 13;
+                break;
+
+              case 10:
+                _context7.prev = 10;
+                _context7.t0 = _context7["catch"](0);
+                console.log(_context7.t0);
+
+              case 13:
+                _context7.prev = 13;
+                _this7.loading = false;
+                return _context7.finish(13);
+
+              case 16:
+              case "end":
+                return _context7.stop();
+            }
+          }
+        }, _callee7, null, [[0, 10, 13, 16]]);
       }))();
     },
     close: function close() {
       this.$emit("update:showDialog", false);
-      this.showSeries = false;
-      this.resetForm();
-      this.form.warehouse_prices = this.warehouses.map(function (w) {
-        return {
-          id: null,
-          item_id: null,
-          warehouse_id: w.id,
-          price: null,
-          warehouse: w.description
-        };
+    },
+    open: function open() {
+      var _this8 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee8() {
+        var response, data;
+        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee8$(_context8) {
+          while (1) {
+            switch (_context8.prev = _context8.next) {
+              case 0:
+                _this8.initForm();
+
+                _this8.recordId && (_this8.title = "Editar registro");
+
+                if (!_this8.recordId) {
+                  _context8.next = 21;
+                  break;
+                }
+
+                _context8.prev = 3;
+                _this8.loading = true;
+                _context8.next = 7;
+                return _this8.$http("/".concat(_this8.resource, "/update/").concat(_this8.recordId, "?from_person=").concat(_this8.fromPerson ? 1 : ""));
+
+              case 7:
+                response = _context8.sent;
+                data = response.data.data;
+                _this8.form = data;
+                _this8.documentNumber = _this8.form.number;
+                _this8.children = _this8.form.children;
+                _context8.next = 18;
+                break;
+
+              case 14:
+                _context8.prev = 14;
+                _context8.t0 = _context8["catch"](3);
+                console.log(_context8.t0);
+
+                _this8.$toast.error("Ocurrió un error al obtener el registro");
+
+              case 18:
+                _context8.prev = 18;
+                _this8.loading = false;
+                return _context8.finish(18);
+
+              case 21:
+              case "end":
+                return _context8.stop();
+            }
+          }
+        }, _callee8, null, [[3, 14, 18, 21]]);
+      }))();
+    },
+    searchCustomer: function searchCustomer() {
+      var _this9 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee10() {
+        var documentNumber;
+        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee10$(_context10) {
+          while (1) {
+            switch (_context10.prev = _context10.next) {
+              case 0:
+                documentNumber = _this9.tab == "parent" ? _this9.documentNumber : _this9.documentNumberChildren;
+
+                if (!(documentNumber == null || documentNumber == "")) {
+                  _context10.next = 3;
+                  break;
+                }
+
+                return _context10.abrupt("return");
+
+              case 3:
+                if (!(documentNumber.length != 8 && documentNumber.length != 11)) {
+                  _context10.next = 6;
+                  break;
+                }
+
+                _this9.$toast.error("Ingrese un documento válido");
+
+                return _context10.abrupt("return");
+
+              case 6:
+                if (_this9.timer) {
+                  clearTimeout(_this9.timer);
+                }
+
+                _this9.timer = setTimeout( /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee9() {
+                  var response, data, _data$ubigeo, department, province, district;
+
+                  return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee9$(_context9) {
+                    while (1) {
+                      switch (_context9.prev = _context9.next) {
+                        case 0:
+                          _context9.prev = 0;
+                          _this9.currentCustomer = null;
+                          _this9.loading_search = true;
+                          _context9.next = 5;
+                          return _this9.$http("/".concat(_this9.resource, "/").concat(documentNumber, "?type=").concat(_this9.tab == "parent" ? "parent" : "student"));
+
+                        case 5:
+                          response = _context9.sent;
+
+                          if (response.status == 200) {
+                            data = response.data;
+
+                            if (data.numero || data.ruc) {
+                              if (_this9.tab == "parent") {
+                                if (documentNumber.length == 8) {
+                                  _this9.form.name = data.nombre_completo;
+                                } else {
+                                  _this9.form.name = data.nombre_o_razon_social;
+                                  _this9.form.state = data.estado;
+                                  _this9.form.condition = data.condicion;
+                                }
+
+                                _this9.form.address = data.direccion_completa;
+
+                                if (data.ubigeo.length == 3) {
+                                  _data$ubigeo = _slicedToArray(data.ubigeo, 3), department = _data$ubigeo[0], province = _data$ubigeo[1], district = _data$ubigeo[2];
+                                  _this9.form.department_id = department;
+                                  _this9.form.province_id = province;
+                                  _this9.form.district_id = district;
+                                }
+                              } else {
+                                _this9.form_children.name = data.nombre_completo;
+                              }
+                            } else {
+                              _this9.$toast.error(data.message || "No se encontró el documento");
+                            }
+                          } else {
+                            _this9.$toast.error("No se pudo obtener los datos");
+                          }
+
+                          _context9.next = 12;
+                          break;
+
+                        case 9:
+                          _context9.prev = 9;
+                          _context9.t0 = _context9["catch"](0);
+
+                          _this9.$toast.error("No se pudo obtener los datos");
+
+                        case 12:
+                          _context9.prev = 12;
+                          _this9.loading_search = false;
+                          return _context9.finish(12);
+
+                        case 15:
+                        case "end":
+                          return _context9.stop();
+                      }
+                    }
+                  }, _callee9, null, [[0, 9, 12, 15]]);
+                })), 250);
+
+              case 8:
+              case "end":
+                return _context10.stop();
+            }
+          }
+        }, _callee10);
+      }))();
+    },
+    filterProvince: function filterProvince() {
+      this.form.province_id = null;
+      this.form.district_id = null;
+      this.filterProvinces();
+    },
+    filterProvinces: function filterProvinces() {
+      var _this10 = this;
+
+      this.provinces = this.all_provinces.filter(function (f) {
+        return f.department_id === _this10.form.department_id;
       });
     },
-    changeHasIsc: function changeHasIsc() {
-      this.form.system_isc_type_id = null;
-      this.form.percentage_isc = 0;
-      this.form.suggested_price = 0;
+    filterDistrict: function filterDistrict() {
+      this.form.district_id = null;
+      this.filterDistricts();
     },
-    changeSystemIscType: function changeSystemIscType() {
-      if (this.form.system_isc_type_id !== "03") {
-        this.form.suggested_price = 0;
-      }
-    },
-    saveCategory: function saveCategory() {
-      var _this12 = this;
+    filterDistricts: function filterDistricts() {
+      var _this11 = this;
 
-      this.form_category.add = false;
-      this.$http.post("/items/categories", this.form_category).then(function (response) {
-        if (response.data.success) {
-          _this12.$toast.success(response.data.message);
-
-          _this12.categories.push(response.data.data);
-
-          _this12.form.category_id = response.data.data.id;
-          _this12.form_category.name = null;
-        } else {
-          _this12.$toast.error("No se guardaron los cambios");
-        }
-      })["catch"](function (error) {});
-    },
-    saveBrand: function saveBrand() {
-      var _this13 = this;
-
-      this.form_brand.add = false;
-      this.$http.post("/brands", this.form_brand).then(function (response) {
-        if (response.data.success) {
-          _this13.$toast.success(response.data.message);
-
-          _this13.brands.push(response.data.data);
-
-          _this13.form_brand.name = null;
-        } else {
-          _this13.$toast.error("No se guardaron los cambios");
-        }
-      })["catch"](function (error) {});
-    },
-    changeAttributeType: function changeAttributeType(index) {
-      var attribute_type_id = this.form.attributes[index].attribute_type_id;
-
-      var attribute_type = _.find(this.attribute_types, {
-        id: attribute_type_id
+      this.districts = this.all_districts.filter(function (f) {
+        return f.province_id === _this11.form.province_id;
       });
-
-      this.form.attributes[index].description = attribute_type.description;
     },
-    clickRemoveAttribute: function clickRemoveAttribute(index) {
-      this.form.attributes.splice(index, 1);
+    closeProperty: function closeProperty() {
+      this.form.state = null;
+      this.form.condition = null;
     }
   }
 });
 
 /***/ }),
 
-/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/js/views/items/partials/lots.vue":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ "./node_modules/css-loader/index.js?sourceMap!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-bf046f30\",\"scoped\":false,\"hasInlineConfig\":true}!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./modules/College/Resources/assets/js/views/persons/form.vue":
+/***/ (function(module, exports, __webpack_require__) {
 
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator__ = __webpack_require__("./node_modules/@babel/runtime/regenerator/index.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator__);
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+exports = module.exports = __webpack_require__("./node_modules/css-loader/lib/css-base.js")(true);
+// imports
 
 
+// module
+exports.push([module.i, "\n.to_left .el-input .el-input__inner {\r\n    text-align: left !important;\n}\r\n", "", {"version":3,"sources":["D:/laragon/www/sdrimsac-tenant/modules/College/Resources/assets/js/views/persons/modules/College/Resources/assets/js/views/persons/form.vue"],"names":[],"mappings":";AA4dA;IACA,4BAAA;CACA","file":"form.vue","sourcesContent":["<template>\r\n    <el-dialog\r\n        :visible=\"showDialog\"\r\n        append-to-body\r\n        @close=\"close\"\r\n        @open=\"open\"\r\n        :title=\"title\"\r\n    >\r\n        <div class=\"form-body\" v-loading=\"loading\">\r\n            <el-tabs tab-position=\"top\" v-model=\"tab\">\r\n                <el-tab-pane name=\"parent\" label=\"Datos del Cliente\">\r\n                    <div class=\"card\">\r\n                        <div class=\"row\">\r\n                            <div class=\"col-md-3 col-12\">\r\n                                <label for=\"number\" class=\"control-label\"\r\n                                    >Tipo de documento</label\r\n                                >\r\n                                <el-select\r\n                                    @change=\"closeProperty\"\r\n                                    style=\"width:100%;\"\r\n                                    v-model=\"form.identity_document_type_id\"\r\n                                >\r\n                                    <el-option\r\n                                        v-for=\"option in identityDocuments\"\r\n                                        :key=\"option.id\"\r\n                                        :value=\"option.id\"\r\n                                        :label=\"option.description\"\r\n                                    >\r\n                                    </el-option>\r\n                                </el-select>\r\n                            </div>\r\n                            <div class=\"col-md-3 col-12\">\r\n                                <label for=\"number\" class=\"control-label\"\r\n                                    >Documento</label\r\n                                >\r\n                                <el-input\r\n                                    class=\"to_left\"\r\n                                    style=\"width:100%;\"\r\n                                    v-model=\"documentNumber\"\r\n                                    @input=\"closeProperty\"\r\n                                    :controls=\"false\"\r\n                                >\r\n                                    <el-button\r\n                                        v-if=\"\r\n                                            form.identity_document_type_id ==\r\n                                                1 ||\r\n                                                form.identity_document_type_id ==\r\n                                                    6\r\n                                        \"\r\n                                        slot=\"append\"\r\n                                        :loading=\"loading_search\"\r\n                                        icon=\"el-icon-search\"\r\n                                        @click.prevent=\"searchCustomer\"\r\n                                    ></el-button>\r\n                                </el-input>\r\n                            </div>\r\n                            <div class=\"col-md-6 col-12\">\r\n                                <label for=\"number\" class=\"control-label\"\r\n                                    >Nombres</label\r\n                                >\r\n                                <el-input v-model=\"form.name\"> </el-input>\r\n                            </div>\r\n                        </div>\r\n                        <div\r\n                            class=\"row mt-2\"\r\n                            v-if=\"form.state && form.condition\"\r\n                        >\r\n                            <div class=\"col-md-6 col-12\"></div>\r\n                            <div class=\"col-md-3 col-12\">\r\n                                <el-alert\r\n                                    :title=\"form.state\"\r\n                                    :type=\"\r\n                                        `${\r\n                                            form.state == 'ACTIVO'\r\n                                                ? 'success'\r\n                                                : 'error'\r\n                                        }`\r\n                                    \"\r\n                                >\r\n                                </el-alert>\r\n                            </div>\r\n                            <div class=\"col-md-3\">\r\n                                <el-alert\r\n                                    :title=\"form.condition\"\r\n                                    :type=\"\r\n                                        `${\r\n                                            form.condition == 'HABIDO'\r\n                                                ? 'success'\r\n                                                : 'error'\r\n                                        }`\r\n                                    \"\r\n                                >\r\n                                </el-alert>\r\n                            </div>\r\n                        </div>\r\n                        <div class=\"row mt-2\">\r\n                            <div class=\"col-md-4\">\r\n                                <div\r\n                                    class=\"form-group\"\r\n                                    :class=\"{ 'has-danger': errors.country_id }\"\r\n                                >\r\n                                    <label class=\"control-label\">País</label>\r\n                                    <el-select\r\n                                        v-model=\"form.country_id\"\r\n                                        filterable\r\n                                        dusk=\"country_id\"\r\n                                        disabled\r\n                                    >\r\n                                        <el-option\r\n                                            v-for=\"option in countries\"\r\n                                            :key=\"option.id\"\r\n                                            :value=\"option.id\"\r\n                                            :label=\"option.description\"\r\n                                        ></el-option>\r\n                                    </el-select>\r\n                                    <small\r\n                                        class=\"text-danger\"\r\n                                        v-if=\"errors.country_id\"\r\n                                        v-text=\"errors.country_id[0]\"\r\n                                    ></small>\r\n                                </div>\r\n                            </div>\r\n                            <div class=\"col-md-4\">\r\n                                <div\r\n                                    class=\"form-group\"\r\n                                    :class=\"{\r\n                                        'has-danger': errors.department_id\r\n                                    }\"\r\n                                >\r\n                                    <label class=\"control-label\"\r\n                                        >Departamento</label\r\n                                    >\r\n                                    <el-select\r\n                                        v-model=\"form.department_id\"\r\n                                        filterable\r\n                                        @change=\"filterProvince\"\r\n                                        popper-class=\"el-select-departments\"\r\n                                        dusk=\"department_id\"\r\n                                    >\r\n                                        <el-option\r\n                                            v-for=\"option in departments\"\r\n                                            :key=\"option.id\"\r\n                                            :value=\"option.id\"\r\n                                            :label=\"option.description\"\r\n                                        ></el-option>\r\n                                    </el-select>\r\n                                    <small\r\n                                        class=\"text-danger\"\r\n                                        v-if=\"errors.department_id\"\r\n                                        v-text=\"errors.department_id[0]\"\r\n                                    ></small>\r\n                                </div>\r\n                            </div>\r\n                            <div class=\"col-md-4\">\r\n                                <div\r\n                                    class=\"form-group\"\r\n                                    :class=\"{\r\n                                        'has-danger': errors.province_id\r\n                                    }\"\r\n                                >\r\n                                    <label class=\"control-label\"\r\n                                        >Provincia</label\r\n                                    >\r\n                                    <el-select\r\n                                        v-model=\"form.province_id\"\r\n                                        filterable\r\n                                        @change=\"filterDistrict\"\r\n                                        popper-class=\"el-select-provinces\"\r\n                                        dusk=\"province_id\"\r\n                                    >\r\n                                        <el-option\r\n                                            v-for=\"option in provinces\"\r\n                                            :key=\"option.id\"\r\n                                            :value=\"option.id\"\r\n                                            :label=\"option.description\"\r\n                                        ></el-option>\r\n                                    </el-select>\r\n                                    <small\r\n                                        class=\"text-danger\"\r\n                                        v-if=\"errors.province_id\"\r\n                                        v-text=\"errors.province_id[0]\"\r\n                                    ></small>\r\n                                </div>\r\n                            </div>\r\n                        </div>\r\n                        <div class=\"row\">\r\n                            <div class=\"col-md-4\">\r\n                                <div\r\n                                    class=\"form-group\"\r\n                                    :class=\"{\r\n                                        'has-danger': errors.district_id\r\n                                    }\"\r\n                                >\r\n                                    <label class=\"control-label\"\r\n                                        >Distrito</label\r\n                                    >\r\n                                    <el-select\r\n                                        @change=\"updateAll\"\r\n                                        v-model=\"form.district_id\"\r\n                                        filterable\r\n                                        popper-class=\"el-select-districts\"\r\n                                        dusk=\"district_id\"\r\n                                    >\r\n                                        <el-option\r\n                                            v-for=\"option in districts\"\r\n                                            :key=\"option.id\"\r\n                                            :value=\"option.id\"\r\n                                            :label=\"option.description\"\r\n                                        ></el-option>\r\n                                    </el-select>\r\n                                    <small\r\n                                        class=\"text-danger\"\r\n                                        v-if=\"errors.district_id\"\r\n                                        v-text=\"errors.district_id[0]\"\r\n                                    ></small>\r\n                                </div>\r\n                            </div>\r\n                            <div class=\"col-md-8\">\r\n                                <div\r\n                                    class=\"form-group\"\r\n                                    :class=\"{ 'has-danger': errors.address }\"\r\n                                >\r\n                                    <label class=\"control-label\"\r\n                                        >Dirección</label\r\n                                    >\r\n                                    <el-input\r\n                                        v-model=\"form.address\"\r\n                                        dusk=\"address\"\r\n                                    >\r\n                                        <i\r\n                                            slot=\"prefix\"\r\n                                            class=\"el-icon-edit-outline\"\r\n                                        ></i\r\n                                    ></el-input>\r\n                                    <small\r\n                                        class=\"text-danger\"\r\n                                        v-if=\"errors.address\"\r\n                                        v-text=\"errors.address[0]\"\r\n                                    ></small>\r\n                                </div>\r\n                            </div>\r\n                        </div>\r\n                        <div class=\"row\">\r\n                            <div class=\"col-md-6 col-12\">\r\n                                <label for=\"number\" class=\"control-label\"\r\n                                    >Teléfono</label\r\n                                >\r\n                                <el-input v-model=\"form.phone\"> </el-input>\r\n                            </div>\r\n                            <div class=\"col-md-6 col-12\">\r\n                                <label for=\"number\" class=\"control-label\"\r\n                                    >Correo</label\r\n                                >\r\n                                <el-input v-model=\"form.email\"> </el-input>\r\n                            </div>\r\n                        </div>\r\n                        <div class=\"row mt-2\">\r\n                            <div class=\"col-md-6 col-12\">\r\n                                <label for=\"number\" class=\"control-label\"\r\n                                    >Teléfono secundario</label\r\n                                >\r\n                                <el-input v-model=\"form.extra_phone\">\r\n                                </el-input>\r\n                            </div>\r\n                            <div class=\"col-md-6 col-12\">\r\n                                <label for=\"number\" class=\"control-label\"\r\n                                    >Relacion</label\r\n                                >\r\n                                <el-select v-model=\"form.type\">\r\n                                    <el-option\r\n                                        value=\"mother\"\r\n                                        label=\"Madre\"\r\n                                    ></el-option>\r\n                                    <el-option\r\n                                        value=\"father\"\r\n                                        label=\"Padre\"\r\n                                    ></el-option>\r\n                                    <el-option\r\n                                        value=\"attorney\"\r\n                                        label=\"Apoderado\"\r\n                                    ></el-option>\r\n                                </el-select>\r\n                            </div>\r\n                        </div>\r\n                        <div class=\"row mt-2\">\r\n                            <div\r\n                                v-if=\"form.type == 'attorney'\"\r\n                                class=\"col-md-6 col-12\"\r\n                            >\r\n                                <label for=\"number\" class=\"control-label\"\r\n                                    >Tipo de apoderado</label\r\n                                >\r\n\r\n                                <a\r\n                                    href=\"#\"\r\n                                    v-if=\"form_attorney.add == false\"\r\n                                    class=\"control-label font-weight-bold text-info\"\r\n                                    @click=\"form_attorney.add = true\"\r\n                                >\r\n                                    [ + Nuevo]</a\r\n                                >\r\n                                <a\r\n                                    href=\"#\"\r\n                                    v-if=\"form_attorney.add == true\"\r\n                                    class=\"control-label font-weight-bold text-info\"\r\n                                    @click=\"saveType()\"\r\n                                >\r\n                                    [ + Guardar]</a\r\n                                >\r\n                                <a\r\n                                    href=\"#\"\r\n                                    v-if=\"form_attorney.add == true\"\r\n                                    class=\"control-label font-weight-bold text-danger\"\r\n                                    @click=\"form_attorney.add = false\"\r\n                                >\r\n                                    [ Cancelar]</a\r\n                                >\r\n                                <el-input\r\n                                    v-if=\"form_attorney.add == true\"\r\n                                    v-model=\"form_attorney.name\"\r\n                                    dusk=\"item_code\"\r\n                                    @input=\"searchType\"\r\n                                    style=\"margin-bottom:1.5%;\"\r\n                                >\r\n                                    <i\r\n                                        slot=\"prefix\"\r\n                                        class=\"el-icon-edit-outline\"\r\n                                    ></i\r\n                                ></el-input>\r\n\r\n                                <el-select\r\n                                    v-if=\"form_attorney.add == false\"\r\n                                    v-model=\"form.attorney_id\"\r\n                                    filterable\r\n                                    clearable\r\n                                >\r\n                                    <el-option\r\n                                        v-for=\"option in types\"\r\n                                        :key=\"option.id\"\r\n                                        :value=\"option.id\"\r\n                                        :label=\"option.description\"\r\n                                    ></el-option>\r\n                                </el-select>\r\n                            </div>\r\n                        </div>\r\n                    </div>\r\n                </el-tab-pane>\r\n                <el-tab-pane name=\"children\" label=\"Datos de los estudiantes\">\r\n                    <div class=\"card\">\r\n                        <div class=\"row\">\r\n                            <div class=\"col-md-3 col-12\">\r\n                                <label for=\"number\" class=\"control-label\"\r\n                                    >Tipo de documento</label\r\n                                >\r\n                                <el-select\r\n                                    style=\"\r\n                    width:100%;\"\r\n                                    v-model=\"documentTypeChildren\"\r\n                                >\r\n                                    <el-option\r\n                                        v-for=\"option in identityDocuments\"\r\n                                        :key=\"option.id\"\r\n                                        :value=\"option.id\"\r\n                                        :label=\"option.description\"\r\n                                    >\r\n                                    </el-option>\r\n                                </el-select>\r\n                            </div>\r\n                            <div class=\"col-md-3 col-12\">\r\n                                <label for=\"number\" class=\"control-label\"\r\n                                    >Documento</label\r\n                                >\r\n                                <el-input\r\n                                    class=\"to_left\"\r\n                                    style=\"\r\n                    width:100%;\"\r\n                                    v-model=\"documentNumberChildren\"\r\n                                    :controls=\"false\"\r\n                                >\r\n                                    <el-button\r\n                                        v-if=\"documentTypeChildren == '1'\"\r\n                                        slot=\"append\"\r\n                                        :loading=\"loading_search\"\r\n                                        icon=\"el-icon-search\"\r\n                                        @click.prevent=\"searchCustomer\"\r\n                                    ></el-button>\r\n                                </el-input>\r\n                            </div>\r\n                            <div class=\"col-md-6 col-12\">\r\n                                <label for=\"number\" class=\"control-label\"\r\n                                    >Nombres</label\r\n                                >\r\n                                <el-input v-model=\"form_children.name\">\r\n                                </el-input>\r\n                            </div>\r\n                        </div>\r\n                        <div class=\"row justify-content-end\">\r\n                            <div\r\n                                class=\"col-md-3 col-12 align-self-end d-flex justify-content-end\"\r\n                            >\r\n                                <el-button\r\n                                    class=\" mt-2\"\r\n                                    type=\"primary\"\r\n                                    @click=\"addChildren\"\r\n                                >\r\n                                    Agregar\r\n                                </el-button>\r\n                            </div>\r\n                        </div>\r\n                        <div class=\"row mt-2 p-2\">\r\n                            <table class=\"table\">\r\n                                <thead>\r\n                                    <tr>\r\n                                        <th>#</th>\r\n                                        <th>Nombre</th>\r\n                                        <th>Documento</th>\r\n                                        <th></th>\r\n                                    </tr>\r\n                                </thead>\r\n                                <tbody>\r\n                                    <tr\r\n                                        v-for=\"(child, idx) in children\"\r\n                                        :key=\"idx\"\r\n                                    >\r\n                                        <td>{{ idx + 1 }}</td>\r\n                                        <td>{{ child.name }}</td>\r\n                                        <td>\r\n                                            {{ child.number }}\r\n\r\n                                            <br />\r\n                                            <small>\r\n                                                {{\r\n                                                    getDocumentType(\r\n                                                        child.identity_document_type_id\r\n                                                    )\r\n                                                }}\r\n                                            </small>\r\n                                        </td>\r\n                                        <td>\r\n                                              <el-button\r\n                                                v-if=\"child.edit\"\r\n                                                type=\"success\"\r\n                                                size=\"mini\"\r\n                                                icon=\"el-icon-edit\"\r\n                                                circle\r\n                                                @click=\"editPerson(child)\"\r\n                                            ></el-button>\r\n                                            <el-button\r\n                                                v-if=\"!child.id\"\r\n                                                type=\"danger\"\r\n                                                size=\"mini\"\r\n                                                icon=\"el-icon-delete\"\r\n                                                circle\r\n                                                @click=\"deleteChild(child)\"\r\n                                            ></el-button>\r\n                                        </td>\r\n                                    </tr>\r\n                                </tbody>\r\n                            </table>\r\n                        </div>\r\n                    </div>\r\n                </el-tab-pane>\r\n            </el-tabs>\r\n        </div>\r\n        <div slot=\"footer\" class=\"dialog-footer\">\r\n            <el-button @click=\"close\">Cancelar</el-button>\r\n            <el-button type=\"primary\" @click=\"sendData\">Guardar</el-button>\r\n        </div>\r\n             <person-form\r\n                :external=\"false\"\r\n                :recordId=\"currentPersonId\"\r\n                :showDialog.sync=\"showDialogNewPerson\"\r\n            ></person-form>\r\n    </el-dialog>\r\n</template>\r\n<style>\r\n.to_left .el-input .el-input__inner {\r\n    text-align: left !important;\r\n}\r\n</style>\r\n<script>\r\nconst PersonForm = () =>\r\n    import(\"../../../../../../../resources/js/views/persons/form.vue\");\r\nexport default {\r\n    props: [\"showDialog\", \"recordId\", \"extern\", \"fromPerson\"],\r\n    components: {\r\n        PersonForm\r\n    },\r\n    data() {\r\n        return {\r\n            identityDocuments: [],\r\n            tab: \"parent\",\r\n            title: \"Nuevo registro\",\r\n            loading: false,\r\nshowDialogNewPerson:false,\r\n            loading_search: false,\r\n            children: [],\r\n            form: {},\r\n            resource: \"college/persons\",\r\n            documentNumber: null,\r\n            documentNumberChildren: null,\r\n            documentTypeChildren: null,\r\n            departments: [],\r\n            provinces: [],\r\n            currentPersonId:null,\r\n            form_attorney: {\r\n                add: false\r\n            },\r\n            countries: [],\r\n            districts: [],\r\n            all_departments: [],\r\n            all_provinces: [],\r\n            all_countries: [],\r\n            all_districts: [],\r\n            errors: {},\r\n            types: [],\r\n            form_children: {\r\n                name: \"\"\r\n            },\r\n            timer: null\r\n        };\r\n    },\r\n    async created() {\r\n        await this.getTables();\r\n        await this.getAttorneyTypes();\r\n        this.initForm();\r\n        this.$eventHub.$on(\"reloadData\", () => {\r\n            this.open();\r\n        });\r\n    },\r\n    methods: {\r\n        editPerson(child){\r\n            this.currentPersonId = child.id;\r\n            this.showDialogNewPerson = true;\r\n        },\r\n        updateAll() {\r\n            this.$forceUpdate();\r\n        },\r\n        async sendData() {\r\n            if (this.validForm()) {\r\n                return;\r\n            }\r\n            this.form.children = this.children;\r\n            this.form.number = this.documentNumber;\r\n\r\n            try {\r\n                this.loading = true;\r\n                const response = await this.$http.post(\r\n                    `/${this.resource}${this.recordId ? \"/update\" : \"\"}`,\r\n                    this.form\r\n                );\r\n                if (response.status == 200) {\r\n                    let { success, message } = response.data;\r\n                    if (success) {\r\n                        this.$toast.success(message);\r\n                        this.$emit(\"memberCreated\", this.form.number);\r\n                        this.close();\r\n                    } else {\r\n                        this.$toast.error(message);\r\n                    }\r\n                }\r\n            } catch (e) {\r\n                this.$toast.error(\"Ocurrió un error\");\r\n                console.log(e);\r\n            } finally {\r\n                this.loading = false;\r\n            }\r\n        },\r\n        getDocumentType(id) {\r\n            return this.identityDocuments.find(i => i.id == id).description;\r\n        },\r\n        initForm() {\r\n            this.form = {\r\n                country_id: \"PE\",\r\n                identity_document_type_id: \"1\",\r\n                type: \"mother\"\r\n            };\r\n            this.children = [];\r\n            this.documentTypeChildren = \"1\";\r\n            this.documentNumber = null;\r\n            this.documentNumber = null;\r\n            this.documentNumberChildren = null;\r\n            this.form_children.name = null;\r\n        },\r\n        validForm() {\r\n            let error = false;\r\n            let {\r\n                name,\r\n                department_id,\r\n                province_id,\r\n                district_id,\r\n                address,\r\n                phone,\r\n\r\n                attorney_id,\r\n                type\r\n            } = this.form;\r\n            if (!name) {\r\n                error = true;\r\n                this.$toast.error(\"El nombre es obligatorio\");\r\n            }\r\n            if (!this.documentNumber) {\r\n                error = true;\r\n                this.$toast.error(\"El documento es obligatorio\");\r\n            }\r\n\r\n            if (!department_id) {\r\n                error = true;\r\n                this.$toast.error(\"El departamento es obligatorio\");\r\n            }\r\n            if (!province_id) {\r\n                error = true;\r\n                this.$toast.error(\"La provincia es obligatorio\");\r\n            }\r\n            if (!district_id) {\r\n                error = true;\r\n                this.$toast.error(\"El distrito es obligatorio\");\r\n            }\r\n            if (!address) {\r\n                error = true;\r\n                this.$toast.error(\"La dirección es obligatorio\");\r\n            }\r\n            if (!phone) {\r\n                error = true;\r\n                this.$toast.error(\"El teléfono es obligatorio\");\r\n            }\r\n\r\n            if (type == \"attorney\") {\r\n                if (!attorney_id) {\r\n                    error = true;\r\n                    this.$toast.error(\"Elija un parentezco\");\r\n                }\r\n            }\r\n\r\n            if (this.children.length == 0) {\r\n                error = true;\r\n                this.$toast.error(\"Debe registrar al menos un estudiante\");\r\n            }\r\n\r\n            return error;\r\n        },\r\n        addChildren() {\r\n            if (!this.documentNumberChildren) {\r\n                return this.$toast.error(\"Documento obligatorio\");\r\n            }\r\n\r\n            if (!this.form_children.name) {\r\n                return this.$toast.error(\"Nombre obligatorio\");\r\n            }\r\n            this.children = [\r\n                ...this.children.filter(\r\n                    c => c.number != this.documentNumberChildren\r\n                ),\r\n                {\r\n                    ...this.form_children,\r\n                    identity_document_type_id: this.documentTypeChildren,\r\n                    number: this.documentNumberChildren,\r\n                    id: null\r\n                }\r\n            ];\r\n\r\n            this.form_children.name = \"\";\r\n            this.documentNumberChildren = null;\r\n        },\r\n        deleteChild(child) {\r\n            let { number, id } = child;\r\n            if (id) {\r\n                console.log(\"No se puede borrar\");\r\n            } else {\r\n                this.children = [\r\n                    ...this.children.filter(c => c.number != number)\r\n                ];\r\n            }\r\n        },\r\n        async searchType() {\r\n            if (this.timer) {\r\n                clearTimeout(this.timer);\r\n            }\r\n\r\n            this.timer = setTimeout(async () => {\r\n                await this.getAttorneyTypes();\r\n            }, 250);\r\n        },\r\n\r\n        async getAttorneyTypes() {\r\n            //persons/attorney/record\r\n            try {\r\n                this.loading = true;\r\n                const response = await this.$http.get(\r\n                    `/${this.resource}/attorney/records?description=${\r\n                        this.form_attorney.name ? this.form_attorney.name : \"\"\r\n                    }`\r\n                );\r\n\r\n                if (response.status == 200) {\r\n                    let { records } = response.data;\r\n                    this.types = records;\r\n                }\r\n            } catch (e) {\r\n                console.log(e);\r\n            } finally {\r\n                this.loading = false;\r\n            }\r\n        },\r\n        async saveType() {\r\n            try {\r\n                this.loading = true;\r\n                const response = await this.$http.post(\r\n                    `/${this.resource}/attorney`,\r\n                    { description: this.form_attorney.name }\r\n                );\r\n\r\n                if (response.status == 200) {\r\n                    let { id, message, success } = response.data;\r\n                    if (success) {\r\n                        this.form.attorney_id = id;\r\n                        this.$toast.success(message);\r\n                        this.getAttorneyTypes();\r\n                        this.form_attorney.add = false;\r\n                        this.form_attorney.name = null;\r\n                    } else {\r\n                        this.$toast.error(message);\r\n                    }\r\n                }\r\n            } catch (e) {\r\n                console.log(e);\r\n            } finally {\r\n                this.loading = false;\r\n            }\r\n        },\r\n        async getTables() {\r\n            try {\r\n                this.loading = true;\r\n                const response = await this.$http(`/${this.resource}/tables`);\r\n                if (response.status == 200) {\r\n                    let {\r\n                        departments,\r\n                        provinces,\r\n                        countries,\r\n                        districts,\r\n                        identity_documents\r\n                    } = response.data;\r\n\r\n                    this.all_departments = departments;\r\n                    this.all_provinces = provinces;\r\n                    this.all_countries = countries;\r\n                    this.all_districts = districts;\r\n                    this.identityDocuments = identity_documents;\r\n                    this.departments = departments;\r\n                    this.provinces = provinces;\r\n                    this.countries = countries;\r\n                    this.districts = districts;\r\n                }\r\n\r\n                this.form.identity_document_type_id = \"1\";\r\n                // this.form_children.identity_document_type_id = \"1\";\r\n                this.documentTypeChildren = \"1\";\r\n            } catch (e) {\r\n                console.log(e);\r\n            } finally {\r\n                this.loading = false;\r\n            }\r\n        },\r\n        close() {\r\n            this.$emit(\"update:showDialog\", false);\r\n        },\r\n        async open() {\r\n            this.initForm();\r\n            this.recordId && (this.title = \"Editar registro\");\r\n\r\n            if (this.recordId) {\r\n                try {\r\n                    this.loading = true;\r\n                    const response = await this.$http(\r\n                        `/${this.resource}/update/${\r\n                            this.recordId\r\n                        }?from_person=${this.fromPerson ? 1 : \"\"}`\r\n                    );\r\n                    const { data } = response.data;\r\n                    this.form = data;\r\n                    this.documentNumber = this.form.number;\r\n                    this.children = this.form.children;\r\n                } catch (e) {\r\n                    console.log(e);\r\n                    this.$toast.error(\r\n                        \"Ocurrió un error al obtener el registro\"\r\n                    );\r\n                } finally {\r\n                    this.loading = false;\r\n                }\r\n            }\r\n        },\r\n        async searchCustomer() {\r\n            let documentNumber =\r\n                this.tab == \"parent\"\r\n                    ? this.documentNumber\r\n                    : this.documentNumberChildren;\r\n            if (documentNumber == null || documentNumber == \"\") return;\r\n            if (documentNumber.length != 8 && documentNumber.length != 11) {\r\n                this.$toast.error(\"Ingrese un documento válido\");\r\n                return;\r\n            }\r\n            if (this.timer) {\r\n                clearTimeout(this.timer);\r\n            }\r\n            this.timer = setTimeout(async () => {\r\n                try {\r\n                    this.currentCustomer = null;\r\n                    this.loading_search = true;\r\n                    const response = await this.$http(\r\n                        `/${this.resource}/${documentNumber}?type=${\r\n                            this.tab == \"parent\" ? \"parent\" : \"student\"\r\n                        }`\r\n                    );\r\n                    if (response.status == 200) {\r\n                        const { data } = response;\r\n                        if (data.numero || data.ruc) {\r\n                            if (this.tab == \"parent\") {\r\n                                if (documentNumber.length == 8) {\r\n                                    this.form.name = data.nombre_completo;\r\n                                } else {\r\n                                    this.form.name = data.nombre_o_razon_social;\r\n                                    this.form.state = data.estado;\r\n                                    this.form.condition = data.condicion;\r\n                                }\r\n\r\n                                this.form.address = data.direccion_completa;\r\n                                if (data.ubigeo.length == 3) {\r\n                                    let [\r\n                                        department,\r\n                                        province,\r\n                                        district\r\n                                    ] = data.ubigeo;\r\n                                    this.form.department_id = department;\r\n                                    this.form.province_id = province;\r\n                                    this.form.district_id = district;\r\n                                }\r\n                            } else {\r\n                                this.form_children.name = data.nombre_completo;\r\n                            }\r\n                        } else {\r\n                            this.$toast.error(\r\n                                data.message || \"No se encontró el documento\"\r\n                            );\r\n                        }\r\n                    } else {\r\n                        this.$toast.error(\"No se pudo obtener los datos\");\r\n                    }\r\n                } catch (e) {\r\n                    this.$toast.error(\"No se pudo obtener los datos\");\r\n                } finally {\r\n                    this.loading_search = false;\r\n                }\r\n            }, 250);\r\n        },\r\n        filterProvince() {\r\n            this.form.province_id = null;\r\n            this.form.district_id = null;\r\n            this.filterProvinces();\r\n        },\r\n        filterProvinces() {\r\n            this.provinces = this.all_provinces.filter(f => {\r\n                return f.department_id === this.form.department_id;\r\n            });\r\n        },\r\n        filterDistrict() {\r\n            this.form.district_id = null;\r\n            this.filterDistricts();\r\n        },\r\n        filterDistricts() {\r\n            this.districts = this.all_districts.filter(f => {\r\n                return f.province_id === this.form.province_id;\r\n            });\r\n        },\r\n        closeProperty() {\r\n            this.form.state = null;\r\n            this.form.condition = null;\r\n        }\r\n    }\r\n};\r\n</script>\r\n"],"sourceRoot":""}]);
 
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+// exports
 
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-/* harmony default export */ __webpack_exports__["default"] = ({
-  props: ["showDialog", "lots", "stock", "recordId"],
-  data: function data() {
-    return {
-      currentPage: 1,
-      lots_splice: [],
-      titleDialog: "Series",
-      loading: false,
-      errors: {},
-      form: {},
-      states: ["Activo", "Inactivo", "Desactivado", "Voz", "M2m"]
-    };
-  },
-  created: function created() {// await this.$http.get(`/pos/payment_tables`)
-    //     .then(response => {
-    //         this.payment_method_types = response.data.payment_method_types
-    //         this.cards_brand = response.data.cards_brand
-    //         this.clickAddLot()
-    //     })
-
-    return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee() {
-      return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee$(_context) {
-        while (1) {
-          switch (_context.prev = _context.next) {
-            case 0:
-            case "end":
-              return _context.stop();
-          }
-        }
-      }, _callee);
-    }))();
-  },
-  methods: _defineProperty({
-    handleCurrentChange: function handleCurrentChange(val) {
-      this.currentPage = val;
-      this.lots_splice = this.lots.slice((val - 1) * 20, val * 20);
-    },
-    duplicateSerie: function duplicateSerie(data, index) {
-      var _this = this;
-
-      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee2() {
-        var duplicates;
-        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee2$(_context2) {
-          while (1) {
-            switch (_context2.prev = _context2.next) {
-              case 0:
-                _context2.next = 2;
-                return _.filter(_this.lots, {
-                  series: data
-                });
-
-              case 2:
-                duplicates = _context2.sent;
-
-                if (duplicates.length > 1) {
-                  _this.lots[index].series = null;
-                }
-
-              case 4:
-              case "end":
-                return _context2.stop();
-            }
-          }
-        }, _callee2);
-      }))();
-    },
-    create: function create() {
-      if (!this.recordId) {
-        if (this.lots.length == 0) {
-          this.addMoreLots(this.stock);
-        } else {
-          var quantity = this.stock - this.lots.length;
-
-          if (quantity > 0) {
-            this.addMoreLots(quantity);
-          } // else{
-          //     this.deleteMoreLots(quantity)
-          // }
-
-        }
-
-        this.lots_splice = this.lots.slice(0, 20);
-      }
-    },
-    addMoreLots: function addMoreLots(number) {
-      for (var i = 0; i < number; i++) {
-        this.clickAddLot();
-      }
-    },
-    deleteMoreLots: function deleteMoreLots(number) {
-      for (var i = 0; i < number; i++) {
-        this.lots.pop();
-        this.$emit("addRowLot", this.lots);
-      }
-    },
-    validateLots: function validateLots() {
-      var _this2 = this;
-
-      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee3() {
-        var error;
-        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee3$(_context3) {
-          while (1) {
-            switch (_context3.prev = _context3.next) {
-              case 0:
-                error = 0;
-                _context3.next = 3;
-                return _this2.lots.forEach(function (element) {
-                  if (element.series == null) {
-                    error++;
-                  }
-                });
-
-              case 3:
-                if (!(error > 0)) {
-                  _context3.next = 5;
-                  break;
-                }
-
-                return _context3.abrupt("return", {
-                  success: false,
-                  message: "El campo serie es obligatorio"
-                });
-
-              case 5:
-                return _context3.abrupt("return", {
-                  success: true
-                });
-
-              case 6:
-              case "end":
-                return _context3.stop();
-            }
-          }
-        }, _callee3);
-      }))();
-    },
-    submit: function submit() {
-      var _this3 = this;
-
-      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee4() {
-        var val_lots;
-        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee4$(_context4) {
-          while (1) {
-            switch (_context4.prev = _context4.next) {
-              case 0:
-                _context4.next = 2;
-                return _this3.validateLots();
-
-              case 2:
-                val_lots = _context4.sent;
-
-                if (val_lots.success) {
-                  _context4.next = 5;
-                  break;
-                }
-
-                return _context4.abrupt("return", _this3.$toast.error(val_lots.message));
-
-              case 5:
-                _context4.next = 7;
-                return _this3.$emit("addRowLot", _this3.lots);
-
-              case 7:
-                _context4.next = 9;
-                return _this3.$emit("update:showDialog", false);
-
-              case 9:
-              case "end":
-                return _context4.stop();
-            }
-          }
-        }, _callee4);
-      }))();
-    },
-    clickAddLot: function clickAddLot() {
-      if (!this.recordId) {
-        if (this.lots.length >= this.stock) return this.$toast.error("La cantidad de registros es superior al stock o cantidad");
-      }
-
-      this.lots.push({
-        id: null,
-        item_id: null,
-        series: null,
-        date: moment().format("YYYY-MM-DD"),
-        state: "Activo"
-      });
-      this.$emit("addRowLot", this.lots);
-    },
-    close: function close() {
-      this.$emit("update:showDialog", false);
-      this.$emit("addRowLot", this.lots);
-      this.lots_splice = [];
-    },
-    clickCancel: function clickCancel(index) {
-      this.lots.splice(index, 1); // item.deleted = true
-
-      this.$emit("addRowLot", this.lots);
-    },
-    clickCancelSubmit: function clickCancelSubmit() {
-      var _this4 = this;
-
-      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee5() {
-        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee5$(_context5) {
-          while (1) {
-            switch (_context5.prev = _context5.next) {
-              case 0:
-                _this4.$emit("addRowLot", []);
-
-                _context5.next = 3;
-                return _this4.$emit("update:showDialog", false);
-
-              case 3:
-              case "end":
-                return _context5.stop();
-            }
-          }
-        }, _callee5);
-      }))();
-    }
-  }, "close", function close() {
-    this.$emit("update:showDialog", false);
-  })
-});
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-cd4ba31c\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/js/views/items/form.vue":
+/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-bf046f30\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/College/Resources/assets/js/views/persons/form.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -2743,890 +1244,471 @@ var render = function() {
   return _c(
     "el-dialog",
     {
-      directives: [
-        {
-          name: "loading",
-          rawName: "v-loading",
-          value: _vm.loading,
-          expression: "loading"
-        }
-      ],
       attrs: {
-        width: "65%",
-        title: _vm.titleDialog,
         visible: _vm.showDialog,
-        "close-on-click-modal": false,
         "append-to-body": "",
-        top: "7vh"
+        title: _vm.title
       },
-      on: { close: _vm.close, open: _vm.create }
+      on: { close: _vm.close, open: _vm.open }
     },
     [
       _c(
-        "form",
+        "div",
         {
-          attrs: { autocomplete: "off" },
-          on: {
-            submit: function($event) {
-              $event.preventDefault()
-              return _vm.submit.apply(null, arguments)
+          directives: [
+            {
+              name: "loading",
+              rawName: "v-loading",
+              value: _vm.loading,
+              expression: "loading"
             }
-          }
+          ],
+          staticClass: "form-body"
         },
         [
           _c(
-            "div",
-            { staticClass: "form-body" },
+            "el-tabs",
+            {
+              attrs: { "tab-position": "top" },
+              model: {
+                value: _vm.tab,
+                callback: function($$v) {
+                  _vm.tab = $$v
+                },
+                expression: "tab"
+              }
+            },
             [
               _c(
-                "el-tabs",
-                { attrs: { "tab-position": "top" } },
+                "el-tab-pane",
+                { attrs: { name: "parent", label: "Datos del Cliente" } },
                 [
-                  _c("el-tab-pane", { attrs: { label: "General" } }, [
+                  _c("div", { staticClass: "card" }, [
                     _c("div", { staticClass: "row" }, [
-                      _c("div", { staticClass: "col-md-3" }, [
-                        _c(
-                          "div",
-                          {
-                            staticClass: "form-group",
-                            class: {
-                              "has-danger": _vm.errors.internal_id
-                            }
-                          },
-                          [
-                            _c(
-                              "label",
-                              { staticClass: "control-label" },
-                              [
-                                _vm._v(
-                                  "Código Interno\n                                    "
-                                ),
-                                _c(
-                                  "el-tooltip",
-                                  {
-                                    staticClass: "item",
-                                    attrs: {
-                                      effect: "dark",
-                                      content:
-                                        "Código interno de la empresa para el control de sus productos",
-                                      placement: "top-start"
-                                    }
-                                  },
-                                  [
-                                    _c("i", {
-                                      staticClass: "fa fa-info-circle"
-                                    })
-                                  ]
-                                )
-                              ],
-                              1
-                            ),
-                            _vm._v(" "),
-                            _c(
-                              "el-input",
-                              {
-                                ref: "internal_id",
-                                attrs: { dusk: "internal_id" },
-                                model: {
-                                  value: _vm.form.internal_id,
-                                  callback: function($$v) {
-                                    _vm.$set(_vm.form, "internal_id", $$v)
-                                  },
-                                  expression: "form.internal_id"
-                                }
-                              },
-                              [
-                                _c("i", {
-                                  staticClass: "el-icon-edit-outline",
-                                  attrs: { slot: "prefix" },
-                                  slot: "prefix"
-                                })
-                              ]
-                            ),
-                            _vm._v(" "),
-                            _vm.errors.internal_id
-                              ? _c("small", {
-                                  staticClass: "text-danger",
-                                  domProps: {
-                                    textContent: _vm._s(
-                                      _vm.errors.internal_id[0]
-                                    )
-                                  }
-                                })
-                              : _vm._e()
-                          ],
-                          1
-                        )
-                      ]),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "col-md-6" }, [
-                        _c(
-                          "div",
-                          {
-                            staticClass: "form-group",
-                            class: {
-                              "has-danger": _vm.errors.description
-                            }
-                          },
-                          [
-                            _c("label", { staticClass: "control-label" }, [
-                              _vm._v("Nombre"),
-                              _c("span", { staticClass: "text-danger" }, [
-                                _vm._v("*")
-                              ])
-                            ]),
-                            _vm._v(" "),
-                            _c(
-                              "el-input",
-                              {
-                                attrs: { dusk: "description" },
-                                model: {
-                                  value: _vm.form.description,
-                                  callback: function($$v) {
-                                    _vm.$set(_vm.form, "description", $$v)
-                                  },
-                                  expression: "form.description"
-                                }
-                              },
-                              [
-                                _c("i", {
-                                  staticClass: "el-icon-edit-outline",
-                                  attrs: { slot: "prefix" },
-                                  slot: "prefix"
-                                })
-                              ]
-                            ),
-                            _vm._v(" "),
-                            _vm.errors.description
-                              ? _c("small", {
-                                  staticClass: "text-danger",
-                                  domProps: {
-                                    textContent: _vm._s(
-                                      _vm.errors.description[0]
-                                    )
-                                  }
-                                })
-                              : _vm._e()
-                          ],
-                          1
-                        )
-                      ]),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "col-md-3" }, [
-                        _c(
-                          "div",
-                          {
-                            staticClass: "form-group",
-                            class: {
-                              "has-danger": _vm.errors.second_name
-                            }
-                          },
-                          [
-                            _c("label", { staticClass: "control-label" }, [
-                              _vm._v(
-                                "Nombre secundario\n                                "
-                              )
-                            ]),
-                            _vm._v(" "),
-                            _c(
-                              "el-input",
-                              {
-                                attrs: { dusk: "second_name" },
-                                model: {
-                                  value: _vm.form.second_name,
-                                  callback: function($$v) {
-                                    _vm.$set(_vm.form, "second_name", $$v)
-                                  },
-                                  expression: "form.second_name"
-                                }
-                              },
-                              [
-                                _c("i", {
-                                  staticClass: "el-icon-edit-outline",
-                                  attrs: { slot: "prefix" },
-                                  slot: "prefix"
-                                })
-                              ]
-                            ),
-                            _vm._v(" "),
-                            _vm.errors.second_name
-                              ? _c("small", {
-                                  staticClass: "text-danger",
-                                  domProps: {
-                                    textContent: _vm._s(
-                                      _vm.errors.second_name[0]
-                                    )
-                                  }
-                                })
-                              : _vm._e()
-                          ],
-                          1
-                        )
-                      ]),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "col-md-3" }, [
-                        _c(
-                          "div",
-                          {
-                            staticClass: "form-group",
-                            class: {
-                              "has-danger": _vm.errors.category_id
-                            }
-                          },
-                          [
-                            _c("label", { staticClass: "control-label" }, [
-                              _vm._v(
-                                "\n                                    Categoría\n                                "
-                              )
-                            ]),
-                            _vm._v(" "),
-                            _vm.form_category.add == false
-                              ? _c(
-                                  "a",
-                                  {
-                                    staticClass:
-                                      "control-label font-weight-bold text-info",
-                                    attrs: { href: "#" },
-                                    on: {
-                                      click: function($event) {
-                                        _vm.form_category.add = true
-                                      }
-                                    }
-                                  },
-                                  [
-                                    _vm._v(
-                                      "\n                                    [ + Nuevo]"
-                                    )
-                                  ]
-                                )
-                              : _vm._e(),
-                            _vm._v(" "),
-                            _vm.form_category.add == true
-                              ? _c(
-                                  "a",
-                                  {
-                                    staticClass:
-                                      "control-label font-weight-bold text-info",
-                                    attrs: { href: "#" },
-                                    on: {
-                                      click: function($event) {
-                                        return _vm.saveCategory()
-                                      }
-                                    }
-                                  },
-                                  [
-                                    _vm._v(
-                                      "\n                                    [ + Guardar]"
-                                    )
-                                  ]
-                                )
-                              : _vm._e(),
-                            _vm._v(" "),
-                            _vm.form_category.add == true
-                              ? _c(
-                                  "a",
-                                  {
-                                    staticClass:
-                                      "control-label font-weight-bold text-danger",
-                                    attrs: { href: "#" },
-                                    on: {
-                                      click: function($event) {
-                                        _vm.form_category.add = false
-                                      }
-                                    }
-                                  },
-                                  [
-                                    _vm._v(
-                                      "\n                                    [ Cancelar]"
-                                    )
-                                  ]
-                                )
-                              : _vm._e(),
-                            _vm._v(" "),
-                            _vm.form_category.add == true
-                              ? _c(
-                                  "el-input",
-                                  {
-                                    staticStyle: { "margin-bottom": "1.5%" },
-                                    attrs: { dusk: "item_code" },
-                                    model: {
-                                      value: _vm.form_category.name,
-                                      callback: function($$v) {
-                                        _vm.$set(_vm.form_category, "name", $$v)
-                                      },
-                                      expression: "form_category.name"
-                                    }
-                                  },
-                                  [
-                                    _c("i", {
-                                      staticClass: "el-icon-edit-outline",
-                                      attrs: { slot: "prefix" },
-                                      slot: "prefix"
-                                    })
-                                  ]
-                                )
-                              : _vm._e(),
-                            _vm._v(" "),
-                            _vm.form_category.add == false
-                              ? _c(
-                                  "el-select",
-                                  {
-                                    attrs: { filterable: "", clearable: "" },
-                                    model: {
-                                      value: _vm.form.category_id,
-                                      callback: function($$v) {
-                                        _vm.$set(_vm.form, "category_id", $$v)
-                                      },
-                                      expression: "form.category_id"
-                                    }
-                                  },
-                                  _vm._l(_vm.categories, function(option) {
-                                    return _c("el-option", {
-                                      key: option.id,
-                                      attrs: {
-                                        value: option.id,
-                                        label: option.name
-                                      }
-                                    })
-                                  }),
-                                  1
-                                )
-                              : _vm._e(),
-                            _vm._v(" "),
-                            _vm.errors.category_id
-                              ? _c("small", {
-                                  staticClass: "text-danger",
-                                  domProps: {
-                                    textContent: _vm._s(
-                                      _vm.errors.category_id[0]
-                                    )
-                                  }
-                                })
-                              : _vm._e()
-                          ],
-                          1
-                        )
-                      ]),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "col-md-3" }, [
-                        _c(
-                          "div",
-                          {
-                            staticClass: "form-group",
-                            class: {
-                              "has-danger":
-                                _vm.errors.sale_affectation_igv_type_id
-                            }
-                          },
-                          [
-                            _c(
-                              "label",
-                              { staticClass: "control-label" },
-                              [
-                                _vm._v(
-                                  "Zona\n                                    "
-                                ),
-                                _c(
-                                  "el-tooltip",
-                                  {
-                                    staticClass: "item",
-                                    attrs: {
-                                      effect: "dark",
-                                      content:
-                                        "Lugar en donde se despacha el producto",
-                                      placement: "top-start"
-                                    }
-                                  },
-                                  [
-                                    _c("i", {
-                                      staticClass: "fa fa-info-circle"
-                                    })
-                                  ]
-                                )
-                              ],
-                              1
-                            ),
-                            _vm._v(" "),
-                            _c(
-                              "el-select",
-                              {
-                                attrs: { disabled: _vm.configuration.college },
-                                model: {
-                                  value: _vm.form.area_id,
-                                  callback: function($$v) {
-                                    _vm.$set(_vm.form, "area_id", $$v)
-                                  },
-                                  expression: "form.area_id"
-                                }
-                              },
-                              _vm._l(_vm.areas, function(option) {
-                                return _c("el-option", {
-                                  key: option.id,
-                                  attrs: {
-                                    value: option.id,
-                                    label: option.description
-                                  }
-                                })
-                              }),
-                              1
-                            ),
-                            _vm._v(" "),
-                            _vm.errors.sale_affectation_igv_type_id
-                              ? _c("small", {
-                                  staticClass: "form-control-feedback",
-                                  domProps: {
-                                    textContent: _vm._s(
-                                      _vm.errors.sale_affectation_igv_type_id[0]
-                                    )
-                                  }
-                                })
-                              : _vm._e()
-                          ],
-                          1
-                        )
-                      ]),
-                      _vm._v(" "),
                       _c(
                         "div",
-                        {
-                          directives: [
-                            {
-                              name: "show",
-                              rawName: "v-show",
-                              value: _vm.show_has_igv,
-                              expression: "show_has_igv"
-                            }
-                          ],
-                          staticClass: "col-md-3 center-el-checkbox"
-                        },
+                        { staticClass: "col-md-3 col-12" },
                         [
                           _c(
-                            "div",
+                            "label",
                             {
-                              staticClass: "form-group",
-                              class: { "has-danger": _vm.errors.has_igv }
+                              staticClass: "control-label",
+                              attrs: { for: "number" }
                             },
-                            [
-                              _c(
-                                "el-checkbox",
-                                {
-                                  model: {
-                                    value: _vm.form.has_igv,
-                                    callback: function($$v) {
-                                      _vm.$set(_vm.form, "has_igv", $$v)
-                                    },
-                                    expression: "form.has_igv"
-                                  }
-                                },
-                                [
-                                  _vm._v(
-                                    "Incluye Igv\n                                    " +
-                                      _vm._s(_vm.configuration.include_igv)
-                                  )
-                                ]
-                              ),
-                              _c("br"),
-                              _vm._v(" "),
-                              _vm.errors.has_igv
-                                ? _c("small", {
-                                    staticClass: "text-danger",
-                                    domProps: {
-                                      textContent: _vm._s(_vm.errors.has_igv[0])
-                                    }
-                                  })
-                                : _vm._e()
-                            ],
-                            1
-                          )
-                        ]
-                      ),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "col-md-3" }, [
-                        _c(
-                          "div",
-                          {
-                            staticClass: "form-group",
-                            class: { "has-danger": _vm.errors.location }
-                          },
-                          [
-                            _c("label", { staticClass: "control-label" }, [
-                              _vm._v(
-                                "Ubicación del producto\n                                "
-                              )
-                            ]),
-                            _vm._v(" "),
-                            _c("el-input", {
-                              attrs: { dusk: "name" },
+                            [_vm._v("Tipo de documento")]
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "el-select",
+                            {
+                              staticStyle: { width: "100%" },
+                              on: { change: _vm.closeProperty },
                               model: {
-                                value: _vm.form.location,
+                                value: _vm.form.identity_document_type_id,
                                 callback: function($$v) {
-                                  _vm.$set(_vm.form, "location", $$v)
+                                  _vm.$set(
+                                    _vm.form,
+                                    "identity_document_type_id",
+                                    $$v
+                                  )
                                 },
-                                expression: "form.location"
+                                expression: "form.identity_document_type_id"
                               }
+                            },
+                            _vm._l(_vm.identityDocuments, function(option) {
+                              return _c("el-option", {
+                                key: option.id,
+                                attrs: {
+                                  value: option.id,
+                                  label: option.description
+                                }
+                              })
                             }),
-                            _vm._v(" "),
-                            _vm.errors.location
-                              ? _c("small", {
-                                  staticClass: "text-danger",
-                                  domProps: {
-                                    textContent: _vm._s(_vm.errors.location[0])
-                                  }
-                                })
-                              : _vm._e()
-                          ],
-                          1
-                        )
-                      ]),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "col-md-3" }, [
-                        _c(
-                          "div",
-                          {
-                            staticClass: "form-group",
-                            class: {
-                              "has-danger": _vm.errors.unit_type_id
-                            }
-                          },
-                          [
-                            _c("label", { staticClass: "control-label" }, [
-                              _vm._v("Unidad")
-                            ]),
-                            _vm._v(" "),
-                            _c(
-                              "el-select",
-                              {
-                                attrs: { dusk: "unit_type_id" },
-                                model: {
-                                  value: _vm.form.unit_type_id,
-                                  callback: function($$v) {
-                                    _vm.$set(_vm.form, "unit_type_id", $$v)
-                                  },
-                                  expression: "form.unit_type_id"
-                                }
-                              },
-                              _vm._l(_vm.unit_types, function(option) {
-                                return _c("el-option", {
-                                  key: option.id,
-                                  attrs: {
-                                    value: option.id,
-                                    label: option.description
-                                  }
-                                })
-                              }),
-                              1
-                            ),
-                            _vm._v(" "),
-                            _vm.errors.unit_type_id
-                              ? _c("small", {
-                                  staticClass: "text-danger",
-                                  domProps: {
-                                    textContent: _vm._s(
-                                      _vm.errors.unit_type_id[0]
-                                    )
-                                  }
-                                })
-                              : _vm._e()
-                          ],
-                          1
-                        )
-                      ]),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "col-md-3" }, [
-                        _c(
-                          "div",
-                          {
-                            staticClass: "form-group",
-                            class: {
-                              "has-danger": _vm.errors.currency_type_id
-                            }
-                          },
-                          [
-                            _c("label", { staticClass: "control-label" }, [
-                              _vm._v("Moneda")
-                            ]),
-                            _vm._v(" "),
-                            _c(
-                              "el-select",
-                              {
-                                attrs: { dusk: "currency_type_id" },
-                                model: {
-                                  value: _vm.form.currency_type_id,
-                                  callback: function($$v) {
-                                    _vm.$set(_vm.form, "currency_type_id", $$v)
-                                  },
-                                  expression: "form.currency_type_id"
-                                }
-                              },
-                              _vm._l(_vm.currency_types, function(option) {
-                                return _c("el-option", {
-                                  key: option.id,
-                                  attrs: {
-                                    value: option.id,
-                                    label: option.description
-                                  }
-                                })
-                              }),
-                              1
-                            ),
-                            _vm._v(" "),
-                            _vm.errors.currency_type_id
-                              ? _c("small", {
-                                  staticClass: "text-danger",
-                                  domProps: {
-                                    textContent: _vm._s(
-                                      _vm.errors.currency_type_id[0]
-                                    )
-                                  }
-                                })
-                              : _vm._e()
-                          ],
-                          1
-                        )
-                      ]),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "col-md-3" }, [
-                        _c(
-                          "div",
-                          {
-                            staticClass: "form-group",
-                            class: {
-                              "has-danger": _vm.errors.sale_unit_price
-                            }
-                          },
-                          [
-                            _c("label", { staticClass: "control-label" }, [
-                              _vm._v(
-                                "Precio Unitario (Venta)\n                                    "
-                              ),
-                              _c("span", { staticClass: "text-danger" }, [
-                                _vm._v("*")
-                              ])
-                            ]),
-                            _vm._v(" "),
-                            _c(
-                              "el-input",
-                              {
-                                attrs: { dusk: "sale_unit_price" },
-                                on: {
-                                  input: _vm.calculatePercentageOfProfitBySale
-                                },
-                                model: {
-                                  value: _vm.form.sale_unit_price,
-                                  callback: function($$v) {
-                                    _vm.$set(_vm.form, "sale_unit_price", $$v)
-                                  },
-                                  expression: "form.sale_unit_price"
-                                }
-                              },
-                              [
-                                _c("i", {
-                                  staticClass: "el-icon-edit-outline",
-                                  attrs: { slot: "prefix" },
-                                  slot: "prefix"
-                                })
-                              ]
-                            ),
-                            _vm._v(" "),
-                            _vm.errors.sale_unit_price
-                              ? _c("small", {
-                                  staticClass: "text-danger",
-                                  domProps: {
-                                    textContent: _vm._s(
-                                      _vm.errors.sale_unit_price[0]
-                                    )
-                                  }
-                                })
-                              : _vm._e()
-                          ],
-                          1
-                        )
-                      ]),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "col-md-3" }, [
-                        _c(
-                          "div",
-                          {
-                            staticClass: "form-group",
-                            class: {
-                              "has-danger":
-                                _vm.errors.sale_affectation_igv_type_id
-                            }
-                          },
-                          [
-                            _c("label", { staticClass: "control-label" }, [
-                              _vm._v("Tipo de afectación (Venta)")
-                            ]),
-                            _vm._v(" "),
-                            _c(
-                              "el-select",
-                              {
-                                on: { change: _vm.changeAffectationIgvType },
-                                model: {
-                                  value: _vm.form.sale_affectation_igv_type_id,
-                                  callback: function($$v) {
-                                    _vm.$set(
-                                      _vm.form,
-                                      "sale_affectation_igv_type_id",
-                                      $$v
-                                    )
-                                  },
-                                  expression:
-                                    "\n                                        form.sale_affectation_igv_type_id\n                                    "
-                                }
-                              },
-                              _vm._l(_vm.affectation_igv_types, function(
-                                option
-                              ) {
-                                return _c("el-option", {
-                                  key: option.id,
-                                  attrs: {
-                                    value: option.id,
-                                    label: option.description
-                                  }
-                                })
-                              }),
-                              1
-                            ),
-                            _vm._v(" "),
-                            _vm.errors.sale_affectation_igv_type_id
-                              ? _c("small", {
-                                  staticClass: "text-danger",
-                                  domProps: {
-                                    textContent: _vm._s(
-                                      _vm.errors.sale_affectation_igv_type_id[0]
-                                    )
-                                  }
-                                })
-                              : _vm._e()
-                          ],
-                          1
-                        )
-                      ]),
+                            1
+                          )
+                        ],
+                        1
+                      ),
                       _vm._v(" "),
                       _c(
                         "div",
-                        {
-                          directives: [
-                            {
-                              name: "show",
-                              rawName: "v-show",
-                              value:
-                                _vm.recordId == null &&
-                                _vm.form.unit_type_id != "ZZ",
-                              expression:
-                                "\n                                recordId == null &&\n                                    form.unit_type_id != 'ZZ'\n                            "
-                            }
-                          ],
-                          staticClass: "col-md-3"
-                        },
+                        { staticClass: "col-md-3 col-12" },
                         [
                           _c(
-                            "div",
+                            "label",
                             {
-                              staticClass: "form-group",
-                              class: { "has-danger": _vm.errors.stock }
+                              staticClass: "control-label",
+                              attrs: { for: "number" }
+                            },
+                            [_vm._v("Documento")]
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "el-input",
+                            {
+                              staticClass: "to_left",
+                              staticStyle: { width: "100%" },
+                              attrs: { controls: false },
+                              on: { input: _vm.closeProperty },
+                              model: {
+                                value: _vm.documentNumber,
+                                callback: function($$v) {
+                                  _vm.documentNumber = $$v
+                                },
+                                expression: "documentNumber"
+                              }
                             },
                             [
-                              !_vm.allEstablishment
-                                ? _c(
-                                    "label",
-                                    { staticClass: "control-label" },
-                                    [_vm._v("Stock Inicial")]
-                                  )
-                                : _c(
-                                    "label",
-                                    { staticClass: "control-label" },
-                                    [
-                                      _vm._v(
-                                        "\n                                    Stock Inicial en cada establecimiento\n                                "
-                                      )
-                                    ]
-                                  ),
-                              _vm._v(" "),
-                              _c(
-                                "el-input",
-                                {
-                                  attrs: {
-                                    disabled: _vm.configuration.init_stock == 1
-                                  },
-                                  model: {
-                                    value: _vm.form.stock,
-                                    callback: function($$v) {
-                                      _vm.$set(_vm.form, "stock", $$v)
+                              _vm.form.identity_document_type_id == 1 ||
+                              _vm.form.identity_document_type_id == 6
+                                ? _c("el-button", {
+                                    attrs: {
+                                      slot: "append",
+                                      loading: _vm.loading_search,
+                                      icon: "el-icon-search"
                                     },
-                                    expression: "form.stock"
-                                  }
-                                },
-                                [
-                                  _c("i", {
-                                    staticClass: "el-icon-edit-outline",
-                                    attrs: { slot: "prefix" },
-                                    slot: "prefix"
-                                  })
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _vm.errors.stock
-                                ? _c("small", {
-                                    staticClass: "text-danger",
-                                    domProps: {
-                                      textContent: _vm._s(_vm.errors.stock[0])
-                                    }
+                                    on: {
+                                      click: function($event) {
+                                        $event.preventDefault()
+                                        return _vm.searchCustomer.apply(
+                                          null,
+                                          arguments
+                                        )
+                                      }
+                                    },
+                                    slot: "append"
                                   })
                                 : _vm._e()
                             ],
                             1
                           )
-                        ]
+                        ],
+                        1
                       ),
                       _vm._v(" "),
-                      _c("div", { staticClass: "col-md-3" }, [
+                      _c(
+                        "div",
+                        { staticClass: "col-md-6 col-12" },
+                        [
+                          _c(
+                            "label",
+                            {
+                              staticClass: "control-label",
+                              attrs: { for: "number" }
+                            },
+                            [_vm._v("Nombres")]
+                          ),
+                          _vm._v(" "),
+                          _c("el-input", {
+                            model: {
+                              value: _vm.form.name,
+                              callback: function($$v) {
+                                _vm.$set(_vm.form, "name", $$v)
+                              },
+                              expression: "form.name"
+                            }
+                          })
+                        ],
+                        1
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _vm.form.state && _vm.form.condition
+                      ? _c("div", { staticClass: "row mt-2" }, [
+                          _c("div", { staticClass: "col-md-6 col-12" }),
+                          _vm._v(" "),
+                          _c(
+                            "div",
+                            { staticClass: "col-md-3 col-12" },
+                            [
+                              _c("el-alert", {
+                                attrs: {
+                                  title: _vm.form.state,
+                                  type:
+                                    "" +
+                                    (_vm.form.state == "ACTIVO"
+                                      ? "success"
+                                      : "error")
+                                }
+                              })
+                            ],
+                            1
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "div",
+                            { staticClass: "col-md-3" },
+                            [
+                              _c("el-alert", {
+                                attrs: {
+                                  title: _vm.form.condition,
+                                  type:
+                                    "" +
+                                    (_vm.form.condition == "HABIDO"
+                                      ? "success"
+                                      : "error")
+                                }
+                              })
+                            ],
+                            1
+                          )
+                        ])
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "row mt-2" }, [
+                      _c("div", { staticClass: "col-md-4" }, [
                         _c(
                           "div",
                           {
                             staticClass: "form-group",
-                            class: { "has-danger": _vm.errors.barcode }
+                            class: { "has-danger": _vm.errors.country_id }
                           },
                           [
+                            _c("label", { staticClass: "control-label" }, [
+                              _vm._v("País")
+                            ]),
+                            _vm._v(" "),
                             _c(
-                              "label",
-                              { staticClass: "control-label" },
-                              [
-                                _vm._v(
-                                  "Código Externo\n                            "
-                                ),
-                                _c(
-                                  "el-tooltip",
-                                  {
-                                    staticClass: "item",
-                                    attrs: {
-                                      effect: "dark",
-                                      content:
-                                        "Código Barra de la empresa para el control de sus productos",
-                                      placement: "top-start"
-                                    }
+                              "el-select",
+                              {
+                                attrs: {
+                                  filterable: "",
+                                  dusk: "country_id",
+                                  disabled: ""
+                                },
+                                model: {
+                                  value: _vm.form.country_id,
+                                  callback: function($$v) {
+                                    _vm.$set(_vm.form, "country_id", $$v)
                                   },
-                                  [
-                                    _c("i", {
-                                      staticClass: "fa fa-info-circle"
-                                    })
-                                  ]
-                                )
-                              ],
+                                  expression: "form.country_id"
+                                }
+                              },
+                              _vm._l(_vm.countries, function(option) {
+                                return _c("el-option", {
+                                  key: option.id,
+                                  attrs: {
+                                    value: option.id,
+                                    label: option.description
+                                  }
+                                })
+                              }),
                               1
                             ),
+                            _vm._v(" "),
+                            _vm.errors.country_id
+                              ? _c("small", {
+                                  staticClass: "text-danger",
+                                  domProps: {
+                                    textContent: _vm._s(
+                                      _vm.errors.country_id[0]
+                                    )
+                                  }
+                                })
+                              : _vm._e()
+                          ],
+                          1
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "col-md-4" }, [
+                        _c(
+                          "div",
+                          {
+                            staticClass: "form-group",
+                            class: {
+                              "has-danger": _vm.errors.department_id
+                            }
+                          },
+                          [
+                            _c("label", { staticClass: "control-label" }, [
+                              _vm._v("Departamento")
+                            ]),
+                            _vm._v(" "),
+                            _c(
+                              "el-select",
+                              {
+                                attrs: {
+                                  filterable: "",
+                                  "popper-class": "el-select-departments",
+                                  dusk: "department_id"
+                                },
+                                on: { change: _vm.filterProvince },
+                                model: {
+                                  value: _vm.form.department_id,
+                                  callback: function($$v) {
+                                    _vm.$set(_vm.form, "department_id", $$v)
+                                  },
+                                  expression: "form.department_id"
+                                }
+                              },
+                              _vm._l(_vm.departments, function(option) {
+                                return _c("el-option", {
+                                  key: option.id,
+                                  attrs: {
+                                    value: option.id,
+                                    label: option.description
+                                  }
+                                })
+                              }),
+                              1
+                            ),
+                            _vm._v(" "),
+                            _vm.errors.department_id
+                              ? _c("small", {
+                                  staticClass: "text-danger",
+                                  domProps: {
+                                    textContent: _vm._s(
+                                      _vm.errors.department_id[0]
+                                    )
+                                  }
+                                })
+                              : _vm._e()
+                          ],
+                          1
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "col-md-4" }, [
+                        _c(
+                          "div",
+                          {
+                            staticClass: "form-group",
+                            class: {
+                              "has-danger": _vm.errors.province_id
+                            }
+                          },
+                          [
+                            _c("label", { staticClass: "control-label" }, [
+                              _vm._v("Provincia")
+                            ]),
+                            _vm._v(" "),
+                            _c(
+                              "el-select",
+                              {
+                                attrs: {
+                                  filterable: "",
+                                  "popper-class": "el-select-provinces",
+                                  dusk: "province_id"
+                                },
+                                on: { change: _vm.filterDistrict },
+                                model: {
+                                  value: _vm.form.province_id,
+                                  callback: function($$v) {
+                                    _vm.$set(_vm.form, "province_id", $$v)
+                                  },
+                                  expression: "form.province_id"
+                                }
+                              },
+                              _vm._l(_vm.provinces, function(option) {
+                                return _c("el-option", {
+                                  key: option.id,
+                                  attrs: {
+                                    value: option.id,
+                                    label: option.description
+                                  }
+                                })
+                              }),
+                              1
+                            ),
+                            _vm._v(" "),
+                            _vm.errors.province_id
+                              ? _c("small", {
+                                  staticClass: "text-danger",
+                                  domProps: {
+                                    textContent: _vm._s(
+                                      _vm.errors.province_id[0]
+                                    )
+                                  }
+                                })
+                              : _vm._e()
+                          ],
+                          1
+                        )
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "row" }, [
+                      _c("div", { staticClass: "col-md-4" }, [
+                        _c(
+                          "div",
+                          {
+                            staticClass: "form-group",
+                            class: {
+                              "has-danger": _vm.errors.district_id
+                            }
+                          },
+                          [
+                            _c("label", { staticClass: "control-label" }, [
+                              _vm._v("Distrito")
+                            ]),
+                            _vm._v(" "),
+                            _c(
+                              "el-select",
+                              {
+                                attrs: {
+                                  filterable: "",
+                                  "popper-class": "el-select-districts",
+                                  dusk: "district_id"
+                                },
+                                on: { change: _vm.updateAll },
+                                model: {
+                                  value: _vm.form.district_id,
+                                  callback: function($$v) {
+                                    _vm.$set(_vm.form, "district_id", $$v)
+                                  },
+                                  expression: "form.district_id"
+                                }
+                              },
+                              _vm._l(_vm.districts, function(option) {
+                                return _c("el-option", {
+                                  key: option.id,
+                                  attrs: {
+                                    value: option.id,
+                                    label: option.description
+                                  }
+                                })
+                              }),
+                              1
+                            ),
+                            _vm._v(" "),
+                            _vm.errors.district_id
+                              ? _c("small", {
+                                  staticClass: "text-danger",
+                                  domProps: {
+                                    textContent: _vm._s(
+                                      _vm.errors.district_id[0]
+                                    )
+                                  }
+                                })
+                              : _vm._e()
+                          ],
+                          1
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "col-md-8" }, [
+                        _c(
+                          "div",
+                          {
+                            staticClass: "form-group",
+                            class: { "has-danger": _vm.errors.address }
+                          },
+                          [
+                            _c("label", { staticClass: "control-label" }, [
+                              _vm._v("Dirección")
+                            ]),
                             _vm._v(" "),
                             _c(
                               "el-input",
                               {
-                                attrs: { dusk: "barcode" },
+                                attrs: { dusk: "address" },
                                 model: {
-                                  value: _vm.form.barcode,
+                                  value: _vm.form.address,
                                   callback: function($$v) {
-                                    _vm.$set(_vm.form, "barcode", $$v)
+                                    _vm.$set(_vm.form, "address", $$v)
                                   },
-                                  expression: "form.barcode"
+                                  expression: "form.address"
                                 }
                               },
                               [
@@ -3638,678 +1720,240 @@ var render = function() {
                               ]
                             ),
                             _vm._v(" "),
-                            _vm.errors.barcode
+                            _vm.errors.address
                               ? _c("small", {
                                   staticClass: "text-danger",
                                   domProps: {
-                                    textContent: _vm._s(_vm.errors.barcode[0])
+                                    textContent: _vm._s(_vm.errors.address[0])
                                   }
                                 })
                               : _vm._e()
                           ],
                           1
                         )
-                      ]),
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "row" }, [
+                      _c(
+                        "div",
+                        { staticClass: "col-md-6 col-12" },
+                        [
+                          _c(
+                            "label",
+                            {
+                              staticClass: "control-label",
+                              attrs: { for: "number" }
+                            },
+                            [_vm._v("Teléfono")]
+                          ),
+                          _vm._v(" "),
+                          _c("el-input", {
+                            model: {
+                              value: _vm.form.phone,
+                              callback: function($$v) {
+                                _vm.$set(_vm.form, "phone", $$v)
+                              },
+                              expression: "form.phone"
+                            }
+                          })
+                        ],
+                        1
+                      ),
                       _vm._v(" "),
-                      _vm.form.unit_type_id != "ZZ"
+                      _c(
+                        "div",
+                        { staticClass: "col-md-6 col-12" },
+                        [
+                          _c(
+                            "label",
+                            {
+                              staticClass: "control-label",
+                              attrs: { for: "number" }
+                            },
+                            [_vm._v("Correo")]
+                          ),
+                          _vm._v(" "),
+                          _c("el-input", {
+                            model: {
+                              value: _vm.form.email,
+                              callback: function($$v) {
+                                _vm.$set(_vm.form, "email", $$v)
+                              },
+                              expression: "form.email"
+                            }
+                          })
+                        ],
+                        1
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "row mt-2" }, [
+                      _c(
+                        "div",
+                        { staticClass: "col-md-6 col-12" },
+                        [
+                          _c(
+                            "label",
+                            {
+                              staticClass: "control-label",
+                              attrs: { for: "number" }
+                            },
+                            [_vm._v("Teléfono secundario")]
+                          ),
+                          _vm._v(" "),
+                          _c("el-input", {
+                            model: {
+                              value: _vm.form.extra_phone,
+                              callback: function($$v) {
+                                _vm.$set(_vm.form, "extra_phone", $$v)
+                              },
+                              expression: "form.extra_phone"
+                            }
+                          })
+                        ],
+                        1
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        { staticClass: "col-md-6 col-12" },
+                        [
+                          _c(
+                            "label",
+                            {
+                              staticClass: "control-label",
+                              attrs: { for: "number" }
+                            },
+                            [_vm._v("Relacion")]
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "el-select",
+                            {
+                              model: {
+                                value: _vm.form.type,
+                                callback: function($$v) {
+                                  _vm.$set(_vm.form, "type", $$v)
+                                },
+                                expression: "form.type"
+                              }
+                            },
+                            [
+                              _c("el-option", {
+                                attrs: { value: "mother", label: "Madre" }
+                              }),
+                              _vm._v(" "),
+                              _c("el-option", {
+                                attrs: { value: "father", label: "Padre" }
+                              }),
+                              _vm._v(" "),
+                              _c("el-option", {
+                                attrs: { value: "attorney", label: "Apoderado" }
+                              })
+                            ],
+                            1
+                          )
+                        ],
+                        1
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "row mt-2" }, [
+                      _vm.form.type == "attorney"
                         ? _c(
                             "div",
-                            {
-                              directives: [
-                                {
-                                  name: "show",
-                                  rawName: "v-show",
-                                  value: _vm.recordId == null,
-                                  expression: "recordId == null"
-                                }
-                              ],
-                              staticClass: "col-md-3"
-                            },
-                            [
-                              _c(
-                                "div",
-                                {
-                                  staticClass: "form-group",
-                                  class: {
-                                    "has-danger": _vm.errors.warehouse_id
-                                  }
-                                },
-                                [
-                                  _c(
-                                    "label",
-                                    { staticClass: "control-label" },
-                                    [
-                                      _vm._v(
-                                        "\n                                    Almacén\n                                    "
-                                      ),
-                                      _c(
-                                        "el-tooltip",
-                                        {
-                                          staticClass: "item",
-                                          attrs: {
-                                            effect: "dark",
-                                            content:
-                                              "Si no selecciona almacén, se asignará por defecto el relacionado al establecimiento",
-                                            placement: "top"
-                                          }
-                                        },
-                                        [
-                                          _c("i", {
-                                            staticClass: "fa fa-info-circle"
-                                          })
-                                        ]
-                                      )
-                                    ],
-                                    1
-                                  ),
-                                  _vm._v(" "),
-                                  _c(
-                                    "el-select",
-                                    {
-                                      attrs: {
-                                        disabled:
-                                          _vm.configuration.college ||
-                                          _vm.allEstablishment
-                                      },
-                                      on: { change: _vm.changeWarehouse },
-                                      model: {
-                                        value: _vm.form.warehouse_id,
-                                        callback: function($$v) {
-                                          _vm.$set(
-                                            _vm.form,
-                                            "warehouse_id",
-                                            $$v
-                                          )
-                                        },
-                                        expression: "form.warehouse_id"
-                                      }
-                                    },
-                                    _vm._l(_vm.warehouses, function(option) {
-                                      return _c("el-option", {
-                                        key: option.id,
-                                        attrs: {
-                                          value: option.id,
-                                          label: option.description
-                                        }
-                                      })
-                                    }),
-                                    1
-                                  ),
-                                  _vm._v(" "),
-                                  !_vm.recordId
-                                    ? _c(
-                                        "small",
-                                        [
-                                          _c(
-                                            "el-checkbox",
-                                            {
-                                              model: {
-                                                value: _vm.allEstablishment,
-                                                callback: function($$v) {
-                                                  _vm.allEstablishment = $$v
-                                                },
-                                                expression: "allEstablishment"
-                                              }
-                                            },
-                                            [
-                                              _vm._v(
-                                                "\n                                        Enviar a todos los almacenes\n                                    "
-                                              )
-                                            ]
-                                          )
-                                        ],
-                                        1
-                                      )
-                                    : _vm._e()
-                                ],
-                                1
-                              )
-                            ]
-                          )
-                        : _vm._e(),
-                      _vm._v(" "),
-                      _c(
-                        "div",
-                        {
-                          directives: [
-                            {
-                              name: "show",
-                              rawName: "v-show",
-                              value: _vm.form.unit_type_id != "ZZ",
-                              expression: "form.unit_type_id != 'ZZ'"
-                            }
-                          ],
-                          staticClass: "col-md-3"
-                        },
-                        [
-                          _c(
-                            "div",
-                            {
-                              staticClass: "form-group",
-                              class: {
-                                "has-danger": _vm.errors.date_of_due
-                              }
-                            },
-                            [
-                              _c("label", { staticClass: "control-label" }, [
-                                _vm._v("Fec. Vencimiento")
-                              ]),
-                              _vm._v(" "),
-                              _c("el-date-picker", {
-                                attrs: {
-                                  type: "date",
-                                  "value-format": "yyyy-MM-dd",
-                                  clearable: true
-                                },
-                                model: {
-                                  value: _vm.form.date_of_due,
-                                  callback: function($$v) {
-                                    _vm.$set(_vm.form, "date_of_due", $$v)
-                                  },
-                                  expression: "form.date_of_due"
-                                }
-                              }),
-                              _vm._v(" "),
-                              _vm.errors.date_of_due
-                                ? _c("small", {
-                                    staticClass: "text-danger",
-                                    domProps: {
-                                      textContent: _vm._s(
-                                        _vm.errors.date_of_due[0]
-                                      )
-                                    }
-                                  })
-                                : _vm._e()
-                            ],
-                            1
-                          )
-                        ]
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "div",
-                        {
-                          directives: [
-                            {
-                              name: "show",
-                              rawName: "v-show",
-                              value: _vm.form.unit_type_id != "ZZ",
-                              expression: "form.unit_type_id != 'ZZ'"
-                            }
-                          ],
-                          staticClass: "col-md-3"
-                        },
-                        [
-                          _c(
-                            "div",
-                            { staticClass: "form-group" },
+                            { staticClass: "col-md-6 col-12" },
                             [
                               _c(
                                 "label",
-                                { staticClass: "control-label" },
-                                [
-                                  _vm._v(
-                                    "Cantidad Máxima\n                                    "
-                                  ),
-                                  _c(
-                                    "el-tooltip",
-                                    {
-                                      staticClass: "item",
-                                      attrs: {
-                                        effect: "dark",
-                                        content:
-                                          "La cantidad máxima representada en el envase/contenedor",
-                                        placement: "top"
-                                      }
-                                    },
-                                    [
-                                      _c("i", {
-                                        staticClass: "fa fa-info-circle"
-                                      })
-                                    ]
-                                  )
-                                ],
-                                1
-                              ),
-                              _vm._v(" "),
-                              _c("el-input", {
-                                attrs: {
-                                  disabled: _vm.form.item_unit_types.length != 0
-                                },
-                                model: {
-                                  value: _vm.form.max_quantity,
-                                  callback: function($$v) {
-                                    _vm.$set(_vm.form, "max_quantity", $$v)
-                                  },
-                                  expression: "form.max_quantity"
-                                }
-                              })
-                            ],
-                            1
-                          )
-                        ]
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "div",
-                        {
-                          directives: [
-                            {
-                              name: "show",
-                              rawName: "v-show",
-                              value: _vm.form.unit_type_id != "ZZ",
-                              expression: "form.unit_type_id != 'ZZ'"
-                            }
-                          ],
-                          staticClass: "col-md-3"
-                        },
-                        [
-                          _c(
-                            "div",
-                            { staticClass: "form-group" },
-                            [
-                              _c(
-                                "label",
-                                { staticClass: "control-label" },
-                                [
-                                  _vm._v(
-                                    "Contenedor\n                                    "
-                                  ),
-                                  _c(
-                                    "el-tooltip",
-                                    {
-                                      staticClass: "item",
-                                      attrs: {
-                                        effect: "dark",
-                                        content:
-                                          "Nombre del contenedor de la cantidad máxima Ej. Botella, Caja, Saco",
-                                        placement: "top"
-                                      }
-                                    },
-                                    [
-                                      _c("i", {
-                                        staticClass: "fa fa-info-circle"
-                                      })
-                                    ]
-                                  )
-                                ],
-                                1
-                              ),
-                              _vm._v(" "),
-                              _c("el-input", {
-                                attrs: { disabled: !_vm.form.max_quantity },
-                                model: {
-                                  value: _vm.form.max_quantity_description,
-                                  callback: function($$v) {
-                                    _vm.$set(
-                                      _vm.form,
-                                      "max_quantity_description",
-                                      $$v
-                                    )
-                                  },
-                                  expression: "form.max_quantity_description"
-                                }
-                              })
-                            ],
-                            1
-                          )
-                        ]
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "div",
-                        {
-                          directives: [
-                            {
-                              name: "show",
-                              rawName: "v-show",
-                              value: _vm.form.unit_type_id != "ZZ",
-                              expression: "form.unit_type_id != 'ZZ'"
-                            }
-                          ],
-                          staticClass: "col-md-3"
-                        },
-                        [
-                          _c(
-                            "div",
-                            { staticClass: "form-group" },
-                            [
-                              _c(
-                                "label",
-                                { staticClass: "control-label" },
-                                [
-                                  _vm._v(
-                                    "Add. Delivery\n                                    "
-                                  ),
-                                  _c(
-                                    "el-tooltip",
-                                    {
-                                      staticClass: "item",
-                                      attrs: {
-                                        effect: "dark",
-                                        content:
-                                          "Valor agregado al enviar el producto por delivery",
-                                        placement: "top"
-                                      }
-                                    },
-                                    [
-                                      _c("i", {
-                                        staticClass: "fa fa-info-circle"
-                                      })
-                                    ]
-                                  )
-                                ],
-                                1
-                              ),
-                              _vm._v(" "),
-                              _c("el-input", {
-                                model: {
-                                  value: _vm.form.delivery_cost,
-                                  callback: function($$v) {
-                                    _vm.$set(_vm.form, "delivery_cost", $$v)
-                                  },
-                                  expression: "form.delivery_cost"
-                                }
-                              })
-                            ],
-                            1
-                          )
-                        ]
-                      ),
-                      _vm._v(" "),
-                      _vm.showSeries
-                        ? _c("div", { staticClass: "d-flex" }, [
-                            _c("div", { staticClass: "col-md-4" }, [
-                              _c(
-                                "div",
                                 {
-                                  directives: [
-                                    {
-                                      name: "show",
-                                      rawName: "v-show",
-                                      value: _vm.form.unit_type_id != "ZZ",
-                                      expression: "form.unit_type_id != 'ZZ'"
-                                    }
-                                  ],
-                                  staticClass: "col-md-3 center-el-checkbox"
+                                  staticClass: "control-label",
+                                  attrs: { for: "number" }
                                 },
-                                [
-                                  _c(
-                                    "div",
-                                    { staticClass: "form-group" },
-                                    [
-                                      _c(
-                                        "el-checkbox",
-                                        {
-                                          on: { change: _vm.changeLotsEnabled },
-                                          model: {
-                                            value: _vm.form.series_enabled,
-                                            callback: function($$v) {
-                                              _vm.$set(
-                                                _vm.form,
-                                                "series_enabled",
-                                                $$v
-                                              )
-                                            },
-                                            expression: "form.series_enabled"
-                                          }
-                                        },
-                                        [_vm._v("¿Maneja series?")]
-                                      ),
-                                      _c("br")
-                                    ],
-                                    1
-                                  )
-                                ]
+                                [_vm._v("Tipo de apoderado")]
                               ),
                               _vm._v(" "),
-                              _vm.form.unit_type_id != "ZZ" &&
-                              _vm.form.series_enabled &&
-                              _vm.recordId == null
+                              _vm.form_attorney.add == false
                                 ? _c(
-                                    "div",
+                                    "a",
                                     {
                                       staticClass:
-                                        "col-md-4 d-flex align-items-end"
-                                    },
-                                    [
-                                      _c(
-                                        "div",
-                                        {
-                                          staticClass: "form-group ",
-                                          class: {
-                                            "has-danger": _vm.errors.lot_code
-                                          }
-                                        },
-                                        [
-                                          _c(
-                                            "label",
-                                            { staticClass: "control-label" },
-                                            [
-                                              _vm._v(
-                                                "\n                                            Ingrese series\n                                        "
-                                              )
-                                            ]
-                                          ),
-                                          _vm._v(" "),
-                                          _c("el-button", {
-                                            staticStyle: {
-                                              "margin-top": "2%",
-                                              "margin-left": "15px"
-                                            },
-                                            attrs: {
-                                              type: "primary",
-                                              icon: "el-icon-edit-outline"
-                                            },
-                                            on: {
-                                              click: function($event) {
-                                                $event.preventDefault()
-                                                return _vm.clickLotcode.apply(
-                                                  null,
-                                                  arguments
-                                                )
-                                              }
-                                            }
-                                          }),
-                                          _vm._v(" "),
-                                          _vm.errors.lot_code
-                                            ? _c("small", {
-                                                staticClass: "text-danger",
-                                                domProps: {
-                                                  textContent: _vm._s(
-                                                    _vm.errors.lot_code[0]
-                                                  )
-                                                }
-                                              })
-                                            : _vm._e()
-                                        ],
-                                        1
-                                      )
-                                    ]
-                                  )
-                                : _vm._e()
-                            ]),
-                            _vm._v(" "),
-                            _c("div", { staticClass: "col-md-4" }, [
-                              _c(
-                                "div",
-                                {
-                                  directives: [
-                                    {
-                                      name: "show",
-                                      rawName: "v-show",
-                                      value: _vm.form.unit_type_id != "ZZ",
-                                      expression: "form.unit_type_id != 'ZZ'"
-                                    }
-                                  ],
-                                  staticClass: "col-md-3 center-el-checkbox"
-                                },
-                                [
-                                  _c(
-                                    "div",
-                                    { staticClass: "form-group" },
-                                    [
-                                      _c(
-                                        "el-checkbox",
-                                        {
-                                          on: { change: _vm.changeLotsEnabled },
-                                          model: {
-                                            value: _vm.form.lots_enabled,
-                                            callback: function($$v) {
-                                              _vm.$set(
-                                                _vm.form,
-                                                "lots_enabled",
-                                                $$v
-                                              )
-                                            },
-                                            expression: "form.lots_enabled"
-                                          }
-                                        },
-                                        [_vm._v("¿Maneja lotes?")]
-                                      ),
-                                      _c("br")
-                                    ],
-                                    1
-                                  )
-                                ]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "div",
-                                {
-                                  directives: [
-                                    {
-                                      name: "show",
-                                      rawName: "v-show",
-                                      value:
-                                        _vm.form.unit_type_id != "ZZ" &&
-                                        _vm.form.lots_enabled,
-                                      expression:
-                                        "\n                                        form.unit_type_id != 'ZZ' &&\n                                            form.lots_enabled\n                                    "
-                                    }
-                                  ],
-                                  staticClass: "col-md-6"
-                                },
-                                [
-                                  _c(
-                                    "div",
-                                    {
-                                      staticClass: "form-group",
-                                      class: {
-                                        "has-danger": _vm.errors.lot_code
+                                        "control-label font-weight-bold text-info",
+                                      attrs: { href: "#" },
+                                      on: {
+                                        click: function($event) {
+                                          _vm.form_attorney.add = true
+                                        }
                                       }
                                     },
                                     [
-                                      _c(
-                                        "label",
-                                        { staticClass: "control-label" },
-                                        [
-                                          _vm._v(
-                                            "\n                                            Código lote\n                                        "
-                                          )
-                                        ]
-                                      ),
-                                      _vm._v(" "),
-                                      _c(
-                                        "el-input",
-                                        {
-                                          model: {
-                                            value: _vm.form.lot_code,
-                                            callback: function($$v) {
-                                              _vm.$set(
-                                                _vm.form,
-                                                "lot_code",
-                                                $$v
-                                              )
-                                            },
-                                            expression: "form.lot_code"
-                                          }
-                                        },
-                                        [
-                                          _c("i", {
-                                            staticClass: "el-icon-edit-outline",
-                                            attrs: { slot: "prefix" },
-                                            slot: "prefix"
-                                          })
-                                        ]
-                                      ),
-                                      _vm._v(" "),
-                                      _vm.errors.lot_code
-                                        ? _c("small", {
-                                            staticClass: "text-danger",
-                                            domProps: {
-                                              textContent: _vm._s(
-                                                _vm.errors.lot_code[0]
-                                              )
-                                            }
-                                          })
-                                        : _vm._e()
-                                    ],
-                                    1
+                                      _vm._v(
+                                        "\n                                [ + Nuevo]"
+                                      )
+                                    ]
                                   )
-                                ]
-                              )
-                            ])
-                          ])
-                        : _vm._e(),
-                      _vm._v(" "),
-                      _vm.configuration.promotions_sell
-                        ? _c("div", { staticClass: "d-flex" }, [
-                            _c("div", { staticClass: "col-md-3" }, [
-                              _c(
-                                "div",
-                                {
-                                  directives: [
+                                : _vm._e(),
+                              _vm._v(" "),
+                              _vm.form_attorney.add == true
+                                ? _c(
+                                    "a",
                                     {
-                                      name: "show",
-                                      rawName: "v-show",
-                                      value: _vm.form.unit_type_id != "ZZ",
-                                      expression: "form.unit_type_id != 'ZZ'"
-                                    }
-                                  ],
-                                  staticClass: "col-md-6 center-el-checkbox"
-                                },
-                                [
-                                  _c(
-                                    "div",
-                                    { staticClass: "form-group" },
+                                      staticClass:
+                                        "control-label font-weight-bold text-info",
+                                      attrs: { href: "#" },
+                                      on: {
+                                        click: function($event) {
+                                          return _vm.saveType()
+                                        }
+                                      }
+                                    },
                                     [
-                                      _c(
-                                        "el-checkbox",
-                                        {
-                                          model: {
-                                            value: _vm.form.is_promotion,
-                                            callback: function($$v) {
-                                              _vm.$set(
-                                                _vm.form,
-                                                "is_promotion",
-                                                $$v
-                                              )
-                                            },
-                                            expression: "form.is_promotion"
-                                          }
-                                        },
-                                        [_vm._v("¿Maneja Promocion ?")]
-                                      ),
-                                      _c("br")
-                                    ],
-                                    1
-                                  ),
-                                  _vm._v(" "),
-                                  _c(
+                                      _vm._v(
+                                        "\n                                [ + Guardar]"
+                                      )
+                                    ]
+                                  )
+                                : _vm._e(),
+                              _vm._v(" "),
+                              _vm.form_attorney.add == true
+                                ? _c(
+                                    "a",
+                                    {
+                                      staticClass:
+                                        "control-label font-weight-bold text-danger",
+                                      attrs: { href: "#" },
+                                      on: {
+                                        click: function($event) {
+                                          _vm.form_attorney.add = false
+                                        }
+                                      }
+                                    },
+                                    [
+                                      _vm._v(
+                                        "\n                                [ Cancelar]"
+                                      )
+                                    ]
+                                  )
+                                : _vm._e(),
+                              _vm._v(" "),
+                              _vm.form_attorney.add == true
+                                ? _c(
                                     "el-input",
                                     {
-                                      attrs: { type: "number" },
+                                      staticStyle: { "margin-bottom": "1.5%" },
+                                      attrs: { dusk: "item_code" },
+                                      on: { input: _vm.searchType },
                                       model: {
-                                        value: _vm.form.promotion_count,
+                                        value: _vm.form_attorney.name,
                                         callback: function($$v) {
                                           _vm.$set(
-                                            _vm.form,
-                                            "promotion_count",
+                                            _vm.form_attorney,
+                                            "name",
                                             $$v
                                           )
                                         },
-                                        expression: "form.promotion_count"
+                                        expression: "form_attorney.name"
                                       }
                                     },
                                     [
@@ -4320,1559 +1964,325 @@ var render = function() {
                                       })
                                     ]
                                   )
-                                ],
-                                1
-                              )
-                            ])
-                          ])
-                        : _vm._e()
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "row" }, [
-                      _c("div", { staticClass: "col-md-12" }, [
-                        _c("h6", { staticClass: "separator-title" }, [
-                          _vm._v(
-                            "\n                                Campos adicionales\n                            "
-                          )
-                        ])
-                      ]),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "row col-md-12" }, [
-                        _c("div", { staticClass: "col-md-3" }, [
-                          _c(
-                            "div",
-                            { staticClass: "form-group" },
-                            [
-                              _c("label", { staticClass: "control-label" }, [
-                                _vm._v(
-                                  "Imágen\n                                        "
-                                ),
-                                _c("span", { staticClass: "text-danger" })
-                              ]),
+                                : _vm._e(),
                               _vm._v(" "),
-                              _c(
-                                "el-upload",
-                                {
-                                  staticClass: "avatar-uploader",
-                                  attrs: {
-                                    data: { type: "items" },
-                                    headers: _vm.headers,
-                                    action: "/" + _vm.resource + "/uploads",
-                                    "show-file-list": false,
-                                    "on-success": _vm.onSuccess
-                                  }
-                                },
-                                [
-                                  _vm.form.image_url
-                                    ? _c("img", {
-                                        staticClass: "avatar",
-                                        attrs: { src: _vm.form.image_url }
+                              _vm.form_attorney.add == false
+                                ? _c(
+                                    "el-select",
+                                    {
+                                      attrs: { filterable: "", clearable: "" },
+                                      model: {
+                                        value: _vm.form.attorney_id,
+                                        callback: function($$v) {
+                                          _vm.$set(_vm.form, "attorney_id", $$v)
+                                        },
+                                        expression: "form.attorney_id"
+                                      }
+                                    },
+                                    _vm._l(_vm.types, function(option) {
+                                      return _c("el-option", {
+                                        key: option.id,
+                                        attrs: {
+                                          value: option.id,
+                                          label: option.description
+                                        }
                                       })
-                                    : _c("i", {
-                                        staticClass:
-                                          "el-icon-plus avatar-uploader-icon"
-                                      })
-                                ]
-                              )
+                                    }),
+                                    1
+                                  )
+                                : _vm._e()
                             ],
                             1
                           )
+                        : _vm._e()
+                    ])
+                  ])
+                ]
+              ),
+              _vm._v(" "),
+              _c(
+                "el-tab-pane",
+                {
+                  attrs: { name: "children", label: "Datos de los estudiantes" }
+                },
+                [
+                  _c("div", { staticClass: "card" }, [
+                    _c("div", { staticClass: "row" }, [
+                      _c(
+                        "div",
+                        { staticClass: "col-md-3 col-12" },
+                        [
+                          _c(
+                            "label",
+                            {
+                              staticClass: "control-label",
+                              attrs: { for: "number" }
+                            },
+                            [_vm._v("Tipo de documento")]
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "el-select",
+                            {
+                              staticStyle: { width: "100%" },
+                              model: {
+                                value: _vm.documentTypeChildren,
+                                callback: function($$v) {
+                                  _vm.documentTypeChildren = $$v
+                                },
+                                expression: "documentTypeChildren"
+                              }
+                            },
+                            _vm._l(_vm.identityDocuments, function(option) {
+                              return _c("el-option", {
+                                key: option.id,
+                                attrs: {
+                                  value: option.id,
+                                  label: option.description
+                                }
+                              })
+                            }),
+                            1
+                          )
+                        ],
+                        1
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        { staticClass: "col-md-3 col-12" },
+                        [
+                          _c(
+                            "label",
+                            {
+                              staticClass: "control-label",
+                              attrs: { for: "number" }
+                            },
+                            [_vm._v("Documento")]
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "el-input",
+                            {
+                              staticClass: "to_left",
+                              staticStyle: { width: "100%" },
+                              attrs: { controls: false },
+                              model: {
+                                value: _vm.documentNumberChildren,
+                                callback: function($$v) {
+                                  _vm.documentNumberChildren = $$v
+                                },
+                                expression: "documentNumberChildren"
+                              }
+                            },
+                            [
+                              _vm.documentTypeChildren == "1"
+                                ? _c("el-button", {
+                                    attrs: {
+                                      slot: "append",
+                                      loading: _vm.loading_search,
+                                      icon: "el-icon-search"
+                                    },
+                                    on: {
+                                      click: function($event) {
+                                        $event.preventDefault()
+                                        return _vm.searchCustomer.apply(
+                                          null,
+                                          arguments
+                                        )
+                                      }
+                                    },
+                                    slot: "append"
+                                  })
+                                : _vm._e()
+                            ],
+                            1
+                          )
+                        ],
+                        1
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "div",
+                        { staticClass: "col-md-6 col-12" },
+                        [
+                          _c(
+                            "label",
+                            {
+                              staticClass: "control-label",
+                              attrs: { for: "number" }
+                            },
+                            [_vm._v("Nombres")]
+                          ),
+                          _vm._v(" "),
+                          _c("el-input", {
+                            model: {
+                              value: _vm.form_children.name,
+                              callback: function($$v) {
+                                _vm.$set(_vm.form_children, "name", $$v)
+                              },
+                              expression: "form_children.name"
+                            }
+                          })
+                        ],
+                        1
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "row justify-content-end" }, [
+                      _c(
+                        "div",
+                        {
+                          staticClass:
+                            "col-md-3 col-12 align-self-end d-flex justify-content-end"
+                        },
+                        [
+                          _c(
+                            "el-button",
+                            {
+                              staticClass: " mt-2",
+                              attrs: { type: "primary" },
+                              on: { click: _vm.addChildren }
+                            },
+                            [
+                              _vm._v(
+                                "\n                                Agregar\n                            "
+                              )
+                            ]
+                          )
+                        ],
+                        1
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "row mt-2 p-2" }, [
+                      _c("table", { staticClass: "table" }, [
+                        _c("thead", [
+                          _c("tr", [
+                            _c("th", [_vm._v("#")]),
+                            _vm._v(" "),
+                            _c("th", [_vm._v("Nombre")]),
+                            _vm._v(" "),
+                            _c("th", [_vm._v("Documento")]),
+                            _vm._v(" "),
+                            _c("th")
+                          ])
                         ]),
                         _vm._v(" "),
-                        _c("div", { staticClass: "col-md-9" }, [
-                          _c("div", { staticClass: "row" }, [
-                            _c("div", { staticClass: "col-md-6" }, [
+                        _c(
+                          "tbody",
+                          _vm._l(_vm.children, function(child, idx) {
+                            return _c("tr", { key: idx }, [
+                              _c("td", [_vm._v(_vm._s(idx + 1))]),
+                              _vm._v(" "),
+                              _c("td", [_vm._v(_vm._s(child.name))]),
+                              _vm._v(" "),
+                              _c("td", [
+                                _vm._v(
+                                  "\n                                        " +
+                                    _vm._s(child.number) +
+                                    "\n\n                                        "
+                                ),
+                                _c("br"),
+                                _vm._v(" "),
+                                _c("small", [
+                                  _vm._v(
+                                    "\n                                            " +
+                                      _vm._s(
+                                        _vm.getDocumentType(
+                                          child.identity_document_type_id
+                                        )
+                                      ) +
+                                      "\n                                        "
+                                  )
+                                ])
+                              ]),
+                              _vm._v(" "),
                               _c(
-                                "div",
-                                {
-                                  staticClass: "form-group",
-                                  class: {
-                                    "has-danger": _vm.errors.brand_id
-                                  }
-                                },
+                                "td",
                                 [
-                                  _c(
-                                    "label",
-                                    { staticClass: "control-label" },
-                                    [
-                                      _vm._v(
-                                        "\n                                                Marca\n                                            "
-                                      )
-                                    ]
-                                  ),
-                                  _vm._v(" "),
-                                  _vm.form_brand.add == false
-                                    ? _c(
-                                        "a",
-                                        {
-                                          staticClass:
-                                            "control-label font-weight-bold text-info",
-                                          attrs: { href: "#" },
-                                          on: {
-                                            click: function($event) {
-                                              _vm.form_brand.add = true
-                                            }
-                                          }
+                                  child.edit
+                                    ? _c("el-button", {
+                                        attrs: {
+                                          type: "success",
+                                          size: "mini",
+                                          icon: "el-icon-edit",
+                                          circle: ""
                                         },
-                                        [
-                                          _vm._v(
-                                            "\n                                                [ + Nuevo]"
-                                          )
-                                        ]
-                                      )
+                                        on: {
+                                          click: function($event) {
+                                            return _vm.editPerson(child)
+                                          }
+                                        }
+                                      })
                                     : _vm._e(),
                                   _vm._v(" "),
-                                  _vm.form_brand.add == true
-                                    ? _c(
-                                        "a",
-                                        {
-                                          staticClass:
-                                            "control-label font-weight-bold text-info",
-                                          attrs: { href: "#" },
-                                          on: {
-                                            click: function($event) {
-                                              return _vm.saveBrand()
-                                            }
-                                          }
+                                  !child.id
+                                    ? _c("el-button", {
+                                        attrs: {
+                                          type: "danger",
+                                          size: "mini",
+                                          icon: "el-icon-delete",
+                                          circle: ""
                                         },
-                                        [
-                                          _vm._v(
-                                            "\n                                                [ + Guardar]"
-                                          )
-                                        ]
-                                      )
-                                    : _vm._e(),
-                                  _vm._v(" "),
-                                  _vm.form_brand.add == true
-                                    ? _c(
-                                        "a",
-                                        {
-                                          staticClass:
-                                            "control-label font-weight-bold text-danger",
-                                          attrs: { href: "#" },
-                                          on: {
-                                            click: function($event) {
-                                              _vm.form_brand.add = false
-                                            }
+                                        on: {
+                                          click: function($event) {
+                                            return _vm.deleteChild(child)
                                           }
-                                        },
-                                        [
-                                          _vm._v(
-                                            "\n                                                [ Cancelar]"
-                                          )
-                                        ]
-                                      )
-                                    : _vm._e(),
-                                  _vm._v(" "),
-                                  _vm.form_brand.add == true
-                                    ? _c(
-                                        "el-input",
-                                        {
-                                          staticStyle: {
-                                            "margin-bottom": "1.5%"
-                                          },
-                                          attrs: { dusk: "item_code" },
-                                          model: {
-                                            value: _vm.form_brand.name,
-                                            callback: function($$v) {
-                                              _vm.$set(
-                                                _vm.form_brand,
-                                                "name",
-                                                $$v
-                                              )
-                                            },
-                                            expression: "form_brand.name"
-                                          }
-                                        },
-                                        [
-                                          _c("i", {
-                                            staticClass: "el-icon-edit-outline",
-                                            attrs: { slot: "prefix" },
-                                            slot: "prefix"
-                                          })
-                                        ]
-                                      )
-                                    : _vm._e(),
-                                  _vm._v(" "),
-                                  _vm.form_brand.add == false
-                                    ? _c(
-                                        "el-select",
-                                        {
-                                          attrs: {
-                                            filterable: "",
-                                            clearable: ""
-                                          },
-                                          model: {
-                                            value: _vm.form.brand_id,
-                                            callback: function($$v) {
-                                              _vm.$set(
-                                                _vm.form,
-                                                "brand_id",
-                                                $$v
-                                              )
-                                            },
-                                            expression: "form.brand_id"
-                                          }
-                                        },
-                                        _vm._l(_vm.brands, function(option) {
-                                          return _c("el-option", {
-                                            key: option.id,
-                                            attrs: {
-                                              value: option.id,
-                                              label: option.name
-                                            }
-                                          })
-                                        }),
-                                        1
-                                      )
-                                    : _vm._e(),
-                                  _vm._v(" "),
-                                  _vm.errors.brand_id
-                                    ? _c("small", {
-                                        staticClass: "text-danger",
-                                        domProps: {
-                                          textContent: _vm._s(
-                                            _vm.errors.brand_id[0]
-                                          )
                                         }
                                       })
                                     : _vm._e()
                                 ],
                                 1
                               )
-                            ]),
-                            _vm._v(" "),
-                            _vm.attribute_types.length > 0
-                              ? _c("div", { staticClass: "col-md-12" }, [
-                                  _c(
-                                    "h6",
-                                    { staticClass: "separator-title " },
-                                    [
-                                      _vm._v(
-                                        "\n                                            Atributos\n                                            "
-                                      ),
-                                      _c(
-                                        "el-tooltip",
-                                        {
-                                          staticClass: "item",
-                                          attrs: {
-                                            effect: "dark",
-                                            content:
-                                              "Diferentes presentaciones para la venta del producto",
-                                            placement: "top"
-                                          }
-                                        },
-                                        [
-                                          _c("i", {
-                                            staticClass: "fa fa-info-circle"
-                                          })
-                                        ]
-                                      ),
-                                      _vm._v(" "),
-                                      _c(
-                                        "a",
-                                        {
-                                          staticClass:
-                                            "control-label font-weight-bold text-info",
-                                          attrs: { href: "#" },
-                                          on: {
-                                            click: function($event) {
-                                              $event.preventDefault()
-                                              return _vm.clickAddAttribute.apply(
-                                                null,
-                                                arguments
-                                              )
-                                            }
-                                          }
-                                        },
-                                        [_vm._v("[+ Agregar]")]
-                                      )
-                                    ],
-                                    1
-                                  )
-                                ])
-                              : _vm._e(),
-                            _vm._v(" "),
-                            _vm.form.attributes.length > 0
-                              ? _c("div", { staticClass: "col-md-12" }, [
-                                  _c(
-                                    "div",
-                                    { staticClass: "table-responsive" },
-                                    [
-                                      _c("table", { staticClass: "table" }, [
-                                        _c("thead", [
-                                          _c("tr", [
-                                            _c("th", [_vm._v("Tipo")]),
-                                            _vm._v(" "),
-                                            _c("th", [_vm._v("Descripción")]),
-                                            _vm._v(" "),
-                                            _c("th")
-                                          ])
-                                        ]),
-                                        _vm._v(" "),
-                                        _c(
-                                          "tbody",
-                                          _vm._l(_vm.form.attributes, function(
-                                            row,
-                                            index
-                                          ) {
-                                            return _c("tr", { key: index }, [
-                                              _c(
-                                                "td",
-                                                [
-                                                  _c(
-                                                    "el-select",
-                                                    {
-                                                      attrs: { filterable: "" },
-                                                      on: {
-                                                        change: function(
-                                                          $event
-                                                        ) {
-                                                          return _vm.changeAttributeType(
-                                                            index
-                                                          )
-                                                        }
-                                                      },
-                                                      model: {
-                                                        value:
-                                                          row.attribute_type_id,
-                                                        callback: function(
-                                                          $$v
-                                                        ) {
-                                                          _vm.$set(
-                                                            row,
-                                                            "attribute_type_id",
-                                                            $$v
-                                                          )
-                                                        },
-                                                        expression:
-                                                          "\n                                                                    row.attribute_type_id\n                                                                "
-                                                      }
-                                                    },
-                                                    _vm._l(
-                                                      _vm.attribute_types,
-                                                      function(option) {
-                                                        return _c("el-option", {
-                                                          key: option.id,
-                                                          attrs: {
-                                                            value: option.id,
-                                                            label:
-                                                              option.description
-                                                          }
-                                                        })
-                                                      }
-                                                    ),
-                                                    1
-                                                  )
-                                                ],
-                                                1
-                                              ),
-                                              _vm._v(" "),
-                                              _c(
-                                                "td",
-                                                [
-                                                  _c(
-                                                    "el-input",
-                                                    {
-                                                      model: {
-                                                        value: row.value,
-                                                        callback: function(
-                                                          $$v
-                                                        ) {
-                                                          _vm.$set(
-                                                            row,
-                                                            "value",
-                                                            $$v
-                                                          )
-                                                        },
-                                                        expression:
-                                                          "\n                                                                    row.value\n                                                                "
-                                                      }
-                                                    },
-                                                    [
-                                                      _c("i", {
-                                                        staticClass:
-                                                          "el-icon-edit-outline",
-                                                        attrs: {
-                                                          slot: "prefix"
-                                                        },
-                                                        slot: "prefix"
-                                                      })
-                                                    ]
-                                                  )
-                                                ],
-                                                1
-                                              ),
-                                              _vm._v(" "),
-                                              _c("td", [
-                                                _c(
-                                                  "button",
-                                                  {
-                                                    staticClass:
-                                                      "btn btn-danger",
-                                                    attrs: { type: "button" },
-                                                    on: {
-                                                      click: function($event) {
-                                                        $event.preventDefault()
-                                                        return _vm.clickRemoveAttribute(
-                                                          index
-                                                        )
-                                                      }
-                                                    }
-                                                  },
-                                                  [
-                                                    _vm._v(
-                                                      "\n                                                                x\n                                                            "
-                                                    )
-                                                  ]
-                                                )
-                                              ])
-                                            ])
-                                          }),
-                                          0
-                                        )
-                                      ])
-                                    ]
-                                  )
-                                ])
-                              : _vm._e()
-                          ])
-                        ])
-                      ])
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _vm.form.unit_type_id != "ZZ"
-                    ? _c("el-tab-pane", { attrs: { label: "Almacenes" } }, [
-                        _c("div", { staticClass: "row" }, [
-                          _c("div", { staticClass: "col-12" }, [
-                            _c("h5", { staticClass: "separator-title mt-0" }, [
-                              _vm._v(
-                                "\n                                Precios por almacén\n                            "
-                              )
-                            ]),
-                            _vm._v(" "),
-                            _c("table", [
-                              _c(
-                                "tbody",
-                                _vm._l(_vm.form.warehouse_prices, function(w) {
-                                  return _c("tr", { key: w.id }, [
-                                    _c("td", { attrs: { width: "80%" } }, [
-                                      _c("h3", [_vm._v(_vm._s(w.warehouse))])
-                                    ]),
-                                    _vm._v(" "),
-                                    _c(
-                                      "td",
-                                      [
-                                        _c("el-input", {
-                                          attrs: {
-                                            placeholder: "Precio de almacen"
-                                          },
-                                          on: {
-                                            input: function($event) {
-                                              return _vm.$forceUpdate()
-                                            }
-                                          },
-                                          model: {
-                                            value: w.price,
-                                            callback: function($$v) {
-                                              _vm.$set(w, "price", $$v)
-                                            },
-                                            expression: "w.price"
-                                          }
-                                        })
-                                      ],
-                                      1
-                                    )
-                                  ])
-                                }),
-                                0
-                              )
                             ])
-                          ])
-                        ])
-                      ])
-                    : _vm._e(),
-                  _vm._v(" "),
-                  _c("el-tab-pane", { attrs: { label: "Lista de Precios" } }, [
-                    _c("div", { staticClass: "row" }, [
-                      _c(
-                        "div",
-                        {
-                          directives: [
-                            {
-                              name: "show",
-                              rawName: "v-show",
-                              value: _vm.form.unit_type_id != "ZZ",
-                              expression: "form.unit_type_id != 'ZZ'"
-                            }
-                          ],
-                          staticClass: "col-md-12"
-                        },
-                        [
-                          _c(
-                            "h6",
-                            { staticClass: "separator-title " },
-                            [
-                              _vm._v(
-                                "\n                                Listado de precios\n                                "
-                              ),
-                              _c(
-                                "el-tooltip",
-                                {
-                                  staticClass: "item",
-                                  attrs: {
-                                    effect: "dark",
-                                    content:
-                                      "Aplica para realizar compra/venta en presentacion de diferentes precios y/o cantidades",
-                                    placement: "top"
-                                  }
-                                },
-                                [_c("i", { staticClass: "fa fa-info-circle" })]
-                              ),
-                              _vm._v(" "),
-                              _c(
-                                "a",
-                                {
-                                  staticClass:
-                                    "control-label font-weight-bold text-info",
-                                  attrs: { href: "#" },
-                                  on: { click: _vm.clickAddRow }
-                                },
-                                [
-                                  _vm._v(
-                                    "\n                                    [ + Nuevo]"
-                                  )
-                                ]
-                              )
-                            ],
-                            1
-                          )
-                        ]
-                      ),
-                      _vm._v(" "),
-                      _vm.form.item_unit_types.length > 0
-                        ? _c(
-                            "div",
-                            {
-                              directives: [
-                                {
-                                  name: "show",
-                                  rawName: "v-show",
-                                  value: _vm.form.unit_type_id != "ZZ",
-                                  expression: "form.unit_type_id != 'ZZ'"
-                                }
-                              ],
-                              staticClass: "col-md-12"
-                            },
-                            [
-                              _c("div", { staticClass: "table-responsive" }, [
-                                _c("table", { staticClass: "table" }, [
-                                  _c("thead", [
-                                    _c("tr", [
-                                      _c("th", { staticClass: "text-center" }, [
-                                        _vm._v(
-                                          "\n                                                Unidad\n                                            "
-                                        )
-                                      ]),
-                                      _vm._v(" "),
-                                      _c("th", { staticClass: "text-center" }, [
-                                        _vm._v(
-                                          "\n                                                Descripción\n                                            "
-                                        )
-                                      ]),
-                                      _vm._v(" "),
-                                      _c(
-                                        "th",
-                                        {
-                                          staticClass: "text-center",
-                                          attrs: { width: "13%" }
-                                        },
-                                        [
-                                          _vm._v(
-                                            "\n                                                Cantidad\n                                                "
-                                          ),
-                                          _c(
-                                            "el-tooltip",
-                                            {
-                                              staticClass: "item",
-                                              attrs: {
-                                                effect: "dark",
-                                                content: "Cantidad de unidades",
-                                                placement: "top"
-                                              }
-                                            },
-                                            [
-                                              _c("i", {
-                                                staticClass: "fa fa-info-circle"
-                                              })
-                                            ]
-                                          )
-                                        ],
-                                        1
-                                      ),
-                                      _vm._v(" "),
-                                      _c(
-                                        "th",
-                                        {
-                                          staticClass: "text-center",
-                                          attrs: { width: "13%" }
-                                        },
-                                        [
-                                          _vm._v(
-                                            "\n                                                Precio\n                                                "
-                                          ),
-                                          _c("br"),
-                                          _vm._v(
-                                            "\n                                                unitario\n                                            "
-                                          )
-                                        ]
-                                      ),
-                                      _vm._v(" "),
-                                      _c(
-                                        "th",
-                                        {
-                                          staticClass: "text-center",
-                                          attrs: { width: "13%" }
-                                        },
-                                        [
-                                          _vm._v(
-                                            "\n                                                Total\n                                            "
-                                          )
-                                        ]
-                                      ),
-                                      _vm._v(" "),
-                                      _c("th", { staticClass: "text-center" }, [
-                                        _vm._v(
-                                          "\n                                                Almacen\n                                            "
-                                        )
-                                      ]),
-                                      _vm._v(" "),
-                                      _c("th", [
-                                        _vm._v("Max."),
-                                        _c("br"),
-                                        _vm._v("Cant.")
-                                      ])
-                                    ])
-                                  ]),
-                                  _vm._v(" "),
-                                  _c(
-                                    "tbody",
-                                    _vm._l(_vm.form.item_unit_types, function(
-                                      row,
-                                      index
-                                    ) {
-                                      return _c(
-                                        "tr",
-                                        { key: index },
-                                        [
-                                          row.id
-                                            ? [
-                                                _c(
-                                                  "td",
-                                                  {
-                                                    staticClass: "text-center"
-                                                  },
-                                                  [
-                                                    _vm._v(
-                                                      "\n                                                    " +
-                                                        _vm._s(
-                                                          row.unit_type_id
-                                                        ) +
-                                                        "\n                                                "
-                                                    )
-                                                  ]
-                                                ),
-                                                _vm._v(" "),
-                                                _c(
-                                                  "td",
-                                                  {
-                                                    staticClass: "text-center"
-                                                  },
-                                                  [
-                                                    _vm._v(
-                                                      "\n                                                    " +
-                                                        _vm._s(
-                                                          row.description
-                                                        ) +
-                                                        "\n                                                "
-                                                    )
-                                                  ]
-                                                ),
-                                                _vm._v(" "),
-                                                _c(
-                                                  "td",
-                                                  {
-                                                    staticClass: "text-center"
-                                                  },
-                                                  [
-                                                    _vm._v(
-                                                      "\n                                                    " +
-                                                        _vm._s(
-                                                          row.quantity_unit
-                                                        ) +
-                                                        "\n                                                "
-                                                    )
-                                                  ]
-                                                ),
-                                                _vm._v(" "),
-                                                _c(
-                                                  "td",
-                                                  {
-                                                    staticClass: "text-center"
-                                                  },
-                                                  [
-                                                    _c(
-                                                      "el-input",
-                                                      {
-                                                        on: {
-                                                          input: function(
-                                                            $event
-                                                          ) {
-                                                            return _vm.undToTotal(
-                                                              index,
-                                                              row.price2,
-                                                              row.quantity_unit
-                                                            )
-                                                          }
-                                                        },
-                                                        model: {
-                                                          value: row.price2,
-                                                          callback: function(
-                                                            $$v
-                                                          ) {
-                                                            _vm.$set(
-                                                              row,
-                                                              "price2",
-                                                              $$v
-                                                            )
-                                                          },
-                                                          expression:
-                                                            "row.price2"
-                                                        }
-                                                      },
-                                                      [
-                                                        _c("i", {
-                                                          staticClass:
-                                                            "el-icon-edit-outline",
-                                                          attrs: {
-                                                            slot: "prefix"
-                                                          },
-                                                          slot: "prefix"
-                                                        })
-                                                      ]
-                                                    )
-                                                  ],
-                                                  1
-                                                ),
-                                                _vm._v(" "),
-                                                _c(
-                                                  "td",
-                                                  {
-                                                    staticClass: "text-center"
-                                                  },
-                                                  [
-                                                    _c(
-                                                      "el-input",
-                                                      {
-                                                        on: {
-                                                          input: function(
-                                                            $event
-                                                          ) {
-                                                            return _vm.totalToUnd(
-                                                              index,
-                                                              row.total,
-                                                              row.quantity_unit
-                                                            )
-                                                          }
-                                                        },
-                                                        model: {
-                                                          value: row.total,
-                                                          callback: function(
-                                                            $$v
-                                                          ) {
-                                                            _vm.$set(
-                                                              row,
-                                                              "total",
-                                                              $$v
-                                                            )
-                                                          },
-                                                          expression:
-                                                            "row.total"
-                                                        }
-                                                      },
-                                                      [
-                                                        _c("i", {
-                                                          staticClass:
-                                                            "el-icon-edit-outline",
-                                                          attrs: {
-                                                            slot: "prefix"
-                                                          },
-                                                          slot: "prefix"
-                                                        })
-                                                      ]
-                                                    )
-                                                  ],
-                                                  1
-                                                ),
-                                                _vm._v(" "),
-                                                _c(
-                                                  "td",
-                                                  [
-                                                    _c(
-                                                      "el-select",
-                                                      {
-                                                        attrs: {
-                                                          clearable: ""
-                                                        },
-                                                        model: {
-                                                          value:
-                                                            row.warehouse_id,
-                                                          callback: function(
-                                                            $$v
-                                                          ) {
-                                                            _vm.$set(
-                                                              row,
-                                                              "warehouse_id",
-                                                              $$v
-                                                            )
-                                                          },
-                                                          expression:
-                                                            "\n                                                            row.warehouse_id\n                                                        "
-                                                        }
-                                                      },
-                                                      _vm._l(
-                                                        _vm.warehouses,
-                                                        function(w) {
-                                                          return _c(
-                                                            "el-option",
-                                                            {
-                                                              key: w.id,
-                                                              attrs: {
-                                                                value: w.id,
-                                                                label:
-                                                                  w.description
-                                                              }
-                                                            }
-                                                          )
-                                                        }
-                                                      ),
-                                                      1
-                                                    )
-                                                  ],
-                                                  1
-                                                ),
-                                                _vm._v(" "),
-                                                _c(
-                                                  "td",
-                                                  [
-                                                    _c("el-checkbox", {
-                                                      on: {
-                                                        change: function(
-                                                          $event
-                                                        ) {
-                                                          return _vm.selectedMax(
-                                                            index
-                                                          )
-                                                        }
-                                                      },
-                                                      model: {
-                                                        value: row.selected,
-                                                        callback: function(
-                                                          $$v
-                                                        ) {
-                                                          _vm.$set(
-                                                            row,
-                                                            "selected",
-                                                            $$v
-                                                          )
-                                                        },
-                                                        expression:
-                                                          "\n                                                            row.selected\n                                                        "
-                                                      }
-                                                    })
-                                                  ],
-                                                  1
-                                                ),
-                                                _vm._v(" "),
-                                                _c(
-                                                  "td",
-                                                  {
-                                                    staticClass:
-                                                      "series-table-actions text-end"
-                                                  },
-                                                  [
-                                                    _c(
-                                                      "button",
-                                                      {
-                                                        staticClass:
-                                                          "btn waves-effect waves-light btn-sm btn-danger",
-                                                        attrs: {
-                                                          type: "button"
-                                                        },
-                                                        on: {
-                                                          click: function(
-                                                            $event
-                                                          ) {
-                                                            $event.preventDefault()
-                                                            return _vm.clickDelete(
-                                                              row.id
-                                                            )
-                                                          }
-                                                        }
-                                                      },
-                                                      [
-                                                        _c("i", {
-                                                          staticClass:
-                                                            "fa fa-trash"
-                                                        })
-                                                      ]
-                                                    )
-                                                  ]
-                                                )
-                                              ]
-                                            : [
-                                                _c("td", [
-                                                  _c(
-                                                    "div",
-                                                    {
-                                                      staticClass: "form-group"
-                                                    },
-                                                    [
-                                                      _c(
-                                                        "el-select",
-                                                        {
-                                                          attrs: {
-                                                            dusk:
-                                                              "item_unit_type.unit_type_id"
-                                                          },
-                                                          model: {
-                                                            value:
-                                                              row.unit_type_id,
-                                                            callback: function(
-                                                              $$v
-                                                            ) {
-                                                              _vm.$set(
-                                                                row,
-                                                                "unit_type_id",
-                                                                $$v
-                                                              )
-                                                            },
-                                                            expression:
-                                                              "\n                                                                row.unit_type_id\n                                                            "
-                                                          }
-                                                        },
-                                                        _vm._l(
-                                                          _vm.unit_types,
-                                                          function(option) {
-                                                            return _c(
-                                                              "el-option",
-                                                              {
-                                                                key: option.id,
-                                                                attrs: {
-                                                                  value:
-                                                                    option.id,
-                                                                  label:
-                                                                    option.description
-                                                                }
-                                                              }
-                                                            )
-                                                          }
-                                                        ),
-                                                        1
-                                                      )
-                                                    ],
-                                                    1
-                                                  )
-                                                ]),
-                                                _vm._v(" "),
-                                                _c("td", [
-                                                  _c(
-                                                    "div",
-                                                    {
-                                                      staticClass: "form-group"
-                                                    },
-                                                    [
-                                                      _c(
-                                                        "el-input",
-                                                        {
-                                                          model: {
-                                                            value:
-                                                              row.description,
-                                                            callback: function(
-                                                              $$v
-                                                            ) {
-                                                              _vm.$set(
-                                                                row,
-                                                                "description",
-                                                                $$v
-                                                              )
-                                                            },
-                                                            expression:
-                                                              "\n                                                                row.description\n                                                            "
-                                                          }
-                                                        },
-                                                        [
-                                                          _c("i", {
-                                                            staticClass:
-                                                              "el-icon-edit-outline",
-                                                            attrs: {
-                                                              slot: "prefix"
-                                                            },
-                                                            slot: "prefix"
-                                                          })
-                                                        ]
-                                                      )
-                                                    ],
-                                                    1
-                                                  )
-                                                ]),
-                                                _vm._v(" "),
-                                                _c("td", [
-                                                  _c(
-                                                    "div",
-                                                    {
-                                                      staticClass: "form-group"
-                                                    },
-                                                    [
-                                                      _c(
-                                                        "el-input",
-                                                        {
-                                                          on: {
-                                                            input: function(
-                                                              $event
-                                                            ) {
-                                                              return _vm.undToTotal(
-                                                                index,
-                                                                row.price2,
-                                                                row.quantity_unit
-                                                              )
-                                                            }
-                                                          },
-                                                          model: {
-                                                            value:
-                                                              row.quantity_unit,
-                                                            callback: function(
-                                                              $$v
-                                                            ) {
-                                                              _vm.$set(
-                                                                row,
-                                                                "quantity_unit",
-                                                                $$v
-                                                              )
-                                                            },
-                                                            expression:
-                                                              "\n                                                                row.quantity_unit\n                                                            "
-                                                          }
-                                                        },
-                                                        [
-                                                          _c("i", {
-                                                            staticClass:
-                                                              "el-icon-edit-outline",
-                                                            attrs: {
-                                                              slot: "prefix"
-                                                            },
-                                                            slot: "prefix"
-                                                          })
-                                                        ]
-                                                      )
-                                                    ],
-                                                    1
-                                                  )
-                                                ]),
-                                                _vm._v(" "),
-                                                _c("td", [
-                                                  _c(
-                                                    "div",
-                                                    {
-                                                      staticClass: "form-group"
-                                                    },
-                                                    [
-                                                      _c(
-                                                        "el-input",
-                                                        {
-                                                          on: {
-                                                            input: function(
-                                                              $event
-                                                            ) {
-                                                              return _vm.undToTotal(
-                                                                index,
-                                                                row.price2,
-                                                                row.quantity_unit
-                                                              )
-                                                            }
-                                                          },
-                                                          model: {
-                                                            value: row.price2,
-                                                            callback: function(
-                                                              $$v
-                                                            ) {
-                                                              _vm.$set(
-                                                                row,
-                                                                "price2",
-                                                                $$v
-                                                              )
-                                                            },
-                                                            expression:
-                                                              "\n                                                                row.price2\n                                                            "
-                                                          }
-                                                        },
-                                                        [
-                                                          _c("i", {
-                                                            staticClass:
-                                                              "el-icon-edit-outline",
-                                                            attrs: {
-                                                              slot: "prefix"
-                                                            },
-                                                            slot: "prefix"
-                                                          })
-                                                        ]
-                                                      )
-                                                    ],
-                                                    1
-                                                  )
-                                                ]),
-                                                _vm._v(" "),
-                                                _c("td", [
-                                                  _c(
-                                                    "div",
-                                                    {
-                                                      staticClass: "form-group"
-                                                    },
-                                                    [
-                                                      _c(
-                                                        "el-input",
-                                                        {
-                                                          on: {
-                                                            input: function(
-                                                              $event
-                                                            ) {
-                                                              return _vm.totalToUnd(
-                                                                index,
-                                                                row.total,
-                                                                row.quantity_unit
-                                                              )
-                                                            }
-                                                          },
-                                                          model: {
-                                                            value: row.total,
-                                                            callback: function(
-                                                              $$v
-                                                            ) {
-                                                              _vm.$set(
-                                                                row,
-                                                                "total",
-                                                                $$v
-                                                              )
-                                                            },
-                                                            expression:
-                                                              "\n                                                                row.total\n                                                            "
-                                                          }
-                                                        },
-                                                        [
-                                                          _c("i", {
-                                                            staticClass:
-                                                              "el-icon-edit-outline",
-                                                            attrs: {
-                                                              slot: "prefix"
-                                                            },
-                                                            slot: "prefix"
-                                                          })
-                                                        ]
-                                                      )
-                                                    ],
-                                                    1
-                                                  )
-                                                ]),
-                                                _vm._v(" "),
-                                                _c(
-                                                  "td",
-                                                  [
-                                                    _c(
-                                                      "el-select",
-                                                      {
-                                                        attrs: {
-                                                          clearable: ""
-                                                        },
-                                                        model: {
-                                                          value:
-                                                            row.warehouse_id,
-                                                          callback: function(
-                                                            $$v
-                                                          ) {
-                                                            _vm.$set(
-                                                              row,
-                                                              "warehouse_id",
-                                                              $$v
-                                                            )
-                                                          },
-                                                          expression:
-                                                            "\n                                                            row.warehouse_id\n                                                        "
-                                                        }
-                                                      },
-                                                      _vm._l(
-                                                        _vm.warehouses,
-                                                        function(w) {
-                                                          return _c(
-                                                            "el-option",
-                                                            {
-                                                              key: w.id,
-                                                              attrs: {
-                                                                value: w.id,
-                                                                label:
-                                                                  w.description
-                                                              }
-                                                            }
-                                                          )
-                                                        }
-                                                      ),
-                                                      1
-                                                    )
-                                                  ],
-                                                  1
-                                                ),
-                                                _vm._v(" "),
-                                                _c(
-                                                  "td",
-                                                  [
-                                                    _c("el-checkbox", {
-                                                      on: {
-                                                        change: function(
-                                                          $event
-                                                        ) {
-                                                          return _vm.selectedMax(
-                                                            index
-                                                          )
-                                                        }
-                                                      },
-                                                      model: {
-                                                        value: row.selected,
-                                                        callback: function(
-                                                          $$v
-                                                        ) {
-                                                          _vm.$set(
-                                                            row,
-                                                            "selected",
-                                                            $$v
-                                                          )
-                                                        },
-                                                        expression:
-                                                          "\n                                                            row.selected\n                                                        "
-                                                      }
-                                                    })
-                                                  ],
-                                                  1
-                                                ),
-                                                _vm._v(" "),
-                                                _c(
-                                                  "td",
-                                                  {
-                                                    staticClass:
-                                                      "series-table-actions text-end"
-                                                  },
-                                                  [
-                                                    _c(
-                                                      "button",
-                                                      {
-                                                        staticClass:
-                                                          "btn waves-effect waves-light btn-sm btn-danger",
-                                                        attrs: {
-                                                          type: "button"
-                                                        },
-                                                        on: {
-                                                          click: function(
-                                                            $event
-                                                          ) {
-                                                            $event.preventDefault()
-                                                            return _vm.clickCancel(
-                                                              index
-                                                            )
-                                                          }
-                                                        }
-                                                      },
-                                                      [
-                                                        _c("i", {
-                                                          staticClass:
-                                                            "fa fa-trash"
-                                                        })
-                                                      ]
-                                                    )
-                                                  ]
-                                                )
-                                              ]
-                                        ],
-                                        2
-                                      )
-                                    }),
-                                    0
-                                  )
-                                ])
-                              ])
-                            ]
-                          )
-                        : _vm._e()
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("el-tab-pane", { attrs: { label: "Compras" } }, [
-                    _c("div", { staticClass: "row" }, [
-                      _c("div", { staticClass: "short-div col-md-8" }, [
-                        _c(
-                          "div",
-                          {
-                            staticClass: "form-group",
-                            class: {
-                              "has-danger":
-                                _vm.errors.purchase_affectation_igv_type_id
-                            }
-                          },
-                          [
-                            _c("label", { staticClass: "control-label" }, [
-                              _vm._v("Tipo de afectación (Compra)")
-                            ]),
-                            _vm._v(" "),
-                            _c(
-                              "el-select",
-                              {
-                                model: {
-                                  value:
-                                    _vm.form.purchase_affectation_igv_type_id,
-                                  callback: function($$v) {
-                                    _vm.$set(
-                                      _vm.form,
-                                      "purchase_affectation_igv_type_id",
-                                      $$v
-                                    )
-                                  },
-                                  expression:
-                                    "\n                                        form.purchase_affectation_igv_type_id\n                                    "
-                                }
-                              },
-                              _vm._l(_vm.affectation_igv_types, function(
-                                option
-                              ) {
-                                return _c("el-option", {
-                                  key: option.id,
-                                  attrs: {
-                                    value: option.id,
-                                    label: option.description
-                                  }
-                                })
-                              }),
-                              1
-                            ),
-                            _vm._v(" "),
-                            _vm.errors.purchase_affectation_igv_type_id
-                              ? _c("small", {
-                                  staticClass: "text-danger",
-                                  domProps: {
-                                    textContent: _vm._s(
-                                      _vm.errors
-                                        .purchase_affectation_igv_type_id[0]
-                                    )
-                                  }
-                                })
-                              : _vm._e()
-                          ],
-                          1
-                        )
-                      ]),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "short-div col-md-4" }, [
-                        _c(
-                          "div",
-                          {
-                            staticClass: "form-group",
-                            class: {
-                              "has-danger": _vm.errors.purchase_unit_price
-                            }
-                          },
-                          [
-                            _c("label", { staticClass: "control-label" }, [
-                              _vm._v("Precio Unitario (Compra)")
-                            ]),
-                            _vm._v(" "),
-                            _c(
-                              "el-input",
-                              {
-                                attrs: { dusk: "purchase_unit_price" },
-                                on: {
-                                  input:
-                                    _vm.calculatePercentageOfProfitByPurchase
-                                },
-                                model: {
-                                  value: _vm.form.purchase_unit_price,
-                                  callback: function($$v) {
-                                    _vm.$set(
-                                      _vm.form,
-                                      "purchase_unit_price",
-                                      $$v
-                                    )
-                                  },
-                                  expression: "form.purchase_unit_price"
-                                }
-                              },
-                              [
-                                _c("i", {
-                                  staticClass: "el-icon-edit-outline",
-                                  attrs: { slot: "prefix" },
-                                  slot: "prefix"
-                                })
-                              ]
-                            ),
-                            _vm._v(" "),
-                            _vm.errors.purchase_unit_price
-                              ? _c("small", {
-                                  staticClass: "text-danger",
-                                  domProps: {
-                                    textContent: _vm._s(
-                                      _vm.errors.purchase_unit_price[0]
-                                    )
-                                  }
-                                })
-                              : _vm._e()
-                          ],
-                          1
-                        )
-                      ]),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "short-div col-md-4" }, [
-                        _c(
-                          "div",
-                          {
-                            staticClass: "form-group",
-                            class: {
-                              "has-danger": _vm.errors.percentage_of_profit
-                            }
-                          },
-                          [
-                            _c(
-                              "label",
-                              { staticClass: "control-label" },
-                              [
-                                _c("el-checkbox", {
-                                  on: {
-                                    change: _vm.changeEnabledPercentageOfProfit
-                                  },
-                                  model: {
-                                    value: _vm.enabled_percentage_of_profit,
-                                    callback: function($$v) {
-                                      _vm.enabled_percentage_of_profit = $$v
-                                    },
-                                    expression:
-                                      "\n                                            enabled_percentage_of_profit\n                                        "
-                                  }
-                                }),
-                                _vm._v(
-                                  "\n                                    Porcentaje de ganancia (%)\n                                "
-                                )
-                              ],
-                              1
-                            ),
-                            _vm._v(" "),
-                            _c(
-                              "el-input",
-                              {
-                                attrs: {
-                                  disabled: !_vm.enabled_percentage_of_profit
-                                },
-                                on: {
-                                  input:
-                                    _vm.calculatePercentageOfProfitByPercentage
-                                },
-                                model: {
-                                  value: _vm.form.percentage_of_profit,
-                                  callback: function($$v) {
-                                    _vm.$set(
-                                      _vm.form,
-                                      "percentage_of_profit",
-                                      $$v
-                                    )
-                                  },
-                                  expression: "form.percentage_of_profit"
-                                }
-                              },
-                              [
-                                _c("i", {
-                                  staticClass: "el-icon-edit-outline",
-                                  attrs: { slot: "prefix" },
-                                  slot: "prefix"
-                                })
-                              ]
-                            ),
-                            _vm._v(" "),
-                            _vm.errors.percentage_of_profit
-                              ? _c("small", {
-                                  staticClass: "text-danger",
-                                  domProps: {
-                                    textContent: _vm._s(
-                                      _vm.errors.percentage_of_profit[0]
-                                    )
-                                  }
-                                })
-                              : _vm._e()
-                          ],
-                          1
+                          }),
+                          0
                         )
                       ])
                     ])
                   ])
-                ],
-                1
-              )
-            ],
-            1
-          ),
-          _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "form-actions text-end pt-2 pb-2" },
-            [
-              _c(
-                "el-button",
-                {
-                  on: {
-                    click: function($event) {
-                      $event.preventDefault()
-                      return _vm.close()
-                    }
-                  }
-                },
-                [_vm._v("Cancelar")]
-              ),
-              _vm._v(" "),
-              _c(
-                "el-button",
-                {
-                  attrs: {
-                    type: "primary",
-                    "native-type": "submit",
-                    loading: _vm.loading_submit
-                  }
-                },
-                [_vm._v("Guardar")]
+                ]
               )
             ],
             1
           )
-        ]
+        ],
+        1
       ),
       _vm._v(" "),
-      _c("lots-form", {
+      _c(
+        "div",
+        {
+          staticClass: "dialog-footer",
+          attrs: { slot: "footer" },
+          slot: "footer"
+        },
+        [
+          _c("el-button", { on: { click: _vm.close } }, [_vm._v("Cancelar")]),
+          _vm._v(" "),
+          _c(
+            "el-button",
+            { attrs: { type: "primary" }, on: { click: _vm.sendData } },
+            [_vm._v("Guardar")]
+          )
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c("person-form", {
         attrs: {
-          showDialog: _vm.showDialogLots,
-          stock: _vm.form.stock,
-          recordId: _vm.recordId,
-          lots: _vm.form.lots
+          external: false,
+          recordId: _vm.currentPersonId,
+          showDialog: _vm.showDialogNewPerson
         },
         on: {
           "update:showDialog": function($event) {
-            _vm.showDialogLots = $event
+            _vm.showDialogNewPerson = $event
           },
           "update:show-dialog": function($event) {
-            _vm.showDialogLots = $event
-          },
-          addRowLot: _vm.addRowLot
+            _vm.showDialogNewPerson = $event
+          }
         }
       })
     ],
@@ -5885,342 +2295,36 @@ module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-cd4ba31c", module.exports)
+    require("vue-hot-reload-api")      .rerender("data-v-bf046f30", module.exports)
   }
 }
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-f9fd823e\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/js/views/items/partials/lots.vue":
+/***/ "./node_modules/vue-style-loader/index.js!./node_modules/css-loader/index.js?sourceMap!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-bf046f30\",\"scoped\":false,\"hasInlineConfig\":true}!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./modules/College/Resources/assets/js/views/persons/form.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "el-dialog",
-    {
-      attrs: {
-        title: _vm.titleDialog,
-        width: "40%",
-        visible: _vm.showDialog,
-        "close-on-click-modal": false,
-        "close-on-press-escape": false,
-        "append-to-body": "",
-        "show-close": false
-      },
-      on: { open: _vm.create }
-    },
-    [
-      _c("div", { staticClass: "form-body" }, [
-        _c("div", { staticClass: "row" }, [
-          _c(
-            "div",
-            { staticClass: "col-lg-12 col-md-12" },
-            [
-              _c("table", { attrs: { width: "100%" } }, [
-                _c("thead", [
-                  _c("tr", { attrs: { width: "100%" } }, [
-                    _vm.lots.length > 0
-                      ? _c("th", [_vm._v("Serie")])
-                      : _vm._e(),
-                    _vm._v(" "),
-                    _vm.lots.length > 0
-                      ? _c("th", [_vm._v("Estado")])
-                      : _vm._e(),
-                    _vm._v(" "),
-                    _vm.lots.length > 0
-                      ? _c("th", [_vm._v("Fecha")])
-                      : _vm._e(),
-                    _vm._v(" "),
-                    _c("th", { attrs: { width: "15%" } }, [
-                      _c(
-                        "a",
-                        {
-                          staticClass: "text-center font-weight-bold text-info",
-                          attrs: { href: "#" },
-                          on: {
-                            click: function($event) {
-                              $event.preventDefault()
-                              return _vm.clickAddLot.apply(null, arguments)
-                            }
-                          }
-                        },
-                        [_vm._v("[+ Agregar]")]
-                      )
-                    ])
-                  ])
-                ]),
-                _vm._v(" "),
-                _c(
-                  "tbody",
-                  _vm._l(_vm.lots_splice, function(row, index) {
-                    return _c("tr", { key: index, attrs: { width: "100%" } }, [
-                      _c("td", [
-                        _c(
-                          "div",
-                          { staticClass: "form-group mb-2 mr-2" },
-                          [
-                            _c(
-                              "el-input",
-                              {
-                                on: {
-                                  blur: function($event) {
-                                    return _vm.duplicateSerie(row.series, index)
-                                  }
-                                },
-                                model: {
-                                  value: row.series,
-                                  callback: function($$v) {
-                                    _vm.$set(row, "series", $$v)
-                                  },
-                                  expression: "row.series"
-                                }
-                              },
-                              [
-                                _c("i", {
-                                  staticClass: "el-icon-edit-outline",
-                                  attrs: { slot: "prefix" },
-                                  slot: "prefix"
-                                })
-                              ]
-                            )
-                          ],
-                          1
-                        )
-                      ]),
-                      _vm._v(" "),
-                      _c("td", [
-                        _c(
-                          "div",
-                          { staticClass: "form-group mb-2 mr-2" },
-                          [
-                            _c(
-                              "el-select",
-                              {
-                                model: {
-                                  value: row.state,
-                                  callback: function($$v) {
-                                    _vm.$set(row, "state", $$v)
-                                  },
-                                  expression: "row.state"
-                                }
-                              },
-                              _vm._l(_vm.states, function(option, index) {
-                                return _c("el-option", {
-                                  key: index,
-                                  attrs: { value: option, label: option }
-                                })
-                              }),
-                              1
-                            )
-                          ],
-                          1
-                        )
-                      ]),
-                      _vm._v(" "),
-                      _c("td", [
-                        _c(
-                          "div",
-                          { staticClass: "form-group mb-2 mr-2" },
-                          [
-                            _c("el-date-picker", {
-                              attrs: {
-                                type: "date",
-                                "value-format": "yyyy-MM-dd",
-                                clearable: false
-                              },
-                              model: {
-                                value: row.date,
-                                callback: function($$v) {
-                                  _vm.$set(row, "date", $$v)
-                                },
-                                expression: "row.date"
-                              }
-                            })
-                          ],
-                          1
-                        )
-                      ]),
-                      _vm._v(" "),
-                      _c(
-                        "td",
-                        { staticClass: "series-table-actions text-center" },
-                        [
-                          _c(
-                            "button",
-                            {
-                              staticClass:
-                                "btn waves-effect waves-light btn-sm btn-danger",
-                              attrs: { type: "button" },
-                              on: {
-                                click: function($event) {
-                                  $event.preventDefault()
-                                  return _vm.clickCancel(index)
-                                }
-                              }
-                            },
-                            [_c("i", { staticClass: "fa fa-trash" })]
-                          )
-                        ]
-                      ),
-                      _vm._v(" "),
-                      _c("br")
-                    ])
-                  }),
-                  0
-                )
-              ]),
-              _vm._v(" "),
-              _c("el-pagination", {
-                attrs: {
-                  "current-page": _vm.currentPage,
-                  "page-size": 20,
-                  total: _vm.lots.length,
-                  layout: "total, prev, pager, next"
-                },
-                on: { "current-change": _vm.handleCurrentChange }
-              })
-            ],
-            1
-          )
-        ])
-      ]),
-      _vm._v(" "),
-      _c(
-        "div",
-        { staticClass: "form-actions text-end pt-2 pb-2" },
-        [
-          _c(
-            "el-button",
-            {
-              on: {
-                click: function($event) {
-                  $event.preventDefault()
-                  return _vm.clickCancelSubmit()
-                }
-              }
-            },
-            [_vm._v("Cancelar")]
-          ),
-          _vm._v(" "),
-          _c(
-            "el-button",
-            { attrs: { type: "primary" }, on: { click: _vm.submit } },
-            [_vm._v("Guardar")]
-          )
-        ],
-        1
-      )
-    ]
-  )
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__("./node_modules/css-loader/index.js?sourceMap!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-bf046f30\",\"scoped\":false,\"hasInlineConfig\":true}!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./modules/College/Resources/assets/js/views/persons/form.vue");
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__("./node_modules/vue-style-loader/lib/addStylesClient.js")("6f8e682d", content, false, {});
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../../../../node_modules/css-loader/index.js?sourceMap!../../../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-bf046f30\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./form.vue", function() {
+     var newContent = require("!!../../../../../../../node_modules/css-loader/index.js?sourceMap!../../../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-bf046f30\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./form.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
 }
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-f9fd823e", module.exports)
-  }
-}
-
-/***/ }),
-
-/***/ "./resources/js/views/items/form.vue":
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__("./node_modules/vue-loader/lib/component-normalizer.js")
-/* script */
-var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/js/views/items/form.vue")
-/* template */
-var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-cd4ba31c\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/js/views/items/form.vue")
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources/js/views/items/form.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-cd4ba31c", Component.options)
-  } else {
-    hotAPI.reload("data-v-cd4ba31c", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-
-/***/ "./resources/js/views/items/partials/lots.vue":
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__("./node_modules/vue-loader/lib/component-normalizer.js")
-/* script */
-var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/js/views/items/partials/lots.vue")
-/* template */
-var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-f9fd823e\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/js/views/items/partials/lots.vue")
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources/js/views/items/partials/lots.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-f9fd823e", Component.options)
-  } else {
-    hotAPI.reload("data-v-f9fd823e", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
 
 /***/ })
 

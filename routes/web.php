@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Tenant\ClientZoneController;
+use App\Http\Controllers\Tenant\CommercialTreatmentController;
 use App\Http\Controllers\Tenant\DispatchController;
 use App\Http\Controllers\Tenant\InventoryController;
 use App\Http\Controllers\Tenant\ItemController;
@@ -9,6 +10,7 @@ use App\Http\Controllers\Tenant\TollController;
 use App\Http\Controllers\Tenant\WhatsappController;
 use App\Http\Controllers\Tenant\PurchaseController;
 use App\Http\Controllers\Tenant\SellerController;
+use App\Models\Tenant\CommercialTreatment;
 use App\Models\Tenant\Dispatch;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -44,7 +46,20 @@ if ($hostname) {
             Route::post('auth', [App\Http\Controllers\Tenant\LoginController::class, 'authenticate'])->name('authenticate');
 
             Route::middleware(['auth', 'redirect.module', 'locked.tenant'])->group(function () {
-
+                Route::prefix('/commercial_treatment')
+                ->group(function (){
+                    Route::get('/', [CommercialTreatmentController::class, 'index'])->name('tenant.commercial_treatment.index');
+                    Route::get('/columns', [CommercialTreatmentController::class, 'columns']);
+                    Route::get('/records', [CommercialTreatmentController::class, 'records']);
+                    Route::get('/record/{id}', [CommercialTreatmentController::class, 'record']);
+                    Route::post('/', [CommercialTreatmentController::class, 'store']);
+                    Route::prefix('categories')
+                    ->group(function (){
+                        
+                        Route::get('/records/{commercial_treatment_id}', [CommercialTreatmentController::class, 'records_categories']);
+                        Route::post('/{commercial_treatment_id}', [CommercialTreatmentController::class, 'store_categories']);
+                    });
+                });
                 Route::prefix('/sellers')->group(function () {
                     //
                     Route::get('/', [SellerController::class, 'index'])->name('tenant.sellers.index');

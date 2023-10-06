@@ -1,14 +1,14 @@
 webpackJsonp([140],{
 
-/***/ "./modules/Consignment/Resources/assets/js/views/partials/penalty_form.vue":
+/***/ "./modules/Internet/Resources/assets/js/view/cash/form.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__("./node_modules/vue-loader/lib/component-normalizer.js")
 /* script */
-var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/Consignment/Resources/assets/js/views/partials/penalty_form.vue")
+var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/Internet/Resources/assets/js/view/cash/form.vue")
 /* template */
-var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-2c2e76ba\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Consignment/Resources/assets/js/views/partials/penalty_form.vue")
+var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-230eaac2\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Internet/Resources/assets/js/view/cash/form.vue")
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -25,7 +25,7 @@ var Component = normalizeComponent(
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "modules/Consignment/Resources/assets/js/views/partials/penalty_form.vue"
+Component.options.__file = "modules/Internet/Resources/assets/js/view/cash/form.vue"
 
 /* hot reload */
 if (false) {(function () {
@@ -34,9 +34,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-2c2e76ba", Component.options)
+    hotAPI.createRecord("data-v-230eaac2", Component.options)
   } else {
-    hotAPI.reload("data-v-2c2e76ba", Component.options)
+    hotAPI.reload("data-v-230eaac2", Component.options)
   }
   module.hot.dispose(function (data) {
     disposed = true
@@ -48,7 +48,7 @@ module.exports = Component.exports
 
 /***/ }),
 
-/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/Consignment/Resources/assets/js/views/partials/penalty_form.vue":
+/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/Internet/Resources/assets/js/view/cash/form.vue":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -131,91 +131,237 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ["showDialog"],
+  props: ["showDialog", "recordId", "typeUser", "fromBox"],
   data: function data() {
     return {
-      resource: '/consignment/penalty',
-      loading: false,
-      form: {
-        id: null,
-        description: null,
-        type: 'percent',
-        amount: 0.0
-      }
+      loading_submit: false,
+      titleDialog: null,
+      resource: "caja/worker/cash",
+      errors: {},
+      form: {},
+      user: {},
+      all_departments: [],
+      all_provinces: [],
+      all_districts: [],
+      provinces: [],
+      districts: [],
+      identity_document_types: [],
+      users: [],
+      turnsTable: [],
+      dontClose: false
     };
   },
+  created: function created() {
+    var _this = this;
+
+    return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee() {
+      return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              _context.next = 2;
+              return _this.$http.get("/".concat(_this.resource, "/tables")).then(function (response) {
+                _this.users = response.data.users;
+                _this.user = response.data.user;
+                _this.turnsTable = response.data.turnsTable;
+              });
+
+            case 2:
+              _this.initForm();
+
+            case 3:
+            case "end":
+              return _context.stop();
+          }
+        }
+      }, _callee);
+    }))();
+  },
+  computed: {
+    disableUser: function disableUser() {
+      if (this.typeUser == "admin" || this.typeUser === "superadmin") {
+        return false;
+      }
+
+      return true;
+    }
+  },
   methods: {
-    open: function open() {
+    ocultarBoton: function ocultarBoton() {
+      this.$emit("ocultarBoton");
+    },
+    initForm: function initForm() {
+      this.errors = {};
       this.form = {
         id: null,
-        description: null,
-        type: 'percent',
-        amount: 0.0
+        user_id: this.user.id,
+        // user: null,
+        date_opening: null,
+        time_opening: null,
+        date_closed: null,
+        time_closed: null,
+        beginning_balance: 0,
+        final_balance: 0,
+        income: 0,
+        state: true,
+        reference_number: null
       };
     },
-    close: function close() {
-      this.$emit('update:showDialog', false);
-    },
     create: function create() {
-      var _this = this;
+      var _this2 = this;
 
-      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee() {
-        var response;
-        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee$(_context) {
+      this.titleDialog = this.recordId ? "Editar Caja" : "Aperturar Caja";
+
+      if (this.recordId) {
+        this.$http.get("/".concat(this.resource, "/record/").concat(this.recordId)).then(function (response) {
+          _this2.form = response.data.data;
+        });
+      } else {
+        this.form.user_id = this.user.id; //sesion
+        //this.form.user = this.user.name
+      }
+    },
+    openingCashCkeck: function openingCashCkeck() {
+      var _this3 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee2() {
+        var response, cash;
+        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee2$(_context2) {
           while (1) {
-            switch (_context.prev = _context.next) {
+            switch (_context2.prev = _context2.next) {
               case 0:
-                _context.prev = 0;
-                _this.loading = true;
-                _context.next = 4;
-                return _this.$http.post(_this.resource, _this.form);
+                _context2.next = 2;
+                return _this3.$http.get("/".concat(_this3.resource, "/opening_cash_check/").concat(_this3.form.user_id));
 
-              case 4:
-                response = _context.sent;
+              case 2:
+                response = _context2.sent;
+                cash = response.data.cash;
+                return _context2.abrupt("return", cash ? true : false);
 
-                if (response.data.success) {
-                  _this.$message({
-                    type: 'success',
-                    message: 'Penalización creada correctamente'
-                  });
-
-                  _this.$emit('reloadPenalties', response.data.id);
-
-                  _this.close();
-                }
-
-                _context.next = 11;
-                break;
-
-              case 8:
-                _context.prev = 8;
-                _context.t0 = _context["catch"](0);
-
-                _this.$message({
-                  type: 'error',
-                  message: 'Ocurrió un error al crear la penalización'
-                });
-
-              case 11:
-                _context.prev = 11;
-                _this.loading = false;
-                return _context.finish(11);
-
-              case 14:
+              case 5:
               case "end":
-                return _context.stop();
+                return _context2.stop();
             }
           }
-        }, _callee, null, [[0, 8, 11, 14]]);
+        }, _callee2);
       }))();
+    },
+    submit: function submit() {
+      var _this4 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee3() {
+        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                _this4.loading_submit = true;
+
+                if (!(_this4.form.turn_id == undefined)) {
+                  _context3.next = 5;
+                  break;
+                }
+
+                _this4.$toast.warning("La opcion 'Seleccionar turno de apertura' no puede ser un campo vacio, por favor seleccione una opcion");
+
+                _this4.loading_submit = false;
+                return _context3.abrupt("return", false);
+
+              case 5:
+                if (_this4.recordId) {
+                  _context3.next = 12;
+                  break;
+                }
+
+                _context3.next = 8;
+                return _this4.openingCashCkeck();
+
+              case 8:
+                if (!_context3.sent) {
+                  _context3.next = 12;
+                  break;
+                }
+
+                _this4.$toast.warning("No puede crear caja, porfavor cierre caja para el usuario definido");
+
+                _this4.loading_submit = false;
+                return _context3.abrupt("return", false);
+
+              case 12:
+                _this4.$http.post("/".concat(_this4.resource), _this4.form).then(function (response) {
+                  console.log(response);
+
+                  if (response.data.success) {
+                    _this4.$toast.success(response.data.message);
+
+                    if (_this4.form.user_id === _this4.user.id) _this4.$eventHub.$emit("openCash");
+
+                    _this4.$eventHub.$emit("reloadData");
+
+                    if (_this4.fromBox) {
+                      _this4.$emit("updateCashId", response.data.cash_id);
+                    } // window.open('/pos/init')
+
+
+                    _this4.close();
+
+                    _this4.ocultarBoton();
+                  } else {
+                    _this4.$toast.error(response.data.message);
+                  }
+                })["catch"](function (error) {
+                  if (error.response.status === 422) {
+                    _this4.errors = error.response.data;
+                  } else {
+                    console.log(error);
+                  }
+                }).then(function () {
+                  _this4.loading_submit = false;
+                });
+
+              case 13:
+              case "end":
+                return _context3.stop();
+            }
+          }
+        }, _callee3);
+      }))();
+    },
+    close: function close() {
+      this.$emit("update:showDialog", false);
+      this.initForm();
     }
   }
 });
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-2c2e76ba\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Consignment/Resources/assets/js/views/partials/penalty_form.vue":
+/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-230eaac2\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Internet/Resources/assets/js/view/cash/form.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -225,126 +371,197 @@ var render = function() {
   return _c(
     "el-dialog",
     {
-      directives: [
-        {
-          name: "loading",
-          rawName: "v-loading",
-          value: _vm.loading,
-          expression: "loading"
-        }
-      ],
       attrs: {
+        title: _vm.titleDialog,
         visible: _vm.showDialog,
-        title: "Creación de penalización",
-        "append-to-body": "",
-        width: "500px"
+        "data-keyboard": false,
+        closeOnPressEscape: _vm.dontClose,
+        closeOnClickModal: _vm.dontClose
       },
-      on: { open: _vm.open, close: _vm.close }
+      on: { close: _vm.close, open: _vm.create }
     },
     [
-      _c("div", { staticClass: "row m-2" }, [
-        _c(
-          "div",
-          { staticClass: "col-md-12" },
-          [
-            _c("label", { attrs: { for: "description" } }, [
-              _vm._v("Descripción")
-            ]),
-            _vm._v(" "),
-            _c("el-input", {
-              staticClass: "w-100",
-              attrs: {
-                placeholder: "Descripción de la penalización",
-                type: "text",
-                dusk: "description"
-              },
-              model: {
-                value: _vm.form.description,
-                callback: function($$v) {
-                  _vm.$set(_vm.form, "description", $$v)
-                },
-                expression: "form.description"
-              }
-            })
-          ],
-          1
-        ),
-        _vm._v(" "),
-        _c(
-          "div",
-          { staticClass: "col-md-12" },
-          [
-            _c("label", { attrs: { for: "type" } }, [_vm._v("Tipo")]),
-            _vm._v(" "),
-            _c(
-              "el-select",
-              {
-                staticClass: "w-100",
-                attrs: { placeholder: "Seleccione un tipo", dusk: "type" },
-                model: {
-                  value: _vm.form.type,
-                  callback: function($$v) {
-                    _vm.$set(_vm.form, "type", $$v)
-                  },
-                  expression: "form.type"
-                }
-              },
-              [
-                _c("el-option", {
-                  attrs: { label: "Porcentaje", value: "percent" }
-                }),
-                _vm._v(" "),
-                _c("el-option", { attrs: { label: "Fijo", value: "fixed" } })
-              ],
-              1
-            )
-          ],
-          1
-        ),
-        _vm._v(" "),
-        _c(
-          "div",
-          { staticClass: "col-md-12" },
-          [
-            _c("label", { attrs: { for: "amount" } }, [_vm._v("Valor")]),
-            _vm._v(" "),
-            _c("el-input", {
-              staticClass: "w-100",
-              attrs: {
-                placeholder: "Valor de la penalización",
-                type: "number",
-                dusk: "amount"
-              },
-              model: {
-                value: _vm.form.amount,
-                callback: function($$v) {
-                  _vm.$set(_vm.form, "amount", $$v)
-                },
-                expression: "form.amount"
-              }
-            })
-          ],
-          1
-        )
-      ]),
-      _vm._v(" "),
       _c(
-        "div",
+        "form",
         {
-          staticClass: "dialog-footer",
-          attrs: { slot: "footer" },
-          slot: "footer"
+          attrs: { autocomplete: "off" },
+          on: {
+            submit: function($event) {
+              $event.preventDefault()
+              return _vm.submit.apply(null, arguments)
+            }
+          }
         },
         [
-          _c("el-button", { on: { click: _vm.close } }, [_vm._v("Cancelar")]),
+          _c("div", { staticClass: "form-body" }, [
+            _c("div", { staticClass: "row" }, [
+              _c("div", { staticClass: "col-md-6" }, [
+                _c(
+                  "div",
+                  { staticClass: "form-group" },
+                  [
+                    _c("label", { staticClass: "control-label" }, [
+                      _vm._v("Cajero ")
+                    ]),
+                    _vm._v(" "),
+                    _c(
+                      "el-select",
+                      {
+                        attrs: { disabled: _vm.disableUser },
+                        model: {
+                          value: _vm.form.user_id,
+                          callback: function($$v) {
+                            _vm.$set(_vm.form, "user_id", $$v)
+                          },
+                          expression: "form.user_id"
+                        }
+                      },
+                      _vm._l(_vm.users, function(option) {
+                        return _c("el-option", {
+                          key: option.id,
+                          attrs: { value: option.id, label: option.name }
+                        })
+                      }),
+                      1
+                    ),
+                    _vm._v(" "),
+                    _vm.errors.user
+                      ? _c("small", {
+                          staticClass: "form-control-feedback",
+                          domProps: { textContent: _vm._s(_vm.errors.user[0]) }
+                        })
+                      : _vm._e()
+                  ],
+                  1
+                )
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-md-6" }, [
+                _c(
+                  "div",
+                  {
+                    staticClass: "form-group",
+                    class: { "has-danger": _vm.errors.beginning_balance }
+                  },
+                  [
+                    _c("label", { staticClass: "control-label" }, [
+                      _vm._v(
+                        "Saldo inicial de Apertura\n                        "
+                      )
+                    ]),
+                    _vm._v(" "),
+                    _c(
+                      "el-input",
+                      {
+                        model: {
+                          value: _vm.form.beginning_balance,
+                          callback: function($$v) {
+                            _vm.$set(_vm.form, "beginning_balance", $$v)
+                          },
+                          expression: "form.beginning_balance"
+                        }
+                      },
+                      [
+                        _c("i", {
+                          staticClass: "el-icon-edit-outline",
+                          attrs: { slot: "prefix" },
+                          slot: "prefix"
+                        })
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _vm.errors.beginning_balance
+                      ? _c("small", {
+                          staticClass: "form-control-feedback",
+                          domProps: {
+                            textContent: _vm._s(_vm.errors.beginning_balance[0])
+                          }
+                        })
+                      : _vm._e()
+                  ],
+                  1
+                )
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-md-6" }, [
+                _c(
+                  "div",
+                  {
+                    staticClass: "form-group",
+                    class: { "has-danger": _vm.errors.reference_number }
+                  },
+                  [
+                    _c("label", { staticClass: "control-label" }, [
+                      _vm._v("Seleccionar Turno de Apertura")
+                    ]),
+                    _vm._v(" "),
+                    _c(
+                      "el-select",
+                      {
+                        model: {
+                          value: _vm.form.turn_id,
+                          callback: function($$v) {
+                            _vm.$set(_vm.form, "turn_id", $$v)
+                          },
+                          expression: "form.turn_id"
+                        }
+                      },
+                      _vm._l(_vm.turnsTable, function(option) {
+                        return _c("el-option", {
+                          key: option.id,
+                          attrs: { value: option.id, label: option.turn_desc }
+                        })
+                      }),
+                      1
+                    ),
+                    _vm._v(" "),
+                    _vm.errors.reference_number
+                      ? _c("small", {
+                          staticClass: "form-control-feedback",
+                          domProps: {
+                            textContent: _vm._s(_vm.errors.reference_number[0])
+                          }
+                        })
+                      : _vm._e()
+                  ],
+                  1
+                )
+              ])
+            ])
+          ]),
           _vm._v(" "),
           _c(
-            "el-button",
-            { attrs: { type: "primary" }, on: { click: _vm.create } },
-            [_vm._v("Guardar")]
+            "div",
+            { staticClass: "form-actions text-end pt-2 pb-2" },
+            [
+              _c(
+                "el-button",
+                {
+                  on: {
+                    click: function($event) {
+                      $event.preventDefault()
+                      return _vm.close()
+                    }
+                  }
+                },
+                [_vm._v("Cancelar")]
+              ),
+              _vm._v(" "),
+              _c(
+                "el-button",
+                {
+                  attrs: {
+                    type: "primary",
+                    "native-type": "submit",
+                    loading: _vm.loading_submit
+                  }
+                },
+                [_vm._v("Guardar")]
+              )
+            ],
+            1
           )
-        ],
-        1
+        ]
       )
     ]
   )
@@ -355,7 +572,7 @@ module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-2c2e76ba", module.exports)
+    require("vue-hot-reload-api")      .rerender("data-v-230eaac2", module.exports)
   }
 }
 

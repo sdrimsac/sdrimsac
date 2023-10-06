@@ -1,4 +1,4 @@
-webpackJsonp([22,98,125,128,137],{
+webpackJsonp([22,99,126,129,138],{
 
 /***/ "./node_modules/@ckeditor/ckeditor5-build-classic/build/ckeditor.js":
 /***/ (function(module, exports, __webpack_require__) {
@@ -7310,12 +7310,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 var DocumentOptions = function DocumentOptions() {
-  return __webpack_require__.e/* import() */(170).then(__webpack_require__.bind(null, "./resources/js/views/documents/partials/options.vue"));
+  return __webpack_require__.e/* import() */(171).then(__webpack_require__.bind(null, "./resources/js/views/documents/partials/options.vue"));
 }; // import DocumentOptions from "../../documents/partials/options.vue";
 
 
 var SaleNoteOptions = function SaleNoteOptions() {
-  return __webpack_require__.e/* import() */(166).then(__webpack_require__.bind(null, "./resources/js/views/sale_notes/partials/options.vue"));
+  return __webpack_require__.e/* import() */(167).then(__webpack_require__.bind(null, "./resources/js/views/sale_notes/partials/options.vue"));
 }; // import SaleNoteOptions from "../../sale_notes/partials/options.vue";
 
 

@@ -1,131 +1,6 @@
 webpackJsonp([227],{
 
-/***/ "./modules/Restaurant/Resources/assets/js/views/login/login.vue":
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__("./node_modules/vue-loader/lib/component-normalizer.js")
-/* script */
-var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/Restaurant/Resources/assets/js/views/login/login.vue")
-/* template */
-var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-0814b47c\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Restaurant/Resources/assets/js/views/login/login.vue")
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "modules/Restaurant/Resources/assets/js/views/login/login.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-0814b47c", Component.options)
-  } else {
-    hotAPI.reload("data-v-0814b47c", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-
-/***/ "./modules/Restaurant/Resources/assets/js/views/login/pad.vue":
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__("./node_modules/vue-loader/lib/component-normalizer.js")
-/* script */
-var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/Restaurant/Resources/assets/js/views/login/pad.vue")
-/* template */
-var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-7de5de2c\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Restaurant/Resources/assets/js/views/login/pad.vue")
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "modules/Restaurant/Resources/assets/js/views/login/pad.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-7de5de2c", Component.options)
-  } else {
-    hotAPI.reload("data-v-7de5de2c", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-
-/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/Restaurant/Resources/assets/js/views/login/login.vue":
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__pad_vue__ = __webpack_require__("./modules/Restaurant/Resources/assets/js/views/login/pad.vue");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__pad_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__pad_vue__);
-//
-//
-//
-//
-//
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-  components: {
-    Pad: __WEBPACK_IMPORTED_MODULE_0__pad_vue___default.a
-  },
-  data: function data() {
-    return {
-      user: "tesctiyo"
-    };
-  },
-  created: function created() {
-    console.log("creado");
-  }
-});
-
-/***/ }),
-
-/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/Restaurant/Resources/assets/js/views/login/pad.vue":
+/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/js/views/commercial_treatment/form.vue":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -164,149 +39,179 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
+  props: ["recordId", "showDialog"],
   data: function data() {
     return {
-      maskPin: null,
-      pinHide: "",
-      person: null,
-      persons: ["Administrador", "Mozo", "Cocinero"]
+      title: null,
+      form: {},
+      loading: false,
+      resource: "commercial_treatment"
     };
   },
+  created: function created() {},
   methods: {
-    getOption: function getOption(option) {
-      if (option == "delete") {
-        this.pinHide = "";
-        this.maskPin = null;
-        return;
-      }
-
-      if (this.pinHide && this.pinHide.length == 4) {
-        return;
-      }
-
-      this.pinHide += option.toString();
-      this.maskPin = "*".repeat(this.pinHide.length);
+    initForm: function initForm() {
+      this.form = {
+        id: null,
+        description: null,
+        is_amount: true
+      };
     },
-    enter: function enter() {
+    submit: function submit() {
       var _this = this;
 
       return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee() {
-        var response, _response$data, success, kitchen, pos;
-
+        var description;
         return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                _context.next = 2;
-                return _this.$http.post("login", {
-                  pin: _this.pinHide
-                });
+                description = _this.form.description;
 
-              case 2:
-                response = _context.sent;
-                _response$data = response.data, success = _response$data.success, kitchen = _response$data.kitchen, pos = _response$data.pos;
-
-                if (success) {
-                  _this.$toast.success("Sesión exitosa. Bienvenido/a .");
-
-                  if (kitchen) {
-                    window.location.href = "worker/dashboard-kitchen";
-                  } else if (pos) {
-                    window.location.href = "worker/dashboard-pos";
-                  } else {
-                    window.location.href = "worker/dashboard";
-                  }
-                } else {
-                  _this.$toast.error("El PIN no existe. Vuelva a intentarlo.");
-
-                  _this.pinHide = "";
-                  _this.maskPin = null;
+                if (description) {
+                  _context.next = 4;
+                  break;
                 }
 
-              case 5:
+                _this.$message.error("Debe ingresar una descripción");
+
+                return _context.abrupt("return");
+
+              case 4:
+                _context.prev = 4;
+                _this.loading = true;
+                _context.next = 8;
+                return _this.$http.post(_this.resource, _this.form);
+
+              case 8:
+                _this.$eventHub.$emit("reloadData");
+
+                _this.close();
+
+                _context.next = 15;
+                break;
+
+              case 12:
+                _context.prev = 12;
+                _context.t0 = _context["catch"](4);
+
+                _this.$message.error("Ocurrió un error al guardar el registro");
+
+              case 15:
+                _context.prev = 15;
+                _this.loading = false;
+                return _context.finish(15);
+
+              case 18:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee);
+        }, _callee, null, [[4, 12, 15, 18]]);
       }))();
+    },
+    open: function open() {
+      this.initForm();
+
+      if (this.recordId) {
+        this.title = "Editar tratamiento comercial";
+      } else {
+        this.title = "Crear tratamiento comercial";
+      }
+
+      console.log("open");
+    },
+    close: function close() {
+      this.$emit("update:showDialog", false);
     }
   }
 });
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-0814b47c\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Restaurant/Resources/assets/js/views/login/login.vue":
+/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-395624be\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/js/views/commercial_treatment/form.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "col-md-12 text-center" }, [_c("pad")], 1)
+  return _c(
+    "el-dialog",
+    {
+      attrs: {
+        title: _vm.title,
+        visible: _vm.showDialog,
+        "append-to-body": ""
+      },
+      on: { open: _vm.open, close: _vm.close }
+    },
+    [
+      _c("div", { staticClass: "row p-2" }, [
+        _c(
+          "div",
+          { staticClass: "col-md-8" },
+          [
+            _c("label", { attrs: { for: "description" } }, [
+              _vm._v("Descripción")
+            ]),
+            _vm._v(" "),
+            _c("el-input", {
+              model: {
+                value: _vm.form.description,
+                callback: function($$v) {
+                  _vm.$set(_vm.form, "description", $$v)
+                },
+                expression: "form.description"
+              }
+            })
+          ],
+          1
+        ),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "col-md-4 d-flex align-items-end" },
+          [
+            _c(
+              "el-checkbox",
+              {
+                model: {
+                  value: _vm.form.is_amount,
+                  callback: function($$v) {
+                    _vm.$set(_vm.form, "is_amount", $$v)
+                  },
+                  expression: "form.is_amount"
+                }
+              },
+              [_c("span", [_vm._v("¿Es por monto?")])]
+            )
+          ],
+          1
+        )
+      ]),
+      _vm._v(" "),
+      _c(
+        "span",
+        {
+          staticClass: "dialog-footer",
+          attrs: { slot: "footer" },
+          slot: "footer"
+        },
+        [
+          _c("el-button", { on: { click: _vm.close } }, [_vm._v("Cancelar")]),
+          _vm._v(" "),
+          _c(
+            "el-button",
+            { attrs: { type: "primary" }, on: { click: _vm.submit } },
+            [_vm._v("Guardar")]
+          )
+        ],
+        1
+      )
+    ]
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -314,243 +219,57 @@ module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-0814b47c", module.exports)
+    require("vue-hot-reload-api")      .rerender("data-v-395624be", module.exports)
   }
 }
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-7de5de2c\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Restaurant/Resources/assets/js/views/login/pad.vue":
+/***/ "./resources/js/views/commercial_treatment/form.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "mt-5" }, [
-    _c("div", { staticClass: "row d-flex justify-content-center mb-3" }, [
-      _c("div", { staticClass: "col-md-4" }, [
-        _c("input", {
-          directives: [
-            {
-              name: "model",
-              rawName: "v-model",
-              value: _vm.maskPin,
-              expression: "maskPin"
-            }
-          ],
-          staticClass: "form-control",
-          staticStyle: { "text-align": "center", "letter-spacing": "1rem" },
-          attrs: { type: "text", size: "2", name: "listeanzahl", value: "10" },
-          domProps: { value: _vm.maskPin },
-          on: {
-            input: function($event) {
-              if ($event.target.composing) {
-                return
-              }
-              _vm.maskPin = $event.target.value
-            }
-          }
-        })
-      ])
-    ]),
-    _vm._v(" "),
-    _c("div", { staticClass: "container d-flex justify-content-center" }, [
-      _c("div", { staticClass: "row justify-content-center" }, [
-        _c("div", { staticClass: "col-4 col-sm-4 col-md-4 p-1" }, [
-          _c(
-            "button",
-            {
-              staticClass: "btn btn-primary btn-block",
-              on: {
-                click: function($event) {
-                  return _vm.getOption(1)
-                }
-              }
-            },
-            [_vm._v("\n          1\n        ")]
-          )
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "col-4 col-sm-4 col-md-4 p-1" }, [
-          _c(
-            "button",
-            {
-              staticClass: "btn btn-primary btn-block",
-              on: {
-                click: function($event) {
-                  return _vm.getOption(2)
-                }
-              }
-            },
-            [_vm._v("\n          2\n        ")]
-          )
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "col-4 col-sm-4 col-md-4 p-1" }, [
-          _c(
-            "button",
-            {
-              staticClass: "btn btn-primary btn-block",
-              on: {
-                click: function($event) {
-                  return _vm.getOption(3)
-                }
-              }
-            },
-            [_vm._v("\n          3\n        ")]
-          )
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "w-100" }),
-        _vm._v(" "),
-        _c("div", { staticClass: "col-4 col-sm-4 col-md-4 p-1" }, [
-          _c(
-            "button",
-            {
-              staticClass: "btn btn-primary btn-block",
-              on: {
-                click: function($event) {
-                  return _vm.getOption(4)
-                }
-              }
-            },
-            [_vm._v("\n          4\n        ")]
-          )
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "col-4 col-sm-4 col-md-4 p-1" }, [
-          _c(
-            "button",
-            {
-              staticClass: "btn btn-primary btn-block",
-              on: {
-                click: function($event) {
-                  return _vm.getOption(5)
-                }
-              }
-            },
-            [_vm._v("\n          5\n        ")]
-          )
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "col-4 col-sm-4 col-md-4 p-1" }, [
-          _c(
-            "button",
-            {
-              staticClass: "btn btn-primary btn-block",
-              on: {
-                click: function($event) {
-                  return _vm.getOption(6)
-                }
-              }
-            },
-            [_vm._v("\n          6\n        ")]
-          )
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "w-100" }),
-        _vm._v(" "),
-        _c("div", { staticClass: "col-4 col-sm-4 col-md-4 p-1" }, [
-          _c(
-            "button",
-            {
-              staticClass: "btn btn-primary btn-block",
-              on: {
-                click: function($event) {
-                  return _vm.getOption(7)
-                }
-              }
-            },
-            [_vm._v("\n          7\n        ")]
-          )
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "col-4 col-sm-4 col-md-4 p-1" }, [
-          _c(
-            "button",
-            {
-              staticClass: "btn btn-primary btn-block",
-              on: {
-                click: function($event) {
-                  return _vm.getOption(8)
-                }
-              }
-            },
-            [_vm._v("\n          8\n        ")]
-          )
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "col-4 col-sm-4 col-md-4 p-1" }, [
-          _c(
-            "button",
-            {
-              staticClass: "btn btn-primary btn-block",
-              on: {
-                click: function($event) {
-                  return _vm.getOption(9)
-                }
-              }
-            },
-            [_vm._v("\n          9\n        ")]
-          )
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "w-100" }),
-        _vm._v(" "),
-        _c("div", { staticClass: "col-4 col-sm-4 col-md-4 p-1" }, [
-          _c(
-            "button",
-            {
-              staticClass: "btn btn-primary btn-block",
-              on: {
-                click: function($event) {
-                  return _vm.getOption(0)
-                }
-              }
-            },
-            [_vm._v("\n          0\n        ")]
-          )
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "col-4 col-sm-4 col-md-4 p-1" }, [
-          _c(
-            "button",
-            {
-              staticClass: "btn btn-danger btn-block",
-              on: {
-                click: function($event) {
-                  return _vm.getOption("delete")
-                }
-              }
-            },
-            [_vm._v("\n          Eliminar\n        ")]
-          )
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "col-4 col-sm-4 col-md-4 p-1" }, [
-          _c(
-            "button",
-            {
-              staticClass: "btn btn-success btn-block",
-              on: { click: _vm.enter }
-            },
-            [_vm._v("\n          Ingresar\n        ")]
-          )
-        ])
-      ])
-    ])
-  ])
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
+var disposed = false
+var normalizeComponent = __webpack_require__("./node_modules/vue-loader/lib/component-normalizer.js")
+/* script */
+var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/js/views/commercial_treatment/form.vue")
+/* template */
+var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-395624be\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/js/views/commercial_treatment/form.vue")
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/js/views/commercial_treatment/form.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
   module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-7de5de2c", module.exports)
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-395624be", Component.options)
+  } else {
+    hotAPI.reload("data-v-395624be", Component.options)
   }
-}
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
 
 /***/ })
 

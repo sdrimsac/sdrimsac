@@ -1,14 +1,14 @@
 webpackJsonp([199],{
 
-/***/ "./modules/Internet/Resources/assets/js/view/pos/partials/payments_internet.vue":
+/***/ "./modules/Internet/Resources/assets/js/view/pos/partials/transfer_modal.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__("./node_modules/vue-loader/lib/component-normalizer.js")
 /* script */
-var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/Internet/Resources/assets/js/view/pos/partials/payments_internet.vue")
+var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/Internet/Resources/assets/js/view/pos/partials/transfer_modal.vue")
 /* template */
-var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-69a7fd82\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Internet/Resources/assets/js/view/pos/partials/payments_internet.vue")
+var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-447e4bdd\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Internet/Resources/assets/js/view/pos/partials/transfer_modal.vue")
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -25,7 +25,7 @@ var Component = normalizeComponent(
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "modules/Internet/Resources/assets/js/view/pos/partials/payments_internet.vue"
+Component.options.__file = "modules/Internet/Resources/assets/js/view/pos/partials/transfer_modal.vue"
 
 /* hot reload */
 if (false) {(function () {
@@ -34,9 +34,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-69a7fd82", Component.options)
+    hotAPI.createRecord("data-v-447e4bdd", Component.options)
   } else {
-    hotAPI.reload("data-v-69a7fd82", Component.options)
+    hotAPI.reload("data-v-447e4bdd", Component.options)
   }
   module.hot.dispose(function (data) {
     disposed = true
@@ -48,23 +48,13 @@ module.exports = Component.exports
 
 /***/ }),
 
-/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/Internet/Resources/assets/js/view/pos/partials/payments_internet.vue":
+/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/Internet/Resources/assets/js/view/pos/partials/transfer_modal.vue":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator__ = __webpack_require__("./node_modules/@babel/runtime/regenerator/index.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_moment__ = __webpack_require__("./node_modules/moment/moment.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_moment___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_moment__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_query_string__ = __webpack_require__("./node_modules/query-string/index.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_query_string___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_query_string__);
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
 
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -143,189 +133,132 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ["showDialog", "registerId", "person", "establishment", "configuration"],
+  props: ["showDialog"],
   data: function data() {
     return {
-      number: null,
-      showWhatsappModal: false,
-      payments: [],
-      pagination: {},
-      loading: false
+      loading: false,
+      code: null,
+      pin: null,
+      transfer: null,
+      time: null
     };
   },
   methods: {
-    openWhatsapp: function openWhatsapp() {
-      this.number = this.person.telephone;
-    },
-    sendWhatsapp: function sendWhatsapp() {
+    acceptTransfers: function acceptTransfers() {
       var _this = this;
 
       return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee() {
-        var number, linkpdf, file_name, formWhatsapp, response;
+        var form, response, _response$data, success, message;
+
         return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                number = _this.number; //check if number is numeric and has 9 digits
+                _context.prev = 0;
+                _this.loading = true;
+                form = {
+                  code: _this.code,
+                  pin: _this.pin
+                };
+                _context.next = 5;
+                return _this.$http.post("/transfers/accept_transfer", form);
 
-                if (!(number && number.length == 9 && !isNaN(number))) {
-                  _context.next = 20;
-                  break;
+              case 5:
+                response = _context.sent;
+                _response$data = response.data, success = _response$data.success, message = _response$data.message;
+
+                if (success) {
+                  _this.$toast.success(message);
+                } else {
+                  _this.$toast.error(message);
                 }
 
-                linkpdf = "/payments_print/".concat(_this.registerId);
-                file_name = "Estado de cuenta_" + (_this.person ? _this.person.name + "_" : "_") + __WEBPACK_IMPORTED_MODULE_1_moment___default()().format("YYYY-MM-DD") + ".pdf";
-                _context.prev = 4;
-                _this.loading = true;
-                formWhatsapp = {
-                  resource: linkpdf,
-                  file_name: file_name,
-                  number: _this.number,
-                  message: "Estado_de_cuenta"
-                };
-                _context.next = 9;
-                return _this.$http.post("/whatsapp/historial", formWhatsapp);
+                _this.close();
 
-              case 9:
-                response = _context.sent;
-                _context.next = 14;
+                _context.next = 15;
                 break;
 
-              case 12:
-                _context.prev = 12;
-                _context.t0 = _context["catch"](4);
+              case 11:
+                _context.prev = 11;
+                _context.t0 = _context["catch"](0);
 
-              case 14:
-                _context.prev = 14;
+                _this.$toast.error("Ocurri\xF3 un error ".concat(_context.t0));
+
+                console.log(_context.t0);
+
+              case 15:
+                _context.prev = 15;
                 _this.loading = false;
-                _this.showWhatsappModal = false;
-                return _context.finish(14);
+                return _context.finish(15);
 
               case 18:
-                _context.next = 21;
-                break;
-
-              case 20:
-                _this.$toast.error("Ingrese un número válido");
-
-              case 21:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, null, [[4, 12, 14, 18]]);
+        }, _callee, null, [[0, 11, 15, 18]]);
       }))();
     },
-    print: function print() {
+    getTransfer: function getTransfer() {
       var _this2 = this;
-
-      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee2() {
-        var _this2$establishment$;
-
-        var printer, linkpdf, paperConfig, config, data;
-        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee2$(_context2) {
-          while (1) {
-            switch (_context2.prev = _context2.next) {
-              case 0:
-                printer = (_this2$establishment$ = _this2.establishment.printer) !== null && _this2$establishment$ !== void 0 ? _this2$establishment$ : _this2.establishment.printer_serve;
-
-                if (printer) {
-                  _context2.next = 4;
-                  break;
-                }
-
-                _this2.$toast.error("No se ha configurado una impresora");
-
-                return _context2.abrupt("return");
-
-              case 4:
-                linkpdf = "/payments_print/".concat(_this2.registerId);
-                paperConfig = {
-                  scaleContent: false
-                };
-                config = qz.configs.create(printer, paperConfig);
-
-                if (qz.websocket.isActive()) {
-                  _context2.next = 10;
-                  break;
-                }
-
-                _context2.next = 10;
-                return qz.websocket.connect(config);
-
-              case 10:
-                data = [{
-                  type: "pdf",
-                  format: "file",
-                  data: linkpdf
-                }];
-                qz.print(config, data)["catch"](function (e) {
-                  _this2.$toast.error(e.message);
-                });
-
-              case 12:
-              case "end":
-                return _context2.stop();
-            }
-          }
-        }, _callee2);
-      }))();
-    },
-    open: function open() {
-      var _this3 = this;
 
       return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee3() {
         return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee3$(_context3) {
           while (1) {
             switch (_context3.prev = _context3.next) {
               case 0:
-                console.log(_this3.establishment);
-                _context3.next = 3;
-                return _this3.getPayments();
+                if (_this2.code.length == 5) {
+                  if (_this2.time) {
+                    clearTimeout(_this2.time);
+                  }
 
-              case 3:
+                  _this2.time = setTimeout( /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee2() {
+                    var response, _response$data2, message, success, transfer;
+
+                    return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee2$(_context2) {
+                      while (1) {
+                        switch (_context2.prev = _context2.next) {
+                          case 0:
+                            _context2.prev = 0;
+                            _this2.loading = true;
+                            _context2.next = 4;
+                            return _this2.$http("/transfers/places?code=".concat(_this2.code));
+
+                          case 4:
+                            response = _context2.sent;
+                            _response$data2 = response.data, message = _response$data2.message, success = _response$data2.success, transfer = _response$data2.transfer;
+
+                            if (success) {
+                              _this2.transfer = transfer;
+                              console.log(_this2.transfer);
+                            } else {
+                              _this2.$toast.warning(message);
+                            }
+
+                            _context2.next = 12;
+                            break;
+
+                          case 9:
+                            _context2.prev = 9;
+                            _context2.t0 = _context2["catch"](0);
+                            console.log(_context2.t0);
+
+                          case 12:
+                            _context2.prev = 12;
+                            _this2.loading = false;
+                            return _context2.finish(12);
+
+                          case 15:
+                          case "end":
+                            return _context2.stop();
+                        }
+                      }
+                    }, _callee2, null, [[0, 9, 12, 15]]);
+                  })), 500);
+                }
+
+              case 1:
               case "end":
                 return _context3.stop();
             }
@@ -334,91 +267,18 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }))();
     },
     close: function close() {
-      var _this4 = this;
-
-      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee4() {
-        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee4$(_context4) {
-          while (1) {
-            switch (_context4.prev = _context4.next) {
-              case 0:
-                _this4.$emit("update:showDialog", false);
-
-              case 1:
-              case "end":
-                return _context4.stop();
-            }
-          }
-        }, _callee4);
-      }))();
-    },
-    viewDocument: function viewDocument(url) {
-      window.open(url);
-    },
-    getDocumentName: function getDocumentName(_ref) {
-      var document = _ref.document,
-          sale_note = _ref.sale_note;
-      var doc = document !== null && document !== void 0 ? document : sale_note;
-
-      if (sale_note) {
-        doc.a4 = "/sale-notes/print/".concat(sale_note.external_id, "/a4");
-        doc.ticket = "/sale-notes/print/".concat(sale_note.external_id, "/ticket");
-      } else {
-        doc.a4 = "/print/document/".concat(document.external_id, "/a4");
-        doc.ticket = "/print/document/".concat(document.external_id, "/ticket");
-      }
-
-      return {
-        a4: doc.a4,
-        ticket: doc.ticket,
-        nameDocPayment: "".concat(doc.series, "-").concat(doc.number),
-        totalDocPayment: doc.total,
-        dateDocPayment: __WEBPACK_IMPORTED_MODULE_1_moment___default()(doc.date_of_issue).format("DD/MM/YYYY")
-      };
-    },
-    customIndex: function customIndex(index) {
-      return this.pagination.per_page * (this.pagination.current_page - 1) + index + 1;
-    },
-    getQueryParameters: function getQueryParameters() {
-      return __WEBPACK_IMPORTED_MODULE_2_query_string___default.a.stringify({
-        page: this.pagination.current_page
-      });
-    },
-    getPayments: function getPayments() {
-      var _this5 = this;
-
-      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee5() {
-        var response, _response$data, data, meta;
-
-        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee5$(_context5) {
-          while (1) {
-            switch (_context5.prev = _context5.next) {
-              case 0:
-                _context5.next = 2;
-                return _this5.$http("/internet/payments/".concat(_this5.registerId, "?").concat(_this5.getQueryParameters()));
-
-              case 2:
-                response = _context5.sent;
-                _response$data = response.data, data = _response$data.data, meta = _response$data.meta;
-                _this5.pagination = meta;
-                _this5.pagination.per_page = parseInt(meta.per_page);
-                _this5.payments = data.map(function (p) {
-                  return _objectSpread(_objectSpread({}, p), _this5.getDocumentName(p));
-                });
-
-              case 7:
-              case "end":
-                return _context5.stop();
-            }
-          }
-        }, _callee5);
-      }))();
+      this.$emit("update:showDialog", false);
+      this.code = null;
+      this.pin = null;
+      this.transfer = null;
+      this.time = null;
     }
   }
 });
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-69a7fd82\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Internet/Resources/assets/js/view/pos/partials/payments_internet.vue":
+/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-447e4bdd\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Internet/Resources/assets/js/view/pos/partials/transfer_modal.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -429,171 +289,16 @@ var render = function() {
     "el-dialog",
     {
       attrs: {
-        "append-to-body": "",
-        "close-on-click-modal": true,
+        "close-on-click-modal": false,
+        width: "40%",
         visible: _vm.showDialog,
-        title: "Pagos"
+        title: "Aceptar Mercaderia "
       },
-      on: { open: _vm.open, close: _vm.close }
+      on: { close: _vm.close }
     },
     [
       _c(
         "div",
-        { staticClass: "d-flex mt-2 justify-content-end" },
-        [
-          _c(
-            "el-button",
-            {
-              attrs: { type: "primary", size: "mini" },
-              on: { click: _vm.print }
-            },
-            [
-              _c("i", { staticClass: "fas fa-print" }),
-              _vm._v("\n            Imprimir")
-            ]
-          ),
-          _vm._v(" "),
-          _c(
-            "el-button",
-            {
-              attrs: { type: "success", size: "mini" },
-              on: {
-                click: function($event) {
-                  _vm.showWhatsappModal = true
-                }
-              }
-            },
-            [
-              _c("i", { staticClass: "fab fa-whatsapp" }),
-              _vm._v("\n            Whatsapp")
-            ]
-          )
-        ],
-        1
-      ),
-      _vm._v(" "),
-      _vm.payments.length > 0
-        ? _c(
-            "div",
-            [
-              _c(
-                "table",
-                { staticClass: "w-100 table table-responsive table-striped" },
-                [
-                  _c("thead", [
-                    _c("tr", [
-                      _c("th", [
-                        _vm._v(
-                          "\n                        #\n                    "
-                        )
-                      ]),
-                      _vm._v(" "),
-                      _c("th", [
-                        _vm._v(
-                          "\n                        Fecha\n                    "
-                        )
-                      ]),
-                      _vm._v(" "),
-                      _c("th", [
-                        _vm._v(
-                          "\n                        Monto\n                    "
-                        )
-                      ]),
-                      _vm._v(" "),
-                      _c("th", [
-                        _vm._v(
-                          "\n                        Documento\n                    "
-                        )
-                      ]),
-                      _vm._v(" "),
-                      _c("th")
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c(
-                    "tbody",
-                    _vm._l(_vm.payments, function(net, idx) {
-                      return _c("tr", { key: idx }, [
-                        _c("td", [_vm._v(_vm._s(_vm.customIndex(idx)))]),
-                        _vm._v(" "),
-                        _c("td", [_vm._v(_vm._s(net.dateDocPayment))]),
-                        _vm._v(" "),
-                        _c("td", [_vm._v(_vm._s(net.totalDocPayment))]),
-                        _vm._v(" "),
-                        _c("td", [_vm._v(_vm._s(net.nameDocPayment))]),
-                        _vm._v(" "),
-                        _c(
-                          "td",
-                          [
-                            _c(
-                              "el-button",
-                              {
-                                attrs: { type: "secondary", size: "mini" },
-                                on: {
-                                  click: function($event) {
-                                    return _vm.viewDocument(net.a4)
-                                  }
-                                }
-                              },
-                              [
-                                _vm._v(
-                                  "\n                            A4 PDF\n                        "
-                                )
-                              ]
-                            ),
-                            _vm._v(" "),
-                            _c(
-                              "el-button",
-                              {
-                                attrs: { type: "secondary", size: "mini" },
-                                on: {
-                                  click: function($event) {
-                                    return _vm.viewDocument(net.ticket)
-                                  }
-                                }
-                              },
-                              [
-                                _vm._v(
-                                  "\n                            TICKET PDF\n                        "
-                                )
-                              ]
-                            )
-                          ],
-                          1
-                        )
-                      ])
-                    }),
-                    0
-                  )
-                ]
-              ),
-              _vm._v(" "),
-              _c("el-pagination", {
-                attrs: {
-                  layout: "total, prev, pager, next",
-                  total: _vm.pagination.total,
-                  "current-page": _vm.pagination.current_page,
-                  "page-size": _vm.pagination.per_page
-                },
-                on: {
-                  "current-change": _vm.getPayments,
-                  "update:currentPage": function($event) {
-                    return _vm.$set(_vm.pagination, "current_page", $event)
-                  },
-                  "update:current-page": function($event) {
-                    return _vm.$set(_vm.pagination, "current_page", $event)
-                  }
-                }
-              })
-            ],
-            1
-          )
-        : _c("div", { staticClass: "d-flex justify-content-center" }, [
-            _c("span", { staticClass: "m-5" }, [_vm._v("SIN PAGOS MENSUALES")])
-          ]),
-      _vm._v(" "),
-      _c(
-        "el-dialog",
         {
           directives: [
             {
@@ -603,39 +308,24 @@ var render = function() {
               expression: "loading"
             }
           ],
-          attrs: {
-            visible: _vm.showWhatsappModal,
-            title: "Enviar por Whatsapp",
-            "append-to-body": ""
-          },
-          on: {
-            "update:visible": function($event) {
-              _vm.showWhatsappModal = $event
-            },
-            close: function($event) {
-              _vm.showWhatsappModal = false
-            },
-            open: _vm.openWhatsapp
-          }
+          staticClass: "p-2"
         },
         [
-          _c("div", { staticClass: "row m-3" }, [
+          _c("div", { staticClass: "row" }, [
             _c(
               "div",
-              { staticClass: "col-8" },
+              { staticClass: "col-md-4" },
               [
+                _c("span", [_vm._v("Código de transferencia")]),
+                _vm._v(" "),
                 _c("el-input", {
-                  attrs: {
-                    placeholder: "Ingrese el número de celular",
-                    size: "mini",
-                    clearable: ""
-                  },
+                  on: { input: _vm.getTransfer },
                   model: {
-                    value: _vm.number,
+                    value: _vm.code,
                     callback: function($$v) {
-                      _vm.number = $$v
+                      _vm.code = $$v
                     },
-                    expression: "number"
+                    expression: "code"
                   }
                 })
               ],
@@ -644,39 +334,116 @@ var render = function() {
             _vm._v(" "),
             _c(
               "div",
-              { staticClass: "col-4" },
+              { staticClass: "col-md-4" },
               [
-                _c(
-                  "el-button",
+                _c("span", [_vm._v("PIN")]),
+                _vm._v(" "),
+                _c("el-input", {
+                  attrs: { disabled: !_vm.transfer, "show-password": "" },
+                  model: {
+                    value: _vm.pin,
+                    callback: function($$v) {
+                      _vm.pin = $$v
+                    },
+                    expression: "pin"
+                  }
+                })
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _vm.transfer
+              ? _c(
+                  "div",
                   {
-                    attrs: { type: "primary", size: "mini" },
-                    on: { click: _vm.sendWhatsapp }
+                    staticClass:
+                      "col-md-4 d-flex align-items-end justify-content-start"
                   },
-                  [_vm._v("Enviar")]
+                  [
+                    _c(
+                      "el-button",
+                      {
+                        attrs: { type: "primary" },
+                        on: { click: _vm.acceptTransfers }
+                      },
+                      [
+                        _vm._v(
+                          "\n                    Aceptar\n                "
+                        )
+                      ]
+                    )
+                  ],
+                  1
+                )
+              : _vm._e()
+          ]),
+          _vm._v(" "),
+          _vm.transfer
+            ? [
+                _c(
+                  "div",
+                  {
+                    staticClass: "d-flex flex-column",
+                    staticStyle: { "margin-top": "10px" }
+                  },
+                  [
+                    _c("h5", [
+                      _vm._v("\n                    De:\n                    "),
+                      _c("strong", [
+                        _vm._v(_vm._s(_vm.transfer.warehouse.description))
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c("h5", [
+                      _vm._v("\n                    A:\n                    "),
+                      _c("strong", [
+                        _vm._v(
+                          _vm._s(_vm.transfer.warehouse_destination.description)
+                        )
+                      ])
+                    ])
+                  ]
                 ),
                 _vm._v(" "),
                 _c(
-                  "el-button",
-                  {
-                    attrs: { size: "mini" },
-                    on: {
-                      click: function($event) {
-                        _vm.showWhatsappModal = false
-                      }
-                    }
-                  },
-                  [_vm._v("Cerrar")]
+                  "div",
+                  { staticClass: "row", staticStyle: { "margin-top": "10px" } },
+                  [
+                    _c("table", [
+                      _c("thead", [
+                        _c("tr", [
+                          _c("th", [_vm._v("#")]),
+                          _vm._v(" "),
+                          _c("th", [_vm._v("Producto")]),
+                          _vm._v(" "),
+                          _c("th", [_vm._v("Cantidad")])
+                        ])
+                      ]),
+                      _vm._v(" "),
+                      _c(
+                        "tbody",
+                        _vm._l(_vm.transfer.detail, function(data, idx) {
+                          return _c("tr", { key: idx }, [
+                            _c("td", [_vm._v(_vm._s(idx + 1))]),
+                            _vm._v(" "),
+                            _c("td", [_vm._v(_vm._s(data.item.description))]),
+                            _vm._v(" "),
+                            _c("td", [_vm._v(_vm._s(data.quantity))])
+                          ])
+                        }),
+                        0
+                      )
+                    ])
+                  ]
                 )
-              ],
-              1
-            )
-          ]),
+              ]
+            : _vm._e(),
           _vm._v(" "),
-          _c("div", { staticClass: "row m-3" })
-        ]
+          _c("div", { staticClass: "p-3" })
+        ],
+        2
       )
-    ],
-    1
+    ]
   )
 }
 var staticRenderFns = []
@@ -685,7 +452,7 @@ module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-69a7fd82", module.exports)
+    require("vue-hot-reload-api")      .rerender("data-v-447e4bdd", module.exports)
   }
 }
 

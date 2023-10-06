@@ -1,14 +1,14 @@
 webpackJsonp([188],{
 
-/***/ "./modules/Restaurant/Resources/assets/js/views/pos/partials/credit_modal.vue":
+/***/ "./modules/Restaurant/Resources/assets/js/views/pos/partials/list_food_mobiles.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__("./node_modules/vue-loader/lib/component-normalizer.js")
 /* script */
-var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/Restaurant/Resources/assets/js/views/pos/partials/credit_modal.vue")
+var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/Restaurant/Resources/assets/js/views/pos/partials/list_food_mobiles.vue")
 /* template */
-var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-17d3c188\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Restaurant/Resources/assets/js/views/pos/partials/credit_modal.vue")
+var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-40aa9260\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Restaurant/Resources/assets/js/views/pos/partials/list_food_mobiles.vue")
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -25,7 +25,7 @@ var Component = normalizeComponent(
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "modules/Restaurant/Resources/assets/js/views/pos/partials/credit_modal.vue"
+Component.options.__file = "modules/Restaurant/Resources/assets/js/views/pos/partials/list_food_mobiles.vue"
 
 /* hot reload */
 if (false) {(function () {
@@ -34,9 +34,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-17d3c188", Component.options)
+    hotAPI.createRecord("data-v-40aa9260", Component.options)
   } else {
-    hotAPI.reload("data-v-17d3c188", Component.options)
+    hotAPI.reload("data-v-40aa9260", Component.options)
   }
   module.hot.dispose(function (data) {
     disposed = true
@@ -48,21 +48,11 @@ module.exports = Component.exports
 
 /***/ }),
 
-/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/Restaurant/Resources/assets/js/views/pos/partials/credit_modal.vue":
+/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/Restaurant/Resources/assets/js/views/pos/partials/list_food_mobiles.vue":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator__ = __webpack_require__("./node_modules/@babel/runtime/regenerator/index.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_moment__ = __webpack_require__("./node_modules/moment/moment.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_moment___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_moment__);
-
-
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
@@ -234,416 +224,428 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
-
-
-var PersonForm = function PersonForm() {
-  return __webpack_require__.e/* import() */(125/* duplicate */).then(__webpack_require__.bind(null, "./resources/js/views/persons/form.vue"));
-};
-
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ["items", "cash_id", "all_customers", "showDialog", "all_series", "establishments"],
-  components: {
-    PersonForm: PersonForm
-  },
+  props: ["foods", "configuration", "worker", "pagination", "blockAdd", "localOrden", "category", "categories", "showDialogViewItems", "selectOption"],
   data: function data() {
+    var _settings, _settings_tables;
+
     return {
-      form: {},
-      tasaInteres: 17,
-      disabled_month: false,
-      credit: {},
-      showDialogNewPerson: false,
-      customers: [],
-      errors: {},
-      resource: "sale-notes",
-      loading_search: false,
-      percentage_igv: 18,
-      loading: false
+      selectCategory: 0,
+      activeName: "menu",
+      loading: true,
+      ordenItems: [],
+      orden: [],
+      currentFood: {},
+      item: null,
+      search: "Buscar por Codigo",
+      currentImage: null,
+      showImage: false,
+      listFoods: [],
+      selectedFood: null,
+      allFalse: true,
+      title: null,
+      total: null,
+      ordenId: null,
+      optionsSelected: 0,
+      generalOrdens: 1,
+      establishmentId: this.worker.establishment_id,
+      settings: (_settings = {
+        dots: false,
+        dotsClass: "slick-dots custom-dot-class",
+        edgeFriction: 0.35,
+        infinite: false,
+        speed: 500,
+        centerMode: true,
+        centerPadding: "10px",
+        focusOnSelect: true
+      }, _defineProperty(_settings, "infinite", true), _defineProperty(_settings, "slidesToShow", 3), _defineProperty(_settings, "slidesToScroll", 3), _defineProperty(_settings, "swipeToSlide", true), _defineProperty(_settings, "speed", 500), _defineProperty(_settings, "responsive", [{
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 3,
+          slidesToScroll: 3,
+          infinite: true,
+          dots: true
+        }
+      }, {
+        breakpoint: 600,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 2,
+          initialSlide: 2
+        }
+      }, {
+        breakpoint: 480,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1
+        }
+      }]), _settings),
+      settings_tables: (_settings_tables = {
+        dots: true,
+        dotsClass: "slick-dots custom-dot-class",
+        infinite: false,
+        speed: 500,
+        centerMode: true,
+        centerPadding: "10px",
+        focusOnSelect: true
+      }, _defineProperty(_settings_tables, "infinite", true), _defineProperty(_settings_tables, "slidesToShow", 5), _defineProperty(_settings_tables, "slidesToScroll", 5), _defineProperty(_settings_tables, "swipeToSlide", true), _defineProperty(_settings_tables, "responsive", [{
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 2,
+          infinite: true,
+          dots: true
+        }
+      }, {
+        breakpoint: 600,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 2,
+          initialSlide: 2
+        }
+      }, {
+        breakpoint: 480,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 2
+        }
+      }]), _settings_tables),
+      screenWidth: 0,
+      input_itemMobil: "",
+      categoryChild: ""
     };
   },
-  created: function created() {
-    var _this = this;
+  mounted: function mounted() {
+    this.screenWidth = window.innerWidth;
+    window.addEventListener('resize', this.handleResize);
 
-    this.$eventHub.$on("reloadDataPersons", function (customer_id) {
-      _this.reloadDataCustomers(customer_id);
-    });
-  },
-  watch: {
-    all_customers: function all_customers(newCustomer, _) {
-      this.customers = newCustomer.filter(function (n) {
-        return n.number != "88888888";
-      });
+    if (this.foods.length > 0) {
+      this.loading = false;
     }
   },
+  watch: {
+    foods: function foods(__, _) {
+      this.updateListFoods();
+    }
+  },
+  created: function created() {
+    this.ordenItems = [];
+    this.orden = [];
+    this.updateListFoods();
+  },
   methods: {
-    validate: function validate() {
-      var flag = true;
-
-      if (this.tasaInteres < 0) {
-        this.$toast.error("La tasa de interes no puede ser negativa");
-        flag = false;
-      }
-
-      if (this.credit.advances > this.form.total) {
-        this.$toast.error("El monto de adelanto no puede ser mayor a la venta total");
-        flag = false;
-      }
-
-      if (this.credit.month == 0) {
-        this.$toast.error("El tiempo no puede ser 0");
-        flag = false;
-      }
-
-      if (this.form.customer_id == null) {
-        this.$toast.error("Debe seleccionar un cliente");
-        flag = false;
-      }
-
-      return flag;
+    UpdateparentCategory: function UpdateparentCategory() {
+      this.$emit("update:category", this.categoryChild);
+      this.$emit('data-received', this.input_itemMobil);
     },
-    initCredit: function initCredit() {
-      this.credit = {
-        num_cuota: 0,
-        amount: 0,
-        month: 0,
-        advances: 0
-      };
+    emitData: function emitData() {
+      //this.$emit("update:category")
+      if (this.input_itemMobil.length > 2) {
+        this.$emit('data-received', this.input_itemMobil);
+      }
     },
-    advances_total: function advances_total() {
-      if (this.credit.advances > this.form.total) {
-        return this.$toast.error("el monto de adelanto no puede ser mayor ala venta total");
+    handleResize: function handleResize() {
+      this.screenWidth = window.innerWidth;
+    },
+    nthing: function nthing() {},
+    getDefaultPrice: function getDefaultPrice(type) {
+      var listPricesDescription = ["price1", "price2", "price3"];
+      var currentPriceIndx = listPricesDescription[type.price_default - 1];
+      var price = type[currentPriceIndx];
+
+      if (type.total == null) {// this.$toast.error(
+        //     "Politica de precio sin total: Tomando precio unitario.."
+        // );
       } else {
-        this.credit.total_balance = (this.form.total - this.credit.advances).toFixed(2);
-        this.calculate(this.credit.advances);
-      }
-    },
-    calculate: function calculate() {
-      var advance = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
-      // let dias = 0;
-      var tasa_interes = 0;
-
-      if (this.form.total > 0 && this.credit.month > 0) {
-        switch (this.credit.type_payment) {
-          case "Diario":
-            this.credit.num_cuota = 26 * parseInt(this.credit.month); // dias = 26 * this.form.month;
-
-            break;
-
-          case "Semanal":
-            this.credit.num_cuota = 4 * this.credit.month; // dias = 7 * this.credit.month;
-
-            break;
-
-          case "Mensual":
-            this.credit.num_cuota = this.credit.month; // dias = 30 * this.credit.month;
-
-            break;
-        }
-
-        if (this.tasaInteres > 0) {
-          var total_financiar = parseFloat(this.form.total || "0") - parseFloat(this.credit.advances || "0");
-          tasa_interes = this.tasaInteres * this.credit.month || 0;
-          tasa_interes = tasa_interes.toFixed(2);
-          var calcular_cuota = (total_financiar * (this.tasaInteres * this.credit.month / 100) + total_financiar) / this.credit.num_cuota;
-          this.credit.amount = calcular_cuota.toFixed(2);
-        } else {
-          var amount = parseInt(this.form.total) / parseInt(this.credit.num_cuota);
-          this.credit.amount = amount.toFixed(2);
-        }
-
-        this.credit.tasadefault = tasa_interes;
-      }
-    },
-    reloadDataCustomers: function reloadDataCustomers(customer_id) {
-      var _this2 = this;
-
-      this.$http.get("/documents/search/customer/".concat(customer_id)).then(function (response) {
-        _this2.customers = response.data.customers;
-        _this2.form.customer_id = customer_id;
-      });
-    },
-    paymentsOrden: function paymentsOrden() {
-      var items = this.items;
-      var ordens = items;
-
-      for (var i = 0; i < items.length; i++) {
-        var item = items[i];
-        ordens[i].food.item.from_unit_type_id = item.type_id;
-        ordens[i].food.item.from_unit_type_id_desc = item.type_description;
-        ordens[i].food.item.quantity = item.quantity;
-        ordens[i].food.item.lotes = item.lotes;
-        ordens[i].food.item.lots = item.series;
-        ordens[i].food.item.sale_unit_price = item.price;
-        ordens[i].food.price = item.price;
+        price = Number(type.total);
       }
 
-      this.form.items = ordens.map(function (o) {
-        return o.food.item;
-      });
-      this.formatItems(ordens);
+      return price;
     },
-    formatItems: function formatItems(ordens) {
-      var _this3 = this;
-
-      this.form.items = this.form.items.map(function (i) {
-        var _objectSpread2;
-
-        return _objectSpread(_objectSpread({}, i), {}, (_objectSpread2 = {
-          warehouse_id: null,
-          item: i,
-          item_id: i.id,
-          unit_value: i.sale_affectation_igv_type_id == 10 ? i.sale_unit_price / (1 + _this3.percentage_igv / 100) : i.sale_unit_price,
-          quantity: i.quantity,
-          aux_quantity: i.quantity,
-          total_base_igv: i.sale_affectation_igv_type_id == 10 ? i.sale_unit_price * i.quantity / (1 + _this3.percentage_igv / 100) : i.sale_unit_price * i.quantity,
-          percentage_igv: _this3.percentage_igv,
-          total_igv: i.sale_affectation_igv_type_id == 10 ? i.sale_unit_price * i.quantity / (1 + _this3.percentage_igv / 100) * (_this3.percentage_igv / 100) : 0,
-          total_base_isc: 0.0,
-          percentage_isc: 0.0,
-          total_isc: 0.0,
-          total_base_other_taxes: 0.0,
-          percentage_other_taxes: 0.0,
-          total_other_taxes: 0.0,
-          total_taxes: i.sale_affectation_igv_type_id == 10 ? i.sale_unit_price * i.quantity / (1 + _this3.percentage_igv / 100) * (_this3.percentage_igv / 100) : 0,
-          total_value: i.sale_affectation_igv_type_id == 10 ? i.sale_unit_price * i.quantity / (1 + _this3.percentage_igv / 100) : i.quantity * i.sale_unit_price,
-          total_charge: 0.0,
-          total_discount: 0.0,
-          total: i.sale_unit_price * i.quantity,
-          price_type_id: "01",
-          unit_price: i.sale_unit_price,
-          unit_price_value: i.sale_unit_price,
-          has_igv: i.has_igv,
-          affectation_igv_type_id: i.sale_affectation_igv_type_id
-        }, _defineProperty(_objectSpread2, "unit_price", i.sale_unit_price), _defineProperty(_objectSpread2, "presentation", null), _defineProperty(_objectSpread2, "charges", []), _defineProperty(_objectSpread2, "discounts", []), _defineProperty(_objectSpread2, "attributes", []), _defineProperty(_objectSpread2, "affectation_igv_type", i.sale_affectation_igv_type_id), _objectSpread2));
-      });
-      this.calculateTotal(ordens);
+    formatDescriptionType: function formatDescriptionType(type) {
+      var price = this.getDefaultPrice(type);
+      return "".concat(type.description, " (").concat(Number(type.quantity_unit), ") - S/ ").concat(price);
     },
-    calculateTotal: function calculateTotal(ordens) {
-      var _this4 = this;
-
-      var total_discount = 0;
-      var total_charge = 0;
-      var total_exportation = 0;
-      var total_taxed = 0;
-      var total_taxes = 0;
-      var total_exonerated = 0;
-      var total_unaffected = 0;
-      var total_free = 0;
-      var total_igv = 0;
-      var total_value = 0;
-      var total = 0;
-      ordens.forEach(function (orden) {
-        total += _.round(orden.food.item.quantity * orden.food.price, 2);
-      }); //  total_igv = _.round((total / (1+(this.percentage_igv/100))) * (this.percentage_igv/100), 2);
-
-      this.form.items.forEach(function (row) {
-        total_discount += parseFloat(row.total_discount);
-        total_charge += parseFloat(row.total_charge);
-        total_taxes += parseFloat(row.total_taxes);
-
-        if (row.sale_affectation_igv_type_id === "10") {
-          total_igv += _.round(parseFloat(row.total_value) * (_this4.percentage_igv / 100), 2);
-          total_value += _.round(row.total_value, 2);
-          total_taxed += parseFloat(row.total_value);
-        }
-
-        if (row.sale_affectation_igv_type_id === "20") {
-          total_exonerated += parseFloat(row.total);
-          total_value += _.round(row.total_value, 2);
-        }
-
-        if (row.sale_affectation_igv_type_id === "30") {
-          total_unaffected += parseFloat(row.total_value);
-          total_value += _.round(row.total_value, 2);
-        }
-
-        if (row.sale_affectation_igv_type_id === "40") {
-          total_exportation += parseFloat(row.total_value);
-          total_value += _.round(row.total_value, 2);
-        }
-
-        if (["10", "20", "30", "40"].indexOf(row.affectation_igv_type_id) < 0) {
-          total_free += parseFloat(row.total_value);
-        }
+    clickCommand: function clickCommand(type) {
+      var idxFood = this.listFoods.findIndex(function (food) {
+        return food.item.id == type.item_id;
       });
-      this.form.total_exportation = _.round(total_exportation, 2);
-      this.form.total_taxed = _.round(total_taxed, 2);
-      this.form.total_taxes = _.round(total_taxes, 2);
-      this.form.total_exonerated = _.round(total_exonerated, 2);
-      this.form.total_unaffsected = _.round(total_unaffected, 2);
-      this.form.total_free = _.round(total_free, 2);
-      this.form.total_igv = _.round(total_igv, 2);
-      this.form.total_value = _.round(total_value, 2);
-      this.form.total = _.round(total, 2);
+
+      if (idxFood >= 0) {
+        this.addFood(idxFood, type);
+      }
     },
-    searchRemoteCustomers: function searchRemoteCustomers(input) {
-      var _this5 = this;
-
-      if (input.length > 0) {
-        this.loading_search = true;
-        var parameters = "input=".concat(input);
-        this.$http.get("/".concat(this.resource, "/search/customers?").concat(parameters)).then(function (response) {
-          _this5.customers = response.data.customers;
-          _this5.loading_search = false;
-
-          if (_this5.customers.length == 0) {
-            _this5.customers = _this5.all_customers;
-          }
+    updateListFoods: function updateListFoods() {
+      this.listFoods = this.foods.map(function (f) {
+        return _objectSpread(_objectSpread({}, f), {}, {
+          select: false
         });
+      });
+    },
+    formatedStockPresentation: function formatedStockPresentation(_ref, stock) {
+      var max_quantity = _ref.max_quantity,
+          item_unit_types = _ref.item_unit_types,
+          unit_type = _ref.unit_type;
+      var general = Math.trunc(stock / max_quantity);
+      var part = (stock / max_quantity % 1).toFixed(2);
+      var text = "".concat(general, " ").concat(unit_type.id);
+
+      if (part != 0) {
+        var item_unit = item_unit_types.find(function (i) {
+          return Number(i.quantity_unit) == Number(max_quantity);
+        });
+
+        if (item_unit) {
+          text += " ".concat(part * max_quantity, " ").concat(item_unit.unit_type.id);
+        }
+      }
+
+      return text;
+    },
+    getRecords: function getRecords() {
+      var currentPage = this.pagination.current_page;
+      this.$emit("changePage", currentPage);
+    },
+    deleteOrden: function deleteOrden(id) {
+      this.ordenItems = this.ordenItems.filter(function (o) {
+        return o.id != id;
+      });
+    },
+    calculateOrden: function calculateOrden() {// this.$refs.ordenRef.calculateTotal();
+    },
+    selectSearch: function selectSearch(value) {
+      this.optionsSelected = value;
+    },
+    deleteFood: function deleteFood(idx) {
+      this.orden.splice(idx, 1);
+    },
+    setCategory: function setCategory(id) {
+      this.selectCategory = id;
+      !this.allFalse && this.setFalse();
+
+      if (id == 0) {
+        this.listFoods = this.foods;
       } else {
-        this.customers = this.all_customers;
+        this.listFoods = [];
+        this.listFoods = _.filter(this.foods, {
+          category_food_id: id
+        });
       }
     },
-    submit: function submit() {
-      var _this6 = this;
+    addFood: function addFood() {
+      var _this = this;
 
-      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee() {
-        var serie, response;
-        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee$(_context) {
-          while (1) {
-            switch (_context.prev = _context.next) {
-              case 0:
-                if (_this6.validate()) {
-                  _context.next = 2;
-                  break;
-                }
+      var index = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
+      var type = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
 
-                return _context.abrupt("return", false);
+      if (this.blockAdd && !this.configuration.box_orden) {
+        this.$toast.error("No puede agregar productos a esta orden.");
+        return;
+      }
 
-              case 2:
-                serie = _this6.all_series.find(function (serie) {
-                  return serie.document_type_id == "80";
-                });
+      this.selectedFood = JSON.parse(JSON.stringify(this.listFoods[index]));
+      if (!this.selectedFood) return;
 
-                if (serie) {
-                  _context.next = 5;
-                  break;
-                }
+      if (Number(this.selectedFood.item.stock) <= 0 && this.configuration.sales_stock == true) {
+        this.$toast.warning("Stock insuficiente");
+        return;
+      }
 
-                return _context.abrupt("return", _this6.$toast.error("No se encontró una serie para el comprobante"));
+      var foodFound = this.localOrden.filter(function (f) {
+        return f.id == _this.selectedFood.id;
+      });
 
-              case 5:
-                _this6.form.series_id = serie.id;
-                _this6.form.establishment_id = _this6.establishments.id;
-                _context.prev = 7;
-                _this6.loading = true;
-                _this6.form = _objectSpread(_objectSpread({}, _this6.form), _this6.credit);
-                _this6.form.time_of_issue = __WEBPACK_IMPORTED_MODULE_1_moment___default()().format("HH:mm:ss");
-                _context.next = 13;
-                return _this6.$http.post("/".concat(_this6.resource), _this6.form);
+      if (foodFound.length != 0) {
+        var item = this.selectedFood.item;
 
-              case 13:
-                response = _context.sent;
+        if (item.lots_enabled) {
+          if (item.item_unit_types.length == 0) {
+            var message = "Producto con lote, ya  agregado";
+            this.$toast.warning(message);
+            return;
+          }
+        }
 
-                if (response.status == 200) {
-                  _this6.$toast.success("Se el crédito se registró correctamente");
-
-                  _this6.$emit("limpiarForm");
-
-                  _this6.close();
-                }
-
-                _context.next = 22;
-                break;
-
-              case 17:
-                _context.prev = 17;
-                _context.t0 = _context["catch"](7);
-                console.log(_context.t0);
-
-                _this6.$toast.error("Ocurrió un error");
-
-                _this6.$emit("");
-
-              case 22:
-                _context.prev = 22;
-                _this6.loading = false;
-                return _context.finish(22);
-
-              case 25:
-              case "end":
-                return _context.stop();
+        if (item.series_enabled) {
+          if (item.item_unit_types.length == 0) {
+            var _message = "Producto con serie, ya  agregado";
+            this.$toast.warning(_message);
+            return;
+          } else {
+            if (type) {
+              if (foodFound.some(function (i) {
+                return i.type_id == type.id;
+              })) {
+                var _message2 = "Producto con serie, ya  agregado";
+                this.$toast.warning(_message2);
+                return;
+              }
             }
           }
-        }, _callee, null, [[7, 17, 22, 25]]);
-      }))();
+        }
+
+        var qty = foodFound.reduce(function (a, b) {
+          return a + Number(b.quantity);
+        }, 0);
+
+        if (type) {
+          // qty += Number(type.quantity_unit);
+          qty += 1;
+        } else {
+          qty += 1;
+        }
+
+        if (this.configuration.sales_stock == true) {
+          if (qty > Number(this.selectedFood.item.stock)) {
+            this.$toast.warning("Limite de stock alcanzado");
+            return;
+          }
+        }
+      } else {
+        if (type) {
+          var _qty = type.quantity_unit;
+
+          if (this.configuration.sales_stock == true) {
+            var stock = Number(this.selectedFood.item.stock);
+
+            if (_qty > stock) {
+              this.$toast.warning("Limite de stock alcanzado");
+              return;
+            }
+          }
+        }
+      }
+
+      this.currentFood = {
+        id: this.selectedFood.id,
+        food: this.selectedFood,
+        observation: null,
+        price: this.selectedFood.price,
+        quantity: !!this.selectedFood.item.series_enabled ? 0 : 1
+      };
+      this.$emit("insertOrden", this.currentFood, this.selectedFood.id, type);
+      this.$notify({
+        title: this.currentFood.food.description.toLowerCase(),
+        duration: 800,
+        iconClass: "el-icon-food",
+        message: "Agregado con èxito",
+        position: "bottom-left"
+      });
+      this.currentFood = {
+        food: null,
+        observation: null,
+        quantity: 0,
+        price: 0
+      };
+      this.selectedFood = null;
+      this.item = null; //this.setFalse();
+      //this.$emit("buscarnuevo");
+      //this.$forceUpdate();
+    },
+    setFalse: function setFalse() {
+      this.listFoods = this.listFoods.map(function (f) {
+        f.select = false;
+        return f;
+      });
+      this.allFalse = true;
+    },
+    selectFood: function selectFood(index) {
+      //  this.$refs.description.$el.getElementsByTagName("input")[0].focus();
+      if (this.listFoods[index].select) {
+        this.listFoods[index].select = false;
+        this.allFalse = true;
+        this.selectedFood = null;
+        return;
+      }
+
+      !this.allFalse && this.setFalse();
+      this.listFoods[index].select = true;
+      this.selectedFood = this.listFoods[index];
+      this.allFalse = false;
+    },
+    searchFoodCategories: function searchFoodCategories(value) {
+      if (value == 0) {
+        this.listFoods = this.foods;
+      } else {
+        this.listFoods = _.filter(this.foods, {
+          category_food_id: value
+        });
+      }
+    },
+    searchFood: function searchFood() {
+      var value = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+      var optionsSelected = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "Descripcion";
+      !this.allFalse && this.setFalse();
+
+      if (value) {
+        if (optionsSelected == "Descripcion") {
+          this.listFoods = this.foods.filter(function (f) {
+            return f.description.toLowerCase().includes(value);
+          });
+        } else {
+          //this.listFoods=_.filter(this.foods,{'code':value})
+          this.listFoods = this.foods.filter(function (ff) {
+            return ff.code.toLowerCase().includes(value);
+          });
+        }
+      } else {
+        this.listFoods = this.foods;
+      }
+    },
+    formatUrlImage: function formatUrlImage(url) {
+      if (!url) return;
+      var formated = "storage/uploads/items/" + url;
+      return "/".concat(formated);
     },
     open: function open() {
-      this.initCredit();
-      this.customers = this.all_customers;
-      this.form = {
-        id: null,
-        afectar_caja: true,
-        restaurant: false,
-        series_id: null,
-        generate: true,
-        prefix: "NV",
-        month: 0,
-        establishment_id: null,
-        date_of_issue: __WEBPACK_IMPORTED_MODULE_1_moment___default()().format("YYYY-MM-DD"),
-        time_of_issue: __WEBPACK_IMPORTED_MODULE_1_moment___default()().format("HH:mm:ss"),
-        customer_id: null,
-        currency_type_id: "PEN",
-        purchase_order: null,
-        exchange_rate_sale: 0,
-        advances: 0,
-        total_balance: 0,
-        total_advances: 0,
-        total_prepayment: 0,
-        total_charge: 0,
-        total_discount: 0,
-        total_exportation: 0,
-        total_free: 0,
-        total_taxed: 0,
-        total_unaffected: 0,
-        total_exonerated: 0,
-        total_igv: 0,
-        total_base_isc: 0,
-        total_isc: 0,
-        total_base_other_taxes: 0,
-        total_other_taxes: 0,
-        total_taxes: 0,
-        total_value: 0,
-        total: 0,
-        total_rounded: 0,
-        total_payment: 0,
-        tasadefault: 0,
-        operation_type_id: null,
-        items: [],
-        charges: [],
-        discounts: [],
-        attributes: [],
-        guides: [],
-        payments: [],
-        additional_information: null,
-        actions: {
-          format_pdf: "a4"
-        },
-        apply_concurrency: false,
-        type_period: null,
-        quantity_period: 0,
-        automatic_date_of_issue: null,
-        enabled_concurrency: false,
-        license_plate: null,
-        paid: false,
-        user_id: null,
-        observation: null,
-        difference: 0,
-        type_payment: "Diario",
-        num_cuota: 0,
-        amount: 0,
-        method_pay: "Efectivo"
-      };
-      this.paymentsOrden();
+      var _this2 = this;
+
+      this.ordenItems = [];
+      this.orden = [];
+
+      if (this.table.orden.length != 0) {
+        this.ordenItems = this.table.orden.orden_items; // this.activeName = "orden";
+
+        this.ordenId = this.table.orden.id;
+        setTimeout(function () {
+          return _this2.calculateOrden();
+        }, 50);
+      }
+
+      if (!this.categories.some(function (c) {
+        return c.id == 0;
+      })) {
+        this.categories.unshift({
+          id: 0,
+          description: "todos"
+        });
+      }
+
+      this.listFoods = this.foods.map(function (f) {
+        return _objectSpread(_objectSpread({}, f), {}, {
+          select: false
+        });
+      });
+      this.title = "Mesa N\xB0".concat(this.table.number);
     },
     close: function close() {
-      this.$emit("update:showDialog", false);
+      this.$emit("update:showDialogViewItems");
+    },
+    clear_input: function clear_input() {
+      this.input_itemMobil = "";
     }
   }
 });
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-17d3c188\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Restaurant/Resources/assets/js/views/pos/partials/credit_modal.vue":
+/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-40aa9260\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Restaurant/Resources/assets/js/views/pos/partials/list_food_mobiles.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -653,319 +655,467 @@ var render = function() {
   return _c(
     "el-dialog",
     {
-      directives: [
-        {
-          name: "loading",
-          rawName: "v-loading",
-          value: _vm.loading,
-          expression: "loading"
-        }
-      ],
-      attrs: { title: "Crédito", visible: _vm.showDialog, width: "950px" },
-      on: { open: _vm.open, close: _vm.close }
+      attrs: {
+        title: "Buscar Producto",
+        width: "30%",
+        visible: _vm.showDialogViewItems
+      },
+      on: { close: _vm.close }
     },
     [
-      _c("div", { staticClass: "m-2" }, [
-        _c("div", { staticClass: "row" }, [
-          _c(
-            "div",
-            { staticClass: "col-md-6" },
+      _c("div", { staticClass: "row col-12" }, [
+        _c(
+          "div",
+          { staticClass: "col-6" },
+          [
             [
-              _c("label", [
-                _vm._v("\n                    Cliente\n                    "),
-                _c(
-                  "a",
-                  {
-                    attrs: { href: "#" },
-                    on: {
-                      click: function($event) {
-                        $event.preventDefault()
-                        _vm.showDialogNewPerson = true
-                      }
-                    }
-                  },
-                  [_vm._v("[+ Nuevo]")]
-                )
+              _c("h2", { staticClass: "text-muted text-small" }, [
+                _vm._v("\n                    Categorias\n                ")
               ]),
               _vm._v(" "),
               _c(
                 "el-select",
                 {
-                  staticClass: "border-left rounded-left border-info",
                   attrs: {
                     filterable: "",
-                    remote: "",
-                    "popper-class": "el-select-customers",
-                    dusk: "customer_id",
-                    placeholder:
-                      "Escriba el nombre o número de documento del cliente",
-                    "remote-method": _vm.searchRemoteCustomers,
-                    loading: _vm.loading_search
+                    clearable: "",
+                    placeholder: "Selecionar aqui...."
                   },
+                  on: { change: _vm.UpdateparentCategory },
                   model: {
-                    value: _vm.form.customer_id,
+                    value: _vm.categoryChild,
                     callback: function($$v) {
-                      _vm.$set(_vm.form, "customer_id", $$v)
+                      _vm.categoryChild = $$v
                     },
-                    expression: "form.customer_id"
+                    expression: "categoryChild"
                   }
                 },
-                _vm._l(_vm.customers, function(option) {
+                _vm._l(_vm.categories, function(item) {
                   return _c("el-option", {
-                    key: option.id,
-                    attrs: { value: option.id, label: option.description }
+                    key: item.id,
+                    attrs: { label: item.name, value: item.id }
                   })
                 }),
                 1
               )
-            ],
-            1
-          ),
-          _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "col-md-6" },
-            [
-              _c("label", [_vm._v("Fecha de emisión")]),
-              _vm._v(" "),
-              _c("el-date-picker", {
-                staticClass: "w-100",
-                attrs: { "value-format": "Y-m-d" },
-                model: {
-                  value: _vm.form.date_of_issue,
-                  callback: function($$v) {
-                    _vm.$set(_vm.form, "date_of_issue", $$v)
-                  },
-                  expression: "form.date_of_issue"
-                }
-              })
-            ],
-            1
-          ),
-          _vm._v(" "),
-          _c("div", { staticClass: "col-md-2" }, [
-            _c(
-              "div",
-              { staticClass: "form-group" },
-              [
-                _c("label", { staticClass: "control-label w-100" }, [
-                  _vm._v("Tiempo (Mes)")
-                ]),
-                _vm._v(" "),
-                _c("el-input-number", {
-                  attrs: {
-                    disabled: _vm.disabled_month,
-                    controls: false,
-                    min: 0,
-                    max: 60
-                  },
-                  on: { change: _vm.calculate },
-                  model: {
-                    value: _vm.credit.month,
-                    callback: function($$v) {
-                      _vm.$set(_vm.credit, "month", $$v)
-                    },
-                    expression: "credit.month"
-                  }
-                }),
-                _vm._v(" "),
-                _vm.errors.month
-                  ? _c("small", {
-                      staticClass: "text-danger",
-                      domProps: { textContent: _vm._s(_vm.errors.month[0]) }
-                    })
-                  : _vm._e()
-              ],
-              1
-            )
-          ]),
-          _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "col-md-4" },
-            [
-              _c("label", { staticClass: "control-label w-100" }, [
-                _vm._v("Cronograma de Pago\n                    "),
-                _c("span", { staticClass: "text-danger" }, [_vm._v("*")])
-              ]),
-              _vm._v(" "),
-              _c(
-                "el-radio-group",
-                {
-                  attrs: { size: "mini" },
-                  on: { change: _vm.calculate },
-                  model: {
-                    value: _vm.credit.type_payment,
-                    callback: function($$v) {
-                      _vm.$set(_vm.credit, "type_payment", $$v)
-                    },
-                    expression: "credit.type_payment"
-                  }
-                },
-                [
-                  _c("el-radio-button", { attrs: { label: "Diario" } }),
-                  _vm._v(" "),
-                  _c("el-radio-button", { attrs: { label: "Semanal" } }),
-                  _vm._v(" "),
-                  _c("el-radio-button", { attrs: { label: "Mensual" } })
-                ],
-                1
-              ),
-              _vm._v(" "),
-              _vm.errors.type_payment
-                ? _c("small", {
-                    staticClass: "text-danger",
-                    domProps: {
-                      textContent: _vm._s(_vm.errors.type_payment[0])
-                    }
-                  })
-                : _vm._e()
-            ],
-            1
-          ),
-          _vm._v(" "),
-          _c("div", { staticClass: "col-md-2" }, [
-            _c("label", { staticClass: "control-label w-100" }, [
-              _vm._v("Nº Cuota "),
-              _c("span", { staticClass: "text-danger" }, [_vm._v("*")])
+            ]
+          ],
+          2
+        ),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "col-6 " },
+          [
+            _c("h2", { staticClass: "text-muted text-small" }, [
+              _vm._v("\n                Buscar\n            ")
             ]),
             _vm._v(" "),
-            _c("b", [_vm._v(_vm._s(_vm.credit.num_cuota) + " ")]),
-            _vm._v(" "),
-            _vm.errors.num_cuota
-              ? _c("small", {
-                  staticClass: "text-danger",
-                  domProps: { textContent: _vm._s(_vm.errors.num_cuota[0]) }
-                })
-              : _vm._e()
-          ]),
-          _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "col-md-2" },
-            [
-              _c("label", { staticClass: "control-label w-100" }, [
-                _vm._v("Tasa %"),
-                _c("span", { staticClass: "text-danger" }, [_vm._v("*")])
-              ]),
-              _vm._v(" "),
-              _c("el-input-number", {
-                attrs: { controls: false },
-                on: { change: _vm.calculate },
-                model: {
-                  value: _vm.tasaInteres,
-                  callback: function($$v) {
-                    _vm.tasaInteres = $$v
-                  },
-                  expression: "tasaInteres"
-                }
-              })
-            ],
-            1
-          ),
-          _vm._v(" "),
-          _c("div", { staticClass: "col-md-2" }, [
-            _c("label", { staticClass: "control-label w-100" }, [
-              _vm._v("Cuota "),
-              _c("span", { staticClass: "text-danger" }, [_vm._v("*")])
-            ]),
-            _vm._v(" "),
-            _c("b", [_vm._v(_vm._s(_vm.credit.amount))]),
-            _vm._v(" "),
-            _vm.errors.amount
-              ? _c("small", {
-                  staticClass: "text-danger",
-                  domProps: { textContent: _vm._s(_vm.errors.amount[0]) }
-                })
-              : _vm._e()
-          ]),
-          _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "col-md-2" },
-            [
-              _c("label", { staticClass: "control-label w-100" }, [
-                _vm._v("Adelanto "),
-                _c("span", { staticClass: "text-danger" }, [_vm._v("*")])
-              ]),
-              _vm._v(" "),
-              _c("el-input-number", {
-                attrs: { "controls-position": "right" },
-                on: {
-                  blur: function($event) {
-                    return _vm.advances_total()
-                  }
-                },
-                model: {
-                  value: _vm.credit.advances,
-                  callback: function($$v) {
-                    _vm.$set(_vm.credit, "advances", $$v)
-                  },
-                  expression: "credit.advances"
-                }
-              }),
-              _vm._v(" "),
-              _vm.errors.advances
-                ? _c("small", {
-                    staticClass: "text-danger",
-                    domProps: { textContent: _vm._s(_vm.errors.advances[0]) }
-                  })
-                : _vm._e()
-            ],
-            1
-          )
-        ])
+            _vm.selectOption == 4
+              ? [
+                  _c(
+                    "el-input",
+                    {
+                      ref: "input_items",
+                      attrs: {
+                        size: "small",
+                        autofocus: "",
+                        placeholder: "Ingrese aca Un Producto"
+                      },
+                      on: {
+                        input: function($event) {
+                          return _vm.emitData()
+                        },
+                        focus: function($event) {
+                          return _vm.clear_input()
+                        }
+                      },
+                      model: {
+                        value: _vm.input_itemMobil,
+                        callback: function($$v) {
+                          _vm.input_itemMobil = $$v
+                        },
+                        expression: "input_itemMobil"
+                      }
+                    },
+                    [
+                      _c("el-button", {
+                        attrs: { slot: "append", icon: "el-icon-search" },
+                        on: { click: _vm.emitData },
+                        slot: "append"
+                      })
+                    ],
+                    1
+                  )
+                ]
+              : [
+                  _c(
+                    "el-input",
+                    {
+                      ref: "input_itemMobil",
+                      attrs: {
+                        size: "small",
+                        autofocus: "",
+                        placeholder: "Ingrese aca Un Producto"
+                      },
+                      on: {
+                        input: function($event) {
+                          return _vm.emitData()
+                        },
+                        focus: function($event) {
+                          return _vm.clear_input()
+                        }
+                      },
+                      model: {
+                        value: _vm.input_itemMobil,
+                        callback: function($$v) {
+                          _vm.input_itemMobil = $$v
+                        },
+                        expression: "input_itemMobil"
+                      }
+                    },
+                    [
+                      _c("el-button", {
+                        attrs: { slot: "append", icon: "el-icon-search" },
+                        on: { click: _vm.emitData },
+                        slot: "append"
+                      })
+                    ],
+                    1
+                  )
+                ]
+          ],
+          2
+        )
       ]),
       _vm._v(" "),
       _c(
         "div",
-        {
-          staticClass: "dialog-footer",
-          attrs: { slot: "footer" },
-          slot: "footer"
-        },
-        [
-          _vm.form.total
-            ? _c(
-                "span",
+        { staticClass: "row" },
+        _vm._l(_vm.foods, function(data, index) {
+          return _c(
+            "div",
+            {
+              key: index,
+              staticClass: "col-6 col-lg-4 col-xl-4 col-xxl-4 p-1"
+            },
+            [
+              _c(
+                "el-tooltip",
                 {
-                  staticStyle: {
-                    "margin-right": "auto",
-                    display: "inline-block"
+                  attrs: {
+                    effect: "dark",
+                    disabled:
+                      data.item.warehouses.length == 1 ||
+                      !_vm.configuration.show_stock_establishment_box
                   }
                 },
-                [_c("h6", [_vm._v("S/. " + _vm._s(_vm.form.total))])]
+                [
+                  _c(
+                    "div",
+                    { attrs: { slot: "content" }, slot: "content" },
+                    [
+                      _vm._v("\n                            Stock Almacenes "),
+                      _c("br"),
+                      _vm._v(" "),
+                      _vm._l(data.item.warehouses, function(info, idx) {
+                        return _c("span", { key: idx }, [
+                          info.warehouse.id != _vm.establishmentId
+                            ? _c(
+                                "label",
+                                [
+                                  data.item.max_quantity
+                                    ? [
+                                        _vm._v(
+                                          "\n                                        " +
+                                            _vm._s(
+                                              _vm.formatedStockPresentation(
+                                                data.item,
+                                                info.stock
+                                              )
+                                            ) +
+                                            "\n                                    "
+                                        )
+                                      ]
+                                    : [
+                                        _vm._v(
+                                          "\n                                        " +
+                                            _vm._s(
+                                              info.warehouse.description +
+                                                ": " +
+                                                Number(info.stock).toFixed(2)
+                                            ) +
+                                            "\n                                    "
+                                        )
+                                      ]
+                                ],
+                                2
+                              )
+                            : _vm._e(),
+                          _c("br")
+                        ])
+                      })
+                    ],
+                    2
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    {
+                      staticClass:
+                        "\n                                    overflow-hidden\n                                    coupon\n                                    rounded\n                                    d-flex\n                                    flex-column\n                                    justify-content-between\n                                    p-1\n                                    ",
+                      attrs: { id: "card" }
+                    },
+                    [
+                      _c(
+                        "div",
+                        {
+                          on: {
+                            click: function($event) {
+                              return _vm.addFood(index)
+                            }
+                          }
+                        },
+                        [
+                          _c("div", [
+                            _c(
+                              "span",
+                              { staticClass: "lead-font-weight-700 h5" },
+                              [
+                                _vm._v(
+                                  "\n                                        " +
+                                    _vm._s(data.description.toUpperCase()) +
+                                    "\n                                    "
+                                )
+                              ]
+                            )
+                          ]),
+                          _vm._v(" "),
+                          _c(
+                            "div",
+                            {
+                              staticClass:
+                                "d-flex align-items-end justify-content-between"
+                            },
+                            [
+                              _c("div", { staticClass: "p-1" }, [
+                                _c("div", { staticClass: "icon-container" }, [
+                                  _c(
+                                    "div",
+                                    { staticClass: "icon-container_box" },
+                                    [
+                                      data.image == "imagen-no-disponible.jpg"
+                                        ? [
+                                            _c("img", {
+                                              staticClass: "thumbail",
+                                              attrs: {
+                                                hidden: "",
+                                                src:
+                                                  "/images/imagen-no-disponible.jpg",
+                                                alt: "User Img"
+                                              }
+                                            })
+                                          ]
+                                        : [
+                                            _c("img", {
+                                              staticClass: "thumbail",
+                                              attrs: {
+                                                src: _vm.formatUrlImage(
+                                                  data.image
+                                                )
+                                              }
+                                            })
+                                          ]
+                                    ],
+                                    2
+                                  )
+                                ])
+                              ]),
+                              _vm._v(" "),
+                              _c("div", [
+                                _vm._v(
+                                  "\n                                        " +
+                                    _vm._s(data.code) +
+                                    "\n                                    "
+                                )
+                              ]),
+                              _vm._v(" "),
+                              _c(
+                                "div",
+                                {
+                                  staticClass:
+                                    "d-flex flex-column align-items-end"
+                                },
+                                [
+                                  _c("div", { staticClass: "block mb-2" }, [
+                                    _c(
+                                      "span",
+                                      { staticClass: "time font-weight-light" },
+                                      [
+                                        _c(
+                                          "span",
+                                          {
+                                            staticClass:
+                                              "text-muted lead-font-weight-700"
+                                          },
+                                          [
+                                            _vm._v(
+                                              "\n                                                    S/\n                                                    " +
+                                                _vm._s(data.price)
+                                            )
+                                          ]
+                                        )
+                                      ]
+                                    )
+                                  ]),
+                                  _vm._v(" "),
+                                  _c(
+                                    "div",
+                                    [
+                                      data.item.stock > 0
+                                        ? [
+                                            _c(
+                                              "span",
+                                              {
+                                                staticClass:
+                                                  "badge rounded-pill bg-primary m-l-0"
+                                              },
+                                              [
+                                                _vm._v(
+                                                  "Stock\n                                                    "
+                                                ),
+                                                data.item.max_quantity
+                                                  ? [
+                                                      _vm._v(
+                                                        "\n                                                        " +
+                                                          _vm._s(
+                                                            _vm.formatedStockPresentation(
+                                                              data.item,
+                                                              data.item.stock
+                                                            )
+                                                          ) +
+                                                          "\n                                                        "
+                                                      )
+                                                    ]
+                                                  : [
+                                                      _vm._v(
+                                                        "\n                                                        " +
+                                                          _vm._s(
+                                                            parseFloat(
+                                                              data.item.stock
+                                                            )
+                                                          ) +
+                                                          "\n                                                    "
+                                                      )
+                                                    ]
+                                              ],
+                                              2
+                                            )
+                                          ]
+                                        : [
+                                            _c(
+                                              "span",
+                                              {
+                                                staticClass:
+                                                  "badge rounded-pill bg-danger m-l-0"
+                                              },
+                                              [
+                                                _vm._v(
+                                                  "\n                                                    Agotado\n                                                "
+                                                )
+                                              ]
+                                            )
+                                          ]
+                                    ],
+                                    2
+                                  )
+                                ]
+                              )
+                            ]
+                          )
+                        ]
+                      ),
+                      _vm._v(" "),
+                      data.types.length > 0
+                        ? _c(
+                            "div",
+                            {
+                              staticClass: "d-flex justify-content-end",
+                              staticStyle: {
+                                "padding-right": "10px",
+                                "margin-top": "5px"
+                              },
+                              on: { click: _vm.nthing }
+                            },
+                            [
+                              _c(
+                                "el-dropdown",
+                                { on: { command: _vm.clickCommand } },
+                                [
+                                  _c(
+                                    "span",
+                                    { staticClass: "el-dropdown-link" },
+                                    [
+                                      _vm._v(
+                                        "\n                                        Precios"
+                                      ),
+                                      _c("i", {
+                                        staticClass:
+                                          "el-icon-arrow-down el-icon--right"
+                                      })
+                                    ]
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "el-dropdown-menu",
+                                    {
+                                      attrs: { slot: "dropdown" },
+                                      slot: "dropdown"
+                                    },
+                                    _vm._l(data.types, function(type, idx) {
+                                      return _c(
+                                        "el-dropdown-item",
+                                        { key: idx, attrs: { command: type } },
+                                        [
+                                          _vm._v(
+                                            "\n                                            " +
+                                              _vm._s(
+                                                _vm.formatDescriptionType(type)
+                                              ) +
+                                              "\n                                        "
+                                          )
+                                        ]
+                                      )
+                                    }),
+                                    1
+                                  )
+                                ],
+                                1
+                              )
+                            ],
+                            1
+                          )
+                        : _vm._e()
+                    ]
+                  )
+                ]
               )
-            : _vm._e(),
-          _vm._v(" "),
-          _c("el-button", { on: { click: _vm.close } }, [_vm._v("Cancelar")]),
-          _vm._v(" "),
-          _c(
-            "el-button",
-            { attrs: { type: "primary" }, on: { click: _vm.submit } },
-            [_vm._v("Enviar")]
+            ],
+            1
           )
-        ],
-        1
+        }),
+        0
       ),
       _vm._v(" "),
-      _c("person-form", {
-        attrs: {
-          showDialog: _vm.showDialogNewPerson,
-          type: "customers",
-          external: true
-        },
-        on: {
-          "update:showDialog": function($event) {
-            _vm.showDialogNewPerson = $event
-          },
-          "update:show-dialog": function($event) {
-            _vm.showDialogNewPerson = $event
-          }
-        }
-      })
-    ],
-    1
+      _c("div", { staticClass: "row" }, [
+        _c(
+          "div",
+          { staticClass: "col-6" },
+          [_c("el-button", { on: { click: _vm.close } }, [_vm._v("Cancel")])],
+          1
+        )
+      ])
+    ]
   )
 }
 var staticRenderFns = []
@@ -974,7 +1124,7 @@ module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-17d3c188", module.exports)
+    require("vue-hot-reload-api")      .rerender("data-v-40aa9260", module.exports)
   }
 }
 

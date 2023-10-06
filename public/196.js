@@ -1,14 +1,14 @@
 webpackJsonp([196],{
 
-/***/ "./modules/Internet/Resources/assets/js/view/pos/partials/transfer_modal.vue":
+/***/ "./modules/Restaurant/Resources/assets/js/views/cash/form.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__("./node_modules/vue-loader/lib/component-normalizer.js")
 /* script */
-var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/Internet/Resources/assets/js/view/pos/partials/transfer_modal.vue")
+var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/Restaurant/Resources/assets/js/views/cash/form.vue")
 /* template */
-var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-447e4bdd\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Internet/Resources/assets/js/view/pos/partials/transfer_modal.vue")
+var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-7326d5df\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Restaurant/Resources/assets/js/views/cash/form.vue")
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -25,7 +25,7 @@ var Component = normalizeComponent(
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "modules/Internet/Resources/assets/js/view/pos/partials/transfer_modal.vue"
+Component.options.__file = "modules/Restaurant/Resources/assets/js/views/cash/form.vue"
 
 /* hot reload */
 if (false) {(function () {
@@ -34,9 +34,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-447e4bdd", Component.options)
+    hotAPI.createRecord("data-v-7326d5df", Component.options)
   } else {
-    hotAPI.reload("data-v-447e4bdd", Component.options)
+    hotAPI.reload("data-v-7326d5df", Component.options)
   }
   module.hot.dispose(function (data) {
     disposed = true
@@ -48,7 +48,7 @@ module.exports = Component.exports
 
 /***/ }),
 
-/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/Internet/Resources/assets/js/view/pos/partials/transfer_modal.vue":
+/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/Restaurant/Resources/assets/js/views/cash/form.vue":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -133,132 +133,218 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ["showDialog"],
+  props: ["showDialog", "recordId", "typeUser", "fromBox"],
   data: function data() {
     return {
-      loading: false,
-      code: null,
-      pin: null,
-      transfer: null,
-      time: null
+      loading_submit: false,
+      titleDialog: null,
+      resource: "caja/worker/cash",
+      errors: {},
+      form: {},
+      user: {},
+      all_departments: [],
+      all_provinces: [],
+      all_districts: [],
+      provinces: [],
+      districts: [],
+      identity_document_types: [],
+      users: [],
+      turnsTable: [],
+      dontClose: false
     };
   },
+  created: function created() {
+    var _this = this;
+
+    return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee() {
+      return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              _context.next = 2;
+              return _this.$http.get("/".concat(_this.resource, "/tables")).then(function (response) {
+                _this.users = response.data.users;
+                _this.user = response.data.user;
+                _this.turnsTable = response.data.turnsTable;
+              });
+
+            case 2:
+              _this.initForm();
+
+            case 3:
+            case "end":
+              return _context.stop();
+          }
+        }
+      }, _callee);
+    }))();
+  },
+  computed: {
+    disableUser: function disableUser() {
+      if (this.typeUser == "admin" || this.typeUser === "superadmin") {
+        return false;
+      }
+
+      return true;
+    }
+  },
   methods: {
-    acceptTransfers: function acceptTransfers() {
-      var _this = this;
+    ocultarBoton: function ocultarBoton() {
+      this.$emit("ocultarBoton");
+    },
+    initForm: function initForm() {
+      this.errors = {};
+      this.form = {
+        id: null,
+        user_id: this.user.id,
+        // user: null,
+        date_opening: null,
+        time_opening: null,
+        date_closed: null,
+        time_closed: null,
+        beginning_balance: 0,
+        final_balance: 0,
+        income: 0,
+        state: true,
+        reference_number: null
+      };
+    },
+    create: function create() {
+      var _this2 = this;
 
-      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee() {
-        var form, response, _response$data, success, message;
+      this.titleDialog = this.recordId ? "Editar Caja" : "Aperturar Caja";
 
-        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee$(_context) {
+      if (this.recordId) {
+        this.$http.get("/".concat(this.resource, "/record/").concat(this.recordId)).then(function (response) {
+          _this2.form = response.data.data;
+        });
+      } else {
+        this.form.user_id = this.user.id; //sesion
+        //this.form.user = this.user.name
+      }
+    },
+    openingCashCkeck: function openingCashCkeck() {
+      var _this3 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee2() {
+        var response, cash;
+        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee2$(_context2) {
           while (1) {
-            switch (_context.prev = _context.next) {
+            switch (_context2.prev = _context2.next) {
               case 0:
-                _context.prev = 0;
-                _this.loading = true;
-                form = {
-                  code: _this.code,
-                  pin: _this.pin
-                };
-                _context.next = 5;
-                return _this.$http.post("/transfers/accept_transfer", form);
+                _context2.next = 2;
+                return _this3.$http.get("/".concat(_this3.resource, "/opening_cash_check/").concat(_this3.form.user_id));
+
+              case 2:
+                response = _context2.sent;
+                cash = response.data.cash;
+                return _context2.abrupt("return", cash ? true : false);
 
               case 5:
-                response = _context.sent;
-                _response$data = response.data, success = _response$data.success, message = _response$data.message;
-
-                if (success) {
-                  _this.$toast.success(message);
-                } else {
-                  _this.$toast.error(message);
-                }
-
-                _this.close();
-
-                _context.next = 15;
-                break;
-
-              case 11:
-                _context.prev = 11;
-                _context.t0 = _context["catch"](0);
-
-                _this.$toast.error("Ocurri\xF3 un error ".concat(_context.t0));
-
-                console.log(_context.t0);
-
-              case 15:
-                _context.prev = 15;
-                _this.loading = false;
-                return _context.finish(15);
-
-              case 18:
               case "end":
-                return _context.stop();
+                return _context2.stop();
             }
           }
-        }, _callee, null, [[0, 11, 15, 18]]);
+        }, _callee2);
       }))();
     },
-    getTransfer: function getTransfer() {
-      var _this2 = this;
+    submit: function submit() {
+      var _this4 = this;
 
       return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee3() {
         return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee3$(_context3) {
           while (1) {
             switch (_context3.prev = _context3.next) {
               case 0:
-                if (_this2.code.length == 5) {
-                  if (_this2.time) {
-                    clearTimeout(_this2.time);
-                  }
+                _this4.loading_submit = true;
 
-                  _this2.time = setTimeout( /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee2() {
-                    var response, _response$data2, message, success, transfer;
-
-                    return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee2$(_context2) {
-                      while (1) {
-                        switch (_context2.prev = _context2.next) {
-                          case 0:
-                            _context2.prev = 0;
-                            _this2.loading = true;
-                            _context2.next = 4;
-                            return _this2.$http("/transfers/places?code=".concat(_this2.code));
-
-                          case 4:
-                            response = _context2.sent;
-                            _response$data2 = response.data, message = _response$data2.message, success = _response$data2.success, transfer = _response$data2.transfer;
-
-                            if (success) {
-                              _this2.transfer = transfer;
-                              console.log(_this2.transfer);
-                            } else {
-                              _this2.$toast.warning(message);
-                            }
-
-                            _context2.next = 12;
-                            break;
-
-                          case 9:
-                            _context2.prev = 9;
-                            _context2.t0 = _context2["catch"](0);
-                            console.log(_context2.t0);
-
-                          case 12:
-                            _context2.prev = 12;
-                            _this2.loading = false;
-                            return _context2.finish(12);
-
-                          case 15:
-                          case "end":
-                            return _context2.stop();
-                        }
-                      }
-                    }, _callee2, null, [[0, 9, 12, 15]]);
-                  })), 500);
+                if (!(_this4.form.turn_id == undefined)) {
+                  _context3.next = 5;
+                  break;
                 }
 
-              case 1:
+                _this4.$toast.warning("La opcion 'Seleccionar turno de apertura' no puede ser un campo vacio, por favor seleccione una opcion");
+
+                _this4.loading_submit = false;
+                return _context3.abrupt("return", false);
+
+              case 5:
+                if (_this4.recordId) {
+                  _context3.next = 12;
+                  break;
+                }
+
+                _context3.next = 8;
+                return _this4.openingCashCkeck();
+
+              case 8:
+                if (!_context3.sent) {
+                  _context3.next = 12;
+                  break;
+                }
+
+                _this4.$toast.warning("No puede crear caja, porfavor cierre caja para el usuario definido");
+
+                _this4.loading_submit = false;
+                return _context3.abrupt("return", false);
+
+              case 12:
+                _this4.$http.post("/".concat(_this4.resource), _this4.form).then(function (response) {
+                  console.log(response);
+
+                  if (response.data.success) {
+                    _this4.$toast.success(response.data.message);
+
+                    if (_this4.form.user_id === _this4.user.id) _this4.$eventHub.$emit("openCash");
+
+                    _this4.$eventHub.$emit("reloadData");
+
+                    if (_this4.fromBox) {
+                      _this4.$emit("updateCashId", response.data.cash_id);
+                    } // window.open('/pos/init')
+
+
+                    _this4.close();
+
+                    _this4.ocultarBoton();
+                  } else {
+                    _this4.$toast.error(response.data.message);
+                  }
+                })["catch"](function (error) {
+                  if (error.response.status === 422) {
+                    _this4.errors = error.response.data;
+                  } else {
+                    console.log(error);
+                  }
+                }).then(function () {
+                  _this4.loading_submit = false;
+                });
+
+              case 13:
               case "end":
                 return _context3.stop();
             }
@@ -268,17 +354,14 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     },
     close: function close() {
       this.$emit("update:showDialog", false);
-      this.code = null;
-      this.pin = null;
-      this.transfer = null;
-      this.time = null;
+      this.initForm();
     }
   }
 });
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-447e4bdd\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Internet/Resources/assets/js/view/pos/partials/transfer_modal.vue":
+/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-7326d5df\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Restaurant/Resources/assets/js/views/cash/form.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -289,159 +372,196 @@ var render = function() {
     "el-dialog",
     {
       attrs: {
-        "close-on-click-modal": false,
-        width: "40%",
+        title: _vm.titleDialog,
         visible: _vm.showDialog,
-        title: "Aceptar Mercaderia "
+        "data-keyboard": false,
+        closeOnPressEscape: _vm.dontClose,
+        closeOnClickModal: _vm.dontClose
       },
-      on: { close: _vm.close }
+      on: { close: _vm.close, open: _vm.create }
     },
     [
       _c(
-        "div",
+        "form",
         {
-          directives: [
-            {
-              name: "loading",
-              rawName: "v-loading",
-              value: _vm.loading,
-              expression: "loading"
+          attrs: { autocomplete: "off" },
+          on: {
+            submit: function($event) {
+              $event.preventDefault()
+              return _vm.submit.apply(null, arguments)
             }
-          ],
-          staticClass: "p-2"
+          }
         },
         [
-          _c("div", { staticClass: "row" }, [
-            _c(
-              "div",
-              { staticClass: "col-md-4" },
-              [
-                _c("span", [_vm._v("Código de transferencia")]),
-                _vm._v(" "),
-                _c("el-input", {
-                  on: { input: _vm.getTransfer },
-                  model: {
-                    value: _vm.code,
-                    callback: function($$v) {
-                      _vm.code = $$v
-                    },
-                    expression: "code"
-                  }
-                })
-              ],
-              1
-            ),
-            _vm._v(" "),
-            _c(
-              "div",
-              { staticClass: "col-md-4" },
-              [
-                _c("span", [_vm._v("PIN")]),
-                _vm._v(" "),
-                _c("el-input", {
-                  attrs: { disabled: !_vm.transfer, "show-password": "" },
-                  model: {
-                    value: _vm.pin,
-                    callback: function($$v) {
-                      _vm.pin = $$v
-                    },
-                    expression: "pin"
-                  }
-                })
-              ],
-              1
-            ),
-            _vm._v(" "),
-            _vm.transfer
-              ? _c(
+          _c("div", { staticClass: "form-body" }, [
+            _c("div", { staticClass: "row" }, [
+              _c("div", { staticClass: "col-md-6" }, [
+                _c(
                   "div",
-                  {
-                    staticClass:
-                      "col-md-4 d-flex align-items-end justify-content-start"
-                  },
+                  { staticClass: "form-group" },
                   [
+                    _c("label", { staticClass: "control-label" }, [
+                      _vm._v("Cajero ")
+                    ]),
+                    _vm._v(" "),
                     _c(
-                      "el-button",
+                      "el-select",
                       {
-                        attrs: { type: "primary" },
-                        on: { click: _vm.acceptTransfers }
+                        attrs: { disabled: _vm.disableUser },
+                        model: {
+                          value: _vm.form.user_id,
+                          callback: function($$v) {
+                            _vm.$set(_vm.form, "user_id", $$v)
+                          },
+                          expression: "form.user_id"
+                        }
                       },
-                      [
-                        _vm._v(
-                          "\n                    Aceptar\n                "
-                        )
-                      ]
-                    )
+                      _vm._l(_vm.users, function(option) {
+                        return _c("el-option", {
+                          key: option.id,
+                          attrs: { value: option.id, label: option.name }
+                        })
+                      }),
+                      1
+                    ),
+                    _vm._v(" "),
+                    _vm.errors.user
+                      ? _c("small", {
+                          staticClass: "form-control-feedback",
+                          domProps: { textContent: _vm._s(_vm.errors.user[0]) }
+                        })
+                      : _vm._e()
                   ],
                   1
                 )
-              : _vm._e()
-          ]),
-          _vm._v(" "),
-          _vm.transfer
-            ? [
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-md-6" }, [
                 _c(
                   "div",
                   {
-                    staticClass: "d-flex flex-column",
-                    staticStyle: { "margin-top": "10px" }
+                    staticClass: "form-group",
+                    class: { "has-danger": _vm.errors.beginning_balance }
                   },
                   [
-                    _c("h5", [
-                      _vm._v("\n                    De:\n                    "),
-                      _c("strong", [
-                        _vm._v(_vm._s(_vm.transfer.warehouse.description))
-                      ])
+                    _c("label", { staticClass: "control-label" }, [
+                      _vm._v(
+                        "Saldo inicial de Apertura\n                        "
+                      )
                     ]),
                     _vm._v(" "),
-                    _c("h5", [
-                      _vm._v("\n                    A:\n                    "),
-                      _c("strong", [
-                        _vm._v(
-                          _vm._s(_vm.transfer.warehouse_destination.description)
-                        )
-                      ])
-                    ])
-                  ]
-                ),
-                _vm._v(" "),
+                    _c(
+                      "el-input",
+                      {
+                        model: {
+                          value: _vm.form.beginning_balance,
+                          callback: function($$v) {
+                            _vm.$set(_vm.form, "beginning_balance", $$v)
+                          },
+                          expression: "form.beginning_balance"
+                        }
+                      },
+                      [
+                        _c("i", {
+                          staticClass: "el-icon-edit-outline",
+                          attrs: { slot: "prefix" },
+                          slot: "prefix"
+                        })
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _vm.errors.beginning_balance
+                      ? _c("small", {
+                          staticClass: "form-control-feedback",
+                          domProps: {
+                            textContent: _vm._s(_vm.errors.beginning_balance[0])
+                          }
+                        })
+                      : _vm._e()
+                  ],
+                  1
+                )
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-md-6" }, [
                 _c(
                   "div",
-                  { staticClass: "row", staticStyle: { "margin-top": "10px" } },
+                  {
+                    staticClass: "form-group",
+                    class: { "has-danger": _vm.errors.reference_number }
+                  },
                   [
-                    _c("table", [
-                      _c("thead", [
-                        _c("tr", [
-                          _c("th", [_vm._v("#")]),
-                          _vm._v(" "),
-                          _c("th", [_vm._v("Producto")]),
-                          _vm._v(" "),
-                          _c("th", [_vm._v("Cantidad")])
-                        ])
-                      ]),
-                      _vm._v(" "),
-                      _c(
-                        "tbody",
-                        _vm._l(_vm.transfer.detail, function(data, idx) {
-                          return _c("tr", { key: idx }, [
-                            _c("td", [_vm._v(_vm._s(idx + 1))]),
-                            _vm._v(" "),
-                            _c("td", [_vm._v(_vm._s(data.item.description))]),
-                            _vm._v(" "),
-                            _c("td", [_vm._v(_vm._s(data.quantity))])
-                          ])
-                        }),
-                        0
-                      )
-                    ])
-                  ]
+                    _c("label", { staticClass: "control-label" }, [
+                      _vm._v("Seleccionar Turno de Apertura")
+                    ]),
+                    _vm._v(" "),
+                    _c(
+                      "el-select",
+                      {
+                        model: {
+                          value: _vm.form.turn_id,
+                          callback: function($$v) {
+                            _vm.$set(_vm.form, "turn_id", $$v)
+                          },
+                          expression: "form.turn_id"
+                        }
+                      },
+                      _vm._l(_vm.turnsTable, function(option) {
+                        return _c("el-option", {
+                          key: option.id,
+                          attrs: { value: option.id, label: option.turn_desc }
+                        })
+                      }),
+                      1
+                    ),
+                    _vm._v(" "),
+                    _vm.errors.reference_number
+                      ? _c("small", {
+                          staticClass: "form-control-feedback",
+                          domProps: {
+                            textContent: _vm._s(_vm.errors.reference_number[0])
+                          }
+                        })
+                      : _vm._e()
+                  ],
+                  1
                 )
-              ]
-            : _vm._e(),
+              ])
+            ])
+          ]),
           _vm._v(" "),
-          _c("div", { staticClass: "p-3" })
-        ],
-        2
+          _c(
+            "div",
+            { staticClass: "form-actions text-end pt-2 pb-2" },
+            [
+              _c(
+                "el-button",
+                {
+                  on: {
+                    click: function($event) {
+                      $event.preventDefault()
+                      return _vm.close()
+                    }
+                  }
+                },
+                [_vm._v("Cancelar")]
+              ),
+              _vm._v(" "),
+              _c(
+                "el-button",
+                {
+                  attrs: {
+                    type: "primary",
+                    "native-type": "submit",
+                    loading: _vm.loading_submit
+                  }
+                },
+                [_vm._v("Guardar")]
+              )
+            ],
+            1
+          )
+        ]
       )
     ]
   )
@@ -452,7 +572,7 @@ module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-447e4bdd", module.exports)
+    require("vue-hot-reload-api")      .rerender("data-v-7326d5df", module.exports)
   }
 }
 

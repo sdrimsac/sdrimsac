@@ -1,14 +1,14 @@
 webpackJsonp([141],{
 
-/***/ "./modules/College/Resources/assets/js/views/classrooms/student_view.vue":
+/***/ "./modules/Consignment/Resources/assets/js/views/partials/penalty_form.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__("./node_modules/vue-loader/lib/component-normalizer.js")
 /* script */
-var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/College/Resources/assets/js/views/classrooms/student_view.vue")
+var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/Consignment/Resources/assets/js/views/partials/penalty_form.vue")
 /* template */
-var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-0ec93f35\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/College/Resources/assets/js/views/classrooms/student_view.vue")
+var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-2c2e76ba\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Consignment/Resources/assets/js/views/partials/penalty_form.vue")
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -25,7 +25,7 @@ var Component = normalizeComponent(
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "modules/College/Resources/assets/js/views/classrooms/student_view.vue"
+Component.options.__file = "modules/Consignment/Resources/assets/js/views/partials/penalty_form.vue"
 
 /* hot reload */
 if (false) {(function () {
@@ -34,9 +34,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-0ec93f35", Component.options)
+    hotAPI.createRecord("data-v-2c2e76ba", Component.options)
   } else {
-    hotAPI.reload("data-v-0ec93f35", Component.options)
+    hotAPI.reload("data-v-2c2e76ba", Component.options)
   }
   module.hot.dispose(function (data) {
     disposed = true
@@ -48,7 +48,7 @@ module.exports = Component.exports
 
 /***/ }),
 
-/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/College/Resources/assets/js/views/classrooms/student_view.vue":
+/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/Consignment/Resources/assets/js/views/partials/penalty_form.vue":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -131,70 +131,33 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-var PaymentCollege = function PaymentCollege() {
-  return __webpack_require__.e/* import() */(126/* duplicate */).then(__webpack_require__.bind(null, "./modules/College/Resources/assets/js/components/payment_college.vue"));
-};
-
-var PaymentsForm = function PaymentsForm() {
-  return __webpack_require__.e/* import() */(136/* duplicate */).then(__webpack_require__.bind(null, "./modules/College/Resources/assets/js/components/payment_form.vue"));
-};
-
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ["showDialog", "classroomId"],
-  components: {
-    PaymentCollege: PaymentCollege,
-    PaymentsForm: PaymentsForm
-  },
+  props: ["showDialog"],
   data: function data() {
     return {
+      resource: '/consignment/penalty',
       loading: false,
-      students: [],
-      allStudents: [],
-      description: null,
-      showPayment: false,
-      member: null,
-      showPaymentsForm: false
+      form: {
+        id: null,
+        description: null,
+        type: 'percent',
+        amount: 0.0
+      }
     };
   },
   methods: {
-    getRecords: function getRecords() {},
-    openFormPayments: function openFormPayments(record) {
-      this.showPaymentsForm = true;
-      this.member = record.member;
-    },
-    openPayment: function openPayment(record) {
-      this.showPayment = true;
-      this.member = record.member;
-    },
-    searchStudent: function searchStudent() {
-      var desc = this.description.toLowerCase();
-      this.students = this.allStudents.filter(function (s) {
-        if (s.name.toLowerCase().includes(desc) || s.number.toLowerCase().includes(desc)) {
-          return s;
-        }
-      });
-    },
     open: function open() {
+      this.form = {
+        id: null,
+        description: null,
+        type: 'percent',
+        amount: 0.0
+      };
+    },
+    close: function close() {
+      this.$emit('update:showDialog', false);
+    },
+    create: function create() {
       var _this = this;
 
       return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee() {
@@ -206,43 +169,53 @@ var PaymentsForm = function PaymentsForm() {
                 _context.prev = 0;
                 _this.loading = true;
                 _context.next = 4;
-                return _this.$http("/college/classrooms/".concat(_this.classroomId));
+                return _this.$http.post(_this.resource, _this.form);
 
               case 4:
                 response = _context.sent;
-                _this.allStudents = response.data;
-                _this.students = _this.allStudents;
-                console.log(_this.students);
-                _context.next = 13;
+
+                if (response.data.success) {
+                  _this.$message({
+                    type: 'success',
+                    message: 'Penalización creada correctamente'
+                  });
+
+                  _this.$emit('reloadPenalties', response.data.id);
+
+                  _this.close();
+                }
+
+                _context.next = 11;
                 break;
 
-              case 10:
-                _context.prev = 10;
+              case 8:
+                _context.prev = 8;
                 _context.t0 = _context["catch"](0);
-                console.log(_context.t0);
 
-              case 13:
-                _context.prev = 13;
+                _this.$message({
+                  type: 'error',
+                  message: 'Ocurrió un error al crear la penalización'
+                });
+
+              case 11:
+                _context.prev = 11;
                 _this.loading = false;
-                return _context.finish(13);
+                return _context.finish(11);
 
-              case 16:
+              case 14:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, null, [[0, 10, 13, 16]]);
+        }, _callee, null, [[0, 8, 11, 14]]);
       }))();
-    },
-    close: function close() {
-      this.$emit("update:showDialog", false);
     }
   }
 });
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-0ec93f35\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/College/Resources/assets/js/views/classrooms/student_view.vue":
+/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-2c2e76ba\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/Consignment/Resources/assets/js/views/partials/penalty_form.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -262,176 +235,118 @@ var render = function() {
       ],
       attrs: {
         visible: _vm.showDialog,
-        width: "650px",
+        title: "Creación de penalización",
         "append-to-body": "",
-        title: "Lista de estudiantes"
+        width: "500px"
       },
       on: { open: _vm.open, close: _vm.close }
     },
     [
-      _c("div", { staticClass: "row mt-4" }, [
+      _c("div", { staticClass: "row m-2" }, [
         _c(
           "div",
-          { staticClass: "col-12" },
+          { staticClass: "col-md-12" },
           [
+            _c("label", { attrs: { for: "description" } }, [
+              _vm._v("Descripción")
+            ]),
+            _vm._v(" "),
+            _c("el-input", {
+              staticClass: "w-100",
+              attrs: {
+                placeholder: "Descripción de la penalización",
+                type: "text",
+                dusk: "description"
+              },
+              model: {
+                value: _vm.form.description,
+                callback: function($$v) {
+                  _vm.$set(_vm.form, "description", $$v)
+                },
+                expression: "form.description"
+              }
+            })
+          ],
+          1
+        ),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "col-md-12" },
+          [
+            _c("label", { attrs: { for: "type" } }, [_vm._v("Tipo")]),
+            _vm._v(" "),
             _c(
-              "el-input",
+              "el-select",
               {
-                attrs: { placeholder: "Nombre/documento" },
-                on: { input: _vm.searchStudent },
+                staticClass: "w-100",
+                attrs: { placeholder: "Seleccione un tipo", dusk: "type" },
                 model: {
-                  value: _vm.description,
+                  value: _vm.form.type,
                   callback: function($$v) {
-                    _vm.description = $$v
+                    _vm.$set(_vm.form, "type", $$v)
                   },
-                  expression: "description"
+                  expression: "form.type"
                 }
               },
               [
-                _c("i", {
-                  staticClass: "el-input__icon el-icon-search",
-                  attrs: { slot: "prefix" },
-                  slot: "prefix"
-                })
-              ]
+                _c("el-option", {
+                  attrs: { label: "Porcentaje", value: "percent" }
+                }),
+                _vm._v(" "),
+                _c("el-option", { attrs: { label: "Fijo", value: "fixed" } })
+              ],
+              1
             )
+          ],
+          1
+        ),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "col-md-12" },
+          [
+            _c("label", { attrs: { for: "amount" } }, [_vm._v("Valor")]),
+            _vm._v(" "),
+            _c("el-input", {
+              staticClass: "w-100",
+              attrs: {
+                placeholder: "Valor de la penalización",
+                type: "number",
+                dusk: "amount"
+              },
+              model: {
+                value: _vm.form.amount,
+                callback: function($$v) {
+                  _vm.$set(_vm.form, "amount", $$v)
+                },
+                expression: "form.amount"
+              }
+            })
           ],
           1
         )
       ]),
       _vm._v(" "),
-      _c("table", { staticClass: "table" }, [
-        _c("thead", [
-          _c("tr", [
-            _c("th", [_vm._v("#")]),
-            _vm._v(" "),
-            _c("th", [_vm._v("Nombre")]),
-            _vm._v(" "),
-            _c("th")
-          ])
-        ]),
-        _vm._v(" "),
-        _c(
-          "tbody",
-          _vm._l(_vm.students, function(student, idx) {
-            return _c("tr", { key: idx }, [
-              _c("td", [_vm._v(_vm._s(idx + 1))]),
-              _vm._v(" "),
-              _c("td", [
-                _vm._v(
-                  "\n                    " +
-                    _vm._s(student.name) +
-                    "\n                    "
-                ),
-                _c("br"),
-                _vm._v(" "),
-                _c("small", [_vm._v(_vm._s(student.number))])
-              ]),
-              _vm._v(" "),
-              _c("td", [
-                _c(
-                  "div",
-                  { staticClass: "d-flex justify-content-center" },
-                  [
-                    !student.incomplete
-                      ? _c(
-                          "el-button",
-                          {
-                            attrs: { type: "success" },
-                            on: {
-                              click: function($event) {
-                                return _vm.openPayment(student)
-                              }
-                            }
-                          },
-                          [
-                            _vm._v(
-                              "\n                            Mensualidad\n                        "
-                            )
-                          ]
-                        )
-                      : _vm._e(),
-                    _vm._v(" "),
-                    !student.incomplete
-                      ? _c(
-                          "el-button",
-                          {
-                            attrs: { type: "primary" },
-                            on: {
-                              click: function($event) {
-                                return _vm.openFormPayments(student)
-                              }
-                            }
-                          },
-                          [
-                            _vm._v(
-                              "\n                            Ver tramites\n                        "
-                            )
-                          ]
-                        )
-                      : _c(
-                          "el-button",
-                          {
-                            attrs: { type: "danger" },
-                            on: {
-                              click: function($event) {
-                                return _vm.openFormPayments(student)
-                              }
-                            }
-                          },
-                          [
-                            _vm._v(
-                              "\n                            Cancelar pagos\n                        "
-                            )
-                          ]
-                        )
-                  ],
-                  1
-                )
-              ])
-            ])
-          }),
-          0
-        )
-      ]),
-      _vm._v(" "),
-      _c("payment-college", {
-        attrs: {
-          title: "Servicio",
-          is_payment: _vm.showPayment,
-          type: "service",
-          member: _vm.member,
-          classroomId: _vm.classroomId
+      _c(
+        "div",
+        {
+          staticClass: "dialog-footer",
+          attrs: { slot: "footer" },
+          slot: "footer"
         },
-        on: {
-          "update:is_payment": function($event) {
-            _vm.showPayment = $event
-          },
-          getRecords: _vm.open,
-          "update:member": function($event) {
-            _vm.member = $event
-          }
-        }
-      }),
-      _vm._v(" "),
-      _c("payments-form", {
-        attrs: {
-          title: "Tramites",
-          showDialog: _vm.showPaymentsForm,
-          member: _vm.member
-        },
-        on: {
-          "update:showDialog": function($event) {
-            _vm.showPaymentsForm = $event
-          },
-          "update:show-dialog": function($event) {
-            _vm.showPaymentsForm = $event
-          },
-          getRecords: _vm.getRecords
-        }
-      })
-    ],
-    1
+        [
+          _c("el-button", { on: { click: _vm.close } }, [_vm._v("Cancelar")]),
+          _vm._v(" "),
+          _c(
+            "el-button",
+            { attrs: { type: "primary" }, on: { click: _vm.create } },
+            [_vm._v("Guardar")]
+          )
+        ],
+        1
+      )
+    ]
   )
 }
 var staticRenderFns = []
@@ -440,7 +355,7 @@ module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-0ec93f35", module.exports)
+    require("vue-hot-reload-api")      .rerender("data-v-2c2e76ba", module.exports)
   }
 }
 

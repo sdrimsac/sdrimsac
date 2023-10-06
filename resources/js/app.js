@@ -900,6 +900,11 @@ const app = new Vue({
                 /*webpackChunkName:"banks"*/
                 "./views/banks/index.vue")
             ,
+            "tenant-commercial-treatment-index":  ()=>
+            import(
+                /*webpackChunkName:"commercial_treatment"*/
+                "./views/commercial_treatment/index.vue")
+            ,
             
     },
  

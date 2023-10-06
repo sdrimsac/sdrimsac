@@ -1553,8 +1553,7 @@ export default {
         }
         this.getBankAccounts();
 
-        if(!this.configuration.discount_with_base_variant){
-            
+        if (!this.configuration.discount_with_base_variant) {
             this.discountTotal = true;
         }
     },
@@ -1946,6 +1945,7 @@ export default {
             this.form.student_id = null;
             this.students = [];
             this.form.customer_id = this.value;
+            
             let customer = _.find(this.customers, {
                 id: this.form.customer_id
             });
@@ -1968,7 +1968,10 @@ export default {
 
                 this.form.customer_telephone = customer.phone;
                 this.setLocalStorageIndex("customer", this.customer);
-                if (this.clientSaleNoteNumber) {
+                if (
+                    this.clientSaleNoteNumber &&
+                    customer.identity_document_type_id !== "6"
+                ) {
                     this.form.document_type_id = "03";
                 }
             }
@@ -2057,8 +2060,8 @@ export default {
             if (this.establishments.customer_id) {
                 let isRuc = this.checkCustomerDocument("6");
                 if (isRuc && this.form.document_type_id != "01") {
-                    this.value = this.establishments.customer_id;
-                    this.form.customer_id = this.establishments.customer_id;
+                    // this.value = this.establishments.customer_id;
+                    // this.form.customer_id = this.establishments.customer_id;
                 }
             }
 
@@ -3437,7 +3440,7 @@ export default {
                 this.form.document_type_id == "03"
             ) {
                 return this.customers.some(
-                    c => c.identity_document_type_id == "6"
+                    c => c.identity_document_type_id == "6" || c.identity_document_type_id == "1"
                 );
             } else {
                 return this.customers.some(
@@ -3460,7 +3463,9 @@ export default {
         },
 
         filterSeries() {
+            console.log("object");
             let check = this.checkCustomers();
+            console.log("🚀 ~ file: payment.vue:3467 ~ filterSeries ~ check:", check)
             if (!check && !this.started) {
                 let dcto = "DNI";
                 if (this.form.document_type_id == "01") {
@@ -3499,14 +3504,19 @@ export default {
                 //     this.form.document_type_id = "03";
                 // }
             }
-
-            if (this.form.document_type_id == "01") {
+  
+            if (
+                this.form.document_type_id == "01" &&
+                currentClient &&
+                currentClient.identity_document_type_id !== "6"
+            ) {
+          
                 this.customers = this.all_customers.filter(
                     f => f.identity_document_type_id == "6"
                 );
                 if (this.customers.length == 0) {
-                    this.$toast.warning("Digite el número de RUC");
-                    this.form.document_type_id == "03";
+                    this.$toast.warning("Digite el número de RsUC");
+                    this.form.document_type_id = "03";
 
                     // this.customers = this.all_customers;
                 } else {
@@ -3517,7 +3527,7 @@ export default {
                         this.form.customer_telephone = currentClient.phone;
                         return;
                     }
-                    console.log("aqyu");
+
                     this.value = this.customers[0].id;
                     this.form.customer_telephone = this.customers[0].phone;
                 }
@@ -3564,12 +3574,13 @@ export default {
             if (this.form.document_type_id != "01") {
                 this.customers = [...this.customers, this.customer_default];
             }
-
+            console.log(this.form.document_type_id);
             this.changeCustomer();
             if (this.form.document_type_id == "80") {
                 this.discount_amount = 0;
                 this.inputDiscountAmount();
             }
+
         }
     }
 };

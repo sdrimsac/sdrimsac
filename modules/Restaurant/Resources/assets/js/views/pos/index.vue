@@ -2830,10 +2830,7 @@ export default {
                 orden.to_carry = false;
                 orden.change_subtotal = false;
                 if (this.clientSaleNoteNumber) {
-                    console.log(
-                        "🚀 ~ file: index.vue:2835 ~ insertOrden ~ orden.series:",
-                        orden.series
-                    );
+                    
                 } else {
                     orden.series = [];
                 }
@@ -2888,6 +2885,7 @@ export default {
                     }
                     orden.quantity = 1;
                 }
+                orden.original_price = orden.price;
                 this.localOrden.unshift(orden);
             }
             //aca existe en original o en alguna  presentación
@@ -4974,6 +4972,8 @@ export default {
             `.print-order-${this.configuration.socket_channel}`,
             e => {
                 console.log("imprimiendoxd", e);
+
+                let area_id = e.data.area_id;
                 if (e.data.direct_printing == true) {
                     if (e.data.printing == true) {
                         this.Printer(

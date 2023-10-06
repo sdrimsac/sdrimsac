@@ -43,8 +43,10 @@ class PromocionPorItemController extends Controller
                     } else {
                         $gifts_earned = 0;
                     }
-                    $items_left = $items_purchased % $catidadHabilitarPromocion; // Número de artículos restantes
-
+                    $items_left = 0; // Número de artículos restantes
+                    if($items_purchased != 0 && $catidadHabilitarPromocion != 0){
+                        $items_left = $items_purchased % $catidadHabilitarPromocion; // Número de artículos restantes
+                    }
                     DB::connection('tenant')->select('insert into promociones (prom_clie_id,  prom_items_id,  prom_cumulative_purchase,  prom_to_redeem, prom_redeemed, created_at  , updated_at   ) values (?,?,?,?,0,?,?)', [$how_is['id'], $productId, $items_left, $gifts_earned, $date, $date]);
                 } else if (count($DBconsulta) == 1) { // por iteracion solo  se permite la actualizacion de un item unico de resto el sistema debera arrojar un error
                     $totalComprado = $DBconsulta[0]['prom_cumulative_purchase']  + $cantidadComprada;

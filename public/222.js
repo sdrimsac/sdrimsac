@@ -1,14 +1,14 @@
 webpackJsonp([222],{
 
-/***/ "./modules/College/Resources/assets/js/components/service_form.vue":
+/***/ "./modules/College/Resources/assets/js/views/penalties/form.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 var normalizeComponent = __webpack_require__("./node_modules/vue-loader/lib/component-normalizer.js")
 /* script */
-var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/College/Resources/assets/js/components/service_form.vue")
+var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/College/Resources/assets/js/views/penalties/form.vue")
 /* template */
-var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-3fbe7136\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/College/Resources/assets/js/components/service_form.vue")
+var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-0286809f\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/College/Resources/assets/js/views/penalties/form.vue")
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -25,7 +25,7 @@ var Component = normalizeComponent(
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "modules/College/Resources/assets/js/components/service_form.vue"
+Component.options.__file = "modules/College/Resources/assets/js/views/penalties/form.vue"
 
 /* hot reload */
 if (false) {(function () {
@@ -34,9 +34,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-3fbe7136", Component.options)
+    hotAPI.createRecord("data-v-0286809f", Component.options)
   } else {
-    hotAPI.reload("data-v-3fbe7136", Component.options)
+    hotAPI.reload("data-v-0286809f", Component.options)
   }
   module.hot.dispose(function (data) {
     disposed = true
@@ -48,15 +48,21 @@ module.exports = Component.exports
 
 /***/ }),
 
-/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/College/Resources/assets/js/components/service_form.vue":
+/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"@babel/preset-env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"]},\"forceAllTransforms\":true}]],\"plugins\":[\"@babel/plugin-proposal-object-rest-spread\",[\"@babel/plugin-transform-runtime\",{\"helpers\":false}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./modules/College/Resources/assets/js/views/penalties/form.vue":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator__ = __webpack_require__("./node_modules/@babel/runtime/regenerator/index.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_moment__ = __webpack_require__("./node_modules/moment/moment.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_moment___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_moment__);
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]; if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
@@ -176,80 +182,53 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+var FormService = function FormService() {
+  return __webpack_require__.e/* import() */(144/* duplicate */).then(__webpack_require__.bind(null, "./modules/College/Resources/assets/js/components/service_create.vue"));
+};
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ["member"],
+  components: {
+    FormService: FormService
+  },
+  props: ["showDialog", "record"],
   data: function data() {
     return {
-      resource: "registers",
+      title: "Crear nuevo",
       loading: false,
-      plans: [],
-      date: __WEBPACK_IMPORTED_MODULE_1_moment___default()(),
-      monthsPayed: [],
-      paymentDay: null,
       form: {},
-      currentPlan: null,
-      penalties: [],
-      limitDate: null,
-      selectedMonths: [],
-      months: [{
-        id: 1,
-        label: "Enero",
-        disabled: false
-      }, {
-        id: 2,
-        label: "Febrero",
-        disabled: false
-      }, {
-        id: 3,
-        label: "Marzo",
-        disabled: false
-      }, {
-        id: 4,
-        label: "Abril",
-        disabled: false
-      }, {
-        id: 5,
-        label: "Mayo",
-        disabled: false
-      }, {
-        id: 6,
-        label: "Junio",
-        disabled: false
-      }, {
-        id: 7,
-        label: "Julio",
-        disabled: false
-      }, {
-        id: 8,
-        label: "Agosto",
-        disabled: false
-      }, {
-        id: 9,
-        label: "Setiembre",
-        disabled: false
-      }, {
-        id: 10,
-        label: "Octubre",
-        disabled: false
-      }, {
-        id: 11,
-        label: "Noviembre",
-        disabled: false
-      }, {
-        id: 12,
-        label: "Diciembre",
-        disabled: false
-      }]
+      timer: null,
+      loading_search: false,
+      items: [],
+      price: null,
+      loading_search_item: false,
+      services: [],
+      resource: "penalties",
+      showFormCreateService: false
     };
   },
-  created: function created() {// await this.getTables();
+  created: function created() {
+    var _this = this;
 
     return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee() {
       return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
+              _context.next = 2;
+              return _this.getTables();
+
+            case 2:
             case "end":
               return _context.stop();
           }
@@ -258,359 +237,224 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     }))();
   },
   methods: {
-    changePlan: function changePlan() {
-      this.paymentDay = null;
-      this.penalties = [];
-      this.currentPlan = null;
-      this.limitDate = null;
-      this.selectedMonths = [];
-      this.updateTotal();
+    openCreateService: function openCreateService() {
+      this.showFormCreateService = true;
     },
-    //limit  es una fecha, con el mes y año actual, pero con el día del pago
-    //date es la fecha actual
-    //paymentday es solo el día
-    //
-    checkPenalty: function checkPenalty(date) {
-      var _this$currentPlan = this.currentPlan,
-          total = _this$currentPlan.total,
-          penalty = _this$currentPlan.penalty,
-          days_extension = _this$currentPlan.days_extension;
-      date = date.add(days_extension, "days");
-
-      if (this.date.isAfter(date.add())) {
-        if (penalty) {
-          var percentage = penalty.percentage,
-              type = penalty.type;
-          percentage = type == "percentage" ? Number(percentage) / 100 : Number(percentage);
-          var totalPerDay = type == "percentage" ? total * percentage : percentage;
-          var days = this.date.diff(date, "days");
-          var month = date.get("month") + 1;
-          var nameMonth = this.months.find(function (m) {
-            return m.id == month;
-          }).label;
-          this.penalties.push({
-            id: month,
-            days: days,
-            label: nameMonth,
-            penalty: days * totalPerDay
-          });
-        }
-      }
+    add: function add(data) {
+      this.items = [].concat(_toConsumableArray(this.items), [data]);
+      this.form.item_id = data.id;
+      this.changeItem();
     },
-    selectMonth: function selectMonth() {
-      var _this = this;
-
-      this.penalties = [];
-
-      if (this.paymentDay) {
-        this.selectedMonths.forEach(function (sm) {
-          var date = __WEBPACK_IMPORTED_MODULE_1_moment___default()("".concat(sm, "-").concat(_this.paymentDay, "-").concat(_this.date.format("Y")));
-
-          _this.checkPenalty(date);
-        });
-      }
-
-      this.updateTotal();
-    },
-    initForm: function initForm() {
-      this.currentPlan = null;
-      this.penalties = [];
-      this.paymentDay = null;
-      this.form = {};
-      this.months = [{
-        id: 1,
-        label: "Enero",
-        disabled: false
-      }, {
-        id: 2,
-        label: "Febrero",
-        disabled: false
-      }, {
-        id: 3,
-        label: "Marzo",
-        disabled: false
-      }, {
-        id: 4,
-        label: "Abril",
-        disabled: false
-      }, {
-        id: 5,
-        label: "Mayo",
-        disabled: false
-      }, {
-        id: 6,
-        label: "Junio",
-        disabled: false
-      }, {
-        id: 7,
-        label: "Julio",
-        disabled: false
-      }, {
-        id: 8,
-        label: "Agosto",
-        disabled: false
-      }, {
-        id: 9,
-        label: "Setiembre",
-        disabled: false
-      }, {
-        id: 10,
-        label: "Octubre",
-        disabled: false
-      }, {
-        id: 11,
-        label: "Noviembre",
-        disabled: false
-      }, {
-        id: 12,
-        label: "Diciembre",
-        disabled: false
-      }];
-    },
-    typeParent: function typeParent(type) {
-      var types = {
-        mother: "Madre:",
-        father: "Padre:",
-        attorney: "Apoderado:"
-      };
-      return types[type];
-    },
-    setMonths: function setMonths() {
+    getTables: function getTables() {
       var _this2 = this;
 
       return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee2() {
-        var months;
+        var response, items;
         return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
-                _this2.months = [{
-                  id: 1,
-                  label: "Enero",
-                  disabled: false
-                }, {
-                  id: 2,
-                  label: "Febrero",
-                  disabled: false
-                }, {
-                  id: 3,
-                  label: "Marzo",
-                  disabled: false
-                }, {
-                  id: 4,
-                  label: "Abril",
-                  disabled: false
-                }, {
-                  id: 5,
-                  label: "Mayo",
-                  disabled: false
-                }, {
-                  id: 6,
-                  label: "Junio",
-                  disabled: false
-                }, {
-                  id: 7,
-                  label: "Julio",
-                  disabled: false
-                }, {
-                  id: 8,
-                  label: "Agosto",
-                  disabled: false
-                }, {
-                  id: 9,
-                  label: "Setiembre",
-                  disabled: false
-                }, {
-                  id: 10,
-                  label: "Octubre",
-                  disabled: false
-                }, {
-                  id: 11,
-                  label: "Noviembre",
-                  disabled: false
-                }, {
-                  id: 12,
-                  label: "Diciembre",
-                  disabled: false
-                }];
+                _context2.prev = 0;
+                _this2.loading = true;
+                _context2.next = 4;
+                return _this2.$http.get("".concat(_this2.resource, "/tables"));
 
-                if (_this2.form.plan_id) {
-                  months = _this2.monthsPayed.filter(function (m) {
-                    return m.plan_id == _this2.form.plan_id;
-                  });
-                  months.forEach(function (m) {
-                    _this2.months.find(function (n) {
-                      return n.id == m.month;
-                    }).disabled = true;
-                  });
-                }
+              case 4:
+                response = _context2.sent;
+                items = response.data.items;
+                _this2.items = items;
+                _context2.next = 13;
+                break;
 
-              case 2:
+              case 9:
+                _context2.prev = 9;
+                _context2.t0 = _context2["catch"](0);
+                console.log(_context2.t0);
+
+                _this2.$toast.error("Ocurrió un problema");
+
+              case 13:
+                _context2.prev = 13;
+                _this2.loading = false;
+                return _context2.finish(13);
+
+              case 16:
               case "end":
                 return _context2.stop();
             }
           }
-        }, _callee2);
+        }, _callee2, null, [[0, 9, 13, 16]]);
       }))();
     },
-    updateTotal: function updateTotal() {
+    initItemForm: function initItemForm() {
+      this.form.item_id = null;
+      this.form.disabled = false;
+      this.price = null;
+    },
+    deleteService: function deleteService(id) {
+      this.services = this.services.filter(function (s) {
+        return s.item_id != id;
+      });
+    },
+    addItem: function addItem() {
       var _this3 = this;
 
-      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee3() {
-        var plan, items, name, description, _this3$member, id, parent, person, observation, totalPenalties, form, penalties;
+      var item = this.items.find(function (i) {
+        return i.id == _this3.form.item_id;
+      }); // let { id } = item;
 
-        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee3$(_context3) {
-          while (1) {
-            switch (_context3.prev = _context3.next) {
-              case 0:
-                if (_this3.form.plan_id) {
-                  _context3.next = 2;
-                  break;
-                }
-
-                return _context3.abrupt("return");
-
-              case 2:
-                _this3.setMonths();
-
-                plan = _this3.plans.find(function (p) {
-                  return p.id == _this3.form.plan_id;
-                });
-                items = [];
-
-                if (plan) {
-                  _this3.currentPlan = plan;
-
-                  if (plan.payment_date) {
-                    _this3.paymentDay = plan.payment_date.split("/")[0];
-                    _this3.limitDate = __WEBPACK_IMPORTED_MODULE_1_moment___default()().set("date", _this3.paymentDay);
-                  }
-
-                  items = plan.services.map(function (s) {
-                    s.item.sale_unit_price = s.price * _this3.selectedMonths.length;
-                    s.item.percentage_igv = 18;
-                    return s.item;
-                  });
-                } else {
-                  _this3.currentPlan = null;
-                  _this3.paymentDay = null;
-                  _this3.limitDate = null;
-                }
-
-                name = plan.name, description = plan.description;
-                _this3$member = _this3.member, id = _this3$member.id, parent = _this3$member.parent, person = _this3$member.person;
-                observation = "".concat(name, " - ").concat(description, " ").concat(_this3.selectedMonths.length != 0 ? "Meses: ".concat(_this3.selectedMonths.sort(function (a, b) {
-                  return a - b;
-                }).map(function (n) {
-                  return _this3.months.find(function (m) {
-                    return m.id == n;
-                  }).label;
-                }).join("-")) : "").toUpperCase();
-
-                _this3.penalties.sort(function (a, b) {
-                  return a.id - b.id;
-                });
-
-                totalPenalties = _this3.penalties.reduce(function (a, b) {
-                  return a + Number(b.penalty);
-                }, 0);
-                form = {
-                  member_id: id,
-                  plan_id: plan.id,
-                  first_pay: "2023-01-30",
-                  last_pay: "2023-01-30",
-                  payment_count: 1,
-                  active: 1,
-                  months: _this3.selectedMonths
-                };
-
-                if (_this3.currentPlan && _this3.currentPlan.penalty) {
-                  penalties = _this3.currentPlan.penalty.services.map(function (s) {
-                    s.item.sale_unit_price = totalPenalties;
-                    s.item.percentage_igv = 18;
-                    return s.item;
-                  });
-                  form.detail = {
-                    items: items,
-                    penalties: penalties
-                  };
-                  items = [].concat(_toConsumableArray(items), _toConsumableArray(penalties));
-                }
-
-                _this3.$emit("createFormRegister", form);
-
-                _this3.$emit("updateItems", items);
-
-                _this3.$emit("updateObservation", observation);
-
-                _this3.$emit("updateCustomer", parent.person);
-
-              case 17:
-              case "end":
-                return _context3.stop();
-            }
-          }
-        }, _callee3);
-      }))();
+      this.services = [item]; // this.initItemForm();
     },
-    getTables: function getTables() {
+    changeItem: function changeItem() {
+      this.addItem();
+    },
+    searchRemoteItems: function searchRemoteItems(input) {
       var _this4 = this;
 
       return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee4() {
-        var response, _response$data, plans, months;
-
         return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee4$(_context4) {
           while (1) {
             switch (_context4.prev = _context4.next) {
               case 0:
-                _context4.prev = 0;
-                _this4.loading = true;
-                _context4.next = 4;
-                return _this4.$http.get("/college/".concat(_this4.resource, "/tables?service=1&member_id=").concat(_this4.member.id));
+                if (input.length > 2) {
+                  if (_this4.timer) {
+                    clearTimeout(_this4.timer);
+                  }
 
-              case 4:
-                response = _context4.sent;
-                _response$data = response.data, plans = _response$data.plans, months = _response$data.months;
-                _this4.monthsPayed = months;
+                  _this4.timer = setTimeout( /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee3() {
+                    var parameters, response;
+                    return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee3$(_context3) {
+                      while (1) {
+                        switch (_context3.prev = _context3.next) {
+                          case 0:
+                            _context3.prev = 0;
+                            parameters = "input=".concat(input);
+                            _this4.loading_search = true;
+                            _context3.next = 5;
+                            return _this4.$http.get("/documents/data-table/items?service=1&".concat(parameters));
 
-                _this4.setMonths();
+                          case 5:
+                            response = _context3.sent;
+                            _this4.items = response.data;
+                            _context3.next = 12;
+                            break;
 
-                _this4.plans = plans.map(function (r) {
-                  return _objectSpread(_objectSpread({}, r), {}, {
-                    total: r.services.reduce(function (a, b) {
-                      return a + Number(b.price);
-                    }, 0)
-                  });
-                });
-                _context4.next = 15;
-                break;
+                          case 9:
+                            _context3.prev = 9;
+                            _context3.t0 = _context3["catch"](0);
+                            console.log(_context3.t0);
 
-              case 11:
-                _context4.prev = 11;
-                _context4.t0 = _context4["catch"](0);
-                console.log(_context4.t0);
+                          case 12:
+                            _context3.prev = 12;
+                            _this4.loading_search = false;
+                            return _context3.finish(12);
 
-                _this4.$toast.error("Ocurrió un problema");
+                          case 15:
+                          case "end":
+                            return _context3.stop();
+                        }
+                      }
+                    }, _callee3, null, [[0, 9, 12, 15]]);
+                  })), 250);
+                }
 
-              case 15:
-                _context4.prev = 15;
-                _this4.loading = false;
-                return _context4.finish(15);
-
-              case 18:
+              case 1:
               case "end":
                 return _context4.stop();
             }
           }
-        }, _callee4, null, [[0, 11, 15, 18]]);
+        }, _callee4);
       }))();
+    },
+    submit: function submit() {
+      var _this5 = this;
+
+      return _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.mark(function _callee5() {
+        var response, _response$data, message, success;
+
+        return __WEBPACK_IMPORTED_MODULE_0__babel_runtime_regenerator___default.a.wrap(function _callee5$(_context5) {
+          while (1) {
+            switch (_context5.prev = _context5.next) {
+              case 0:
+                _context5.prev = 0;
+                _this5.loading = true;
+                _this5.form.services = _this5.services;
+                _context5.next = 5;
+                return _this5.$http.post("penalties", _objectSpread(_objectSpread({}, _this5.form), {}, {
+                  id: _this5.record ? _this5.record.id : null
+                }));
+
+              case 5:
+                response = _context5.sent;
+                _response$data = response.data, message = _response$data.message, success = _response$data.success;
+
+                if (success) {
+                  _this5.$toast.success(message);
+
+                  _this5.$emit("getRecords");
+                } else {
+                  _this5.$toast.error(message);
+                }
+
+                console.log(response);
+                _context5.next = 15;
+                break;
+
+              case 11:
+                _context5.prev = 11;
+                _context5.t0 = _context5["catch"](0);
+                console.log(_context5.t0);
+
+                _this5.$toast.error("Ocurrió un problema");
+
+              case 15:
+                _context5.prev = 15;
+                _this5.loading = false;
+
+                _this5.close();
+
+                return _context5.finish(15);
+
+              case 19:
+              case "end":
+                return _context5.stop();
+            }
+          }
+        }, _callee5, null, [[0, 11, 15, 19]]);
+      }))();
+    },
+    close: function close() {
+      this.$emit("update:showDialog");
+    },
+    open: function open() {
+      this.form = {
+        default_count: 1,
+        type: "amount"
+      };
+
+      if (this.record) {
+        console.log(this.record);
+        this.form = _objectSpread({}, this.record);
+        this.items = this.form.services.map(function (s) {
+          return s.item;
+        });
+        this.services = _toConsumableArray(this.items);
+
+        var _this$items = _slicedToArray(this.items, 1),
+            item = _this$items[0];
+
+        this.form.item_id = item.id;
+        this.title = "Editar penalidad";
+      } else {
+        this.title = "Crear nueva penalidad";
+      }
     }
   }
 });
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-3fbe7136\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/College/Resources/assets/js/components/service_form.vue":
+/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-0286809f\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./modules/College/Resources/assets/js/views/penalties/form.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -618,7 +462,7 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c(
-    "div",
+    "el-dialog",
     {
       directives: [
         {
@@ -628,212 +472,233 @@ var render = function() {
           expression: "loading"
         }
       ],
-      staticClass: "card bg-ligth"
+      attrs: {
+        "append-to-body": "",
+        title: _vm.title,
+        visible: _vm.showDialog,
+        width: "650px"
+      },
+      on: { open: _vm.open, close: _vm.close }
     },
     [
-      _c("div", { staticClass: "row mt-2" }, [
-        _c(
-          "div",
-          { staticClass: "col-12" },
-          [
-            _c("label", { staticClass: "label-control w-100" }, [
-              _vm._v("Plan")
-            ]),
-            _vm._v(" "),
-            _c(
-              "el-select",
-              {
-                on: { change: _vm.changePlan },
+      _c("div", [
+        _c("div", { staticClass: "row" }, [
+          _c(
+            "div",
+            { staticClass: "col-md-6 col-12" },
+            [
+              _c(
+                "label",
+                { staticClass: "label-control w-100", attrs: { for: "" } },
+                [_vm._v("Descripción")]
+              ),
+              _vm._v(" "),
+              _c("el-input", {
                 model: {
-                  value: _vm.form.plan_id,
+                  value: _vm.form.description,
                   callback: function($$v) {
-                    _vm.$set(_vm.form, "plan_id", $$v)
+                    _vm.$set(_vm.form, "description", $$v)
                   },
-                  expression: "form.plan_id"
+                  expression: "form.description"
                 }
-              },
-              _vm._l(_vm.plans, function(plan, idx) {
-                return _c("el-option", {
-                  key: idx,
-                  attrs: {
-                    label:
-                      plan.name + " " + plan.description + " S/" + plan.total,
-                    value: plan.id
+              })
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "col-md-3 col-12" },
+            [
+              _c(
+                "label",
+                { staticClass: "label-control w-100", attrs: { for: "" } },
+                [
+                  _vm._v(
+                    "\n                    Tipo de cobro\n                "
+                  )
+                ]
+              ),
+              _vm._v(" "),
+              _c(
+                "el-select",
+                {
+                  model: {
+                    value: _vm.form.type,
+                    callback: function($$v) {
+                      _vm.$set(_vm.form, "type", $$v)
+                    },
+                    expression: "form.type"
                   }
-                })
-              }),
-              1
-            ),
-            _vm._v(" "),
-            _vm.paymentDay
-              ? _c("label", { staticClass: "mt-2 label-control" }, [
-                  _vm._v("Vencimiento:\n                "),
-                  _c("strong", [
-                    _vm._v(
-                      "\n                    " +
-                        _vm._s(_vm.paymentDay.split("/")[0] + " de cada mes")
-                    )
-                  ])
-                ])
-              : _vm._e(),
-            _vm._v(" "),
-            _vm.currentPlan && _vm.currentPlan.days_extension != 0
-              ? _c(
-                  "label",
+                },
+                [
+                  _c("el-option", {
+                    attrs: { value: "percentage", label: "Porcentaje" }
+                  }),
+                  _vm._v(" "),
+                  _c("el-option", {
+                    attrs: { value: "amount", label: "Monto fijo" }
+                  })
+                ],
+                1
+              )
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "col-md-3 col-12" },
+            [
+              _c(
+                "label",
+                { staticClass: "label-control w-100", attrs: { for: "" } },
+                [
+                  _vm._v(
+                    "\n                    " +
+                      _vm._s(
+                        _vm.form.type == "percentage"
+                          ? "Porcentaje %"
+                          : "S/ Monto"
+                      ) +
+                      "\n                "
+                  )
+                ]
+              ),
+              _vm._v(" "),
+              _vm.form.type == "amount"
+                ? _c("el-input-number", {
+                    staticStyle: { width: "100%" },
+                    attrs: {
+                      "controls-position": "right",
+                      precision: 2,
+                      step: 0.1
+                    },
+                    model: {
+                      value: _vm.form.percentage,
+                      callback: function($$v) {
+                        _vm.$set(_vm.form, "percentage", $$v)
+                      },
+                      expression: "form.percentage"
+                    }
+                  })
+                : _c("el-input-number", {
+                    staticStyle: { width: "100%" },
+                    attrs: {
+                      "controls-position": "right",
+                      precision: 2,
+                      max: 100,
+                      step: 0.1
+                    },
+                    model: {
+                      value: _vm.form.percentage,
+                      callback: function($$v) {
+                        _vm.$set(_vm.form, "percentage", $$v)
+                      },
+                      expression: "form.percentage"
+                    }
+                  })
+            ],
+            1
+          )
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "row" }, [
+          _c(
+            "div",
+            { staticClass: "col-12" },
+            [
+              _c("label", { staticClass: "control-label w-100" }, [
+                _vm._v("Servicio\n                    "),
+                _c(
+                  "a",
                   {
-                    staticClass: "text-primary",
-                    staticStyle: { "font-weight": "bold" }
+                    staticClass: "control-label font-weight-bold text-info",
+                    attrs: { href: "#" },
+                    on: { click: _vm.openCreateService }
                   },
-                  [
-                    _vm._v("\n                / Prorroga:\n                "),
-                    _c("strong", [
-                      _vm._v(
-                        " " + _vm._s(_vm.currentPlan.days_extension) + " días "
-                      )
-                    ])
-                  ]
+                  [_vm._v("\n                        [ + Nuevo]")]
                 )
-              : _vm._e()
-          ],
-          1
-        )
+              ]),
+              _vm._v(" "),
+              _c(
+                "el-select",
+                {
+                  staticClass: "w-100",
+                  attrs: {
+                    filterable: "",
+                    remote: "",
+                    "popper-class": "el-select-customers",
+                    clearable: "",
+                    placeholder: "Nombre o código interno",
+                    "remote-method": _vm.searchRemoteItems,
+                    loading: _vm.loading_search_item
+                  },
+                  on: { change: _vm.changeItem },
+                  model: {
+                    value: _vm.form.item_id,
+                    callback: function($$v) {
+                      _vm.$set(_vm.form, "item_id", $$v)
+                    },
+                    expression: "form.item_id"
+                  }
+                },
+                _vm._l(_vm.items, function(option) {
+                  return _c("el-option", {
+                    key: option.id,
+                    attrs: { value: option.id, label: option.description }
+                  })
+                }),
+                1
+              )
+            ],
+            1
+          )
+        ])
       ]),
       _vm._v(" "),
       _c(
         "div",
-        { staticClass: "row mt-1 " },
+        {
+          staticClass: "dialog-footer",
+          attrs: { slot: "footer" },
+          slot: "footer"
+        },
         [
+          _c("el-button", { on: { click: _vm.close } }, [_vm._v("Cancelar")]),
+          _vm._v(" "),
           _c(
-            "el-checkbox-group",
-            {
-              staticClass: " d-flex flex-wrap justify-content-center",
-              attrs: { disabled: !_vm.form.plan_id },
-              on: { change: _vm.selectMonth },
-              model: {
-                value: _vm.selectedMonths,
-                callback: function($$v) {
-                  _vm.selectedMonths = $$v
-                },
-                expression: "selectedMonths"
-              }
-            },
-            _vm._l(_vm.months, function(m) {
-              return _c(
-                "el-checkbox-button",
-                {
-                  key: m.id,
-                  staticClass: "mt-1",
-                  attrs: { disabled: m.disabled, label: m.id }
-                },
-                [_vm._v(_vm._s(m.label))]
-              )
-            }),
-            1
+            "el-button",
+            { attrs: { type: "primary" }, on: { click: _vm.submit } },
+            [_vm._v("Guardar")]
           )
         ],
         1
       ),
       _vm._v(" "),
-      _vm.penalties.length != 0
-        ? _c("div", { staticClass: "row p-2 d-flex justify-content-center" }, [
-            _c(
-              "table",
-              { staticClass: "table-sm table-bordered border-danger w-75" },
-              [
-                _c("thead", { staticClass: "thead-dark" }, [
-                  _c("tr", [
-                    _c("th", { staticClass: "text-center" }, [
-                      _vm._v(
-                        "\n                        Mes\n                    "
-                      )
-                    ]),
-                    _vm._v(" "),
-                    _c("th", { staticClass: "text-center" }, [
-                      _vm._v("Días de retraso")
-                    ]),
-                    _vm._v(" "),
-                    _c("th", { staticClass: "text-center" }, [
-                      _vm._v(
-                        "\n                        Penalidad x día" +
-                          _vm._s(
-                            _vm.currentPlan.penalty.type == "percentage"
-                              ? " " + _vm.currentPlan.penalty.percentage + " %"
-                              : " S/ " + _vm.currentPlan.penalty.percentage
-                          ) +
-                          "\n                    "
-                      )
-                    ])
-                  ])
-                ]),
-                _vm._v(" "),
-                _c(
-                  "tbody",
-                  [
-                    _vm._l(_vm.penalties, function(penal, idx) {
-                      return _c("tr", { key: idx }, [
-                        _c("td", { staticClass: "text-center" }, [
-                          _vm._v(_vm._s(penal.label))
-                        ]),
-                        _vm._v(" "),
-                        _c("td", { staticClass: "text-center" }, [
-                          _vm._v(_vm._s(penal.days))
-                        ]),
-                        _vm._v(" "),
-                        _c("td", { staticClass: "text-center" }, [
-                          _vm._v(
-                            "\n                        " +
-                              _vm._s(penal.penalty.toFixed(2)) +
-                              "\n                    "
-                          )
-                        ])
-                      ])
-                    }),
-                    _vm._v(" "),
-                    _c("tr", [
-                      _c("td", { staticClass: "text-center" }),
-                      _vm._v(" "),
-                      _vm._m(0),
-                      _vm._v(" "),
-                      _c("td", { staticClass: "text-center" }, [
-                        _vm._v(
-                          "\n                        " +
-                            _vm._s(
-                              _vm.penalties
-                                .reduce(function(a, b) {
-                                  return a + Number(b.penalty)
-                                }, 0)
-                                .toFixed(2)
-                            ) +
-                            "\n                    "
-                        )
-                      ])
-                    ])
-                  ],
-                  2
-                )
-              ]
-            )
-          ])
-        : _vm._e()
-    ]
+      _c("form-service", {
+        attrs: { showDialog: _vm.showFormCreateService },
+        on: {
+          add: _vm.add,
+          "update:showDialog": function($event) {
+            _vm.showFormCreateService = $event
+          },
+          "update:show-dialog": function($event) {
+            _vm.showFormCreateService = $event
+          }
+        }
+      })
+    ],
+    1
   )
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", { staticClass: "text-center" }, [
-      _c("span", { staticClass: "bold" }, [_vm._v("Total")])
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-3fbe7136", module.exports)
+    require("vue-hot-reload-api")      .rerender("data-v-0286809f", module.exports)
   }
 }
 
