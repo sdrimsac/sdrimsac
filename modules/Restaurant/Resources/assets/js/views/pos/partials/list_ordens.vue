@@ -585,7 +585,7 @@
                                 </span>
                             </el-checkbox>
                         </template>
-                        <template v-if="commercialTreatments.length > 0">
+                        <template v-if="commercialTreatments.length > 0 && configuration.commercial_treatments">
                             <el-select
                             style="margin-bottom: 5px;"
                                 clearable
@@ -3054,6 +3054,7 @@ export default {
             }
         },
         limpiarForm() {
+            this.commercialTreatmentId = null;
             this.quotation_stock = false;
             this.$emit("limpiarForm");
         },
@@ -3065,6 +3066,7 @@ export default {
             this.apart = true;
         },
         pullApartOrden() {
+            this.commercialTreatmentId = null;
             if (
                 !this.numberCustomerApart &&
                 this.numberCustomerApart.length <= 1
@@ -3097,6 +3099,7 @@ export default {
             }
         },
         async cancelOrden() {
+            this.commercialTreatmentId = null;
             try {
                 let res = await this.$confirm(
                     "Desea cancelar este pedido?",

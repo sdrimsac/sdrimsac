@@ -23,7 +23,15 @@ class CommercialTreatmentController extends Controller
             'description' => 'Descripción'
         ];
     }
-
+    public function delete($id){
+        $commercial_treatment = CommercialTreatment::findOrFail($id);
+        $commercial_treatment->delete();
+        return [
+            'success' => true,
+            'message' => 'Eliminado con éxito',
+            'data'    => $commercial_treatment
+        ];
+    }
     public function store_categories(Request $request, $id)
     {
         $table_data = $request->data;

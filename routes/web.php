@@ -52,6 +52,7 @@ if ($hostname) {
                     Route::get('/columns', [CommercialTreatmentController::class, 'columns']);
                     Route::get('/records', [CommercialTreatmentController::class, 'records']);
                     Route::get('/record/{id}', [CommercialTreatmentController::class, 'record']);
+                    Route::delete('/{id}', [CommercialTreatmentController::class, 'delete']);
                     Route::post('/', [CommercialTreatmentController::class, 'store']);
                     Route::prefix('categories')
                     ->group(function (){

@@ -123,7 +123,7 @@
                                         Eliminar
                                     </button>
 
-                                    <button
+                                    <!-- <button
                                         type="button"
                                         class="btn waves-effect waves-light btn-sm btn-danger"
                                         @click.prevent="clickDisable(row.id)"
@@ -138,7 +138,7 @@
                                         v-else
                                     >
                                         Habilitar
-                                    </button>
+                                    </button> -->
                                 </template>
                             </td>
                         </tr>

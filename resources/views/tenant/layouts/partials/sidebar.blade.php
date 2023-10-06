@@ -36,7 +36,7 @@
                             </a>
                         </li>
                     @endif
-
+                    @if($config->commercial_treatments)
                     <li>
                         <a class="{{ $path[0] === 'bank_accounts' && $path[1] === '' ? 'active' : '' }}"
                             href="{{ route('tenant.commercial_treatment.index') }}">
@@ -44,6 +44,7 @@
                             Tratamiento comercial
                         </a>
                     </li>
+                    @endif
                     <li>
                         <a class="{{ $path[0] === 'bank_accounts' && $path[1] === '' ? 'active' : '' }}"
                             href="{{ route('tenant.bank_accounts.index') }}">

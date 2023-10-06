@@ -895,8 +895,10 @@ export default {
         },
 
         searchNumber(data) {
-            this.form.district_id = data.ubigeo[2];
-            this.filterDistricts();
+            if (data.ubigeo) {
+                this.form.district_id = data.ubigeo[2];
+                this.filterDistricts();
+            }
             this.form.name =
                 this.form.identity_document_type_id === "1"
                     ? data.nombre_completo
@@ -905,15 +907,17 @@ export default {
                 this.form.identity_document_type_id === "6"
                     ? data.nombre_o_razon_social
                     : "";
-            this.form.location_id = data.ubigeo;
-            this.form.department_id = data.ubigeo ? data.ubigeo[0] : null;
-            this.form.province_id = data.ubigeo ? data.ubigeo[1] : null;
-            this.form.district_id = data.ubigeo ? data.ubigeo[2] : null;
-            this.filterProvinces();
-            this.filterDistricts();
-            this.form.address = data.direccion;
-            this.form.condition = data.condicion;
-            this.form.state = data.estado;
+            if (data.ubigeo) {
+                this.form.location_id = data.ubigeo;
+                this.form.department_id = data.ubigeo ? data.ubigeo[0] : null;
+                this.form.province_id = data.ubigeo ? data.ubigeo[1] : null;
+                this.form.district_id = data.ubigeo ? data.ubigeo[2] : null;
+                this.filterProvinces();
+                this.filterDistricts();
+                this.form.address = data.direccion;
+                this.form.condition = data.condicion;
+                this.form.state = data.estado;
+            }
         },
         clickRemoveAddress(index) {
             this.form.addresses.splice(index, 1);

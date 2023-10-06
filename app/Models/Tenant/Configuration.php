@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Config;
 class Configuration extends ModelTenant
 {
     protected $fillable = [
+        'commercial_treatments',
         'caja_actions',
         'purchase_affectation_igv_type_id',
         'text_comanda',
@@ -121,6 +122,7 @@ class Configuration extends ModelTenant
 
     ];
     protected $casts = [
+        'commercial_treatments' => 'boolean',
         'caja_actions' => 'boolean',
         'text_comanda' => 'boolean',
         'seller_caja' => 'boolean',
@@ -199,6 +201,7 @@ class Configuration extends ModelTenant
         // $skins = Skin::all();
         $skins = [];
         return [
+            'commercial_treatments' => (bool)$this->commercial_treatments,
             'caja_actions' => (bool)$this->caja_actions,
             'purchase_affectation_igv_type_id' => $this->purchase_affectation_igv_type_id,
             'text_comanda' => (bool) $this->text_comanda,

@@ -12,8 +12,34 @@
                 {{ commercialTreatment.is_amount ? "Monto" : "Porcentaje" }}
             </span>
         </div>
-        <div class="d-flex flex-wrap justify-content-center">
-            <div v-for="(data, idx) in tableData" :key="idx" class="m-1">
+        <div class="row">
+            <div class="col-4">
+                <label for="general"
+                    >Valor general
+                    <el-tooltip
+                        effect="dark"
+                        content="Valor que se aplicará a todas las categorias"
+                        placement="top"
+                    >
+                        <i class="el-icon-question"></i>
+                    </el-tooltip>
+                </label>
+                <el-input v-model="general"
+                type="number"
+                ></el-input>
+            </div>
+            <div class="col-3 d-flex align-items-end">
+                <el-button
+                    type="primary"
+                    icon="el-icon-plus"
+                    @click="addGeneralValue"
+                >
+                    Insertar
+                </el-button>
+            </div>
+        </div>
+        <div class="row d-flex justify-content-center">
+            <div v-for="(data, idx) in tableData" :key="idx" class="m-1 col-3">
                 <label for="desc">
                     {{ data.name }}
                 </label>
@@ -38,6 +64,7 @@ export default {
     props: ["showDialog", "commercialTreatment"],
     data() {
         return {
+            general: 0,
             originalTitle: "Categoria x tratamiento comercial",
             title: "Categoria x tratamiento comercial",
             form: {},
@@ -47,6 +74,12 @@ export default {
         };
     },
     methods: {
+        async addGeneralValue(){
+            this.tableData.forEach((item) => {
+                let general = this.general.toFixed(2);
+                item.amount = general;
+            });
+        },
         async getTable() {
             this.loading = true;
             const response = await this.$http.get(
