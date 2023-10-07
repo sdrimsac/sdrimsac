@@ -283,71 +283,16 @@
                     </div>
                 </div>
                 <el-divider></el-divider>
-                <!-- <div class="row d-flex justify-content-between">
-                    <span>Compra: {{ purchase_code }}</span>
-                    <span>Venta: {{ sale_code }}</span>
-                </div> -->
-                <!--    
-                <div class="d-flex flex-row justify-content-center">
-                    <div
-                        class="d-flex flex-row  col-12  col-lg-4 col-md-10 border overflow-hidden justify-content-start "
-                    >
-                        <div>
-                            <div
-                                v-if="imageSaved"
-                                class="col-12 d-flex  justify-content-center align-items-center "
-                            >
-                                <img
-                                    :src="imageSaved"
-                                    alt="imagen"
-                                    class="img-thumbnail"
-                                />
-                            </div>
-                            <div
-                                v-else
-                                class="col-12 d-flex  justify-content-center align-items-center "
-                            >
-                                <el-empty :image-size="100"></el-empty>
-                            </div>
-                        </div>
-
-                        <div
-                            class="d-flex flex-column flex-fill justify-content-center align-items-center"
-                        >
-                            <span
-                                :style="
-                                    `color:${
-                                        type == 'Precio venta'
-                                            ? '#E6A23C'
-                                            : '#000'
-                                    }`
-                                "
-                                class="text-center"
-                            >
-                                {{ sale_code || "N/D" }}</span
-                            >
-                            <span class="text-center">{{
-                                product.descripcion ||
-                                    "DESCRIPCION DEL PRODUCTO"
-                            }}</span>
-                            <img id="barcode" alt="barcode" />
-                            <div class="d-flex col-12 justify-content-end p-1">
-                                <span
-                                    :style="
-                                        `color:${
-                                            type != 'Precio venta'
-                                                ? '#409EFF'
-                                                : '#000'
-                                        }`
-                                    "
-                                    >{{ purchase_code || "N/D" }}</span
-                                >
-                            </div>
-                        </div>
+             
+                <div class="d-flex justify-content-center">
+                    <div class="col-3 text-center">
+                        <el-button @click="changeModel(1)">Modelo 1</el-button>
                     </div>
-                </div> -->
-
-                <div class="d-flex flex-row justify-content-center">
+                    <div class="col-3 text-center">
+                        <el-button @click="changeModel(2)">Modelo 2</el-button>
+                    </div>
+                </div>
+                <div v-if="modelType == 1" class="d-flex flex-row justify-content-center">
                     <div
                         class="  border d-flex flex-row align-items-center h150 w300 overflow-hidden"
                     >
@@ -405,6 +350,74 @@
                                     "
                                     >{{ purchase_code || "N/D" }}</span
                                 >
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div v-else class="d-flex flex-row justify-content-center">
+                    <div
+                        class="  border d-flex flex-column align-items-center h150 w300 overflow-hidden"
+                    >
+                        <div>
+                            <div v-if="imageSaved" class="w150 overflow-hidden">
+                                <img
+                                    style="border:none !important;"
+                                    :src="imageSaved"
+                                    alt="imagen"
+                                    class="img-thumbnail"
+                                />
+                            </div>
+                            <div
+                                v-else
+                                class="col-12 d-flex  justify-content-center align-items-center "
+                            >
+                                <el-empty :image-size="150"></el-empty>
+                            </div>
+                        </div>
+                        <div
+                            class="d-flex flex-fill flex-column justify-content-center align-items-center"
+                        >
+                            <span
+                                :style="
+                                    `color:${
+                                        type == 'Precio venta'
+                                            ? '#E6A23C'
+                                            : '#000'
+                                    }`
+                                "
+                                class="text-center"
+                            >
+                                {{ sale_code || "N/D" }}</span
+                            >
+                            <span class="text-center">{{
+                                product.descripcion ||
+                                    "DESCRIPCION DEL PRODUCTO"
+                            }}</span>
+                            <img
+                                v-show="product_id"
+                                id="barcode"
+                                alt="barcode"
+                            />
+                            <div
+                                class="d-flex col-12 justify-content-between p-1"
+                            >
+                                <!-- <span>{{ product.location || "S/L" }}</span> -->
+                                <span></span>
+                                <span>
+                                   S/ {{Number(product.price||0).toFixed(0)}}
+                                </span>
+                                <!-- <span
+                                    :style="
+                                        `color:${
+                                            type != 'Precio venta'
+                                                ? '#409EFF'
+                                                : '#000'
+                                        }`
+                                    "
+                                    >{{ purchase_code || "N/D" }}</span
+                                > -->
                             </div>
                         </div>
                     </div>
@@ -624,7 +637,7 @@ export default {
             paperType: 1,
             config: {
                 scaleContent: false,
-                density: 350,
+                density: 200,
                 orientation: "portrait",
                 margins: {
                     top: 0,
@@ -658,7 +671,8 @@ export default {
             product_id: null,
             company_name: null,
             items: [],
-            resource: "etiquetas"
+            resource: "etiquetas",
+            modelType:1,
         };
     },
     async created() {
@@ -693,6 +707,9 @@ export default {
         await this.getTables();
     },
     methods: {
+        changeModel(type){
+            this.modelType = type;
+        },
         async delete_image() {
             try {
                 this.loading = true;
@@ -820,7 +837,9 @@ export default {
                     this.product.barras
                 )}&type_barcode=${encodeURIComponent(
                     this.typeBarcode
-                )}&location=${this.product.location || ""}`;
+                )}&location=${this.product.location || ""}
+                &type=${this.modelType || ""}
+                `;
                 let { print_direct } = this.configuration;
                 let { etiquetadora } = this.establishment;
                 if (print_direct && etiquetadora) {

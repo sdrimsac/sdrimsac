@@ -39,6 +39,7 @@ class EtiquetasController extends Controller
                 $is_code_128 = false;
             }
             $sale_code = $request->salecode;
+            $type = $request->type;
             $purchase_code = $request->purchasecode;
             $description = $request->description;
             $format = $request->format;
@@ -53,7 +54,8 @@ class EtiquetasController extends Controller
 
             $company = Company::first();
 
-
+            $price = $record->sale_unit_price;
+            $price = number_format($price,0, ".", "");
 
             $margin_top = 0;
             $margin_left = 0;
@@ -93,6 +95,7 @@ class EtiquetasController extends Controller
             
             $html = view('etiquetas::' . $template, compact(
                 // $html = view('etiquetas::templatetest', compact(
+                'type',
                 'record',
                 'stock',
                 'company',
@@ -101,6 +104,7 @@ class EtiquetasController extends Controller
                 'purchase_code',
                 'image',
                 'location',
+                'price',
                 'paper',
                 'barcode',
                 'is_code_128'
