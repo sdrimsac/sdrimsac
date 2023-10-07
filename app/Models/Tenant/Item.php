@@ -160,11 +160,13 @@ class Item extends ModelTenant
 
         $purchase_unit_price = $this->purchase_unit_price;
         $purchase_unit_value = $this->purchase_unit_price;
-        if ($this->purchase_has_igv) {
+        
+        if ($this->purchase_affectation_igv_type_id == '10') {
             $purchase_unit_value = round($purchase_unit_price / 1.18, 8);
-        } else {
-            $purchase_unit_price = $purchase_unit_value * 1.18;
-        }
+        } 
+        // else {
+        //     
+        // }
 
         $data = [
             'id'                               => $this->id,
