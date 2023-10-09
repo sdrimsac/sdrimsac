@@ -50,7 +50,7 @@ class EtiquetasController extends Controller
 
 
 
-            $record = Item::find(1);
+            $record = Item::where('description',$description)->first();
 
             $company = Company::first();
 
