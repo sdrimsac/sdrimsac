@@ -102,6 +102,7 @@
                             </el-select>
                             <el-input
                                 v-else
+                                 ref="input_barcode"
                                 v-model="item_for_barcode"
                                 @input="searchItems"
                                 placeholder="Buscar producto"
@@ -283,7 +284,7 @@
                     </div>
                 </div>
                 <el-divider></el-divider>
-             
+
                 <div class="d-flex justify-content-center">
                     <div class="col-3 text-center">
                         <el-button @click="changeModel(1)">Modelo 1</el-button>
@@ -292,7 +293,10 @@
                         <el-button @click="changeModel(2)">Modelo 2</el-button>
                     </div>
                 </div>
-                <div v-if="modelType == 1" class="d-flex flex-row justify-content-center">
+                <div
+                    v-if="modelType == 1"
+                    class="d-flex flex-row justify-content-center"
+                >
                     <div
                         class="  border d-flex flex-row align-items-center h150 w300 overflow-hidden"
                     >
@@ -355,7 +359,6 @@
                     </div>
                 </div>
 
-
                 <div v-else class="d-flex flex-row justify-content-center">
                     <div
                         class="  border d-flex flex-column align-items-center h150 w300 overflow-hidden"
@@ -406,7 +409,8 @@
                                 <!-- <span>{{ product.location || "S/L" }}</span> -->
                                 <span></span>
                                 <span>
-                                   S/ {{Number(product.price||0).toFixed(0)}}
+                                    S/
+                                    {{ Number(product.price || 0).toFixed(0) }}
                                 </span>
                                 <!-- <span
                                     :style="
@@ -673,6 +677,7 @@ export default {
             items: [],
             resource: "etiquetas",
             modelType:1,
+            timer: null
         };
     },
     async created() {
@@ -865,6 +870,10 @@ export default {
                 } = e.response;
                 this.$toast.error(message);
                 this.loading = false;
+            }
+            if(this.lector_barcode){
+                 this.$refs.input_barcode.focus();
+                 this.item_for_barcode = null;
             }
         },
         async Printer(Printer, linkpdf) {
@@ -1068,7 +1077,11 @@ export default {
             }
         },
         async searchItems() {
-            let input = this.item_for_barcode;
+           if(this.timer){
+               clearTimeout(this.timer);
+           }
+           this.timer = setTimeout(async () => {
+             let input = this.item_for_barcode;
             if (input.length > 2) {
                 this.loading_search = true;
                 let parameters = `input=${input}`;
@@ -1092,6 +1105,7 @@ export default {
                     this.loading = false;
                 }
             }
+           }, 300);
         }
     }
 };
