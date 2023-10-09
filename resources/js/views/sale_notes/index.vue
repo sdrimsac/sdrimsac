@@ -221,7 +221,7 @@
                                                                 'superadmin')
                                                 "
                                             ></div> -->
-                                            <!-- <a
+                                            <a
                                                 href="!#"
                                                 class="dropdown-item"
                                                 @click.prevent="
@@ -239,8 +239,8 @@
                                                 <i
                                                     class="fas fa-file-signature"
                                                 ></i>
-                                                Modificar Nota de Venta
-                                            </a> -->
+                                                Editar nota de Venta
+                                            </a>
                                             <!-- <div
                                                 class="dropdown-divider"
                                                 v-if="
@@ -570,7 +570,9 @@
             :boxes="boxes"
         >
         </sale-note-detail>
-             <modal-generate-cpe :show.sync="showModalGenerateCPE"></modal-generate-cpe>
+        <modal-generate-cpe
+            :show.sync="showModalGenerateCPE"
+        ></modal-generate-cpe>
     </div>
 </template>
 <style>
@@ -600,7 +602,7 @@ export default {
     },
     data() {
         return {
-            showModalGenerateCPE:false,
+            showModalGenerateCPE: false,
             resource: "sale-notes",
             showDialogDetail: false,
             showDialogPayments: false,
@@ -683,8 +685,8 @@ export default {
         }
     },
     methods: {
-        onOpenModalGenerateCPE(){
-   this.showModalGenerateCPE = true;
+        onOpenModalGenerateCPE() {
+            this.showModalGenerateCPE = true;
         },
         teclasInit() {
             document.onkeydown = e => {

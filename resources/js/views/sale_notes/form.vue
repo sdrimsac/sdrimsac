@@ -901,7 +901,7 @@
                                                 </td>
                                                 <td class="text-end">
                                                     {{
-                                                        row.unit_price.toFixed(
+                                                        Number(row.unit_price).toFixed(
                                                             2
                                                         )
                                                     }}

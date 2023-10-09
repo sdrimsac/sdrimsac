@@ -129,6 +129,9 @@ class SaleNote extends ModelTenant
 
         );
     }
+    public function boxes(){
+        return $this->hasMany(Box::class);
+    }
     public function variationDocument()
     {
         return $this->belongsTo(Document::class, 'variation_document_id');

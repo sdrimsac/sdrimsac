@@ -7,6 +7,7 @@ use App\Models\Tenant\Series;
 use App\Models\Tenant\Payment;
 use App\Models\Tenant\SaleNote;
 use App\Models\Tenant\Establishment;
+use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 
@@ -79,6 +80,7 @@ class SaleNoteResource2 extends JsonResource
             'date_of_due' => $this->date_of_due,
             'items' => $this->items,
             'payments' => self::getTransformPayments($this->payments),
+            'boxes' => self::getTransformBoxes($this->boxes),
             'charges' => $this->charges,
             'discounts' => $this->discounts,
             'attributes' => $this->attributes,
@@ -96,7 +98,27 @@ class SaleNoteResource2 extends JsonResource
         ];
     }
 
-
+    // id: null,
+    // document_id: null,
+    // date_of_payment: moment().format("YYYY-MM-DD"),
+    // method: "Efectivo",
+    // reference: null,
+    // cash_id,
+    // amount: 0
+    public static function getTransformBoxes($boxes){
+        return $boxes->transform(function($row, $key){
+                return [
+                    'id' => $row->id,
+                    'document_id' => $row->sale_note_id,
+                    'date_of_payment' => Carbon::parse($row->date)->format('Y-m-d'),
+                    'method' => $row->method,
+                    'reference' => $row->reference,
+                    'cash_id' => $row->cash_id,
+                    'amount' => $row->amount,
+        
+                ];
+        });
+    }
     public static function getTransformPayments($payments){
 
         return $payments->transform(function($row, $key){

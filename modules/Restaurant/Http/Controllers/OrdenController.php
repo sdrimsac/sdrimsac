@@ -13,12 +13,12 @@ use App\Models\Tenant\Document;
 use App\Models\Tenant\SaleNote;
 use App\Models\Tenant\DocumentItem;
 use App\Models\Tenant\SaleNoteItem;
-use Illuminate\Http\Request;
 use App\Models\Tenant\Configuration;
 use App\Models\Tenant\Establishment;
 use App\Models\Tenant\ItemUnitType;
 use Barryvdh\DomPDF\Facade as PDF;
 use Facade\Ignition\Tabs\Tab;
+use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Modules\Restaurant\Models\Area;
@@ -392,7 +392,8 @@ class OrdenController extends Controller
     {
         $configuration = Configuration::first();
         if ($request->column == 'date') {
-            $request->value = Carbon::parse($request->value)->format('Y-m-d');
+            $date_value = Carbon::parse($request->value)->format('Y-m-d');
+            $request->merge(['value' => $date_value]);
         }
         if ($request->column == 'client') {
             $records = Orden::whereHas('customer', function ($q) use ($request) {
@@ -400,7 +401,7 @@ class OrdenController extends Controller
                     ->orWhere('number', 'like', "%{$request->value}%");
             });
         } else {
-            if ($request->id = "id") {
+            if ($request->id == "id") {
                 if ($configuration->commands_fisico == 1) {
                     $records = Orden::where('commands_fisico', 'like', "%{$request->value}%");
                 } else {
@@ -496,16 +497,18 @@ class OrdenController extends Controller
                 $user = User::where('id', auth()->user()->id)->first();
             }
             if ($configuration->commands_fisico == true) {
-                $Orden = Orden::where('commands_fisico', $request->commands_fisico)->first();
-                if ($Orden != null) {
-                    $id = $Orden->id;
+                $orden = Orden::where('commands_fisico', $request->commands_fisico)->first();
+                if ($orden != null) {
+                    $id = $orden->id;
                 } else {
                     $id = null;
                 }
             } else {
                 if ($request->id != null) {
-                    $Orden = Orden::find($request->id);
-                    $id = $Orden->id;
+                    $orden = Orden::find($request->id);
+                    if($orden){
+                        $id = $orden->id;
+                    }
                 } else {
                     $id = $request->id;
                 }
@@ -629,13 +632,22 @@ class OrdenController extends Controller
             ];
             /* ----------------------------- */
         } catch (Exception $e) {
-            Log::info($e->getMessage());
-            $ordens_items = OrdenItem::where('orden_id', $orden->id)->count();
-            if ($ordens_items == 0) {
-                $orden->delete();
-                $table = Table::find($orden->table_id);
-                $table->status_table_id = 1;
-                $table->save();
+            if($e->getMessage()!=null){
+
+                Log::info($e->getMessage());
+            }
+            if($e->getLine()!=null){
+
+                Log::info($e->getLine());
+            }
+            if($orden){
+                $ordens_items = OrdenItem::where('orden_id', $orden->id)->count();
+                if ($ordens_items == 0) {
+                    $orden->delete();
+                    $table = Table::find($orden->table_id);
+                    $table->status_table_id = 1;
+                    $table->save();
+                }
             }
             return [
                 'message' => $e->getMessage(),

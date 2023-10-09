@@ -605,6 +605,7 @@ class SaleNoteController extends Controller
             }
 
             $company = Company::first();
+            Box::where('sale_note_id', $this->sale_note->id)->delete();
             if ($request->afectar_caja == true) {
                 // $payments = PaymentMethodType::where('id', $request->payment_condition_id)->first();
                 // $method = $payments->description;
