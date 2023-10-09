@@ -199,7 +199,11 @@ class EtiquetasController extends Controller
     public function items(Request $request)
     {
         $input = $request->input("input");
-        $items = Item::where("description", "like", "%" . $input . "%")->orWhere("internal_id", "like", "%" . $input . "%")->take(15)->get()
+        $items = Item::where("description", "like", "%" . $input . "%")->orWhere(function ($subquery) use ($input){
+            $subquery->where("internal_id", "like", "%" . $input . "%")->orWhere("barcode", "like", "%" . $input . "%");
+        })
+    
+        ->take(15)->get()
             ->transform(function ($row) {
                 if ($row->internal_id != null && $row->type_barcode == "EAN-8") {
                     $row->internal_id = substr($row->internal_id, 0, -1);
