@@ -20,6 +20,10 @@ class ItemRequest extends FormRequest
                 'nullable',
                 Rule::unique('tenant.items')->ignore($id),
             ],
+            'barcode' => [
+                'nullable',
+                Rule::unique('tenant.items')->ignore($id),
+            ],
             'description' => [
                 'required',
             ],
