@@ -6,7 +6,6 @@ function format_unit($row){
     $unit_type = $row["unit_type"];
     $unit_item = $row["unit_item"];
     $stock = number_format($row["stock"],2,".","");
-    \Illuminate\Support\Facades\Log::info("max_quantity_item: ".$max_quantity_item."stock: ".$stock);
     if($max_quantity_item==0){
         return $stock." ".$unit_type;
     }
