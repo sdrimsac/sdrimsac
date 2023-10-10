@@ -1,7 +1,7 @@
 <?php
 
 function format_unit($row){
-    $max_quantity_item = $row["max_quantity_item"];
+    $max_quantity_item = $row["max_quantity_item"]??0;
   
     $unit_type = $row["unit_type"];
     $unit_item = $row["unit_item"];
@@ -9,6 +9,7 @@ function format_unit($row){
     if($max_quantity_item==0){
         return $stock." ".$unit_type;
     }
+
     $full = intdiv($stock,$max_quantity_item);
     $rest = $stock %$max_quantity_item;
     $text = "";

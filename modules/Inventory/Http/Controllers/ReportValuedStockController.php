@@ -33,6 +33,7 @@ class ReportValuedStockController extends Controller
     }
     public function exportExcel(Request $request){
      
+
         $categoria_id = $request->categoria_id;
         $establishment_id = $request->establishment_id;
         $config = Configuration::first();
