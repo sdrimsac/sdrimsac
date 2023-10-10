@@ -13,7 +13,7 @@ trait SearchTrait
         if($request->input){
 
             $items = $items->where('description','like', "%{$request->input}%")
-                        ->where(function ($subquery) use ($request){
+                        ->orWhere(function ($subquery) use ($request){
                             $subquery->where('internal_id','like', "%{$request->input}%")
                             ->orWhere('barcode','like', "%{$request->input}%");
                         });
