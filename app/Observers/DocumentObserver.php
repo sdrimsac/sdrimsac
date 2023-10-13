@@ -5,6 +5,7 @@ namespace App\Observers;
 use App\CoreFacturalo\Requests\Inputs\Functions;
 use App\Models\Tenant\Company;
 use App\Models\Tenant\Document;
+use Exception;
 
 class DocumentObserver
 {
@@ -17,14 +18,25 @@ class DocumentObserver
     public function creating(Document $document)
     {
         $company = Company::active();
-        $number = Functions::newNumber($document->soap_type_id,
-                                       $document->document_type_id,
-                                       $document->series,
-                                       $document->number, Document::class);
+        $number = Functions::newNumber(
+            $document->soap_type_id,
+            $document->document_type_id,
+            $document->series,
+            $document->number,
+            Document::class
+        );
         $document->number = $number;
 
         $document->filename = Functions::filename($company, $document->document_type_id, $document->series, $number);
 
+        $existingDocument = Document::where('number', $document->number)
+            ->where('series', $document->series)
+            ->first();
+
+        if ($existingDocument) {
+
+            throw new Exception("Verifique si el documento ya fue emitido, Ya existe un documento con el mismo número y serie");
+        }
     }
 
     /**
