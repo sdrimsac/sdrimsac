@@ -17,18 +17,20 @@ class TableController extends Controller
 {
 
 
-    public function check(){
+    public function check()
+    {
         $total = 0;
         $user = auth()->user();
         $establishment_id = $user->establishment_id;
         $tables = Table::where('status_table_id', 2)
-        ->where(function($q) use($establishment_id){
-            $q->where('establishment_id', $establishment_id)->orWhereNull('establishment_id');
-        })
-        ->get();
+        ->where('is_room', false)
+            ->where(function ($q) use ($establishment_id) {
+                $q->where('establishment_id', $establishment_id)->orWhereNull('establishment_id');
+            })
+            ->get();
         $number_tables = count($tables);
-       
-        if($number_tables == 0){
+
+        if ($number_tables == 0) {
             return [
                 'success' => false,
             ];
@@ -37,17 +39,15 @@ class TableController extends Controller
         $number_ordens = 0;
         $orden_items = [];
         foreach ($tables as $table) {
-            $ordens = Orden::where('table_id', $table->id)->whereIn('status_orden_id', [1,2,3])->get();
+            $ordens = Orden::where('table_id', $table->id)->whereIn('status_orden_id', [1, 2, 3])->get();
             $number_ordens += count($ordens);
             foreach ($ordens as $orden) {
                 $ordens_desc[] = $orden->id;
                 $items = OrdenItem::where('orden_id', $orden->id)->get()->toArray();
                 $orden_items = array_merge($orden_items, $items);
-                
+
                 $total += OrdenItem::where('orden_id', $orden->id)->selectRaw('SUM(price * quantity) as total')->value('total');
             }
-
-
         }
 
         return [
@@ -72,6 +72,7 @@ class TableController extends Controller
     {
         $establishment_id = auth()->user()->establishment_id;
         $tables = new TableCollection(Table::where('area_id', $id)
+            ->where('is_room', false)
             ->where(function ($q) use ($establishment_id) {
                 $q->where('establishment_id', $establishment_id)
                     ->orWhereNull('establishment_id');
@@ -88,7 +89,7 @@ class TableController extends Controller
         $user = auth()->user();
         $establishment_id = $user->establishment_id;
         $this->checkTables($establishment_id);
-        $tables = Table::where('establishment_id', $establishment_id)->orWhereNull('establishment_id')
+        $tables = Table::where('is_room', false)->where('establishment_id', $establishment_id)->orWhereNull('establishment_id')
             ->get();
 
         return compact('tables');
@@ -96,8 +97,8 @@ class TableController extends Controller
     public function get_ordens($id)
     {
         $ordens = Orden::where('table_id', $id)->where('status_orden_id', '<>', 4)
-        ->where('status_orden_id', '<>', 5)
-        ->get();
+            ->where('status_orden_id', '<>', 5)
+            ->get();
 
         return compact('ordens');
     }
@@ -105,7 +106,7 @@ class TableController extends Controller
     {
 
         // $this->checkTables();
-        $records = Table::query();
+        $records = Table::where('is_room', false);
         return new TableCollection($records->paginate(config('tenant.items_per_page')));
 
         // return [
@@ -115,23 +116,24 @@ class TableController extends Controller
     }
     function checkTables($establishment_id)
     {
-    
-        Table::where('status_table_id', 2)
-        ->where('establishment_id', $establishment_id)->orWhereNull('establishment_id')
-        ->chunk(
-            50,
-            function ($row) {
-                foreach ($row as $table) {
-                    //buscar las ordenes de la mesa
-                    $ordens = Orden::where('table_id', $table->id)->where('status_orden_id', '<>', 4)->where('status_orden_id', '<>', 5)->get();
 
-                    if (count($ordens) == 0) {
-                        $table->status_table_id = 1;
-                        $table->save();
+        Table::where('status_table_id', 2)
+            ->where('is_room', false)
+            ->where('establishment_id', $establishment_id)->orWhereNull('establishment_id')
+            ->chunk(
+                50,
+                function ($row) {
+                    foreach ($row as $table) {
+                        //buscar las ordenes de la mesa
+                        $ordens = Orden::where('table_id', $table->id)->where('status_orden_id', '<>', 4)->where('status_orden_id', '<>', 5)->get();
+
+                        if (count($ordens) == 0) {
+                            $table->status_table_id = 1;
+                            $table->save();
+                        }
                     }
                 }
-            }
-        );
+            );
     }
     public function record($id)
     {
@@ -147,6 +149,7 @@ class TableController extends Controller
         $numbers = $request->input('numbers');
         //check in Table if exist the number
         $tables = Table::whereIn('number', $numbers)
+            ->where('is_room', false)
             ->where('establishment_id', $request->input('establishment_id'))
             ->where('area_id', $request->input('area_id'))
             ->get();

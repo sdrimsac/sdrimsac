@@ -13,6 +13,9 @@ class Table extends ModelTenant
     public $timestamps = false;
     protected $with = ["area", "status_table"];
     protected $fillable = [
+        'is_room',
+        'floor_id',
+        'table_type_id',
         'number',
         'area_id',
         'status_table_id',
@@ -73,6 +76,13 @@ class Table extends ModelTenant
     
     public function establishment(){
         return $this->belongsTo(Establishment::class);
+    }
+
+    public function type(){
+        return $this->belongsTo(TableType::class, 'table_type_id');
+    }
+    public function floor(){
+        return $this->belongsTo(Floor::class);
     }
     public function area()
     {

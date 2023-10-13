@@ -640,6 +640,13 @@
                         </a>
                     </li>
                     <li>
+                        <a class="{{ $path[0] === 'caja' && $path[1] === 'rooms' ? 'active' : '' }}"
+                            href="{{ route('restaurant.rooms') }}">
+                            <i class="fas fa-bed"></i>
+                            Habitaciones
+                        </a>
+                    </li>
+                    <li>
                         <a class="{{ $path[0] === 'caja' && $path[1] === 'areas' ? 'active' : '' }}"
                             href="{{ route('restaurant.areas') }}">
                             <i class="icofont-billboard"></i> Áreas

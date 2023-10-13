@@ -29,7 +29,10 @@
                             <span>Nuevo</span>
                         </button>
                         <button
-                            v-if="resource == 'caja/tables'"
+                            v-if="
+                                resource == 'caja/tables' ||
+                                    resource == 'caja/rooms'
+                            "
                             type="button"
                             class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto m-l-5"
                             @click.prevent="clickCreateMassive()"
@@ -51,17 +54,43 @@
                     <data-table :resource="resource">
                         <tr slot="heading">
                             <th>#</th>
-                            <th v-if="type != 'caja/tables'">
+                            <th
+                                v-if="
+                                    type != 'caja/tables' &&
+                                        type != 'caja/rooms'
+                                "
+                            >
                                 Descripción
                             </th>
-                            <th v-if="type == 'caja/tables'">
+                            <th
+                                v-if="
+                                    type == 'caja/tables' ||
+                                        type == 'caja/rooms'
+                                "
+                            >
                                 Número
                             </th>
-                            <th v-if="type == 'caja/tables'">
+                            <th v-if="type == 'caja/rooms'">
+                                Tipo
+                            </th>
+                            <th
+                                v-if="
+                                    type == 'caja/tables' ||
+                                        type == 'caja/rooms'
+                                "
+                            >
                                 Área
                             </th>
-                            <th v-if="type == 'caja/tables'">
+                            <th
+                                v-if="
+                                    type == 'caja/tables' ||
+                                        type == 'caja/rooms'
+                                "
+                            >
                                 Establecimiento
+                            </th>
+                            <th v-if="type == 'caja/rooms'">
+                                Piso
                             </th>
                             <th v-if="type == 'caja/areas'">
                                 Impresora
@@ -75,17 +104,43 @@
                         <tr></tr>
                         <tr slot-scope="{ index, row }">
                             <td>{{ index }}</td>
-                            <td v-if="type != 'caja/tables'">
+                            <td
+                                v-if="
+                                    type != 'caja/tables' &&
+                                        type != 'caja/rooms'
+                                "
+                            >
                                 {{ row.description }}
                             </td>
-                            <td v-if="type == 'caja/tables'">
+                            <td
+                                v-if="
+                                    type == 'caja/tables' ||
+                                        type == 'caja/rooms'
+                                "
+                            >
                                 {{ row.number }}
                             </td>
-                            <td v-if="type == 'caja/tables'">
+                            <td v-if="type == 'caja/rooms'">
+                                {{ row.type }}
+                            </td>
+                            <td
+                                v-if="
+                                    type == 'caja/tables' ||
+                                        type == 'caja/rooms'
+                                "
+                            >
                                 {{ row.area.description }}
                             </td>
-                            <td v-if="type == 'caja/tables'">
+                            <td
+                                v-if="
+                                    type == 'caja/tables' ||
+                                        type == 'caja/rooms'
+                                "
+                            >
                                 {{ row.establishment }}
+                            </td>
+                            <td v-if="type == 'caja/rooms'">
+                                {{ row.floor }}
                             </td>
                             <td v-if="type == 'caja/areas'">
                                 {{ row.printer }}
@@ -119,6 +174,7 @@
                 </div>
 
                 <create-form
+                    :types="types"
                     :showDialog.sync="showDialog"
                     :areas="areas"
                     :type="type"
@@ -129,6 +185,7 @@
                 ></create-form>
 
                 <create-form-massive
+                    :types="types"
                     :showDialog.sync="showDialogMassive"
                     :areas="areas"
                     :type="type"
@@ -174,11 +231,12 @@ export default {
             loading_data: false,
             disabled_next: false,
             disabled_previos: false,
-            myOptions: ["op1", "op2", "op3"]
+            myOptions: ["op1", "op2", "op3"],
+            types: []
         };
     },
     created() {
-        if (this.type == "caja/tables") {
+        if (this.type == "caja/tables" || this.type == "caja/rooms") {
             this.getTables();
         }
         // this.getData();
@@ -216,9 +274,7 @@ export default {
         },
         async getTables() {
             this.$http
-                .get(
-                    `/caja/areas/records?column=description&page=1&value`
-                )
+                .get(`/caja/areas/records?column=description&page=1&value`)
                 .then(response => {
                     this.areas = response.data.data;
                 });
@@ -229,13 +285,18 @@ export default {
                 .then(response => {
                     this.statusTable = response.data.data;
                 });
+            this.$http.get(`/caja/rooms/types`).then(response => {
+                this.types = response.data.data;
+                console.log(
+                    "🚀 ~ file: items.vue:284 ~ this.$http.get ~ response:",
+                    response
+                );
+            });
+            this.$http.get(`/establishments/records`).then(response => {
+                this.establishments = response.data.data;
 
-            this.$http.get(`/establishments/records`)
-                .then(response => {
-                    this.establishments = response.data.data;
-
-                    console.log(this.establishments);
-                });
+                console.log(this.establishments);
+            });
         },
         async updateSearchPrint(row) {
             try {

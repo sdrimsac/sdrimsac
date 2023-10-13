@@ -133,6 +133,18 @@ Route::prefix('caja')->group(function () {
         Route::delete('status-orden/{id}', 'StatusOrdenController@active');
         Route::get('status-orden/record/{id}', 'StatusOrdenController@record');
         Route::post('status-orden', 'StatusOrdenController@store');
+
+        //**** MESAS */
+        Route::get('rooms', 'TableRoomController@index')->name('restaurant.rooms');
+        Route::get('rooms/columns', 'TableRoomController@columns');
+        Route::get('rooms/check', 'TableRoomController@check');
+        Route::get('rooms/records', 'TableRoomController@records');
+        Route::get('rooms/tables', 'TableRoomController@get_tables');
+        Route::get('rooms/orden/{id}', 'TableRoomController@get_ordens');
+        Route::get('rooms/record/{id}', 'TableRoomController@record');
+        Route::get('rooms/types', 'TableRoomController@room_types');
+        Route::post('rooms', 'TableRoomController@store');
+        Route::post('rooms/massive', 'TableRoomController@store_massive');
         //**** MESAS */
         Route::get('tables', 'TableController@index')->name('restaurant.tables');
         Route::get('tables/columns', 'TableController@columns');
