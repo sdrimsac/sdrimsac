@@ -21,6 +21,8 @@ class TableCollection extends ResourceCollection
                 'id'                => $row->id,
                 'number'            => $row->number,
                 'area'              => $row->area,
+                'type'              => optional($row->type)->name,
+                'floor'            =>  optional($row->floor)->name,
                 'status_table'     => $row->status_table,
                 'establishment'     => $row->establishment ? $row->establishment->description : null,
                 'establishment_id'  => $row->establishment_id,

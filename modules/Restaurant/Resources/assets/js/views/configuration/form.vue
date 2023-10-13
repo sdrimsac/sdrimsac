@@ -8,7 +8,10 @@
         <form autocomplete="off" @submit.prevent="submit">
             <div class="form-body">
                 <div class="row">
-                    <div v-if="type !== 'caja/tables'" class="col-md-12">
+                    <div
+                        v-if="type !== 'caja/tables' && type !== 'caja/rooms'"
+                        class="col-md-12"
+                    >
                         <div
                             class="form-group"
                             :class="{ 'has-danger': errors.description }"
@@ -62,20 +65,71 @@
                             ></small>
                         </div>
                     </div>
-                    <template v-if="type == 'caja/tables'">
+                    <template
+                        v-if="type == 'caja/tables' || type == 'caja/rooms'"
+                    >
                         <div class="col-md-4">
                             <div
                                 class="form-group"
                                 :class="{ 'has-danger': errors.number }"
                             >
                                 <label class="control-label"
-                                    >Número de mesa</label
+                                    >Número de
+                                    {{
+                                        type == "caja/tables"
+                                            ? "mesa"
+                                            : "habitación"
+                                    }}</label
                                 >
                                 <el-input v-model="form.number"></el-input>
                                 <small
                                     class="form-control-feedback"
                                     v-if="errors.number"
                                     v-text="errors.number[0]"
+                                ></small>
+                            </div>
+                        </div>
+                        <div class="col-md-4" v-if="type == 'caja/rooms'">
+                        
+                            <div
+                                class="form-group"
+                                :class="{ 'has-danger': errors.floor_id }"
+                            >
+                                <label class="control-label">Piso</label>
+                                <el-select v-model="form.floor_id">
+                                    <el-option
+                                        v-for="(data, index) in floors"
+                                        :key="index"
+                                        :label="data.description"
+                                        :value="data.id"
+                                    ></el-option>
+                                </el-select>
+                                <small
+                                    class="form-control-feedback"
+                                    v-if="errors.floor_id"
+                                    v-text="errors.floor_id[0]"
+                                ></small>
+                            </div>
+                      
+                        </div>
+                        <div class="col-md-4" v-if="type == 'caja/rooms'">
+                               <div
+                                class="form-group"
+                                :class="{ 'has-danger': errors.type_id }"
+                            >
+                                <label class="control-label">Tipo</label>
+                                <el-select v-model="form.table_type_id">
+                                    <el-option
+                                        v-for="(data, index) in types"
+                                        :key="index"
+                                        :label="data.name"
+                                        :value="data.id"
+                                    ></el-option>
+                                </el-select>
+                                <small
+                                    class="form-control-feedback"
+                                    v-if="errors.type_id"
+                                    v-text="errors.type_id[0]"
                                 ></small>
                             </div>
                         </div>
@@ -87,7 +141,12 @@
                                 }"
                             >
                                 <label class="control-label"
-                                    >Estado de mesa</label
+                                    >Estado de
+                                    {{
+                                        type == "caja/tables"
+                                            ? "mesa"
+                                            : "habitación"
+                                    }}</label
                                 >
                                 <el-select v-model="form.status_table_id">
                                     <el-option
@@ -110,7 +169,12 @@
                                 :class="{ 'has-danger': errors.area_id }"
                             >
                                 <label class="control-label"
-                                    >Área de mesa</label
+                                    >Área de
+                                    {{
+                                        type == "caja/tables"
+                                            ? "mesa"
+                                            : "habitación"
+                                    }}</label
                                 >
                                 <el-select v-model="form.area_id">
                                     <el-option
@@ -127,10 +191,12 @@
                                 ></small>
                             </div>
                         </div>
-                             <div class="col-md-4">
+                        <div class="col-md-4">
                             <div
                                 class="form-group"
-                                :class="{ 'has-danger': errors.establishment_id }"
+                                :class="{
+                                    'has-danger': errors.establishment_id
+                                }"
                             >
                                 <label class="control-label"
                                     >Establecimiento</label
@@ -171,6 +237,7 @@ export default {
     props: [
         "showDialog",
         "recordId",
+        "types",
         "type",
         "areas",
         "statusTable",
@@ -184,7 +251,49 @@ export default {
             resource: this.type,
             errors: {},
             form: {},
-            options: []
+            options: [],
+            floors: [
+                {
+                    id: 1,
+                    description: "Piso 1"
+                },
+                {
+                    id: 2,
+                    description: "Piso 2"
+                },
+                {
+                    id: 3,
+                    description: "Piso 3"
+                },
+                {
+                    id: 4,
+                    description: "Piso 4"
+                },
+                {
+                    id: 5,
+                    description: "Piso 5"
+                },
+                {
+                    id: 6,
+                    description: "Piso 6"
+                },
+                {
+                    id: 7,
+                    description: "Piso 7"
+                },
+                {
+                    id: 8,
+                    description: "Piso 8"
+                },
+                {
+                    id: 9,
+                    description: "Piso 9"
+                },
+                {
+                    id: 10,
+                    description: "Piso 10"
+                }
+            ]
         };
     },
     created() {
@@ -205,7 +314,6 @@ export default {
             this.titleDialog = this.recordId
                 ? "Modificar Registro"
                 : "Nuevo Registro";
-            console.log("this.recordId", this.recordId);
             this.initForm();
             if (this.recordId) {
                 this.$http

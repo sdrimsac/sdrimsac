@@ -8,7 +8,10 @@
         <form autocomplete="off" @submit.prevent="submit">
             <div class="form-body">
                 <div class="row">
-                    <div v-if="type !== 'caja/tables'" class="col-md-12">
+                    <div
+                        v-if="type !== 'caja/tables' && type !== 'caja/rooms'"
+                        class="col-md-12"
+                    >
                         <div
                             class="form-group"
                             :class="{ 'has-danger': errors.description }"
@@ -62,7 +65,9 @@
                             ></small>
                         </div>
                     </div>
-                    <template v-if="type == 'caja/tables'">
+                    <template
+                        v-if="type == 'caja/tables' || type == 'caja/rooms'"
+                    >
                         <!-- <div class="col-md-4">
                             <div
                                 class="form-group"
@@ -79,6 +84,48 @@
                                 ></small>
                             </div>
                         </div> -->
+                        <div class="col-md-4" v-if="type == 'caja/rooms'">
+                            <div
+                                class="form-group"
+                                :class="{ 'has-danger': errors.floor_id }"
+                            >
+                                <label class="control-label">Piso</label>
+                                <el-select v-model="form.floor_id">
+                                    <el-option
+                                        v-for="(data, index) in floors"
+                                        :key="index"
+                                        :label="data.description"
+                                        :value="data.id"
+                                    ></el-option>
+                                </el-select>
+                                <small
+                                    class="form-control-feedback"
+                                    v-if="errors.floor_id"
+                                    v-text="errors.floor_id[0]"
+                                ></small>
+                            </div>
+                        </div>
+                             <div class="col-md-4" v-if="type == 'caja/rooms'">
+                            <div
+                                class="form-group"
+                                :class="{ 'has-danger': errors.table_type_id }"
+                            >
+                                <label class="control-label">Tipo</label>
+                                <el-select v-model="form.table_type_id">
+                                    <el-option
+                                        v-for="(data, index) in types"
+                                        :key="index"
+                                        :label="data.name"
+                                        :value="data.id"
+                                    ></el-option>
+                                </el-select>
+                                <small
+                                    class="form-control-feedback"
+                                    v-if="errors.table_type_id"
+                                    v-text="errors.table_type_id[0]"
+                                ></small>
+                            </div>
+                        </div>
                         <div class="col-md-4">
                             <div
                                 class="form-group"
@@ -87,7 +134,12 @@
                                 }"
                             >
                                 <label class="control-label"
-                                    >Estado de mesa</label
+                                    >Estado de
+                                    {{
+                                        type == "caja/tables"
+                                            ? "mesa"
+                                            : "habitación"
+                                    }}</label
                                 >
                                 <el-select v-model="form.status_table_id">
                                     <el-option
@@ -110,7 +162,12 @@
                                 :class="{ 'has-danger': errors.area_id }"
                             >
                                 <label class="control-label"
-                                    >Área de mesa</label
+                                    >Área de
+                                    {{
+                                        type == "caja/tables"
+                                            ? "mesa"
+                                            : "habitación"
+                                    }}</label
                                 >
                                 <el-select v-model="form.area_id">
                                     <el-option
@@ -155,7 +212,12 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label class="control-label w-100"
-                                    >Número inicial de mesa</label
+                                    >Número inicial de
+                                    {{
+                                        type == "caja/tables"
+                                            ? "mesa"
+                                            : "habitación"
+                                    }}</label
                                 >
                                 <el-input-number
                                     class="w-100"
@@ -166,7 +228,12 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label class="control-label w-100"
-                                    >Número final de mesa</label
+                                    >Número final de
+                                    {{
+                                        type == "caja/tables"
+                                            ? "mesa"
+                                            : "habitación"
+                                    }}</label
                                 >
                                 <el-input-number
                                     class="w-100"
@@ -196,6 +263,7 @@ export default {
         "showDialog",
         "recordId",
         "type",
+        "types",
         "areas",
         "statusTable",
         "configurations",
@@ -203,6 +271,48 @@ export default {
     ],
     data() {
         return {
+            floors: [
+                {
+                    id: 1,
+                    description: "Piso 1"
+                },
+                {
+                    id: 2,
+                    description: "Piso 2"
+                },
+                {
+                    id: 3,
+                    description: "Piso 3"
+                },
+                {
+                    id: 4,
+                    description: "Piso 4"
+                },
+                {
+                    id: 5,
+                    description: "Piso 5"
+                },
+                {
+                    id: 6,
+                    description: "Piso 6"
+                },
+                {
+                    id: 7,
+                    description: "Piso 7"
+                },
+                {
+                    id: 8,
+                    description: "Piso 8"
+                },
+                {
+                    id: 9,
+                    description: "Piso 9"
+                },
+                {
+                    id: 10,
+                    description: "Piso 10"
+                }
+            ],
             loading_submit: false,
             titleDialog: null,
             resource: this.type,
