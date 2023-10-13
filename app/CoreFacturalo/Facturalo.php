@@ -133,11 +133,12 @@ class Facturalo
     {
         return $this->response;
     }
-    function restoreStock($qty,$item_id,$warehouse_id){
+    function restoreStock($qty, $item_id, $warehouse_id)
+    {
         $item = Item::find($item_id);
         $item->stock = $item->stock + $qty;
         $item->save();
-        $item_warehouse = ItemWarehouse::where('warehouse_id',$warehouse_id)->where('item_id',$item_id)->first();
+        $item_warehouse = ItemWarehouse::where('warehouse_id', $warehouse_id)->where('item_id', $item_id)->first();
         $item_warehouse->stock = $item_warehouse->stock + $qty;
         $item_warehouse->save();
     }
@@ -164,29 +165,32 @@ class Facturalo
                 $this->document = Document::find($document->id);
                 break;
             case 'invoice':
-                $document = Document::create($inputs);
-                // if (key_exists('payments', $inputs['payments']) == false) {
-                //     $payments = DocumentPayment::where('document_id', $inputs['id'])->delete();
-                // }
-                // $this->savePayments($document, $inputs['payments']);
-                $this->saveFee($document, $inputs['fee']);
-                foreach ($inputs['items'] as $row) {
-                    $document->items()->create($row);
-                    if(array_key_exists('toWarehouse',$row)){
-                        $quantity_to_restore = $row['toWarehouse'];
-                        if($quantity_to_restore > 0){
-                            $item_id = $row['item_id'];
-                            $warehouse_id = $row['item']['warehouse_id'];
-                            $this->restoreStock($quantity_to_restore,$item_id,$warehouse_id);
+                try {
+                    $document = Document::create($inputs);
+                    // if (key_exists('payments', $inputs['payments']) == false) {
+                    //     $payments = DocumentPayment::where('document_id', $inputs['id'])->delete();
+                    // }
+                    // $this->savePayments($document, $inputs['payments']);
+                    $this->saveFee($document, $inputs['fee']);
+                    foreach ($inputs['items'] as $row) {
+                        $document->items()->create($row);
+                        if (array_key_exists('toWarehouse', $row)) {
+                            $quantity_to_restore = $row['toWarehouse'];
+                            if ($quantity_to_restore > 0) {
+                                $item_id = $row['item_id'];
+                                $warehouse_id = $row['item']['warehouse_id'];
+                                $this->restoreStock($quantity_to_restore, $item_id, $warehouse_id);
+                            }
                         }
                     }
-
+                    $this->updatePrepaymentDocuments($inputs);
+                    // if ($inputs['hotel']) $document->hotel()->create($inputs['hotel']);
+                    // if ($inputs['transport']) $document->transport()->create($inputs['transport']);
+                    $document->invoice()->create($inputs['invoice']);
+                    $this->document = Document::find($document->id);
+                } catch (Exception $e) {
+                    throw new Exception($e->getMessage());
                 }
-                $this->updatePrepaymentDocuments($inputs);
-                // if ($inputs['hotel']) $document->hotel()->create($inputs['hotel']);
-                // if ($inputs['transport']) $document->transport()->create($inputs['transport']);
-                $document->invoice()->create($inputs['invoice']);
-                $this->document = Document::find($document->id);
                 break;
             case 'summary':
                 $document = Summary::create($inputs);
@@ -559,7 +563,7 @@ class Facturalo
             $orientation = $this->configuration->a5_orientation;
             $pdf = new Mpdf([
                 'mode' => 'utf-8',
-                'format' =>$orientation ? 'A5-L' : 'A5-P',
+                'format' => $orientation ? 'A5-L' : 'A5-P',
                 'orientation' => $orientation ? 'L' : 'P',
                 'margin_top' => 5,
                 'margin_right' => 5,

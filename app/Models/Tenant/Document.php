@@ -111,17 +111,17 @@ class Document extends ModelTenant
     {
         parent::boot();
         //created
-        static::created(function ($model) {
-            $type = $model->get_document_type();
-            $request = Request::capture();
-            $description = "$type creada";
-            RegisterMovementTrait::registerCreate(
-                $model,
-                $request,
-                $description,
-                $model->toArray()
-            );
-        });
+        // static::created(function ($model) {
+        //     $type = $model->get_document_type();
+        //     $request = Request::capture();
+        //     $description = "$type creada";
+        //     RegisterMovementTrait::registerCreate(
+        //         $model,
+        //         $request,
+        //         $description,
+        //         $model->toArray()
+        //     );
+        // });
         // static::updated(function ($model) {
         //     $type = $model->get_document_type();
         //     $request = Request::capture();

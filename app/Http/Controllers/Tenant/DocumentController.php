@@ -825,17 +825,24 @@ class DocumentController extends Controller
 
             Orden::where('document_id', $document_id)->update(["document_id" => null]);
         }
-        $fact = DB::connection('tenant')->transaction(function () use ($request) {
-            $facturalo = new Facturalo();
-            $facturalo->save($request->all());
-            $facturalo->createXmlUnsigned();
-            $facturalo->signXmlUnsigned();
-            $facturalo->updateHash();
-            $facturalo->updateQr();
-            $facturalo->createPdf();
-            $facturalo->senderXmlSignedBill();
-            return $facturalo;
-        });
+        try {
+            $fact = DB::connection('tenant')->transaction(function () use ($request) {
+                $facturalo = new Facturalo();
+                $facturalo->save($request->all());
+                $facturalo->createXmlUnsigned();
+                $facturalo->signXmlUnsigned();
+                $facturalo->updateHash();
+                $facturalo->updateQr();
+                $facturalo->createPdf();
+                $facturalo->senderXmlSignedBill();
+                return $facturalo;
+            });
+        } catch (Exception $e) {
+            return [
+                'success' => false,
+                'message' => $e->getMessage()
+            ];
+        }
         $document = $fact->getDocument();
         $this->associateSaleNoteToDocument($request, $document->id);
         Box::where('document_id', $document->id)->delete();
@@ -878,7 +885,7 @@ class DocumentController extends Controller
                     }
                     $documents_rows = $type_document . " N° " . $document_save->series . " - " . $document_save->number;
                     $box->description = "VENTAS " . $documents_rows;
-                    if($bank_account_id){
+                    if ($bank_account_id) {
                         $bank_account = BankAccount::findOrFail($bank_account_id);
                         $bank_account->balance = $bank_account->balance + $currentBox['amount'];
                         $bank_account->save();
