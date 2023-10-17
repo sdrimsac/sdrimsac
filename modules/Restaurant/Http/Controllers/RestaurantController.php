@@ -222,12 +222,18 @@ class RestaurantController extends Controller
             } else {
                 $cocina = strripos(strtolower($user->area->description), "cocina");
                 $caja = strripos(strtolower($user->area->description), "caja");
+                $hotel = strripos(strtolower($user->area->description), "hotel");
                 $peaje = strripos(strtolower($user->area->description), "peaje");
                 if ($cocina !== false) {
                     $kitchen = true;
                 } else if ($caja !== false) {
                     $pos = true;
-                } else {
+                }
+                
+                else if($hotel !== false ){
+                    $pos = true;
+                }
+                else {
                     $kitchen = true;
                 }
             }

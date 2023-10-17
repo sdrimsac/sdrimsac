@@ -1487,7 +1487,11 @@
             @sendOrdens="sendOrdens"
             :showTables.sync="showTables"
         ></tables>
-
+        <tables-rooms
+            @creatingOrden="creatingOrden"
+            @sendOrdens="sendOrdens"
+            :showTables.sync="showTablesRooms"
+        ></tables-rooms>
         <documents-print
             :sender="personalWhatsapp ? sender : 'sdrimsac'"
             :company="company"
@@ -1590,21 +1594,8 @@ import {
     exchangeRate
 } from "../../../../../../../resources/js/mixins/functions";
 import { calculateRowItem } from "../../../../../../../resources/js/helpers/functions";
-// calculateRowItem,
 
-//import PaymentForm from "./partials/payment.vue";
-// import ItemForm from "./partials/form.vue";
-
-//import ItemForm from "../../../../../../../resources/js/views/items/form.vue";
 import queryString from "query-string";
-
-//import PersonForm from "../../../../../../../resources/js/views/persons/form.vue";
-//import NumberPad from "./partials/num_pad.vue";
-//import ListOrden from "./partials/list_ordens.vue";
-//import WarehousesDetail from "../../../../../../../resources/js/views/items/partials/warehouses.vue";
-//import Tables from "./partials/tables.vue";
-//import CashHistory from "./partials/cash_history.vue";
-//import DocumentsPrint from "./partials/documents_print.vue";
 const DispatchModal = () => import("./partials/dispatch_modal.vue");
 
 const PaymentForm = () => import("./partials/payment.vue");
@@ -1618,6 +1609,7 @@ const WarehousesDetail = () =>
         "../../../../../../../resources/js/views/items/partials/warehouses.vue"
     );
 const Tables = () => import("./partials/tables.vue");
+const TablesRooms = () => import("./partials/tables_rooms.vue");
 const CashHistory = () => import("./partials/cash_history.vue");
 const DocumentsPrint = () => import("./partials/documents_print.vue");
 const PromotionCanje = () =>
@@ -1679,7 +1671,8 @@ export default {
         ListOrden,
         Tables,
         ListFoodMobiles,
-        PromotionCanje
+        PromotionCanje,
+        TablesRooms
     },
     mixins: [functions, exchangeRate],
 
@@ -1725,6 +1718,7 @@ export default {
             clientTableData: {},
             tactil: false,
             showTables: false,
+            showTablesRooms: false,
             showHistoryCash: false,
             itemDefault: null,
             optionsMenu: [],
@@ -1816,6 +1810,7 @@ export default {
     },
 
     async created() {
+        console.log(this.worker, "worker");
         localStorage.setItem("quotation_stock", 0);
         let type_code = localStorage.getItem("type_code");
         let barcode = localStorage.getItem("barcode");
@@ -1887,11 +1882,10 @@ export default {
     computed: {},
     methods: {
         sendItems(items, clientNumber, notes, dscto_global) {
-         
             this.clientSaleNoteNumber = clientNumber;
             this.clientSaleNoteDiscount = dscto_global;
             this.form.sale_notes_relateds = notes;
-               for (let index = 0; index < items.length; index++) {
+            for (let index = 0; index < items.length; index++) {
                 let element = items[index];
                 this.insertOrden(element, element.id, null);
             }
@@ -1935,7 +1929,17 @@ export default {
                     icon: "fas fa-map-pin ",
                     visible:
                         this.configuration.restaurant &&
-                        !this.configuration.college
+                        !this.configuration.college &&
+                        this.configuration.hotels &&
+                        this.worker.area.description.toUpperCase() !== "HOTEL"
+                },
+                {
+                    id: 171,
+                    title: [" Habitaciones "],
+                    icon: "fas fa-map-pin ",
+                    visible:
+                        this.configuration.hotels &&
+                        this.worker.area.description.toUpperCase() == "HOTEL"
                 },
                 {
                     id: 6,
@@ -2115,9 +2119,14 @@ export default {
             switch (keyCode) {
                 case 113:
                     event.preventDefault(); // Evita la función por defecto del navegador
-
-                    if (this.configuration.restaurant) {
-                        this.openTables();
+                    if (this.configuration.hotels) { 
+                        if (this.isCurrentAreaHotel()) {
+                            this.openTablesRooms(); 
+                        } else {
+                            this.openTables(); 
+                        }
+                    } else {
+                        this.openTables(); 
                     }
 
                     break;
@@ -2125,6 +2134,9 @@ export default {
                 default:
                     break;
             }
+        },
+        isCurrentAreaHotel() {
+            return this.worker.area.description.toUpperCase() == "HOTEL";
         },
         setItemsToLiquidate(items, consignment_id) {
             this.consignment_id = consignment_id;
@@ -2491,6 +2503,9 @@ export default {
                 case 5:
                     this.openTables();
                     break;
+                case 171:
+                    this.openTablesRooms();
+                    break;
                 case 6:
                     if (this.configuration.view_daily_cash_pin) {
                         this.showPinRequest = true;
@@ -2542,6 +2557,9 @@ export default {
         },
         openTables() {
             this.showTables = true;
+        },
+        openTablesRooms() {
+            this.showTablesRooms = true;
         },
         openviewsItemsMobil() {
             this.showDialogViewItems = true;
@@ -2830,7 +2848,6 @@ export default {
                 orden.to_carry = false;
                 orden.change_subtotal = false;
                 if (this.clientSaleNoteNumber) {
-                    
                 } else {
                     orden.series = [];
                 }

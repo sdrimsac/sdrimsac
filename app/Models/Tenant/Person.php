@@ -18,6 +18,7 @@ class Person extends ModelTenant
     protected $table = 'persons';
     protected $with = ['identity_document_type', 'country', 'department', 'province', 'district'];
     protected $fillable = [
+        'sex',
         'type',
         'identity_document_type_id',
         'number',

@@ -153,7 +153,18 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-md-4" 
+                v-if="form.identity_document_type_id !== '6'">
+                        <label for="name">Sexo</label>
+                        <el-select v-model="form.sex">
+                            <el-option label="Másculino" value="M"></el-option>
+                            <el-option label="Femenino" value="F"></el-option>
+                        </el-select>
+                    </div>
+                    <div v-else
+                        class="col-md-12"
+                       
+                    >
                         <div
                             class="form-group"
                             :class="{ 'has-danger': errors.trade_name }"
@@ -177,6 +188,7 @@
                             ></small>
                         </div>
                     </div>
+                    
                 </div>
 
                 <!-- <div class="row" v-if="type === 'customers'">

@@ -2,17 +2,21 @@
 
 namespace Modules\Restaurant\Http\Controllers;
 
-
+use App\CoreFacturalo\Requests\Inputs\Common\PersonInput;
 use App\Models\Tenant\Configuration;
+use App\Models\Tenant\HotelRent;
+use App\Models\Tenant\HotelRentItem;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
 use Modules\Restaurant\Models\Table;
 use Modules\Restaurant\Http\Requests\TableRequest;
 use Modules\Restaurant\Http\Resources\TableCollection;
+use Modules\Restaurant\Models\Floor;
 use Modules\Restaurant\Models\Orden;
 use Modules\Restaurant\Models\OrdenItem;
 use Modules\Restaurant\Models\TableType;
+use Modules\Restaurant\Models\Tower;
 
 class TableRoomController extends Controller
 {
@@ -24,7 +28,7 @@ class TableRoomController extends Controller
         $user = auth()->user();
         $establishment_id = $user->establishment_id;
         $tables = Table::where('status_table_id', 2)
-        ->where('is_room', true)
+            ->where('is_room', true)
             ->where(function ($q) use ($establishment_id) {
                 $q->where('establishment_id', $establishment_id)->orWhereNull('establishment_id');
             })
@@ -74,7 +78,7 @@ class TableRoomController extends Controller
     {
         $establishment_id = auth()->user()->establishment_id;
         $tables = new TableCollection(Table::where('area_id', $id)
-        ->where('is_room', true)
+            ->where('is_room', true)
             ->where(function ($q) use ($establishment_id) {
                 $q->where('establishment_id', $establishment_id)
                     ->orWhereNull('establishment_id');
@@ -84,6 +88,48 @@ class TableRoomController extends Controller
         return [
             'success' => true,
             'data' => $tables
+        ];
+    }
+    public function tables()
+    {
+        $towers = Tower::where('active', true)->get();
+        $floors = Floor::where('active', true)->get();
+        $tables = Table::where('is_room', true)
+            ->where('status_table_id', 1)
+            ->get();
+
+        return compact('towers', 'floors', 'tables');
+    }
+    public function setGuess(Request $request){
+        //     'supplier' => PersonInput::set($inputs['supplier_id']),
+        $customer_id = $request->input('customer_id');
+        $customer = PersonInput::set($customer_id);
+        $advance = $request->input('advance');
+        $total = $request->input('total');
+        $observation = $request->input('observation');
+        $payment_status = "Pendiente";
+        $hotel_rent = new HotelRent;
+        $hotel_rent->customer_id = $customer_id;
+        $hotel_rent->customer = $customer;
+        $hotel_rent->observation = $observation;
+        $hotel_rent->payment_status = $payment_status;
+        $hotel_rent->advance = $advance;
+        $hotel_rent->total = $total;
+        $hotel_rent->save();
+
+        $rooms = $request->input('rooms');
+        foreach($rooms as $room){
+            $hotel_rent_item = new HotelRentItem;
+            $hotel_rent_item->hotel_rent_id = $hotel_rent->id;
+            $hotel_rent_item->table_id = $room['table_id'];
+            
+
+        }
+       
+
+        return [
+            'success' => true,
+            'message' => 'Habitación actualizada con éxito'
         ];
     }
     public function get_tables()
@@ -146,7 +192,8 @@ class TableRoomController extends Controller
             'data' => $table
         ];
     }
-    public function room_types(){
+    public function room_types()
+    {
         $types = TableType::where('active', true)->get();
         return [
             'success' => true,
