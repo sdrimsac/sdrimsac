@@ -1161,7 +1161,18 @@
                                                                             >
                                                                         </span>
                                                                     </div>
-                                                                    <div>
+                                                                    <div
+                                                                        v-if="
+                                                                            data
+                                                                                .item
+                                                                                .is_set ==
+                                                                                0 &&
+                                                                                data
+                                                                                    .item
+                                                                                    .unit_type_id !=
+                                                                                    'ZZ'
+                                                                        "
+                                                                    >
                                                                         <template
                                                                             v-if="
                                                                                 data
@@ -1360,6 +1371,7 @@
                         :configuration.sync="configuration"
                         :localOrden.sync="localOrden"
                         :ordens.sync="ordensItems"
+                        @limpiarForm="limpiarForm"
                         @total_sales="total_sales"
                         @updateOrdens="updateOrdens"
                         @paymentsOrden="paymentsOrden"
@@ -1887,11 +1899,10 @@ export default {
     computed: {},
     methods: {
         sendItems(items, clientNumber, notes, dscto_global) {
-         
             this.clientSaleNoteNumber = clientNumber;
             this.clientSaleNoteDiscount = dscto_global;
             this.form.sale_notes_relateds = notes;
-               for (let index = 0; index < items.length; index++) {
+            for (let index = 0; index < items.length; index++) {
                 let element = items[index];
                 this.insertOrden(element, element.id, null);
             }
@@ -2830,7 +2841,6 @@ export default {
                 orden.to_carry = false;
                 orden.change_subtotal = false;
                 if (this.clientSaleNoteNumber) {
-                    
                 } else {
                     orden.series = [];
                 }
@@ -4816,6 +4826,8 @@ export default {
             return `/${formated}`;
         },
         addFood(index = 0, type = null) {
+            let quotation_stock = localStorage.getItem("quotation_stock") || 0;
+            quotation_stock = quotation_stock == 1;
             if (this.blockAdd && !this.configuration.box_orden) {
                 this.$toast.error("No puede agregar productos a esta orden.");
                 return;
@@ -4828,7 +4840,9 @@ export default {
 
             if (
                 Number(this.selectedFood.item.stock) <= 0 &&
-                this.configuration.sales_stock == true
+                this.configuration.sales_stock == true &&
+                !quotation_stock &&
+                this.selectedFood.item.unit_type_id != "ZZ"
             ) {
                 this.$toast.warning("Stock insuficiente");
                 return;
@@ -4872,7 +4886,12 @@ export default {
                 } else {
                     qty += 1;
                 }
-                if (this.configuration.sales_stock == true) {
+                if (
+                    this.configuration.sales_stock == true &&
+                    this.selectedFood.item.is_set == 0 &&
+                    !quotation_stock &&
+                    this.selectedFood.item.unit_type_id != "ZZ"
+                ) {
                     if (qty > Number(this.selectedFood.item.stock)) {
                         this.$toast.warning("Limite de stock alcanzado");
                         return;
@@ -4881,7 +4900,12 @@ export default {
             } else {
                 if (type) {
                     let qty = type.quantity_unit;
-                    if (this.configuration.sales_stock == true) {
+                    if (
+                        this.configuration.sales_stock == true &&
+                        this.selectedFood.item.is_set == 0 &&
+                        !quotation_stock &&
+                        this.selectedFood.item.unit_type_id != "ZZ"
+                    ) {
                         let stock = Number(this.selectedFood.item.stock);
                         if (qty > stock) {
                             this.$toast.warning("Limite de stock alcanzado");

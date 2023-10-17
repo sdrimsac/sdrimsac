@@ -104,7 +104,7 @@
                                                         {{ data.price }}</span>
                                                 </span>
                                             </div>
-                                            <div>
+                                            <div   v-if="data.item.is_set == 0 && data.item.unit_type_id != 'ZZ'">
                                                 <template v-if="data.item.stock > 0">
                                                     <span class="badge rounded-pill bg-primary m-l-0">Stock
                                                         <template v-if="data.item.max_quantity">
@@ -413,6 +413,8 @@ export default ({
             }
         },
         addFood(index = 0, type = null) {
+            let quotation_stock = localStorage.getItem("quotation_stock") || 0;
+            quotation_stock = quotation_stock == 1;
             if (this.blockAdd && !this.configuration.box_orden) {
                 this.$toast.error("No puede agregar productos a esta orden.");
                 return;
@@ -424,6 +426,8 @@ export default ({
             if (
                 Number(this.selectedFood.item.stock) <= 0 &&
                 this.configuration.sales_stock == true
+                 && !quotation_stock
+                    && this.selectedFood.item.unit_type_id != 'ZZ'
             ) {
                 this.$toast.warning("Stock insuficiente");
                 return;
@@ -466,7 +470,7 @@ export default ({
                 } else {
                     qty += 1;
                 }
-                if (this.configuration.sales_stock == true) {
+                if (this.configuration.sales_stock == true && this.selectedFood.item.is_set == 0 && !quotation_stock && this.selectedFood.item.unit_type_id != 'ZZ') {
                     if (qty > Number(this.selectedFood.item.stock)) {
                         this.$toast.warning("Limite de stock alcanzado");
                         return;
@@ -475,7 +479,7 @@ export default ({
             } else {
                 if (type) {
                     let qty = type.quantity_unit;
-                    if (this.configuration.sales_stock == true) {
+                    if (this.configuration.sales_stock == true && this.selectedFood.item.is_set == 0 && !quotation_stock && this.selectedFood.item.unit_type_id != 'ZZ') {
                         let stock = Number(this.selectedFood.item.stock);
                         if ( qty > stock) {
                             this.$toast.warning("Limite de stock alcanzado");

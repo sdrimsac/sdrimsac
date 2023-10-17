@@ -10,6 +10,7 @@
             :close-on-click-modal="false"
             :close-on-press-escape="false"
             :show-close="false"
+            v-loading="loading"
         >
             <div class="row" v-show="!showGenerate">
                 <div
@@ -397,6 +398,7 @@ export default {
     ],
     data() {
         return {
+            loading:false,
             customer_email: "",
             titleDialog: null,
             loading: false,

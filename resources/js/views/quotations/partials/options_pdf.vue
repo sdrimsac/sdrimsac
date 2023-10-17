@@ -1,6 +1,8 @@
 <template>
     <div>
-        <el-dialog :title="titleDialog" :visible="showDialog" @open="create" width="30%"
+        <el-dialog
+        v-loading="loading"
+         :title="titleDialog" :visible="showDialog" @open="create" width="30%"
                 > 
             <div class="row">
                 <div class="col-lg-4 col-md-4 col-sm-4 text-center font-weight-bold">
@@ -83,10 +85,15 @@
                 }
             },     
             create() {
+                this.loading = true
                 this.$http.get(`/${this.resource}/record/${this.recordId}`)
                     .then(response => {
                         this.form = response.data.data
                         this.titleDialog = `Cotización registrada: ${this.form.identifier}`
+                        this.loading = false
+                    }).catch(error => {
+                        this.$message.error('Error al cargar los datos')
+                        this.loading = false
                     })
             },             
             clickClose() {
