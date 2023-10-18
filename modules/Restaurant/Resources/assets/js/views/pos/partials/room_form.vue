@@ -137,9 +137,9 @@
                         </el-select>
                     </div>
                     <div class="col-md-4">
-                        <label for="quantity">N° Personas</label>
+                        <label for="quantity_persons">N° Personas</label>
                         <el-input-number
-                            v-model="room.quantity"
+                            v-model="room.quantity_persons"
                             :min="1"
                             :max="2"
                             style="width: 100%;"
@@ -147,7 +147,7 @@
                             size="small"
                         ></el-input-number>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <label for="checkin_date">
                             Fecha de ingreso
                         </label>
@@ -165,7 +165,7 @@
                             }"
                         ></el-date-picker>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <label for="checkin_time">
                             Hora de ingreso
                         </label>
@@ -176,6 +176,17 @@
                             style="width: 100%;"
                             value-format="HH:mm:ss"
                         ></el-time-picker>
+                    </div>
+                    <div class="col-md-2">
+                        <label for="duration">Días</label>
+                        <el-input
+                            type="number"
+                            v-model="room.duration"
+                            placeholder="Duración"
+                            size="small"
+                            step="1"
+                            style="width: 100%;"
+                        ></el-input>
                     </div>
                     <div class="col-md-4">
                         <label for="name"
@@ -394,7 +405,8 @@ export default {
                 tower_id,
                 floor_id,
                 table_id,
-                quantity: 1,
+                quantity_persons: 1,
+                duration: 1,
                 checkin_date: new Date(),
                 checkin_time: new Date(),
                 guesses: []

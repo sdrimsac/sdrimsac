@@ -22,6 +22,8 @@ class CreateHotelRents extends Migration
 		Schema::create('hotel_rents', function (Blueprint $table) {
 			$table->increments('id');
 			$table->unsignedInteger('customer_id');
+			$table->unsignedInteger('establishment_id');
+			$table->unsignedInteger('user_id');
 			$table->json('customer');
 			$table->string('observation', 250)->nullable();
 			$table->string('payment_type', 10)->nullable();
@@ -36,6 +38,8 @@ class CreateHotelRents extends Migration
 			$table->foreign('document_id')->references('id')->on('documents')->onDelete('cascade');
 			$table->foreign('sale_note_id')->references('id')->on('sale_notes')->onDelete('cascade');
 			$table->foreign('customer_id')->references('id')->on('persons')->onDelete('cascade');
+			$table->foreign('establishment_id')->references('id')->on('establishments')->onDelete('cascade');
+			$table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
 		});
 
 		Schema::create('hotel_rent_items', function (Blueprint $table) {

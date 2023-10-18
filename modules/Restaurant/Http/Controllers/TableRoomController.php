@@ -6,8 +6,11 @@ use App\CoreFacturalo\Requests\Inputs\Common\PersonInput;
 use App\Models\Tenant\Configuration;
 use App\Models\Tenant\HotelRent;
 use App\Models\Tenant\HotelRentItem;
+use App\Models\Tenant\HotelRentItemPerson;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Modules\Restaurant\Models\Table;
 use Modules\Restaurant\Http\Requests\TableRequest;
@@ -100,37 +103,64 @@ class TableRoomController extends Controller
 
         return compact('towers', 'floors', 'tables');
     }
-    public function setGuess(Request $request){
+    public function setGuess(Request $request)
+    {
         //     'supplier' => PersonInput::set($inputs['supplier_id']),
-        $customer_id = $request->input('customer_id');
-        $customer = PersonInput::set($customer_id);
-        $advance = $request->input('advance');
-        $total = $request->input('total');
-        $observation = $request->input('observation');
-        $payment_status = "Pendiente";
-        $hotel_rent = new HotelRent;
-        $hotel_rent->customer_id = $customer_id;
-        $hotel_rent->customer = $customer;
-        $hotel_rent->observation = $observation;
-        $hotel_rent->payment_status = $payment_status;
-        $hotel_rent->advance = $advance;
-        $hotel_rent->total = $total;
-        $hotel_rent->save();
+        try {
+            DB::connection('tenant')->beginTransaction();
+            $customer_id = $request->input('customer_id');
+            $customer = PersonInput::set($customer_id);
+            $advance = $request->input('advance');
+            $total = $request->input('total');
+            $observation = $request->input('observation');
+            $payment_status = "Pendiente";
+            $hotel_rent = new HotelRent;
+            $hotel_rent->customer_id = $customer_id;
+            $hotel_rent->establishment_id = auth()->user()->establishment_id;
+            $hotel_rent->user_id = auth()->id();
+            $hotel_rent->customer = $customer;
+            $hotel_rent->observation = $observation;
+            $hotel_rent->payment_status = $payment_status;
+            $hotel_rent->advance = $advance;
+            $hotel_rent->total = $total;
+            $hotel_rent->save();
 
-        $rooms = $request->input('rooms');
-        foreach($rooms as $room){
-            $hotel_rent_item = new HotelRentItem;
-            $hotel_rent_item->hotel_rent_id = $hotel_rent->id;
-            $hotel_rent_item->table_id = $room['table_id'];
-            
+            $rooms = $request->input('rooms');
+            foreach ($rooms as $room) {
+                $hotel_rent_item = new HotelRentItem;
+                $hotel_rent_item->hotel_rent_id = $hotel_rent->id;
+                $hotel_rent_item->table_id = $room['table_id'];
+                $hotel_rent_item->duration = $room['duration'];
+                $hotel_rent_item->quantity_persons = $room['quantity_persons'];
+                $hotel_rent_item->payment_status = $payment_status;
+                $hotel_rent_item->checkin_date = Carbon::parse($room['checkin_date'])->format('Y-m-d');
+                $hotel_rent_item->checkin_time = Carbon::parse($room['checkin_time'])->format('H:i:s');
+                $hotel_rent_item->save();
+                Table::where('id', $room['table_id'])->update(['status_table_id' => 2]);
 
+                $guesses = $room['guesses'];
+                foreach ($guesses as $guess) {
+                    $hotel_rent_item_person = new HotelRentItemPerson;
+                    $hotel_rent_item_person->hotel_rent_item_id = $hotel_rent_item->id;
+                    $hotel_rent_item_person->person_id = $guess['id'];
+                    $hotel_rent_item_person->save();
+                }
+            }
+            DB::connection('tenant')->commit();
+
+            return [
+                'success' => true,
+                'message' => 'Habitación actualizada con éxito'
+            ];
+        } catch (\Exception $e) {
+            DB::connection('tenant')->rollBack();
+            Log::error($e->getMessage());
+            $message = $e->getMessage();
+            return [
+                'success' => false,
+                'message' => $message
+            ];
         }
-       
-
-        return [
-            'success' => true,
-            'message' => 'Habitación actualizada con éxito'
-        ];
     }
     public function get_tables()
     {
