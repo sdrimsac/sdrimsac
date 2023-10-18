@@ -89,7 +89,7 @@ class WhatsappController extends Controller
             Log::alert("No se ha configurado el número de whatsapp para enviar notificaciones");
             return;
         }
-        $url = "https://sdrimsac.xyz/api/send-message";
+        $url = "https://angelcross.xyz/api/send-message";
 
 
 
@@ -250,7 +250,7 @@ class WhatsappController extends Controller
         }
         //"" 
         if ($request->sender == "sdrimsac") {
-            $url = "https://sdrimsac.xyz" . '/api/send-media';
+            $url = "https://angelcross.xyz" . '/api/send-media';
         } else {
             $url = config('app.whatsapp_url') . '/api/send-media';
         }
@@ -309,7 +309,7 @@ class WhatsappController extends Controller
     {
 
         if ($request->sender == "sdrimsac" || $request->sender == null) {
-            $url = "https://sdrimsac.xyz" . '/api/send-media';
+            $url = "https://angelcross.xyz" . '/api/send-media';
         } else {
             $url = config('app.whatsapp_url') . '/api/send-media';
         }
@@ -376,7 +376,7 @@ class WhatsappController extends Controller
 
 
         if ($request->sender == "sdrimsac") {
-            $url = "https://sdrimsac.xyz" . '/api/send-media';
+            $url = "https://angelcross.xyz" . '/api/send-media';
         } else {
             $url = config('app.whatsapp_url') . '/api/send-media';
         }
