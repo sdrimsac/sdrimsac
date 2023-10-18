@@ -197,7 +197,8 @@ class EtiquetasController extends Controller
         return compact('palabras', 'codigos', 'company_name', 'etiqueta','establishment');
     }
     public function items(Request $request)
-    {
+    {   
+        $establishment_id = auth()->user()->establishment_id;
         $input = $request->input("input");
         $items = Item::where("description", "like", "%" . $input . "%")->orWhere(function ($subquery) use ($input){
             $subquery->where("internal_id", "like", "%" . $input . "%")->orWhere("barcode", "like", "%" . $input . "%");
@@ -208,12 +209,13 @@ class EtiquetasController extends Controller
                 if ($row->internal_id != null && $row->type_barcode == "EAN-8") {
                     $row->internal_id = substr($row->internal_id, 0, -1);
                 }
+                $stock = $row->getStockByWarehouse(auth()->user()->establishment_id);
                 return [
                     "id" => $row->id,
                     "descripcion" => $row->description,
                     "barras" => $row->internal_id,
                     "tipo_barras" => $row->barcode_type,
-                    "stock" => $row->stock,
+                    "stock" => $stock,
                     "price" => $row->sale_unit_price,
                     "purchase" => $row->purchase_unit_price,
                     "location" => $row->location,
