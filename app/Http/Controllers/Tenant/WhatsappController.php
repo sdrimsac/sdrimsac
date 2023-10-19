@@ -249,7 +249,7 @@ class WhatsappController extends Controller
             $url1 = $url1 . "/quotations/print/" . $external_id . "/ticket";
         }
         //"" 
-        if ($request->sender == "sdrimsac") {
+        if ($request->sender == "sdrimsac" || $request->sender = "tunegociofactvillacorpnet") {
             $url = "https://angelcross.xyz" . '/api/send-media';
         } else {
             $url = config('app.whatsapp_url') . '/api/send-media';
