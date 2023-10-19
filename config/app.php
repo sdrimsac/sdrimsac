@@ -12,6 +12,7 @@ return [
     | any other location as required by the application or its packages.
     |
     */
+  'desarrollador' => env('DESARROLLADOR', 'SDRIMSAC SOLUTIONS'),
   'whatsapp_url' => env('API_SERVICE_URL'),
   'whatsapp_token' => env('API_SERVICE_TOKEN'),
   'api_peru_service_url' => env('API_PERU_SERVICE_URL'),

@@ -28,11 +28,12 @@ class UserController extends Controller
     }
 
     public function getDesarrollador(){
-        $desarrollador = Desarrollador::first();
-        $name = "Sdrimsac Solutions";
-        if($desarrollador){
-            $name = $desarrollador->name;
+
+        $name = config('app.desarrollador');
+        if(!$name){
+            $name = "Sdrimsac Solutions";
         }
+       
         return $name;
     }
     public function update_pin(Request  $request){

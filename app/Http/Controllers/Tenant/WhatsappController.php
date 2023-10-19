@@ -119,7 +119,11 @@ class WhatsappController extends Controller
     }
     public function getStatus(Request $request)
     {
-        $sender = $request->sender;
+        $sender = $request->sender ?? 'sdrimsac';
+        if($sender == 'tunegociofactvillacorpnet'){
+            $sender = 'sdrimsac';
+        }
+        $sender = $sender;
 
         try {
             $response = Http::post("http://localhost:3500/api/get-sesion", [
@@ -155,7 +159,11 @@ class WhatsappController extends Controller
 
     public function initWhatsapp(Request $request)
     {
-        $sender = $request->sender;
+        $sender = $request->sender ?? 'sdrimsac';
+        if($sender == 'tunegociofactvillacorpnet'){
+            $sender = 'sdrimsac';
+        }
+        $sender = $sender;
         $url = $request->url;
         $description = "Sesión de " . $sender;
         $response = Http::post("http://localhost:3500/api/init-sesion", [
@@ -249,7 +257,11 @@ class WhatsappController extends Controller
             $url1 = $url1 . "/quotations/print/" . $external_id . "/ticket";
         }
         //"" 
-        if ($request->sender == "sdrimsac" || $request->sender = "tunegociofactvillacorpnet") {
+        $sender = $request->sender ?? 'sdrimsac';
+        if($sender == 'tunegociofactvillacorpnet'){
+            $sender = 'sdrimsac';
+        }
+        if ($sender == "sdrimsac") {
             $url = "https://angelcross.xyz" . '/api/send-media';
         } else {
             $url = config('app.whatsapp_url') . '/api/send-media';
@@ -284,7 +296,7 @@ class WhatsappController extends Controller
                     ],
                     [
                         'name'     => 'sender',
-                        'contents' => $request->sender ?? 'sdrimsac'
+                        'contents' => $sender ?? 'sdrimsac'
                     ],
                     [
                         'name'     => 'file',
@@ -307,15 +319,19 @@ class WhatsappController extends Controller
 
     public function sendHistorial(Request $request)
     {
+        $sender = $request->sender ?? 'sdrimsac';
+        if($sender == 'tunegociofactvillacorpnet'){
+            $sender = 'sdrimsac';
+        }
 
-        if ($request->sender == "sdrimsac" || $request->sender == null) {
+        if ($sender == "sdrimsac" || $sender == null) {
             $url = "https://angelcross.xyz" . '/api/send-media';
         } else {
             $url = config('app.whatsapp_url') . '/api/send-media';
         }
         // $url = 'http://localhost:3800/api/send-media';
         $resource = $request->resource;
-        $sender = $request->sender ?? 'sdrimsac';
+        $sender = $sender ?? 'sdrimsac';
         $message = $request->message;
         $file_name = $request->file_name;
         $number = $request->number;
@@ -373,9 +389,12 @@ class WhatsappController extends Controller
     }
     public function sendReporteDocumentos(Request $request)
     {
+        $sender = $request->sender ?? 'sdrimsac';
+        if($sender == 'tunegociofactvillacorpnet'){
+            $sender = 'sdrimsac';
+        }
 
-
-        if ($request->sender == "sdrimsac") {
+        if ($sender == "sdrimsac") {
             $url = "https://angelcross.xyz" . '/api/send-media';
         } else {
             $url = config('app.whatsapp_url') . '/api/send-media';
@@ -384,7 +403,7 @@ class WhatsappController extends Controller
 
         $documento = $request->file;
         $path = $request->file->getPathname();
-        $sender = $request->sender ?? 'sdrimsac';
+        $sender = $sender ?? 'sdrimsac';
         $message = $request->message;
         $file_name = $request->file_name;
         $number = $request->number;
