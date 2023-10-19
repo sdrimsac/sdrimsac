@@ -19,7 +19,8 @@ class LockedTenant
         $configuration = Configuration::first();
 
         if($configuration->locked_tenant){
-            abort(403);
+            // abort(403);
+            return view('tenant.errors.403')
         }
 
         return $next($request);

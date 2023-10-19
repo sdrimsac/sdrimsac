@@ -51,10 +51,10 @@
 
             <div class="row">
                 <div class="col-md-12">
-                    {{-- <div class="main-error">
+                    <div class="main-error">
                         <h2 class="error-code text-dark text-center font-weight-semibold m-0">403 <i class="fas fa-lock"></i></h2>
                         <p class="error-explanation text-center text-e"><strong>Acceso denegado:</strong> Su cuenta está inactiva, comuníquese con el administrador</p>
-                    </div> --}}
+                    </div>
                 </div>
             </div>
         </div>
