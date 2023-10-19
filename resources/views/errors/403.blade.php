@@ -1,7 +1,7 @@
 @extends('errors::minimal')
 <style>
     body {
-        background-image: url('/logo/fondo.png');
+        background-image: url('/logo/bloqueo.png');
         background-size: cover;
         background-repeat: no-repeat;
         background-attachment: fixed;
