@@ -100,7 +100,7 @@
       <div class="container-fluid">
         <div class="row">
     @if($company->logo==null || $company->logo=="")     
-        <div class="col-xl-12 order-1" style="background-image: url({{ asset('img/restaurant.png')}}) ;
+        <div class="col-xl-12 order-1" style="background-image: url({{ asset('logo/fondo.png')}}) ;
          background-repeat: no-repeat;
          background-attachment: fixed;
          background-position: top center;
