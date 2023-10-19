@@ -87,7 +87,7 @@
                                         <img src="{{ asset('storage/uploads/logos/' . $vc_company->logo) }}" />
                                     @else
                                         <img style="max-width: 180px  ; max-height: 75px "
-                                            src="{{ asset('acorn/img/logo/logo-light.svg') }}" class="icono" />
+                                            src="{{ asset('logo/logo.png') }}" class="icono" />
                                     @endif
                                 @endif
                             </div>

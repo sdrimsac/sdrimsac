@@ -92,7 +92,7 @@
                     @if($vc_company->logo)
                         <img src="{{ asset('storage/uploads/logos/'.$vc_company->logo) }}"  class="icono" width="80" height="30"/>
                     @else
-                       <img src="{{ asset('acorn/img/logo/logo-light.svg') }}"  class="icono"/>
+                       <img src="{{ asset('logo/logo.png') }}"  class="icono"/>
                     @endif
                 </a>
 
