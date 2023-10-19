@@ -20,7 +20,7 @@ class LockedTenant
 
         if($configuration->locked_tenant){
             // abort(403);
-            return view('tenant.errors.403')
+            return view('tenant.errors.403');
         }
 
         return $next($request);
