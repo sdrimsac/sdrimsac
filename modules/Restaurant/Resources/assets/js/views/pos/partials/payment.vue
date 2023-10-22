@@ -3162,8 +3162,8 @@ export default {
                     `/${this.resource_documents}`,
                     form
                 );
-
-                if (response.status == 200) {
+                let {data} = response;
+                if (response.status == 200 && data.data) {
                     let format = null;
                     let data = response.data.data;
                     switch (data.format_printer) {

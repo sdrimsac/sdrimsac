@@ -31,6 +31,8 @@ class DocumentObserver
 
         $existingDocument = Document::where('number', $document->number)
             ->where('series', $document->series)
+            ->where('soap_type_id', $document->soap_type_id)
+            ->where('document_type_id', $document->document_type_id)
             ->first();
 
         if ($existingDocument) {
