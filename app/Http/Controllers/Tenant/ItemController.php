@@ -82,7 +82,18 @@ class ItemController extends Controller
             // 'description' => 'Descripción'
         ];
     }
- 
+    // public function generateCode()
+    // {
+    //     $new_code = "100001";
+    //     $item = Item::whereRaw('LENGTH(internal_id) >= 6')->where('internal_id', 'regexp', '^[0-9]{6,}$')->orderBy('internal_id', 'desc')->first();
+
+    //     if ($item) {
+    //         $internal_id = $item->internal_id;
+    //         $new_code = str_pad(intval($internal_id) + 1, 6, '0', STR_PAD_LEFT);
+    //     }
+
+    //     return $new_code;
+    // }
     public function generateCode()
     {
         $regex = '/^\d+$/';
@@ -92,14 +103,11 @@ class ItemController extends Controller
             $new_code = "100001";
         } else {
             $internal_id = $item->internal_id;
-            if(preg_match($regex, $internal_id) === 1){
+            if (preg_match($regex, $internal_id) === 1) {
                 $new_code = intval($internal_id) + 1;
-            }else{
+            } else {
                 $new_code = "100001";
             }
-
-
-
         }
         return $new_code;
     }
@@ -287,7 +295,7 @@ class ItemController extends Controller
     public function store(ItemRequest $request)
     {
         $all_establishment = $request->all_establishment;
-       
+
         $id = $request->input('id');
 
         $item = Item::firstOrNew(['id' => $id]);
@@ -633,17 +641,17 @@ class ItemController extends Controller
             'message' =>  __('app.actions.upload.error'),
         ];
     }
-    public function excel(Request $request){
+    public function excel(Request $request)
+    {
         $records = $this->getRecords($request);
         $company = Company::first();
         $establishment = ($request->establishment_id) ? Establishment::findOrFail($request->establishment_id) : auth()->user()->establishment;
         $records = $records->get();
         return (new ItemExportGeneral)
-                ->records($records)
-                ->company($company)
-                ->establishment($establishment)
-                ->download('Reporte_Productos_'.Carbon::now().'.xlsx');
-
+            ->records($records)
+            ->company($company)
+            ->establishment($establishment)
+            ->download('Reporte_Productos_' . Carbon::now() . '.xlsx');
     }
     public function import(Request $request)
     {
