@@ -138,6 +138,7 @@ Route::prefix('caja')->group(function () {
         Route::get('rooms', 'TableRoomController@index')->name('restaurant.rooms');
         Route::get('rooms/columns', 'TableRoomController@columns');
         Route::get('rooms/check', 'TableRoomController@check');
+        Route::get('rooms/room/{id}', 'TableRoomController@getRoom');
         Route::get('rooms/records', 'TableRoomController@records');
         Route::get('rooms/tables', 'TableRoomController@get_tables');
         Route::get('rooms/tablas', 'TableRoomController@tables');

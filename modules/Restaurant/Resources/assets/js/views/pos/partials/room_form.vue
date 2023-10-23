@@ -313,7 +313,7 @@ export default {
         initForm() {
             this.rooms = [];
             this.form = {
-                observation: "",   
+                observation: "",
                 customer_id: null,
                 sub_total: 0,
                 advance: 0,
@@ -353,6 +353,10 @@ export default {
             for (let room of this.rooms) {
                 if (room.table_id) {
                     let table = this.tables.find(t => t.id == room.table_id);
+                    console.log(
+                        "🚀 ~ file: room_form.vue:356 ~ calculateSubtotal ~ table:",
+                        table
+                    );
                     let {
                         type: { price }
                     } = table;
@@ -372,6 +376,10 @@ export default {
             }
             let total = this.form.sub_total - this.form.advance;
             this.form.total = total;
+            console.log(
+                "🚀 ~ file: room_form.vue:375 ~ calculateTotal ~ this.form.total:",
+                this.form.total
+            );
         },
         addGuess(idx) {
             if (!this.rooms[idx].guess_id) {
@@ -499,10 +507,24 @@ export default {
             if (!this.validate()) {
                 return;
             }
+            try {
+                this.loading = true;
+                const response = await this.$http.post(
+                    "/caja/rooms/set-guess",
+                    this.form
+                );
+                if (response.status == 200) {
+                    this.$toast.success("Huesped ingresado correctamente");
+                    this.$emit("getTables");
+                    this.$emit("update:showDialog", false);
 
-            const response = await this.$http.post('/caja/rooms/set-guess', this.form);
-            console.log("🚀 ~ file: room_form.vue:479 ~ submit ~ response:", response)
-            
+                }
+                this.loading = false;
+            } catch (e) {
+                this.loading = false;
+                this.$toast.error("Error al ingresar huesped");
+            }
+          
         },
         validate() {
             let pass = true;
@@ -523,7 +545,6 @@ export default {
             return pass;
         },
         async open() {
-
             this.loading = true;
             this.keyupCustomer();
             this.initForm();

@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Modules\Restaurant\Models\Table;
 use Modules\Restaurant\Http\Requests\TableRequest;
+use Modules\Restaurant\Http\Resources\HotelRentItemResource;
 use Modules\Restaurant\Http\Resources\TableCollection;
 use Modules\Restaurant\Models\Floor;
 use Modules\Restaurant\Models\Orden;
@@ -25,6 +26,13 @@ class TableRoomController extends Controller
 {
 
 
+    public function getRoom($id){
+        $room = HotelRentItem::where('table_id', $id)->where('payment_status', 'Pendiente')->first();
+        
+
+        return new HotelRentItemResource($room);
+
+    }
     public function check()
     {
         $total = 0;
@@ -136,6 +144,7 @@ class TableRoomController extends Controller
                 $hotel_rent_item->checkin_date = Carbon::parse($room['checkin_date'])->format('Y-m-d');
                 $hotel_rent_item->checkin_time = Carbon::parse($room['checkin_time'])->format('H:i:s');
                 $hotel_rent_item->save();
+                dump($room['table_id']);
                 Table::where('id', $room['table_id'])->update(['status_table_id' => 2]);
 
                 $guesses = $room['guesses'];
@@ -166,7 +175,7 @@ class TableRoomController extends Controller
     {
         $user = auth()->user();
         $establishment_id = $user->establishment_id;
-        $this->checkTables($establishment_id);
+        // $this->checkTables($establishment_id);
         $tables = Table::where('is_room', true)->where('establishment_id', $establishment_id)->orWhereNull('establishment_id')
             ->get();
 

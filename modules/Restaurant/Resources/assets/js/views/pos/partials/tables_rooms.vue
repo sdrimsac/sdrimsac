@@ -9,7 +9,7 @@
         :close-on-click-modal="false"
         :class="{ top }"
     >
-        <div class="card" v-if="ordens.length == 0 || hasSelectedOrdenToChange">
+        <div v-if="ordens.length == 0 || hasSelectedOrdenToChange">
             <div class="d-flex justify-content-end p-2">
                 <button
                     v-if="hasTableOcuped"
@@ -30,10 +30,10 @@
                 <button
                     type="button"
                     style="margin-left:15px;"
-                    :class="`btn ${addingOrden ? 'btn-danger' : 'btn-primary'}`"
+                    :class="`btn ${viewingRoom ? 'btn-danger' : 'btn-primary'}`"
                     @click="addOrden"
                 >
-                    {{ addingOrden ? "Seleccione habtación" : "Nueva orden" }}
+                    {{ viewingRoom ? "Seleccione habtación" : "Nueva orden" }}
                 </button>
                 <button
                     type="button"
@@ -44,87 +44,124 @@
                     Cerrar
                 </button>
             </div>
-            <div
-                v-if="tables.length > 0"
-                class="d-flex flex-wrap justify-content-center"
-            >
+            <template v-if="viewingRoom && currentRoom">
+                <div class="row m-2">
+                    <div class="col-3">
+                        <label for="checkin_date">
+                            <strong>Fecha de ingreso</strong>
+                        </label>
+                        <input
+                            type="date"
+                            class="form-control"
+                            id="checkin_date"
+                            v-model="currentRoom.checkin_date"
+                            disabled
+                        />
+                    </div>
+                    <div class="col-3">
+                        <label for="checkout_time">
+                            <strong>Hora de ingreso</strong>
+                        </label>
+                        <input
+                            type="time"
+                            class="form-control"
+                            id="checkout_time"
+                            v-model="currentRoom.checkin_time"
+                            disabled
+                        />
+                    </div>
+                    <div class="col-3">
+                        <label for="duration">
+                            <strong>Duración</strong>
+                        </label>
+                        <input
+                            type="number"
+                            class="form-control"
+                            id="duration"
+                            v-model="currentRoom.duration"
+                            disabled
+                        />
+                    </div>
+                    <div class="col-3">
+                        <label for="quantity">Cantidad de personas</label>
+                        <input
+                            type="number"
+                            class="form-control"
+                            id="quantity"
+                            v-model="currentRoom.quantity_persons"
+                            disabled
+                        />
+                    </div>
+                </div>
+                <div class="row m-2">
+
+                </div>
+
+            </template>
+            <template v-else>
                 <div
-                    v-for="(table, idx) in tables"
-                    :class="
-                        `${
-                            table.status_table_id == 1
-                                ? 'btn-primary'
-                                : 'btn-danger'
-                        }`
-                    "
-                    class=" col-2 btn   m-1 d-flex flex-column justify-content-center align-items-center "
-                    :key="idx"
-                    @click="selectTable(table)"
-                    style="max-height: 136px;    max-width: 135px;"
+                    v-if="tables.length > 0"
+                    class="d-flex flex-wrap justify-content-center"
                 >
-                   <span class="text-white m-1" style="font-size:45px;">
-                     <template v-if="table.status_table.description == 'Libre'">
-                        <i class="fas fa-door-closed"></i>
-                    </template>
-                    <template
-                        v-else-if="table.status_table.description == 'Ocupado'"
-                    >
-                        <i class="fas fa-bed"></i>
-                    </template>
-                    <template
-                        v-else-if="
-                            table.status_table.description == 'En mantenimiento'
+                    <div
+                        v-for="(table, idx) in tables"
+                        :class="
+                            `${
+                                table.status_table_id == 1
+                                    ? 'btn-primary'
+                                    : 'btn-danger'
+                            }`
                         "
+                        class=" col-2 btn   m-1 d-flex flex-column justify-content-center align-items-center "
+                        :key="idx"
+                        @click="selectTable(table)"
+                        style="max-height: 136px;    max-width: 135px;"
                     >
-                        <i class="fas fa-person-booth"></i>
-                    </template>
-                    <template v-else>
-                        <i class="fas fa-ban"></i>
-                    </template>
-                   </span>
+                        <span class="text-white m-1" style="font-size:45px;">
+                            <template
+                                v-if="table.status_table.description == 'Libre'"
+                            >
+                                <i class="fas fa-door-closed"></i>
+                            </template>
+                            <template
+                                v-else-if="
+                                    table.status_table.description == 'Ocupado'
+                                "
+                            >
+                                <i class="fas fa-bed"></i>
+                            </template>
+                            <template
+                                v-else-if="
+                                    table.status_table.description ==
+                                        'En mantenimiento'
+                                "
+                            >
+                                <i class="fas fa-person-booth"></i>
+                            </template>
+                            <template v-else>
+                                <i class="fas fa-ban"></i>
+                            </template>
+                        </span>
 
+                        <span class="h2 mt-2 text-white">
+                            {{ table.number.toString().toUpperCase() }}
+                        </span>
+                    </div>
+                </div>
+                <div
+                    v-else
+                    class="h-25 d-flex justify-content-center align-items-center"
+                >
+                    <span>Sin habitaciones</span>
+                </div>
+            </template>
+        </div>
 
-                    <span class="h2 mt-2 text-white">
-                        {{ table.number.toString().toUpperCase() }}
-                    </span>
-                </div>
-            </div>
-            <div
-                v-else
-                class="h-25 d-flex justify-content-center align-items-center"
-            >
-                <span>Sin mesas</span>
-            </div>
-        </div>
-        <div
-            class="card-body p-2"
-            v-if="ordens.length > 0 && !hasSelectedOrdenToChange"
-        >
-            <div class="row" v-if="hasSelectedTableToChange">
-                <h3>Seleccione la orden a cambiar</h3>
-            </div>
-            <div class="d-flex flex-wrap justify-content-left">
-                <div class="col-3" v-for="(ord, idx) in ordens" :key="idx">
-                    <button
-                        @click="sendOrdens(ord)"
-                        type="button"
-                        class="btn btn-primary p-1 m-1 "
-                    >
-                        <span class="h3 text-white">#{{ ord.id }}</span
-                        ><br />
-                        <span class="h4 text-white">{{
-                            ord.ref ? ord.ref : "Sin referencia"
-                        }}</span>
-                    </button>
-                </div>
-            </div>
-            <div class="d-flex justify-content-end">
-                <button type="button" class="btn btn-light" @click="closeOrden">
-                    Regresar
-                </button>
-            </div>
-        </div>
-        <room-form :showDialog.sync="showRoom" :table="currentTable"></room-form>
+        <room-form
+            @getTables="getTables"
+            :showDialog.sync="showRoom"
+            :table="currentTable"
+        ></room-form>
     </el-dialog>
 </template>
 
@@ -138,8 +175,8 @@ export default {
     },
     data() {
         return {
-            showRoom:false,
-            addingOrden: false,
+            showRoom: false,
+            viewingRoom: false,
             ordens: [],
             loading: false,
             resource: "/caja/rooms/tables",
@@ -154,6 +191,7 @@ export default {
             hasSelectedOrdenToChange: false,
             ordenToChange: null,
             currentTable: null,
+            currentRoom: null
         };
     },
     methods: {
@@ -165,7 +203,25 @@ export default {
             this.screenWidth = window.innerWidth;
         },
         addOrden() {
-            this.addingOrden = !this.addingOrden;
+            this.viewingRoom = !this.viewingRoom;
+        },
+        async getRoomDetail(id) {
+            try {
+                this.loading = true;
+                const response = await this.$http.get(`/caja/rooms/room/${id}`);
+                const {
+                    data: { data }
+                } = response;
+                this.currentRoom = data;
+                this.viewingRoom = true;
+            } catch (e) {
+                console.log(
+                    "🚀 ~ file: tables_rooms.vue:157 ~ getRoomDetail ~ e",
+                    e
+                );
+            } finally {
+                this.loading = false;
+            }
         },
         async sendOrdenToNewTable(orden, table) {
             let orden_id = orden.id;
@@ -210,6 +266,10 @@ export default {
         },
 
         async selectTable(table) {
+            if (table.status_table_id == 2) {
+                this.getRoomDetail(table.id);
+                return;
+            }
             this.currentTable = table;
             this.showRoom = true;
             // if (
@@ -226,7 +286,7 @@ export default {
             //     }
             // }
 
-            // if (this.addingOrden) {
+            // if (this.viewingRoom) {
             //     this.$emit("creatingOrden", table.number, table.id);
             //     this.close();
             //     return;
@@ -264,6 +324,9 @@ export default {
         },
         async open() {
             this.closeOrden();
+            await this.getTables();
+        },
+        async getTables() {
             try {
                 this.loading = true;
                 const response = await this.$http(this.resource);
@@ -286,7 +349,7 @@ export default {
             }
         },
         close() {
-            this.addingOrden = false;
+            this.viewingRoom = false;
             this.$emit("update:showTables", false);
         }
     },
