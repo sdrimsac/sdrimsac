@@ -87,15 +87,15 @@ class ItemController extends Controller
     {
         $regex = '/^\d+$/';
         $new_code = "";
-        $item = Item::where('internal_id', 'regexp', '^9[0-9]{7}$')->orderBy('internal_id', 'desc')->first();
+        $item = Item::where('internal_id', 'regexp', '^1[0-9]{5}$')->orderBy('internal_id', 'desc')->first();
         if (!$item) {
-            $new_code = "90000000";
+            $new_code = "100001";
         } else {
             $internal_id = $item->internal_id;
             if(preg_match($regex, $internal_id) === 1){
                 $new_code = intval($internal_id) + 1;
             }else{
-                $new_code = "90000000";
+                $new_code = "100001";
             }
 
 
