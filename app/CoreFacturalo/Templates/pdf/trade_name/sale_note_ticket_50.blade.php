@@ -24,7 +24,7 @@
     {{-- <link href="{{ $path_style }}" rel="stylesheet" /> --}}
 </head>
 
-<body style="margin:0px;padding:0px;">
+<body style="margin:0px!important;padding:0px!important;">
 
     @if ($stablishment->logo || $stablishment->document_logo)
         @if ($is_chifa_china)
