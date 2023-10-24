@@ -181,6 +181,7 @@
                         <label for="duration">Días</label>
                         <el-input
                             type="number"
+                            @input="calculateTotal"
                             v-model="room.duration"
                             placeholder="Duración"
                             size="small"
@@ -218,6 +219,11 @@
                         <el-button @click="addGuess(idx)" type="primary">
                             Agregar Huesped
                         </el-button>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="total_room">Subtotal </label>
+                        <el-input type="number" readonly v-model="room.total">
+                        </el-input>
                     </div>
                     <div
                         class="row mt-2"
@@ -353,13 +359,11 @@ export default {
             for (let room of this.rooms) {
                 if (room.table_id) {
                     let table = this.tables.find(t => t.id == room.table_id);
-                    console.log(
-                        "🚀 ~ file: room_form.vue:356 ~ calculateSubtotal ~ table:",
-                        table
-                    );
                     let {
                         type: { price }
                     } = table;
+                    price = price * room.duration;
+                    room.total = price;
                     subtotal += price;
                 }
             }
@@ -376,10 +380,6 @@ export default {
             }
             let total = this.form.sub_total - this.form.advance;
             this.form.total = total;
-            console.log(
-                "🚀 ~ file: room_form.vue:375 ~ calculateTotal ~ this.form.total:",
-                this.form.total
-            );
         },
         addGuess(idx) {
             if (!this.rooms[idx].guess_id) {
@@ -409,6 +409,7 @@ export default {
         },
         addRoom({ tower_id, floor_id, table_id }) {
             let room = {
+                total: 0,
                 guess_id: null,
                 tower_id,
                 floor_id,
@@ -517,14 +518,12 @@ export default {
                     this.$toast.success("Huesped ingresado correctamente");
                     this.$emit("getTables");
                     this.$emit("update:showDialog", false);
-
                 }
                 this.loading = false;
             } catch (e) {
                 this.loading = false;
                 this.$toast.error("Error al ingresar huesped");
             }
-          
         },
         validate() {
             let pass = true;

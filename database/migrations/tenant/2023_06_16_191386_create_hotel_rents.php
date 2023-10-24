@@ -53,6 +53,7 @@ class CreateHotelRents extends Migration
 			$table->time('checkin_time')->nullable();
 			$table->date('checkout_date')->nullable();
 			$table->time('checkout_time')->nullable();
+			$table->decimal('total')->default(0);
 			$table->timestamps();
 			$table->foreign('hotel_rent_id')->references('id')->on('hotel_rents')->onDelete('cascade');
 			$table->foreign('table_id')->references('id')->on('tables')->onDelete('cascade');

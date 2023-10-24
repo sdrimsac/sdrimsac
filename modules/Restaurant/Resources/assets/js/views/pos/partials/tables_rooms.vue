@@ -46,7 +46,7 @@
             </div>
             <template v-if="viewingRoom && currentRoom">
                 <div class="row m-2">
-                    <div class="col-3">
+                    <div class="col-lg-3 col-6">
                         <label for="checkin_date">
                             <strong>Fecha de ingreso</strong>
                         </label>
@@ -58,7 +58,7 @@
                             disabled
                         />
                     </div>
-                    <div class="col-3">
+                    <div class="col-lg-3 col-6">
                         <label for="checkout_time">
                             <strong>Hora de ingreso</strong>
                         </label>
@@ -70,9 +70,12 @@
                             disabled
                         />
                     </div>
-                    <div class="col-3">
+                    <div class="col-lg-3 col-6">
                         <label for="duration">
                             <strong>Duración</strong>
+                            <a href="#" data-toggle="tooltip" title="Días">
+                                [+ Agregar días]
+                            </a>
                         </label>
                         <input
                             type="number"
@@ -82,8 +85,13 @@
                             disabled
                         />
                     </div>
-                    <div class="col-3">
-                        <label for="quantity">Cantidad de personas</label>
+                    <div class="col-lg-3 col-6">
+                        <label for="quantity"
+                            >Cantidad de personas
+                            <a href="#" data-toggle="tooltip" title="persons">
+                                [+ Ver detalle]
+                            </a>
+                        </label>
                         <input
                             type="number"
                             class="form-control"
@@ -93,10 +101,85 @@
                         />
                     </div>
                 </div>
-                <div class="row m-2">
-
+                <div class="d-flex m-2">
+                    <button
+                        type="button"
+                        class="btn btn-success m-2"
+                        @click="createOrden"
+                    >
+                        Ordenar
+                    </button>
+                    <!-- <button type="button" class="btn btn-success m-2">
+                        Ver ordenes
+                    </button> -->
+                    <button type="button" class="btn btn-warning m-2">
+                        Cancelar habitación
+                    </button>
+                    <!-- <div class="col-3 d-flex flex-column p-2 bg-warning rounded justify-content-center align-items-center">
+                        Total ordenes <br />
+                        S/ 1650.00
+                    </div> -->
                 </div>
-
+                <div class="row m-2" v-if="currentRoom.ordens.length > 0">
+                    <div class="col-12">
+                        <span class="text-muted h2">ORDENES</span>
+                    </div>
+                    <el-collapse v-model="activeOrdenRoom" accordion>
+                        <el-collapse-item
+                            v-for="(orden, idx) in currentRoom.ordens"
+                            :key="idx"
+                            :name="idx + 1"
+                        >
+                            <template slot="title">
+                                <div
+                                    class="w-100 d-flex justify-content-between"
+                                >
+                                    <div>
+                                        {{ orden.date }} - Total: {{ orden.total }}
+                                    </div>
+                                    <div class="d-flex align-items-center">
+                                        <button
+                                            style="margin-right:5px;"
+                                            type="button"
+                                            class="btn btn-primary btn-sm"
+                                        >
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button
+                                            style="margin-right:5px;"
+                                            type="button"
+                                            class="btn btn-danger btn-sm"
+                                        >
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </template>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Producto</th>
+                                        <th>Cantidad</th>
+                                        <th>Precio</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr
+                                        v-for="(item, idx) in orden.items"
+                                        :key="idx"
+                                    >
+                                        <td>{{ item.name }}</td>
+                                        <td>{{ item.quantity }}</td>
+                                        <td>{{ item.price }}</td>
+                                        <td>{{ item.total }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </el-collapse-item>
+                    </el-collapse>
+                </div>
+                <div class="row m-3"></div>
             </template>
             <template v-else>
                 <div
@@ -175,6 +258,7 @@ export default {
     },
     data() {
         return {
+            activeOrdenRoom: "1",
             showRoom: false,
             viewingRoom: false,
             ordens: [],
@@ -195,6 +279,11 @@ export default {
         };
     },
     methods: {
+        createOrden() {
+            let { number, id } = this.currentTable;
+            this.$emit("creatingOrden", number, id);
+            this.close();
+        },
         changeOrden() {
             console.log("object");
             this.changingOrden = !this.changingOrden;
@@ -266,11 +355,11 @@ export default {
         },
 
         async selectTable(table) {
+            this.currentTable = table;
             if (table.status_table_id == 2) {
                 this.getRoomDetail(table.id);
                 return;
             }
-            this.currentTable = table;
             this.showRoom = true;
             // if (
             //     this.changingOrden &&
