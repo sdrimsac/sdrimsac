@@ -147,9 +147,9 @@ class SaleNoteController extends Controller
     }
     public function saleNotesByClient(Request $request)
     {
-        
+
         $number = $request->number;
-        if($number == null){
+        if ($number == null) {
             $request->validate([
                 'client_id' => 'required|numeric|min:1',
             ]);
@@ -158,14 +158,14 @@ class SaleNoteController extends Controller
         $clientId = $request->client_id;
         $records = SaleNote::without(['user', 'soap_type', 'state_type', 'currency_type', 'payments'])
             ->select('series', 'number', 'id', 'date_of_issue', 'total');
-            if($clientId){
-                $records = $records->where('customer_id', $clientId);
-            }
-            if($number){
-                $records = $records->where('number', 'like', "%{$number}%");
-            }
-         
-            $records  = $records->whereNull('document_id')
+        if ($clientId) {
+            $records = $records->where('customer_id', $clientId);
+        }
+        if ($number) {
+            $records = $records->where('number', 'like', "%{$number}%");
+        }
+
+        $records  = $records->whereNull('document_id')
             ->whereIn('state_type_id', ['01', '03', '05'])
             ->orderBy('number', 'desc');
 
@@ -1008,7 +1008,10 @@ class SaleNoteController extends Controller
         $base_template = $configuration;
         $html = $template->pdf($base_template, "sale_note", $this->company, $this->document, $format_pdf, $boxes);
 
-        if (($format_pdf === 'ticket') or ($format_pdf === 'ticket_58')) {
+        if (($format_pdf === 'ticket') or ($format_pdf === 'ticket_58')
+            or
+            ($format_pdf === 'ticket_50')
+        ) {
 
             $width = ($format_pdf === 'ticket_58') ? 56 : 78;
             if (config('tenant.enabled_template_ticket_80')) $width = 76;
