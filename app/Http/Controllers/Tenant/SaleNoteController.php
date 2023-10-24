@@ -1077,7 +1077,7 @@ class SaleNoteController extends Controller
                 'margin_top' => 0,
                 'margin_right' => $format_pdf === 'ticket_50' ? 0.5: 6,
                 'margin_bottom' => 0,
-                'margin_left' =>$format_pdf === 'ticket_50'  ? 0.5: 6
+                'margin_left' =>$format_pdf === 'ticket_50'  ? 2: 6
             ]);
         } else if ($format_pdf === 'a5') {
 
