@@ -393,7 +393,7 @@ class Facturalo
             $width = ($format_pdf === 'ticket_58') ? 56 : 78;
             if (config('tenant.enabled_template_ticket_80')) $width = 76;
             if (config('tenant.enabled_template_ticket_70')) $width = 70;
-            if ($format_pdf === 'ticket_50') $width = 45;
+            if ($format_pdf === 'ticket_50') $width = 56;
 
             $company_name      = (strlen($this->company->name) / 20) * 10;
             $company_address   = (strlen($this->document->establishment->address) / 30) * 10;
