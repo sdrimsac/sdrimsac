@@ -1014,6 +1014,7 @@ class SaleNoteController extends Controller
         ) {
 
             $width = ($format_pdf === 'ticket_58') ? 56 : 78;
+            if ($format_pdf === 'ticket_50') $width = 45;
             if (config('tenant.enabled_template_ticket_80')) $width = 76;
 
             $company_logo      = ($this->company->logo) ? 40 : 0;
