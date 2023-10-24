@@ -18,7 +18,7 @@
 
 <head>
     <style>
- 
+
     </style>
     {{-- <title>{{ $tittle }}</title> --}}
     {{-- <link href="{{ $path_style }}" rel="stylesheet" /> --}}
@@ -36,7 +36,8 @@
                 @else
                     <img src="data:{{ mime_content_type(public_path("storage/uploads/logos/{$stablishment->logo}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/uploads/logos/{$stablishment->logo}"))) }}"
                         alt="{{ $company->trade_name }}" class="
-    contain" style=" max-width: 400px; max-height: 150px">
+    contain"
+                        style=" max-width: 400px; max-height: 150px">
                 @endif
             </div>
         @else
@@ -273,7 +274,6 @@
                 <th class="border-top-bottom desc text-left">CANT.</th>
                 <th class="border-top-bottom desc text-left">UNIDAD</th>
                 <th class="border-top-bottom desc text-left">DESCRIPCIÓN</th>
-                <th class="border-top-bottom desc text-left">P.UNIT</th>
                 <th class="border-top-bottom desc text-left">TOTAL</th>
             </tr>
         </thead>
@@ -291,13 +291,14 @@
                             @endif
                         @endif
                     </td>
-                    <td class="text-center desc-9 align-top">  {{          isset($row->item->from_unit_type_id_desc) ? 'NIU' :
-                        $row->item->unit_type_id }}</td>
+                    <td class="text-center desc-9 align-top">
+                        {{ isset($row->item->from_unit_type_id_desc) ? 'NIU' : $row->item->unit_type_id }}
+                    </td>
                     <td class="text-left desc-9 align-top">
                         @if (isset($row->item->descriptionInternet))
                             {{ $row->item->descriptionInternet }}
                         @else
-                        @if (isset($row->name_product_pdf) && strlen($row->name_product_pdf) > 0)
+                            @if (isset($row->name_product_pdf) && strlen($row->name_product_pdf) > 0)
                                 {{ $row->name_product_pdf }}
                             @else
                                 {{ $row->item->description }}
@@ -332,68 +333,62 @@
                             @endforeach
                         @endif
                     </td>
-                    <td class="text-right desc-9 align-top">
-                        @if (isset($row->price_unit))
-                            {{ number_format($row->price_unit, 2) }}
-                    </td>
-                @else
-                    {{ number_format($row->unit_price, 2) }}</td>
-            @endif
+               
             <td class="text-right desc-9 align-top">{{ number_format($row->total, 2) }}</td>
             </tr>
             <tr>
-                <td colspan="5" class="border-bottom"></td>
+                <td colspan="4" class="border-bottom"></td>
             </tr>
             @endforeach
             @if ($document->total_exportation > 0)
                 <tr>
-                    <td colspan="4" class="text-right font-bold desc">OP. EXPORTACIÓN:
+                    <td colspan="3" class="text-right font-bold desc">OP. EXPORTACIÓN:
                         {{ $document->currency_type->symbol }}</td>
                     <td class="text-right font-bold desc">{{ number_format($document->total_exportation, 2) }}</td>
                 </tr>
             @endif
             @if ($document->total_free > 0)
                 <tr>
-                    <td colspan="4" class="text-right font-bold desc">OP. GRATUITAS:
+                    <td colspan="3" class="text-right font-bold desc">OP. GRATUITAS:
                         {{ $document->currency_type->symbol }}</td>
                     <td class="text-right font-bold desc">{{ number_format($document->total_free, 2) }}</td>
                 </tr>
             @endif
             @if ($document->total_unaffected > 0)
                 <tr>
-                    <td colspan="4" class="text-right font-bold desc">OP. INAFECTAS:
+                    <td colspan="3" class="text-right font-bold desc">OP. INAFECTAS:
                         {{ $document->currency_type->symbol }}</td>
                     <td class="text-right font-bold desc">{{ number_format($document->total_unaffected, 2) }}</td>
                 </tr>
             @endif
             @if ($document->total_exonerated > 0)
                 <tr>
-                    <td colspan="4" class="text-right font-bold desc">OP. EXONERADAS:
+                    <td colspan="3" class="text-right font-bold desc">OP. EXONERADAS:
                         {{ $document->currency_type->symbol }}</td>
                     <td class="text-right font-bold desc">{{ number_format($document->total_exonerated, 2) }}</td>
                 </tr>
             @endif
             @if ($document->total_taxed > 0)
                 <tr>
-                    <td colspan="4" class="text-right font-bold desc">OP. GRAVADAS:
+                    <td colspan="3" class="text-right font-bold desc">OP. GRAVADAS:
                         {{ $document->currency_type->symbol }}</td>
                     <td class="text-right font-bold desc">{{ number_format($document->total_taxed, 2) }}</td>
                 </tr>
             @endif
             @if ($document->total_discount > 0)
                 <tr>
-                    <td colspan="4" class="text-right font-bold">
+                    <td colspan="3" class="text-right font-bold">
                         {{ $document->total_prepayment > 0 ? 'ANTICIPO' : 'DESCUENTO TOTAL' }}:
                         {{ $document->currency_type->symbol }}</td>
                     <td class="text-right font-bold">{{ number_format($document->total_discount, 2) }}</td>
                 </tr>
             @endif
             <tr>
-                <td colspan="4" class="text-right font-bold desc">IGV: {{ $document->currency_type->symbol }}</td>
+                <td colspan="3" class="text-right font-bold desc">IGV: {{ $document->currency_type->symbol }}</td>
                 <td class="text-right font-bold desc">{{ number_format($document->total_igv, 2) }}</td>
             </tr>
             <tr>
-                <td colspan="4" class="text-right font-bold desc">TOTAL A PAGAR:
+                <td colspan="3" class="text-right font-bold desc">TOTAL A PAGAR:
                     {{ $document->currency_type->symbol }}</td>
                 <td class="text-right font-bold desc">{{ number_format($document->total, 2) }}</td>
             </tr>
@@ -408,7 +403,7 @@
             @endphp
             @if ($difference > 0)
                 <tr>
-                    <td colspan="4" class="text-right font-bold desc">VUELTO:
+                    <td colspan="3" class="text-right font-bold desc">VUELTO:
                         {{ $document->currency_type->symbol }}</td>
                     <td class="text-right font-bold desc">{{ number_format($difference, 2) }}</td>
                 </tr>
@@ -436,17 +431,16 @@
         </tr>
         @foreach ($boxes as $box)
             <tr>
-                <td colspan="4" class="text-left font-bold desc">{{ $box->method }}
-                    @if($box->bank_account_operation)
-                    <br>
-                    <small>N° Op: {{$box->bank_account_operation}}</small>
+                <td colspan="3" class="text-left font-bold desc">{{ $box->method }}
+                    @if ($box->bank_account_operation)
+                        <br>
+                        <small>N° Op: {{ $box->bank_account_operation }}</small>
                     @endif
                     :
-                    {{ $document->currency_type->symbol }}</td>
-                <td 
-                
-                valign='bottom'
-                class="text-right font-bold desc">{{ number_format(abs($box->amount), 2, '.', '') }}</td>
+                    {{ $document->currency_type->symbol }}
+                </td>
+                <td valign='bottom' class="text-right font-bold desc">
+                    {{ number_format(abs($box->amount), 2, '.', '') }}</td>
             </tr>
         @endforeach
 
