@@ -17,15 +17,18 @@
 <html>
 
 <head>
+    <style>
+ 
+    </style>
     {{-- <title>{{ $tittle }}</title> --}}
     {{-- <link href="{{ $path_style }}" rel="stylesheet" /> --}}
 </head>
 
-<body>
+<body style="margin:0px;padding:0px;">
 
     @if ($stablishment->logo || $stablishment->document_logo)
         @if ($is_chifa_china)
-            <div class="text-center company_logo_box" style="padding-top:2rem;width: 350px;">
+            <div class="text-center company_logo_box" style="width: 350px;">
                 @if ($stablishment->document_logo)
                     <img src="data:{{ mime_content_type(public_path("storage/uploads/logos/{$stablishment->document_logo}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/uploads/logos/{$stablishment->document_logo}"))) }}"
                         alt="{{ $company->trade_name }}" class="
@@ -50,7 +53,7 @@
     @else
         @if ($company->logo)
             @if ($is_chifa_china)
-                <div class="text-center company_logo_box" style="padding-top:2rem;width: 350px;">
+                <div class="text-center company_logo_box" style="width: 350px;">
                     @if ($company->document_logo)
                         <img src="data:{{ mime_content_type(public_path("storage/uploads/logos/{$company->document_logo}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/uploads/logos/{$company->document_logo}"))) }}"
                             alt="{{ $company->trade_name }}" class="
@@ -64,7 +67,7 @@
                     @endif
                 </div>
             @else
-                <div class="text-center full-width company_logo_box pt-5">
+                <div class="text-center full-width company_logo_box">
                     @if ($company->document_logo)
                         <img src="data:{{ mime_content_type(public_path("storage/uploads/logos/{$company->document_logo}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/uploads/logos/{$company->document_logo}"))) }}"
                             alt="{{ $company->trade_name }}" class="company_logo_ticket contain">
@@ -267,11 +270,11 @@
     <table class="full-width mt-10 mb-10">
         <thead class="">
             <tr>
-                <th class="border-top-bottom desc-9 text-left">CANT.</th>
-                <th class="border-top-bottom desc-9 text-left">UNIDAD</th>
-                <th class="border-top-bottom desc-9 text-left">DESCRIPCIÓN</th>
-                <th class="border-top-bottom desc-9 text-left">P.UNIT</th>
-                <th class="border-top-bottom desc-9 text-left">TOTAL</th>
+                <th class="border-top-bottom desc text-left">CANT.</th>
+                <th class="border-top-bottom desc text-left">UNIDAD</th>
+                <th class="border-top-bottom desc text-left">DESCRIPCIÓN</th>
+                <th class="border-top-bottom desc text-left">P.UNIT</th>
+                <th class="border-top-bottom desc text-left">TOTAL</th>
             </tr>
         </thead>
         <tbody>
