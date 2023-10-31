@@ -245,7 +245,6 @@ class PosController extends Controller
         $documents_type = IdentityDocumentType::where('active', 1)->get();
         $customers = $this->table('customers');
         $user = User::findOrFail(auth()->user()->id);
-
         $customers_default = Person::where('id', "=", $establishment->customer_id)->get()->transform(function ($row) {
             return [
                 'id' => $row->id,
@@ -286,7 +285,12 @@ class PosController extends Controller
             $item_default = Item::where('id', $config->item_variation_id)->first();
         }
         $areas = Area::all();
+        $tablesClean = [];
+        if($config->hotels){
+            $tablesClean = DB::connection('tenant')->table('tables')->where('is_cleaning', true)->get();
+        }
         return compact(
+            'tablesClean',
             'sellers',
             'products_to_due',
             'areas',
@@ -329,6 +333,7 @@ class PosController extends Controller
     {
         $configuration = Configuration::first();
         if ($table === 'customers') {
+         
             $customers = Person::whereType('customers')->whereIsEnabled()->orderBy('created_at', 'desc');
 
 
@@ -339,7 +344,9 @@ class PosController extends Controller
                         ->from('parents');
                 });
             }
-            $customers = $customers->limit(5)->get()->transform(function ($row) {
+            $customers = $customers->limit(5)->get();
+     
+            $customers = $customers->transform(function ($row) {
                 $students = CollegeStudent::whereHas('member', function ($query) use ($row) {
                     $query->whereHas('parent', function ($query) use ($row) {
                         $query->where('parent_id', $row->id);

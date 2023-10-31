@@ -251,7 +251,10 @@ class SaleNote extends ModelTenant
     {
         return (is_null($value)) ? null : (object) json_decode($value);
     }
-
+    public function getDownloadExternalPdfAttribute()
+    {
+        return route('tenant.download.external_id', ['model' => 'saleNote', 'type' => 'pdf', 'external_id' => $this->external_id]);
+    }
     public function setDetractionAttribute($value)
     {
         $this->attributes['detraction'] = (is_null($value)) ? null : json_encode($value);

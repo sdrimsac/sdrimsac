@@ -11,10 +11,12 @@ class TableType extends ModelTenant
     protected $table = "table_types";
     protected $casts = [
         'active' => 'boolean',
+        'price' => 'float'
     ];
     protected $fillable = [
         'name',
         'active',
+        'price'
       
     ];
 }

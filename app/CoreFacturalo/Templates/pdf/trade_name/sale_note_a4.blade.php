@@ -6,7 +6,7 @@
     $left = $document->series ? $document->series : $document->prefix;
     $tittle = $left . '-' . str_pad($document->number, 8, '0', STR_PAD_LEFT);
     $payments = $document->payments;
-    
+    $hotel_rent = \App\Models\Tenant\HotelRent::where('sale_note_id', $document->id)->first();
 @endphp
 <html>
 
@@ -127,6 +127,47 @@
             <td height="18px"><b>OBSERVACION:</b></td>
             <td colspan="3" class="align-top">{{ trim($document->observation) }}</td>
         </tr>
+        @if ($hotel_rent)
+            @php
+                $hotel_rent_items = $hotel_rent->items;
+                
+            @endphp
+            @foreach ($hotel_rent_items as $hri)
+                <tr>
+                    <td height="18px">
+                        <b>
+                            Habitación:
+                        </b>
+                    </td>
+                    <td colspan="3" class="align-top">
+                        {{ $hri->table->number }}
+                    </td>
+                </tr>
+                <tr>
+                    <td height="18px">
+                        <b>
+                            Entrada:
+                        </b>
+
+                    </td>
+                    <td colspan="3" class="align-top">
+
+                        {{ \Carbon\Carbon::parse($hri->checkin_date)->format('d/m/Y') }} {{ $hri->checkin_time }}
+                    </td>
+                </tr>
+                <tr>
+                    <td height="18px">
+                        <b>
+                            Salida:
+                        </b>
+
+                    </td>
+                    <td colspan="3" class="align-top">
+                        {{ \Carbon\Carbon::parse($hri->checkout_date)->format('d/m/Y') }} {{ $hri->checkout_time }}
+                    </td>
+                </tr>
+            @endforeach
+        @endif
     </table>
 
     <table class="full-width mt-10 mb-10">
@@ -157,15 +198,14 @@
                         @endif
                     </td>
                     <td class="text-center align-top">
-                        {{          isset($row->item->from_unit_type_id_desc) ? 'NIU' :
-                        $row->item->unit_type_id }}
-                        </td>
+                        {{ isset($row->item->from_unit_type_id_desc) ? 'NIU' : $row->item->unit_type_id }}
+                    </td>
                     <td class="text-left">
 
                         @if (isset($row->item->descriptionInternet))
                             {{ $row->item->descriptionInternet }}
                         @else
-                        @if (isset($row->name_product_pdf) && strlen($row->name_product_pdf) > 0)
+                            @if (isset($row->name_product_pdf) && strlen($row->name_product_pdf) > 0)
                                 {{ $row->name_product_pdf }}
                             @else
                                 {{ $row->item->description }}
@@ -310,7 +350,7 @@
                 <td colspan="7" height="18px"><b>OBSERVACION: </b>{{ trim($document->observation) }}</td>
             </tr> --}}
         </tbody>
-      
+
     </table>
     <table class="full-width">
         <tr>
@@ -320,9 +360,8 @@
         </tr>
         @foreach ($boxes as $box)
             <tr>
-                <td colspan="7" class="text-left font-bold border_detalles">{{ $box->method }}   @if($box->bank_account_operation)
-                    
-                    <small>N° Op: {{$box->bank_account_operation}}</small>
+                <td colspan="7" class="text-left font-bold border_detalles">{{ $box->method }} @if ($box->bank_account_operation)
+                        <small>N° Op: {{ $box->bank_account_operation }}</small>
                     @endif
                     :
                     {{ $document->currency_type->symbol }}</td>
@@ -332,7 +371,7 @@
         @endforeach
 
 
-</table>
+    </table>
     {{-- <table align="center" width="70%" style="margin-top:50px">
         <tr>
             <td align="center" width="45%" style="border-top:1px solid #000;font-weight:bold">Recibi

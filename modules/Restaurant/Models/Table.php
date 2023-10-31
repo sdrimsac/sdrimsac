@@ -11,8 +11,10 @@ class Table extends ModelTenant
 {
  use RegisterMovementTrait;
     public $timestamps = false;
-    protected $with = ["area", "status_table"];
+    protected $with = ["type","area", "status_table","floor"];
     protected $fillable = [
+        'is_cleaning',
+        'cleaning_start_date',
         'is_room',
         'floor_id',
         'table_type_id',
@@ -20,6 +22,9 @@ class Table extends ModelTenant
         'area_id',
         'status_table_id',
         'establishment_id',
+    ];
+    protected $casts = [
+        'is_cleaning' => 'boolean',
     ];
     protected static function boot()
     {

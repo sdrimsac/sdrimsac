@@ -54,7 +54,9 @@
                         `${
                             table.status_table_id == 1
                                 ? 'btn-primary'
-                                : 'btn-danger'
+                                : (table.status_table_id == 2
+                                ? 'btn-danger'
+                                : 'btn-warning')
                         }`
                     "
                     class=" col-2 btn   m-1 d-flex flex-column justify-content-center align-items-center "
@@ -64,7 +66,7 @@
                 >
                     <strong class="h3 text-white  ">Mesa</strong>
                     <i class="icofont-dining-table icofont-4x"></i>
-
+                    
                     <span class="h2  text-white">
                         {{ table.number }}
                     </span>
@@ -142,24 +144,26 @@ export default {
         addOrden() {
             this.addingOrden = !this.addingOrden;
         },
-       async sendOrdenToNewTable(orden,table) {
-            let orden_id = orden.id;   
+        async sendOrdenToNewTable(orden, table) {
+            let orden_id = orden.id;
             let table_id = table.id;
-            try{
+            try {
                 this.loading = true;
-                const response = await this.$http.post(`change-orden`,{orden_id,table_id});
-                if(response.status == 200){
+                const response = await this.$http.post(`change-orden`, {
+                    orden_id,
+                    table_id
+                });
+                if (response.status == 200) {
                     this.$toast.success("Orden cambiada con éxito");
-                   
-                }else{
+                } else {
                     this.$toast.error("Ocurrió un error, al cambiar la orden");
                 }
-            }catch(e){
+            } catch (e) {
                 console.log(e);
                 this.$toast.error("Ocurrió un error, al cambiar la orden");
-            }finally{
+            } finally {
                 this.loading = false;
- this.close();
+                this.close();
             }
         },
         closeOrden() {
@@ -191,8 +195,8 @@ export default {
                 if (table.status_table_id == 2) {
                     this.$toast.warning("La mesa no esta libre");
                     return;
-                }else{
-                    this.sendOrdenToNewTable(this.ordenToChange,table);
+                } else {
+                    this.sendOrdenToNewTable(this.ordenToChange, table);
                     return;
                 }
             }

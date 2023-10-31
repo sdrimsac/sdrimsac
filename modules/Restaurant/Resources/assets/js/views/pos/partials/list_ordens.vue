@@ -936,7 +936,7 @@
                           "
                                                 >
                                                     <div
-                                                        class="overflow-hidden card shadow-lg p-3"
+                                                        class="overflow-hidden w-100 card shadow-lg p-3"
                                                         style="
                               box-shadow: rgba(0, 0, 0, 0.18) 0px 1rem 3rem !important;
                             "
@@ -1071,7 +1071,7 @@
                                                                 </span>
                                                             </div>
                                                             <div
-                                                                class="col-md-6 m2 mt-2"
+                                                                class="col-md-6 m2 mt-2  col-lg-3"
                                                             >
                                                                 <el-button-group>
                                                                     <el-button

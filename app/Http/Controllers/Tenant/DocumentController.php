@@ -944,6 +944,21 @@ class DocumentController extends Controller
                 event(new OrdenReadyEvent($orden_item->id));
             }
         }
+        if($request->orden_ids){
+            $ids = $request->orden_ids;
+            foreach ($ids as $id) {
+                $Orden = Orden::findOrFail($id);
+                $Orden->document_id = $document->id;
+                $Orden->status_orden_id = 4;
+                $Orden->customer_id = $document->customer_id;
+                $Orden->save();
+                $orden_items = OrdenItem::where('orden_id', $id)->get();
+                foreach ($orden_items as $orden_item) {
+                    $orden_item->status_orden_id = 4;
+                    $orden_item->save();
+                }
+            }
+        }
         if (count($ids) != 0) {
             Orden::whereIn('id', $ids)->update(['document_id' => $document->id]);
         }

@@ -100,7 +100,14 @@ class EstablishmentController extends Controller
         $id = $request->input('id');
         $conf = $request->conf;
         $establishment = Establishment::firstOrNew(['id' => $id]);
+
         $establishment->fill($request->all());
+        $direct_printing = $request->input('direct_printing');
+        if($direct_printing){
+            $establishment->direct_printing = 1;
+        }else{
+            $establishment->direct_printing = 0;
+        }
         $establishment->save();
         $series = $request->series;
         if (!$id) {

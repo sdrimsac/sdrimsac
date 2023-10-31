@@ -536,19 +536,26 @@ class OrdenController extends Controller
 
                 //   dd($request->all());
                 $table = Table::find($request->orden['table_id']);
+               
                 $table->status_table_id = 2;
                 $table->save();
             }
 
             //si la orden existe solo quiero agregar
             //los items
-
+            $orden = null;
             if ($id != null) {
                 $orden = Orden::find($id);
                 $orden->ref = $ref;
-                $orden->save();
                 $table = Table::find($orden->table_id);
+                if($table->is_room){
+                    $hotel_rent_item = DB::connection('tenant')->table('hotel_rent_items')->where('table_id', $table->id)->latest('id')->first();
+                    if($hotel_rent_item){
+                        $orden->hotel_rent_item_id = $hotel_rent_item->id;
+                    }
+                }
                 $message = 'Pedido agregado.'; //me refiero en punto de caja
+                $orden->save();
                 //creo la orden y guardo los items
             } else {
                 $orden = new Orden;
@@ -563,10 +570,16 @@ class OrdenController extends Controller
                 if ($request->caja == true) {
                     $orden->table_id = $table->id;
                 }
-                $orden->save();
                 $table = Table::find($orden->table_id);
                 $table->status_table_id = 2;
+                if($table->is_room){
+                    $hotel_rent_item = DB::connection('tenant')->table('hotel_rent_items')->where('table_id', $table->id)->latest('id')->first();
+                    if($hotel_rent_item){
+                        $orden->hotel_rent_item_id = $hotel_rent_item->id;
+                    }
+                }
                 $table->save();
+                $orden->save();
             }
             event(new OrdenPendingEvent(1));
             /* ----------------------------- */

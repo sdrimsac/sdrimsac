@@ -69,6 +69,8 @@ use App\CoreFacturalo\Requests\Inputs\Functions;
 use App\Exports\SaleNoteExport;
 use App\Models\Tenant\BankAccount;
 use App\Models\Tenant\Cash;
+use App\Models\Tenant\HotelRent;
+use App\Models\Tenant\HotelRentItem;
 use App\Models\Tenant\ItemUnitType;
 use App\Models\Tenant\SaleNoteCredit;
 use App\Models\Tenant\Seller;
@@ -523,6 +525,53 @@ class SaleNoteController extends Controller
                     $orden_item->save();
                     event(new OrdenReadyEvent($orden_item->id));
                 }
+            }
+            if($request->orden_ids){
+                $ids = $request->orden_ids;
+                foreach ($ids as $id) {
+                    $Orden = Orden::findOrFail($id);
+                    $Orden->sale_note_id = $this->sale_note->id;
+                    $Orden->status_orden_id = 4;
+                    $Orden->customer_id = $this->sale_note->customer_id;
+                    $Orden->save();
+                    $orden_items = OrdenItem::where('orden_id', $id)->get();
+                    foreach ($orden_items as $orden_item) {
+                        $orden_item->status_orden_id = 4;
+                        $orden_item->save();
+                        // event(new OrdenReadyEvent($orden_item->id));
+                    }
+                }
+            }
+            if($request->hotel_rent_item_ids){
+                $hotel_rent_items = HotelRentItem::whereIn('id', $request->hotel_rent_item_ids)->get();
+                foreach ($hotel_rent_items as $item) {
+                    $item->payment_status = "Pagado";
+                    $item->sale_note_id = $this->sale_note->id;
+                    $item->checkout_date = date('Y-m-d');
+                    $item->checkout_time = date('H:i:s');
+                    $item->save();
+                    $table = Table::where('id', $item->table_id)->first();
+                    $table->status_table_id = 5;
+                    $table->save();
+                    
+                }
+            }
+            if($request->hotel_rent_id){
+                $hotel_rent= HotelRent::findOrFail($request->hotel_rent_id);
+                $hotel_rent_items = $hotel_rent->items;
+                foreach ($hotel_rent_items as $item) {
+                    $item->payment_status = "Pagado";
+                    $table = Table::where('id', $item->table_id)->first();
+                    $table->status_table_id = 5;
+                    $table->save();
+                    $item->checkout_date = date('Y-m-d');
+                    $item->checkout_time = date('H:i:s');
+                    $item->save();
+                }
+                $hotel_rent->payment_status = "Pagado";
+                $hotel_rent->sale_note_id = $this->sale_note->id;
+                $hotel_rent->paid = 1;
+                $hotel_rent->save();
             }
             if ($all_ordens) {
                 $tables = Table::where('establishment_id', auth()->user()->establishment_id)

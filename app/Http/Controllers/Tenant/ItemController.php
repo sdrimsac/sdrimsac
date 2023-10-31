@@ -67,7 +67,7 @@ class ItemController extends Controller
     {
         return view('tenant.items_ecommerce.index');
     }
-
+    
     public function columns()
     {
         return [
