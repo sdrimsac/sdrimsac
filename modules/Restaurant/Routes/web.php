@@ -137,13 +137,20 @@ Route::prefix('caja')->group(function () {
         //**** MESAS */
         Route::get('rooms', 'TableRoomController@index')->name('restaurant.rooms');
         Route::get('rooms/columns', 'TableRoomController@columns');
+        Route::get('rooms/tables_to_clean', 'TableRoomController@tablesToClean');
         Route::get('rooms/check', 'TableRoomController@check');
+        Route::get('rooms/cleaned/{id}', 'TableRoomController@cleaned');
         Route::get('rooms/room/{id}', 'TableRoomController@getRoom');
         Route::get('rooms/records', 'TableRoomController@records');
+        Route::get('rooms/add_days/{id}/{days}', 'TableRoomController@addDays');
         Route::get('rooms/tables', 'TableRoomController@get_tables');
         Route::get('rooms/tablas', 'TableRoomController@tables');
         Route::get('rooms/orden/{id}', 'TableRoomController@get_ordens');
+        Route::get('rooms/send_to_clean/{id}', 'TableRoomController@sendToclean');
+        Route::get('rooms/ordenById/{id}', 'TableRoomController@ordenById');
+        Route::get('rooms/change_room/{to}/{from}', 'TableRoomController@changeRoom');
         Route::get('rooms/record/{id}', 'TableRoomController@record');
+        Route::post('rooms/all_ordens/{id}', 'TableRoomController@allOrdens');
         Route::get('rooms/types', 'TableRoomController@room_types');
         Route::post('rooms', 'TableRoomController@store');
         Route::post('rooms/set-guess', 'TableRoomController@setGuess');

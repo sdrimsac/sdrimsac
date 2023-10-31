@@ -141,7 +141,7 @@
                         <el-input-number
                             v-model="room.quantity_persons"
                             :min="1"
-                            :max="2"
+                            
                             style="width: 100%;"
                             :step="1"
                             size="small"

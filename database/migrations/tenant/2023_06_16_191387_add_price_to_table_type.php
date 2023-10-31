@@ -19,6 +19,11 @@ class AddPriceToTableType extends Migration
 			});
 		}
 
+		Schema::table('ordens',function (Blueprint $table){
+			$table->unsignedInteger('hotel_rent_item_id')->nullable();
+			$table->foreign('hotel_rent_item_id')->references('id')->on('hotel_rent_items')->onDelete('cascade');
+		});
+
 	
 	}
 
@@ -35,6 +40,10 @@ class AddPriceToTableType extends Migration
 				$table->dropColumn('price');
 			});
 		}
+		Schema::table('ordens',function (Blueprint $table){
+			$table->dropForeign(['hotel_rent_item_id']);
+			$table->dropColumn('hotel_rent_item_id');
+		});
 
 	}
 }

@@ -14,7 +14,7 @@ class HotelRentItemResource extends JsonResource
      * @return array
      */
     public function toArray($request)
-    {
+    {   
         $guesses = [];
         if ($this->guesses->isEmpty()) {
             $guess = $this->hotel_rent->customer;
@@ -30,19 +30,25 @@ class HotelRentItemResource extends JsonResource
                 ];
             }
         }
-        $table_id = $this->table_id;
-        $ordens = Orden::where('table_id', $table_id)
+        $total_all_orden = 0;
+        $ordens = Orden::where('hotel_rent_item_id', $this->id)
             ->orderBy('created_at', 'desc')
             ->get()
-            ->transform(function ($row) {
+            ->transform(function ($row) use (&$total_all_orden) {
                 $total_orden = 0;
+
                 return [
                     'id' => $row->id,
+                    'paid' => $row->hasDocument(),
+             
+                    'document' => $row->getDocument(),
                     'number' => $row->id,
                     'date' => $row->created_at->format('d/m/Y H:i:s'),
-                    'items' => $row->orden_items->transform(function ($item) use (&$total_orden) {
+                    'items' => $row->orden_items->transform(function ($item) use (&$total_orden, &$total_all_orden) {
+
                         $total = $item->price * $item->quantity;
                         $total_orden += $total;
+                        $total_all_orden += $total;
                         return [
                             'id' => $item->id,
                             'name' => $item->food->description,
@@ -63,7 +69,11 @@ class HotelRentItemResource extends JsonResource
             'quantity_persons' => $this->quantity_persons,
             'checkin_date' => $this->checkin_date,
             'checkin_time' => $this->checkin_time,
+            
             'ordens' => $ordens,
+            'total_room' => $this->total,
+            'total_orden' => number_format($total_all_orden, 2),
+            'total' => number_format($this->total + $total_all_orden, 2),
         ];
     }
 }

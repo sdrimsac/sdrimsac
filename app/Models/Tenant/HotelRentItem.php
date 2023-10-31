@@ -2,12 +2,15 @@
 
 namespace App\Models\Tenant;
 
-
+use Modules\Restaurant\Models\Table;
 
 class HotelRentItem extends ModelTenant
 {
+    public $timestamps = false;
     protected $table = 'hotel_rent_items';
     protected $fillable = [
+        'sale_note_id',
+        'document_id',
         'hotel_rent_id',
         'table_id',
         'duration',
@@ -17,6 +20,8 @@ class HotelRentItem extends ModelTenant
         'checkin_time',
         'checkout_date',
         'checkout_time',
+        'total',
+        'extra_time',
     ];
 
     public function hotel_rent()

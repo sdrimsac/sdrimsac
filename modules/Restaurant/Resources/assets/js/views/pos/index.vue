@@ -84,6 +84,44 @@
                                         </div>
                                     </div>
                                 </div>
+                                <button
+                                    v-for="(t, idx) in tablesClean"
+                                    :key="idx"
+                                    style="margin-right: 2px;margin-left: 2px;"
+                                    type="button"
+                                    class="btn  btn-warning"
+                                    @click="isCleaned(t.id)"
+                                >
+                                    <span>{{ t.time_to_finish }}</span>
+                                    <svg
+                                        fill="#ffffff"
+                                        width="20px"
+                                        height="20px"
+                                        viewBox="-8.08 0 122.88 122.88"
+                                        version="1.1"
+                                        id="Layer_1"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        xmlns:xlink="http://www.w3.org/1999/xlink"
+                                        style="enable-background:new 0 0 106.72 122.88"
+                                        xml:space="preserve"
+                                        stroke="#ffffff"
+                                        stroke-width="0.0012288"
+                                        transform="rotate(0)"
+                                    >
+                                        <g id="SVGRepo_iconCarrier">
+                                            <g>
+                                                <path
+                                                    d="M4.42,33.57c-0.66-5.38,0.44-9.98,2.7-13.69c1.65-2.7,3.9-4.9,6.54-6.56c2.6-1.63,5.57-2.74,8.69-3.27 c4.94-0.84,10.29-0.24,15.13,1.96c1.72-3.29,4.16-6.1,7.33-8.19C48.46,1.41,53.04,0,58.53,0c5.96,0,11.59,2.53,15.71,6.6 c3.05,3.03,5.27,6.92,6.17,11.26c3.55-1.84,6.87-2.69,9.86-2.68c2.46,0,4.7,0.58,6.67,1.65c1.96,1.07,3.63,2.61,4.96,4.56 c2.24,3.27,3.54,7.71,3.69,12.93c0.64,0.92,1.01,2.03,1.11,3.33c0.04,0.51,0.03,1.04-0.01,1.58c-0.02,0.19-0.05,0.37-0.1,0.54 l-16,70.03c-0.01,0.03-0.02,0.07-0.03,0.1l0,0c-3.72,13.67-13.03,13.27-23.32,12.82c-1.58-0.07-3.19-0.14-5.05-0.14h-17 c-2.48,0-3.96,0.03-5.31,0.05c-14.36,0.27-17.53,0.33-22.17-19.11l0-0.01l-0.01,0l-0.23-0.97c-2.1-1.21-4.08-2.72-5.91-4.54 C1.39,87.86-3.71,67.96,3.11,35.55c0.14-0.68,0.53-1.24,1.04-1.62C4.23,33.8,4.32,33.68,4.42,33.57L4.42,33.57z M78.35,44.25 c4.2,0,7.6,3.4,7.6,7.6c0,3.49-2.36,6.43-5.56,7.32c-2.3,19.92-14.95,35.36-29.48,42.62c-6.76,3.38-13.94,5.01-20.71,4.54 c-2.24-0.16-4.43-0.54-6.55-1.16c3.28,12.33,6.04,12.28,16.15,12.09c1.88-0.03,3.95-0.07,5.39-0.07h17c1.61,0,3.46,0.08,5.28,0.16 c8.03,0.35,15.3,0.66,17.89-8.86h0l15.96-69.87c0.02-0.23,0.02-0.43,0-0.6c-0.02-0.24-0.05-0.42-0.11-0.54 c-0.1-0.08-0.19-0.17-0.28-0.27c-0.2-0.09-0.5-0.15-0.89-0.19c-0.33-0.03-0.69-0.03-1.07-0.01c-0.11,0.01-0.21,0.02-0.33,0.02H8.7 c-0.13,0.02-0.2,0.06-0.22,0.1c-0.22,0.5-0.25,1.36-0.15,2.43l13.81,59.34c2.64,1.19,5.48,1.87,8.41,2.07 c5.83,0.4,12.05-1.03,17.95-3.98c13.05-6.53,24.42-20.39,26.53-38.31c-2.54-1.23-4.29-3.83-4.29-6.84 C70.76,47.66,74.16,44.25,78.35,44.25L78.35,44.25z M15.58,94.42L5.85,52.64c-2.04,20.94,2.21,34.29,9.5,41.56 C15.43,94.28,15.5,94.35,15.58,94.42L15.58,94.42z M100,31.62c-0.4-2.9-1.26-5.35-2.54-7.21c-0.86-1.25-1.9-2.22-3.09-2.87 c-1.19-0.65-2.57-0.99-4.11-0.99c-2.97,0-6.54,1.25-10.6,4.03l0,0c-0.44,0.3-0.97,0.47-1.54,0.47c-1.47-0.02-2.65-1.22-2.65-2.69 c-0.01-0.07-0.01-0.14-0.01-0.21c0-4.56-1.95-8.71-5-11.73c-3.13-3.1-7.41-5.03-11.92-5.03c-4.4,0-7.99,1.08-10.78,2.92 c-3.01,1.98-5.16,4.9-6.46,8.33c-0.06,0.17-0.14,0.33-0.24,0.49c-0.77,1.27-2.43,1.67-3.69,0.89c-4.34-2.65-9.45-3.46-14.12-2.66 c-2.43,0.41-4.73,1.26-6.72,2.51c-1.95,1.23-3.62,2.84-4.82,4.81c-1.48,2.43-2.27,5.44-2.06,8.97h88.98 C99.1,31.62,99.56,31.61,100,31.62L100,31.62z"
+                                                ></path>
+                                            </g>
+                                        </g>
+                                    </svg>
+
+                                    <span>
+                                        N°
+                                        {{ t.number.toString().toUpperCase() }}
+                                    </span>
+                                </button>
                             </div>
                         </div>
                         <div class="row card mx-1 mt-2">
@@ -1488,6 +1526,8 @@
             :showTables.sync="showTables"
         ></tables>
         <tables-rooms
+            @getTablesToClean="getTablesToClean"
+            @paymentsOrden="paymentsOrden"
             @creatingOrden="creatingOrden"
             @sendOrdens="sendOrdens"
             :showTables.sync="showTablesRooms"
@@ -1678,6 +1718,7 @@ export default {
 
     data() {
         return {
+            tablesClean: [],
             clientSaleNoteNumber: null,
             clientSaleNoteDiscount: 0,
             sellers: [],
@@ -1805,12 +1846,14 @@ export default {
             personalWhatsapp: false,
             config: {},
             screenWidth: 0,
-            showdialogPromocion: false
+            showdialogPromocion: false,
+            timer: null
         };
     },
-
+    beforeDestroy() {
+        clearInterval(this.timer);
+    },
     async created() {
-        console.log(this.worker, "worker");
         localStorage.setItem("quotation_stock", 0);
         let type_code = localStorage.getItem("type_code");
         let barcode = localStorage.getItem("barcode");
@@ -1877,10 +1920,72 @@ export default {
                     });
             };
         });
+
+        setTimeout(() => {
+                this.timer = setInterval(() => {
+                    this.updateTime();
+                }, 1000);
+        }, 500);
     },
     sockets: {},
     computed: {},
     methods: {
+        async roomCleaned(id) {
+            const response = await this.$http(
+                `/caja/rooms/cleaned/${id}`
+            );
+            if (response.status == 200) {
+                this.tablesClean = this.tablesClean.filter(t => t.id != id);
+            }
+        },
+        async isCleaned(id) {
+            try {
+                await this.$confirm(
+                    "¿Está seguro de marcar como limpiada la habitación?",
+                    "Mensaje",
+                    {
+                        confirmButtonText: "Aceptar",
+                        cancelButtonText: "Cancelar",
+                        type: "warning"
+                    }
+                );
+                await this.roomCleaned(id);
+            } catch (e) {}
+        },
+        playSound() {
+            let audio = new Audio("/sounds/services_sound.mp3");
+            if (audio) {
+                audio.play();
+            }
+        },
+        updateTime() {
+            this.tablesClean.forEach(t => {
+                if (t.is_cleaning) {
+                    if (t.cleaned === true) {
+                        return;
+                    }
+                    let { cleaning_start_date } = t;
+                    let date = new Date(cleaning_start_date);
+                    let now = new Date();
+                    let diff = date.getTime() - now.getTime();
+
+                    if (diff <= 0) {
+                        t.cleaned = true;
+                        t.time_to_finish = null;
+                        this.playSound();
+                    } else {
+                        diff = Math.floor(diff / 1000);
+                        let seconds = diff % 60;
+                        diff = Math.floor(diff / 60);
+                        let minutes = diff % 60;
+                        t.time_to_finish = `${
+                            minutes < 10 ? "0" : ""
+                        }${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+                    }
+                }
+            });
+        },
+
         sendItems(items, clientNumber, notes, dscto_global) {
             this.clientSaleNoteNumber = clientNumber;
             this.clientSaleNoteDiscount = dscto_global;
@@ -2119,14 +2224,14 @@ export default {
             switch (keyCode) {
                 case 113:
                     event.preventDefault(); // Evita la función por defecto del navegador
-                    if (this.configuration.hotels) { 
+                    if (this.configuration.hotels) {
                         if (this.isCurrentAreaHotel()) {
-                            this.openTablesRooms(); 
+                            this.openTablesRooms();
                         } else {
-                            this.openTables(); 
+                            this.openTables();
                         }
                     } else {
-                        this.openTables(); 
+                        this.openTables();
                     }
 
                     break;
@@ -2673,6 +2778,13 @@ export default {
         async paymentsOrden(form, variationItem = []) {
             this.orden_items = form;
             this.form.printDocument = form.printDocument;
+            this.form.is_room = form.is_room;
+            if(this.form.is_room){
+            this.form.orden_ids = form.orden_ids;
+            this.form.hotel_rent_item_ids = form.hotel_rent_item_ids;
+            this.form.hotel_rent_id = form.hotel_rent_id;
+            this.form.hotel_customer_number = form.customer_number;
+            }
             let { items } = form;
             this.ordens = items;
             for (let i = 0; i < items.length; i++) {
@@ -4483,11 +4595,34 @@ export default {
                 this.loading = false;
             }
         },
+        async getTablesToClean() {
+            try {
+                const response = await this.$http.get(
+                    `/caja/rooms/tables_to_clean`
+                );
+                if (response.status == 200) {
+                    const { data } = response.data;
+                    this.tablesClean = data;
+                    this.tablesClean = this.tablesClean.map(t => ({
+                        ...t,
+                        time_to_finish: null
+                    }));
+                }
+            } catch (e) {
+                console.log(e);
+            }
+        },
         async getTables() {
             //this.loadingInstance = Loading.service({fullscreen: false,lock:true,text:"Espere por favor..."});
             await this.$http.get(`/${this.resource}/tables`).then(response => {
                 // this.all_items = response.data.items;
                 this.sellers = response.data.sellers;
+                this.tablesClean = response.data.tablesClean;
+                this.tablesClean = this.tablesClean.map(t => ({
+                    ...t,
+                    time_to_finish: null
+                }));
+
                 this.products_to_due = response.data.products_to_due;
                 this.categories = response.data.categories;
                 this.areas = response.data.areas;
@@ -4567,6 +4702,7 @@ export default {
             this.form.discounts = [];
             this.form.seller_id = null;
             this.form.total_discount = 0;
+            this.form.is_room = false;
             this.cancelOrden();
             if (
                 this.configuration.sales_quick == 1 ||

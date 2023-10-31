@@ -19,6 +19,7 @@ class Orden extends ModelTenant
     protected $with = ['orden_items', 'status_orden', 'salenote', 'document', 'customer', 'mesa'];
     // , 'document', 'sale_note','mesa'
     protected $fillable = [
+        'hotel_rent_item_id',
         'table_id',
         'status_orden_id',
         'customer_id',
@@ -82,6 +83,23 @@ class Orden extends ModelTenant
         );
     }
 
+    public function getDocument(){
+        if($this->document_id){
+        $external_id =$this->document->external_id;
+        return url('/print/document/'.$external_id.'/ticket');
+        }
+        if($this->sale_note_id){
+        $external_id =$this->salenote->external_id;
+        return url('/sale-notes/print/'.$external_id.'/ticket');
+        }
+        return null;
+    }
+    public function hasDocument(){
+        if($this->document_id || $this->sale_note_id){
+            return true;
+        }
+        return false;
+    }
     public function info_to_message($items = [],$reason){
         $message = "";
         $message .= "📝 *ORDEN N° ".$this->id." ELIMINADA* \n";

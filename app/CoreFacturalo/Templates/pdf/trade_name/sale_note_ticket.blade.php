@@ -12,6 +12,7 @@
     //$path_style = app_path('CoreFacturalo'.DIRECTORY_SEPARATOR.'Templates'.DIRECTORY_SEPARATOR.'pdf'.DIRECTORY_SEPARATOR.'style.css');
     $tittle = $document->series . '-' . str_pad($document->number, 8, '0', STR_PAD_LEFT);
     $payments = $document->payments;
+    $hotel_rent = \App\Models\Tenant\HotelRent::where('sale_note_id', $document->id)->first();
     $is_chifa_china = $company->number == '15609876309';
 @endphp
 <html>
@@ -257,6 +258,44 @@
                 </td>
             </tr>
         @endif
+        @if ($hotel_rent)
+            @php
+                $hotel_rent_items = $hotel_rent->items;
+                
+            @endphp
+            @foreach ($hotel_rent_items as $hri)
+                <tr>
+                    <td>
+                        <p class="desc">Habitación:</p>
+                    </td>
+                    <td>
+                        <p class="desc">{{ $hri->table->number }}</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p class="desc">Entrada:</p>
+
+                    </td>
+                    <td>
+                        <p class="desc">
+                            {{ \Carbon\Carbon::parse($hri->checkin_date)->format("d/m/Y") }} {{ $hri->checkin_time }}
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p class="desc">Salida:</p>
+
+                    </td>
+                    <td>
+                        <p class="desc">
+                            {{ \Carbon\Carbon::parse($hri->checkout_date)->format("d/m/Y") }} {{ $hri->checkout_time }}
+                        </p>
+                    </td>
+                </tr>
+            @endforeach
+        @endif
         <tr>
             <td height="18px"><b>OBSERVACION:</b></td>
             <td colspan="3" class="align-top">{{ trim($document->observation) }}</td>
@@ -288,13 +327,14 @@
                             @endif
                         @endif
                     </td>
-                    <td class="text-center desc-9 align-top">  {{          isset($row->item->from_unit_type_id_desc) ? 'NIU' :
-                        $row->item->unit_type_id }}</td>
+                    <td class="text-center desc-9 align-top">
+                        {{ isset($row->item->from_unit_type_id_desc) ? 'NIU' : $row->item->unit_type_id }}
+                    </td>
                     <td class="text-left desc-9 align-top">
                         @if (isset($row->item->descriptionInternet))
                             {{ $row->item->descriptionInternet }}
                         @else
-                        @if (isset($row->name_product_pdf) && strlen($row->name_product_pdf) > 0)
+                            @if (isset($row->name_product_pdf) && strlen($row->name_product_pdf) > 0)
                                 {{ $row->name_product_pdf }}
                             @else
                                 {{ $row->item->description }}
@@ -434,16 +474,15 @@
         @foreach ($boxes as $box)
             <tr>
                 <td colspan="4" class="text-left font-bold desc">{{ $box->method }}
-                    @if($box->bank_account_operation)
-                    <br>
-                    <small>N° Op: {{$box->bank_account_operation}}</small>
+                    @if ($box->bank_account_operation)
+                        <br>
+                        <small>N° Op: {{ $box->bank_account_operation }}</small>
                     @endif
                     :
-                    {{ $document->currency_type->symbol }}</td>
-                <td 
-                
-                valign='bottom'
-                class="text-right font-bold desc">{{ number_format(abs($box->amount), 2, '.', '') }}</td>
+                    {{ $document->currency_type->symbol }}
+                </td>
+                <td valign='bottom' class="text-right font-bold desc">
+                    {{ number_format(abs($box->amount), 2, '.', '') }}</td>
             </tr>
         @endforeach
 

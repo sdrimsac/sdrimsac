@@ -10,6 +10,10 @@ use App\Models\Tenant\Turned;
     //$path_style = app_path('CoreFacturalo'.DIRECTORY_SEPARATOR.'Templates'.DIRECTORY_SEPARATOR.'pdf'.DIRECTORY_SEPARATOR.'style.css');
     $tittle = $document->series.'-'.str_pad($document->number, 8, '0', STR_PAD_LEFT);
     $payments = $document->payments;
+    $hotel_rent = \App\Models\Tenant\HotelRent::where('sale_note_id',$document->id)->first();
+    
+
+    
 
 @endphp
 <html>
@@ -94,6 +98,34 @@ use App\Models\Tenant\Turned;
             <td><p class="desc">Orden de Compra:</p></td>
             <td><p class="desc">{{ $document->purchase_order }}</p></td>
         </tr>
+    @endif
+    @if($hotel_rent)
+        @php
+            $hotel_rent_items  = $hotel_rent->items;
+
+        @endphp
+        @foreach ($hotel_rent_items as $hri )
+            <tr>
+                <td><p class="desc">Habitación:</p></td>
+                <td><p class="desc">{{ $hri->room->number }}</p></td>
+            </tr>
+            <tr>
+                <td>
+                    <p class="desc">Entrada</p>
+                    <p class="desc">
+                        {{$hri->checkin_date}} {{$hri->checkin_time}}
+                    </p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p class="desc">Salida</p>
+                    <p class="desc">
+                        {{$hri->checkout_date}} {{$hri->checkout_time}}
+                    </p>
+                </td>
+            </tr>
+        @endforeach
     @endif
 </table>
 

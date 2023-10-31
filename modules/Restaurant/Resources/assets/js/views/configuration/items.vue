@@ -12,13 +12,31 @@
                                 <a href="/dashboard">{{ title }}</a>
                             </li>
                             <li class="breadcrumb-item active">
-                                <span class="text-muted">Marcas</span>
+                                <!-- <span class="text-muted">Marcas</span> -->
                             </li>
                         </ol>
                     </div>
                     <div
                         class="col-12 col-md-6 d-flex align-items-start justify-content-end"
                     >
+                        <button
+                            v-if="resource == 'caja/rooms'"
+                            type="button"
+                            class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto m-l-5"
+                            @click.prevent="clickSeeTowers()"
+                        >
+                            <i class="icofont-plus-circle"></i>
+                            <span>Torres</span>
+                        </button>
+                        <button
+                            v-if="resource == 'caja/rooms'"
+                            type="button"
+                            class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto m-l-5"
+                            @click.prevent="clickSeeFloors()"
+                        >
+                            <i class="icofont-plus-circle"></i>
+                            <span>Pisos</span>
+                        </button>
                         <!-- Contact Button Start -->
                         <button
                             type="button"
@@ -194,6 +212,8 @@
                     :statusTable="statusTable"
                     :establishments="establishments"
                 ></create-form-massive>
+                <items-rooms :showDialog.sync="showItems" :type="typeItem">
+                </items-rooms>
             </div>
         </div>
     </div>
@@ -202,15 +222,17 @@
 <script>
 import CreateForm from "./form.vue";
 import CreateFormMassive from "./formTableMassive.vue";
+import ItemsRooms from "./items_rooms.vue";
 import DataTable from "../../../../../../../resources/js/components/DataTable.vue";
 import { deletable } from "../../../../../../../resources/js/mixins/deletable";
 import queryString from "query-string";
 export default {
     props: ["type", "title", "configurations"],
     mixins: [deletable],
-    components: { DataTable, CreateForm, CreateFormMassive },
+    components: { DataTable, CreateForm, CreateFormMassive, ItemsRooms },
     data() {
         return {
+            showItems: false,
             showDialog: false,
             showDialogMassive: false,
             resource: this.type,
@@ -232,7 +254,8 @@ export default {
             disabled_next: false,
             disabled_previos: false,
             myOptions: ["op1", "op2", "op3"],
-            types: []
+            types: [],
+            typeItem: null
         };
     },
     created() {
@@ -246,6 +269,15 @@ export default {
         });
     },
     methods: {
+        
+        clickSeeTowers() {
+            this.typeItem = "towers";
+            this.showItems = true;
+        },
+        clickSeeFloors() {
+            this.typeItem = "floors";
+            this.showItems = true;
+        },
         clickCreateMassive() {
             this.showDialogMassive = true;
         },

@@ -7,7 +7,7 @@
     //$path_style = app_path('CoreFacturalo'.DIRECTORY_SEPARATOR.'Templates'.DIRECTORY_SEPARATOR.'pdf'.DIRECTORY_SEPARATOR.'style.css');
     $document_number = $document->series . '-' . str_pad($document->number, 8, '0', STR_PAD_LEFT);
     $accounts = \App\Models\Tenant\BankAccount::all();
-    
+    $hotel_rent = \App\Models\Tenant\HotelRent::where('sale_note_id', $document->id)->first();
     if ($document_base) {
         $affected_document_number = $document_base->affected_document ? $document_base->affected_document->series . '-' . str_pad($document_base->affected_document->number, 8, '0', STR_PAD_LEFT) : $document_base->data_affected_document->series . '-' . str_pad($document_base->data_affected_document->number, 8, '0', STR_PAD_LEFT);
     } else {
@@ -257,6 +257,49 @@
                 @endforeach
             </table>
         @endif
+        @if ($hotel_rent)
+        @php
+            $hotel_rent_items = $hotel_rent->items;
+            
+        @endphp
+       <table>
+        @foreach ($hotel_rent_items as $hri)
+        <tr>
+            <td height="18px">
+                <b>
+                    Habitación:
+                </b>
+            </td>
+            <td colspan="3" class="align-top">
+                {{ $hri->table->number }}
+            </td>
+        </tr>
+        <tr>
+            <td height="18px">
+                <b>
+                    Entrada:
+                </b>
+
+            </td>
+            <td colspan="3" class="align-top">
+
+                {{ \Carbon\Carbon::parse($hri->checkin_date)->format('d/m/Y') }} {{ $hri->checkin_time }}
+            </td>
+        </tr>
+        <tr>
+            <td height="18px">
+                <b>
+                    Salida:
+                </b>
+
+            </td>
+            <td colspan="3" class="align-top">
+                {{ \Carbon\Carbon::parse($hri->checkout_date)->format('d/m/Y') }} {{ $hri->checkout_time }}
+            </td>
+        </tr>
+    @endforeach
+       </table>
+    @endif
         <div class="mt-2">
             <strong>Observación:</strong>
             @foreach ($document->additional_information as $information)

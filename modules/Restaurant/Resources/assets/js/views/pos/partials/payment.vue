@@ -2037,6 +2037,7 @@ export default {
             // this.discount_amount = 0;
             // this.form.customer_id
             // this.form.student_id = null;
+
             if (!this.configuration.restrict_receipt_date) {
                 this.form.date_of_issue = moment().format("YYYY-MM-DD");
             }
@@ -2089,6 +2090,18 @@ export default {
                 }
             }
             this.checkTotal("01");
+
+            if(this.form.hotel_customer_number){
+                 setTimeout(() => {
+                        this.$refs.select_person.$el.getElementsByTagName(
+                            "input"
+                        )[0].value = this.form.hotel_customer_number;
+                        this.keyupCustomer();
+                    }, 800);
+                // this.value = this.form.hotel_customer_number;
+                // this.form.customer_id = this.form.hotel_customer_number;
+                // this.changeCustomer();
+            }
         },
         checkCustomerDocument(type) {
             let { customer_id } = this.form;
@@ -3001,6 +3014,7 @@ export default {
             return pass;
         },
         async clickPayment(form) {
+            console.log("🚀 ~ file: payment.vue:3004 ~ clickPayment ~ form:", form)
             if (!this.checkBankAccount()) {
                 return;
             }
@@ -3141,7 +3155,7 @@ export default {
                     (ordenId == undefined || ordenId == null) &&
                     (form.variation == undefined || form.variation == null) &&
                     !this.conf.pos_quick_sale &&
-                    !this.ordens_all_table
+                    !this.ordens_all_table && !this.form.is_room
                 ) {
                     const responses = await this.$http.post(
                         "/caja/worker/send-orden",

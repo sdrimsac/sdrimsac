@@ -25,6 +25,7 @@
     $total_payment = $document->payments->sum('payment');
     //$balance = ($document->total - $total_payment) - $document->payments->sum('change');
     $balance = -5;
+    $hotel_rent = \App\Models\Tenant\HotelRent::where('sale_note_id', $document->id)->first();
     
 @endphp
 <html>
@@ -301,7 +302,45 @@
                 </td>
             </tr>
         @endif
+        @if ($hotel_rent)
+            @php
+                $hotel_rent_items = $hotel_rent->items;
+                
+            @endphp
+            @foreach ($hotel_rent_items as $hri)
+                <tr>
+                    <td>
+                        <p class="desc">Habitación:</p>
+                    </td>
+                    <td>
+                        <p class="desc">{{ $hri->table->number }}</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p class="desc">Entrada:</p>
 
+                    </td>
+                    <td>
+                        <p class="desc">
+                            {{ \Carbon\Carbon::parse($hri->checkin_date)->format('d/m/Y') }} {{ $hri->checkin_time }}
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p class="desc">Salida:</p>
+
+                    </td>
+                    <td>
+                        <p class="desc">
+                            {{ \Carbon\Carbon::parse($hri->checkout_date)->format('d/m/Y') }}
+                            {{ $hri->checkout_time }}
+                        </p>
+                    </td>
+                </tr>
+            @endforeach
+        @endif
 
         <tr>
             <td class="align-top">
@@ -673,12 +712,12 @@
             <td class="text-left font-bold desc">{{ number_format(abs($box->amount), 2, '.', '') }}</td>
         </tr>
         @endforeach --}}
-        @if ($document->payment_condition_id == '01')
-            <tr>
-                <td colspan="4" class="text-left font-bold desc">VUELTO: {{ $document->currency_type->symbol }}
-                </td>
-                <td class="text-left font-bold desc">{{ number_format(abs($paymet2), 2, '.', '') }}</td>
-            </tr>
+            @if ($document->payment_condition_id == '01')
+        <tr>
+            <td colspan="4" class="text-left font-bold desc">VUELTO: {{ $document->currency_type->symbol }}
+            </td>
+            <td class="text-left font-bold desc">{{ number_format(abs($paymet2), 2, '.', '') }}</td>
+        </tr>
         @endif
         {{-- @endif --}}
         </tr>
@@ -754,16 +793,18 @@
                 </td>
             </tr>
             @foreach ($boxes as $box)
-            <tr>
-                <td colspan="4" class="text-left font-bold desc">{{ $box->method }}
-                    @if($box->bank_account_operation)
-                    <br>
-                    <small>N° Op: {{$box->bank_account_operation}}</small>
-                    @endif
-                    :
-                    {{ $document->currency_type->symbol }}</td>
-                <td valign='bottom' class="text-left font-bold desc">{{ number_format(abs($box->amount), 2, '.', '') }}</td>
-            </tr>
+                <tr>
+                    <td colspan="4" class="text-left font-bold desc">{{ $box->method }}
+                        @if ($box->bank_account_operation)
+                            <br>
+                            <small>N° Op: {{ $box->bank_account_operation }}</small>
+                        @endif
+                        :
+                        {{ $document->currency_type->symbol }}
+                    </td>
+                    <td valign='bottom' class="text-left font-bold desc">
+                        {{ number_format(abs($box->amount), 2, '.', '') }}</td>
+                </tr>
             @endforeach
             {{-- @foreach ($payments as $row)
                 <tr>
