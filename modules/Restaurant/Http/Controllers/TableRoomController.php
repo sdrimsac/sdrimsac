@@ -30,6 +30,26 @@ class TableRoomController extends Controller
 {
 
 
+    public function deleteItem($type, $id){
+        $model = null;
+        switch ($type) {
+            case 'floors':
+                $model = Floor::find($id);
+                break;
+            case 'towers':
+                $model = Tower::find($id);
+                break;
+            default:
+                $model = TableType::find($id);
+                break;
+        }
+        $model->delete();
+        return [
+            'success' => true,
+            'message' => 'Registro eliminado con éxito'
+        ];
+
+    }
     public function addDays($id, $days)
     {
         $hotel_rent_item = HotelRentItem::find($id);
@@ -296,13 +316,14 @@ class TableRoomController extends Controller
     }
     public function tables()
     {
+        $table_types = TableType::where('active', true)->get();
         $towers = Tower::where('active', true)->get();
         $floors = Floor::where('active', true)->get();
         $tables = Table::where('is_room', true)
             ->where('status_table_id', 1)
             ->get();
 
-        return compact('towers', 'floors', 'tables');
+        return compact('towers', 'floors', 'tables','table_types');
     }
     public function ordenById($id)
     {
@@ -369,10 +390,34 @@ class TableRoomController extends Controller
             ];
         }
     }
+    public function storeType(Request $request,$type){
+        $model = null;
+        switch ($type) {
+            case 'floors':
+                $model = new Floor;
+                break;
+            case 'towers':
+                $model = new Tower;
+                break;
+            default:
+                $model = new TableType;
+                break;
+        }
+        $id = $request->input('id');
+        $model = $model->firstOrNew(['id' => $id]);
+        $model->fill($request->all());
+        $model->save();
+        return [
+            'success' => true,
+            'message' => ($id) ? 'Registro actualizado con éxito' : 'Registro creado con éxito'
+        ];
+
+    }
     public function get_tables()
     {
         $user = auth()->user();
         $establishment_id = $user->establishment_id;
+        $tables_types = TableType::where('active', true)->get();
         // $this->checkTables($establishment_id);
         $tables = Table::where('is_room', true)->where(function ($query) {
             $query->where('establishment_id', auth()->user()->establishment_id)->orWhereNull('establishment_id');
@@ -381,7 +426,7 @@ class TableRoomController extends Controller
         $towers = Tower::where('active', true)->get();
         $floors = Floor::where('active', true)->get();
 
-        return compact('tables', 'towers', 'floors');
+        return compact('tables', 'towers', 'floors','tables_types');
     }
     public function get_ordens($id)
     {

@@ -148,10 +148,12 @@ Route::prefix('caja')->group(function () {
         Route::get('rooms/orden/{id}', 'TableRoomController@get_ordens');
         Route::get('rooms/send_to_clean/{id}', 'TableRoomController@sendToclean');
         Route::get('rooms/ordenById/{id}', 'TableRoomController@ordenById');
+        Route::post('rooms/store/{type}', 'TableRoomController@storeType');
         Route::get('rooms/change_room/{to}/{from}', 'TableRoomController@changeRoom');
         Route::get('rooms/record/{id}', 'TableRoomController@record');
         Route::post('rooms/all_ordens/{id}', 'TableRoomController@allOrdens');
         Route::get('rooms/types', 'TableRoomController@room_types');
+        Route::delete('rooms/delete/{type}/{id}', 'TableRoomController@deleteItem');
         Route::post('rooms', 'TableRoomController@store');
         Route::post('rooms/set-guess', 'TableRoomController@setGuess');
         Route::post('rooms/massive', 'TableRoomController@store_massive');

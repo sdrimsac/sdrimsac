@@ -19,6 +19,15 @@
                     <div
                         class="col-12 col-md-6 d-flex align-items-start justify-content-end"
                     >
+                      <button
+                            v-if="resource == 'caja/rooms'"
+                            type="button"
+                            class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto m-l-5"
+                            @click.prevent="clickSeeTypes()"
+                        >
+                            <i class="icofont-plus-circle"></i>
+                            <span>Tipo de habitaciones</span>
+                        </button>
                         <button
                             v-if="resource == 'caja/rooms'"
                             type="button"
@@ -270,6 +279,10 @@ export default {
     },
     methods: {
         
+        clickSeeTypes() {
+            this.typeItem = "table_types";
+            this.showItems = true;
+        },
         clickSeeTowers() {
             this.typeItem = "towers";
             this.showItems = true;
