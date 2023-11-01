@@ -2047,7 +2047,7 @@ export default {
                     visible:
                         this.configuration.restaurant &&
                         !this.configuration.college &&
-                        this.configuration.hotels &&
+                        !this.configuration.hotels &&
                         this.worker.area.description.toUpperCase() !== "HOTEL"
                 },
                 {
