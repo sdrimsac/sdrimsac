@@ -27,7 +27,7 @@ Vue.use(ElementUI, { size: "small" });
 Vue.prototype.$eventHub = new Vue();
 Vue.prototype.$http = Axios;
 
-Vue.prototype.$socketUrl = "https://cevicherialaislasatipo.xyz";
+Vue.prototype.$socketUrl = "https://casadedako.xyz";
 Vue.prototype.$setStorage = function(name, obj) {
     localStorage.setItem(name, JSON.stringify(obj));
 };
