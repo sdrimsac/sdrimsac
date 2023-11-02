@@ -22,6 +22,7 @@ class Table extends ModelTenant
         'area_id',
         'status_table_id',
         'establishment_id',
+        'price',
     ];
     protected $casts = [
         'is_cleaning' => 'boolean',

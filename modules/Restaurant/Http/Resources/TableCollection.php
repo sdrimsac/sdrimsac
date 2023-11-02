@@ -18,6 +18,7 @@ class TableCollection extends ResourceCollection
         return $this->collection->transform(function ($row, $key) {
             $orden = Orden::where('table_id', $row->id)->where('status_orden_id', '!=', 4)->get();
             return [
+                'price'            => $row->price,
                 'id'                => $row->id,
                 'number'            => $row->number,
                 'area'              => $row->area,

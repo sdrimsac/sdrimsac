@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources\Tenant;
 
+use App\Models\Tenant\Establishment;
 use App\Models\Tenant\Quotation;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -17,13 +18,15 @@ class QuotationResource extends JsonResource
     {
         $quotation = Quotation::find($this->id);
         $quotation->payments = self::getTransformPayments($quotation->payments);
-
+        $establishment = Establishment::find($this->establishment_id);
         return [
             'id' => $this->id,
             'external_id' => $this->external_id,  
             'identifier' => $this->identifier,
             'date_of_issue' => $this->date_of_issue->format('Y-m-d'), 
-            'quotation' => $quotation
+            'quotation' => $quotation,
+            'total' => number_format($this->total, 2, ".", ""),
+            'establishment_description' => ($establishment) ? $establishment->description : null,
         ];
     }
 

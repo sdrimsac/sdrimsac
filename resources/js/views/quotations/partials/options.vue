@@ -65,6 +65,18 @@
                     ></el-input>
                     <!--<small class="form-control-feedback" v-if="errors.customer_email" v-text="errors.customer_email[0]"></small> -->
                 </div>
+                <div class="col-md-12" style="margin-top:5px;">
+                    <el-input v-model="form.customer_telephone">
+                        <el-button
+                            slot="append"
+                            icon="fab fa-whatsapp"
+                            @click="clickSendWhatsapp"
+                            :loading="loading"
+                            >Enviar</el-button
+                        >
+                        <i slot="prefix" class="fab fa-whatsapp"></i>
+                    </el-input>
+                </div>
             </div>
             <br />
             <div class="row" v-if="typeUser == 'admin'">
@@ -398,7 +410,7 @@ export default {
     ],
     data() {
         return {
-            loading:false,
+            loading: false,
             customer_email: "",
             titleDialog: null,
             loading: false,
@@ -426,10 +438,93 @@ export default {
     },
     created() {
         this.initForm();
+        this.socketWhatsappConfig();
         this.initDocument();
         this.clickAddPayment();
     },
     methods: {
+        showMessage(text, duration = 6000) {
+            this.$message({
+                message: text,
+                duration,
+                type: "success"
+            });
+        },
+        socketWhatsappConfig() {
+            let hostName = window.location.hostname;
+            let url = `https://${hostName}`;
+            this.sender = hostName
+                .replace(/https?\:\/\//, "")
+                .replace("/", "")
+                .split(".")
+                .join("");
+            try {
+                this.socket = io.connect(this.$socketUrl);
+            } catch (e) {
+                console.log(e);
+            }
+            this.socket.on("ready", message => {
+                this.showMessage(message);
+            });
+            this.socket.on("authenticated", ({ message, sender }) => {
+                this.sender = sender;
+                this.showMessage(message);
+            });
+            this.socket.on("connected", ({ message }) => {
+                // this.$message.success(message);
+
+                this.socket.emit("getStatus", url);
+            });
+            this.socket.on("setStatus", ({ status, sender }) => {
+                this.sender = sender || "sdrimsac";
+                // if (!status) {
+                //     this.sender = "sdrimsac";
+                //     this.$message.warning("Sesión iniciada con SDRIMSAC");
+                // } else {
+                //     this.sender = sender;
+                //     this.$message.success("Whatsapp Listo!");
+                // }
+            });
+            //MessageResponse
+        },
+        async clickSendWhatsapp() {
+            if (this.form.customer_telephone != null) {
+                let formWhatsapp = {
+                    id: this.recordId,
+                    sender: this.sender,
+                    document_id: this.recordId,
+                    document_type_id: "COT",
+                    customer_telephone: this.form.customer_telephone,
+                    mensaje:
+                        "Su comprobante de pago electrónico " +
+                        this.form.identifier +
+                        " por S/" +
+                        this.form.total +
+                        " de *" +
+                        this.form.establishment_description +
+                        "*, ha sido generado correctamente a través del facturador electrónico de " +
+                        "*" +
+                        this.$desarrollador +
+                        "*"
+                };
+                try {
+                    this.loading = true;
+                    let response = await this.$http.post(
+                        `/whatsapp`,
+                        formWhatsapp
+                    );
+
+                    if (response.status == 200) {
+                        this.$toast.success("Mensaje enviado");
+                        this.loading = false;
+                    }
+                } catch (e) {
+                    console.log(e, " error");
+                } finally {
+                    this.loading = false;
+                }
+            }
+        },
         clickCancel(index) {
             this.document.payments.splice(index, 1);
         },
@@ -632,7 +727,7 @@ export default {
             this.document.quotation_id = this.form.id;
         },
         async create() {
-            await this.$http
+             this.$http
                 .get(`/${this.resource}/option/tables`)
                 .then(response => {
                     this.all_document_types =
@@ -646,10 +741,11 @@ export default {
                     // this.changeDocumentType()
                 });
 
-            await this.$http
+             this.$http
                 .get(`/${this.resource}/record2/${this.recordId}`)
                 .then(response => {
                     this.form = response.data.data;
+                    console.log("🚀 ~ file: options.vue:748 ~ create ~  this.form :",  this.form )
                     this.document.payments =
                         response.data.data.quotation.payments;
                     // console.log(this.form)

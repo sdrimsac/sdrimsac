@@ -243,6 +243,7 @@ export default {
                 this.socket.emit("getStatus", url);
             });
             this.socket.on("setStatus", ({ status, sender }) => {
+                                    this.sender = sender || 'sdrimsac';
                 // if (!status) {
                 //     this.sender = "sdrimsac";
                 //     this.$message.warning("Sesión iniciada con SDRIMSAC");
