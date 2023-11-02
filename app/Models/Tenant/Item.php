@@ -439,6 +439,16 @@ class Item extends ModelTenant
         return $this->belongsTo(AffectationIgvType::class, 'purchase_affectation_igv_type_id');
     }
 
+    public function checkSeries(){
+        collect($this->warehouses)->transform(function ($warehouse)  {
+            $warehouses_series = ItemLot::where('item_id', $this->id)->where('warehouse_id', $warehouse->warehouse_id)
+            ->where('has_sale', false)->count();
+            if($warehouse->stock != $warehouses_series){
+                $warehouse->stock = $warehouses_series;
+                $warehouse->save();
+            }
+        });
+    }
     public function scopeWhereWarehouse($query)
     {
         $establishment_id = auth()->user()->establishment_id;

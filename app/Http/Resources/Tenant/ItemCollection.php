@@ -80,6 +80,7 @@ class ItemCollection extends ResourceCollection
                 'unit_type_description' => ($row->unit_type) ? $row->unit_type->description : '',
                 'unit_type' => $item_unit_types,
                 'warehouses' => collect($row->warehouses)->transform(function ($row) use ($decimal) {
+             
                     return [ //
                         'id' => $row->id,
                         'warehouse_description' => $row->warehouse->description,

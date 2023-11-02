@@ -29,10 +29,9 @@
                         <el-input type="number" v-model="config.density">
                         </el-input>
                     </div>
-                      <div class="col-md-4 col-12">
+                    <div class="col-md-4 col-12">
                         <label for="density">Impresora</label>
-                        <el-input  v-model="printer">
-                        </el-input>
+                        <el-input v-model="printer"> </el-input>
                     </div>
                     <div class="col-md-4 col-12">
                         <label for="orientation">Orientación</label>
@@ -46,7 +45,6 @@
                                 value="landscape"
                             ></el-option>
                         </el-select>
-
                     </div>
                 </div>
                 <div class="row">
@@ -74,14 +72,16 @@
                 <div class="row mt-2">
                     <div class="col-md-3 col-12">
                         <el-button type="primary" @click="Printer('zebra')">
-                        Imprimir
-                    </el-button>
+                            Imprimir
+                        </el-button>
                     </div>
                 </div>
             </div>
         </div>
         <div class="container-fluid p-l-0 p-r-0">
-            <table class="table table-responsive"></table>
+            <el-button type="primary" @click="checkSeries">
+                Verificar Series
+            </el-button>
         </div>
     </div>
 </template>
@@ -92,8 +92,9 @@ export default {
 
     data() {
         return {
-            linkpdf:"https://tunegocio.sdrimsac.pro/sale-notes/print/6e977e52-38c8-4c4d-a897-3bbb1fd77ca8/a5",
-            printer:null,
+            linkpdf:
+                "https://tunegocio.sdrimsac.pro/sale-notes/print/6e977e52-38c8-4c4d-a897-3bbb1fd77ca8/a5",
+            printer: null,
             resource: "/items/check_stock",
             records: [],
             loading: false,
@@ -114,7 +115,7 @@ export default {
 
     created() {
         // this.getRecords();
-         qz.security.setCertificatePromise((resolve, reject) => {
+        qz.security.setCertificatePromise((resolve, reject) => {
             this.$http
                 .get("/api/qz/crt/override", {
                     responseType: "text"
@@ -141,17 +142,22 @@ export default {
         });
     },
     methods: {
+        async checkSeries() {
+            const response = await this.$http.get("/items/check_series");
+            if (response.status == 200) {
+                this.$toast.success("Se verificaron las series");
+            }
+        },
         async Printer() {
-            if(!this.printer){
+            if (!this.printer) {
                 this.$toast.error("Debe ingresar una impresora");
                 return;
             }
-            if(!this.linkpdf || this.linkpdf == "" || this.linkpdf == null){
-                
+            if (!this.linkpdf || this.linkpdf == "" || this.linkpdf == null) {
                 this.$toast.error("Debe ingresar una url");
                 return;
             }
-            // let linkpdf = "https://portal.sdrimsac.pro/sale-notes/print/c393face-938f-40d1-9c9d-6cd9e55fb791/a5";   
+            // let linkpdf = "https://portal.sdrimsac.pro/sale-notes/print/c393face-938f-40d1-9c9d-6cd9e55fb791/a5";
             let config = qz.configs.create(this.printer, this.config);
             localStorage.setItem("printer", this.config);
             if (!qz.websocket.isActive()) {
@@ -168,9 +174,8 @@ export default {
             qz.print(config, data).catch(e => {
                 this.$toast.error(e.message);
             });
-          
         },
-    
+
         async getRecords() {
             try {
                 this.loading = true;

@@ -52,7 +52,17 @@ class LotItemsImport implements ToCollection
                         if($item_lot){
                             $item->stock += 1;
                             $item->save();
-                            ItemWarehouse::where('item_id', $item_id)->where('warehouse_id', $warehouse_id)->increment('stock', 1);
+                            $item_warehouse = ItemWarehouse::where('item_id', $item_id)->where('warehouse_id', $warehouse_id)->first();
+                            if ($item_warehouse != null) {
+                                $item_warehouse->stock += 1;
+                                $item_warehouse->save();
+                            } else {
+                                $item_warehouse = ItemWarehouse::create([
+                                    'item_id' => $item_id,
+                                    'warehouse_id' => $warehouse_id,
+                                    'stock' => 1,
+                                ]);
+                            }
                         }
                         $registered += 1;
                     }

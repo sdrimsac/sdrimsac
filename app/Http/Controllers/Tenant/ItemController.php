@@ -68,6 +68,19 @@ class ItemController extends Controller
         return view('tenant.items_ecommerce.index');
     }
     
+    public function check_series(){
+
+         Item::where('series_enabled', true)->chunk(50,function($items_chunk){
+            foreach ($items_chunk as $item) {
+                $item->checkSeries();
+            }
+        });
+
+        return [
+            'success' => true,
+            'message' => 'Se verificaron las series'
+        ];
+    }
     public function columns()
     {
         return [
