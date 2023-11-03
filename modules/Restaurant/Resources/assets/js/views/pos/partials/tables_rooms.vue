@@ -224,6 +224,10 @@
                         <span class="h4">{{ currentRoom.total_orden }}</span>
                     </div>
                     <div class="col-3 d-flex">
+                        <span class="text-muted h4">T. ADELANTO: </span>
+                        <span class="h4">{{ currentRoom.advance }}</span>
+                    </div>
+                    <div class="col-3 d-flex">
                         <span class="text-muted h4">TOTAL: </span>
                         <span class="h4">{{ currentRoom.total }}</span>
                     </div>
@@ -651,8 +655,8 @@ export default {
         },
 
         createOrden() {
-            let { number, id } = this.currentTable;
-            this.$emit("creatingOrden", number, id);
+            let { number, id, is_room } = this.currentTable;
+            this.$emit("creatingOrden", number, id,is_room);
             this.close();
         },
         changeOrden() {

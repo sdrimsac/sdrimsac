@@ -6,6 +6,7 @@
         @open="open"
         @close="close"
         width="30%"
+        :close-on-click-modal="false"
     >
         <div class="row-m-2">
             <div class="col-12">

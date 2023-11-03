@@ -4,6 +4,8 @@
         :visible="showDialog"
         @close="close"
         @open="create"
+        append-to-body
+        :close-on-click-modal="false"
     >
         <form autocomplete="off" @submit.prevent="submit">
             <div class="form-body">
@@ -87,14 +89,17 @@
                         <div class="col-md-4" v-if="type == 'caja/rooms'">
                             <div
                                 class="form-group"
-                                :class="{ 'has-danger': errors.floor_id }"
+                                :class="{ 'has-danger': errors.tower_id }"
                             >
-                                <label class="control-label">Piso</label>
-                                <el-select v-model="form.floor_id">
+                                <label class="control-label">Torre</label>
+                                <el-select
+                                    v-model="form.tower_id"
+                                    @change="filterFloorsByTower(form.tower_id)"
+                                >
                                     <el-option
-                                        v-for="(data, index) in floors"
+                                        v-for="(data, index) in towers"
                                         :key="index"
-                                        :label="data.description"
+                                        :label="data.name"
                                         :value="data.id"
                                     ></el-option>
                                 </el-select>
@@ -105,7 +110,28 @@
                                 ></small>
                             </div>
                         </div>
-                             <div class="col-md-4" v-if="type == 'caja/rooms'">
+                        <div class="col-md-4" v-if="type == 'caja/rooms'">
+                            <div
+                                class="form-group"
+                                :class="{ 'has-danger': errors.floor_id }"
+                            >
+                                <label class="control-label">Piso</label>
+                                <el-select v-model="form.floor_id">
+                                    <el-option
+                                        v-for="(data, index) in floors"
+                                        :key="index"
+                                        :label="data.name"
+                                        :value="data.id"
+                                    ></el-option>
+                                </el-select>
+                                <small
+                                    class="form-control-feedback"
+                                    v-if="errors.floor_id"
+                                    v-text="errors.floor_id[0]"
+                                ></small>
+                            </div>
+                        </div>
+                        <div class="col-md-4" v-if="type == 'caja/rooms'">
                             <div
                                 class="form-group"
                                 :class="{ 'has-danger': errors.table_type_id }"
@@ -123,6 +149,23 @@
                                     class="form-control-feedback"
                                     v-if="errors.table_type_id"
                                     v-text="errors.table_type_id[0]"
+                                ></small>
+                            </div>
+                        </div>
+                        <div class="col-md-4" v-if="type == 'caja/rooms'">
+                            <div
+                                class="form-group"
+                                :class="{ 'has-danger': errors.price }"
+                            >
+                                <label class="control-label">Precio</label>
+                                <el-input
+                                    v-model="form.price"
+                                    type="number"
+                                ></el-input>
+                                <small
+                                    class="form-control-feedback"
+                                    v-if="errors.price"
+                                    v-text="errors.price[0]"
                                 ></small>
                             </div>
                         </div>
@@ -169,7 +212,10 @@
                                             : "habitación"
                                     }}</label
                                 >
-                                <el-select v-model="form.area_id">
+                                <el-select
+                                    v-model="form.area_id"
+                                    :disabled="type == 'caja/rooms'"
+                                >
                                     <el-option
                                         v-for="(data, index) in areas"
                                         :key="index"
@@ -271,48 +317,11 @@ export default {
     ],
     data() {
         return {
-            floors: [
-                {
-                    id: 1,
-                    description: "Piso 1"
-                },
-                {
-                    id: 2,
-                    description: "Piso 2"
-                },
-                {
-                    id: 3,
-                    description: "Piso 3"
-                },
-                {
-                    id: 4,
-                    description: "Piso 4"
-                },
-                {
-                    id: 5,
-                    description: "Piso 5"
-                },
-                {
-                    id: 6,
-                    description: "Piso 6"
-                },
-                {
-                    id: 7,
-                    description: "Piso 7"
-                },
-                {
-                    id: 8,
-                    description: "Piso 8"
-                },
-                {
-                    id: 9,
-                    description: "Piso 9"
-                },
-                {
-                    id: 10,
-                    description: "Piso 10"
-                }
-            ],
+            all_floors: [],
+            floors: [],
+            all_towers: [],
+            towers: [],
+            tower_id: null,
             loading_submit: false,
             titleDialog: null,
             resource: this.type,
@@ -329,15 +338,65 @@ export default {
             this.errors = {};
             this.form = {
                 id: null,
+                price: null,
+                tower_id: null,
+                floor_id: null,
+                table_type_id: null,
+                status_table_id: null,
+                area_id: null,
+                establishment_id: null,
                 description: null,
                 printer: null,
                 copies: null,
                 active: 1
             };
         },
+
+        filterFloorsByTower(tower_id) {
+            this.form.floor_id = null;
+            this.form.tower_id = tower_id;
+            this.floors = this.all_floors.filter(f => {
+                return f.tower_id == tower_id;
+            });
+        },
+        async getTables() {
+            const response = await this.$http("/caja/rooms/tables");
+            if (response.status == 200) {
+                const { towers, floors } = response.data;
+                this.all_floors = floors;
+                this.all_towers = towers;
+                this.towers = towers;
+                let [tower] = towers;
+                this.form.tower_id = tower.id;
+
+                this.filterFloorsByTower(tower.id);
+            } else {
+                this.$toast.warning("Ocurrió un error");
+            }
+        },
         create() {
+            this.getTables();
             this.titleDialog = "Nuevo Registro Masivo";
             this.initForm();
+            if (this.type == "caja/rooms") {
+                let area = this.areas.find(
+                    area => area.description.toUpperCase() == "HOTEL"
+                );
+                if (area) {
+                    this.form.area_id = area.id;
+                }
+
+                let status = this.statusTable.find(
+                    status => status.description.toUpperCase() == "LIBRE"
+                );
+                if (status) {
+                    this.form.status_table_id = status.id;
+                }
+
+                if (this.types.length > 0) {
+                    this.form.table_type_id = this.types[0].id;
+                }
+            }
         },
         valid() {
             let pass = true;

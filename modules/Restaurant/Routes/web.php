@@ -154,6 +154,7 @@ Route::prefix('caja')->group(function () {
         Route::post('rooms/all_ordens/{id}', 'TableRoomController@allOrdens');
         Route::get('rooms/types', 'TableRoomController@room_types');
         Route::delete('rooms/delete/{type}/{id}', 'TableRoomController@deleteItem');
+        Route::delete('rooms/{id}', 'TableRoomController@delete');
         Route::post('rooms', 'TableRoomController@store');
         Route::post('rooms/set-guess', 'TableRoomController@setGuess');
         Route::post('rooms/massive', 'TableRoomController@store_massive');

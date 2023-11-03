@@ -48,15 +48,15 @@
                 <el-input type="number" readonly v-model="form.sub_total">
                 </el-input>
             </div>
-            <div class="col-md-4">
+            <!-- <div class="col-md-4">
                 <label for="total">Adelantos</label>
                 <el-input
                     type="number"
-                    @input="calculateTotal"
+                    readonly
                     v-model="form.advance"
                 >
                 </el-input>
-            </div>
+            </div> -->
             <div class="col-md-4">
                 <label for="total">Total a pagar</label>
                 <el-input type="number" readonly v-model="form.total">
@@ -89,7 +89,7 @@
                                 type="danger"
                                 icon="el-icon-delete"
                                 size="mini"
-                                @click="rooms.splice(idx, 1)"
+                                @click="removeRoom(idx)"
                                 circle
                             ></el-button>
                         </template>
@@ -141,7 +141,6 @@
                         <el-input-number
                             v-model="room.quantity_persons"
                             :min="1"
-                            
                             style="width: 100%;"
                             :step="1"
                             size="small"
@@ -159,6 +158,7 @@
                             style="width: 100%;"
                             value-format="yyyy-MM-dd"
                             :picker-options="{
+                                defaultDate: Date.now('America/Lima'),
                                 disabledDate: time => {
                                     return time.getTime() < Date.now() - 8.64e7;
                                 }
@@ -175,6 +175,7 @@
                             placeholder="Hora de ingreso"
                             style="width: 100%;"
                             value-format="HH:mm:ss"
+                            timezone="America/Lima"
                         ></el-time-picker>
                     </div>
                     <div class="col-md-2">
@@ -189,9 +190,9 @@
                             style="width: 100%;"
                         ></el-input>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <label for="name"
-                            >Agregar datos huespedes
+                            >Agregar huespedes
                             <a href="#" @click.prevent="createClient(idx)">
                                 [ + Nuevo ]
                             </a>
@@ -215,12 +216,22 @@
                             ></el-option>
                         </el-select>
                     </div>
-                    <div class="col-md-4 d-flex align-items-end">
+                    <div class="col-md-3 d-flex align-items-end">
                         <el-button @click="addGuess(idx)" type="primary">
                             Agregar Huesped
                         </el-button>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
+                        <label for="total_room">Adelanto </label>
+                        <el-input
+                            type="number"
+                            :min="0"
+                            @input="calculateTotal"
+                            v-model="room.advances"
+                        >
+                        </el-input>
+                    </div>
+                    <div class="col-md-3">
                         <label for="total_room">Subtotal </label>
                         <el-input type="number" readonly v-model="room.total">
                         </el-input>
@@ -305,6 +316,10 @@ export default {
         };
     },
     methods: {
+        removeRoom(idx) {
+            this.rooms.splice(idx, 1);
+            this.calculateTotal();
+        },
         filterFloors(tower_id, idx) {
             this.floors = this.all_floors.filter(f => f.tower_id == tower_id);
             this.rooms[idx].floor_id = null;
@@ -356,18 +371,25 @@ export default {
         },
         calculateSubtotal() {
             let subtotal = 0;
+            let advance = 0;
             for (let room of this.rooms) {
+                let { advances } = room;
+
+
                 if (room.table_id) {
-                    let table = this.tables.find(t => t.id == room.table_id);
-                    let {
-                        type: { price }
-                    } = table;
-                    price = price * room.duration;
-                    room.total = price;
-                    subtotal += price;
+                    let table = this.all_tables.find(t => t.id == room.table_id);
+                    if (table) {
+                        let { price } = table;
+                        price = price * room.duration;
+                        room.total = price - Number(advances);
+
+                        subtotal += price - Number(advances);
+                    }
                 }
+                // advance += Number(advances);
             }
             this.form.sub_total = subtotal;
+            this.form.advance = advance;
         },
         calculateTotal() {
             this.calculateSubtotal();
@@ -410,6 +432,7 @@ export default {
         addRoom({ tower_id, floor_id, table_id }) {
             let room = {
                 total: 0,
+                advances: 0,
                 guess_id: null,
                 tower_id,
                 floor_id,
@@ -420,7 +443,6 @@ export default {
                 checkin_time: new Date(),
                 guesses: []
             };
-
             this.rooms.push(room);
             this.calculateTotal();
             // if(!this.checkRoomIsExist(room)){
@@ -505,6 +527,7 @@ export default {
         changeCustomer() {},
         async submit() {
             this.form.rooms = this.rooms;
+
             if (!this.validate()) {
                 return;
             }

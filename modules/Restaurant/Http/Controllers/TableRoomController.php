@@ -30,6 +30,15 @@ class TableRoomController extends Controller
 {
 
 
+    public function delete($id){
+        $table = Table::find($id);
+        $table->delete();
+        return [
+            'success' => true,
+            'message' => 'Registro eliminado con éxito'
+        ];
+
+    }
     public function deleteItem($type, $id){
         $model = null;
         switch ($type) {
@@ -57,7 +66,7 @@ class TableRoomController extends Controller
         $old_total = $hotel_rent->total;
         $hotel_rent_item->duration = $days;
         $table = $hotel_rent_item->table;
-        $price = $table->type->price;
+        $price = $table->price;
         $total = $price * $days;
         $hotel_rent_item->total = $total;
         $hotel_rent->total -= $old_total;
@@ -144,7 +153,7 @@ class TableRoomController extends Controller
     }
     function recalculate(HotelRentItem $hote_rent_item){
         $table = $hote_rent_item->table;
-        $price = $table->type->price;
+        $price = $table->price;
         $total = $price * $hote_rent_item->duration;
         $hote_rent_item->total = $total;
         $hote_rent_item->save();
@@ -178,6 +187,7 @@ class TableRoomController extends Controller
         $customer_number  = $hotel_rent_item->hotel_rent->customer->number;
         $hotel_rent = $hotel_rent_item->hotel_rent;
         $hotel_rent_id = $hotel_rent->id;
+        $advance = $hotel_rent->advance;
         $single_room = $hotel_rent->items->count() == 1;
         $hotel_rent_item_id = $id;
         $total =  $hotel_rent_item->total;
@@ -190,7 +200,7 @@ class TableRoomController extends Controller
             $extra_service->description = "Tiempo extra";
             $extra_service->item->description = "Tiempo extra";
         }
-        $service->price = $total;
+        $service->price = $total - $advance;
         $service->description = $description;
         $service->item->description = $description;
         $orden_ids  = Orden::where('hotel_rent_item_id', $id)
@@ -354,15 +364,22 @@ class TableRoomController extends Controller
 
             $rooms = $request->input('rooms');
             foreach ($rooms as $room) {
+                $checkin_date = Carbon::parse($room['checkin_date'])
+                ->setTimezone('America/Lima')
+                ->format('Y-m-d');
+                $checkin_time = Carbon::parse($room['checkin_time'])
+                ->setTimezone('America/Lima')
+                ->format('H:i:s');
                 $hotel_rent_item = new HotelRentItem;
                 $hotel_rent_item->hotel_rent_id = $hotel_rent->id;
                 $hotel_rent_item->table_id = $room['table_id'];
                 $hotel_rent_item->duration = $room['duration'];
+                $hotel_rent_item->advances = $room['advances'];
                 $hotel_rent_item->total = $room['total'];
                 $hotel_rent_item->quantity_persons = $room['quantity_persons'];
                 $hotel_rent_item->payment_status = $payment_status;
-                $hotel_rent_item->checkin_date = Carbon::parse($room['checkin_date'])->format('Y-m-d');
-                $hotel_rent_item->checkin_time = Carbon::parse($room['checkin_time'])->format('H:i:s');
+                $hotel_rent_item->checkin_date = $checkin_date;
+                $hotel_rent_item->checkin_time = $checkin_time;
                 $hotel_rent_item->save();
                 Table::where('id', $room['table_id'])->update(['status_table_id' => 2]);
 
@@ -508,8 +525,9 @@ class TableRoomController extends Controller
             $table->floor_id = $request->input('floor_id');
             $table->is_room = true;
             $table->status_table_id = $request->input('status_table_id');
-            $table->table_type_id = $request->input('status_table_id');
+            $table->table_type_id = $request->input('table_type_id');
             $table->establishment_id = $request->input('establishment_id');
+            $table->price = $request->input('price');
             $table->save();
         }
         return [

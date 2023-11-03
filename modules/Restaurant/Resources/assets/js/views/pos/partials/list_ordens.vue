@@ -143,7 +143,7 @@
                     v-if="clientTableData.table"
                 >
                     <strong>
-                        Mesa {{ clientTableData.table }}- Ref:
+                        {{clientTableData.is_room ? 'Habitación':'Mesa'}} {{ clientTableData.table }}- Ref:
                         {{ clientTableData.ref }}
                     </strong>
                 </div>

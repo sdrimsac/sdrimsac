@@ -116,6 +116,9 @@
                             >
                                 Establecimiento
                             </th>
+                              <th v-if="type == 'caja/rooms'">
+                                Torre
+                            </th>
                             <th v-if="type == 'caja/rooms'">
                                 Piso
                             </th>
@@ -124,6 +127,11 @@
                             </th>
                             <th v-if="type == 'caja/areas'">
                                 Forzar impresión
+                            </th>
+                            <th
+                            v-if="type == 'caja/rooms'"
+                            >
+                                Precio
                             </th>
                             <th class="text-end">Acciones</th>
                         </tr>
@@ -166,6 +174,9 @@
                             >
                                 {{ row.establishment }}
                             </td>
+                               <td v-if="type == 'caja/rooms'">
+                                {{ row.tower }}
+                            </td>
                             <td v-if="type == 'caja/rooms'">
                                 {{ row.floor }}
                             </td>
@@ -179,6 +190,11 @@
                                     v-model="row.search_print"
                                 >
                                 </el-switch>
+                            </td>
+                            <td
+                            v-if="type == 'caja/rooms'"
+                            >
+                            {{ row.price }}
                             </td>
                             <td class="text-end">
                                 <button

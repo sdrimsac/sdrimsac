@@ -3015,6 +3015,7 @@ export default {
         },
         async clickPayment(form) {
             console.log("🚀 ~ file: payment.vue:3004 ~ clickPayment ~ form:", form)
+
             if (!this.checkBankAccount()) {
                 return;
             }

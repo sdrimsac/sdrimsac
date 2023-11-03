@@ -207,7 +207,7 @@ class RegisterEvent implements ShouldBroadcast
     }
     function document_description()
     {
-        if($this->model == null){
+        if ($this->model == null) {
             return [
                 "number" => null,
                 "total" => 0,
@@ -221,7 +221,7 @@ class RegisterEvent implements ShouldBroadcast
     }
     function box_description()
     {
-        if($this->model == null){
+        if ($this->model == null) {
             return [
                 "method" => null,
                 "description" => "Eliminado",
@@ -229,14 +229,13 @@ class RegisterEvent implements ShouldBroadcast
                 "amount" => 0,
             ];
         }
-        if($this->model->document_id == null && $this->model->salenote_id == null){
+        if ($this->model->document_id == null && $this->model->salenote_id == null) {
             return [
                 "method" => $this->model->method,
                 "description" => $this->model->description,
                 "document" => null,
                 "amount" => $this->model->amount,
             ];
-            
         }
         if ($this->model->document_id) {
             $document = $this->model->document->getNumberFullAttribute();
@@ -252,9 +251,27 @@ class RegisterEvent implements ShouldBroadcast
     }
     function table_description()
     {
-        return [
-            "number" => $this->model->number,
-            "area" => $this->model->area->description,
-        ];
+        if ($this->model == null) {
+            $data = $this->data;
+            if ($data) {
+                $data = json_decode($data, true);
+                return [
+                    $area = Area::find($data["area_id"]),
+                    "number" => $data["number"],
+                    "area" => $area ? $area->description : null,
+                ];
+            }else{
+                return [
+                    "number" => null,
+                    "area" => null,
+                ];
+            }
+          
+        } else {
+            return [
+                "number" => $this->model->number,
+                "area" => $this->model->area->description,
+            ];
+        }
     }
 }

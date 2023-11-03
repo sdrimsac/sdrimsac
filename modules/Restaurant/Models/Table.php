@@ -90,6 +90,7 @@ class Table extends ModelTenant
     public function floor(){
         return $this->belongsTo(Floor::class);
     }
+  
     public function area()
     {
         return $this->belongsTo(Area::class);

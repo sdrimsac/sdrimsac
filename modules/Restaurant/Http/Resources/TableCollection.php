@@ -17,6 +17,7 @@ class TableCollection extends ResourceCollection
     {
         return $this->collection->transform(function ($row, $key) {
             $orden = Orden::where('table_id', $row->id)->where('status_orden_id', '!=', 4)->get();
+            $tower = optional(optional($row->floor)->tower)->name;
             return [
                 'price'            => $row->price,
                 'id'                => $row->id,
@@ -24,6 +25,7 @@ class TableCollection extends ResourceCollection
                 'area'              => $row->area,
                 'type'              => optional($row->type)->name,
                 'floor'            =>  optional($row->floor)->name,
+                'tower'            =>  $tower,
                 'status_table'     => $row->status_table,
                 'establishment'     => $row->establishment ? $row->establishment->description : null,
                 'establishment_id'  => $row->establishment_id,

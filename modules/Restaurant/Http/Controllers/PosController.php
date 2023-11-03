@@ -560,6 +560,7 @@ class PosController extends Controller
         $customer_id = $request->customer_id;
         $id = $request->id;
         $orden = Orden::find($id);
+        $table = null;
         if ($orden != null) {
             $table = Table::find($orden->table_id);
         }
@@ -573,16 +574,18 @@ class PosController extends Controller
         }
         $orden->save();
 
-        $tableIsFree = Orden::where('table_id', $table->id)->where(function ($query) {
-            $query->where('status_orden_id',  1)
-                ->orWhere('status_orden_id',  2)
-                ->orWhere('status_orden_id',  3);
-        })
-            ->count();
-
-        if ($tableIsFree == 0) {
-            $table->status_table_id = 1;
-            $table->save();
+        if($table && !$table->is_room){
+            $tableIsFree = Orden::where('table_id', $table->id)->where(function ($query) {
+                $query->where('status_orden_id',  1)
+                    ->orWhere('status_orden_id',  2)
+                    ->orWhere('status_orden_id',  3);
+            })
+                ->count();
+    
+            if ($tableIsFree == 0) {
+                $table->status_table_id = 1;
+                $table->save();
+            }
         }
         event(new OrdenPaidEvent(true));
         event(new StockEvent($orden->id));

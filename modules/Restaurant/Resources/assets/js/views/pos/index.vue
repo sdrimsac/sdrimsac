@@ -2047,7 +2047,7 @@ export default {
                     visible:
                         this.configuration.restaurant &&
                         !this.configuration.college &&
-                        !this.configuration.hotels &&
+                       
                         this.worker.area.description.toUpperCase() !== "HOTEL"
                 },
                 {
@@ -2439,12 +2439,14 @@ export default {
                 this.limpiarForm();
             }
         },
-        creatingOrden(number, id) {
+        creatingOrden(number, id,is_room = false) {
+            console.log(is_room, "is_room");
             this.isCreatingOrden = true;
             this.clientTableData = {
                 ref: undefined,
                 table: number,
-                table_id: id
+                table_id: id,
+                is_room
             };
         },
         async setPaymentOrden(items) {
@@ -2557,7 +2559,8 @@ export default {
                 table: orden.mesa.number,
                 ref: orden.ref ?? "-",
                 table_id: orden.mesa.id,
-                orden_id: orden.id
+                orden_id: orden.id,
+                is_room: orden.mesa.is_room
             };
 
             // orden.type_id = type ? type.id : null;

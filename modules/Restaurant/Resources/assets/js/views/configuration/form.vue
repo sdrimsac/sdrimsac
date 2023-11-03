@@ -4,6 +4,8 @@
         :visible="showDialog"
         @close="close"
         @open="create"
+        append-to-body
+        :close-on-click-modal="false"
     >
         <form autocomplete="off" @submit.prevent="submit">
             <div class="form-body">
@@ -92,7 +94,7 @@
                         <div class="col-md-4" v-if="type == 'caja/rooms'">
                             <div
                                 class="form-group"
-                                :class="{ 'has-danger': errors.floor_id }"
+                                :class="{ 'has-danger': errors.tower_id }"
                             >
                                 <label class="control-label">Torre</label>
                                 <el-select
@@ -340,6 +342,7 @@ export default {
                 return f.tower_id == tower_id;
             });
         },
+        
         create() {
             this.getTables();
             this.titleDialog = this.recordId
@@ -374,7 +377,46 @@ export default {
                 }
             }
         },
+        validRoom()
+        {
+            if(this.type == "caja/rooms"){
+                let pass = true;
+                let { number, floor_id, table_type_id, price, status_table_id,
+                establishment_id
+                } = this.form;
+                if(!number){
+                    this.$toast.error("El número de habitación es requerido");
+                    pass = false;
+                }
+                if(!floor_id){
+                    this.$toast.error("El piso es requerido");
+                    pass = false;
+                }
+                if(!table_type_id){
+                    this.$toast.error("El tipo de habitación es requerido");
+                    pass = false;
+                }
+                if(!price){
+                    this.$toast.error("El precio es requerido");
+                    pass = false;
+                }
+                if(!status_table_id){
+                    this.$toast.error("El estado es requerido");
+                    pass = false;
+                }
+                if(!establishment_id){
+                    this.$toast.error("El establecimiento es requerido");
+                    pass = false;
+                }
+                return pass;
+
+            }  
+            return true;
+        },
         submit() {
+            if(!this.validRoom()){
+                return;
+            }
             this.loading_submit = true;
             this.$http
                 .post(`/${this.resource}`, this.form)
