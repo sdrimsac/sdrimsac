@@ -272,7 +272,7 @@ class SaleNote extends ModelTenant
 
     public function getIdentifierAttribute()
     {
-        return $this->prefix . '-' . $this->id;
+        return $this->series . '-' . $this->number;
     }
 
     public function user()
