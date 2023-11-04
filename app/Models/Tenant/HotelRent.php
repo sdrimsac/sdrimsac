@@ -51,6 +51,10 @@ class HotelRent extends ModelTenant
         return $this->belongsTo(Person::class);
     }
     
+    public function has_many_rooms()
+    {
+        return $this->items->count() > 1;
+    }
 
     
 }

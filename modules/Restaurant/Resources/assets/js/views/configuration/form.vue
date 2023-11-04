@@ -260,6 +260,77 @@
                                 ></small>
                             </div>
                         </div>
+                        <div class="col-12">
+                            <div
+                                class="form-group"
+                                :class="{
+                                    'has-danger': errors.description
+                                }"
+                            >
+                                <label class="control-label">Contiene</label>
+                                <el-input
+                                    v-model="detail"
+                                    type="textarea"
+                                    readonly
+                                    :rows="3"
+                                ></el-input>
+
+                                <small
+                                    class="text-danger"
+                                    v-if="errors.description"
+                                    v-text="errors.description[0]"
+                                ></small>
+                            </div>
+                        </div>
+                        <div
+                            class="d-flex flex-wrap justify-content-center p-2"
+                        >
+                            <el-tag
+                                role="button"
+                                :type="data.selected ? 'success' : 'primary'"
+                                style="margin-right:5px;margin-top:5px"
+                                v-for="(data, idx) in tags"
+                                :key="idx"
+                                :disable-transitions="true"
+                                @click="select(idx)"
+                            >
+                                {{ data.description }}
+                            </el-tag>
+                            <template v-if="tags.length == 0">
+                                <el-tag
+                                    type="danger"
+                                    :disable-transitions="true"
+                                >
+                                    <span>
+                                        PRESIONE <b>+ AGREGAR</b> PARA GUARDARLA
+                                    </span>
+                                </el-tag>
+                            </template>
+                        </div>
+                        <div
+                            class="d-flex justify-content-end align-items-center"
+                        >
+                            <div class="col-md-3 col-lg-3 col-6">
+                                <el-input
+                                    class="input-new-tag"
+                                    @input="search"
+                                    v-model="newTag"
+                                    placeholder="Nueva obs.."
+                                    size="medium"
+                                >
+                                </el-input>
+                            </div>
+                            <div>
+                                <el-button
+                                    class="button-new-tag"
+                                    size="small"
+                                    style="margin-left: 10px;"
+                                    type="primary"
+                                    @click="handleInputConfirm"
+                                    >+ Agregar</el-button
+                                >
+                            </div>
+                        </div>
                     </template>
                 </div>
             </div>
@@ -290,26 +361,109 @@ export default {
     ],
     data() {
         return {
+            newTag: null,
             loading_submit: false,
             titleDialog: null,
             resource: this.type,
             errors: {},
+            tags: [],
             form: {},
             options: [],
             all_floors: [],
             floors: [],
             all_towers: [],
             towers: [],
-            tower_id: null
+            tower_id: null,
+            detailsArray: [],
+            detail: null,
+            details: []
         };
     },
     created() {
         this.initForm();
     },
     methods: {
+        async getDetails() {
+            const response = await this.$http.get("/caja/rooms/detail_table");
+            if (response.status == 200) {
+                this.details = response.data.data;
+                this.tags = this.details.slice(0, 10);
+            } else {
+                this.$toast.warning("Ocurrió un error");
+            }
+        },
+        search(input) {
+            this.tags = this.details
+                .filter(o => o.description.includes(input.toUpperCase()))
+                .slice(0, 10);
+        },
+        async handleInputConfirm() {
+            if (this.newTag) {
+                if (this.newTag.trim().length > 1) {
+                    let toAdd = this.newTag.toUpperCase();
+
+                    try {
+                        this.loading = true;
+                        const response = await this.$http.post(
+                            "/caja/rooms/detail_table",
+                            {
+                                description: toAdd,
+                                active: 1
+                            }
+                        );
+                        if (response.status == 200) {
+                            this.tags.push({
+                                description: toAdd,
+                                selected: true,
+                                active: 1
+                            });
+                            this.addWord(toAdd);
+                            this.formatObs();
+
+                            // this.$emit("update:details", [
+                            //     ...this.details,
+                            //     ...this.tags
+                            // ]);
+                            // this.tags = this.details.slice(0, 10);
+                        } else {
+                            if (response.status == 422) {
+                                this.$toast.error("La obse ya existe.");
+                            } else {
+                                this.$toast.error("No se guardó la obs.");
+                            }
+                        }
+                    } catch (e) {
+                        console.log(e);
+                        const { response } = e;
+                        if (response.status == 422) {
+                            this.$toast.error("La observación ya existe.");
+                        } else {
+                            this.$toast.error("No se guardó la obs.");
+                        }
+                    } finally {
+                        this.loading = false;
+                    }
+                }
+            }
+
+            this.newTag = null;
+        },
+        removeWord(word) {
+            this.detailsArray = this.detailsArray.filter(o => o != word);
+        },
+        addWord(word) {
+            this.detailsArray.push(word);
+        },
+        formatObs() {
+            this.detail = this.detailsArray.join(" / ");
+        },
         initForm() {
+            this.detailsArray = [];
+            
+            this.detail = null;
             this.errors = {};
             this.form = {
+                description: null,
                 id: null,
                 description: null,
                 printer: null,
@@ -342,19 +496,66 @@ export default {
                 return f.tower_id == tower_id;
             });
         },
-        
-        create() {
-            this.getTables();
+        select(idx) {
+            this.tags[idx].selected = !this.tags[idx].selected;
+            if (this.tags[idx].selected) {
+                this.addWord(this.tags[idx].description);
+            } else {
+                this.removeWord(this.tags[idx].description);
+            }
+            this.formatObs();
+        },
+
+        restoreDetail() {
+            this.tags = this.details.slice(0, 10).map(o => ({
+                ...o,
+                description: o.description.toUpperCase(),
+                selected: false
+            }));
+            this.detailsArray = [];
+            this.newTag = null;
+
+            if (this.detail && this.detail.length > 0) {
+                this.restore();
+            }
+        },
+        restore() {
+            let obs = this.detail.split(" / ");
+            this.detailsArray = obs;
+            let tgs = this.tags.map(t => t.description);
+            let idxs = [];
+            for (let i = 0; i < tgs.length; i++) {
+                let wd = tgs[i];
+
+                if (obs.some(t => t == wd)) {
+                    idxs.push(i);
+                }
+            }
+            if (idxs.length != 0) {
+                idxs.forEach(i => {
+                    this.tags[i].selected = true;
+                });
+            }
+        },
+        async create() {
+            await this.getTables();
+            this.getDetails();
             this.titleDialog = this.recordId
                 ? "Modificar Registro"
                 : "Nuevo Registro";
             this.initForm();
             if (this.recordId) {
-                this.$http
-                    .get(`/${this.resource}/record/${this.recordId}`)
-                    .then(response => {
-                        this.form = response.data.data;
-                    });
+                const response = await this.$http.get(
+                    `/${this.resource}/record/${this.recordId}`
+                );
+
+                this.form = response.data.data;
+                let { floor, description } = this.form;
+                this.detail = description;
+                this.restoreDetail();
+                this.form.tower_id = floor.tower_id;
+                this.filterFloorsByTower(floor.tower_id);
+                this.form.floor_id = floor.id;
             }
 
             if (this.type == "caja/rooms") {
@@ -372,49 +573,53 @@ export default {
                     this.form.status_table_id = status.id;
                 }
 
-                if(this.types.length > 0){
+                if (this.types.length > 0) {
                     this.form.table_type_id = this.types[0].id;
                 }
             }
         },
-        validRoom()
-        {
-            if(this.type == "caja/rooms"){
+        validRoom() {
+            if (this.type == "caja/rooms") {
+                this.form.description = this.detail;
                 let pass = true;
-                let { number, floor_id, table_type_id, price, status_table_id,
-                establishment_id
+                let {
+                    number,
+                    floor_id,
+                    table_type_id,
+                    price,
+                    status_table_id,
+                    establishment_id
                 } = this.form;
-                if(!number){
+                if (!number) {
                     this.$toast.error("El número de habitación es requerido");
                     pass = false;
                 }
-                if(!floor_id){
+                if (!floor_id) {
                     this.$toast.error("El piso es requerido");
                     pass = false;
                 }
-                if(!table_type_id){
+                if (!table_type_id) {
                     this.$toast.error("El tipo de habitación es requerido");
                     pass = false;
                 }
-                if(!price){
+                if (!price) {
                     this.$toast.error("El precio es requerido");
                     pass = false;
                 }
-                if(!status_table_id){
+                if (!status_table_id) {
                     this.$toast.error("El estado es requerido");
                     pass = false;
                 }
-                if(!establishment_id){
+                if (!establishment_id) {
                     this.$toast.error("El establecimiento es requerido");
                     pass = false;
                 }
                 return pass;
-
-            }  
+            }
             return true;
         },
         submit() {
-            if(!this.validRoom()){
+            if (!this.validRoom()) {
                 return;
             }
             this.loading_submit = true;

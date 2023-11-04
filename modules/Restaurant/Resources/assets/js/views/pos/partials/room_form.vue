@@ -75,7 +75,7 @@
                 </el-input>
             </div>
         </div>
-        <el-collapse class="mt-2">
+        <el-collapse v-model="collap" class="mt-2">
             <el-collapse-item name="1">
                 <template slot="title">
                     N° Habitaciones {{ rooms.length }}
@@ -94,6 +94,14 @@
                             ></el-button>
                         </template>
                     </el-divider>
+                    <div class="col-12" v-if="room.description">
+                        <div class="alert alert-success">
+                            LA HABITACIÓN INCLUYE:
+                            <strong>
+                                {{ room.description }}
+                            </strong>
+                        </div>
+                    </div>
                     <div class="col-md-4">
                         <label for="name">Torre</label>
                         <el-select
@@ -295,6 +303,7 @@ export default {
     },
     data() {
         return {
+            collap: ["1"],
             loading: false,
             input_person: {
                 number: ""
@@ -375,9 +384,16 @@ export default {
             for (let room of this.rooms) {
                 let { advances } = room;
 
-
                 if (room.table_id) {
-                    let table = this.all_tables.find(t => t.id == room.table_id);
+                    let table = this.all_tables.find(
+                        t => t.id == room.table_id
+                    );
+                    if (table.description) {
+                        room.description = table.description.replaceAll(
+                            "/",
+                            "·"
+                        );
+                    }
                     if (table) {
                         let { price } = table;
                         price = price * room.duration;
@@ -443,6 +459,10 @@ export default {
                 checkin_time: new Date(),
                 guesses: []
             };
+            let table = this.all_tables.find(t => t.id == table_id);
+            if (table && table.description) {
+                room.description = table.description.replaceAll("/", "·");
+            }
             this.rooms.push(room);
             this.calculateTotal();
             // if(!this.checkRoomIsExist(room)){
@@ -574,6 +594,7 @@ export default {
 
             if (this.table) {
                 this.defaultTable(this.table);
+
                 this.addRoom({
                     table_id: this.table.id,
                     floor_id: this.table.floor_id,

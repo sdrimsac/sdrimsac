@@ -348,10 +348,6 @@ export default {
                 });
             this.$http.get(`/caja/rooms/types`).then(response => {
                 this.types = response.data.data;
-                console.log(
-                    "🚀 ~ file: items.vue:284 ~ this.$http.get ~ response:",
-                    response
-                );
             });
             this.$http.get(`/establishments/records`).then(response => {
                 this.establishments = response.data.data;

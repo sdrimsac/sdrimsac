@@ -19,6 +19,7 @@ use Modules\Restaurant\Http\Requests\TableRequest;
 use Modules\Restaurant\Http\Resources\HotelRentItemResource;
 use Modules\Restaurant\Http\Resources\TableCollection;
 use Modules\Restaurant\Models\CategoryFood;
+use Modules\Restaurant\Models\DetailTable;
 use Modules\Restaurant\Models\Floor;
 use Modules\Restaurant\Models\Food;
 use Modules\Restaurant\Models\Orden;
@@ -30,16 +31,37 @@ class TableRoomController extends Controller
 {
 
 
-    public function delete($id){
+    public function delete($id)
+    {
         $table = Table::find($id);
         $table->delete();
         return [
             'success' => true,
             'message' => 'Registro eliminado con éxito'
         ];
-
     }
-    public function deleteItem($type, $id){
+    public function get_detail_table(){
+        $detail_table = DetailTable::where('active', true)->get();
+        return [
+            'success' => true,
+            'data' => $detail_table
+        ];
+    }
+    public function detail_table(Request $request){
+        $id = $request->input('id');
+        $detail_table = DetailTable::firstOrNew(['id' => $id]);
+
+        $detail_table->fill($request->all());
+        $detail_table->description = mb_strtoupper($detail_table->description);
+        $detail_table->save();
+
+        return [
+            'success' => true,
+            'message' => ($id) ? 'Detalle actualizado con éxito' : 'Detalle creado con éxito'
+        ];
+    }
+    public function deleteItem($type, $id)
+    {
         $model = null;
         switch ($type) {
             case 'floors':
@@ -57,7 +79,6 @@ class TableRoomController extends Controller
             'success' => true,
             'message' => 'Registro eliminado con éxito'
         ];
-
     }
     public function addDays($id, $days)
     {
@@ -90,6 +111,26 @@ class TableRoomController extends Controller
         return [
             'success' => true,
             'message' => 'Habitación limpia'
+        ];
+    }
+    public function sendToAvaible($id){
+        $table = Table::find($id);
+        $table->status_table_id = 1;
+        $table->save();
+        return [
+            'success' => true,
+            'message' => 'Habitación disponible'
+        ];
+
+    }
+    public function sendToMaintenance($id)
+    {
+        $table = Table::find($id);
+        $table->status_table_id = 3;
+        $table->save();
+        return [
+            'success' => true,
+            'message' => 'Habitación enviada a mantenimiento'
         ];
     }
     public function sendToclean($id)
@@ -151,7 +192,8 @@ class TableRoomController extends Controller
 
         return "Habitación n° $number por $duration días ";
     }
-    function recalculate(HotelRentItem $hote_rent_item){
+    function recalculate(HotelRentItem $hote_rent_item)
+    {
         $table = $hote_rent_item->table;
         $price = $table->price;
         $total = $price * $hote_rent_item->duration;
@@ -161,9 +203,10 @@ class TableRoomController extends Controller
         $hotel_rent->total = $hotel_rent->items->sum('total');
         $hotel_rent->save();
     }
-    public function changeRoom($to,$from){
+    public function changeRoom($to, $from)
+    {
         $table_to = Table::find($to);
-        $hotel_rent_item = HotelRentItem::where('table_id',$to)->orderBy('id','desc')->first();
+        $hotel_rent_item = HotelRentItem::where('table_id', $to)->orderBy('id', 'desc')->first();
         $table_from = Table::find($from);
         $hotel_rent_item->table_id = $from;
         $hotel_rent_item->save();
@@ -176,10 +219,9 @@ class TableRoomController extends Controller
             'success' => true,
             'message' => 'Habitación cambiada'
         ];
-        
     }
-    public  function allOrdens(Request $request,$id)
-    {   
+    public  function allOrdens(Request $request, $id)
+    {
         $extra_time = $request->input('extra_time') ?? 0;
         $hotel_rent_item = HotelRentItem::find($id);
         $hotel_rent_item->extra_time = $extra_time;
@@ -194,7 +236,7 @@ class TableRoomController extends Controller
         $description = $this->create_description($hotel_rent_item);
         $extra_service = null;
         $service = $this->get_item_service();
-        if($extra_time>0){
+        if ($extra_time > 0) {
             $extra_service = $this->get_item_service();
             $extra_service->price = $extra_time;
             $extra_service->description = "Tiempo extra";
@@ -231,7 +273,7 @@ class TableRoomController extends Controller
             'quantity' => 1,
             'price' => number_format($service->price, 2),
         ]);
-        if($extra_service){
+        if ($extra_service) {
             $ordens_items->push([
                 'id' => 0,
                 'observation' => '',
@@ -333,7 +375,7 @@ class TableRoomController extends Controller
             ->where('status_table_id', 1)
             ->get();
 
-        return compact('towers', 'floors', 'tables','table_types');
+        return compact('towers', 'floors', 'tables', 'table_types');
     }
     public function ordenById($id)
     {
@@ -365,11 +407,11 @@ class TableRoomController extends Controller
             $rooms = $request->input('rooms');
             foreach ($rooms as $room) {
                 $checkin_date = Carbon::parse($room['checkin_date'])
-                ->setTimezone('America/Lima')
-                ->format('Y-m-d');
+                    ->setTimezone('America/Lima')
+                    ->format('Y-m-d');
                 $checkin_time = Carbon::parse($room['checkin_time'])
-                ->setTimezone('America/Lima')
-                ->format('H:i:s');
+                    ->setTimezone('America/Lima')
+                    ->format('H:i:s');
                 $hotel_rent_item = new HotelRentItem;
                 $hotel_rent_item->hotel_rent_id = $hotel_rent->id;
                 $hotel_rent_item->table_id = $room['table_id'];
@@ -407,7 +449,8 @@ class TableRoomController extends Controller
             ];
         }
     }
-    public function storeType(Request $request,$type){
+    public function storeType(Request $request, $type)
+    {
         $model = null;
         switch ($type) {
             case 'floors':
@@ -428,7 +471,6 @@ class TableRoomController extends Controller
             'success' => true,
             'message' => ($id) ? 'Registro actualizado con éxito' : 'Registro creado con éxito'
         ];
-
     }
     public function get_tables()
     {
@@ -443,7 +485,7 @@ class TableRoomController extends Controller
         $towers = Tower::where('active', true)->get();
         $floors = Floor::where('active', true)->get();
 
-        return compact('tables', 'towers', 'floors','tables_types');
+        return compact('tables', 'towers', 'floors', 'tables_types');
     }
     public function get_ordens($id)
     {

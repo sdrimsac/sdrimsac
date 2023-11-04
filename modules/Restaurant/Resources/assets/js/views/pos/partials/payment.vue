@@ -1926,7 +1926,7 @@ export default {
                 }
             }
             let newData = [];
-            if (this.clientSaleNoteNumber) {
+            if (this.clientSaleNoteNumber || this.form.hotel_customer_number) {
                 newData = personsFromServer;
             } else {
                 newData = [...this.all_customers, ...persons];
