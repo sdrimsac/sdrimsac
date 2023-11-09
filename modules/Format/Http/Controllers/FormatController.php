@@ -121,6 +121,7 @@ class FormatController extends Controller
                                 //->where('establishment_id',auth()->user()->establishment_id)
                                 ->whereIn('document_type_id', ['01', '03','07','08'])
                                 ->whereIn('currency_type_id', ['PEN'])
+                                ->whereIn('soap_type_id', ['01'])
                                 ->orderBy('series')
                                 ->orderBy('number')
                                 ->get()->transform(function($row) {

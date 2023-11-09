@@ -46,6 +46,7 @@ class BoxCollection extends ResourceCollection
                 ];
             });
             return [
+                'operation_number' => $row->operation_number,
                 'id'                => $row->id,
                 'groups'            => $row->groups->group,
                 'categories'        => $row->categories,

@@ -81,6 +81,8 @@ class Table extends ModelTenant
         );
     }
     
+
+ 
     public function establishment(){
         return $this->belongsTo(Establishment::class);
     }

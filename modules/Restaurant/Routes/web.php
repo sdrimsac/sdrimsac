@@ -151,6 +151,7 @@ Route::prefix('caja')->group(function () {
         Route::get('rooms/send_to_avaible/{id}', 'TableRoomController@sendToAvaible');
         Route::get('rooms/ordenById/{id}', 'TableRoomController@ordenById');
         Route::post('rooms/store/{type}', 'TableRoomController@storeType');
+        Route::post('rooms/check_reserve', 'TableRoomController@check_reserve');
         Route::get('rooms/change_room/{to}/{from}', 'TableRoomController@changeRoom');
         Route::get('rooms/record/{id}', 'TableRoomController@record');
         Route::post('rooms/all_ordens/{id}', 'TableRoomController@allOrdens');

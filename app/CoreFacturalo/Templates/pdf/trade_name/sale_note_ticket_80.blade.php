@@ -61,7 +61,10 @@
         <td width="" class="pt-3"><p class="desc">F. Emisión:</p></td>
         <td width="" class="pt-3"><p class="desc">{{ $document->date_of_issue }}</p></td>
     </tr>
-
+    <tr>
+        <td width="" class="pt-3"><p class="desc">H. Emisión:</p></td>
+        <td width="" class="pt-3"><p class="desc">{{ $document->time_of_issue }}</p></td>
+    </tr>
 
     <tr>
         <td class="align-top"><p class="desc">Cliente:</p></td>

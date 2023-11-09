@@ -203,6 +203,15 @@ class PosController extends Controller
         }
         //orderBy('description', 'ASC')
         $configuration = Configuration::first();
+        $hotels = $configuration->hotels;
+        // if($hotels){
+        //     $user = auth()->user();
+        //     $area = $user->area;
+        //     $is_hotel = $area->is_hotel();
+        //     if($is_hotel){
+        //         $foods = $foods->where('area_id',$area->id);
+        //     }
+        // }
         if ($configuration->ord_dscp) {
             $foods = $foods->orderBy('description', 'ASC');
         }

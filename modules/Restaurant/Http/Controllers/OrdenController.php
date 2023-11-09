@@ -625,9 +625,9 @@ class OrdenController extends Controller
             if ($print_box) {
                 event(new PrintEvent($orden->id, "0", true, $this->getBoxArea(), $orden_items_ids));
             }
-            if ($isFromBox == false && $print_box) {
-                event(new PrintEvent($orden->id, "0", true, $user->area_id, $orden_items_ids));
-            }
+            // if ($isFromBox == false && $print_box) {
+            //     event(new PrintEvent($orden->id, "0", true, $user->area_id, $orden_items_ids));
+            // }
 
             $id = strval($orden->id);
             $establishment = Establishment::findOrFail(auth()->user()->establishment_id);

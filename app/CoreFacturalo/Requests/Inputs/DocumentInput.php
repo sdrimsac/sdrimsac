@@ -106,8 +106,12 @@ class DocumentInput
         if(count($sale_notes_relateds) > 0){
             $has_related_sale_note = true;
         }
+        
+
         // $from_dispatch = array_key_exists('dispatch_id', $inputs);
         return [
+            'hotel_rent_item_ids' => Functions::valueKeyInArray($inputs, 'hotel_rent_item_ids', []),
+            'hotel_rent_id' => Functions::valueKeyInArray($inputs, 'hotel_rent_id', null),
             'has_related_sale_note' => $has_related_sale_note,
             'discount_variant' => Functions::valueKeyInArray($inputs, 'discount_variant', null),
             'college' => Functions::valueKeyInArray($inputs, 'college', false),
@@ -221,6 +225,7 @@ class DocumentInput
                 } else {
                     $is_stock = "Si";
                 }
+                $desc = Functions::valueKeyInArray($row, 'description', null);
                 $item = Item::find($row['item_id']);
                 $type_id = Functions::valueKeyInArray($row, "from_unit_type_id", null);
                 $type_desc = null;

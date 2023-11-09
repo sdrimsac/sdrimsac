@@ -4,9 +4,10 @@
         @open="open"
         @close="close"
         append-to-body
-        title="Ingreso de huesped"
+        :title="title"
         :close-on-click-modal="false"
         v-loading="loading"
+        :element-loading-text="textLoading"
     >
         <div class="row mt-2">
             <div class="col-md-4">
@@ -78,11 +79,13 @@
         <el-collapse v-model="collap" class="mt-2">
             <el-collapse-item name="1">
                 <template slot="title">
-                    N° Habitaciones {{ rooms.length }}
+                    N° {{ isReserve ? "Reservas" : "Habitaciones" }}
+                    {{ rooms.length }}
                 </template>
                 <div class="row mt-1" v-for="(room, idx) in rooms" :key="idx">
                     <el-divider content-position="left"
-                        >Habitación {{ idx + 1 }}
+                        >{{ isReserve ? "Reserva" : "Habitación" }}
+                        {{ idx + 1 }}
 
                         <template v-if="rooms.length > 1">
                             <el-button
@@ -100,6 +103,15 @@
                             <strong>
                                 {{ room.description }}
                             </strong>
+                        </div>
+                    </div>
+                    <div class="row" v-if="!isReserve">
+                        <div class="col-3">
+                            <el-checkbox
+                                @change="verifyIsReserve(room)"
+                                v-model="room.is_reserve"
+                                label="Es reserva"
+                            ></el-checkbox>
                         </div>
                     </div>
                     <div class="col-md-4">
@@ -133,7 +145,7 @@
                     <div class="col-md-4">
                         <label for="name">Habitación</label>
                         <el-select
-                            @change="calculateTotal"
+                            @change="changeTable(room)"
                             v-model="room.table_id"
                         >
                             <el-option
@@ -159,6 +171,7 @@
                             Fecha de ingreso
                         </label>
                         <el-date-picker
+                            @change="changeTable(room)"
                             v-model="room.checkin_date"
                             type="date"
                             placeholder="Fecha de ingreso"
@@ -178,6 +191,7 @@
                             Hora de ingreso
                         </label>
                         <el-time-picker
+                            @change="changeTable(room)"
                             v-model="room.checkin_time"
                             size="small"
                             placeholder="Hora de ingreso"
@@ -190,7 +204,7 @@
                         <label for="duration">Días</label>
                         <el-input
                             type="number"
-                            @input="calculateTotal"
+                            @input="changeTable(room)"
                             v-model="room.duration"
                             placeholder="Duración"
                             size="small"
@@ -291,7 +305,7 @@
 const PersonForm = () =>
     import("../../../../../../../../resources/js/views/persons/form.vue");
 export default {
-    props: ["showDialog", "table"],
+    props: ["showDialog", "table", "isReserve"],
     components: {
         PersonForm
     },
@@ -303,6 +317,8 @@ export default {
     },
     data() {
         return {
+            title: "Ingreso de huesped",
+            textLoading: "Cargando...",
             collap: ["1"],
             loading: false,
             input_person: {
@@ -325,6 +341,54 @@ export default {
         };
     },
     methods: {
+        async changeTable(room) {
+            this.textLoading = "Verificando reserva...";
+            await this.checkDateReserve(room);
+
+            this.calculateTotal();
+        },
+        resetTextLoading() {
+            this.textLoading = "Cargando...";
+        },
+        async checkDateReserve(room) {
+            try {
+                this.loading = true;
+                let { table_id, checkin_date, checkin_time,duration } = room;
+                const response = await this.$http.post(
+                    "/caja/rooms/check_reserve",
+                    {
+                        table_id,
+                        checkin_date,
+                        checkin_time,
+                        duration
+                    }
+                );
+                if (response.status == 200) {
+                    const { success, message } = response.data;
+                    if (success) {
+                        delete room.not_available;
+                        this.$toast.success(message);
+                    } else {
+                        room.not_available = true;
+                        this.$toast.error(message);
+                    }
+                }
+            } catch (e) {
+                console.log(e);
+            } finally {
+                this.loading = false;
+            }
+        },
+        async verifyIsReserve(room) {
+            if (room.is_reserve) {
+                this.textLoading = "Verificando reserva...";
+                await this.checkDateReserve(room);
+            } else {
+                console.log(" pa no reservar");
+            }
+
+            this.resetTextLoading();
+        },
         removeRoom(idx) {
             this.rooms.splice(idx, 1);
             this.calculateTotal();
@@ -447,6 +511,7 @@ export default {
         },
         addRoom({ tower_id, floor_id, table_id }) {
             let room = {
+                is_reserve: this.isReserve,
                 total: 0,
                 advances: 0,
                 guess_id: null,
@@ -460,6 +525,7 @@ export default {
                 guesses: []
             };
             let table = this.all_tables.find(t => t.id == table_id);
+
             if (table && table.description) {
                 room.description = table.description.replaceAll("/", "·");
             }
@@ -475,7 +541,9 @@ export default {
             // }
         },
         async getTables() {
-            const response = await this.$http.get(`/caja/rooms/tablas`);
+            const response = await this.$http.get(
+                `/caja/rooms/tablas?is_reserve=${this.isReserve}`
+            );
             // this.rooms = response.data.tables;
             let { towers, floors, tables } = response.data;
             this.all_towers = towers;
@@ -583,6 +651,12 @@ export default {
                     );
                     pass = false;
                 }
+                if (room.not_available) {
+                    this.$toast.warning(
+                        `Habitación N° ${idx + 1} no está disponible`
+                    );
+                    pass = false;
+                }
             }
             return pass;
         },
@@ -591,7 +665,6 @@ export default {
             this.keyupCustomer();
             this.initForm();
             await this.getTables();
-
             if (this.table) {
                 this.defaultTable(this.table);
 
@@ -600,6 +673,13 @@ export default {
                     floor_id: this.table.floor_id,
                     tower_id: this.table.floor.tower_id
                 });
+
+                if (this.isReserve) {
+                    this.title = "Reserva de habitación";
+                    let [room] = this.rooms;
+                    this.textLoading = "Verificando reserva...";
+                    await this.checkDateReserve(room);
+                }
             }
             this.loading = false;
         },

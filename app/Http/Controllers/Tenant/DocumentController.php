@@ -82,6 +82,8 @@ use App\Models\Tenant\BankAccount;
 use App\Models\Tenant\Cash;
 use Modules\Inventory\Models\Warehouse as ModuleWarehouse;
 use App\Models\Tenant\Catalogs\PaymentMethodType as CatPaymentMethodType;
+use App\Models\Tenant\HotelRent;
+use App\Models\Tenant\HotelRentItem;
 use App\Models\Tenant\ItemUnitType;
 use App\Models\Tenant\Seller;
 use App\Models\Tenant\Summary;
@@ -94,6 +96,7 @@ use Modules\Restaurant\Events\OrdenReadyEvent;
 use Modules\Restaurant\Models\OrdenItem;
 use Modules\Services\Data\ServiceData;
 use GuzzleHttp\Client as ClientGuzzleHttp;
+use Modules\Restaurant\Models\Table;
 
 class DocumentController extends Controller
 {
@@ -859,6 +862,7 @@ class DocumentController extends Controller
                     $bank_account_operation = Functions::valueKeyInArray($currentBox, 'number_operation');
                     $box = new Box;
                     $box->group_id = 1;
+                    $box->operation_number = Functions::valueKeyInArray($currentBox, 'operation_number');
                     $box->method = $currentBox['method'];
                     $box->bank_account_id = $bank_account_id;
                     $box->bank_account_operation = $bank_account_operation;
@@ -900,6 +904,7 @@ class DocumentController extends Controller
                     $boxes    = Box::firstOrNew(['document_id' =>  $document->id]);
                     $boxes->group_id = 1;
                     $boxes->method = $request->method_pay;
+                    $boxes->operation_number = $request->operation_number;
                     $boxes->category_id = 1;
                     $boxes->subcategory_id = 1;
                     $boxes->amount = $request->input('total_payment');
@@ -958,6 +963,37 @@ class DocumentController extends Controller
                     $orden_item->save();
                 }
             }
+        }
+        if($request->hotel_rent_item_ids){
+            $hotel_rent_items = HotelRentItem::whereIn('id', $request->hotel_rent_item_ids)->get();
+            foreach ($hotel_rent_items as $item) {
+                $item->payment_status = "Pagado";
+                $item->sale_note_id = $this->sale_note->id;
+                $item->checkout_date = date('Y-m-d');
+                $item->checkout_time = date('H:i:s');
+                $item->save();
+                $table = Table::where('id', $item->table_id)->first();
+                $table->status_table_id = 5;
+                $table->save();
+                
+            }
+        }
+        if($request->hotel_rent_id){
+            $hotel_rent= HotelRent::findOrFail($request->hotel_rent_id);
+            $hotel_rent_items = $hotel_rent->items;
+            foreach ($hotel_rent_items as $item) {
+                $item->payment_status = "Pagado";
+                $table = Table::where('id', $item->table_id)->first();
+                $table->status_table_id = 5;
+                $table->save();
+                $item->checkout_date = date('Y-m-d');
+                $item->checkout_time = date('H:i:s');
+                $item->save();
+            }
+            $hotel_rent->payment_status = "Pagado";
+            $hotel_rent->document_id = $document->id;
+            $hotel_rent->paid = 1;
+            $hotel_rent->save();
         }
         if (count($ids) != 0) {
             Orden::whereIn('id', $ids)->update(['document_id' => $document->id]);
@@ -1742,7 +1778,6 @@ class DocumentController extends Controller
                         // $warehouse = Warehouse::where('establishment_id', $establishment_id)->first();
                         // $warehouse_id = ($warehouse) ? $warehouse->id : null;
                         // ItemWarehouse::where('item_id', $it->item_id)->where('warehouse_id', $warehouse_id)->increment('stock', $quantity);
-                        // dump($quantity);
                     }
                     Box::where('document_id', $document_id)->delete();
                     $orden = Orden::where('document_id', $document_id)->first();

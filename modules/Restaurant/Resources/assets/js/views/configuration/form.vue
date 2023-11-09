@@ -9,6 +9,17 @@
     >
         <form autocomplete="off" @submit.prevent="submit">
             <div class="form-body">
+                <div v-if="type == 'caja/rooms' && recordId" class="row mt-2">
+                    <div class="col-md-3">
+                        <button
+                            class="btn btn-primary"
+                            @click="minibar"
+                            type="button"
+                        >
+                            Frigobar
+                        </button>
+                    </div>
+                </div>
                 <div class="row">
                     <div
                         v-if="type !== 'caja/tables' && type !== 'caja/rooms'"
@@ -260,7 +271,8 @@
                                 ></small>
                             </div>
                         </div>
-                        <div class="col-12">
+                        <template v-if="type=='caja/rooms'">
+                              <div class="col-12">
                             <div
                                 class="form-group"
                                 :class="{
@@ -331,6 +343,7 @@
                                 >
                             </div>
                         </div>
+                        </template>
                     </template>
                 </div>
             </div>
@@ -344,10 +357,17 @@
                 >
             </div>
         </form>
+    <mini-bar
+    :showDialog.sync="showMinibar"
+    :table_id="recordId"
+    >
+
+    </mini-bar>
     </el-dialog>
 </template>
 
 <script>
+import MiniBar from "./minibar.vue";
 export default {
     props: [
         "showDialog",
@@ -359,6 +379,9 @@ export default {
         "configurations",
         "establishments"
     ],
+    components: {
+        MiniBar
+    },
     data() {
         return {
             newTag: null,
@@ -376,13 +399,18 @@ export default {
             tower_id: null,
             detailsArray: [],
             detail: null,
-            details: []
+            details: [],
+            showMinibar:false,
+
         };
     },
     created() {
         this.initForm();
     },
     methods: {
+        minibar(){
+            this.showMinibar = true;
+        },
         async getDetails() {
             const response = await this.$http.get("/caja/rooms/detail_table");
             if (response.status == 200) {
@@ -459,7 +487,7 @@ export default {
         },
         initForm() {
             this.detailsArray = [];
-            
+
             this.detail = null;
             this.errors = {};
             this.form = {

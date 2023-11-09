@@ -125,7 +125,7 @@ class DashboardController extends Controller
                 });
             } else {
                 $tables_active = [];
-                $tables_area = null;
+                $tables_area = "[]";
             }
 
             $configuration = Configuration::first();

@@ -7,7 +7,7 @@
     //$path_style = app_path('CoreFacturalo'.DIRECTORY_SEPARATOR.'Templates'.DIRECTORY_SEPARATOR.'pdf'.DIRECTORY_SEPARATOR.'style.css');
     $document_number = $document->series . '-' . str_pad($document->number, 8, '0', STR_PAD_LEFT);
     $accounts = \App\Models\Tenant\BankAccount::all();
-    $hotel_rent = \App\Models\Tenant\HotelRent::where('sale_note_id', $document->id)->first();
+    $hotel_rent = \App\Models\Tenant\HotelRent::where('document_id', $document->id)->first();
     if ($document_base) {
         $affected_document_number = $document_base->affected_document ? $document_base->affected_document->series . '-' . str_pad($document_base->affected_document->number, 8, '0', STR_PAD_LEFT) : $document_base->data_affected_document->series . '-' . str_pad($document_base->data_affected_document->number, 8, '0', STR_PAD_LEFT);
     } else {
@@ -136,7 +136,7 @@
                 <tr>
                     <td width="120px" height="20px"><b>FECHA DE EMISIÓN</b></td>
                     <td width="8px" height="20px">:</td>
-                    <td>{{ $document->date_of_issue }}</td>
+                    <td>{{ $document->date_of_issue }} {{$document->time_of_issue}}</td>
                     @if ($document->detraction)
                         <td width="120px" height="20px"><b>N. CTA DETRACCIONES</b></td>
                         <td width="8px" height="20px">:</td>

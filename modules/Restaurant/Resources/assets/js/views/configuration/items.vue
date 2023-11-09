@@ -19,7 +19,7 @@
                     <div
                         class="col-12 col-md-6 d-flex align-items-start justify-content-end"
                     >
-                      <button
+                        <button
                             v-if="resource == 'caja/rooms'"
                             type="button"
                             class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto m-l-5"
@@ -116,7 +116,7 @@
                             >
                                 Establecimiento
                             </th>
-                              <th v-if="type == 'caja/rooms'">
+                            <th v-if="type == 'caja/rooms'">
                                 Torre
                             </th>
                             <th v-if="type == 'caja/rooms'">
@@ -128,10 +128,11 @@
                             <th v-if="type == 'caja/areas'">
                                 Forzar impresión
                             </th>
-                            <th
-                            v-if="type == 'caja/rooms'"
-                            >
+                            <th v-if="type == 'caja/rooms'">
                                 Precio
+                            </th>
+                            <th v-if="type == 'caja/rooms'">
+                                Incluye
                             </th>
                             <th class="text-end">Acciones</th>
                         </tr>
@@ -174,7 +175,7 @@
                             >
                                 {{ row.establishment }}
                             </td>
-                               <td v-if="type == 'caja/rooms'">
+                            <td v-if="type == 'caja/rooms'">
                                 {{ row.tower }}
                             </td>
                             <td v-if="type == 'caja/rooms'">
@@ -191,10 +192,26 @@
                                 >
                                 </el-switch>
                             </td>
-                            <td
-                            v-if="type == 'caja/rooms'"
-                            >
-                            {{ row.price }}
+                            <td v-if="type == 'caja/rooms'">
+                                {{ row.price }}
+                            </td>
+                            <td v-if="type == 'caja/rooms'">
+                                <template
+                                    v-if="
+                                        row.description != null &&
+                                            row.description != ''
+                                    "
+                                >
+                                    <el-tooltip
+                                        class="item"
+                                        effect="dark"
+                                        :content="row.description"
+                                        placement="top"
+                                    >
+                                        <!-- icono dde ojo -->
+                                        <i class="icofont-eye-alt"></i>
+                                    </el-tooltip>
+                                </template>
                             </td>
                             <td class="text-end">
                                 <button
@@ -294,7 +311,6 @@ export default {
         });
     },
     methods: {
-        
         clickSeeTypes() {
             this.typeItem = "table_types";
             this.showItems = true;

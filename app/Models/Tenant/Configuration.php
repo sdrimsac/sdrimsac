@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Config;
 class Configuration extends ModelTenant
 {
     protected $fillable = [
+        'create_service_all_warehouse',
         'hotels',
         'commercial_treatments',
         'caja_actions',
@@ -203,6 +204,7 @@ class Configuration extends ModelTenant
         // $skins = Skin::all();
         $skins = [];
         return [
+            'create_service_all_warehouse' => (bool)$this->create_service_all_warehouse,
             'hotels' => (bool)$this->hotels,
             'commercial_treatments' => (bool)$this->commercial_treatments,
             'caja_actions' => (bool)$this->caja_actions,

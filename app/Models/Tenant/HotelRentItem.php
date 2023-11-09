@@ -9,6 +9,7 @@ class HotelRentItem extends ModelTenant
     public $timestamps = false;
     protected $table = 'hotel_rent_items';
     protected $fillable = [
+        'is_reserve',
         'advances',
         'sale_note_id',
         'document_id',
@@ -23,6 +24,10 @@ class HotelRentItem extends ModelTenant
         'checkout_time',
         'total',
         'extra_time',
+    ];
+
+    protected $casts = [
+        'is_reserve' => 'boolean',  
     ];
 
     public function hotel_rent()

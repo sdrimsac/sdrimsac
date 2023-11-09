@@ -512,7 +512,7 @@
                                                         configuration.credit_mode
                                                 "
                                             >
-                                                <div class="col-md-4">
+                                                <div class="col-md-6">
                                                     <label
                                                         class="w-100"
                                                         style="text-align:left;"
@@ -535,10 +535,11 @@
                                                     </el-input>
                                                 </div>
                                                 <div
-                                                    class="col-md-2"
+                                                    class="col-md-3"
                                                     style="text-align:left;margin-left:5px;"
                                                 >
                                                     <el-radio-group
+                                                    class="d-flex"
                                                         @change="
                                                             calculateCharge
                                                         "
@@ -626,6 +627,30 @@
                                         </template>
                                     </div>
                                     <div class="col-lg-12">
+                                        <div
+                                            class="row"
+                                            v-if="
+                                                form.method_pay == 'Yape' ||
+                                                    form.method_pay == 'PLIN'
+                                            "
+                                        >
+                                          <div class="col-md-6 col-lg-6 col-12">
+                                              <label
+                                                class="control-label text-left  d-flex align-items-start justify-content-start"
+                                            >
+                                                N° de operación
+                                            </label>
+                                            <el-input
+                                                v-model="operation_number"
+                                            >
+                                                <template slot="prepend"
+                                                    ><i
+                                                        class="fa fa-mobile"
+                                                    ></i>
+                                                </template>
+                                            </el-input>
+                                          </div>
+                                        </div>
                                         <div class="row">
                                             <div
                                                 class="col-lg-4 col-md-5 col-xl-6"
@@ -1458,6 +1483,7 @@ export default {
             resource_documents: "documents",
             resource_payments: "document_payments",
             amount: 0,
+            operation_number: null,
             printerOn: 0,
             button_payment: false,
             input_item: "",
@@ -1729,10 +1755,13 @@ export default {
             return array;
         },
         calculateCharge() {
+            if(this.form.original_total == undefined){
+                this.form.original_total = this.form.total;
+            }
             let { amount, credit_type } = this.chargeCredit;
             if (credit_type == "1") {
                 this.chargeCredit.total_charge =
-                    this.form.total * (amount / 100);
+                    this.form.original_total * (amount / 100);
             } else {
                 this.chargeCredit.total_charge = Number(amount);
             }
@@ -1877,7 +1906,8 @@ export default {
                     method_payment_id: this.method_payments,
                     method,
                     date,
-                    amount: this.form.enter_amount
+                    amount: this.form.enter_amount,
+                    operation_number: this.operation_number
                 });
                 if (this.form.payment_condition_id == "03") {
                     this.form.enter_amount = this.checkPaymentTotal();
@@ -1886,6 +1916,7 @@ export default {
                     this.form.enter_amount = 0.0;
                 }
             }
+            this.operation_number = null;
         },
         customerForm(isNew) {
             if (isNew) {
@@ -1916,6 +1947,7 @@ export default {
             }, 500);
         },
         async updateAllCustomers(personsFromServer) {
+            console.log("🚀 ~ file: payment.vue:1950 ~ updateAllCustomers ~ personsFromServer:", personsFromServer)
             let ids = this.all_customers.map(c => c.id);
             let persons = [];
 
@@ -1925,15 +1957,17 @@ export default {
                     persons.push(person);
                 }
             }
+            persons = [...persons, ...this.all_customers]
             let newData = [];
             if (this.clientSaleNoteNumber || this.form.hotel_customer_number) {
                 newData = personsFromServer;
             } else {
                 newData = [...this.all_customers, ...persons];
             }
-
+    console.log(persons);
             if (persons.length != 0) {
                 await this.$emit("update:all_customers", newData);
+                console.log("🚀 ~ file: payment.vue:1968 ~ updateAllCustomers ~ newData:", newData)
                 if (newData.length == 1) {
                     this.value = newData[0].id;
                     this.form.customer_id = newData[0].id;
@@ -1945,7 +1979,7 @@ export default {
             this.form.student_id = null;
             this.students = [];
             this.form.customer_id = this.value;
-            
+
             let customer = _.find(this.customers, {
                 id: this.form.customer_id
             });
@@ -2091,13 +2125,13 @@ export default {
             }
             this.checkTotal("01");
 
-            if(this.form.hotel_customer_number){
-                 setTimeout(() => {
-                        this.$refs.select_person.$el.getElementsByTagName(
-                            "input"
-                        )[0].value = this.form.hotel_customer_number;
-                        this.keyupCustomer();
-                    }, 800);
+            if (this.form.hotel_customer_number) {
+                setTimeout(() => {
+                    this.$refs.select_person.$el.getElementsByTagName(
+                        "input"
+                    )[0].value = this.form.hotel_customer_number;
+                    this.keyupCustomer();
+                }, 800);
                 // this.value = this.form.hotel_customer_number;
                 // this.form.customer_id = this.form.hotel_customer_number;
                 // this.changeCustomer();
@@ -2573,6 +2607,9 @@ export default {
 
                 this.calculateCharge();
             }
+            if (method_pay !== "Yape" || method_pay !== "PLIN"){
+                this.operation_number = null;
+            }
         },
 
         reCalculateTotal() {
@@ -3014,7 +3051,7 @@ export default {
             return pass;
         },
         async clickPayment(form) {
-            console.log("🚀 ~ file: payment.vue:3004 ~ clickPayment ~ form:", form)
+  
 
             if (!this.checkBankAccount()) {
                 return;
@@ -3156,7 +3193,8 @@ export default {
                     (ordenId == undefined || ordenId == null) &&
                     (form.variation == undefined || form.variation == null) &&
                     !this.conf.pos_quick_sale &&
-                    !this.ordens_all_table && !this.form.is_room
+                    !this.ordens_all_table &&
+                    !this.form.is_room
                 ) {
                     const responses = await this.$http.post(
                         "/caja/worker/send-orden",
@@ -3177,7 +3215,7 @@ export default {
                     `/${this.resource_documents}`,
                     form
                 );
-                let {data} = response;
+                let { data } = response;
                 if (response.status == 200 && data.data) {
                     let format = null;
                     let data = response.data.data;
@@ -3195,6 +3233,7 @@ export default {
                     if (this.printer && format && this.printerOn == 1) {
                         // this.printerDocument(this.printer,format)
                     }
+                    this.operation_number = null;
                     if (response.data.success == true) {
                         let document_id = 0;
                         if (form.document_type_id === "80") {
@@ -3455,7 +3494,9 @@ export default {
                 this.form.document_type_id == "03"
             ) {
                 return this.customers.some(
-                    c => c.identity_document_type_id == "6" || c.identity_document_type_id == "1"
+                    c =>
+                        c.identity_document_type_id == "6" ||
+                        c.identity_document_type_id == "1"
                 );
             } else {
                 return this.customers.some(
@@ -3480,7 +3521,10 @@ export default {
         filterSeries() {
             console.log("object");
             let check = this.checkCustomers();
-            console.log("🚀 ~ file: payment.vue:3467 ~ filterSeries ~ check:", check)
+            console.log(
+                "🚀 ~ file: payment.vue:3467 ~ filterSeries ~ check:",
+                check
+            );
             if (!check && !this.started) {
                 let dcto = "DNI";
                 if (this.form.document_type_id == "01") {
@@ -3519,13 +3563,12 @@ export default {
                 //     this.form.document_type_id = "03";
                 // }
             }
-  
+
             if (
                 this.form.document_type_id == "01" &&
                 currentClient &&
                 currentClient.identity_document_type_id !== "6"
             ) {
-          
                 this.customers = this.all_customers.filter(
                     f => f.identity_document_type_id == "6"
                 );
@@ -3595,7 +3638,6 @@ export default {
                 this.discount_amount = 0;
                 this.inputDiscountAmount();
             }
-
         }
     }
 };

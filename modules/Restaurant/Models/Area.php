@@ -19,4 +19,9 @@ class Area extends ModelTenant
         'active',
         'search_print'
     ];
+
+
+    public function is_hotel(){
+        return $this->description == 'HOTEL';
+    }
 }

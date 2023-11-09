@@ -25,7 +25,7 @@
     $total_payment = $document->payments->sum('payment');
     //$balance = ($document->total - $total_payment) - $document->payments->sum('change');
     $balance = -5;
-    $hotel_rent = \App\Models\Tenant\HotelRent::where('sale_note_id', $document->id)->first();
+    $hotel_rent = \App\Models\Tenant\HotelRent::where('document_id', $document->id)->first();
     
 @endphp
 <html>
@@ -215,9 +215,10 @@
                 <p class="desc">F. Emisión:</p>
             </td>
             <td width="" class="pt-3">
-                <p class="desc">{{ $document->date_of_issue }}</p>
+                <p class="desc">{{ $document->date_of_issue }} {{$document->time_of_issue}}</p>
             </td>
         </tr>
+
         <tr>
             <td width="">
                 <p class="desc">H. Emisión:</p>
@@ -798,6 +799,10 @@
                         @if ($box->bank_account_operation)
                             <br>
                             <small>N° Op: {{ $box->bank_account_operation }}</small>
+                        @endif
+                        @if ($box->operation_number)
+                        <br>
+                        <small>N° Operación: {{ $box->operation_number }}</small>
                         @endif
                         :
                         {{ $document->currency_type->symbol }}

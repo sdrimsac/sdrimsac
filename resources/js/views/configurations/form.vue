@@ -1398,6 +1398,30 @@
                                             ></el-switch>
                                         </div>
                                     </div>
+                                    <div class="col-md-6 mt-4">
+                                        <div class="form-group">
+                                            <label class="control-label w-100"
+                                                >Servicio en todos los establecimientos
+                                                <el-tooltip
+                                                    class="item"
+                                                    effect="dark"
+                                                    content="Al crear un servicio, se creará en todos los establecimientos"
+                                                    placement="top-start"
+                                                >
+                                                    <i
+                                                        class="fa fa-info-circle"
+                                                    ></i>
+                                                </el-tooltip>
+                                            </label>
+
+                                            <el-switch
+                                                v-model="form.create_service_all_warehouse"
+                                                active-text="Si"
+                                                inactive-text="No"
+                                                @change="submit"
+                                            ></el-switch>
+                                        </div>
+                                    </div>
                                 </div>
                             </el-tab-pane>
                             <el-tab-pane label="Impresion">

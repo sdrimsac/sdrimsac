@@ -178,10 +178,10 @@
                 <p class="desc">F. Emisión:</p>
             </td>
             <td width="" class="pt-3">
-                <p class="desc">{{ $document->date_of_issue->format('d-m-Y') }}</p>
+                <p class="desc">{{ $document->date_of_issue->format('d-m-Y') }} {{$document->time_of_issue}}</p>
             </td>
         </tr>
-
+       
 
         <tr>
             <td class="align-top">
@@ -477,6 +477,10 @@
                     @if ($box->bank_account_operation)
                         <br>
                         <small>N° Op: {{ $box->bank_account_operation }}</small>
+                    @endif
+                    @if ($box->operation_number)
+                    <br>
+                    <small>N° Operación: {{ $box->operation_number }}</small>
                     @endif
                     :
                     {{ $document->currency_type->symbol }}

@@ -97,7 +97,7 @@
             <td height="18px"><b>Telefono:</b></td>
             <td>{{ $customer->telephone }}</td>
             <td><b>Fecha Emisión</b></td>
-            <td>{{ $document->date_of_issue->format('d-m-Y') }}</td>
+            <td>{{ $document->date_of_issue->format('d-m-Y') }} {{$document->time_of_issue}}</td>
 
         </tr>
 

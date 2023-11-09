@@ -24,6 +24,7 @@ use Modules\Restaurant\Models\Floor;
 use Modules\Restaurant\Models\Food;
 use Modules\Restaurant\Models\Orden;
 use Modules\Restaurant\Models\OrdenItem;
+use Modules\Restaurant\Models\StatusTable;
 use Modules\Restaurant\Models\TableType;
 use Modules\Restaurant\Models\Tower;
 
@@ -40,14 +41,16 @@ class TableRoomController extends Controller
             'message' => 'Registro eliminado con éxito'
         ];
     }
-    public function get_detail_table(){
+    public function get_detail_table()
+    {
         $detail_table = DetailTable::where('active', true)->get();
         return [
             'success' => true,
             'data' => $detail_table
         ];
     }
-    public function detail_table(Request $request){
+    public function detail_table(Request $request)
+    {
         $id = $request->input('id');
         $detail_table = DetailTable::firstOrNew(['id' => $id]);
 
@@ -113,7 +116,8 @@ class TableRoomController extends Controller
             'message' => 'Habitación limpia'
         ];
     }
-    public function sendToAvaible($id){
+    public function sendToAvaible($id)
+    {
         $table = Table::find($id);
         $table->status_table_id = 1;
         $table->save();
@@ -121,7 +125,6 @@ class TableRoomController extends Controller
             'success' => true,
             'message' => 'Habitación disponible'
         ];
-
     }
     public function sendToMaintenance($id)
     {
@@ -153,15 +156,18 @@ class TableRoomController extends Controller
     }
     function get_item_service()
     {
-        $item = Item::where('unit_type_id', 'ZZ')->first();
+        $item = Item::where('unit_type_id', 'ZZ')
+        ->where('description','Servicio')
+        ->first();
         if ($item) {
             $food = Food::where('item_id', $item->id)->first();
             return $food;
         } else {
             $configuration = Configuration::first();
             $affectation_igv_type_id = $configuration->affectation_igv_type_id;
-            $item = Item::create([
-                [
+            $item = Item::create(
+                [   'stock' => 0,
+                    'attributes' => [],
                     'item_type_id' => '01',
                     'unit_type_id' => 'ZZ',
                     'internal_id' => '000ZZ',
@@ -171,7 +177,7 @@ class TableRoomController extends Controller
                     'sale_affectation_igv_type_id'  => $affectation_igv_type_id,
                     'purchase_affectation_igv_type_id' => $affectation_igv_type_id,
                 ]
-            ]);
+            );
             $category_food_id = CategoryItem::first()->id;
             $food = Food::create([
                 'item_id' => $item->id,
@@ -206,7 +212,9 @@ class TableRoomController extends Controller
     public function changeRoom($to, $from)
     {
         $table_to = Table::find($to);
-        $hotel_rent_item = HotelRentItem::where('table_id', $to)->orderBy('id', 'desc')->first();
+        $hotel_rent_item = HotelRentItem::where('table_id', $to)->orderBy('checkin_date', 'desc')
+            ->orderBy('checkin_time', 'desc')
+            ->first();
         $table_from = Table::find($from);
         $hotel_rent_item->table_id = $from;
         $hotel_rent_item->save();
@@ -339,6 +347,7 @@ class TableRoomController extends Controller
         return [
             'number' => 'Nº de habitación',
             'floor_id' => 'N° Piso',
+            'description' => 'Incluye',
         ];
     }
     public function recordsByArea($id)
@@ -366,14 +375,19 @@ class TableRoomController extends Controller
             'data' => $tablesClean
         ];
     }
-    public function tables()
+    public function tables(Request $request)
     {
+        $is_reserve = $request->input('is_reserve');
+        $is_reserve = $is_reserve == 'true' ? true : false;
         $table_types = TableType::where('active', true)->get();
         $towers = Tower::where('active', true)->get();
         $floors = Floor::where('active', true)->get();
-        $tables = Table::where('is_room', true)
-            ->where('status_table_id', 1)
-            ->get();
+        $tables = Table::where('is_room', true);
+        if (!$is_reserve) {
+
+            $tables->where('status_table_id', 1);
+        }
+        $tables = $tables->get();
 
         return compact('towers', 'floors', 'tables', 'table_types');
     }
@@ -415,6 +429,7 @@ class TableRoomController extends Controller
                 $hotel_rent_item = new HotelRentItem;
                 $hotel_rent_item->hotel_rent_id = $hotel_rent->id;
                 $hotel_rent_item->table_id = $room['table_id'];
+                $hotel_rent_item->is_reserve = $room['is_reserve'];
                 $hotel_rent_item->duration = $room['duration'];
                 $hotel_rent_item->advances = $room['advances'];
                 $hotel_rent_item->total = $room['total'];
@@ -423,7 +438,9 @@ class TableRoomController extends Controller
                 $hotel_rent_item->checkin_date = $checkin_date;
                 $hotel_rent_item->checkin_time = $checkin_time;
                 $hotel_rent_item->save();
-                Table::where('id', $room['table_id'])->update(['status_table_id' => 2]);
+                if ($hotel_rent_item->is_reserve == false) {
+                    Table::where('id', $room['table_id'])->update(['status_table_id' => 2]);
+                }
 
                 $guesses = $room['guesses'];
                 foreach ($guesses as $guess) {
@@ -481,11 +498,44 @@ class TableRoomController extends Controller
         $tables = Table::where('is_room', true)->where(function ($query) {
             $query->where('establishment_id', auth()->user()->establishment_id)->orWhereNull('establishment_id');
         })
-            ->get();
+            ->get()
+
+            ->transform(function ($row) {
+
+                $reserves = HotelRentItem::where('table_id', $row->id)->where('is_reserve', true)
+                    ->get()
+                    ->transform(function ($rent) {
+
+                        return [
+                            'checkin_date' => Carbon::parse($rent->checkin_date)->format('d/m/Y'),
+                            'checkin_time' => $rent->checkin_time,
+
+                        ];
+                    });
+                return [
+                    'reserves' => $reserves,
+                    'cleaning_start_date' => $row->cleaning_start_date,
+                    'is_cleaning' => $row->is_cleaning,
+                    'is_room' => $row->is_room,
+                    'price'            => $row->price,
+                    'id'                => $row->id,
+                    'number'            => $row->number,
+                    'floor_id'          => $row->floor_id,
+                    'area'              => $row->area,
+                    'type'              => $row->type,
+                    'floor'            =>  $row->floor,
+                    'status_table'     => $row->status_table,
+                    'status_table_id'     => $row->status_table_id,
+                    'establishment'     => $row->establishment ? $row->establishment->description : null,
+                    'establishment_id'  => $row->establishment_id,
+                    'description'      => $row->description,
+
+                ];
+            });
         $towers = Tower::where('active', true)->get();
         $floors = Floor::where('active', true)->get();
-
-        return compact('tables', 'towers', 'floors', 'tables_types');
+        $status = StatusTable::where('active', true)->get();
+        return compact('tables', 'towers', 'floors', 'tables_types', 'status');
     }
     public function get_ordens($id)
     {
@@ -495,11 +545,17 @@ class TableRoomController extends Controller
 
         return compact('ordens');
     }
-    public function records()
+    public function records(Request $request)
     {
-
+        $column = $request->input('column');
+        $value = $request->input('value');
         // $this->checkTables();
         $records = Table::where('is_room', true);
+
+        if ($column && $value) {
+            $records = $records->where($column, 'like', "%{$value}%");
+        }
+
         return new TableCollection($records->paginate(config('tenant.items_per_page')));
 
         // return [
@@ -545,6 +601,50 @@ class TableRoomController extends Controller
             'data' => $types
         ];
     }
+    public function check_reserve(Request $request)
+    {
+        $table_id = $request->input('table_id');
+        $duration = $request->input('duration');
+        $checkin_date = Carbon::parse($request->input('checkin_date'))
+            ->setTimezone('America/Lima')
+            ->format('Y-m-d');
+        $checkin_time = Carbon::parse($request->input('checkin_time'))
+            ->setTimezone('America/Lima')
+            ->format('H:i:s');
+        $start_date = Carbon::parse($checkin_date . ' ' . $checkin_time);
+        $end_date = $start_date->copy()->addDays($duration);
+       
+
+        $tables_in_reserve = HotelRentItem::where('table_id', $table_id)
+            ->whereNull('checkout_date')
+            ->get();
+        if ($tables_in_reserve->count() == 0) {
+            return [
+                'success' => true,
+                'message' => 'Habitación disponible'
+            ];
+        }
+
+
+        foreach ($tables_in_reserve as $key => $value) {
+            $start_date_reserve = Carbon::parse($value->checkin_date . ' ' . $value->checkin_time);
+            $end_date_reserve = $start_date_reserve->copy()->addDays($value->duration);
+       
+            if (
+                $start_date->between($start_date_reserve, $end_date_reserve) || $end_date->between($start_date_reserve, $end_date_reserve)
+                || $start_date_reserve->between($start_date, $end_date) || $end_date_reserve->between($start_date, $end_date)
+            ) {
+                return [
+                    'success' => false,
+                    'message' => 'Habitación reservada o en uso | Verifique las fechas/horas de reserva'
+                ];
+            }
+        }
+        return [
+            'success' => true,
+            'message' => 'Habitación disponible'
+        ];
+    }
     public function store_massive(Request $request)
     {
         $numbers = $request->input('numbers');
@@ -553,6 +653,7 @@ class TableRoomController extends Controller
             ->where('is_room', true)
             ->where('establishment_id', $request->input('establishment_id'))
             ->where('area_id', $request->input('area_id'))
+            ->where('floor_id', $request->input('floor_id'))
             ->get();
         if (count($tables) > 0) {
             return [

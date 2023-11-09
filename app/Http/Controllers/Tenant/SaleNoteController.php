@@ -667,6 +667,7 @@ class SaleNoteController extends Controller
                         $bank_account_id = Functions::valueKeyInArray($currentBox, 'bank_account_id');
                         $bank_account_operation = Functions::valueKeyInArray($currentBox, 'number_operation');
                         $cajas    = new Box;
+                        $cajas->operation_number = Functions::valueKeyInArray($currentBox, 'operation_number');
                         $cajas->group_id = 1;
                         $cajas->category_id = 1;
                         $cajas->subcategory_id = 1;
@@ -697,6 +698,7 @@ class SaleNoteController extends Controller
                     $cajas->group_id = 1;
                     $cajas->category_id = 1;
                     $cajas->subcategory_id = 1;
+                    $cajas->operation_number = $request->operation_number;
                     $cajas->amount = $request->input('total');
                     $cajas->date = Carbon::parse($request->input('date_of_issue'))->format('Y-m-d');
                     $cajas->type = '1';

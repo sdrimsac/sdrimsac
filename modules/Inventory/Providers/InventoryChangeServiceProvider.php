@@ -2,6 +2,7 @@
 
 namespace Modules\Inventory\Providers;
 
+use App\Models\Tenant\Configuration;
 use App\Models\Tenant\Item;
 use App\Models\Tenant\Warehouse;
 use Illuminate\Support\ServiceProvider;
@@ -28,8 +29,9 @@ class InventoryChangeServiceProvider extends ServiceProvider
 
         Item::created(function ($item) {
 
+            $configuration = Configuration::firstOrFail();
 
-            if ($item->unit_type_id == 'ZZ') {
+            if ($item->unit_type_id == 'ZZ' && $configuration->create_service_all_warehouse) {
                 $warehouses = Warehouse::all()->pluck('id');
                 $stock = $item->stock;
                 $id = $item->id;

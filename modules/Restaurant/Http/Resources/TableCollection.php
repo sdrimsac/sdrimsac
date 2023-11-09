@@ -29,6 +29,7 @@ class TableCollection extends ResourceCollection
                 'status_table'     => $row->status_table,
                 'establishment'     => $row->establishment ? $row->establishment->description : null,
                 'establishment_id'  => $row->establishment_id,
+                'description'      => $row->description,
                 'orden'          => $orden,
             ];
         });

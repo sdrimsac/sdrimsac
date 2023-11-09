@@ -639,6 +639,7 @@
                             <i class="icofont-dining-table"></i> Mesas
                         </a>
                     </li>
+                    @if($config->hotels)
                     <li>
                         <a class="{{ $path[0] === 'caja' && $path[1] === 'rooms' ? 'active' : '' }}"
                             href="{{ route('restaurant.rooms') }}">
@@ -646,6 +647,8 @@
                             Habitaciones
                         </a>
                     </li>
+                    @endif
+                  
                     <li>
                         <a class="{{ $path[0] === 'caja' && $path[1] === 'areas' ? 'active' : '' }}"
                             href="{{ route('restaurant.areas') }}">
