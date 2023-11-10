@@ -225,7 +225,8 @@ class QuotationController extends Controller
 
             $data = $this->mergeData($request);
             $data['terms_condition'] = $this->getTermsCondition();
-
+            $establishment_id = auth()->user()->establishment_id;
+            $data['establishment_id'] = $establishment_id;
             $this->quotation =  Quotation::create($data);
 
             foreach ($data['items'] as $row) {
@@ -334,16 +335,15 @@ class QuotationController extends Controller
     {
 
         $this->company = Company::active();
-
+        $establishment_id = auth()->user()->establishment_id ?? $inputs['establishment_id'];
         $values = [
             'user_id' => auth()->id(),
             'external_id' => Str::uuid()->toString(),
             'customer' => PersonInput::set($inputs['customer_id']),
-            'establishment' => EstablishmentInput::set($inputs['establishment_id']),
+            'establishment' =>  EstablishmentInput::set($establishment_id),
             'soap_type_id' => $this->company->soap_type_id,
             'state_type_id' => '01'
         ];
-
         $inputs->merge($values);
 
         return $inputs->all();

@@ -197,6 +197,10 @@
                             placeholder="Hora de ingreso"
                             style="width: 100%;"
                             value-format="HH:mm:ss"
+                            :format="'hh:mm A'"
+                            :picker-options="{
+                                format: 'hh:mm A' // Utiliza 'hh' para las horas en formato de 12 horas y 'A' para AM/PM
+                            }"
                             timezone="America/Lima"
                         ></el-time-picker>
                     </div>
@@ -353,7 +357,7 @@ export default {
         async checkDateReserve(room) {
             try {
                 this.loading = true;
-                let { table_id, checkin_date, checkin_time,duration } = room;
+                let { table_id, checkin_date, checkin_time, duration } = room;
                 const response = await this.$http.post(
                     "/caja/rooms/check_reserve",
                     {
@@ -613,10 +617,10 @@ export default {
             }, 500);
         },
         changeCustomer() {},
-        hasAdvances(){
+        hasAdvances() {
             let has = false;
-            for(let room of this.rooms){
-                if(room.advances > 0){
+            for (let room of this.rooms) {
+                if (room.advances > 0) {
                     has = true;
                     break;
                 }
@@ -625,7 +629,7 @@ export default {
         },
         async submit() {
             this.form.rooms = this.rooms;
-            
+
             if (!this.validate()) {
                 return;
             }
@@ -636,12 +640,15 @@ export default {
                     this.form
                 );
                 if (response.status == 200) {
-                    console.log("🚀 ~ file: room_form.vue:639 ~ submit ~ response:", response)
+                    console.log(
+                        "🚀 ~ file: room_form.vue:639 ~ submit ~ response:",
+                        response
+                    );
                     this.$toast.success("Huesped ingresado correctamente");
                     this.$emit("getTables");
-                    if(this.hasAdvances()){
-                        let {id} = response.data;
-                        this.$emit("emitAdvances",id);
+                    if (this.hasAdvances()) {
+                        let { id } = response.data;
+                        this.$emit("emitAdvances", id);
                     }
                     this.$emit("update:showDialog", false);
                 }

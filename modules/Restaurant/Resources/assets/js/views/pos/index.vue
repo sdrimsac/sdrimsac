@@ -2797,7 +2797,7 @@ export default {
             if(this.form.is_room){
             this.form.orden_ids = form.orden_ids;
             this.form.hotel_rent_item_ids = form.hotel_rent_item_ids;
-            this.form.is_advance_hotel = form.is_advance;
+            this.form.is_advance = form.is_advance;
             this.form.hotel_rent_id = form.hotel_rent_id;
             this.form.hotel_customer_number = form.customer_number;
             }

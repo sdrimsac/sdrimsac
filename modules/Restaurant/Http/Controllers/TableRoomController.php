@@ -274,8 +274,8 @@ class TableRoomController extends Controller
         if ($extra_time > 0) {
             $extra_service = $this->get_item_service();
             $extra_service->price = $extra_time;
-            $extra_service->description = "Tiempo extra";
-            $extra_service->item->description = "Tiempo extra";
+            $extra_service->description = "Media tarifa";
+            $extra_service->item->description = "Media tarifa";
         }
         $service->price = $total - $advance;
         $service->description = $description;
@@ -563,7 +563,19 @@ class TableRoomController extends Controller
         $towers = Tower::where('active', true)->get();
         $floors = Floor::where('active', true)->get();
         $status = StatusTable::where('active', true)->get();
-        return compact('tables', 'towers', 'floors', 'tables_types', 'status');
+        $reserves = HotelRentItem::where('is_reserve', true)->orderBy('checkin_date','desc')->orderBy('checkin_time','desc')
+            ->get()
+            ->transform(function ($rent) {
+                return [
+                    'checkin_date' => Carbon::parse($rent->checkin_date)->format('d/m/Y'),
+                    'checkin_time' => $rent->checkin_time,
+                    'customer_name' => $rent->hotel_rent->customer->name,
+                    'customer_number' => $rent->hotel_rent->customer->number,
+                    'room_number' => $rent->table->number,
+                    'tower' => $rent->table->floor->tower->name,
+                ];
+            });
+        return compact('reserves','tables', 'towers', 'floors', 'tables_types', 'status');
     }
     public function get_ordens($id)
     {

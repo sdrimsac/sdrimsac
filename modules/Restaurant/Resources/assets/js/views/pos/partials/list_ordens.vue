@@ -786,7 +786,7 @@
                                                                     addVariation
                                                                 "
                                                             >
-                                                                Agregar
+                                                                Agregar otro item
                                                             </el-tag>
                                                             <el-tag
                                                                 v-if="
