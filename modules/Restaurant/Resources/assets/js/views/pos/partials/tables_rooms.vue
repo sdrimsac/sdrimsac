@@ -76,7 +76,7 @@
                 <div>
                     <el-tooltip v-for="(statu, idx) in status" :key="idx">
                         <div slot="content">
-                         {{statu.description}} ({{statu.count}})
+                            {{ statu.description }} ({{ statu.count }})
                         </div>
                         <button
                             @click="filterByStatus(statu.id)"
@@ -85,42 +85,27 @@
                             style="margin-left:8px;"
                             class="btn btn-sm"
                             :class="statu.class"
-                            
                         >
-                 <span
-                                        class="text-white m-1"
-                                        style="font-size:18px;"
-                                    >
-                                        <template
-                                            v-if="statu.id == 1"
-                                        >
-                                            <i class="fas fa-door-closed"></i>
-                                        </template>
-                                        <template
-                                            v-else-if="
-                                                statu.id == 2
-                                            "
-                                        >
-                                            <i class="fas fa-bed"></i>
-                                        </template>
-                                        <template
-                                            v-else-if="
-                                                statu.id == 3
-                                            "
-                                        >
-                                            <i class="fas fa-tools"></i>
-                                        </template>
-                                        <template
-                                            v-else-if="
-statu.id == 5
-                                            "
-                                        >
-                                            <i class="fas fa-walking"></i>
-                                        </template>
-                                        <template v-else>
-                                            <i class="fas fa-ban"></i>
-                                        </template>
-                                    </span>
+                            <span
+                                class="text-white m-1"
+                                style="font-size:18px;"
+                            >
+                                <template v-if="statu.id == 1">
+                                    <i class="fas fa-door-closed"></i>
+                                </template>
+                                <template v-else-if="statu.id == 2">
+                                    <i class="fas fa-bed"></i>
+                                </template>
+                                <template v-else-if="statu.id == 3">
+                                    <i class="fas fa-tools"></i>
+                                </template>
+                                <template v-else-if="statu.id == 5">
+                                    <i class="fas fa-walking"></i>
+                                </template>
+                                <template v-else>
+                                    <i class="fas fa-ban"></i>
+                                </template>
+                            </span>
                         </button>
                     </el-tooltip>
                     <button
@@ -553,7 +538,7 @@ statu.id == 5
                                         }}
                                     </span>
                                     <span v-if="table.tower_name">
-                                            {{table.tower_name.toUpperCase()}}
+                                        {{ table.tower_name.toUpperCase() }}
                                     </span>
                                     <div
                                         class="d-flex"
@@ -673,6 +658,7 @@ statu.id == 5
             @getTables="getTables"
             :showDialog.sync="showRoom"
             :table="currentTable"
+            @emitAdvances="emitAdvances"
             :isReserve="isReserve"
         ></room-form>
         <el-dialog
@@ -717,8 +703,8 @@ export default {
     },
     data() {
         return {
-            status:[],
-            all_status:[],
+            status: [],
+            all_status: [],
             isReserve: false,
             floor_id: null,
             all_floors: [],
@@ -752,17 +738,30 @@ export default {
         };
     },
     methods: {
-        filterByStatus(id){
-            this.tables = this.all_tables.filter(table => table.status_table_id == id)
-            .map(table => {
-                table.tower_name = table.floor.tower.name;
-                return table;
-            });
-            ;
+        filterByStatus(id) {
+            this.tables = this.all_tables
+                .filter(table => table.status_table_id == id)
+                .map(table => {
+                    table.tower_name = table.floor.tower.name;
+                    return table;
+                });
         },
         reserveRoom() {
             this.isReserve = true;
             this.showRoom = true;
+        },
+        async emitAdvances(id) {
+            const response = await this.$http(`/caja/rooms/advance/${id}`);
+            const { data } = response;
+            let { items, hotel_rent_id, customer_number } = data;
+            this.$emit("paymentsOrden", {
+                items,
+                is_room: true,
+                is_advance:true,
+                hotel_rent_id,
+                customer_number
+            });
+            this.close();
         },
         async sendToMaintenance(event, id) {
             event.stopPropagation();
@@ -1092,22 +1091,28 @@ export default {
                 if (response.status == 200) {
                     const { tables, towers, floors, status } = response.data;
                     //  this.tables = tables.filter(f => f.number != "caja");
-                         this.all_tables = tables;
+                    this.all_tables = tables;
                     this.all_tables = this.all_tables.map(t => ({
                         ...t,
                         time_to_finish: null
                     }));
-                        this.all_status = status;
-                    this.status = status.
-                    
-                    filter(s=>s.id != 4)
-                    .map(s => ({
-                        ...s,
-                        count: this.all_tables.filter(t => t.status_table_id == s.id)
-                            .length,
-                        class:s.id == 1 ? "btn-free" : s.id == 2 ? "btn-danger" : s.id== 5  ?"btn-dirty" : "btn-warning"
-                    }));
-               
+                    this.all_status = status;
+                    this.status = status
+                        .filter(s => s.id != 4)
+                        .map(s => ({
+                            ...s,
+                            count: this.all_tables.filter(
+                                t => t.status_table_id == s.id
+                            ).length,
+                            class:
+                                s.id == 1
+                                    ? "btn-free"
+                                    : s.id == 2
+                                    ? "btn-danger"
+                                    : s.id == 5
+                                    ? "btn-dirty"
+                                    : "btn-warning"
+                        }));
 
                     this.all_floors = floors;
                     this.towers = towers;

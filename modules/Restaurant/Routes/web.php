@@ -139,6 +139,7 @@ Route::prefix('caja')->group(function () {
         Route::get('rooms/columns', 'TableRoomController@columns');
         Route::get('rooms/tables_to_clean', 'TableRoomController@tablesToClean');
         Route::get('rooms/check', 'TableRoomController@check');
+        Route::get('rooms/advance/{id}', 'TableRoomController@advanceDocument');
         Route::get('rooms/cleaned/{id}', 'TableRoomController@cleaned');
         Route::get('rooms/room/{id}', 'TableRoomController@getRoom');
         Route::get('rooms/records', 'TableRoomController@records');

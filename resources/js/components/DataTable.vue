@@ -3,24 +3,24 @@
         <div class="row ">
             <div class="col-md-12 col-lg-12 col-xl-12 ">
                 <div class="row" v-if="applyFilter">
-                    <div class="col-lg-4 col-md-4 col-sm-12 pb-2">
-                            <label style="width:100%">
-                                Filtrar por:
-                            </label>
-                            <el-select
-                                v-model="search.column"
-                                placeholder="Select"
-                                @change="changeClearInput"
-                            >
-                                <el-option
-                                    v-for="(label, key) in columns"
-                                    :key="key"
-                                    :value="key"
-                                    :label="label"
-                                ></el-option>
-                            </el-select>
+                    <div class="col-lg-3 col-md-3 col-sm-12 pb-2">
+                        <label style="width:100%">
+                            Filtrar por:
+                        </label>
+                        <el-select
+                            v-model="search.column"
+                            placeholder="Select"
+                            @change="changeClearInput"
+                        >
+                            <el-option
+                                v-for="(label, key) in columns"
+                                :key="key"
+                                :value="key"
+                                :label="label"
+                            ></el-option>
+                        </el-select>
                     </div>
-                    <div class="col-lg-3 col-md-4 col-sm-12 pb-2">
+                    <div class="col-lg-3 col-md-3 col-sm-12 pb-2">
                         <label for="value">
                             Buscar
                         </label>
@@ -33,9 +33,7 @@
                                     search.column == 'date'
                             "
                         >
-                            <template
-                                v-if="resource != 'caja/worker/expenses'"
-                            >
+                            <template v-if="resource != 'caja/worker/expenses'">
                                 <el-date-picker
                                     v-model="search.value"
                                     type="date"
@@ -45,8 +43,6 @@
                                     @change="getRecords"
                                 >
                                 </el-date-picker>
-
-                             
                             </template>
                             <template v-else>
                                 <el-date-picker
@@ -77,13 +73,13 @@
                             </el-select>
                         </template>
                         <template v-else-if="search.column == 'seller_id'">
-                               <el-select
+                            <el-select
                                 v-model="search.value"
                                 @change="getRecords"
                                 placeholder="Seleccione el vendedor"
                             >
                                 <el-option
-                                    v-for="(item,idx) in sellers"
+                                    v-for="(item, idx) in sellers"
                                     :key="idx"
                                     :label="item.name"
                                     :value="item.id"
@@ -102,41 +98,88 @@
                             </el-input>
                         </template>
                     </div>
-                    <div  v-if="
-                                search.column == 'date_of_issue' ||
-                                    search.column == 'date_of_due' ||
-                                    search.column == 'date_of_payment' ||
-                                    search.column == 'delivery_date' ||
-                                    search.column == 'date'
-                                    && resource == 'purchases'  
-                                    && search.value
-                            " class="col-lg-3 col-md-4 col-sm-12 pb-2">
-                          <label for="value">
+                    <div
+                        v-if="
+                            search.column == 'date_of_issue' ||
+                                search.column == 'date_of_due' ||
+                                search.column == 'date_of_payment' ||
+                                search.column == 'delivery_date' ||
+                                (search.column == 'date' &&
+                                    resource == 'purchases' &&
+                                    search.value)
+                        "
+                        class="col-lg-3 col-md-3 col-sm-12 pb-2"
+                    >
+                        <label for="value">
                             Hasta
                         </label>
-                                <el-date-picker
-                                    v-model="search.end_date"
-                                    type="date"
-                                    style="width: 100%;"
-                                    placeholder="Buscar"
-                                    value-format="yyyy-MM-dd"
-                                    @change="getRecords"
-                                >
-                                </el-date-picker>
+                        <el-date-picker
+                            v-model="search.end_date"
+                            type="date"
+                            style="width: 100%;"
+                            placeholder="Buscar"
+                            value-format="yyyy-MM-dd"
+                            @change="getRecords"
+                        >
+                        </el-date-picker>
+                    </div>
+                    <div
+                        class="col-lg-3 col-md-3 col-sm-12 pb-2"
+                        v-if="resource == 'items'"
+                    >
+                        <label for="warehouse">
+                            Almacén
+                        </label>
+                        <el-select
+                            clearable
+                            v-model="search.warehouse_id"
+                            @change="getRecords"
+                            placeholder="Seleccione el Almacén"
+                        >
+                            <el-option
+                                v-for="item in warehouses"
+                                :key="item.id"
+                                :label="item.description"
+                                :value="item.id"
+                            >
+                            </el-option>
+                        </el-select>
+                    </div>
+                    <div
+                        class="col-lg-3 col-md-3 col-sm-12 pb-2"
+                        v-if="resource == 'items'"
+                    >
+                        <label for="warehouse">
+                            Area de preparación
+                        </label>
+                        <el-select
+                            clearable
+                            filterable
+                            v-model="search.area_id"
+                            @change="getRecords"
+                            placeholder="Seleccione el Almacén"
+                        >
+                            <el-option
+                                v-for="item in areas"
+                                :key="item.id"
+                                :label="item.description"
+                                :value="item.id"
+                            >
+                            </el-option>
+                        </el-select>
                     </div>
                 </div>
             </div>
+            <div v-if="resource == 'items'" class="row"></div>
             <div
                 v-if="
-                    resource == 'caja/worker/expenses' || 'purchases' &&
-                        records.length != 0
+                    resource == 'caja/worker/expenses' ||
+                        ('purchases' && records.length != 0)
                 "
                 class="row"
             >
-                <div v-if="resource == 'caja/worker/expenses'" 
-                class="col-md-3">
+                <div v-if="resource == 'caja/worker/expenses'" class="col-md-3">
                     <el-button
-                    
                         class="submit"
                         type="danger"
                         icon="el-icon-tickets"
@@ -144,7 +187,7 @@
                         >Exportar PDF</el-button
                     >
                 </div>
-                  <div class="col-md-3">
+                <div class="col-md-3">
                     <el-button
                         class="submit"
                         type="success"
@@ -217,7 +260,9 @@ export default {
             records: [],
             pagination: {},
             array_district: [],
-            time: null
+            time: null,
+            warehouses: [],
+            areas: []
         };
     },
     computed: {},
@@ -225,6 +270,15 @@ export default {
         this.$eventHub.$on("reloadData", () => {
             this.getRecords();
         });
+        if (this.resource == "items") {
+            this.$http.get(`/warehouses/records`).then(response => {
+                this.warehouses = response.data.data;
+            });
+
+            this.$http.get(`/caja/areas/records`).then(response => {
+                this.areas = response.data.data;
+            });
+        }
     },
     async mounted() {
         let column_resource = this.resource; // _.split(this.resource, '/')
@@ -286,7 +340,9 @@ export default {
                 limit: this.limit,
                 value: this.search.value,
                 column: this.search.column,
-                end_date: this.search.end_date
+                end_date: this.search.end_date,
+                warehouse_id: this.search.warehouse_id,
+                area_id: this.search.area_id
             });
         },
         changeClearInput() {

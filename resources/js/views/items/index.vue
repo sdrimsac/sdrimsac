@@ -288,9 +288,11 @@ export default {
     },
     methods: {
         clickReport(query = null) {
-            let { column, value } = query;
+            let { column, value, warehouse_id, area_id } = query;
             window.open(
-                `/items/excel?column=${column || ""}&value=${value || ""}`,
+                `/items/excel?column=${column || ""}&value=${value ||
+                    ""}&warehouse_id=${warehouse_id || ""}&area_id=${area_id ||
+                    ""}`,
                 "_blank"
             );
         },

@@ -67,10 +67,11 @@ class ItemController extends Controller
     {
         return view('tenant.items_ecommerce.index');
     }
-    
-    public function check_series(){
 
-         Item::where('series_enabled', true)->chunk(50,function($items_chunk){
+    public function check_series()
+    {
+
+        Item::where('series_enabled', true)->chunk(50, function ($items_chunk) {
             foreach ($items_chunk as $item) {
                 $item->checkSeries();
             }
@@ -165,60 +166,67 @@ class ItemController extends Controller
     {
         $datos = $request->value;
         $textoIntoArray =  explode(' ', $datos);
-
+        $warehouse_id = $request->warehouse_id;
+        $area_id = $request->area_id;
+        $records = Item::whereTypeUser()
+            ->whereNotIsSet();
         switch ($request->column) {
 
             case 'brand':
-                $records = Item::whereHas('brand', function ($q) use ($request) {
+                $records->whereHas('brand', function ($q) use ($request) {
                     $q->where('name', 'like', "%{$request->value}%");
-                })
-                    ->whereTypeUser()
-                    ->whereNotIsSet();
+                });
                 break;
 
             case 'active':
-                $records = Item::whereTypeUser()
-                    ->whereNotIsSet()
+                $records
                     ->whereIsActive();
                 break;
 
             case 'inactive':
-                $records = Item::whereTypeUser()
-                    ->whereNotIsSet()
+                $records
                     ->whereIsNotActive();
                 break;
             case 'description':
-                if (count($textoIntoArray) === 1) {
-                    $records = Item::whereTypeUser()
-                        ->whereNotIsSet()
-                        ->where('description', 'like', "%{$request->value}%")
-                        ->orWhere('internal_id', 'like', "%{$request->value}%")
-                        ->orWhere('second_name', 'like', "%{$request->value}%");
-                    break;
-                } else {
-                    $records = Item::whereTypeUser()
-                        ->whereNotIsSet();
-                    foreach ($textoIntoArray as $key => $value) {
-                        $records->where('description', 'like', '%' . $value . '%');
-                    }
+                if ($request->value) {
+                    if (count($textoIntoArray) === 1) {
+                        $records
+                            ->where('description', 'like', "%{$request->value}%")
+                            ->orWhere('internal_id', 'like', "%{$request->value}%")
+                            ->orWhere('second_name', 'like', "%{$request->value}%");
+                        break;
+                    } else {
 
-                    break;
+                        foreach ($textoIntoArray as $key => $value) {
+                            $records->where('description', 'like', '%' . $value . '%');
+                        }
+                    }
                 }
+                break;
 
             case 'category':
-                $records = Item::whereTypeUser()
-                    ->whereNotIsSet()
+                $records
                     ->whereHas('category', function ($query) use ($request) {
                         $query->where('name', 'like', '%' . $request->value . '%');
                     });
                 break;
             default:
-                $records = Item::whereTypeUser()
-                    ->whereNotIsSet()
+                $records
                     ->where($request->column, 'like', "%{$request->value}%");
                 break;
         }
 
+        if ($warehouse_id) {
+            $records = $records->whereHas('warehouses', function ($query) use ($warehouse_id) {
+                $query->where('warehouse_id', $warehouse_id);
+            });
+        }
+
+        if ($area_id) {
+            $records = $records->whereHas('food', function ($query) use ($area_id) {
+                $query->where('area_id', $area_id);
+            });
+        }
 
         return $records->orderBy('description');
     }

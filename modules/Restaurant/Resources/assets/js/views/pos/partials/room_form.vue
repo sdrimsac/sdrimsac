@@ -613,9 +613,19 @@ export default {
             }, 500);
         },
         changeCustomer() {},
+        hasAdvances(){
+            let has = false;
+            for(let room of this.rooms){
+                if(room.advances > 0){
+                    has = true;
+                    break;
+                }
+            }
+            return has;
+        },
         async submit() {
             this.form.rooms = this.rooms;
-
+            
             if (!this.validate()) {
                 return;
             }
@@ -626,8 +636,13 @@ export default {
                     this.form
                 );
                 if (response.status == 200) {
+                    console.log("🚀 ~ file: room_form.vue:639 ~ submit ~ response:", response)
                     this.$toast.success("Huesped ingresado correctamente");
                     this.$emit("getTables");
+                    if(this.hasAdvances()){
+                        let {id} = response.data;
+                        this.$emit("emitAdvances",id);
+                    }
                     this.$emit("update:showDialog", false);
                 }
                 this.loading = false;

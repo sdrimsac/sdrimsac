@@ -2597,6 +2597,7 @@ export default {
             if (this.configuration.credit_mode) {
                 if (
                     method_pay == "TARJETA: IZYPAY" ||
+                    method_pay == "TARJETA: OPENPAY" ||
                     method_pay == "TARJETA: NIUBIZ" ||
                     method_pay == "Culqui"
                 ) {

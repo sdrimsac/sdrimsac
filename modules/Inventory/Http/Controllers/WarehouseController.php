@@ -25,8 +25,11 @@ class WarehouseController extends Controller
 
     public function records(Request $request)
     {
-        $records = Warehouse::where($request->column, 'like', "%{$request->value}%")
-                            ->orderBy('description');
+        if($request->column && $request->value) {
+            $records = Warehouse::where($request->column, 'like', "%{$request->value}%");
+        } else {
+            $records = Warehouse::query();
+        }
 
         return new WarehouseCollection($records->paginate(config('tenant.items_per_page')));
     }

@@ -157,8 +157,8 @@ class TableRoomController extends Controller
     function get_item_service()
     {
         $item = Item::where('unit_type_id', 'ZZ')
-        ->where('description','Servicio')
-        ->first();
+            ->where('description', 'Servicio')
+            ->first();
         if ($item) {
             $food = Food::where('item_id', $item->id)->first();
             return $food;
@@ -166,7 +166,8 @@ class TableRoomController extends Controller
             $configuration = Configuration::first();
             $affectation_igv_type_id = $configuration->affectation_igv_type_id;
             $item = Item::create(
-                [   'stock' => 0,
+                [
+                    'stock' => 0,
                     'attributes' => [],
                     'item_type_id' => '01',
                     'unit_type_id' => 'ZZ',
@@ -227,6 +228,32 @@ class TableRoomController extends Controller
             'success' => true,
             'message' => 'Habitación cambiada'
         ];
+    }
+    public  function advanceDocument($id)
+    {
+        $hotel_rent = HotelRent::find($id);
+        $hotel_rent_items = $hotel_rent->items->where('advances', '>', 0);
+        $customer_number  = $hotel_rent->customer->number;
+        $hotel_rent_id = $id;
+        $items = collect();
+        foreach ($hotel_rent_items as $hotel_rent_item) {
+            $service = $this->get_item_service();
+            $service->price = $hotel_rent_item->advances;
+            $service->description = "Adelanto de habitación n° " . $hotel_rent_item->table->number;
+            $service->item->description = "Adelanto de habitación n° " . $hotel_rent_item->table->number;
+            $items->push([
+                'id' => 0,
+                'observation' => '',
+                'food' => $service,
+                'quantity' => 1,
+                'price' => number_format($service->price, 2),
+            ]);
+        }
+        return compact(
+            'items',
+            'hotel_rent_id',
+            'customer_number'
+        );
     }
     public  function allOrdens(Request $request, $id)
     {
@@ -454,7 +481,8 @@ class TableRoomController extends Controller
 
             return [
                 'success' => true,
-                'message' => 'Habitación actualizada con éxito'
+                'message' => 'Habitación actualizada con éxito',
+                'id' => $hotel_rent->id
             ];
         } catch (\Exception $e) {
             DB::connection('tenant')->rollBack();
@@ -574,7 +602,7 @@ class TableRoomController extends Controller
                 function ($row) {
                     foreach ($row as $table) {
                         //buscar las ordenes de la mesa
-                        // $ordens = Orden::where('table_id', $table->id)->where('status_orden_id', '<>', 4)->where('status_orden_id', '<>', 5)->get();
+                        $ordens = Orden::where('table_id', $table->id)->where('status_orden_id', '<>', 4)->where('status_orden_id', '<>', 5)->get();
 
                         if (count($ordens) == 0) {
                             $table->status_table_id = 1;
@@ -613,7 +641,7 @@ class TableRoomController extends Controller
             ->format('H:i:s');
         $start_date = Carbon::parse($checkin_date . ' ' . $checkin_time);
         $end_date = $start_date->copy()->addDays($duration);
-       
+
 
         $tables_in_reserve = HotelRentItem::where('table_id', $table_id)
             ->whereNull('checkout_date')
@@ -629,7 +657,7 @@ class TableRoomController extends Controller
         foreach ($tables_in_reserve as $key => $value) {
             $start_date_reserve = Carbon::parse($value->checkin_date . ' ' . $value->checkin_time);
             $end_date_reserve = $start_date_reserve->copy()->addDays($value->duration);
-       
+
             if (
                 $start_date->between($start_date_reserve, $end_date_reserve) || $end_date->between($start_date_reserve, $end_date_reserve)
                 || $start_date_reserve->between($start_date, $end_date) || $end_date_reserve->between($start_date, $end_date)
