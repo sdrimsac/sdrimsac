@@ -13,6 +13,7 @@
     $tittle = $document->series . '-' . str_pad($document->number, 8, '0', STR_PAD_LEFT);
     $payments = $document->payments;
     $hotel_rent = \App\Models\Tenant\HotelRent::where('sale_note_id', $document->id)->first();
+    $hotel_rent_advance = \App\Models\Tenant\HotelRentDocument::where('sale_note_id', $document->id)->first();
     $is_chifa_china = $company->number == '15609876309';
 @endphp
 <html>
@@ -296,6 +297,36 @@
                 </tr>
             @endforeach
         @endif
+        @if ($hotel_rent_advance)
+        @php
+            $hotel_rent_items = $hotel_rent_advance->hotel_rent->items;
+            
+        @endphp
+        @foreach ($hotel_rent_items as $hri)
+            @if ($hri->is_reserve)
+            <tr>
+                <td>
+                    <p class="desc">Habitación:</p>
+                </td>
+                <td>
+                    <p class="desc">{{ $hri->table->number }}</p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p class="desc">Reserva:</p>
+
+                </td>
+                <td>
+                    <p class="desc">
+                        {{ \Carbon\Carbon::parse($hri->checkin_date)->format("d/m/Y") }} {{ $hri->checkin_time }}
+                    </p>
+                </td>
+            </tr>
+         
+            @endif
+        @endforeach
+    @endif
         <tr>
             <td height="18px"><b>OBSERVACION:</b></td>
             <td colspan="3" class="align-top">{{ trim($document->observation) }}</td>

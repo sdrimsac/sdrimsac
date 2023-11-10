@@ -21,6 +21,9 @@ class HotelRent extends ModelTenant
         'sale_note_id',
     ];
 
+
+    
+
     public function getCustomerAttribute($value)
     {
         return (is_null($value)) ? null : (object) json_decode($value);

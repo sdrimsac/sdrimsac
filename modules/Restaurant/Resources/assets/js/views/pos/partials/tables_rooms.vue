@@ -375,6 +375,47 @@
                         </el-collapse-item>
                     </el-collapse>
                 </div>
+                <div class="row m-2" v-if="currentRoom.documents.length > 0">
+                    <div class="col-12">
+                        <span class="text-muted h4">
+                            DOCUMENTOS DE ADELANTO
+                        </span>
+                    </div>
+                    <div class="col-12 table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Documento</th>
+                                    <th>Fecha</th>
+                                    <th>Total</th>
+                                    <th>Pdf</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr
+                                    v-for="(document,
+                                    idx) in currentRoom.documents"
+                                    :key="idx"
+                                >
+                                    <td>{{ document.number }}</td>
+                                    <td>{{ document.date_of_issue }}</td>
+                                    <td>{{ document.total }}</td>
+                                    <td>
+                                        <a
+                                            :href="document.pdf"
+                                            target="_blank"
+                                            style="margin-right:5px;"
+                                            type="button"
+                                            class="btn btn-success btn-sm"
+                                        >
+                                            <i class="fas fa-file-pdf"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
                 <div class="row m-3"></div>
             </template>
             <template v-else>
@@ -757,7 +798,7 @@ export default {
             this.$emit("paymentsOrden", {
                 items,
                 is_room: true,
-                is_advance:true,
+                is_advance: true,
                 hotel_rent_id,
                 customer_number
             });

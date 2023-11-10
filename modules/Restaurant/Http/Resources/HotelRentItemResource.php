@@ -3,6 +3,7 @@
 namespace Modules\Restaurant\Http\Resources;
 
 use App\Models\Tenant\HotelRent;
+use App\Models\Tenant\HotelRentDocument;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Modules\Restaurant\Models\Orden;
 
@@ -17,6 +18,26 @@ class HotelRentItemResource extends JsonResource
     public function toArray($request)
     {
         $customer = $this->setCustomer($this->hotel_rent->customer);
+        $hotel_rent_id = $this->hotel_rent_id;
+        $documents = HotelRentDocument::where('hotel_rent_id', $hotel_rent_id)->get()
+        ->transform(function ($row) {
+            $document = $row->document ? $row->document : $row->sale_note;
+            $is_sale_note = $row->document ? false : true;
+            $external_id = $document->external_id;
+            $url = "print/document/$external_id/ticket";
+            if($is_sale_note){
+                $url = "sale-notes/print/$external_id/ticket";
+            }
+            return [
+                'id' => $row->id,
+                'number' => $document->number_full,
+                'pdf' => url($url),
+                'total' => $document->total,
+                'date_of_issue' => $document->date_of_issue->format('Y-m-d'),
+               
+            ];
+        })
+        ;
         $guesses = [];
         if ($this->guesses->isEmpty()) {
             $guess = $this->hotel_rent->customer;
@@ -67,6 +88,7 @@ class HotelRentItemResource extends JsonResource
             $has_many_rooms = $this->hotel_rent->has_many_rooms();
         return [
             'id' => $this->id,
+            'documents' => $documents,
             'has_many_rooms' => $has_many_rooms,
             'hotel_rent_id' => $this->hotel_rent_id,
             'hotel_rent' => $this->hotel_rent,

@@ -12,7 +12,6 @@ use App\Models\Tenant\Turned;
     $payments = $document->payments;
     $hotel_rent = \App\Models\Tenant\HotelRent::where('sale_note_id',$document->id)->first();
     
-
     
 
 @endphp

@@ -110,6 +110,7 @@ class DocumentInput
 
         // $from_dispatch = array_key_exists('dispatch_id', $inputs);
         return [
+            'is_advance' => Functions::valueKeyInArray($inputs, 'is_advance', false),
             'hotel_rent_item_ids' => Functions::valueKeyInArray($inputs, 'hotel_rent_item_ids', []),
             'hotel_rent_id' => Functions::valueKeyInArray($inputs, 'hotel_rent_id', null),
             'has_related_sale_note' => $has_related_sale_note,

@@ -70,6 +70,7 @@ use App\Exports\SaleNoteExport;
 use App\Models\Tenant\BankAccount;
 use App\Models\Tenant\Cash;
 use App\Models\Tenant\HotelRent;
+use App\Models\Tenant\HotelRentDocument;
 use App\Models\Tenant\HotelRentItem;
 use App\Models\Tenant\ItemUnitType;
 use App\Models\Tenant\SaleNoteCredit;
@@ -526,7 +527,7 @@ class SaleNoteController extends Controller
                     event(new OrdenReadyEvent($orden_item->id));
                 }
             }
-            if($request->orden_ids){
+            if ($request->orden_ids) {
                 $ids = $request->orden_ids;
                 foreach ($ids as $id) {
                     $Orden = Orden::findOrFail($id);
@@ -542,7 +543,7 @@ class SaleNoteController extends Controller
                     }
                 }
             }
-            if($request->hotel_rent_item_ids){
+            if ($request->hotel_rent_item_ids) {
                 $hotel_rent_items = HotelRentItem::whereIn('id', $request->hotel_rent_item_ids)->get();
                 foreach ($hotel_rent_items as $item) {
                     $item->payment_status = "Pagado";
@@ -553,25 +554,32 @@ class SaleNoteController extends Controller
                     $table = Table::where('id', $item->table_id)->first();
                     $table->status_table_id = 5;
                     $table->save();
-                    
                 }
             }
-            if($request->hotel_rent_id){
-                $hotel_rent= HotelRent::findOrFail($request->hotel_rent_id);
-                $hotel_rent_items = $hotel_rent->items;
-                foreach ($hotel_rent_items as $item) {
-                    $item->payment_status = "Pagado";
-                    $table = Table::where('id', $item->table_id)->first();
-                    $table->status_table_id = 5;
-                    $table->save();
-                    $item->checkout_date = date('Y-m-d');
-                    $item->checkout_time = date('H:i:s');
-                    $item->save();
+            if ($request->hotel_rent_id) {
+                $hotel_rent = HotelRent::findOrFail($request->hotel_rent_id);
+                if ($request->is_advance) {
+                    HotelRentDocument::create([
+                        'hotel_rent_id' => $hotel_rent->id,
+                        'sale_note_id' => $this->sale_note->id,
+                    ]);
+                } else {
+                    $hotel_rent_items = $hotel_rent->items;
+                    foreach ($hotel_rent_items as $item) {
+                        $item->payment_status = "Pagado";
+                        $table = Table::where('id', $item->table_id)->first();
+                        $table->status_table_id = 5;
+                        $table->save();
+                        $item->checkout_date = date('Y-m-d');
+                        $item->checkout_time = date('H:i:s');
+                        $item->save();
+                    }
+                    $hotel_rent->payment_status = "Pagado";
+                    $hotel_rent->sale_note_id = $this->sale_note->id;
+
+                    $hotel_rent->paid = 1;
+                    $hotel_rent->save();
                 }
-                $hotel_rent->payment_status = "Pagado";
-                $hotel_rent->sale_note_id = $this->sale_note->id;
-                $hotel_rent->paid = 1;
-                $hotel_rent->save();
             }
             if ($all_ordens) {
                 $tables = Table::where('establishment_id', auth()->user()->establishment_id)
@@ -1126,9 +1134,9 @@ class SaleNoteController extends Controller
                         $total_taxed
                 ],
                 'margin_top' => 0,
-                'margin_right' => $format_pdf === 'ticket_50' ? 0.5: 6,
+                'margin_right' => $format_pdf === 'ticket_50' ? 0.5 : 6,
                 'margin_bottom' => 0,
-                'margin_left' =>$format_pdf === 'ticket_50'  ? 4.5: 6
+                'margin_left' => $format_pdf === 'ticket_50'  ? 4.5 : 6
             ]);
         } else if ($format_pdf === 'a5') {
 

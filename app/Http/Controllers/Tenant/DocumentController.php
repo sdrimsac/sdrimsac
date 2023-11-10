@@ -83,6 +83,7 @@ use App\Models\Tenant\Cash;
 use Modules\Inventory\Models\Warehouse as ModuleWarehouse;
 use App\Models\Tenant\Catalogs\PaymentMethodType as CatPaymentMethodType;
 use App\Models\Tenant\HotelRent;
+use App\Models\Tenant\HotelRentDocument;
 use App\Models\Tenant\HotelRentItem;
 use App\Models\Tenant\ItemUnitType;
 use App\Models\Tenant\Seller;
@@ -968,7 +969,7 @@ class DocumentController extends Controller
             $hotel_rent_items = HotelRentItem::whereIn('id', $request->hotel_rent_item_ids)->get();
             foreach ($hotel_rent_items as $item) {
                 $item->payment_status = "Pagado";
-                $item->sale_note_id = $this->sale_note->id;
+                $item->document = $document->id;
                 $item->checkout_date = date('Y-m-d');
                 $item->checkout_time = date('H:i:s');
                 $item->save();
@@ -980,20 +981,30 @@ class DocumentController extends Controller
         }
         if($request->hotel_rent_id){
             $hotel_rent= HotelRent::findOrFail($request->hotel_rent_id);
-            $hotel_rent_items = $hotel_rent->items;
-            foreach ($hotel_rent_items as $item) {
-                $item->payment_status = "Pagado";
-                $table = Table::where('id', $item->table_id)->first();
-                $table->status_table_id = 5;
-                $table->save();
-                $item->checkout_date = date('Y-m-d');
-                $item->checkout_time = date('H:i:s');
-                $item->save();
+
+            if($request->is_advance){
+                HotelRentDocument::create([
+                    'hotel_rent_id' => $hotel_rent->id,
+                    'document_id' => $document->id,
+                ]);
+            }else{
+                $hotel_rent_items = $hotel_rent->items;
+                foreach ($hotel_rent_items as $item) {
+                    $item->payment_status = "Pagado";
+                    $table = Table::where('id', $item->table_id)->first();
+                    $table->status_table_id = 5;
+                    $table->save();
+                    $item->checkout_date = date('Y-m-d');
+                    $item->checkout_time = date('H:i:s');
+                    $item->save();
+                }
+                $hotel_rent->payment_status = "Pagado";
+                $hotel_rent->document_id = $document->id;
+                $hotel_rent->paid = 1;
+                $hotel_rent->save();
             }
-            $hotel_rent->payment_status = "Pagado";
-            $hotel_rent->document_id = $document->id;
-            $hotel_rent->paid = 1;
-            $hotel_rent->save();
+         
+        
         }
         if (count($ids) != 0) {
             Orden::whereIn('id', $ids)->update(['document_id' => $document->id]);
