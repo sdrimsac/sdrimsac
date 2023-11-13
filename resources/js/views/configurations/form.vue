@@ -933,7 +933,7 @@
                                                 >Números de whatsapp para enviar
                                                 actividad
                                                 <a
-                                                v-if="form.number_activity"
+                                                    v-if="form.number_activity"
                                                     href="#"
                                                     @click.prevent="
                                                         addNumberWhatsapp
@@ -946,9 +946,9 @@
                                                 v-model="form.number_activity"
                                             >
                                             </el-input>
-                                            <small >
+                                            <small>
                                                 <el-tag
-                                                class="mt-1"
+                                                    class="mt-1"
                                                     v-for="(number,
                                                     idx) in numbers"
                                                     :key="idx"
@@ -959,7 +959,7 @@
                                                         )
                                                     "
                                                 >
-                                                {{number.number}}
+                                                    {{ number.number }}
                                                 </el-tag>
                                             </small>
                                         </div>
@@ -1374,7 +1374,7 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                     <div class="col-md-6 mt-4">
+                                    <div class="col-md-6 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
                                                 >Tratamiento comercial
@@ -1391,7 +1391,9 @@
                                             </label>
 
                                             <el-switch
-                                                v-model="form.commercial_treatments"
+                                                v-model="
+                                                    form.commercial_treatments
+                                                "
                                                 active-text="Si"
                                                 inactive-text="No"
                                                 @change="submit"
@@ -1401,7 +1403,8 @@
                                     <div class="col-md-6 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
-                                                >Servicio en todos los establecimientos
+                                                >Servicio en todos los
+                                                establecimientos
                                                 <el-tooltip
                                                     class="item"
                                                     effect="dark"
@@ -1415,13 +1418,111 @@
                                             </label>
 
                                             <el-switch
-                                                v-model="form.create_service_all_warehouse"
+                                                v-model="
+                                                    form.create_service_all_warehouse
+                                                "
                                                 active-text="Si"
                                                 inactive-text="No"
                                                 @change="submit"
                                             ></el-switch>
                                         </div>
                                     </div>
+                                    <div class="col-md-6 mt-4">
+                                        <div class="form-group">
+                                            <label class="control-label w-100"
+                                                >Requerir número de operación
+                                                (YAPE/PLIN)
+                                                <el-tooltip
+                                                    class="item"
+                                                    effect="dark"
+                                                    content="Número de operación obligatorio para emitir comprobante de pago"
+                                                    placement="top-start"
+                                                >
+                                                    <i
+                                                        class="fa fa-info-circle"
+                                                    ></i>
+                                                </el-tooltip>
+                                            </label>
+
+                                            <el-switch
+                                                v-model="form.require_code"
+                                                active-text="Si"
+                                                inactive-text="No"
+                                                @change="submit"
+                                            ></el-switch>
+                                        </div>
+                                    </div>
+                                    <template v-if="form.hotels">
+                                        <div class="col-md-6 mt-4">
+                                            <div class="form-group">
+                                                <label
+                                                    class="control-label w-100"
+                                                    >Tiempo para limpiar la
+                                                    habitación
+                                                </label>
+                                                <el-input-number
+                                                    @change="submit"
+                                                    v-model="form.time_to_clean"
+                                                >
+                                                </el-input-number>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mt-4">
+                                            <div class="form-group">
+                                                <label
+                                                    class="control-label w-100"
+                                                    >Tiempo de alarma de
+                                                    alquileres por vencer
+                                                </label>
+
+                                                <el-input-number
+                                                    @change="submit"
+                                                    v-model="form.alarm_to_end"
+                                                >
+                                                </el-input-number>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mt-4">
+                                            <div class="form-group">
+                                                <label
+                                                    class="control-label w-100"
+                                                    >Tiempo para el calculo del
+                                                    inicio del dia
+                                                </label>
+
+                                                <el-time-picker
+                                                    style="width: 100%;"
+                                                    value-format="HH:mm:ss"
+                                                    :format="'hh:mm A'"
+                                                    :picker-options="{
+                                                        format: 'hh:mm A' // Utiliza 'hh' para las horas en formato de 12 horas y 'A' para AM/PM
+                                                    }"
+                                                    timezone="America/Lima"
+                                                    v-model="form.time_to_enter"
+                                                ></el-time-picker>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mt-4">
+                                            <div class="form-group">
+                                                <label
+                                                    class="control-label w-100"
+                                                    >Tiempo para el calculo del
+                                                    final del dia
+                                                </label>
+
+                                                <el-time-picker
+                                                    style="width: 100%;"
+                                                    value-format="HH:mm:ss"
+                                                    :format="'hh:mm A'"
+                                                    :picker-options="{
+                                                        format: 'hh:mm A' // Utiliza 'hh' para las horas en formato de 12 horas y 'A' para AM/PM
+                                                    }"
+                                                    timezone="America/Lima"
+                                                    v-model="form.time_to_leave"
+                                                ></el-time-picker>
+                                            </div>
+                                        </div>
+                                    </template>
                                 </div>
                             </el-tab-pane>
                             <el-tab-pane label="Impresion">
@@ -1489,7 +1590,7 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                          <!-- <div class="col-md-6 mt-4">
+                                    <!-- <div class="col-md-6 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
                                                 >Entorno Hotel</label
@@ -1628,21 +1729,18 @@
             >
                 <div class="row mt-2">
                     <div class="col-12">
-                        <el-input 
-                        :maxlength="9"
-                        v-model="numberWhatsapp"> </el-input>
+                        <el-input :maxlength="9" v-model="numberWhatsapp">
+                        </el-input>
                     </div>
-
-                   
                 </div>
-                 <span slot="footer" class="dialog-footer">
-                        <el-button @click="showAddNumberwhatsapp = false"
-                            >Cancelar</el-button
-                        >
-                        <el-button type="primary" @click="sendNumberWhatsapp"
-                            >Agregar</el-button
-                        >
-                    </span>
+                <span slot="footer" class="dialog-footer">
+                    <el-button @click="showAddNumberwhatsapp = false"
+                        >Cancelar</el-button
+                    >
+                    <el-button type="primary" @click="sendNumberWhatsapp"
+                        >Agregar</el-button
+                    >
+                </span>
             </el-dialog>
         </div>
     </div>
@@ -1696,12 +1794,14 @@ export default {
         getNumbers() {
             this.$http.get("/whatsapp/numbers").then(response => {
                 this.numbers = response.data.data;
-                console.log("🚀 ~ file: form.vue:1633 ~ this.$http.get ~ this.numbers:", this.numbers)
-                
+                console.log(
+                    "🚀 ~ file: form.vue:1633 ~ this.$http.get ~ this.numbers:",
+                    this.numbers
+                );
             });
         },
         async removeNumberWhatsapp(idx) {
-            let {number} = this.numbers[idx];
+            let { number } = this.numbers[idx];
             const response = await this.$http.post("/whatsapp/remove", {
                 number
             });
@@ -1715,26 +1815,26 @@ export default {
             }
         },
         async sendNumberWhatsapp() {
-           try{
-             const response = await this.$http.post("/whatsapp/save", {
-                number: this.numberWhatsapp
-            });
-            if (response.status == 200) {
-                this.$toast.success("Número agregado correctamente");
-                this.showAddNumberwhatsapp = false;
-                this.numberWhatsapp = null;
-                this.getNumbers();
-            } else {
-                this.$toast.error("Ocurrió un error al agregar el número");
-            }
-           }catch(e){
-                let {message} = e.response.data;
-                if(message){
-                    this.$toast.error(message);
-                }else{
+            try {
+                const response = await this.$http.post("/whatsapp/save", {
+                    number: this.numberWhatsapp
+                });
+                if (response.status == 200) {
+                    this.$toast.success("Número agregado correctamente");
+                    this.showAddNumberwhatsapp = false;
+                    this.numberWhatsapp = null;
+                    this.getNumbers();
+                } else {
                     this.$toast.error("Ocurrió un error al agregar el número");
                 }
-           }
+            } catch (e) {
+                let { message } = e.response.data;
+                if (message) {
+                    this.$toast.error(message);
+                } else {
+                    this.$toast.error("Ocurrió un error al agregar el número");
+                }
+            }
         },
         addNumberWhatsapp() {
             this.showAddNumberwhatsapp = true;

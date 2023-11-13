@@ -4,6 +4,7 @@ namespace Modules\Restaurant\Http\Resources;
 
 use App\Models\Tenant\HotelRent;
 use App\Models\Tenant\HotelRentDocument;
+use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Modules\Restaurant\Models\Orden;
 
@@ -28,12 +29,17 @@ class HotelRentItemResource extends JsonResource
             if($is_sale_note){
                 $url = "sale-notes/print/$external_id/ticket";
             }
+            $date_of_issue = $document->date_of_issue;
+            //si date_of_issue es string lo convierto a date
+            if(is_string($date_of_issue)){
+                $date_of_issue = Carbon::parse($date_of_issue);
+            }
             return [
                 'id' => $row->id,
                 'number' => $document->number_full,
                 'pdf' => url($url),
                 'total' => $document->total,
-                'date_of_issue' => $document->date_of_issue->format('Y-m-d'),
+                'date_of_issue' => $date_of_issue->format('Y-m-d'),
                
             ];
         })

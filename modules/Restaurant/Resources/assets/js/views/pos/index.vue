@@ -89,7 +89,7 @@
                                     :key="idx"
                                     style="margin-right: 2px;margin-left: 2px;"
                                     type="button"
-                                    class="btn  btn-warning"
+                                    class="btn  btn-dirty"
                                     @click="isCleaned(t.id)"
                                 >
                                     <span>{{ t.time_to_finish }}</span>

@@ -110,7 +110,7 @@
                     </el-tooltip>
                     <el-tooltip>
                         <div slot="content">
-                            Reservadas ({{all_reserves.length}})
+                            Reservadas ({{ all_reserves.length }})
                         </div>
 
                         <button
@@ -272,7 +272,7 @@
                         >
                         </el-input>
                     </div>
-                    <div class="col-md-6 col-lg-3 col-sm-6 col-6">
+                    <div class="col-md-6 col-lg-6 col-sm-6 col-6">
                         <button
                             type="button"
                             class="btn btn-success btn-sm"
@@ -292,6 +292,15 @@
                             style="margin-top:20px;"
                         >
                             Pagar habitación
+                        </button>
+
+                        <button
+                            @click="cancelRoom"
+                            type="button"
+                            class="btn btn-danger  btn-sm"
+                            style="margin-top:20px;"
+                        >
+                            Cancelar alquiler
                         </button>
                     </div>
                     <!-- <div class="col-3 d-flex flex-column p-2 bg-warning rounded justify-content-center align-items-center">
@@ -447,11 +456,13 @@
                             :class="
                                 `${
                                     table.is_cleaning
-                                        ? 'btn-warning'
+                                        ? 'btn-dirty'
                                         : table.status_table_id == 1
                                         ? 'btn-free'
                                         : table.status_table_id == 2
                                         ? 'btn-danger'
+                                        : table.status_table_id == 3
+                                        ? 'btn-black'
                                         : table.status_table_id == 5
                                         ? 'btn-dirty'
                                         : 'btn-warning'
@@ -698,8 +709,11 @@
                     </div></template
                 >
                 <template v-else>
-                    <table class="table table-striped " v-if="all_reserves.length > 0">
-                        <thead >
+                    <table
+                        class="table table-striped "
+                        v-if="all_reserves.length > 0"
+                    >
+                        <thead>
                             <tr>
                                 <th scope="col" class="h5">
                                     #
@@ -728,9 +742,9 @@
                                 <td>{{ reserve.checkin_time }}</td>
                                 <td>
                                     {{ reserve.customer_name }}
-                                    <br>
+                                    <br />
                                     <small>
-                                        {{reserve.customer_number}}
+                                        {{ reserve.customer_number }}
                                     </small>
                                 </td>
                                 <td>
@@ -805,6 +819,9 @@
     </el-dialog>
 </template>
 <style>
+.btn-black {
+    background-color: #000;
+}
 .btn-free {
     background-color: #91d24c;
 }
@@ -862,6 +879,30 @@ export default {
         };
     },
     methods: {
+        async cancelRoom() {
+            try {
+                await this.$confirm(
+                    "¿Está seguro de cancelar la habitación?",
+                    "Confirmación",
+                    {
+                        confirmButtonText: "Aceptar",
+                        cancelButtonText: "Cancelar",
+                        type: "warning"
+                    }
+                );
+                const response = await this.$http(
+                    `/caja/rooms/cancel/${this.currentRoom.id}`
+                );
+                if (response.status == 200) {
+                    this.$toast({
+                        type: "success",
+                        message: "Habitación cancelada"
+                    });
+                    this.close2();
+                    this.getTables();
+                }
+            } catch (e) {}
+        },
         filterByReserve() {
             this.showReserves = true;
         },
@@ -1248,6 +1289,8 @@ export default {
                                     ? "btn-danger"
                                     : s.id == 5
                                     ? "btn-dirty"
+                                    : s.id == 3
+                                    ? "btn-black"
                                     : "btn-warning"
                         }));
 

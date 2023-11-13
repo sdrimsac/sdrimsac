@@ -40,8 +40,11 @@ use Modules\Restaurant\Models\BoxesDetail;
 
 class BoxesController extends Controller
 {
+
+    protected $configuration;
     public function __construct()
     {
+        $this->configuration = Configuration::first();
         //ini_set('memory_limit', '4096M');
     }
     function get_receipts($cash_id)
@@ -74,22 +77,21 @@ class BoxesController extends Controller
                     $method = $box->method;
                 }
                 $amount = $row->amount;
-                if($sale_note_id){
+                if ($sale_note_id) {
                     $paid = (bool) $row->sale_note->paid;
                     $amount_payment = SaleNotePayment::where('sale_note_id', $sale_note_id)->sum('payment');
                     $remaining = number_format($row->sale_note->total - $amount_payment, 2, ".", "");
                 }
-                if($document_id){
+                if ($document_id) {
                     $amount_payment = DocumentPayment::where('document_id', $document_id)->sum('payment');
                     $remaining = number_format($row->document->total - $amount_payment, 2, ".", "");
-                    if($remaining == 0){
+                    if ($remaining == 0) {
                         $paid = true;
-                    }else{
+                    } else {
                         $paid = false;
                     }
-
                 }
-             
+
                 return
                     [
                         "id" => $row->id,
@@ -227,6 +229,19 @@ class BoxesController extends Controller
             "documents" => $documents_credit
         ];
     }
+    function get_category($item)
+    {
+        $hotels = $this->configuration->hotels;
+        if ($hotels) {
+            $item = $item->item;
+            $description = $item->description;
+            if (mb_stripos($description, 'HABITACIÓN') !== false) {
+                return "HABITACIONES";
+            }
+            
+        }
+        return isset($item->item->category) ?  $item->item->category->name : "OTROS";
+    }
     function get_items_from_box($cash_id)
     {
 
@@ -278,7 +293,8 @@ class BoxesController extends Controller
                             if (gettype($id_exist) == "integer") {
                                 $all_items[$id_exist] = [
                                     "price" => $item->unit_price,
-                                    "category" => isset($item->item->category) ?  $item->item->category->name : "OTROS",
+                                    // "category" => isset($item->item->category) ?  $item->item->category->name : "OTROS",
+                                    "category" => $this->get_category($item),
                                     "description" => $data['description'],
                                     "quantity" => $all_items[$id_exist]["quantity"] + $item->quantity,
                                     "total" => $all_items[$id_exist]["total"] + $item->total
@@ -288,7 +304,9 @@ class BoxesController extends Controller
                                     "price" => $item->unit_price,
                                     "description" => $data['description'],
                                     "quantity" => $item->quantity,
-                                    "category" => isset($item->item->category) ?  $item->item->category->name : "OTROS",
+                                    "category" => $this->get_category($item),
+
+                                    // "category" => isset($item->item->category) ?  $item->item->category->name : "OTROS",
                                     "total" => $item->total
                                 ];
                             }
@@ -326,7 +344,8 @@ class BoxesController extends Controller
                             $all_items[$id_exist] = [
                                 "price" => $data["sale_unit_price"],
                                 "description" => $data['description'],
-                                "category" => isset($item->item->category) ?  $item->item->category->name : "OTROS",
+                                "category" => $this->get_category($item),
+                                // "category" => isset($item->item->category) ?  $item->item->category->name : "OTROS",
                                 "quantity" => $all_items[$id_exist]["quantity"] + $item->quantity,
                                 "total" => $all_items[$id_exist]["total"] + $item->total
                             ];
@@ -334,7 +353,8 @@ class BoxesController extends Controller
                             $all_items[] = [
                                 "price" => $data["sale_unit_price"],
                                 "description" => $data['description'],
-                                "category" => isset($item->item->category) ?  $item->item->category->name : "OTROS",
+                                "category" => $this->get_category($item),
+                                // "category" => isset($item->item->category) ?  $item->item->category->name : "OTROS",
                                 "quantity" => $item->quantity,
                                 "total" => $item->total
                             ];
@@ -354,6 +374,18 @@ class BoxesController extends Controller
             return count($a) < count($b);
         });
 
+        //grouped es un array de arrays, y quisiera que cojas un elemento de cada array 
+        //y de este obtengas la key "category" si esta es "HABITACIONES" entonces colocas ese array en
+        //primera posicion del array grouped
+        $values_grouped = array_values($grouped);
+        $cat_habitaciones = array_filter($values_grouped, function ($item) {
+            return $item[0]["category"] == "HABITACIONES";
+        });
+        $grouped = array_merge($cat_habitaciones, array_filter($grouped, function ($item) {
+            return $item[0]["category"] != "HABITACIONES";
+        }));
+
+
         return [
             "grouped" => $grouped,
             "items" => $all_items,
@@ -364,6 +396,45 @@ class BoxesController extends Controller
 
 
 
+    public function validation_methods(Request $request)
+    {
+        $payments = $request->payments;
+        $message = '';
+        $pass = true;
+        foreach ($payments as $payment) {
+            $method = $payment['method'];
+            $operation_number = $payment['operation_number'];
+
+            $exist = Box::where('method', $method)
+                ->where('operation_number', $operation_number)
+                ->first();
+            if ($exist) {
+                $message .= $operation_number . ' (' . $method . ')' . '|';
+                $pass = false;
+                break;
+            }
+        }
+
+        if (substr_count($message, '|') > 1) {
+            $message = 'Los códigos: ' . $message;
+        } else {
+            $message = 'El código: ' . $message;
+        }
+        if (substr($message, -1) == '|') {
+            $message = substr($message, 0, -1);
+        }
+
+        if ($pass) {
+            return [
+                'success' => true,
+            ];
+        } else {
+            return [
+                'success' => false,
+                'message' => $message . ' ya existe',
+            ];
+        }
+    }
     public function cashes()
     {
         $userid = auth()->user()->id;
@@ -784,8 +855,8 @@ class BoxesController extends Controller
         // $sales_cash_records = $sales_cash->get();
 
         //TARJETA: NIUBIZ
-      
-        
+
+
 
         $sales_izypay = Box::where('type', '1')->where('method', 'TARJETA: IZYPAY')->where('expenses', 0)->where('incomes', 0)->where('state', 0)->where('cash_id', $cash_id)->OrderBy('date', 'asc');
         $sales_izypay_sum = $sales_izypay->sum('amount');
@@ -795,7 +866,7 @@ class BoxesController extends Controller
         $sales_niubiz_sum = $sales_niubiz->sum('amount');
         $sales_niubiz_quantity = $sales_niubiz->count();
 
-        
+
         $sales_openpay = Box::where('type', '1')->where('method', 'TARJETA: OPENPAY')->where('expenses', 0)->where('incomes', 0)->where('state', 0)->where('cash_id', $cash_id)->OrderBy('date', 'asc');
         $sales_openpay_sum = $sales_openpay->sum('amount');
         $sales_openpay_quantity = $sales_openpay->count();
@@ -934,7 +1005,7 @@ class BoxesController extends Controller
                 "quantity" => $sales_openpay_quantity,
                 "sum" => $sales_openpay_sum,
             ],
-            
+
             "bbva" => [
                 "desc" => "BBVA",
                 "quantity" => $sales_bbva_quantity,
@@ -959,24 +1030,22 @@ class BoxesController extends Controller
 
 
         ];
-        $banks = Box::where('type','1')
-        ->whereNotNull('bank_account_id')
-        ->where('cash_id', $cash_id)
-        
-        ;
+        $banks = Box::where('type', '1')
+            ->whereNotNull('bank_account_id')
+            ->where('cash_id', $cash_id);
         $total_coins_bank = $banks->sum('amount');
-        
+
         $bank_accounts = $banks->get();
-        foreach($bank_accounts as $bank_account){
+        foreach ($bank_accounts as $bank_account) {
             $method = $bank_account->method;
-            if(isset($sales_detail[$method])){
+            if (isset($sales_detail[$method])) {
                 $sales_detail[$method]["quantity"] += 1;
                 $sales_detail[$method]["sum"] += $bank_account->amount;
-            }else{
+            } else {
                 $bk_account = BankAccount::find($bank_account->bank_account_id);
                 $bank_description = $bk_account->bank->description;
                 $sales_detail[$method] = [
-                    "desc" =>$bank_description." ". $bank_account->method,
+                    "desc" => $bank_description . " " . $bank_account->method,
                     "quantity" => 1,
                     "sum" => $bank_account->amount,
                 ];
@@ -1636,32 +1705,30 @@ class BoxesController extends Controller
                 "sum" => $sales_scotiabank_sum,
             ],
 
-           "openpay" => [
+            "openpay" => [
                 "desc" => "Openpay",
                 "quantity" => $sales_openpay_quantity,
                 "sum" => $sales_openpay_sum,
             ],
-            
+
 
         ];
-        $banks = Box::where('type','1')
-        ->whereNotNull('bank_account_id')
-        ->where('cash_id', $cash_id)
-        
-        ;
+        $banks = Box::where('type', '1')
+            ->whereNotNull('bank_account_id')
+            ->where('cash_id', $cash_id);
         $total_coins_bank = $banks->sum('amount');
-        
+
         $bank_accounts = $banks->get();
-        foreach($bank_accounts as $bank_account){
+        foreach ($bank_accounts as $bank_account) {
             $method = $bank_account->method;
-            if(isset($sales_detail[$method])){
+            if (isset($sales_detail[$method])) {
                 $sales_detail[$method]["quantity"] += 1;
                 $sales_detail[$method]["sum"] += $bank_account->amount;
-            }else{
+            } else {
                 $bk_account = BankAccount::find($bank_account->bank_account_id);
                 $bank_description = $bk_account->bank->description;
                 $sales_detail[$method] = [
-                    "desc" =>$bank_description." ".$bank_account->method,
+                    "desc" => $bank_description . " " . $bank_account->method,
                     "quantity" => 1,
                     "sum" => $bank_account->amount,
                     "is_bank" => true,

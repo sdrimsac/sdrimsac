@@ -79,6 +79,7 @@ Route::prefix('caja')->group(function () {
         Route::get('cashes', 'BoxesController@cashes')->name('restaurant.cash');
         Route::get('ordens', 'OrdenController@index')->name('restaurant.ordens');
         Route::get('boxes/records/{id}', 'BoxesController@get_boxes');
+        Route::post('boxes/validation', 'BoxesController@validation_methods');
         Route::get('ordens/records', 'OrdenController@records');
         Route::get('ordens/listfoods/{date}', 'BoxesController@listfoods');
         Route::get('ordens/payment/{type}/{document_id}/{orderid}', 'BoxesController@paymentorden');
@@ -152,6 +153,7 @@ Route::prefix('caja')->group(function () {
         Route::get('rooms/send_to_avaible/{id}', 'TableRoomController@sendToAvaible');
         Route::get('rooms/ordenById/{id}', 'TableRoomController@ordenById');
         Route::post('rooms/store/{type}', 'TableRoomController@storeType');
+        Route::get('rooms/cancel/{id}', 'TableRoomController@cancelRoom');
         Route::post('rooms/check_reserve', 'TableRoomController@check_reserve');
         Route::get('rooms/change_room/{to}/{from}', 'TableRoomController@changeRoom');
         Route::get('rooms/record/{id}', 'TableRoomController@record');

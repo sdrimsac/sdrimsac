@@ -11,6 +11,7 @@ class HotelRent extends ModelTenant
         'user_id',
         'establishment_id',
         'customer',
+        'was_cancel',
         'observation',
         'payment_type',
         'payment_number_operation',

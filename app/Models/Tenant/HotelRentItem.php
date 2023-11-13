@@ -9,6 +9,7 @@ class HotelRentItem extends ModelTenant
     public $timestamps = false;
     protected $table = 'hotel_rent_items';
     protected $fillable = [
+        'was_cancel',
         'is_reserve',
         'advances',
         'sale_note_id',

@@ -137,10 +137,12 @@ class TableRoomController extends Controller
         ];
     }
     public function sendToclean($id)
-    {
+    {   $configuration = Configuration::first();
+        $minutes = $configuration->time_to_clean;
+        $minutes = $minutes ?? 45;
         $table = Table::find($id);
         $table->is_cleaning = true;
-        $table->cleaning_start_date = Carbon::now()->addMinutes(2);
+        $table->cleaning_start_date = Carbon::now()->addMinutes($minutes);
         $table->save();
         return [
             'success' => true,
@@ -493,6 +495,30 @@ class TableRoomController extends Controller
                 'message' => $message
             ];
         }
+    }
+    public function cancelRoom($id){
+        $hotel_rent_item = HotelRentItem::find($id);
+        $hotel_rent = $hotel_rent_item->hotel_rent;
+        $hotel_rent_item->was_cancel = true;
+        $hotel_rent_item->save();
+        $table = $hotel_rent_item->table;
+        $table->status_table_id = 5;
+        $table->save();
+        $items = $hotel_rent->items;
+        $cancel = true;
+        foreach ($items as $item) {
+            if($item->was_cancel == false){
+                $cancel = false;
+            }
+        }
+        if($cancel){
+            $hotel_rent->was_cancel = true;
+            $hotel_rent->save();
+        }
+        return [
+            'success' => true,
+            'message' => 'Habitación cancelada'
+        ];
     }
     public function storeType(Request $request, $type)
     {

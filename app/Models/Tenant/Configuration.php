@@ -10,6 +10,11 @@ use Illuminate\Support\Facades\Config;
 class Configuration extends ModelTenant
 {
     protected $fillable = [
+        'time_to_clean',
+        'alarm_to_end',
+        'time_to_enter',
+        'time_to_leave',
+        'require_code',
         'create_service_all_warehouse',
         'hotels',
         'commercial_treatments',
@@ -124,6 +129,7 @@ class Configuration extends ModelTenant
 
     ];
     protected $casts = [
+        'require_code' => 'boolean',
         'hotels' => 'boolean',
         'commercial_treatments' => 'boolean',
         'caja_actions' => 'boolean',
@@ -204,6 +210,11 @@ class Configuration extends ModelTenant
         // $skins = Skin::all();
         $skins = [];
         return [
+            'time_to_clean' =>  $this->time_to_clean,
+            'alarm_to_end' =>  $this->alarm_to_end,
+            'time_to_leave' =>  $this->time_to_leave,
+            'time_to_enter' =>  $this->time_to_enter,
+            'require_code' => (bool)$this->require_code,
             'create_service_all_warehouse' => (bool)$this->create_service_all_warehouse,
             'hotels' => (bool)$this->hotels,
             'commercial_treatments' => (bool)$this->commercial_treatments,

@@ -539,7 +539,7 @@
                                                     style="text-align:left;margin-left:5px;"
                                                 >
                                                     <el-radio-group
-                                                    class="d-flex"
+                                                        class="d-flex"
                                                         @change="
                                                             calculateCharge
                                                         "
@@ -634,22 +634,24 @@
                                                     form.method_pay == 'PLIN'
                                             "
                                         >
-                                          <div class="col-md-6 col-lg-6 col-12">
-                                              <label
-                                                class="control-label text-left  d-flex align-items-start justify-content-start"
+                                            <div
+                                                class="col-md-6 col-lg-6 col-12"
                                             >
-                                                N° de operación
-                                            </label>
-                                            <el-input
-                                                v-model="operation_number"
-                                            >
-                                                <template slot="prepend"
-                                                    ><i
-                                                        class="fa fa-mobile"
-                                                    ></i>
-                                                </template>
-                                            </el-input>
-                                          </div>
+                                                <label
+                                                    class="control-label text-left  d-flex align-items-start justify-content-start"
+                                                >
+                                                    N° de operación
+                                                </label>
+                                                <el-input
+                                                    v-model="operation_number"
+                                                >
+                                                    <template slot="prepend"
+                                                        ><i
+                                                            class="fa fa-mobile"
+                                                        ></i>
+                                                    </template>
+                                                </el-input>
+                                            </div>
                                         </div>
                                         <div class="row">
                                             <div
@@ -1755,7 +1757,7 @@ export default {
             return array;
         },
         calculateCharge() {
-            if(this.form.original_total == undefined){
+            if (this.form.original_total == undefined) {
                 this.form.original_total = this.form.total;
             }
             let { amount, credit_type } = this.chargeCredit;
@@ -1947,7 +1949,10 @@ export default {
             }, 500);
         },
         async updateAllCustomers(personsFromServer) {
-            console.log("🚀 ~ file: payment.vue:1950 ~ updateAllCustomers ~ personsFromServer:", personsFromServer)
+            console.log(
+                "🚀 ~ file: payment.vue:1950 ~ updateAllCustomers ~ personsFromServer:",
+                personsFromServer
+            );
             let ids = this.all_customers.map(c => c.id);
             let persons = [];
 
@@ -1957,17 +1962,20 @@ export default {
                     persons.push(person);
                 }
             }
-            persons = [...persons, ...this.all_customers]
+            persons = [...persons, ...this.all_customers];
             let newData = [];
             if (this.clientSaleNoteNumber || this.form.hotel_customer_number) {
                 newData = personsFromServer;
             } else {
                 newData = [...this.all_customers, ...persons];
             }
-    console.log(persons);
+            console.log(persons);
             if (persons.length != 0) {
                 await this.$emit("update:all_customers", newData);
-                console.log("🚀 ~ file: payment.vue:1968 ~ updateAllCustomers ~ newData:", newData)
+                console.log(
+                    "🚀 ~ file: payment.vue:1968 ~ updateAllCustomers ~ newData:",
+                    newData
+                );
                 if (newData.length == 1) {
                     this.value = newData[0].id;
                     this.form.customer_id = newData[0].id;
@@ -2608,7 +2616,7 @@ export default {
 
                 this.calculateCharge();
             }
-            if (method_pay !== "Yape" || method_pay !== "PLIN"){
+            if (method_pay !== "Yape" || method_pay !== "PLIN") {
                 this.operation_number = null;
             }
         },
@@ -3051,9 +3059,35 @@ export default {
 
             return pass;
         },
+        verifyHasOperationNumber() {
+            //itera sobre this.currentPayments si el method es "Yape" o "PLIN" verifica que tengan el operation_number, en caso que no regresa un error
+            let pass = true;
+            this.currentPayments.forEach(p => {
+                if (p.method == "Yape" || p.method == "PLIN") {
+                    if (!p.operation_number) {
+                        this.$toast.error(
+                            "Debe ingresar el número de operación"
+                        );
+                        pass = false;
+                    }
+                }
+            });
+            return pass;
+        },
+        async validOperationNumber(form) {
+            const response = await this.$http.post(
+                "/caja/boxes/validation",
+                form
+            );
+            const { success, message } = response.data;
+            if (success) {
+                return true;
+            } else {
+                this.$toast.error(message);
+                return false;
+            }
+        },
         async clickPayment(form) {
-  
-
             if (!this.checkBankAccount()) {
                 return;
             }
@@ -3167,6 +3201,44 @@ export default {
                 form.payment_condition_id = "02";
             } else {
                 this.addPayment();
+                if (this.configuration.require_code) {
+                    if (!this.verifyHasOperationNumber()) {
+                        this.currentPayments.pop();
+                        this.enterAmount();
+                        return;
+                    } else {
+                        if (
+                            this.currentPayments
+                                .filter(
+                                    p =>
+                                        p.method == "Yape" || p.method == "PLIN"
+                                )
+                                .map(p => ({
+                                    method: p.method,
+                                    operation_number: p.operation_number
+                                })).length > 0
+                        ) {
+                            if (
+                                !(await this.validOperationNumber({
+                                    payments: this.currentPayments
+                                        .filter(
+                                            p =>
+                                                p.method == "Yape" ||
+                                                p.method == "PLIN"
+                                        )
+                                        .map(p => ({
+                                            method: p.method,
+                                            operation_number: p.operation_number
+                                        }))
+                                }))
+                            ) {
+                                this.currentPayments.pop();
+                                this.enterAmount();
+                                return;
+                            }
+                        }
+                    }
+                }
             }
             if (this.checkLimitReceipt()) {
                 this.$toast.error(
