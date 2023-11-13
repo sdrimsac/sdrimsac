@@ -250,7 +250,7 @@ class TableRoomController extends Controller
                 'observation' => '',
                 'food' => $service,
                 'quantity' => 1,
-                'price' => number_format($service->price, 2),
+                'price' => $service->price,
             ]);
         }
         return compact(
