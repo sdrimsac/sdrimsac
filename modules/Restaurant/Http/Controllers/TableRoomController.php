@@ -126,6 +126,7 @@ class TableRoomController extends Controller
             'message' => 'Habitación disponible'
         ];
     }
+
     public function sendToMaintenance($id)
     {
         $table = Table::find($id);
@@ -137,7 +138,8 @@ class TableRoomController extends Controller
         ];
     }
     public function sendToclean($id)
-    {   $configuration = Configuration::first();
+    {
+        $configuration = Configuration::first();
         $minutes = $configuration->time_to_clean;
         $minutes = $minutes ?? 45;
         $table = Table::find($id);
@@ -308,7 +310,7 @@ class TableRoomController extends Controller
             'observation' => '',
             'food' => $service,
             'quantity' => 1,
-            'price' => number_format($service->price, 2),
+            'price' => $service->price,
         ]);
         if ($extra_service) {
             $ordens_items->push([
@@ -316,7 +318,7 @@ class TableRoomController extends Controller
                 'observation' => '',
                 'food' => $extra_service,
                 'quantity' => 1,
-                'price' => number_format($extra_service->price, 2),
+                'price' => $extra_service->price,
             ]);
         }
         if ($single_room) {
@@ -425,6 +427,25 @@ class TableRoomController extends Controller
         $orden = Orden::find($id);
         return compact('orden');
     }
+    function getDateAndTimeToLeave($date, $time, $duration)
+    {
+        $configuration = Configuration::first();
+        $time_to_leave = $configuration->time_to_leave;
+        $time_to_enter = $configuration->time_to_enter;
+        $time_to_enter =  Carbon::parse($time_to_leave)
+            ->setTimezone('America/Lima')
+            ->format('H:i:s');
+        $time_to_enter =  Carbon::parse($time_to_enter)
+            ->setTimezone('America/Lima')
+            ->format('H:i:s');
+        $checkout_date_estimated = null;
+        $checkout_time_estimated = null;
+        //si $time_to_enter es menor $time se agrega se le resta uno a $duration
+        if ($time_to_enter < $time) {
+            $duration -= 1;
+            
+        }
+    }
     public function setGuess(Request $request)
     {
         //     'supplier' => PersonInput::set($inputs['supplier_id']),
@@ -455,6 +476,7 @@ class TableRoomController extends Controller
                 $checkin_time = Carbon::parse($room['checkin_time'])
                     ->setTimezone('America/Lima')
                     ->format('H:i:s');
+                // $date_estimate_out = $this->getDateAndTimeToLeave($checkin_date, $checkin_time, $room['duration']);
                 $hotel_rent_item = new HotelRentItem;
                 $hotel_rent_item->hotel_rent_id = $hotel_rent->id;
                 $hotel_rent_item->table_id = $room['table_id'];
@@ -496,7 +518,8 @@ class TableRoomController extends Controller
             ];
         }
     }
-    public function cancelRoom($id){
+    public function cancelRoom($id)
+    {
         $hotel_rent_item = HotelRentItem::find($id);
         $hotel_rent = $hotel_rent_item->hotel_rent;
         $hotel_rent_item->was_cancel = true;
@@ -507,11 +530,11 @@ class TableRoomController extends Controller
         $items = $hotel_rent->items;
         $cancel = true;
         foreach ($items as $item) {
-            if($item->was_cancel == false){
+            if ($item->was_cancel == false) {
                 $cancel = false;
             }
         }
-        if($cancel){
+        if ($cancel) {
             $hotel_rent->was_cancel = true;
             $hotel_rent->save();
         }
@@ -589,7 +612,7 @@ class TableRoomController extends Controller
         $towers = Tower::where('active', true)->get();
         $floors = Floor::where('active', true)->get();
         $status = StatusTable::where('active', true)->get();
-        $reserves = HotelRentItem::where('is_reserve', true)->orderBy('checkin_date','desc')->orderBy('checkin_time','desc')
+        $reserves = HotelRentItem::where('is_reserve', true)->orderBy('checkin_date', 'desc')->orderBy('checkin_time', 'desc')
             ->get()
             ->transform(function ($rent) {
                 return [
@@ -601,7 +624,7 @@ class TableRoomController extends Controller
                     'tower' => $rent->table->floor->tower->name,
                 ];
             });
-        return compact('reserves','tables', 'towers', 'floors', 'tables_types', 'status');
+        return compact('reserves', 'tables', 'towers', 'floors', 'tables_types', 'status');
     }
     public function get_ordens($id)
     {
