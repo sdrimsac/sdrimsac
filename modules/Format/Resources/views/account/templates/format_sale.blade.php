@@ -48,6 +48,9 @@
             IMPORTE TOTAL
         </td>
         <td class="border-left font-weight">
+            DESCUENTO
+        </td>
+        <td class="border-left font-weight">
             ISC
         </td>
         <td class="border-left font-weight">VENTA DIFERIDA</td>
@@ -121,6 +124,10 @@
             </td>
             <td class="border-left">
                 {{ in_array($row['document_type_id'], ['01', '03']) && in_array($row['state_type_id'], ['09', '11']) ? 0 : $row['total_unaffected'] }}
+            </td>
+            <td class="border-left">
+                {{$row['total_discount']}}
+
             </td>
             <td class="border-left">
                 {{ in_array($row['document_type_id'], ['01', '03']) && in_array($row['state_type_id'], ['09', '11']) ? 0 : $row['total_plastic_bag_taxes'] }}
