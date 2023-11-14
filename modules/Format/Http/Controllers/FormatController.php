@@ -140,6 +140,7 @@ class FormatController extends Controller
                                         'total_unaffected' => $row->total_unaffected,
                                         'total_plastic_bag_taxes' => $row->total_plastic_bag_taxes,
                                         'total_isc' => $row->total_isc,
+                                        'total_discount' => $row->total_discount,
                                         'total_igv' => $row->total_igv,
                                         'total' => $row->total,
                                         'exchange_rate_sale' => $row->exchange_rate_sale,
