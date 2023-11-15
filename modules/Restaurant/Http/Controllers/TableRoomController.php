@@ -3,11 +3,13 @@
 namespace Modules\Restaurant\Http\Controllers;
 
 use App\CoreFacturalo\Requests\Inputs\Common\PersonInput;
+use App\CoreFacturalo\Services\Models\Person;
 use App\Models\Tenant\Configuration;
 use App\Models\Tenant\HotelRent;
 use App\Models\Tenant\HotelRentItem;
 use App\Models\Tenant\HotelRentItemPerson;
 use App\Models\Tenant\Item;
+use App\Models\Tenant\Person as TenantPerson;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -660,11 +662,85 @@ class TableRoomController extends Controller
                     'customer_number' => $rent->hotel_rent->customer->number,
                     'room_number' => $rent->table->number,
                     'room_state' => $rent->table->status_table->description,
+                    'room_state_id' => $rent->table->status_table_id,
                     'cleaning' => $rent->table->is_cleaning,
                     'tower' => $rent->table->floor->tower->name,
+                    'id' => $rent->id,
+                    'hotel_rent_id' => $rent->hotel_rent_id,
                 ];
             });
         return compact('reserves', 'tables', 'towers', 'floors', 'tables_types', 'status');
+    }
+    function transformCustomer($row){
+        return [
+            'id' => $row->id,
+            'description' => $row->number . ' - ' . $row->name,
+            'name' => $row->name,
+            'number' => $row->number,
+            'identity_document_type_id' => $row->identity_document_type_id,
+            'identity_document_type_code' => $row->identity_document_type->code,
+            'addresses' => $row->addresses,
+            'address' =>  $row->address,
+            'seller_id' =>  $row->seller_id,
+            'phone' => $row->telephone,
+        ];
+    }
+    function transformHotelRentItem($item){
+
+    }
+    public function set_reserve_date(Request $request){
+        $id = $request->input('id');
+        $checkin_date = Carbon::parse($request->input('checkin_date'))
+            ->setTimezone('America/Lima')
+            ->format('Y-m-d');
+        $checkin_time = Carbon::parse($request->input('checkin_time'))
+            ->setTimezone('America/Lima')
+            ->format('H:i:s');
+        $hotel_rent_item = HotelRentItem::find($id);
+        $hotel_rent_item->checkin_date = $checkin_date;
+        $hotel_rent_item->checkin_time = $checkin_time;
+        $hotel_rent_item->save();
+        return [
+            'success' => true,
+            'message' => 'Fecha de reserva actualizada'
+        ];
+    }
+    public function get_hotel_rent($id){
+        $hotel_rent = HotelRent::find($id);
+        $customer = $this->transformCustomer(TenantPerson::find($hotel_rent->customer_id));
+        $hotel_rent_items = $hotel_rent->items;
+        $hotel_rent_items = $hotel_rent_items->transform(function ($row) {
+            return [
+                'id' => $row->id,
+                
+            ];
+        });
+        return compact('hotel_rent_items','customer');
+    }
+    public function get_reserve_date($id){
+        $hotel_rent_item = HotelRentItem::find($id);
+        $checkin_date = Carbon::parse($hotel_rent_item->checkin_date)->format('Y-m-d');
+        $checkin_time = $hotel_rent_item->checkin_time;
+        return[
+            'checkin_date' => $checkin_date,
+            'checkin_time' => $checkin_time,
+        ];
+    }
+    public function reserve_to_occupied($id){
+        $hotel_rent_item = HotelRentItem::find($id);
+        $hotel_rent_item->is_reserve = false;
+        $checkin_date = Carbon::now()->format('Y-m-d');
+        $checkin_time = Carbon::now()->format('H:i:s');
+        $hotel_rent_item->checkin_date = $checkin_date;
+        $hotel_rent_item->checkin_time = $checkin_time;
+        $hotel_rent_item->save();
+        $table = $hotel_rent_item->table;
+        $table->status_table_id = 2;
+        $table->save();
+        return [
+            'success' => true,
+            'message' => 'Habitación ocupada'
+        ];
     }
     public function get_ordens($id)
     {

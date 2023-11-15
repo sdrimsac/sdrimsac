@@ -283,7 +283,6 @@ class Item extends ModelTenant
 
         // El nombre de producto, por defecto, sera la misma descripcion.
         // $data['name_product_pdf'] =$data['description'];
-
         return $data;
     }
     private function getLotsBySerie($warehouse, $series,  $search_item_by_series)

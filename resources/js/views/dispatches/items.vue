@@ -188,7 +188,7 @@ export default {
                 await this.$http
                     .get(`/documents/search-items`, { params })
                     .then(response => {
-                        this.items = response.data.items;
+                        this.items = response.data;
                         this.loading_search = false;
                         // this.enabledSearchItemsBarcode()
                         if (this.items.length == 0) {

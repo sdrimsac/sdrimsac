@@ -4720,6 +4720,7 @@ export default {
             this.form.seller_id = null;
             this.form.total_discount = 0;
             this.form.is_room = false;
+            this.form.reference_number = null;
             this.cancelOrden();
             if (
                 this.configuration.sales_quick == 1 ||

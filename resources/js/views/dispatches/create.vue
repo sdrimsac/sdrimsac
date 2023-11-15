@@ -22,6 +22,7 @@
                                 <el-select
                                     v-model="form.establishment_id"
                                     @change="changeEstablishment"
+                                             :disabled="pos"
                                 >
                                     <el-option
                                         v-for="(option, idx) in establishments"
@@ -50,7 +51,7 @@
                                 <el-select
                                     v-model="form.series"
                                     @change="getCorrelative"
-                                    :disabled="generalDisabledSeries()"
+                                    :disabled="pos"
                                 >
                                     <el-option
                                         v-for="(option, idx) in series"
@@ -1179,6 +1180,13 @@ export default {
                     this.form.establishment_id = _.head(this.establishments).id;
                 }
                 await this.changeEstablishment();
+                if(this.pos){
+                    let {establishment_id } = this.config.user;
+                    if(establishment_id){
+                        this.form.establishment_id = establishment_id;
+                        await this.changeEstablishment();
+                    }
+                }
                 this.changeSeries();
                 this.setDefaults();
             }

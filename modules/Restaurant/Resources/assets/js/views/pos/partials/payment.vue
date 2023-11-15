@@ -587,6 +587,7 @@
                                         >
                                             <label for="banks">
                                                 <el-checkbox
+                                                    @change="transferPayment"
                                                     v-model="
                                                         form_payment.is_bank
                                                     "
@@ -1587,6 +1588,12 @@ export default {
     },
     mounted() {},
     methods: {
+        transferPayment(){
+            let {is_bank} = this.form_payment;
+            let value = is_bank ? null:"01";
+            this.method_payments = value;
+
+        },
         changeBankAccount() {
             if (this.form_payment.is_bank) {
                 let bank_account = this.bank_accounts.find(
@@ -1871,6 +1878,12 @@ export default {
         addPayment() {
             let id = this.currentPayments.length + 1;
             let method = this.paymentsValue[this.method_payments];
+            let bank_account_id = null;
+            if(method == null && this.form_payment.is_bank){
+                let bank = this.bank_accounts.find(b => b.id == this.form.bank_account_id);
+                method = `${bank.description}-${bank.number}`;
+                bank_account_id = this.form.bank_account_id;
+            }
             if (this.form.total + 200 <= this.form.enter_amount) {
                 this.$toast.error(
                     "el monto a agregar no puede ser 200 soles mayor al pago total "
@@ -1907,6 +1920,7 @@ export default {
                     id,
                     method_payment_id: this.method_payments,
                     method,
+                    bank_account_id,
                     date,
                     amount: this.form.enter_amount,
                     operation_number: this.operation_number
@@ -1919,6 +1933,8 @@ export default {
                 }
             }
             this.operation_number = null;
+            this.form_payment.is_bank = false;
+            this.transferPayment();
         },
         customerForm(isNew) {
             if (isNew) {

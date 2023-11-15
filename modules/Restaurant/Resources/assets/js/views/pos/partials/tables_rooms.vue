@@ -772,6 +772,7 @@
                                 <th scope="col" class="h5">
                                     HABITACIÓN
                                 </th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -790,11 +791,43 @@
                                     </small>
                                 </td>
                                 <td>
-                                    {{ reserve.room_number }} {{reserve.cleaning ? ' - Limpieza' : ` - ${reserve.room_state}`}}
+                                    {{ reserve.room_number }}
+                                    {{
+                                        reserve.cleaning
+                                            ? " - Limpieza"
+                                            : ` - ${reserve.room_state}`
+                                    }}
                                     <br />
                                     <small>
                                         {{ reserve.tower }}
                                     </small>
+                                </td>
+                                <td>
+                                    <el-tooltip
+                                        v-if="reserve.room_state_id == 1"
+                                        content="Tomar habitación"
+                                    >
+                                        <button
+                                            type="button"
+                                            class="btn btn-primary btn-sm"
+                                            @click="selectReserve(reserve.id)"
+                                        >
+                                            <i class="fas fa-check"></i>
+                                        </button>
+                                    </el-tooltip>
+                                    <el-tooltip content="Editar fecha">
+                                        <button
+                                            type="button"
+                                            class="btn btn-success btn-sm"
+                                            @click="
+                                                editReserve(
+                                                    reserve.id
+                                                )
+                                            "
+                                        >
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                    </el-tooltip>
                                 </td>
                             </tr>
                         </tbody>
@@ -835,7 +868,53 @@
             :table="currentTable"
             @emitAdvances="emitAdvances"
             :isReserve="isReserve"
+            :hotelRentId="hotelRentId"
         ></room-form>
+               <el-dialog
+            :visible.sync="showEditDate"
+            append-to-body
+            width="50%"
+            title="Agregar días"
+        >
+            <div class="row m-2" v-if="roomEdit">
+                <div class="col-6">
+                    <label for="days">Fecha de reserva</label>
+                 <el-date-picker
+                            v-model="roomEdit.checkin_date"
+                            type="date"
+                            placeholder="Fecha de ingreso"
+                            size="small"
+                            style="width: 100%;"
+                            value-format="yyyy-MM-dd"
+                            :picker-options="{
+                                defaultDate: Date.now('America/Lima'),
+                                disabledDate: time => {
+                                    return time.getTime() < Date.now() - 8.64e7;
+                                }
+                            }"
+                        ></el-date-picker>
+                </div>
+                    <div class="col-6">
+                    <label for="days">Hora de reserva</label>
+                    <el-time-picker
+                            v-model="roomEdit.checkin_time"
+                            size="small"
+                            placeholder="Hora de ingreso"
+                            style="width: 100%;"
+                            value-format="HH:mm:ss"
+                            :format="'hh:mm A'"
+                            :picker-options="{
+                                format: 'hh:mm A' 
+                            }"
+                            timezone="America/Lima"
+                        ></el-time-picker>
+                </div>
+            </div>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="showEditDate = false">Cancelar</el-button>
+                <el-button type="primary" @click="editReserveDate(roomEdit.id)">Agregar</el-button>
+            </span>
+        </el-dialog>
         <el-dialog
             :visible.sync="showAddDays"
             append-to-body
@@ -884,6 +963,8 @@ export default {
     },
     data() {
         return {
+            roomEdit:null,
+            showEditDate:false,
             status: [],
             all_status: [],
             all_reserves: [],
@@ -917,10 +998,55 @@ export default {
             showAddDays: false,
             extra_time: 0,
             isChangingRoom: false,
-            showReserves: false
+            showReserves: false,
+            hotelRentId: null
         };
     },
     methods: {
+        async editReserveDate(id){
+            let form = {
+                id,
+                checkin_date:this.roomEdit.checkin_date,
+                checkin_time:this.roomEdit.checkin_time
+            }
+            const response = await this.$http.post(`/caja/rooms/set_reserve_date`,form);
+            if(response.status == 200){
+                this.$toast.success("Fecha de reserva actualizada");
+                this.showEditDate = false;
+                this.getTables();
+            }
+
+        },
+        async editReserve(id) {
+            this.roomEdit = null;
+            const response = await this.$http(`/caja/rooms/get_reserve_date/${id}`);
+            if (response.status == 200) {
+                this.roomEdit = response.data;
+                this.roomEdit.id = id;
+                this.showEditDate = true;
+            }
+
+        },
+        async selectReserve(id) {
+            try {
+                await this.$confirm(
+                    "¿Está seguro de tomar la reserva?",
+                    "Confirmación",
+                    {
+                        confirmButtonText: "Aceptar",
+                        cancelButtonText: "Cancelar",
+                        type: "warning"
+                    }
+                );
+                const response = await this.$http.get(
+                    `/caja/rooms/reserve_to_occupied/${id}`
+                );
+                if (response.status == 200) {
+                    this.$toast.successt("Reserva tomada");
+                    this.getTables();
+                }
+            } catch (e) {}
+        },
         async cancelRoom() {
             try {
                 await this.$confirm(
@@ -936,10 +1062,7 @@ export default {
                     `/caja/rooms/cancel/${this.currentRoom.id}`
                 );
                 if (response.status == 200) {
-                    this.$toast({
-                        type: "success",
-                        message: "Habitación cancelada"
-                    });
+                    this.$toast.success("Habitación cancelada");
                     this.close2();
                     this.getTables();
                 }
@@ -1157,15 +1280,13 @@ export default {
                 this.close();
             }
         },
-          async roomCleaned(id) {
-                const response = await this.$http(
-                    `/caja/rooms/cleaned/${id}`
-                );
-                if (response.status == 200) {
-                    this.getTables();
-                    this.$emit("roomWasCleaned",id);
-                }
-            },
+        async roomCleaned(id) {
+            const response = await this.$http(`/caja/rooms/cleaned/${id}`);
+            if (response.status == 200) {
+                this.getTables();
+                this.$emit("roomWasCleaned", id);
+            }
+        },
 
         async selectTable(table) {
             if (this.isChangingRoom) {
@@ -1204,15 +1325,11 @@ export default {
             } else if (table.status_table_id == 5) {
                 if (table.is_cleaning) {
                     try {
-                        await this.$confirm(
-                            "¿Terminar limpieza?",
-                            "Atención",
-                            {
-                                confirmButtonText: "Aceptar",
-                                cancelButtonText: "Cancelar",
-                                type: "warning"
-                            }
-                        );
+                        await this.$confirm("¿Terminar limpieza?", "Atención", {
+                            confirmButtonText: "Aceptar",
+                            cancelButtonText: "Cancelar",
+                            type: "warning"
+                        });
                         this.roomCleaned(table.id);
                     } catch (e) {}
                 } else {

@@ -142,7 +142,9 @@ Route::prefix('caja')->group(function () {
         Route::get('rooms/check', 'TableRoomController@check');
         Route::get('rooms/advance/{id}', 'TableRoomController@advanceDocument');
         Route::get('rooms/cleaned/{id}', 'TableRoomController@cleaned');
+        Route::get('rooms/reserve_to_occupied/{id}', 'TableRoomController@reserve_to_occupied');
         Route::get('rooms/room/{id}', 'TableRoomController@getRoom');
+        Route::get('rooms/get_hotel_rent/{id}', 'TableRoomController@get_hotel_rent');
         Route::get('rooms/records', 'TableRoomController@records');
         Route::get('rooms/add_days/{id}/{days}', 'TableRoomController@addDays');
         Route::get('rooms/tables', 'TableRoomController@get_tables');
@@ -166,6 +168,8 @@ Route::prefix('caja')->group(function () {
         Route::post('rooms/massive', 'TableRoomController@store_massive');
         Route::post('rooms/detail_table', 'TableRoomController@detail_table');
         Route::get('rooms/detail_table', 'TableRoomController@get_detail_table');
+        Route::get('rooms/get_reserve_date/{id}', 'TableRoomController@get_reserve_date');
+        Route::post('rooms/set_reserve_date', 'TableRoomController@set_reserve_date');
         //**** MESAS */
         Route::get('tables', 'TableController@index')->name('restaurant.tables');
         Route::get('tables/columns', 'TableController@columns');

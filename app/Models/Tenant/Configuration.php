@@ -309,6 +309,7 @@ class Configuration extends ModelTenant
                 'serie' => $serie,
                 'document_id' => $document_id,
                 'type' => $typeUser,
+                'establishment_id' => $establishment_id,
             ],
             'auto_print' => (bool)$this->auto_print,
             'show_service_on_pos' => (bool)$this->show_service_on_pos,

@@ -309,7 +309,9 @@
 const PersonForm = () =>
     import("../../../../../../../../resources/js/views/persons/form.vue");
 export default {
-    props: ["showDialog", "table", "isReserve"],
+    props: ["showDialog", "table", "isReserve"
+    ,"hotelRentId"
+    ],
     components: {
         PersonForm
     },
@@ -683,6 +685,7 @@ export default {
             this.keyupCustomer();
             this.initForm();
             await this.getTables();
+            await this.getHotelRent();
             if (this.table) {
                 this.defaultTable(this.table);
 
@@ -700,6 +703,16 @@ export default {
                 }
             }
             this.loading = false;
+        },
+        async getHotelRent(){
+            if(!this.hotelRentId) return;
+            
+            const response = await this.$http(`/caja/rooms/get_hotel_rent/${this.hotelRentId}`)
+            const {data} = response;
+            let {customer} = data;
+            this.customers = [customer];
+            this.all_customers = [customer];
+            this.form.customer_id = customer.id;
         },
         defaultTable(table) {
             let {
