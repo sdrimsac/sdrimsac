@@ -41,6 +41,7 @@ use Modules\Order\Models\OrderNote;
 use App\Models\Tenant\PaymentCondition;
 use App\Models\Tenant\Catalogs\RelatedDocumentType;
 use App\Traits\HelperTrait;
+use Modules\Document\Models\SeriesConfiguration;
 
 /**
  * Class DispatchController
@@ -63,6 +64,10 @@ class DispatchController extends Controller
     {
         $correlative = Dispatch::where('series', $serie)->max('number');
         if ($correlative == null) {
+            $serie_configuration = SeriesConfiguration::where('series', $serie)->first();
+            if($serie_configuration) {
+                return $serie_configuration->number;
+            }
             return 1;
         }
         return $correlative + 1;
@@ -604,7 +609,7 @@ class DispatchController extends Controller
         $transports = (new TransportController())->getOptions();
         $dispatchers = (new DispatcherController())->getOptions();
         $related_document_types = RelatedDocumentType::get();
-        $series_dispatches = Series::where('document_type_id', '09')->get();
+        $series_dispatches = Series::whereIn('document_type_id', ['09','31'])->get();
         $last_numbers = [];
         foreach ($series_dispatches as $series_dispatch) {
             $last_numbers[$series_dispatch->number] = $this->getCorrelative($series_dispatch->number);

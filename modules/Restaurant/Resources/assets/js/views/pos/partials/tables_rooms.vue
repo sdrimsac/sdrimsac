@@ -211,6 +211,11 @@
                             id="checkout_time"
                             v-model="currentRoom.checkin_time"
                             disabled
+                            value-format="HH:mm:ss"
+                            :format="'hh:mm A'"
+                            :picker-options="{
+                                format: 'hh:mm A' // Utiliza 'hh' para las horas en formato de 12 horas y 'A' para AM/PM
+                            }"
                         />
                     </div>
                     <div class="col-lg-3 col-6">
@@ -251,6 +256,43 @@
                             id="quantity"
                             v-model="currentRoom.quantity_persons"
                             disabled
+                        />
+                    </div>
+                </div>
+                <div class="row m-2">
+                    <div
+                        class="col-lg-3 col-6"
+                        v-if="currentRoom.checkout_date_estimated"
+                    >
+                        <label for="checkin_date">
+                            <strong>Fecha estimada de salida</strong>
+                        </label>
+                        <input
+                            type="date"
+                            class="form-control"
+                            id="checkin_date"
+                            v-model="currentRoom.checkout_date_estimated"
+                            disabled
+                        />
+                    </div>
+                    <div
+                        class="col-lg-3 col-6"
+                        v-if="currentRoom.checkout_time_estimated"
+                    >
+                        <label for="checkout_time">
+                            <strong>Hora estimada de salida</strong>
+                        </label>
+                        <input
+                            type="time"
+                            class="form-control"
+                            id="checkout_time"
+                            v-model="currentRoom.checkout_time_estimated"
+                            disabled
+                            value-format="HH:mm:ss"
+                            :format="'hh:mm A'"
+                            :picker-options="{
+                                format: 'hh:mm A' // Utiliza 'hh' para las horas en formato de 12 horas y 'A' para AM/PM
+                            }"
                         />
                     </div>
                 </div>
@@ -748,7 +790,7 @@
                                     </small>
                                 </td>
                                 <td>
-                                    {{ reserve.room_number }}
+                                    {{ reserve.room_number }} {{reserve.cleaning ? ' - Limpieza' : ` - ${reserve.room_state}`}}
                                     <br />
                                     <small>
                                         {{ reserve.tower }}
@@ -949,7 +991,7 @@ export default {
                 );
 
                 if (response.status == 200) {
-                    this.close();
+                    this.getTables();
                 }
             } catch (e) {}
         },
@@ -1115,14 +1157,15 @@ export default {
                 this.close();
             }
         },
-        //   async roomCleaned(id) {
-        //         const response = await this.$http(
-        //             `/caja/rooms/cleaned/${id}`
-        //         );
-        //         if (response.status == 200) {
-        //             this.tablesClean = this.tablesClean.filter(t => t.id != id);
-        //         }
-        //     },
+          async roomCleaned(id) {
+                const response = await this.$http(
+                    `/caja/rooms/cleaned/${id}`
+                );
+                if (response.status == 200) {
+                    this.getTables();
+                    this.$emit("roomWasCleaned",id);
+                }
+            },
 
         async selectTable(table) {
             if (this.isChangingRoom) {
@@ -1160,8 +1203,18 @@ export default {
                 return;
             } else if (table.status_table_id == 5) {
                 if (table.is_cleaning) {
-                    this.$toast.warning("La habitación ya esta en limpieza");
-                    return;
+                    try {
+                        await this.$confirm(
+                            "¿Terminar limpieza?",
+                            "Atención",
+                            {
+                                confirmButtonText: "Aceptar",
+                                cancelButtonText: "Cancelar",
+                                type: "warning"
+                            }
+                        );
+                        this.roomCleaned(table.id);
+                    } catch (e) {}
                 } else {
                     try {
                         await this.$confirm(

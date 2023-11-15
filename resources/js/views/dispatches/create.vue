@@ -1114,7 +1114,7 @@ export default {
             delivery_addresses: [],
             origin_addresses: [],
             send_sunat: false,
-            last_numbers:[],
+            last_numbers: []
         };
     },
     created() {
@@ -1124,69 +1124,70 @@ export default {
         this.canCreateProduct();
     },
     async mounted() {
-        if(!this.pos){
+        if (!this.pos) {
             await this.mountedMethod();
         }
     },
     methods: {
-        async mountedMethod(){
-             const itemsFromSummary = localStorage.getItem("items");
-        const payload = {};
-        if (itemsFromSummary) {
-            const items = JSON.parse(itemsFromSummary);
-            payload.itemIds = items.map(i => i.id);
-        }
-        await this.$http
-            .post(`/${this.resource}/tables`, payload)
-            .then(response => {
-                this.last_numbers = response.data.last_numbers;
-                this.company = response.data.company;
-                this.identityDocumentTypes =
-                    response.data.identityDocumentTypes;
-                this.transferReasonTypes = response.data.transferReasonTypes;
-                this.related_document_types =
-                    response.data.related_document_types;
-                this.transportModeTypes = response.data.transportModeTypes;
-                this.establishments = response.data.establishments;
-                this.unitTypes = response.data.unitTypes;
-                this.all_customers = [];
-                this.countries = response.data.countries;
-                this.locations = response.data.locations;
-                this.seriesAll = response.data.series;
-                this.drivers = response.data.drivers;
-                this.dispatchers = response.data.dispatchers;
-                this.transports = response.data.transports;
-                if (itemsFromSummary) {
-                    this.onLoadItemsFromSummary(
-                        response.data.itemsFromSummary,
-                        JSON.parse(itemsFromSummary)
-                    );
-                }
-            });
+        async mountedMethod() {
+            const itemsFromSummary = localStorage.getItem("items");
+            const payload = {};
+            if (itemsFromSummary) {
+                const items = JSON.parse(itemsFromSummary);
+                payload.itemIds = items.map(i => i.id);
+            }
+            await this.$http
+                .post(`/${this.resource}/tables`, payload)
+                .then(response => {
+                    this.last_numbers = response.data.last_numbers;
+                    this.company = response.data.company;
+                    this.identityDocumentTypes =
+                        response.data.identityDocumentTypes;
+                    this.transferReasonTypes =
+                        response.data.transferReasonTypes;
+                    this.related_document_types =
+                        response.data.related_document_types;
+                    this.transportModeTypes = response.data.transportModeTypes;
+                    this.establishments = response.data.establishments;
+                    this.unitTypes = response.data.unitTypes;
+                    this.all_customers = [];
+                    this.countries = response.data.countries;
+                    this.locations = response.data.locations;
+                    this.seriesAll = response.data.series;
+                    this.drivers = response.data.drivers;
+                    this.dispatchers = response.data.dispatchers;
+                    this.transports = response.data.transports;
+                    if (itemsFromSummary) {
+                        this.onLoadItemsFromSummary(
+                            response.data.itemsFromSummary,
+                            JSON.parse(itemsFromSummary)
+                        );
+                    }
+                });
 
-        if (this.parentId) {
-            this.form = Object.assign({}, this.form, this.document);
-            await this.reloadDataCustomers(this.form.customer_id);
-            await this.getDeliveryAddresses(this.form.customer_id);
-            await this.changeEstablishment();
-            if (this.parentTable !== "dispatches") {
+            if (this.parentId) {
+                this.form = Object.assign({}, this.form, this.document);
+                await this.reloadDataCustomers(this.form.customer_id);
+                await this.getDeliveryAddresses(this.form.customer_id);
+                await this.changeEstablishment();
+                if (this.parentTable !== "dispatches") {
+                    this.setDefaults();
+                }
+            } else {
+                this.searchRemoteCustomers("");
+                if (this.establishments.length > 0) {
+                    this.form.establishment_id = _.head(this.establishments).id;
+                }
+                await this.changeEstablishment();
+                this.changeSeries();
                 this.setDefaults();
             }
-        } else {
-            this.searchRemoteCustomers("");
-            if (this.establishments.length > 0) {
-                this.form.establishment_id = _.head(this.establishments).id;
-            }
-            await this.changeEstablishment();
-            this.changeSeries();
-            this.setDefaults();
-        }
-        this.$eventHub.$on("reloadDataPersons", customer_id => {
-            this.reloadDataCustomers(customer_id);
-        });
-        this.$eventHub.$on("initInputPerson", () => {
-            this.initInputPerson();
-        });
+            this.$eventHub.$on("reloadDataPersons", customer_id => {
+                this.reloadDataCustomers(customer_id);
+            });
+            this.$eventHub.$on("initInputPerson", () => {
+                this.initInputPerson();
+            });
         },
         async getCorrelative() {
             let { series } = this.form;
@@ -1490,7 +1491,10 @@ export default {
             }
         },
         setDefaultCustomer() {
-            if (this.config.establishment && this.config.establishment.customer_id) {
+            if (
+                this.config.establishment &&
+                this.config.establishment.customer_id
+            ) {
                 let temp_customers = this.customers;
                 let customer_id = this.config.establishment.customer_id;
                 let custom = temp_customers.find(l => l.id == customer_id);
@@ -1525,10 +1529,12 @@ export default {
                 this.series = this.series.map(s => {
                     return {
                         ...s,
-                        correlative: `${s.number}-${this.last_numbers[s.number]}`
+                        correlative: `${s.number}-${
+                            this.last_numbers[s.number]
+                        }`
                     };
                 });
-                if(this.series.length > 0){
+                if (this.series.length > 0) {
                     this.form.series = this.series[0].number;
                 }
                 await this.getOriginAddresses(this.form.establishment_id);
@@ -1541,13 +1547,23 @@ export default {
         },
         setDefaultSeries() {
             let series_id = parseInt(this.config.user.serie);
+
             if (isNaN(series_id)) series_id = null;
-            let searchSeries = _.find(this.series, {
-                establishment_id: this.form.establishment_id,
-                document_type_id: this.form.document_type_id,
-                id: series_id
-            });
-            if (searchSeries !== undefined && searchSeries.length > 0) {
+            let searchSeries = null;
+            if (series_id) {
+                searchSeries = _.find(this.series, {
+                    establishment_id: this.form.establishment_id,
+                    document_type_id: this.form.document_type_id,
+                    id: series_id
+                });
+            } else {
+                searchSeries = _.find(this.series, {
+                    establishment_id: this.form.establishment_id,
+                    document_type_id: this.form.document_type_id
+                });
+            }
+            if (searchSeries !== undefined) {
+                
                 this.form.series = searchSeries.number;
             }
         },

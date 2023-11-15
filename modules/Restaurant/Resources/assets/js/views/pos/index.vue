@@ -1541,6 +1541,7 @@
             @getTablesToClean="getTablesToClean"
             @paymentsOrden="paymentsOrden"
             @creatingOrden="creatingOrden"
+            @roomWasCleaned="roomWasCleaned"
             @sendOrdens="sendOrdens"
             :showTables.sync="showTablesRooms"
         ></tables-rooms>
@@ -1934,21 +1935,22 @@ export default {
         });
 
         setTimeout(() => {
-                this.timer = setInterval(() => {
-                    this.updateTime();
-                }, 1000);
+            this.timer = setInterval(() => {
+                this.updateTime();
+            }, 1000);
         }, 500);
     },
     sockets: {},
     computed: {},
     methods: {
         async roomCleaned(id) {
-            const response = await this.$http(
-                `/caja/rooms/cleaned/${id}`
-            );
+            const response = await this.$http(`/caja/rooms/cleaned/${id}`);
             if (response.status == 200) {
                 this.tablesClean = this.tablesClean.filter(t => t.id != id);
             }
+        },
+        roomWasCleaned(id) {
+            this.tablesClean = this.tablesClean.filter(t => t.id != id);
         },
         async isCleaned(id) {
             try {
@@ -2047,7 +2049,6 @@ export default {
                     visible:
                         this.configuration.restaurant &&
                         !this.configuration.college &&
-                       
                         this.worker.area.description.toUpperCase() !== "HOTEL"
                 },
                 {
@@ -2439,7 +2440,7 @@ export default {
                 this.limpiarForm();
             }
         },
-        creatingOrden(number, id,is_room = false) {
+        creatingOrden(number, id, is_room = false) {
             console.log(is_room, "is_room");
             this.isCreatingOrden = true;
             this.clientTableData = {
@@ -2794,12 +2795,12 @@ export default {
             this.orden_items = form;
             this.form.printDocument = form.printDocument;
             this.form.is_room = form.is_room;
-            if(this.form.is_room){
-            this.form.orden_ids = form.orden_ids;
-            this.form.hotel_rent_item_ids = form.hotel_rent_item_ids;
-            this.form.is_advance = form.is_advance;
-            this.form.hotel_rent_id = form.hotel_rent_id;
-            this.form.hotel_customer_number = form.customer_number;
+            if (this.form.is_room) {
+                this.form.orden_ids = form.orden_ids;
+                this.form.hotel_rent_item_ids = form.hotel_rent_item_ids;
+                this.form.is_advance = form.is_advance;
+                this.form.hotel_rent_id = form.hotel_rent_id;
+                this.form.hotel_customer_number = form.customer_number;
             }
             let { items } = form;
             this.ordens = items;

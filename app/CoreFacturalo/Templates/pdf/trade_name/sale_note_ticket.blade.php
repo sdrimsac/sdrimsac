@@ -179,10 +179,10 @@
                 <p class="desc">F. Emisión:</p>
             </td>
             <td width="" class="pt-3">
-                <p class="desc">{{ $document->date_of_issue->format('d-m-Y') }} {{$document->time_of_issue}}</p>
+                <p class="desc">{{ $document->date_of_issue->format('d-m-Y') }} {{ $document->time_of_issue }}</p>
             </td>
         </tr>
-       
+
 
         <tr>
             <td class="align-top">
@@ -280,7 +280,7 @@
                     </td>
                     <td>
                         <p class="desc">
-                            {{ \Carbon\Carbon::parse($hri->checkin_date)->format("d/m/Y") }} {{ $hri->checkin_time }}
+                            {{ \Carbon\Carbon::parse($hri->checkin_date)->format('d/m/Y') }} {{ $hri->checkin_time }}
                         </p>
                     </td>
                 </tr>
@@ -291,45 +291,67 @@
                     </td>
                     <td>
                         <p class="desc">
-                            {{ \Carbon\Carbon::parse($hri->checkout_date)->format("d/m/Y") }} {{ $hri->checkout_time }}
+                            {{ \Carbon\Carbon::parse($hri->checkout_date)->format('d/m/Y') }}
+                            {{ $hri->checkout_time }}
                         </p>
                     </td>
                 </tr>
             @endforeach
         @endif
         @if ($hotel_rent_advance)
-        @php
-            $hotel_rent_items = $hotel_rent_advance->hotel_rent->items;
-            
-        @endphp
-        @foreach ($hotel_rent_items as $hri)
-            @if ($hri->is_reserve)
-            <tr>
-                <td>
-                    <p class="desc">Habitación:</p>
-                </td>
-                <td>
-                    <p class="desc">{{ $hri->table->number }}</p>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <p class="desc">Reserva:</p>
+            @php
+                $hotel_rent_items = $hotel_rent_advance->hotel_rent->items;
+                
+            @endphp
+            @foreach ($hotel_rent_items as $hri)
+                @if ($hri->is_reserve)
+                    <tr>
+                        <td>
+                            <p class="desc">Habitación:</p>
+                        </td>
+                        <td>
+                            <p class="desc">{{ $hri->table->number }}</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p class="desc">Reserva:</p>
 
-                </td>
-                <td>
-                    <p class="desc">
-                        {{ \Carbon\Carbon::parse($hri->checkin_date)->format("d/m/Y") }} {{ $hri->checkin_time }}
-                    </p>
-                </td>
-            </tr>
-         
-            @endif
-        @endforeach
-    @endif
+                        </td>
+                        <td>
+                            <p class="desc">
+                                {{ \Carbon\Carbon::parse($hri->checkin_date)->format('d/m/Y') }}
+                                {{ $hri->checkin_time }}
+                            </p>
+                        </td>
+                    </tr>
+                @endif
+            @endforeach
+        @endif
+        @if ($hotel_rent)
+            @php
+                $advances = $hotel_rent->documents->toArray();
+                $observation_hotel = '';
+                if (count($advances) > 0) {
+                    $observation_hotel = 'Adelantos : ';
+                
+                    foreach ($advances as $adv) {
+                        $document_hotel = $adv['document'] ?? $adv['sale_note'];
+                        $full_number = $document_hotel['series'] . '-' . $document_hotel['number'];
+                        $total = $document_hotel['total'];
+                        $observation_hotel .= ' ' . $full_number . ' S/' . $total . ' ';
+                    }
+                }
+            @endphp
+        @endif
         <tr>
             <td height="18px"><b>OBSERVACION:</b></td>
-            <td colspan="3" class="align-top">{{ trim($document->observation) }}</td>
+            <td colspan="3" class="align-top">{{ trim($document->observation) }}
+                @isset($observation_hotel)
+                    <br>
+                    <b>{{ $observation_hotel }}</b>
+                @endisset
+            </td>
         </tr>
 
     </table>
@@ -510,8 +532,8 @@
                         <small>N° Op: {{ $box->bank_account_operation }}</small>
                     @endif
                     @if ($box->operation_number)
-                    <br>
-                    <small>N° Operación: {{ $box->operation_number }}</small>
+                        <br>
+                        <small>N° Operación: {{ $box->operation_number }}</small>
                     @endif
                     :
                     {{ $document->currency_type->symbol }}

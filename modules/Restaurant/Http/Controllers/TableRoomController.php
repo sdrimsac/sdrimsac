@@ -25,6 +25,7 @@ use Modules\Restaurant\Models\Food;
 use Modules\Restaurant\Models\Orden;
 use Modules\Restaurant\Models\OrdenItem;
 use Modules\Restaurant\Models\StatusTable;
+use Modules\Restaurant\Models\TableMaintenance;
 use Modules\Restaurant\Models\TableType;
 use Modules\Restaurant\Models\Tower;
 
@@ -119,7 +120,20 @@ class TableRoomController extends Controller
     public function sendToAvaible($id)
     {
         $table = Table::find($id);
-        $table->status_table_id = 1;
+        //busca el último registro de mantenimiento que este activo
+        $table_maintenance = TableMaintenance::where('table_id', $id)
+            ->where('active', true)
+            ->orderBy('start_time', 'desc')
+            ->first();
+        if ($table_maintenance) {
+            $table->status_table_id = $table_maintenance->table_status_id;
+            $table_maintenance->end_time = Carbon::now()->format('Y-m-d H:i:s');
+            $table_maintenance->active = false;
+            $table_maintenance->save();
+        }else{
+            $table->status_table_id = 1;
+
+        }
         $table->save();
         return [
             'success' => true,
@@ -130,6 +144,11 @@ class TableRoomController extends Controller
     public function sendToMaintenance($id)
     {
         $table = Table::find($id);
+        TableMaintenance::create([
+            'table_id' => $id,
+            'table_status_id' => $table->status_table_id,
+            'start_time' => Carbon::now()->format('Y-m-d H:i:s'),
+        ]);
         $table->status_table_id = 3;
         $table->save();
         return [
@@ -440,11 +459,28 @@ class TableRoomController extends Controller
             ->format('H:i:s');
         $checkout_date_estimated = null;
         $checkout_time_estimated = null;
-        //si $time_to_enter es menor $time se agrega se le resta uno a $duration
-        if ($time_to_enter < $time) {
-            $duration -= 1;
-            
+        if($duration == 1){
+            if ($time_to_enter > $time) {
+                $checkout_date_estimated = Carbon::parse($date)
+                    ->setTimezone('America/Lima')
+                    ->format('Y-m-d');
+            }else{
+                $checkout_date_estimated = Carbon::parse($date)
+                    ->setTimezone('America/Lima')
+                    ->addDay()
+                    ->format('Y-m-d');
+            }
+        }else{
+            $checkout_date_estimated = Carbon::parse($date)
+                ->setTimezone('America/Lima')
+                ->addDays($duration)
+                ->format('Y-m-d');
         }
+        $checkout_time_estimated = $time_to_leave;
+        return [
+            'checkout_date_estimated' => $checkout_date_estimated,
+            'checkout_time_estimated' => $checkout_time_estimated,
+        ];
     }
     public function setGuess(Request $request)
     {
@@ -476,7 +512,7 @@ class TableRoomController extends Controller
                 $checkin_time = Carbon::parse($room['checkin_time'])
                     ->setTimezone('America/Lima')
                     ->format('H:i:s');
-                // $date_estimate_out = $this->getDateAndTimeToLeave($checkin_date, $checkin_time, $room['duration']);
+                 $date_estimate_out = $this->getDateAndTimeToLeave($checkin_date, $checkin_time, $room['duration']);
                 $hotel_rent_item = new HotelRentItem;
                 $hotel_rent_item->hotel_rent_id = $hotel_rent->id;
                 $hotel_rent_item->table_id = $room['table_id'];
@@ -486,6 +522,8 @@ class TableRoomController extends Controller
                 $hotel_rent_item->total = $room['total'];
                 $hotel_rent_item->quantity_persons = $room['quantity_persons'];
                 $hotel_rent_item->payment_status = $payment_status;
+                $hotel_rent_item->checkout_date_estimated = $date_estimate_out['checkout_date_estimated'];
+                $hotel_rent_item->checkout_time_estimated = $date_estimate_out['checkout_time_estimated'];
                 $hotel_rent_item->checkin_date = $checkin_date;
                 $hotel_rent_item->checkin_time = $checkin_time;
                 $hotel_rent_item->save();
@@ -621,6 +659,8 @@ class TableRoomController extends Controller
                     'customer_name' => $rent->hotel_rent->customer->name,
                     'customer_number' => $rent->hotel_rent->customer->number,
                     'room_number' => $rent->table->number,
+                    'room_state' => $rent->table->status_table->description,
+                    'cleaning' => $rent->table->is_cleaning,
                     'tower' => $rent->table->floor->tower->name,
                 ];
             });

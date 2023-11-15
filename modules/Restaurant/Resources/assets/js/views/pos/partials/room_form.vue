@@ -199,7 +199,7 @@
                             value-format="HH:mm:ss"
                             :format="'hh:mm A'"
                             :picker-options="{
-                                format: 'hh:mm A' // Utiliza 'hh' para las horas en formato de 12 horas y 'A' para AM/PM
+                                format: 'hh:mm A' 
                             }"
                             timezone="America/Lima"
                         ></el-time-picker>
@@ -640,10 +640,6 @@ export default {
                     this.form
                 );
                 if (response.status == 200) {
-                    console.log(
-                        "🚀 ~ file: room_form.vue:639 ~ submit ~ response:",
-                        response
-                    );
                     this.$toast.success("Huesped ingresado correctamente");
                     this.$emit("getTables");
                     if (this.hasAdvances()) {

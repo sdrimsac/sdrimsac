@@ -21,29 +21,28 @@ class HotelRentItemResource extends JsonResource
         $customer = $this->setCustomer($this->hotel_rent->customer);
         $hotel_rent_id = $this->hotel_rent_id;
         $documents = HotelRentDocument::where('hotel_rent_id', $hotel_rent_id)->get()
-        ->transform(function ($row) {
-            $document = $row->document ? $row->document : $row->sale_note;
-            $is_sale_note = $row->document ? false : true;
-            $external_id = $document->external_id;
-            $url = "print/document/$external_id/ticket";
-            if($is_sale_note){
-                $url = "sale-notes/print/$external_id/ticket";
-            }
-            $date_of_issue = $document->date_of_issue;
-            //si date_of_issue es string lo convierto a date
-            if(is_string($date_of_issue)){
-                $date_of_issue = Carbon::parse($date_of_issue);
-            }
-            return [
-                'id' => $row->id,
-                'number' => $document->number_full,
-                'pdf' => url($url),
-                'total' => $document->total,
-                'date_of_issue' => $date_of_issue->format('Y-m-d'),
-               
-            ];
-        })
-        ;
+            ->transform(function ($row) {
+                $document = $row->document ? $row->document : $row->sale_note;
+                $is_sale_note = $row->document ? false : true;
+                $external_id = $document->external_id;
+                $url = "print/document/$external_id/ticket";
+                if ($is_sale_note) {
+                    $url = "sale-notes/print/$external_id/ticket";
+                }
+                $date_of_issue = $document->date_of_issue;
+                //si date_of_issue es string lo convierto a date
+                if (is_string($date_of_issue)) {
+                    $date_of_issue = Carbon::parse($date_of_issue);
+                }
+                return [
+                    'id' => $row->id,
+                    'number' => $document->number_full,
+                    'pdf' => url($url),
+                    'total' => $document->total,
+                    'date_of_issue' => $date_of_issue->format('Y-m-d'),
+
+                ];
+            });
         $guesses = [];
         if ($this->guesses->isEmpty()) {
             $guess = $this->hotel_rent->customer;
@@ -91,13 +90,15 @@ class HotelRentItemResource extends JsonResource
                     'total' => number_format($total_orden, 2),
                 ];
             });
-            $has_many_rooms = $this->hotel_rent->has_many_rooms();
+        $has_many_rooms = $this->hotel_rent->has_many_rooms();
         return [
             'id' => $this->id,
             'documents' => $documents,
             'has_many_rooms' => $has_many_rooms,
             'hotel_rent_id' => $this->hotel_rent_id,
             'hotel_rent' => $this->hotel_rent,
+            'checkout_date_estimated' => $this->checkout_date_estimated,
+            'checkout_time_estimated' => $this->checkout_time_estimated,
             'guesses' => $guesses,
             'duration' => $this->duration,
             'quantity_persons' => $this->quantity_persons,

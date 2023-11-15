@@ -215,7 +215,7 @@
                 <p class="desc">F. Emisión:</p>
             </td>
             <td width="" class="pt-3">
-                <p class="desc">{{ $document->date_of_issue }} {{$document->time_of_issue}}</p>
+                <p class="desc">{{ $document->date_of_issue }} {{ $document->time_of_issue }}</p>
             </td>
         </tr>
 
@@ -343,44 +343,65 @@
             @endforeach
         @endif
         @if ($hotel_rent_advance)
-        @php
-            $hotel_rent_items = $hotel_rent_advance->hotel_rent->items;
-            
-        @endphp
-        @foreach ($hotel_rent_items as $hri)
-            @if ($hri->is_reserve)
-            <tr>
-                <td>
-                    <p class="desc">Habitación:</p>
-                </td>
-                <td>
-                    <p class="desc">{{ $hri->table->number }}</p>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <p class="desc">Reserva:</p>
+            @php
+                $hotel_rent_items = $hotel_rent_advance->hotel_rent->items;
+                
+            @endphp
+            @foreach ($hotel_rent_items as $hri)
+                @if ($hri->is_reserve)
+                    <tr>
+                        <td>
+                            <p class="desc">Habitación:</p>
+                        </td>
+                        <td>
+                            <p class="desc">{{ $hri->table->number }}</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p class="desc">Reserva:</p>
 
-                </td>
-                <td>
-                    <p class="desc">
-                        {{ \Carbon\Carbon::parse($hri->checkin_date)->format("d/m/Y") }} {{ $hri->checkin_time }}
-                    </p>
-                </td>
-            </tr>
-         
-            @endif
-        @endforeach
-    @endif
+                        </td>
+                        <td>
+                            <p class="desc">
+                                {{ \Carbon\Carbon::parse($hri->checkin_date)->format('d/m/Y') }}
+                                {{ $hri->checkin_time }}
+                            </p>
+                        </td>
+                    </tr>
+                @endif
+            @endforeach
+        @endif
+        @if ($hotel_rent)
+            @php
+                $advances = $hotel_rent->documents->toArray();
+                $observation_hotel = '';
+                if (count($advances) > 0) {
+                    $observation_hotel = 'Adelantos : ';
+               
+                    foreach($advances as $adv) {
+                        $document_hotel =   $adv['document'] ?? $adv['sale_note'];
+                        $full_number = $document_hotel["series"] . "-" . $document_hotel["number"];
+                        $total = $document_hotel["total"];
+                        $observation_hotel .=  ' ' . $full_number . ' S/' . $total . ' ';
+                    }
+                }
+            @endphp
+        @endif
         <tr>
-            <td class="align-top">
+            <td colspan="2" class="align-top">
                 <b>Observación:</b> {{ trim($document->observation) }}
+
                 @isset($document->additional_information)
                     @foreach ($document->additional_information as $information)
                         @if ($information)
                             {{ $information }}<br />
                         @endif
                     @endforeach
+                @endisset
+                @isset ($observation_hotel)
+                    <br>
+                    <b>{{ $observation_hotel }}</b>
                 @endisset
             </td>
         </tr>
@@ -751,6 +772,7 @@
         @endif
         {{-- @endif --}}
         </tr>
+
         <tr>
             <td colspan="4" class="text-left font-bold desc"><b>FORMA DE PAGO</b></td>
             <td class="text-left font-bold desc">{{ mb_strtoupper($document->payment_condition->name) }}</td>
@@ -830,8 +852,8 @@
                             <small>N° Op: {{ $box->bank_account_operation }}</small>
                         @endif
                         @if ($box->operation_number)
-                        <br>
-                        <small>N° Operación: {{ $box->operation_number }}</small>
+                            <br>
+                            <small>N° Operación: {{ $box->operation_number }}</small>
                         @endif
                         :
                         {{ $document->currency_type->symbol }}

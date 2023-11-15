@@ -40,6 +40,9 @@ class HotelRent extends ModelTenant
         return $this->hasMany(HotelRentItem::class);
     }
 
+    public function documents(){
+        return $this->hasMany(HotelRentDocument::class);
+    }
     public function document()
     {
         return $this->belongsTo(Document::class);

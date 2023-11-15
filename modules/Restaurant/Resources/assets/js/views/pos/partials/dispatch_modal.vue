@@ -7,7 +7,7 @@
         v-loading="loading"
     >
         <div class="d-flex justify-content-end mt-2">
-            <el-button type="primary" @click="showCreate = true">
+            <el-button type="primary" @click="createDispatch">
                 <i class="fas fa-plus"></i>
                 Nuevo
             </el-button>
@@ -84,6 +84,7 @@
         >
             <dispatch-create
                 @records="getRecords"
+                ref="dispatchCreate"
                 @closeDispatch="closeDispatch"
                 :configuration="configuration"
                 :pos="true"
@@ -132,6 +133,12 @@ export default {
         };
     },
     methods: {
+        createDispatch(){
+            this.showCreate = true;
+            setTimeout(() => {
+                this.$refs.dispatchCreate.mountedMethod();
+            }, 500);
+        },
         whatsapp(record) {
             let { external_id } = record;
             let formatoPdf = `/print/dispatch/${external_id}/ticket`;
