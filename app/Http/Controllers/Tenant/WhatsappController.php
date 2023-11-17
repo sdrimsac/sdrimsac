@@ -14,6 +14,8 @@ use App\Models\Tenant\Configuration;
 use App\Models\Tenant\Quotation;
 use Illuminate\Support\Facades\Storage;
 use App\Models\System\Configuration as Config;
+use App\Models\Tenant\Company;
+use App\Models\Tenant\Dispatch;
 use App\Models\Tenant\NumberActivity;
 use Exception;
 use Illuminate\Http\Response;
@@ -236,6 +238,7 @@ class WhatsappController extends Controller
     }
     public function sendwhatsapp(Request $request)
     {
+        $message = $request->mensaje;
         $url1 = url("");
         $external_id = "";
         $xml = $request->xml ?? false;
@@ -250,6 +253,15 @@ class WhatsappController extends Controller
             $document_filename = $document->filename;
             $external_id = $document->external_id;
             $url1 = $url1 . "/sale-notes/print/" . $external_id . "/ticket";
+        } else if ($request->document_type_id == "09") {
+            $document = Dispatch::find($request->input('document_id'));
+            $company = Company::first();
+            $company_name = $company->name;
+            //si en $message existe la palabra "de undefined" reemplazalo con "de $company_name"
+            $message = str_replace("de *undefined*", "de " . $company_name, $message);
+            $document_filename = $document->filename;
+            $external_id = $document->external_id;
+            $url1 = $url1 . "/print/dispatch/" . $external_id . "/ticket";
         } else if ($request->document_type_id == "COT") {
             $document = Quotation::find($request->input('document_id'));
             $document_filename = $document->filename;
@@ -292,7 +304,7 @@ class WhatsappController extends Controller
                     ],
                     [
                         'name'     => 'caption',
-                        'contents' => $request->mensaje
+                        'contents' => $message
                     ],
                     [
                         'name'     => 'sender',

@@ -1452,6 +1452,31 @@
                                             ></el-switch>
                                         </div>
                                     </div>
+                                    
+                                         <div class="col-md-6 mt-4">
+                                        <div class="form-group">
+                                            <label class="control-label w-100"
+                                                >Enviar whatsapp por pagos YAPE/PLIN
+                                                <el-tooltip
+                                                    class="item"
+                                                    effect="dark"
+                                                    content="Enviar un whastapp al número del dueño por cada pago con YAPE/PLIN"
+                                                    placement="top-start"
+                                                >
+                                                    <i
+                                                        class="fa fa-info-circle"
+                                                    ></i>
+                                                </el-tooltip>
+                                            </label>
+
+                                            <el-switch
+                                                v-model="form.send_whatsapp_digital_pay"
+                                                active-text="Si"
+                                                inactive-text="No"
+                                                @change="submit"
+                                            ></el-switch>
+                                        </div>
+                                    </div>
                                     <template v-if="form.hotels">
                                         <div class="col-md-6 mt-4">
                                             <div class="form-group">

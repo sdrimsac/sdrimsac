@@ -277,12 +277,38 @@ export default {
         },
         clickSendWhatsapp() {
             if (!this.form.customer_telephone) {
-                return this.$message.error("El número es obligatorio");
+                return this.$toast.error("El número es obligatorio");
             }
-            window.open(
-                `https://wa.me/51${this.form.customer_telephone}?text=${this.form.message_text}`,
-                "_blank"
-            );
+            if (this.form.customer_telephone != null) {
+                let form = {
+                    id: this.recordId,
+                    document_id: this.recordId,
+                    document_type_id: this.form.document_type_id,
+                    customer_telephone: this.form.customer_telephone,
+                    mensaje:
+                        "Su comprobante de pago electrónico " +
+                        this.form.number +
+                        " de *" +
+                        this.company.name +
+                        "*, ha sido generado correctamente a través del facturador electrónico de "+"*"+this.$desarrollador+"*"
+                };
+                try {
+                    this.loading = true;
+                    this.$http.post(`/whatsapp`, form).then(response => {
+                        if (response.data.success == true) {
+                            this.$toast.success(response.data.message);
+                        }
+                    });
+                    this.loading = false;
+                } catch (e) {
+                    this.loading = false;
+                }
+            }
+
+            // window.open(
+            //     `https://wa.me/51${this.form.customer_telephone}?text=${this.form.message_text}`,
+            //     "_blank"
+            // );
         },
         clickDownloadCdr() {
             window.open(this.form.download_cdr, "_blank");

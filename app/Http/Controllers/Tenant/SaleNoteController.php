@@ -477,7 +477,7 @@ class SaleNoteController extends Controller
     {
 
         DB::connection('tenant')->transaction(function () use ($request) {
-
+            $configuration = Configuration::first();
             $request["is_credit"] = Functions::valueKeyInArray($request->all(), "is_credit", false);
             $request["user_id"] = Functions::valueKeyInArray($request->all(), "user_id", auth()->id());
             $request["advances"] = Functions::valueKeyInArray($request->all(), "advances", 0.0);
@@ -675,19 +675,26 @@ class SaleNoteController extends Controller
                 $document = $type_document . " N° " . $document_save->series . " - " . $document_save->number;
 
                 if ($request->boxes) {
+                    $message = "";
                     foreach ($request->boxes as $currentBox) {
+                        $method = $currentBox['method'];
+                        $amount = $currentBox['amount'];
+                        $operation_number = Functions::valueKeyInArray($currentBox, 'operation_number');
                         $bank_account_id = Functions::valueKeyInArray($currentBox, 'bank_account_id');
                         $bank_account_operation = Functions::valueKeyInArray($currentBox, 'number_operation');
                         $cajas    = new Box;
-                        $cajas->operation_number = Functions::valueKeyInArray($currentBox, 'operation_number');
+                        $cajas->operation_number = $operation_number;
                         $cajas->group_id = 1;
                         $cajas->category_id = 1;
                         $cajas->subcategory_id = 1;
-                        $cajas->amount = $currentBox["amount"];
+                        $cajas->amount = $amount;
                         $cajas->date = Carbon::parse($request->input('date_of_issue'))->format('Y-m-d');
                         $cajas->type = '1';
                         $cajas->state = '1';
-                        $cajas->method =  $currentBox['method'];
+                        $cajas->method = $method;
+                        if($method == "Yape"|| $method == "PLIN"){
+                            $message.= "Pago por ".$method." por S/".$amount."- N° Operación: ".$operation_number ?? "-";
+                        }
                         $cajas->bank_account_id = $bank_account_id;
                         $cajas->bank_account_operation = $bank_account_operation;
                         $cajas->sale_note_id = $this->sale_note->id;
@@ -704,6 +711,11 @@ class SaleNoteController extends Controller
                         $cajas->soap_type_id = $company->soap_type_id;
                         $cajas->establishment_id = auth()->user()->establishment_id;
                         $cajas->save();
+                    }
+                    if($configuration->send_whatsapp_digital_pay){
+                        if($message){
+                            (new WhatsappController)->sendMessage($message);
+                        }
                     }
                 } else {
                     $cajas    = Box::firstOrNew(['sale_note_id' => $this->sale_note->id]);

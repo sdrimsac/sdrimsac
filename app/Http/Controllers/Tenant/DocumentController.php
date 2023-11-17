@@ -856,21 +856,28 @@ class DocumentController extends Controller
         $response = $fact->getResponse();
         $company = Company::first();
         //&& $request->afectar_caja === true
-
+        $configuration = Configuration::first();
         if (!$request->has_related_sale_note && $request->variation == false && $request->payment_condition_id === "01") {
             if ($request->boxes) {
+                $message="";
                 foreach ($request->boxes as $currentBox) {
+                    $method = $currentBox['method'];
+                    $amount = $currentBox['amount'];
+                    $operation_number = Functions::valueKeyInArray($currentBox, 'operation_number');
                     $bank_account_id = Functions::valueKeyInArray($currentBox, 'bank_account_id');
                     $bank_account_operation = Functions::valueKeyInArray($currentBox, 'number_operation');
                     $box = new Box;
                     $box->group_id = 1;
-                    $box->operation_number = Functions::valueKeyInArray($currentBox, 'operation_number');
-                    $box->method = $currentBox['method'];
+                    $box->operation_number = $operation_number;
+                    $box->method = $method;
+                    if($method == "Yape"|| $method == "PLIN"){
+                        $message.= "Pago por ".$method." por S/".$amount."- N° Operación: ".$operation_number ?? "-";
+                    }
                     $box->bank_account_id = $bank_account_id;
                     $box->bank_account_operation = $bank_account_operation;
                     $box->category_id = 1;
                     $box->subcategory_id = 1;
-                    $box->amount = $currentBox['amount'];
+                    $box->amount = $amount;
                     $box->date = Carbon::parse($request->input('date_of_issue'))->format('Y-m-d');
                     $box->type = '1';
                     $box->state = '1';
@@ -900,6 +907,11 @@ class DocumentController extends Controller
                     $box->soap_type_id = $company->soap_type_id;
                     $box->soap_type_id = $company->soap_type_id;
                     $box->save();
+                }
+                if($configuration->send_whatsapp_digital_pay){
+                    if($message){
+                        (new WhatsappController)->sendMessage($message);
+                    }
                 }
             } else {
                 if ($request->sale_note_id == null && $request->method_pay) {
