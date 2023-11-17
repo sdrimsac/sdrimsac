@@ -905,6 +905,11 @@ const app = new Vue({
                 /*webpackChunkName:"commercial_treatment"*/
                 "./views/commercial_treatment/index.vue")
             ,
+            "tenant-credit-list-index": ()=>
+            import(
+                /*webpackChunkName:"credit_list"*/
+                "./views/credit_list/index.vue")
+            ,
             
     },
  

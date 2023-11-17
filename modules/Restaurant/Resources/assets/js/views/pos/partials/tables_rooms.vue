@@ -819,13 +819,18 @@
                                         <button
                                             type="button"
                                             class="btn btn-success btn-sm"
-                                            @click="
-                                                editReserve(
-                                                    reserve.id
-                                                )
-                                            "
+                                            @click="editReserve(reserve.id)"
                                         >
                                             <i class="fas fa-edit"></i>
+                                        </button>
+                                    </el-tooltip>
+                                    <el-tooltip content="Cancelar reserva">
+                                        <button
+                                            type="button"
+                                            class="btn btn-danger btn-sm"
+                                            @click="cancelReserve(reserve.id)"
+                                        >
+                                            <i class="fas fa-trash"></i>
                                         </button>
                                     </el-tooltip>
                                 </td>
@@ -870,7 +875,7 @@
             :isReserve="isReserve"
             :hotelRentId="hotelRentId"
         ></room-form>
-       
+
         <el-dialog
             :visible.sync="showAddDays"
             append-to-body
@@ -892,16 +897,13 @@
                 <el-button @click="showAddDays = false">Cancelar</el-button>
                 <el-button type="primary" @click="addDays">Agregar</el-button>
             </span>
-
-
         </el-dialog>
 
         <edit-reserve
-        :showDialog.sync="showEditDate"
-        :roomEdit="roomEdit"
-        @getTables="getTables"
+            :showDialog.sync="showEditDate"
+            :roomEdit="roomEdit"
+            @getTables="getTables"
         >
-
         </edit-reserve>
     </el-dialog>
 </template>
@@ -931,8 +933,8 @@ export default {
     },
     data() {
         return {
-            roomEdit:null,
-            showEditDate:false,
+            roomEdit: null,
+            showEditDate: false,
             status: [],
             all_status: [],
             all_reserves: [],
@@ -971,36 +973,62 @@ export default {
         };
     },
     methods: {
-           filterFloors(tower_id, idx) {
-            this.floors = this.all_floors.filter(f => f.tower_id == tower_id);
-    
+        async cancelReserve(id) {
+            try {
+                this.loading = true;
+                await this.$confirm(
+                    "¿Está seguro de cancelar la reserva?",
+                    "Confirmación",
+                    {
+                        confirmButtonText: "Aceptar",
+                        cancelButtonText: "Cancelar",
+                        type: "warning"
+                    }
+                );
+                const response = await this.$http.get(
+                    `/caja/rooms/cancel_reserve/${id}`
+                );
+                if (response.status == 200) {
+                    this.$toast.success("Reserva cancelada");
+                    this.getTables();
+                }
+            } catch (e) {
+                this.$toast.error("Error al cancelar la reserva");
+            } finally {
+                this.loading = false;
+            }
         },
-        async editReserveDate(id){
+        filterFloors(tower_id, idx) {
+            this.floors = this.all_floors.filter(f => f.tower_id == tower_id);
+        },
+        async editReserveDate(id) {
             let form = {
                 id,
-                checkin_date:this.roomEdit.checkin_date,
-                checkin_time:this.roomEdit.checkin_time,
-                table_id:this.roomEdit.table_id,
-                duration:this.roomEdit.duration
-
-            }
-            const response = await this.$http.post(`/caja/rooms/set_reserve_date`,form);
-            if(response.status == 200){
+                checkin_date: this.roomEdit.checkin_date,
+                checkin_time: this.roomEdit.checkin_time,
+                table_id: this.roomEdit.table_id,
+                duration: this.roomEdit.duration
+            };
+            const response = await this.$http.post(
+                `/caja/rooms/set_reserve_date`,
+                form
+            );
+            if (response.status == 200) {
                 this.$toast.success("Fecha de reserva actualizada");
                 this.showEditDate = false;
                 this.getTables();
             }
-
         },
         async editReserve(id) {
             this.roomEdit = null;
-            const response = await this.$http(`/caja/rooms/get_reserve_date/${id}`);
+            const response = await this.$http(
+                `/caja/rooms/get_reserve_date/${id}`
+            );
             if (response.status == 200) {
                 this.roomEdit = response.data;
                 this.roomEdit.id = id;
                 this.showEditDate = true;
             }
-
         },
         async selectReserve(id) {
             try {
@@ -1453,12 +1481,13 @@ export default {
                 } else {
                     this.$toast.warning("Ocurrió un error");
                 }
-                this.loading = false;
             } catch (e) {
                 this.loading = false;
                 console.log(e);
 
                 this.$toast.warning("Ocurrió un error");
+            }finally{
+                this.loading = false;
             }
         },
         close() {

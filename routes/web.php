@@ -63,9 +63,13 @@ if ($hostname) {
                             });
                     });
                 Route::prefix('credit-list')->group(function () {
+                    Route::get('/', [CreditListController::class, 'credit_list_report_index'])->name('tenant.credit_list.index');
+                    Route::get('/tables', [CreditListController::class, 'tables']);
                     Route::post('/send-credit', [CreditListController::class, 'send_credit']);
                     Route::get('/balance/{customer_id}', [CreditListController::class, 'get_balance']);
                     Route::get('/records', [CreditListController::class, 'records']);
+                    Route::get('/records_by_person/download', [CreditListController::class, 'download']);
+                    Route::post('/records_by_person', [CreditListController::class, 'recordByPerson']);
                     Route::get('/get-ordens/{customer_id}', [CreditListController::class, 'get_ordens']);
                 });
                 Route::prefix('/sellers')->group(function () {

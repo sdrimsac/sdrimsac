@@ -2,6 +2,7 @@
 
 namespace Modules\Restaurant\Models;
 
+use App\Models\Tenant\CreditList;
 use App\Models\Tenant\Person;
 use App\Models\Tenant\Document;
 use App\Models\Tenant\SaleNote;
@@ -93,6 +94,9 @@ class Orden extends ModelTenant
         return url('/sale-notes/print/'.$external_id.'/ticket');
         }
         return null;
+    }
+    public function credit_list(){
+        return $this->hasMany(CreditList::class);
     }
     public function hasDocument(){
         if($this->document_id || $this->sale_note_id){

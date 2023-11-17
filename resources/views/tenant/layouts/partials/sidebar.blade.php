@@ -436,6 +436,14 @@
                         <i class="icofont-chart-bar-graph"></i> Kardex
                     </a>
                 </li>
+                @if($config->credit_list)
+                <li>
+                    <a class="{{ $path[0] === 'reports' && $path[1] === 'credit_list' ? 'active' : '' }}"
+                        href="{{ route('tenant.credit_list.index') }}">
+                        <i class="icofont-chart-bar-graph"></i> Lista de crédito
+                    </a>
+                </li>
+                @endif
                 @if ($has_series)
                     <li>
                         <a class="{{ $path[0] === 'reports' && $path[1] === 'series' ? 'active' : '' }}"

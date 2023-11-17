@@ -3,19 +3,72 @@
 namespace App\Http\Controllers\Tenant;
 
 use App\CoreFacturalo\Requests\Inputs\Functions;
+use App\Exports\CreditListExport;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Tenant\CreditListCollection;
+use App\Http\Resources\Tenant\CreditListPersonCollection;
+use App\Models\Tenant\Company;
 use App\Models\Tenant\CreditList;
+use App\Models\Tenant\Establishment;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Modules\Restaurant\Models\Orden;
 use Modules\Restaurant\Models\OrdenItem;
 use Modules\Restaurant\Models\Table;
 
 class CreditListController extends Controller
 {
-   
-    public function send_credit(Request $request){
+    public function getData($request)
+    {
+        $establishment_id = $request->establishment_id;
+        $person_id = $request->person_id;
+        $date = $request->date;
+        $paid = $request->paid != null ? ($request->paid == "0" ? false : true) : null;
+        $orden_items = OrdenItem::query();
+        $orden_items->whereHas('orden', function ($q) use ($establishment_id, $person_id, $date, $paid) {
+            $q->whereHas('credit_list', function ($qq) use ($establishment_id, $person_id, $date, $paid) {
+                $qq->where('customer_id', $person_id);
+                if ($establishment_id) {
+                    $qq->where('establishment_id', $establishment_id);
+                }
+                if ($date) {
+                    $date = Carbon::parse($date)->format('m');
+                    //date es un inicio de un mes, deseo buscar registros con esos mes en la columna created_at
+                    $qq->whereMonth('created_at', $date);
+                }
+                if ($paid !== null) {
+                    $qq->where('paid', $paid);
+                }
+            });
+        });
+
+        return $orden_items;
+    }
+    public function download(Request $request)
+    {   
+        $company = Company::first();
+        $records = $this->getData($request)->get();
+        return (new CreditListExport)
+        ->records($records)
+        ->company($company)
+        ->download('Lista_de_credito_'.Carbon::now().'.xlsx');
+
+    }
+    public function recordByPerson(Request $request)
+    {
+
+        $orden_items = $this->getData($request);
+
+        return new CreditListPersonCollection($orden_items->paginate(config('tenant.items_per_page')));
+    }
+    public function credit_list_report_index(Request $request)
+    {
+
+        return view('tenant.credit_list.index');
+    }
+    public function send_credit(Request $request)
+    {
         $customer_id = $request->customer_id;
         $items = $request->items;
         $user_id = auth()->id();
@@ -41,7 +94,6 @@ class CreditListController extends Controller
             $orden_item->time = date('H:i:s');
             $orden_item->area_id = $item['food']['area_id'];
             $orden_item->save();
-        
         }
 
         CreditList::create([
@@ -59,41 +111,51 @@ class CreditListController extends Controller
         ];
         // $orden_id = $request->orden_id;
     }
-    public function records(){
+    public function tables()
+    {
+        $establishments = Establishment::all();
+
+        return [
+            'success' => true,
+            'establishments' => $establishments,
+        ];
+    }
+    public function records()
+    {
         //saca los registros que tengan paid en false pero agrupados por customer_id
-        $credit_lists = CreditList::select('customer_id', \DB::raw('count(*) as count'))
-        ->where('paid', false)
-        ->groupBy('customer_id');
+        $credit_lists = CreditList::select('customer_id', DB::raw('count(*) as count'))
+            ->where('paid', false)
+            ->groupBy('customer_id');
 
         return new CreditListCollection($credit_lists->paginate(config('tenant.items_per_page')));
     }
-    public function get_ordens($customer_id){
+    public function get_ordens($customer_id)
+    {
         $credit_lists = CreditList::where('customer_id', $customer_id)
-        ->where('paid', false)
-        ->with(['orden.orden_items'])
-        ->get()
-        ->flatMap(function ($creditList) {
-            return $creditList->orden->orden_items->map(function ($ordenItem) {
-                return [
-                    'id' => $ordenItem->id,
-                    'food' => $ordenItem->food,
-                    'observations' => $ordenItem->observations,
-                    'quantity' => $ordenItem->quantity,
-                    'unit_type_id' => $ordenItem->unit_type_id,
-                    'price' => $ordenItem->price,
-                    'user_id' => $ordenItem->user_id,
-                    'orden_id' => $ordenItem->orden_id,
-                    'to_carry' => $ordenItem->to_carry,
-                    'status_orden_id' => $ordenItem->status_orden_id,
-                    'date' => $ordenItem->date,
-                    'time' => $ordenItem->time,
-                    'area_id' => $ordenItem->area_id,
-                ];
+            ->where('paid', false)
+            ->with(['orden.orden_items'])
+            ->get()
+            ->flatMap(function ($creditList) {
+                return $creditList->orden->orden_items->map(function ($ordenItem) {
+                    return [
+                        'id' => $ordenItem->id,
+                        'food' => $ordenItem->food,
+                        'observations' => $ordenItem->observations,
+                        'quantity' => $ordenItem->quantity,
+                        'unit_type_id' => $ordenItem->unit_type_id,
+                        'price' => $ordenItem->price,
+                        'user_id' => $ordenItem->user_id,
+                        'orden_id' => $ordenItem->orden_id,
+                        'to_carry' => $ordenItem->to_carry,
+                        'status_orden_id' => $ordenItem->status_orden_id,
+                        'date' => $ordenItem->date,
+                        'time' => $ordenItem->time,
+                        'area_id' => $ordenItem->area_id,
+                    ];
+                });
             });
-        });
 
         return $credit_lists;
-
     }
     public function get_balance($customer_id)
     {
@@ -107,8 +169,7 @@ class CreditListController extends Controller
                 });
             })
             ->sum();
-    
+
         return $balance;
     }
-    
 }

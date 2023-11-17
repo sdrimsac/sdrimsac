@@ -143,6 +143,7 @@ Route::prefix('caja')->group(function () {
         Route::get('rooms/advance/{id}', 'TableRoomController@advanceDocument');
         Route::get('rooms/cleaned/{id}', 'TableRoomController@cleaned');
         Route::get('rooms/reserve_to_occupied/{id}', 'TableRoomController@reserve_to_occupied');
+        Route::get('rooms/cancel_reserve/{id}', 'TableRoomController@cancel_reserve');
         Route::get('rooms/room/{id}', 'TableRoomController@getRoom');
         Route::get('rooms/get_hotel_rent/{id}', 'TableRoomController@get_hotel_rent');
         Route::get('rooms/records', 'TableRoomController@records');

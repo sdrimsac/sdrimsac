@@ -28,7 +28,7 @@ class CreditList extends ModelTenant
         return $this->belongsTo(Orden::class, 'orden_id');
     }
 
-    public function user()
+    public function seller()
     {
         return $this->belongsTo(User::class, 'user_id');
     }

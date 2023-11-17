@@ -620,6 +620,7 @@ class TableRoomController extends Controller
             ->transform(function ($row) {
 
                 $reserves = HotelRentItem::where('table_id', $row->id)->where('is_reserve', true)
+                ->where('was_cancel', false)
                     ->get()
                     ->transform(function ($rent) {
 
@@ -652,7 +653,9 @@ class TableRoomController extends Controller
         $towers = Tower::where('active', true)->get();
         $floors = Floor::where('active', true)->get();
         $status = StatusTable::where('active', true)->get();
-        $reserves = HotelRentItem::where('is_reserve', true)->orderBy('checkin_date', 'desc')->orderBy('checkin_time', 'desc')
+        $reserves = HotelRentItem::where('is_reserve', true)
+        ->where('was_cancel', false)
+        ->orderBy('checkin_date', 'desc')->orderBy('checkin_time', 'desc')
             ->get()
             ->transform(function ($rent) {
                 return [
@@ -707,6 +710,16 @@ class TableRoomController extends Controller
         return [
             'success' => true,
             'message' => 'Fecha de reserva actualizada'
+        ];
+    }
+    public function cancel_reserve($id){
+        $hotel_rent_item = HotelRentItem::find($id);
+        $hotel_rent_item->was_cancel = true;
+        $hotel_rent_item->save();
+        
+        return [
+            'success' => true,
+            'message' => 'Reserva cancelada'
         ];
     }
     public function get_hotel_rent($id){

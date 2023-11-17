@@ -39,7 +39,9 @@ class DocumentCollection extends ResourceCollection
             }
             if ($row->group_id === '01') {
 
-
+                if ($row->state_type_id === '01' || $row->state_type_id === '03') {
+                    $btn_delete_doc_type_03 = true;
+                }
                 if ($row->state_type_id === '05') {
                     $has_cdr = true;
                     $btn_note = true;
@@ -61,7 +63,7 @@ class DocumentCollection extends ResourceCollection
                 if (in_array($row->document_type_id, ['07', '08'])) {
                     $btn_note = false;
                 }
-                if ($row->state_type_id === '01' || $row->state_type_id === '03') {
+                if ($row->state_type_id == '01' || $row->state_type_id == '03') {
                     $btn_delete_doc_type_03 = true;
                 }
 
