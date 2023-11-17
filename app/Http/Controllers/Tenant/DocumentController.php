@@ -82,6 +82,7 @@ use App\Models\Tenant\BankAccount;
 use App\Models\Tenant\Cash;
 use Modules\Inventory\Models\Warehouse as ModuleWarehouse;
 use App\Models\Tenant\Catalogs\PaymentMethodType as CatPaymentMethodType;
+use App\Models\Tenant\CreditList;
 use App\Models\Tenant\HotelRent;
 use App\Models\Tenant\HotelRentDocument;
 use App\Models\Tenant\HotelRentItem;
@@ -964,6 +965,9 @@ class DocumentController extends Controller
                     $orden_item->save();
                 }
             }
+        }
+        if($request->is_list_credit){
+            CreditList::where('customer_id', $document->customer_id)->update(['paid' => true]);
         }
         if($request->hotel_rent_item_ids){
             $hotel_rent_items = HotelRentItem::whereIn('id', $request->hotel_rent_item_ids)->get();

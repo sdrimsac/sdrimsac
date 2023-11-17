@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Config;
 class Configuration extends ModelTenant
 {
     protected $fillable = [
+        'credit_list',
         'time_to_clean',
         'alarm_to_end',
         'time_to_enter',
@@ -129,6 +130,7 @@ class Configuration extends ModelTenant
 
     ];
     protected $casts = [
+        'credit_list' => 'boolean',
         'require_code' => 'boolean',
         'hotels' => 'boolean',
         'commercial_treatments' => 'boolean',
@@ -210,6 +212,7 @@ class Configuration extends ModelTenant
         // $skins = Skin::all();
         $skins = [];
         return [
+            'credit_list' => (bool)$this->credit_list,
             'time_to_clean' =>  $this->time_to_clean,
             'alarm_to_end' =>  $this->alarm_to_end,
             'time_to_leave' =>  $this->time_to_leave,

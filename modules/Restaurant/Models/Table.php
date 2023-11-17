@@ -81,7 +81,14 @@ class Table extends ModelTenant
         );
     }
     
-
+    public static function get_caja(){
+        $user = auth()->user();
+        $establishment_id = $user->establishment_id;
+        $table = Table::where('establishment_id',$establishment_id)->where('is_room',false)
+        ->where('number','like','CAJA%')->first();
+        if($table) return $table->id;
+        return null;
+    }
  
     public function establishment(){
         return $this->belongsTo(Establishment::class);

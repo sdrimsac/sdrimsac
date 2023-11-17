@@ -696,9 +696,13 @@ class TableRoomController extends Controller
         $checkin_time = Carbon::parse($request->input('checkin_time'))
             ->setTimezone('America/Lima')
             ->format('H:i:s');
+        $duration = $request->input('duration');
+        $table_id = $request->input('table_id');
         $hotel_rent_item = HotelRentItem::find($id);
         $hotel_rent_item->checkin_date = $checkin_date;
         $hotel_rent_item->checkin_time = $checkin_time;
+        $hotel_rent_item->duration = $duration;
+        $hotel_rent_item->table_id = $table_id;
         $hotel_rent_item->save();
         return [
             'success' => true,
@@ -721,7 +725,11 @@ class TableRoomController extends Controller
         $hotel_rent_item = HotelRentItem::find($id);
         $checkin_date = Carbon::parse($hotel_rent_item->checkin_date)->format('Y-m-d');
         $checkin_time = $hotel_rent_item->checkin_time;
+        $duration = $hotel_rent_item->duration;
+        $table_id = $hotel_rent_item->table_id;
         return[
+            'duration' => $duration,
+            'table_id' => $table_id,
             'checkin_date' => $checkin_date,
             'checkin_time' => $checkin_time,
         ];
@@ -807,7 +815,8 @@ class TableRoomController extends Controller
         ];
     }
     public function check_reserve(Request $request)
-    {
+    {   
+        $id = $request->input('id');
         $table_id = $request->input('table_id');
         $duration = $request->input('duration');
         $checkin_date = Carbon::parse($request->input('checkin_date'))
@@ -821,8 +830,12 @@ class TableRoomController extends Controller
 
 
         $tables_in_reserve = HotelRentItem::where('table_id', $table_id)
-            ->whereNull('checkout_date')
-            ->get();
+            ->whereNull('checkout_date');
+        if($id){
+            $tables_in_reserve->where('id', '<>', $id);
+        }
+
+           $tables_in_reserve = $tables_in_reserve->get();
         if ($tables_in_reserve->count() == 0) {
             return [
                 'success' => true,

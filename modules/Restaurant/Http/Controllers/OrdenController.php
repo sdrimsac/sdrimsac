@@ -470,6 +470,7 @@ class OrdenController extends Controller
     public function store(Request $request)
     {
         try {
+            $customer_id_credit_list = $request->customer_id_credit_list;
             $user = User::query();
             $ref = $request->ref;
             $sale_direct = $request->saleDirect ?? true;

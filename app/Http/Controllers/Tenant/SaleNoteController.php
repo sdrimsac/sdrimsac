@@ -69,6 +69,7 @@ use App\CoreFacturalo\Requests\Inputs\Functions;
 use App\Exports\SaleNoteExport;
 use App\Models\Tenant\BankAccount;
 use App\Models\Tenant\Cash;
+use App\Models\Tenant\CreditList;
 use App\Models\Tenant\HotelRent;
 use App\Models\Tenant\HotelRentDocument;
 use App\Models\Tenant\HotelRentItem;
@@ -555,6 +556,9 @@ class SaleNoteController extends Controller
                     $table->status_table_id = 5;
                     $table->save();
                 }
+            }
+            if($request->is_list_credit){
+                CreditList::where('customer_id', $this->sale_note->customer_id)->update(['paid' => true]);
             }
             if ($request->hotel_rent_id) {
                 $hotel_rent = HotelRent::findOrFail($request->hotel_rent_id);

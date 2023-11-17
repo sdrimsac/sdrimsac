@@ -870,51 +870,7 @@
             :isReserve="isReserve"
             :hotelRentId="hotelRentId"
         ></room-form>
-               <el-dialog
-            :visible.sync="showEditDate"
-            append-to-body
-            width="50%"
-            title="Agregar días"
-        >
-            <div class="row m-2" v-if="roomEdit">
-                <div class="col-6">
-                    <label for="days">Fecha de reserva</label>
-                 <el-date-picker
-                            v-model="roomEdit.checkin_date"
-                            type="date"
-                            placeholder="Fecha de ingreso"
-                            size="small"
-                            style="width: 100%;"
-                            value-format="yyyy-MM-dd"
-                            :picker-options="{
-                                defaultDate: Date.now('America/Lima'),
-                                disabledDate: time => {
-                                    return time.getTime() < Date.now() - 8.64e7;
-                                }
-                            }"
-                        ></el-date-picker>
-                </div>
-                    <div class="col-6">
-                    <label for="days">Hora de reserva</label>
-                    <el-time-picker
-                            v-model="roomEdit.checkin_time"
-                            size="small"
-                            placeholder="Hora de ingreso"
-                            style="width: 100%;"
-                            value-format="HH:mm:ss"
-                            :format="'hh:mm A'"
-                            :picker-options="{
-                                format: 'hh:mm A' 
-                            }"
-                            timezone="America/Lima"
-                        ></el-time-picker>
-                </div>
-            </div>
-            <span slot="footer" class="dialog-footer">
-                <el-button @click="showEditDate = false">Cancelar</el-button>
-                <el-button type="primary" @click="editReserveDate(roomEdit.id)">Agregar</el-button>
-            </span>
-        </el-dialog>
+       
         <el-dialog
             :visible.sync="showAddDays"
             append-to-body
@@ -936,7 +892,17 @@
                 <el-button @click="showAddDays = false">Cancelar</el-button>
                 <el-button type="primary" @click="addDays">Agregar</el-button>
             </span>
+
+
         </el-dialog>
+
+        <edit-reserve
+        :showDialog.sync="showEditDate"
+        :roomEdit="roomEdit"
+        @getTables="getTables"
+        >
+
+        </edit-reserve>
     </el-dialog>
 </template>
 <style>
@@ -955,11 +921,13 @@
 </style>
 <script>
 import RoomForm from "./room_form.vue";
+import EditReserve from "./edit_reserve.vue";
 export default {
     //tabla color verde
     props: ["showTables", "table"],
     components: {
-        RoomForm
+        RoomForm,
+        EditReserve
     },
     data() {
         return {
@@ -1003,11 +971,18 @@ export default {
         };
     },
     methods: {
+           filterFloors(tower_id, idx) {
+            this.floors = this.all_floors.filter(f => f.tower_id == tower_id);
+    
+        },
         async editReserveDate(id){
             let form = {
                 id,
                 checkin_date:this.roomEdit.checkin_date,
-                checkin_time:this.roomEdit.checkin_time
+                checkin_time:this.roomEdit.checkin_time,
+                table_id:this.roomEdit.table_id,
+                duration:this.roomEdit.duration
+
             }
             const response = await this.$http.post(`/caja/rooms/set_reserve_date`,form);
             if(response.status == 200){
@@ -1042,7 +1017,7 @@ export default {
                     `/caja/rooms/reserve_to_occupied/${id}`
                 );
                 if (response.status == 200) {
-                    this.$toast.successt("Reserva tomada");
+                    this.$toast.success("Reserva tomada");
                     this.getTables();
                 }
             } catch (e) {}

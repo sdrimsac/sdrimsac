@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Tenant\ClientZoneController;
 use App\Http\Controllers\Tenant\CommercialTreatmentController;
+use App\Http\Controllers\Tenant\CreditListController;
 use App\Http\Controllers\Tenant\DispatchController;
 use App\Http\Controllers\Tenant\InventoryController;
 use App\Http\Controllers\Tenant\ItemController;
@@ -47,19 +48,25 @@ if ($hostname) {
 
             Route::middleware(['auth', 'redirect.module', 'locked.tenant'])->group(function () {
                 Route::prefix('/commercial_treatment')
-                ->group(function (){
-                    Route::get('/', [CommercialTreatmentController::class, 'index'])->name('tenant.commercial_treatment.index');
-                    Route::get('/columns', [CommercialTreatmentController::class, 'columns']);
-                    Route::get('/records', [CommercialTreatmentController::class, 'records']);
-                    Route::get('/record/{id}', [CommercialTreatmentController::class, 'record']);
-                    Route::delete('/{id}', [CommercialTreatmentController::class, 'delete']);
-                    Route::post('/', [CommercialTreatmentController::class, 'store']);
-                    Route::prefix('categories')
-                    ->group(function (){
-                        
-                        Route::get('/records/{commercial_treatment_id}', [CommercialTreatmentController::class, 'records_categories']);
-                        Route::post('/{commercial_treatment_id}', [CommercialTreatmentController::class, 'store_categories']);
+                    ->group(function () {
+                        Route::get('/', [CommercialTreatmentController::class, 'index'])->name('tenant.commercial_treatment.index');
+                        Route::get('/columns', [CommercialTreatmentController::class, 'columns']);
+                        Route::get('/records', [CommercialTreatmentController::class, 'records']);
+                        Route::get('/record/{id}', [CommercialTreatmentController::class, 'record']);
+                        Route::delete('/{id}', [CommercialTreatmentController::class, 'delete']);
+                        Route::post('/', [CommercialTreatmentController::class, 'store']);
+                        Route::prefix('categories')
+                            ->group(function () {
+
+                                Route::get('/records/{commercial_treatment_id}', [CommercialTreatmentController::class, 'records_categories']);
+                                Route::post('/{commercial_treatment_id}', [CommercialTreatmentController::class, 'store_categories']);
+                            });
                     });
+                Route::prefix('credit-list')->group(function () {
+                    Route::post('/send-credit', [CreditListController::class, 'send_credit']);
+                    Route::get('/balance/{customer_id}', [CreditListController::class, 'get_balance']);
+                    Route::get('/records', [CreditListController::class, 'records']);
+                    Route::get('/get-ordens/{customer_id}', [CreditListController::class, 'get_ordens']);
                 });
                 Route::prefix('/sellers')->group(function () {
                     //
@@ -318,7 +325,7 @@ if ($hostname) {
                 //Persons
                 Route::get('filtrar_distritos/records', [App\Http\Controllers\Tenant\PersonController::class, 'distritos']);
                 Route::get('persons/columns', [App\Http\Controllers\Tenant\PersonController::class, 'columns']);
-                Route::get('customers/list', [PersonController::class,'clientsForGenerateCPE'] );
+                Route::get('customers/list', [PersonController::class, 'clientsForGenerateCPE']);
                 Route::get('persons/{type}', [App\Http\Controllers\Tenant\PersonController::class, 'index'])->name('tenant.persons.index')->middleware('just.admin');
                 Route::get('persons/{type}/printer', [App\Http\Controllers\Tenant\PersonController::class, 'printer']);
                 Route::get('persons/{type}/records', [App\Http\Controllers\Tenant\PersonController::class, 'records']);
@@ -576,7 +583,7 @@ if ($hostname) {
                 Route::post('sale-notes/items',  [App\Http\Controllers\Tenant\SaleNoteController::class, 'getItemsFromNotes']);
                 Route::post('sale-notes/items_caja',  [App\Http\Controllers\Tenant\SaleNoteController::class, 'getItemsFromNotesCaja']);
                 Route::get('sale-notes/columns2', [App\Http\Controllers\Tenant\SaleNoteController::class, 'columns2']);
-                Route::get('sale-notes/list-by-client',[App\Http\Controllers\Tenant\SaleNoteController::class, 'saleNotesByClient']);
+                Route::get('sale-notes/list-by-client', [App\Http\Controllers\Tenant\SaleNoteController::class, 'saleNotesByClient']);
                 Route::get('sale-notes/records', [App\Http\Controllers\Tenant\SaleNoteController::class, 'records']);
                 Route::get('sale-notes/excel', [App\Http\Controllers\Tenant\SaleNoteController::class, 'excel']);
                 Route::get('sale-notes/credit_pending', [App\Http\Controllers\Tenant\SaleNoteController::class, 'getCreditPending']);

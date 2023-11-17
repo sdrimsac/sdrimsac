@@ -1522,6 +1522,21 @@
                                                 ></el-time-picker>
                                             </div>
                                         </div>
+                                        <div class="col-md-6 mt-4">
+                                            <div class="form-group">
+                                                <label
+                                                    class="control-label w-100"
+                                                    >Lista de cuenta por cobrar
+                                                </label>
+
+                                                <el-switch
+                                                    v-model="form.credit_list"
+                                                    active-text="Si"
+                                                    inactive-text="No"
+                                                    @change="submit"
+                                                ></el-switch>
+                                            </div>
+                                        </div>
                                     </template>
                                 </div>
                             </el-tab-pane>

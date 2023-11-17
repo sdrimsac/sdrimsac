@@ -2550,6 +2550,7 @@ export default {
             this.setPaymentOrden(orden_items);
             // this.idOrden = orden.id;
         },
+
         //aqui se envia los productos desde la mesa
         sendOrdens(orden) {
             if (this.localOrden.length != 0 && !this.configuration.box_orden) {
@@ -2796,6 +2797,7 @@ export default {
             this.form.printDocument = form.printDocument;
             this.form.is_room = form.is_room;
             if (this.form.is_room) {
+                this.form.is_list_credit = form.is_list_credit;
                 this.form.orden_ids = form.orden_ids;
                 this.form.hotel_rent_item_ids = form.hotel_rent_item_ids;
                 this.form.is_advance = form.is_advance;

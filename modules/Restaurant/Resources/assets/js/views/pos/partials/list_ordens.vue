@@ -143,7 +143,8 @@
                     v-if="clientTableData.table"
                 >
                     <strong>
-                        {{clientTableData.is_room ? 'Habitación':'Mesa'}} {{ clientTableData.table }}- Ref:
+                        {{ clientTableData.is_room ? "Habitación" : "Mesa" }}
+                        {{ clientTableData.table }}- Ref:
                         {{ clientTableData.ref }}
                     </strong>
                 </div>
@@ -245,7 +246,24 @@
                             <br />
                             Limpiar
                         </button>
-
+                        <button
+                            v-if="
+                                isCreatingOrden == false &&
+                                    configuration.credit_list &&
+                                    localOrden.length != 0
+                            "
+                            class="btn btn-light mt-2"
+                            type="button"
+                            @click="toCreditList"
+                            style="max-height: 45px ; max-width: 80px;"
+                        >
+                            <i
+                                class="far fa-credit-card"
+                                style="color: var(--primary) !important"
+                            ></i>
+                            <br />
+                            A cuenta
+                        </button>
                         <button
                             v-if="
                                 (isCreatingOrden == true ||
@@ -585,9 +603,14 @@
                                 </span>
                             </el-checkbox>
                         </template>
-                        <template v-if="commercialTreatments.length > 0 && configuration.commercial_treatments">
+                        <template
+                            v-if="
+                                commercialTreatments.length > 0 &&
+                                    configuration.commercial_treatments
+                            "
+                        >
                             <el-select
-                            style="margin-bottom: 5px;"
+                                style="margin-bottom: 5px;"
                                 clearable
                                 v-model="commercialTreatmentId"
                                 placeholder="Seleccione un tratamiento comercial"
@@ -786,7 +809,8 @@
                                                                     addVariation
                                                                 "
                                                             >
-                                                                Agregar otro item
+                                                                Agregar otro
+                                                                item
                                                             </el-tag>
                                                             <el-tag
                                                                 v-if="
@@ -2145,6 +2169,20 @@
             @limpiarForm="limpiarForm"
         >
         </consignment-form>
+        <credit-list-modal
+            :showDialog.sync="showCreditListModal"
+            :amountToAdd="creditListAmount"
+            @sendOrdenToCreditList="sendOrdenToCreditList"
+        >
+        </credit-list-modal>
+
+        <credit-list-dialog
+            :showDialog.sync="showCreditListDialog"
+            :amountToAdd="creditListAmount"
+            @sendOrdenToCreditList="sendOrdenToCreditList"
+            @paymentsOrden="paymentsOrden"
+        >
+        </credit-list-dialog>
         <el-dialog
             :visible.sync="showChangeName"
             title="Cambiar nombre de producto"
@@ -2209,8 +2247,12 @@ const ExpensesIncomes = () => import("../partials/expenses_incomes.vue");
 const ShowSeriesProduct = () => import("../partials/show_series_product.vue");
 const ShowLotesProduct = () => import("../partials/show_lotes_product.vue");
 const TransfersModal = () => import("../partials/transfer_modal.vue");
+const CreditListModal = () => import("../partials/credit_list_modal.vue");
+const CreditListDialog = () => import("../partials/credit_list_dialog.vue");
 export default {
     components: {
+        CreditListDialog,
+        CreditListModal,
         ConsignmentForm,
         CreditForm,
         CashForm,
@@ -2250,6 +2292,9 @@ export default {
 
     data() {
         return {
+            showCreditListDialog: false,
+            showCreditListModal: false,
+            creditListAmount: 0,
             commercialTreatmentId: null,
             quotation_stock: false,
             name_pdf: null,
@@ -2386,6 +2431,12 @@ export default {
                 icon: "fas fa-hourglass",
                 visible:
                     this.configuration.restaurant && !this.configuration.college
+            },
+            {
+                id: 6,
+                title: ["Lista de crédito"],
+                icon: "fas fa-hourglass",
+                visible: this.configuration.credit_list
             }
         ];
         let ordens = [];
@@ -2430,8 +2481,24 @@ export default {
         this.getCommercialTreatments();
     },
     methods: {
+        paymentsOrden(items){
+            this.$emit("paymentsOrden", items);
+        },
+        toCreditList() {
+            this.creditListAmount = 0;
+            this.localOrden.forEach(orden => {
+                this.creditListAmount +=
+                    Number(orden.price) * Number(orden.quantity);
+            });
+            this.creditListAmount = Number(this.creditListAmount.toFixed(2));
+            this.showCreditListModal = true;
+            console.log(
+                "🚀 ~ file: list_ordens.vue:2467 ~ toCreditList ~ this.showCreditListModal:",
+                this.showCreditListModal
+            );
+        },
         clearCommercialTreatment() {
-              let ordens = [...this.localOrden];
+            let ordens = [...this.localOrden];
             ordens.forEach(orden => {
                 if (orden.original_price) {
                     orden.price = orden.original_price;
@@ -2463,16 +2530,18 @@ export default {
                                 c => c.category_item_id == category_id
                             );
                             if (factor) {
-                                let amount = Number(factor.amount);                                
+                                let amount = Number(factor.amount);
                                 if (is_amount) {
-                                    if(price >= amount){
+                                    if (price >= amount) {
                                         orden.price = price - factor.amount;
                                     }
                                 } else {
-                                    orden.price = price /  (1+(factor.amount / 100));
-                                   
+                                    orden.price =
+                                        price / (1 + factor.amount / 100);
                                 }
-                                    orden.price = Number((Number(orden.price)).toFixed(2));
+                                orden.price = Number(
+                                    Number(orden.price).toFixed(2)
+                                );
                             }
                         });
                     }
@@ -2927,6 +2996,33 @@ export default {
                 this.ordenLoading = false;
             }
         },
+        async sendOrdenToCreditList(customer_id) {
+            try {
+                this.ordenLoading = true;
+                const responses = await this.$http.post(
+                    "/credit-list/send-credit",
+                    {
+                        customer_id,
+                        items: this.localOrden
+                    }
+                );
+
+                this.ordenLoading = false;
+                if (responses.status != 200) {
+                    this.$toast.warning("Ocurrió un error");
+
+                    return;
+                }
+                this.to_carry = false;
+                this.$emit("cancelOrden");
+                this.$emit("update:isCreatingOrden", false);
+                let msg = `Se agregó correctamente a la cuenta.`;
+                this.$toast.success(msg);
+            } catch (e) {
+                this.ordenLoading = false;
+                this.$toast.error("Ocurrió un error");
+            }
+        },
         async sendOrden() {
             if (this.localOrden.length == 0 && !this.variation) {
                 this.$toast.warning("Orden sin productos");
@@ -2996,6 +3092,9 @@ export default {
 
         async trigerFunction(id) {
             switch (id) {
+                case 6:
+                    this.showCreditListDialog = true;
+                    break;
                 case 7:
                     if (!this.cash_id) {
                         this.$toast.error("Abra una caja");
