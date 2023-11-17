@@ -1793,6 +1793,7 @@ export default {
             this.form.items = items;
             this.reCalculateTotal();
             this.form.enter_amount = this.form.total;
+            this.enterAmount();
         },
         openDialogPerson() {
             if (this.configuration.college) {
@@ -3249,7 +3250,11 @@ export default {
                                 }))
                             ) {
                                 this.currentPayments.pop();
-                                this.enterAmount();
+                                this.method_payment("Efectivo");
+                                if(this.currentPayments.length == 0){
+                                    this.form.enter_amount = this.form.total;
+                                }
+                                    this.enterAmount();
                                 return;
                             }
                         }
