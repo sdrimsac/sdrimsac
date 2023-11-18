@@ -405,8 +405,7 @@ class BoxesController extends Controller
             $method = $payment['method'];
             $operation_number = $payment['operation_number'];
 
-            $exist = Box::where('method', $method)
-                ->where('operation_number', $operation_number)
+            $exist = Box::where('operation_number', $operation_number)
                 ->first();
             if ($exist) {
                 $message .= $operation_number . ' (' . $method . ')' . '|';

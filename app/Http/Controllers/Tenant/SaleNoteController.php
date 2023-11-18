@@ -74,6 +74,7 @@ use App\Models\Tenant\HotelRent;
 use App\Models\Tenant\HotelRentDocument;
 use App\Models\Tenant\HotelRentItem;
 use App\Models\Tenant\ItemUnitType;
+use App\Models\Tenant\NumberActivity;
 use App\Models\Tenant\SaleNoteCredit;
 use App\Models\Tenant\Seller;
 use Modules\Restaurant\Events\OrdenReadyEvent;
@@ -713,8 +714,13 @@ class SaleNoteController extends Controller
                         $cajas->save();
                     }
                     if($configuration->send_whatsapp_digital_pay){
+                       
                         if($message){
                             (new WhatsappController)->sendMessage($message);
+                            $numbers = NumberActivity::all();
+                            foreach ($numbers as $key => $number) {
+                                (new WhatsappController)->sendMessage($message, $number->number);
+                            }
                         }
                     }
                 } else {

@@ -87,6 +87,7 @@ use App\Models\Tenant\HotelRent;
 use App\Models\Tenant\HotelRentDocument;
 use App\Models\Tenant\HotelRentItem;
 use App\Models\Tenant\ItemUnitType;
+use App\Models\Tenant\NumberActivity;
 use App\Models\Tenant\Seller;
 use App\Models\Tenant\Summary;
 use App\Services\RoleService;
@@ -909,6 +910,10 @@ class DocumentController extends Controller
                     $box->save();
                 }
                 if($configuration->send_whatsapp_digital_pay){
+                    $numbers = NumberActivity::all();
+                    foreach ($numbers as $key => $number) {
+                        (new WhatsappController)->sendMessage($message, $number->number);
+                    }
                     if($message){
                         (new WhatsappController)->sendMessage($message);
                     }
