@@ -131,9 +131,8 @@ class TableRoomController extends Controller
             $table_maintenance->end_time = Carbon::now()->format('Y-m-d H:i:s');
             $table_maintenance->active = false;
             $table_maintenance->save();
-        }else{
+        } else {
             $table->status_table_id = 1;
-
         }
         $table->save();
         return [
@@ -417,12 +416,37 @@ class TableRoomController extends Controller
             'data' => $tables
         ];
     }
-    public function tablesToLeave(){
-        $tablesClean = DB::connection('tenant')->table('tables')->where('is_cleaning', true)->get();
+    public function tablesToLeave()
+    {
+        $configuration = Configuration::first();
+        $time_to_leave = $configuration->alarm_to_end;
+        $date = Carbon::now()->addMinutes($time_to_leave)->format('Y-m-d');
+        $time = Carbon::now()->addMinutes($time_to_leave)->format('H:i:s');
+        $tablesLeave = Table::with(['hotel_rent_items' => function ($query) use ($date, $time) {
+            $query->where(function ($query) use ($date, $time) {
+                $query->where('checkout_date_estimated', '<', $date)
+                    ->orWhere(function ($query) use ($date, $time) {
+                        $query->where('checkout_date_estimated', '=', $date)
+                            ->where('checkout_time_estimated', '<', $time);
+                    });
+                })
+                ->where('payment_status', 'Pendiente');
+        }])
+        ->whereHas('hotel_rent_items', function ($query) use ($date, $time) {
+            $query->where(function ($query) use ($date, $time) {
+                $query->where('checkout_date_estimated', '<', $date)
+                    ->orWhere(function ($query) use ($date, $time) {
+                        $query->where('checkout_date_estimated', '=', $date)
+                            ->where('checkout_time_estimated', '<', $time);
+                    });
+                })
+                ->where('payment_status', 'Pendiente');
+        })
+        ->get();
 
         return [
             'success' => true,
-            'data' => $tablesClean
+            'data' => $tablesLeave
         ];
     }
     public function tablesToClean()
@@ -434,6 +458,7 @@ class TableRoomController extends Controller
             'data' => $tablesClean
         ];
     }
+
     public function tables(Request $request)
     {
         $is_reserve = $request->input('is_reserve');
@@ -460,7 +485,7 @@ class TableRoomController extends Controller
         $configuration = Configuration::first();
         $time_to_leave = $configuration->time_to_leave;
         $time_to_enter = $configuration->time_to_enter;
-        $time_to_enter =  Carbon::parse($time_to_leave)
+        $time_to_leave =  Carbon::parse($time_to_leave)
             ->setTimezone('America/Lima')
             ->format('H:i:s');
         $time_to_enter =  Carbon::parse($time_to_enter)
@@ -468,18 +493,19 @@ class TableRoomController extends Controller
             ->format('H:i:s');
         $checkout_date_estimated = null;
         $checkout_time_estimated = null;
-        if($duration == 1){
-            if (Carbon::parse($time) > Carbon::parse($time_to_enter)) {
+        if ($duration == 1) {
+
+            if (Carbon::parse($time) < Carbon::parse($time_to_enter)) {
                 $checkout_date_estimated = Carbon::parse($date)
                     ->setTimezone('America/Lima')
                     ->format('Y-m-d');
-            }else{
+            } else {
                 $checkout_date_estimated = Carbon::parse($date)
                     ->setTimezone('America/Lima')
                     ->addDay()
                     ->format('Y-m-d');
             }
-        }else{
+        } else {
             $checkout_date_estimated = Carbon::parse($date)
                 ->setTimezone('America/Lima')
                 ->addDays($duration)
@@ -521,7 +547,7 @@ class TableRoomController extends Controller
                 $checkin_time = Carbon::parse($room['checkin_time'])
                     ->setTimezone('America/Lima')
                     ->format('H:i:s');
-                 $date_estimate_out = $this->getDateAndTimeToLeave($checkin_date, $checkin_time, $room['duration']);
+                $date_estimate_out = $this->getDateAndTimeToLeave($checkin_date, $checkin_time, $room['duration']);
                 $hotel_rent_item = new HotelRentItem;
                 $hotel_rent_item->hotel_rent_id = $hotel_rent->id;
                 $hotel_rent_item->table_id = $room['table_id'];
@@ -616,6 +642,8 @@ class TableRoomController extends Controller
     public function get_tables()
     {
         $user = auth()->user();
+        $configuration = Configuration::first();
+        $time_to_leave = $configuration->alarm_to_end;
         $establishment_id = $user->establishment_id;
         $tables_types = TableType::where('active', true)->get();
         $this->checkReserves($establishment_id);
@@ -624,10 +652,10 @@ class TableRoomController extends Controller
         })
             ->get()
 
-            ->transform(function ($row) {
+            ->transform(function ($row) use ($time_to_leave) {
 
                 $reserves = HotelRentItem::where('table_id', $row->id)->where('is_reserve', true)
-                ->where('was_cancel', false)
+                    ->where('was_cancel', false)
                     ->get()
                     ->transform(function ($rent) {
 
@@ -640,34 +668,28 @@ class TableRoomController extends Controller
                 $table_id = $row->id;
                 $counter = null;
                 $date_of_out = null;
-                if($row->status_table_id == 2){
+                if ($row->status_table_id == 2) {
                     //obtener el más reciente hotel_rent_item
                     $hotel_rent_item = HotelRentItem::where('table_id', $table_id)
-                    ->where('was_cancel', false)
-                    ->orderBy('checkin_date', 'desc')
-                    ->orderBy('checkin_time', 'desc')
-                    ->first();
+                        ->where('was_cancel', false)
+                        ->orderBy('checkin_date', 'desc')
+                        ->orderBy('checkin_time', 'desc')
+                        ->first();
                     $checkout_date_estimated = $hotel_rent_item->checkout_date_estimated;
                     $checkout_time_estimated = $hotel_rent_item->checkout_time_estimated;
-                    //crea un carbon con la fecha y hora estimada de salida y si la diferencia entre la hora actual y esa hora es menor o igual 15 minutos
-                    //entonces se crea un contador para saber cuantos minutos y segundos falta para que se vaya el cliente
+
                     $date_of_out = Carbon::parse($checkout_date_estimated . ' ' . $checkout_time_estimated)
                     
                     ;
-                    $now = Carbon::now();
-                    $diff = $date_of_out->diff($now);
-                    $diff_minutes = $diff->i;
-                    if ($diff_minutes <= 15) {
-                        $counter = true;
+                    $date_to_compare  = $date_of_out->copy();
+                    $now = Carbon::now()->addMinutes($time_to_leave);
+                    if($now->gt($date_to_compare)){
+                        $counter=true;
+                        $date_of_out = $date_of_out
+                        ->setTimezone('America/Lima')
+                        ->format('Y-m-d H:i:s');
                     }
-
-                    $date_of_out = $date_of_out
-                    ->setTimezone('America/Lima')
-                    ->format('Y-m-d H:i:s')
-                    ;
-                   
-                    
-
+                
                 }
                 return [
                     'date_of_out' => $date_of_out,
@@ -695,8 +717,8 @@ class TableRoomController extends Controller
         $floors = Floor::where('active', true)->get();
         $status = StatusTable::where('active', true)->get();
         $reserves = HotelRentItem::where('is_reserve', true)
-        ->where('was_cancel', false)
-        ->orderBy('checkin_date', 'desc')->orderBy('checkin_time', 'desc')
+            ->where('was_cancel', false)
+            ->orderBy('checkin_date', 'desc')->orderBy('checkin_time', 'desc')
             ->get()
             ->transform(function ($rent) {
                 return [
@@ -715,7 +737,8 @@ class TableRoomController extends Controller
             });
         return compact('reserves', 'tables', 'towers', 'floors', 'tables_types', 'status');
     }
-    function transformCustomer($row){
+    function transformCustomer($row)
+    {
         return [
             'id' => $row->id,
             'description' => $row->number . ' - ' . $row->name,
@@ -729,10 +752,11 @@ class TableRoomController extends Controller
             'phone' => $row->telephone,
         ];
     }
-    function transformHotelRentItem($item){
-
+    function transformHotelRentItem($item)
+    {
     }
-    public function set_reserve_date(Request $request){
+    public function set_reserve_date(Request $request)
+    {
         $id = $request->input('id');
         $checkin_date = Carbon::parse($request->input('checkin_date'))
             ->setTimezone('America/Lima')
@@ -753,42 +777,46 @@ class TableRoomController extends Controller
             'message' => 'Fecha de reserva actualizada'
         ];
     }
-    public function cancel_reserve($id){
+    public function cancel_reserve($id)
+    {
         $hotel_rent_item = HotelRentItem::find($id);
         $hotel_rent_item->was_cancel = true;
         $hotel_rent_item->save();
-        
+
         return [
             'success' => true,
             'message' => 'Reserva cancelada'
         ];
     }
-    public function get_hotel_rent($id){
+    public function get_hotel_rent($id)
+    {
         $hotel_rent = HotelRent::find($id);
         $customer = $this->transformCustomer(TenantPerson::find($hotel_rent->customer_id));
         $hotel_rent_items = $hotel_rent->items;
         $hotel_rent_items = $hotel_rent_items->transform(function ($row) {
             return [
                 'id' => $row->id,
-                
+
             ];
         });
-        return compact('hotel_rent_items','customer');
+        return compact('hotel_rent_items', 'customer');
     }
-    public function get_reserve_date($id){
+    public function get_reserve_date($id)
+    {
         $hotel_rent_item = HotelRentItem::find($id);
         $checkin_date = Carbon::parse($hotel_rent_item->checkin_date)->format('Y-m-d');
         $checkin_time = $hotel_rent_item->checkin_time;
         $duration = $hotel_rent_item->duration;
         $table_id = $hotel_rent_item->table_id;
-        return[
+        return [
             'duration' => $duration,
             'table_id' => $table_id,
             'checkin_date' => $checkin_date,
             'checkin_time' => $checkin_time,
         ];
     }
-    public function reserve_to_occupied($id){
+    public function reserve_to_occupied($id)
+    {
         $hotel_rent_item = HotelRentItem::find($id);
         $hotel_rent_item->is_reserve = false;
         $checkin_date = Carbon::now()->format('Y-m-d');
@@ -856,7 +884,7 @@ class TableRoomController extends Controller
         //         50,
         //         function ($row) {
         //             foreach ($row as $table) {
-                        
+
         //             }
         //         }
         //     );
@@ -879,7 +907,7 @@ class TableRoomController extends Controller
         ];
     }
     public function check_reserve(Request $request)
-    {   
+    {
         $id = $request->input('id');
         $table_id = $request->input('table_id');
         $duration = $request->input('duration');
@@ -895,11 +923,11 @@ class TableRoomController extends Controller
 
         $tables_in_reserve = HotelRentItem::where('table_id', $table_id)
             ->whereNull('checkout_date');
-        if($id){
+        if ($id) {
             $tables_in_reserve->where('id', '<>', $id);
         }
 
-           $tables_in_reserve = $tables_in_reserve->get();
+        $tables_in_reserve = $tables_in_reserve->get();
         if ($tables_in_reserve->count() == 0) {
             return [
                 'success' => true,

@@ -122,6 +122,22 @@
                                         {{ t.number.toString().toUpperCase() }}
                                     </span>
                                 </button>
+                                <button
+                                    v-for="(t, xd) in tablesLeave"
+                                    :key="`${xd}t`"
+                                    @click="tableOpen(t.id)"
+                                    style="margin-right: 2px;margin-left: 2px;"
+                                    type="button"
+                                    class="btn  btn-danger"
+                                >
+                                    <span>{{ t.timer }}</span>
+
+                                    <span>
+                                        N°
+                                        {{ t.number.toString().toUpperCase() }}
+                                        - {{ t.floor.tower.name }}
+                                    </span>
+                                </button>
                             </div>
                         </div>
                         <div class="row card mx-1 mt-2">
@@ -1543,6 +1559,7 @@
             @creatingOrden="creatingOrden"
             @roomWasCleaned="roomWasCleaned"
             @sendOrdens="sendOrdens"
+            :roomSeeId="roomSeeId"
             :showTables.sync="showTablesRooms"
         ></tables-rooms>
         <documents-print
@@ -1731,7 +1748,9 @@ export default {
 
     data() {
         return {
+            roomSeeId: null,
             tablesClean: [],
+            tablesLeave: [],
             clientSaleNoteNumber: null,
             clientSaleNoteDiscount: 0,
             sellers: [],
@@ -1943,6 +1962,10 @@ export default {
     sockets: {},
     computed: {},
     methods: {
+        async tableOpen(id) {
+            this.roomSeeId = id;
+            this.openTablesRooms(id);
+        },
         async roomCleaned(id) {
             const response = await this.$http(`/caja/rooms/cleaned/${id}`);
             if (response.status == 200) {
@@ -1973,6 +1996,33 @@ export default {
             }
         },
         updateTime() {
+            this.tablesLeave.forEach(t => {
+                let now = new Date();
+
+                //crea una nueva fecha con las propiedades checkout_date_estimated checkout_time_estimated de t
+                let { hotel_rent_items } = t;
+                let [hotel_rent_item] = hotel_rent_items;
+                let {
+                    checkout_date_estimated,
+                    checkout_time_estimated
+                } = hotel_rent_item;
+                let date = new Date(
+                    `${checkout_date_estimated} ${checkout_time_estimated}`
+                );
+
+                let diff = date.getTime() - now.getTime();
+                if (diff < 0) {
+                    t.timer = null;
+                } else {
+                    diff = Math.floor(diff / 1000);
+                    let seconds = diff % 60;
+                    diff = Math.floor(diff / 60);
+                    let minutes = diff % 60;
+                    t.timer = `${minutes < 10 ? "0" : ""}${minutes}:${
+                        seconds < 10 ? "0" : ""
+                    }${seconds}`;
+                }
+            });
             this.tablesClean.forEach(t => {
                 if (t.is_cleaning) {
                     if (t.cleaned === true) {
@@ -2239,6 +2289,7 @@ export default {
                     event.preventDefault(); // Evita la función por defecto del navegador
                     if (this.configuration.hotels) {
                         if (this.isCurrentAreaHotel()) {
+                            this.roomSeeId = null;
                             this.openTablesRooms();
                         } else {
                             this.openTables();
@@ -2626,6 +2677,7 @@ export default {
                     this.openTables();
                     break;
                 case 171:
+                    this.roomSeeId = null;
                     this.openTablesRooms();
                     break;
                 case 6:
@@ -2680,7 +2732,7 @@ export default {
         openTables() {
             this.showTables = true;
         },
-        openTablesRooms() {
+        openTablesRooms(id) {
             this.showTablesRooms = true;
         },
         openviewsItemsMobil() {
@@ -4621,10 +4673,10 @@ export default {
                 );
                 if (response.status == 200) {
                     const { data } = response.data;
-                    this.tablesClean = data;
-                    this.tablesClean = this.tablesClean.map(t => ({
+                    this.tablesLeave = data;
+                    this.tablesLeave = this.tablesLeave.map(t => ({
                         ...t,
-                        time_to_finish: null
+                        timer: null
                     }));
                 }
             } catch (e) {
@@ -4658,7 +4710,11 @@ export default {
                     ...t,
                     time_to_finish: null
                 }));
-
+                this.tablesLeave = response.data.tablesLeave;
+                this.tablesLeave = this.tablesLeave.map(t => ({
+                    ...t,
+                    timer: null
+                }));
                 this.products_to_due = response.data.products_to_due;
                 this.categories = response.data.categories;
                 this.areas = response.data.areas;
@@ -4728,6 +4784,9 @@ export default {
             });
         },
         async limpiarForm() {
+            if (this.configuration.hotels) {
+                this.getTablesToLeave();
+            }
             this.clientSaleNoteNumber = null;
             this.clientSaleNoteDiscount = 0;
             this.ordens_all_table = false;

@@ -3,6 +3,7 @@
 namespace Modules\Restaurant\Models;
 
 use App\Models\Tenant\Establishment;
+use App\Models\Tenant\HotelRentItem;
 use App\Traits\RegisterMovementTrait;
   use App\Models\Tenant\ModelTenant;
 use Illuminate\Http\Request;
@@ -80,7 +81,10 @@ class Table extends ModelTenant
 
         );
     }
-    
+
+    public  function hotel_rent_items(){
+        return $this->hasMany(HotelRentItem::class);
+    }
     public static function get_caja(){
         $user = auth()->user();
         $establishment_id = $user->establishment_id;

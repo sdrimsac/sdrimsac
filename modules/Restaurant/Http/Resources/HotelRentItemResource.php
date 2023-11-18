@@ -91,7 +91,31 @@ class HotelRentItemResource extends JsonResource
                 ];
             });
         $has_many_rooms = $this->hotel_rent->has_many_rooms();
+        $price_table = $this->table->price;
+        $extra_time = 0;
+        $checkout_date_estimated = Carbon::parse($this->checkout_date_estimated . " " . $this->checkout_time_estimated);
+        $now = Carbon::now();
+        $difference_days = $checkout_date_estimated->diffInDays($now);
+        if($difference_days == 0){
+            $checkout_time_estimated = Carbon::parse($this->checkout_time_estimated);
+            $now_time = Carbon::parse($now->format('H:i:s'));
+            if($now_time->greaterThan($checkout_time_estimated)){
+                $extra_time = $price_table/2;
+            }
+
+        }
+        if($difference_days > 0){
+            $extra_time = $price_table * $difference_days;
+        }
+        // if ($checkout_date_estimated->greaterThan($now) && $checkout_date_estimated->diffInDays($now) <= 1
+            
+        // ) {
+        //     $extra_time = $price_table / 2;
+        // }else{
+        //     $extra_time = $price_table * $checkout_date_estimated->diffInDays($now);
+        // }
         return [
+            'extra_time' => $extra_time,
             'id' => $this->id,
             'documents' => $documents,
             'has_many_rooms' => $has_many_rooms,

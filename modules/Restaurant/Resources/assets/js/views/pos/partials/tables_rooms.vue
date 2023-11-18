@@ -308,6 +308,7 @@
                     <div class="col-md-6 col-lg-3 col-sm-6 col-6">
                         <label for="extra_time">Media tarifa</label>
                         <el-input
+                            readonly
                             type="number"
                             class="w-100"
                             v-model="extra_time"
@@ -350,22 +351,26 @@
                         S/ 1650.00
                     </div> -->
                 </div>
-                <div class="m-1 d-flex">
-                    <div class="col-3 d-flex">
+                <div class="m-1 d-flex justify-content-center">
+                    <div class="col-2 d-flex">
                         <span class="text-muted h4">T. HABITACIÓN: </span>
                         <span class="h4">{{ currentRoom.total_room }}</span>
                     </div>
-                    <div class="col-3 d-flex">
+                    <div class="col-2 d-flex">
                         <span class="text-muted h4">T. ORDENES: </span>
                         <span class="h4">{{ currentRoom.total_orden }}</span>
                     </div>
-                    <div class="col-3 d-flex">
+                    <div class="col-2 d-flex">
                         <span class="text-muted h4">T. ADELANTO: </span>
                         <span class="h4">{{ currentRoom.advance }}</span>
                     </div>
-                    <div class="col-3 d-flex">
+                    <div class="col-2 d-flex" v-if="extra_time > 0">
+                        <span class="text-muted h4">PENALIDAD: </span>
+                        <span class="h4">{{ extra_time }}</span>
+                    </div>
+                    <div class="col-2 d-flex">
                         <span class="text-muted h4">TOTAL: </span>
-                        <span class="h4">{{ currentRoom.total }}</span>
+                        <span class="h4">{{ (Number(currentRoom.total) + Number(extra_time)).toFixed(2) }}</span>
                     </div>
                 </div>
                 <div class="row m-2" v-if="currentRoom.ordens.length > 0">
@@ -933,7 +938,7 @@ import RoomForm from "./room_form.vue";
 import EditReserve from "./edit_reserve.vue";
 export default {
     //tabla color verde
-    props: ["showTables", "table"],
+    props: ["showTables", "table","roomSeeId"],
     components: {
         RoomForm,
         EditReserve
@@ -1243,7 +1248,9 @@ export default {
                     data: { data }
                 } = response;
                 this.currentRoom = data;
+                this.extra_time = data.extra_time;
                 this.viewingRoom = true;
+                
             } catch (e) {
             } finally {
                 this.loading = false;
@@ -1399,7 +1406,6 @@ export default {
                         t.timer = `${minutes < 10 ? "0" : ""}${minutes}:${
                             seconds < 10 ? "0" : ""
                         }${seconds} para salir`;
-                        
                     }
                 }
                 if (t.is_cleaning) {
@@ -1430,6 +1436,10 @@ export default {
             this.timer = setInterval(() => {
                 this.updateTime();
             }, 1000);
+            if(this.roomSeeId){
+                let table = this.all_tables.find(t=>t.id==this.roomSeeId);
+                this.selectTable(table);
+            }
         },
         filterTablesByFloor(floor_id) {
             this.showReserves = false;
@@ -1471,7 +1481,7 @@ export default {
                     this.all_tables = this.all_tables.map(t => ({
                         ...t,
                         time_to_finish: null,
-                        timer:null
+                        timer: null
                     }));
                     this.all_status = status;
                     this.status = status
@@ -1518,9 +1528,11 @@ export default {
         },
         close() {
             this.viewingRoom = false;
+            
             clearInterval(this.timer);
 
             this.$emit("update:showTables", false);
+            this.$emit("update:roomSeeId", null);
         }
     },
     mounted() {

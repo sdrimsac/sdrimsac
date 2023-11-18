@@ -3024,6 +3024,7 @@ export default {
         },
 
         async limpiarForm() {
+      
             this.selectOption = 4;
             this.blockCart = false;
             this.variation = false;

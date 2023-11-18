@@ -36,6 +36,7 @@ use Modules\Item\Models\ItemLotsGroup;
 use Modules\Restaurant\Models\Area;
 use Modules\Restaurant\Models\Food;
 use Modules\Restaurant\Models\Orden;
+use Modules\Restaurant\Models\Table;
 use Modules\Services\Data\ServiceData;
 
 class PosController extends Controller
@@ -286,10 +287,39 @@ class PosController extends Controller
         }
         $areas = Area::all();
         $tablesClean = [];
+        $tablesLeave = [];
         if($config->hotels){
             $tablesClean = DB::connection('tenant')->table('tables')->where('is_cleaning', true)->get();
+
+            $configuration = Configuration::first();
+            $time_to_leave = $configuration->alarm_to_end;
+            $date = Carbon::now()->addMinutes($time_to_leave)->format('Y-m-d');
+            $time = Carbon::now()->addMinutes($time_to_leave)->format('H:i:s');
+            $tablesLeave = Table::with(['hotel_rent_items' => function ($query) use ($date, $time) {
+                $query->where(function ($query) use ($date, $time) {
+                    $query->where('checkout_date_estimated', '<', $date)
+                        ->orWhere(function ($query) use ($date, $time) {
+                            $query->where('checkout_date_estimated', '=', $date)
+                                ->where('checkout_time_estimated', '<', $time);
+                        });
+                    })
+                    ->where('payment_status', 'Pendiente');
+            }])
+            ->whereHas('hotel_rent_items', function ($query) use ($date, $time) {
+                $query->where(function ($query) use ($date, $time) {
+                    $query->where('checkout_date_estimated', '<', $date)
+                        ->orWhere(function ($query) use ($date, $time) {
+                            $query->where('checkout_date_estimated', '=', $date)
+                                ->where('checkout_time_estimated', '<', $time);
+                        });
+                    })
+                    ->where('payment_status', 'Pendiente');
+            })
+            ->get();
+    
         }
         return compact(
+            'tablesLeave',
             'tablesClean',
             'sellers',
             'products_to_due',
