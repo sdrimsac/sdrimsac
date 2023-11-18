@@ -112,7 +112,7 @@ class PrintEvent implements ShouldBroadcast
             }
         }
         $conf_establishment = ConfEstablishment::where('establishment_id', $establishment->id)->first();
-        if($conf_establishment->print_command == false && $document_type == "0"){
+        if($conf_establishment && $conf_establishment->print_command == false && $document_type == "0"){
             $printing = false;
         }
 
