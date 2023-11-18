@@ -656,6 +656,13 @@
                                                     .toUpperCase()
                                             }}
                                         </span>
+                                        <small
+                                            v-if="table.timer"
+                                            class="text-white"
+                                        >
+                                            {{ table.timer }}
+                                        </small>
+
                                         <span v-if="table.tower_name">
                                             {{ table.tower_name.toUpperCase() }}
                                         </span>
@@ -1377,10 +1384,28 @@ export default {
         },
         updateTime() {
             this.tables.forEach(t => {
+                let now = new Date();
+                if (t.status_table_id == 2 && t.counter) {
+                    let { date_of_out } = t;
+                    let date = new Date(date_of_out);
+                    let diff = date.getTime() - now.getTime();
+                    if (diff < 0) {
+                        t.timer = null;
+                    } else {
+                        diff = Math.floor(diff / 1000);
+                        let seconds = diff % 60;
+                        diff = Math.floor(diff / 60);
+                        let minutes = diff % 60;
+                        t.timer = `${minutes < 10 ? "0" : ""}${minutes}:${
+                            seconds < 10 ? "0" : ""
+                        }${seconds} para salir`;
+                        
+                    }
+                }
                 if (t.is_cleaning) {
                     let { cleaning_start_date } = t;
                     let date = new Date(cleaning_start_date);
-                    let now = new Date();
+
                     let diff = date.getTime() - now.getTime();
 
                     if (diff < 0) {
@@ -1445,7 +1470,8 @@ export default {
                     this.all_reserves = reserves;
                     this.all_tables = this.all_tables.map(t => ({
                         ...t,
-                        time_to_finish: null
+                        time_to_finish: null,
+                        timer:null
                     }));
                     this.all_status = status;
                     this.status = status
@@ -1486,7 +1512,7 @@ export default {
                 console.log(e);
 
                 this.$toast.warning("Ocurrió un error");
-            }finally{
+            } finally {
                 this.loading = false;
             }
         },

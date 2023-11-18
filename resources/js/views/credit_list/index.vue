@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="container-fluid p-l-0 p-r-0">
+        <div class="container-fluid p-l-0 p-r-0" v-loading="loading">
             <div class="page-header">
                 <div class="row">
                     <div class="col-sm-6">
@@ -110,6 +110,20 @@
                                 <div class="col-12">
                                     <!-- boton para buscar -->
                                     <button
+                                        v-if="showPaid"
+                                        type="button"
+                                        class="btn btn-success"
+                                        @click="getItemsOrdenClientId"
+                                    >
+                                        <i class="fa fa-card"></i>
+                                        Pagar
+                                        {{
+                                            total != 0
+                                                ? `S/ ${total.toFixed(2)}`
+                                                : ""
+                                        }}
+                                    </button>
+                                    <button
                                         v-if="records.length > 0"
                                         type="button"
                                         class="btn btn-success"
@@ -183,17 +197,29 @@ export default {
     components: {},
     data() {
         return {
+            showPaid:false,
+            total: 0,
+            loading: false,
             resource: "credit-list",
             records: [],
             establishments: [],
-            form: {},
+            form: {
+                paid:"0"
+            },
             input_person: {},
             loading_search: false,
-            customers: []
+            customers: [],
+            formDocument: {},
+            ordens: [],
+            orden_items: [],
+            resource_documents: "sale-notes",
+            series: [],
+            resource_payments: "",
+            loading_submit: false,
+            list_ordens: []
         };
     },
     created() {
-        
         this.getTables();
         // this.$http.get(`/${this.resource}/tables`)
         //         .then(response => {
@@ -201,11 +227,323 @@ export default {
         //         })
     },
     methods: {
-             getQueryParameters() {
-         
-            return queryString.stringify(
-                {...this.form}
+        setSeries() {
+            this.formDocument.series_id = null;
+            this.series = _.filter(this.all_series, {
+                document_type_id: this.formDocument.document_type_id
+            });
+            this.series.forEach(s => {
+                s.full_number = s.number;
+            });
+            this.formDocument.series_id =
+                this.series.length > 0 ? this.series[0].id : null;
+            console.log(
+                "🚀 ~ file: index.vue:230 ~ setSeries ~ this.formDocument.series_id:",
+                this.formDocument.series_id
             );
+        },
+        async clickPayment(form) {
+            // this.reCalculateTotal();
+            // return;
+
+            this.setSeries();
+
+            let customer = this.customers.find(
+                c => c.id == this.form.person_id
+            );
+
+            if (!form.series_id) {
+                return this.$toast.warning(
+                    "El establecimiento no tiene series disponibles para el comprobante"
+                );
+            }
+
+            if (form.document_type_id === "80") {
+                form.prefix = "NV";
+                form.paid = 1;
+                this.resource_documents = "sale-notes";
+                this.resource_payments = "sale_note_payments";
+            }
+
+            form.advances = 0.0;
+            form.prefix = "NV";
+            form.total_advances = 0.0;
+            form.total_payment = form.total;
+            form.exchange_rate_sale = 1;
+            form.list_ordens = this.list_ordens;
+            form.currency_type_id = "PEN";
+            form.date_of_issue = moment().format("YYYY-MM-DD");
+            form.time_of_issue = moment().format("HH:mm:ss");
+            form.is_pay_credit_list = true;
+            form.payments = [
+                {
+                    payment_method_type_id: "01",
+                    date_of_payment: form.date_of_issue,
+                    payment: form.total
+                }
+            ];
+
+            this.loading_submit = true;
+            this.formDocument.items = this.formDocument.items.filter(
+                item => Number(item.quantity) > 0
+            );
+
+            try {
+                // const response_efectivo = await this.$http.post(`/efectivo`,form_efectivo);
+
+                const response = await this.$http.post(
+                    `/${this.resource_documents}`,
+                    form
+                );
+                let { data } = response;
+                if (response.status == 200 && data.data) {
+                    let data = response.data.data;
+                    let { print_ticket } = data;
+                    window.open(`${print_ticket}`, "_blank");
+                    this.getRecords();
+
+                    if (response.data.success == true) {
+                    }
+                } else {
+                }
+            } catch (error) {
+                console.log(error);
+                const response = error.response;
+                let {
+                    data: { message }
+                } = response;
+
+                this.$toast.error(message || "Ocurrió un error");
+                this.loading_submit = false;
+            }
+        },
+        async getItemsOrdenClientId() {
+            try {
+                await this.$confirm(
+                    "¿Desea cancelar la cuenta?",
+                    "Advertencia",
+                    {
+                        confirmButtonText: "Sí",
+                        cancelButtonText: "No",
+                        type: "warning"
+                    }
+                );
+                try {
+                    this.loading = true;
+                    let { person_id } = this.form;
+                    if (!person_id) {
+                        this.$toast.error(
+                            "Debe seleccionar un cliente/personal"
+                        );
+                        return;
+                    }
+                    const response = await this.$http.post(
+                        `/${this.resource}/records_by_person_to_pay`,
+                        this.form
+                    );
+                    let {
+                        data: { records }
+                    } = response;
+                    this.list_ordens = records.map(o => o.orden_id);
+                    //unique list_ordens
+                    this.list_ordens = [...new Set(this.list_ordens)];
+                    console.log(
+                        "🚀 ~ file: index.vue:331 ~ getItemsOrdenClientId ~ this.list_ordens :",
+                        this.list_ordens
+                    );
+
+                    this.paymentsOrden({ items: records });
+                    await this.clickPayment(this.formDocument);
+                } catch (error) {
+                    this.$toast.error("Ocurrió un error");
+                } finally {
+                    this.loading = false;
+                }
+            } catch (e) {}
+
+            // this.records = response.data.data;
+        },
+        async paymentsOrden(form) {
+            this.orden_items = form;
+            // this.formDocument.printDocument = form.printDocument;
+            // this.formDocument.is_room = form.is_room;
+            // if (this.formDocument.is_room) {
+            //     this.formDocument.is_list_credit = form.is_list_credit;
+            //     this.fformDocumentorm.orden_ids = form.orden_ids;
+            //     this.formDocument.hotel_rent_item_ids = form.hotel_rent_item_ids;
+            //     this.formDocument.is_advance = form.is_advance;
+            //     this.formDocument.hotel_rent_id = form.hotel_rent_id;
+            //     this.formDocument.hotel_customer_number = form.customer_number;
+            // }
+            let { items } = form;
+            this.ordens = items;
+            for (let i = 0; i < items.length; i++) {
+                let item = items[i];
+                this.ordens[i].food.item.from_unit_type_id = item.type_id;
+                this.ordens[i].food.item.from_unit_type_id_desc =
+                    item.type_description;
+
+                this.ordens[i].food.item.quantity = item.quantity;
+                this.ordens[i].food.item.lotes = item.lotes;
+                this.ordens[i].food.item.lots = item.series;
+                this.ordens[i].food.item.sale_unit_price = item.price;
+                this.ordens[i].food.price = item.price;
+                // this.ordens[i].food.item.price = item.price;
+                this.ordens[i].food.item.toWarehouse = item.toWarehouse;
+                this.ordens[i].food.item.consignment_item_id =
+                    item.consignment_item_id;
+            }
+
+            this.formDocument.items = this.ordens.map(o => o.food.item);
+            this.formatItems();
+            this.calculateTotal();
+            this.formDocument.enter_amount = this.formDocument.total;
+            this.formDocument.difference = 0;
+            this.formDocument.establishment_id = this.form.establishment_id;
+            if (this.formDocument.establishment_id == null) {
+                this.formDocument.establishment_id = this.establishments[0].id;
+            }
+            this.formDocument.customer_id = this.form.person_id;
+            this.formDocument.document_type_id = "80";
+        },
+        formatItems() {
+            this.formDocument.items = this.formDocument.items.map(i => {
+                return {
+                    ...i,
+                    attributes: i.attributes || [],
+                    toWarehouse: i.toWarehouse || 0,
+                    consignment_item_id: i.consignment_item_id,
+                    warehouse_id: null,
+                    item: i,
+                    item_id: i.id,
+                    unit_value:
+                        i.sale_affectation_igv_type_id == 10
+                            ? i.sale_unit_price /
+                              (1 + this.percentage_igv / 100)
+                            : i.sale_unit_price,
+                    quantity: i.quantity,
+                    aux_quantity: i.quantity,
+                    total_base_igv:
+                        i.sale_affectation_igv_type_id == 10
+                            ? (i.sale_unit_price * i.quantity) /
+                              (1 + this.percentage_igv / 100)
+                            : i.sale_unit_price * i.quantity,
+                    percentage_igv: this.percentage_igv,
+                    total_igv:
+                        i.sale_affectation_igv_type_id == 10
+                            ? ((i.sale_unit_price * i.quantity) /
+                                  (1 + this.percentage_igv / 100)) *
+                              (this.percentage_igv / 100)
+                            : 0,
+                    total_base_isc: 0.0,
+                    percentage_isc: 0.0,
+                    total_isc: 0.0,
+                    total_base_other_taxes: 0.0,
+                    percentage_other_taxes: 0.0,
+                    total_other_taxes: 0.0,
+                    total_taxes:
+                        i.sale_affectation_igv_type_id == 10
+                            ? ((i.sale_unit_price * i.quantity) /
+                                  (1 + this.percentage_igv / 100)) *
+                              (this.percentage_igv / 100)
+                            : 0,
+                    total_value:
+                        i.sale_affectation_igv_type_id == 10
+                            ? (i.sale_unit_price * i.quantity) /
+                              (1 + this.percentage_igv / 100)
+                            : i.quantity * i.sale_unit_price,
+                    total_charge: 0.0,
+                    total_discount: 0.0,
+                    total: i.sale_unit_price * i.quantity,
+                    price_type_id: "01",
+                    unit_price: i.sale_unit_price,
+                    unit_price_value: i.sale_unit_price,
+                    has_igv: i.has_igv,
+                    affectation_igv_type_id: i.sale_affectation_igv_type_id,
+                    unit_price: i.sale_unit_price,
+                    presentation: null,
+                    charges: [],
+                    discounts: [],
+                    affectation_igv_type: i.sale_affectation_igv_type_id
+                };
+            });
+            this.calculateTotal();
+        },
+        calculateTotal(sale_unit_price = 0) {
+            let total_discount = 0;
+            let total_charge = 0;
+            let total_exportation = 0;
+            let total_taxed = 0;
+            let total_taxes = 0;
+            let total_exonerated = 0;
+            let total_unaffected = 0;
+            let total_free = 0;
+            let total_igv = 0;
+            let total_value = 0;
+            let total = 0;
+            this.ordens.forEach(orden => {
+                let t = parseFloat(
+                    _.round(
+                        parseFloat(orden.food.item.quantity) *
+                            parseFloat(orden.food.price),
+                        2
+                    )
+                );
+                total += t;
+            });
+
+            this.formDocument.items.forEach(row => {
+                total_discount += parseFloat(row.total_discount);
+                total_charge += parseFloat(row.total_charge);
+
+                total_taxes += parseFloat(row.total_taxes);
+                if (row.sale_affectation_igv_type_id === "10") {
+                    total_igv += _.round(
+                        parseFloat(row.total_value) *
+                            (this.percentage_igv / 100),
+                        2
+                    );
+                    total_value += _.round(row.total_value, 2);
+                    total_taxed += parseFloat(row.total_value);
+                }
+                if (row.sale_affectation_igv_type_id === "20") {
+                    total_exonerated += parseFloat(row.total);
+                    total_value += _.round(row.total_value, 2);
+                }
+                if (row.sale_affectation_igv_type_id === "30") {
+                    total_unaffected += parseFloat(row.total_value);
+                    total_value += _.round(row.total_value, 2);
+                }
+                if (row.sale_affectation_igv_type_id === "40") {
+                    total_exportation += parseFloat(row.total_value);
+                    total_value += _.round(row.total_value, 2);
+                }
+                if (
+                    ["10", "20", "30", "40"].indexOf(
+                        row.affectation_igv_type_id
+                    ) < 0
+                ) {
+                    total_free += parseFloat(row.total_value);
+                }
+            });
+
+            this.formDocument.total_exportation = _.round(total_exportation, 2);
+            this.formDocument.total_taxed = _.round(total_taxed, 2);
+            this.formDocument.total_taxes = _.round(total_taxes, 2);
+            this.formDocument.total_exonerated = _.round(total_exonerated, 2);
+            this.formDocument.total_unaffsected = _.round(total_unaffected, 2);
+            this.formDocument.total_free = _.round(total_free, 2);
+            this.formDocument.total_igv = _.round(total_igv, 2);
+            this.formDocument.total_value = _.round(total_value, 2);
+            this.formDocument.total = _.round(total, 2);
+            if (this.ordens.length > 0) {
+                if (this.selectOption == 2) {
+                    this.ordens[0].food.item.sale_unit_price = sale_unit_price;
+                }
+            }
+        },
+        getQueryParameters() {
+            return queryString.stringify({ ...this.form });
         },
         clickDownload() {
             let parameters = this.getQueryParameters();
@@ -224,11 +562,20 @@ export default {
                 `/${this.resource}/records_by_person`,
                 this.form
             );
-            console.log(
-                "🚀 ~ file: index.vue:182 ~ getRecords ~ response:",
-                response
-            );
+
             this.records = response.data.data;
+
+            this.total = this.records.reduce(
+                (a, b) => a + (Number(b.price) || 0),
+                0
+            );
+
+            if(this.total> 0 && this.form.paid == "0"){
+                this.showPaid = true;
+
+            }else{
+                this.showPaid = false;
+            }
         },
         changeCustomer() {},
         async searchRemoteCustomers(input) {
@@ -251,6 +598,7 @@ export default {
             if (response.status == 200) {
                 let { data } = response;
                 this.establishments = data.establishments;
+                this.all_series = data.series;
             }
         },
         search() {}

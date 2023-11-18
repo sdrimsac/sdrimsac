@@ -80,6 +80,13 @@ export default {
         };
     },
     methods: {
+        initForm(){
+            this.form = {
+                total: 0,
+                balance: 0,
+                customer_id: null
+            }
+        },
         async getRecords(){
             const response = await this.$http.get(`/credit-list/records`);
             
@@ -130,6 +137,7 @@ export default {
             }
         },
         open() {
+            this.initForm();
             this.getRecords();
         },
         close() {

@@ -417,6 +417,14 @@ class TableRoomController extends Controller
             'data' => $tables
         ];
     }
+    public function tablesToLeave(){
+        $tablesClean = DB::connection('tenant')->table('tables')->where('is_cleaning', true)->get();
+
+        return [
+            'success' => true,
+            'data' => $tablesClean
+        ];
+    }
     public function tablesToClean()
     {
         $tablesClean = DB::connection('tenant')->table('tables')->where('is_cleaning', true)->get();
@@ -461,7 +469,7 @@ class TableRoomController extends Controller
         $checkout_date_estimated = null;
         $checkout_time_estimated = null;
         if($duration == 1){
-            if ($time_to_enter > $time) {
+            if (Carbon::parse($time) > Carbon::parse($time_to_enter)) {
                 $checkout_date_estimated = Carbon::parse($date)
                     ->setTimezone('America/Lima')
                     ->format('Y-m-d');
@@ -610,7 +618,7 @@ class TableRoomController extends Controller
         $user = auth()->user();
         $establishment_id = $user->establishment_id;
         $tables_types = TableType::where('active', true)->get();
-        // $this->checkTables($establishment_id);
+        $this->checkReserves($establishment_id);
         $tables = Table::where('is_room', true)->where(function ($query) {
             $query->where('establishment_id', auth()->user()->establishment_id)->orWhereNull('establishment_id');
         })
@@ -629,7 +637,41 @@ class TableRoomController extends Controller
 
                         ];
                     });
+                $table_id = $row->id;
+                $counter = null;
+                $date_of_out = null;
+                if($row->status_table_id == 2){
+                    //obtener el más reciente hotel_rent_item
+                    $hotel_rent_item = HotelRentItem::where('table_id', $table_id)
+                    ->where('was_cancel', false)
+                    ->orderBy('checkin_date', 'desc')
+                    ->orderBy('checkin_time', 'desc')
+                    ->first();
+                    $checkout_date_estimated = $hotel_rent_item->checkout_date_estimated;
+                    $checkout_time_estimated = $hotel_rent_item->checkout_time_estimated;
+                    //crea un carbon con la fecha y hora estimada de salida y si la diferencia entre la hora actual y esa hora es menor o igual 15 minutos
+                    //entonces se crea un contador para saber cuantos minutos y segundos falta para que se vaya el cliente
+                    $date_of_out = Carbon::parse($checkout_date_estimated . ' ' . $checkout_time_estimated)
+                    
+                    ;
+                    $now = Carbon::now();
+                    $diff = $date_of_out->diff($now);
+                    $diff_minutes = $diff->i;
+                    if ($diff_minutes <= 15) {
+                        $counter = true;
+                    }
+
+                    $date_of_out = $date_of_out
+                    ->setTimezone('America/Lima')
+                    ->format('Y-m-d H:i:s')
+                    ;
+                   
+                    
+
+                }
                 return [
+                    'date_of_out' => $date_of_out,
+                    'counter' => $counter,
                     'reserves' => $reserves,
                     'cleaning_start_date' => $row->cleaning_start_date,
                     'is_cleaning' => $row->is_cleaning,
@@ -774,7 +816,7 @@ class TableRoomController extends Controller
     {
         $column = $request->input('column');
         $value = $request->input('value');
-        // $this->checkTables();
+        // $this->checkReserves();
         $records = Table::where('is_room', true);
 
         if ($column && $value) {
@@ -788,26 +830,36 @@ class TableRoomController extends Controller
         //     'data' => $tables
         // ];
     }
-    function checkTables($establishment_id)
+    function checkReserves($establishment_id)
     {
+        $tables_in_reserve = HotelRentItem::where('is_reserve', true)
+            ->where('was_cancel', false)
+            ->whereNull('checkout_date')
+            ->whereNull('checkout_time')
+            ->get();
 
-        Table::where('status_table_id', 2)
-            ->where('is_room', true)
-            ->where('establishment_id', $establishment_id)->orWhereNull('establishment_id')
-            ->chunk(
-                50,
-                function ($row) {
-                    foreach ($row as $table) {
-                        //buscar las ordenes de la mesa
-                        $ordens = Orden::where('table_id', $table->id)->where('status_orden_id', '<>', 4)->where('status_orden_id', '<>', 5)->get();
+        //verificar si checkout_date_estimated y checkout_time_estimated es menor a la fecha actual más 2 horas, poner was_cancel = true
+        foreach ($tables_in_reserve as $key => $value) {
+            $checkout_date_estimated = Carbon::parse($value->checkout_date_estimated . ' ' . $value->checkout_time_estimated);
+            $now = Carbon::now();
+            $now->addHours(2);
+            if ($checkout_date_estimated->lessThan($now)) {
+                $value->was_cancel = true;
+                $value->save();
+            }
+        }
 
-                        if (count($ordens) == 0) {
-                            $table->status_table_id = 1;
-                            $table->save();
-                        }
-                    }
-                }
-            );
+        // Table::where('is_reserve', true)
+        //     ->where('is_room', true)
+        //     ->where('establishment_id', $establishment_id)->orWhereNull('establishment_id')
+        //     ->chunk(
+        //         50,
+        //         function ($row) {
+        //             foreach ($row as $table) {
+                        
+        //             }
+        //         }
+        //     );
     }
     public function record($id)
     {

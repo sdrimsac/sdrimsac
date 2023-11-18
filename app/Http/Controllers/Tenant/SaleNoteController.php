@@ -479,6 +479,9 @@ class SaleNoteController extends Controller
 
         DB::connection('tenant')->transaction(function () use ($request) {
             $configuration = Configuration::first();
+
+            $request["list_ordens"] = Functions::valueKeyInArray($request->all(), "list_ordens", []);
+            $request["is_pay_credit_list"] = Functions::valueKeyInArray($request->all(), "is_pay_credit_list", false);
             $request["is_credit"] = Functions::valueKeyInArray($request->all(), "is_credit", false);
             $request["user_id"] = Functions::valueKeyInArray($request->all(), "user_id", auth()->id());
             $request["advances"] = Functions::valueKeyInArray($request->all(), "advances", 0.0);
@@ -494,6 +497,12 @@ class SaleNoteController extends Controller
             );
             if ($request->input('id') != null) {
                 SaleNoteItem::where('sale_note_id', $request->input('id'))->delete();
+            }
+            if ($request->is_pay_credit_list) {
+                SaleNoteItem::unsetEventDispatcher();
+            }
+            foreach($request->list_ordens as $list_orden){
+                CreditList::where('orden_id', $list_orden)->update(['paid' => true]);
             }
             foreach ($data['items'] as $row) {
                 $item_id = isset($row['id']) ? $row['id'] : null;
@@ -515,6 +524,9 @@ class SaleNoteController extends Controller
                 // $item = Item::find($item_id);
                 //  $item->stock = $item->stock - $row['quantity'];
                 // $item->save();
+            }
+            if ($request->is_pay_credit_list) {
+                SaleNoteItem::setEventDispatcher(new \Illuminate\Events\Dispatcher());
             }
             if ($request->orden_id) {
                 $Orden = Orden::findOrFail($request->orden_id);
@@ -558,7 +570,7 @@ class SaleNoteController extends Controller
                     $table->save();
                 }
             }
-            if($request->is_list_credit){
+            if ($request->is_list_credit) {
                 CreditList::where('customer_id', $this->sale_note->customer_id)->update(['paid' => true]);
             }
             if ($request->hotel_rent_id) {
@@ -693,8 +705,8 @@ class SaleNoteController extends Controller
                         $cajas->type = '1';
                         $cajas->state = '1';
                         $cajas->method = $method;
-                        if($method == "Yape"|| $method == "PLIN"){
-                            $message.= "Pago por ".$method." por S/".$amount."- N° Operación: ".$operation_number ?? "-";
+                        if ($method == "Yape" || $method == "PLIN") {
+                            $message .= "Pago por " . $method . " por S/" . $amount . "- N° Operación: " . $operation_number ?? "-";
                         }
                         $cajas->bank_account_id = $bank_account_id;
                         $cajas->bank_account_operation = $bank_account_operation;
@@ -713,9 +725,9 @@ class SaleNoteController extends Controller
                         $cajas->establishment_id = auth()->user()->establishment_id;
                         $cajas->save();
                     }
-                    if($configuration->send_whatsapp_digital_pay){
-                       
-                        if($message){
+                    if ($configuration->send_whatsapp_digital_pay) {
+
+                        if ($message) {
                             (new WhatsappController)->sendMessage($message);
                             $numbers = NumberActivity::all();
                             foreach ($numbers as $key => $number) {

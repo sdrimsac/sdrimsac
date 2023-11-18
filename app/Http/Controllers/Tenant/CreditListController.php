@@ -10,6 +10,7 @@ use App\Http\Resources\Tenant\CreditListPersonCollection;
 use App\Models\Tenant\Company;
 use App\Models\Tenant\CreditList;
 use App\Models\Tenant\Establishment;
+use App\Models\Tenant\Series;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -54,6 +55,15 @@ class CreditListController extends Controller
         ->company($company)
         ->download('Lista_de_credito_'.Carbon::now().'.xlsx');
 
+    }
+    public function recordByPersonToPay(Request $request){
+        $request['paid'] = "0";
+        $orden_items = $this->getData($request);
+        $records = $orden_items->get();
+        return [
+            'success' => true,
+            'records' => $records,
+        ];
     }
     public function recordByPerson(Request $request)
     {
@@ -114,10 +124,11 @@ class CreditListController extends Controller
     public function tables()
     {
         $establishments = Establishment::all();
-
+        $series = Series::all();
         return [
             'success' => true,
             'establishments' => $establishments,
+            'series' => $series,
         ];
     }
     public function records()

@@ -4614,6 +4614,23 @@ export default {
                 this.loading = false;
             }
         },
+         async getTablesToLeave() {
+            try {
+                const response = await this.$http.get(
+                    `/caja/rooms/tables_to_leave`
+                );
+                if (response.status == 200) {
+                    const { data } = response.data;
+                    this.tablesClean = data;
+                    this.tablesClean = this.tablesClean.map(t => ({
+                        ...t,
+                        time_to_finish: null
+                    }));
+                }
+            } catch (e) {
+                console.log(e);
+            }
+        },
         async getTablesToClean() {
             try {
                 const response = await this.$http.get(
