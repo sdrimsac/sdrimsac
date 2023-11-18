@@ -910,11 +910,12 @@ class DocumentController extends Controller
                     $box->save();
                 }
                 if($configuration->send_whatsapp_digital_pay){
-                    $numbers = NumberActivity::all();
-                    foreach ($numbers as $key => $number) {
-                        (new WhatsappController)->sendMessage($message, $number->number);
-                    }
+                
                     if($message){
+                        $numbers = NumberActivity::all();
+                        foreach ($numbers as $key => $number) {
+                            (new WhatsappController)->sendMessage($message, $number->number);
+                        }
                         (new WhatsappController)->sendMessage($message);
                     }
                 }
