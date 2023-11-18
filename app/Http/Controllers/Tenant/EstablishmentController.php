@@ -126,6 +126,8 @@ class EstablishmentController extends Controller
                 Functions::valueKeyInArray($conf, 'direct_sale', false);
             $exist->company_address =
                 Functions::valueKeyInArray($conf, 'company_address', false);
+                $exist->print_command =
+                Functions::valueKeyInArray($conf, 'print_command', true);
             $exist->save();
         }
         //series

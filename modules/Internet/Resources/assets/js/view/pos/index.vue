@@ -3386,15 +3386,17 @@ export default {
             e => {
                 let num = Number(e.amount);
                 this.ordensPending = this.ordensPending + num;
-
-                this.$notify({
+                if(num>0){
+    this.$notify({
                     title: "Aviso",
                     duration: 1500,
                     iconClass:
-                        num > 0 ? "el-icon-star-on" : "el-icon-delete-solid",
-                    message: num > 0 ? "Nueva orden" : "Una orden fue anulada",
+                      "el-icon-star-on" ,
+                    message: "Nueva orden",
                     position: "bottom-left"
                 });
+                }
+            
             }
         );
         Echo.channel("stock_orden").listen(

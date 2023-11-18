@@ -31,7 +31,8 @@ class CreditListPersonCollection extends ResourceCollection
                 'product' => optional($row->food)->description,
                 'price' => $total,
                 'quantity' => $row->quantity,
-                'establishment' => $establishment,               
+                'establishment' => $establishment,    
+                'date' => $row->date,           
             ];
         });
     }

@@ -150,6 +150,7 @@
                                     <thead>
                                         <th>#</th>
                                         <th>ESTABLECIMIENTO</th>
+                                        <th>FECHA</th>
                                         <th>PRODUCTO</th>
                                         <th>CANTIDAD</th>
                                         <th class="text-end">TOTAL</th>
@@ -162,6 +163,7 @@
                                         >
                                             <td>{{ idx + 1 }}</td>
                                             <td>{{ record.establishment }}</td>
+                                            <td>{{ record.date }}</td>
                                             <td>{{ record.product }}</td>
                                             <td>{{ record.quantity }}</td>
                                             <td class="text-end">

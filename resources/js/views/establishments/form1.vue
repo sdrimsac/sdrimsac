@@ -370,13 +370,23 @@
                             ></small>
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-3 flex-column justify-content-end">
                         <label class="control-label"
-                            >Impresión dirección de la empresa y
+                            >Impresión dirección de la 
+                            <br>
+                            empresa y
                             establecimiento</label
                         ><br>
                         <el-checkbox v-model="conf.company_address">
                             {{ conf.company_address ? "Si" : "No" }}
+                        </el-checkbox>
+                    </div>
+                        <div class="col-md-3 flex-column justify-content-end">
+                        <label class="control-label"
+                            >Imprimir comandas</label
+                        ><br>
+                        <el-checkbox v-model="conf.print_command">
+                            {{ conf.print_command ? "Si" : "No" }}
                         </el-checkbox>
                     </div>
                 </div>

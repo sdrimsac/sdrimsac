@@ -35,7 +35,7 @@
                 {{record.balance}}
             </td>
             <td>
-                <el-tooltip
+                <!-- <el-tooltip
                     class="item"
                     effect="dark"
                     content="Pagar"
@@ -48,7 +48,7 @@
                         size="mini"
                         @click="submit(record.customer_id,record.customer.number)"
                     ></el-button>
-                </el-tooltip>
+                </el-tooltip> -->
             </td>
 
         </tr>

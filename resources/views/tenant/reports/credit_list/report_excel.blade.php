@@ -53,6 +53,7 @@
                         <tr>
                             <th>#</th>
                             <th>Establecimiento</th>
+                            <th>Fecha</th>
                             <th>Producto</th>
                             <th>Cantidad</th>
                             <th>Total</th>
@@ -75,6 +76,7 @@
                             <tr>
                                 <td class="celda">{{ $key + 1 }}</td>
                                 <td class="celda">{{ $establishment }}</td>
+                                <td class="celda">{{ $value->date }}</td>
                                 <td class="celda">{{ $product }}</td>
                                 <td class="celda">
                                     {{ $quantity }}

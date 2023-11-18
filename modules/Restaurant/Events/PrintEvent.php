@@ -2,6 +2,7 @@
 
 namespace Modules\Restaurant\Events;
 
+use App\Models\Tenant\ConfEstablishment;
 use App\Models\Tenant\User;
 use App\Models\Tenant\Document;
 use App\Models\Tenant\SaleNote;
@@ -109,6 +110,10 @@ class PrintEvent implements ShouldBroadcast
             } else {
                 $printing = false;
             }
+        }
+        $conf_establishment = ConfEstablishment::where('establishment_id', $establishment->id)->first();
+        if($conf_establishment->print_command == false && $document_type == "0"){
+            $printing = false;
         }
 
 

@@ -609,7 +609,7 @@ class OrdenController extends Controller
                 event(new OrdenEvent($orden_item->id));
             }
 
-            $print_box = $configuration->print_commands;
+            $print_box = $configuration->print_commands ;
             $print_kitchen = $configuration->print_kitchen;
 
             if ($print_kitchen) {

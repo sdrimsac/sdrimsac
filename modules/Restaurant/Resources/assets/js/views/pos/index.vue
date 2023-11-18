@@ -4614,7 +4614,7 @@ export default {
                 this.loading = false;
             }
         },
-         async getTablesToLeave() {
+        async getTablesToLeave() {
             try {
                 const response = await this.$http.get(
                     `/caja/rooms/tables_to_leave`
@@ -5140,14 +5140,15 @@ export default {
                 let num = Number(e.amount);
                 this.ordensPending = this.ordensPending + num;
 
-                this.$notify({
-                    title: "Aviso",
-                    duration: 1500,
-                    iconClass:
-                        num > 0 ? "el-icon-star-on" : "el-icon-delete-solid",
-                    message: num > 0 ? "Nueva orden" : "Una orden fue anulada",
-                    position: "bottom-left"
-                });
+                if (num > 0) {
+                    this.$notify({
+                        title: "Aviso",
+                        duration: 1500,
+                        iconClass: "el-icon-star-on",
+                        message: "Nueva orden",
+                        position: "bottom-left"
+                    });
+                }
             }
         );
         Echo.channel("stock_orden").listen(
