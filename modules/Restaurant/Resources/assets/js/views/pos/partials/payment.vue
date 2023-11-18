@@ -685,6 +685,8 @@
                                                     <input
                                                         id="imprimir"
                                                         v-model="printerOn"
+                                                        @change="updateConfigutation"
+                                                            
                                                         class="radio-button2"
                                                         type="radio"
                                                         name="imprimir"
@@ -711,6 +713,7 @@
                                                     <input
                                                         id="noimprimir"
                                                         v-model="printerOn"
+                                                        @change="updateConfigutation"
                                                         class="radio-button2"
                                                         type="radio"
                                                         name="noimprimir"
@@ -1588,11 +1591,32 @@ export default {
     },
     mounted() {},
     methods: {
-        transferPayment(){
-            let {is_bank} = this.form_payment;
-            let value = is_bank ? null:"01";
+        async updateConfigutation() {
+            this.configuration.print_in_pos = this.printerOn == 1 ? true : false;
+            this.$http
+                .post(`/configurations`, this.configuration)
+                .then(response => {
+                    if (response.data.success) {
+                        this.$toast.success(response.data.message);
+                    } else {
+                        this.$toast.error(response.data.message);
+                    }
+                })
+                .catch(error => {
+                    if (error.response.status === 422) {
+                        this.errors = error.response.data.errors;
+                    } else {
+                        console.log(error);
+                    }
+                })
+                .then(() => {
+                    // this.loading_submit = false;
+                });
+        },
+        transferPayment() {
+            let { is_bank } = this.form_payment;
+            let value = is_bank ? null : "01";
             this.method_payments = value;
-
         },
         changeBankAccount() {
             if (this.form_payment.is_bank) {
@@ -1880,8 +1904,10 @@ export default {
             let id = this.currentPayments.length + 1;
             let method = this.paymentsValue[this.method_payments];
             let bank_account_id = null;
-            if(method == null && this.form_payment.is_bank){
-                let bank = this.bank_accounts.find(b => b.id == this.form.bank_account_id);
+            if (method == null && this.form_payment.is_bank) {
+                let bank = this.bank_accounts.find(
+                    b => b.id == this.form.bank_account_id
+                );
                 method = `${bank.description}-${bank.number}`;
                 bank_account_id = this.form.bank_account_id;
             }
@@ -2161,6 +2187,9 @@ export default {
                 // this.form.customer_id = this.form.hotel_customer_number;
                 // this.changeCustomer();
             }
+
+            this.printerOn = this.configuration.print_in_pos ? 1:0;
+            console.log("🚀 ~ file: payment.vue:2192 ~ date_of_issue ~ this.configuration:", this.configuration)
         },
         checkCustomerDocument(type) {
             let { customer_id } = this.form;
@@ -3251,10 +3280,10 @@ export default {
                             ) {
                                 this.currentPayments.pop();
                                 this.method_payment("Efectivo");
-                                if(this.currentPayments.length == 0){
+                                if (this.currentPayments.length == 0) {
                                     this.form.enter_amount = this.form.total;
                                 }
-                                    this.enterAmount();
+                                this.enterAmount();
                                 return;
                             }
                         }

@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Config;
 class Configuration extends ModelTenant
 {
     protected $fillable = [
+        'print_in_pos',
         'send_whatsapp_digital_pay',
         'credit_list',
         'time_to_clean',
@@ -131,6 +132,7 @@ class Configuration extends ModelTenant
 
     ];
     protected $casts = [
+        'print_in_pos' => 'boolean',
         'send_whatsapp_digital_pay' => 'boolean',
         'credit_list' => 'boolean',
         'require_code' => 'boolean',
@@ -214,6 +216,7 @@ class Configuration extends ModelTenant
         // $skins = Skin::all();
         $skins = [];
         return [
+            'print_in_pos' => (bool)$this->print_in_pos,
             'send_whatsapp_digital_pay' => (bool)$this->send_whatsapp_digital_pay,
             'credit_list' => (bool)$this->credit_list,
             'time_to_clean' =>  $this->time_to_clean,

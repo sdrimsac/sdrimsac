@@ -20,7 +20,6 @@ use Modules\Restaurant\Models\Table;
 use Modules\Restaurant\Http\Requests\TableRequest;
 use Modules\Restaurant\Http\Resources\HotelRentItemResource;
 use Modules\Restaurant\Http\Resources\TableCollection;
-use Modules\Restaurant\Models\CategoryFood;
 use Modules\Restaurant\Models\DetailTable;
 use Modules\Restaurant\Models\Floor;
 use Modules\Restaurant\Models\Food;

@@ -15,6 +15,7 @@ class ConfigurationResource extends JsonResource
     public function toArray($request)
     {
         return [
+            'print_in_pos' => (bool) $this->print_in_pos,
             'send_whatsapp_digital_pay' => (bool) $this->send_whatsapp_digital_pay,
             'credit_list' => (bool) $this->credit_list,
             'time_to_clean' =>  $this->time_to_clean,
