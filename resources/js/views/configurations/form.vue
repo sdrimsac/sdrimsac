@@ -1563,7 +1563,9 @@
                                             </div>
                                         </div>
                                         
-                                        <div class="col-md-6 mt-4">
+                                        
+                                    </template>
+                                    <div class="col-md-6 mt-4">
                                             <div class="form-group">
                                                 <label
                                                     class="control-label w-100"
@@ -1578,7 +1580,6 @@
                                                 ></el-switch>
                                             </div>
                                         </div>
-                                    </template>
                                 </div>
                             </el-tab-pane>
                             <el-tab-pane label="Impresion">
