@@ -900,6 +900,7 @@
                 <div class="col-5 col-sm-7 col-lg-6 col-md-7 col-xl-5">
                     <div class="card-body p-2">
                         <list-orden
+                            :isHotelArea.sync="isHotelArea"
                             :clientSaleNoteNumber.sync="clientSaleNoteNumber"
                             :clientSaleNoteDiscount.sync="
                                 clientSaleNoteDiscount
@@ -910,7 +911,7 @@
                             :affectation_igv_types="affectation_igv_types"
                             :all_series.sync="all_series"
                             @resetOrden="resetOrden"
-                            :areas="areas"
+                            :areas.sync="areas"
                             :company.sync="company"
                             :customers.sync="all_customers"
                             :customer_variation="customer_variation"
@@ -1748,6 +1749,7 @@ export default {
 
     data() {
         return {
+            isHotelArea: false,
             roomSeeId: null,
             tablesClean: [],
             tablesLeave: [],
@@ -4718,6 +4720,7 @@ export default {
                 this.products_to_due = response.data.products_to_due;
                 this.categories = response.data.categories;
                 this.areas = response.data.areas;
+
                 this.payments = response.data.method_payment;
                 this.date_last = response.data.date_last;
                 this.documentsType = response.data.documents_type;
@@ -4761,6 +4764,10 @@ export default {
                 // this.changeDateOfIssue();
                 // this.changeExchangeRate();
                 this.config = response.data.config;
+                let area = this.areas.find(a => a.id == this.area_id);
+                if (area.description == "HOTEL") {
+                    this.isHotelArea = true;
+                }
             });
 
             // this.loadingInstance.close()

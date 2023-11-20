@@ -25,9 +25,11 @@ class HotelRentItem extends ModelTenant
         'checkout_time',
         'total',
         'extra_time',
+        'is_month_rent',
     ];
 
     protected $casts = [
+        'is_month_rent' => 'boolean',
         'is_reserve' => 'boolean',  
     ];
 

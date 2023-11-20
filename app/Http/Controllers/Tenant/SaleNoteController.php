@@ -567,6 +567,7 @@ class SaleNoteController extends Controller
                     $item->save();
                     $table = Table::where('id', $item->table_id)->first();
                     $table->status_table_id = 5;
+                    $table->sendMessageDesocupied();
                     $table->save();
                 }
             }
@@ -586,6 +587,7 @@ class SaleNoteController extends Controller
                         $item->payment_status = "Pagado";
                         $table = Table::where('id', $item->table_id)->first();
                         $table->status_table_id = 5;
+                        $table->sendMessageDesocupied();
                         $table->save();
                         $item->checkout_date = date('Y-m-d');
                         $item->checkout_time = date('H:i:s');

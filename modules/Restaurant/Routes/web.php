@@ -23,6 +23,7 @@ use Modules\Restaurant\Http\Controllers\IncomesController;
 use Modules\Restaurant\Http\Controllers\OrdenController;
 use Modules\Restaurant\Http\Controllers\RestaurantController;
 use Modules\Restaurant\Http\Controllers\PromocionPorItemController;
+use Modules\Restaurant\Http\Controllers\WorkerController;
 
 Route::prefix('caja')->group(function () {
     //Route::get('/', 'RestaurantController@index');
@@ -47,6 +48,7 @@ Route::prefix('caja')->group(function () {
     Route::get('report-boxes/reports_type', [BoxesController::class, 'reports_type']);
     Route::get('report-boxes/reports_bancario_type', 'BoxesController@reports_bancario_type');
     Route::get('report-boxes/reports', 'BoxesController@reports_results');
+    Route::get('report-product-warehouse-w', [WorkerController::class,'report_products_w'] );
 
     Route::get('login', 'RestaurantController@loginWorker');
     Route::post('login', [RestaurantController::class, 'login']);
@@ -75,6 +77,7 @@ Route::prefix('caja')->group(function () {
             return view('restaurant::kitchen', compact('configuration'));
         });
 
+        Route::get('report-product-warehouse', [WorkerController::class,'report_products'] );
         //*** ORDENS */
         Route::get('cashes', 'BoxesController@cashes')->name('restaurant.cash');
         Route::get('ordens', 'OrdenController@index')->name('restaurant.ordens');
@@ -144,6 +147,7 @@ Route::prefix('caja')->group(function () {
         Route::get('rooms/advance/{id}', 'TableRoomController@advanceDocument');
         Route::get('rooms/cleaned/{id}', 'TableRoomController@cleaned');
         Route::get('rooms/reserve_to_occupied/{id}', 'TableRoomController@reserve_to_occupied');
+        Route::get('rooms/desocupied/{id}', 'TableRoomController@desocupied');
         Route::get('rooms/cancel_reserve/{id}', 'TableRoomController@cancel_reserve');
         Route::get('rooms/room/{id}', 'TableRoomController@getRoom');
         Route::get('rooms/get_hotel_rent/{id}', 'TableRoomController@get_hotel_rent');

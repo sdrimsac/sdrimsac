@@ -95,26 +95,30 @@ class HotelRentItemResource extends JsonResource
         $extra_time = 0;
         $checkout_date_estimated = Carbon::parse($this->checkout_date_estimated . " " . $this->checkout_time_estimated);
         $now = Carbon::now();
-        $difference_days = $checkout_date_estimated->diffInDays($now);
-        if($difference_days == 0){
-            $checkout_time_estimated = Carbon::parse($this->checkout_time_estimated);
-            $now_time = Carbon::parse($now->format('H:i:s'));
-            if($now_time->greaterThan($checkout_time_estimated)){
-                $extra_time = $price_table/2;
+     
+        if ($now->greaterThan($checkout_date_estimated)) {
+            $difference_days = $checkout_date_estimated->diffInDays($now);
+            if ($difference_days == 0) {
+                $checkout_time_estimated = Carbon::parse($this->checkout_time_estimated);
+                $now_time = Carbon::parse($now->format('H:i:s'));
+                if ($now_time->greaterThan($checkout_time_estimated)) {
+                    $extra_time = $price_table / 2;
+                }
             }
-
-        }
-        if($difference_days > 0){
-            $extra_time = $price_table * $difference_days;
+            if ($difference_days > 0) {
+                $extra_time = $price_table * $difference_days;
+            }
         }
         // if ($checkout_date_estimated->greaterThan($now) && $checkout_date_estimated->diffInDays($now) <= 1
-            
+
         // ) {
         //     $extra_time = $price_table / 2;
         // }else{
         //     $extra_time = $price_table * $checkout_date_estimated->diffInDays($now);
         // }
+        $toPay = $this->total > 0;
         return [
+            'toPay' => $toPay,
             'extra_time' => $extra_time,
             'id' => $this->id,
             'documents' => $documents,
@@ -134,6 +138,7 @@ class HotelRentItemResource extends JsonResource
             'total_room' => $this->total + $this->advances,
             'total_orden' => number_format($total_all_orden, 2),
             'total' => number_format($this->total + $total_all_orden, 2),
+            'is_month_rent' => $this->is_month_rent,
         ];
     }
 

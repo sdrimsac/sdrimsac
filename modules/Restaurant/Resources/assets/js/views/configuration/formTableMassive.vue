@@ -169,6 +169,23 @@
                                 ></small>
                             </div>
                         </div>
+                             <div class="col-md-4" v-if="type == 'caja/rooms'">
+                            <div
+                                class="form-group"
+                                :class="{ 'has-danger': errors.month_price }"
+                            >
+                                <label class="control-label">Precio mensual</label>
+                                <el-input
+                                    v-model="form.month_price"
+                                    type="number"
+                                ></el-input>
+                                <small
+                                    class="form-control-feedback"
+                                    v-if="errors.month_price"
+                                    v-text="errors.month_price[0]"
+                                ></small>
+                            </div>
+                        </div>
                         <div class="col-md-4">
                             <div
                                 class="form-group"
@@ -338,7 +355,8 @@ export default {
             this.errors = {};
             this.form = {
                 id: null,
-                price: null,
+                price: 0,
+                month_price: 0,
                 tower_id: null,
                 floor_id: null,
                 table_type_id: null,

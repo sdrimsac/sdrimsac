@@ -1487,6 +1487,28 @@ class CashController extends Controller
             (new WhatsappController)->sendHistorial($request);
         }
 
+        $resource = "http://" . $hostname->fqdn . "/caja/report-product-warehouse-w?user_id=" . $cash->user_id;
+        $request = new Request(
+            [
+                'from_server' => true,
+                'sender' => 'sdrimsac',
+                'number' => $number_activity,
+                'resource' => $resource,
+                'file_name' => 'Stock_al_cerrar_caja_' . Carbon::now()->format("Y-m-d").".xlsx",
+                'message' => "Caja cerrada por " . $user_name
+            ]
+        );
+        if ($number_activity) {
+
+            (new WhatsappController)->sendHistorial($request);
+        }
+        $numbers = NumberActivity::all();
+        foreach ($numbers as $number) {
+            $request['number'] = $number->number;
+            (new WhatsappController)->sendHistorial($request);
+        }
+        // 
+
         return [
             'success' => true,
             'message' => 'Caja cerrada con éxito',

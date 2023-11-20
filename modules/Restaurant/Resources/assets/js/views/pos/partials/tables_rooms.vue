@@ -227,7 +227,14 @@
                                 title="Días"
                                 @click="showAddDays = true"
                             >
-                                [+ Agregar días]
+                                [+
+                                {{
+                                    currentRoom
+                                        ? currentRoom.is_month_rent
+                                            ? "Agregar meses"
+                                            : "Agregar días"
+                                        : ""
+                                }}]
                             </a>
                         </label>
                         <input
@@ -329,6 +336,7 @@
                     </button> -->
 
                         <button
+                            v-if="currentRoom.toPay && !currentRoom.is_month_rent"
                             @click="payAll"
                             type="button"
                             class="btn btn-warning  btn-sm"
@@ -337,6 +345,15 @@
                             Pagar habitación
                         </button>
 
+                        <button
+                        v-else
+                            @click="desocupiedRoom(currentRoom.id)"
+                            type="button"
+                            class="btn btn-warning  btn-sm"
+                            style="margin-top:20px;"
+                        >
+                            Desocupar habitación
+                        </button>
                         <button
                             @click="cancelRoom"
                             type="button"
@@ -370,7 +387,11 @@
                     </div>
                     <div class="col-2 d-flex">
                         <span class="text-muted h4">TOTAL: </span>
-                        <span class="h4">{{ (Number(currentRoom.total) + Number(extra_time)).toFixed(2) }}</span>
+                        <span class="h4">{{
+                            (
+                                Number(currentRoom.total) + Number(extra_time)
+                            ).toFixed(2)
+                        }}</span>
                     </div>
                 </div>
                 <div class="row m-2" v-if="currentRoom.ordens.length > 0">
@@ -502,7 +523,10 @@
                             v-for="(table, idx) in tables"
                             :class="
                                 `${
-                                    table.is_cleaning
+                                    table.rent_month &&
+                                    table.status_table_id == 2
+                                        ? 'btn-warning'
+                                        : table.is_cleaning
                                         ? 'btn-dirty'
                                         : table.status_table_id == 1
                                         ? 'btn-free'
@@ -892,11 +916,21 @@
             :visible.sync="showAddDays"
             append-to-body
             width="30%"
-            title="Agregar días"
+            :title="
+                currentRoom
+                    ? currentRoom.is_month_rent
+                        ? 'Agregar meses'
+                        : 'Agregar días'
+                    : ''
+            "
         >
             <div class="row m-2" v-if="currentRoom">
                 <div class="col-12">
-                    <label for="days">Días de alquiler</label>
+                    <label for="days">{{  currentRoom
+                    ? currentRoom.is_month_rent
+                        ? 'Meses'
+                        : 'Días'
+                    : ''}} de alquiler</label>
                     <el-input-number
                         :min="1"
                         class="w-100"
@@ -938,7 +972,7 @@ import RoomForm from "./room_form.vue";
 import EditReserve from "./edit_reserve.vue";
 export default {
     //tabla color verde
-    props: ["showTables", "table","roomSeeId"],
+    props: ["showTables", "table", "roomSeeId"],
     components: {
         RoomForm,
         EditReserve
@@ -985,6 +1019,32 @@ export default {
         };
     },
     methods: {
+        async desocupiedRoom(id){
+             try {
+                this.loading = true;
+                await this.$confirm(
+                    "¿Está seguro de desocupar la habitación?",
+                    "Confirmación",
+                    {
+                        confirmButtonText: "Aceptar",
+                        cancelButtonText: "Cancelar",
+                        type: "warning"
+                    }
+                );
+                const response = await this.$http.get(
+                    `/caja/rooms/desocupied/${id}`
+                );
+                if (response.status == 200) {
+                    this.$toast.success("Habitación desocupada");
+                    this.getTables();
+                    this.close2();
+                }
+            } catch (e) {
+                this.$toast.error("Error al cancelar la reserva");
+            } finally {
+                this.loading = false;
+            }
+        },
         async cancelReserve(id) {
             try {
                 this.loading = true;
@@ -1250,7 +1310,6 @@ export default {
                 this.currentRoom = data;
                 this.extra_time = data.extra_time;
                 this.viewingRoom = true;
-                
             } catch (e) {
             } finally {
                 this.loading = false;
@@ -1436,8 +1495,8 @@ export default {
             this.timer = setInterval(() => {
                 this.updateTime();
             }, 1000);
-            if(this.roomSeeId){
-                let table = this.all_tables.find(t=>t.id==this.roomSeeId);
+            if (this.roomSeeId) {
+                let table = this.all_tables.find(t => t.id == this.roomSeeId);
                 this.selectTable(table);
             }
         },
@@ -1528,7 +1587,7 @@ export default {
         },
         close() {
             this.viewingRoom = false;
-            
+
             clearInterval(this.timer);
 
             this.$emit("update:showTables", false);

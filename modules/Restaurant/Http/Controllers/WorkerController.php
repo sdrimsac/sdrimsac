@@ -2,11 +2,16 @@
 
 namespace Modules\Restaurant\Http\Controllers;
 
+use App\Exports\ReportProductWarehouse;
 use App\Models\Tenant\User;
 use Illuminate\Routing\Controller;
 use Modules\Restaurant\Models\Table;
 use App\Http\Resources\Tenant\UserCollection;
+use App\Models\Tenant\Company;
 use App\Models\Tenant\Establishment;
+use App\Models\Tenant\ItemWarehouse;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Modules\Restaurant\Http\Requests\TableRequest;
 use Modules\Restaurant\Http\Requests\WorkerRequest;
 
@@ -19,9 +24,59 @@ class WorkerController extends Controller
         $establishments = Establishment::all();
         return view('restaurant::workers', compact('establishments'));
     }
+    public function report_products_w(Request $request){
+        $user_id = $request->user_id;
+        $user = User::find($user_id);
+        $establishment_id = $user->establishment_id;
+        $establishment = Establishment::find($establishment_id);
+        $company = Company::active();
+        $records = ItemWarehouse::where('warehouse_id', $establishment_id)
+            ->whereHas('item', function ($query) {
+                $query->where('unit_type_id', '<>', 'ZZ');
+            })
+            ->get()
+            ->transform(function ($row) {
+                return [
+                    'id' => $row->id,
+                    'description' => $row->item->description,
+                    'stock' => $row->stock,
+                ];
+            });
+        return (new ReportProductWarehouse)
+            ->records($records)
+            ->company($company)
+            ->user($user)
+            ->establishment($establishment)
+            ->download('Stock_al_cerrar_caja_' . Carbon::now() . '.xlsx');
+    }
+    public function report_products()
+    {
+        $user = auth()->user();
+        $company = Company::active();
+        $establishment_id = auth()->user()->establishment_id;
+        $establishment = Establishment::find($establishment_id);
+        $records = ItemWarehouse::where('warehouse_id', $establishment_id)
+            ->whereHas('item', function ($query) {
+                $query->where('unit_type_id', '<>', 'ZZ');
+            })
+            ->get()
+            ->transform(function ($row) {
+                return [
+                    'id' => $row->id,
+                    'description' => $row->item->description,
+                    'stock' => $row->stock,
+                ];
+            });
+        return (new ReportProductWarehouse)
+            ->records($records)
+            ->company($company)
+            ->user($user)
+            ->establishment($establishment)
+            ->download('Stock_al_cerrar_caja_' . Carbon::now() . '.xlsx');
+    }
     public function records()
     {
-       
+
         $user_type = auth()->user()->type;
         if ($user_type == 'admin') {
             $records = User::where('type', '<>', 'superadmin');

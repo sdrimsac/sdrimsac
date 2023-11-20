@@ -661,6 +661,14 @@ export default {
                 `/caja/report-boxes/reports_resumen_type?cash_id=${this.recordId}`,
                 "_blank"
             );
+            if(this.configuration.hotels){
+                setTimeout(() => {
+                           window.open(
+                `/caja/report-product-warehouse`,
+                "_blank"
+            );
+                }, 3000);
+            }
             this.closeDialog();
         }
     }

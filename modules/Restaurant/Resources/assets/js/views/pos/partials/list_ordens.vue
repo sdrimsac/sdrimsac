@@ -27,7 +27,14 @@
                             >Menu De Acciones
                         </span>
                     </button>
-
+                    <button
+                        v-if="!cash_id"
+                        class="btn btn-danger"
+                        type="button"
+                        @click="openCash"
+                    >
+                        Sin caja abierta
+                    </button>
                     <div
                         class="dropdown-menu dropdown-menu-end col-md-2 col-1 "
                         style="width: 153px;"
@@ -2287,11 +2294,13 @@ export default {
         "clientTableData",
         "isCreatingOrden",
         "ordenId",
-        "cash_id"
+        "cash_id",
+        "isHotelArea",
     ],
 
     data() {
         return {
+            currentArea: null,
             showCreditListDialog: false,
             showCreditListModal: false,
             creditListAmount: 0,
@@ -2358,10 +2367,15 @@ export default {
             currentFoodDefault: null,
             commercialTreatments: [],
             currentCommercialTreatment: null
+            ,isHotel:false,
         };
     },
 
     watch: {
+        isHotelArea(value,__){
+            this.isHotel = value;
+            this.setOptionMenu();
+        },
         variationShow(variat, _) {
             if (this.variation && !variat) {
                 this.variation = false;
@@ -2392,53 +2406,8 @@ export default {
         window.addEventListener("resize", this.handleResize);
         this.foodDefault = this.itemDefault;
         this.boxOperation = this.cash_id ? "Cerrar" : "Abrir";
-
-        this.optionsMenu = [
-            {
-                id: 1,
-                title: ["Configuración"],
-                icon: "fas fa-cogs",
-                visible: false
-            },
-            {
-                id: 2,
-                title: ["Recibir ", "mercaderia"],
-                icon: "fas fa-people-carry",
-                visible: this.configuration.receive_merchandise
-            },
-            {
-                id: 3,
-                title: [this.boxOperation, " Caja"],
-                icon: "fas fa-cash-register",
-                visible: true
-            },
-            {
-                id: 7,
-                title: ["Ingresos/", "/Gastos"],
-                icon: "fas fa-money-bill-wave-alt",
-                visible: true
-            },
-            {
-                id: 4,
-                title: ["Aparcado"],
-                icon: "fas fa-cart-arrow-down",
-                visible: !this.configuration.college
-            },
-
-            {
-                id: 5,
-                title: ["Ordenes"],
-                icon: "fas fa-hourglass",
-                visible:
-                    this.configuration.restaurant && !this.configuration.college
-            },
-            {
-                id: 6,
-                title: ["Lista de crédito"],
-                icon: "fas fa-hourglass",
-                visible: this.configuration.credit_list
-            }
-        ];
+        
+        this.setOptionMenu();
         let ordens = [];
         let ordensSave = localStorage.ordens;
         if (ordensSave) {
@@ -2481,7 +2450,60 @@ export default {
         this.getCommercialTreatments();
     },
     methods: {
-        paymentsOrden(items){
+        setOptionMenu(){
+                this.optionsMenu = [
+            {
+                id: 1,
+                title: ["Configuración"],
+                icon: "fas fa-cogs",
+                visible: false
+            },
+            {
+                id: 2,
+                title: ["Recibir ", "mercaderia"],
+                icon: "fas fa-people-carry",
+                visible: this.configuration.receive_merchandise
+            },
+            {
+                id: 3,
+                title: [this.boxOperation, " Caja"],
+                icon: "fas fa-cash-register",
+                visible: true
+            },
+            {
+                id: 7,
+                title: ["Ingresos/", "/Gastos"],
+                icon: "fas fa-money-bill-wave-alt",
+                visible: true
+            },
+            {
+                id: 4,
+                title: ["Aparcado"],
+                icon: "fas fa-cart-arrow-down",
+                visible: !this.configuration.college
+            },
+
+            {
+                id: 5,
+                title: ["Ordenes"],
+                icon: "fas fa-hourglass",
+                visible:
+                    (this.configuration.restaurant && !this.configuration.college) && !this.isHotel
+            },
+            {
+                id: 6,
+                title: ["Lista de crédito"],
+                icon: "fas fa-hourglass",
+                visible: this.configuration.credit_list
+            }
+        ];
+        },
+        openCash() {
+            if (!this.cash_id) {
+                this.showDialogCash = true;
+            }
+        },
+        paymentsOrden(items) {
             this.$emit("paymentsOrden", items);
         },
         toCreditList() {
@@ -2492,10 +2514,6 @@ export default {
             });
             this.creditListAmount = Number(this.creditListAmount.toFixed(2));
             this.showCreditListModal = true;
-            console.log(
-                "🚀 ~ file: list_ordens.vue:2467 ~ toCreditList ~ this.showCreditListModal:",
-                this.showCreditListModal
-            );
         },
         clearCommercialTreatment() {
             let ordens = [...this.localOrden];
@@ -2554,10 +2572,6 @@ export default {
                 .get("/commercial_treatment/records?all=true")
                 .then(res => {
                     this.commercialTreatments = res.data;
-                    console.log(
-                        "🚀 ~ file: list_ordens.vue:2419 ~ getCommercialTreatments ~ this.commercialTreatments:",
-                        this.commercialTreatments
-                    );
                 })
                 .catch(err => {
                     console.log(err);
@@ -3409,11 +3423,6 @@ export default {
             }
             this.loading = false;
             this.disableSend = false;
-            console.log(
-                "🚀 ~ file: list_ordens.vue:3229 ~ payOrden ~ form_submit:",
-                form_submit
-            );
-
             if (this.variation) {
                 this.$emit("paymentsOrden", form_submit, this.foodDefaults);
             } else {

@@ -19,6 +19,7 @@ class TableCollection extends ResourceCollection
             $orden = Orden::where('table_id', $row->id)->where('status_orden_id', '!=', 4)->get();
             $tower = optional(optional($row->floor)->tower)->name;
             return [
+                'month_price'      => $row->month_price,
                 'price'            => $row->price,
                 'id'                => $row->id,
                 'number'            => $row->number,

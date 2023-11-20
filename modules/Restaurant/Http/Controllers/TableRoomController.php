@@ -92,16 +92,19 @@ class TableRoomController extends Controller
         $old_total = $hotel_rent->total;
         $hotel_rent_item->duration = $days;
         $table = $hotel_rent_item->table;
-        $price = $table->price;
+        $price = $hotel_rent_item->is_month_rent ? $table->month_price : $table->price ;
         $total = $price * $days;
         $hotel_rent_item->total = $total;
         $hotel_rent->total -= $old_total;
         $hotel_rent->total += $total;
         $hotel_rent->save();
+        $estimated = $this->getDateAndTimeToLeave($hotel_rent_item->checkin_date, $hotel_rent_item->checkin_time, $days, $hotel_rent_item->is_month_rent);
+        $hotel_rent_item->checkout_date_estimated = $estimated['checkout_date_estimated'];
+        $hotel_rent_item->checkout_time_estimated = $estimated['checkout_time_estimated'];
         $hotel_rent_item->save();
         return [
             'success' => true,
-            'message' => 'Días agregados'
+            'message' => $hotel_rent_item->is_month_rent ? 'Meses agregados' : 'Días agregados'
         ];
     }
     public function cleaned($id)
@@ -252,6 +255,26 @@ class TableRoomController extends Controller
             'message' => 'Habitación cambiada'
         ];
     }
+   
+    public  function desocupied($id){
+       $hotel_rent_item = HotelRentItem::find($id);
+       $table = $hotel_rent_item->table;
+        $table->status_table_id = 5;
+        $table->sendMessageDesocupied();
+        $table->save();
+        if($hotel_rent_item &&$hotel_rent_item->is_month_rent){
+            $hotel_rent_item->checkout_date = Carbon::now()->format('Y-m-d');
+            $hotel_rent_item->checkout_time = Carbon::now()->format('H:i:s');
+            $hotel_rent_item->payment_status = "Pagado";
+            $hotel_rent_item->save();
+        }
+        $table->save();
+        return [
+            'success' => true,
+            'message' => 'Habitación desocupada'
+        ];
+  
+    }
     public  function advanceDocument($id)
     {
         $hotel_rent = HotelRent::find($id);
@@ -262,8 +285,25 @@ class TableRoomController extends Controller
         foreach ($hotel_rent_items as $hotel_rent_item) {
             $service = $this->get_item_service();
             $service->price = $hotel_rent_item->advances;
-            $service->description = "Adelanto de habitación n° " . $hotel_rent_item->table->number;
-            $service->item->description = "Adelanto de habitación n° " . $hotel_rent_item->table->number;
+            $concept =  "Adelanto de habitación n° " . $hotel_rent_item->table->number;
+            if($hotel_rent_item->is_month_rent){
+                $checkin_date = Carbon::parse($hotel_rent_item->checkin_date);
+                //$day
+         
+                $checkin_date_more_one_month = $checkin_date->copy()->addMonth()->format('Y-m-d');
+                //obtener el día y el mes de la fecha de checkin, el mes en letras
+                $day = Carbon::parse($checkin_date)->format('d');
+                $month = Carbon::parse($checkin_date)->format('m');
+                $month = $this->getMonth($month);
+                
+                $day_one_more_month = Carbon::parse($checkin_date_more_one_month)->format('d');
+                $month_one_more_month = Carbon::parse($checkin_date_more_one_month)->format('m');
+                $month_one_more_month = $this->getMonth($month_one_more_month);
+                $concept = "Alquiler de habitación n° " . $hotel_rent_item->table->number . " del $day de $month al $day_one_more_month de $month_one_more_month";
+            }
+            $service->description = $concept;
+            $service->item->description = $concept;
+            
             $items->push([
                 'id' => 0,
                 'observation' => '',
@@ -277,6 +317,23 @@ class TableRoomController extends Controller
             'hotel_rent_id',
             'customer_number'
         );
+    }
+    function getMonth($m){
+        $months = [
+            '01' => 'Enero',
+            '02' => 'Febrero',
+            '03' => 'Marzo',
+            '04' => 'Abril',
+            '05' => 'Mayo',
+            '06' => 'Junio',
+            '07' => 'Julio',
+            '08' => 'Agosto',
+            '09' => 'Setiembre',
+            '10' => 'Octubre',
+            '11' => 'Noviembre',
+            '12' => 'Diciembre',
+        ];
+        return $months[$m];
     }
     public  function allOrdens(Request $request, $id)
     {
@@ -429,24 +486,22 @@ class TableRoomController extends Controller
                         $query->where('checkout_date_estimated', '=', $date)
                             ->where('checkout_time_estimated', '<', $time);
                     });
-                })
+            })
                 ->where('payment_status', 'Pendiente')
-                ->where('was_cancel',0)
-                ;
+                ->where('was_cancel', 0);
         }])
-        ->whereHas('hotel_rent_items', function ($query) use ($date, $time) {
-            $query->where(function ($query) use ($date, $time) {
-                $query->where('checkout_date_estimated', '<', $date)
-                    ->orWhere(function ($query) use ($date, $time) {
-                        $query->where('checkout_date_estimated', '=', $date)
-                            ->where('checkout_time_estimated', '<', $time);
-                    });
+            ->whereHas('hotel_rent_items', function ($query) use ($date, $time) {
+                $query->where(function ($query) use ($date, $time) {
+                    $query->where('checkout_date_estimated', '<', $date)
+                        ->orWhere(function ($query) use ($date, $time) {
+                            $query->where('checkout_date_estimated', '=', $date)
+                                ->where('checkout_time_estimated', '<', $time);
+                        });
                 })
-                ->where('payment_status', 'Pendiente')
-                ->where('was_cancel',0)
-                ;
-        })
-        ->get();
+                    ->where('payment_status', 'Pendiente')
+                    ->where('was_cancel', 0);
+            })
+            ->get();
 
         return [
             'success' => true,
@@ -484,38 +539,47 @@ class TableRoomController extends Controller
         $orden = Orden::find($id);
         return compact('orden');
     }
-    function getDateAndTimeToLeave($date, $time, $duration)
+    function getDateAndTimeToLeave($date, $time, $duration, $is_month_rent)
     {
-        $configuration = Configuration::first();
-        $time_to_leave = $configuration->time_to_leave;
-        $time_to_enter = $configuration->time_to_enter;
-        $time_to_leave =  Carbon::parse($time_to_leave)
-            ->setTimezone('America/Lima')
-            ->format('H:i:s');
-        $time_to_enter =  Carbon::parse($time_to_enter)
-            ->setTimezone('America/Lima')
-            ->format('H:i:s');
-        $checkout_date_estimated = null;
-        $checkout_time_estimated = null;
-        if ($duration == 1) {
+        if ($is_month_rent) {
+            //a $date agregale en meses $duration
+            $checkout_date_estimated = Carbon::parse($date)
+                ->setTimezone('America/Lima')
+                ->addMonths($duration)
+                ->format('Y-m-d');
+            $checkout_time_estimated = $time;
+        } else {
+            $configuration = Configuration::first();
+            $time_to_leave = $configuration->time_to_leave;
+            $time_to_enter = $configuration->time_to_enter;
+            $time_to_leave =  Carbon::parse($time_to_leave)
+                ->setTimezone('America/Lima')
+                ->format('H:i:s');
+            $time_to_enter =  Carbon::parse($time_to_enter)
+                ->setTimezone('America/Lima')
+                ->format('H:i:s');
+            $checkout_date_estimated = null;
+            $checkout_time_estimated = null;
+            if ($duration == 1) {
 
-            if (Carbon::parse($time) < Carbon::parse($time_to_enter)) {
-                $checkout_date_estimated = Carbon::parse($date)
-                    ->setTimezone('America/Lima')
-                    ->format('Y-m-d');
+                if (Carbon::parse($time) < Carbon::parse($time_to_enter)) {
+                    $checkout_date_estimated = Carbon::parse($date)
+                        ->setTimezone('America/Lima')
+                        ->format('Y-m-d');
+                } else {
+                    $checkout_date_estimated = Carbon::parse($date)
+                        ->setTimezone('America/Lima')
+                        ->addDay()
+                        ->format('Y-m-d');
+                }
             } else {
                 $checkout_date_estimated = Carbon::parse($date)
                     ->setTimezone('America/Lima')
-                    ->addDay()
+                    ->addDays($duration)
                     ->format('Y-m-d');
             }
-        } else {
-            $checkout_date_estimated = Carbon::parse($date)
-                ->setTimezone('America/Lima')
-                ->addDays($duration)
-                ->format('Y-m-d');
+            $checkout_time_estimated = $time_to_leave;
         }
-        $checkout_time_estimated = $time_to_leave;
         return [
             'checkout_date_estimated' => $checkout_date_estimated,
             'checkout_time_estimated' => $checkout_time_estimated,
@@ -540,6 +604,7 @@ class TableRoomController extends Controller
             $hotel_rent->observation = $observation;
             $hotel_rent->payment_status = $payment_status;
             $hotel_rent->advance = $advance;
+            
             $hotel_rent->total = $total;
             $hotel_rent->save();
 
@@ -551,12 +616,14 @@ class TableRoomController extends Controller
                 $checkin_time = Carbon::parse($room['checkin_time'])
                     ->setTimezone('America/Lima')
                     ->format('H:i:s');
-                $date_estimate_out = $this->getDateAndTimeToLeave($checkin_date, $checkin_time, $room['duration']);
+                $date_estimate_out = $this->getDateAndTimeToLeave($checkin_date, $checkin_time, $room['duration'], $room["is_month_rent"]);
                 $hotel_rent_item = new HotelRentItem;
                 $hotel_rent_item->hotel_rent_id = $hotel_rent->id;
                 $hotel_rent_item->table_id = $room['table_id'];
                 $hotel_rent_item->is_reserve = $room['is_reserve'];
                 $hotel_rent_item->duration = $room['duration'];
+                $hotel_rent_item->is_month_rent = $room['is_month_rent'];
+
                 $hotel_rent_item->advances = $room['advances'];
                 $hotel_rent_item->total = $room['total'];
                 $hotel_rent_item->quantity_persons = $room['quantity_persons'];
@@ -603,6 +670,7 @@ class TableRoomController extends Controller
         $hotel_rent_item->save();
         $table = $hotel_rent_item->table;
         $table->status_table_id = 5;
+        $table->sendMessageDesocupied();
         $table->save();
         $items = $hotel_rent->items;
         $cancel = true;
@@ -657,6 +725,7 @@ class TableRoomController extends Controller
             ->get()
 
             ->transform(function ($row) use ($time_to_leave) {
+                $rent_month = false;
 
                 $reserves = HotelRentItem::where('table_id', $row->id)->where('is_reserve', true)
                     ->where('was_cancel', false)
@@ -675,27 +744,27 @@ class TableRoomController extends Controller
                 if ($row->status_table_id == 2) {
                     //obtener el más reciente hotel_rent_item
                     $hotel_rent_item = HotelRentItem::where('table_id', $table_id)
-                        ->where('was_cancel', false)
-                        ->orderBy('checkin_date', 'desc')
-                        ->orderBy('checkin_time', 'desc')
-                        ->first();
+                    ->where('was_cancel', false)
+                    ->orderBy('checkin_date', 'desc')
+                    ->orderBy('checkin_time', 'desc')
+                    ->first();
+                    $rent_month = $hotel_rent_item->is_month_rent;
                     $checkout_date_estimated = $hotel_rent_item->checkout_date_estimated;
                     $checkout_time_estimated = $hotel_rent_item->checkout_time_estimated;
 
-                    $date_of_out = Carbon::parse($checkout_date_estimated . ' ' . $checkout_time_estimated)
-                    
-                    ;
+                    $date_of_out = Carbon::parse($checkout_date_estimated . ' ' . $checkout_time_estimated);
                     $date_to_compare  = $date_of_out->copy();
                     $now = Carbon::now()->addMinutes($time_to_leave);
-                    if($now->gt($date_to_compare)){
-                        $counter=true;
+                    if ($now->gt($date_to_compare)) {
+                        $counter = true;
                         $date_of_out = $date_of_out
-                        ->setTimezone('America/Lima')
-                        ->format('Y-m-d H:i:s');
+                            ->setTimezone('America/Lima')
+                            ->format('Y-m-d H:i:s');
                     }
-                
                 }
+           
                 return [
+                    'rent_month' => $rent_month,
                     'date_of_out' => $date_of_out,
                     'counter' => $counter,
                     'reserves' => $reserves,
@@ -870,7 +939,6 @@ class TableRoomController extends Controller
             ->whereNull('checkout_time')
             ->get();
 
-        //verificar si checkout_date_estimated y checkout_time_estimated es menor a la fecha actual más 2 horas, poner was_cancel = true
         foreach ($tables_in_reserve as $key => $value) {
             $checkout_date_estimated = Carbon::parse($value->checkout_date_estimated . ' ' . $value->checkout_time_estimated);
             $now = Carbon::now();
@@ -880,18 +948,6 @@ class TableRoomController extends Controller
                 $value->save();
             }
         }
-
-        // Table::where('is_reserve', true)
-        //     ->where('is_room', true)
-        //     ->where('establishment_id', $establishment_id)->orWhereNull('establishment_id')
-        //     ->chunk(
-        //         50,
-        //         function ($row) {
-        //             foreach ($row as $table) {
-
-        //             }
-        //         }
-        //     );
     }
     public function record($id)
     {
@@ -915,6 +971,7 @@ class TableRoomController extends Controller
         $id = $request->input('id');
         $table_id = $request->input('table_id');
         $duration = $request->input('duration');
+        $is_month_rent = $request->input('is_month_rent');
         $checkin_date = Carbon::parse($request->input('checkin_date'))
             ->setTimezone('America/Lima')
             ->format('Y-m-d');
@@ -922,7 +979,11 @@ class TableRoomController extends Controller
             ->setTimezone('America/Lima')
             ->format('H:i:s');
         $start_date = Carbon::parse($checkin_date . ' ' . $checkin_time);
-        $end_date = $start_date->copy()->addDays($duration);
+        if ($is_month_rent) {
+            $end_date = $start_date->copy()->addMonths($duration);
+        } else {
+            $end_date = $start_date->copy()->addDays($duration);
+        }
 
 
         $tables_in_reserve = HotelRentItem::where('table_id', $table_id)
@@ -942,8 +1003,11 @@ class TableRoomController extends Controller
 
         foreach ($tables_in_reserve as $key => $value) {
             $start_date_reserve = Carbon::parse($value->checkin_date . ' ' . $value->checkin_time);
-            $end_date_reserve = $start_date_reserve->copy()->addDays($value->duration);
-
+            if ($is_month_rent) {
+                $end_date_reserve = $start_date_reserve->copy()->addMonths($value->duration);
+            } else {
+                $end_date_reserve = $start_date_reserve->copy()->addDays($value->duration);
+            }
             if (
                 $start_date->between($start_date_reserve, $end_date_reserve) || $end_date->between($start_date_reserve, $end_date_reserve)
                 || $start_date_reserve->between($start_date, $end_date) || $end_date_reserve->between($start_date, $end_date)

@@ -2,10 +2,13 @@
 
 namespace Modules\Restaurant\Models;
 
+use App\Http\Controllers\Tenant\WhatsappController;
+use App\Models\Tenant\Configuration;
 use App\Models\Tenant\Establishment;
 use App\Models\Tenant\HotelRentItem;
 use App\Traits\RegisterMovementTrait;
   use App\Models\Tenant\ModelTenant;
+use App\Models\Tenant\NumberActivity;
 use Illuminate\Http\Request;
 
 class Table extends ModelTenant
@@ -14,6 +17,7 @@ class Table extends ModelTenant
     public $timestamps = false;
     protected $with = ["type","area", "status_table","floor"];
     protected $fillable = [
+        'month_price',
         'is_cleaning',
         'cleaning_start_date',
         'is_room',
@@ -82,6 +86,9 @@ class Table extends ModelTenant
         );
     }
 
+    public  function last_hotel_rent_item(){
+        return $this->hasOne(HotelRentItem::class)->latestOfMany();
+    }
     public  function hotel_rent_items(){
         return $this->hasMany(HotelRentItem::class);
     }
@@ -103,6 +110,23 @@ class Table extends ModelTenant
     }
     public function floor(){
         return $this->belongsTo(Floor::class);
+    }
+
+    public function sendMessageDesocupied(){
+            if($this->is_room){
+                $number = $this->number;
+                $tower = $this->floor->tower->name;
+                $message = "La habitación $number - $tower se ha desocupado";
+                $configuration = Configuration::first();
+                $number_activity = $configuration->number_activity;
+                $numbers_activity = NumberActivity::all();
+                if($number_activity){
+                    (new WhatsappController)->sendMessage($message,$number_activity);
+                }
+                foreach ($numbers_activity as $number) {
+                    (new WhatsappController)->sendMessage($message,$number->number);
+                }
+            }
     }
   
     public function area()

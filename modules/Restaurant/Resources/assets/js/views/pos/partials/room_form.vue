@@ -105,9 +105,17 @@
                             </strong>
                         </div>
                     </div>
-                    <div class="row" v-if="!isReserve">
+                    <div class="row">
                         <div class="col-3">
                             <el-checkbox
+                                @change="changeMonthRent(room)"
+                                v-model="room.is_month_rent"
+                                label="Alquiler mensual"
+                            ></el-checkbox>
+                        </div>
+                        <div class="col-3">
+                            <el-checkbox
+                                v-if="!isReserve"
                                 @change="verifyIsReserve(room)"
                                 v-model="room.is_reserve"
                                 label="Es reserva"
@@ -199,13 +207,20 @@
                             value-format="HH:mm:ss"
                             :format="'hh:mm A'"
                             :picker-options="{
-                                format: 'hh:mm A' 
+                                format: 'hh:mm A'
                             }"
                             timezone="America/Lima"
                         ></el-time-picker>
                     </div>
                     <div class="col-md-2">
-                        <label for="duration">Días</label>
+                        <label for="duration">
+                            <template v-if="room.is_month_rent">
+                                Mes
+                            </template>
+                            <template v-else>
+                                Días
+                            </template>
+                        </label>
                         <el-input
                             type="number"
                             @input="changeTable(room)"
@@ -248,7 +263,7 @@
                         </el-button>
                     </div>
                     <div class="col-md-3">
-                        <label for="total_room">Adelanto </label>
+                        <label for="total_room">Adelanto de pago </label>
                         <el-input
                             type="number"
                             :min="0"
@@ -309,9 +324,7 @@
 const PersonForm = () =>
     import("../../../../../../../../resources/js/views/persons/form.vue");
 export default {
-    props: ["showDialog", "table", "isReserve"
-    ,"hotelRentId"
-    ],
+    props: ["showDialog", "table", "isReserve", "hotelRentId"],
     components: {
         PersonForm
     },
@@ -347,6 +360,13 @@ export default {
         };
     },
     methods: {
+        async changeMonthRent(room) {
+            let { is_month_rent } = room;
+            if (is_month_rent) {
+            }
+            await this.checkDateReserve(room);
+            this.calculateTotal();
+        },
         async changeTable(room) {
             this.textLoading = "Verificando reserva...";
             await this.checkDateReserve(room);
@@ -359,14 +379,21 @@ export default {
         async checkDateReserve(room) {
             try {
                 this.loading = true;
-                let { table_id, checkin_date, checkin_time, duration } = room;
+                let {
+                    table_id,
+                    checkin_date,
+                    checkin_time,
+                    duration,
+                    is_month_rent
+                } = room;
                 const response = await this.$http.post(
                     "/caja/rooms/check_reserve",
                     {
                         table_id,
                         checkin_date,
                         checkin_time,
-                        duration
+                        duration,
+                        is_month_rent
                     }
                 );
                 if (response.status == 200) {
@@ -389,8 +416,6 @@ export default {
             if (room.is_reserve) {
                 this.textLoading = "Verificando reserva...";
                 await this.checkDateReserve(room);
-            } else {
-                console.log(" pa no reservar");
             }
 
             this.resetTextLoading();
@@ -465,7 +490,10 @@ export default {
                         );
                     }
                     if (table) {
-                        let { price } = table;
+                        let { price, month_price } = table;
+                        if (room.is_month_rent) {
+                            price = month_price;
+                        }
                         price = price * room.duration;
                         room.total = price - Number(advances);
 
@@ -519,6 +547,7 @@ export default {
             let room = {
                 is_reserve: this.isReserve,
                 total: 0,
+                is_month_rent: false,
                 advances: 0,
                 guess_id: null,
                 tower_id,
@@ -704,12 +733,14 @@ export default {
             }
             this.loading = false;
         },
-        async getHotelRent(){
-            if(!this.hotelRentId) return;
-            
-            const response = await this.$http(`/caja/rooms/get_hotel_rent/${this.hotelRentId}`)
-            const {data} = response;
-            let {customer} = data;
+        async getHotelRent() {
+            if (!this.hotelRentId) return;
+
+            const response = await this.$http(
+                `/caja/rooms/get_hotel_rent/${this.hotelRentId}`
+            );
+            const { data } = response;
+            let { customer } = data;
             this.customers = [customer];
             this.all_customers = [customer];
             this.form.customer_id = customer.id;
