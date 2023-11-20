@@ -1592,6 +1592,7 @@ export default {
     mounted() {},
     methods: {
         async updateConfigutation() {
+            if(!this.configuration.save_pos_printing) return;
             this.configuration.print_in_pos = this.printerOn == 1 ? true : false;
             this.$http
                 .post(`/configurations`, this.configuration)
@@ -1992,10 +1993,6 @@ export default {
             }, 500);
         },
         async updateAllCustomers(personsFromServer) {
-            console.log(
-                "🚀 ~ file: payment.vue:1950 ~ updateAllCustomers ~ personsFromServer:",
-                personsFromServer
-            );
             let ids = this.all_customers.map(c => c.id);
             let persons = [];
 
@@ -2015,10 +2012,6 @@ export default {
             console.log(persons);
             if (persons.length != 0) {
                 await this.$emit("update:all_customers", newData);
-                console.log(
-                    "🚀 ~ file: payment.vue:1968 ~ updateAllCustomers ~ newData:",
-                    newData
-                );
                 if (newData.length == 1) {
                     this.value = newData[0].id;
                     this.form.customer_id = newData[0].id;
@@ -2187,9 +2180,10 @@ export default {
                 // this.form.customer_id = this.form.hotel_customer_number;
                 // this.changeCustomer();
             }
+            if(this.configuration.save_pos_printing){
+                this.printerOn = this.configuration.print_in_pos ? 1:0;
 
-            this.printerOn = this.configuration.print_in_pos ? 1:0;
-            console.log("🚀 ~ file: payment.vue:2192 ~ date_of_issue ~ this.configuration:", this.configuration)
+            }
         },
         checkCustomerDocument(type) {
             let { customer_id } = this.form;
@@ -3644,10 +3638,6 @@ export default {
         filterSeries() {
             console.log("object");
             let check = this.checkCustomers();
-            console.log(
-                "🚀 ~ file: payment.vue:3467 ~ filterSeries ~ check:",
-                check
-            );
             if (!check && !this.started) {
                 let dcto = "DNI";
                 if (this.form.document_type_id == "01") {

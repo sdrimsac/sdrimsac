@@ -1562,6 +1562,22 @@
                                                 ></el-switch>
                                             </div>
                                         </div>
+                                        
+                                        <div class="col-md-6 mt-4">
+                                            <div class="form-group">
+                                                <label
+                                                    class="control-label w-100"
+                                                    >Guardar decisión de impresión
+                                                </label>
+
+                                                <el-switch
+                                                    v-model="form.save_pos_printing"
+                                                    active-text="Si"
+                                                    inactive-text="No"
+                                                    @change="submit"
+                                                ></el-switch>
+                                            </div>
+                                        </div>
                                     </template>
                                 </div>
                             </el-tab-pane>
