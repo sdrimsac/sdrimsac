@@ -268,7 +268,10 @@ class TableRoomController extends Controller
     }
     public function getRoom($id)
     {
-        $room = HotelRentItem::where('table_id', $id)->where('payment_status', 'Pendiente')->first();
+        $room = HotelRentItem::where('table_id', $id)->orderBy('checkin_date', 'desc')
+            ->orderBy('checkin_time', 'desc')
+        
+        ->first();
 
 
         return new HotelRentItemResource($room);
