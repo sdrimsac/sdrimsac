@@ -331,12 +331,23 @@
                         >
                             Ordenar
                         </button>
+                        <button
+                            v-if="currentRoom.has_services"
+                            type="button"
+                            class="btn btn-primary btn-sm"
+                            @click="checkServices(currentRoom.id)"
+                            style="margin-top:20px;"
+                        >
+                            Promociones
+                        </button>
                         <!-- <button type="button" class="btn btn-success m-2">
                         Ver ordenes
                     </button> -->
 
                         <button
-                            v-if="currentRoom.toPay && !currentRoom.is_month_rent"
+                            v-if="
+                                currentRoom.toPay && !currentRoom.is_month_rent
+                            "
                             @click="payAll"
                             type="button"
                             class="btn btn-warning  btn-sm"
@@ -346,7 +357,7 @@
                         </button>
 
                         <button
-                        v-else
+                            v-else
                             @click="desocupiedRoom(currentRoom.id)"
                             type="button"
                             class="btn btn-warning  btn-sm"
@@ -926,11 +937,16 @@
         >
             <div class="row m-2" v-if="currentRoom">
                 <div class="col-12">
-                    <label for="days">{{  currentRoom
-                    ? currentRoom.is_month_rent
-                        ? 'Meses'
-                        : 'Días'
-                    : ''}} de alquiler</label>
+                    <label for="days"
+                        >{{
+                            currentRoom
+                                ? currentRoom.is_month_rent
+                                    ? "Meses"
+                                    : "Días"
+                                : ""
+                        }}
+                        de alquiler</label
+                    >
                     <el-input-number
                         :min="1"
                         class="w-100"
@@ -951,6 +967,14 @@
             @getTables="getTables"
         >
         </edit-reserve>
+        <template v-if="currentRoom && currentTable">
+            <services-room-modal
+                :showDialog.sync="showServices"
+                :hotelRentItemId="currentRoom.id"
+                :numberRoom="currentTable.number"
+            >
+            </services-room-modal>
+        </template>
     </el-dialog>
 </template>
 <style>
@@ -970,12 +994,14 @@
 <script>
 import RoomForm from "./room_form.vue";
 import EditReserve from "./edit_reserve.vue";
+import ServicesRoomModal from "./services_room_modal.vue";
 export default {
     //tabla color verde
     props: ["showTables", "table", "roomSeeId"],
     components: {
         RoomForm,
-        EditReserve
+        EditReserve,
+        ServicesRoomModal
     },
     data() {
         return {
@@ -997,7 +1023,7 @@ export default {
             resource: "/caja/rooms/tables",
             tables: [],
             all_tables: [],
-            all_services:[],
+            all_services: [],
             showOrdens: false,
             ordensSaved: [],
             top: "rounded-top",
@@ -1016,12 +1042,16 @@ export default {
             extra_time: 0,
             isChangingRoom: false,
             showReserves: false,
-            hotelRentId: null
+            hotelRentId: null,
+            showServices: false
         };
     },
     methods: {
-        async desocupiedRoom(id){
-             try {
+        async checkServices() {
+            this.showServices = true;
+        },
+        async desocupiedRoom(id) {
+            try {
                 this.loading = true;
                 await this.$confirm(
                     "¿Está seguro de desocupar la habitación?",

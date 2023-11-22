@@ -63,5 +63,10 @@ class HotelRent extends ModelTenant
         return $this->items->count() > 1;
     }
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
     
 }

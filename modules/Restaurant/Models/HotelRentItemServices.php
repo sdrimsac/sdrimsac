@@ -2,6 +2,7 @@
 
 namespace Modules\Restaurant\Models;
 
+use App\Models\Tenant\HotelRentItem;
 use App\Models\Tenant\ModelTenant;
 
 

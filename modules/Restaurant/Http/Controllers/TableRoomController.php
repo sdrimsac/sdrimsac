@@ -4,6 +4,7 @@ namespace Modules\Restaurant\Http\Controllers;
 
 use App\CoreFacturalo\Requests\Inputs\Common\PersonInput;
 use App\CoreFacturalo\Services\Models\Person;
+use App\Models\Tenant\Company;
 use App\Models\Tenant\Configuration;
 use App\Models\Tenant\HotelRent;
 use App\Models\Tenant\HotelRentItem;
@@ -33,10 +34,72 @@ use Modules\Restaurant\Models\TableRoomService;
 use Modules\Restaurant\Models\TableType;
 use Modules\Restaurant\Models\Tower;
 use Illuminate\Support\Str;
+use Barryvdh\DomPDF\Facade as PDF;
+use Exception;
+use Modules\Restaurant\Events\PrintEvent;
+
 class TableRoomController extends Controller
 {
+    public function desactive_promotion($id){
+        $promotion = HotelRentItemServices::findOrFail($id);
+        $promotion->active = false;
+        $promotion->save();
+        return [
+            'success' => true,
+            'message' => 'Promoción entregada'
+        ];
+    
+    }
 
+    public function get_promotion($code){
+        $promotion = HotelRentItemServices::whereRaw('BINARY code=?', $code)->first();
+        $room_service = $promotion->room_service;
+        $promotion->has_items = (bool) $room_service->has_items;
+        $promotion->name = $room_service->name;
+        if($promotion){
+            return [
+                'success' => true,
+                'data' => $promotion
+            ];
+        }else{
+            return [
+                'success' => false,
+                'message' => 'Código no encontrado'
+            ];
+        }
+    }
+    public function print_service($id){
+        $record = HotelRentItemServices::findOrFail($id);
+        $room = null;
+        $hotel_rent_item = $record->hotel_rent_item;
+        $hotel_rent = $hotel_rent_item->hotel_rent;
+        $customer_name = $hotel_rent->customer->name;
+        $customer_number = $hotel_rent->customer->number;
+        $table = $hotel_rent_item->table;
+        $floor = $table->floor;
+        $tower = $floor->tower;
+        $table_number = $table->number;
+        $user_name = $hotel_rent->user->name;
+        $room = $table_number . ' - ' . $tower->name;
+        $record->room = $room;
+        $record->customer_name = $customer_name;
+        $record->customer_number = $customer_number;
+        $record->user_name = $user_name;
+        $company = Company::active();
+        $height = 230;
+        try{
+        $pdf = PDF::loadView('restaurant::table_room.services', compact(
+            'record',
+            'company'
+        ))
+            ->setPaper(array(0, 0, 249.45, $height));
+    } catch (Exception $e) {
+        return ['m' => $e->getMessage()];
+    }
 
+    return $pdf->stream('pdf_transfers.pdf');
+
+    }
     public function delete($id)
     {
         $table = Table::find($id);
@@ -95,7 +158,7 @@ class TableRoomController extends Controller
         $old_total = $hotel_rent->total;
         $hotel_rent_item->duration = $days;
         $table = $hotel_rent_item->table;
-        $price = $hotel_rent_item->is_month_rent ? $table->month_price : $table->price ;
+        $price = $hotel_rent_item->is_month_rent ? $table->month_price : $table->price;
         $total = $price * $days;
         $hotel_rent_item->total = $total;
         $hotel_rent->total -= $old_total;
@@ -258,14 +321,15 @@ class TableRoomController extends Controller
             'message' => 'Habitación cambiada'
         ];
     }
-   
-    public  function desocupied($id){
-       $hotel_rent_item = HotelRentItem::find($id);
-       $table = $hotel_rent_item->table;
+
+    public  function desocupied($id)
+    {
+        $hotel_rent_item = HotelRentItem::find($id);
+        $table = $hotel_rent_item->table;
         $table->status_table_id = 5;
         $table->sendMessageDesocupied();
         $table->save();
-        if($hotel_rent_item &&$hotel_rent_item->is_month_rent){
+        if ($hotel_rent_item && $hotel_rent_item->is_month_rent) {
             $hotel_rent_item->checkout_date = Carbon::now()->format('Y-m-d');
             $hotel_rent_item->checkout_time = Carbon::now()->format('H:i:s');
             $hotel_rent_item->payment_status = "Pagado";
@@ -276,7 +340,6 @@ class TableRoomController extends Controller
             'success' => true,
             'message' => 'Habitación desocupada'
         ];
-  
     }
     public  function advanceDocument($id)
     {
@@ -289,16 +352,16 @@ class TableRoomController extends Controller
             $service = $this->get_item_service();
             $service->price = $hotel_rent_item->advances;
             $concept =  "Adelanto de habitación n° " . $hotel_rent_item->table->number;
-            if($hotel_rent_item->is_month_rent){
+            if ($hotel_rent_item->is_month_rent) {
                 $checkin_date = Carbon::parse($hotel_rent_item->checkin_date);
                 //$day
-         
+
                 $checkin_date_more_one_month = $checkin_date->copy()->addMonth()->format('Y-m-d');
                 //obtener el día y el mes de la fecha de checkin, el mes en letras
                 $day = Carbon::parse($checkin_date)->format('d');
                 $month = Carbon::parse($checkin_date)->format('m');
                 $month = $this->getMonth($month);
-                
+
                 $day_one_more_month = Carbon::parse($checkin_date_more_one_month)->format('d');
                 $month_one_more_month = Carbon::parse($checkin_date_more_one_month)->format('m');
                 $month_one_more_month = $this->getMonth($month_one_more_month);
@@ -306,7 +369,7 @@ class TableRoomController extends Controller
             }
             $service->description = $concept;
             $service->item->description = $concept;
-            
+
             $items->push([
                 'id' => 0,
                 'observation' => '',
@@ -321,7 +384,8 @@ class TableRoomController extends Controller
             'customer_number'
         );
     }
-    function getMonth($m){
+    function getMonth($m)
+    {
         $months = [
             '01' => 'Enero',
             '02' => 'Febrero',
@@ -534,12 +598,15 @@ class TableRoomController extends Controller
 
             $tables->where('status_table_id', 1);
         }
-        $tables = $tables->with('services')->get()
-        ;
+        $tables = $tables->with('services')->get();
 
         return compact(
             'services',
-            'towers', 'floors', 'tables', 'table_types');
+            'towers',
+            'floors',
+            'tables',
+            'table_types'
+        );
     }
     public function ordenById($id)
     {
@@ -611,7 +678,7 @@ class TableRoomController extends Controller
             $hotel_rent->observation = $observation;
             $hotel_rent->payment_status = $payment_status;
             $hotel_rent->advance = $advance;
-            
+
             $hotel_rent->total = $total;
             $hotel_rent->save();
 
@@ -651,6 +718,8 @@ class TableRoomController extends Controller
                     $hotel_rent_item_service->quantity = $service['quantity'];
                     $hotel_rent_item_service->code = $this->generate_code();
                     $hotel_rent_item_service->save();
+
+                    event(new PrintEvent($hotel_rent_item_service->id,"H",true));
                 }
                 $guesses = $room['guesses'];
                 foreach ($guesses as $guess) {
@@ -677,7 +746,8 @@ class TableRoomController extends Controller
             ];
         }
     }
-    function generate_code(){
+    function generate_code()
+    {
         //genera un código de 10 caracteres entre numero, letras mayusculas y minusculas
         $code = Str::random(10);
         return $code;
@@ -765,10 +835,10 @@ class TableRoomController extends Controller
                 if ($row->status_table_id == 2) {
                     //obtener el más reciente hotel_rent_item
                     $hotel_rent_item = HotelRentItem::where('table_id', $table_id)
-                    ->where('was_cancel', false)
-                    ->orderBy('checkin_date', 'desc')
-                    ->orderBy('checkin_time', 'desc')
-                    ->first();
+                        ->where('was_cancel', false)
+                        ->orderBy('checkin_date', 'desc')
+                        ->orderBy('checkin_time', 'desc')
+                        ->first();
                     $rent_month = $hotel_rent_item->is_month_rent;
                     $checkout_date_estimated = $hotel_rent_item->checkout_date_estimated;
                     $checkout_time_estimated = $hotel_rent_item->checkout_time_estimated;
@@ -783,7 +853,7 @@ class TableRoomController extends Controller
                             ->format('Y-m-d H:i:s');
                     }
                 }
-           
+
                 return [
                     'rent_month' => $rent_month,
                     'date_of_out' => $date_of_out,
@@ -831,7 +901,13 @@ class TableRoomController extends Controller
             });
         return compact(
             'services',
-            'reserves', 'tables', 'towers', 'floors', 'tables_types', 'status');
+            'reserves',
+            'tables',
+            'towers',
+            'floors',
+            'tables_types',
+            'status'
+        );
     }
     function transformCustomer($row)
     {
@@ -975,15 +1051,34 @@ class TableRoomController extends Controller
     public function record($id)
     {
         $table = Table::find($id);
-        $table->services = $table->services->transform(function ($row){
+        $table->services = $table->services->transform(function ($row) {
             return [
                 'room_service_id' => $row->room_service_id,
-           
+
             ];
         });
         return [
             'success' => true,
             'data' => $table
+        ];
+    }
+    public function get_services($id)
+    {
+        $hotel_rent_item_service = HotelRentItemServices::where('hotel_rent_item_id', $id)->get()
+            ->transform(function ($row) {
+                return [
+                    'id' => $row->id,
+                    'code' => $row->code,
+                    'name' => $row->room_service->name,
+                    'room_service_id' => $row->room_service_id,
+                    'quantity' => $row->quantity,
+                    'active' => (bool)$row->active,
+                ];
+            });
+
+        return [
+            'success' => true,
+            'data' => $hotel_rent_item_service
         ];
     }
     public function room_types()

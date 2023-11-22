@@ -76,6 +76,9 @@ class PrintEvent implements ShouldBroadcast
         }
         $documentLink = null;
         switch ($document_type) {
+            case "H":
+                $documentLink = url('') . "/caja/rooms/print_service/{$id}";
+                break;
             case "0":
                 $documentLink = url('') . "/caja/worker/print-ticket?id={$id}&area_id={$area_id}&ids={$ids_string}";
                 break;
@@ -98,10 +101,10 @@ class PrintEvent implements ShouldBroadcast
                 $doc = $id;
                 $documentLink = url('') . $format == "a4" ? "/consignment/format/{$doc}" : "/consignment/format_ticket/{$doc}";
                 break;
-                case "COL":
-                    $doc = $id;
-                    $documentLink = url('') .  "/consignment/format_ticket_liquidated/{$doc}";
-                    break;
+            case "COL":
+                $doc = $id;
+                $documentLink = url('') .  "/consignment/format_ticket_liquidated/{$doc}";
+                break;
         }
         $printer = $area_printer->printer;
         if ($printer == null) {
@@ -112,7 +115,7 @@ class PrintEvent implements ShouldBroadcast
             }
         }
         $conf_establishment = ConfEstablishment::where('establishment_id', $establishment->id)->first();
-        if($conf_establishment && $conf_establishment->print_command == false && $document_type == "0"){
+        if ($conf_establishment && $conf_establishment->print_command == false && $document_type == "0") {
             $printing = false;
         }
 

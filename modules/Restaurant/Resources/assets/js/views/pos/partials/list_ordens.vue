@@ -646,6 +646,19 @@
                                 placeholder="Referencia (DNI)"
                             ></el-input>
                         </template>
+                        <template v-if="configuration.hotels">
+                            <el-input
+                                @input="seachPromotion"
+                                type="text"
+                                maxlength="10"
+                                show-word-limit
+                                v-model="promotionCode"
+                                placeholder="Canjear código de promoción"
+                            >
+                            
+                            
+                            </el-input>
+                        </template>
                     </div>
 
                     <div
@@ -2295,11 +2308,13 @@ export default {
         "isCreatingOrden",
         "ordenId",
         "cash_id",
-        "isHotelArea",
+        "isHotelArea"
     ],
 
     data() {
         return {
+            timer: null,
+            promotionCode: null,
             currentArea: null,
             showCreditListDialog: false,
             showCreditListModal: false,
@@ -2366,13 +2381,13 @@ export default {
             foodDefaults: [],
             currentFoodDefault: null,
             commercialTreatments: [],
-            currentCommercialTreatment: null
-            ,isHotel:false,
+            currentCommercialTreatment: null,
+            isHotel: false
         };
     },
 
     watch: {
-        isHotelArea(value,__){
+        isHotelArea(value, __) {
             this.isHotel = value;
             this.setOptionMenu();
         },
@@ -2406,7 +2421,7 @@ export default {
         window.addEventListener("resize", this.handleResize);
         this.foodDefault = this.itemDefault;
         this.boxOperation = this.cash_id ? "Cerrar" : "Abrir";
-        
+
         this.setOptionMenu();
         let ordens = [];
         let ordensSave = localStorage.ordens;
@@ -2450,53 +2465,97 @@ export default {
         this.getCommercialTreatments();
     },
     methods: {
-        setOptionMenu(){
-                this.optionsMenu = [
-            {
-                id: 1,
-                title: ["Configuración"],
-                icon: "fas fa-cogs",
-                visible: false
-            },
-            {
-                id: 2,
-                title: ["Recibir ", "mercaderia"],
-                icon: "fas fa-people-carry",
-                visible: this.configuration.receive_merchandise
-            },
-            {
-                id: 3,
-                title: [this.boxOperation, " Caja"],
-                icon: "fas fa-cash-register",
-                visible: true
-            },
-            {
-                id: 7,
-                title: ["Ingresos/", "/Gastos"],
-                icon: "fas fa-money-bill-wave-alt",
-                visible: true
-            },
-            {
-                id: 4,
-                title: ["Aparcado"],
-                icon: "fas fa-cart-arrow-down",
-                visible: !this.configuration.college
-            },
+        async promotionDesactive(id) {
+            try {
+             
+                const response = await this.$http(
+                    `/caja/rooms/desactive_promotion/${id}`
+                );
+                console.log("🚀 ~ file: list_ordens.vue:2474 ~ promotionDesactive ~ response:", response)
 
-            {
-                id: 5,
-                title: ["Ordenes"],
-                icon: "fas fa-hourglass",
-                visible:
-                    (this.configuration.restaurant && !this.configuration.college) && !this.isHotel
-            },
-            {
-                id: 6,
-                title: ["Lista de crédito"],
-                icon: "fas fa-hourglass",
-                visible: this.configuration.credit_list
+            } catch (e) {
+                console.log(e);
             }
-        ];
+        },
+        async seachPromotion() {
+            if (this.timer) {
+                clearTimeout(this.timer);
+            }
+            this.timer = setTimeout(async () => {
+                const response = await this.$http(
+                    `/caja/rooms/promotion/${this.promotionCode}`
+                );
+                let {data:{data}} = response;
+                let {has_items,name} = data;
+                if(!has_items){
+                    let message = `Desea dar por entregada la promoción ${name}?`;
+                    try{
+                           await this.$confirm(
+                        message,
+                        "Atención",
+                        {
+                            confirmButtonText: "Buscar",
+                            cancelButtonText: "Cancelar",
+                            type: "warning"
+                        }
+                    );
+                    }catch(e){
+                        console.log(e);
+                    }
+                }else{
+                    this.$toast.success("Promoción con items");
+                }
+            }, 1000);
+        },
+        setOptionMenu() {
+            this.optionsMenu = [
+                {
+                    id: 1,
+                    title: ["Configuración"],
+                    icon: "fas fa-cogs",
+                    visible: false
+                },
+                {
+                    id: 2,
+                    title: ["Recibir ", "mercaderia"],
+                    icon: "fas fa-people-carry",
+                    visible: this.configuration.receive_merchandise
+                },
+                {
+                    id: 3,
+                    title: [this.boxOperation, " Caja"],
+                    icon: "fas fa-cash-register",
+                    visible: true
+                },
+                {
+                    id: 7,
+                    title: ["Ingresos/", "/Gastos"],
+                    icon: "fas fa-money-bill-wave-alt",
+                    visible: true
+                },
+                {
+                    id: 4,
+                    title: ["Aparcado"],
+                    icon: "fas fa-cart-arrow-down",
+                    visible: !this.configuration.college
+                },
+
+                {
+                    id: 5,
+                    title: ["Ordenes"],
+                    icon: "fas fa-hourglass",
+                    visible:
+                        this.configuration.restaurant &&
+                        !this.configuration.college &&
+                        !this.isHotel
+                },
+                {
+                    id: 6,
+                    title: ["Lista de crédito"],
+                    icon: "fas fa-hourglass",
+                    visible: this.configuration.credit_list
+                }
+            ];
         },
         openCash() {
             if (!this.cash_id) {

@@ -23,11 +23,13 @@ use Modules\Restaurant\Http\Controllers\IncomesController;
 use Modules\Restaurant\Http\Controllers\OrdenController;
 use Modules\Restaurant\Http\Controllers\RestaurantController;
 use Modules\Restaurant\Http\Controllers\PromocionPorItemController;
+use Modules\Restaurant\Http\Controllers\TableRoomController;
 use Modules\Restaurant\Http\Controllers\WorkerController;
 
 Route::prefix('caja')->group(function () {
     //Route::get('/', 'RestaurantController@index');
     //Route::get('documents', 'OrdenController@printTicket');
+    Route::get('rooms/print_service/{id}', [TableRoomController::class, 'print_service']);
     Route::get('sale-notes', [App\Http\Controllers\SaleNoteController::class, 'pos'])->name('pos.sale_notes.index')->middleware('redirect.level');
     Route::get('documents', [App\Http\Controllers\DocumentController::class, 'documents'])->name('restaurant.documents.index');
     Route::get('documents/create/{documents?}', [App\Http\Controllers\DocumentController::class, 'create_pos'])->name('tenant.documents_pos.create')->middleware(['redirect.level', 'tenant.internal.mode']);
@@ -176,6 +178,9 @@ Route::prefix('caja')->group(function () {
         Route::get('rooms/detail_table', 'TableRoomController@get_detail_table');
         Route::get('rooms/get_reserve_date/{id}', 'TableRoomController@get_reserve_date');
         Route::post('rooms/set_reserve_date', 'TableRoomController@set_reserve_date');
+        Route::get('rooms/services/{id}', 'TableRoomController@get_services');
+        Route::get('rooms/promotion/{code}', 'TableRoomController@get_promotion');
+        Route::get('rooms/desactive_promotion/{code}', 'TableRoomController@desactive_promotion');
 
 
         Route::post('room_services', 'TableRoomServiceController@room_services');

@@ -20,7 +20,7 @@ class HotelRentItemResource extends JsonResource
     {
         $customer = $this->setCustomer($this->hotel_rent->customer);
         $hotel_rent_id = $this->hotel_rent_id;
-        $services = $this->services;
+        $has_services = $this->services->count() > 0;
         $documents = HotelRentDocument::where('hotel_rent_id', $hotel_rent_id)->get()
             ->transform(function ($row) {
                 $document = $row->document ? $row->document : $row->sale_note;
@@ -119,7 +119,7 @@ class HotelRentItemResource extends JsonResource
         // }
         $toPay = $this->total > 0;
         return [
-            'services' => $services,
+            'has_services' => $has_services,
             'toPay' => $toPay,
             'extra_time' => $extra_time,
             'id' => $this->id,

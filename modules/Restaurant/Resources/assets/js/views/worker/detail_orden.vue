@@ -127,7 +127,8 @@
                                                                         </span>
                                                                     </div>
                                                                     <div>
-                                                                        <template v-if="data.item.stock > 0">
+                                                                  <template v-if="data.item.is_set == 0 && data.item.unit_type_id != 'ZZ'">
+                                                                            <template v-if="data.item.stock > 0">
                                                                             <span
                                                                                 class="badge rounded-pill bg-primary m-l-0">Stock
                                                                                 <template v-if="data.item.max_quantity">
@@ -148,6 +149,7 @@
                                                                                 class="badge rounded-pill bg-danger m-l-0">
                                                                                 Agotado
                                                                             </span>
+                                                                        </template>
                                                                         </template>
                                                                     </div>
                                                                 </div>

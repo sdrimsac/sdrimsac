@@ -102,7 +102,8 @@
                                             </el-tag>
                                         </div>
                                         <div>
-                                            <template
+                                           <template v-if="data.item.is_set == 0 && data.item.unit_type_id != 'ZZ'">
+                                             <template
                                                 v-if="data.item.stock > 0"
                                             >
                                                 <span
@@ -122,6 +123,7 @@
                                                     Agotado
                                                 </span>
                                             </template>
+                                           </template>
                                         </div>
                                     </div>
                                 </div>
