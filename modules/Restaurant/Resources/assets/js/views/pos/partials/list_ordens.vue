@@ -655,8 +655,6 @@
                                 v-model="promotionCode"
                                 placeholder="Canjear código de promoción"
                             >
-                            
-                            
                             </el-input>
                         </template>
                     </div>
@@ -2467,45 +2465,57 @@ export default {
     methods: {
         async promotionDesactive(id) {
             try {
-             
+                this.loading = true;
                 const response = await this.$http(
                     `/caja/rooms/desactive_promotion/${id}`
                 );
-                console.log("🚀 ~ file: list_ordens.vue:2474 ~ promotionDesactive ~ response:", response)
-
+                if (response.status == 200) {
+                    this.$toast.success("Promoción desactivada");
+                }
             } catch (e) {
                 console.log(e);
+                this.$toast.error("Error al desactivar promoción");
+            } finally {
+                this.loading = false;
             }
         },
         async seachPromotion() {
-            if (this.timer) {
-                clearTimeout(this.timer);
-            }
-            this.timer = setTimeout(async () => {
-                const response = await this.$http(
-                    `/caja/rooms/promotion/${this.promotionCode}`
-                );
-                let {data:{data}} = response;
-                let {has_items,name} = data;
-                if(!has_items){
-                    let message = `Desea dar por entregada la promoción ${name}?`;
-                    try{
-                           await this.$confirm(
-                        message,
-                        "Atención",
-                        {
-                            confirmButtonText: "Buscar",
-                            cancelButtonText: "Cancelar",
-                            type: "warning"
-                        }
-                    );
-                    }catch(e){
-                        console.log(e);
-                    }
-                }else{
-                    this.$toast.success("Promoción con items");
+            if (this.promotionCode && this.promotionCode.length > 5) {
+                if (this.timer) {
+                    clearTimeout(this.timer);
                 }
-            }, 1000);
+                this.timer = setTimeout(async () => {
+                    const response = await this.$http(
+                        `/caja/rooms/promotion/${this.promotionCode}`
+                    );
+                    let {
+                        data: { data, success }
+                    } = response;
+                    if (success) {
+                        let { has_items, name, id,items } = data;
+                        if (!has_items) {
+                            let message = `Desea dar por entregada la promoción ${name}?`;
+                            try {
+                                await this.$confirm(message, "Atención", {
+                                    confirmButtonText: "Aceptar",
+                                    cancelButtonText: "Cancelar",
+                                    type: "warning"
+                                });
+                                await this.promotionDesactive(id);
+                            } catch (e) {
+                                console.log(e);
+                            }
+                        } else {
+                            this.$toast.success("Cargando productos");
+                            this.$emit('update:localOrden',items)
+                        }
+                    } else {
+                        this.$toast.error("Promoción no encontrada");
+
+                    }
+                    this.promotionCode = null;
+                }, 1000);
+            }
         },
         setOptionMenu() {
             this.optionsMenu = [

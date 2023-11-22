@@ -35,21 +35,18 @@
                         <td>
                             <template v-if="record.has_items">
                                 <el-tooltip effect="dark" placement="top">
-                                <div slot="content">
-                                    <div
-                                        v-for="item in record.items"
-                                        :key="item.id"
-                                    >
-                                        {{ item.description }} <br>
+                                    <div slot="content">
+                                        <div
+                                            v-for="item in record.items"
+                                            :key="item.id"
+                                        >
+                                            {{ item.description }} <br />
+                                        </div>
                                     </div>
-                                </div>
-                                <el-button
-                                    icon="el-icon-view"
-                                    size="mini"
-                                >
-                                    {{ record.items.length }}
-                                </el-button>
-                            </el-tooltip>
+                                    <el-button icon="el-icon-view" size="mini">
+                                        {{ record.items.length }}
+                                    </el-button>
+                                </el-tooltip>
                             </template>
                         </td>
                         <td>
@@ -73,8 +70,11 @@
             </table>
         </div>
         <promotions-form
+            @getRecords="getRecords"
             :recordId="recordId"
-         :showDialog.sync="showAddPromotion"> </promotions-form>
+            :showDialog.sync="showAddPromotion"
+        >
+        </promotions-form>
     </el-dialog>
 </template>
 
@@ -98,15 +98,15 @@ export default {
             this.showAddPromotion = true;
         },
         async deleteRecord(id) {
-                await this.$confirm(
-                    "¿Está seguro que desea eliminar este registro?",
-                    "Advertencia",
-                    {
-                        confirmButtonText: "Sí",
-                        cancelButtonText: "No",
-                        type: "warning"
-                    }
-                );
+            await this.$confirm(
+                "¿Está seguro que desea eliminar este registro?",
+                "Advertencia",
+                {
+                    confirmButtonText: "Sí",
+                    cancelButtonText: "No",
+                    type: "warning"
+                }
+            );
             const response = await this.$http.delete(
                 `/caja/room_services/record/${id}`
             );
@@ -117,9 +117,9 @@ export default {
                 });
                 this.getRecords();
             }
-
         },
         addNewRecord() {
+            this.recordId = null;
             this.showAddPromotion = true;
         },
         close() {

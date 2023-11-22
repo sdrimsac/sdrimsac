@@ -52,11 +52,21 @@ class TableRoomController extends Controller
     }
 
     public function get_promotion($code){
+
+        // 'id' => 0,
+        // 'observation' => '',
+        // 'food' => $service,
+        // 'quantity' => 1,
+        // 'price' => $service->price,
         $promotion = HotelRentItemServices::whereRaw('BINARY code=?', $code)->first();
-        $room_service = $promotion->room_service;
-        $promotion->has_items = (bool) $room_service->has_items;
-        $promotion->name = $room_service->name;
+     
         if($promotion){
+            $room_service = $promotion->room_service;
+            $promotion->has_items = (bool) $room_service->has_items;
+            if($promotion->has_items){
+                $promotion->items = $this->formatedItems($room_service->items);
+            }
+            $promotion->name = $room_service->name;
             return [
                 'success' => true,
                 'data' => $promotion
@@ -67,6 +77,23 @@ class TableRoomController extends Controller
                 'message' => 'Código no encontrado'
             ];
         }
+    }
+
+    function formatedItems($items){
+        $formated_items = [];
+        foreach($items as $item){
+            $food_id = $item['food_id'];
+            $food = Food::findOrFail($food_id);
+            $quantity = $item['quantity'];
+            $formated_items[] = [
+                'id' => 0,
+                'observation' => '',
+                'food' => $food,
+                'quantity' => $quantity,
+                'price' => $food->price,
+            ];
+        }
+        return $formated_items;
     }
     public function print_service($id){
         $record = HotelRentItemServices::findOrFail($id);

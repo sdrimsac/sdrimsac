@@ -72,6 +72,7 @@
                         <th>
                             Cantidad
                         </th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -86,6 +87,14 @@
                                 v-model="item.quantity"
                                 placeholder="Cantidad"
                             ></el-input-number>
+                        </td>
+                        <td>
+                            <el-button
+                                type="danger"
+                                icon="el-icon-delete"
+                                size="mini"
+                                @click="service_items.splice(idx, 1)"
+                            ></el-button>
                         </td>
                     </tr>
                 </tbody>
@@ -120,7 +129,6 @@ export default {
                 const response = await this.$http.get(
                     `/caja/room_services/record/${this.recordId}`
                 );
-                console.log("🚀 ~ file: promotions_form.vue:122 ~ getRecord ~ response:", response)
                 this.form = response.data.record;
                 this.service_items = response.data.record.items;
             } catch (e) {
@@ -158,6 +166,7 @@ export default {
                 if (response.status == 200) {
                     this.$toast.success("Registro guardado");
                     this.initForm();
+                    this.$emit('getRecords');
                 }
             } catch (e) {
                 this.$toast.error("Ocurrió un error");
@@ -199,6 +208,7 @@ export default {
         },
         close() {
             this.$emit("update:showDialog", false);
+            this.$emit("update:recordId", null);
         },
         open() {
             this.initForm();

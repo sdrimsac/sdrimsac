@@ -2610,13 +2610,15 @@ export default {
                 this.$toast.warning("Tiene productos seleccionados.");
                 return;
             }
-            this.clientTableData = {
+            if(orden.mesa != undefined && orden.id != undefined){
+                this.clientTableData = {
                 table: orden.mesa.number,
                 ref: orden.ref ?? "-",
                 table_id: orden.mesa.id,
                 orden_id: orden.id,
                 is_room: orden.mesa.is_room
             };
+            }
 
             // orden.type_id = type ? type.id : null;
             //  orden.type_description = type ? type.description : null;
