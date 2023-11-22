@@ -997,6 +997,7 @@ export default {
             resource: "/caja/rooms/tables",
             tables: [],
             all_tables: [],
+            all_services:[],
             showOrdens: false,
             ordensSaved: [],
             top: "rounded-top",

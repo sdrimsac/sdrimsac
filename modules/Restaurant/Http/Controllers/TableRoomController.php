@@ -23,13 +23,16 @@ use Modules\Restaurant\Http\Resources\TableCollection;
 use Modules\Restaurant\Models\DetailTable;
 use Modules\Restaurant\Models\Floor;
 use Modules\Restaurant\Models\Food;
+use Modules\Restaurant\Models\HotelRentItemServices;
 use Modules\Restaurant\Models\Orden;
 use Modules\Restaurant\Models\OrdenItem;
+use Modules\Restaurant\Models\RoomService;
 use Modules\Restaurant\Models\StatusTable;
 use Modules\Restaurant\Models\TableMaintenance;
+use Modules\Restaurant\Models\TableRoomService;
 use Modules\Restaurant\Models\TableType;
 use Modules\Restaurant\Models\Tower;
-
+use Illuminate\Support\Str;
 class TableRoomController extends Controller
 {
 
@@ -526,13 +529,17 @@ class TableRoomController extends Controller
         $towers = Tower::where('active', true)->get();
         $floors = Floor::where('active', true)->get();
         $tables = Table::where('is_room', true);
+        $services = RoomService::where('active', true)->get();
         if (!$is_reserve) {
 
             $tables->where('status_table_id', 1);
         }
-        $tables = $tables->get();
+        $tables = $tables->with('services')->get()
+        ;
 
-        return compact('towers', 'floors', 'tables', 'table_types');
+        return compact(
+            'services',
+            'towers', 'floors', 'tables', 'table_types');
     }
     public function ordenById($id)
     {
@@ -636,7 +643,15 @@ class TableRoomController extends Controller
                 if ($hotel_rent_item->is_reserve == false) {
                     Table::where('id', $room['table_id'])->update(['status_table_id' => 2]);
                 }
-
+                $services = $room['services'];
+                foreach ($services as $service) {
+                    $hotel_rent_item_service = new HotelRentItemServices;
+                    $hotel_rent_item_service->hotel_rent_item_id = $hotel_rent_item->id;
+                    $hotel_rent_item_service->room_service_id = $service['id'];
+                    $hotel_rent_item_service->quantity = $service['quantity'];
+                    $hotel_rent_item_service->code = $this->generate_code();
+                    $hotel_rent_item_service->save();
+                }
                 $guesses = $room['guesses'];
                 foreach ($guesses as $guess) {
                     $hotel_rent_item_person = new HotelRentItemPerson;
@@ -661,6 +676,11 @@ class TableRoomController extends Controller
                 'message' => $message
             ];
         }
+    }
+    function generate_code(){
+        //genera un código de 10 caracteres entre numero, letras mayusculas y minusculas
+        $code = Str::random(10);
+        return $code;
     }
     public function cancelRoom($id)
     {
@@ -716,6 +736,7 @@ class TableRoomController extends Controller
         $user = auth()->user();
         $configuration = Configuration::first();
         $time_to_leave = $configuration->alarm_to_end;
+        $services = RoomService::where('active', true)->get();
         $establishment_id = $user->establishment_id;
         $tables_types = TableType::where('active', true)->get();
         $this->checkReserves($establishment_id);
@@ -808,7 +829,9 @@ class TableRoomController extends Controller
                     'hotel_rent_id' => $rent->hotel_rent_id,
                 ];
             });
-        return compact('reserves', 'tables', 'towers', 'floors', 'tables_types', 'status');
+        return compact(
+            'services',
+            'reserves', 'tables', 'towers', 'floors', 'tables_types', 'status');
     }
     function transformCustomer($row)
     {
@@ -952,7 +975,12 @@ class TableRoomController extends Controller
     public function record($id)
     {
         $table = Table::find($id);
-
+        $table->services = $table->services->transform(function ($row){
+            return [
+                'room_service_id' => $row->room_service_id,
+           
+            ];
+        });
         return [
             'success' => true,
             'data' => $table
@@ -1062,6 +1090,14 @@ class TableRoomController extends Controller
         $table = Table::firstOrNew(['id' => $id]);
         $table->fill($request->all());
         $table->is_room = true;
+        $services = $request->input('services');
+        TableRoomService::where('table_id', $table->id)->delete();
+        foreach ($services as $service) {
+            $table_room_service = new TableRoomService;
+            $table_room_service->table_id = $table->id;
+            $table_room_service->room_service_id = $service;
+            $table_room_service->save();
+        }
         $table->save();
 
         return [

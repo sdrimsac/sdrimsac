@@ -2,6 +2,7 @@
 
 namespace App\Models\Tenant;
 
+use Modules\Restaurant\Models\HotelRentItemServices;
 use Modules\Restaurant\Models\Table;
 
 class HotelRentItem extends ModelTenant
@@ -46,6 +47,11 @@ class HotelRentItem extends ModelTenant
     public function guesses()
     {
         return $this->belongsToMany(Person::class, 'hotel_rent_item_person');
+    }
+
+    public function services()
+    {
+        return $this->hasMany(HotelRentItemServices::class);
     }
 
 }

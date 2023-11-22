@@ -301,6 +301,23 @@
                             ></el-button>
                         </div>
                     </div>
+                    <el-divider></el-divider>
+                    <div v-if="room.services.length > 0" class="row">
+                        <div
+                            class="col-md-3"
+                            v-for="(service, sidx) in room.services"
+                            :key="`_sidx${sidx}`"
+                        >
+                            <label for="total_room">{{ service.name }} </label>
+                            <el-input
+                                type="number"
+                                :min="0"
+                                @input="updateServices"
+                                v-model="service.quantity"
+                            >
+                            </el-input>
+                        </div>
+                    </div>
                 </div>
             </el-collapse-item>
         </el-collapse>
@@ -336,6 +353,8 @@ export default {
     },
     data() {
         return {
+            services: [],
+            all_services: [],
             title: "Ingreso de huesped",
             textLoading: "Cargando...",
             collap: ["1"],
@@ -370,7 +389,7 @@ export default {
         async changeTable(room) {
             this.textLoading = "Verificando reserva...";
             await this.checkDateReserve(room);
-
+            this.showServices(room);
             this.calculateTotal();
         },
         resetTextLoading() {
@@ -437,6 +456,7 @@ export default {
         },
         initForm() {
             this.rooms = [];
+            this.services = [];
             this.form = {
                 observation: "",
                 customer_id: null,
@@ -557,7 +577,8 @@ export default {
                 duration: 1,
                 checkin_date: new Date(),
                 checkin_time: new Date(),
-                guesses: []
+                guesses: [],
+                services: []
             };
             let table = this.all_tables.find(t => t.id == table_id);
 
@@ -580,10 +601,11 @@ export default {
                 `/caja/rooms/tablas?is_reserve=${this.isReserve}`
             );
             // this.rooms = response.data.tables;
-            let { towers, floors, tables } = response.data;
+            let { towers, floors, tables, services } = response.data;
             this.all_towers = towers;
             this.all_floors = floors;
             this.all_tables = tables;
+            this.all_services = services;
 
             ///
             // this.towers = towers;
@@ -660,7 +682,7 @@ export default {
         },
         async submit() {
             this.form.rooms = this.rooms;
-
+        
             if (!this.validate()) {
                 return;
             }
@@ -730,8 +752,33 @@ export default {
                     this.textLoading = "Verificando reserva...";
                     await this.checkDateReserve(room);
                 }
+                let [room] = this.rooms;
+                this.showServices(room);
             }
             this.loading = false;
+        },
+        updateServices(){
+            this.$forceUpdate();
+        },
+        showServices(room) {
+            let table = this.all_tables.find(t => t.id == room.table_id);
+            if (table) {
+                let { services } = table;
+                if (services.length > 0) {
+                    room.services = this.all_services
+                        .filter(s =>
+                            services.some(ss => ss.room_service_id == s.id)
+                        )
+                        .map(s => {
+                            s.quantity = 0;
+                            return s;
+                        });
+                } else {
+                    room.services = [];
+                }
+            } else {
+                room.services = [];
+            }
         },
         async getHotelRent() {
             if (!this.hotelRentId) return;

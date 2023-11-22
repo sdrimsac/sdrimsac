@@ -9,7 +9,7 @@
     >
         <form autocomplete="off" @submit.prevent="submit">
             <div class="form-body">
-                <div v-if="type == 'caja/rooms' && recordId" class="row mt-2">
+                <!-- <div v-if="type == 'caja/rooms' && recordId" class="row mt-2">
                     <div class="col-md-3">
                         <button
                             class="btn btn-primary"
@@ -19,7 +19,7 @@
                             Frigobar
                         </button>
                     </div>
-                </div>
+                </div> -->
                 <div class="row">
                     <div
                         v-if="type !== 'caja/tables' && type !== 'caja/rooms'"
@@ -185,12 +185,14 @@
                                 ></small>
                             </div>
                         </div>
-                            <div class="col-md-4" v-if="type == 'caja/rooms'">
+                        <div class="col-md-4" v-if="type == 'caja/rooms'">
                             <div
                                 class="form-group"
                                 :class="{ 'has-danger': errors.month_price }"
                             >
-                                <label class="control-label">Precio mensual</label>
+                                <label class="control-label"
+                                    >Precio mensual</label
+                                >
                                 <el-input
                                     v-model="form.month_price"
                                     type="number"
@@ -288,78 +290,119 @@
                                 ></small>
                             </div>
                         </div>
-                        <template v-if="type=='caja/rooms'">
-                              <div class="col-12">
+                        <template
+                            v-if="
+                                type == 'caja/rooms' && all_services.length > 0
+                            "
+                        >
+                            <div class="col-12">
+                                <div
+                                    class="form-group"
+                                    :class="{
+                                        'has-danger': errors.all_services
+                                    }"
+                                >
+                                    <label class="control-label"
+                                        >Servicios</label
+                                    >
+                                </div>
+                            </div>
                             <div
-                                class="form-group"
-                                :class="{
-                                    'has-danger': errors.description
-                                }"
+                                class="d-flex flex-wrap justify-content-center p-2"
                             >
-                                <label class="control-label">Contiene</label>
-                                <el-input
-                                    v-model="detail"
-                                    type="textarea"
-                                    readonly
-                                    :rows="3"
-                                ></el-input>
-
-                                <small
-                                    class="text-danger"
-                                    v-if="errors.description"
-                                    v-text="errors.description[0]"
-                                ></small>
-                            </div>
-                        </div>
-                        <div
-                            class="d-flex flex-wrap justify-content-center p-2"
-                        >
-                            <el-tag
-                                role="button"
-                                :type="data.selected ? 'success' : 'primary'"
-                                style="margin-right:5px;margin-top:5px"
-                                v-for="(data, idx) in tags"
-                                :key="idx"
-                                :disable-transitions="true"
-                                @click="select(idx)"
-                            >
-                                {{ data.description }}
-                            </el-tag>
-                            <template v-if="tags.length == 0">
                                 <el-tag
-                                    type="danger"
+                                    role="button"
+                                    :type="
+                                        data.selected ? 'success' : 'primary'
+                                    "
+                                    style="margin-right:5px;margin-top:5px"
+                                    v-for="(data, idx) in all_services"
+                                    :key="idx"
                                     :disable-transitions="true"
+                                    @click="selectService(idx)"
                                 >
-                                    <span>
-                                        PRESIONE <b>+ AGREGAR</b> PARA GUARDARLA
-                                    </span>
+                                    {{ data.name.toUpperCase() }}
                                 </el-tag>
-                            </template>
-                        </div>
-                        <div
-                            class="d-flex justify-content-end align-items-center"
-                        >
-                            <div class="col-md-3 col-lg-3 col-6">
-                                <el-input
-                                    class="input-new-tag"
-                                    @input="search"
-                                    v-model="newTag"
-                                    placeholder="Nueva obs.."
-                                    size="medium"
-                                >
-                                </el-input>
                             </div>
-                            <div>
-                                <el-button
-                                    class="button-new-tag"
-                                    size="small"
-                                    style="margin-left: 10px;"
-                                    type="primary"
-                                    @click="handleInputConfirm"
-                                    >+ Agregar</el-button
+                         
+                        </template>
+                        <template v-if="type == 'caja/rooms'">
+                            <div class="col-12">
+                                <div
+                                    class="form-group"
+                                    :class="{
+                                        'has-danger': errors.description
+                                    }"
                                 >
+                                    <label class="control-label"
+                                        >Contiene</label
+                                    >
+                                    <el-input
+                                        v-model="detail"
+                                        type="textarea"
+                                        readonly
+                                        :rows="3"
+                                    ></el-input>
+
+                                    <small
+                                        class="text-danger"
+                                        v-if="errors.description"
+                                        v-text="errors.description[0]"
+                                    ></small>
+                                </div>
                             </div>
-                        </div>
+                            <div
+                                class="d-flex flex-wrap justify-content-center p-2"
+                            >
+                                <el-tag
+                                    role="button"
+                                    :type="
+                                        data.selected ? 'success' : 'primary'
+                                    "
+                                    style="margin-right:5px;margin-top:5px"
+                                    v-for="(data, idx) in tags"
+                                    :key="idx"
+                                    :disable-transitions="true"
+                                    @click="select(idx)"
+                                >
+                                    {{ data.description }}
+                                </el-tag>
+                                <template v-if="tags.length == 0">
+                                    <el-tag
+                                        type="danger"
+                                        :disable-transitions="true"
+                                    >
+                                        <span>
+                                            PRESIONE <b>+ AGREGAR</b> PARA
+                                            GUARDARLA
+                                        </span>
+                                    </el-tag>
+                                </template>
+                            </div>
+                            <div
+                                class="d-flex justify-content-end align-items-center"
+                            >
+                                <div class="col-md-3 col-lg-3 col-6">
+                                    <el-input
+                                        class="input-new-tag"
+                                        @input="search"
+                                        v-model="newTag"
+                                        placeholder="Nueva obs.."
+                                        size="medium"
+                                    >
+                                    </el-input>
+                                </div>
+                                <div>
+                                    <el-button
+                                        class="button-new-tag"
+                                        size="small"
+                                        style="margin-left: 10px;"
+                                        type="primary"
+                                        @click="handleInputConfirm"
+                                        >+ Agregar</el-button
+                                    >
+                                </div>
+                            </div>
                         </template>
                     </template>
                 </div>
@@ -374,12 +417,8 @@
                 >
             </div>
         </form>
-    <mini-bar
-    :showDialog.sync="showMinibar"
-    :table_id="recordId"
-    >
-
-    </mini-bar>
+        <mini-bar :showDialog.sync="showMinibar" :table_id="recordId">
+        </mini-bar>
     </el-dialog>
 </template>
 
@@ -410,6 +449,7 @@ export default {
             form: {},
             options: [],
             all_floors: [],
+            all_services: [],
             floors: [],
             all_towers: [],
             towers: [],
@@ -417,15 +457,14 @@ export default {
             detailsArray: [],
             detail: null,
             details: [],
-            showMinibar:false,
-
+            showMinibar: false
         };
     },
     created() {
         this.initForm();
     },
     methods: {
-        minibar(){
+        minibar() {
             this.showMinibar = true;
         },
         async getDetails() {
@@ -523,7 +562,12 @@ export default {
         async getTables() {
             const response = await this.$http("/caja/rooms/tables");
             if (response.status == 200) {
-                const { towers, floors } = response.data;
+                const { towers, floors, services } = response.data;
+                this.all_services = services;
+                this.all_services = this.all_services.map(s => ({
+                    ...s,
+                    selected: false
+                }));
                 this.all_floors = floors;
                 this.all_towers = towers;
                 this.towers = towers;
@@ -541,6 +585,9 @@ export default {
             this.floors = this.all_floors.filter(f => {
                 return f.tower_id == tower_id;
             });
+        },
+        selectService(idx) {
+            this.all_services[idx].selected = !this.all_services[idx].selected;
         },
         select(idx) {
             this.tags[idx].selected = !this.tags[idx].selected;
@@ -602,6 +649,15 @@ export default {
                 this.form.tower_id = floor.tower_id;
                 this.filterFloorsByTower(floor.tower_id);
                 this.form.floor_id = floor.id;
+                this.all_services = this.all_services.map(s => {
+                    if (this.form.services.some(srv => srv.room_service_id == s.id)) {
+                        return {
+                            ...s,
+                            selected: true
+                        };
+                    }
+                    return s;
+                });
             }
 
             if (this.type == "caja/rooms") {
@@ -669,6 +725,9 @@ export default {
                 return;
             }
             this.loading_submit = true;
+            this.form.services = this.all_services
+                .filter(s => s.selected)
+                .map(s => s.id);
             this.$http
                 .post(`/${this.resource}`, this.form)
                 .then(response => {

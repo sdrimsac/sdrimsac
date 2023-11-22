@@ -176,6 +176,12 @@ Route::prefix('caja')->group(function () {
         Route::get('rooms/detail_table', 'TableRoomController@get_detail_table');
         Route::get('rooms/get_reserve_date/{id}', 'TableRoomController@get_reserve_date');
         Route::post('rooms/set_reserve_date', 'TableRoomController@set_reserve_date');
+
+
+        Route::post('room_services', 'TableRoomServiceController@room_services');
+        Route::get('room_services/records', 'TableRoomServiceController@records');
+        Route::get('room_services/record/{id}', 'TableRoomServiceController@record');
+        Route::delete('room_services/record/{id}', 'TableRoomServiceController@destroy');
         //**** MESAS */
         Route::get('tables', 'TableController@index')->name('restaurant.tables');
         Route::get('tables/columns', 'TableController@columns');

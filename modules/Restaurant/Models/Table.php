@@ -86,6 +86,9 @@ class Table extends ModelTenant
         );
     }
 
+    public  function services(){
+        return $this->hasMany(TableRoomService::class);
+    }
     public  function last_hotel_rent_item(){
         return $this->hasOne(HotelRentItem::class)->latestOfMany();
     }

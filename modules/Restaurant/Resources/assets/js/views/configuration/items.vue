@@ -19,6 +19,15 @@
                     <div
                         class="col-12 col-md-6 d-flex align-items-start justify-content-end"
                     >
+                            <button
+                            v-if="resource == 'caja/rooms'"
+                            type="button"
+                            class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto m-l-5"
+                            @click.prevent="clickSeePromotions"
+                        >
+                            <i class="icofont-plus-circle"></i>
+                            <span>Promociones</span>
+                        </button>
                         <button
                             v-if="resource == 'caja/rooms'"
                             type="button"
@@ -256,12 +265,16 @@
                 ></create-form-massive>
                 <items-rooms :showDialog.sync="showItems" :type="typeItem">
                 </items-rooms>
+                <promotions
+                :showDialog.sync="showPromotions"
+                ></promotions>
             </div>
         </div>
     </div>
 </template>
 
 <script>
+const Promotions = () => import("./promotions.vue");
 import CreateForm from "./form.vue";
 import CreateFormMassive from "./formTableMassive.vue";
 import ItemsRooms from "./items_rooms.vue";
@@ -271,7 +284,9 @@ import queryString from "query-string";
 export default {
     props: ["type", "title", "configurations"],
     mixins: [deletable],
-    components: { DataTable, CreateForm, CreateFormMassive, ItemsRooms },
+    components: { DataTable, CreateForm, CreateFormMassive, ItemsRooms
+    ,Promotions
+    },
     data() {
         return {
             showItems: false,
@@ -297,7 +312,8 @@ export default {
             disabled_previos: false,
             myOptions: ["op1", "op2", "op3"],
             types: [],
-            typeItem: null
+            typeItem: null,
+            showPromotions: false
         };
     },
     created() {
@@ -311,6 +327,9 @@ export default {
         });
     },
     methods: {
+        clickSeePromotions(){
+            this.showPromotions = true;
+        },
         clickSeeTypes() {
             this.typeItem = "table_types";
             this.showItems = true;
