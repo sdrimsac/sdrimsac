@@ -783,14 +783,16 @@ class TableRoomController extends Controller
                 }
                 $services = $room['services'];
                 foreach ($services as $service) {
-                    $hotel_rent_item_service = new HotelRentItemServices;
-                    $hotel_rent_item_service->hotel_rent_item_id = $hotel_rent_item->id;
-                    $hotel_rent_item_service->room_service_id = $service['id'];
-                    $hotel_rent_item_service->quantity = $service['quantity'];
-                    $hotel_rent_item_service->code = $this->generate_code();
-                    $hotel_rent_item_service->save();
-
-                    event(new PrintEvent($hotel_rent_item_service->id, "H", true));
+                    if($service['quantity'] > 0){
+                        $hotel_rent_item_service = new HotelRentItemServices;
+                        $hotel_rent_item_service->hotel_rent_item_id = $hotel_rent_item->id;
+                        $hotel_rent_item_service->room_service_id = $service['id'];
+                        $hotel_rent_item_service->quantity = $service['quantity'];
+                        $hotel_rent_item_service->code = $this->generate_code();
+                        $hotel_rent_item_service->save();
+                        event(new PrintEvent($hotel_rent_item_service->id, "H", true));
+                    }
+              
                 }
                 $guesses = $room['guesses'];
                 foreach ($guesses as $guess) {
