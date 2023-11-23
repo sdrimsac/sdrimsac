@@ -2590,7 +2590,10 @@ export default {
             let partsUrl = linkpdf.split("/");
             let document = partsUrl[partsUrl.length - 1];
             let isTicket = document.toLowerCase().includes("ticket");
-
+            if(!isTicket){
+                let print_service = linkpdf.includes("print_service");
+                isTicket = print_service;
+            }
             let tipoBandejaImpresora = this.config.new_old_printer;
 
             if (!isTicket && tipoBandejaImpresora == 1) {
