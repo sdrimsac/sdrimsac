@@ -115,11 +115,11 @@ class Table extends ModelTenant
         return $this->belongsTo(Floor::class);
     }
 
-    public function sendMessageDesocupied(){
+    public function sendMessageDesocupied($word = "desocupada"){
             if($this->is_room){
                 $number = $this->number;
                 $tower = $this->floor->tower->name;
-                $message = "La habitación $number - $tower se ha desocupado";
+                $message = "La habitación $number - $tower ha sido $word";
                 $configuration = Configuration::first();
                 $number_activity = $configuration->number_activity;
                 $numbers_activity = NumberActivity::all();

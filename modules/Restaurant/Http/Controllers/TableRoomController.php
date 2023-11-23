@@ -833,7 +833,7 @@ class TableRoomController extends Controller
         $hotel_rent_item->save();
         $table = $hotel_rent_item->table;
         $table->status_table_id = 5;
-        $table->sendMessageDesocupied();
+        $table->sendMessageDesocupied("cancelada");
         $table->save();
         $items = $hotel_rent->items;
         $cancel = true;
