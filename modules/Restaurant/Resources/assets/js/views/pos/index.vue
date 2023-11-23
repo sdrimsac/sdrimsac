@@ -84,6 +84,9 @@
                                         </div>
                                     </div>
                                 </div>
+                                <template
+                                v-if="isHotelArea"
+                                >
                                 <button
                                     v-for="(t, idx) in tablesClean"
                                     :key="idx"
@@ -138,6 +141,7 @@
                                         - {{ t.floor.tower.name }}
                                     </span>
                                 </button>
+                                </template>
                             </div>
                         </div>
                         <div class="row card mx-1 mt-2">

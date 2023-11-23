@@ -219,7 +219,9 @@
                                             : "habitación"
                                     }}</label
                                 >
-                                <el-select v-model="form.status_table_id">
+                                <el-select
+                                :disabled="recordId"
+                                 v-model="form.status_table_id">
                                     <el-option
                                         v-for="(data, index) in statusTable"
                                         :key="index"
@@ -324,7 +326,6 @@
                                     {{ data.name.toUpperCase() }}
                                 </el-tag>
                             </div>
-                         
                         </template>
                         <template v-if="type == 'caja/rooms'">
                             <div class="col-12">
@@ -650,7 +651,11 @@ export default {
                 this.filterFloorsByTower(floor.tower_id);
                 this.form.floor_id = floor.id;
                 this.all_services = this.all_services.map(s => {
-                    if (this.form.services.some(srv => srv.room_service_id == s.id)) {
+                    if (
+                        this.form.services.some(
+                            srv => srv.room_service_id == s.id
+                        )
+                    ) {
                         return {
                             ...s,
                             selected: true
@@ -668,13 +673,14 @@ export default {
                     this.form.area_id = area.id;
                 }
 
-                let status = this.statusTable.find(
-                    status => status.description.toUpperCase() == "LIBRE"
-                );
-                if (status) {
-                    this.form.status_table_id = status.id;
+                if (!this.recordId) {
+                    let status = this.statusTable.find(
+                        status => status.description.toUpperCase() == "LIBRE"
+                    );
+                    if (status) {
+                        this.form.status_table_id = status.id;
+                    }
                 }
-
                 if (this.types.length > 0) {
                     this.form.table_type_id = this.types[0].id;
                 }
