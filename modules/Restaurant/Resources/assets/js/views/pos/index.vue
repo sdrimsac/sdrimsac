@@ -2498,7 +2498,6 @@ export default {
             }
         },
         creatingOrden(number, id, is_room = false) {
-            console.log(is_room, "is_room");
             this.isCreatingOrden = true;
             this.clientTableData = {
                 ref: undefined,
@@ -2857,6 +2856,11 @@ export default {
             this.form.printDocument = form.printDocument;
             this.form.is_room = form.is_room;
             if (this.form.is_room) {
+                if(form.customer_id){
+                    this.form.customer_id = form.customer_id;
+                }
+                this.form.promotion_sale = form.promotion_sale;
+                this.form.hotel_rent_item_service_id = form.hotel_rent_item_service_id;
                 this.form.is_list_credit = form.is_list_credit;
                 this.form.orden_ids = form.orden_ids;
                 this.form.hotel_rent_item_ids = form.hotel_rent_item_ids;
@@ -2864,6 +2868,7 @@ export default {
                 this.form.hotel_rent_id = form.hotel_rent_id;
                 this.form.hotel_customer_number = form.customer_number;
             }
+                    console.log("🚀 ~ file: index.vue:2861 ~ asyncpaymentsOrden(form,variationItem ~ this.form.customer_id:", this.form.customer_id)
             let { items } = form;
             this.ordens = items;
             for (let i = 0; i < items.length; i++) {

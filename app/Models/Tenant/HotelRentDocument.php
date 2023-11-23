@@ -12,6 +12,11 @@ class HotelRentDocument extends ModelTenant
         'sale_note_id',
         'document_id',
         'hotel_rent_id',
+        'is_advance',
+    ];
+
+    protected $casts = [
+        'is_advance' => 'boolean',
     ];
 
 

@@ -1009,6 +1009,7 @@ class DocumentController extends Controller
                 HotelRentDocument::create([
                     'hotel_rent_id' => $hotel_rent->id,
                     'document_id' => $document->id,
+                    'is_advance' => true,
                 ]);
             }else{
                 $hotel_rent_items = $hotel_rent->items;

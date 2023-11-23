@@ -3,10 +3,8 @@
 namespace Modules\Restaurant\Http\Controllers;
 
 use App\CoreFacturalo\Requests\Inputs\Common\PersonInput;
-use App\CoreFacturalo\Services\Models\Person;
 use App\Models\Tenant\Company;
 use App\Models\Tenant\Configuration;
-use App\Models\Tenant\Establishment;
 use App\Models\Tenant\HotelRent;
 use App\Models\Tenant\HotelRentItem;
 use App\Models\Tenant\HotelRentItemPerson;
@@ -56,14 +54,15 @@ class TableRoomController extends Controller
     public function get_promotion($code)
     {
 
-        // 'id' => 0,
-        // 'observation' => '',
-        // 'food' => $service,
-        // 'quantity' => 1,
-        // 'price' => $service->price,
-        $promotion = HotelRentItemServices::whereRaw('BINARY code=?', $code)->first();
+        $promotion = HotelRentItemServices::whereRaw('BINARY code=?', $code)
+            ->where('active', true)
+            ->first();
 
         if ($promotion) {
+            $hotel_rent_item_id = $promotion->hotel_rent_item_id;
+            $hotel_rent_item = HotelRentItem::find($hotel_rent_item_id);
+            $customer_number = $hotel_rent_item->hotel_rent->customer->number;
+            $customer_id = $hotel_rent_item->hotel_rent->customer_id;
             $room_service = $promotion->room_service;
             $promotion->has_items = (bool) $room_service->has_items;
             if ($promotion->has_items) {
@@ -76,12 +75,16 @@ class TableRoomController extends Controller
                     ];
                 } else {
                     $promotion->items = $formated['items'];
+                    $promotion->hotel_rent_item_id = $hotel_rent_item_id;
+                    $promotion->customer_number = $customer_number;
+                    $promotion->customer_id = $customer_id;
                 }
             }
             $promotion->name = $room_service->name;
             return [
                 'success' => true,
-                'data' => $promotion
+                'data' => $promotion,
+
             ];
         } else {
             return [
@@ -99,7 +102,6 @@ class TableRoomController extends Controller
         $warehouse_id = Warehouse::where('establishment_id', $establishment_id)->first()->id;
         foreach ($items as $item) {
             $food_id = $item['food_id'];
-
             $food = Food::whereHas(
                 'item',
                 function ($query)
@@ -117,7 +119,7 @@ class TableRoomController extends Controller
                     'observation' => '',
                     'food' => $food,
                     'quantity' => $quantity,
-                    'price' => $food->price,
+                    'price' => 0,
                 ];
             } else {
                 $error = true;
@@ -306,11 +308,12 @@ class TableRoomController extends Controller
     }
     public function getRoom($id)
     {
-        $room = HotelRentItem::where('table_id', $id)->orderBy('checkin_date', 'desc')
+        $room = HotelRentItem::where('table_id', $id)
+            ->where('payment_status', 'Pendiente')
+            ->where('is_reserve', false)
+            ->orderBy('checkin_date', 'desc')
             ->orderBy('checkin_time', 'desc')
-
             ->first();
-
 
         return new HotelRentItemResource($room);
     }
@@ -907,7 +910,7 @@ class TableRoomController extends Controller
                         ->orderBy('checkin_date', 'desc')
                         ->orderBy('checkin_time', 'desc')
                         ->first();
-                    $rent_month = $hotel_rent_item->is_month_rent;
+                    $rent_month = (bool) $hotel_rent_item->is_month_rent;
                     $checkout_date_estimated = $hotel_rent_item->checkout_date_estimated;
                     $checkout_time_estimated = $hotel_rent_item->checkout_time_estimated;
 
@@ -948,6 +951,7 @@ class TableRoomController extends Controller
         $towers = Tower::where('active', true)->get();
         $floors = Floor::where('active', true)->get();
         $status = StatusTable::where('active', true)->get();
+
         $reserves = HotelRentItem::where('is_reserve', true)
             ->where('was_cancel', false)
             ->orderBy('checkin_date', 'desc')->orderBy('checkin_time', 'desc')

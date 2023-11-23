@@ -2492,7 +2492,14 @@ export default {
                         data: { data, success }
                     } = response;
                     if (success) {
-                        let { has_items, name, id,items } = data;
+                        let {
+                            has_items,
+                            name,
+                            id,
+                            items,
+                            customer_number,
+                            customer_id
+                        } = data;
                         if (!has_items) {
                             let message = `Desea dar por entregada la promoción ${name}?`;
                             try {
@@ -2507,11 +2514,18 @@ export default {
                             }
                         } else {
                             this.$toast.success("Cargando productos");
-                            this.$emit('update:localOrden',items)
+                            this.$emit("paymentsOrden", {
+                                items: items,
+                                is_room: true,
+                                hotel_rent_item_service_id:id,
+                                customer_number,
+                                customer_id,
+                                promotion_sale:true
+                            });
+                            // this.$emit('update:localOrden',items)
                         }
                     } else {
                         this.$toast.error("Promoción no encontrada");
-
                     }
                     this.promotionCode = null;
                 }, 1000);

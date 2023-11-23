@@ -14,6 +14,7 @@
     $payments = $document->payments;
     $hotel_rent = \App\Models\Tenant\HotelRent::where('sale_note_id', $document->id)->first();
     $hotel_rent_advance = \App\Models\Tenant\HotelRentDocument::where('sale_note_id', $document->id)->first();
+    $sale_note_promotion = \App\Models\Tenant\SaleNotePromotion::where('sale_note_id', $document->id)->first();
     $is_chifa_china = $company->number == '15609876309';
 @endphp
 <html>
@@ -273,30 +274,57 @@
                         <p class="desc">{{ $hri->table->number }}</p>
                     </td>
                 </tr>
-                <tr>
-                    <td>
-                        <p class="desc">Entrada:</p>
+                @if ($hri->payment_status == 'Pagado')
+                    <tr>
+                        <td>
+                            <p class="desc">Entrada:</p>
 
-                    </td>
-                    <td>
-                        <p class="desc">
-                            {{ \Carbon\Carbon::parse($hri->checkin_date)->format('d/m/Y') }} {{ $hri->checkin_time }}
-                        </p>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <p class="desc">Salida:</p>
+                        </td>
+                        <td>
+                            <p class="desc">
+                                {{ \Carbon\Carbon::parse($hri->checkin_date)->format('d/m/Y') }}
+                                {{ $hri->checkin_time }}
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p class="desc">Salida:</p>
 
-                    </td>
-                    <td>
-                        <p class="desc">
-                            {{ \Carbon\Carbon::parse($hri->checkout_date)->format('d/m/Y') }}
-                            {{ $hri->checkout_time }}
-                        </p>
-                    </td>
-                </tr>
+                        </td>
+                        <td>
+                            <p class="desc">
+                                {{ \Carbon\Carbon::parse($hri->checkout_date)->format('d/m/Y') }}
+                                {{ $hri->checkout_time }}
+                            </p>
+                        </td>
+                    </tr>
+                @endif
             @endforeach
+        @endif
+        @if ($sale_note_promotion)
+            @php
+                $hotel_rent_item_service = $sale_note_promotion->hotel_rent_item_service;
+                $hotel_rent_item = $hotel_rent_item_service->hotel_rent_item;
+                $room_number = $hotel_rent_item->table->number;
+                $promotion = $hotel_rent_item_service->room_service->name;
+            @endphp
+            <tr>
+                <td>
+                    <p class="desc">Habitación:</p>
+                </td>
+                <td>
+                    <p class="desc">{{ $room_number }}</p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p class="desc">Promoción:</p>
+                </td>
+                <td>
+                    <p class="desc">{{ $promotion }}</p>
+                </td>
+            </tr>
         @endif
         @if ($hotel_rent_advance)
             @php

@@ -76,9 +76,11 @@ use App\Models\Tenant\HotelRentItem;
 use App\Models\Tenant\ItemUnitType;
 use App\Models\Tenant\NumberActivity;
 use App\Models\Tenant\SaleNoteCredit;
+use App\Models\Tenant\SaleNotePromotion;
 use App\Models\Tenant\Seller;
 use Modules\Restaurant\Events\OrdenReadyEvent;
 use Modules\Restaurant\Models\Food;
+use Modules\Restaurant\Models\HotelRentItemServices;
 use Modules\Restaurant\Models\OrdenItem;
 use Modules\Restaurant\Models\Table;
 use Mpdf\Mpdf;
@@ -574,12 +576,14 @@ class SaleNoteController extends Controller
             if ($request->is_list_credit) {
                 CreditList::where('customer_id', $this->sale_note->customer_id)->update(['paid' => true]);
             }
-            if ($request->hotel_rent_id) {
+            $promotion_sale = $request->promotion_sale ?? false;
+            if ($request->hotel_rent_id && !$promotion_sale) {
                 $hotel_rent = HotelRent::findOrFail($request->hotel_rent_id);
                 if ($request->is_advance) {
                     HotelRentDocument::create([
                         'hotel_rent_id' => $hotel_rent->id,
                         'sale_note_id' => $this->sale_note->id,
+                        'is_advance' => true,
                     ]);
                 } else {
                     $hotel_rent_items = $hotel_rent->items;
@@ -599,6 +603,15 @@ class SaleNoteController extends Controller
                     $hotel_rent->paid = 1;
                     $hotel_rent->save();
                 }
+            }
+            if($promotion_sale && $request->hotel_rent_item_service_id){
+                 SaleNotePromotion::create([
+                    'sale_note_id' => $this->sale_note->id,
+                    'hotel_rent_item_service_id' => $request->hotel_rent_item_service_id,
+                ]);
+
+                HotelRentItemServices::where('id', $request->hotel_rent_item_service_id)->update(['active' => 0]);
+
             }
             if ($all_ordens) {
                 $tables = Table::where('establishment_id', auth()->user()->establishment_id)

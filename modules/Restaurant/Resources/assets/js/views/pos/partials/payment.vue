@@ -685,8 +685,9 @@
                                                     <input
                                                         id="imprimir"
                                                         v-model="printerOn"
-                                                        @change="updateConfigutation"
-                                                            
+                                                        @change="
+                                                            updateConfigutation
+                                                        "
                                                         class="radio-button2"
                                                         type="radio"
                                                         name="imprimir"
@@ -713,7 +714,9 @@
                                                     <input
                                                         id="noimprimir"
                                                         v-model="printerOn"
-                                                        @change="updateConfigutation"
+                                                        @change="
+                                                            updateConfigutation
+                                                        "
                                                         class="radio-button2"
                                                         type="radio"
                                                         name="noimprimir"
@@ -1526,8 +1529,13 @@ export default {
         this.button_payment = true;
         this.currentDocumentsType = this.documentsType;
         this.form.identity_document_type_id = this.currentDocumentsType[0].id;
-        this.form.customer_id = this.establishments.customer_id;
-        this.value = this.establishments.customer_id;
+        if (!this.form.customer_id && !this.form.promotion_sale) {
+            this.form.customer_id = this.establishments.customer_id;
+            this.value = this.establishments.customer_id;
+        } else {
+            this.value = this.form.customer_id;
+        }
+
         this.isInterno = this.company.soap_type_id == "03";
 
         // await this.getTables();
@@ -1580,7 +1588,11 @@ export default {
 
         this.button_payment = false;
         let { conf } = this.establishments;
-        if ((conf && conf.pos_quick_sale) || this.ordens_all_table) {
+        if (
+            (conf && conf.pos_quick_sale) ||
+            this.ordens_all_table ||
+            this.form.promotion_sale
+        ) {
             this.sendPayment(null, this.form);
         }
         this.getBankAccounts();
@@ -1592,8 +1604,9 @@ export default {
     mounted() {},
     methods: {
         async updateConfigutation() {
-            if(!this.configuration.save_pos_printing) return;
-            this.configuration.print_in_pos = this.printerOn == 1 ? true : false;
+            if (!this.configuration.save_pos_printing) return;
+            this.configuration.print_in_pos =
+                this.printerOn == 1 ? true : false;
             this.$http
                 .post(`/configurations`, this.configuration)
                 .then(response => {
@@ -2180,9 +2193,8 @@ export default {
                 // this.form.customer_id = this.form.hotel_customer_number;
                 // this.changeCustomer();
             }
-            if(this.configuration.save_pos_printing){
-                this.printerOn = this.configuration.print_in_pos ? 1:0;
-
+            if (this.configuration.save_pos_printing) {
+                this.printerOn = this.configuration.print_in_pos ? 1 : 0;
             }
         },
         checkCustomerDocument(type) {
@@ -3636,7 +3648,6 @@ export default {
         },
 
         filterSeries() {
-            console.log("object");
             let check = this.checkCustomers();
             if (!check && !this.started) {
                 let dcto = "DNI";
@@ -3745,7 +3756,10 @@ export default {
             if (this.form.document_type_id != "01") {
                 this.customers = [...this.customers, this.customer_default];
             }
-            console.log(this.form.document_type_id);
+            console.log(
+                "🚀 ~ file: payment.vue:3750 ~ filterSeries ~ this.form.customer_id:",
+                this.form.customer_id
+            );
             this.changeCustomer();
             if (this.form.document_type_id == "80") {
                 this.discount_amount = 0;

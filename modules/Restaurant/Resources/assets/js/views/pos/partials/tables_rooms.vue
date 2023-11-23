@@ -74,6 +74,24 @@
                 </div>
 
                 <div>
+                    <el-tooltip>
+                        <div slot="content">Mensual ({{ all_months }})</div>
+
+                        <button
+                            @click="filterByMonth"
+                            v-if="!viewingRoom && !isChangingRoom"
+                            type="button"
+                            style="margin-left:8px;"
+                            class="btn btn-sm btn-warning"
+                        >
+                            <span
+                                class="text-white m-1"
+                                style="font-size:18px;"
+                            >
+                                <i class="fas fa-bed"></i>
+                            </span>
+                        </button>
+                    </el-tooltip>
                     <el-tooltip v-for="(statu, idx) in status" :key="idx">
                         <div slot="content">
                             {{ statu.description }} ({{ statu.count }})
@@ -1005,6 +1023,7 @@ export default {
     },
     data() {
         return {
+            all_months: [],
             roomEdit: null,
             showEditDate: false,
             status: [],
@@ -1047,6 +1066,15 @@ export default {
         };
     },
     methods: {
+        filterByMonth() {
+            this.showReserves = false;
+            this.tables = this.all_tables
+                .filter(table => table.rent_month)
+                .map(table => {
+                    table.tower_name = table.floor.tower.name;
+                    return table;
+                });
+        },
         async checkServices() {
             this.showServices = true;
         },
@@ -1573,6 +1601,9 @@ export default {
                         time_to_finish: null,
                         timer: null
                     }));
+                    this.all_months = this.all_tables.filter(
+                        t => t.rent_month
+                    ).length;
                     this.all_status = status;
                     this.status = status
                         .filter(s => s.id != 4)
