@@ -6,11 +6,13 @@ use App\CoreFacturalo\Requests\Inputs\Common\PersonInput;
 use App\CoreFacturalo\Services\Models\Person;
 use App\Models\Tenant\Company;
 use App\Models\Tenant\Configuration;
+use App\Models\Tenant\Establishment;
 use App\Models\Tenant\HotelRent;
 use App\Models\Tenant\HotelRentItem;
 use App\Models\Tenant\HotelRentItemPerson;
 use App\Models\Tenant\Item;
 use App\Models\Tenant\Person as TenantPerson;
+use App\Models\Tenant\Warehouse;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -40,7 +42,8 @@ use Modules\Restaurant\Events\PrintEvent;
 
 class TableRoomController extends Controller
 {
-    public function desactive_promotion($id){
+    public function desactive_promotion($id)
+    {
         $promotion = HotelRentItemServices::findOrFail($id);
         $promotion->active = false;
         $promotion->save();
@@ -48,10 +51,10 @@ class TableRoomController extends Controller
             'success' => true,
             'message' => 'Promoción entregada'
         ];
-    
     }
 
-    public function get_promotion($code){
+    public function get_promotion($code)
+    {
 
         // 'id' => 0,
         // 'observation' => '',
@@ -59,19 +62,28 @@ class TableRoomController extends Controller
         // 'quantity' => 1,
         // 'price' => $service->price,
         $promotion = HotelRentItemServices::whereRaw('BINARY code=?', $code)->first();
-     
-        if($promotion){
+
+        if ($promotion) {
             $room_service = $promotion->room_service;
             $promotion->has_items = (bool) $room_service->has_items;
-            if($promotion->has_items){
-                $promotion->items = $this->formatedItems($room_service->items);
+            if ($promotion->has_items) {
+                $formated = $this->formatedItems($room_service->items);
+                $error = $formated['error'];
+                if ($error) {
+                    return [
+                        'success' => false,
+                        'message' => 'Producto no encontrado'
+                    ];
+                } else {
+                    $promotion->items = $formated['items'];
+                }
             }
             $promotion->name = $room_service->name;
             return [
                 'success' => true,
                 'data' => $promotion
             ];
-        }else{
+        } else {
             return [
                 'success' => false,
                 'message' => 'Código no encontrado'
@@ -79,23 +91,50 @@ class TableRoomController extends Controller
         }
     }
 
-    function formatedItems($items){
+    function formatedItems($items)
+    {
         $formated_items = [];
-        foreach($items as $item){
+        $error = false;
+        $establishment_id = auth()->user()->establishment_id;
+        $warehouse_id = Warehouse::where('establishment_id', $establishment_id)->first()->id;
+        foreach ($items as $item) {
             $food_id = $item['food_id'];
-            $food = Food::findOrFail($food_id);
-            $quantity = $item['quantity'];
-            $formated_items[] = [
-                'id' => 0,
-                'observation' => '',
-                'food' => $food,
-                'quantity' => $quantity,
-                'price' => $food->price,
-            ];
+
+            $food = Food::whereHas(
+                'item',
+                function ($query)
+                use ($warehouse_id) {
+                    $query->whereHas('warehouses', function ($query) use ($warehouse_id) {
+                        $query->where('warehouse_id', $warehouse_id);
+                    });
+                }
+            )->where('id', $food_id)->first();
+
+            if ($food) {
+                $quantity = $item['quantity'];
+                $formated_items[] = [
+                    'id' => 0,
+                    'observation' => '',
+                    'food' => $food,
+                    'quantity' => $quantity,
+                    'price' => $food->price,
+                ];
+            } else {
+                $error = true;
+                break;
+            }
         }
-        return $formated_items;
+        if ($error) {
+            $formated_items = [];
+        }
+
+        return [
+            'error' => $error,
+            'items' => $formated_items
+        ];
     }
-    public function print_service($id){
+    public function print_service($id)
+    {
         $record = HotelRentItemServices::findOrFail($id);
         $room = null;
         $hotel_rent_item = $record->hotel_rent_item;
@@ -114,18 +153,17 @@ class TableRoomController extends Controller
         $record->user_name = $user_name;
         $company = Company::active();
         $height = 230;
-        try{
-        $pdf = PDF::loadView('restaurant::table_room.services', compact(
-            'record',
-            'company'
-        ))
-            ->setPaper(array(0, 0, 249.45, $height));
-    } catch (Exception $e) {
-        return ['m' => $e->getMessage()];
-    }
+        try {
+            $pdf = PDF::loadView('restaurant::table_room.services', compact(
+                'record',
+                'company'
+            ))
+                ->setPaper(array(0, 0, 249.45, $height));
+        } catch (Exception $e) {
+            return ['m' => $e->getMessage()];
+        }
 
-    return $pdf->stream('pdf_transfers.pdf');
-
+        return $pdf->stream('pdf_transfers.pdf');
     }
     public function delete($id)
     {
@@ -270,8 +308,8 @@ class TableRoomController extends Controller
     {
         $room = HotelRentItem::where('table_id', $id)->orderBy('checkin_date', 'desc')
             ->orderBy('checkin_time', 'desc')
-        
-        ->first();
+
+            ->first();
 
 
         return new HotelRentItemResource($room);
@@ -749,7 +787,7 @@ class TableRoomController extends Controller
                     $hotel_rent_item_service->code = $this->generate_code();
                     $hotel_rent_item_service->save();
 
-                    event(new PrintEvent($hotel_rent_item_service->id,"H",true));
+                    event(new PrintEvent($hotel_rent_item_service->id, "H", true));
                 }
                 $guesses = $room['guesses'];
                 foreach ($guesses as $guess) {
@@ -1217,13 +1255,14 @@ class TableRoomController extends Controller
         $table->is_room = true;
         $services = $request->input('services');
         TableRoomService::where('table_id', $table->id)->delete();
+        $table->save();
+
         foreach ($services as $service) {
             $table_room_service = new TableRoomService;
             $table_room_service->table_id = $table->id;
             $table_room_service->room_service_id = $service;
             $table_room_service->save();
         }
-        $table->save();
 
         return [
             'success' => true,
