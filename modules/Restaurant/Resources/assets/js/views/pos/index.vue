@@ -4261,7 +4261,10 @@ export default {
             let isTicket = linkpdf.toLowerCase().includes("ticket");
             let isA4 = document.toLowerCase().includes("a4");
             let isA5 = document.toLowerCase().includes("a5");
-
+              if(!isTicket){
+                let print_service = linkpdf.includes("print_service");
+                isTicket = print_service;
+            }
             let tipoBandejaImpresora = this.config.new_old_printer;
 
             if (isA4) {
