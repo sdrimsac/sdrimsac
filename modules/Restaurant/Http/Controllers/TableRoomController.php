@@ -152,7 +152,7 @@ class TableRoomController extends Controller
         $record->customer_number = $customer_number;
         $record->user_name = $user_name;
         $company = Company::active();
-        $height = 230;
+        $height = 280;
         try {
             $pdf = PDF::loadView('restaurant::table_room.services', compact(
                 'record',
