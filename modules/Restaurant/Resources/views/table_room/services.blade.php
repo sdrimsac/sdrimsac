@@ -264,7 +264,7 @@ function format_serie($id)
 <body>
     <div id="register">
 
-        <table border="0" style="border:0px solid;width:100%">
+        <table border="0" style="border:0px solid;width:90%">
             <thead>
                 <tr>
                     <th colspan="4" class="header_title text-center">
@@ -356,4 +356,3 @@ function format_serie($id)
 </body>
 
 </html>
-1
