@@ -814,7 +814,7 @@ class TableRoomController extends Controller
                             $hotel_rent_item_service->quantity = $service['quantity'];
                             $hotel_rent_item_service->code = $this->generate_code();
                             $hotel_rent_item_service->save();
-                            if ($i == 0) {
+                            if ($i == 0 && $room['is_reserve'] == false) {
                                 event(new PrintEvent($hotel_rent_item_service->id, "H", true));
                             }
                         }
