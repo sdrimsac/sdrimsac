@@ -30,6 +30,7 @@ use App\Models\Tenant\Catalogs\IdentityDocumentType;
 use App\Models\Tenant\Seller;
 use Carbon\Carbon;
 use Modules\College\Models\CollegeStudent;
+use Modules\Document\Models\SeriesConfiguration;
 use Modules\Inventory\Models\ItemWarehouse;
 use Modules\Inventory\Models\InventoryConfiguration;
 use Modules\Item\Models\ItemLotsGroup;
@@ -85,7 +86,13 @@ class PosController extends Controller
                     if ($last_sale_note) {
                         $last_sale_note = $last_sale_note->number + 1;
                     } else {
-                        $last_sale_note = 1;
+                        $series_configuration = SeriesConfiguration::where('series', $prefix)->first();
+                        if ($series_configuration) {
+                            $last_sale_note->number = $series_configuration->number;
+                        } else {
+
+                            $last_sale_note = 1;
+                        }
                     }
                     $result[$prefix] = $last_sale_note;
                 } else {
@@ -93,7 +100,13 @@ class PosController extends Controller
                     if ($last_document) {
                         $last_document = $last_document->number + 1;
                     } else {
-                        $last_document = 1;
+                        $series_configuration = SeriesConfiguration::where('series', $prefix)->first();
+                        if ($series_configuration) {
+                            $last_document->number = $series_configuration->number;
+                        } else {
+
+                            $last_document = 1;
+                        }
                     }
                     $result[$prefix] = $last_document;
                 }
@@ -234,8 +247,8 @@ class PosController extends Controller
     {
         $sellers = Seller::where('establishment_id', auth()->user()->establishment_id)->get();
         $products_to_due = ItemLotsGroup::where('date_of_due', '<=', Carbon::now()->addMonths(2))
-        ->where('quantity', '>', 0)
-        ->count();
+            ->where('quantity', '>', 0)
+            ->count();
         $affectation_igv_types = AffectationIgvType::whereActive()->get();
         $establishment = Establishment::where('id', auth()->user()->establishment_id)->first();
         $method_payment = PaymentMethodType::where('active', 1)->orderBy('description', 'asc')->get();
@@ -277,7 +290,7 @@ class PosController extends Controller
                     $query->where('warehouse_id', $user->establishment_id);
                 });
             })
-            ->where('name','<>','INSUMOS')
+            ->where('name', '<>', 'INSUMOS')
             ->get();
         //  dd($row,$documents);
         $item_default = null;
@@ -288,7 +301,7 @@ class PosController extends Controller
         $areas = Area::all();
         $tablesClean = [];
         $tablesLeave = [];
-        if($config->hotels){
+        if ($config->hotels) {
             $tablesClean = DB::connection('tenant')->table('tables')->where('is_cleaning', true)->get();
 
             $configuration = Configuration::first();
@@ -302,25 +315,22 @@ class PosController extends Controller
                             $query->where('checkout_date_estimated', '=', $date)
                                 ->where('checkout_time_estimated', '<', $time);
                         });
-                    })
+                })
                     ->where('payment_status', 'Pendiente')
-                    ->where('was_cancel',0)
-                    ;
+                    ->where('was_cancel', 0);
             }])
-            ->whereHas('hotel_rent_items', function ($query) use ($date, $time) {
-                $query->where(function ($query) use ($date, $time) {
-                    $query->where('checkout_date_estimated', '<', $date)
-                        ->orWhere(function ($query) use ($date, $time) {
-                            $query->where('checkout_date_estimated', '=', $date)
-                                ->where('checkout_time_estimated', '<', $time);
-                        });
+                ->whereHas('hotel_rent_items', function ($query) use ($date, $time) {
+                    $query->where(function ($query) use ($date, $time) {
+                        $query->where('checkout_date_estimated', '<', $date)
+                            ->orWhere(function ($query) use ($date, $time) {
+                                $query->where('checkout_date_estimated', '=', $date)
+                                    ->where('checkout_time_estimated', '<', $time);
+                            });
                     })
-                    ->where('payment_status', 'Pendiente')
-                    ->where('was_cancel',0)
-                    ;
-            })
-            ->get();
-    
+                        ->where('payment_status', 'Pendiente')
+                        ->where('was_cancel', 0);
+                })
+                ->get();
         }
         return compact(
             'tablesLeave',
@@ -367,7 +377,7 @@ class PosController extends Controller
     {
         $configuration = Configuration::first();
         if ($table === 'customers') {
-         
+
             $customers = Person::whereType('customers')->whereIsEnabled()->orderBy('created_at', 'desc');
 
 
@@ -379,7 +389,7 @@ class PosController extends Controller
                 });
             }
             $customers = $customers->limit(5)->get();
-     
+
             $customers = $customers->transform(function ($row) {
                 $students = CollegeStudent::whereHas('member', function ($query) use ($row) {
                     $query->whereHas('parent', function ($query) use ($row) {
