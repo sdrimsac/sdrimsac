@@ -3332,12 +3332,14 @@ export default {
                     difference: form.difference
                 };
                 let ordenId = this.idOrden;
-
+            
+                    console.log("🚀 ~ file: payment.vue:3341 ~ clickPayment ~ this.form.is_room:", this.form.is_room)
+                    console.log("🚀 ~ file: payment.vue:3342 ~ clickPayment ~ this.form.promotion_sale:", this.form.promotion_sale)
                 if (
                     (ordenId == undefined || ordenId == null) &&
                     (form.variation == undefined || form.variation == null) &&
                     !this.conf.pos_quick_sale &&
-                    !this.ordens_all_table && !this.form.is_room
+                    !this.ordens_all_table && (this.form.is_room && this.form.promotion_sale)
                     
                 ) {
                     const responses = await this.$http.post(
