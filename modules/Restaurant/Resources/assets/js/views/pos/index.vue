@@ -2869,7 +2869,7 @@ export default {
                 this.form.is_advance = form.is_advance;
                 this.form.hotel_rent_id = form.hotel_rent_id;
                 this.form.hotel_customer_number = form.customer_number;
-                this.form.caja = true;
+                //this.form.caja = true;
             }
             let { items } = form;
             this.ordens = items;
@@ -5261,8 +5261,7 @@ export default {
                 console.log("imprimiendoxd", e);
 
                 let area_id = e.data.area_id;
-                console.log("🚀 ~ file: index.vue:5264 ~ mounted ~ area_id:", area_id)
-                console.log("🚀 ~ file: index.vue:526r ~ mounted ~ area_id:", this.area_id)
+               
                 
                 if (e.data.direct_printing == true ) {
                     if (e.data.printing == true && this.area_id == area_id) {
