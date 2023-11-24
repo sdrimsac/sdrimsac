@@ -5261,8 +5261,11 @@ export default {
                 console.log("imprimiendoxd", e);
 
                 let area_id = e.data.area_id;
-                if (e.data.direct_printing == true) {
-                    if (e.data.printing == true) {
+                console.log("🚀 ~ file: index.vue:5264 ~ mounted ~ area_id:", area_id)
+                console.log("🚀 ~ file: index.vue:526r ~ mounted ~ area_id:", this.area_id)
+                
+                if (e.data.direct_printing == true ) {
+                    if (e.data.printing == true && this.area_id == area_id) {
                         setTimeout(() => {
                             this.Printer(
                             e.data.printer,

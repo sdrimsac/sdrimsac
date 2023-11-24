@@ -110,6 +110,12 @@ class PrintEvent implements ShouldBroadcast
         if ($printer == null) {
             if ($area_printer->search_print) {
                 $printer = $establishment->printer;
+                if($printer){
+                    $area_with_printer = Area::where('printer',$printer)->first();
+                    if($area_with_printer){
+                        $area_id = $area_with_printer->id;
+                    }
+                }
             } else {
                 $printing = false;
             }
