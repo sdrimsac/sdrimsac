@@ -88,7 +88,7 @@ class PosController extends Controller
                     } else {
                         $series_configuration = SeriesConfiguration::where('series', $prefix)->first();
                         if ($series_configuration) {
-                            $last_sale_note->number = $series_configuration->number;
+                            $last_sale_note = $series_configuration->number;
                         } else {
 
                             $last_sale_note = 1;
@@ -102,7 +102,7 @@ class PosController extends Controller
                     } else {
                         $series_configuration = SeriesConfiguration::where('series', $prefix)->first();
                         if ($series_configuration) {
-                            $last_document->number = $series_configuration->number;
+                            $last_document = $series_configuration->number;
                         } else {
 
                             $last_document = 1;
