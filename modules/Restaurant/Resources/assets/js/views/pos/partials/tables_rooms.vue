@@ -987,6 +987,7 @@
         </edit-reserve>
         <template v-if="currentRoom && currentTable">
             <services-room-modal
+                :printer="printer"
                 :showDialog.sync="showServices"
                 :hotelRentItemId="currentRoom.id"
                 :numberRoom="currentTable.number"
@@ -1015,7 +1016,7 @@ import EditReserve from "./edit_reserve.vue";
 import ServicesRoomModal from "./services_room_modal.vue";
 export default {
     //tabla color verde
-    props: ["showTables", "table", "roomSeeId"],
+    props: ["showTables", "table", "roomSeeId","printer"],
     components: {
         RoomForm,
         EditReserve,

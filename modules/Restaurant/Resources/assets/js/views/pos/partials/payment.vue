@@ -1871,12 +1871,11 @@ export default {
             this.showDialogNewPerson = true;
         },
         async reloadDataCustomers(customer_id) {
-            this.$http.get(`/pos/table/customers`).then(async response => {
-                await this.$emit("update:all_customers", response.data);
-                this.value = customer_id;
-                this.form.customer_id = customer_id;
-                this.changeCustomer();
-            });
+            const response = await this.$http.get(`/pos/table/customers`);
+            await this.$emit("update:all_customers", response.data);
+            this.value = customer_id;
+            this.form.customer_id = customer_id;
+            this.changeCustomer();
         },
         totalItemSelected(products) {
             let total = 0;
@@ -3140,6 +3139,12 @@ export default {
             }
         },
         async clickPayment(form) {
+
+            if(this.form.promotion_sale){
+                this.form.document_type_id = "80";
+                this.setSeries();
+
+            }
             if (!this.checkBankAccount()) {
                 return;
             }
@@ -3178,6 +3183,16 @@ export default {
             }
 
             let customer = this.customers.find(c => c.id == form.customer_id);
+            console.log(
+                "🚀 ~ file: payment.vue:3181 ~ clickPayment ~ customer:",
+                customer
+            );
+
+            if (customer == undefined) {
+                console.log("entrando...");
+                await this.reloadDataCustomers(form.customer_id);
+                customer = this.customers.find(c => c.id == form.customer_id);
+            }
 
             if (
                 form.customer_telephone != null &&

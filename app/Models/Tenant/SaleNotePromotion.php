@@ -11,6 +11,7 @@ class SaleNotePromotion extends ModelTenant
     protected $fillable = [
         'sale_note_id',
         'hotel_rent_item_service_id',
+        'cash_id'
     ];
 
     protected $casts = [
@@ -27,6 +28,11 @@ class SaleNotePromotion extends ModelTenant
     public function sale_note()
     {
         return $this->belongsTo(SaleNote::class);
+    }
+
+    public function cash()
+    {
+        return $this->belongsTo(Cash::class);
     }
 
 }

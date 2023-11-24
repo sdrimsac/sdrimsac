@@ -27,18 +27,34 @@
                             {{ record.active ? "Por entregar" : "Entregado" }}
                         </td>
                         <td>
-                            <button
-                                class="btn-sm btn-danger"
+                           <template v-if="record.active">
+                            <el-tooltip
+                           :content="`Dar por entregado`"
+                           >
+                              <button
+                                class="btn-sm btn-success"
                                 @click="desactiveService(record.id)"
+                            >
+                                <i class="fas fa-check"></i>
+                            </button>
+                           </el-tooltip>
+                           <el-tooltip
+                           :content="`Eliminar servicio`"
+                           >
+                              <button
+                                class="btn-sm btn-danger"
+                                @click="deleteService(record.id)"
                             >
                                 <i class="fas fa-trash"></i>
                             </button>
+                           </el-tooltip>
                             <button
                                 class="btn-sm btn-primary"
                                 @click="printTicket(record.id)"
                             >
                                 <i class="fas fa-print"></i>
                             </button>
+                           </template>
                             <!-- <button
                                 class="btn-sm btn-success"
                                 @click="sendWhatsapp(record.id)"
@@ -55,7 +71,7 @@
 
 <script>
 export default {
-    props: ["showDialog", "hotelRentItemId", "numberRoom"],
+    props: ["showDialog", "hotelRentItemId", "numberRoom","printer"],
     data() {
         return {
             title: "Servicios",
@@ -64,10 +80,130 @@ export default {
             records: []
         };
     },
+    created(){
+     qz.security.setCertificatePromise((resolve, reject) => {
+                this.$http
+                    .get("/api/qz/crt/override", {
+                        responseType: "text"
+                    })
+                    .then(response => {
+                        resolve(response.data);
+                    })
+                    .catch(error => {
+                        reject(error.data);
+                    });
+            });
+
+            qz.security.setSignaturePromise(toSign => {
+                return (resolve, reject) => {
+                    this.$http
+                        .post("/api/qz/signing", { request: toSign })
+                        .then(response => {
+                            resolve(response.data);
+                        })
+                        .catch(error => {
+                            reject(error.data);
+                        });
+                };
+            });
+    },
     methods: {
-        desactiveService() {},
+           async Printer(
+            linkpdf,
+          
+        ) {
+            let paperConfig = {
+                scaleContent: false
+            };
+            let isTicket = linkpdf.toLowerCase().includes("ticket");
+
+              if(!isTicket){
+                let print_service = linkpdf.includes("print_service");
+                isTicket = print_service;
+            }
+
+                // let orientation = "portrait";
+               
+
+               
+            let config = qz.configs.create(this.printer, paperConfig);
+
+            if (!qz.websocket.isActive()) {
+                await qz.websocket.connect(config);
+            }
+            let data = [
+                {
+                    type: "pdf",
+                    format: "file",
+                    data: linkpdf
+                }
+            ];
+
+            qz.print(config, data).catch(e => {
+                this.$toast.error(e.message);
+            });
+          
+       
+        },
+       async desactiveService(id) {
+               try{
+               await this.$confirm(
+                    "¿Está seguro que desea dar por entregado este servicio?",
+                    "Advertencia",
+                    {
+                        confirmButtonText: "Sí",
+                        cancelButtonText: "No",
+                        type: "warning"
+                    }
+                );
+                this.loading = true;
+                const response = await this.$http(
+                    `/caja/rooms/success_service/${id}`
+                );
+                if (response.status == 200) {
+                    this.$message({
+                        message: "Servicio entregado correctamente",
+                        type: "success"
+                    });
+                    this.getServices();
+                }
+            }catch(e){
+                this.$toast.error(e.message);
+            }finally{
+                this.loading = false;
+            }
+        },
+      async  deleteService(id) {
+            try{
+                await this.$confirm(
+                    "¿Está seguro que desea eliminar este servicio?",
+                    "Advertencia",
+                    {
+                        confirmButtonText: "Sí",
+                        cancelButtonText: "No",
+                        type: "warning"
+                    }
+                );
+                this.loading = true;
+                const response = await this.$http.delete(
+                    `/caja/rooms/delete_service/${id}`
+                );
+                if (response.status == 200) {
+                    this.$message({
+                        message: "Servicio eliminado correctamente",
+                        type: "success"
+                    });
+                    this.getServices();
+                }
+            }catch(e){
+                this.$toast.error(e.message);
+            }finally{
+                this.loading = false;
+            }
+        },
         printTicket(id) {
-            window.open(`/caja/rooms/print_service/${id}`, "_blank");
+            this.Printer(`/caja/rooms/print_service/${id}`);
+            // window.open(`/caja/rooms/print_service/${id}`, "_blank");
         },
         sendWhatsapp() {},
         async getServices() {

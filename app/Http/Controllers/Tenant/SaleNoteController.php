@@ -604,10 +604,16 @@ class SaleNoteController extends Controller
                     $hotel_rent->save();
                 }
             }
+            $user_id = auth()->user()->id;
+            $cash = Cash::where('state', 1)->where('user_id', $user_id)->first();
+            if(!$cash){
+                throw new Exception("No existe caja abierta para el usuario");
+            }
             if($promotion_sale && $request->hotel_rent_item_service_id){
                  SaleNotePromotion::create([
                     'sale_note_id' => $this->sale_note->id,
                     'hotel_rent_item_service_id' => $request->hotel_rent_item_service_id,
+                    'cash_id' => $cash->id,
                 ]);
 
                 HotelRentItemServices::where('id', $request->hotel_rent_item_service_id)->update(['active' => 0]);
@@ -660,7 +666,7 @@ class SaleNoteController extends Controller
                             $date_payment = \Carbon\Carbon::parse($date->addDay($dias))->format('Y-m-d');
                             break;
                     }
-                    $user_id = auth()->user()->id;
+    
 
                     Payment::create([
                         "user_id"     => auth()->user()->id,
@@ -672,7 +678,7 @@ class SaleNoteController extends Controller
                     ]);
                     // $payment = Payment::firstOrNew(['id' => $id]);
                 }
-                $cash = Cash::where('state', 1)->where('user_id', $user_id)->first();
+  
                 if ($cash == null) {
                     $cash = Cash::create([
                         'user_id' => auth()->user()->id,

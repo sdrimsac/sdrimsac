@@ -31,7 +31,7 @@ class HotelRentItem extends ModelTenant
 
     protected $casts = [
         'is_month_rent' => 'boolean',
-        'is_reserve' => 'boolean',  
+        'is_reserve' => 'boolean',
     ];
 
     public function hotel_rent()
@@ -54,4 +54,14 @@ class HotelRentItem extends ModelTenant
         return $this->hasMany(HotelRentItemServices::class);
     }
 
+    public function getName()
+    {   
+        $table_ = Table::find($this->table_id);
+        $table_number = $table_->number;
+        $floor = $table_->floor;
+        $tower = $floor->tower;
+        $tower_name = $tower->name;
+
+        return "$table_number - $tower_name";
+    }
 }

@@ -1091,6 +1091,69 @@
 
             </div>
         @endif
+        @if(count($promotions)>0)
+        <div style="text-align:center;">
+            <span style="font-size: 18px !important;">
+                DETALLE DE PROMOCIONES ENTREGADAS
+            </span>
+
+                <table class="border" width="50%">
+                    <thead>
+                        <tr>
+                           <th>HABITACIÓN</th>
+                           <th>SERVICIOS</th>
+                        </tr>
+                    
+                    </thead>
+                    <tbody>
+                        @php
+                        $total = [];
+                        @endphp
+                        @foreach ($promotions as $key => $promotion)
+                            <tr>
+                                <td class="f12 center">
+                                    {{ $key }}
+                                </td>
+                                <td class="f12 center">
+                                    @foreach($promotion as $name => $quantity)
+                                        @php
+                                            if(!isset($total[$name])){
+                                                $total[$name] = 0;
+                                            }
+                                            $total[$name] += $quantity;
+                                            
+                                        @endphp
+                                        {{ $name }} ({{ $quantity }})<br>
+                                    @endforeach
+                                </td>
+                               
+                            </tr>
+                        @endforeach
+                        @foreach($total as $k =>$t)
+                        <td class="f12 center"><strong>{{$k}}</strong></td>
+                        <td class="f12 center"><strong>{{$t}}</strong></td>
+                        @endforeach
+                        {{-- <tr>
+                            <td colspan="2"></td>
+                            <td class="f12 right">TOTAL</td>
+                            <td class="f12 right">
+                                @php
+                                    $t = array_reduce(
+                                        $group,
+                                        function ($carry, $item) {
+                                            return $carry + $item['total'];
+                                        },
+                                        0,
+                                    );
+                                @endphp
+                                S/ {{ number_format($t, 2) }}
+                            </td>
+                        </tr> --}}
+                    </tbody>
+                </table>
+
+        </div>
+        @endif
         @if ($grouped && count($grouped) > 0)
             <div style="text-align:center;">
                 <span style="font-size: 18px !important;">
@@ -1161,263 +1224,9 @@
 
             </div>
         @endif
-        {{-- <table>
-            <thead>
-                <tr>
-                    <th colspan="2">
-                        <div style="text-align:center;">
-                            <span style="font-size: 18px !important;">
-                                DETALLE DE PRODUCTOS VENDIDOS
-                            </span>
-                        </div>
 
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                @php
-                    $total_elements = array_reduce(
-                        $grouped,
-                        function ($carry, $item) {
-                            return $carry + count($item);
-                        },
-                        0,
-                    );
-                    $arr = [];
-                    $arr2 = [];
-                    $sum = intval($total_elements / 2);
-                    if (count($grouped) != 2) {
-                        foreach ($grouped as $group) {
-                            $sum1 = array_reduce(
-                                $arr,
-                                function ($carry, $item) {
-                                    return $carry + count($item);
-                                },
-                                0,
-                            );
-                    
-                            if ($sum1 <= $sum) {
-                                array_push($arr, $group);
-                            } else {
-                                array_push($arr2, $group);
-                            }
-                        }
-                    } else {
-                        $arr[] = $grouped[0];
-                        $arr2[] = $grouped[1];
-                    }
-                    
-                    $general = [$arr, $arr2];
-                    
-                @endphp
-                <tr>
-                    @foreach ($general as $arrr)
-                        <td width="50%" style="vertical-align: top">
-                            @foreach ($arrr as $a)
-                                <table class="border">
-                                    <thead>
-                                        <tr>
-                                            <th colspan="4" class="left">
-                                                <span class="f12">
-                                                    {{ $a[0]['category'] }}
-                                                </span>
-                                            </th>
-                                        </tr>
-                                        <tr>
-                                            <th>
-                                                <span class="f12">UNIDAD</span>
-                                            </th>
-                                            <th>
-                                                <span class="f12">DESCRIPCION</span>
-                                            </th>
-                                            <th>
-                                                <span class="f12">PRECIO</span>
-                                            </th>
-                                            <th>
-                                                <span class="f12">TOTAL</span>
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($a as $a_item)
-                                            <tr>
-                                                <td class="f12 center">
-                                                    {{ intval($a_item['quantity']) }}
-                                                </td>
-                                                <td class="f12">
-                                                    {{ $a_item['description'] }}
-                                                </td>
-                                                <td class="f12 right">
-                                                    {{ number_format(floatval($a_item['price']), 2) }}
-                                                </td>
-                                                <td class="f12 right">
-                                                    {{ number_format($a_item['total'], 2) }}
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                        <tr>
-                                            <td colspan="2"></td>
-                                            <td class="f12 right">TOTAL</td>
-                                            <td class="f12 right">
-                                                @php
-                                                    $t = array_reduce(
-                                                        $a,
-                                                        function ($carry, $item) {
-                                                            return $carry + $item['total'];
-                                                        },
-                                                        0,
-                                                    );
-                                                @endphp
-                                                S/ {{ number_format($t, 2) }}
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                                <br>
-                            @endforeach
-
-                        </td>
-                    @endforeach
-
-
-                </tr>
-
-            </tbody>
-        </table> --}}
     </div>
 
-    {{-- <table>
-        <tbody>
-            <tr>
-                <td>
-                    <span>Titulo</span>
-                </td>
-            </tr>
-            <tr>
-                <td width="50%">
-                    <table>
-                        <tr>
-                            <table>
-
-                                <tr>
-                                    <table style="margin-top:10px;">
-                                        <thead>
-                                            <tr>CATEGORIA A </tr>
-                                            <tr>
-                                                <th>
-                                                    <span class="f12">UNID</span>
-
-                                                </th>
-                                                <th>
-                                                    <span class="f12">DESCR</span>
-
-                                                </th>
-                                                <th>
-                                                    <span class="f12">PRECIO</span>
-
-                                                </th>
-                                                <th>
-                                                    <span class="f12">TOTAL</span>
-
-                                                </th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>1</td>
-                                                <td>ITEM</td>
-                                                <td>12</td>
-                                                <td>12</td>
-                                            </tr>
-                                            <tr>
-                                                <td>1</td>
-                                                <td>ITEM</td>
-                                                <td>12</td>
-                                                <td>12</td>
-                                            </tr>
-                                            <tr>
-                                                <td>1</td>
-                                                <td>ITEM</td>
-                                                <td>12</td>
-                                                <td>12</td>
-                                        </tbody>
-
-                                    </table>
-                                </tr>
-                            </table>
-
-                        </tr>
-                    </table>
-                </td>
-                <td width="50%">
-                    <table>
-                        <tr>
-
-                            <table>
-
-                                <tr>
-                                    <table style="margin-top:10px;">
-                                        <thead>
-                                            <tr>
-                                                CATEGORIA B
-                                            </tr>
-                                            <tr>
-                                                <th>
-                                                    <span class="f12">UNID</span>
-
-                                                </th>
-                                                <th>
-                                                    <span class="f12">DESCR</span>
-
-                                                </th>
-                                                <th>
-                                                    <span class="f12">PRECIO</span>
-
-                                                </th>
-                                                <th>
-                                                    <span class="f12">TOTAL</span>
-
-                                                </th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>1</td>
-                                                <td>ITEM</td>
-                                                <td>12</td>
-                                                <td>12</td>
-                                            </tr>
-                                            <tr>
-                                                <td>1</td>
-                                                <td>ITEM</td>
-                                                <td>12</td>
-                                                <td>12</td>
-                                            </tr>
-                                            <tr>
-                                                <td>1</td>
-                                                <td>ITEM</td>
-                                                <td>12</td>
-                                                <td>12</td>
-                                        </tbody>
-
-                                    </table>
-                                </tr>
-                            </table>
-                        </tr>
-                    </table>
-                </td>
-            </tr>
-        </tbody>
-    </table> --}}
-    {{-- <footer>
-        <table width="100%" border="0" style="border-collapse: collapse;border-top:1px solid #ddd;margin-top:15px;">
-            <tr>
-                <td align="left" valign="middle" colspan="2">Direccion:{{ $establishment->address }} -
-                    {{ $establishment->department->description }} - {{ $establishment->district->description }} -
-                    Telefonos: {{ $establishment->telephone }} Email: {{ $establishment->email }}</td>
-            </tr>
-        </table>
-    </footer> --}}
 </body>
 
 

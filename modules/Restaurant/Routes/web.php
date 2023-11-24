@@ -180,6 +180,8 @@ Route::prefix('caja')->group(function () {
         Route::post('rooms/set_reserve_date', 'TableRoomController@set_reserve_date');
         Route::get('rooms/services/{id}', 'TableRoomController@get_services');
         Route::get('rooms/promotion/{code}', 'TableRoomController@get_promotion');
+        Route::delete('rooms/delete_service/{id}', 'TableRoomController@delete_service');
+        Route::get('rooms/success_service/{id}', 'TableRoomController@success_service');
         Route::get('rooms/desactive_promotion/{code}', 'TableRoomController@desactive_promotion');
 
 

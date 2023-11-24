@@ -28,6 +28,7 @@ use App\Models\Tenant\Receipt;
 use App\Models\Tenant\SaleNoteCredit;
 use App\Models\Tenant\SaleNoteItem;
 use App\Models\Tenant\SaleNotePayment;
+use App\Models\Tenant\SaleNotePromotion;
 use Exception;
 use Modules\Report\Exports\BoxesExport;
 use Modules\Restaurant\Models\OrdenItem;
@@ -238,7 +239,6 @@ class BoxesController extends Controller
             if (mb_stripos($description, 'HABITACIÓN') !== false) {
                 return "HABITACIONES";
             }
-            
         }
         return isset($item->item->category) ?  $item->item->category->name : "OTROS";
     }
@@ -810,11 +810,48 @@ class BoxesController extends Controller
             "data"    => $items,
         ];
     }
+    function formatPromotions($promotions)
+    {
+        $formated = [];
+
+        foreach ($promotions as $promotion) {
+            $hotel_rent_item_service = $promotion->hotel_rent_item_service;
+            $room_service = $hotel_rent_item_service->room_service;
+            $promotion_name = $room_service->name;
+            $promotion_quantity = $hotel_rent_item_service->quantity;
+            $hotel_rent_item = $hotel_rent_item_service->hotel_rent_item;
+            $room_name = $hotel_rent_item->getName();
+
+
+            if (array_key_exists($room_name, $formated)) {
+                if (array_key_exists($promotion_name, $formated[$room_name])) {
+
+
+                    $formated[$room_name][$promotion_name] += $promotion_quantity;
+                } else {
+
+                    $formated[$room_name][$promotion_name] = $promotion_quantity;
+                }
+            } else {
+                $formated[$room_name] = [
+                    $promotion_name => $promotion_quantity
+                ];
+            }
+        }
+        return $formated;
+    }
     public function reports_resumen_type(Request $request)
     {
+        $configuration = Configuration::first();
         $total_discount = 0;
         $cash_id = $request->cash_id;
         Box::where('cash_id', $cash_id)->update(['state' => 0]);
+        $promotions = [];
+        if($configuration->hotels){
+            $promotions = SaleNotePromotion::where('cash_id', $cash_id)->get();
+            $promotions = $this->formatPromotions($promotions);
+        }
+       
         $sales = Box::where('cash_id', $cash_id)->where('expenses', 0)->where('incomes', 0)->OrderBy('date', 'asc');
         $sales_quantity = $sales->count();
         $sales_amount = $sales->where('method', '<>', 'Efectivo')->sum('amount');
@@ -1154,6 +1191,7 @@ class BoxesController extends Controller
 
         try {
             $pdf = PDF::loadView('report::boxes.report_resumen_pdf_pos', compact(
+                "promotions",
                 "all_credit_invoices_items",
                 "all_credit_invoices_documents",
                 "all_credit_items",

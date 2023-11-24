@@ -1559,6 +1559,7 @@
             :showTables.sync="showTables"
         ></tables>
         <tables-rooms
+        :printer="printer"
             @getTablesToClean="getTablesToClean"
             @paymentsOrden="paymentsOrden"
             @creatingOrden="creatingOrden"
@@ -2106,6 +2107,7 @@ export default {
                         this.configuration.restaurant &&
                         !this.configuration.college &&
                         this.worker.area.description.toUpperCase() !== "HOTEL"
+                        || this.worker.area.description.toUpperCase() !== "PISCINA"
                 },
                 {
                     id: 171,

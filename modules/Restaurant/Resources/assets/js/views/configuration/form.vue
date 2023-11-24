@@ -220,7 +220,7 @@
                                     }}</label
                                 >
                                 <el-select
-                                :disabled="recordId"
+                                :disabled="recordId!=null"
                                  v-model="form.status_table_id">
                                     <el-option
                                         v-for="(data, index) in statusTable"

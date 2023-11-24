@@ -40,6 +40,25 @@ use Modules\Restaurant\Events\PrintEvent;
 
 class TableRoomController extends Controller
 {
+    public function delete_service($id)
+    {
+        $service = HotelRentItemServices::findOrFail($id);
+        $service->delete();
+        return [
+            'success' => true,
+            'message' => 'Servicio eliminado con éxito'
+        ];
+    }
+    public function success_service($id)
+    {
+        $service = HotelRentItemServices::findOrFail($id);
+        $service->active = false;
+        $service->save();
+        return [
+            'success' => true,
+            'message' => 'Servicio entregado con éxito'
+        ];
+    }
     public function desactive_promotion($id)
     {
         $promotion = HotelRentItemServices::findOrFail($id);
@@ -66,7 +85,7 @@ class TableRoomController extends Controller
             $room_service = $promotion->room_service;
             $promotion->has_items = (bool) $room_service->has_items;
             if ($promotion->has_items) {
-                $formated = $this->formatedItems($room_service->items);
+                $formated = $this->formatedItems($room_service->items, $promotion->quantity);
                 $error = $formated['error'];
                 if ($error) {
                     return [
@@ -94,14 +113,16 @@ class TableRoomController extends Controller
         }
     }
 
-    function formatedItems($items)
+    function formatedItems($items, $qty = 1)
     {
         $formated_items = [];
         $error = false;
         $establishment_id = auth()->user()->establishment_id;
         $warehouse_id = Warehouse::where('establishment_id', $establishment_id)->first()->id;
         foreach ($items as $item) {
+
             $food_id = $item['food_id'];
+
             $food = Food::whereHas(
                 'item',
                 function ($query)
@@ -118,7 +139,7 @@ class TableRoomController extends Controller
                     'id' => 0,
                     'observation' => '',
                     'food' => $food,
-                    'quantity' => $quantity,
+                    'quantity' => $quantity  * $qty,
                     'price' => 0,
                 ];
             } else {
@@ -783,16 +804,28 @@ class TableRoomController extends Controller
                 }
                 $services = $room['services'];
                 foreach ($services as $service) {
-                    if($service['quantity'] > 0){
-                        $hotel_rent_item_service = new HotelRentItemServices;
-                        $hotel_rent_item_service->hotel_rent_item_id = $hotel_rent_item->id;
-                        $hotel_rent_item_service->room_service_id = $service['id'];
-                        $hotel_rent_item_service->quantity = $service['quantity'];
-                        $hotel_rent_item_service->code = $this->generate_code();
-                        $hotel_rent_item_service->save();
-                        event(new PrintEvent($hotel_rent_item_service->id, "H", true));
+                    if ($service['quantity'] > 0) {
+                        $duration = $hotel_rent_item->duration;
+                        //$duration es un número y quiero iterar sobre él y crear un HotelRentItemServices por cada iteración pero solo lanzar el evento en la primera iteración
+                        for ($i = 0; $i < $duration; $i++) {
+                            $hotel_rent_item_service = new HotelRentItemServices;
+                            $hotel_rent_item_service->hotel_rent_item_id = $hotel_rent_item->id;
+                            $hotel_rent_item_service->room_service_id = $service['id'];
+                            $hotel_rent_item_service->quantity = $service['quantity'];
+                            $hotel_rent_item_service->code = $this->generate_code();
+                            $hotel_rent_item_service->save();
+                            if ($i == 0) {
+                                event(new PrintEvent($hotel_rent_item_service->id, "H", true));
+                            }
+                        }
+                        // $hotel_rent_item_service = new HotelRentItemServices;
+                        // $hotel_rent_item_service->hotel_rent_item_id = $hotel_rent_item->id;
+                        // $hotel_rent_item_service->room_service_id = $service['id'];
+                        // $hotel_rent_item_service->quantity = $service['quantity'];
+                        // $hotel_rent_item_service->code = $this->generate_code();
+                        // $hotel_rent_item_service->save();
+                        // event(new PrintEvent($hotel_rent_item_service->id, "H", true));
                     }
-              
                 }
                 $guesses = $room['guesses'];
                 foreach ($guesses as $guess) {
