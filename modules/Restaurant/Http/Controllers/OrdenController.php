@@ -542,10 +542,12 @@ class OrdenController extends Controller
             } else {
 
                 //   dd($request->all());
-                $table = Table::find($request->orden['table_id']);
+                if($request->orden){
+                    $table = Table::find($request->orden['table_id']);
                
                 $table->status_table_id = 2;
                 $table->save();
+                }
             }
 
             //si la orden existe solo quiero agregar
