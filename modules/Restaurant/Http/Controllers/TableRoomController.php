@@ -1217,7 +1217,9 @@ class TableRoomController extends Controller
 
 
         $tables_in_reserve = HotelRentItem::where('table_id', $table_id)
-            ->whereNull('checkout_date');
+            ->whereNull('checkout_date')
+            ->where('was_cancel',false)
+            ;
         if ($id) {
             $tables_in_reserve->where('id', '<>', $id);
         }
