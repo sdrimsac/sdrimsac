@@ -2107,7 +2107,7 @@ export default {
                         this.configuration.restaurant &&
                         !this.configuration.college &&
                         this.worker.area.description.toUpperCase() !== "HOTEL"
-                        || this.worker.area.description.toUpperCase() !== "PISCINA"
+                        && this.worker.area.description.toUpperCase() !== "PISCINA"
                 },
                 {
                     id: 171,
@@ -2869,8 +2869,8 @@ export default {
                 this.form.is_advance = form.is_advance;
                 this.form.hotel_rent_id = form.hotel_rent_id;
                 this.form.hotel_customer_number = form.customer_number;
+                this.form.caja = true;
             }
-                    console.log("🚀 ~ file: index.vue:2861 ~ asyncpaymentsOrden(form,variationItem ~ this.form.customer_id:", this.form.customer_id)
             let { items } = form;
             this.ordens = items;
             for (let i = 0; i < items.length; i++) {
@@ -5263,7 +5263,8 @@ export default {
                 let area_id = e.data.area_id;
                 if (e.data.direct_printing == true) {
                     if (e.data.printing == true) {
-                        this.Printer(
+                        setTimeout(() => {
+                            this.Printer(
                             e.data.printer,
                             e.data.print,
                             e.data.copies,
@@ -5271,7 +5272,8 @@ export default {
                             e.data.multiple_boxes,
                             e.data.typeuser,
                             e.data.printing
-                        );
+                        ); 
+                        }, 500);
                     }
                 } else {
                     console.log(e.data.print);

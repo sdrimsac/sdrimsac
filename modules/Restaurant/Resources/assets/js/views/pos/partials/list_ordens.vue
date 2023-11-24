@@ -2520,7 +2520,8 @@ export default {
                                 hotel_rent_item_service_id:id,
                                 customer_number,
                                 customer_id,
-                                promotion_sale:true
+                                promotion_sale:true,
+                                caja:true
                             });
                             // this.$emit('update:localOrden',items)
                         }

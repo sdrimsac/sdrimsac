@@ -3337,8 +3337,8 @@ export default {
                     (ordenId == undefined || ordenId == null) &&
                     (form.variation == undefined || form.variation == null) &&
                     !this.conf.pos_quick_sale &&
-                    !this.ordens_all_table &&
-                    !this.form.is_room
+                    !this.ordens_all_table 
+                    
                 ) {
                     const responses = await this.$http.post(
                         "/caja/worker/send-orden",

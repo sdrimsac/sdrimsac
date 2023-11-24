@@ -511,11 +511,17 @@ class OrdenController extends Controller
                         $id = $orden->id;
                     }
                 } else {
-                    $id = $request->id;
+                    $id = null;
                 }
             }
+          
 
             $new_orden = collect($request->orden);
+
+            //si new_orden no tiene status_orden_id por defecto es 1
+            if (!$new_orden->has('status_orden_id')) {
+                $new_orden->put('status_orden_id', 1);
+            }
 
             $items = $request->items;
             $user_id = $user->id;
