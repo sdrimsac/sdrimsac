@@ -128,16 +128,16 @@ class OrdenController extends Controller
         $area_desc = null;
         //   $to_kitchen = true; en true no es pa cocina
         $to_kitchen = true;
-        if ($area_id) {
-            $area = Area::find($area_id);
-            if ($area) {
-                $area_desc = $area->description;
-                $desc = strtoupper($area_desc);
-                if (!str_contains($desc, "CAJA")) {
-                    $to_kitchen = false;
-                }
-            }
-        }
+        // if ($area_id) {
+        //     $area = Area::find($area_id);
+        //     if ($area) {
+        //         $area_desc = $area->description;
+        //         $desc = strtoupper($area_desc);
+        //         if (!str_contains($desc, "CAJA")) {
+        //             $to_kitchen = false;
+        //         }
+        //     }
+        // }
 
         $ordenes = Orden::where('id', $request->id)->first();
         if ($ordenes == null) {
