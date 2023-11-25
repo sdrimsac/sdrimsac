@@ -223,6 +223,7 @@ class OrdenController extends Controller
         try {
             $pdf = PDF::loadView('restaurant::ordens.ticket', compact(
                 'is_restaurant',
+                'precuenta',
                 'configuration',
                 'area_desc',
                 'to_carry',
