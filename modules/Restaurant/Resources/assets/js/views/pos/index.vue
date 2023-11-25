@@ -5261,10 +5261,19 @@ export default {
                 console.log("imprimiendoxd", e);
 
                 let area_id = e.data.area_id;
-               
+                let sameArea = this.area_id == area_id;
+                let isHotels = this.configuration.hotels;
+                let canPrint = true;
+                if (isHotels) {
+                    if (sameArea) {
+                        canPrint = true;
+                    } else {
+                        canPrint = false;
+                    }
+                }
                 
                 if (e.data.direct_printing == true ) {
-                    if (e.data.printing == true && this.area_id == area_id) {
+                    if (e.data.printing == true && canPrint) {
                         setTimeout(() => {
                             this.Printer(
                             e.data.printer,

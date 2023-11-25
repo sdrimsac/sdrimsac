@@ -119,6 +119,7 @@ class OrdenController extends Controller
     {
 
         $configuration = Configuration::first();
+        $precuenta = $request->precuenta ?? false;
         $is_restaurant = $configuration->restaurant;
         $show_unit_ticket = $configuration->show_unit_types_ticket;
         $company = Company::first();
@@ -128,6 +129,9 @@ class OrdenController extends Controller
         $area_desc = null;
         //   $to_kitchen = true; en true no es pa cocina
         $to_kitchen = false;
+        if($precuenta){
+            $to_kitchen = true;
+        }
         // if ($area_id) {
         //     $area = Area::find($area_id);
         //     if ($area) {
@@ -428,6 +432,7 @@ class OrdenController extends Controller
     public function record($id, Request $request)
     {
         $orden = Orden::find($id);
+        $precuenta = $request->precuenta ?? false;
         $to_kitchen = $request->to_kitchen;
         $establishment = Establishment::findOrFail(auth()->user()->establishment_id);
         $user = auth()->user();
@@ -463,7 +468,7 @@ class OrdenController extends Controller
                 'printer' => $printer,
                 'direct_printing' => (bool) $establishment->direct_printing,
                 'printer_serve' => $establishment->printer_serve,
-                'print'   => url('') . "/caja/worker/print-ticket?id={$id}&ids={$ids_string}&area_id={$area_id}"
+                'print'   => url('') . "/caja/worker/print-ticket?id={$id}&ids={$ids_string}&area_id={$area_id}&precuenta={$precuenta}"
             ];
         }
     }

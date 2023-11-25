@@ -3377,7 +3377,7 @@ export default {
         async printTicket(id) {
             try {
                 const response = await this.$http.get(
-                    `/caja/worker/record/${id}`
+                    `/caja/worker/record/${id}?precuenta=true`
                 );
                 let url = response.data.print;
 
