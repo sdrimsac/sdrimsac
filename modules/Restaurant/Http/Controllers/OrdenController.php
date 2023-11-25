@@ -127,7 +127,7 @@ class OrdenController extends Controller
         $area_id = $request->area_id;
         $area_desc = null;
         //   $to_kitchen = true; en true no es pa cocina
-        $to_kitchen = true;
+        $to_kitchen = false;
         // if ($area_id) {
         //     $area = Area::find($area_id);
         //     if ($area) {
