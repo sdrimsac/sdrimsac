@@ -164,12 +164,9 @@ class Document extends ModelTenant
         );
     }
     public function hasDuplicate($serie,$number,$soap_type_id){
-        $document = Document::where('series',$serie)->where('number',$number)->where('soap_type_id',$soap_type_id)->first();
-        if($document){
-            return true;
-        }else{
-            return false;
-        }
+        $count = Document::where('series',$serie)->where('number',$number)->where('soap_type_id',$soap_type_id)->count();
+        return $count > 1;
+      
     }
   public function canceled(){
     $boxes = Box::where('document_id', $this->id)->sum('amount');
