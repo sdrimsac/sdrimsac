@@ -369,7 +369,6 @@ class BoxController extends Controller
                 ->establishment($establishment)
                 ->download('Reporte_arqueo_resumen_' . Carbon::now() . '.xlsx');
         }
-     
     }
     public function reports_type(Request $request)
     {
@@ -504,9 +503,17 @@ class BoxController extends Controller
         $date_close = $request['date_close'];
         $user_id = $request['user_id'];
         //------------------------------------------------------------------------------------------------------------
-        $data = Box::whereHas('cash', function ($q) use ($date_close) {
-            $q->where('date_closed', $date_close);
-        })->OrderBy("date", "asc")->OrderBy("type", "desc")->latest();
+        if ($date_close) {
+            $data = Box::whereHas('cash', function ($q) use ($date_close) {
+                $q->where('date_closed', $date_close);
+            });
+        } else {
+            $data  = Box::query();
+        }
+
+
+
+        $data->OrderBy("date", "desc")->OrderBy("type", "desc")->latest();
 
         if ($user_id) {
             $data =  $data->where('user_id', $user_id);
@@ -526,11 +533,16 @@ class BoxController extends Controller
         $date_start = $request['date_start'];
         $date_end = $request['date_end'];
         //------------------------------------------------------------------------------------------------------------
-        $data = Box::whereHas('cash', function ($q) use ($date_close) {
-            $q->where('date_closed', $date_close);
-        })
-            ->with(['cash'])
-            ->OrderBy("date", "asc")->OrderBy("type", "desc")->latest();
+        if ($date_close) {
+            $data = Box::whereHas('cash', function ($q) use ($date_close) {
+                $q->where('date_closed', $date_close);
+            });
+        } else {
+            $data  = Box::query();
+        }
+
+        $data->with(['cash'])
+            ->OrderBy("date", "desc")->OrderBy("type", "desc")->latest();
 
         if ($user_id) {
             $data =  $data->where('user_id', $user_id);
