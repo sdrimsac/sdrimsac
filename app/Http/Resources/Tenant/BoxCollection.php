@@ -17,6 +17,8 @@ class BoxCollection extends ResourceCollection
     public function toArray($request)
     {
         return $this->collection->transform(function ($row, $key) {
+            $date  = $row->created_at->format('Y-m-d H:i:s');
+
             $customers = "";
             if ($row->type == "1") {
 
@@ -28,9 +30,11 @@ class BoxCollection extends ResourceCollection
                 if ($row->document_id != null  && $row->type == "1") {
                     $row_document = Document::where('id', $row->document_id)->first();
                     $customers = ($row_document == null) ? "" : $row_document->customer->name;
+                    $date = $row_document->date_of_issue."  ".$row_document->time_of_issue;
                 } else if ($row->sale_note_id != null && $row->type == "1") {
                     $row_document = SaleNote::where('id', $row->sale_note_id)->first();
                     $customers = ($row_document == null) ? "" : $row_document->customer->name;
+                    $date = $row_document->date_of_issue->format('Y-m-d')."  ".$row_document->time_of_issue;
                 } else {
                     $customers = "";
                 }
@@ -57,12 +61,13 @@ class BoxCollection extends ResourceCollection
                 'subcategory_id'    => $row->subcategory_id,
                 'amount'            => $row->amount,
                 'method'            => $row->method,
-                'date'              => $row->date . " " . $row->created_at->format('h:m:s'),
+                // 'date'              => $row->date . " " . $row->created_at->format('h:m:s'),
                 'description'       => $row->description,
                 'cliente'           => $customers,
                 'type'              => $type,
                 'items' => $items,
                 'user'              => $row->user->name,
+                'date'             => $date,
             ];
         });
     }

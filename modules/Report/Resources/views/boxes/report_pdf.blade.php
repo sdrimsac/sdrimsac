@@ -275,13 +275,22 @@
                             if ($row['type'] == '2') {
                                 $egresos = $egresos + $row['amount'];
                             }
-
+                            $date = \Carbon\Carbon::parse($row['date'])->format('d-m-Y')." ".\Carbon\Carbon::parse($row['created_at'])->format('h:m:s');
+                            
+                            if(isset($row["document_id"]) && $row["document_id"]!=null){
+                                $document = \App\Models\Tenant\Document::find($row["document_id"]);
+                                $date = $document->date_of_issue." ".$document->time_of_issue;
+                            }
+                            if(isset($row["sale_note_id"]) && $row["sale_note_id"]!=null){
+                                $document = \App\Models\Tenant\SaleNote::find($row["document_id"]);
+                                $date = $document->date_of_issue->format('Y-m-d')." ".$document->time_of_issue;
+                            }
                             ?>
                             <tr>
                                 <td class="celda_loop">{{ $loop->iteration }}</td>
                                 <td class="celda_descrip">
-                                    {{ \Carbon\Carbon::parse($row['date'])->format('d-m-Y') }}
-                                    {{ \Carbon\Carbon::parse($row['created_at'])->format('h:m:s') }}</td>
+                                    {{$date}}
+                                </td>
                                 @if ($row['type'] == '1' && $row['method'] == 'Transferencia')
                                     <td>Transferencia Bancaria</td>
                                 @endif

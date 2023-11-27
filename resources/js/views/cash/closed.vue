@@ -18,7 +18,7 @@
                                     type="date"
                                     value-format="yyyy-MM-dd"
                                     format="dd/MM/yyyy"
-                                    :clearable="false"
+                                    clearable
                                 ></el-date-picker>
                             </div>
                         </template>

@@ -1322,7 +1322,8 @@ class CashController extends Controller
     {
         $user_id  = $request->input('user_id');
         $date_close = $request->input('date_close');
-        $records = Cash::where('state', '=', 0);
+        $records = Cash::query();
+        // $records = Cash::where('state', '=', 0);
         if ($user_id) {
             $records = $records->where('user_id', '=', $user_id);
         }
