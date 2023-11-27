@@ -3,6 +3,7 @@
 namespace Modules\Restaurant\Http\Controllers;
 
 use App\CoreFacturalo\Requests\Inputs\Common\PersonInput;
+use App\Http\Controllers\Tenant\WhatsappController;
 use App\Models\Tenant\Company;
 use App\Models\Tenant\Configuration;
 use App\Models\Tenant\HotelRent;
@@ -74,10 +75,21 @@ class TableRoomController extends Controller
     {
 
         $promotion = HotelRentItemServices::whereRaw('BINARY code=?', $code)
-            ->where('active', true)
             ->first();
 
         if ($promotion) {
+            if($promotion->active == false){
+                $user = auth()->user();
+                $room_service = $promotion->room_service;
+                $service_name = $room_service->name;
+                $user_name = $user->name;
+                $message = "El cajero $user_name volvió a leer el código de promoción $code ($service_name), que ya fue utilizado";
+                (new WhatsappController)->sendMessageAll($message);
+                return [
+                    'success' => false,
+                    'message' => 'Código ya utilizado'
+                ];
+            }
             $hotel_rent_item_id = $promotion->hotel_rent_item_id;
             $hotel_rent_item = HotelRentItem::find($hotel_rent_item_id);
             $customer_number = $hotel_rent_item->hotel_rent->customer->number;

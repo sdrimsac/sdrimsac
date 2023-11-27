@@ -12,8 +12,12 @@
         :title="`MODULO DE COBRO ${variation ? '- Variación' : ''}`"
         class="algunaClase"
     >
-        <div v-loading="loading" class=" mb-0">
-            <div class="pt-1" v-loading="loading_submit">
+        <div v-loading="loading" class=" mb-0"
+         
+        >
+            <div class="pt-1" v-loading="loading_submit"
+             :element-loading-text="loadingText"
+            >
                 <div class="d-flex pt-2 justify-content-end">
                     <el-button
                         size="mini"
@@ -1424,6 +1428,7 @@ export default {
     },
     data() {
         return {
+            loadingText : 'Cargando...',
             gotClient: false,
             showListItems: false,
             discountTotal: false,
@@ -3139,7 +3144,16 @@ export default {
             }
         },
         async clickPayment(form) {
-
+            if(this.configuration.auth_discount && this.discount_amount > 0){
+                this.loading_submit = true;
+                //con async y await deten el flujo por 5 segundos
+                this.loadingText = "VERIFICANDO AUTORIZACIÓN PARA EL DESCUENTO...";
+                await this.sleep(3000);
+                this.loadingText = "DESCUENTO AUTORIZADO";
+                await this.sleep(2000);
+                this.loadingText = "CARGANDO...";
+                this.loading_submit = false;
+            }
             if(this.form.promotion_sale){
                 this.form.document_type_id = "80";
                 this.setSeries();

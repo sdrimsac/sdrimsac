@@ -10,6 +10,9 @@ use Illuminate\Support\Facades\Config;
 class Configuration extends ModelTenant
 {
     protected $fillable = [
+        'auth_discount',
+        'time_manteniment',
+        'show_expenses_incomes_caja',
         'save_pos_printing',
         'print_in_pos',
         'send_whatsapp_digital_pay',
@@ -133,6 +136,8 @@ class Configuration extends ModelTenant
 
     ];
     protected $casts = [
+        'auth_discount' => 'boolean',
+        'show_expenses_incomes_caja' => 'boolean',
         'save_pos_printing' => 'boolean',
         'print_in_pos' => 'boolean',
         'send_whatsapp_digital_pay' => 'boolean',
@@ -218,6 +223,9 @@ class Configuration extends ModelTenant
         // $skins = Skin::all();
         $skins = [];
         return [
+            'auth_discount' => (bool) $this->auth_discount,
+            'time_manteniment' => $this->time_manteniment,
+            'show_expenses_incomes_caja' => (bool) $this->show_expenses_incomes_caja,
             'save_pos_printing' => (bool)$this->save_pos_printing,
             'print_in_pos' => (bool)$this->print_in_pos,
             'send_whatsapp_digital_pay' => (bool)$this->send_whatsapp_digital_pay,

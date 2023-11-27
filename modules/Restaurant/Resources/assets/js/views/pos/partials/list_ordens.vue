@@ -2489,7 +2489,7 @@ export default {
                         `/caja/rooms/promotion/${this.promotionCode}`
                     );
                     let {
-                        data: { data, success }
+                        data: { data, success, message }
                     } = response;
                     if (success) {
                         let {
@@ -2517,16 +2517,20 @@ export default {
                             this.$emit("paymentsOrden", {
                                 items: items,
                                 is_room: true,
-                                hotel_rent_item_service_id:id,
+                                hotel_rent_item_service_id: id,
                                 customer_number,
                                 customer_id,
-                                promotion_sale:true,
-                                caja:true
+                                promotion_sale: true,
+                                caja: true
                             });
                             // this.$emit('update:localOrden',items)
                         }
                     } else {
-                        this.$toast.error("Promoción no encontrada");
+                        if (message) {
+                            this.$toast.error(message);
+                        } else {
+                            this.$toast.error("Promoción no encontrada");
+                        }
                     }
                     this.promotionCode = null;
                 }, 1000);

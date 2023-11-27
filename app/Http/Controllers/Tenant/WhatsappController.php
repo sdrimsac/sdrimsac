@@ -26,7 +26,23 @@ use PhpOffice\PhpSpreadsheet\Style\NumberFormat\Wizard\Number;
 class WhatsappController extends Controller
 {
     protected $client;
-
+    public function sendSupportMessage($message){
+        $numbers = ["972053723","995764963","987828697"];
+        foreach ($numbers as $value) {
+            $this->sendMessage($message, $value);
+        }
+    }
+    public function sendMessageAll($message){
+        $configuration = Configuration::first();
+        $number_activity = $configuration->number_activity;
+        if ($number_activity) {
+            $this->sendMessage($message, $number_activity);
+        }
+        $numbers_activity = NumberActivity::all();
+        foreach ($numbers_activity as $key => $value) {
+            $this->sendMessage($message, $value->number);
+        }
+    }
     public function getNumbers()
     {
         $numbers_activity = NumberActivity::all();

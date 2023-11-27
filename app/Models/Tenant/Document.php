@@ -2,11 +2,14 @@
 
 namespace App\Models\Tenant;
 
+use App\Http\Controllers\Tenant\WhatsappController;
 use App\Models\Tenant\Catalogs\CurrencyType;
 use App\Models\Tenant\Catalogs\DocumentType;
 use App\Traits\RegisterMovementTrait;
+use Exception;
 use Hyn\Tenancy\Traits\UsesTenantConnection;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 //use Modules\BusinessTurn\Models\DocumentHotel;
 //use Modules\BusinessTurn\Models\DocumentTransport;
@@ -111,17 +114,24 @@ class Document extends ModelTenant
     {
         parent::boot();
         //created
-        // static::created(function ($model) {
-        //     $type = $model->get_document_type();
-        //     $request = Request::capture();
-        //     $description = "$type creada";
-        //     RegisterMovementTrait::registerCreate(
-        //         $model,
-        //         $request,
-        //         $description,
-        //         $model->toArray()
-        //     );
-        // });
+        static::created(function ($model) {
+            try{
+                $serie = $model->series;
+                $number = $model->number;
+                $soap_type_id = $model->soap_type_id;
+                $exist = $model->hasDuplicate($serie,$number,$soap_type_id);
+                if($exist){
+                    $company = Company::first();
+                    $company_name = $company->name;
+                    
+                    $message = "🚨🚨🚨⚠️⚠️⚠️ ATENCIÓN ⚠️⚠️⚠️🚨🚨🚨 \n\nSe ha detectado una duplicidad de comprobante en la empresa $company_name \n\nSerie: $serie \nNúmero: $number.";
+                    (new WhatsappController)->sendSupportMessage($message);
+                }
+            }catch(Exception $e){
+                $message = $e->getMessage();
+                Log::error($message);
+            }
+        });
         // static::updated(function ($model) {
         //     $type = $model->get_document_type();
         //     $request = Request::capture();
@@ -153,7 +163,14 @@ class Document extends ModelTenant
 
         );
     }
-
+    public function hasDuplicate($serie,$number,$soap_type_id){
+        $document = Document::where('series',$serie)->where('number',$number)->where('soap_type_id',$soap_type_id)->first();
+        if($document){
+            return true;
+        }else{
+            return false;
+        }
+    }
   public function canceled(){
     $boxes = Box::where('document_id', $this->id)->sum('amount');
     if($boxes > 0){

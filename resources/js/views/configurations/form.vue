@@ -1562,8 +1562,36 @@
                                                 ></el-switch>
                                             </div>
                                         </div>
-                                        
-                                        
+                                          <div class="col-md-6 mt-4">
+                                            <div class="form-group">
+                                                <label
+                                                    class="control-label w-100"
+                                                    >Autorización de descuento
+                                                </label>
+
+                                                <el-switch
+                                                    v-model="form.auth_discount"
+                                                    active-text="Si"
+                                                    inactive-text="No"
+                                                    @change="submit"
+                                                ></el-switch>
+                                            </div>
+                                        </div>
+                                          <div class="col-md-6 mt-4">
+                                            <div class="form-group">
+                                                <label
+                                                    class="control-label w-100"
+                                                    >Tiempo de mantenimiento
+                                                </label>
+
+                                                <el-input-number
+                                                    @change="submit"
+                                                    v-model="form.time_manteniment"
+                                                >
+                                                </el-input-number>
+                                            </div>
+                                        </div>
+                                     
                                     </template>
                                     <div class="col-md-6 mt-4">
                                             <div class="form-group">
@@ -1574,6 +1602,21 @@
 
                                                 <el-switch
                                                     v-model="form.save_pos_printing"
+                                                    active-text="Si"
+                                                    inactive-text="No"
+                                                    @change="submit"
+                                                ></el-switch>
+                                            </div>
+                                        </div>
+                                           <div class="col-md-6 mt-4">
+                                            <div class="form-group">
+                                                <label
+                                                    class="control-label w-100"
+                                                    >Mostrar gastos / ingresos en caja
+                                                </label>
+
+                                                <el-switch
+                                                    v-model="form.show_expenses_incomes_caja"
                                                     active-text="Si"
                                                     inactive-text="No"
                                                     @change="submit"
