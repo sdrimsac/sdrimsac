@@ -282,7 +282,7 @@
                                 $date = $document->date_of_issue." ".$document->time_of_issue;
                             }
                             if(isset($row["sale_note_id"]) && $row["sale_note_id"]!=null){
-                                $document = \App\Models\Tenant\SaleNote::find($row["document_id"]);
+                                $document = \App\Models\Tenant\SaleNote::find($row["sale_note_id"]);
                                 $date = $document->date_of_issue->format('Y-m-d')." ".$document->time_of_issue;
                             }
                             ?>

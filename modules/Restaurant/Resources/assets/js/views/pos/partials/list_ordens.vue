@@ -1428,7 +1428,7 @@
                                                                 <span
                                                                     class="text-muted"
                                                                 >
-                                                                    Cantidad<br />
+                                                                    Cantidasd<br />
                                                                     <div
                                                                         class="input-group spinner"
                                                                         data-trigger="spinner"

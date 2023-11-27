@@ -442,7 +442,7 @@ class CashController extends Controller
     public function report_cash(Request $request)
     {
         $categoria_id = $request->categoria_id;
-
+        $item_id = $request->item_id;
         $establishment_id = $request->establishment_id;
         $date_start = $request->date_start ? Carbon::parse($request->date_start)->format("y-m-d") : null;
         $date_end = $request->date_end ? Carbon::parse($request->date_end)->format("y-m-d") : null;
@@ -464,12 +464,14 @@ class CashController extends Controller
         }
 
         $recordsDocument->chunk(50, function ($documents)
-        use (&$items, &$total, &$categoria_id, $item_id_variation) {
+        use (&$items, &$total, &$categoria_id, $item_id_variation,$item_id) {
 
             foreach ($documents as  $document) {
                 $total_items = 0;
                 $documents_items = DocumentItem::where('document_id', $document->id);
-
+                if($item_id ){
+                    $documents_items = $documents_items->where('item_id', $item_id);
+                }
                 if ($item_id_variation) {
                     $documents_items = $documents_items->where('item_id', '<>', $item_id_variation);
                 }
@@ -630,14 +632,16 @@ class CashController extends Controller
 
         $recordsSaleNote->chunk(50, function ($sale_notes)
 
-        use (&$items, &$total, &$categoria_id) {
+        use (&$items, &$total, &$categoria_id,$item_id) {
 
             foreach ($sale_notes as  $sale_note) {
 
                 $total_items = 0;
                 $sale_notes_items = SaleNoteItem::where('sale_note_id', $sale_note->id)->get();
 
-
+                if($item_id ){
+                    $sale_notes_items = $sale_notes_items->where('item_id', $item_id);
+                }
 
                 foreach ($sale_notes_items as  $d_it) {
                     if ($categoria_id == null) {

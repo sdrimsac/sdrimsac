@@ -61,7 +61,31 @@
                                     </el-select>
                                 </div>
                             </div>
-
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label class="control-label"
+                                        >Producto</label
+                                    >
+                                    <el-select
+                                        class="w-100"
+                                        v-model="form.item_id"
+                                        filterable
+                                        remote
+                                        popper-class="el-select-customers"
+                                        clearable
+                                        placeholder="Nombre o código interno"
+                                        :remote-method="searchRemoteItems"
+                                        :loading="loading_search_item"
+                                    >
+                                        <el-option
+                                            v-for="option in items"
+                                            :key="option.id"
+                                            :value="option.id"
+                                            :label="option.description"
+                                        ></el-option>
+                                    </el-select>
+                                </div>
+                            </div>
                             <div class="col-md-2">
                                 <div class="form-group">
                                     <label class="control-label"
@@ -406,7 +430,11 @@ export default {
             records: [],
             categories: [],
             pagination: {},
-            showWhatsappForm: false
+            showWhatsappForm: false,
+            loading_search:false,
+            timer:null,
+
+            items: [],
         };
     },
     async created() {
@@ -417,6 +445,28 @@ export default {
         });
     },
     methods: {
+                async searchRemoteItems(input) {
+            if (input.length > 2) {
+                if (this.timer) {
+                    clearTimeout(this.timer);
+                }
+                this.timer = setTimeout(async () => {
+                    try {
+                        let parameters = `input=${input}`;
+                        this.loading_search = true;
+                        const response = await this.$http.get(
+                            `/documents/data-table/items?${parameters}`
+                        );
+
+                        this.items = response.data;
+                    } catch (e) {
+                        console.log(e);
+                    } finally {
+                        this.loading_search = false;
+                    }
+                }, 250);
+            }
+        },
         openWhastappForm() {
             this.messageReport = `Reporte de ganancias ${
                 this.form.date_start
