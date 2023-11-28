@@ -307,12 +307,14 @@
                             <strong>AREA: {{ strtoupper($area_desc) }} </strong>
                         </td>
                     </tr>
-                    <tr>
-                        <td colspan="4" colspan="4" class="header_title1 text-center" valign="top">
-
-                            {{ $date }}</td>
-                    </tr>
+                  
                 @endif
+                <tr>
+                    <td colspan="4" colspan="4" class="header_title1 text-center" valign="top">
+
+                        {{ $date }}</td>
+                </tr>
+                
             @endif
             @if ($is_restaurant)
                 <tr>
