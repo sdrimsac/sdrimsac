@@ -173,7 +173,7 @@
 
                 </ul>
             </li>
-            @if (!$config->college)
+            {{-- @if (!$config->college) --}}
                 <li>
                     <a href="#invetories" data-bs-toggle="collapse" data-role="button"
                         aria-expanded="{{ $path[0] === 'invetories' ? true : false }}{{ $path[0] === 'invetories' && $path[1] === 'create' ? true : false }}{{ $path[0] === 'items' ? true : false }}"
@@ -248,7 +248,7 @@
 
                     </ul>
                 </li>
-            @endif
+            {{-- @endif --}}
         @endif
         {{-- consignación --}}
         {{-- <li>
