@@ -12,12 +12,15 @@ class HotelRentItemServices extends ModelTenant
     protected $table = "hotel_rent_item_services";
     protected $casts = [
         'active' => 'boolean',
+        'was_due' => 'boolean',
     ];
     protected $fillable = [
         'hotel_rent_item_id',
         'room_service_id',
-        'quantity', 
-        'code', 
+        'quantity',
+        'code',
+        'date_take',
+        'was_due',
         'active',
     ];
 
@@ -30,7 +33,4 @@ class HotelRentItemServices extends ModelTenant
     {
         return $this->belongsTo(RoomService::class);
     }
-    
-
- 
 }

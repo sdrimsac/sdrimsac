@@ -12,11 +12,11 @@
         :title="`MODULO DE COBRO ${variation ? '- Variación' : ''}`"
         class="algunaClase"
     >
-        <div v-loading="loading" class=" mb-0"
-         
-        >
-            <div class="pt-1" v-loading="loading_submit"
-             :element-loading-text="loadingText"
+        <div v-loading="loading" class=" mb-0">
+            <div
+                class="pt-1"
+                v-loading="loading_submit"
+                :element-loading-text="loadingText"
             >
                 <div class="d-flex pt-2 justify-content-end">
                     <el-button
@@ -1428,7 +1428,7 @@ export default {
     },
     data() {
         return {
-            loadingText : 'Cargando...',
+            loadingText: "Cargando...",
             gotClient: false,
             showListItems: false,
             discountTotal: false,
@@ -1875,8 +1875,21 @@ export default {
             this.form.customer_id = null;
             this.showDialogNewPerson = true;
         },
+        async reloadDataCustomer(customer_id) {
+            if (customer_id) {
+                const response = await this.$http.get(
+                    `/pos/table/customerId/${customer_id}`
+                );
+                await this.$emit("update:all_customers", response.data);
+                this.value = customer_id;
+                this.form.customer_id = customer_id;
+                this.changeCustomer();
+            }
+        },
         async reloadDataCustomers(customer_id) {
-            const response = await this.$http.get(`/pos/table/customers`);
+            const response = await this.$http.get(
+                `/pos/table/customers?customer_id=${customer_id || ""}`
+            );
             await this.$emit("update:all_customers", response.data);
             this.value = customer_id;
             this.form.customer_id = customer_id;
@@ -2128,6 +2141,15 @@ export default {
                 }
             };
         },
+        checkForCustomer() {
+            let { customer_id } = this.form;
+            if (customer_id) {
+                let customer = this.customers.find(c => c.id == customer_id);
+                if (customer == null) {
+                    this.reloadDataCustomer(customer_id);
+                }
+            }
+        },
         async date_of_issue() {
             // this.discount_amount = 0;
             // this.form.customer_id
@@ -2160,7 +2182,7 @@ export default {
                     // this.form.customer_id = this.establishments.customer_id;
                 }
             }
-
+            this.checkForCustomer();
             let form_efectivo = {
                 enter_amount: 0,
                 difference: 0
@@ -2186,17 +2208,17 @@ export default {
             }
             this.checkTotal("01");
 
-            if (this.form.hotel_customer_number) {
-                setTimeout(() => {
-                    this.$refs.select_person.$el.getElementsByTagName(
-                        "input"
-                    )[0].value = this.form.hotel_customer_number;
-                    this.keyupCustomer();
-                }, 800);
-                // this.value = this.form.hotel_customer_number;
-                // this.form.customer_id = this.form.hotel_customer_number;
-                // this.changeCustomer();
-            }
+            // if (this.form.hotel_customer_number) {
+            //     setTimeout(() => {
+            //         this.$refs.select_person.$el.getElementsByTagName(
+            //             "input"
+            //         )[0].value = this.form.hotel_customer_number;
+            //         this.keyupCustomer();
+            //     }, 800);
+            //     // this.value = this.form.hotel_customer_number;
+            //     // this.form.customer_id = this.form.hotel_customer_number;
+            //     // this.changeCustomer();
+            // }
             if (this.configuration.save_pos_printing) {
                 this.printerOn = this.configuration.print_in_pos ? 1 : 0;
             }
@@ -3144,20 +3166,20 @@ export default {
             }
         },
         async clickPayment(form) {
-            if(this.configuration.auth_discount && this.discount_amount > 0){
+            if (this.configuration.auth_discount && this.discount_amount > 0) {
                 this.loading_submit = true;
                 //con async y await deten el flujo por 5 segundos
-                this.loadingText = "VERIFICANDO AUTORIZACIÓN PARA EL DESCUENTO...";
+                this.loadingText =
+                    "VERIFICANDO AUTORIZACIÓN PARA EL DESCUENTO...";
                 await this.sleep(3000);
                 this.loadingText = "DESCUENTO AUTORIZADO";
                 await this.sleep(2000);
                 this.loadingText = "CARGANDO...";
                 this.loading_submit = false;
             }
-            if(this.form.promotion_sale){
+            if (this.form.promotion_sale) {
                 this.form.document_type_id = "80";
                 this.setSeries();
-
             }
             if (!this.checkBankAccount()) {
                 return;
@@ -3197,10 +3219,6 @@ export default {
             }
 
             let customer = this.customers.find(c => c.id == form.customer_id);
-            console.log(
-                "🚀 ~ file: payment.vue:3181 ~ clickPayment ~ customer:",
-                customer
-            );
 
             if (customer == undefined) {
                 console.log("entrando...");
@@ -3346,20 +3364,19 @@ export default {
                     difference: form.difference
                 };
                 let ordenId = this.idOrden;
-            
-                  
 
-                    let hotels = this.configuration.hotels;
-                    let printOrdenHotel = true;
-                    if(hotels){
-                            printOrdenHotel = this.form.is_room && this.form.promotion_sale;
-                    }
+                let hotels = this.configuration.hotels;
+                let printOrdenHotel = true;
+                if (hotels) {
+                    printOrdenHotel =
+                        this.form.is_room && this.form.promotion_sale;
+                }
                 if (
                     (ordenId == undefined || ordenId == null) &&
                     (form.variation == undefined || form.variation == null) &&
                     !this.conf.pos_quick_sale &&
-                    !this.ordens_all_table && printOrdenHotel
-                    
+                    !this.ordens_all_table &&
+                    printOrdenHotel
                 ) {
                     const responses = await this.$http.post(
                         "/caja/worker/send-orden",
@@ -3792,10 +3809,6 @@ export default {
             if (this.form.document_type_id != "01") {
                 this.customers = [...this.customers, this.customer_default];
             }
-            console.log(
-                "🚀 ~ file: payment.vue:3750 ~ filterSeries ~ this.form.customer_id:",
-                this.form.customer_id
-            );
             this.changeCustomer();
             if (this.form.document_type_id == "80") {
                 this.discount_amount = 0;

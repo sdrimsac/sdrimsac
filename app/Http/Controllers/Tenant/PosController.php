@@ -330,6 +330,8 @@ class PosController extends Controller
                         ->where('payment_status', 'Pendiente')
                         ->where('was_cancel', 0);
                 })
+                ->where('is_room', true)
+                ->where('status_table_id', '!=', 1)
                 ->get();
         }
         return compact(
@@ -373,12 +375,59 @@ class PosController extends Controller
         return compact('series', 'payment_method_types', 'cards_brand', 'payment_destinations');
     }
 
+    public function table_customer($id)
+    {
+        $configuration = Configuration::first();
+
+        $customers = Person::where('id', $id)
+            ->whereType('customers')->whereIsEnabled()->orderBy('created_at', 'desc');
+
+
+
+
+        if ($configuration->college) {
+            $customers = $customers->whereIn('id', function ($query) {
+
+                $query->select('parent_id')
+                    ->from('parents');
+            });
+        }
+        $customers = $customers->limit(5)->get();
+
+        $customers = $customers->transform(function ($row) {
+            $students = CollegeStudent::whereHas('member', function ($query) use ($row) {
+                $query->whereHas('parent', function ($query) use ($row) {
+                    $query->where('parent_id', $row->id);
+                });
+            })->get()->transform(function ($student) {
+                return [
+                    'id' => $student->id,
+                    'name' => $student->person->name,
+                    'class' => mb_strtoupper($student->classroom->description),
+                ];
+            });
+
+            return [
+                'students' => $students,
+                'id' => $row->id,
+                'description' => $row->number . ' - ' . $row->name,
+                'name' => $row->name,
+                'number' => $row->number,
+                'identity_document_type_id' => $row->identity_document_type_id,
+                'identity_document_type_code' => $row->identity_document_type->code,
+                'phone' => $row->telephone
+            ];
+        });
+        return $customers;
+    }
     public function table($table)
     {
         $configuration = Configuration::first();
         if ($table === 'customers') {
 
             $customers = Person::whereType('customers')->whereIsEnabled()->orderBy('created_at', 'desc');
+
+
 
 
             if ($configuration->college) {

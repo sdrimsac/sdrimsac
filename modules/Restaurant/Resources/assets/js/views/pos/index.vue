@@ -38,7 +38,7 @@
                                         </span>
                                     </button>
 
-                                    <template>
+                                    <template v-if="configuration.restaurant">
                                         <button
                                             class="btn btn-sm btn-primary"
                                             type="button"
@@ -50,7 +50,10 @@
                                             ></i>
                                             <i
                                                 v-else
-                                                class="icofont-dining-table icofont-2x"
+                                                class="icofont-dining-table"
+                                                style="font-size: 28px;
+                                                margin-top:-5px;
+                                                "
                                             ></i>
                                         </button>
                                     </template>

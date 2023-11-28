@@ -26,6 +26,22 @@
                 ></el-input>
             </div>
             <div class="col-12">
+                <label for="description">Hora de vencimiento</label>
+                <el-time-picker
+                    clearable
+                    v-model="form.due_time"
+                    size="small"
+                    placeholder="Hora a vencerse la promoción"
+                    style="width: 100%;"
+                    value-format="HH:mm:ss"
+                    :format="'hh:mm A'"
+                    :picker-options="{
+                        format: 'hh:mm A'
+                    }"
+                    timezone="America/Lima"
+                ></el-time-picker>
+            </div>
+            <div class="col-12">
                 <label for="items"
                     >Productos que contiene
                     <small>(opcional)</small>
@@ -143,7 +159,8 @@ export default {
             this.form = {
                 name: null,
                 description: null,
-                items: []
+                items: [],
+                due_time: null
             };
             this.service_items = [];
         },
@@ -166,7 +183,7 @@ export default {
                 if (response.status == 200) {
                     this.$toast.success("Registro guardado");
                     this.initForm();
-                    this.$emit('getRecords');
+                    this.$emit("getRecords");
                 }
             } catch (e) {
                 this.$toast.error("Ocurrió un error");

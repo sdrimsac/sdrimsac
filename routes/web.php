@@ -120,6 +120,7 @@ if ($hostname) {
                 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
                 Route::get('validar', [App\Http\Controllers\Tenant\ValidateController::class, 'validar_cpe']);
                 Route::get('pos/tables', [App\Http\Controllers\Tenant\PosController::class, 'tables']);
+                Route::get('pos/table/customerId/{id}', [App\Http\Controllers\Tenant\PosController::class, 'table_customer']);
                 Route::get('persons/tables', [App\Http\Controllers\Tenant\PersonController::class, 'tables']);
                 Route::get('items/tables', [App\Http\Controllers\Tenant\ItemController::class, 'tables']);
                 Route::get('documents/record/{document}', [App\Http\Controllers\Tenant\DocumentController::class, 'record']);

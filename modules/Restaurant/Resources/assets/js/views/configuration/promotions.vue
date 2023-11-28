@@ -25,6 +25,7 @@
                         <th>Nombre</th>
                         <th>Descripción</th>
                         <th>Productos</th>
+                        <th>Vencimiento</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
@@ -48,6 +49,9 @@
                                     </el-button>
                                 </el-tooltip>
                             </template>
+                        </td>
+                        <td>
+                            {{ record.due_date && (record.due_date | formatDate) }}
                         </td>
                         <td>
                             <el-button

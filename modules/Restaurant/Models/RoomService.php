@@ -15,6 +15,7 @@ class RoomService extends ModelTenant
         'name',
         'description',
         'has_items',
+        'due_time',
         'active',
     ];
 

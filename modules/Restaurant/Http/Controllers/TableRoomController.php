@@ -78,7 +78,7 @@ class TableRoomController extends Controller
             ->first();
 
         if ($promotion) {
-            if($promotion->active == false){
+            if ($promotion->active == false) {
                 $user = auth()->user();
                 $room_service = $promotion->room_service;
                 $service_name = $room_service->name;
@@ -260,6 +260,8 @@ class TableRoomController extends Controller
         $table = $hotel_rent_item->table;
         $price = $hotel_rent_item->is_month_rent ? $table->month_price : $table->price;
         $total = $price * $days;
+        $advance = $hotel_rent->advance;
+        $total -= $advance;
         $hotel_rent_item->total = $total;
         $hotel_rent->total -= $old_total;
         $hotel_rent->total += $total;
@@ -513,6 +515,7 @@ class TableRoomController extends Controller
         $hotel_rent_item->extra_time = $extra_time;
         $hotel_rent_item->save();
         $customer_number  = $hotel_rent_item->hotel_rent->customer->number;
+        $customer_id = $hotel_rent_item->hotel_rent->customer_id;
         $hotel_rent = $hotel_rent_item->hotel_rent;
         $hotel_rent_id = $hotel_rent->id;
         $advance = $hotel_rent->advance;
@@ -570,9 +573,9 @@ class TableRoomController extends Controller
         }
         if ($single_room) {
 
-            return compact('orden_ids', 'ordens_items', 'hotel_rent_id', 'customer_number');
+            return compact('orden_ids', 'ordens_items', 'hotel_rent_id', 'customer_number','customer_id');
         } else {
-            return compact('orden_ids', 'ordens_items', 'hotel_rent_item_ids', 'customer_number');
+            return compact('orden_ids', 'ordens_items', 'hotel_rent_item_ids', 'customer_number','customer_id');
         }
     }
     public function check()
@@ -672,6 +675,8 @@ class TableRoomController extends Controller
                     ->where('payment_status', 'Pendiente')
                     ->where('was_cancel', 0);
             })
+            ->where('is_room', true)
+            ->where('status_table_id', '<>', 1)
             ->get();
 
         return [
@@ -1230,8 +1235,7 @@ class TableRoomController extends Controller
 
         $tables_in_reserve = HotelRentItem::where('table_id', $table_id)
             ->whereNull('checkout_date')
-            ->where('was_cancel',false)
-            ;
+            ->where('was_cancel', false);
         if ($id) {
             $tables_in_reserve->where('id', '<>', $id);
         }

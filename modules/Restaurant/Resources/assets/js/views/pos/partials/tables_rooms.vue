@@ -397,25 +397,25 @@
                         S/ 1650.00
                     </div> -->
                 </div>
-                <div class="m-1 d-flex justify-content-center">
-                    <div class="col-2 d-flex">
-                        <span class="text-muted h4">T. HABITACIÓN: </span>
+                <div class="m-1 d-flex justify-content-center alig-items-center">
+                    <div class="col-2 d-flex align-items-center">
+                        <span class="text-muted h5">T. HABITACIÓN: </span>
                         <span class="h4">{{ currentRoom.total_room }}</span>
                     </div>
-                    <div class="col-2 d-flex">
-                        <span class="text-muted h4">T. ORDENES: </span>
+                    <div class="col-2 d-flex align-items-center">
+                        <span class="text-muted h5">T. ORDENES: </span>
                         <span class="h4">{{ currentRoom.total_orden }}</span>
                     </div>
-                    <div class="col-2 d-flex">
-                        <span class="text-muted h4">T. ADELANTO: </span>
+                    <div class="col-2 d-flex align-items-center">
+                        <span class="text-muted h5">T. ADELANTO: </span>
                         <span class="h4">{{ currentRoom.advance }}</span>
                     </div>
-                    <div class="col-2 d-flex" v-if="extra_time > 0">
-                        <span class="text-muted h4">PENALIDAD: </span>
+                    <div class="col-2 d-fle align-items-center" v-if="extra_time > 0">
+                        <span class="text-muted h5">PENALIDAD: </span>
                         <span class="h4">{{ extra_time }}</span>
                     </div>
-                    <div class="col-2 d-flex">
-                        <span class="text-muted h4">TOTAL: </span>
+                    <div class="col-2 d-flex align-items-center">
+                        <span class="text-muted h5">TOTAL: </span>
                         <span class="h4">{{
                             (
                                 Number(currentRoom.total) + Number(extra_time)
@@ -1316,7 +1316,8 @@ export default {
                 orden_ids,
                 hotel_rent_item_ids,
                 hotel_rent_id,
-                customer_number
+                customer_number,
+                customer_id
             } = data;
             this.$emit("paymentsOrden", {
                 items: ordens_items,
@@ -1324,7 +1325,8 @@ export default {
                 orden_ids,
                 hotel_rent_item_ids,
                 hotel_rent_id,
-                customer_number
+                customer_number,
+                customer_id
             });
             this.close();
         },

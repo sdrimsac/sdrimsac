@@ -56,6 +56,7 @@ class TableRoomServiceController extends Controller
         $room_service = RoomService::firstOrNew(['id' => $id]);
         $room_service->name = $request->name;
         $room_service->description = $request->description;
+        $room_service->due_time = $request->due_time;
 
         if ($items  && count($items) > 0) {
             $room_service->has_items = true;
