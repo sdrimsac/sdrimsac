@@ -22,6 +22,7 @@ use App\Http\Resources\Tenant\PersonResource;
 use App\Http\Resources\Tenant\PersonCollection;
 use App\Models\Tenant\Catalogs\IdentityDocumentType;
 use App\Models\Tenant\ClientZone;
+use App\Models\Tenant\Configuration;
 use Modules\Vip\Models\SocialMedias;
 
 class PersonController extends Controller
@@ -121,9 +122,12 @@ class PersonController extends Controller
         $person_types = PersonType::get();
         $social_media = SocialMedias::all();
         $zones = ClientZone::all();
+        $configuration = Configuration::first();
         $locations = $this->getLocationCascade();
         $api_service_token = config('configuration.api_service_token');
-        return compact('social_media', 'zones', 'countries', 'departments', 'provinces', 'districts', 'identity_document_types', 'locations', 'person_types', 'api_service_token', 'users');
+        return compact(
+            'configuration',
+            'social_media', 'zones', 'countries', 'departments', 'provinces', 'districts', 'identity_document_types', 'locations', 'person_types', 'api_service_token', 'users');
     }
 
     public function record($id)

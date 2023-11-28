@@ -175,6 +175,7 @@
                 </div>
                 <Printer :showDialogPrinter.sync="showDialogPrinter"></Printer>
                 <persons-form
+                :typeUser="typeUser"
                     :showDialog.sync="showDialog"
                     :type="type"
                     :recordId="recordId"

@@ -33,4 +33,21 @@ class HotelRentItemServices extends ModelTenant
     {
         return $this->belongsTo(RoomService::class);
     }
+
+    public function dued(){
+        $room_service = $this->room_service;
+        $due_time = $room_service->due_time;
+        $date_take = $this->date_take;
+        if(!$date_take){
+            return false;
+        }
+        $date_take = \Carbon\Carbon::parse($date_take.' '.$due_time);
+        $now = \Carbon\Carbon::now();
+        if($now->gt($date_take)){
+            $this->was_due = true;
+            $this->save();
+            return true;
+        }
+        return false;
+    }
 }

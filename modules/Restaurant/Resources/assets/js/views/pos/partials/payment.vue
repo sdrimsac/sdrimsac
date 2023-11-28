@@ -166,8 +166,9 @@
                                             @keyup.native="keyupCustomer"
                                         >
                                             <el-option
-                                                v-for="option in customers"
-                                                :key="option.id"
+                                                v-for="(option,
+                                                idx) in customers"
+                                                :key="idx"
                                                 :label="option.description"
                                                 :value="option.id"
                                             ></el-option>
@@ -2039,8 +2040,15 @@ export default {
             } else {
                 newData = [...this.all_customers, ...persons];
             }
-            console.log(persons);
+            newData = newData.filter(
+                (thing, index, self) =>
+                    index === self.findIndex(t => t.id === thing.id)
+            );
             if (persons.length != 0) {
+                console.log(
+                    "🚀 ~ file: payment.vue:2048 ~ updateAllCustomers ~ newData:",
+                    newData
+                );
                 await this.$emit("update:all_customers", newData);
                 if (newData.length == 1) {
                     this.value = newData[0].id;
@@ -2083,6 +2091,11 @@ export default {
                     this.form.document_type_id = "03";
                 }
             }
+            //in this.customers remove duplicate id propertie
+            this.customers = this.customers.filter(
+                (thing, index, self) =>
+                    index === self.findIndex(t => t.id === thing.id)
+            );
             this.setSeries();
         },
         setLocalStorageIndex(key, obj) {

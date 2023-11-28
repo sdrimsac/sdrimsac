@@ -153,18 +153,17 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-4" 
-                v-if="form.identity_document_type_id !== '6'">
+                    <div
+                        class="col-md-4"
+                        v-if="form.identity_document_type_id !== '6'"
+                    >
                         <label for="name">Sexo</label>
                         <el-select v-model="form.sex">
                             <el-option label="Másculino" value="M"></el-option>
                             <el-option label="Femenino" value="F"></el-option>
                         </el-select>
                     </div>
-                    <div v-else
-                        class="col-md-12"
-                       
-                    >
+                    <div v-else class="col-md-12">
                         <div
                             class="form-group"
                             :class="{ 'has-danger': errors.trade_name }"
@@ -188,7 +187,6 @@
                             ></small>
                         </div>
                     </div>
-                    
                 </div>
 
                 <!-- <div class="row" v-if="type === 'customers'">
@@ -639,6 +637,37 @@
                         <el-input clearable v-model="form.vip_amount" />
                     </div>
                 </div> -->
+                <template
+                    v-if="
+                        type == 'customers' &&
+                            configuration.hotels &&
+                            (typeUser == 'admin' || typeUser == 'superadmin')
+                    "
+                >
+                    <div class="row">
+                        <div class="col-3">
+                            <label for="has_credit_line" class="w-100"
+                                >Tiene linea de crédito</label
+                            >
+                            <el-checkbox
+                                v-model="form.has_credit_line"
+                                :checked="form.has_credit_line"
+                            ></el-checkbox>
+                        </div>
+                        <div class="col-3">
+                            <label for="credit_line"
+                                >Monto - linea de crédito</label
+                            >
+                            <el-input
+                                v-model="form.credit_line"
+                                :disabled="!form.has_credit_line"
+                                type="number"
+                                min="0"
+                                step="0.01"
+                            ></el-input>
+                        </div>
+                    </div>
+                </template>
             </div>
             <div class="form-actions text-end pt-2 pb-2">
                 <el-button @click.prevent="close()">Cancelar</el-button>
@@ -667,7 +696,8 @@ export default {
         "document_type_id",
         "input_person",
         "user_id",
-        "newTech"
+        "newTech",
+        "typeUser"
     ],
     data() {
         return {
@@ -688,11 +718,11 @@ export default {
             locations: [],
             person_types: [],
             identity_document_types: [],
-            all_users: []
+            all_users: [],
+            configuration: {}
         };
     },
     async created() {
-        console.log(this.newTech, " a");
         await this.initForm();
         await this.$http.get(`/${this.resource}/tables`).then(response => {
             this.api_service_token = response.data.api_service_token;
@@ -707,6 +737,7 @@ export default {
                 response.data.identity_document_types;
             this.locations = response.data.locations;
             this.person_types = response.data.person_types;
+            this.configuration = response.data.configuration;
         });
     },
     computed: {
@@ -733,6 +764,8 @@ export default {
         initForm() {
             this.errors = {};
             this.form = {
+                has_credit_line: false,
+                credit_line: 0.0,
                 id: null,
                 type: this.type,
                 identity_document_type_id: "6",
@@ -854,6 +887,7 @@ export default {
                 return;
             }
             this.loading_submit = true;
+                    console.log("🚀 ~ file: form.vue:893 ~ submit ~ this.form:", this.form)
             this.$http
                 .post(`/${this.resource}`, this.form)
                 .then(response => {

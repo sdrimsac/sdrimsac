@@ -174,7 +174,8 @@ export default {
                     id: this.recordId,
                     name: this.form.name,
                     description: this.form.description,
-                    items: this.service_items
+                    items: this.service_items,
+                    due_time: this.form.due_time
                 };
                 const response = await this.$http.post(
                     "/caja/room_services",

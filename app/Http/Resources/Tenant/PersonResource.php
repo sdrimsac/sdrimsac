@@ -15,6 +15,8 @@ class PersonResource extends JsonResource
     public function toArray($request)
     {
         return [
+            'credit_line' => $this->credit_line,
+            'has_credit_line' => (bool) $this->has_credit_line,
             'id' => $this->id,
             'type' => $this->type,
             'identity_document_type_id' => $this->identity_document_type_id,

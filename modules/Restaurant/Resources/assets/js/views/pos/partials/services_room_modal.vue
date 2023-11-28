@@ -14,6 +14,7 @@
                         <th>Promoción</th>
                         <th>Cantidad</th>
                         <th>Código</th>
+                        <th>Vencimiento</th>
                         <th>Estado</th>
                         <th></th>
                     </tr>
@@ -24,10 +25,24 @@
                         <td>{{ record.quantity }}</td>
                         <td>{{ record.code }}</td>
                         <td>
-                            {{ record.active ? "Por entregar" : "Entregado" }}
+                            <template v-if="record.due_date">
+                                {{ record.due_date.split(" ")[0]  }} <br>
+                                {{ record.due_date.split(" ")[1]  }}
+                            </template>
                         </td>
                         <td>
-                           <template v-if="record.active">
+                           <template v-if="record.active && !record.was_due">
+                             {{ "Por entregar" }}
+                           </template>
+                             <template v-if="!record.active">
+                             {{ "Entregado" }}
+                           </template>
+                              <template v-if="record.active && record.was_due">
+                             {{ "Vencido" }}
+                           </template>
+                        </td>
+                        <td>
+                           <template v-if="record.active&&!record.was_due">
                             <el-tooltip
                            :content="`Dar por entregado`"
                            >

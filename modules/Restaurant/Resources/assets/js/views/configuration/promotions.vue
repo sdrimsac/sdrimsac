@@ -51,7 +51,7 @@
                             </template>
                         </td>
                         <td>
-                            {{ record.due_date && (record.due_date | formatDate) }}
+                            {{ record.due_time }}
                         </td>
                         <td>
                             <el-button

@@ -29,17 +29,21 @@
                     ></el-option>
                 </el-select>
             </div>
-            <div class="col-lg-4 col-md-4 col-12">
+            <div class="col-lg-3 col-md-3 col-12">
                 <label for="account">Cuenta actual</label>
-                <el-input disabled v-model="form.balance"></el-input>
+                <el-input readonly v-model="form.balance"></el-input>
             </div>
-            <div class="col-lg-4 col-md-4 col-12">
+            <div class="col-lg-3 col-md-3 col-12">
                 <label for="account">A agregar</label>
-                <el-input disabled v-model="amountToAdd"></el-input>
+                <el-input readonly v-model="amountToAdd"></el-input>
             </div>
-            <div class="col-lg-4 col-md-4 col-12">
+            <div class="col-lg-3 col-md-3 col-12">
                 <label for="account">Cuenta total</label>
-                <el-input disabled v-model="form.total"></el-input>
+                <el-input readonly v-model="form.total"></el-input>
+            </div>
+            <div class="col-lg-3 col-md-3 col-12" v-if="form.has_credit_line">
+                <label for="account">Limite de crédito</label>
+                <el-input readonly v-model="form.credit_line"></el-input>
             </div>
         </div>
         <span slot="footer" class="dialog-footer">
@@ -57,7 +61,9 @@ export default {
             form: {
                 total: 0,
                 balance: 0,
-                customer_id: null
+                customer_id: null,
+                credit_line: 0,
+                has_credit_line: false
             },
             customers: [],
             input_person: {
@@ -67,6 +73,13 @@ export default {
     },
     methods: {
         submit() {
+            let { has_credit_line, credit_line, total } = this.form;
+            if (has_credit_line && credit_line < total) {
+                this.$toast.error(
+                    "El cliente/personal no tiene suficiente crédito para realizar esta operación"
+                );
+                return;
+            }
             this.$emit("sendOrdenToCreditList", this.form.customer_id);
             this.close();
         },
@@ -79,6 +92,11 @@ export default {
                 parseFloat(this.form.balance) + parseFloat(this.amountToAdd);
         },
         changeCustomer(customer_id) {
+            let customer = this.customers.find(
+                customer => customer.id == customer_id
+            );
+            this.form.credit_line = customer.credit_line;
+            this.form.has_credit_line = customer.has_credit_line;
             this.getBalance(customer_id);
         },
 
@@ -101,7 +119,18 @@ export default {
                 // }
             }
         },
-        open() {},
+        initForm() {
+            this.form = {
+                total: 0,
+                balance: 0,
+                customer_id: null,
+                credit_line: 0,
+                has_credit_line: false
+            };
+        },
+        open() {
+            this.initForm();
+        },
         close() {
             this.$emit("update:showDialog", false);
         }

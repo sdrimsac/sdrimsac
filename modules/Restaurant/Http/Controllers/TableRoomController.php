@@ -76,7 +76,9 @@ class TableRoomController extends Controller
 
         $promotion = HotelRentItemServices::whereRaw('BINARY code=?', $code)
             ->first();
+        $promotion->dued();
 
+    
         if ($promotion) {
             if ($promotion->active == false) {
                 $user = auth()->user();
@@ -88,6 +90,12 @@ class TableRoomController extends Controller
                 return [
                     'success' => false,
                     'message' => 'Código ya utilizado'
+                ];
+            }
+            if($promotion->was_due){
+                return [
+                    'success' => false,
+                    'message' => 'Código vencido'
                 ];
             }
             $hotel_rent_item_id = $promotion->hotel_rent_item_id;
@@ -573,9 +581,9 @@ class TableRoomController extends Controller
         }
         if ($single_room) {
 
-            return compact('orden_ids', 'ordens_items', 'hotel_rent_id', 'customer_number','customer_id');
+            return compact('orden_ids', 'ordens_items', 'hotel_rent_id', 'customer_number', 'customer_id');
         } else {
-            return compact('orden_ids', 'ordens_items', 'hotel_rent_item_ids', 'customer_number','customer_id');
+            return compact('orden_ids', 'ordens_items', 'hotel_rent_item_ids', 'customer_number', 'customer_id');
         }
     }
     public function check()
@@ -828,8 +836,20 @@ class TableRoomController extends Controller
                             $hotel_rent_item_service = new HotelRentItemServices;
                             $hotel_rent_item_service->hotel_rent_item_id = $hotel_rent_item->id;
                             $hotel_rent_item_service->room_service_id = $service['id'];
+                            $room_service = RoomService::find($service['id']);
+                            $due_time = $room_service->due_time;
+                            $date_take = Carbon::now()->addDays($i);
+                            if ($due_time) {
+                                //si $due_time es menor a $checkin_time entonces sumarle un día a $date_take
+                                $date_take = Carbon::parse($date_take->format('Y-m-d') . " " . $checkin_time);
+                                if ($due_time < $checkin_time) {
+                                    $date_take->addDay();
+                                }
+                            }
+                            $date_take = $date_take->format('Y-m-d');
                             $hotel_rent_item_service->quantity = $service['quantity'];
                             $hotel_rent_item_service->code = $this->generate_code();
+                            $hotel_rent_item_service->date_take = $date_take;
                             $hotel_rent_item_service->save();
                             if ($i == 0 && $room['is_reserve'] == false) {
                                 event(new PrintEvent($hotel_rent_item_service->id, "H", true));
@@ -1188,14 +1208,30 @@ class TableRoomController extends Controller
     }
     public function get_services($id)
     {
-        $hotel_rent_item_service = HotelRentItemServices::where('hotel_rent_item_id', $id)->get()
+        $hotel_rent_item_service = HotelRentItemServices::where('hotel_rent_item_id', $id)
+       
+        ->orderBy('date_take', 'asc')
+        ->get()
+
             ->transform(function ($row) {
+                $row->dued();
+                $room_service = RoomService::find($row->room_service_id);
+                $due_time = $room_service->due_time;
+                $due_date = null;
+                if ($due_time && $row->date_take) {
+                    $due_date = Carbon::parse($row->date_take)->format('Y-m-d');
+                    $due_date = Carbon::parse($due_date . " " . $due_time)->format('Y-m-d H:i:s');
+                }
+
+
                 return [
                     'id' => $row->id,
                     'code' => $row->code,
                     'name' => $row->room_service->name,
                     'room_service_id' => $row->room_service_id,
                     'quantity' => $row->quantity,
+                    'was_due' =>(bool) $row->was_due,
+                    'due_date' => $due_date,
                     'active' => (bool)$row->active,
                 ];
             });

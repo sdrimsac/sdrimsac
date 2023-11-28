@@ -341,6 +341,8 @@ class DocumentController extends Controller
                     'description' => $row->number . ' - ' . $row->name,
                     'name' => $row->name,
                     'number' => $row->number,
+                    'has_credit_line' => (bool) $row->has_credit_line,
+                    'credit_line' => $row->credit_line,
                     'identity_document_type_id' => $row->identity_document_type_id,
                     'identity_document_type_code' => $row->identity_document_type->code,
                     'addresses' => $row->addresses,
