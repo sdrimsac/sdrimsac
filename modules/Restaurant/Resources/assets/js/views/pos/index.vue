@@ -5324,7 +5324,7 @@ export default {
                                 e.data.typeuser,
                                 e.data.printing
                             );
-                        }, 500);
+                        }, 1000);
                     }
                 } else {
                     console.log(e.data.print);
