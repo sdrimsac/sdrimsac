@@ -910,6 +910,11 @@ const app = new Vue({
                 /*webpackChunkName:"credit_list"*/
                 "./views/credit_list/index.vue")
             ,
+            "worker-cleaner" : ()=>
+            import(
+                /*webpackChunkName:"worker-cleaner"*/
+                "../../modules/Restaurant/Resources/assets/js/views/cleaner/index.vue")
+            ,
             
     },
  

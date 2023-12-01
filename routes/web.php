@@ -29,6 +29,7 @@ if ($hostname) {
                 'register' => false,
                 'verify'   => false
             ]);
+            Route::get('credit-list/receipt/{id}/ticket', [CreditListController::class, 'receipt']);
             Route::get('buscar', [App\Http\Controllers\Tenant\SearchController::class, 'index'])->name('search.index');
             Route::get('search/tables', [App\Http\Controllers\Tenant\SearchController::class, 'tables']);
             Route::post('search', [App\Http\Controllers\Tenant\SearchController::class, 'store']);
@@ -66,6 +67,7 @@ if ($hostname) {
                     Route::get('/', [CreditListController::class, 'credit_list_report_index'])->name('tenant.credit_list.index');
                     Route::get('/tables', [CreditListController::class, 'tables']);
                     Route::post('/send-credit', [CreditListController::class, 'send_credit']);
+               
                     Route::get('/balance/{customer_id}', [CreditListController::class, 'get_balance']);
                     Route::get('/records', [CreditListController::class, 'records']);
                     Route::get('/records_by_person/download', [CreditListController::class, 'download']);

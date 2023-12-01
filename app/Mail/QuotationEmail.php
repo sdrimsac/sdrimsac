@@ -29,10 +29,10 @@ class QuotationEmail extends Mailable
      */
     public function build()
     {
-        $pdf = $this->getStorage($this->quotation->filename, 'quotation');
+        // $pdf = $this->getStorage($this->quotation->filename, 'quotation');
         return $this->subject('Envio de Cotización')
                     ->from(config('mail.username'), 'Cotización')
                     ->view('tenant.templates.email.quotation')
-                    ->attachData($pdf, $this->quotation->filename.'.pdf');
+                  ;
     }
 }

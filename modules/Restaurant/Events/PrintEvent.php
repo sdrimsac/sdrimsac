@@ -74,8 +74,13 @@ class PrintEvent implements ShouldBroadcast
         if (count($ids) != 0) {
             $ids_string = join("_", $ids);
         }
+        $copies = 0;
         $documentLink = null;
         switch ($document_type) {
+            case "S":
+                // $copies = 1;
+                $documentLink = url('') . "/credit-list/receipt/{$id}/ticket";
+                break;
             case "H":
                 $documentLink = url('') . "/caja/rooms/print_service/{$id}";
                 break;
@@ -129,7 +134,8 @@ class PrintEvent implements ShouldBroadcast
         $this->data = array(
             'printer' => $printer,
             'printing' => $printing,
-            'copies' => ($multiple_boxes == true && auth()->user()->type != 'admin') ? $area->copies : $establishment->copies,
+            // 'copies' => ($multiple_boxes == true && auth()->user()->type != 'admin') ? $area->copies : $establishment->copies,
+            'copies' =>$copies,
             'direct_printing' => (bool) $establishment->direct_printing,
             'print'   => $documentLink,
             'multiple_boxes' => (bool) $configuration->multiple_boxes,

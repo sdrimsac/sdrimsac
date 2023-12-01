@@ -87,6 +87,24 @@
                                 </el-option>
                             </el-select>
                         </template>
+                        <template v-else-if="search.column == 'active' && resource=='caja/workers-type'">
+                            <el-select
+                                v-model="search.value"
+                                @change="getRecords"
+                                placeholder="Seleccione el estado"
+                            >
+                                <el-option
+                                    v-for="(item, idx) in [
+                                        { id: 1, description: 'Activado' },
+                                        { id: 0, description: 'Desactivado' }
+                                    ]"
+                                    :key="idx"
+                                    :label="item.description"
+                                    :value="item.description"
+                                >
+                                </el-option>
+                            </el-select>
+                        </template>
                         <template v-else>
                             <el-input
                                 placeholder="Buscar"

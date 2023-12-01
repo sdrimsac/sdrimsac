@@ -23,6 +23,7 @@ use Modules\Restaurant\Http\Controllers\IncomesController;
 use Modules\Restaurant\Http\Controllers\OrdenController;
 use Modules\Restaurant\Http\Controllers\RestaurantController;
 use Modules\Restaurant\Http\Controllers\PromocionPorItemController;
+use Modules\Restaurant\Http\Controllers\TableMaintenanceController;
 use Modules\Restaurant\Http\Controllers\TableRoomController;
 use Modules\Restaurant\Http\Controllers\WorkerController;
 
@@ -139,7 +140,15 @@ Route::prefix('caja')->group(function () {
         Route::delete('status-orden/{id}', 'StatusOrdenController@active');
         Route::get('status-orden/record/{id}', 'StatusOrdenController@record');
         Route::post('status-orden', 'StatusOrdenController@store');
-
+        //***MANTENIMENTO */
+        Route::prefix('maintenance')->group(function (){
+            Route::get('workers', [TableMaintenanceController::class, 'workers']);
+            Route::get('records', [TableMaintenanceController::class, 'records']);
+            Route::get('record/{id}', [TableMaintenanceController::class, 'record']);
+            Route::post('', [TableMaintenanceController::class, 'store']);
+            Route::delete('delete/{id}', [TableMaintenanceController::class, 'destroy']);
+        });
+        Route::get('rooms', 'TableRoomController@index')->name('restaurant.rooms');
         //**** MESAS */
         Route::get('rooms', 'TableRoomController@index')->name('restaurant.rooms');
         Route::get('rooms/columns', 'TableRoomController@columns');
@@ -233,6 +242,11 @@ Route::prefix('caja')->group(function () {
             Route::post('logout', 'RestaurantController@logout');
             Route::get('print_last_document', [OrdenController::class, 'print_last_document']);
             Route::post('pos/last_number_documents', [App\Http\Controllers\Tenant\PosController::class, 'last_number_documents']);
+            //Cleaner
+            Route::get('cleaner', 'CleanerController@index')->name('restaurant.cleaner.index')->middleware('just.worker');;
+            Route::get('tables', 'CleanerController@tables');
+            //Mantenimiento
+            Route::get('maintenance', 'MaintenanceController@index')->name('restaurant.maintenance.index')->middleware('just.worker');;
 
             Route::get('totales_sales', 'PosController@total_sales');
             Route::get('dashboard', 'DashboardController@index')->name('restaurant.workers.dashboard');

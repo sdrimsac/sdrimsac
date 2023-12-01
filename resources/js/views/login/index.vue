@@ -176,7 +176,6 @@ export default {
                 data: { success }
             } = response;
 
-            console.log(response);
             if (success) {
                 if (pin.length == 6) {
                     window.location.href = "items";
@@ -198,7 +197,11 @@ export default {
                     window.location.href = "caja/worker/dashboard";
                 } else if (response.data.collector == true) {
                     window.location.href = "toll";
-                } else {
+               } else if (response.data.cleaner == true) {
+                    window.location.href = "caja/worker/cleaner";
+               }
+                
+                else {
                     if (this.company.soap_type_id != "03") {
                         window.location.href = "documents";
                     } else {
@@ -206,6 +209,11 @@ export default {
                     }
                 }
             } else {
+                $("#password-pin").val("");
+                 let pins = document.querySelectorAll(".pin-radio");
+            for (let pin of pins) {
+                pin.checked = false;
+            }
                 this.$toast.error(response.data.message);
                 this.pinHide = "";
                 this.maskPin = null;

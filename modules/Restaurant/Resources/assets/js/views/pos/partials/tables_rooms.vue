@@ -397,7 +397,9 @@
                         S/ 1650.00
                     </div> -->
                 </div>
-                <div class="m-1 d-flex justify-content-center alig-items-center">
+                <div
+                    class="m-1 d-flex justify-content-center alig-items-center"
+                >
                     <div class="col-2 d-flex align-items-center">
                         <span class="text-muted h5">T. HABITACIÓN: </span>
                         <span class="h4">{{ currentRoom.total_room }}</span>
@@ -410,7 +412,10 @@
                         <span class="text-muted h5">T. ADELANTO: </span>
                         <span class="h4">{{ currentRoom.advance }}</span>
                     </div>
-                    <div class="col-2 d-fle align-items-center" v-if="extra_time > 0">
+                    <div
+                        class="col-2 d-fle align-items-center"
+                        v-if="extra_time > 0"
+                    >
                         <span class="text-muted h5">PENALIDAD: </span>
                         <span class="h4">{{ extra_time }}</span>
                     </div>
@@ -978,7 +983,13 @@
                 <el-button type="primary" @click="addDays">Agregar</el-button>
             </span>
         </el-dialog>
-
+        <maintenance-modal
+            :tableName="tableNameMaintenance"
+            :type="typeMaintenance"
+            :tableId="tableIdMaintenance"
+            :showDialog.sync="showModalMaintenance"
+            @getTables="getTables"
+        ></maintenance-modal>
         <edit-reserve
             :showDialog.sync="showEditDate"
             :roomEdit="roomEdit"
@@ -1014,16 +1025,22 @@
 import RoomForm from "./room_form.vue";
 import EditReserve from "./edit_reserve.vue";
 import ServicesRoomModal from "./services_room_modal.vue";
+import MaintenanceModal from "./maintenance_modal.vue";
 export default {
     //tabla color verde
-    props: ["showTables", "table", "roomSeeId","printer"],
+    props: ["showTables", "table", "roomSeeId", "printer"],
     components: {
         RoomForm,
         EditReserve,
-        ServicesRoomModal
+        ServicesRoomModal,
+        MaintenanceModal
     },
     data() {
         return {
+            tableNameMaintenance: null,
+            typeMaintenance: null,
+            tableIdMaintenance: null,
+            showModalMaintenance: false,
             all_months: [],
             roomEdit: null,
             showEditDate: false,
@@ -1234,6 +1251,15 @@ export default {
         },
         async sendToMaintenance(event, id) {
             event.stopPropagation();
+            let table = this.all_tables.find(t => t.id == id);
+            let number = table.number;
+            let tower = table.floor.tower.name;
+            let name = `${number} - ${tower}`;
+            this.tableNameMaintenance = name;
+            this.showModalMaintenance = true;
+            this.typeMaintenance = "mantenimiento";
+            this.tableIdMaintenance = id;
+            return;
             try {
                 await this.$confirm(
                     "¿Está seguro de enviar a mantenimiento la habitación?",
@@ -1273,6 +1299,15 @@ export default {
         },
         async sendToCleanById(event, id) {
             event.stopPropagation();
+            let table = this.all_tables.find(t => t.id == id);
+            let number = table.number;
+            let tower = table.floor.tower.name;
+            let name = `${number} - ${tower}`;
+            this.tableNameMaintenance = name;
+            this.showModalMaintenance = true;
+            this.typeMaintenance = "limpieza";
+            this.tableIdMaintenance = id;
+            return;
             try {
                 await this.$confirm(
                     "¿Está seguro de enviar a limpiar esta habitación?",

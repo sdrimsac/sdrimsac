@@ -40,10 +40,7 @@
                                             <el-radio-group
                                                 v-model="form.document_type_id"
                                                 size="small"
-                                                @change="
-                                                    date_of_issue();
-                                                    filterSeries();
-                                                "
+                                                @change="filterSeries()"
                                             >
                                                 <template v-if="!isInterno">
                                                     <el-radio-button
@@ -1590,7 +1587,7 @@ export default {
 
         this.setAmountCash(this.form.total);
 
-        this.filterSeries();
+        // this.filterSeries();
 
         this.button_payment = false;
         let { conf } = this.establishments;
@@ -2167,26 +2164,34 @@ export default {
             // this.discount_amount = 0;
             // this.form.customer_id
             // this.form.student_id = null;
+            if (!this.form.is_room) {
+                this.value = null;
+                this.form.customer_id = null;
+            }
 
             if (!this.configuration.restrict_receipt_date) {
                 this.form.date_of_issue = moment().format("YYYY-MM-DD");
             }
-            let { documents } = this.establishments;
+            let { documents, document_default } = this.establishments;
             if (documents) {
                 let { invoice, sale_note, receipt } = documents;
                 this.invoice = invoice;
                 this.sale_note = sale_note;
                 this.receipt = receipt;
             }
+            if (document_default) {
+                this.form.document_type_id = document_default;
+            }
             this.customers = this.all_customers.filter(
                 n => n.number != "88888888"
             );
-            this.customers = [
-                ...this.customers.filter(c => c.id != this.customer_default.id)
-            ];
-            if (this.form.document_type_id != "01") {
-                this.customers = [...this.customers, this.customer_default];
-            }
+            // this.customers = [
+            //     ...this.customers.filter(c => c.id != this.customer_default.id)
+            // ];
+            // if (this.form.document_type_id != "01") {
+            //     this.customers = [...this.customers, this.customer_default];
+
+            // }
 
             if (this.establishments.customer_id) {
                 let isRuc = this.checkCustomerDocument("6");
@@ -2235,6 +2240,7 @@ export default {
             if (this.configuration.save_pos_printing) {
                 this.printerOn = this.configuration.print_in_pos ? 1 : 0;
             }
+            this.filterSeries();
         },
         checkCustomerDocument(type) {
             let { customer_id } = this.form;
@@ -3712,23 +3718,73 @@ export default {
             this.form.series_id =
                 this.series.length > 0 ? this.series[0].id : null;
         },
+        filterCustomers() {
+            let { document_type_id } = this.form;
+            let isForRuc = document_type_id == "01";
+            if (isForRuc) {
+                this.customers = this.all_customers.filter(
+                    f => f.identity_document_type_id == "6"
+                );
+            } else {
+                this.customers = this.all_customers;
+            }
+            //si this.form.customer_id no es nulo y existe en this.customers
+            console.log(
+                "🚀 ~ file: payment.vue:3730 ~ filterCustomers ~ this.form.customer_id :",
+                this.form.customer_id
+            );
+            if (
+                this.form.customer_id &&
+                this.customers.some(c => c.id == this.form.customer_id)
+            ) {
+                this.value = this.form.customer_id;
+
+                this.form.customer_telephone = this.customers.find(
+                    c => c.id == this.form.customer_id
+                ).phone;
+            } else {
+                if (this.customers.length > 0) {
+                    let hasCustomerDefault = false;
+                    if (this.customer_default) {
+                        let { id } = this.customer_default;
+                        hasCustomerDefault = this.customers.some(
+                            c => c.id == id
+                        );
+                    }
+                    if (hasCustomerDefault) {
+                        let { id } = this.customer_default;
+                        this.value = id;
+                        this.form.customer_id = id;
+                    } else {
+                        this.value = this.customers[0].id;
+                        this.form.customer_id = this.customers[0].id;
+                    }
+                    this.changeCustomer();
+                } else {
+                    this.value = null;
+                    this.form.customer_id = null;
+                    this.form.customer_telephone = null;
+                }
+            }
+        },
 
         filterSeries() {
-            let check = this.checkCustomers();
-            if (!check && !this.started) {
-                let dcto = "DNI";
-                if (this.form.document_type_id == "01") {
-                    dcto = "RUC";
-                    this.form.document_type_id = "03";
-                } else {
-                    this.form.document_type_id = "01";
-                }
-                this.$toast.warning(`Digite el número de ${dcto}`);
+            this.filterCustomers();
+            // let check = this.checkCustomers();
+            // if (!check && !this.started) {
+            //     let dcto = "DNI";
+            //     if (this.form.document_type_id == "01") {
+            //         dcto = "RUC";
+            //         this.form.document_type_id = "03";
+            //     } else {
+            //         this.form.document_type_id = "01";
+            //     }
+            //     this.$toast.warning(`Digite el número de ${dcto}`);
 
-                this.setSeries();
-                return;
-            }
-            this.started = false;
+            //     this.setSeries();
+            //     return;
+            // }
+            // this.started = false;
 
             if (this.form.document_type_id == "01") {
                 this.currentDocumentsType = [
@@ -3754,32 +3810,32 @@ export default {
                 // }
             }
 
-            if (
-                this.form.document_type_id == "01" &&
-                currentClient &&
-                currentClient.identity_document_type_id !== "6"
-            ) {
-                this.customers = this.all_customers.filter(
-                    f => f.identity_document_type_id == "6"
-                );
-                if (this.customers.length == 0) {
-                    this.$toast.warning("Digite el número de RUC");
-                    this.form.document_type_id = "03";
+            // if (
+            //     this.form.document_type_id == "01" &&
+            //     currentClient &&
+            //     currentClient.identity_document_type_id !== "6"
+            // ) {
+            //     this.customers = this.all_customers.filter(
+            //         f => f.identity_document_type_id == "6"
+            //     );
+            //     if (this.customers.length == 0) {
+            //         this.$toast.warning("Digite el número de RUC");
+            //         this.form.document_type_id = "03";
 
-                    // this.customers = this.all_customers;
-                } else {
-                    if (
-                        currentClient &&
-                        this.customers.some(c => c.id == currentClient.id)
-                    ) {
-                        this.form.customer_telephone = currentClient.phone;
-                        return;
-                    }
+            //         // this.customers = this.all_customers;
+            //     } else {
+            //         if (
+            //             currentClient &&
+            //             this.customers.some(c => c.id == currentClient.id)
+            //         ) {
+            //             this.form.customer_telephone = currentClient.phone;
+            //             return;
+            //         }
 
-                    this.value = this.customers[0].id;
-                    this.form.customer_telephone = this.customers[0].phone;
-                }
-            }
+            //         this.value = this.customers[0].id;
+            //         this.form.customer_telephone = this.customers[0].phone;
+            //     }
+            // }
             // else if (
             //     this.form.document_type_id == "03" ||
             //     this.form.document_type_id == "80"
@@ -3811,9 +3867,9 @@ export default {
             //         this.form.customer_telephone = this.customers[0].phone;
             //     }
             // }
-            else {
-                this.customers = this.all_customers;
-            }
+            // else {
+            //     this.customers = this.all_customers;
+            // }
 
             this.customers = this.customers.filter(n => n.number != "88888888");
             this.customers = [

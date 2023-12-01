@@ -142,4 +142,12 @@ class Orden extends ModelTenant
     {
         return $this->belongsTo(Table::class, 'table_id', 'id');
     }
+
+    public function getTotal(){
+        $total = 0;
+        foreach ($this->orden_items as $item) {
+            $total += $item->quantity * $item->price;
+        }
+        return $total;
+    }
 }

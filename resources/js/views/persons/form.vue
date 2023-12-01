@@ -805,6 +805,7 @@ export default {
             }
         },
         create() {
+            this.initForm();
             if (this.external) {
                 if (this.document_type_id === "01") {
                     this.form.identity_document_type_id = "6";

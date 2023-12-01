@@ -19,7 +19,7 @@
                     <div
                         class="col-12 col-md-6 d-flex align-items-start justify-content-end"
                     >
-                            <button
+                        <button
                             v-if="resource == 'caja/rooms'"
                             type="button"
                             class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto m-l-5"
@@ -232,10 +232,27 @@
                                 </button>
                                 <button
                                     type="button"
-                                    class="btn waves-effect waves-light btn-sm btn-danger"
+                                    :class="
+                                        row.active
+                                            ? 'btn btn-danger btn-sm'
+                                            : 'btn btn-success btn-sm'
+                                    "
+                                    class="btn waves-effect waves-light btn-sm"
                                     @click.prevent="clickDelete(row.id)"
                                 >
-                                    Eliminar
+                                    <template
+                                        v-if="type == 'caja/workers-type'"
+                                    >
+                                        <template v-if="row.active">
+                                            Desactivar
+                                        </template>
+                                        <template v-else>
+                                            Activar
+                                        </template>
+                                    </template>
+                                    <template v-else>
+                                        Eliminar
+                                    </template>
                                 </button>
                             </td>
                         </tr>
@@ -265,9 +282,7 @@
                 ></create-form-massive>
                 <items-rooms :showDialog.sync="showItems" :type="typeItem">
                 </items-rooms>
-                <promotions
-                :showDialog.sync="showPromotions"
-                ></promotions>
+                <promotions :showDialog.sync="showPromotions"></promotions>
             </div>
         </div>
     </div>
@@ -284,8 +299,12 @@ import queryString from "query-string";
 export default {
     props: ["type", "title", "configurations"],
     mixins: [deletable],
-    components: { DataTable, CreateForm, CreateFormMassive, ItemsRooms
-    ,Promotions
+    components: {
+        DataTable,
+        CreateForm,
+        CreateFormMassive,
+        ItemsRooms,
+        Promotions
     },
     data() {
         return {
@@ -317,6 +336,7 @@ export default {
         };
     },
     created() {
+        console.log(this.type);
         if (this.type == "caja/tables" || this.type == "caja/rooms") {
             this.getTables();
         }
@@ -327,7 +347,7 @@ export default {
         });
     },
     methods: {
-        clickSeePromotions(){
+        clickSeePromotions() {
             this.showPromotions = true;
         },
         clickSeeTypes() {

@@ -106,6 +106,20 @@
                             ></small>
                         </div>
                     </div>
+                      <div class="col-md-4">
+                        <div
+                            class="form-group"
+                            :class="{ 'has-danger': errors.telephone }"
+                        >
+                            <label class="control-label">Teléfono</label>
+                            <el-input v-model="form.telephone"> </el-input>
+                            <small
+                                class="form-control-feedback"
+                                v-if="errors.telephone"
+                                v-text="errors.telephone[0]"
+                            ></small>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="form-actions text-end pt-2 pb-2">
@@ -143,6 +157,7 @@ export default {
             this.form = {
                 id: null,
                 description: null,
+                telephone: null,
                 active: 1,
                 establishment_id: this.establishments[0].id
             };

@@ -17,6 +17,9 @@ use Illuminate\Support\Facades\DB;
 use Modules\Restaurant\Models\Orden;
 use Modules\Restaurant\Models\OrdenItem;
 use Modules\Restaurant\Models\Table;
+use Barryvdh\DomPDF\Facade as PDF;
+use Exception;
+use Modules\Restaurant\Events\PrintEvent;
 
 class CreditListController extends Controller
 {
@@ -47,16 +50,48 @@ class CreditListController extends Controller
         return $orden_items;
     }
     public function download(Request $request)
-    {   
+    {
         $company = Company::first();
         $records = $this->getData($request)->get();
         return (new CreditListExport)
-        ->records($records)
-        ->company($company)
-        ->download('Lista_de_credito_'.Carbon::now().'.xlsx');
-
+            ->records($records)
+            ->company($company)
+            ->download('Lista_de_credito_' . Carbon::now() . '.xlsx');
     }
-    public function recordByPersonToPay(Request $request){
+
+    public function receipt($id)
+    {
+        $credit_list = CreditList::find($id);
+        $customer = $credit_list->customer;
+        $user = $credit_list->seller;
+        $orden = $credit_list->orden;
+        $total = $orden->getTotal();
+        $company = Company::first();
+        $count_items = $orden->orden_items->count();
+
+
+        $height = 10  * 30;
+        if ($count_items > 8) {
+            $height = $count_items * 30;
+        }
+        try {
+            $pdf = PDF::loadView('restaurant::credit_list.receipt', compact(
+                "credit_list",
+                "customer",
+                "user",
+                "orden",
+                "total",
+                "company",
+            ))
+                ->setPaper(array(0, 0, 249.45, $height));
+        } catch (Exception $e) {
+            return ['m' => $e->getMessage()];
+        }
+
+        return $pdf->stream('pdf_file.pdf');
+    }
+    public function recordByPersonToPay(Request $request)
+    {
         $request['paid'] = "0";
         $orden_items = $this->getData($request);
         $records = $orden_items->get();
@@ -106,7 +141,7 @@ class CreditListController extends Controller
             $orden_item->save();
         }
 
-        CreditList::create([
+      $credit_list =  CreditList::create([
             'orden_id' => $orden->id,
             'customer_id' => $customer_id,
             'user_id' => $user_id,
@@ -114,6 +149,11 @@ class CreditListController extends Controller
             'observation' => $request->observation,
             'paid' => false,
         ]);
+
+        event(new PrintEvent($credit_list->id, 'S', true, null, []));
+        sleep(1);
+        event(new PrintEvent($credit_list->id, 'S', true, null, []));
+
 
         return [
             'success' => true,

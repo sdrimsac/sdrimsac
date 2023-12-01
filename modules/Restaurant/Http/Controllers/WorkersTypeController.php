@@ -29,9 +29,14 @@ class WorkersTypeController extends Controller
     }
     public function records(Request $request)
     {
-        if ($request->value == "Activado") {
+        if ($request->column && $request->value == "Activado") {
             $records = WorkersType::where($request->column, '=', 1);
-        } else {
+        } 
+        else if ($request->column && $request->value == "Desactivado") {
+            $records = WorkersType::where($request->column, '=', 0);
+        }
+        
+        else {
             $records = WorkersType::where($request->column, 'like', "%{$request->value}%")
                 ->where('active', 1);
         }

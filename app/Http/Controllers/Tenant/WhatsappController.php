@@ -120,7 +120,6 @@ class WhatsappController extends Controller
 
             $status = $response->status();
             $body = $response->body();
-
             return [
                 "success" => $status == 200,
                 "message" => $body
