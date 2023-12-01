@@ -3384,7 +3384,7 @@ export default {
                     `/caja/worker/record/${id}?precuenta=true`
                 );
                 let url = response.data.print;
-
+                console.log("🚀 ~ file: list_ordens.vue:3387 ~ printTicket ~ url:", url)
                 let config = qz.configs.create(response.data.printer, {
                     scaleContent: false
                 });
@@ -3402,8 +3402,6 @@ export default {
                     this.$toast.error(e.message);
                 });
 
-                //this.$toast.success("se esta imprimiendo el comprobante con exito");
-                // qz.websocket.disconnect()
             } catch (e) {
                 this.$toast.error(e.message);
             }

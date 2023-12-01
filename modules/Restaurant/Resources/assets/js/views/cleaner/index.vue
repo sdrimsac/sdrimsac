@@ -6,19 +6,23 @@
 
 <script>
 export default {
-    props:["configuration","establishment"],
-    data(){
-        return{
-            resource:'caja/worker/cleaner',
+    props: ["configuration", "establishment"],
+    data() {
+        return {
+            resource: "caja/worker/cleaner"
         };
     },
-    methods:{
-
-        getTables(){
-
-        },
-
+    mounted() {
+        this.getTables();
+    },
+    methods: {
+        async getTables() {
+            const response = await this.$http(`/caja/maintenance/records`);
+            console.log(
+                "🚀 ~ file: index.vue:20 ~ getTables ~ response:",
+                response
+            );
+        }
     }
-
-}
+};
 </script>

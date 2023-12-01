@@ -1028,7 +1028,7 @@ import ServicesRoomModal from "./services_room_modal.vue";
 import MaintenanceModal from "./maintenance_modal.vue";
 export default {
     //tabla color verde
-    props: ["showTables", "table", "roomSeeId", "printer"],
+    props: ["showTables", "table", "roomSeeId", "printer", "configuration"],
     components: {
         RoomForm,
         EditReserve,
@@ -1249,17 +1249,38 @@ export default {
             });
             this.close();
         },
+
+        changeRoom() {
+            this.isChangingRoom = !this.isChangingRoom;
+            if (this.isChangingRoom) {
+                this.close2();
+            }
+        },
+        async addDays() {
+            await this.$http(
+                `/caja/rooms/add_days/${this.currentRoom.id}/${this.currentRoom.duration}`
+            );
+            this.showAddDays = false;
+            this.getRoomDetail(this.currentTable.id);
+        },
+        close2() {
+            this.viewingRoom = false;
+            // this.currentTable = null;
+            this.currentRoom = null;
+        },
         async sendToMaintenance(event, id) {
-            event.stopPropagation();
-            let table = this.all_tables.find(t => t.id == id);
-            let number = table.number;
-            let tower = table.floor.tower.name;
-            let name = `${number} - ${tower}`;
-            this.tableNameMaintenance = name;
-            this.showModalMaintenance = true;
-            this.typeMaintenance = "mantenimiento";
-            this.tableIdMaintenance = id;
-            return;
+            if (this.configuration.maintenance_workers) {
+                event.stopPropagation();
+                let table = this.all_tables.find(t => t.id == id);
+                let number = table.number;
+                let tower = table.floor.tower.name;
+                let name = `${number} - ${tower}`;
+                this.tableNameMaintenance = name;
+                this.showModalMaintenance = true;
+                this.typeMaintenance = "mantenimiento";
+                this.tableIdMaintenance = id;
+                return;
+            }
             try {
                 await this.$confirm(
                     "¿Está seguro de enviar a mantenimiento la habitación?",
@@ -1279,35 +1300,19 @@ export default {
                 }
             } catch (e) {}
         },
-        changeRoom() {
-            this.isChangingRoom = !this.isChangingRoom;
-            if (this.isChangingRoom) {
-                this.close2();
-            }
-        },
-        async addDays() {
-            await this.$http(
-                `/caja/rooms/add_days/${this.currentRoom.id}/${this.currentRoom.duration}`
-            );
-            this.showAddDays = false;
-            this.getRoomDetail(this.currentTable.id);
-        },
-        close2() {
-            this.viewingRoom = false;
-            // this.currentTable = null;
-            this.currentRoom = null;
-        },
         async sendToCleanById(event, id) {
-            event.stopPropagation();
-            let table = this.all_tables.find(t => t.id == id);
-            let number = table.number;
-            let tower = table.floor.tower.name;
-            let name = `${number} - ${tower}`;
-            this.tableNameMaintenance = name;
-            this.showModalMaintenance = true;
-            this.typeMaintenance = "limpieza";
-            this.tableIdMaintenance = id;
-            return;
+           event.stopPropagation();
+            if (this.configuration.maintenance_workers) {
+                let table = this.all_tables.find(t => t.id == id);
+                let number = table.number;
+                let tower = table.floor.tower.name;
+                let name = `${number} - ${tower}`;
+                this.tableNameMaintenance = name;
+                this.showModalMaintenance = true;
+                this.typeMaintenance = "limpieza";
+                this.tableIdMaintenance = id;
+                return;
+            }
             try {
                 await this.$confirm(
                     "¿Está seguro de enviar a limpiar esta habitación?",
@@ -1329,13 +1334,17 @@ export default {
             } catch (e) {}
         },
         async sendToClean() {
-            const response = await this.$http(
+            if(this.configuration.maintenance_workers){
+                this.sendToCleanById(null, this.currentTable.id);
+            }else{
+                  const response = await this.$http(
                 `/caja/rooms/send_to_clean/${this.currentTable.id}`
             );
 
             if (response.status == 200) {
                 this.$emit("getTablesToClean");
                 this.getTables();
+            }
             }
         },
         async payAll() {
@@ -1506,18 +1515,18 @@ export default {
                         this.roomCleaned(table.id);
                     } catch (e) {}
                 } else {
-                    try {
-                        await this.$confirm(
-                            "¿Limpiar habitación?",
-                            "Atención",
-                            {
-                                confirmButtonText: "Aceptar",
-                                cancelButtonText: "Cancelar",
-                                type: "warning"
-                            }
-                        );
-                        this.sendToClean();
-                    } catch (e) {}
+                    // try {
+                    //     await this.$confirm(
+                    //         "¿Limpiar habitación?",
+                    //         "Atención",
+                    //         {
+                    //             confirmButtonText: "Aceptar",
+                    //             cancelButtonText: "Cancelar",
+                    //             type: "warning"
+                    //         }
+                    //     );
+                    //     this.sendToClean();
+                    // } catch (e) {}
                 }
             } else if (table.status_table_id == 3) {
                 try {

@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Config;
 class Configuration extends ModelTenant
 {
     protected $fillable = [
+        'maintenance_workers',
         'auth_discount',
         'time_manteniment',
         'show_expenses_incomes_caja',
@@ -136,6 +137,7 @@ class Configuration extends ModelTenant
 
     ];
     protected $casts = [
+        'maintenance_workers' => 'boolean',
         'auth_discount' => 'boolean',
         'show_expenses_incomes_caja' => 'boolean',
         'save_pos_printing' => 'boolean',
@@ -223,6 +225,7 @@ class Configuration extends ModelTenant
         // $skins = Skin::all();
         $skins = [];
         return [
+            'maintenance_workers' => (bool) $this->maintenance_workers,
             'auth_discount' => (bool) $this->auth_discount,
             'time_manteniment' => $this->time_manteniment,
             'show_expenses_incomes_caja' => (bool) $this->show_expenses_incomes_caja,

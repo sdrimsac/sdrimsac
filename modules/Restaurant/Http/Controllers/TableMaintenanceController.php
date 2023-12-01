@@ -16,6 +16,40 @@ class TableMaintenanceController extends Controller
 {
     public function records()
     {
+        $records = TableUserMaintenance::where('user_id', auth()->id())
+            ->where('status', 1)
+            ->where('active', true)
+            ->get()
+            ->transform(function ($row, $key) {
+                $table_name = null;
+                $table = $row->table;
+                $number = $table->number;
+                $tower = $table->floor->tower->name;
+                $table_name = "$tower - $number";
+                return [
+                    "id" => $row->id,
+                    "table_id" => $row->table_id,
+                    "user_id" => $row->user_id,
+                    "type" => $row->type,
+                    "init_comment" => $row->init_comment,
+                    "finish_comment" => $row->finish_comment,
+                    "init_time" => $row->init_time,
+                    "estimated_finish_time" => $row->estimated_finish_time,
+                    "finish_time" => $row->finish_time,
+                    "status" => $row->status,
+                    "active" => $row->active,
+                    "created_at" => $row->created_at,
+                    "updated_at" => $row->updated_at,
+                    "table_name" => $table_name,
+                    "user" => $row->user,
+                ];
+            })
+            ;
+
+        return [
+            'success' => true,
+            'records' => $records
+        ];
     }
     public function record()
     {

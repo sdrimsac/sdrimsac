@@ -1585,6 +1585,7 @@
             :showTables.sync="showTables"
         ></tables>
         <tables-rooms
+            :configuration="configuration"
             :printer="printer"
             @getTablesToClean="getTablesToClean"
             @paymentsOrden="paymentsOrden"

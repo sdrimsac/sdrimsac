@@ -1,2 +1,0 @@
-webpackJsonp([119],{"Bh+Z":function(e,n,t){"use strict";Object.defineProperty(n,"__esModule",{value:!0}),n.default={props:["configuration","establishment"],data:function(){return{resource:"caja/worker/cleaner"}},methods:{getTables:function(){}}}},du7b:function(e,n,t){var r=t("VU/8")(t("Bh+Z"),t("vfrK"),!1,null,null,null);e.exports=r.exports},vfrK:function(e,n){e.exports={render:function(){var e=this.$createElement;return(this._self._c||e)("div",[this._v("\n    Limpieza\n")])},staticRenderFns:[]}}});
-//# sourceMappingURL=worker-cleaner.4e65c68229bc3527c20c.js.map

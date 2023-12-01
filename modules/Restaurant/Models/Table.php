@@ -86,6 +86,9 @@ class Table extends ModelTenant
         );
     }
 
+    public  function maintenance(){
+        return $this->hasMany(TableUserMaintenance::class);
+    }
     public  function services(){
         return $this->hasMany(TableRoomService::class);
     }

@@ -1591,7 +1591,20 @@
                                                 </el-input-number>
                                             </div>
                                         </div>
-                                     
+                                            <div class="col-md-6 mt-4">
+                                            <div class="form-group">
+                                                <label
+                                                    class="control-label w-100"
+                                                    >Control de mantenimiento
+                                                </label>
+
+                                                <el-input-number
+                                                    @change="submit"
+                                                    v-model="form.maintenance_workers"
+                                                >
+                                                </el-input-number>
+                                            </div>
+                                        </div>
                                     </template>
                                     <div class="col-md-6 mt-4">
                                             <div class="form-group">
