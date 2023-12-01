@@ -18,6 +18,7 @@ use App\Models\Tenant\Voided;
 use App\Models\Tenant\Box;
 use Illuminate\Http\Request;
 use App\Models\Tenant\Configuration;
+use App\Models\Tenant\SaleNotePromotion;
 use BoxesDetail;
 use Illuminate\Support\Facades\DB;
 use Modules\Expense\Models\Expense;
@@ -120,10 +121,11 @@ class OptionController extends Controller
         $this->delete_quantity = 0;
         Document::where('id', '<>', null)->update(['orden_id' => null]);
         SaleNote::where('id', '<>', null)->update(['orden_id' => null]);
-
         DB::connection('tenant')->table('invoices')->delete();
         DB::connection('tenant')->table('tables')->update(['status_table_id' => 1]);
         DB::connection('tenant')->table('kardex')->delete();
+        DB::connection('tenant')->table('sale_notes_promotions')->delete();
+
         DB::connection('tenant')->table('receipts')->delete();
         DB::connection('tenant')->table('summary_documents')->delete();
 
