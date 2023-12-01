@@ -123,6 +123,7 @@ class OptionController extends Controller
         SaleNote::where('id', '<>', null)->update(['orden_id' => null]);
         DB::connection('tenant')->table('credit_lists')->delete();
         DB::connection('tenant')->table('invoices')->delete();
+        DB::connection('tenant')->table('hotel_rent_documents')->delete();
         DB::connection('tenant')->table('hotel_rent_item_services')->delete();
         DB::connection('tenant')->table('tables')->update(['status_table_id' => 1]);
         DB::connection('tenant')->table('kardex')->delete();
