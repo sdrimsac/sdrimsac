@@ -145,6 +145,7 @@ Route::prefix('caja')->group(function () {
             Route::get('workers', [TableMaintenanceController::class, 'workers']);
             Route::get('records', [TableMaintenanceController::class, 'records']);
             Route::get('record/{id}', [TableMaintenanceController::class, 'record']);
+            Route::post('change-state', [TableMaintenanceController::class, 'change_state']);
             Route::post('', [TableMaintenanceController::class, 'store']);
             Route::delete('delete/{id}', [TableMaintenanceController::class, 'destroy']);
         });

@@ -443,6 +443,7 @@
                         </div>
                     </div>
                  
+-->
 
                     <div class="col-md-3" v-show="form.unit_type_id !='ZZ'">
                         <div class="form-group" :class="{'has-danger': errors.stock_min}">
@@ -450,8 +451,7 @@
                             <el-input v-model="form.stock_min"> <i slot="prefix" class="el-icon-edit-outline"></i></el-input>
                             <small class="text-danger" v-if="errors.stock_min" v-text="errors.stock_min[0]"></small>
                         </div>
-                    </div>-->
-
+                    </div>
                             <div
                                 class="col-md-3"
                                 v-show="recordId == null"

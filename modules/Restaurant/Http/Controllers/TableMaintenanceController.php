@@ -2,8 +2,11 @@
 
 namespace Modules\Restaurant\Http\Controllers;
 
+use App\Events\ReloadEvent;
 use App\Http\Controllers\Tenant\WhatsappController;
+use App\Models\System\Configuration;
 use App\Models\Tenant\User;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -14,10 +17,81 @@ use Modules\Restaurant\Models\WorkersType;
 
 class TableMaintenanceController extends Controller
 {
+    function change_table($table_id, $table_user_maintenance)
+    {
+        $type = $table_user_maintenance->type;
+        $status = $table_user_maintenance->status;
+        switch ($type) {
+            case 'limpieza':
+                $this->change_table_clean($table_id, $status);
+                break;
+            default:
+                $this->change_table_maintenance($table_id, $status);
+                break;
+        }
+    }
+    function change_table_maintenance($table_id, $status)
+    {
+        $table = Table::find($table_id);
+        switch ($status) {
+            case 2:
+                $table->status_table_id = 3;
+                break;
+            case 3:
+                $table->status_table_id = 1;
+                break;
+        }
+        $table->save();
+    }
+    function change_table_clean($table_id, $status)
+
+    {
+        $table = Table::find($table_id);
+        switch ($status) {
+            case 1:
+                $configuration = Configuration::first();
+                $minutes = $configuration->time_to_clean;
+                $minutes = $minutes ?? 45;
+                $table->is_cleaning = 1;
+                $table->cleaning_start_date = Carbon::now()->addMinutes($minutes);
+                break;
+            case 3:
+                $table->is_cleaning = 0;
+                $table->cleaning_start_date = null;
+                break;
+        }
+        $table->save();
+    }
+    public function change_state(Request $request)
+    {
+        $id = $request->id;
+        $finish_comment = $request->finish_comment;
+        $table_user_maintenance = TableUserMaintenance::find($id);
+        $status = $table_user_maintenance->status;
+        $table_id = $table_user_maintenance->table_id;
+        $this->change_table($table_id, $table_user_maintenance);
+        $new_status = $status == 1 ? 2 : ($status == 2 ? 3 : 1);
+        
+        if ($new_status == 3) {
+            $table_user_maintenance->finish_comment = $finish_comment;
+            $table_user_maintenance->finish_time = date('Y-m-d H:i:s');
+        }
+
+        if ($new_status == 2) {
+            $table_user_maintenance->init_time = date('Y-m-d H:i:s');
+        }
+        $table_user_maintenance->status = $new_status;
+        $table_user_maintenance->save();
+        event(new ReloadEvent(true));
+        return [
+            'success' => true,
+            'message' => 'Estado actualizado con exito'
+        ];
+    }
     public function records()
     {
         $records = TableUserMaintenance::where('user_id', auth()->id())
-            ->where('status', 1)
+            ->whereIn('status', [1, 2])
             ->where('active', true)
             ->get()
             ->transform(function ($row, $key) {
@@ -32,19 +106,10 @@ class TableMaintenanceController extends Controller
                     "user_id" => $row->user_id,
                     "type" => $row->type,
                     "init_comment" => $row->init_comment,
-                    "finish_comment" => $row->finish_comment,
-                    "init_time" => $row->init_time,
-                    "estimated_finish_time" => $row->estimated_finish_time,
-                    "finish_time" => $row->finish_time,
-                    "status" => $row->status,
-                    "active" => $row->active,
-                    "created_at" => $row->created_at,
-                    "updated_at" => $row->updated_at,
-                    "table_name" => $table_name,
-                    "user" => $row->user,
+                    "name" => $table_name,
+                    'status' => $row->status,
                 ];
-            })
-            ;
+            });
 
         return [
             'success' => true,

@@ -944,6 +944,7 @@
                                                         <el-input
                                                             id="inputTotal"
                                                             ref="enter_amount"
+                                                            :disabled="form.enter_amount == 0"
                                                             v-model="
                                                                 form.enter_amount
                                                             "
@@ -1606,6 +1607,29 @@ export default {
     },
     mounted() {},
     methods: {
+        verifyBoxesDuplicate() {
+            let boxes = this.form.boxes;
+            let { total } = this.form;
+            let total_boxes = 0;
+            if (boxes.length > 0) {
+                total_boxes = boxes.reduce(
+                    (a, b) => a + (parseFloat(b["amount"]) || 0),
+                    0
+                );
+                total = parseFloat(total);
+                if (total_boxes > total) {
+                    let difference = total_boxes - total;
+                    //remove box with difference
+                    let index = boxes.findIndex(
+                        b => parseFloat(b["amount"]) == difference
+                    );
+                    if (index >= 0) {
+                        boxes.splice(index, 1);
+                    }
+                }
+                this.form.boxes = boxes;
+            }
+        },
         async updateConfigutation() {
             if (!this.configuration.save_pos_printing) return;
             this.configuration.print_in_pos =
@@ -3368,7 +3392,7 @@ export default {
                 );
                 return;
             }
-
+            this.verifyBoxesDuplicate();
             this.loading_submit = true;
             this.form.items = this.form.items.filter(
                 item => Number(item.quantity) > 0

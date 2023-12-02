@@ -7,7 +7,7 @@
         @open="open"
         append-to-body
     >
-        <div class="row m-2">
+        <div class="row m-2" v-loading="loading">
             <div class="col-12">
                 <label for="">Trabajador</label>
                 <el-select
@@ -53,6 +53,7 @@ export default {
     props: ["showDialog", "type", "tableId", "tableName"],
     data() {
         return {
+            loading: false,
             title: "",
             workers: [],
             form: {
@@ -71,16 +72,23 @@ export default {
             this.workers = records;
         },
         async submit() {
-            const response = await this.$http.post(
-                `/caja/maintenance`,
-                this.form
-            );
-            if (response.data.success) {
-                this.$toast.success(response.data.message);
-                this.$emit("getTables");
-                this.close();
-            } else {
-                this.$toast.error(response.data.message);
+            try {
+                this.loading = true;
+                const response = await this.$http.post(
+                    `/caja/maintenance`,
+                    this.form
+                );
+                if (response.data.success) {
+                    this.$toast.success(response.data.message);
+                    this.$emit("getTables");
+                    this.close();
+                } else {
+                    this.$toast.error(response.data.message);
+                }
+            } catch (e) {
+                this.$toast.error(e.message);
+            } finally {
+                this.loading = false;
             }
         },
         initForm() {

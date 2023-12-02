@@ -1452,11 +1452,12 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                    
-                                         <div class="col-md-6 mt-4">
+
+                                    <div class="col-md-6 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
-                                                >Enviar whatsapp por pagos YAPE/PLIN
+                                                >Enviar whatsapp por pagos
+                                                YAPE/PLIN
                                                 <el-tooltip
                                                     class="item"
                                                     effect="dark"
@@ -1470,7 +1471,9 @@
                                             </label>
 
                                             <el-switch
-                                                v-model="form.send_whatsapp_digital_pay"
+                                                v-model="
+                                                    form.send_whatsapp_digital_pay
+                                                "
                                                 active-text="Si"
                                                 inactive-text="No"
                                                 @change="submit"
@@ -1562,7 +1565,7 @@
                                                 ></el-switch>
                                             </div>
                                         </div>
-                                          <div class="col-md-6 mt-4">
+                                        <div class="col-md-6 mt-4">
                                             <div class="form-group">
                                                 <label
                                                     class="control-label w-100"
@@ -1577,7 +1580,7 @@
                                                 ></el-switch>
                                             </div>
                                         </div>
-                                          <div class="col-md-6 mt-4">
+                                        <div class="col-md-6 mt-4">
                                             <div class="form-group">
                                                 <label
                                                     class="control-label w-100"
@@ -1586,56 +1589,62 @@
 
                                                 <el-input-number
                                                     @change="submit"
-                                                    v-model="form.time_manteniment"
+                                                    v-model="
+                                                        form.time_manteniment
+                                                    "
                                                 >
                                                 </el-input-number>
                                             </div>
                                         </div>
-                                            <div class="col-md-6 mt-4">
+                                        <div class="col-md-6 mt-4">
                                             <div class="form-group">
                                                 <label
                                                     class="control-label w-100"
                                                     >Control de mantenimiento
                                                 </label>
 
-                                                <el-input-number
+                                                <el-switch
+                                                    active-text="Si"
+                                                    inactive-text="No"
                                                     @change="submit"
-                                                    v-model="form.maintenance_workers"
-                                                >
-                                                </el-input-number>
+                                                    v-model="
+                                                        form.maintenance_workers
+                                                    "
+                                                ></el-switch>
                                             </div>
                                         </div>
                                     </template>
                                     <div class="col-md-6 mt-4">
-                                            <div class="form-group">
-                                                <label
-                                                    class="control-label w-100"
-                                                    >Guardar decisión de impresión
-                                                </label>
+                                        <div class="form-group">
+                                            <label class="control-label w-100"
+                                                >Guardar decisión de impresión
+                                            </label>
 
-                                                <el-switch
-                                                    v-model="form.save_pos_printing"
-                                                    active-text="Si"
-                                                    inactive-text="No"
-                                                    @change="submit"
-                                                ></el-switch>
-                                            </div>
+                                            <el-switch
+                                                v-model="form.save_pos_printing"
+                                                active-text="Si"
+                                                inactive-text="No"
+                                                @change="submit"
+                                            ></el-switch>
                                         </div>
-                                           <div class="col-md-6 mt-4">
-                                            <div class="form-group">
-                                                <label
-                                                    class="control-label w-100"
-                                                    >Mostrar gastos / ingresos en caja
-                                                </label>
+                                    </div>
+                                    <div class="col-md-6 mt-4">
+                                        <div class="form-group">
+                                            <label class="control-label w-100"
+                                                >Mostrar gastos / ingresos en
+                                                caja
+                                            </label>
 
-                                                <el-switch
-                                                    v-model="form.show_expenses_incomes_caja"
-                                                    active-text="Si"
-                                                    inactive-text="No"
-                                                    @change="submit"
-                                                ></el-switch>
-                                            </div>
+                                            <el-switch
+                                                v-model="
+                                                    form.show_expenses_incomes_caja
+                                                "
+                                                active-text="Si"
+                                                inactive-text="No"
+                                                @change="submit"
+                                            ></el-switch>
                                         </div>
+                                    </div>
                                 </div>
                             </el-tab-pane>
                             <el-tab-pane label="Impresion">

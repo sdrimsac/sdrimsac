@@ -2,7 +2,7 @@
 
 namespace Modules\Restaurant\Models;
 use App\Models\Tenant\ModelTenant;
-
+use App\Models\Tenant\User;
 
 class TableUserMaintenance extends ModelTenant
 {

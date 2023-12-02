@@ -5257,6 +5257,12 @@ export default {
         window.addEventListener("resize", this.handleResize);
 
         // this.teclasInit();
+        Echo.channel("reload").listen(
+            `.reload-${this.configuration.socket_channel}`,
+            e => {
+                this.getTablesToClean();
+            }
+        );
         Echo.channel("orden_pending").listen(
             `.orden-pending-${this.configuration.socket_channel}`,
             e => {
