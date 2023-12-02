@@ -197,7 +197,7 @@ export default {
                     window.location.href = "caja/worker/dashboard";
                 } else if (response.data.collector == true) {
                     window.location.href = "toll";
-               } else if (response.data.cleaner == true) {
+               } else if (response.data.cleaner == true || response.data.maintenance == true) {
                     window.location.href = "caja/worker/cleaner";
                }
                 

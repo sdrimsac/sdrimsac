@@ -144,7 +144,12 @@ class Table extends ModelTenant
         return $this->belongsTo(StatusTable::class);
     }
 
- 
+    public  function getTableFullName(){
+        $number = $this->number;
+        $tower = $this->floor->tower->name;
+        
+        return "$number - $tower";
+    }
 
     
 }

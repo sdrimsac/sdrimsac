@@ -22,10 +22,12 @@ class MessageEvent implements ShouldBroadcast
      * @return void
      */
     public $message;
-    public function __construct(string $message)
+    public $area_id;
+    public function __construct(string $message,int $area_id = null)
     {
         //
         $this->message = $message;
+        $this->area_id = $area_id;
     }
 
     /**

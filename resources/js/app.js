@@ -915,7 +915,11 @@ const app = new Vue({
                 /*webpackChunkName:"worker-cleaner"*/
                 "../../modules/Restaurant/Resources/assets/js/views/cleaner/index.vue")
             ,
-            
+            "worker-maintenance" : ()=>
+            import(
+                /*webpackChunkName:"worker-cleaner"*/
+                "../../modules/Restaurant/Resources/assets/js/views/maintenance/index.vue")
+            ,
     },
  
 });

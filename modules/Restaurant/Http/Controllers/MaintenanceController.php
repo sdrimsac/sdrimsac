@@ -15,8 +15,8 @@ class MaintenanceController extends Controller
 
     public function index()
     {
-        $configurations = Configuration::first();
-        return view('restaurant::maintenance.index', compact('configurations'));
+        $establishment = auth()->user()->establishment;
+        $configuration = Configuration::first();
+        return view('restaurant::maintenance.index', compact('configuration', 'establishment'));
     }
- 
 }

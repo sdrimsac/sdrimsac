@@ -38,6 +38,7 @@
             title="Terminar trabajo"
             :visible.sync="showDialog"
             append-to-body
+            v-loading="loading"
         >
             <div class="row m-2">
                 <div class="col-12">
@@ -100,13 +101,21 @@ export default {
             };
         },
         async sendState() {
-            this.form.id = this.currentTable.id;
-            const response = await this.$http.post(
-                `/caja/maintenance/change-state`,
-                this.form
-            );
-            if (response.data.success) {
-                this.getTables();
+            try {
+                this.loading = true;
+                this.form.id = this.currentTable.id;
+                const response = await this.$http.post(
+                    `/caja/maintenance/change-state`,
+                    this.form
+                );
+                if (response.data.success) {
+                    this.getTables();
+                }
+            } catch (e) {
+                console.log("🚀 ~ file: index.vue:114 ~ sendState ~ e:", e);
+            } finally {
+                this.showDialog = false;
+                this.loading = false;
             }
         },
         async changeState(table) {

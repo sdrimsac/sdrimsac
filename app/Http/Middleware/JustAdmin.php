@@ -61,6 +61,10 @@ class JustAdmin
                     $redirect_to .= 'dashboard-kitchen';
                 } else if (str_contains($description_type, 'CAJ')) {
                     $redirect_to .= 'dashboard-pos';
+                } else if ($description_type == 'LIMPIEZA') {
+                    $redirect_to .= 'cleaner';
+                } else if ($description_type == 'MANTENIMIENTO') {
+                    $redirect_to .= 'maintenance';
                 } else {
                     $redirect_to .= 'dashboard';
                 }

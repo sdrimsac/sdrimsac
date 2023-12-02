@@ -2,8 +2,10 @@
 
 namespace Modules\Restaurant\Http\Controllers;
 
+use App\Events\MessageEvent;
 use App\Events\ReloadEvent;
 use App\Http\Controllers\Tenant\WhatsappController;
+use App\Jobs\WhatsappProccess;
 use App\Models\System\Configuration;
 use App\Models\Tenant\User;
 use Carbon\Carbon;
@@ -11,10 +13,11 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Log;
+use Modules\Restaurant\Models\Area;
 use Modules\Restaurant\Models\Table;
 use Modules\Restaurant\Models\TableUserMaintenance;
 use Modules\Restaurant\Models\WorkersType;
-
+use Illuminate\Support\Facades\Queue;
 class TableMaintenanceController extends Controller
 {
     function change_table($table_id, $table_user_maintenance)
@@ -34,11 +37,17 @@ class TableMaintenanceController extends Controller
     {
         $table = Table::find($table_id);
         switch ($status) {
-            case 2:
-                $table->status_table_id = 3;
+            case 1:
+                $table->status_table_id = 2;
                 break;
-            case 3:
+            case 2:
                 $table->status_table_id = 1;
+                $caja_id = Area::getCajaAreaIdByTableId($table_id);
+                if($caja_id){
+                    $message = "Terminó el mantenimiento de la habitación {$table->getTableFullName()}, ya se encuentra disponible.";
+                    event(new MessageEvent($message, $caja_id));
+                    (new WhatsappController)->sendMessageAll($message);
+                }
                 break;
         }
         $table->save();
@@ -55,9 +64,16 @@ class TableMaintenanceController extends Controller
                 $table->is_cleaning = 1;
                 $table->cleaning_start_date = Carbon::now()->addMinutes($minutes);
                 break;
-            case 3:
-                $table->is_cleaning = 0;
+            case 2:
+                // $table->is_cleaning = 0;
                 $table->cleaning_start_date = null;
+                $caja_id = Area::getCajaAreaIdByTableId($table_id);
+                if($caja_id){
+                    $message = "Terminó limpieza de la habitación {$table->getTableFullName()}.";
+                    event(new MessageEvent($message, $caja_id));
+                    (new WhatsappController)->sendMessageAll($message);
+                    // WhatsappProccess::dispatch($message);
+                }
                 break;
         }
         $table->save();
@@ -71,7 +87,7 @@ class TableMaintenanceController extends Controller
         $table_id = $table_user_maintenance->table_id;
         $this->change_table($table_id, $table_user_maintenance);
         $new_status = $status == 1 ? 2 : ($status == 2 ? 3 : 1);
-        
+
         if ($new_status == 3) {
             $table_user_maintenance->finish_comment = $finish_comment;
             $table_user_maintenance->finish_time = date('Y-m-d H:i:s');

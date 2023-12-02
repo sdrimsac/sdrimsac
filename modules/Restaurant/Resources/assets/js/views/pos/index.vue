@@ -2023,8 +2023,8 @@ export default {
                 await this.roomCleaned(id);
             } catch (e) {}
         },
-        playSound() {
-            let audio = new Audio("/sounds/services_sound.mp3");
+        playSound(sound = "services_sound.mp3") {
+            let audio = new Audio(`/sounds/${sound}`);
             if (audio) {
                 audio.play();
             }
@@ -5299,6 +5299,16 @@ export default {
                             this.listFoods[index_find].item.stock = nSaldo;
                         }
                     }
+                }
+            }
+        );
+        Echo.channel("message").listen(
+            `.message-${this.configuration.socket_channel}`,
+            e => {
+                let { message, area_id } = e;
+                if (area_id == this.area_id) {
+                    this.$toast.success(message);
+                    this.playSound("work_finish.mp3")
                 }
             }
         );
