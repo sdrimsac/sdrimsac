@@ -72,8 +72,10 @@ class OptionController extends Controller
         DB::connection('tenant')->table('inventory_kardex')->delete();
         DB::connection('tenant')->table('sale_note_payments')->delete();
         DB::connection('tenant')->table('document_items')->delete();
+        DB::connection('tenant')->table('dispatch_items')->delete();
         DB::connection('tenant')->table('document_payments')->delete();
-        DB::connection('tenant')->table('documents')->delete();
+        DB::connection('tenant')->table('dispatches')->delete();
+        DB::connection('tenant')->table('dispatch')->delete();
         DB::connection('tenant')->table('sale_notes')->delete();
 
         DB::connection('tenant')->table('purchase_items')->delete();
