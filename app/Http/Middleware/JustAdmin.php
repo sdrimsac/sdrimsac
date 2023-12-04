@@ -72,7 +72,11 @@ class JustAdmin
                 $redirect_to = $internet ? "/internet/worker/" :  "/caja/worker/";
 
                 $worker_type = WorkersType::find($user->worker_type_id);
-                $description_type = strtoupper($worker_type->description);
+                if($worker_type){
+                    $description_type = $worker_type->description;
+                }else{
+                    $description_type = "";
+                }
                 if (str_contains($description_type, 'COCI')) {
                     $redirect_to .= 'dashboard-kitchen';
                 } else if (str_contains($description_type, 'CAJ')) {
