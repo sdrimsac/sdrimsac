@@ -95,7 +95,7 @@
 
 <script>
 export default {
-    props: ["showDialog", "recordId", "typeUser", "fromBox"],
+    props: ["showDialog", "recordId", "typeUser", "fromBox","principal"],
     data() {
         return {
             loading_submit: false,

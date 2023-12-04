@@ -278,6 +278,7 @@ Route::prefix('caja')->group(function () {
             //Ingresos
 
             //Cash
+
             Route::get('cash', [CashController::class, 'index'])->name('restaurant.cash.index')->middleware('just.worker');;
             Route::get('cash/columns', [CashController::class, 'columns']);
             Route::get('cash/records', [CashController::class, 'records']);
@@ -300,7 +301,7 @@ Route::prefix('caja')->group(function () {
             Route::get('cash/search/customers', [CashController::class, 'searchCustomers']);
             Route::get('cash/search/customer/{id}', [CashController::class, 'searchCustomerById']);
             Route::get('cash/report/products/{cash}', [CashController::class, 'report_products']);
-
+        
 
             Route::get('dashboard/tables/{area_id}', 'DashboardController@tables');
             //

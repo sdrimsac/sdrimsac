@@ -24,6 +24,15 @@ class JustAdmin
         $type = $user->type;
 
         $isAccountant = false;
+        $isArca = false;
+        //crear una variable $isArca y que sea true si el usuario actual tiene el worker_type de ARCA
+        $worker_types = WorkersType::where('description', 'ARCA')->first();
+        if ($worker_types != null) {
+            $worker_type_id = $user->worker_type_id;
+            $isArca = $worker_type_id == $worker_types->id;
+        }
+        //crear una variable $isAccountant y que sea true si el usuario actual tiene el worker_type de CONTA
+
         $worker_types = WorkersType::where('description', 'like', '%CONTA%')->first();
         if ($worker_types != null) {
             $worker_type_id = $user->worker_type_id;
@@ -31,6 +40,7 @@ class JustAdmin
         }
 
         $paths = ["documents", "documents/not-sent", "summaries", "voided", "reports/inventory"];
+        $paths_arca = ["incomes", "expenses", "boxes", "report_closed_cash"];
 
 
         if ($type != 'admin' && $type != "superadmin") {
@@ -44,6 +54,12 @@ class JustAdmin
                     } else {
                         return redirect('/', '/documents');
                     }
+                }
+            } else if ($isArca) {
+                $pathPass = in_array($path, $paths_arca);
+                if (!$pathPass) {
+
+                    return redirect('/incomes');
                 }
             } else {
 

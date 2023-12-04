@@ -134,6 +134,12 @@ if ($hostname) {
                 Route::get('pos/payment_tables', [App\Http\Controllers\Tenant\PosController::class, 'payment_tables']);
                 Route::post('sale-notes', [App\Http\Controllers\Tenant\SaleNoteController::class, 'store']);
                 Route::post('cash/cash_document', [Modules\Restaurant\Http\Controllers\CashController::class, 'cash_document']);
+                Route::prefix('cash/main_cash')->group(function () {
+                    Route::get('/', [CashController::class, 'index_main']);
+                    Route::get('/records', [CashController::class, 'records_principal']);
+                    Route::get('/accept/{id}', [CashController::class, 'accept_register']);
+                   
+                });
                 Route::post('documents', [App\Http\Controllers\Tenant\DocumentController::class, 'store']);
                 Route::post('sale_note_payments', [App\Http\Controllers\Tenant\SaleNotePaymentController::class, 'store']);
                 Route::post('document_payments', [App\Http\Controllers\Tenant\DocumentPaymentController::class, 'store']);

@@ -1269,8 +1269,8 @@ export default {
             this.currentRoom = null;
         },
         async sendToMaintenance(event, id) {
-            if (this.configuration.maintenance_workers) {
                 event.stopPropagation();
+            if (this.configuration.maintenance_workers) {
                 let table = this.all_tables.find(t => t.id == id);
                 let number = table.number;
                 let tower = table.floor.tower.name;

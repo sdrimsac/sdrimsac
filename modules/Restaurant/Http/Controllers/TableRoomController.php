@@ -4,6 +4,7 @@ namespace Modules\Restaurant\Http\Controllers;
 
 use App\CoreFacturalo\Requests\Inputs\Common\PersonInput;
 use App\Http\Controllers\Tenant\WhatsappController;
+use App\Models\Tenant\Cash;
 use App\Models\Tenant\Company;
 use App\Models\Tenant\Configuration;
 use App\Models\Tenant\HotelRent;
@@ -83,9 +84,13 @@ class TableRoomController extends Controller
             if ($promotion->active == false) {
                 $user = auth()->user();
                 $room_service = $promotion->room_service;
+                $hotel_rent_item_id = $promotion->hotel_rent_item_id;
+                $hotel_rent_item = HotelRentItem::find($hotel_rent_item_id);
+                $table = $hotel_rent_item->table;
+                $name = $table->getTableFullName();
                 $service_name = $room_service->name;
                 $user_name = $user->name;
-                $message = "El cajero $user_name volvió a leer el código de promoción $code ($service_name), que ya fue utilizado";
+                $message = "El cajero $user_name volvió a leer el código de promoción $code ($service_name - Hab. $name), que ya fue utilizado";
                 (new WhatsappController)->sendMessageAll($message);
                 return [
                     'success' => false,
@@ -800,6 +805,11 @@ class TableRoomController extends Controller
             $hotel_rent->save();
 
             $rooms = $request->input('rooms');
+            $user_id = auth()->id();
+            $cash = Cash::where('user_id', $user_id)
+            ->where('state', 1)
+            ->orderBy('created_at', 'desc')
+            ->first();
             foreach ($rooms as $room) {
                 $checkin_date = Carbon::parse($room['checkin_date'])
                     ->setTimezone('America/Lima')
@@ -823,6 +833,7 @@ class TableRoomController extends Controller
                 $hotel_rent_item->checkout_time_estimated = $date_estimate_out['checkout_time_estimated'];
                 $hotel_rent_item->checkin_date = $checkin_date;
                 $hotel_rent_item->checkin_time = $checkin_time;
+                $hotel_rent_item->cash_id = $cash->id;
                 $hotel_rent_item->save();
                 if ($hotel_rent_item->is_reserve == false) {
                     Table::where('id', $room['table_id'])->update(['status_table_id' => 2]);

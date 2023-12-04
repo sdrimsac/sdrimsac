@@ -208,7 +208,8 @@ class RestaurantController extends Controller
                 ];
             }
             Auth::login($user);
-            if ($user->type == "admin" || $user->type == "superadmin" || strtolower($user->worker_type->description) == "contador") {
+            $description =  strtolower($user->worker_type->description);
+            if ($user->type == "admin" || $user->type == "superadmin" ||$description == "contador" || $description == "arca") {
                 return ['success' => true,];
             }
             $pos = false;

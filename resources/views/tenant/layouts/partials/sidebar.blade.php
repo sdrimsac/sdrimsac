@@ -4,6 +4,7 @@
     $path[2] = array_key_exists(2, $path) > 0 ? $path[2] : '';
     $path[0] = $path[0] === '' ? 'documents' : $path[0];
     $user = auth()->user();
+ 
     $config = \App\Models\Tenant\Configuration::first();
     $has_series = (bool) \Modules\Item\Models\ItemLot::count();
     $has_lotes = (bool) \Modules\Item\Models\ItemLotsGroup::count();
@@ -15,7 +16,7 @@
 
         
         @inject('roleService', 'App\Services\RoleService')
-        @if (!$roleService->isAccountant($user->worker_type_id))
+        @if (!$roleService->isAccountant($user->worker_type_id)&&!$roleService->isArca())
 
 
             <li>
@@ -271,6 +272,7 @@
             </ul>
         </li> --}}
         {{-- ***************** --}}
+         @if (!$roleService->isArca())
         <li>
             <a href="#documents" data-bs-toggle="collapse" data-role="button"
                 aria-expanded="{{ $path[0] === 'documents' ? true : false }}{{ $path[0] === 'summaries' ? true : false }}{{ $path[0] === 'voided' ? true : false }}{{ $path[0] === 'sale-notes' ? true : false }}{{ $path[0] === 'brands' ? true : false }}{{ $path[0] === 'order-notes' ? true : false }}"
@@ -336,6 +338,7 @@
                 @endif
             </ul>
         </li>
+        @endif
         @if (!$roleService->isAccountant($user->worker_type_id))
             <li>
                 <a href="#boxes" data-bs-toggle="collapse" data-role="button"
@@ -346,7 +349,12 @@
                     <span class="label">Arqueo de Caja</span>
                 </a>
                 <ul id="boxes" class="collapse ">
-
+                    <li>
+                        <a href="/cash/main_cash" class="{{ $path[0] === 'incomes' ? 'active' : '' }}">
+                            <i class="icofont-money icon-parent"></i>
+                            <span class="label">Caja principal</span>
+                        </a>
+                    </li>
                     <li>
                         <a href="/incomes" class="{{ $path[0] === 'incomes' ? 'active' : '' }}">
                             <i class="icofont-money icon-parent"></i>
@@ -374,7 +382,8 @@
                 </ul>
             </li>
         @endif
-
+            @if (!$roleService->isArca())
+                
         <li>
             <a href="#reporte" data-bs-toggle="collapse" data-role="button"
                 aria-expanded="{{ $path[0] === 'reports' && $path[1] === 'inventory' ? true : false }}{{ ($path[0] === 'reports' && $path[1] === 'stockmin' ? true : false && $path[1] === 'kardex') ? true : false }}"
@@ -456,7 +465,9 @@
             </ul>
         </li>
 
+            @endif
 
+        @if(!$roleService->isArca())
         <li>
             <a href="#contabilidad" data-bs-toggle="collapse" data-role="button"
                 aria-expanded="{{ $path[0] === 'account' ? true : false }}"
@@ -475,6 +486,8 @@
                 </li>
             </ul>
         </li>
+        @endif
+
         @if ($config->college)
             <li>
                 <a href="#college" data-bs-toggle="collapse" data-role="button"

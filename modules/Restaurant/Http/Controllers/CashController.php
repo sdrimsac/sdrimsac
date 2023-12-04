@@ -28,6 +28,7 @@ use App\Http\Resources\Tenant\DocumentCollection;
 use App\Http\Resources\Tenant\QuotationCollection;
 use App\Http\Resources\Tenant\SaleNoteCollection;
 use App\Models\Tenant\BankAccount;
+use App\Models\Tenant\CashIncomePrincipal;
 use App\Models\Tenant\Catalogs\AttributeType;
 use App\Models\Tenant\Catalogs\SystemIscType;
 use App\Models\Tenant\Catalogs\AffectationIgvType;
@@ -48,6 +49,7 @@ use Modules\Restaurant\Models\Turns;
 use Illuminate\Support\Facades\DB;
 use Modules\Item\Models\CategoryItem;
 use Modules\Report\Exports\GainReportExport;
+use Modules\Restaurant\Http\Resources\CashIncomePrincipalCollection;
 use Modules\Restaurant\Models\Area;
 use Modules\Restaurant\Models\BoxesDetail;
 use Mpdf\Mpdf;
@@ -56,6 +58,51 @@ use NumberFormatter;
 class CashController extends Controller
 {
 
+    public function accept_register($id){
+
+        $cash_income_principal = CashIncomePrincipal::findOrFail($id);
+        $cash = $cash_income_principal->cash;
+        $amount = $cash_income_principal->amount;
+        $principal_cash_id = $cash_income_principal->cash_principal_id;
+        $description_cash = $cash->reference_number;
+        $description = "Ingreso de la caja $description_cash";
+        
+        Box::create([
+            'cash_id' => $principal_cash_id,
+            'amount' => $amount,
+            'type' => 1,
+            'incomes' => true,
+            'date' => date('Y-m-d'),
+            'method' => 'Efectivo',
+            'group_id' => 1,
+            'subcategory_id' => 1,
+            'category_id' => 1,
+            'soap_type_id' => 1,
+            'description' => $description,
+            'state' => 1,
+            'user_id' => auth()->user()->id,
+        ]);
+        $cash_income_principal->status = 3;
+        $cash_income_principal->save();
+        return [
+            'success' => true,
+            'message' => 'Ingreso aceptado con éxito'
+        ];
+    }
+    public function index_main()
+    {
+        $cash_id = null;
+        $cash = Cash::where('user_id', auth()->user()->id)
+            ->where('state', 1)
+            ->orderBy('id', 'desc')
+            ->first();
+        if ($cash) {
+            $cash_id = $cash->id;
+        }
+        $configuration = Configuration::first();
+
+        return view('tenant.cash.index_main', compact('configuration', 'cash_id'));
+    }
     public function index_report_closed_cash()
     {
         $configuration = Configuration::first();
@@ -464,12 +511,12 @@ class CashController extends Controller
         }
 
         $recordsDocument->chunk(50, function ($documents)
-        use (&$items, &$total, &$categoria_id, $item_id_variation,$item_id) {
+        use (&$items, &$total, &$categoria_id, $item_id_variation, $item_id) {
 
             foreach ($documents as  $document) {
                 $total_items = 0;
                 $documents_items = DocumentItem::where('document_id', $document->id);
-                if($item_id ){
+                if ($item_id) {
                     $documents_items = $documents_items->where('item_id', $item_id);
                 }
                 if ($item_id_variation) {
@@ -632,14 +679,14 @@ class CashController extends Controller
 
         $recordsSaleNote->chunk(50, function ($sale_notes)
 
-        use (&$items, &$total, &$categoria_id,$item_id) {
+        use (&$items, &$total, &$categoria_id, $item_id) {
 
             foreach ($sale_notes as  $sale_note) {
 
                 $total_items = 0;
                 $sale_notes_items = SaleNoteItem::where('sale_note_id', $sale_note->id)->get();
 
-                if($item_id ){
+                if ($item_id) {
                     $sale_notes_items = $sale_notes_items->where('item_id', $item_id);
                 }
 
@@ -1149,24 +1196,22 @@ class CashController extends Controller
 
 
         ];
-        $banks = Box::where('type','1')
-        ->whereNotNull('bank_account_id')
-        ->where('cash_id', $cash_id)
-        
-        ;
+        $banks = Box::where('type', '1')
+            ->whereNotNull('bank_account_id')
+            ->where('cash_id', $cash_id);
         $total_coins_bank = $banks->sum('amount');
-        
+
         $bank_accounts = $banks->get();
-        foreach($bank_accounts as $bank_account){
+        foreach ($bank_accounts as $bank_account) {
             $method = $bank_account->method;
-            if(isset($sales_detail[$method])){
+            if (isset($sales_detail[$method])) {
                 $sales_detail[$method]["quantity"] += 1;
                 $sales_detail[$method]["sum"] += $bank_account->amount;
-            }else{
+            } else {
                 $bk_account = BankAccount::find($bank_account->bank_account_id);
                 $bank_description = $bk_account->bank->description;
                 $sales_detail[$method] = [
-                    "desc" =>$bank_description." ". $bank_account->method,
+                    "desc" => $bank_description . " " . $bank_account->method,
                     "quantity" => 1,
                     "sum" => $bank_account->amount,
                     "is_bank" => true,
@@ -1198,8 +1243,7 @@ class CashController extends Controller
             $sales_culqui_sum +
             $sales_izypay_sum +
             $sales_niubiz_sum +
-            $sales_openpay_sum 
-            ;
+            $sales_openpay_sum;
         $counter_length = 0;
         if ($counter != null) {
             $counter_length = count($counter);
@@ -1254,32 +1298,32 @@ class CashController extends Controller
                 $customer_name = $customer->name;
                 $sale_note_id = $row->sale_note_id;
                 $document_id = $row->document_id;
-                if($sale_note_id){
+                if ($sale_note_id) {
                     $box = Box::where('sale_note_id', $row->sale_note_id)
-                    ->where('sale_note_payment_id', $row->sale_note_payment_id)
-                    ->first();
-                }else{
+                        ->where('sale_note_payment_id', $row->sale_note_payment_id)
+                        ->first();
+                } else {
                     $box = Box::where('document_id', $row->document_id)
-                    ->where('document_payment_id', $row->document_payment_id)
-                    ->first();
+                        ->where('document_payment_id', $row->document_payment_id)
+                        ->first();
                 }
-                
+
                 $method  = null;
 
                 if ($box) {
                     $method = $box->method;
                 }
                 $amount = $row->amount;
-                if($row->sale_note){
+                if ($row->sale_note) {
                     $paid = (bool) $row->sale_note->paid;
                     $amount_payment = SaleNotePayment::where('sale_note_id', $sale_note_id)->sum('payment');
                     $remaining = number_format($row->sale_note->total - $amount_payment, 2, ".", "");
-                }else{
+                } else {
                     $paid = (bool)$row->document->total_canceled;
                     $amount_payment = DocumentPayment::where('document_id', $row->document_id)->sum('payment');
                     $remaining = number_format($row->document->total - $amount_payment, 2, ".", "");
                 }
-            
+
                 return
                     [
                         "id" => $row->id,
@@ -1450,6 +1494,15 @@ class CashController extends Controller
         ];
     }
 
+    public function records_principal(Request $request){
+
+        $user_id = auth()->user()->id;
+        $records = CashIncomePrincipal::whereHas('cash_principal',function($query) use($user_id){
+            $query->where('user_id',$user_id);
+        })->orderBy('id','desc');
+
+        return new CashIncomePrincipalCollection($records->paginate(config('tenant.items_per_page')));
+    }
     public function close(Request $request)
     {
 
@@ -1467,8 +1520,32 @@ class CashController extends Controller
         $cash->time_closed = date('H:i:s');
         $cash->save();
         Box::where('cash_id', $id)->update(['close' => date('Y-m-d'), 'state' => 0]);
+        $all_cash = Box::where('cash_id', $id)->where('method', 'Efectivo')->sum('amount');
         $user_name = $cash->user->name;
         $configuration = Configuration::first();
+        $principal_cash =  $configuration->principal_cash;
+        if ($principal_cash) {
+            $cash_principal = Cash::where('state', 1)
+                ->where('principal', 1)
+                ->first();
+            if ($cash_principal) {
+                $cash_principal_id = $cash_principal->id;
+                $user_principal = $cash_principal->user;
+                $user_principal_telephone = $user_principal->telephone;
+                $cash_id = $cash->id;
+                CashIncomePrincipal::create([
+                    'cash_principal_id' => $cash_principal_id,
+                    'cash_id' => $cash_id,
+                    'amount' => $all_cash,
+                ]);
+                $user = User::find($cash->user_id);
+                $name = $user->name;
+                $message = "La caja de $name ha sido cerrada, el monto total es de $all_cash";
+                if ($user_principal_telephone) {
+                    (new WhatsappController)->sendMessage($message, $user_principal_telephone);
+                }
+            }
+        }
         $number_activity = $configuration->number_activity;
         $hostname =  app(Environment::class)->hostname();
         $resource = "http://" . $hostname->fqdn . "/caja/report-boxes/reports_resumen_type?cash_id=" . $id;
@@ -1499,7 +1576,7 @@ class CashController extends Controller
                 'sender' => 'sdrimsac',
                 'number' => $number_activity,
                 'resource' => $resource,
-                'file_name' => 'Stock_al_cerrar_caja_' . Carbon::now()->format("Y-m-d").".xlsx",
+                'file_name' => 'Stock_al_cerrar_caja_' . Carbon::now()->format("Y-m-d") . ".xlsx",
                 'message' => "Caja cerrada por " . $user_name
             ]
         );

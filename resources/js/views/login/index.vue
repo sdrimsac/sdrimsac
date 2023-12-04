@@ -172,6 +172,7 @@ export default {
             const response = await this.$http.post(`${this.resource}/login`, {
                 pin: pin
             });
+            console.log("🚀 ~ file: index.vue:174 ~ enter ~ response:", response)
             const {
                 data: { success }
             } = response;

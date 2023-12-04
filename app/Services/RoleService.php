@@ -8,6 +8,18 @@ use Modules\Restaurant\Models\WorkersType;
 class RoleService
 {
 
+    public function isArca()
+    {   
+        $worker_type_id = auth()->user()->worker_type_id;
+        if($worker_type_id == null){
+            return false;
+        }
+        $worker_types = WorkersType::where('description', 'ARCA')->first();
+        if ($worker_types != null) {
+            return $worker_types->id == $worker_type_id;
+        }
+        return false;
+    }
     public function isAccountant($worker_type_id)
     {
         $worker_types = WorkersType::where('description', 'like', '%CONTA%')->first();

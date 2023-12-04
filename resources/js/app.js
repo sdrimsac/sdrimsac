@@ -429,6 +429,11 @@ const app = new Vue({
                 /* webpackChunkName:"js/tenant-cash-closed" */
                 "@views/cash/closed.vue"
             ),
+            "cash-index-main": () =>
+            import(
+                /* webpackChunkName:"js/tenant-cash-main" */
+                "@views/cash/main.vue"
+            ),
         "tenant-card-brands-index": () =>
             import(
                 /* webpackChunkName:"js/tenant-card-brands-index" */ "./views/card_brands/index.vue"

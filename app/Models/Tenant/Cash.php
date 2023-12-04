@@ -12,10 +12,12 @@ class Cash extends ModelTenant
     use RegisterMovementTrait;
     // protected $with = ['cash_documents'];
     protected $casts = [
-        'counter' => 'array'
+        'counter' => 'array',
+        'principal' => 'boolean',
     ];
     protected $table = 'cash';
     protected $fillable = [
+        'principal',
         'user_id',
         'date_opening',
         'time_opening',
@@ -31,6 +33,7 @@ class Cash extends ModelTenant
         'difference'
 
     ];
+
 
     protected static function boot()
     {
