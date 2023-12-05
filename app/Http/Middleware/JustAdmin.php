@@ -74,9 +74,11 @@ class JustAdmin
                 $worker_type = WorkersType::find($user->worker_type_id);
                 if($worker_type){
                     $description_type = $worker_type->description;
+                    $description_type = strtoupper($description_type);
                 }else{
                     $description_type = "";
                 }
+                
                 if (str_contains($description_type, 'COCI')) {
                     $redirect_to .= 'dashboard-kitchen';
                 } else if (str_contains($description_type, 'CAJ')) {

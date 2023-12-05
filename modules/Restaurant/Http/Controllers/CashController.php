@@ -1409,7 +1409,7 @@ class CashController extends Controller
         $user = auth()->user();
         $type = $user->type;
         $users = array();
-
+        $turnsTable = [];
         switch ($type) {
             case 'admin':
                 $users = User::where('type', 'seller')->get();
