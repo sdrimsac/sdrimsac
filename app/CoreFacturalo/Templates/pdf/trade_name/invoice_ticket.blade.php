@@ -233,7 +233,11 @@
                     <p class="desc">F. Vencimiento:</p>
                 </td>
                 <td>
-                    <p class="desc">{{ $invoice->date_of_due }}</p>
+                    @php
+                        $date_of_due = $invoice->date_of_due;
+                        $date_of_due = Carbon\Carbon::parse($date_of_due)->format('Y-m-d');
+                    @endphp
+                    <p class="desc">{{ $date_of_due }}</p>
                 </td>
             </tr>
         @endisset
