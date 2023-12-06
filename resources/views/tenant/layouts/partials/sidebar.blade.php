@@ -350,12 +350,14 @@
                     <span class="label">Arqueo de Caja</span>
                 </a>
                 <ul id="boxes" class="collapse ">
+                    @if ($roleService->isArca())
                     <li>
                         <a href="/cash/main_cash" class="{{ $path[0] === 'incomes' ? 'active' : '' }}">
                             <i class="icofont-money icon-parent"></i>
                             <span class="label">Caja principal</span>
                         </a>
                     </li>
+                    @endif
                     <li>
                         <a href="/incomes" class="{{ $path[0] === 'incomes' ? 'active' : '' }}">
                             <i class="icofont-money icon-parent"></i>
