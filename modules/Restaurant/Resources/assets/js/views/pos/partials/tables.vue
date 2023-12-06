@@ -192,13 +192,15 @@ export default {
                 !this.hasSelectedTableToChange &&
                 this.hasSelectedOrdenToChange
             ) {
-                if (table.status_table_id == 2) {
-                    this.$toast.warning("La mesa no esta libre");
-                    return;
-                } else {
-                    this.sendOrdenToNewTable(this.ordenToChange, table);
-                    return;
-                }
+                // if (table.status_table_id == 2) {
+                //     this.$toast.warning("La mesa no esta libre");
+                //     return;
+                // } else {
+                //     this.sendOrdenToNewTable(this.ordenToChange, table);
+                //     return;
+                // }
+
+                     this.sendOrdenToNewTable(this.ordenToChange, table);
             }
 
             if (this.addingOrden) {
