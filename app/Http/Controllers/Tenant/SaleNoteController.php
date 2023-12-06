@@ -493,6 +493,7 @@ class SaleNoteController extends Controller
             $request["document_type_id"] = "80";
             $all_ordens = Functions::valueKeyInArray($request->all(), "all_ordens", false);
             $data = $this->mergeData($request);
+            $data['time_of_issue'] = date('H:i:s'); 
             $this->sale_note =  SaleNote::updateOrCreate(
                 ['id' => $request->input('id')],
                 $data
