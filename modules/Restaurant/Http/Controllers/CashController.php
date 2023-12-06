@@ -58,6 +58,17 @@ use NumberFormatter;
 class CashController extends Controller
 {
 
+    public function observ_register(Request $request){
+            
+            $cash_income_principal = CashIncomePrincipal::findOrFail($request->id);
+            $cash_income_principal->comment = $request->comment;
+            $cash_income_principal->status = 2;
+            $cash_income_principal->save();
+            return [
+                'success' => true,
+                'message' => 'Observación registrada con éxito'
+            ];  
+    }
     public function accept_register($id){
 
         $cash_income_principal = CashIncomePrincipal::findOrFail($id);

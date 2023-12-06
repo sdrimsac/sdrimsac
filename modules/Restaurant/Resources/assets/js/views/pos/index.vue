@@ -175,6 +175,7 @@
                                 <div class="d-flex row align-items-center">
                                     <div class="col-2 d-flex flex-column">
                                         <el-checkbox
+                                            v-if="configuration.search_series_pos"
                                             v-model="searchSeries"
                                             @change="
                                                 saveInLocalStorageSearchSeries
@@ -192,18 +193,15 @@
                                                 Barcode
                                             </h2>
                                         </el-checkbox>
-                                        <el-checkbox
+                                        <!-- <el-checkbox
                                             v-model="type_code"
                                             @change="saveInLocalStorage"
                                         >
                                             <h2 class="text-muted text-small">
                                                 QR
                                             </h2>
-                                            <!-- <i
-                                                class="fas fa-barcode"
-                                                style="font-size:30px;"
-                                            ></i> -->
-                                        </el-checkbox>
+                                           
+                                        </el-checkbox> -->
                                     </div>
                                     <div class="col-12 col-lg-3 p-2">
                                         <template>

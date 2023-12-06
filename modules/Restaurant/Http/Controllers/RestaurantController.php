@@ -222,6 +222,7 @@ class RestaurantController extends Controller
             $cleaner = false;
             $maintenance = false;
             $collector = false;
+            $logistic = false;
             if (strtolower($user->worker_type->description) == "mozo") {
                 $waiter = true;
             } else if (strtolower($user->worker_type->description) == "peaje") {
@@ -229,6 +230,9 @@ class RestaurantController extends Controller
             } 
             else if (strtolower($user->worker_type->description) == "limpieza") {
                 $cleaner =  true;
+            } 
+            else if (strtolower($user->worker_type->description) == "logistica") {
+                $logistic =  true;
             } 
             else if (strtolower($user->worker_type->description) == "mantenimiento") {
                 $maintenance =  true;
@@ -255,6 +259,7 @@ class RestaurantController extends Controller
             return [
                 'success' => true,
                 'kitchen' => $kitchen,
+                'logistic' => $logistic,
                 'pos' => $pos,
                 'waiter' => $waiter,
                 "collector" => $collector,

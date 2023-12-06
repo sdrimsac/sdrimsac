@@ -24,6 +24,8 @@ use Modules\Restaurant\Models\Orden;
 use App\Http\Resources\Tenant\BoxCollection;
 use App\Models\Tenant\BankAccount;
 use App\Models\Tenant\DocumentPayment;
+use App\Models\Tenant\HotelRent;
+use App\Models\Tenant\HotelRentItem;
 use App\Models\Tenant\Receipt;
 use App\Models\Tenant\SaleNoteCredit;
 use App\Models\Tenant\SaleNoteItem;
@@ -38,6 +40,7 @@ use Modules\Report\Exports\BoxesResumenExportPos;
 use Modules\Report\Exports\BoxesExportBancarioPos;
 use Modules\Dashboard\Helpers\DashboardSalePurchase;
 use Modules\Restaurant\Models\BoxesDetail;
+use Modules\Restaurant\Models\HotelRentItemServices;
 
 class BoxesController extends Controller
 {
@@ -847,11 +850,33 @@ class BoxesController extends Controller
         $cash_id = $request->cash_id;
         Box::where('cash_id', $cash_id)->update(['state' => 0]);
         $promotions = [];
-        if($configuration->hotels){
+        $promotions_give = [];
+        if ($configuration->hotels) {
             $promotions = SaleNotePromotion::where('cash_id', $cash_id)->get();
             $promotions = $this->formatPromotions($promotions);
+            $hotel_rent_items = HotelRentItemServices::whereHas(
+                'hotel_rent_item',
+                function ($query) use ($cash_id) {
+                    $query->whereHas('hotel_rent', function ($query) use ($cash_id) {
+                        $query->where('cash_id', $cash_id);
+                    });
+                }
+            )
+         
+            ->get()
+            
+            ->transform(function ($item) {
+                return [
+                    "room" => $item->hotel_rent_item->getName(),
+                    "service" => $item->room_service->name,
+                    "quantity" => $item->quantity,
+                ];
+            });
+            
+            $promotions_give = $hotel_rent_items->groupBy('room');
+
         }
-       
+
         $sales = Box::where('cash_id', $cash_id)->where('expenses', 0)->where('incomes', 0)->OrderBy('date', 'asc');
         $sales_quantity = $sales->count();
         $sales_amount = $sales->where('method', '<>', 'Efectivo')->sum('amount');
@@ -1191,6 +1216,7 @@ class BoxesController extends Controller
 
         try {
             $pdf = PDF::loadView('report::boxes.report_resumen_pdf_pos', compact(
+                "promotions_give",
                 "promotions",
                 "all_credit_invoices_items",
                 "all_credit_invoices_documents",

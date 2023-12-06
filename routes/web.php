@@ -138,6 +138,7 @@ if ($hostname) {
                     Route::get('/', [CashController::class, 'index_main']);
                     Route::get('/records', [CashController::class, 'records_principal']);
                     Route::get('/accept/{id}', [CashController::class, 'accept_register']);
+                    Route::post('/observ/{id}', [CashController::class, 'observ_register']);
                    
                 });
                 Route::post('documents', [App\Http\Controllers\Tenant\DocumentController::class, 'store']);

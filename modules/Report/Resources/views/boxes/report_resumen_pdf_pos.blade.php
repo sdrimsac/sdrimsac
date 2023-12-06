@@ -1091,6 +1091,71 @@
 
             </div>
         @endif
+        @if(count($promotions_give)>0)
+        <div style="text-align:center;">
+            <span style="font-size: 18px !important;">
+                DETALLE DE PROMOCIONES CREADAS
+            </span>
+
+                <table class="border" width="50%">
+                    <thead>
+                        <tr>
+                           <th>HABITACIÓN</th>
+                           <th>SERVICIOS</th>
+                        </tr>
+                    
+                    </thead>
+                    <tbody>
+                        @php
+                        $total = [];
+                        @endphp
+                        @foreach ($promotions_give as $key => $promotion)
+                            <tr>
+                                <td class="f12 center">
+                                    {{ $key }}
+                                </td>
+                                <td class="f12 center">
+                                    @foreach($promotion as $name => $item)
+                                        @php
+                                            if(!isset($total[$item['service']])){
+                                                $total[$item['service']] = 0;
+                                            }
+                                            $total[$item['service']] += $item['quantity'];
+                                            
+                                        @endphp
+                                        {{ $item['service'] }} ({{ $item['quantity'] }})<br>
+                                    @endforeach
+                                </td>
+                               
+                            </tr>
+                        @endforeach
+                        @foreach($total as $k =>$t)
+                        <tr>
+                        <td class="f12 center"><strong>{{$k}}</strong></td>
+                        <td class="f12 center"><strong>{{$t}}</strong></td>
+                        </tr>
+                        @endforeach
+                        {{-- <tr>
+                            <td colspan="2"></td>
+                            <td class="f12 right">TOTAL</td>
+                            <td class="f12 right">
+                                @php
+                                    $t = array_reduce(
+                                        $group,
+                                        function ($carry, $item) {
+                                            return $carry + $item['total'];
+                                        },
+                                        0,
+                                    );
+                                @endphp
+                                S/ {{ number_format($t, 2) }}
+                            </td>
+                        </tr> --}}
+                    </tbody>
+                </table>
+
+        </div>
+        @endif
         @if(count($promotions)>0)
         <div style="text-align:center;">
             <span style="font-size: 18px !important;">

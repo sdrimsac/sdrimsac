@@ -24,7 +24,11 @@ class JustAdmin
         $type = $user->type;
 
         $isAccountant = false;
+        $isLogistic = false;
         $isArca = false;
+
+
+        $isLogistic = RoleService::isLogistic();
         //crear una variable $isArca y que sea true si el usuario actual tiene el worker_type de ARCA
         $worker_types = WorkersType::where('description', 'ARCA')->first();
         if ($worker_types != null) {
@@ -41,7 +45,11 @@ class JustAdmin
 
         $paths = ["documents", "documents/not-sent", "summaries", "voided", "reports/inventory"];
         $paths_arca = ["incomes", "expenses", "boxes", "report_closed_cash"];
-
+        $paths_logistic = [
+            "items", "purchases", "purchases/create",
+            "transfers", "transfers/transfer_place", "dispatches", "item-sets",
+            "reports/inventory", "reports/stockmin", "reports/kardex",
+        ];
 
         if ($type != 'admin' && $type != "superadmin") {
             if ($isAccountant) {
@@ -54,6 +62,12 @@ class JustAdmin
                     } else {
                         return redirect('/', '/documents');
                     }
+                }
+            } else if ($isLogistic) {
+                $pathPass = in_array($path, $paths_logistic);
+                if (!$pathPass) {
+
+                    return redirect('/items');
                 }
             } else if ($isArca) {
                 $pathPass = in_array($path, $paths_arca);
@@ -72,13 +86,13 @@ class JustAdmin
                 $redirect_to = $internet ? "/internet/worker/" :  "/caja/worker/";
 
                 $worker_type = WorkersType::find($user->worker_type_id);
-                if($worker_type){
+                if ($worker_type) {
                     $description_type = $worker_type->description;
                     $description_type = strtoupper($description_type);
-                }else{
+                } else {
                     $description_type = "";
                 }
-                
+
                 if (str_contains($description_type, 'COCI')) {
                     $redirect_to .= 'dashboard-kitchen';
                 } else if (str_contains($description_type, 'CAJ')) {

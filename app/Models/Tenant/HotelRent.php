@@ -20,6 +20,8 @@ class HotelRent extends ModelTenant
         'paid',
         'document_id',
         'sale_note_id',
+        'cash_id',
+        
     ];
 
 

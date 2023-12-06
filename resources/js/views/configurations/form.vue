@@ -1645,7 +1645,7 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mt-4">
+                                         <div class="col-md-6 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
                                                 >Mostrar gastos / ingresos en
@@ -1655,6 +1655,24 @@
                                             <el-switch
                                                 v-model="
                                                     form.show_expenses_incomes_caja
+                                                "
+                                                active-text="Si"
+                                                inactive-text="No"
+                                                @change="submit"
+                                            ></el-switch>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mt-4">
+                                        <div class="form-group">
+                                            <label class="control-label w-100"
+                                                >Buscar por series en caja
+                                            </label>
+
+                                            <el-switch
+                                    
+
+                                                v-model="
+                                                    form.search_series_pos
                                                 "
                                                 active-text="Si"
                                                 inactive-text="No"

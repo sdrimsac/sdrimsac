@@ -7,7 +7,18 @@ use Modules\Restaurant\Models\WorkersType;
 
 class RoleService
 {
-
+    public static function isLogistic()
+    {
+        $worker_type_id = auth()->user()->worker_type_id;
+        if($worker_type_id == null){
+            return false;
+        }
+        $worker_types = WorkersType::where('description', 'LOGISTICA')->first();
+        if ($worker_types != null) {
+            return $worker_types->id == $worker_type_id;
+        }
+        return false;
+    }
     public function isArca()
     {   
         $worker_type_id = auth()->user()->worker_type_id;

@@ -172,7 +172,10 @@ export default {
             const response = await this.$http.post(`${this.resource}/login`, {
                 pin: pin
             });
-            console.log("🚀 ~ file: index.vue:174 ~ enter ~ response:", response)
+            console.log(
+                "🚀 ~ file: index.vue:174 ~ enter ~ response:",
+                response
+            );
             const {
                 data: { success }
             } = response;
@@ -185,24 +188,25 @@ export default {
                 }
                 this.$toast.success("Sesión exitosa. Bienvenido/a .");
                 if (response.data.kitchen == true) {
-                    window.location.href =
-                        "caja/worker/dashboard-kitchen";
+                    window.location.href = "caja/worker/dashboard-kitchen";
                 } else if (response.data.pos == true) {
                     if (this.config.internet) {
                         window.location.href = "internet/worker/dashboard-pos";
                     } else {
-                        window.location.href =
-                            "caja/worker/dashboard-pos";
+                        window.location.href = "caja/worker/dashboard-pos";
                     }
                 } else if (response.data.waiter == true) {
                     window.location.href = "caja/worker/dashboard";
                 } else if (response.data.collector == true) {
                     window.location.href = "toll";
-               } else if (response.data.cleaner == true || response.data.maintenance == true) {
+                } else if (response.data.logistic == true) {
+                    window.location.href = "items";
+                } else if (
+                    response.data.cleaner == true ||
+                    response.data.maintenance == true
+                ) {
                     window.location.href = "caja/worker/cleaner";
-               }
-                
-                else {
+                } else {
                     if (this.company.soap_type_id != "03") {
                         window.location.href = "documents";
                     } else {
@@ -211,10 +215,10 @@ export default {
                 }
             } else {
                 $("#password-pin").val("");
-                 let pins = document.querySelectorAll(".pin-radio");
-            for (let pin of pins) {
-                pin.checked = false;
-            }
+                let pins = document.querySelectorAll(".pin-radio");
+                for (let pin of pins) {
+                    pin.checked = false;
+                }
                 this.$toast.error(response.data.message);
                 this.pinHide = "";
                 this.maskPin = null;

@@ -1541,12 +1541,12 @@ export default {
         }
 
         this.isInterno = this.company.soap_type_id == "03";
-
-        // await this.getTables();
-        await this.date_of_issue();
-        if (!this.conf.pos_quick_sale) {
+          if (!this.conf.pos_quick_sale) {
             await this.getLastNumbersDocument();
         }
+        // await this.getTables();
+        await this.date_of_issue();
+      
         await this.initFormPayment();
         await this.setInitialAmount();
         this.$eventHub.$on("reloadDataCardBrands", card_brand_id => {
@@ -2066,10 +2066,6 @@ export default {
                     index === self.findIndex(t => t.id === thing.id)
             );
             if (persons.length != 0) {
-                console.log(
-                    "🚀 ~ file: payment.vue:2048 ~ updateAllCustomers ~ newData:",
-                    newData
-                );
                 await this.$emit("update:all_customers", newData);
                 if (newData.length == 1) {
                     this.value = newData[0].id;
@@ -3741,6 +3737,8 @@ export default {
             });
             this.form.series_id =
                 this.series.length > 0 ? this.series[0].id : null;
+                let series = this.series.find(s => s.id == this.form.series_id);
+                
         },
         filterCustomers() {
             let { document_type_id } = this.form;
@@ -3753,10 +3751,6 @@ export default {
                 this.customers = this.all_customers;
             }
             //si this.form.customer_id no es nulo y existe en this.customers
-            console.log(
-                "🚀 ~ file: payment.vue:3730 ~ filterCustomers ~ this.form.customer_id :",
-                this.form.customer_id
-            );
             if (
                 this.form.customer_id &&
                 this.customers.some(c => c.id == this.form.customer_id)

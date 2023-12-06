@@ -79,7 +79,7 @@ class TableRoomController extends Controller
             ->first();
         $promotion->dued();
 
-    
+
         if ($promotion) {
             if ($promotion->active == false) {
                 $user = auth()->user();
@@ -97,7 +97,7 @@ class TableRoomController extends Controller
                     'message' => 'Código ya utilizado'
                 ];
             }
-            if($promotion->was_due){
+            if ($promotion->was_due) {
                 return [
                     'success' => false,
                     'message' => 'Código vencido'
@@ -786,7 +786,11 @@ class TableRoomController extends Controller
         //     'supplier' => PersonInput::set($inputs['supplier_id']),
         try {
             DB::connection('tenant')->beginTransaction();
+            $user_id = auth()->id();
             $customer_id = $request->input('customer_id');
+            $cash = Cash::where('user_id', $user_id)->where('state', 1)
+                ->orderBy('created_at', 'desc')
+                ->first();
             $customer = PersonInput::set($customer_id);
             $advance = $request->input('advance');
             $total = $request->input('total');
@@ -800,16 +804,12 @@ class TableRoomController extends Controller
             $hotel_rent->observation = $observation;
             $hotel_rent->payment_status = $payment_status;
             $hotel_rent->advance = $advance;
-
+            $hotel_rent->cash_id = $cash->id;
             $hotel_rent->total = $total;
             $hotel_rent->save();
 
             $rooms = $request->input('rooms');
-            $user_id = auth()->id();
-            $cash = Cash::where('user_id', $user_id)
-            ->where('state', 1)
-            ->orderBy('created_at', 'desc')
-            ->first();
+
             foreach ($rooms as $room) {
                 $checkin_date = Carbon::parse($room['checkin_date'])
                     ->setTimezone('America/Lima')
@@ -833,7 +833,7 @@ class TableRoomController extends Controller
                 $hotel_rent_item->checkout_time_estimated = $date_estimate_out['checkout_time_estimated'];
                 $hotel_rent_item->checkin_date = $checkin_date;
                 $hotel_rent_item->checkin_time = $checkin_time;
-                $hotel_rent_item->cash_id = $cash->id;
+
                 $hotel_rent_item->save();
                 if ($hotel_rent_item->is_reserve == false) {
                     Table::where('id', $room['table_id'])->update(['status_table_id' => 2]);
@@ -1220,9 +1220,9 @@ class TableRoomController extends Controller
     public function get_services($id)
     {
         $hotel_rent_item_service = HotelRentItemServices::where('hotel_rent_item_id', $id)
-       
-        ->orderBy('date_take', 'asc')
-        ->get()
+
+            ->orderBy('date_take', 'asc')
+            ->get()
 
             ->transform(function ($row) {
                 $row->dued();
@@ -1241,7 +1241,7 @@ class TableRoomController extends Controller
                     'name' => $row->room_service->name,
                     'room_service_id' => $row->room_service_id,
                     'quantity' => $row->quantity,
-                    'was_due' =>(bool) $row->was_due,
+                    'was_due' => (bool) $row->was_due,
                     'due_date' => $due_date,
                     'active' => (bool)$row->active,
                 ];

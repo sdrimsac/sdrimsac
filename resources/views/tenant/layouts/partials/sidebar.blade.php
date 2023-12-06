@@ -18,7 +18,7 @@
         @inject('roleService', 'App\Services\RoleService')
         @if (!$roleService->isAccountant($user->worker_type_id)&&!$roleService->isArca())
 
-
+            @if(!$roleService->isLogistic())
             <li>
                 <a href="#restaurantComponents" data-bs-toggle="collapse" data-role="button"
                     aria-expanded="{{ $path[0] === 'persons' && $path[1] === 'customers' ? true : false }}{{ $path[0] === 'brands' ? true : false }}{{ $path[0] === 'category' ? true : false }}{{ $path[0] === 'item-sets' ? true : false }} {{ $path[0] === 'caja' && $path[1] === 'workers' ? true : false }}  {{ $path[0] === 'caja' && $path[1] === 'workers-type' ? true : false }}{{ $path[0] === 'caja' && $path[1] === 'areas' ? true : false }}{{ $path[0] === 'caja' && $path[1] === 'tables' ? true : false }}{{ $path[0] === 'caja' && $path[1] === 'status-orden' ? true : false }}{{ $path[0] === 'caja' && $path[1] === 'status-tables' ? true : false }}"
@@ -124,6 +124,7 @@
                     @endif
                 </ul>
             </li>
+            @endif
             {{-- <li >
         <a href="#vips" data-bs-toggle="collapse" data-role="button"
           aria-expanded="{{ ($path[0] === 'vips') ? true:false }}{{ ($path[0] === 'vips' && $path[1] === 'create') ? true:false }}"
@@ -272,7 +273,7 @@
             </ul>
         </li> --}}
         {{-- ***************** --}}
-         @if (!$roleService->isArca())
+         @if (!$roleService->isArca()&&!$roleService->isLogistic())
         <li>
             <a href="#documents" data-bs-toggle="collapse" data-role="button"
                 aria-expanded="{{ $path[0] === 'documents' ? true : false }}{{ $path[0] === 'summaries' ? true : false }}{{ $path[0] === 'voided' ? true : false }}{{ $path[0] === 'sale-notes' ? true : false }}{{ $path[0] === 'brands' ? true : false }}{{ $path[0] === 'order-notes' ? true : false }}"
@@ -339,7 +340,7 @@
             </ul>
         </li>
         @endif
-        @if (!$roleService->isAccountant($user->worker_type_id))
+        @if (!$roleService->isAccountant($user->worker_type_id)&&!$roleService->isLogistic())
             <li>
                 <a href="#boxes" data-bs-toggle="collapse" data-role="button"
                     aria-expanded="{{ $path[0] === 'caja' && $path[1] === 'boxes' ? true : false }}"
@@ -413,20 +414,22 @@
                         </a>
                     </li>
                 @endif
-                <li>
-                    <a class="{{ $path[0] === 'report_cash' ? 'active' : '' }}"
-                        href="{{ route('reports.cash.index') }}">
-                        <i class="icofont-money-bag"></i>
-                        Ganancias
-                    </a>
-                </li>
-                <li>
-                    <a class="{{ $path[0] === 'reports' && $path[1] === 'valued' ? 'active' : '' }}"
-                        href="{{ route('reports.valued.index') }}">
-
-                        <i class="icofont-dollar"></i> Stock valorizado
-                    </a>
-                </li>
+                    @if(!$roleService->isLogistic())
+                    <li>
+                        <a class="{{ $path[0] === 'report_cash' ? 'active' : '' }}"
+                            href="{{ route('reports.cash.index') }}">
+                            <i class="icofont-money-bag"></i>
+                            Ganancias
+                        </a>
+                    </li>
+                    <li>
+                        <a class="{{ $path[0] === 'reports' && $path[1] === 'valued' ? 'active' : '' }}"
+                            href="{{ route('reports.valued.index') }}">
+    
+                            <i class="icofont-dollar"></i> Stock valorizado
+                        </a>
+                    </li>
+                    @endif
                 <li>
                     <a class="{{ $path[0] === 'reports' && $path[1] === 'inventory' ? 'active' : '' }}"
                         href="{{ route('reports.inventory.index') }}">
@@ -445,7 +448,7 @@
                         <i class="icofont-chart-bar-graph"></i> Kardex
                     </a>
                 </li>
-                @if($config->credit_list)
+                @if($config->credit_list && !$roleService->isLogistic())
                 <li>
                     <a class="{{ $path[0] === 'reports' && $path[1] === 'credit_list' ? 'active' : '' }}"
                         href="{{ route('tenant.credit_list.index') }}">
@@ -467,7 +470,7 @@
 
             @endif
 
-        @if(!$roleService->isArca())
+        @if(!$roleService->isArca()&& !$roleService->isLogistic())
         <li>
             <a href="#contabilidad" data-bs-toggle="collapse" data-role="button"
                 aria-expanded="{{ $path[0] === 'account' ? true : false }}"

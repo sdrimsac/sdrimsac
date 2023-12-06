@@ -183,7 +183,9 @@ class PosController extends Controller
             if (count($textoIntoArray) === 1) {
                 if($external_id){
                     $foods = $foods->whereHas('item',function($query) use ($value){
-                        $query->where('description', 'LIKE', '%' . $value . '%')->orWhere('barcode', 'LIKE', '%' . $value . '%');
+                        $query->where('description', 'LIKE', '%' . $value . '%')->orWhere(function ($query) use ($value) {
+                            $query->where('internal_id', 'LIKE', '%' . $value . '%')->orWhere('barcode', 'LIKE', '%' . $value . '%');
+                        });
                     });
                 }else{
                     $foods = $foods->where(function ($query) use ($value) {
