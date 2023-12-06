@@ -10,14 +10,20 @@
                 <i class="icofont-plus-circle"></i>
                 <span>Nuevo</span>
             </button>
-            <button
-                v-else
-                type="button"
-                class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto"
-                @click.prevent="clickClose()"
-            >
-                <span>Cerrar caja</span>
-            </button>
+            <template v-else>
+                <div
+                class="alert alert-success d-flex justify-content-between align-items-center"
+                >
+                <span>S/ 1.362</span>
+                </div>
+                <button
+                    type="button"
+                    class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto"
+                    @click.prevent="clickClose()"
+                >
+                    <span>Cerrar caja</span>
+                </button>
+            </template>
             <cash-form
                 :showDialog.sync="showDialogCash"
                 :recordId="cash_id"

@@ -24,6 +24,8 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
+        'establishment_table_id',
+        'warehouse_product_id',
         'area_id',
         'pin',
         'worker_type_id',
@@ -97,6 +99,8 @@ class User extends Authenticatable
     public function getDataOnlyAuthUser()
     {
         return [
+            'establishment_table_id' => $this->establishment_table_id,
+            'warehouse_product_id' => $this->warehouse_product_id,
             'name' => $this->name,
             'email' => $this->email,
             'password' => $this->password,

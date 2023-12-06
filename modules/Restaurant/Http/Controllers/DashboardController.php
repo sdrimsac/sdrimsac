@@ -106,13 +106,19 @@ class DashboardController extends Controller
 
         try {
             $user = Auth::user();
+            $establishment_table_id = $user->establishment_id;
             $areas = Area::where('id', auth()->user()->area_id)->get();
             $table = Table::where('area_id', $areas[0]->id)->first();
 
             //dd($areas,$table);
             if ($table != null) {
                 $tables_active = new TableCollection(Table::where('area_id', $areas[0]->id)->first());
-                $tables_area = collect(Table::where('area_id', $areas[0]->id)->get())->transform(function ($row) {
+                $tables =Table::where('area_id', $areas[0]->id);
+                // dump($establishment_table_id);
+                if($establishment_table_id){
+                    $tables = $tables->where('establishment_id', $establishment_table_id);
+                }
+                $tables_area = collect($tables->get())->transform(function ($row) {
                     $orden = Orden::where('table_id', $row->id)->where('status_orden_id', '!=', 4)->get();
                     return [
                         'id'                => $row->id,

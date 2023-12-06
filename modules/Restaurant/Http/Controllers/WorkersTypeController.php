@@ -4,7 +4,8 @@ namespace Modules\Restaurant\Http\Controllers;
 
 
 use App\Models\Tenant\Configuration;
-
+use App\Models\Tenant\Establishment;
+use App\Models\Tenant\Warehouse;
 use Illuminate\Routing\Controller;
 
 use Modules\Restaurant\Models\WorkersType;
@@ -46,9 +47,13 @@ class WorkersTypeController extends Controller
     public function actives()
     {
         $workers_type = WorkersType::where('active', 1)->get();
+        $establishments = Establishment::all();
+        $warehouses = Warehouse::all();
         return [
             'success' => true,
-            'data' => $workers_type
+            'workers_type' => $workers_type,
+            'establishments' => $establishments,
+            'warehouses' => $warehouses
         ];
     }
 

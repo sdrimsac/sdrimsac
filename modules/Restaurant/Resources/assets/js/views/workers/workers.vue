@@ -121,6 +121,8 @@
                     :recordId="recordId"
                     :workersType="workersType"
                     :establishments="establishments"
+                    :allEstablishments="allEstablishments"
+                    :allWarehouses="allWarehouses"
                 ></create-form>
             </div>
             <el-dialog
@@ -165,6 +167,8 @@ export default {
             currentUser:null,
             newPin:null,
             loading:false,
+            allWarehouses: [],
+            allEstablishments: []
         };
     },
     created() {
@@ -208,7 +212,9 @@ export default {
             let response = await this.$http.get(`areas/actives`);
             this.areas = response.data.data;
             response = await this.$http.get(`workers-type/actives`);
-            this.workersType = response.data.data;
+            this.workersType = response.data.workers_type;
+            this.allWarehouses = response.data.warehouses;
+            this.allEstablishments = response.data.establishments;
         },
         async getData() {
             const response = await this.$http.get(`${this.resource}/records`);

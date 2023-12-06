@@ -106,7 +106,7 @@
                             ></small>
                         </div>
                     </div>
-                      <div class="col-md-4">
+                    <div class="col-md-4">
                         <div
                             class="form-group"
                             :class="{ 'has-danger': errors.telephone }"
@@ -119,6 +119,48 @@
                                 v-text="errors.telephone[0]"
                             ></small>
                         </div>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="product"
+                            >Establecimiento productos
+                            <el-tooltip
+                                class="item"
+                                effect="dark"
+                                content="Establecimiento desde el cual obtendrá los productos"
+                                placement="top"
+                            >
+                                <i class="fas fa-info-circle"></i>
+                            </el-tooltip>
+                        </label>
+                        <el-select v-model="form.warehouse_product_id">
+                            <el-option
+                                v-for="(data, index) in allWarehouses"
+                                :key="index"
+                                :label="data.description"
+                                :value="data.id"
+                            ></el-option>
+                        </el-select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="product"
+                            >Establecimiento mesa
+                            <el-tooltip
+                                class="item"
+                                effect="dark"
+                                content="Establecimiento desde el cual obtendrá las mesas"
+                                placement="top"
+                            >
+                                <i class="fas fa-info-circle"></i>
+                            </el-tooltip>
+                        </label>
+                        <el-select v-model="form.establishment_table_id">
+                            <el-option
+                                v-for="(data, index) in allEstablishments"
+                                :key="index"
+                                :label="data.description"
+                                :value="data.id"
+                            ></el-option>
+                        </el-select>
                     </div>
                 </div>
             </div>
@@ -137,7 +179,15 @@
 
 <script>
 export default {
-    props: ["showDialog", "recordId", "areas", "workersType", "establishments"],
+    props: [
+        "showDialog",
+        "recordId",
+        "areas",
+        "workersType",
+        "establishments",
+        "allEstablishments",
+        "allWarehouses"
+    ],
     data() {
         return {
             loading_submit: false,

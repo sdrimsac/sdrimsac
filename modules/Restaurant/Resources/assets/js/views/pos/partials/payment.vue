@@ -1609,7 +1609,8 @@ export default {
     methods: {
         verifyBoxesDuplicate() {
             let boxes = this.form.boxes;
-            let { total } = this.form;
+            if(boxes){
+                 let { total } = this.form;
             let total_boxes = 0;
             if (boxes.length > 0) {
                 total_boxes = boxes.reduce(
@@ -1628,6 +1629,7 @@ export default {
                     }
                 }
                 this.form.boxes = boxes;
+            }
             }
         },
         async updateConfigutation() {

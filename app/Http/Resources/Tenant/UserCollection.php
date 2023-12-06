@@ -49,6 +49,8 @@ class UserCollection extends ResourceCollection
                 'category' => $row->category,
                 'locked' => (bool) $row->locked,
                 'active' => (bool) $row->active,
+                'establishment_table_id' => $row->establishment_table_id,
+                'warehouse_product_id' => $row->warehouse_product_id,
             ];
         });
     }
