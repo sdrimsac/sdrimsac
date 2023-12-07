@@ -106,7 +106,7 @@ class DashboardController extends Controller
 
         try {
             $user = Auth::user();
-            $establishment_table_id = $user->establishment_id;
+            $establishment_table_id = $user->establishment_table_id;
             $areas = Area::where('id', auth()->user()->area_id)->get();
             $table = Table::where('area_id', $areas[0]->id)->first();
 
