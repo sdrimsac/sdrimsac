@@ -23,7 +23,7 @@ class TableController extends Controller
         $user = auth()->user();
         $establishment_id = $user->establishment_id;
         $tables = Table::where('status_table_id', 2)
-        ->where('is_room', false)
+            ->where('is_room', false)
             ->where(function ($q) use ($establishment_id) {
                 $q->where('establishment_id', $establishment_id)->orWhereNull('establishment_id');
             })
@@ -70,13 +70,32 @@ class TableController extends Controller
     }
     public function recordsByArea($id)
     {
-        $establishment_id = auth()->user()->establishment_id;
-        $tables = new TableCollection(Table::where('area_id', $id)
-            ->where('is_room', false)
-            ->where(function ($q) use ($establishment_id) {
-                $q->where('establishment_id', $establishment_id)
-                    ->orWhereNull('establishment_id');
-            })
+        $user = auth()->user();
+        $establishment_table_id = $user->establishment_table_id;
+        $establishment_id = $user->establishment_id;
+        $query = Table::where('number', 'not like', '%caj%');
+
+        if ($establishment_table_id) {
+            // $configuration = Configuration::first();
+            $query->where('establishment_id', $establishment_table_id)
+                ->where(function ($q) {
+                    $q->where(function ($query) {
+                        $query->where('is_room', 1)->where('status_table_id', 2);
+                    })
+                        ->orWhere(function ($query) {
+                            $query->where('is_room', 0);
+                        });
+                });
+        } else {
+            $query->where('area_id', $id)
+                // ->where('is_room', false)
+                ->where(function ($q) use ($establishment_id) {
+                    $q->where('establishment_id', $establishment_id)
+                        ->orWhereNull('establishment_id');
+                });
+        }
+
+        $tables = new TableCollection($query
             ->get());
 
         return [

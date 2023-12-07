@@ -2,7 +2,7 @@
     <div>
         <div class="row" v-if="ordens.length > 0">
             <div class="col-12 p-1">
-                <h2 class="small-title">Ordenes Realizados</h2>
+                <h2 class="small-title">Ordenes Realizadas</h2>
                 <hooper :settings="hooperSettings">
                     <slide v-for="(o, index) in ordens" :key="index">
                         <div class="col-md-12 p-2">
@@ -191,7 +191,9 @@
 
             <!-- fin de sidebar -->
             <div class="col-md-7 col-xl-4 col-lg-6 p-1">
-                <current-orden ref="ordenRef" :referencia.sync="currentRef" :tableId="table.id"
+                <current-orden 
+                :table="table"
+                ref="ordenRef" :referencia.sync="currentRef" :tableId="table.id"
                     :configuration.sync="configuration" :localOrden.sync="localOrden" :ordens.sync="ordensItems"
                     :ordenSelectedId.sync="ordenSelectedId" @updateOrdens="updateOrdens" @deleteFood="deleteFood"
                     @ordenDeleted="createOrden" @listtables="clearTables">

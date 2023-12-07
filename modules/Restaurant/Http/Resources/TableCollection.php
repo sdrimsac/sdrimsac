@@ -32,6 +32,8 @@ class TableCollection extends ResourceCollection
                 'establishment_id'  => $row->establishment_id,
                 'description'      => $row->description,
                 'orden'          => $orden,
+                'full_name'       => $row->getTableFullName(), 
+                'is_room'       => $row->is_room,
             ];
         });
     }

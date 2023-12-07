@@ -23,6 +23,7 @@
                                     <i class="icofont icofont-dining-table"></i>
                                     Visualizar mesas
                                 </el-button>
+                                
                                 <!-- <div class="dropdown-menu w-300" aria-labelledby="dropdownMenuLink"> -->
                                     <!-- <a class="dropdown-item" href="javascript:void(0)" @click="selectOption=1;tables_row_select=null;show ='tables';createOrden();"><i class="icofont-fast-food"></i> Nueva Orden</a> -->
                                     <!-- <a class="dropdown-item" href="javascript:void(0)" @click="
@@ -126,11 +127,11 @@
                     data.status_table.id == 1 ? 'btn-primary' : 'btn-danger'
                 ]" class=" col-xl-2 col-md-3  col-4 btn   m-1 d-flex flex-column justify-content-center align-items-center "
                     v-for="(data, index) in tables" :key="index" @click="selectedTable(data.id, data)">
-                    <strong class="h3 text-white">Mesa</strong>
+                    <strong class="h3 text-white">{{data.is_room ? 'Habitación':'Mesa' }}</strong>
                     <i class="fas fa-utensils"></i>
 
                     <span class="h2  text-white">
-                        {{ data.number }}
+                        {{ data.full_name }}
                     </span>
                     <span :class="
                         `${data.status_table.id == 1
@@ -138,7 +139,7 @@
                             : 'text-black'
                         }`
                     ">
-                        {{ data.status_table.description }}
+                        {{ data.status_table.description }} 
                     </span>
                 </div>
             </div>
@@ -596,6 +597,7 @@ export default {
             const response = await this.$http.get(
                 `tables/records-area/${this.currentArea}`
             );
+            console.log("🚀 ~ file: dashboard.vue:599 ~ getTables ~ response:", response)
             if (response.status == 200) {
                 const { data } = response.data;
                 this.tables = data;

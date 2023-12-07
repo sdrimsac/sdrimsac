@@ -15,6 +15,7 @@ use App\Models\Tenant\DocumentItem;
 use App\Models\Tenant\SaleNoteItem;
 use App\Models\Tenant\Configuration;
 use App\Models\Tenant\Establishment;
+use App\Models\Tenant\Item;
 use App\Models\Tenant\ItemUnitType;
 use Barryvdh\DomPDF\Facade as PDF;
 use Facade\Ignition\Tabs\Tab;
@@ -24,6 +25,7 @@ use Illuminate\Support\Facades\DB;
 use Modules\Restaurant\Models\Area;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Modules\Item\Models\CategoryItem;
 use Modules\Restaurant\Models\Orden;
 use Modules\Restaurant\Models\Table;
 use Modules\Restaurant\Models\OrdenItem;
@@ -34,6 +36,7 @@ use Modules\Restaurant\Events\OrdenPendingEvent;
 use Modules\Restaurant\Http\Resources\ObservationCollection;
 use Modules\Restaurant\Http\Resources\OrdenCollection;
 use Modules\Restaurant\Http\Resources\OrdenItemCollection;
+use Modules\Restaurant\Models\Food;
 use Modules\Restaurant\Models\Observation;
 
 class OrdenController extends Controller
@@ -622,6 +625,24 @@ class OrdenController extends Controller
                 ];
                 event(new OrdenEvent($orden_item->id));
             }
+            if($request->add_charge_room){
+                $food = $this->get_item_service();
+                $orden_item = new OrdenItem;
+                $orden_item->food_id = $food->id;
+                $orden_item->observations = '-';
+                $orden_item->quantity = 1;
+                // $orden_item->unit_type_id = 'ZZ';
+                $orden_item->price = 5;
+                $orden_item->user_id = $user_id;
+                $orden_item->orden_id = $orden->id;
+                $orden_item->to_carry = 0;
+                $orden_item->status_orden_id = 1;
+                $orden_item->date = Carbon::today();
+                $orden_item->time = date('H:i:s');
+                $orden_item->area_id = $food->area_id;
+                $orden_item->save();
+
+            }
 
             $print_box = $configuration->print_commands ;
             $print_kitchen = $configuration->print_kitchen;
@@ -682,6 +703,43 @@ class OrdenController extends Controller
                 'line'    => $e->getLine(),
                 'file'    => $e->getFile(),
             ];
+        }
+    }
+    function get_item_service()
+    {
+        $item = Item::where('unit_type_id', 'ZZ')
+            ->where('description', 'Servicio')
+            ->first();
+        if ($item) {
+            $food = Food::where('item_id', $item->id)->first();
+            return $food;
+        } else {
+            $configuration = Configuration::first();
+            $affectation_igv_type_id = $configuration->affectation_igv_type_id;
+            $item = Item::create(
+                [
+                    'stock' => 0,
+                    'attributes' => [],
+                    'item_type_id' => '01',
+                    'unit_type_id' => 'ZZ',
+                    'internal_id' => '000ZZ',
+                    'description' => 'Servicio',
+                    'currency_type_id' => 'PEN',
+                    'sale_unit_price' => '1.00',
+                    'sale_affectation_igv_type_id'  => $affectation_igv_type_id,
+                    'purchase_affectation_igv_type_id' => $affectation_igv_type_id,
+                ]
+            );
+            $category_food_id = CategoryItem::first()->id;
+            $food = Food::create([
+                'item_id' => $item->id,
+                'description' => 'Servicio',
+                'price' => '1.00',
+                'category_food_id' => $category_food_id,
+                'active' => true,
+            ]);
+
+            return $food;
         }
     }
     function getBoxArea()

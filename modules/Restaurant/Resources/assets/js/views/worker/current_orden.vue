@@ -111,7 +111,7 @@
                                         <div class="row h-100">
                                             <div class="col-5 mb-md-0 d-flex align-items-center p-1">
                                                 {{ ord_row.quantity }} x
-                                                {{ ord_row.food.price }}
+                                                {{ Number(ord_row.price).toFixed(2) }}
                                             </div>
 
                                             <div
@@ -392,7 +392,8 @@ export default {
         "tableId",
         "ordens",
         "ordenSelectedId",
-        "referencia"
+        "referencia",
+        "table"
     ],
     async created() {
         this.referenciaInput = this.referencia;
@@ -665,6 +666,7 @@ export default {
                 .addClass("active");
         },
         async sendOrden(pin = null) {
+        
             let form_submit = {
                 id: this.ordenSelectedId,
                 caja: false,
@@ -680,6 +682,9 @@ export default {
                 ref: this.referenciaInput,
                 pin
             };
+            if(this.table.is_room){
+                form_submit.add_charge_room = true;
+            }
             try {
                 this.loading = true;
                 const response = await this.$http.post(
@@ -823,13 +828,13 @@ export default {
                 value
             ) {
                 OrdenPen =
-                    parseFloat(OrdenPen) + value.quantity * value.food.price;
+                    parseFloat(OrdenPen) + value.quantity * value.price;
             });
             this.totalOrden = _.round(OrdenPen, 2);
             let nTotal_atendidos = _.forEach(this.ordens, function (values) {
                 OrdenPenAtendidos =
                     parseFloat(OrdenPenAtendidos) +
-                    values.quantity * values.food.price;
+                    values.quantity * values.price;
             });
             this.totalOrdenItems = _.round(OrdenPenAtendidos, 2);
             this.total = this.totalOrden + this.totalOrdenItems;

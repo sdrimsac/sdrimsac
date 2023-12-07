@@ -32,6 +32,15 @@ class DashboardController extends Controller
         $category_id = $request->category;
         $value = $request->value;
         $foods = Food::query();
+        $user = auth()->user();
+        $warehouse_product_id = $user->warehouse_product_id;
+        if ($warehouse_product_id) {
+            $foods = $foods->whereHas('item', function ($query) use ($warehouse_product_id) {
+                $query->whereHas('warehouses', function ($query) use ($warehouse_product_id) {
+                    $query->where('warehouse_id', $warehouse_product_id);
+                });
+            });
+        }
         if ($category_id) {
 
             $foods = $foods->where('category_food_id', $category_id);
@@ -113,9 +122,9 @@ class DashboardController extends Controller
             //dd($areas,$table);
             if ($table != null) {
                 $tables_active = new TableCollection(Table::where('area_id', $areas[0]->id)->first());
-                $tables =Table::where('area_id', $areas[0]->id);
+                $tables = Table::where('area_id', $areas[0]->id);
                 // dump($establishment_table_id);
-                if($establishment_table_id){
+                if ($establishment_table_id) {
                     $tables = $tables->where('establishment_id', $establishment_table_id);
                 }
                 $tables_area = collect($tables->get())->transform(function ($row) {

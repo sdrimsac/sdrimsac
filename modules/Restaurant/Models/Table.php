@@ -146,7 +146,11 @@ class Table extends ModelTenant
 
     public  function getTableFullName(){
         $number = $this->number;
-        $tower = $this->floor->tower->name;
+        $floor = $this->floor;
+        if(!$floor) return $number;
+        $tower = $floor->tower;
+        if(!$tower) return $number;
+        $tower = $tower->name;
         
         return "$number - $tower";
     }
