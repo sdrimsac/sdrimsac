@@ -49,7 +49,8 @@ class ReportKardexController extends Controller
         "App\Models\Tenant\Purchase",
         "App\Models\Tenant\SaleNote",
         "Modules\Inventory\Models\Inventory",
-        "Modules\Order\Models\OrderNote"
+        "Modules\Order\Models\OrderNote",
+        "App\Models\Tenant\CreditList"
     ];
 
     public function index()

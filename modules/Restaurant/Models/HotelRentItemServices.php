@@ -38,7 +38,7 @@ class HotelRentItemServices extends ModelTenant
         $room_service = $this->room_service;
         $due_time = $room_service->due_time;
         $date_take = $this->date_take;
-        if(!$date_take){
+        if(!$date_take || !$due_time){
             return false;
         }
         $date_take = \Carbon\Carbon::parse($date_take.' '.$due_time);

@@ -39,7 +39,8 @@
                                     </button>
 
                                     <template v-if="configuration.restaurant">
-                                        <button
+                                        <template v-if="!configuration.hotels || configuration.hotels && !isPiscinaArea">
+                                            <button
                                             class="btn btn-sm btn-primary"
                                             type="button"
                                             @click="buttonSmTables"
@@ -56,6 +57,7 @@
                                                 "
                                             ></i>
                                         </button>
+                                        </template>
                                     </template>
 
                                     <div
@@ -1780,6 +1782,7 @@ export default {
     data() {
         return {
             isHotelArea: false,
+            isPiscinaArea: false,
             roomSeeId: null,
             tablesClean: [],
             tablesLeave: [],
@@ -2133,7 +2136,7 @@ export default {
                         !this.configuration.college &&
                         this.worker.area.description.toUpperCase() !==
                             "HOTEL" &&
-                        this.worker.area.description.toUpperCase() !== "PISCINA"
+                        this.worker.area.description.toUpperCase() !== "CAJA PISCINA"
                 },
                 {
                     id: 171,
@@ -4820,8 +4823,12 @@ export default {
                 // this.changeExchangeRate();
                 this.config = response.data.config;
                 let area = this.areas.find(a => a.id == this.area_id);
+                console.log("🚀 ~ file: index.vue:4824 ~ awaitthis.$http.get ~ area:", area)
                 if (area.description == "HOTEL") {
                     this.isHotelArea = true;
+                }
+                if(area.description == "CAJA PISCINA"){
+                    this.isPiscinaArea = true;
                 }
             });
 

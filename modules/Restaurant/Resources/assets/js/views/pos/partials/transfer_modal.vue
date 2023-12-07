@@ -9,7 +9,7 @@
         <div v-loading="loading" class="p-2">
             <div class="row">
                 <div class="col-md-4">
-                    <span>Código de transferencia</span>
+                    <span>Código de transferaencia</span>
                     <el-input @input="getTransfer" v-model="code"></el-input>
                 </div>
                 <div class="col-md-4">
@@ -110,6 +110,7 @@ export default {
             }
         },
         async getTransfer() {
+        console.log("aaaa");
             if (this.code.length == 5) {
                 if (this.time) {
                     clearTimeout(this.time);
@@ -121,11 +122,13 @@ export default {
                         const response = await this.$http(
                             `/transfers/places?code=${this.code}`
                         );
+                        console.log("🚀 ~ file: transfer_modal.vue:124 ~ this.time=setTimeout ~ response:", response)
+                        console.log("🚀 ~ file: transfer_modal.vue:126 ~ this.time=setTimeout ~ message:", message)
                         const { message, success, transfer } = response.data;
                         if (success) {
                             this.transfer = transfer;
                         } else {
-                            this.$toast.warning(message);
+                            // this.$toast.warning(message);
                         }
                     } catch (e) {
                         console.log(e);

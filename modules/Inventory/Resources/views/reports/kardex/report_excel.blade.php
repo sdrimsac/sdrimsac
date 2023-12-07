@@ -140,6 +140,9 @@
                                         @case($models[4])
                                             {{ $quantity < 0 ? 'Pedido' : 'Anulación pedido' }}
                                         @break
+                                        @case($models[5])
+                                            {{ 'A cuenta' }}
+                                        @break
                                     @endswitch
 
 

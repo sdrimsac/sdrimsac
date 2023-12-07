@@ -419,6 +419,10 @@
                             "
                         >
                             {{ data.date_of_issue }}
+                            <br>
+                            <small>
+                                {{ data.time_of_issue }}
+                            </small>
                         </td>
                         <td
                             :class="

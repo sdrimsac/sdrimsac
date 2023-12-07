@@ -105,6 +105,7 @@ if ($hostname) {
                 Route::get('report_cash', [CashController::class, 'index_report_cash'])->name('reports.cash.index');
                 Route::get('report_closed_cash', [CashController::class, 'index_report_closed_cash'])->name('reports.cash_closes.index');
                 Route::get('report_cash/records', [CashController::class, 'report_cash']);
+                Route::get('get_stock_file/{id}', [CashController::class, 'get_stock_file']);
 
                 Route::post('whatsapp', [App\Http\Controllers\Tenant\WhatsappController::class, 'sendwhatsapp']);
                 Route::post('whatsapp/save', [App\Http\Controllers\Tenant\WhatsappController::class, 'saveWhatsapp']);

@@ -49,6 +49,22 @@
                             <el-button class="margin-left:10px;" type="primary" @click="openA4(box)">
                                 A4
                             </el-button>
+                            <!-- un boton para bajar un excel -->
+                           <el-tooltip
+                                class="item"
+                                effect="dark"
+                                content="Descargar Excel del stock al momento de cerrar caja"
+                                placement="top"
+                            >
+                                <el-button
+                                    type="success"
+                                    icon="el-icon-download"
+                                    circle
+                                    v-if="box.stock_file"
+                                    @click="openExcel(box)"
+                                ></el-button>
+                            </el-tooltip>
+
                         </td>
                     </tr>
                 </tbody>
@@ -93,6 +109,10 @@ export default {
         };
     },
     methods: {
+        openExcel(cash) {
+          let {id} = cash;
+            window.open(`/get_stock_file/${id}`);
+        },
         openWhastappForm(cash) {
             this.number = null;
             this.message = `Reporte de ${cash.user} ${cash.date_opening}`;

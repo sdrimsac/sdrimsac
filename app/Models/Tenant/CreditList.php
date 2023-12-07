@@ -36,5 +36,11 @@ class CreditList extends ModelTenant
     public function establishment()
     {
         return $this->belongsTo(Establishment::class, 'establishment_id');
+ 
+    }
+
+    public function inventory_kardex()
+    {
+        return $this->morphMany(InventoryKardex::class, 'inventory_kardexable');
     }
 }

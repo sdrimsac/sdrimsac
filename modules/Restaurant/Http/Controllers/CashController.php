@@ -3,6 +3,7 @@
 namespace Modules\Restaurant\Http\Controllers;
 
 use Exception;
+use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 use App\Models\Tenant\Box;
 use App\Models\Tenant\Cash;
@@ -43,6 +44,7 @@ use App\Models\Tenant\Receipt;
 use App\Models\Tenant\SaleNoteItem;
 use App\Models\Tenant\SaleNotePayment;
 use Barryvdh\Debugbar\Twig\Extension\Dump;
+use GuzzleHttp\Psr7\Response;
 use Hyn\Tenancy\Environment;
 use Hyn\Tenancy\Models\Website;
 use Modules\Restaurant\Models\Turns;
@@ -58,18 +60,20 @@ use NumberFormatter;
 class CashController extends Controller
 {
 
-    public function observ_register(Request $request){
-            
-            $cash_income_principal = CashIncomePrincipal::findOrFail($request->id);
-            $cash_income_principal->comment = $request->comment;
-            $cash_income_principal->status = 2;
-            $cash_income_principal->save();
-            return [
-                'success' => true,
-                'message' => 'Observación registrada con éxito'
-            ];  
+    public function observ_register(Request $request)
+    {
+
+        $cash_income_principal = CashIncomePrincipal::findOrFail($request->id);
+        $cash_income_principal->comment = $request->comment;
+        $cash_income_principal->status = 2;
+        $cash_income_principal->save();
+        return [
+            'success' => true,
+            'message' => 'Observación registrada con éxito'
+        ];
     }
-    public function accept_register($id){
+    public function accept_register($id)
+    {
 
         $cash_income_principal = CashIncomePrincipal::findOrFail($id);
         $cash = $cash_income_principal->cash;
@@ -77,7 +81,7 @@ class CashController extends Controller
         $principal_cash_id = $cash_income_principal->cash_principal_id;
         $description_cash = $cash->reference_number;
         $description = "Ingreso de la caja $description_cash";
-        
+
         Box::create([
             'cash_id' => $principal_cash_id,
             'amount' => $amount,
@@ -107,12 +111,17 @@ class CashController extends Controller
             ->where('state', 1)
             ->orderBy('id', 'desc')
             ->first();
+        $total = 0;
+
         if ($cash) {
             $cash_id = $cash->id;
+            $incomes = Box::where('cash_id', $cash_id)->where('incomes', 1)->sum('amount');
+            $expenses = Box::where('cash_id', $cash_id)->where('expenses', 1)->sum('amount');
+            $total = $incomes - $expenses;
         }
         $configuration = Configuration::first();
 
-        return view('tenant.cash.index_main', compact('configuration', 'cash_id'));
+        return view('tenant.cash.index_main', compact('configuration', 'cash_id', 'total'));
     }
     public function index_report_closed_cash()
     {
@@ -1505,12 +1514,13 @@ class CashController extends Controller
         ];
     }
 
-    public function records_principal(Request $request){
+    public function records_principal(Request $request)
+    {
 
         $user_id = auth()->user()->id;
-        $records = CashIncomePrincipal::whereHas('cash_principal',function($query) use($user_id){
-            $query->where('user_id',$user_id);
-        })->orderBy('id','desc');
+        $records = CashIncomePrincipal::whereHas('cash_principal', function ($query) use ($user_id) {
+            $query->where('user_id', $user_id);
+        })->orderBy('id', 'desc');
 
         return new CashIncomePrincipalCollection($records->paginate(config('tenant.items_per_page')));
     }
@@ -1581,6 +1591,17 @@ class CashController extends Controller
         }
 
         $resource = "http://" . $hostname->fqdn . "/caja/report-product-warehouse-w?user_id=" . $cash->user_id;
+        $file = file_get_contents($resource);
+
+        $file_name = $cash->id . "_" . "Stock_al_cerrar_caja_" . Carbon::now()->format("Y-m-d") . ".xlsx";
+
+        $directory = 'public' . DIRECTORY_SEPARATOR . 'stock_excel_cierre_caja';
+        Storage::disk('tenant')->put($directory . DIRECTORY_SEPARATOR . $file_name, $file);
+
+        $cash->stock_file = $file_name;
+        $cash->save();
+
+
         $request = new Request(
             [
                 'from_server' => true,
@@ -1592,7 +1613,6 @@ class CashController extends Controller
             ]
         );
         if ($number_activity) {
-
             (new WhatsappController)->sendHistorial($request);
         }
         $numbers = NumberActivity::all();
@@ -1600,7 +1620,7 @@ class CashController extends Controller
             $request['number'] = $number->number;
             (new WhatsappController)->sendHistorial($request);
         }
-        // 
+        
 
         return [
             'success' => true,
@@ -1609,7 +1629,16 @@ class CashController extends Controller
     }
 
 
+    public function get_stock_file($id){
+        $cash = Cash::findOrFail($id);
+        $file_path = $cash->stock_file;
+        $directory = 'public' . DIRECTORY_SEPARATOR.'stock_excel_cierre_caja'.DIRECTORY_SEPARATOR.$file_path;
+        // $file = Storage::disk('tenant')->get($directory);
 
+        // $response = Response::make($file, 200);
+        // $response->header("Content-Type", $type);
+        return Storage::disk('tenant')->download($directory);
+    }
     public function cash_document(Request $request)
     {
 

@@ -78,6 +78,7 @@ class CashCollection extends ResourceCollection
                 'state_description' => ($row->state) ? 'Aperturada' : 'Cerrada',
                 'reference_number' => $row->reference_number,
                 'counter' => $counter,
+                'stock_file' => $row->stock_file,
                 // 'final_cash' => $final_cash,
 
             ];

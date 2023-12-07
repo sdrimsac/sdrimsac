@@ -17,6 +17,7 @@ class Cash extends ModelTenant
     ];
     protected $table = 'cash';
     protected $fillable = [
+        'stock_file',
         'principal',
         'user_id',
         'date_opening',

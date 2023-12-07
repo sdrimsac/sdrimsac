@@ -352,7 +352,7 @@
                 <ul id="boxes" class="collapse ">
                     @if ($roleService->isArca())
                     <li>
-                        <a href="/cash/main_cash" class="{{ $path[0] === 'incomes' ? 'active' : '' }}">
+                        <a href="/cash/main_cash" class="{{ $path[0] === 'cash' && $path[1] == 'main_cash' ? 'active' : '' }}">
                             <i class="icofont-money icon-parent"></i>
                             <span class="label">Caja principal</span>
                         </a>

@@ -892,6 +892,9 @@ class TableRoomController extends Controller
             ];
         } catch (\Exception $e) {
             DB::connection('tenant')->rollBack();
+            //log treace
+            Log::error($e->getTraceAsString());
+
             Log::error($e->getMessage());
             $message = $e->getMessage();
             return [

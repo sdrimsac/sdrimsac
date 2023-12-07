@@ -1,8 +1,8 @@
 <template>
     <div>
-        <div class="col-md- d-flex justify-content-end">
+        <div     v-if="!cash_id" class="col-md- d-flex justify-content-end">
             <button
-                v-if="!cash_id"
+            
                 type="button"
                 class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto"
                 @click.prevent="clickCreate()"
@@ -10,19 +10,23 @@
                 <i class="icofont-plus-circle"></i>
                 <span>Nuevo</span>
             </button>
+        </div>
+
             <template v-else>
-                <div
-                class="alert alert-success d-flex justify-content-between align-items-center"
-                >
-                <span>S/ 1.362</span>
+                <div class="d-flex justify-content-between">
+                    <div
+                        class="alert alert-success d-flex justify-content-start align-items-center"
+                    >
+                        <span>Efectivo disponible: S/ {{total.toFixed(2)}}</span>
+                    </div>
+                    <button
+                        type="button"
+                        class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto"
+                        @click.prevent="clickClose()"
+                    >
+                        <span>Cerrar caja</span>
+                    </button>
                 </div>
-                <button
-                    type="button"
-                    class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto"
-                    @click.prevent="clickClose()"
-                >
-                    <span>Cerrar caja</span>
-                </button>
             </template>
             <cash-form
                 :showDialog.sync="showDialogCash"
@@ -37,7 +41,6 @@
                 @updateCashId="updateCashId"
             >
             </close-cash>
-        </div>
         <div class="card">
             <div class="card-header bg-primary">
                 <h6 class="my-0 text-white">Ingreso de cierres de caja</h6>
@@ -166,7 +169,7 @@ const CashForm = () => import("./partials/form.vue");
 const CloseCash = () => import("./partials/closecash.vue");
 
 export default {
-    props: ["configuration", "cashid"],
+    props: ["configuration", "cashid","total"],
     components: {
         CashForm,
         CloseCash
@@ -187,7 +190,7 @@ export default {
             records: [],
             dialogVisible: false,
             form: {},
-            currentRegister: null
+            currentRegister: null, 
         };
     },
     methods: {

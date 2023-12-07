@@ -16,6 +16,7 @@ class CashResource extends JsonResource
     {
             return [
                 'id' => $this->id,
+                'stock_file' => $this->stock_file,
                 'user_id' => $this->user_id,
                 'user' => $this->user->name,
                 'date_opening' => $this->date_opening,

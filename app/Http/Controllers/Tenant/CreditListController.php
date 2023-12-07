@@ -8,9 +8,14 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\Tenant\CreditListCollection;
 use App\Http\Resources\Tenant\CreditListPersonCollection;
 use App\Models\Tenant\Company;
+use App\Models\Tenant\Configuration;
 use App\Models\Tenant\CreditList;
 use App\Models\Tenant\Establishment;
+use App\Models\Tenant\InventoryKardex;
+use App\Models\Tenant\Item;
+use App\Models\Tenant\ItemWarehouse;
 use App\Models\Tenant\Series;
+use App\Models\Tenant\Warehouse;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -20,6 +25,7 @@ use Modules\Restaurant\Models\Table;
 use Barryvdh\DomPDF\Facade as PDF;
 use Exception;
 use Modules\Restaurant\Events\PrintEvent;
+use Modules\Restaurant\Models\Food;
 
 class CreditListController extends Controller
 {
@@ -112,9 +118,84 @@ class CreditListController extends Controller
 
         return view('tenant.credit_list.index');
     }
-    public function send_credit(Request $request)
+
+    private function updateStock($item_id, $quantity, $warehouse_id)
     {
-        $customer_id = $request->customer_id;
+
+        // $inventory_configuration = InventoryConfiguration::firstOrFail();
+        $configuration = Configuration::firstOrFail();
+        if ($configuration->college) {
+
+            $item_warehouse = ItemWarehouse::where('item_id', $item_id)->first();
+            if (!isset($item_warehouse)) {
+                $item_warehouse = ItemWarehouse::firstOrNew(['item_id' => $item_id, 'warehouse_id' => $warehouse_id]);
+            }
+        } else {
+
+            $item_warehouse = ItemWarehouse::firstOrNew(['item_id' => $item_id, 'warehouse_id' => $warehouse_id]);
+        }
+        //$item=Item::findOrFail($item_id);
+        //     $item->stock=$item_warehouse->stock + $quantity;
+        $item_warehouse->stock = $item_warehouse->stock + $quantity;
+        if ($quantity < 0 && $item_warehouse->item->unit_type_id !== 'ZZ') {
+            if (($configuration->sales_stock) && ($item_warehouse->stock < 0)) {
+
+                throw new Exception("El producto {$item_warehouse->item->description} no tiene suficiente stock!");
+            }
+        }
+        $item_warehouse->save();
+        // $item-save();
+    }
+    function findWarehouse()
+    {
+        $warehouse = Warehouse::where('establishment_id', auth()->user()->establishment_id)->first();
+        if (!$warehouse) {
+            $warehouse = Warehouse::create([
+                'description' => 'Almacén',
+                'establishment_id' => auth()->user()->establishment_id,
+            ]);
+        }
+        return $warehouse;
+    }
+    function createInventoryKardex($item_id, $quantity, $warehouse_id,$credit_list)
+    {
+        InventoryKardex::create([
+            'inventory_kardexable_id' => $credit_list->id,
+            'inventory_kardexable_type' => 'App\Models\Tenant\CreditList',
+            'item_id' => $item_id,
+            'date_of_issue' => date('Y-m-d'),
+            'warehouse_id' => $warehouse_id,
+            'quantity' => $quantity,
+            'type' => 'output',
+        ]);
+    }
+    function update_stock($credit_list)
+    {
+        $orden = Orden::find($credit_list->orden_id);
+        $items = $orden->orden_items;
+        $warehouse = $this->findWarehouse();
+        foreach ($items as $orden_item) {
+            $food_id = $orden_item->food_id;
+            $quantity = $orden_item->quantity * -1;
+            $food = Food::find($food_id);
+            $item_id = $food->item_id;
+            $item = Item::find($item_id);
+            if ($item->unit_type_id  !== 'ZZ') {
+                if (!$item->is_set) {
+    
+                    $this->createInventoryKardex($item_id, $quantity, $warehouse->id,$credit_list);
+                    $this->updateStock($item_id, $quantity, $warehouse->id);
+                } else {
+                }
+            }
+        }
+      
+    }
+    public function send_credit(Request $request)
+    {   
+        try{
+            DB::beginTransaction();
+            $customer_id = $request->customer_id;
         $items = $request->items;
         $user_id = auth()->id();
         $table_caja_id = Table::get_caja();
@@ -141,7 +222,7 @@ class CreditListController extends Controller
             $orden_item->save();
         }
 
-      $credit_list =  CreditList::create([
+        $credit_list =  CreditList::create([
             'orden_id' => $orden->id,
             'customer_id' => $customer_id,
             'user_id' => $user_id,
@@ -149,16 +230,26 @@ class CreditListController extends Controller
             'observation' => $request->observation,
             'paid' => false,
         ]);
+        $this->update_stock($credit_list);
 
         event(new PrintEvent($credit_list->id, 'S', true, null, []));
         sleep(1);
         event(new PrintEvent($credit_list->id, 'S', true, null, []));
 
+        DB::commit();
 
         return [
             'success' => true,
             'message' => 'Credito enviado correctamente'
         ];
+        }catch(Exception $e){
+            DB::rollBack();
+            return [
+                'success' => false,
+                'message' => $e->getMessage()
+            ];
+        }
+
         // $orden_id = $request->orden_id;
     }
     public function tables()

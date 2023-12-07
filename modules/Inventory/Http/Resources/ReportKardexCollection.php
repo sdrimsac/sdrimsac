@@ -40,9 +40,9 @@ class ReportKardexCollection extends ResourceCollection
             "App\Models\Tenant\SaleNote",
             "Modules\Inventory\Models\Inventory",
             "Modules\Order\Models\OrderNote",
-            Devolution::class
+            Devolution::class,
+            "App\Models\Tenant\CreditList"
         ];
-
         switch ($row->inventory_kardexable_type) {
 
             case $models[0]: //venta
@@ -214,6 +214,25 @@ class ReportKardexCollection extends ResourceCollection
                     'sale_note_asoc' => '-',
                     'order_note_asoc' => '-',
                     'doc_asoc' => '-'
+
+                ];
+            case $models[6]:
+                return [
+                    'id' => $row->id,
+                    'item_name' => $row->item->description,
+                    'internal_id' => $row->item->internal_id,
+                    'unit_type_id' => $row->item->unit_type_id,
+                    'date_time' => $row->created_at->format('Y-m-d H:i:s'),
+                    'type_transaction' => "A cuenta",
+                    'date_of_issue' => isset($row->inventory_kardexable->date_of_issue) ? $row->inventory_kardexable->date_of_issue->format('Y-m-d') : '',
+                    'number' => optional($row->inventory_kardexable)->id,
+                    'input' => ($row->quantity > 0) ?  $row->quantity : "-",
+                    'output' => ($row->quantity < 0) ?  $row->quantity : "-",
+                    'balance' => self::$balance += $row->quantity,
+                    'sale_note_asoc' => '-',
+                    'order_note_asoc' => '-',
+                    'doc_asoc' => '-',
+                    'view' => true  
 
                 ];
         }

@@ -17,6 +17,7 @@ class CashCollection extends ResourceCollection
                
             return [
                 'id' => $row->id,
+                'stock_file' => $row->stock_file,
                 // 'group_id' => $row->group_id,
                 'soap_type_id' => $row->soap_type_id,
                 'soap_type_description' => $row->soap_type->description,
