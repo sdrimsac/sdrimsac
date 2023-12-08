@@ -944,7 +944,6 @@
                                                         <el-input
                                                             id="inputTotal"
                                                             ref="enter_amount"
-                                                            :disabled="form.enter_amount == 0"
                                                             v-model="
                                                                 form.enter_amount
                                                             "
@@ -1629,6 +1628,11 @@ export default {
                     }
                 }
                 this.form.boxes = boxes;
+                let new_total = boxes.reduce(
+                    (a, b) => a + (parseFloat(b["amount"]) || 0),
+                    0
+                );
+                this.form.difference = total - new_total;
             }
             }
         },
