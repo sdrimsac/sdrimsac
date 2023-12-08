@@ -80,7 +80,7 @@ class JustAdmin
                 $internet = (bool) $config->internet;
                 $configuration = Configuration::first();
                 if ($configuration->toll) {
-                    $redirect_to = "toll";
+                    $redirect_to = "/caja/worker/dashboard-pos";
                     return redirect($redirect_to);
                 }
                 $redirect_to = $internet ? "/internet/worker/" :  "/caja/worker/";
