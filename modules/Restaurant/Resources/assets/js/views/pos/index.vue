@@ -39,24 +39,30 @@
                                     </button>
 
                                     <template v-if="configuration.restaurant">
-                                        <template v-if="!configuration.hotels || configuration.hotels && !isPiscinaArea">
-                                            <button
-                                            class="btn btn-sm btn-primary"
-                                            type="button"
-                                            @click="buttonSmTables"
+                                        <template
+                                            v-if="
+                                                !configuration.hotels ||
+                                                    (configuration.hotels &&
+                                                        !isPiscinaArea)
+                                            "
                                         >
-                                            <i
-                                                v-if="isHotelArea"
-                                                class="fas fa-door-closed"
-                                            ></i>
-                                            <i
-                                                v-else
-                                                class="icofont-dining-table"
-                                                style="font-size: 28px;
+                                            <button
+                                                class="btn btn-sm btn-primary"
+                                                type="button"
+                                                @click="buttonSmTables"
+                                            >
+                                                <i
+                                                    v-if="isHotelArea"
+                                                    class="fas fa-door-closed"
+                                                ></i>
+                                                <i
+                                                    v-else
+                                                    class="icofont-dining-table"
+                                                    style="font-size: 28px;
                                                 margin-top:-5px;
                                                 "
-                                            ></i>
-                                        </button>
+                                                ></i>
+                                            </button>
                                         </template>
                                     </template>
 
@@ -177,7 +183,9 @@
                                 <div class="d-flex row align-items-center">
                                     <div class="col-2 d-flex flex-column">
                                         <el-checkbox
-                                            v-if="configuration.search_series_pos"
+                                            v-if="
+                                                configuration.search_series_pos
+                                            "
                                             v-model="searchSeries"
                                             @change="
                                                 saveInLocalStorageSearchSeries
@@ -930,7 +938,7 @@
                 <div class="col-5 col-sm-7 col-lg-6 col-md-7 col-xl-5">
                     <div class="card-body p-2">
                         <list-orden
-                                    @sendOrdens="sendOrdens"
+                            @sendOrdens="sendOrdens"
                             :isHotelArea.sync="isHotelArea"
                             :clientSaleNoteNumber.sync="clientSaleNoteNumber"
                             :clientSaleNoteDiscount.sync="
@@ -1442,7 +1450,7 @@
                 </div>
                 <div class="row">
                     <list-orden
-                                    @sendOrdens="sendOrdens"
+                        @sendOrdens="sendOrdens"
                         :company.sync="company"
                         :customer_variation="customer_variation"
                         :variationShow.sync="variation"
@@ -1719,7 +1727,8 @@ const CashHistory = () => import("./partials/cash_history.vue");
 const DocumentsPrint = () => import("./partials/documents_print.vue");
 const PromotionCanje = () =>
     import(
-        /* webpackChunkName:"js/promotionscanje"*/ "./partials/promotionscanje.vue"
+        /* webpackChunkName:"js/promotionscanje"*/
+        "./partials/promotionscanje.vue"
     );
 const EditProduct = () => import("./partials/edit_product.vue");
 const ListOrden = () => import("./partials/list_ordens.vue");
@@ -2138,7 +2147,8 @@ export default {
                         !this.configuration.college &&
                         this.worker.area.description.toUpperCase() !==
                             "HOTEL" &&
-                        this.worker.area.description.toUpperCase() !== "CAJA PISCINA"
+                        this.worker.area.description.toUpperCase() !==
+                            "CAJA PISCINA"
                 },
                 {
                     id: 171,
@@ -4381,6 +4391,7 @@ export default {
                 this.$toast.error(e.message);
             });
             for (let index = 0; index < copies; index++) {
+                await new Promise(resolve => setTimeout(resolve, 1500));
                 qz.print(config, data).catch(e => {
                     this.$toast.error(e.message);
                 });
@@ -4826,11 +4837,14 @@ export default {
                 // this.changeExchangeRate();
                 this.config = response.data.config;
                 let area = this.areas.find(a => a.id == this.area_id);
-                console.log("🚀 ~ file: index.vue:4824 ~ awaitthis.$http.get ~ area:", area)
+                console.log(
+                    "🚀 ~ file: index.vue:4824 ~ awaitthis.$http.get ~ area:",
+                    area
+                );
                 if (area.description == "HOTEL") {
                     this.isHotelArea = true;
                 }
-                if(area.description == "CAJA PISCINA"){
+                if (area.description == "CAJA PISCINA") {
                     this.isPiscinaArea = true;
                 }
             });
@@ -5316,13 +5330,13 @@ export default {
                 let { message, area_id } = e;
                 if (area_id == this.area_id) {
                     this.$toast.success(message);
-                    this.playSound("work_finish.mp3")
+                    this.playSound("work_finish.mp3");
                 }
             }
         );
         Echo.channel("print_orden").listen(
             `.print-order-${this.configuration.socket_channel}`,
-            e => {
+            async e => {
                 console.log("imprimiendoxd", e);
 
                 let area_id = e.data.area_id;
@@ -5339,17 +5353,19 @@ export default {
 
                 if (e.data.direct_printing == true) {
                     if (e.data.printing == true && canPrint) {
-                        setTimeout(() => {
-                            this.Printer(
-                                e.data.printer,
-                                e.data.print,
-                                e.data.copies,
-                                e.data.user_id,
-                                e.data.multiple_boxes,
-                                e.data.typeuser,
-                                e.data.printing
-                            );
-                        }, 1000);
+                        let copies = Number(e.data.copies) || 0;
+                        if (isNaN(copies)) copies = 0;
+                        copies += 1;
+
+                        await this.Printer(
+                            e.data.printer,
+                            e.data.print,
+                            e.data.copies,
+                            e.data.user_id,
+                            e.data.multiple_boxes,
+                            e.data.typeuser,
+                            e.data.printing
+                        );
                     }
                 } else {
                     console.log(e.data.print);

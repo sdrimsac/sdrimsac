@@ -27,7 +27,7 @@ class PrintEvent implements ShouldBroadcast
      * @return void
      */
     public $data;
-    public function __construct($id, $document_type = 0, $printing = true, $area_id = null, $ids = [])
+    public function __construct($id, $document_type = 0, $printing = true, $area_id = null, $ids = [],$isEmit = false)
     {
 
         $establishment = Establishment::findOrFail(auth()->user()->establishment_id);
@@ -74,7 +74,7 @@ class PrintEvent implements ShouldBroadcast
         if (count($ids) != 0) {
             $ids_string = join("_", $ids);
         }
-        $copies = 0;
+        // $copies = 0;
         $documentLink = null;
         switch ($document_type) {
             case "S":
@@ -131,6 +131,10 @@ class PrintEvent implements ShouldBroadcast
         $conf_establishment = ConfEstablishment::where('establishment_id', $establishment->id)->first();
         if ($conf_establishment && $conf_establishment->print_command == false && $document_type == "0") {
             $printing = false;
+        }
+        $copies = 0;
+        if($isEmit){
+            $copies = $area->copies;
         }
 
 

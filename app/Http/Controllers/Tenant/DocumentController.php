@@ -1059,7 +1059,7 @@ class DocumentController extends Controller
             InventoryKardex::where('inventory_kardexable_type', $desc)->where('inventory_kardexable_id', $request->sale_note_id)->delete();
         }
         $establishment = Establishment::where('id', $document->establishment_id)->first();
-        event(new PrintEvent($document->id, $document->document_type_id, $request->printerOn, 0));
+        event(new PrintEvent($document->id, $document->document_type_id, $request->printerOn, 0,[],true));
         return [
             'success' => true,
             'data' => [

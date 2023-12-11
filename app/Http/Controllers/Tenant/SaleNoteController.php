@@ -856,7 +856,7 @@ class SaleNoteController extends Controller
     
             $establishment = Establishment::where('id', $this->sale_note->establishment_id)->first();
             if (auth()->user()->type != 'admin') {
-                event(new PrintEvent($this->sale_note->id, "80", $request->printerOn, 0));
+                event(new PrintEvent($this->sale_note->id, "80", $request->printerOn, 0,[],true));
             }
             return [
                 'success' => true,
