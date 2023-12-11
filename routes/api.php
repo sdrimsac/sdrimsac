@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\Tenant\DocumentController;
 use App\Http\Controllers\Tenant\ItemController;
 use App\Http\Controllers\Tenant\PersonController;
 use App\Http\Controllers\Tenant\WhatsappController;
@@ -31,7 +30,7 @@ $hostname = app(Hyn\Tenancy\Contracts\CurrentHostname::class);
 if($hostname){
     Route::domain($hostname->fqdn)->group(function () {
 Route::get('persons/customers/records', [PersonController::class, 'recordsApp']);
-Route::get('documents/tables', [DocumentController::class, 'tables']);
+// Route::get('/documents/series', 'Api\MobileController@getSeries');
 Route::get('categories/init', [ItemController::class, 'init_categories']);
 Route::post('whatsapp/qr', [WhatsappController::class, 'receiveQr']);
 Route::get('whatsapp/notification', [WhatsappController::class, 'notification']);
@@ -62,7 +61,7 @@ Route::get('sale-note/print/{external_id}/{format?}', 'SaleNoteController@toPrin
 Route::middleware(['auth:api', 'locked.tenant'])->group(function () {
 
 
-
+    
 
     //Company
     Route::get('companies/record', 'CompanyController@record');
@@ -109,7 +108,7 @@ Route::middleware(['auth:api', 'locked.tenant'])->group(function () {
     Route::get('items/images/delete/{id}', 'ItemController@delete_images');
     //MOBILE
     Route::get('downloads/{model}/{type}/{external_id}/{format?}', 'DownloadController@downloadExternal');
-    Route::get('document/series', 'Api\MobileController@getSeries');
+    // Route::get('document/series', 'Api\MobileController@getSeries');
     Route::get('document/tables', 'Api\MobileController@tables');
     Route::get('document/customers', 'Api\MobileController@customers');
     Route::post('document/email', 'Api\MobileController@document_email');
@@ -198,20 +197,20 @@ Route::middleware(['auth:api', 'locked.tenant'])->group(function () {
     Route::post('person', 'Api\MobileController@person');
     Route::get('document/search-items', 'Api\MobileController@searchItems');
     Route::get('document/search-customers', 'Api\MobileController@searchCustomers');
-    Route::post('documents/generar_documents', '\App\Http\Controllers\Tenant\DocumentController@store');
+    Route::post('documents/generar_documents', 'DocumentController@store');
     Route::post('documents/{id}', 'Api\DocumentController@store');
-    Route::get('documents/validate/{id}', '\App\Http\Controllers\Tenant\DocumentController@validar_cpe');
+    Route::get('documents/validate/{id}', 'DocumentController@validar_cpe');
     Route::post('documents', 'Api\DocumentController@store');
-    Route::get('documents/tables', '\App\Http\Controllers\Tenant\DocumentController@tables');
+    Route::get('documents/tables', 'DocumentController@tables');
     Route::get('documents/lists', 'Api\DocumentController@lists');
-    Route::get('documents/record/{document}', '\App\Http\Controllers\Tenant\DocumentController@record');
-    Route::get('documents/records', '\App\Http\Controllers\Tenant\DocumentController@records');
+    Route::get('documents/record/{document}', 'DocumentController@record');
+    Route::get('documents/records', 'DocumentController@records');
     Route::post('summaries', 'Api\SummaryController@store');
     Route::post('voided', 'Api\VoidedController@store');
     Route::post('retentions', 'Api\RetentionController@store');
     Route::post('dispatches', 'Api\DispatchController@store');
     Route::post('documents/send', 'Api\DocumentController@send');
-    Route::get('documents/send/{document}', '\App\Http\Controllers\Tenant\DocumentController@send');
+    Route::get('documents/send/{document}', 'DocumentController@send');
     Route::post('summaries/status', 'Api\SummaryController@status');
     Route::post('voided/status', 'Api\VoidedController@status');
     Route::get('services/ruc/{number}', 'Api\ServiceController@ruc');
@@ -222,12 +221,12 @@ Route::middleware(['auth:api', 'locked.tenant'])->group(function () {
     Route::post('documents_server', 'Api\DocumentController@storeServer');
     Route::get('document_check_server/{external_id}', 'Api\DocumentController@documentCheckServer');
 });
-Route::get('documents/search/customers', '\App\Http\Controllers\Tenant\DocumentController@searchCustomers');
+Route::get('documents/search/customers', 'DocumentController@searchCustomers');
 
 Route::post('services/validate_cpe', 'Api\ServiceController@validateCpe');
 Route::post('services/consult_status', 'Api\ServiceController@consultStatus');
 Route::post('documents/status', 'Api\ServiceController@documentStatus');
-Route::get('sendserver/{document_id}/{query?}', '\App\Http\Controllers\Tenant\DocumentController@sendServer');
+Route::get('sendserver/{document_id}/{query?}', 'DocumentController@sendServer');
 
     });
 }else{

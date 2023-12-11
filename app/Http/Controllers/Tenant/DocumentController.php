@@ -437,7 +437,7 @@ class DocumentController extends Controller
         return view('tenant.documents.form_tensu', compact('is_contingency'));
     }
 
-
+    
     public function tables()
     {
         $exchange_rate_sale = 1;

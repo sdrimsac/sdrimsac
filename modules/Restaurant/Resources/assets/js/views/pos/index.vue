@@ -1761,7 +1761,9 @@ export default {
         "desarrollador",
         "company",
         "area_id",
-        "area"
+        "lareaId",
+        "area",
+        "areaId",
     ],
     components: {
         ItemSet,
@@ -1951,12 +1953,13 @@ export default {
         this.ordensPending = this.pending_order;
         this.loading = true;
         this.socketWhatsappConfig();
-        this.getPrinter();
         await this.getTables();
         await this.getSeries();
         await this.initForm(this.customer_default.id);
         await this.getFoods();
         await this.filterCategorie(0, false);
+        await this.getPrinter();
+
         this.setMenuOptions();
         // await this.changeCustomer();
         this.loading = false;
@@ -2381,8 +2384,9 @@ export default {
             }
         },
         async getPrinter() {
+
             const response = await this.$http.get(
-                `/caja/worker/cash/get_printer/${this.area_id}`
+                `/caja/worker/cash/get_printer/${this.worker.area_id}`
             );
             if (response.status == 200) {
                 const { printer } = response.data;

@@ -93,7 +93,8 @@ class DashboardController extends Controller
         $auth_login = auth()->user()->id;
         $cash_id = $cash ? $cash->id : 0;
         $pending_order = Orden::where('status_orden_id', '<>', 4)->count();
-        return view('restaurant::pos.dashboard', compact('pending_order', 'area_id', 'cash_id', 'worker', 'establishments', 'configuration', 'auth_login', 'company', 'desarrollador'));
+        $lareaId = $area_id;
+        return view('restaurant::pos.dashboard', compact('pending_order','lareaId', 'area_id', 'cash_id', 'worker', 'establishments', 'configuration', 'auth_login', 'company', 'desarrollador'));
     }
 
     public function kitchen()
@@ -123,7 +124,6 @@ class DashboardController extends Controller
             if ($table != null) {
                 $tables_active = new TableCollection(Table::where('area_id', $areas[0]->id)->first());
                 $tables = Table::where('area_id', $areas[0]->id);
-                // dump($establishment_table_id);
                 if ($establishment_table_id) {
                     $tables = $tables->where('establishment_id', $establishment_table_id);
                 }
