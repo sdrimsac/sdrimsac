@@ -170,12 +170,12 @@ class ItemController extends Controller
         foreach ($categories as $category) {
             $items = Item::where('category_id', $category->id)->take(15)->get();
             $categories_array[] = [
-                'category' => $category->name,
+                'category' => $category,
                 'items' => $items
             ];
         }
         return $categories_array;
-        
+
         
       
 
