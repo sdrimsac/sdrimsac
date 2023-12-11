@@ -341,6 +341,15 @@
                         </el-input>
                     </div>
                     <div class="col-md-6 col-lg-6 col-sm-6 col-6">
+                        <template v-if="currentRoom.credit_line > 0">
+                            <button
+                                type="button"
+                                class="btn btn-secondary btn-sm"
+                                style="margin-top:20px;"
+                            >
+                              Garantía  S/.{{ currentRoom.credit_line.toFixed(2) }}
+                            </button>
+                        </template>
                         <button
                             type="button"
                             class="btn btn-success btn-sm"
@@ -412,6 +421,7 @@
                         <span class="text-muted h5">T. ADELANTO: </span>
                         <span class="h4">{{ currentRoom.advance }}</span>
                     </div>
+
                     <div
                         class="col-2 d-fle align-items-center"
                         v-if="extra_time > 0"
@@ -1269,7 +1279,7 @@ export default {
             this.currentRoom = null;
         },
         async sendToMaintenance(event, id) {
-                event.stopPropagation();
+            event.stopPropagation();
             if (this.configuration.maintenance_workers) {
                 let table = this.all_tables.find(t => t.id == id);
                 let number = table.number;
@@ -1301,7 +1311,7 @@ export default {
             } catch (e) {}
         },
         async sendToCleanById(event, id) {
-           event.stopPropagation();
+            event.stopPropagation();
             if (this.configuration.maintenance_workers) {
                 let table = this.all_tables.find(t => t.id == id);
                 let number = table.number;
@@ -1334,17 +1344,17 @@ export default {
             } catch (e) {}
         },
         async sendToClean() {
-            if(this.configuration.maintenance_workers){
+            if (this.configuration.maintenance_workers) {
                 this.sendToCleanById(null, this.currentTable.id);
-            }else{
-                  const response = await this.$http(
-                `/caja/rooms/send_to_clean/${this.currentTable.id}`
-            );
+            } else {
+                const response = await this.$http(
+                    `/caja/rooms/send_to_clean/${this.currentTable.id}`
+                );
 
-            if (response.status == 200) {
-                this.$emit("getTablesToClean");
-                this.getTables();
-            }
+                if (response.status == 200) {
+                    this.$emit("getTablesToClean");
+                    this.getTables();
+                }
             }
         },
         async payAll() {
@@ -1361,7 +1371,8 @@ export default {
                 hotel_rent_item_ids,
                 hotel_rent_id,
                 customer_number,
-                customer_id
+                customer_id,
+                credit_line
             } = data;
             this.$emit("paymentsOrden", {
                 items: ordens_items,
@@ -1370,7 +1381,8 @@ export default {
                 hotel_rent_item_ids,
                 hotel_rent_id,
                 customer_number,
-                customer_id
+                customer_id,
+                credit_line
             });
             this.close();
         },
@@ -1392,7 +1404,7 @@ export default {
         },
 
         createOrden() {
-            let { number, id, is_room } = this.currentTable;
+            let { number, id, is_room, } = this.currentTable;
             this.$emit("creatingOrden", number, id, is_room);
             this.close();
         },

@@ -181,6 +181,39 @@ class TableRoomController extends Controller
             'items' => $formated_items
         ];
     }
+    public function print_warranty($id){
+        $room = null;
+        $hotel_rent_item = HotelRentItem::findOrFail($id);
+        $record = new \stdClass();
+        $hotel_rent = $hotel_rent_item->hotel_rent;
+        $customer_name = $hotel_rent->customer->name;
+        $customer_number = $hotel_rent->customer->number;
+        $table = $hotel_rent_item->table;
+        $floor = $table->floor;
+        $tower = $floor->tower;
+        $table_number = $table->number;
+        $user_name = $hotel_rent->user->name;
+        $room = $table_number . ' - ' . $tower->name;
+        $record->room = $room;
+        $record->customer_name = $customer_name;
+        $record->customer_number = $customer_number;
+        $record->user_name = $user_name;
+        $record->credit_line = $hotel_rent_item->credit_line;
+        $record->created_at = $hotel_rent_item->checkin_date;
+        $company = Company::active();
+        $height = 280;
+        try {
+            $pdf = PDF::loadView('restaurant::table_room.credit_line_hotel', compact(
+                'record',
+                'company'
+            ))
+                ->setPaper(array(0, 0, 249.45, $height));
+        } catch (Exception $e) {
+            return ['m' => $e->getMessage()];
+        }
+
+        return $pdf->stream('pdf_transfers.pdf');
+    }
     public function print_service($id)
     {
         $record = HotelRentItemServices::findOrFail($id);
@@ -357,7 +390,7 @@ class TableRoomController extends Controller
     public function getRoom($id)
     {
         $room = HotelRentItem::where('table_id', $id)
-            ->where('payment_status', 'Pendiente')
+            // ->where('payment_status', 'Pendiente')
             ->where('is_reserve', false)
             ->orderBy('checkin_date', 'desc')
             ->orderBy('checkin_time', 'desc')
@@ -525,6 +558,7 @@ class TableRoomController extends Controller
     {
         $extra_time = $request->input('extra_time') ?? 0;
         $hotel_rent_item = HotelRentItem::find($id);
+        $credit_line = $hotel_rent_item->credit_line;
         $hotel_rent_item->extra_time = $extra_time;
         $hotel_rent_item->save();
         $customer_number  = $hotel_rent_item->hotel_rent->customer->number;
@@ -586,7 +620,7 @@ class TableRoomController extends Controller
         }
         if ($single_room) {
 
-            return compact('orden_ids', 'ordens_items', 'hotel_rent_id', 'customer_number', 'customer_id');
+            return compact('orden_ids', 'ordens_items', 'hotel_rent_id', 'customer_number', 'customer_id','credit_line');
         } else {
             return compact('orden_ids', 'ordens_items', 'hotel_rent_item_ids', 'customer_number', 'customer_id');
         }
@@ -708,7 +742,9 @@ class TableRoomController extends Controller
     }
 
     public function tables(Request $request)
-    {
+    {   
+        $configuration = Configuration::first();
+        $credit_line_limit = $configuration->credit_line_limit ?? 150;
         $is_reserve = $request->input('is_reserve');
         $is_reserve = $is_reserve == 'true' ? true : false;
         $table_types = TableType::where('active', true)->get();
@@ -723,6 +759,7 @@ class TableRoomController extends Controller
         $tables = $tables->with('services')->get();
 
         return compact(
+            'credit_line_limit',
             'services',
             'towers',
             'floors',
@@ -781,6 +818,23 @@ class TableRoomController extends Controller
             'checkout_time_estimated' => $checkout_time_estimated,
         ];
     }
+    public function delete_hotel_rent($id){
+        $hotel_rent = HotelRent::findOrFail($id);
+        $hotel_rent->items->each(function($item){
+            $item->services->each(function($service){
+                $service->delete();
+            });
+            $item->table->status_table_id = 1;
+            $item->table->save();
+            
+            $item->delete();
+        });
+        $hotel_rent->delete();
+        return [
+            'success' => true,
+            'message' => 'Registro eliminado con éxito'
+        ];
+    }
     public function setGuess(Request $request)
     {
         //     'supplier' => PersonInput::set($inputs['supplier_id']),
@@ -811,6 +865,14 @@ class TableRoomController extends Controller
             $rooms = $request->input('rooms');
 
             foreach ($rooms as $room) {
+                $advances = $room['advances'];
+                $total = $room['total'];
+                $original_price = $room['original_price'];
+                $is_payed = $advances >= $original_price;
+                if($is_payed){
+                    // $payment_status = "Pagado";
+                    // $advances = $total;
+                }
                 $checkin_date = Carbon::parse($room['checkin_date'])
                     ->setTimezone('America/Lima')
                     ->format('Y-m-d');
@@ -824,8 +886,8 @@ class TableRoomController extends Controller
                 $hotel_rent_item->is_reserve = $room['is_reserve'];
                 $hotel_rent_item->duration = $room['duration'];
                 $hotel_rent_item->is_month_rent = $room['is_month_rent'];
-
-                $hotel_rent_item->advances = $room['advances'];
+                $hotel_rent_item->credit_line = $room['credit_line'];
+                $hotel_rent_item->advances = $advances;
                 $hotel_rent_item->total = $room['total'];
                 $hotel_rent_item->quantity_persons = $room['quantity_persons'];
                 $hotel_rent_item->payment_status = $payment_status;
@@ -881,6 +943,9 @@ class TableRoomController extends Controller
                     $hotel_rent_item_person->hotel_rent_item_id = $hotel_rent_item->id;
                     $hotel_rent_item_person->person_id = $guess['id'];
                     $hotel_rent_item_person->save();
+                }
+                if($hotel_rent_item->credit_line > 0){
+                    event(new PrintEvent($hotel_rent_item->id, "CL", true));
                 }
             }
             DB::connection('tenant')->commit();
@@ -962,6 +1027,7 @@ class TableRoomController extends Controller
     {
         $user = auth()->user();
         $configuration = Configuration::first();
+        $credit_line_hotel_limit = $configuration->credit_line_hotel_limit ?? 150; 
         $time_to_leave = $configuration->alarm_to_end;
         $services = RoomService::where('active', true)->get();
         $establishment_id = $user->establishment_id;
@@ -972,7 +1038,7 @@ class TableRoomController extends Controller
         })
             ->get()
 
-            ->transform(function ($row) use ($time_to_leave) {
+            ->transform(function ($row) use ($time_to_leave,$credit_line_hotel_limit) {
                 $rent_month = false;
 
                 $reserves = HotelRentItem::where('table_id', $row->id)->where('is_reserve', true)
@@ -1012,6 +1078,8 @@ class TableRoomController extends Controller
                 }
 
                 return [
+                    'credit_line_limit' => $credit_line_hotel_limit,
+                    'has_frigobar' => $row->has_frigobar,
                     'rent_month' => $rent_month,
                     'date_of_out' => $date_of_out,
                     'counter' => $counter,

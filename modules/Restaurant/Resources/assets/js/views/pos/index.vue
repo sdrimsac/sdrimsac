@@ -930,6 +930,7 @@
                 <div class="col-5 col-sm-7 col-lg-6 col-md-7 col-xl-5">
                     <div class="card-body p-2">
                         <list-orden
+                                    @sendOrdens="sendOrdens"
                             :isHotelArea.sync="isHotelArea"
                             :clientSaleNoteNumber.sync="clientSaleNoteNumber"
                             :clientSaleNoteDiscount.sync="
@@ -1441,6 +1442,7 @@
                 </div>
                 <div class="row">
                     <list-orden
+                                    @sendOrdens="sendOrdens"
                         :company.sync="company"
                         :customer_variation="customer_variation"
                         :variationShow.sync="variation"
@@ -2902,6 +2904,7 @@ export default {
                 if (form.customer_id) {
                     this.form.customer_id = form.customer_id;
                 }
+                this.form.credit_line = form.credit_line;
                 this.form.promotion_sale = form.promotion_sale;
                 this.form.hotel_rent_item_service_id =
                     form.hotel_rent_item_service_id;

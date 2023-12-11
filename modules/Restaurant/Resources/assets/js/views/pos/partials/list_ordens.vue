@@ -656,6 +656,15 @@
                                 placeholder="Canjear código de promoción"
                             >
                             </el-input>
+                            <el-input
+                                @input="searchOrdenNumber"
+                                type="text"
+                                maxlength="10"
+                                show-word-limit
+                                v-model="ordenNumber"
+                                placeholder="Cobrar por N° de orden"
+                            >
+                            </el-input>
                         </template>
                     </div>
 
@@ -2311,6 +2320,7 @@ export default {
 
     data() {
         return {
+            ordenNumber: null,
             timer: null,
             promotionCode: null,
             currentArea: null,
@@ -2463,6 +2473,26 @@ export default {
         this.getCommercialTreatments();
     },
     methods: {
+        sendOrdens(orden) {
+            this.$emit("sendOrdens", orden);
+            this.ordenNumber = null;
+        },
+        searchOrdenNumber() {
+            if (this.ordenNumber) {
+                if (this.timer) {
+                    clearTimeout(this.timer);
+                }
+                this.timer = setTimeout(async () => {
+                    const response = await this.$http(
+                        `/caja/worker/record/${this.ordenNumber}`
+                    );
+                    let { data } = response.data;
+                    this.sendOrdens(data);
+
+                    this.ordenNumber = null;
+                }, 1000);
+            }
+        },
         async promotionDesactive(id) {
             try {
                 this.loading = true;
@@ -2560,7 +2590,7 @@ export default {
                     id: 7,
                     title: ["Ingresos/", "/Gastos"],
                     icon: "fas fa-money-bill-wave-alt",
-                    visible: true
+                    visible: this.configuration.show_expenses_incomes_caja
                 },
                 {
                     id: 4,
@@ -3384,7 +3414,10 @@ export default {
                     `/caja/worker/record/${id}?precuenta=true`
                 );
                 let url = response.data.print;
-                console.log("🚀 ~ file: list_ordens.vue:3387 ~ printTicket ~ url:", url)
+                console.log(
+                    "🚀 ~ file: list_ordens.vue:3387 ~ printTicket ~ url:",
+                    url
+                );
                 let config = qz.configs.create(response.data.printer, {
                     scaleContent: false
                 });
@@ -3401,7 +3434,6 @@ export default {
                 qz.print(config, data).catch(e => {
                     this.$toast.error(e.message);
                 });
-
             } catch (e) {
                 this.$toast.error(e.message);
             }

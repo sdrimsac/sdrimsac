@@ -360,6 +360,8 @@
                                                 <a
                                                     type="button"
                                                     class="dropdown-item"
+                                                    v-if="!(row.state_type_id ==
+                                                                '13' && row.document_type_id =='03')"
                                                     @click.prevent="
                                                         clickValidarCpe(row.id)
                                                     "

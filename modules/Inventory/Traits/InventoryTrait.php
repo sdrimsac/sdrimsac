@@ -250,7 +250,11 @@ trait InventoryTrait
 
     private function updateStock($item_id, $quantity, $warehouse_id)
     {
-
+        //si el item es un servicio no se actualiza el stock
+        $item = Item::findOrFail($item_id);
+        if ($item->unit_type_id === 'ZZ') {
+            return;
+        }
         // $inventory_configuration = InventoryConfiguration::firstOrFail();
         $configuration = Configuration::firstOrFail();
         if ($configuration->college) {

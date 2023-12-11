@@ -2,6 +2,7 @@
 
 namespace Modules\Restaurant\Http\Resources;
 
+use App\Models\Tenant\Configuration;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Modules\Restaurant\Models\Orden;
 
@@ -15,10 +16,14 @@ class TableCollection extends ResourceCollection
      */
     public function toArray($request)
     {
-        return $this->collection->transform(function ($row, $key) {
+        $configuration =   Configuration::first();
+        $credit_line_hotel_limit = $configuration->credit_line_hotel_limit ?? 150;
+        return $this->collection->transform(function ($row, $key) use ($credit_line_hotel_limit) {
             $orden = Orden::where('table_id', $row->id)->where('status_orden_id', '!=', 4)->get();
             $tower = optional(optional($row->floor)->tower)->name;
             return [
+                'credit_line_hotel_limit' => $credit_line_hotel_limit,
+                'has_frigobar'     => (bool)$row->has_frigobar,
                 'month_price'      => $row->month_price,
                 'price'            => $row->price,
                 'id'                => $row->id,
@@ -32,7 +37,7 @@ class TableCollection extends ResourceCollection
                 'establishment_id'  => $row->establishment_id,
                 'description'      => $row->description,
                 'orden'          => $orden,
-                'full_name'       => $row->getTableFullName(), 
+                'full_name'       => $row->getTableFullName(),
                 'is_room'       => $row->is_room,
             ];
         });

@@ -21,6 +21,7 @@ class Table extends ModelTenant
         'is_cleaning',
         'cleaning_start_date',
         'is_room',
+        'has_frigobar',
         'floor_id',
         'table_type_id',
         'number',
@@ -31,6 +32,7 @@ class Table extends ModelTenant
         'description'
     ];
     protected $casts = [
+        'has_frigobar' => 'boolean',
         'is_cleaning' => 'boolean',
     ];
     protected static function boot()

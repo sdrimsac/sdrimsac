@@ -31,6 +31,7 @@ Route::prefix('caja')->group(function () {
     //Route::get('/', 'RestaurantController@index');
     //Route::get('documents', 'OrdenController@printTicket');
     Route::get('rooms/print_service/{id}', [TableRoomController::class, 'print_service']);
+    Route::get('rooms/print_warranty/{id}', [TableRoomController::class, 'print_warranty']);
     Route::get('sale-notes', [App\Http\Controllers\SaleNoteController::class, 'pos'])->name('pos.sale_notes.index')->middleware('redirect.level');
     Route::get('documents', [App\Http\Controllers\DocumentController::class, 'documents'])->name('restaurant.documents.index');
     Route::get('documents/create/{documents?}', [App\Http\Controllers\DocumentController::class, 'create_pos'])->name('tenant.documents_pos.create')->middleware(['redirect.level', 'tenant.internal.mode']);
@@ -191,6 +192,7 @@ Route::prefix('caja')->group(function () {
         Route::get('rooms/services/{id}', 'TableRoomController@get_services');
         Route::get('rooms/promotion/{code}', 'TableRoomController@get_promotion');
         Route::delete('rooms/delete_service/{id}', 'TableRoomController@delete_service');
+        Route::delete('rooms/hotel/rents/{id}', 'TableRoomController@delete_hotel_rent');
         Route::get('rooms/success_service/{id}', 'TableRoomController@success_service');
         Route::get('rooms/desactive_promotion/{code}', 'TableRoomController@desactive_promotion');
 

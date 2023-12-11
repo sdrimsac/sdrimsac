@@ -1613,6 +1613,21 @@
                                                 ></el-switch>
                                             </div>
                                         </div>
+                                         <div class="col-md-6 mt-4">
+                                            <div class="form-group">
+                                                <label
+                                                    class="control-label w-100"
+                                                    >Limite de la garantía - frigobar
+                                                </label>
+                                                <el-input-number
+                                                    @change="submit"
+                                                    v-model="
+                                                       form.credit_line_hotel_limit
+                                                    "
+                                                >
+                                                </el-input-number>
+                                            </div>
+                                        </div>
                                         <div class="col-md-6 mt-4">
                                             <div class="form-group">
                                                 <label

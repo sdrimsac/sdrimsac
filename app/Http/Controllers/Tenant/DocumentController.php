@@ -862,7 +862,7 @@ class DocumentController extends Controller
         $configuration = Configuration::first();
         if (!$request->has_related_sale_note && $request->variation == false && $request->payment_condition_id === "01") {
             if ($request->boxes) {
-                $message="";
+                $message = "";
                 foreach ($request->boxes as $currentBox) {
                     $method = $currentBox['method'];
                     $amount = $currentBox['amount'];
@@ -873,8 +873,8 @@ class DocumentController extends Controller
                     $box->group_id = 1;
                     $box->operation_number = $operation_number;
                     $box->method = $method;
-                    if($method == "Yape"|| $method == "PLIN"){
-                        $message.= "Pago por ".$method." por S/".$amount."- N° Operación: ".$operation_number ?? "-";
+                    if ($method == "Yape" || $method == "PLIN") {
+                        $message .= "Pago por " . $method . " por S/" . $amount . "- N° Operación: " . $operation_number ?? "-";
                     }
                     $box->bank_account_id = $bank_account_id;
                     $box->bank_account_operation = $bank_account_operation;
@@ -911,9 +911,9 @@ class DocumentController extends Controller
                     $box->soap_type_id = $company->soap_type_id;
                     $box->save();
                 }
-                if($configuration->send_whatsapp_digital_pay){
-                
-                    if($message){
+                if ($configuration->send_whatsapp_digital_pay) {
+
+                    if ($message) {
                         $numbers = NumberActivity::all();
                         foreach ($numbers as $key => $number) {
                             (new WhatsappController)->sendMessage($message, $number->number);
@@ -971,7 +971,7 @@ class DocumentController extends Controller
                 event(new OrdenReadyEvent($orden_item->id));
             }
         }
-        if($request->orden_ids){
+        if ($request->orden_ids) {
             $ids = $request->orden_ids;
             foreach ($ids as $id) {
                 $Orden = Orden::findOrFail($id);
@@ -986,10 +986,10 @@ class DocumentController extends Controller
                 }
             }
         }
-        if($request->is_list_credit){
+        if ($request->is_list_credit) {
             CreditList::where('customer_id', $document->customer_id)->update(['paid' => true]);
         }
-        if($request->hotel_rent_item_ids){
+        if ($request->hotel_rent_item_ids) {
             $hotel_rent_items = HotelRentItem::whereIn('id', $request->hotel_rent_item_ids)->get();
             foreach ($hotel_rent_items as $item) {
                 $item->payment_status = "Pagado";
@@ -1001,20 +1001,30 @@ class DocumentController extends Controller
                 $table->status_table_id = 5;
                 $table->sendMessageDesocupied();
                 $table->save();
-                
             }
         }
-        if($request->hotel_rent_id){
-            $hotel_rent= HotelRent::findOrFail($request->hotel_rent_id);
+        if ($request->hotel_rent_id) {
+            $hotel_rent = HotelRent::findOrFail($request->hotel_rent_id);
+            $hotel_rent_items = $hotel_rent->items;
 
-            if($request->is_advance){
+            if ($request->is_advance) {
                 HotelRentDocument::create([
                     'hotel_rent_id' => $hotel_rent->id,
                     'document_id' => $document->id,
                     'is_advance' => true,
                 ]);
-            }else{
-                $hotel_rent_items = $hotel_rent->items;
+
+                foreach ($hotel_rent_items as $item) {
+                    $advance = $item->advances;
+                    $advance = floatval($advance);
+                    $price = $item->getPrice();
+                    if ($advance == $price) {
+                        $item->payment_status = "Pagado";
+                        $item->advances = 0;
+                        $item->save();
+                    }
+                }
+            } else {
                 foreach ($hotel_rent_items as $item) {
                     $item->payment_status = "Pagado";
                     $table = Table::where('id', $item->table_id)->first();
@@ -1030,8 +1040,6 @@ class DocumentController extends Controller
                 $hotel_rent->paid = 1;
                 $hotel_rent->save();
             }
-         
-        
         }
         if (count($ids) != 0) {
             Orden::whereIn('id', $ids)->update(['document_id' => $document->id]);
@@ -1078,6 +1086,7 @@ class DocumentController extends Controller
 
     public function reStore($document_id)
     {
+       try{
         $fact = DB::connection('tenant')->transaction(function () use ($document_id) {
             $document = Document::find($document_id);
 
@@ -1108,6 +1117,12 @@ class DocumentController extends Controller
             'success' => true,
             'message' => 'El documento se volvio a generar.',
         ];
+       }catch(Exception $e){
+        return [
+            'success' => false,
+            'message' => $e->getMessage(),
+        ];
+       }
     }
     public function updateBox($id, $Payments, $method_payment, $total_payment)
     {

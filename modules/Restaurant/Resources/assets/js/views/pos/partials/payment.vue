@@ -1603,6 +1603,16 @@ export default {
         if (!this.configuration.discount_with_base_variant) {
             this.discountTotal = true;
         }
+
+        if(this.form.is_room){
+                
+                if(this.form.credit_line && this.form.credit_line > 0){
+                    this.form.enter_amount = this.form.credit_line;
+                    
+                    this.enterAmount();
+
+                }
+        }
     },
     mounted() {},
     methods: {
@@ -1959,7 +1969,7 @@ export default {
             }
             return false;
         },
-        addPayment() {
+        addPayment(amount) {
             let id = this.currentPayments.length + 1;
             let method = this.paymentsValue[this.method_payments];
             let bank_account_id = null;
@@ -2008,7 +2018,7 @@ export default {
                     method,
                     bank_account_id,
                     date,
-                    amount: this.form.enter_amount,
+                    amount: amount || this.form.enter_amount,
                     operation_number: this.operation_number
                 });
                 if (this.form.payment_condition_id == "03") {
@@ -2193,6 +2203,7 @@ export default {
             if (!this.form.is_room) {
                 this.value = null;
                 this.form.customer_id = null;
+             
             }
 
             if (!this.configuration.restrict_receipt_date) {
@@ -3602,17 +3613,12 @@ export default {
                         }
                     }
                 } else {
-                    this.loading_submit = true;
-                    this.$alert(
-                        "<strong>Ocurrio un error </strong>" +
-                            response.statusCode +
-                            "<br>" +
-                            this.resource_documents,
-                        "HTML String",
-                        {
-                            dangerouslyUseHTMLString: true
-                        }
-                    );
+                this.loading_submit = true;
+                let {
+                    data: { message }
+                } = response;
+                this.$toast.error(message || "Ocurrió un error");
+                this.loading_submit = false;
                 }
             } catch (error) {
                 console.log(error);
@@ -3693,7 +3699,17 @@ export default {
             this.cleanLocalStoragePayment();
             this.$eventHub.$emit("cancelSale");
         },
+        async deleteHotelRentItem(id) {
+            const response = await this.$http.delete(
+                `/caja/rooms/hotel/rents/${id}`
+            );
+            console.log("🚀 ~ file: payment.vue:3711 ~ deleteHotelRentItem ~ response:", response)
+        },
         back(val = false) {
+        let {is_advance,hotel_rent_id} = this.form;
+            if(is_advance && hotel_rent_id && !val){
+                this.deleteHotelRentItem(hotel_rent_id);
+            }
             this.splitPayments = [];
             //this.$emit("limpiarForm");
             if (!val) {

@@ -11,7 +11,7 @@ class Configuration extends ModelTenant
 {
     protected $fillable = [
         'search_series_pos',
-
+        'credit_line_hotel_limit',
         'principal_cash',
         'maintenance_workers',
         'auth_discount',
@@ -140,6 +140,7 @@ class Configuration extends ModelTenant
 
     ];
     protected $casts = [
+        'credit_line_hotel_limit' => 'float',
         'search_series_pos' => 'boolean',
         'principal_cash' => 'boolean',
         'maintenance_workers' => 'boolean',
@@ -230,6 +231,7 @@ class Configuration extends ModelTenant
         // $skins = Skin::all();
         $skins = [];
         return [
+            'credit_line_hotel_limit' => $this->credit_line_hotel_limit,
             'search_series_pos' => (bool)$this->search_series_pos,
             'principal_cash' => (bool) $this->principal_cash,
             'maintenance_workers' => (bool) $this->maintenance_workers,

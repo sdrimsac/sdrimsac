@@ -117,8 +117,12 @@ class HotelRentItemResource extends JsonResource
         // }else{
         //     $extra_time = $price_table * $checkout_date_estimated->diffInDays($now);
         // }
-        $toPay = $this->total > 0;
+        $toPay = ($this->total +  $total_all_orden) > 0 ;
+        if($this->credit_line > 0){
+            $credit_line = $this->credit_line - $total_all_orden;
+        }
         return [
+            'credit_line' => $credit_line,
             'has_services' => $has_services,
             'toPay' => $toPay,
             'extra_time' => $extra_time,

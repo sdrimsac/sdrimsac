@@ -301,7 +301,11 @@
                             ></el-button>
                         </div>
                     </div>
-                    <el-divider></el-divider>
+                    <el-divider
+                        v-if="room.services.length > 0"
+                        content-position="left"
+                        >Promociones</el-divider
+                    >
                     <div v-if="room.services.length > 0" class="row">
                         <div
                             class="col-md-3"
@@ -318,6 +322,30 @@
                             </el-input>
                         </div>
                     </div>
+                    <template v-if="room.has_frigobar">
+                        <el-divider content-position="left"
+                            >
+                            <el-checkbox
+                            v-model="room.enable_frigobar"
+                            >
+                                Garantía frigobar
+                            </el-checkbox>
+                            </el-divider
+                        >
+                        <div class="row">
+                            <div class="col-md-3">
+                                <label for="total_room">Monto </label>
+                                <el-input
+                                    :disabled="!room.enable_frigobar"
+                                    type="number"
+                                    :min="0"
+                                    step="any"
+                                    v-model="room.credit_line"
+                                >
+                                </el-input>
+                            </div>
+                        </div>
+                    </template>
                 </div>
             </el-collapse-item>
         </el-collapse>
@@ -353,6 +381,7 @@ export default {
     },
     data() {
         return {
+            credit_line_limit:150,
             services: [],
             all_services: [],
             title: "Ingreso de huesped",
@@ -515,6 +544,7 @@ export default {
                             price = month_price;
                         }
                         price = price * room.duration;
+                        room.original_price = price;
                         room.total = price - Number(advances);
 
                         subtotal += price - Number(advances);
@@ -565,6 +595,8 @@ export default {
         },
         addRoom({ tower_id, floor_id, table_id }) {
             let room = {
+                enable_frigobar:false,
+                credit_line: 0,
                 is_reserve: this.isReserve,
                 total: 0,
                 is_month_rent: false,
@@ -584,6 +616,8 @@ export default {
 
             if (table && table.description) {
                 room.description = table.description.replaceAll("/", "·");
+                room.has_frigobar = table.has_frigobar;
+                room.credit_line = this.credit_line_limit; 
             }
             this.rooms.push(room);
             this.calculateTotal();
@@ -601,11 +635,12 @@ export default {
                 `/caja/rooms/tablas?is_reserve=${this.isReserve}`
             );
             // this.rooms = response.data.tables;
-            let { towers, floors, tables, services } = response.data;
+            let { towers, floors, tables, services,credit_line_limit } = response.data;
             this.all_towers = towers;
             this.all_floors = floors;
             this.all_tables = tables;
             this.all_services = services;
+            this.credit_line_limit = credit_line_limit||150;
 
             ///
             // this.towers = towers;
@@ -673,21 +708,24 @@ export default {
         hasAdvances() {
             let has = false;
             for (let room of this.rooms) {
-                if (room.advances > 0) {
+                if (room.advances > 0) 
+                {
                     has = true;
                     break;
                 }
             }
             return has;
         },
+
         async submit() {
             this.form.rooms = this.rooms;
-        
+
             if (!this.validate()) {
                 return;
             }
             try {
                 this.loading = true;
+
                 const response = await this.$http.post(
                     "/caja/rooms/set-guess",
                     this.form
@@ -728,6 +766,9 @@ export default {
                     );
                     pass = false;
                 }
+                if(!room.enable_frigobar){
+                    room.credit_line = 0;
+                }
             }
             return pass;
         },
@@ -757,13 +798,13 @@ export default {
             }
             this.loading = false;
         },
-        updateServices(){
+        updateServices() {
             this.$forceUpdate();
         },
         showServices(room) {
             let table = this.all_tables.find(t => t.id == room.table_id);
             if (table) {
-                let { services } = table;
+                let { services,has_frigobar } = table;
                 if (services.length > 0) {
                     room.services = this.all_services
                         .filter(s =>
@@ -776,6 +817,7 @@ export default {
                 } else {
                     room.services = [];
                 }
+                room.has_frigobar = has_frigobar;
             } else {
                 room.services = [];
             }

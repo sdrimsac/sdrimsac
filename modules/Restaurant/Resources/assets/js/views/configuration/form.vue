@@ -220,8 +220,9 @@
                                     }}</label
                                 >
                                 <el-select
-                                :disabled="recordId!=null"
-                                 v-model="form.status_table_id">
+                                    :disabled="recordId != null"
+                                    v-model="form.status_table_id"
+                                >
                                     <el-option
                                         v-for="(data, index) in statusTable"
                                         :key="index"
@@ -297,6 +298,14 @@
                                 type == 'caja/rooms' && all_services.length > 0
                             "
                         >
+                            <div class="col-12 my-2">
+                                <el-checkbox
+                                    v-model="form.has_frigobar"
+                                    label="Frigobar"
+                                >
+                                    ¿Tiene frigobar?
+                                </el-checkbox>
+                            </div>
                             <div class="col-12">
                                 <div
                                     class="form-group"
@@ -548,6 +557,7 @@ export default {
             this.detail = null;
             this.errors = {};
             this.form = {
+                has_frigobar: false,
                 description: null,
                 id: null,
                 description: null,

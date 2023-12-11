@@ -27,11 +27,13 @@ class HotelRentItem extends ModelTenant
         'total',
         'extra_time',
         'is_month_rent',
+        'credit_line',
     ];
 
     protected $casts = [
         'is_month_rent' => 'boolean',
         'is_reserve' => 'boolean',
+        'credit_line' => 'float',
     ];
 
     public function hotel_rent()
@@ -53,7 +55,18 @@ class HotelRentItem extends ModelTenant
     {
         return $this->hasMany(HotelRentItemServices::class);
     }
-
+    public function getPrice()
+    {
+        $table_ = Table::find($this->table_id);
+        if($this->is_month_rent){
+            $price = $table_->price_month;
+        }else{
+            $price = $table_->price;
+        }
+        $duration = $this->duration;
+        $price = $price * $duration;
+        return $price;
+    }
     public function getName()
     {   
         $table_ = Table::find($this->table_id);

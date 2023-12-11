@@ -479,392 +479,410 @@ class SaleNoteController extends Controller
     public function store(SaleNoteRequest $request)
     {
 
-        DB::connection('tenant')->transaction(function () use ($request) {
-            $configuration = Configuration::first();
-
-            $request["list_ordens"] = Functions::valueKeyInArray($request->all(), "list_ordens", []);
-            $request["is_pay_credit_list"] = Functions::valueKeyInArray($request->all(), "is_pay_credit_list", false);
-            $request["is_credit"] = Functions::valueKeyInArray($request->all(), "is_credit", false);
-            $request["user_id"] = Functions::valueKeyInArray($request->all(), "user_id", auth()->id());
-            $request["advances"] = Functions::valueKeyInArray($request->all(), "advances", 0.0);
-            $request["total_advances"] = Functions::valueKeyInArray($request->all(), "total_advances", 0.0);
-            $request["total_rounded"] = Functions::valueKeyInArray($request->all(), "total", 0.0);
-            $request["total_payment"] = Functions::valueKeyInArray($request->all(), "total_payment", 0.0);
-            $request["document_type_id"] = "80";
-            $all_ordens = Functions::valueKeyInArray($request->all(), "all_ordens", false);
-            $data = $this->mergeData($request);
-            $data['time_of_issue'] = date('H:i:s'); 
-            $this->sale_note =  SaleNote::updateOrCreate(
-                ['id' => $request->input('id')],
-                $data
-            );
-            if ($request->input('id') != null) {
-                SaleNoteItem::where('sale_note_id', $request->input('id'))->delete();
-            }
-            if ($request->is_pay_credit_list) {
-                SaleNoteItem::unsetEventDispatcher();
-            }
-            foreach($request->list_ordens as $list_orden){
-                CreditList::where('orden_id', $list_orden)->update(['paid' => true]);
-            }
-            foreach ($data['items'] as $row) {
-                $item_id = isset($row['id']) ? $row['id'] : null;
-                $sale_note_item = new SaleNoteItem;
-                $sale_note_item->percentage_igv = 18;
-                $sale_note_item->fill($row);
-                $sale_note_item->percentage_igv = 18;
-                $sale_note_item->name_product_pdf = (isset($row['name_product_pdf'])) ? $row['name_product_pdf'] : "";
-                $sale_note_item->sale_note_id = $this->sale_note->id;
-                $sale_note_item->save();
-                if (array_key_exists('toWarehouse', $row)) {
-                    $quantity_to_restore = $row['toWarehouse'];
-                    if ($quantity_to_restore > 0) {
-                        $item_id = $row['item_id'];
-                        $warehouse_id = $row['item']['warehouse_id'];
-                        $this->restoreStock($quantity_to_restore, $item_id, $warehouse_id);
+        try{
+            DB::connection('tenant')->transaction(function () use ($request) {
+                $configuration = Configuration::first();
+    
+                $request["list_ordens"] = Functions::valueKeyInArray($request->all(), "list_ordens", []);
+                $request["is_pay_credit_list"] = Functions::valueKeyInArray($request->all(), "is_pay_credit_list", false);
+                $request["is_credit"] = Functions::valueKeyInArray($request->all(), "is_credit", false);
+                $request["user_id"] = Functions::valueKeyInArray($request->all(), "user_id", auth()->id());
+                $request["advances"] = Functions::valueKeyInArray($request->all(), "advances", 0.0);
+                $request["total_advances"] = Functions::valueKeyInArray($request->all(), "total_advances", 0.0);
+                $request["total_rounded"] = Functions::valueKeyInArray($request->all(), "total", 0.0);
+                $request["total_payment"] = Functions::valueKeyInArray($request->all(), "total_payment", 0.0);
+                $request["document_type_id"] = "80";
+                $all_ordens = Functions::valueKeyInArray($request->all(), "all_ordens", false);
+                $data = $this->mergeData($request);
+                $data['time_of_issue'] = date('H:i:s'); 
+                $this->sale_note =  SaleNote::updateOrCreate(
+                    ['id' => $request->input('id')],
+                    $data
+                );
+                if ($request->input('id') != null) {
+                    SaleNoteItem::where('sale_note_id', $request->input('id'))->delete();
+                }
+                if ($request->is_pay_credit_list) {
+                    SaleNoteItem::unsetEventDispatcher();
+                }
+                foreach($request->list_ordens as $list_orden){
+                    CreditList::where('orden_id', $list_orden)->update(['paid' => true]);
+                }
+                foreach ($data['items'] as $row) {
+                    $item_id = isset($row['id']) ? $row['id'] : null;
+                    $sale_note_item = new SaleNoteItem;
+                    $sale_note_item->percentage_igv = 18;
+                    $sale_note_item->fill($row);
+                    $sale_note_item->percentage_igv = 18;
+                    $sale_note_item->name_product_pdf = (isset($row['name_product_pdf'])) ? $row['name_product_pdf'] : "";
+                    $sale_note_item->sale_note_id = $this->sale_note->id;
+                    $sale_note_item->save();
+                    if (array_key_exists('toWarehouse', $row)) {
+                        $quantity_to_restore = $row['toWarehouse'];
+                        if ($quantity_to_restore > 0) {
+                            $item_id = $row['item_id'];
+                            $warehouse_id = $row['item']['warehouse_id'];
+                            $this->restoreStock($quantity_to_restore, $item_id, $warehouse_id);
+                        }
                     }
+                    // $item = Item::find($item_id);
+                    //  $item->stock = $item->stock - $row['quantity'];
+                    // $item->save();
                 }
-                // $item = Item::find($item_id);
-                //  $item->stock = $item->stock - $row['quantity'];
-                // $item->save();
-            }
-            if ($request->is_pay_credit_list) {
-                SaleNoteItem::setEventDispatcher(new \Illuminate\Events\Dispatcher());
-            }
-            if ($request->orden_id) {
-                $Orden = Orden::findOrFail($request->orden_id);
-                $Orden->sale_note_id = $this->sale_note->id;
-                $Orden->status_orden_id = 4;
-                $Orden->customer_id = $this->sale_note->customer_id;
-                $Orden->save();
-                $orden_items = OrdenItem::where('orden_id', $request->orden_id)->get();
-                foreach ($orden_items as $orden_item) {
-                    $orden_item->status_orden_id = 4;
-                    $orden_item->save();
-                    event(new OrdenReadyEvent($orden_item->id));
+                if ($request->is_pay_credit_list) {
+                    SaleNoteItem::setEventDispatcher(new \Illuminate\Events\Dispatcher());
                 }
-            }
-            if ($request->orden_ids) {
-                $ids = $request->orden_ids;
-                foreach ($ids as $id) {
-                    $Orden = Orden::findOrFail($id);
+                if ($request->orden_id) {
+                    $Orden = Orden::findOrFail($request->orden_id);
                     $Orden->sale_note_id = $this->sale_note->id;
                     $Orden->status_orden_id = 4;
                     $Orden->customer_id = $this->sale_note->customer_id;
                     $Orden->save();
-                    $orden_items = OrdenItem::where('orden_id', $id)->get();
+                    $orden_items = OrdenItem::where('orden_id', $request->orden_id)->get();
                     foreach ($orden_items as $orden_item) {
                         $orden_item->status_orden_id = 4;
                         $orden_item->save();
-                        // event(new OrdenReadyEvent($orden_item->id));
+                        event(new OrdenReadyEvent($orden_item->id));
                     }
                 }
-            }
-            if ($request->hotel_rent_item_ids) {
-                $hotel_rent_items = HotelRentItem::whereIn('id', $request->hotel_rent_item_ids)->get();
-                foreach ($hotel_rent_items as $item) {
-                    $item->payment_status = "Pagado";
-                    $item->sale_note_id = $this->sale_note->id;
-                    $item->checkout_date = date('Y-m-d');
-                    $item->checkout_time = date('H:i:s');
-                    $item->save();
-                    $table = Table::where('id', $item->table_id)->first();
-                    $table->status_table_id = 5;
-                    $table->sendMessageDesocupied();
-                    $table->save();
+                if ($request->orden_ids) {
+                    $ids = $request->orden_ids;
+                    foreach ($ids as $id) {
+                        $Orden = Orden::findOrFail($id);
+                        $Orden->sale_note_id = $this->sale_note->id;
+                        $Orden->status_orden_id = 4;
+                        $Orden->customer_id = $this->sale_note->customer_id;
+                        $Orden->save();
+                        $orden_items = OrdenItem::where('orden_id', $id)->get();
+                        foreach ($orden_items as $orden_item) {
+                            $orden_item->status_orden_id = 4;
+                            $orden_item->save();
+                            // event(new OrdenReadyEvent($orden_item->id));
+                        }
+                    }
                 }
-            }
-            if ($request->is_list_credit) {
-                CreditList::where('customer_id', $this->sale_note->customer_id)->update(['paid' => true]);
-            }
-            $promotion_sale = $request->promotion_sale ?? false;
-            if ($request->hotel_rent_id && !$promotion_sale) {
-                $hotel_rent = HotelRent::findOrFail($request->hotel_rent_id);
-                if ($request->is_advance) {
-                    HotelRentDocument::create([
-                        'hotel_rent_id' => $hotel_rent->id,
-                        'sale_note_id' => $this->sale_note->id,
-                        'is_advance' => true,
-                    ]);
-                } else {
-                    $hotel_rent_items = $hotel_rent->items;
+                if ($request->hotel_rent_item_ids) {
+                    $hotel_rent_items = HotelRentItem::whereIn('id', $request->hotel_rent_item_ids)->get();
                     foreach ($hotel_rent_items as $item) {
                         $item->payment_status = "Pagado";
+                        $item->sale_note_id = $this->sale_note->id;
+                        $item->checkout_date = date('Y-m-d');
+                        $item->checkout_time = date('H:i:s');
+                        $item->save();
                         $table = Table::where('id', $item->table_id)->first();
                         $table->status_table_id = 5;
                         $table->sendMessageDesocupied();
                         $table->save();
-                        $item->checkout_date = date('Y-m-d');
-                        $item->checkout_time = date('H:i:s');
-                        $item->save();
                     }
-                    $hotel_rent->payment_status = "Pagado";
-                    $hotel_rent->sale_note_id = $this->sale_note->id;
-
-                    $hotel_rent->paid = 1;
-                    $hotel_rent->save();
                 }
-            }
-            $user_id = auth()->user()->id;
-            $cash = Cash::where('state', 1)->where('user_id', $user_id)->first();
-            if(!$cash){
-                throw new Exception("No existe caja abierta para el usuario");
-            }
-            if($promotion_sale && $request->hotel_rent_item_service_id){
-                 SaleNotePromotion::create([
-                    'sale_note_id' => $this->sale_note->id,
-                    'hotel_rent_item_service_id' => $request->hotel_rent_item_service_id,
-                    'cash_id' => $cash->id,
-                ]);
-
-                HotelRentItemServices::where('id', $request->hotel_rent_item_service_id)->update(['active' => 0]);
-
-            }
-            if ($all_ordens) {
-                $tables = Table::where('establishment_id', auth()->user()->establishment_id)
-                    ->orWhereNull('establishment_id')
-                    ->where('status_table_id', 2)
-                    ->get();
-                foreach ($tables as $table) {
-                    $ordens = Orden::where('table_id', $table->id)->whereIn('status_orden_id', [1, 2, 3])->get();
-                    foreach ($ordens as $orden) {
-                        $orden->sale_note_id = $this->sale_note->id;
-                        $orden->status_orden_id = 4;
-                        $orden->customer_id = $this->sale_note->customer_id;
-                        $orden->save();
-                        $orden_items = OrdenItem::where('orden_id', $orden->id)->get();
-                        foreach ($orden_items as $orden_item) {
-                            $orden_item->status_orden_id = 4;
-                            $orden_item->save();
-                        }
-                    }
-                    Table::where('id', $table->id)->update(['status_table_id' => 1]);
+                if ($request->is_list_credit) {
+                    CreditList::where('customer_id', $this->sale_note->customer_id)->update(['paid' => true]);
                 }
-            }
-            /////------------------------------------------
-            if ($request->generate == true) {
-                $date = Carbon::parse($request->date_of_issue);
-                for ($i = 0; $i < $request->num_cuota; $i++) {
-                    switch ($request->type_payment) {
-                        case "Diario":
-                            $dias = 1;
-                            $date_payment = \Carbon\Carbon::parse($date->addDay($dias))->format('Y-m-d');
-                            $Week = date("w", strtotime($date_payment)); //date('W',strtotime($date_payment));
-                            if ($Week == 0) {
-                                $date_payment = \Carbon\Carbon::parse($date->addDay($dias))->format('Y-m-d');
-                            }
-                            break;
-                        case "Semanal":
-                            $dias = 7;
-                            $date_payment = \Carbon\Carbon::parse($date->addDay($dias))->format('Y-m-d');
-                            $Week = date("w", strtotime($date_payment)); //date('W',strtotime($date_payment));
-                            if ($Week == 0) {
-                                $date_payment = \Carbon\Carbon::parse($date->addDay($dias + 1))->format('Y-m-d');
-                            }
-                            break;
-                        case "Mensual":
-                            $dias = 30;
-                            $date_payment = \Carbon\Carbon::parse($date->addDay($dias))->format('Y-m-d');
-                            break;
-                    }
+                $promotion_sale = $request->promotion_sale ?? false;
+                if ($request->hotel_rent_id && !$promotion_sale) {
+                    $hotel_rent = HotelRent::findOrFail($request->hotel_rent_id);
+                    $hotel_rent_items = $hotel_rent->items;
+                    if ($request->is_advance) {
     
-
-                    Payment::create([
-                        "user_id"     => auth()->user()->id,
-                        "amount"       => $request->amount,
-                        "sale_note_id" => $this->sale_note->id,
-                        "type_payment" => $request->type_payment,
-                        "date_payment" => $date_payment,
-                        "tasa"         => $request->tasadefault
-                    ]);
-                    // $payment = Payment::firstOrNew(['id' => $id]);
+                        HotelRentDocument::create([
+                            'hotel_rent_id' => $hotel_rent->id,
+                            'sale_note_id' => $this->sale_note->id,
+                            'is_advance' => true,
+                        ]);
+                        foreach ($hotel_rent_items as $item) {
+                            $advance = $item->advances;
+                            $advance = floatval($advance);
+                            $price = $item->getPrice();
+                            if($advance == $price){
+                                $item->payment_status = "Pagado";
+                                $item->advances = 0;
+                                $item->save();
+                            }
+                        }
+                    } else {
+                        foreach ($hotel_rent_items as $item) {
+                            $item->payment_status = "Pagado";
+                            $table = Table::where('id', $item->table_id)->first();
+                            $table->status_table_id = 5;
+                            $table->sendMessageDesocupied();
+                            $table->save();
+                            $item->checkout_date = date('Y-m-d');
+                            $item->checkout_time = date('H:i:s');
+                            $item->save();
+                        }
+                        $hotel_rent->payment_status = "Pagado";
+                        $hotel_rent->sale_note_id = $this->sale_note->id;
+    
+                        $hotel_rent->paid = 1;
+                        $hotel_rent->save();
+                    }
                 }
-  
-                if ($cash == null) {
-                    $cash = Cash::create([
-                        'user_id' => auth()->user()->id,
-                        'date_opening' => date('Y-m-d'),
-                        'time_opening' => date('H:i:s'),
-                        'date_closed' => null,
-                        'time_closed' => null,
-                        'beginning_balance' => 0,
-                        'final_balance' => 0,
-                        'income' => 0,
-                        'state' => true,
-                        'reference_number' => null
+                $user_id = auth()->user()->id;
+                $cash = Cash::where('state', 1)->where('user_id', $user_id)->first();
+                if(!$cash){
+                    throw new Exception("No existe caja abierta para el usuario");
+                }
+                if($promotion_sale && $request->hotel_rent_item_service_id){
+                     SaleNotePromotion::create([
+                        'sale_note_id' => $this->sale_note->id,
+                        'hotel_rent_item_service_id' => $request->hotel_rent_item_service_id,
+                        'cash_id' => $cash->id,
+                    ]);
+    
+                    HotelRentItemServices::where('id', $request->hotel_rent_item_service_id)->update(['active' => 0]);
+    
+                }
+                if ($all_ordens) {
+                    $tables = Table::where('establishment_id', auth()->user()->establishment_id)
+                        ->orWhereNull('establishment_id')
+                        ->where('status_table_id', 2)
+                        ->get();
+                    foreach ($tables as $table) {
+                        $ordens = Orden::where('table_id', $table->id)->whereIn('status_orden_id', [1, 2, 3])->get();
+                        foreach ($ordens as $orden) {
+                            $orden->sale_note_id = $this->sale_note->id;
+                            $orden->status_orden_id = 4;
+                            $orden->customer_id = $this->sale_note->customer_id;
+                            $orden->save();
+                            $orden_items = OrdenItem::where('orden_id', $orden->id)->get();
+                            foreach ($orden_items as $orden_item) {
+                                $orden_item->status_orden_id = 4;
+                                $orden_item->save();
+                            }
+                        }
+                        Table::where('id', $table->id)->update(['status_table_id' => 1]);
+                    }
+                }
+                /////------------------------------------------
+                if ($request->generate == true) {
+                    $date = Carbon::parse($request->date_of_issue);
+                    for ($i = 0; $i < $request->num_cuota; $i++) {
+                        switch ($request->type_payment) {
+                            case "Diario":
+                                $dias = 1;
+                                $date_payment = \Carbon\Carbon::parse($date->addDay($dias))->format('Y-m-d');
+                                $Week = date("w", strtotime($date_payment)); //date('W',strtotime($date_payment));
+                                if ($Week == 0) {
+                                    $date_payment = \Carbon\Carbon::parse($date->addDay($dias))->format('Y-m-d');
+                                }
+                                break;
+                            case "Semanal":
+                                $dias = 7;
+                                $date_payment = \Carbon\Carbon::parse($date->addDay($dias))->format('Y-m-d');
+                                $Week = date("w", strtotime($date_payment)); //date('W',strtotime($date_payment));
+                                if ($Week == 0) {
+                                    $date_payment = \Carbon\Carbon::parse($date->addDay($dias + 1))->format('Y-m-d');
+                                }
+                                break;
+                            case "Mensual":
+                                $dias = 30;
+                                $date_payment = \Carbon\Carbon::parse($date->addDay($dias))->format('Y-m-d');
+                                break;
+                        }
+        
+    
+                        Payment::create([
+                            "user_id"     => auth()->user()->id,
+                            "amount"       => $request->amount,
+                            "sale_note_id" => $this->sale_note->id,
+                            "type_payment" => $request->type_payment,
+                            "date_payment" => $date_payment,
+                            "tasa"         => $request->tasadefault
+                        ]);
+                        // $payment = Payment::firstOrNew(['id' => $id]);
+                    }
+      
+                    if ($cash == null) {
+                        $cash = Cash::create([
+                            'user_id' => auth()->user()->id,
+                            'date_opening' => date('Y-m-d'),
+                            'time_opening' => date('H:i:s'),
+                            'date_closed' => null,
+                            'time_closed' => null,
+                            'beginning_balance' => 0,
+                            'final_balance' => 0,
+                            'income' => 0,
+                            'state' => true,
+                            'reference_number' => null
+                        ]);
+                    }
+                    SaleNoteCredit::create([
+                        'cash_id' => $cash->id,
+                        'sale_note_id' => $this->sale_note->id,
                     ]);
                 }
-                SaleNoteCredit::create([
-                    'cash_id' => $cash->id,
-                    'sale_note_id' => $this->sale_note->id,
-                ]);
-            }
-
-            $company = Company::first();
-            Box::where('sale_note_id', $this->sale_note->id)->delete();
-            if ($request->afectar_caja == true) {
-                // $payments = PaymentMethodType::where('id', $request->payment_condition_id)->first();
-                // $method = $payments->description;
-                $document_save = SaleNote::where('id', $this->sale_note->id)->first();
-                $type_document = "NOTA DE VENTA";
-                $document = $type_document . " N° " . $document_save->series . " - " . $document_save->number;
-
-                if ($request->boxes) {
-                    $message = "";
-                    foreach ($request->boxes as $currentBox) {
-                        $method = $currentBox['method'];
-                        $amount = $currentBox['amount'];
-                        $operation_number = Functions::valueKeyInArray($currentBox, 'operation_number');
-                        $bank_account_id = Functions::valueKeyInArray($currentBox, 'bank_account_id');
-                        $bank_account_operation = Functions::valueKeyInArray($currentBox, 'number_operation');
-                        $cajas    = new Box;
-                        $cajas->operation_number = $operation_number;
+    
+                $company = Company::first();
+                Box::where('sale_note_id', $this->sale_note->id)->delete();
+                if ($request->afectar_caja == true) {
+                    // $payments = PaymentMethodType::where('id', $request->payment_condition_id)->first();
+                    // $method = $payments->description;
+                    $document_save = SaleNote::where('id', $this->sale_note->id)->first();
+                    $type_document = "NOTA DE VENTA";
+                    $document = $type_document . " N° " . $document_save->series . " - " . $document_save->number;
+    
+                    if ($request->boxes) {
+                        $message = "";
+                        foreach ($request->boxes as $currentBox) {
+                            $method = $currentBox['method'];
+                            $amount = $currentBox['amount'];
+                            $operation_number = Functions::valueKeyInArray($currentBox, 'operation_number');
+                            $bank_account_id = Functions::valueKeyInArray($currentBox, 'bank_account_id');
+                            $bank_account_operation = Functions::valueKeyInArray($currentBox, 'number_operation');
+                            $cajas    = new Box;
+                            $cajas->operation_number = $operation_number;
+                            $cajas->group_id = 1;
+                            $cajas->category_id = 1;
+                            $cajas->subcategory_id = 1;
+                            $cajas->amount = $amount;
+                            $cajas->date = Carbon::parse($request->input('date_of_issue'))->format('Y-m-d');
+                            $cajas->type = '1';
+                            $cajas->state = '1';
+                            $cajas->method = $method;
+                            if ($method == "Yape" || $method == "PLIN") {
+                                $message .= "Pago por " . $method . " por S/" . $amount . "- N° Operación: " . $operation_number ?? "-";
+                            }
+                            $cajas->bank_account_id = $bank_account_id;
+                            $cajas->bank_account_operation = $bank_account_operation;
+                            $cajas->sale_note_id = $this->sale_note->id;
+                            $cajas->orden_id =  $request->orden_id;
+                            $cajas->cash_id = $request->cash_id;
+                            $cajas->user_id = auth()->user()->id;
+                            $cajas->description = "VENTAS " . $document;
+                            if ($bank_account_id) {
+                                $bank_account = BankAccount::findOrFail($bank_account_id);
+                                $bank_account->balance = $bank_account->balance + $currentBox["amount"];
+                                $bank_account->save();
+                                $cajas->description = "VENTAS " . $document . " - " . $bank_account->bank->description . " - " . $bank_account->currency_type->description;
+                            }
+                            $cajas->soap_type_id = $company->soap_type_id;
+                            $cajas->establishment_id = auth()->user()->establishment_id;
+                            $cajas->save();
+                        }
+                        if ($configuration->send_whatsapp_digital_pay) {
+    
+                            if ($message) {
+                                (new WhatsappController)->sendMessage($message);
+                                $numbers = NumberActivity::all();
+                                foreach ($numbers as $key => $number) {
+                                    (new WhatsappController)->sendMessage($message, $number->number);
+                                }
+                            }
+                        }
+                    } else {
+                        $cajas    = Box::firstOrNew(['sale_note_id' => $this->sale_note->id]);
                         $cajas->group_id = 1;
                         $cajas->category_id = 1;
                         $cajas->subcategory_id = 1;
-                        $cajas->amount = $amount;
+                        $cajas->operation_number = $request->operation_number;
+                        $cajas->amount = $request->input('total');
                         $cajas->date = Carbon::parse($request->input('date_of_issue'))->format('Y-m-d');
                         $cajas->type = '1';
                         $cajas->state = '1';
-                        $cajas->method = $method;
-                        if ($method == "Yape" || $method == "PLIN") {
-                            $message .= "Pago por " . $method . " por S/" . $amount . "- N° Operación: " . $operation_number ?? "-";
-                        }
-                        $cajas->bank_account_id = $bank_account_id;
-                        $cajas->bank_account_operation = $bank_account_operation;
+                        $cajas->method =  $request->method_pay;
                         $cajas->sale_note_id = $this->sale_note->id;
                         $cajas->orden_id =  $request->orden_id;
                         $cajas->cash_id = $request->cash_id;
                         $cajas->user_id = auth()->user()->id;
                         $cajas->description = "VENTAS " . $document;
-                        if ($bank_account_id) {
-                            $bank_account = BankAccount::findOrFail($bank_account_id);
-                            $bank_account->balance = $bank_account->balance + $currentBox["amount"];
-                            $bank_account->save();
-                            $cajas->description = "VENTAS " . $document . " - " . $bank_account->bank->description . " - " . $bank_account->currency_type->description;
-                        }
                         $cajas->soap_type_id = $company->soap_type_id;
                         $cajas->establishment_id = auth()->user()->establishment_id;
                         $cajas->save();
                     }
-                    if ($configuration->send_whatsapp_digital_pay) {
-
-                        if ($message) {
-                            (new WhatsappController)->sendMessage($message);
-                            $numbers = NumberActivity::all();
-                            foreach ($numbers as $key => $number) {
-                                (new WhatsappController)->sendMessage($message, $number->number);
-                            }
-                        }
+                }
+                $boxes = Box::where('sale_note_id', $this->sale_note->id)->get();
+    
+    
+                $this->setFilename();
+                $this->createPdf($this->sale_note, "a4", $this->sale_note->filename, $boxes);
+                $paid = $request->paid;
+    
+                if (count($request->payments) > 0) {
+                    if ($request->payments[0]['payment_method_type_id'] == "01" || $request->payments[0]['payment_method_type_id'] == "10") {
+                        $paid = 1;
                     }
+                }
+    
+                if ($request->generate === null || $request->generate === false) {
+                    //advances
+    
+    
                 } else {
-                    $cajas    = Box::firstOrNew(['sale_note_id' => $this->sale_note->id]);
-                    $cajas->group_id = 1;
-                    $cajas->category_id = 1;
-                    $cajas->subcategory_id = 1;
-                    $cajas->operation_number = $request->operation_number;
-                    $cajas->amount = $request->input('total');
-                    $cajas->date = Carbon::parse($request->input('date_of_issue'))->format('Y-m-d');
-                    $cajas->type = '1';
-                    $cajas->state = '1';
-                    $cajas->method =  $request->method_pay;
-                    $cajas->sale_note_id = $this->sale_note->id;
-                    $cajas->orden_id =  $request->orden_id;
-                    $cajas->cash_id = $request->cash_id;
-                    $cajas->user_id = auth()->user()->id;
-                    $cajas->description = "VENTAS " . $document;
-                    $cajas->soap_type_id = $company->soap_type_id;
-                    $cajas->establishment_id = auth()->user()->establishment_id;
-                    $cajas->save();
+                    $paid = 0;
+                    $user_id = auth()->user()->id;
+                    $cash = Cash::where('state', 1)->where('user_id', $user_id)->first();
+                    if ($cash == null) {
+                        $cash = Cash::create([
+                            'user_id' => auth()->user()->id,
+                            'date_opening' => date('Y-m-d'),
+                            'time_opening' => date('H:i:s'),
+                            'date_closed' => null,
+                            'time_closed' => null,
+                            'beginning_balance' => 0,
+                            'final_balance' => 0,
+                            'income' => 0,
+                            'state' => true,
+                            'reference_number' => null
+                        ]);
+                    }
+    
+                    if ($request->advances) {
+    
+                        $cajas    = new Box;
+                        $cajas->group_id = 1;
+                        $cajas->category_id = 1;
+                        $cajas->subcategory_id = 1;
+                        $cajas->amount = $request->advances;
+                        $cajas->date = Carbon::parse($request->input('date_of_issue'))->format('Y-m-d');
+                        $cajas->type = '1';
+                        $cajas->state = '1';
+                        $cajas->method =  "Efectivo";
+                        $cajas->sale_note_id = $this->sale_note->id;
+                        $cajas->orden_id = null;
+                        $cajas->cash_id = $cash->id;
+                        $cajas->user_id = $user_id;
+                        $cajas->description = "ADELANTO CRÉDITO";
+                        $cajas->soap_type_id = $company->soap_type_id;
+                        $cajas->establishment_id = auth()->user()->establishment_id;
+                        $cajas->save();
+                    }
                 }
+                $saleNoteUpdate = SaleNote::findOrFail($this->sale_note->id);
+                $saleNoteUpdate->paid = $paid;
+                $saleNoteUpdate->save();
+            });
+    
+    
+    
+            $establishment = Establishment::where('id', $this->sale_note->establishment_id)->first();
+            if (auth()->user()->type != 'admin') {
+                event(new PrintEvent($this->sale_note->id, "80", $request->printerOn, 0));
             }
-            $boxes = Box::where('sale_note_id', $this->sale_note->id)->get();
-
-
-            $this->setFilename();
-            $this->createPdf($this->sale_note, "a4", $this->sale_note->filename, $boxes);
-            $paid = $request->paid;
-
-            if (count($request->payments) > 0) {
-                if ($request->payments[0]['payment_method_type_id'] == "01" || $request->payments[0]['payment_method_type_id'] == "10") {
-                    $paid = 1;
-                }
-            }
-
-            if ($request->generate === null || $request->generate === false) {
-                //advances
-
-
-            } else {
-                $paid = 0;
-                $user_id = auth()->user()->id;
-                $cash = Cash::where('state', 1)->where('user_id', $user_id)->first();
-                if ($cash == null) {
-                    $cash = Cash::create([
-                        'user_id' => auth()->user()->id,
-                        'date_opening' => date('Y-m-d'),
-                        'time_opening' => date('H:i:s'),
-                        'date_closed' => null,
-                        'time_closed' => null,
-                        'beginning_balance' => 0,
-                        'final_balance' => 0,
-                        'income' => 0,
-                        'state' => true,
-                        'reference_number' => null
-                    ]);
-                }
-
-                if ($request->advances) {
-
-                    $cajas    = new Box;
-                    $cajas->group_id = 1;
-                    $cajas->category_id = 1;
-                    $cajas->subcategory_id = 1;
-                    $cajas->amount = $request->advances;
-                    $cajas->date = Carbon::parse($request->input('date_of_issue'))->format('Y-m-d');
-                    $cajas->type = '1';
-                    $cajas->state = '1';
-                    $cajas->method =  "Efectivo";
-                    $cajas->sale_note_id = $this->sale_note->id;
-                    $cajas->orden_id = null;
-                    $cajas->cash_id = $cash->id;
-                    $cajas->user_id = $user_id;
-                    $cajas->description = "ADELANTO CRÉDITO";
-                    $cajas->soap_type_id = $company->soap_type_id;
-                    $cajas->establishment_id = auth()->user()->establishment_id;
-                    $cajas->save();
-                }
-            }
-            $saleNoteUpdate = SaleNote::findOrFail($this->sale_note->id);
-            $saleNoteUpdate->paid = $paid;
-            $saleNoteUpdate->save();
-        });
-
-
-
-        $establishment = Establishment::where('id', $this->sale_note->establishment_id)->first();
-        if (auth()->user()->type != 'admin') {
-            event(new PrintEvent($this->sale_note->id, "80", $request->printerOn, 0));
+            return [
+                'success' => true,
+                'data' => [
+                    'id' => $this->sale_note->id,
+                    'external_id' => $this->sale_note->external_id,
+                    'format_printer' => $establishment->format_printer,
+                    'printer' => $establishment->printer,
+                    'printer_serve' => $establishment->printer_serve,
+                    'direct_printing' => (bool) $establishment->direct_printing,
+                    "number" => $this->sale_note->getNumberFullAttribute(),
+                    'print_ticket' => url('') . "/sale-notes/print/{$this->sale_note->external_id}/ticket",
+                    'print_a4' => url('') . "/sale-notes/print/{$this->sale_note->external_id}/a4",
+                    'print_a5' => url('') . "/sale-notes/print/{$this->sale_note->external_id}/a5",
+                    'schedule' => url('') . "/sale-notes/schedule/{$this->sale_note->id}",
+                    // 'print_ticket' => url('') . "/sale-notes/print/{$this->sale_note->external_id}/ticket",
+                    // 'print_a4' => url('') . "/api/sale-note/print/{$this->sale_note->external_id}/a4",
+                    // 'print_a5' => url('') . "/api/sale-note/print/{$this->sale_note->external_id}/a5",
+                ],
+            ];
+        }catch(Exception $e){
+            return [
+                'success' => false,
+                'message' => $e->getMessage()
+            ];
         }
-        return [
-            'success' => true,
-            'data' => [
-                'id' => $this->sale_note->id,
-                'external_id' => $this->sale_note->external_id,
-                'format_printer' => $establishment->format_printer,
-                'printer' => $establishment->printer,
-                'printer_serve' => $establishment->printer_serve,
-                'direct_printing' => (bool) $establishment->direct_printing,
-                "number" => $this->sale_note->getNumberFullAttribute(),
-                'print_ticket' => url('') . "/sale-notes/print/{$this->sale_note->external_id}/ticket",
-                'print_a4' => url('') . "/sale-notes/print/{$this->sale_note->external_id}/a4",
-                'print_a5' => url('') . "/sale-notes/print/{$this->sale_note->external_id}/a5",
-                'schedule' => url('') . "/sale-notes/schedule/{$this->sale_note->id}",
-                // 'print_ticket' => url('') . "/sale-notes/print/{$this->sale_note->external_id}/ticket",
-                // 'print_a4' => url('') . "/api/sale-note/print/{$this->sale_note->external_id}/a4",
-                // 'print_a5' => url('') . "/api/sale-note/print/{$this->sale_note->external_id}/a5",
-            ],
-        ];
     }
 
     public function updateStock($id, $is_set = false)
