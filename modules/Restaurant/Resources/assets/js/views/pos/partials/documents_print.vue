@@ -159,7 +159,7 @@ import ModalGenerateCpe from "./modal_generate_cpe.vue";
 
 export default {
     components: { DocumentPrintDetail,ModalGenerateCpe },
-    props: ["showDialog", "company", "sender", "config", "establishment"],
+    props: ["showDialog", "company", "sender", "config", "establishment","printer","area_id"],
     data() {
         return {
             remain: false,
@@ -175,7 +175,6 @@ export default {
                 documents: {},
                 quotations: {}
             },
-            printer: null,
             lastDocument: null,
             activeName: "documents",
             showModalGenerateCPE:false,
@@ -345,7 +344,7 @@ export default {
             let {
                 data: { printer }
             } = response;
-            this.printer = printer;
+            // this.printer = printer;
         },
         getRecords(page = 1) {
             if (this.activeName == "saleNotes") {
@@ -393,7 +392,7 @@ export default {
             console.log(this.config);
             await this.getLastDocument();
             await this.getLastDocuments();
-            await this.getPrinter();
+            // await this.getPrinter();
         },
         close() {
             this.$emit("update:showDialog", false);

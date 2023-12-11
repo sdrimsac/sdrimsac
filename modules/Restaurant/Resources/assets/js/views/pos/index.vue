@@ -1520,7 +1520,7 @@
                 :consignment_id="consignment_id"
                 @removeConsignment="removeConsignment"
                 :isConsignment.sync="isConsignment"
-                :printer="printer"
+                :printer.sync="printer"
                 :personalWhatsapp="personalWhatsapp"
                 @getFile="getFile"
                 :customer_default="customer_default"
@@ -1596,7 +1596,7 @@
         ></tables>
         <tables-rooms
             :configuration="configuration"
-            :printer="printer"
+            :printer.sync="printer"
             @getTablesToClean="getTablesToClean"
             @paymentsOrden="paymentsOrden"
             @creatingOrden="creatingOrden"
@@ -1612,6 +1612,8 @@
             :config.sync="config"
             @sendItems="sendItems"
             :establishment.sync="establishments"
+            :area_id="area_id"
+             :printer.sync="printer"
         ></documents-print>
         <PromotionCanje
             :showDialog.sync="showdialogPromocion"
@@ -1760,7 +1762,6 @@ export default {
         "auth_login",
         "desarrollador",
         "company",
-        "area_id",
         "lareaId",
         "area",
         "areaId",
@@ -1794,6 +1795,7 @@ export default {
 
     data() {
         return {
+            area_id:null,
             isHotelArea: false,
             isPiscinaArea: false,
             roomSeeId: null,
@@ -1934,6 +1936,8 @@ export default {
         clearInterval(this.timer);
     },
     async created() {
+        this.area_id = this.worker.area_id;
+
         localStorage.setItem("quotation_stock", 0);
         let type_code = localStorage.getItem("type_code");
         let barcode = localStorage.getItem("barcode");
@@ -1959,7 +1963,6 @@ export default {
         await this.getFoods();
         await this.filterCategorie(0, false);
         await this.getPrinter();
-
         this.setMenuOptions();
         // await this.changeCustomer();
         this.loading = false;

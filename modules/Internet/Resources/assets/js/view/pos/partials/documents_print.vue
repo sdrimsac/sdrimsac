@@ -104,7 +104,7 @@ import DocumentPrintDetail from "./document_print_detail.vue";
 import queryString from "query-string";
 export default {
     components: { DocumentPrintDetail },
-    props: ["showDialog", "company", "sender", "config", "establishment"],
+    props: ["showDialog", "company", "sender", "config", "establishment","area_id","printer"],
     data() {
         return {
             time: null,
@@ -117,7 +117,7 @@ export default {
                 saleNotes: {},
                 documents: {}
             },
-            printer: null,
+            // printer: null,
             lastDocument: null,
             activeName: "documents"
         };
@@ -260,7 +260,7 @@ export default {
             let {
                 data: { printer }
             } = response;
-            this.printer = printer;
+            // this.printer = printer;
         },
         getRecords(page = 1) {
             if (this.activeName == "saleNotes") {

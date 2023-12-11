@@ -72,7 +72,7 @@ import ExpensesIncomesForm from "./expenses_incomes_form.vue";
 import queryString from "query-string";
 export default {
     components: { ExpensesIncomesDetail, ExpensesIncomesForm },
-    props: ["showDialog", "company", "cash_id"],
+    props: ["showDialog", "company", "cash_id","area_id"],
     data() {
         return {
             time: null,
