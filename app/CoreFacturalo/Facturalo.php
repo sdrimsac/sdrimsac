@@ -430,7 +430,7 @@ class Facturalo
                     if (isset($it->item->has_unit_type)&&$it->item->has_unit_type) {
                         $extra_by_item_description += strlen($it->item->has_unit_type);
                     }
-                    if ($it->item->second_name) {
+                    if (isset($it->item->second_name)&&$it->item->second_name) {
                         $extra_by_item_description += strlen($it->item->second_name);
                     }
                 }
