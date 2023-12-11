@@ -69,6 +69,15 @@ class PersonController extends Controller
             'district_id' => 'Distritos'
         ];
     }
+    public function recordsApp( Request $request)
+    {
+        //  return 'sd';
+        $records = Person::where($request->column, 'like', "%{$request->value}%")
+            ->where('type', 'customers')
+            ->orderBy($request->column);
+
+        return new PersonCollection($records->paginate(config('tenant.items_per_page')));
+    }
     public function listcustomer($type, Request $request)
     {
         //  return 'sd';
