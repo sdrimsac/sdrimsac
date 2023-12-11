@@ -18,6 +18,7 @@ class JustAdmin
      */
     public function handle($request, Closure $next)
     {
+      
         $config = Configuration::first();
         $user = $request->user();
         $path = $request->path();
