@@ -171,7 +171,7 @@ class ItemController extends Controller
             $items = Item::where('category_id', $category->id)->take(15)->get();
             $categories_array[] = [
                 'category' => $category,
-                'items' => $items
+                'products' => $items
             ];
         }
         return $categories_array;
