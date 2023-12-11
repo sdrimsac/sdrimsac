@@ -23,8 +23,11 @@ Route::post('qz/signing', function (Request $request) {
     }
     return '<h1>Error signing message</h1>';
 });
+$hostname = app(Hyn\Tenancy\Contracts\CurrentHostname::class);
 
-Route::post('whatsapp/qr', [WhatsappController::class, 'receiveQr']);
+if($hostname){
+    Route::domain($hostname->fqdn)->group(function () {
+        Route::post('whatsapp/qr', [WhatsappController::class, 'receiveQr']);
 Route::get('whatsapp/notification', [WhatsappController::class, 'notification']);
 Route::post('/login', 'Api\MobileController@login');
 Route::post('get_igv', [App\Http\Controllers\StoreController::class, 'getIgv']);
@@ -219,3 +222,14 @@ Route::post('services/validate_cpe', 'Api\ServiceController@validateCpe');
 Route::post('services/consult_status', 'Api\ServiceController@consultStatus');
 Route::post('documents/status', 'Api\ServiceController@documentStatus');
 Route::get('sendserver/{document_id}/{query?}', 'DocumentController@sendServer');
+
+    });
+}else{
+    Route::domain(env('APP_URL_BASE'))->group(function () {
+        Route::get('listclients/', 'System\ClientController@records');
+        //reseller
+        // Route::post('reseller/detail', 'System\Api\ResellerController@resellerDetail');
+        // Route::post('reseller/lockedAdmin', 'System\Api\ResellerController@lockedAdmin');
+    });
+
+}
