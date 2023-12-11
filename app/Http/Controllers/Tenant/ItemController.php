@@ -162,6 +162,24 @@ class ItemController extends Controller
             "message" => "Se actualizo con Exito"
         ];
     }
+    public function init_categories(){
+        //regresa una array de array donde este 'category' con el nombre de cateogria y 'items' con los items 15 items de esa categoria
+
+        $categories = CategoryItem::all();
+        $categories_array = [];
+        foreach ($categories as $category) {
+            $items = Item::where('category_id', $category->id)->take(15)->get();
+            $categories_array[] = [
+                'category' => $category->name,
+                'items' => $items
+            ];
+        }
+        return $categories_array;
+        
+        
+      
+
+    }
     public function getRecords($request)
     {
         $datos = $request->value;
