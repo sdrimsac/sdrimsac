@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Tenant\DocumentController;
 use App\Http\Controllers\Tenant\ItemController;
 use App\Http\Controllers\Tenant\PersonController;
 use App\Http\Controllers\Tenant\WhatsappController;
@@ -30,6 +31,7 @@ $hostname = app(Hyn\Tenancy\Contracts\CurrentHostname::class);
 if($hostname){
     Route::domain($hostname->fqdn)->group(function () {
 Route::get('persons/customers/records', [PersonController::class, 'recordsApp']);
+Route::get('documents/tables', [DocumentController::class, 'tables']);
 Route::get('categories/init', [ItemController::class, 'init_categories']);
 Route::post('whatsapp/qr', [WhatsappController::class, 'receiveQr']);
 Route::get('whatsapp/notification', [WhatsappController::class, 'notification']);
