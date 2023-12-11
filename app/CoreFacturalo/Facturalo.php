@@ -427,7 +427,7 @@ class Facturalo
             foreach ($this->document->items as $it) {
                 if (strlen($it->item->description) > 100) {
                     $extra_by_item_description += 24;
-                    if ($it->item->has_unit_type) {
+                    if (isset($it->item->has_unit_type)&&$it->item->has_unit_type) {
                         $extra_by_item_description += strlen($it->item->has_unit_type);
                     }
                     if ($it->item->second_name) {
@@ -531,7 +531,7 @@ class Facturalo
             foreach ($this->document->items as $it) {
                 if (strlen($it->item->description) > 100) {
                     $extra_by_item_description += 24;
-                    if ($it->item->has_unit_type) {
+                    if (isset($it->item->has_unit_type)&&$it->item->has_unit_type) {
                         $extra_by_item_description += strlen($it->item->has_unit_type);
                     }
                     if ($it->item->second_name) {
