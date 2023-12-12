@@ -649,14 +649,14 @@
             $pdf->WriteHTML($stylesheet, HTMLParserMode::HEADER_CSS);
             $pdf->WriteHTML($html, HTMLParserMode::HTML_BODY);
 
-            if ($format_pdf != 'ticket') {
-                if (config('tenant.pdf_template_footer')) {
-                    $html_footer = $template->pdfFooter($base_template, $this->order_note);
-                    $pdf->SetHTMLFooter($html_footer);
-                }
-                //$html_footer = $template->pdfFooter();
-                //$pdf->SetHTMLFooter($html_footer);
-            }
+            // if ($format_pdf != 'ticket') {
+            //     if (config('tenant.pdf_template_footer')) {
+            //         $html_footer = $template->pdfFooter($base_template, $this->order_note);
+            //         $pdf->SetHTMLFooter($html_footer);
+            //     }
+            //     //$html_footer = $template->pdfFooter();
+            //     //$pdf->SetHTMLFooter($html_footer);
+            // }
 
             $this->uploadFile($filename, $pdf->output('', 'S'), 'order_note');
         }
