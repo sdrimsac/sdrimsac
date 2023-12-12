@@ -4387,6 +4387,8 @@ export default {
                 paperConfig.density = 200;
              
             }
+                console.log("🚀 ~ file: index.vue:4388 ~ paperConfig:", paperConfig)
+            console.log("🚀 ~ file: index.vue:4392 ~ Printer:", Printer)
             let config = qz.configs.create(Printer, paperConfig);
 
             if (!qz.websocket.isActive()) {
