@@ -45,6 +45,13 @@
                             <td>{{ row.sender }}</td>
                             <td>
                                 {{ row.code }}
+                                <button
+                                    @click="clickPrint(row.code)"
+                                    type="button"
+                                    class="btn btn-sm btn-primary"
+                                >
+                                    <i class="fa fa-print"></i>
+                                </button>
                             </td>
                             <td>{{ row.quantity }}</td>
                             <td>
@@ -76,8 +83,63 @@ export default {
     },
     created() {
         this.title = "Traslados por aceptar";
+        qz.security.setCertificatePromise((resolve, reject) => {
+            this.$http
+                .get("/api/qz/crt/override", {
+                    responseType: "text"
+                })
+                .then(response => {
+                    resolve(response.data);
+                })
+                .catch(error => {
+                    reject(error.data);
+                });
+        });
+        qz.security.setSignaturePromise(toSign => {
+            return (resolve, reject) => {
+                this.$http
+                    .post("/api/qz/signing", {
+                        request: toSign
+                    })
+                    .then(response => {
+                        resolve(response.data);
+                    })
+                    .catch(error => {
+                        reject(error.data);
+                    });
+            };
+        });
     },
     methods: {
+        async Printer(linkpdf) {
+            let paperConfig = {
+                scaleContent: false
+            };
+
+            let config = qz.configs.create(this.$areaPrinter, paperConfig);
+
+            if (!qz.websocket.isActive()) {
+                await qz.websocket.connect(config);
+            }
+            let data = [
+                {
+                    type: "pdf",
+                    format: "file",
+                    data: linkpdf
+                }
+            ];
+
+            qz.print(config, data).catch(e => {
+                this.$toast.error(e.message);
+            });
+        
+        },
+        clickPrint(code) {
+            console.log(this.$areaPrinter);
+
+            let url = `/transfers/print_places/${code}`;
+            this.Printer(url);
+        },
         clickCreate(recordId = null) {
             location.href = `/${this.resource}/create`;
             //this.recordId = recordId

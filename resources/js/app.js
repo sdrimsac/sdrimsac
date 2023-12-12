@@ -44,9 +44,11 @@ const options = {
 Vue.use(Toast, options);
 document.addEventListener("DOMContentLoaded", function() {
     getDesarrollador();
+    getAreaPrinter();
 });
 const getDesarrollador = async () =>{
     const { data } = await Axios.get("/getDesarrollador");
+    
     if(data == null){
         Vue.prototype.$desarrollador = "sdrimsac solutions";
     }else{
@@ -57,7 +59,20 @@ const getDesarrollador = async () =>{
         }
     }
 }
+const getAreaPrinter = async () =>{
+    const { data } = await Axios.get("/getAreaPrinter");
+    console.log("🚀 ~ file: app.js:51 ~ getDesarrollador ~ data:", data)
 
+    if(data == null){
+        Vue.prototype.$areaPrinter = null;
+    }else{
+        if(data.printer){
+            Vue.prototype.$areaPrinter = data.printer;
+        }else{
+            Vue.prototype.$areaPrinter = null;
+        }
+    }
+}
 /* Vue toast (notificaciones personalizadas )  */
 
 //Vue.prototype.$http.defaults.withCredentials = false;

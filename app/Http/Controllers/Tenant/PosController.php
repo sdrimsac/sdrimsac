@@ -316,7 +316,7 @@ class PosController extends Controller
                                 ->where('checkout_time_estimated', '<', $time);
                         });
                 })
-                    ->where('payment_status', 'Pendiente')
+                    // ->where('payment_status', 'Pendiente')
                     ->where('was_cancel', 0);
             }])
                 ->whereHas('hotel_rent_items', function ($query) use ($date, $time) {
@@ -327,7 +327,7 @@ class PosController extends Controller
                                     ->where('checkout_time_estimated', '<', $time);
                             });
                     })
-                        ->where('payment_status', 'Pendiente')
+                        // ->where('payment_status', 'Pendiente')
                         ->where('was_cancel', 0);
                 })
                 ->where('is_room', true)
