@@ -53,11 +53,11 @@ Route::delete('users/{user}', 'UserController@destroy');
 Route::get('services/ruc/{number}', 'Api\ServiceController@ruc');
 Route::get('services/dni/{number}', 'Api\ServiceController@dni');
 Route::get('services/numberletter/{number}', 'Api\ServiceController@numberletter');
-Route::get('sale-notes/downloadExternal/{external_id}', 'SaleNoteController@downloadExternal');
-Route::get('sale-notes/records', 'SaleNoteController@records');
-Route::get('sale-notes/records2', 'SaleNoteController@records2');
+Route::get('sale-notes/downloadExternal/{external_id}', '\App\Http\Controllers\Tenant\SaleNoteController@downloadExternal');
+Route::get('sale-notes/records', '\App\Http\Controllers\Tenant\SaleNoteController@records');
+Route::get('sale-notes/records2', '\App\Http\Controllers\Tenant\SaleNoteController@records2');
 
-Route::get('sale-note/print/{external_id}/{format?}', 'SaleNoteController@toPrint');
+Route::get('sale-note/print/{external_id}/{format?}', '\App\Http\Controllers\Tenant\SaleNoteController@toPrint');
 Route::middleware(['auth:api', 'locked.tenant'])->group(function () {
 
 
@@ -112,8 +112,8 @@ Route::middleware(['auth:api', 'locked.tenant'])->group(function () {
     Route::get('document/tables', 'Api\MobileController@tables');
     Route::get('document/customers', 'Api\MobileController@customers');
     Route::post('document/email', 'Api\MobileController@document_email');
-    Route::get('sale-note/record/{salenote}', 'SaleNoteController@record');
-    Route::post('sale-note', 'SaleNoteController@store');
+    Route::get('sale-note/record/{salenote}', '\App\Http\Controllers\Tenant\SaleNoteController@record');
+    Route::post('sale-note', '\App\Http\Controllers\Tenant\SaleNoteController@store');
     //--------------------------------------------------------------------------------------------------
     Route::get('quotations', 'QuotationController@index')->middleware('redirect.level');
     Route::get('quotations/columns', 'QuotationController@columns');
