@@ -2018,7 +2018,7 @@ export default {
                     method,
                     bank_account_id,
                     date,
-                    amount: amount || this.form.enter_amount,
+                    amount:  this.form.enter_amount,
                     operation_number: this.operation_number
                 });
                 if (this.form.payment_condition_id == "03") {
