@@ -590,6 +590,7 @@ class OrderNote extends ModelTenant
 
         return [
             'id' => $this->id,
+            'customer_id' => $this->customer_id,
             'quotation' => (object)$quotation,
             'soap_type_id' => $this->soap_type_id,
             'external_id' => $this->external_id,
