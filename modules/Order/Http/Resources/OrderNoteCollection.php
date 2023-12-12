@@ -23,6 +23,7 @@ class OrderNoteCollection extends ResourceCollection
 
             return [
                 'id' => $row->id,
+                'customer_id' => $row->customer_id,
                 'soap_type_id' => $row->soap_type_id,
                 'external_id' => $row->external_id,
                 'date_of_issue' => $row->date_of_issue->format('Y-m-d'),
