@@ -4387,8 +4387,6 @@ export default {
                 paperConfig.density = 200;
              
             }
-                console.log("🚀 ~ file: index.vue:4388 ~ paperConfig:", paperConfig)
-            console.log("🚀 ~ file: index.vue:4392 ~ Printer:", Printer)
             let config = qz.configs.create(Printer, paperConfig);
 
             if (!qz.websocket.isActive()) {
@@ -4411,6 +4409,8 @@ export default {
                     this.$toast.error(e.message);
                 });
             }
+                     console.log("🚀 ~ file: index.vue:4388 ~ paperConfig:", paperConfig)
+            console.log("🚀 ~ file: index.vue:4392 ~ Printer:", Printer)
             // if (multiple_boxes == true && typeuser != "admin") {
             //     //  if (true) { this.auth_login - auth
             //     let config = qz.configs.create(Printer, paperConfig);

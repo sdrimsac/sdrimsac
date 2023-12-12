@@ -243,7 +243,11 @@ export default {
                     paperConfig.margins = margins;
                 }
             }
-
+      let isPosd = this.printer.split(" ")[this.printer.split(" ").length - 1];
+            if (isPosd == "POSD" && isTicket ) {
+                paperConfig.density = 200;
+             
+            }
             try {
                 let config = qz.configs.create(this.printer, paperConfig);
                 if (!qz.websocket.isActive()) {
