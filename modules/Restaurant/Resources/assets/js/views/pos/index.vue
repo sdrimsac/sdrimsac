@@ -4381,6 +4381,12 @@ export default {
                     // };
                 }
             } //FIN IMPRESION DIRECTA A5
+            //separa Printer por el espacio, coge el ultimo elemento y verifica si es "POSD"
+            let isPosd = Printer.split(" ")[Printer.split(" ").length - 1];
+            if (isPosd == "POSD" && isTicket ) {
+                paperConfig.density = 200;
+             
+            }
             let config = qz.configs.create(Printer, paperConfig);
 
             if (!qz.websocket.isActive()) {
