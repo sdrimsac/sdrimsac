@@ -1969,7 +1969,7 @@ export default {
             }
             return false;
         },
-        addPayment(amount) {
+        addPayment() {
             let id = this.currentPayments.length + 1;
             let method = this.paymentsValue[this.method_payments];
             let bank_account_id = null;
