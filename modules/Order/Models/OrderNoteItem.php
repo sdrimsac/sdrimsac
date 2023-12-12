@@ -108,7 +108,6 @@
             'charges',
             'discounts',
             'warehouse_id',
-            'total_plastic_bag_taxes',
             'additional_information',
             'name_product_pdf',
         ];
@@ -126,7 +125,6 @@
             'total_base_other_taxes' => 'float',
             'percentage_other_taxes' => 'float',
             'total_other_taxes' => 'float',
-            'total_plastic_bag_taxes' => 'float',
             'total_taxes' => 'float',
             'unit_price' => 'float',
             'total_value' => 'float',
