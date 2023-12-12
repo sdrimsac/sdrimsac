@@ -13,7 +13,8 @@ use Exception;
 
 class Functions
 {
-    public static function establishment($inputs) {
+    public static function establishment($inputs)
+    {
         $establishment = Establishment::where('code', $inputs['code'])->first();
 
         if ($establishment) {
@@ -23,15 +24,16 @@ class Functions
         throw new Exception("El código ingresado del establecimiento es incorrecto.");
     }
 
-    public static function person($inputs, $type) {
+    public static function person($inputs, $type)
+    {
         $district_id = $inputs['district_id'];
 
-        if(in_array($inputs['identity_document_type_id'],['6'])){
+        if (in_array($inputs['identity_document_type_id'], ['6'])) {
             $ubigeo = Functions::validateUbigeo($district_id);
         }
 
-        $province_id = ($district_id)?substr($district_id, 0 ,4):null;
-        $department_id = ($district_id)?substr($district_id, 0 ,2):null;
+        $province_id = ($district_id) ? substr($district_id, 0, 4) : null;
+        $department_id = ($district_id) ? substr($district_id, 0, 2) : null;
 
         $person = Person::updateOrCreate([
             'type' => $type,
@@ -52,7 +54,8 @@ class Functions
         return $person->id;
     }
 
-    public static function validateUbigeo($ubigeo) {
+    public static function validateUbigeo($ubigeo)
+    {
 
         if (strlen($ubigeo) != 6) throw new Exception("El código ubigeo debe contener 6 dígitos");
 
@@ -63,7 +66,8 @@ class Functions
         return true;
     }
 
-    public static function item($inputs) {
+    public static function item($inputs)
+    {
 
         // $establishment_id = auth()->user()->establishment->id;
         // $warehouse = Warehouse::where('establishment_id', $establishment_id)->first();
@@ -82,13 +86,15 @@ class Functions
             'sale_unit_price' =>  $inputs['unit_price'],
             'sale_affectation_igv_type_id' => $inputs['affectation_igv_type_id'],
             'purchase_affectation_igv_type_id' => $inputs['affectation_igv_type_id'],
+            'attributes' => array_key_exists('attributes', $inputs) ? $inputs['attributes'] : [],
             'stock' => 0,
             // 'warehouse_id' => $warehouse->id
         ]);
         return $item->id;
     }
 
-    public static function findAffectedDocumentByExternalId($external_id) {
+    public static function findAffectedDocumentByExternalId($external_id)
+    {
         $document = Document::where('external_id', $external_id)
             ->first();
 
@@ -97,7 +103,8 @@ class Functions
         return $document;
     }
 
-    public static function voidedDocuments($inputs, $type) {
+    public static function voidedDocuments($inputs, $type)
+    {
         if (count($inputs['documents']) === 0) {
             throw new Exception("No se enviaron documentos para la anulación.");
         }
@@ -106,7 +113,7 @@ class Functions
         foreach ($inputs['documents'] as $row) {
             $document = Document::where('external_id', $row['external_id'])
                 ->where('date_of_issue', $inputs['date_of_reference'])
-                ->where('group_id', ($type === 'summary')?'02':'01')
+                ->where('group_id', ($type === 'summary') ? '02' : '01')
                 ->first();
 
             if (!$document) throw new Exception("El código externo {$row['external_id']} no fue encontrado o la fecha indica no corresponde al documento.");
@@ -120,7 +127,8 @@ class Functions
         return $documents;
     }
 
-    public static function validateSeries($inputs) {
+    public static function validateSeries($inputs)
+    {
         $series = Series::where('number', $inputs['series'])
             ->where('document_type_id', $inputs['document_type_id'])
             ->where('establishment_id', $inputs['establishment_id'])
@@ -131,20 +139,21 @@ class Functions
         }
     }
 
-    public static function DNI($inputs){
+    public static function DNI($inputs)
+    {
         if (($inputs['document_type_id'] == '03') && ($inputs['total']) > 700) {
             $person = Person::query()
                 ->with('identity_document_type')
                 ->find($inputs['customer_id']);
 
-            if (!in_array($person->identity_document_type_id, ['01','04','06','07'])) throw new Exception("El tipo doc. identidad {$person->identity_document_type->description} del cliente no es valido.");
+            if (!in_array($person->identity_document_type_id, ['01', '04', '06', '07'])) throw new Exception("El tipo doc. identidad {$person->identity_document_type->description} del cliente no es valido.");
         }
     }
 
     public static function identityDocumentTypeInvoice($inputs)
     {
-        if($inputs['document_type_id'] == '01') {
-            if($inputs['operation_type_id'] === '0101') {
+        if ($inputs['document_type_id'] == '01') {
+            if ($inputs['operation_type_id'] === '0101') {
                 $person = Person::find($inputs['customer_id']);
                 if (!in_array($person->identity_document_type_id, ['6'], true)) {
                     throw new Exception("El tipo doc. identidad {$person->identity_document_type->description} del cliente no es válido.");
@@ -152,5 +161,4 @@ class Functions
             }
         }
     }
-
 }
