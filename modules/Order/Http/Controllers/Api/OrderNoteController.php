@@ -2,8 +2,6 @@
 
 namespace Modules\Order\Http\Controllers\Api;
 
-use App\Http\Controllers\Tenant\EmailController;
-use App\Models\Tenant\Configuration;
 use Illuminate\Http\Request;
 use Modules\Order\Http\Requests\OrderNoteRequest;
 use Illuminate\Http\Response;
@@ -11,46 +9,9 @@ use Illuminate\Routing\Controller;
 use Modules\Order\Models\OrderNote;
 use Modules\Order\Http\Resources\OrderNoteCollection;
 use Modules\Order\Http\Resources\OrderNoteResource;
-use Modules\Order\Mail\OrderNoteEmail;
-use App\Models\Tenant\Person;
-use Illuminate\Support\Facades\Mail;
-
 
 class OrderNoteController extends Controller
 {
-
-    public function email(Request $request)
-    {
-
-        $order_note = OrderNote::find($request->id);
-        $client = Person::find($order_note->customer_id);
-        $customer_email = $request->input('email');
-
-        $email = $customer_email;
-        $mailable = new OrderNoteEmail($client, $order_note);
-        $id = (int) $order_note->id;
-        $model = __FILE__.";;".__LINE__;
-        $sendIt = EmailController::SendMail($email, $mailable, $id, $model);
-        /*
-        Configuration::setConfigSmtpMail();
-        $array_email = explode(',', $customer_email);
-        if (count($array_email) > 1) {
-            foreach ($array_email as $email_to) {
-                $email_to = trim($email_to);
-                if(!empty($email_to)) {
-                    Mail::to($email_to)->send(new OrderNoteEmail($client, $order_note));
-                }
-            }
-        } else {
-            Mail::to($customer_email)->send(new OrderNoteEmail($client, $order_note));
-        }*/
-        return [
-            'success' => true,
-            'message'=> 'Email enviado correctamente.'
-        ];
-
-    }
-
     // public function store(OrderNoteRequest $request)
     // {
     //     DB::connection('tenant')->transaction(function () use ($request) {
@@ -75,19 +36,48 @@ class OrderNoteController extends Controller
     //     ];
     // }
 
+    public function lista_user($user_id)
+    {
+        //$records = $this->getRecords($request);
+        $records = OrderNote::where("user_id",$user_id)->latest();
+
+        return new OrderNoteCollection($records->paginate(config('tenant.items_per_page')));
+    }
     public function lists(Request $request)
     {
-        $records = OrderNote::where(function($q) use($request){
-                                $q->where('prefix', 'like', "%{$request->input}%" )
-                                    ->orWhere('id','like', "%{$request->input}%");
-                            })
-                            ->orderBy('id', 'desc')
-                            ->take(config('tenant.items_per_page'))
-                            ->get();
+       //  dd($request->all());   
+       if($request->document==null && $request->document_number==null  && $request->date_of_issue==null && $request->customer_id==null){
+        $records = OrderNote::orderBy('id', 'desc')->get();
+       }else{
+        $record = OrderNote::orderBy('id', 'desc');
+        if($request->document!=null){
+            $records = $record->where( 'document',$request->document)->get();
+        } 
+        if($request->customer_id!=null){
+            $records = $record->where( 'customer_id',$request->customer_id)->get();
+        } 
+        if($request->document!=null){
+            $records = $record->where( 'document_number',$request->document_number)->get();
+        }   
+        if($request->date_of_issue!=null){
+            $records = $record->where( 'date_of_issue',$request->date_of_issue)->get();
+        }  
+    }
 
         return new OrderNoteCollection($records);
     }
+    public function status(Request $request) {
+        $record=OrderNote::where('external_id',$request->external_id)->first();
+        $orden=OrderNote::findOrFail($record->id);
+        $orden->state_type_id="05";
+        $orden->save();
+        return [
+            "status"=>true,
+            "message"=>"Se registro con Exito",
+            "data"=> $record,
 
+        ];
+     }
     // private function setFilename(){
 
     //     $name = [$this->order_note->prefix,$this->order_note->id,date('Ymd')];
