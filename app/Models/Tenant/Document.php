@@ -21,6 +21,7 @@ class Document extends ModelTenant
     protected $with = ['user', 'establecimientos', 'soap_type', 'user', 'state_type', 'document_type', 'currency_type', 'group', 'items', 'invoice', 'payments'];
     public $timestamps = true;
     protected $fillable = [
+        'to_carry',
         'has_related_sale_note',
         'cash_id',
         'seller_id',
@@ -107,6 +108,7 @@ class Document extends ModelTenant
     ];
 
     protected $casts = [
+        'to_carry' => 'boolean',
         'from_consignment' => 'boolean',
         //  'date_of_issue' => 'date',
     ];

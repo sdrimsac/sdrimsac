@@ -43,7 +43,11 @@ class DocumentInput
         // $filename = Functions::filename($company, $document_type_id, $series, $number);
         $establishment = EstablishmentInput::set($inputs['establishment_id']);
         $customer = PersonInput::set($inputs['customer_id'], isset($inputs['customer_address_id']) ? $inputs['customer_address_id'] : null);
-
+        $sum_coins = Functions::valueKeyInArray($inputs, 'sumCoins');
+        if($sum_coins){
+            $customer['sum_coins'] = $sum_coins;
+        }
+        
         if (in_array($document_type_id, ['01', '03'])) {
             $array_partial = self::invoice($inputs);
             $invoice = $array_partial['invoice'];
@@ -120,6 +124,7 @@ class DocumentInput
             'variation' => Functions::valueKeyInArray($inputs, 'variation', false),
             'boxes' => Functions::valueKeyInArray($inputs, 'boxes'),
             'cash_id' => Functions::valueKeyInArray($inputs, 'cash_id'),
+            'to_carry' => Functions::valueKeyInArray($inputs, 'to_carry',false),
             'id' => $id,
             'from_consignment' => $from_consignment,
             'type' => $inputs['type'],

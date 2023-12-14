@@ -608,6 +608,31 @@
 
                         </tbody>
                     </table>
+                    @if(isset($coinsReceive) && count($coinsReceive)>0)
+                    <div>
+                        <br>
+                    </div>
+                    <table class="border" style="margin-top:4px;">
+                        <thead>
+                            <tr>
+                                <th class="thead" colspan="3">
+                                    <span class="f12">BILLETE/MONEDAS RECIBIDAS</span>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($coinsReceive as $detail)
+                                    <tr>
+                                        <td class="f12">{{ number_format($detail->value,2)}}</td>
+                                        <td class="f12">{{ $detail->quantity }}</td>
+                                        <td class="f12 right">{{ number_format($detail->quantity*$detail->value, 2) }}</td>
+                                    </tr>
+                            @endforeach
+
+
+                        </tbody>
+                    </table>
+                    @endif
                 </td>
                 <td width="65%">
                     <div>

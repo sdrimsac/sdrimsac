@@ -67,10 +67,10 @@
                                                     <el-select
                                                         v-model="form.seller_id"
                                                         filterable
-                                                    
                                                     >
                                                         <el-option
-                                                            v-for="(option,idx) in sellers"
+                                                            v-for="(option,
+                                                            idx) in sellers"
                                                             :key="idx"
                                                             :value="option.id"
                                                             :label="option.name"
@@ -254,8 +254,7 @@
                                                         <tr width="100%">
                                                             <th
                                                                 v-if="
-                                                                    form
-                                                                        .boxes
+                                                                    form.boxes
                                                                         .length >
                                                                         0
                                                                 "
@@ -264,8 +263,7 @@
                                                             </th>
                                                             <th
                                                                 v-if="
-                                                                    form
-                                                                        .boxes
+                                                                    form.boxes
                                                                         .length >
                                                                         0
                                                                 "
@@ -284,8 +282,7 @@
                                                             </th> -->
                                                             <th
                                                                 v-if="
-                                                                    form
-                                                                        .boxes
+                                                                    form.boxes
                                                                         .length >
                                                                         0
                                                                 "
@@ -319,10 +316,10 @@
                                                                         v-model="
                                                                             row.method
                                                                         "
-                                                                      
                                                                     >
                                                                         <el-option
-                                                                            v-for="(option,idx) in methods"
+                                                                            v-for="(option,
+                                                                            idx) in methods"
                                                                             :key="
                                                                                 idx
                                                                             "
@@ -396,9 +393,19 @@
                                                             <td
                                                                 class="series-table-actions text-center"
                                                             >
-                                                                <button  type="button" class="btn waves-effect waves-light btn-sm btn-danger" @click.prevent="clickCancel(index)">
-                                                                <i class="fa fa-trash"></i>
-                                                            </button>
+                                                                <button
+                                                                    type="button"
+                                                                    class="btn waves-effect waves-light btn-sm btn-danger"
+                                                                    @click.prevent="
+                                                                        clickCancel(
+                                                                            index
+                                                                        )
+                                                                    "
+                                                                >
+                                                                    <i
+                                                                        class="fa fa-trash"
+                                                                    ></i>
+                                                                </button>
                                                             </td>
                                                             <br />
                                                         </tr>
@@ -901,9 +908,9 @@
                                                 </td>
                                                 <td class="text-end">
                                                     {{
-                                                        Number(row.unit_price).toFixed(
-                                                            2
-                                                        )
+                                                        Number(
+                                                            row.unit_price
+                                                        ).toFixed(2)
                                                     }}
                                                 </td>
 
@@ -1132,7 +1139,7 @@ export default {
     mixins: [functions, exchangeRate],
     data() {
         return {
-              methods: [
+            methods: [
                 "Efectivo",
                 "Yape",
                 "PLIN",
@@ -1141,7 +1148,7 @@ export default {
                 "TARJETA: IZYPAY",
                 "Transferencia"
             ],
-            boxes:[],
+            boxes: [],
             resource: "sale-notes",
             showDialogAddItem: false,
             showDialogNewPerson: false,
@@ -1187,7 +1194,7 @@ export default {
             tasa_interes: 0,
             tasaInteres: 0,
             disabled_month: true,
-            sellers: [],
+            sellers: []
         };
     },
     async created() {
@@ -1214,7 +1221,7 @@ export default {
         await this.calculateTotal();
     },
     methods: {
-         clickAddBoxes() {
+        clickAddBoxes() {
             let cash_id = null;
             if (this.payment_destinations.length != 0) {
                 cash_id = this.payment_destinations[0].id;
@@ -1367,7 +1374,6 @@ export default {
                 this.form.payments[0].payment_method_type_id == "09"
             ) {
                 this.form.payments[0].payment = 0.0;
-             
             } else {
                 // if (!this.form.generate) {
                 //     this.form.payments[0].payment = this.form.total;
@@ -1661,20 +1667,19 @@ export default {
         },
         clickAddPayment() {
             // if (this.form.payments.length == 0)
-                this.form.payments.push({
-                    id: null,
-                    document_id: null,
-                    date_of_payment: moment().format("YYYY-MM-DD"),
-                    payment_method_type_id: "01",
-                    reference: null,
-                    payment_destination_id: "cash",
-                    payment: this.form.total
-                });
+            this.form.payments.push({
+                id: null,
+                document_id: null,
+                date_of_payment: moment().format("YYYY-MM-DD"),
+                payment_method_type_id: "01",
+                reference: null,
+                payment_destination_id: "cash",
+                payment: this.form.total
+            });
         },
         clickCancel(index) {
-            
-            if(this.form.boxes.length > 1){
-                  this.form.boxes.splice(index, 1);
+            if (this.form.boxes.length > 1) {
+                this.form.boxes.splice(index, 1);
             }
         },
         searchRemoteCustomers(input) {
@@ -1698,7 +1703,7 @@ export default {
         initForm() {
             this.errors = {};
             this.form = {
-                boxes:[],
+                boxes: [],
                 id: null,
                 afectar_caja: true,
                 restaurant: false,
@@ -1828,7 +1833,7 @@ export default {
             // } else {
             //     this.form.payments[0].payment = this.form.total;
             // }
-            if(this.form.boxes.length == 1){
+            if (this.form.boxes.length == 1) {
                 this.form.boxes[0].amount = this.form.total;
             }
             if (this.form.generate) {
@@ -1953,6 +1958,16 @@ export default {
                         data: FileLink
                     }
                 ];
+                let format = FileLink.split("/")[
+                    FileLink.split("/").length - 1
+                ];
+                let isTicket = format == "ticket";
+                let isPosd = PrinterName.split(" ")[
+                    PrinterName.split(" ").length - 1
+                ];
+                if (isPosd == "POSD" && isTicket) {
+                    paperConfig.density = 200;
+                }
                 qz.print(config, data).catch(e => {
                     this.$toast.error(e.message);
                 });
@@ -1984,7 +1999,7 @@ export default {
             } else {
                 this.validarForm = false;
             }
-   
+
             if (this.enabled_discount == false) {
                 if (
                     validate.acum_total > parseFloat(this.form.total) ||

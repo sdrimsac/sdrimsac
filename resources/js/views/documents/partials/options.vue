@@ -203,7 +203,7 @@ export default {
     async created() {
         this.initForm();
         this.socketWhatsappConfig();
-         qz.security.setCertificatePromise((resolve, reject) => {
+        qz.security.setCertificatePromise((resolve, reject) => {
             this.$http
                 .get("/api/qz/crt/override", {
                     responseType: "text"
@@ -254,7 +254,7 @@ export default {
             });
             this.socket.on("authenticated", ({ message, sender }) => {
                 this.sender = sender;
-                 console.log(sender, " xddd");
+                console.log(sender, " xddd");
                 this.showMessage(message);
             });
             this.socket.on("connected", ({ message }) => {
@@ -263,7 +263,7 @@ export default {
                 this.socket.emit("getStatus", url);
             });
             this.socket.on("setStatus", ({ status, sender }) => {
-                this.sender = sender || 'sdrimsac';
+                this.sender = sender || "sdrimsac";
                 // if (!status) {
                 //     this.sender = "sdrimsac";
                 //     this.$message.warning("Sesión iniciada con SDRIMSAC");
@@ -350,6 +350,16 @@ export default {
                 if (!qz.websocket.isActive()) {
                     await qz.websocket.connect(config);
                 }
+                let format = FileLink.split("/")[
+                    FileLink.split("/").length - 1
+                ];
+                let isTicket = format == "ticket";
+                let isPosd = PrinterName.split(" ")[
+                    PrinterName.split(" ").length - 1
+                ];
+                if (isPosd == "POSD" && isTicket) {
+                    config.density = 200;
+                }
                 let data = [
                     {
                         type: "pdf",
@@ -409,7 +419,8 @@ export default {
                         let isA4 = document.toLowerCase().includes("a4");
                         let isA5 = document.toLowerCase().includes("a5");
                         console.log(this.configuration, " configuraccion");
-                        let tipoBandejaImpresora = this.configuration.new_old_printer;
+                        let tipoBandejaImpresora = this.configuration
+                            .new_old_printer;
                         if (isA4) {
                             if (tipoBandejaImpresora == 1) {
                                 paperConfig.density = 700;
@@ -454,7 +465,12 @@ export default {
                             "Espere imprimiendo el Comprobante " +
                             this.form.number;
                         this.loading_print = true;
-
+                        let isPosd = printerName.split(" ")[
+                            printerName.split(" ").length - 1
+                        ];
+                        if (isPosd == "POSD" && isTicket) {
+                            paperConfig.density = 200;
+                        }
                         let config = qz.configs.create(
                             printerName,
                             paperConfig,

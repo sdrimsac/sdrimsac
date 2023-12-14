@@ -420,7 +420,16 @@ export default {
                         let paperConfig = {
                             scaleContent: false
                         };
-
+                        let format = formatoPdf.split("/")[
+                            formatoPdf.split("/").length - 1
+                        ];
+                        let isTicket = format == "ticket";
+                        let isPosd = printerName.split(" ")[
+                            printerName.split(" ").length - 1
+                        ];
+                        if (isPosd == "POSD" && isTicket) {
+                            paperConfig.density = 200;
+                        }
                         let config = qz.configs.create(
                             printerName,
                             paperConfig
@@ -439,7 +448,6 @@ export default {
                         qz.print(config, data).catch(e => {
                             this.$toast.error(e.message);
                         });
-
                     } catch (e) {
                         this.$toast.error(e.message);
                     }
@@ -450,10 +458,7 @@ export default {
                 });
         },
         async clickReceipt(receipt, printer) {
-           
-             
-                    this.clickPrintPos(printer, receipt);
-               
+            this.clickPrintPos(printer, receipt);
         },
         clickDownloadFile(filename) {
             window.open(

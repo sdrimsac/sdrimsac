@@ -210,14 +210,16 @@
             </table>
 
             <table class="table table border-bottom">
-                  <tr>
+                <tr>
                     <td></td>
-                    <td class="text-left lead-font-weight-700 h6">SALDO INICIAL</td>
+                    <td class="text-left lead-font-weight-700 h6">
+                        SALDO INICIAL
+                    </td>
                     <td class="text-right h6">
-                  {{ formatedMoney(cash.beginning_balance) }}
+                        {{ formatedMoney(cash.beginning_balance) }}
                     </td>
                 </tr>
-                
+
                 <tr>
                     <td></td>
                     <td class="text-left lead-font-weight-700 h6">EFECTIVO</td>
@@ -232,27 +234,40 @@
                         {{ formatedMoney(virtualAmount) }}
                     </td>
                 </tr>
-                  <tr>
+                <tr>
                     <td></td>
                     <td class="text-left lead-font-weight-700 h6">BANCOS</td>
                     <td class="text-right h6">
                         {{ formatedMoney(bankAmount) }}
                     </td>
                 </tr>
-                  <tr>
+                <tr>
                     <td></td>
                     <td class="text-left lead-font-weight-700 h6">GASTOS</td>
-                    <td   v-if="form.incomes_expenses_cash" class="text-right h6">
-                        {{  formatedMoney(
+                    <td v-if="form.incomes_expenses_cash" class="text-right h6">
+                        {{
+                            formatedMoney(
                                 form.incomes_expenses_cash.expenses.amount
-                            )}}
+                            )
+                        }}
                     </td>
                 </tr>
                 <tr>
                     <td></td>
                     <td class="text-left lead-font-weight-700 h6">TOTAL</td>
-                    <td   v-if="form.incomes_expenses_cash" class="text-right h6">
-                        {{ formatedMoney(Number(virtualAmount) + Number(bankAmount) + Number(cashAmount) + Number(cash.beginning_balance) - Number(form.incomes_expenses_cash.expenses.amount)) }}
+                    <td v-if="form.incomes_expenses_cash" class="text-right h6">
+                        {{
+                            formatedMoney(
+                                Number(virtualAmount) +
+                                    Number(bankAmount) +
+                                    Number(cashAmount) +
+                                    Number(cash.beginning_balance) -
+                                    Number(
+                                        form.incomes_expenses_cash.expenses
+                                            .amount
+                                    )
+                            )
+                        }}
                     </td>
                 </tr>
             </table>
@@ -325,7 +340,10 @@ export default {
                 if (!qz.websocket.isActive()) {
                     await qz.websocket.connect(config);
                 }
-
+                let isPosd = printer.split(" ")[printer.split(" ").length - 1];
+                if (isPosd == "POSD") {
+                    config.density = 200;
+                }
                 let data = [
                     {
                         type: "pdf",
@@ -382,10 +400,10 @@ export default {
                     if (k != "cash" && !sales_detail[k].is_bank) {
                         this.virtualAmount += Number(sales_detail[k].sum);
                     }
-                    if(sales_detail[k].is_bank){
+                    if (sales_detail[k].is_bank) {
                         this.bankAmount += Number(sales_detail[k].sum);
                     }
-                    if(k == "cash"){
+                    if (k == "cash") {
                         this.cashAmount = Number(sales_detail[k].sum);
                     }
                 });

@@ -478,11 +478,10 @@ class SaleNoteController extends Controller
     }
     public function store(SaleNoteRequest $request)
     {
-
-        try{
+        try {
             DB::connection('tenant')->transaction(function () use ($request) {
                 $configuration = Configuration::first();
-    
+
                 $request["list_ordens"] = Functions::valueKeyInArray($request->all(), "list_ordens", []);
                 $request["is_pay_credit_list"] = Functions::valueKeyInArray($request->all(), "is_pay_credit_list", false);
                 $request["is_credit"] = Functions::valueKeyInArray($request->all(), "is_credit", false);
@@ -491,10 +490,12 @@ class SaleNoteController extends Controller
                 $request["total_advances"] = Functions::valueKeyInArray($request->all(), "total_advances", 0.0);
                 $request["total_rounded"] = Functions::valueKeyInArray($request->all(), "total", 0.0);
                 $request["total_payment"] = Functions::valueKeyInArray($request->all(), "total_payment", 0.0);
+                $request["sumCoins"]  = Functions::valueKeyInArray($request->all(), "sumCoins", null);
                 $request["document_type_id"] = "80";
                 $all_ordens = Functions::valueKeyInArray($request->all(), "all_ordens", false);
+             
                 $data = $this->mergeData($request);
-                $data['time_of_issue'] = date('H:i:s'); 
+                $data['time_of_issue'] = date('H:i:s');
                 $this->sale_note =  SaleNote::updateOrCreate(
                     ['id' => $request->input('id')],
                     $data
@@ -505,7 +506,7 @@ class SaleNoteController extends Controller
                 if ($request->is_pay_credit_list) {
                     SaleNoteItem::unsetEventDispatcher();
                 }
-                foreach($request->list_ordens as $list_orden){
+                foreach ($request->list_ordens as $list_orden) {
                     CreditList::where('orden_id', $list_orden)->update(['paid' => true]);
                 }
                 foreach ($data['items'] as $row) {
@@ -583,7 +584,7 @@ class SaleNoteController extends Controller
                     $hotel_rent = HotelRent::findOrFail($request->hotel_rent_id);
                     $hotel_rent_items = $hotel_rent->items;
                     if ($request->is_advance) {
-    
+
                         HotelRentDocument::create([
                             'hotel_rent_id' => $hotel_rent->id,
                             'sale_note_id' => $this->sale_note->id,
@@ -593,7 +594,7 @@ class SaleNoteController extends Controller
                             $advance = $item->advances;
                             $advance = floatval($advance);
                             $price = $item->getPrice();
-                            if($advance == $price){
+                            if ($advance == $price) {
                                 $item->payment_status = "Pagado";
                                 $item->advances = 0;
                                 $item->save();
@@ -612,25 +613,24 @@ class SaleNoteController extends Controller
                         }
                         $hotel_rent->payment_status = "Pagado";
                         $hotel_rent->sale_note_id = $this->sale_note->id;
-    
+
                         $hotel_rent->paid = 1;
                         $hotel_rent->save();
                     }
                 }
                 $user_id = auth()->user()->id;
                 $cash = Cash::where('state', 1)->where('user_id', $user_id)->first();
-                if(!$cash){
+                if (!$cash) {
                     throw new Exception("No existe caja abierta para el usuario");
                 }
-                if($promotion_sale && $request->hotel_rent_item_service_id){
-                     SaleNotePromotion::create([
+                if ($promotion_sale && $request->hotel_rent_item_service_id) {
+                    SaleNotePromotion::create([
                         'sale_note_id' => $this->sale_note->id,
                         'hotel_rent_item_service_id' => $request->hotel_rent_item_service_id,
                         'cash_id' => $cash->id,
                     ]);
-    
+
                     HotelRentItemServices::where('id', $request->hotel_rent_item_service_id)->update(['active' => 0]);
-    
                 }
                 if ($all_ordens) {
                     $tables = Table::where('establishment_id', auth()->user()->establishment_id)
@@ -679,8 +679,8 @@ class SaleNoteController extends Controller
                                 $date_payment = \Carbon\Carbon::parse($date->addDay($dias))->format('Y-m-d');
                                 break;
                         }
-        
-    
+
+
                         Payment::create([
                             "user_id"     => auth()->user()->id,
                             "amount"       => $request->amount,
@@ -691,7 +691,7 @@ class SaleNoteController extends Controller
                         ]);
                         // $payment = Payment::firstOrNew(['id' => $id]);
                     }
-      
+
                     if ($cash == null) {
                         $cash = Cash::create([
                             'user_id' => auth()->user()->id,
@@ -711,7 +711,7 @@ class SaleNoteController extends Controller
                         'sale_note_id' => $this->sale_note->id,
                     ]);
                 }
-    
+
                 $company = Company::first();
                 Box::where('sale_note_id', $this->sale_note->id)->delete();
                 if ($request->afectar_caja == true) {
@@ -720,7 +720,7 @@ class SaleNoteController extends Controller
                     $document_save = SaleNote::where('id', $this->sale_note->id)->first();
                     $type_document = "NOTA DE VENTA";
                     $document = $type_document . " N° " . $document_save->series . " - " . $document_save->number;
-    
+
                     if ($request->boxes) {
                         $message = "";
                         foreach ($request->boxes as $currentBox) {
@@ -760,7 +760,7 @@ class SaleNoteController extends Controller
                             $cajas->save();
                         }
                         if ($configuration->send_whatsapp_digital_pay) {
-    
+
                             if ($message) {
                                 (new WhatsappController)->sendMessage($message);
                                 $numbers = NumberActivity::all();
@@ -791,22 +791,22 @@ class SaleNoteController extends Controller
                     }
                 }
                 $boxes = Box::where('sale_note_id', $this->sale_note->id)->get();
-    
-    
+
+
                 $this->setFilename();
                 $this->createPdf($this->sale_note, "a4", $this->sale_note->filename, $boxes);
                 $paid = $request->paid;
-    
+
                 if (count($request->payments) > 0) {
                     if ($request->payments[0]['payment_method_type_id'] == "01" || $request->payments[0]['payment_method_type_id'] == "10") {
                         $paid = 1;
                     }
                 }
-    
+
                 if ($request->generate === null || $request->generate === false) {
                     //advances
-    
-    
+
+
                 } else {
                     $paid = 0;
                     $user_id = auth()->user()->id;
@@ -825,9 +825,9 @@ class SaleNoteController extends Controller
                             'reference_number' => null
                         ]);
                     }
-    
+
                     if ($request->advances) {
-    
+
                         $cajas    = new Box;
                         $cajas->group_id = 1;
                         $cajas->category_id = 1;
@@ -851,12 +851,12 @@ class SaleNoteController extends Controller
                 $saleNoteUpdate->paid = $paid;
                 $saleNoteUpdate->save();
             });
-    
-    
-    
+
+
+
             $establishment = Establishment::where('id', $this->sale_note->establishment_id)->first();
             if (auth()->user()->type != 'admin') {
-                event(new PrintEvent($this->sale_note->id, "80", $request->printerOn, 0,[],true));
+                event(new PrintEvent($this->sale_note->id, "80", $request->printerOn, 0, [], true));
             }
             return [
                 'success' => true,
@@ -877,7 +877,7 @@ class SaleNoteController extends Controller
                     // 'print_a5' => url('') . "/api/sale-note/print/{$this->sale_note->external_id}/a5",
                 ],
             ];
-        }catch(Exception $e){
+        } catch (Exception $e) {
             return [
                 'success' => false,
                 'message' => $e->getMessage()
@@ -1038,13 +1038,19 @@ class SaleNoteController extends Controller
             $number = ($document) ? $document->number + 1 : 1;
         }
 
-
+        $customer =  PersonInput::set($inputs['customer_id']);
+        $sum_coins = $inputs["sumCoins"];
+        if ($sum_coins) {
+            $customer['sum_coins'] = $sum_coins;
+        }
+        // dump($customer);
         $values = [
             'additional_information' => $inputs['additional_information'],
             'automatic_date_of_issue' => $automatic_date_of_issue,
             'user_id' => $inputs['user_id'],
             'external_id' => Str::uuid()->toString(),
-            'customer' => PersonInput::set($inputs['customer_id']),
+            // 'customer' => PersonInput::set($inputs['customer_id']),
+            'customer' => $customer,
             'establishment' => EstablishmentInput::set($inputs['establishment_id']),
             'soap_type_id' => $this->company->soap_type_id,
             'state_type_id' => '01',

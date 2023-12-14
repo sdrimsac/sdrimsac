@@ -843,12 +843,27 @@ class BoxesController extends Controller
         }
         return $formated;
     }
+    function get_to_carry($model)
+    {
+        $info = null;
+        if (!$model->to_carry) {
+            return;
+        }
+        $customer = $model->customer;
+        if (isset($customer->sum_coins) && $customer->sum_coins) {
+            $info = [
+                "coins" => $customer->sum_coins,
+            ];
+        }
+        return $info;
+    }
     public function reports_resumen_type(Request $request)
     {
         $configuration = Configuration::first();
         $total_discount = 0;
         $cash_id = $request->cash_id;
         Box::where('cash_id', $cash_id)->update(['state' => 0]);
+        $deliveries = [];
         $promotions = [];
         $promotions_give = [];
         if ($configuration->hotels) {
@@ -862,19 +877,18 @@ class BoxesController extends Controller
                     });
                 }
             )
-         
-            ->get()
-            
-            ->transform(function ($item) {
-                return [
-                    "room" => $item->hotel_rent_item->getName(),
-                    "service" => $item->room_service->name,
-                    "quantity" => $item->quantity,
-                ];
-            });
-            
-            $promotions_give = $hotel_rent_items->groupBy('room');
 
+                ->get()
+
+                ->transform(function ($item) {
+                    return [
+                        "room" => $item->hotel_rent_item->getName(),
+                        "service" => $item->room_service->name,
+                        "quantity" => $item->quantity,
+                    ];
+                });
+
+            $promotions_give = $hotel_rent_items->groupBy('room');
         }
 
         $sales = Box::where('cash_id', $cash_id)->where('expenses', 0)->where('incomes', 0)->OrderBy('date', 'asc');
@@ -888,6 +902,15 @@ class BoxesController extends Controller
         foreach ($sales_cash_records as $ringreso) {
             if ($ringreso["sale_note_id"]) {
                 $sale_note = SaleNote::find($ringreso["sale_note_id"]);
+                $coins = $this->get_to_carry($sale_note);
+                if ($coins) {
+                    // $deliveries[] = 
+                    // $coins["coins"];
+                    //insertar en $deliveries cada elemento de $coins["coins"]
+                    foreach ($coins["coins"] as $coin) {
+                        $deliveries[] = $coin;
+                    }
+                }
                 if ($sale_note->total > $ringreso["amount"]) {
                     $sales_cash_sum += $ringreso["amount"];
                 } else {
@@ -900,6 +923,13 @@ class BoxesController extends Controller
             }
             if ($ringreso["document_id"]) {
                 $document = Document::find($ringreso["document_id"]);
+                $coins = $this->get_to_carry($document);
+                if ($coins) {
+
+                    foreach ($coins["coins"] as $coin) {
+                        $deliveries[] = $coin;
+                    }
+                }
                 if ($document->total > $ringreso["amount"]) {
                     $sales_cash_sum +=  $ringreso["amount"];
                 } else {
@@ -913,12 +943,24 @@ class BoxesController extends Controller
         }
         $sales_amount += $sales_cash_sum;
         $sales_cash_quantity = $sales_cash->count();
-        // $sales_cash_records = $sales_cash->get();
 
-        //TARJETA: NIUBIZ
+        $sumArray = [];
+        foreach ($deliveries as $delivery) {
+            $id = $delivery->id;
 
+            if (isset($sumArray[$id])) {
+                $sumArray[$id]->quantity += $delivery->quantity;
+            } else {
+                $sumArray[$id] = $delivery;
+            }
+        }
 
-
+        $coinsReceive = array_values($sumArray);
+        //ordenar por value
+        usort($coinsReceive, function ($a, $b) {
+            return $a->value < $b->value;
+        });
+      
         $sales_izypay = Box::where('type', '1')->where('method', 'TARJETA: IZYPAY')->where('expenses', 0)->where('incomes', 0)->where('state', 0)->where('cash_id', $cash_id)->OrderBy('date', 'asc');
         $sales_izypay_sum = $sales_izypay->sum('amount');
         $sales_izypay_quantity = $sales_izypay->count();
@@ -1216,6 +1258,7 @@ class BoxesController extends Controller
 
         try {
             $pdf = PDF::loadView('report::boxes.report_resumen_pdf_pos', compact(
+                "coinsReceive",
                 "promotions_give",
                 "promotions",
                 "all_credit_invoices_items",

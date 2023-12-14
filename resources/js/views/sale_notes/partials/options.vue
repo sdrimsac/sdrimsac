@@ -187,7 +187,7 @@ export default {
         };
     },
     created() {
-         qz.security.setCertificatePromise((resolve, reject) => {
+        qz.security.setCertificatePromise((resolve, reject) => {
             this.$http
                 .get("/api/qz/crt/override", {
                     responseType: "text"
@@ -243,7 +243,7 @@ export default {
                 this.socket.emit("getStatus", url);
             });
             this.socket.on("setStatus", ({ status, sender }) => {
-                                    this.sender = sender || 'sdrimsac';
+                this.sender = sender || "sdrimsac";
                 // if (!status) {
                 //     this.sender = "sdrimsac";
                 //     this.$message.warning("Sesión iniciada con SDRIMSAC");
@@ -269,7 +269,10 @@ export default {
                         this.form.total +
                         " de *" +
                         this.form.establishment_description +
-                        "*, ha sido generado correctamente a través del facturador electrónico de "+"*"+this.$desarrollador+"*"
+                        "*, ha sido generado correctamente a través del facturador electrónico de " +
+                        "*" +
+                        this.$desarrollador +
+                        "*"
                 };
                 try {
                     this.loading = true;
@@ -305,7 +308,7 @@ export default {
                 view_schedule: null
             };
         },
-            async clickPrintPos(printerName, formatoPdf) {
+        async clickPrintPos(printerName, formatoPdf) {
             this.$confirm("Elija una de las opciones", "Imprimir", {
                 confirmButtonText: "Impresión directa",
                 cancelButtonText: "Descargar PDF",
@@ -317,7 +320,7 @@ export default {
                             "Espere imprimiendo el Comprobante " +
                             this.form.number;
                         this.loading_print = true;
-                         let paperConfig = {
+                        let paperConfig = {
                             scaleContent: false
                         };
                         let partsUrl = formatoPdf.split("/");
@@ -327,7 +330,8 @@ export default {
                             .includes("ticket");
                         let isA4 = document.toLowerCase().includes("a4");
                         let isA5 = document.toLowerCase().includes("a5");
-                        let tipoBandejaImpresora = this.configuration.new_old_printer;
+                        let tipoBandejaImpresora = this.configuration
+                            .new_old_printer;
                         if (isA4) {
                             if (tipoBandejaImpresora == 1) {
                                 paperConfig.density = 700;
@@ -372,7 +376,12 @@ export default {
                             "Espere imprimiendo el Comprobante " +
                             this.form.number;
                         this.loading_print = true;
-
+                        let isPosd = printerName.split(" ")[
+                            printerName.split(" ").length - 1
+                        ];
+                        if (isPosd == "POSD" && isTicket) {
+                            paperConfig.density = 200;
+                        }
                         let config = qz.configs.create(
                             printerName,
                             paperConfig,
@@ -406,9 +415,7 @@ export default {
                 .catch(() => {
                     window.open(formatoPdf, "_blank");
                     this.clickClose();
-                })
-                
-                ;
+                });
         },
         clickPrint(format) {
             if (this.configuration.print_direct == 1) {

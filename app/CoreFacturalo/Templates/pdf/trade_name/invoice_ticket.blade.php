@@ -270,6 +270,26 @@
 
             </tr>
         @endisset
+        @isset($customer->sum_coins)
+        <tr>
+            <td>
+                <p class="desc">Pagó con: </p>
+            </td>
+            <td>
+                @php
+                    $txt = '';
+                    foreach ($customer->sum_coins as $coin) {
+                        $txt .= '(S/ ' . $coin->value . ') ' . $coin->quantity . ' | ';
+                    }
+                    $txt = substr($txt, 0, -2);
+                    
+                @endphp
+                <p class="desc">
+                    {{ $txt }}
+                </p>
+            </td>
+        </tr>
+    @endisset
         @if ($student_name)
             <tr>
                 <td class="align-top">

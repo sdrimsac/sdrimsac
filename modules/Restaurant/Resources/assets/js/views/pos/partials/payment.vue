@@ -229,7 +229,45 @@
                                         ></el-input>
                                     </div>
                                 </div>
-                                <div class="row">
+                              <template v-if="configuration.show_coins_to_receive">
+                                  <div
+                                    class="m-2 d-flex justify-content-center align-items"
+                                >
+                                    <template v-if="sumCoins.length == 0">
+                                        Billetes/Monedas a recibir
+                                    </template>
+                                    <template v-else>
+                                        {{ formatSumCoins }}
+                                    </template>
+                                </div>
+                                <div
+                                    class="d-flex justify-content-center align-items-center"
+                                >
+                                    <el-button-group
+                                        class="d-flex flex-wrap justify-content-center"
+                                    >
+                                        <el-button
+                                            v-for="(coin, idx) in coins"
+                                            type="primary"
+                                            :key="idx"
+                                            @click="addCoin(coin.id)"
+                                            size="small"
+                                            round
+                                        >
+                                            {{ coin.id }}</el-button
+                                        >
+                                        <!-- un boton con el icono de tacho de basura que al dar click setee sumCoins a null -->
+                                        <el-button
+                                            type="danger"
+                                            @click="clearSumCoins"
+                                            size="small"
+                                            round
+                                        >
+                                            <i class="fas fa-trash"></i>
+                                        </el-button>
+                                    </el-button-group>
+                                </div>
+                              </template>
                                     <div class="col-md-4 form-group">
                                         <label class="control-label"
                                             >Monto Descuento</label
@@ -1426,6 +1464,53 @@ export default {
     },
     data() {
         return {
+            sumCoins: [],
+            coins: [
+                {
+                    id: "0.10",
+                    value: 0.1
+                },
+                {
+                    id: "0.20",
+                    value: 0.2
+                },
+                {
+                    id: "0.50",
+                    value: 0.5
+                },
+                {
+                    id: "1",
+                    value: 1
+                },
+                {
+                    id: "2",
+                    value: 2
+                },
+                {
+                    id: "5",
+                    value: 5
+                },
+                {
+                    id: "10",
+                    value: 10
+                },
+                {
+                    id: "20",
+                    value: 20
+                },
+                {
+                    id: "50",
+                    value: 50
+                },
+                {
+                    id: "100",
+                    value: 100
+                },
+                {
+                    id: "200",
+                    value: 200
+                }
+            ],
             loadingText: "Cargando...",
             gotClient: false,
             showListItems: false,
@@ -1526,7 +1611,25 @@ export default {
             // percentage_igv: 18
         };
     },
+    computed: {
 
+        formatSumCoins() {
+            //regresa un string en formato (cantidad) moneda | (cantidad) moneda
+            let sumCoins = this.sumCoins;
+            //ordenar por valor de moneda
+            sumCoins.sort((a, b) => {
+                return a.value - b.value;
+            });
+            let sum = 0;
+            let format = "";
+            sumCoins.forEach((coin, index) => {
+                sum += coin.value * coin.quantity;
+                format += `(${coin.quantity}) ${coin.value.toFixed(2)} | `;
+            });
+            format += `Total: ${sum.toFixed(2)}`;
+            return format;
+        }
+    },
     async created() {
         this.conf = this.establishments.conf ?? {};
         this.button_payment = true;
@@ -1540,12 +1643,12 @@ export default {
         }
 
         this.isInterno = this.company.soap_type_id == "03";
-          if (!this.conf.pos_quick_sale) {
+        if (!this.conf.pos_quick_sale) {
             await this.getLastNumbersDocument();
         }
         // await this.getTables();
         await this.date_of_issue();
-      
+
         await this.initFormPayment();
         await this.setInitialAmount();
         this.$eventHub.$on("reloadDataCardBrands", card_brand_id => {
@@ -1604,46 +1707,61 @@ export default {
             this.discountTotal = true;
         }
 
-        if(this.form.is_room){
-                
-                if(this.form.credit_line && this.form.credit_line > 0){
-                    this.form.enter_amount = this.form.credit_line;
-                    
-                    this.enterAmount();
+        if (this.form.is_room) {
+            if (this.form.credit_line && this.form.credit_line > 0) {
+                this.form.enter_amount = this.form.credit_line;
 
-                }
+                this.enterAmount();
+            }
         }
     },
     mounted() {},
     methods: {
+                clearSumCoins() {
+            this.sumCoins = [];
+        },
+        addCoin(id) {
+            let coin = this.coins.find(c => c.id == id);
+            //encuentra en sumCoins la moneda si no existe insertala agregando la cantidad, si existe solo sumale la cantidad
+            let index = this.sumCoins.findIndex(c => c.id == id);
+            if (index == -1) {
+                this.sumCoins.push({
+                    id: coin.id,
+                    value: coin.value,
+                    quantity: 1
+                });
+            } else {
+                this.sumCoins[index].quantity++;
+            }
+        },
         verifyBoxesDuplicate() {
             let boxes = this.form.boxes;
-            if(boxes){
-                 let { total } = this.form;
-            let total_boxes = 0;
-            if (boxes.length > 0) {
-                total_boxes = boxes.reduce(
-                    (a, b) => a + (parseFloat(b["amount"]) || 0),
-                    0
-                );
-                total = parseFloat(total);
-                if (total_boxes > total) {
-                    let difference = total_boxes - total;
-                    //remove box with difference
-                    let index = boxes.findIndex(
-                        b => parseFloat(b["amount"]) == difference
+            if (boxes) {
+                let { total } = this.form;
+                let total_boxes = 0;
+                if (boxes.length > 0) {
+                    total_boxes = boxes.reduce(
+                        (a, b) => a + (parseFloat(b["amount"]) || 0),
+                        0
                     );
-                    if (index >= 0) {
-                        boxes.splice(index, 1);
+                    total = parseFloat(total);
+                    if (total_boxes > total) {
+                        let difference = total_boxes - total;
+                        //remove box with difference
+                        let index = boxes.findIndex(
+                            b => parseFloat(b["amount"]) == difference
+                        );
+                        if (index >= 0) {
+                            boxes.splice(index, 1);
+                        }
                     }
+                    this.form.boxes = boxes;
+                    let new_total = boxes.reduce(
+                        (a, b) => a + (parseFloat(b["amount"]) || 0),
+                        0
+                    );
+                    this.form.difference = total - new_total;
                 }
-                this.form.boxes = boxes;
-                let new_total = boxes.reduce(
-                    (a, b) => a + (parseFloat(b["amount"]) || 0),
-                    0
-                );
-                this.form.difference = total - new_total;
-            }
             }
         },
         async updateConfigutation() {
@@ -2018,7 +2136,7 @@ export default {
                     method,
                     bank_account_id,
                     date,
-                    amount:  this.form.enter_amount,
+                    amount: this.form.enter_amount,
                     operation_number: this.operation_number
                 });
                 if (this.form.payment_condition_id == "03") {
@@ -2200,10 +2318,12 @@ export default {
             // this.discount_amount = 0;
             // this.form.customer_id
             // this.form.student_id = null;
+
+     
+            this.sumCoins = [];
             if (!this.form.is_room) {
                 this.value = null;
                 this.form.customer_id = null;
-             
             }
 
             if (!this.configuration.restrict_receipt_date) {
@@ -3448,7 +3568,9 @@ export default {
                     form.all_ordens = true;
                 }
                 // const response_efectivo = await this.$http.post(`/efectivo`,form_efectivo);
-
+                if(this.sumCoins.length > 0){
+                 form.sumCoins = this.sumCoins;
+                }
                 const response = await this.$http.post(
                     `/${this.resource_documents}`,
                     form
@@ -3613,12 +3735,12 @@ export default {
                         }
                     }
                 } else {
-                this.loading_submit = true;
-                let {
-                    data: { message }
-                } = response;
-                this.$toast.error(message || "Ocurrió un error");
-                this.loading_submit = false;
+                    this.loading_submit = true;
+                    let {
+                        data: { message }
+                    } = response;
+                    this.$toast.error(message || "Ocurrió un error");
+                    this.loading_submit = false;
                 }
             } catch (error) {
                 console.log(error);
@@ -3703,11 +3825,14 @@ export default {
             const response = await this.$http.delete(
                 `/caja/rooms/hotel/rents/${id}`
             );
-            console.log("🚀 ~ file: payment.vue:3711 ~ deleteHotelRentItem ~ response:", response)
+            console.log(
+                "🚀 ~ file: payment.vue:3711 ~ deleteHotelRentItem ~ response:",
+                response
+            );
         },
         back(val = false) {
-        let {is_advance,hotel_rent_id} = this.form;
-            if(is_advance && hotel_rent_id && !val){
+            let { is_advance, hotel_rent_id } = this.form;
+            if (is_advance && hotel_rent_id && !val) {
                 this.deleteHotelRentItem(hotel_rent_id);
             }
             this.splitPayments = [];
@@ -3759,8 +3884,7 @@ export default {
             });
             this.form.series_id =
                 this.series.length > 0 ? this.series[0].id : null;
-                let series = this.series.find(s => s.id == this.form.series_id);
-                
+            let series = this.series.find(s => s.id == this.form.series_id);
         },
         filterCustomers() {
             let { document_type_id } = this.form;

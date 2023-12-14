@@ -3414,15 +3414,16 @@ export default {
                     `/caja/worker/record/${id}?precuenta=true`
                 );
                 let url = response.data.print;
-                console.log(
-                    "🚀 ~ file: list_ordens.vue:3387 ~ printTicket ~ url:",
-                    url
-                );
+          
                 let config = qz.configs.create(response.data.printer, {
                     scaleContent: false
                 });
                 if (!qz.websocket.isActive()) {
                     await qz.websocket.connect(config);
+                }
+                         let isPosd = response.data.printer.split(" ")[response.data.printer.split(" ").length - 1];
+                if (isPosd == "POSD") {
+                    config.density = 200;
                 }
                 let data = [
                     {
@@ -3531,21 +3532,21 @@ export default {
             this.loading = true;
 
             this.commands_fisico = "";
-            this.to_carry = false;
 
-            this.loading = false;
-            this.disableSend = false;
 
+ 
+            form_submit.is_for_carry = this.to_carry;
             if (this.variation) {
                 form_submit.variationItems = this.foodDefaults;
-            }
-            this.loading = false;
-            this.disableSend = false;
-            if (this.variation) {
+
                 this.$emit("paymentsOrden", form_submit, this.foodDefaults);
             } else {
                 this.$emit("paymentsOrden", form_submit);
             }
+                this.loading = false;
+            this.disableSend = false;
+            this.to_carry = false;
+
         },
         mergeItems(items) {
             let hasFoodId = items.every(item => item.food && item.food.id);

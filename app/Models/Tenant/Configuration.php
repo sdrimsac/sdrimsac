@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Config;
 class Configuration extends ModelTenant
 {
     protected $fillable = [
+        'show_coins_to_receive',
+        'carry_cash_report',
         'search_series_pos',
         'credit_line_hotel_limit',
         'principal_cash',
@@ -140,6 +142,8 @@ class Configuration extends ModelTenant
 
     ];
     protected $casts = [
+        'show_coins_to_receive' => 'boolean',
+        'carry_cash_report' => 'boolean',
         'credit_line_hotel_limit' => 'float',
         'search_series_pos' => 'boolean',
         'principal_cash' => 'boolean',
@@ -231,6 +235,8 @@ class Configuration extends ModelTenant
         // $skins = Skin::all();
         $skins = [];
         return [
+            'show_coins_to_receive' => (bool)$this->show_coins_to_receive,
+            'carry_cash_report' => (bool)$this->carry_cash_report,
             'credit_line_hotel_limit' => $this->credit_line_hotel_limit,
             'search_series_pos' => (bool)$this->search_series_pos,
             'principal_cash' => (bool) $this->principal_cash,

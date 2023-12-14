@@ -2917,6 +2917,7 @@ export default {
             this.orden_items = form;
             this.form.printDocument = form.printDocument;
             this.form.is_room = form.is_room;
+            this.form.to_carry = form.to_carry;
             if (this.form.is_room) {
                 if (form.customer_id) {
                     this.form.customer_id = form.customer_id;
