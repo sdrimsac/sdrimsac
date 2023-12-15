@@ -1613,16 +1613,17 @@
                                                 ></el-switch>
                                             </div>
                                         </div>
-                                         <div class="col-md-6 mt-4">
+                                        <div class="col-md-6 mt-4">
                                             <div class="form-group">
                                                 <label
                                                     class="control-label w-100"
-                                                    >Limite de la garantía - frigobar
+                                                    >Limite de la garantía -
+                                                    frigobar
                                                 </label>
                                                 <el-input-number
                                                     @change="submit"
                                                     v-model="
-                                                       form.credit_line_hotel_limit
+                                                        form.credit_line_hotel_limit
                                                     "
                                                 >
                                                 </el-input-number>
@@ -1660,7 +1661,7 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                         <div class="col-md-6 mt-4">
+                                    <div class="col-md-6 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
                                                 >Mostrar gastos / ingresos en
@@ -1684,29 +1685,38 @@
                                             </label>
 
                                             <el-switch
-                                    
-
-                                                v-model="
-                                                    form.search_series_pos
-                                                "
+                                                v-model="form.search_series_pos"
                                                 active-text="Si"
                                                 inactive-text="No"
                                                 @change="submit"
                                             ></el-switch>
                                         </div>
                                     </div>
-                                    
-                                       <div class="col-md-6 mt-4">
+
+                                    <div class="col-md-6 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
                                                 >Reporte caja - para llevar
                                             </label>
 
                                             <el-switch
-                                    
+                                                v-model="form.carry_cash_report"
+                                                active-text="Si"
+                                                inactive-text="No"
+                                                @change="submit"
+                                            ></el-switch>
+                                        </div>
+                                    </div>
 
+                                    <div class="col-md-6 mt-4">
+                                        <div class="form-group">
+                                            <label class="control-label w-100"
+                                                >Billetes/Monedas a recibir caja
+                                            </label>
+
+                                            <el-switch
                                                 v-model="
-                                                    form.carry_cash_report
+                                                    form.show_coins_to_receive
                                                 "
                                                 active-text="Si"
                                                 inactive-text="No"
@@ -1714,18 +1724,15 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                    
-                                             <div class="col-md-6 mt-4">
+                                    <div class="col-md-6 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
-                                                >Billetes/Monedas a recibir caja
+                                                >Buscar por segundo nombre
                                             </label>
 
                                             <el-switch
-                                    
-
                                                 v-model="
-                                                    form.show_coins_to_receive
+                                                    form.search_by_second_name
                                                 "
                                                 active-text="Si"
                                                 inactive-text="No"
@@ -1839,7 +1846,7 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                     <div class="col-md-6 mt-4">
+                                    <div class="col-md-6 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
                                                 >Contabilidad</label

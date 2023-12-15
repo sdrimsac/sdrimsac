@@ -141,13 +141,14 @@ class PosController extends Controller
     }
     public function foods(Request $request)
     {
-        $category_ins =  CategoryItem::where('name','INSUMOS')->first();
+        $category_ins =  CategoryItem::where('name', 'INSUMOS')->first();
         $category_ins_id = null;
-        if($category_ins){
+        if ($category_ins) {
             $category_ins_id = $category_ins->id;
         }
         $datafoods = $request->all();
         $search_by_series = $request->search_by_series == "true" ? true : false;
+        $search_by_second_name = $request->search_by_second_name == "true" ? true : false;
         $category_id = $request->category;
         $external_id =  $request->external_id == "true" ? true : false;
         $value = $request->value;
@@ -159,18 +160,17 @@ class PosController extends Controller
 
         $foods = Food::query()->whereHas(
             "item",
-            function ($query) use ($warehouse_id,$search_by_series,$value) {
+            function ($query) use ($warehouse_id, $search_by_series, $value) {
                 $query
-                    ->where('active', 1)->whereHas('warehouses', function ($query) use ($warehouse_id ,$value) {
+                    ->where('active', 1)->whereHas('warehouses', function ($query) use ($warehouse_id, $value) {
                         $query->where('warehouse_id', $warehouse_id);
                     });
-                if($search_by_series == true){
+                if ($search_by_series == true) {
                     $query->where('series_enabled', 1)
-                    ->whereHas('item_lots', function ($query) use ($warehouse_id,$value) {
-                        $query->where('warehouse_id', $warehouse_id)->where('has_sale', 0)
-                        ->where('series','like','%'.$value.'%')
-                        ;
-                    });
+                        ->whereHas('item_lots', function ($query) use ($warehouse_id, $value) {
+                            $query->where('warehouse_id', $warehouse_id)->where('has_sale', 0)
+                                ->where('series', 'like', '%' . $value . '%');
+                        });
                 }
             }
         );
@@ -179,20 +179,28 @@ class PosController extends Controller
 
             $foods = $foods->where('category_food_id', $category_id);
         }
-        if ($value && $search_by_series == null || $search_by_series == false ) {
+        if ($value && $search_by_series == null || $search_by_series == false) {
+
             if (count($textoIntoArray) === 1) {
-                if($external_id){
-                    $foods = $foods->whereHas('item',function($query) use ($value){
+                if ($external_id) {
+                    $foods = $foods->whereHas('item', function ($query) use ($value) {
                         $query->where('description', 'LIKE', '%' . $value . '%')->orWhere(function ($query) use ($value) {
                             $query->where('internal_id', 'LIKE', '%' . $value . '%')->orWhere('barcode', 'LIKE', '%' . $value . '%');
                         });
                     });
-                }else{
-                    $foods = $foods->where(function ($query) use ($value) {
-                        $query->where('description', 'LIKE', '%' . $value . '%')->orWhere('code', 'LIKE', '%' . $value . '%');
-                    });
+                } else {
+                    if ($search_by_second_name) {
+                        $foods = $foods->whereHas('item', function ($query) use ($value) {
+                            $query->where('second_name', 'LIKE', '%' . $value . '%');
+                        });
+                    } else {
+                        $foods = $foods->where(function ($query) use ($value) {
+                            $query->where('description', 'LIKE', '%' . $value . '%')->orWhere('code', 'LIKE', '%' . $value . '%');
+                        });
+                    }
                 }
             } else {
+                
                 $foods = $foods->where(function ($query) use ($value,  $textoIntoArray) {
                     foreach ($textoIntoArray as $key => $valor) {
                         $query->where('description', 'LIKE', '%' . $valor . '%');
@@ -200,8 +208,9 @@ class PosController extends Controller
                 });
             }
         }
-        if($category_ins_id){
-            $foods = $foods->where('category_food_id','<>',$category_ins_id);
+
+        if ($category_ins_id) {
+            $foods = $foods->where('category_food_id', '<>', $category_ins_id);
         }
         //orderBy('description', 'ASC')
         $configuration = Configuration::first();
@@ -217,14 +226,14 @@ class PosController extends Controller
         if ($configuration->ord_dscp) {
             $foods = $foods->orderBy('description', 'ASC');
         }
-        if (empty($datafoods)){
-            
+        if (empty($datafoods)) {
+
             return new FoodCollection($foods->paginate(50));
-        }else{
-            return new FoodCollection($foods->paginate(100),$search_by_series);
+        } else {
+            return new FoodCollection($foods->paginate(100), $search_by_series);
         }
 
-        
+
 
         //  return Food::all();
         //     return new InventoryCollection($reports->paginate(config('tenant.items_per_page')));
@@ -585,14 +594,14 @@ class PosController extends Controller
         }
         $orden->save();
 
-        if($table && !$table->is_room){
+        if ($table && !$table->is_room) {
             $tableIsFree = Orden::where('table_id', $table->id)->where(function ($query) {
                 $query->where('status_orden_id',  1)
                     ->orWhere('status_orden_id',  2)
                     ->orWhere('status_orden_id',  3);
             })
                 ->count();
-    
+
             if ($tableIsFree == 0) {
                 $table->status_table_id = 1;
                 $table->save();

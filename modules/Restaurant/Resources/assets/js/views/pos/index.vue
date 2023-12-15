@@ -184,6 +184,21 @@
                                     <div class="col-2 d-flex flex-column">
                                         <el-checkbox
                                             v-if="
+                                                configuration.search_by_second_name
+                                            "
+                                            v-model="searchSecondName"
+                                            @change="
+                                                saveInLocalStorageSearchSecondName
+                                            "
+                                        >
+                                            <h2 class="text-muted text-small">
+                                                Buscar por
+                                                <br/>
+                                                 segundo nombre
+                                            </h2>
+                                        </el-checkbox>
+                                          <el-checkbox
+                                            v-if="
                                                 configuration.search_series_pos
                                             "
                                             v-model="searchSeries"
@@ -288,6 +303,7 @@
                                     ref="list_foods"
                                     :barcode.sync="barcode"
                                     :searchSeries.sync="searchSeries"
+                                    :searchSecondName.sync="searchSecondName"
                                     :type_code.sync="type_code"
                                     :worker="worker"
                                     @insertOrden="insertOrden"
@@ -1795,6 +1811,7 @@ export default {
 
     data() {
         return {
+        searchSecondName:false,
             area_id:null,
             isHotelArea: false,
             isPiscinaArea: false,
@@ -1942,6 +1959,7 @@ export default {
         let type_code = localStorage.getItem("type_code");
         let barcode = localStorage.getItem("barcode");
         let searchSeries = localStorage.getItem("searchSeries");
+        let searchSecondName = localStorage.getItem("searchSecondName");
         if (barcode) {
             this.barcode = barcode == "1" ? true : false;
         }
@@ -1950,6 +1968,9 @@ export default {
         }
         if (searchSeries) {
             this.searchSeries = searchSeries == "1" ? true : false;
+        }
+        if (searchSecondName) {
+            this.searchSecondName = searchSecondName == "1" ? true : false;
         }
         // console.log(this.establishments, " xdl");
         this.conf = this.establishments.conf ?? {};
@@ -2257,6 +2278,9 @@ export default {
         },
         saveInLocalStorageSearchSeries(searchSeries) {
             localStorage.setItem("searchSeries", searchSeries ? "1" : "0");
+        },
+           saveInLocalStorageSearchSecondName(searchSecondName) {
+            localStorage.setItem("searchSecondName", searchSecondName ? "1" : "0");
         },
         saveInLocalStorageBarcode(barcode) {
             localStorage.setItem("barcode", barcode ? "1" : "0");
@@ -4719,6 +4743,7 @@ export default {
                 page: this.pagination.current_page,
                 external_id: this.type_code,
                 search_by_series: this.searchSeries,
+                search_by_second_name : this.searchSecondName,
                 ...form
 
                 // limit: this.limit
