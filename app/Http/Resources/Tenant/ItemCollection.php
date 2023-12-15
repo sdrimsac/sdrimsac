@@ -70,7 +70,7 @@ class ItemCollection extends ResourceCollection
                 'has_igv' => (bool) $row->has_igv,
                 'active' => (bool) $row->active,
                 'has_igv_description' => $has_igv_description,
-                'sale_unit_price' => "{$row->currency_type->symbol} " . number_format($row->sale_unit_price, $decimal, ".", ""),
+                'sale_unit_price' =>  number_format($row->sale_unit_price, $decimal, ".", ""),
                 'purchase_unit_price' => "{$row->currency_type->symbol} " . number_format($row->purchase_unit_price, $decimal, '.', ''),
                 'created_at' => ($row->created_at) ? $row->created_at->format('Y-m-d H:i:s') : '',
                 'updated_at' => ($row->created_at) ? $row->updated_at->format('Y-m-d H:i:s') : '',
