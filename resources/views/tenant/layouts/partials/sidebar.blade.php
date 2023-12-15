@@ -472,7 +472,7 @@
 
             @endif
 
-        @if(!$roleService->isArca()&& !$roleService->isLogistic())
+        @if(!$roleService->isArca()&& !$roleService->isLogistic() && $config->accounting_mode)
         <li>
             <a href="#contabilidad" data-bs-toggle="collapse" data-role="button"
                 aria-expanded="{{ $path[0] === 'account' ? true : false }}"
