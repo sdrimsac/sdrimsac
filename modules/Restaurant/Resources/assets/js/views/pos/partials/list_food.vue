@@ -102,7 +102,15 @@
                                                 style="  height: 64px;  width: 64px;"
                                             >
                                                 <div class="icon-container_box">
-                                                    <template
+                                                  <el-tooltip
+                                                  :disabled="data.second_name == null"
+                                                    effect="dark"
+                                                    :content="
+                                                        data.second_name
+                                                    "
+                                                    placement="top-start"
+                                                  >
+                                                      <template
                                                         v-if="
                                                             data.image ==
                                                                 'imagen-no-disponible.jpg'
@@ -125,11 +133,12 @@
                                                             style="  max-height: 69px;  max-width: 69px;"
                                                         />
                                                     </template>
+                                                  </el-tooltip>
                                                 </div>
                                             </div>
                                         </div>
                                         <div>
-                                            {{ data.code }}
+                                            {{ data.code }} aa
                                         </div>
                                     </div>
                                 </div>

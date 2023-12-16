@@ -83,6 +83,7 @@ class FoodCollection extends ResourceCollection
                 'active' => $row->active,
                 'types' => $item_unit_types,
                 'series'  => $lots ?? [],
+                'second_name' => $item->second_name,
             ];
         });
     }

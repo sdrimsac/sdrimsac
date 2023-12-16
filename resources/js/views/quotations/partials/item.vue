@@ -5,6 +5,7 @@
         @open="create"
         @close="close"
         top="7vh"
+        append-to-body
         :close-on-click-modal="false"
     >
         <form autocomplete="off">
