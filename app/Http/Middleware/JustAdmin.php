@@ -52,7 +52,7 @@ class JustAdmin
             "reports/inventory", "reports/stockmin", "reports/kardex",
         ];
 
-        if ($type != 'admin' && $type != "superadmin") {
+        if ($type != 'admin' && $type != "superadmin" || $isLogistic) {
             if ($isAccountant) {
                 $pathPass = in_array($path, $paths);
                 if (!$pathPass) {
@@ -68,7 +68,7 @@ class JustAdmin
                 $pathPass = in_array($path, $paths_logistic);
                 if (!$pathPass) {
 
-                    return redirect('/items');
+                    return redirect('/purchases');
                 }
             } else if ($isArca) {
                 $pathPass = in_array($path, $paths_arca);

@@ -197,8 +197,8 @@
                             class="custom-legend-container mb-3 pb-3 d-flex flex-row"
                         ></div>
                         <div class="sh-25">
-                            <!-- <graphline :all-data="general.graph">
-                            </graphline> -->
+                            <graphline :all-data="general.graph">
+                            </graphline>
                         </div>
                     </div>
                 </div>

@@ -182,7 +182,7 @@
                             <div>
                                 <div class="d-flex row align-items-center">
                                     <div class="col-2 d-flex flex-column">
-                                        <el-checkbox
+                                        <!-- <el-checkbox
                                             v-if="
                                                 configuration.search_by_second_name
                                             "
@@ -196,7 +196,7 @@
                                                 <br/>
                                                  segundo nombre
                                             </h2>
-                                        </el-checkbox>
+                                        </el-checkbox> -->
                                           <el-checkbox
                                             v-if="
                                                 configuration.search_series_pos
