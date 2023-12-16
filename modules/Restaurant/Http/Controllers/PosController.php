@@ -204,9 +204,14 @@ class PosController extends Controller
                 }
             } else {
 
-                $foods = $foods->where(function ($query) use ($value,  $textoIntoArray) {
+                $foods = $foods->where(function ($query) use ($value,  $textoIntoArray,$search_by_second_name) {
                     foreach ($textoIntoArray as $key => $valor) {
                         $query->where('description', 'LIKE', '%' . $valor . '%');
+                        if($search_by_second_name){
+                            $query->orWhereHas('item', function ($query) use ($valor) {
+                                $query->where('second_name', 'LIKE', '%' . $valor . '%');
+                            });
+                        }
                     }
                 });
             }
