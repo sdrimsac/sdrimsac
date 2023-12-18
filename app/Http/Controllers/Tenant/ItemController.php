@@ -682,10 +682,19 @@ class ItemController extends Controller
     }
     public function excel(Request $request)
     {
-        $records = $this->getRecords($request);
+        $records = $this->getRecords($request)->get();
         $company = Company::first();
+        $warehouse_id = $request->warehouse_id;
         $establishment = ($request->establishment_id) ? Establishment::findOrFail($request->establishment_id) : auth()->user()->establishment;
-        $records = $records->get();
+        foreach ($records as $key => $row) {
+            if ($warehouse_id) {
+                $item_warehouse = ItemWarehouse::where([['item_id', $row->id], ['warehouse_id', $warehouse_id]])->first();
+                $row->stock = ($item_warehouse) ? $item_warehouse->stock : 0;
+            } else {
+                $item_sum_stock = ItemWarehouse::where('item_id', $row->id)->sum('stock');
+                $row->stock = $item_sum_stock;
+            }
+        }
         return (new ItemExportGeneral)
             ->records($records)
             ->company($company)
