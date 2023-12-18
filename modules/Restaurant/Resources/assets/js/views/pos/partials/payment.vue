@@ -3233,7 +3233,7 @@ export default {
             let pass = true;
             if (
                 (this.hasExceedBank && this.form.observation == null) ||
-                this.form.observation == ""
+                (this.form.observation == "" && this.hasExceedBank)
             ) {
                 try {
                     await this.$confirm(

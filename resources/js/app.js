@@ -161,7 +161,8 @@ Vue.component(
 
 Vue.component("x-input-service", require("./components/InputService.vue"));
 Vue.component("x-input-service", require("./components/InputService.vue"));
-
+Vue.component("x-graph", require("./components/graph/src/Graph.vue"));
+Vue.component("x-graph-line", require("./components/graph/src/GraphLine.vue"));
 const app = new Vue({
 
     store,
@@ -262,16 +263,18 @@ const app = new Vue({
                 /* webpackChunkName:"js/tenant-dashboard-index" */
                 "../../modules/Dashboard/Resources/assets/js/views/index.vue"
             ),
-        "x-graph": () =>
-            import(
-                /* webpackChunkName:"js/x-graph" */
-                "./components/graph/src/Graph.vue"
-            ),
-        "x-graph-line": () =>
-            import(
-                /* webpackChunkName:"js/x-graph-line" */
-                "./components/graph/src/GraphLine.vue"
-            ),
+
+
+        // "x-graph": () =>
+        //     import(
+        //         /* webpackChunkName:"js/x-graph" */
+        //         "./components/graph/src/Graph.vue"
+        //     ),
+        // "x-graph-line": () =>
+        //     import(
+        //         /* webpackChunkName:"js/x-graph-line" */
+        //         "./components/graph/src/GraphLine.vue"
+        //     ),
         "tenant-companies-form": () =>
             import(
                 /* webpackChunkName:"js/tenant-companies-form" */
