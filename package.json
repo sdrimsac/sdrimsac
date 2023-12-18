@@ -28,7 +28,6 @@
     "dependencies": {
         "@ckeditor/ckeditor5-build-classic": "^20.0.0",
         "@pencilpix/vue2-clock-picker": "^0.1.6",
-        "apexcharts": "^3.35.2",
         "chart.js": "^2.7.3",
         "element-ui": "^2.15.6",
         "hooper": "^0.3.4",

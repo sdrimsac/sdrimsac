@@ -17,18 +17,23 @@ trait TotalsTrait
     public function get_purchase_totals($establishment_id, $date_start, $date_end)
     {
 
-        if($date_start && $date_end){
+        if ($date_start && $date_end) {
 
-            $purchases = Purchase::query()->whereIn('state_type_id', ['01','03','05','07','13'])
-                                        ->where('establishment_id', $establishment_id)
-                                        ->whereBetween('date_of_issue', [$date_start, $date_end])
-                                        ->get();
+            $purchases = Purchase::query()->whereIn('state_type_id', ['01', '03', '05', '07', '13']);
+            if ($establishment_id) {
 
-        }else{
+                $purchases->where('establishment_id', $establishment_id);
+            }
+            $purchases = $purchases->whereBetween('date_of_issue', [$date_start, $date_end])
+                ->get();
+        } else {
 
-            $purchases = Purchase::query()->whereIn('state_type_id', ['01','03','05','07','13'])
-                                        ->where('establishment_id', $establishment_id)
-                                        ->get();
+            $purchases = Purchase::query()->whereIn('state_type_id', ['01', '03', '05', '07', '13']);
+            if ($establishment_id) {
+
+                $purchases->where('establishment_id', $establishment_id);
+            }
+            $purchases = $purchases->get();
         }
 
 
@@ -36,15 +41,14 @@ trait TotalsTrait
 
         $purchase_total_payment = 0;
 
-        foreach ($purchases as $purchase)
-        {
+        foreach ($purchases as $purchase) {
             $purchase_total_payment += collect($purchase->purchase_payments)->sum('payment');
         }
 
         return [
             'totals' => [
-                'total_payment' => round($purchase_total_payment,2),
-                'total' => round($purchases_total,2),
+                'total_payment' => round($purchase_total_payment, 2),
+                'total' => round($purchases_total, 2),
             ]
         ];
     }
@@ -54,49 +58,56 @@ trait TotalsTrait
     {
 
 
-        if($date_start && $date_end){
+        if ($date_start && $date_end) {
 
             $expenses = Expense::query()->where('establishment_id', $establishment_id)
-                                        ->whereBetween('date_of_issue', [$date_start, $date_end])
-                                        ->where('state_type_id','05')
-                                        ->get();
-
-        }else{
+                ->whereBetween('date_of_issue', [$date_start, $date_end])
+                ->where('state_type_id', '05')
+                ->get();
+        } else {
 
             $expenses = Expense::query()->where('establishment_id', $establishment_id)
-                                        ->where('state_type_id','05')
-                                        ->get();
+                ->where('state_type_id', '05')
+                ->get();
         }
 
         $expenses_total = $expenses->sum('total');
 
         $expense_total_payment = 0;
 
-        foreach ($expenses as $expense)
-        {
+        foreach ($expenses as $expense) {
             $expense_total_payment += collect($expense->payments)->sum('payment');
         }
 
         return [
             'totals' => [
-                'total_payment' => round($expense_total_payment,2),
-                'total' => round($expenses_total,2),
+                'total_payment' => round($expense_total_payment, 2),
+                'total' => round($expenses_total, 2),
             ]
         ];
-
     }
 
 
     public function get_sale_note_totals($establishment_id, $date_start, $date_end)
     {
 
-        if($date_start && $date_end){
-            $sale_notes = SaleNote::query()->where('establishment_id', $establishment_id)
-                                           ->where('changed', false)
-                                           ->whereBetween('date_of_issue', [$date_start, $date_end])->get();
-        }else{
-            $sale_notes = SaleNote::query()->where('establishment_id', $establishment_id)
-                                           ->where('changed', false)->get();
+        if ($date_start && $date_end) {
+            $sale_notes = SaleNote::query();
+            if ($establishment_id) {
+
+                $sale_notes->where('establishment_id', $establishment_id);
+            }
+
+            $sale_notes = $sale_notes->where('changed', false)
+                ->whereBetween('date_of_issue', [$date_start, $date_end])->get();
+        } else {
+            $sale_notes = SaleNote::query();
+            if ($establishment_id) {
+
+                $sale_notes->where('establishment_id', $establishment_id);
+            }
+
+            $sale_notes = $sale_notes->where('changed', false)->get();
         }
 
 
@@ -111,18 +122,15 @@ trait TotalsTrait
         $sale_note_total_payment_usd = 0;
 
         //TWO CURRENCY
-        foreach ($sale_notes as $sale_note)
-        {
+        foreach ($sale_notes as $sale_note) {
 
-            if($sale_note->currency_type_id == 'PEN'){
+            if ($sale_note->currency_type_id == 'PEN') {
 
                 $sale_note_total_payment_pen += collect($sale_note->payments)->sum('payment');
-
-            }else{
+            } else {
 
                 $sale_note_total_usd += $sale_note->total * $sale_note->exchange_rate_sale;
                 $sale_note_total_payment_usd += collect($sale_note->payments)->sum('payment') * $sale_note->exchange_rate_sale;
-
             }
         }
 
@@ -133,8 +141,8 @@ trait TotalsTrait
 
         return [
             'totals' => [
-                'total_payment' => round($sale_note_total_payment,2),
-                'total' => round($sale_note_total,2),
+                'total_payment' => round($sale_note_total_payment, 2),
+                'total' => round($sale_note_total, 2),
             ]
         ];
     }
@@ -143,10 +151,20 @@ trait TotalsTrait
     public function get_document_totals($establishment_id, $date_start, $date_end)
     {
 
-        if($date_start && $date_end){
-            $documents = Document::query()->where('establishment_id', $establishment_id)->whereBetween('date_of_issue', [$date_start, $date_end])->get();
-        }else{
-            $documents = Document::query()->where('establishment_id', $establishment_id)->get();
+        if ($date_start && $date_end) {
+            $documents = Document::query();
+            if ($establishment_id) {
+
+                $documents->where('establishment_id', $establishment_id);
+            }
+            $documents = $documents->whereBetween('date_of_issue', [$date_start, $date_end])->get();
+        } else {
+            $documents = Document::query();
+            if ($establishment_id) {
+
+                $documents->where('establishment_id', $establishment_id);
+            }
+            $documents = $documents->get();
         }
 
         //PEN
@@ -154,16 +172,16 @@ trait TotalsTrait
         $document_total_payment_pen = 0;
         $document_total_note_credit_pen = 0;
 
-        $document_total_pen = collect($documents->whereIn('state_type_id', ['01','03','05','07','13'])->whereIn('document_type_id', ['01','03','08']))->where('currency_type_id', 'PEN')->sum('total');
+        $document_total_pen = collect($documents->whereIn('state_type_id', ['01', '03', '05', '07', '13'])->whereIn('document_type_id', ['01', '03', '08']))->where('currency_type_id', 'PEN')->sum('total');
 
         //USD
         $document_total_usd = 0;
         $document_total_note_credit_usd = 0;
         $document_total_payment_usd = 0;
 
-        $documents_usd = $documents->whereIn('state_type_id', ['01','03','05','07','13'])
-                                    ->whereIn('document_type_id', ['01','03','08'])
-                                    ->where('currency_type_id', 'USD');
+        $documents_usd = $documents->whereIn('state_type_id', ['01', '03', '05', '07', '13'])
+            ->whereIn('document_type_id', ['01', '03', '08'])
+            ->where('currency_type_id', 'USD');
 
         foreach ($documents_usd as $dusd) {
             $document_total_usd += $dusd->total * $dusd->exchange_rate_sale;
@@ -171,24 +189,22 @@ trait TotalsTrait
 
         //TWO CURRENCY
 
-        foreach ($documents as $document)
-        {
-            if($document->currency_type_id == 'PEN'){
+        foreach ($documents as $document) {
+            if ($document->currency_type_id == 'PEN') {
 
-                if(in_array($document->state_type_id,['01','03','05','07','13']))
+                if (in_array($document->state_type_id, ['01', '03', '05', '07', '13']))
                     $document_total_payment_pen += collect($document->payments)->sum('payment');
 
-                $document_total_note_credit_pen += ($document->document_type_id == '07') ? $document->total:0; //nota de credito
+                $document_total_note_credit_pen += ($document->document_type_id == '07') ? $document->total : 0; //nota de credito
 
-            }else{
+            } else {
 
-                if(in_array($document->state_type_id,['01','03','05','07','13']))
+                if (in_array($document->state_type_id, ['01', '03', '05', '07', '13']))
                     $document_total_payment_usd += collect($document->payments)->sum('payment') * $document->exchange_rate_sale;
 
-                $document_total_note_credit_usd += ($document->document_type_id == '07') ? $document->total * $document->exchange_rate_sale:0; //nota de credito
+                $document_total_note_credit_usd += ($document->document_type_id == '07') ? $document->total * $document->exchange_rate_sale : 0; //nota de credito
 
             }
-
         }
 
         //TOTALS
@@ -196,14 +212,13 @@ trait TotalsTrait
         $document_total_note_credit = $document_total_note_credit_pen + $document_total_note_credit_usd;
         $document_total_payment = $document_total_payment_pen + $document_total_payment_usd;
 
-        $document_total = round(($document_total - $document_total_note_credit),2);
+        $document_total = round(($document_total - $document_total_note_credit), 2);
 
         return [
             'totals' => [
-                'total_payment' => round($document_total_payment,2),
-                'total' => round($document_total,2),
+                'total_payment' => round($document_total_payment, 2),
+                'total' => round($document_total, 2),
             ]
         ];
     }
-
 }

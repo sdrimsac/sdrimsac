@@ -37,6 +37,7 @@ Route::middleware(['auth', 'just.admin'])->group(function () {
         // Route::get('unpaidall', 'DashboardController@unpaidall')->name('unpaidall');
         Route::get('stock-by-product/records', 'DashboardController@stockByProduct');
         Route::post('utilities', 'DashboardController@utilities');
+        Route::post('global-data', 'DashboardController@globalData');
     });
 
     //Commands

@@ -23,6 +23,9 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
+                    legend: {
+                        display: false,
+                    },
                 }
             }
         },
@@ -44,7 +47,7 @@
 
                 }
                 this.chart = new Chart(this.$refs.canvas.getContext('2d'), {
-                    type: 'line',
+                    type: 'bar',
                     data: {
                         labels: this.allData.labels,
                         datasets: this.allData.datasets,

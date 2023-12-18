@@ -20,6 +20,11 @@ use Illuminate\Support\Arr;
 
 class DashboardController extends Controller
 {
+    public function globalData(Request $request)
+    {
+        return response()->json((new DashboardData())->globalData($request->all()), 200);
+    }
+
     public function index()
     {
 

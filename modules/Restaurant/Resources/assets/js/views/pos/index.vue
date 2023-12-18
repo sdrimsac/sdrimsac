@@ -2035,6 +2035,7 @@ export default {
     sockets: {},
     computed: {},
     methods: {
+   
         async tableOpen(id) {
             this.roomSeeId = id;
             this.openTablesRooms(id);
