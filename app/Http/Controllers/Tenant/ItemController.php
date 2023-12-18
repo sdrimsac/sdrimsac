@@ -180,7 +180,7 @@ class ItemController extends Controller
       
 
     }
-    public function getRecords($request)
+    public function getRecords($request,$services = true)
     {
         $datos = $request->value;
         $textoIntoArray =  explode(' ', $datos);
@@ -188,6 +188,9 @@ class ItemController extends Controller
         $area_id = $request->area_id;
         $records = Item::whereTypeUser()
             ->whereNotIsSet();
+        if(!$services){
+            $records = $records->where('unit_type_id', '!=', 'ZZ');
+        }
         switch ($request->column) {
 
             case 'brand':
@@ -682,7 +685,9 @@ class ItemController extends Controller
     }
     public function excel(Request $request)
     {
-        $records = $this->getRecords($request)->get();
+        $records = $this->getRecords($request,false)
+
+        ->get();
         $company = Company::first();
         $warehouse_id = $request->warehouse_id;
         $establishment = ($request->establishment_id) ? Establishment::findOrFail($request->establishment_id) : auth()->user()->establishment;
