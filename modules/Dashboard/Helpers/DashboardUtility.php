@@ -2,6 +2,7 @@
 
 namespace Modules\Dashboard\Helpers;
 
+use App\Models\Tenant\Box;
 use App\Models\Tenant\Document;
 use App\Models\Tenant\SaleNote;
 use App\Models\Tenant\Person;
@@ -83,7 +84,9 @@ class DashboardUtility
                                             })
                                             ->get();
 
-            $expenses = ($enabled_expense) ? Expense::where('establishment_id', $establishment_id)->whereBetween('date_of_issue', [$d_start, $d_end])->get():null;
+            $expenses = ($enabled_expense) ? Box::where('establishment_id', $establishment_id)
+            ->where('expenses',1)
+            ->whereBetween('date', [$d_start, $d_end])->get():null;
 
 
         }else{
@@ -104,7 +107,9 @@ class DashboardUtility
                                             ->get();
 
 
-            $expenses = ($enabled_expense) ? Expense::where('establishment_id', $establishment_id)->get():null;
+            $expenses = ($enabled_expense) ? Box::
+            where('expenses',1)->
+            where('establishment_id', $establishment_id)->get():null;
 
         }
 
@@ -155,7 +160,8 @@ class DashboardUtility
 
             $total = 0;
             foreach ($expenses as $ex) {
-                $total += ($ex->currency_type_id == 'USD') ? $ex->total * $ex->exchange_rate_sale: $ex->total;
+                $total += $ex->amount;
+                // $total += ($ex->currency_type_id == 'USD') ? $ex->amount * $ex->exchange_rate_sale: $ex->total;
             }
 
             return number_format($total, 2, ".", "");

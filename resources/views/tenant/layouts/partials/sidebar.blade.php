@@ -103,6 +103,12 @@
                             <i class="icofont-business-man"></i> Clientes
                         </a>
                     </li>
+                    <li>
+                        <a class="{{ $path[0] === 'persons' && $path[1] === 'suppliers' ? 'active' : '' }}"
+                            href="{{ route('tenant.persons.index', ['type' => 'suppliers']) }}">
+                            <i class="icofont-business-man"></i>  Proveedores
+                        </a>
+                    </li>
 
 
                     @if ($config->restaurant)

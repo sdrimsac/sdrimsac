@@ -140,26 +140,26 @@
                         <div
                             class="mt-2 d-flex flex-wrap justify-content-around "
                         >
-                            <div class="col-2 alert alert-success text-center">
+                            <div class="col-2 alert custom-alert text-center">
                                 CPE EMITIDOS <br />
                                 <strong class="display-4">{{
                                     total_cpe
                                 }}</strong>
                             </div>
-                            <div class="col-2 alert alert-success text-center">
+                            <div class="col-2 alert custom-alert text-center">
                                 TOTAL CPE <br />
                                 <strong class="display-4">{{
                                     document_total_global
                                 }}</strong>
                             </div>
 
-                            <div class="col-2 alert alert-success text-center">
+                            <div class="col-2 alert custom-alert text-center">
                                 TOTAL NOTAS DE VENTA <br />
                                 <strong class="display-4">{{
                                     sale_note_total_global
                                 }}</strong>
                             </div>
-                            <div class="col-2 alert alert-success text-center">
+                            <div class="col-2 alert custom-alert text-center">
                                 MONTO TOTAL GENERAL
                                 <br />
                                 <strong class="display-4">{{
@@ -169,7 +169,7 @@
                                     ).toFixed(2)
                                 }}</strong>
                             </div>
-                            <div class="col-2 alert alert-success text-center">
+                            <div class="col-2 alert custom-alert text-center">
                                 UTILIDAD <br />
                                 <strong class="display-4">
                                     <template v-if="utilities.totals">{{
@@ -221,7 +221,7 @@
         <div class="row">
             <div class="col-xl-12">
                 <div class="row">
-                    <div class="col-xl-3">
+                    <div class="col-xl-3 ">
                         <section
                             class="card card-featured-left card-featured-secondary"
                         >
@@ -285,7 +285,7 @@
                             </div>
                         </section>
                     </div>
-                    <div class="col-xl-3" v-if="soapCompany != '03'">
+                    <div class="col-xl-3 " v-if="soapCompany != '03'">
                         <section
                             class="card card-featured-left card-featured-secondary"
                         >
@@ -440,7 +440,300 @@
                         </section>
                     </div>
 
-                    <div class="col-xl-3 col-md-3">
+                    <div class="col-xl-3 mt-2 col-md-3  ">
+                        <section
+                            class="card card-featured-left card-featured-secondary"
+                        >
+                            <div class="card-body" v-if="document">
+                                <div class="widget-summary">
+                                    <div class="widget-summary-col">
+                                        <div class="row no-gutters">
+                                            <div class="col-md-12 m-b-10 mb-4">
+                                                <h2 class="card-title">
+                                                    Documentos emitidos
+                                                </h2>
+                                            </div>
+                                          
+                     
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6 col-sm-6 col-12">
+                                                <h4 class="title">Facturas: {{count_documents.totals.invoices}}</h4>
+                                                <h4 class="title">Boletas: {{count_documents.totals.receives }} </h4>
+                                                <h4 class="title">Notas de venta: {{count_documents.totals.sale_notes}}</h4>
+                                            </div>
+                                            <div class="col-md-6 col-sm-6 col-12">
+                                                <x-graph
+                                                    type="doughnut"
+                                                    :all-data="count_documents.graph"
+                                                ></x-graph>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+
+                    <div class="col-xl-3 mt-2  col-md-3">
+                        <section
+                            class="card card-featured-left card-featured-secondary"
+                        >
+                            <div class="card-body" v-if="utilities">
+                                <div class="widget-summary">
+                                    <div class="widget-summary-col">
+                                        <div class="row no-gutters">
+                                            <div class="col-md-12 m-b-10">
+                                                <h2 class="card-title">
+                                                    Utilidades/Ganancias
+                                                </h2>
+                                            </div>
+                                            <div class="col-lg-4">
+                                                <div class="summary">
+                                                    <h4 class="title text-info">
+                                                        Ingreso
+                                                    </h4>
+                                                    <div class="info">
+                                                        <strong
+                                                            class="amount text-info"
+                                                            >S/
+                                                            {{
+                                                                utilities.totals
+                                                                    .total_income
+                                                            }}</strong
+                                                        >
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4">
+                                                <div class="summary">
+                                                    <h4
+                                                        class="title text-danger"
+                                                    >
+                                                        Egreso
+                                                    </h4>
+                                                    <div class="info">
+                                                        <strong
+                                                            class="amount text-danger"
+                                                            >S/
+                                                            {{
+                                                                utilities.totals
+                                                                    .total_egress
+                                                            }}</strong
+                                                        >
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4">
+                                                <div class="summary">
+                                                    <h4 class="title">
+                                                        Utilidad
+                                                 
+                                                    </h4>
+                                                    <div class="info">
+                                                        <strong class="amount"
+                                                            >S/
+                                                            {{
+                                                                utilities.totals
+                                                                    .utility
+                                                            }}</strong
+                                                        >
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-12 ">
+                                                <div class="summary">
+                                                    <h4 class="title">
+                                                        <br />
+                                                        <el-checkbox
+                                                            v-model="
+                                                                form.enabled_expense
+                                                            "
+                                                            @change="
+                                                                loadDataUtilities
+                                                            "
+                                                            >Considerar
+                                                            gastos</el-checkbox
+                                                        ><br />
+                                                    </h4>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-12 ">
+                                                <div class="summary">
+                                                    <h4 class="title">
+                                                        <el-checkbox
+                                                            v-model="
+                                                                filter_item
+                                                            "
+                                                            @change="
+                                                                changeFilterItem
+                                                            "
+                                                            >Filtrar por
+                                                            producto</el-checkbox
+                                                        ><br />
+                                                    </h4>
+                                                </div>
+                                            </div>
+                                            <div
+                                                class="col-lg-12 "
+                                                v-if="filter_item"
+                                            >
+                                                <div class="summary">
+                                                    <h4 class="title">
+                                                        <div class="form-group">
+                                                            <el-select
+                                                                v-model="
+                                                                    form.item_id
+                                                                "
+                                                                filterable
+                                                                remote
+                                                                popper-class="el-select-customers"
+                                                                clearable
+                                                                placeholder="Buscar producto"
+                                                                :remote-method="
+                                                                    searchRemoteItems
+                                                                "
+                                                                :loading="
+                                                                    loading_search
+                                                                "
+                                                                @change="
+                                                                    loadDataUtilities
+                                                                "
+                                                            >
+                                                                <el-option
+                                                                    v-for="option in items"
+                                                                    :key="
+                                                                        option.id
+                                                                    "
+                                                                    :value="
+                                                                        option.id
+                                                                    "
+                                                                    :label="
+                                                                        option.description
+                                                                    "
+                                                                ></el-option>
+                                                            </el-select>
+                                                        </div>
+                                                    </h4>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row m-t-20">
+                                            <div class="col-md-12">
+                                                <x-graph
+                                                    type="doughnut"
+                                                    :all-data="utilities.graph"
+                                                ></x-graph>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+
+                    <div class="col-xl-6 col-md-6 ">
+                        <section
+                            class="card card-featured-left card-featured-secondary"
+                        >
+                            <div class="card-body" v-if="general">
+                                <div class="widget-summary">
+                                    <div class="widget-summary-col">
+                                        <div class="summary">
+                                            <div class="row no-gutters">
+                                                <div class="col-md-12 m-b-10">
+                                                    <h2 class="card-title">
+                                                        Compras
+                                                        <el-tooltip
+                                                            class="item"
+                                                            effect="dark"
+                                                            content="Aplica filtro por establecimiento"
+                                                            placement="top-start"
+                                                        >
+                                                            <i
+                                                                class="fa fa-info-circle"
+                                                            ></i>
+                                                        </el-tooltip>
+                                                    </h2>
+                                                </div>
+                                                <div class="col-lg-4">
+                                                    <div class="summary">
+                                                        <h4
+                                                            class="title text-danger"
+                                                        >
+                                                            Total
+                                                            <br />percepciones
+                                                        </h4>
+                                                        <div class="info">
+                                                            <strong
+                                                                class="amount text-danger"
+                                                                >S/
+                                                                {{
+                                                                    purchase
+                                                                        .totals
+                                                                        .purchases_total_perception
+                                                                }}</strong
+                                                            >
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4">
+                                                    <div class="summary">
+                                                        <h4
+                                                            class="title text-info"
+                                                        >
+                                                            Total
+                                                            <br />compras
+                                                        </h4>
+                                                        <div class="info">
+                                                            <strong
+                                                                class="amount text-info"
+                                                                >S/
+                                                                {{
+                                                                    purchase
+                                                                        .totals
+                                                                        .purchases_total
+                                                                }}</strong
+                                                            >
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4">
+                                                    <div class="summary">
+                                                        <h4 class="title">
+                                                            Total
+                                                            <br />&nbsp;
+                                                        </h4>
+                                                        <div class="info">
+                                                            <strong
+                                                                class="amount"
+                                                                >S/
+                                                                {{
+                                                                    purchase
+                                                                        .totals
+                                                                        .total
+                                                                }}</strong
+                                                            >
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row m-t-20">
+                                                <div class="col-md-12">
+                                                    <x-graph-line
+                                                        :all-data="
+                                                            purchase.graph
+                                                        "
+                                                    ></x-graph-line>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                     <!-- <div class="col-xl-3 mt-2 col-md-3  ">
                         <section
                             class="card card-featured-left card-featured-secondary"
                         >
@@ -631,17 +924,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <!-- <div class="col-lg-4">
-                        <div class="summary">
-                          <h4 class="title">
-                            Total
-                            <br />&nbsp;
-                          </h4>
-                          <div class="info">
-                            <strong class="amount">S/ {{ balance.totals.total }}</strong>
-                          </div>
-                        </div>
-                      </div> -->
+                                   
                                         </div>
                                         <div class="row m-t-20">
                                             <div class="col-md-12">
@@ -655,268 +938,8 @@
                                 </div>
                             </div>
                         </section>
-                    </div>
-
-                    <div class="col-xl-3 col-md-3">
-                        <section
-                            class="card card-featured-left card-featured-secondary"
-                        >
-                            <div class="card-body" v-if="utilities">
-                                <div class="widget-summary">
-                                    <div class="widget-summary-col">
-                                        <div class="row no-gutters">
-                                            <div class="col-md-12 m-b-10">
-                                                <h2 class="card-title">
-                                                    Utilidades/Ganancias
-                                                </h2>
-                                            </div>
-                                            <div class="col-lg-4">
-                                                <div class="summary">
-                                                    <h4 class="title text-info">
-                                                        Ingreso
-                                                    </h4>
-                                                    <div class="info">
-                                                        <strong
-                                                            class="amount text-info"
-                                                            >S/
-                                                            {{
-                                                                utilities.totals
-                                                                    .total_income
-                                                            }}</strong
-                                                        >
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-4">
-                                                <div class="summary">
-                                                    <h4
-                                                        class="title text-danger"
-                                                    >
-                                                        Egreso
-                                                    </h4>
-                                                    <div class="info">
-                                                        <strong
-                                                            class="amount text-danger"
-                                                            >S/
-                                                            {{
-                                                                utilities.totals
-                                                                    .total_egress
-                                                            }}</strong
-                                                        >
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-4">
-                                                <div class="summary">
-                                                    <h4 class="title">
-                                                        Utilidad
-                                                        <br />&nbsp;
-                                                    </h4>
-                                                    <div class="info">
-                                                        <strong class="amount"
-                                                            >S/
-                                                            {{
-                                                                utilities.totals
-                                                                    .utility
-                                                            }}</strong
-                                                        >
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-12 ">
-                                                <div class="summary">
-                                                    <h4 class="title">
-                                                        <br />
-                                                        <el-checkbox
-                                                            v-model="
-                                                                form.enabled_expense
-                                                            "
-                                                            @change="
-                                                                loadDataUtilities
-                                                            "
-                                                            >Considerar
-                                                            gastos</el-checkbox
-                                                        ><br />
-                                                    </h4>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-12 ">
-                                                <div class="summary">
-                                                    <h4 class="title">
-                                                        <el-checkbox
-                                                            v-model="
-                                                                filter_item
-                                                            "
-                                                            @change="
-                                                                changeFilterItem
-                                                            "
-                                                            >Filtrar por
-                                                            producto</el-checkbox
-                                                        ><br />
-                                                    </h4>
-                                                </div>
-                                            </div>
-                                            <div
-                                                class="col-lg-12 "
-                                                v-if="filter_item"
-                                            >
-                                                <div class="summary">
-                                                    <h4 class="title">
-                                                        <div class="form-group">
-                                                            <el-select
-                                                                v-model="
-                                                                    form.item_id
-                                                                "
-                                                                filterable
-                                                                remote
-                                                                popper-class="el-select-customers"
-                                                                clearable
-                                                                placeholder="Buscar producto"
-                                                                :remote-method="
-                                                                    searchRemoteItems
-                                                                "
-                                                                :loading="
-                                                                    loading_search
-                                                                "
-                                                                @change="
-                                                                    loadDataUtilities
-                                                                "
-                                                            >
-                                                                <el-option
-                                                                    v-for="option in items"
-                                                                    :key="
-                                                                        option.id
-                                                                    "
-                                                                    :value="
-                                                                        option.id
-                                                                    "
-                                                                    :label="
-                                                                        option.description
-                                                                    "
-                                                                ></el-option>
-                                                            </el-select>
-                                                        </div>
-                                                    </h4>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row m-t-20">
-                                            <div class="col-md-12">
-                                                <x-graph
-                                                    type="doughnut"
-                                                    :all-data="utilities.graph"
-                                                ></x-graph>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </section>
-                    </div>
-
-                    <div class="col-xl-6 col-md-6">
-                        <section
-                            class="card card-featured-left card-featured-secondary"
-                        >
-                            <div class="card-body" v-if="general">
-                                <div class="widget-summary">
-                                    <div class="widget-summary-col">
-                                        <div class="summary">
-                                            <div class="row no-gutters">
-                                                <div class="col-md-12 m-b-10">
-                                                    <h2 class="card-title">
-                                                        Compras
-                                                        <el-tooltip
-                                                            class="item"
-                                                            effect="dark"
-                                                            content="Aplica filtro por establecimiento"
-                                                            placement="top-start"
-                                                        >
-                                                            <i
-                                                                class="fa fa-info-circle"
-                                                            ></i>
-                                                        </el-tooltip>
-                                                    </h2>
-                                                </div>
-                                                <div class="col-lg-4">
-                                                    <div class="summary">
-                                                        <h4
-                                                            class="title text-danger"
-                                                        >
-                                                            Total
-                                                            <br />percepciones
-                                                        </h4>
-                                                        <div class="info">
-                                                            <strong
-                                                                class="amount text-danger"
-                                                                >S/
-                                                                {{
-                                                                    purchase
-                                                                        .totals
-                                                                        .purchases_total_perception
-                                                                }}</strong
-                                                            >
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-lg-4">
-                                                    <div class="summary">
-                                                        <h4
-                                                            class="title text-info"
-                                                        >
-                                                            Total
-                                                            <br />compras
-                                                        </h4>
-                                                        <div class="info">
-                                                            <strong
-                                                                class="amount text-info"
-                                                                >S/
-                                                                {{
-                                                                    purchase
-                                                                        .totals
-                                                                        .purchases_total
-                                                                }}</strong
-                                                            >
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-lg-4">
-                                                    <div class="summary">
-                                                        <h4 class="title">
-                                                            Total
-                                                            <br />&nbsp;
-                                                        </h4>
-                                                        <div class="info">
-                                                            <strong
-                                                                class="amount"
-                                                                >S/
-                                                                {{
-                                                                    purchase
-                                                                        .totals
-                                                                        .total
-                                                                }}</strong
-                                                            >
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row m-t-20">
-                                                <div class="col-md-12">
-                                                    <x-graph-line
-                                                        :all-data="
-                                                            purchase.graph
-                                                        "
-                                                    ></x-graph-line>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </section>
-                    </div>
-
-                    <div class="col-xl-3 col-md-6">
+                    </div> -->
+                    <div class="col-xl-3 col-md-6 mt-2">
                         <section class="card">
                             <div class="card-body">
                                 <h2 class="card-title">Ventas por producto</h2>
@@ -977,7 +1000,7 @@
                             </div>
                         </section>
                     </div>
-                    <div class="col-xl-3 col-md-6">
+                    <div class="col-xl-3 col-md-6 mt-2">
                         <section class="card">
                             <div class="card-body">
                                 <h2 class="card-title">Top clientes</h2>
@@ -1062,6 +1085,11 @@
     font-size: 15px;
     font-weight: bold;
 }
+.custom-alert{
+    background-color: #cce5ff;
+    color: #4a81b7;
+
+}
 </style>
 <script>
 // import DocumentPayments from "../../../../../../resources/js/views/tenant/documents/partials/payments.vue";
@@ -1084,6 +1112,11 @@ export default {
                 totals: {},
                 graph: {}
             },
+            count_documents:{
+                totals: {},
+                graph: {}
+            },
+            
             document: {
                 totals: {},
                 graph: {}
@@ -1274,6 +1307,7 @@ export default {
                     this.document = response.data.data.document;
                     this.balance = response.data.data.balance;
                     this.sale_note = response.data.data.sale_note;
+                    this.count_documents = response.data.data.count_documents;
                     this.general = response.data.data.general;
                     this.customers = response.data.data.customers;
                     this.items = response.data.data.items;

@@ -110,9 +110,50 @@ class DashboardData
             'general' => $this->totals($establishment_id, $d_start, $d_end, $period, $month_start, $month_end),
             'balance' => $this->balance($establishment_id, $d_start, $d_end),
             'items' => $this->getItems(),
+            'count_documents' => $this->get_count_documents($establishment_id, $d_start, $d_end),
         ];
     }
+    function get_count_documents($establishment_id, $d_start, $d_end)
+    {
+        $soap_company = Company::first()->soap_type_id;
+        $invoices = Document::where('establishment_id', $establishment_id)
+            ->where('document_type_id', '01')
+            ->whereBetween('date_of_issue', [$d_start, $d_end])
+            ->where('soap_type_id', $soap_company)
+            ->count();
+        $receives = Document::where('establishment_id', $establishment_id)
+            ->where('document_type_id', '03')
+            ->whereBetween('date_of_issue', [$d_start, $d_end])
+            ->where('soap_type_id', $soap_company)
+            ->count();
+        $sale_notes = SaleNote::where('establishment_id', $establishment_id)
+            ->whereBetween('date_of_issue', [$d_start, $d_end])
+            ->where('soap_type_id', $soap_company)
+            ->count();
 
+            return [
+                'totals' => [
+                    'invoices' => $invoices,
+                    'receives' => $receives,
+                    'sale_notes' => $sale_notes,
+                ],
+                'graph' => [
+                    'labels' => ['Facturas', 'Boletas', 'Notas de venta'],
+                    'datasets' => [
+                        [
+                            'label' => 'Comprobantes',
+                            'data' => [$invoices, $receives, $sale_notes],
+                            'backgroundColor' => [
+                                'rgb(54, 162, 235)',
+                                'rgb(255, 99, 132)',
+                                'rgb(255, 205, 86)',
+                            ]
+                        ]
+                    ],
+                ]
+            ];
+        
+    }
     /**
      * @param $establishment_id
      * @param $date_start
