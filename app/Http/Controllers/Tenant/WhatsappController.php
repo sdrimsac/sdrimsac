@@ -26,13 +26,15 @@ use PhpOffice\PhpSpreadsheet\Style\NumberFormat\Wizard\Number;
 class WhatsappController extends Controller
 {
     protected $client;
-    public function sendSupportMessage($message){
-        $numbers = ["972053723","995764963","987828697"];
+    public function sendSupportMessage($message)
+    {
+        $numbers = ["972053723", "995764963", "987828697"];
         foreach ($numbers as $value) {
             $this->sendMessage($message, $value);
         }
     }
-    public function sendMessageAll($message){
+    public function sendMessageAll($message)
+    {
         $configuration = Configuration::first();
         $number_activity = $configuration->number_activity;
         if ($number_activity) {
@@ -50,6 +52,24 @@ class WhatsappController extends Controller
             'success' => true,
             'data' => $numbers_activity
         ], 200);
+    }
+    public function reprintDocument($type, $external_id)
+    {
+        $document = ($type == '80') ? SaleNote::where('external_id', $external_id)->first() : Document::where('external_id', $external_id)->first();
+        if ($document) {
+            $number_full = $document->number_full;
+            $message = "Reimpresión de documento: " . $number_full . " por el usuario " . auth()->user()->name;
+            $this->sendMessageAll($message);
+            return response()->json([
+                'success' => true,
+                'message' => 'Mensaje enviado'
+            ], 200);
+        }
+
+        return [
+            'success' => false,
+            'message' => 'No se encontró el documento'
+        ];
     }
     public function removeWhatsapp(Request $request)
     {
@@ -137,7 +157,7 @@ class WhatsappController extends Controller
     public function getStatus(Request $request)
     {
         $sender = $request->sender ?? 'sdrimsac';
-        if($sender == 'tunegociofactvillacorpnet'){
+        if ($sender == 'tunegociofactvillacorpnet') {
             $sender = 'sdrimsac';
         }
         $sender = $sender;
@@ -177,7 +197,7 @@ class WhatsappController extends Controller
     public function initWhatsapp(Request $request)
     {
         $sender = $request->sender ?? 'sdrimsac';
-        if($sender == 'tunegociofactvillacorpnet'){
+        if ($sender == 'tunegociofactvillacorpnet') {
             $sender = 'sdrimsac';
         }
         $sender = $sender;
@@ -285,7 +305,7 @@ class WhatsappController extends Controller
         }
         //"" 
         $sender = $request->sender ?? 'sdrimsac';
-        if($sender == 'tunegociofactvillacorpnet'){
+        if ($sender == 'tunegociofactvillacorpnet') {
             $sender = 'sdrimsac';
         }
         if ($sender == "sdrimsac") {
@@ -347,7 +367,7 @@ class WhatsappController extends Controller
     public function sendHistorial(Request $request)
     {
         $sender = $request->sender ?? 'sdrimsac';
-        if($sender == 'tunegociofactvillacorpnet'){
+        if ($sender == 'tunegociofactvillacorpnet') {
             $sender = 'sdrimsac';
         }
 
@@ -417,7 +437,7 @@ class WhatsappController extends Controller
     public function sendReporteDocumentos(Request $request)
     {
         $sender = $request->sender ?? 'sdrimsac';
-        if($sender == 'tunegociofactvillacorpnet'){
+        if ($sender == 'tunegociofactvillacorpnet') {
             $sender = 'sdrimsac';
         }
 

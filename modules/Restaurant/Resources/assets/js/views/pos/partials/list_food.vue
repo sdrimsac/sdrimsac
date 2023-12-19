@@ -138,7 +138,7 @@
                                             </div>
                                         </div>
                                         <div>
-                                            {{ data.code }} aa
+                                            {{ data.code }} 
                                         </div>
                                     </div>
                                 </div>

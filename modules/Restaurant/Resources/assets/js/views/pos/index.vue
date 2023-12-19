@@ -2157,7 +2157,7 @@ export default {
                     id: 3,
                     title: ["Productos"],
                     icon: "fas fa-box-open",
-                    visible: true
+                    visible: this.configuration.product_cash
                 },
                 {
                     id: 4,

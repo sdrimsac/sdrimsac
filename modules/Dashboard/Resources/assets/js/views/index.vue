@@ -458,9 +458,11 @@
                                         </div>
                                         <div class="row">
                                             <div class="col-md-6 col-sm-6 col-12">
-                                                <h4 class="title">Facturas: {{count_documents.totals.invoices}}</h4>
-                                                <h4 class="title">Boletas: {{count_documents.totals.receives }} </h4>
-                                                <h4 class="title">Notas de venta: {{count_documents.totals.sale_notes}}</h4>
+                                                <h5 class="title">Facturas: {{count_documents.totals.invoices}}</h5>
+                                                <h5 class="title">Boletas: {{count_documents.totals.receives }} </h5>
+                                                <h5 class="title">Notas de venta: {{count_documents.totals.sale_notes}}</h5>
+                                                <h5 class="title">Notas de crédito: {{count_documents.totals.credit_notes}}</h5>
+                                                <h5 class="title">Notas de débito: {{count_documents.totals.debit_notes}}</h5>
                                             </div>
                                             <div class="col-md-6 col-sm-6 col-12">
                                                 <x-graph

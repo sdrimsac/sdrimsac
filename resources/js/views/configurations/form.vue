@@ -1740,6 +1740,38 @@
                                             ></el-switch>
                                         </div>
                                     </div>
+                                       <div class="col-md-6 mt-4">
+                                        <div class="form-group">
+                                            <label class="control-label w-100"
+                                                >Whatsapp en reimpresión
+                                            </label>
+
+                                            <el-switch
+                                                v-model="
+                                                    form.reprint_whatsapp
+                                                "
+                                                active-text="Si"
+                                                inactive-text="No"
+                                                @change="submit"
+                                            ></el-switch>
+                                        </div>
+                                    </div>
+                                       <div class="col-md-6 mt-4">
+                                        <div class="form-group">
+                                            <label class="control-label w-100"
+                                                >Productos en caja
+                                            </label>
+
+                                            <el-switch
+                                                v-model="
+                                                    form.product_cash
+                                                "
+                                                active-text="Si"
+                                                inactive-text="No"
+                                                @change="submit"
+                                            ></el-switch>
+                                        </div>
+                                    </div>
                                 </div>
                             </el-tab-pane>
                             <el-tab-pane label="Impresion">

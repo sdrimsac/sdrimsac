@@ -45,7 +45,7 @@
             <div class="mt-1 d-flex align-items-center justify-content-between">
                 <div>
                     <button
-                    v-if="activeName == 'saleNotes'"
+                        v-if="activeName == 'saleNotes'"
                         @click.prevent="onOpenModalGenerateCPE"
                         type="button"
                         class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto"
@@ -132,11 +132,10 @@
                 </el-tabs>
             </div>
             <modal-generate-cpe
-            :show.sync="showModalGenerateCPE"
-            @sendItems="sendItems"
-            @close="closeCpe"
+                :show.sync="showModalGenerateCPE"
+                @sendItems="sendItems"
+                @close="closeCpe"
             >
-
             </modal-generate-cpe>
         </div>
     </el-dialog>
@@ -158,8 +157,16 @@ import queryString from "query-string";
 import ModalGenerateCpe from "./modal_generate_cpe.vue";
 
 export default {
-    components: { DocumentPrintDetail,ModalGenerateCpe },
-    props: ["showDialog", "company", "sender", "config", "establishment","printer","area_id"],
+    components: { DocumentPrintDetail, ModalGenerateCpe },
+    props: [
+        "showDialog",
+        "company",
+        "sender",
+        "config",
+        "establishment",
+        "printer",
+        "area_id"
+    ],
     data() {
         return {
             remain: false,
@@ -177,22 +184,22 @@ export default {
             },
             lastDocument: null,
             activeName: "documents",
-            showModalGenerateCPE:false,
+            showModalGenerateCPE: false
         };
     },
     methods: {
-        closeCpe(){
-             this.showModalGenerateCPE = false;
-             this.close();
+        closeCpe() {
+            this.showModalGenerateCPE = false;
+            this.close();
         },
         onOpenModalGenerateCPE() {
-               this.showModalGenerateCPE = true;
+            this.showModalGenerateCPE = true;
         },
         getRecordsInput() {
             this.getRecords();
         },
-        sendItems(items,clientNumber,notes,dscto_global){
-            this.$emit("sendItems", items,clientNumber,notes,dscto_global);
+        sendItems(items, clientNumber, notes, dscto_global) {
+            this.$emit("sendItems", items, clientNumber, notes, dscto_global);
         },
         async printEvent(url) {
             console.log(url);
@@ -243,10 +250,11 @@ export default {
                     paperConfig.margins = margins;
                 }
             }
-      let isPosd = this.printer.split(" ")[this.printer.split(" ").length - 1];
-            if (isPosd == "POSD" && isTicket ) {
+            let isPosd = this.printer.split(" ")[
+                this.printer.split(" ").length - 1
+            ];
+            if (isPosd == "POSD" && isTicket) {
                 paperConfig.density = 200;
-             
             }
             try {
                 let config = qz.configs.create(this.printer, paperConfig);
@@ -266,7 +274,15 @@ export default {
             } catch (e) {}
         },
         async printData(external_id, type) {
-            console.log(external_id, type);
+            // console.log("🚀 ~ file: documents_print.vue:270 ~ printData ~ this.config:", this.config)
+            let { reprint_whatsapp } = this.config;
+            if (reprint_whatsapp) {
+                this.$http
+                    .post(`/whatsapp/reprint/${type}/${external_id}`)
+                    .then(response => {
+                        console.log(response);
+                    });
+            }
             let typePrint = this.establishment.format_printer;
             let url = "";
             //colocar una condicion para cada caso desde impresira de 80mm hasta las a4 y a5

@@ -455,7 +455,6 @@
                             <div
                                 class="col-md-3"
                                 v-show="recordId == null"
-                                v-if="form.unit_type_id != 'ZZ'"
                             >
                                 <div
                                     class="form-group"

@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Config;
 class Configuration extends ModelTenant
 {
     protected $fillable = [
+        'reprint_whatsapp',
+        'product_cash',
         'search_by_second_name',
         'accounting_mode',
         'show_coins_to_receive',
@@ -144,6 +146,8 @@ class Configuration extends ModelTenant
 
     ];
     protected $casts = [
+        'reprint_whatsapp' => 'boolean',
+        'product_cash' => 'boolean',
         'search_by_second_name' => 'boolean',
         'accounting_mode' => 'boolean',
         'show_coins_to_receive' => 'boolean',
@@ -239,6 +243,8 @@ class Configuration extends ModelTenant
         // $skins = Skin::all();
         $skins = [];
         return [
+            'reprint_whatsapp' => (bool)$this->reprint_whatsapp,
+            'product_cash' => (bool)$this->product_cash,
             'search_by_second_name' => (bool)$this->search_by_second_name,
             'accounting_mode' => (bool)$this->accounting_mode,
             'show_coins_to_receive' => (bool)$this->show_coins_to_receive,

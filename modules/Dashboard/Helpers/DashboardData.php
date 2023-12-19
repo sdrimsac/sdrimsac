@@ -116,14 +116,22 @@ class DashboardData
     function get_count_documents($establishment_id, $d_start, $d_end)
     {
         $soap_company = Company::first()->soap_type_id;
+  
+
         $invoices = Document::where('establishment_id', $establishment_id)
-            ->where('document_type_id', '01')
-            ->whereBetween('date_of_issue', [$d_start, $d_end])
+            ->whereBetween('date_of_issue', [$d_start, $d_end])->where('document_type_id', '01')
             ->where('soap_type_id', $soap_company)
             ->count();
         $receives = Document::where('establishment_id', $establishment_id)
-            ->where('document_type_id', '03')
-            ->whereBetween('date_of_issue', [$d_start, $d_end])
+            ->whereBetween('date_of_issue', [$d_start, $d_end])->where('document_type_id', '03')
+            ->where('soap_type_id', $soap_company)
+            ->count();
+        $credit_notes = Document::where('establishment_id', $establishment_id)
+            ->whereBetween('date_of_issue', [$d_start, $d_end])->where('document_type_id', '07')
+            ->where('soap_type_id', $soap_company)
+            ->count();
+        $debit_notes = Document::where('establishment_id', $establishment_id)
+            ->whereBetween('date_of_issue', [$d_start, $d_end])->where('document_type_id', '08')
             ->where('soap_type_id', $soap_company)
             ->count();
         $sale_notes = SaleNote::where('establishment_id', $establishment_id)
@@ -131,28 +139,31 @@ class DashboardData
             ->where('soap_type_id', $soap_company)
             ->count();
 
-            return [
-                'totals' => [
-                    'invoices' => $invoices,
-                    'receives' => $receives,
-                    'sale_notes' => $sale_notes,
-                ],
-                'graph' => [
-                    'labels' => ['Facturas', 'Boletas', 'Notas de venta'],
-                    'datasets' => [
-                        [
-                            'label' => 'Comprobantes',
-                            'data' => [$invoices, $receives, $sale_notes],
-                            'backgroundColor' => [
-                                'rgb(54, 162, 235)',
-                                'rgb(255, 99, 132)',
-                                'rgb(255, 205, 86)',
-                            ]
+        return [
+            'totals' => [
+                'invoices' => $invoices,
+                'receives' => $receives,
+                'sale_notes' => $sale_notes,
+                'credit_notes' => $credit_notes,
+                'debit_notes' => $debit_notes,
+            ],
+            'graph' => [
+                'labels' => ['Facturas', 'Boletas', 'Notas de venta', 'Notas de crédito', 'Notas de débito'],
+                'datasets' => [
+                    [
+                        'label' => 'Comprobantes',
+                        'data' => [$invoices, $receives, $sale_notes, $credit_notes, $debit_notes],
+                        'backgroundColor' => [
+                            'rgb(54, 162, 235)',
+                            'rgb(255, 99, 132)',
+                            'rgb(255, 205, 86)',
+                            'rgb(75, 192, 192)',
+                            'rgb(201, 203, 207)',
                         ]
-                    ],
-                ]
-            ];
-        
+                    ]
+                ],
+            ]
+        ];
     }
     /**
      * @param $establishment_id
@@ -172,12 +183,12 @@ class DashboardData
                 ->whereBetween('date_of_issue', [$date_start, $date_end])->get();
         } else {
             $sale_notes = SaleNote::query();
-            if($establishment_id){
+            if ($establishment_id) {
 
                 $sale_notes->where('establishment_id', $establishment_id);
             }
 
-                $sale_notes = $sale_notes->where('changed', false)->get();
+            $sale_notes = $sale_notes->where('changed', false)->get();
         }
 
         //PEN
@@ -354,14 +365,14 @@ class DashboardData
 
         if ($date_start && $date_end) {
             $documents = Document::query();
-            if($establishment_id){
+            if ($establishment_id) {
 
                 $documents->where('establishment_id', $establishment_id);
             }
             $documents = $documents->whereBetween('date_of_issue', [$date_start, $date_end])->get();
         } else {
             $documents = Document::query();
-            if($establishment_id){
+            if ($establishment_id) {
 
                 $documents->where('establishment_id', $establishment_id);
             }
@@ -453,29 +464,29 @@ class DashboardData
 
         if ($date_start && $date_end) {
             $sale_notes = SaleNote::query();
-            if($establishment_id){
+            if ($establishment_id) {
 
                 $sale_notes->where('establishment_id', $establishment_id);
             }
-               $sale_notes = $sale_notes->where('changed', false)
+            $sale_notes = $sale_notes->where('changed', false)
                 ->whereBetween('date_of_issue', [$date_start, $date_end])->get();
 
             $documents = Document::query();
-            if($establishment_id){
+            if ($establishment_id) {
 
                 $documents->where('establishment_id', $establishment_id);
             }
             $documents = $documents->whereBetween('date_of_issue', [$date_start, $date_end])->get();;
         } else {
             $sale_notes = SaleNote::query();
-            if($establishment_id){
+            if ($establishment_id) {
 
                 $sale_notes->where('establishment_id', $establishment_id);
             }
-                $sale_notes =$sale_notes->where('changed', false)->get();
+            $sale_notes = $sale_notes->where('changed', false)->get();
 
             $documents = Document::query();
-            if($establishment_id){
+            if ($establishment_id) {
 
                 $documents->where('establishment_id', $establishment_id);
             }

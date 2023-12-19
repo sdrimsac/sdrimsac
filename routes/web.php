@@ -109,6 +109,7 @@ if ($hostname) {
                 Route::get('get_stock_file/{id}', [CashController::class, 'get_stock_file']);
 
                 Route::post('whatsapp', [App\Http\Controllers\Tenant\WhatsappController::class, 'sendwhatsapp']);
+                Route::post('whatsapp/reprint/{type}/{external_id}', [App\Http\Controllers\Tenant\WhatsappController::class, 'reprintDocument']);
                 Route::post('whatsapp/save', [App\Http\Controllers\Tenant\WhatsappController::class, 'saveWhatsapp']);
                 Route::post('whatsapp/remove', [App\Http\Controllers\Tenant\WhatsappController::class, 'removeWhatsapp']);
                 Route::get('whatsapp/numbers', [App\Http\Controllers\Tenant\WhatsappController::class, 'getNumbers']);

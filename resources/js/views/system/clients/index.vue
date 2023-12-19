@@ -654,7 +654,6 @@
                                             </button>
                                         </el-tooltip>
                                         <button
-                                            v-if="deletePermission == true"
                                             class="btn waves-effect waves-light btn-xs btn-danger m-1__2"
                                             type="button"
                                             @click.prevent="clickDelete(row)"
@@ -738,7 +737,7 @@ import DataLimitNotification from "./partials/DataLimitNotification.vue";
 
 export default {
     mixins: [deletable, changeable],
-    props: ["deletePermission", "discUsed", "iUsed", "storageSize", "version"],
+    props: [ "discUsed", "iUsed", "storageSize", "version"],
     components: {
         CompaniesForm,
         ChartLine,

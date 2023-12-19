@@ -433,6 +433,16 @@ class ItemController extends Controller
             }
             $item->stock = $new_qty;
             $item->save();
+        }else{
+            $warehouse_id = $request->warehouse_id;
+            //si es servicio crea un registro en itemwarehouse
+            if ($item->unit_type_id == 'ZZ' && $warehouse_id) {
+                $item_warehouse = ItemWarehouse::firstOrNew(['item_id' => $item->id, 'warehouse_id' => $warehouse_id]);
+                $item_warehouse->stock = $item->stock;
+                $item_warehouse->save();
+             
+            }
+
         }
         ItemUnitType::where('item_id', $item->id)->delete();
         ItemWarehousePrice::where('item_id', $item->id)->delete();
