@@ -416,7 +416,7 @@
                     <li>
                         <a class="{{ $path[0] === 'reports' && $path[1] === 'credits' ? 'active' : '' }}"
                             href="{{ route('reports.credits.index') }}">
-                            <i class="fas fa-credit-card"></i>
+                         <i class="fas fa-window-restore"></i>
 
                             Créditos
                         </a>
@@ -428,6 +428,13 @@
                             href="{{ route('reports.cash.index') }}">
                             <i class="icofont-money-bag"></i>
                             Ganancias
+                        </a>
+                    </li>
+                    <li>
+                        <a class="{{ $path[0] === 'report_product_client' ? 'active' : '' }}"
+                            href="{{ route('reports.products-clients.index') }}">
+                            <i class="fas fa-window-restore"></i>
+                            R. productos
                         </a>
                     </li>
                     <li>

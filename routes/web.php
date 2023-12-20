@@ -103,6 +103,11 @@ if ($hostname) {
                 Route::post('toll', [TollController::class, 'store']);
                 Route::get('toll/{number}', [TollController::class, 'person']);
 
+                Route::get('report_product_client', [ItemController::class, 'index_product_client'])->name('reports.products-clients.index');
+                Route::get('report_product_client/records', [ItemController::class, 'items_by_clients']);
+
+
+
                 Route::get('report_cash', [CashController::class, 'index_report_cash'])->name('reports.cash.index');
                 Route::get('report_closed_cash', [CashController::class, 'index_report_closed_cash'])->name('reports.cash_closes.index');
                 Route::get('report_cash/records', [CashController::class, 'report_cash']);

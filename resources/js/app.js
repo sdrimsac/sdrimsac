@@ -317,6 +317,12 @@ const app = new Vue({
                 /* webpackChunkName:"js/tenant-configurations-pdf" */
                 "./views/configurations/pdf_templates.vue"
             ),
+            //
+        "tenant-items-client": () =>
+            import(
+                /* webpackChunkName:"js/tenant-items-client" */
+                "./views/items/items_client.vue"
+            ),
         "tenant-items-index": () =>
             import(
                 /* webpackChunkName:"js/tenant-items-index" */
