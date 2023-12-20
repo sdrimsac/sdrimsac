@@ -1756,6 +1756,7 @@
                                             ></el-switch>
                                         </div>
                                     </div>
+                                    
                                        <div class="col-md-6 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
@@ -1765,6 +1766,22 @@
                                             <el-switch
                                                 v-model="
                                                     form.product_cash
+                                                "
+                                                active-text="Si"
+                                                inactive-text="No"
+                                                @change="submit"
+                                            ></el-switch>
+                                        </div>
+                                    </div>
+                                         <div class="col-md-6 mt-4">
+                                        <div class="form-group">
+                                            <label class="control-label w-100"
+                                                >Reimpresion de documentos - caja
+                                            </label>
+
+                                            <el-switch
+                                                v-model="
+                                                    form.print_document_cash
                                                 "
                                                 active-text="Si"
                                                 inactive-text="No"

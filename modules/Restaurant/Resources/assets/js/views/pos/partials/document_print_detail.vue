@@ -369,6 +369,7 @@
                                 v-if="
                                     data.state_type_id != '11' &&
                                         data.state_type_id != '13'
+                                        && configuration.print_document_cash
                                 "
                                 size="mini"
                                 plain
