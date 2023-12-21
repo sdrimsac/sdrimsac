@@ -26,6 +26,7 @@ use Modules\Item\Models\ItemLot;
 use Illuminate\Support\Str;
 use Modules\Inventory\Http\Resources\TransferPlaceCollection;
 use Modules\Item\Models\ItemLotsGroup;
+use Modules\Restaurant\Models\Area;
 
 class TransferPlaceController extends Controller
 {
@@ -63,8 +64,18 @@ class TransferPlaceController extends Controller
 
 
     public function tables()
-    {
+    {   
+        $printers = Area::whereNotNull('printer')->get()
+        ->transform(function($row, $key){
+            return [
+                'id' => $row->id,
+                'description' => $row->description,
+                'printer' => $row->printer,
+            ];
+        });
+        ;
         return [
+            'printers' => $printers,
             //'items' => $this->optionsItemWareHouse(),
             'warehouses' => $this->optionsWarehouse()
         ];

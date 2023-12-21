@@ -77,4 +77,9 @@ class HotelRentItem extends ModelTenant
 
         return "$table_number - $tower_name";
     }
+
+    public function inventory_kardex()
+    {
+        return $this->morphMany(InventoryKardex::class, 'inventory_kardexable');
+    }
 }

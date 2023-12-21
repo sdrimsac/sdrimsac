@@ -1610,7 +1610,8 @@
             @sendOrdens="sendOrdens"
             :showTables.sync="showTables"
         ></tables>
-        <tables-rooms
+        <tables-rooms    
+            :cash_id.sync="cashId"
             :configuration="configuration"
             :printer.sync="printer"
             @getTablesToClean="getTablesToClean"
@@ -2037,6 +2038,14 @@ export default {
     methods: {
    
         async tableOpen(id) {
+            if(!this.cashId){
+                this.$message({
+                    showClose: true,
+                    type: "warning",
+                    message: "Seleccione una caja para poder abrir una mesa"
+                });
+                return;
+            }
             this.roomSeeId = id;
             this.openTablesRooms(id);
         },

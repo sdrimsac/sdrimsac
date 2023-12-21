@@ -23,6 +23,15 @@
                             v-if="resource == 'caja/rooms'"
                             type="button"
                             class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto m-l-5"
+                            @click.prevent="clickSeeInsumos"
+                        >
+                            <i class="icofont-plus-circle"></i>
+                            <span>Insumos</span>
+                        </button>
+                        <button
+                            v-if="resource == 'caja/rooms'"
+                            type="button"
+                            class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto m-l-5"
                             @click.prevent="clickSeePromotions"
                         >
                             <i class="icofont-plus-circle"></i>
@@ -283,6 +292,7 @@
                 <items-rooms :showDialog.sync="showItems" :type="typeItem">
                 </items-rooms>
                 <promotions :showDialog.sync="showPromotions"></promotions>
+                <insumos :showDialog.sync="showInsumos"></insumos>
             </div>
         </div>
     </div>
@@ -290,6 +300,7 @@
 
 <script>
 const Promotions = () => import("./promotions.vue");
+const Insumos = () => import("./insumos.vue");
 import CreateForm from "./form.vue";
 import CreateFormMassive from "./formTableMassive.vue";
 import ItemsRooms from "./items_rooms.vue";
@@ -304,10 +315,12 @@ export default {
         CreateForm,
         CreateFormMassive,
         ItemsRooms,
-        Promotions
+        Promotions,
+        Insumos
     },
     data() {
         return {
+            showInsumos: false,
             showItems: false,
             showDialog: false,
             showDialogMassive: false,
@@ -347,6 +360,9 @@ export default {
         });
     },
     methods: {
+        clickSeeInsumos() {
+            this.showInsumos = true;
+        },
         clickSeePromotions() {
             this.showPromotions = true;
         },

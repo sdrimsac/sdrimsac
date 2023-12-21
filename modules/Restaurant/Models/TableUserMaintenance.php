@@ -16,6 +16,7 @@ class TableUserMaintenance extends ModelTenant
         'id',
         'table_id',
         'user_id',
+        'state_table_id',
         'type',
         'init_comment',
         'finish_comment',

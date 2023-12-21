@@ -61,6 +61,32 @@
                     </data-table>
                 </div>
             </div>
+            <el-dialog
+                append-to-body
+                :visible.sync="showDialogPrinters"
+                title="Seleccione una impresora"
+            >
+                <el-select
+                    class="m-2"
+                    v-model="printer_id"
+                    placeholder="Seleccione una impresora"
+                >
+                    <el-option
+                        v-for="printer in printers"
+                        :key="printer.id"
+                        :label="printer.printer"
+                        :value="printer.id"
+                    ></el-option>
+                </el-select>
+                <span slot="footer" class="dialog-footer">
+                    <el-button @click="showDialogPrinters = false"
+                        >Cancelar</el-button
+                    >
+                    <el-button type="primary" @click="Printer"
+                        >Aceptar</el-button
+                    >
+                </span>
+            </el-dialog>
         </div>
     </div>
 </template>
@@ -74,15 +100,20 @@ export default {
     mixins: [deletable],
     data() {
         return {
+            showDialogPrinters: false,
             title: null,
             showDialog: false,
             resource: "transfers/transfer_place",
             recordId: null,
-            typeTransaction: null
+            typeTransaction: null,
+            printer_id: null,
+            printers: [],
+            currentCode: null
         };
     },
     created() {
         this.title = "Traslados por aceptar";
+        this.getTables();
         qz.security.setCertificatePromise((resolve, reject) => {
             this.$http
                 .get("/api/qz/crt/override", {
@@ -111,13 +142,46 @@ export default {
         });
     },
     methods: {
-        async Printer(linkpdf) {
+        getTables() {
+            this.$http
+                .get("/transfers/transfer_place/tables")
+                .then(response => {
+                    console.log(
+                        "🚀 ~ file: index.vue:116 ~ this.$http.get ~ response:",
+                        response
+                    );
+                    // this.tables = response.data;
+                    let { data } = response;
+                    this.printers = data.printers;
+                    console.log(
+                        "🚀 ~ file: index.vue:144 ~ this.$http.get ~ this.$areaPrinter:",
+                        this.$areaPrinter
+                    );
+                    if (this.$areaPrinter) {
+                        //ordena printers de manera que $areaPrinter sea el primero
+                        let index = this.printers.findIndex(
+                            printer => printer.printer == this.$areaPrinter
+                        );
+                        if (index != -1) {
+                            let printer = this.printers[index];
+                            this.printer_id = printer.id;
+                            this.printers.splice(index, 1);
+                            this.printers.unshift(printer);
+                        }
+                    }
+                });
+        },
+        async Printer() {
             let paperConfig = {
                 scaleContent: false
             };
 
-            let config = qz.configs.create(this.$areaPrinter, paperConfig);
-
+            let printer = this.printers.find(printer => {
+                return printer.id == this.printer_id;
+            });
+          
+            let config = qz.configs.create(printer.printer, paperConfig);
+            let linkpdf = `/transfers/print_places/${this.currentCode}`;
             if (!qz.websocket.isActive()) {
                 await qz.websocket.connect(config);
             }
@@ -132,13 +196,13 @@ export default {
             qz.print(config, data).catch(e => {
                 this.$toast.error(e.message);
             });
-        
         },
-        clickPrint(code) {
-            console.log(this.$areaPrinter);
 
-            let url = `/transfers/print_places/${code}`;
-            this.Printer(url);
+        clickPrint(code) {
+            this.showDialogPrinters = true;
+            this.currentCode = code;
+
+            // this.Printer(url);
         },
         clickCreate(recordId = null) {
             location.href = `/${this.resource}/create`;

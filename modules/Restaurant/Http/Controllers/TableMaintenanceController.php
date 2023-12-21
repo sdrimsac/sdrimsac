@@ -24,24 +24,30 @@ class TableMaintenanceController extends Controller
     {
         $type = $table_user_maintenance->type;
         $status = $table_user_maintenance->status;
+        $state = $table_user_maintenance->state_table_id;
         switch ($type) {
             case 'limpieza':
                 $this->change_table_clean($table_id, $status);
                 break;
             default:
-                $this->change_table_maintenance($table_id, $status);
+                $this->change_table_maintenance($table_id, $status, $state);
                 break;
         }
     }
-    function change_table_maintenance($table_id, $status)
+    function change_table_maintenance($table_id, $status,$state = null)
     {
         $table = Table::find($table_id);
         switch ($status) {
-            case 1:
-                $table->status_table_id = 2;
-                break;
+            // case 1:
+            //     // $table->status_table_id = 2;
+            //     break;
             case 2:
-                $table->status_table_id = 1;
+                if($state){
+                    $table->status_table_id = $state;
+                }else{
+                    $table->status_table_id = 1;
+
+                }
                 $caja_id = Area::getCajaAreaIdByTableId($table_id);
                 if($caja_id){
                     $message = "Terminó el mantenimiento de la habitación {$table->getTableFullName()}, ya se encuentra disponible.";
@@ -87,14 +93,15 @@ class TableMaintenanceController extends Controller
         $table_id = $table_user_maintenance->table_id;
         $this->change_table($table_id, $table_user_maintenance);
         $new_status = $status == 1 ? 2 : ($status == 2 ? 3 : 1);
-
+        
         if ($new_status == 3) {
             $table_user_maintenance->finish_comment = $finish_comment;
             $table_user_maintenance->finish_time = date('Y-m-d H:i:s');
         }
-
+        
         if ($new_status == 2) {
             $table_user_maintenance->init_time = date('Y-m-d H:i:s');
+        
         }
         $table_user_maintenance->status = $new_status;
         $table_user_maintenance->save();
@@ -191,12 +198,16 @@ class TableMaintenanceController extends Controller
     public function store(Request $request)
     {
         $table_id = $request->table_id;
+        $table = Table::find($table_id);
+        $status_table_id = $table->status_table_id;
+     
         $worker_id = $request->worker_id;
         $description = $request->description;
         $type = $request->type;
         $id = $request->id;
         $table_maintenance = TableUserMaintenance::firstOrNew(['id' => $id]);
         $table_maintenance->table_id = $table_id;
+        $table_maintenance->state_table_id = $status_table_id;
         $table_maintenance->user_id = $worker_id;
         $table_maintenance->type = $type;
         $table_maintenance->init_comment = $description;

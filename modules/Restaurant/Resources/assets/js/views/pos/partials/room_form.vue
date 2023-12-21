@@ -323,24 +323,45 @@
                         </div>
                     </div>
                     <template v-if="room.has_frigobar">
-                        <el-divider content-position="left"
-                            >
-                            <el-checkbox
-                            v-model="room.enable_frigobar"
-                            >
-                                Garantía frigobar
-                            </el-checkbox>
-                            </el-divider
-                        >
+                        <el-divider content-position="left"> </el-divider>
                         <div class="row">
                             <div class="col-md-3">
-                                <label for="total_room">Monto </label>
+                                <el-checkbox v-model="room.enable_frigobar">
+                                    Garantía frigobar
+                                </el-checkbox>
                                 <el-input
                                     :disabled="!room.enable_frigobar"
                                     type="number"
                                     :min="0"
                                     step="any"
                                     v-model="room.credit_line"
+                                >
+                                </el-input>
+                            </div>
+                            <div class="col-md-3" v-if="insumos.length > 0">
+                                <label for="insumos" class="label-control"
+                                    >Insumos
+
+                                    <el-tooltip effect="dark" placement="top">
+                                        <span slot="content">
+                                            <div
+                                                v-for="insumo in insumos"
+                                                :key="insumo.id"
+                                            >
+                                                {{ insumo.item_description }}
+                                                <br />
+                                            </div>
+                                        </span>
+                                        <i class="fas fa-info-circle"></i>
+                                    </el-tooltip>
+                                </label>
+                                <el-input
+                                    type="number"
+                                    :min="1"
+                                    :max="2"
+                                    step="any"
+                                    v-model="room.insumos"
+                                    @input="limitInsumos(room,idx)"
                                 >
                                 </el-input>
                             </div>
@@ -381,7 +402,7 @@ export default {
     },
     data() {
         return {
-            credit_line_limit:150,
+            credit_line_limit: 150,
             services: [],
             all_services: [],
             title: "Ingreso de huesped",
@@ -408,6 +429,23 @@ export default {
         };
     },
     methods: {
+        limitInsumos(room,idx) {
+            if (room.insumos > 2) {
+                this.$message({
+                    message: "Solo puede seleccionar 2 insumos",
+                    type: "warning"
+                });
+                room.insumos = 2;
+            }
+            if (room.insumos < 1) {
+                this.$message({
+                    message: "Debe seleccionar al menos 1 insumo",
+                    type: "warning"
+                });
+                room.insumos = 1;
+            }
+            
+        },
         async changeMonthRent(room) {
             let { is_month_rent } = room;
             if (is_month_rent) {
@@ -595,7 +633,8 @@ export default {
         },
         addRoom({ tower_id, floor_id, table_id }) {
             let room = {
-                enable_frigobar:false,
+                insumos: 1,
+                enable_frigobar: false,
                 credit_line: 0,
                 is_reserve: this.isReserve,
                 total: 0,
@@ -617,7 +656,7 @@ export default {
             if (table && table.description) {
                 room.description = table.description.replaceAll("/", "·");
                 room.has_frigobar = table.has_frigobar;
-                room.credit_line = this.credit_line_limit; 
+                room.credit_line = this.credit_line_limit;
             }
             this.rooms.push(room);
             this.calculateTotal();
@@ -635,12 +674,20 @@ export default {
                 `/caja/rooms/tablas?is_reserve=${this.isReserve}`
             );
             // this.rooms = response.data.tables;
-            let { towers, floors, tables, services,credit_line_limit } = response.data;
+            let {
+                insumos,
+                towers,
+                floors,
+                tables,
+                services,
+                credit_line_limit
+            } = response.data;
             this.all_towers = towers;
+            this.insumos = insumos;
             this.all_floors = floors;
             this.all_tables = tables;
             this.all_services = services;
-            this.credit_line_limit = credit_line_limit||150;
+            this.credit_line_limit = credit_line_limit || 150;
 
             ///
             // this.towers = towers;
@@ -708,8 +755,7 @@ export default {
         hasAdvances() {
             let has = false;
             for (let room of this.rooms) {
-                if (room.advances > 0) 
-                {
+                if (room.advances > 0) {
                     has = true;
                     break;
                 }
@@ -766,7 +812,7 @@ export default {
                     );
                     pass = false;
                 }
-                if(!room.enable_frigobar){
+                if (!room.enable_frigobar) {
                     room.credit_line = 0;
                 }
             }
@@ -804,7 +850,7 @@ export default {
         showServices(room) {
             let table = this.all_tables.find(t => t.id == room.table_id);
             if (table) {
-                let { services,has_frigobar } = table;
+                let { services, has_frigobar } = table;
                 if (services.length > 0) {
                     room.services = this.all_services
                         .filter(s =>

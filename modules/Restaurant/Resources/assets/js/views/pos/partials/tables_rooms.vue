@@ -1041,7 +1041,7 @@ import ServicesRoomModal from "./services_room_modal.vue";
 import MaintenanceModal from "./maintenance_modal.vue";
 export default {
     //tabla color verde
-    props: ["showTables", "table", "roomSeeId", "printer", "configuration"],
+    props: ["showTables", "table", "roomSeeId", "printer", "configuration","cash_id"],
     components: {
         RoomForm,
         EditReserve,
@@ -1546,6 +1546,10 @@ export default {
             }
             this.currentTable = table;
             if (table.status_table_id == 2) {
+                if(!this.cash_id){
+                    this.$message.warning("Abra una caja para continuar");
+                    return;
+                }
                 this.getRoomDetail(table.id);
                 return;
             } else if (table.status_table_id == 5) {
@@ -1595,6 +1599,10 @@ export default {
                     console.log(e);
                 }
             } else {
+                if(!this.cash_id){
+                    this.$message.warning("Abra una caja para continuar");
+                    return;
+                }
                 this.showRoom = true;
             }
         },

@@ -154,6 +154,10 @@ Route::prefix('caja')->group(function () {
         //**** MESAS */
         Route::get('rooms', 'TableRoomController@index')->name('restaurant.rooms');
         Route::get('rooms/columns', 'TableRoomController@columns');
+        Route::post('rooms/insumos', 'TableRoomController@setInsumo');
+        Route::get('rooms/insumos/records', 'TableRoomController@getInsumos');
+        Route::delete('rooms/insumos/record/{id}', 'TableRoomController@deleteInsumo');
+
         Route::get('rooms/tables_to_clean', 'TableRoomController@tablesToClean');
         Route::get('rooms/tables_to_leave', 'TableRoomController@tablesToLeave');
         Route::get('rooms/check', 'TableRoomController@check');
