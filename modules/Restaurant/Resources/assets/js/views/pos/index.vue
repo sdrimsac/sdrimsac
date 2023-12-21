@@ -2097,6 +2097,7 @@ export default {
                     }${seconds}`;
                 }
             });
+
             this.tablesClean.forEach(t => {
                 if (t.is_cleaning) {
                     if (t.cleaned === true) {

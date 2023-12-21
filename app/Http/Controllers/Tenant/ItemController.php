@@ -53,6 +53,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Modules\Inventory\Models\Warehouse as WarehouseModule;
+use Modules\Report\Exports\ItemClientProductExport;
 use Modules\Report\Exports\ItemExport;
 use Modules\Report\Exports\ItemExportGeneral;
 
@@ -62,7 +63,141 @@ class ItemController extends Controller
     {
         return view('tenant.items.index_product_client');
     }
+    public function items_by_clients_excel(Request $request)
+    {
+        $categoria_id = $request->categoria_id;
+        $item_id = $request->item_id;
+        $establishment_id = $request->establishment_id;
+        $date_start = $request->date_start ? Carbon::parse($request->date_start)->format("y-m-d") : null;
+        $customer_id = $request->customer_id;
+        $date_end = $request->date_end ? Carbon::parse($request->date_end)->format("y-m-d") : null;
 
+
+        $document_items = DocumentItem::query();
+        $sale_note_items = SaleNoteItem::query();
+
+        if ($item_id) {
+            $document_items->where('item_id', $item_id);
+            $sale_note_items->where('item_id', $item_id);
+        }
+        if ($categoria_id) {
+            $document_items->whereHas('item', function ($q) use ($categoria_id) {
+                $q->where('category_id', $categoria_id);
+            });
+            $sale_note_items->whereHas('item', function ($q) use ($categoria_id) {
+                $q->where('category_id', $categoria_id);
+            });
+        }
+        if ($establishment_id) {
+            $document_items->whereHas('document', function ($q) use ($establishment_id) {
+                $q->where('establishment_id', $establishment_id);
+            });
+            $sale_note_items->whereHas('sale_note', function ($q) use ($establishment_id) {
+                $q->where('establishment_id', $establishment_id);
+            });
+        }
+        if ($customer_id) {
+            $document_items->whereHas('document', function ($q) use ($customer_id) {
+                $q->where('customer_id', $customer_id);
+            });
+            $sale_note_items->whereHas('sale_note', function ($q) use ($customer_id) {
+                $q->where('customer_id', $customer_id);
+            });
+        }
+        if ($date_start && $date_end) {
+            $document_items->whereHas('document', function ($q) use ($date_start, $date_end) {
+                $q->whereBetween('date_of_issue', [$date_start, $date_end]);
+            });
+            $sale_note_items->whereHas('sale_note', function ($q) use ($date_start, $date_end) {
+                $q->whereBetween('date_of_issue', [$date_start, $date_end]);
+            });
+        } else if ($date_start) {
+            $document_items->whereHas('document', function ($q) use ($date_start) {
+                $q->where('date_of_issue', '>=', $date_start);
+            });
+            $sale_note_items->whereHas('sale_note', function ($q) use ($date_start) {
+                $q->where('date_of_issue', '>=', $date_start);
+            });
+        }
+
+        $document_items->select(
+            'documents.customer_id',
+            'documents.series',
+            'documents.date_of_issue',
+            'documents.number',
+            DB::raw('SUM(document_items.quantity) as total_quantity'),
+            'document_items.item_id',
+            'document_items.total',
+            'persons.name as customer_name',
+            'persons.number as customer_number',
+            'items.description as item_description'
+        )
+            ->join('documents', 'document_items.document_id', '=', 'documents.id')
+            ->join('persons', 'documents.customer_id', '=', 'persons.id')
+            //join con item
+            ->join('items', 'document_items.item_id', '=', 'items.id')
+            // ->where('documents.establishment_id', '=', $establishment_id)
+            ->groupBy(
+                'documents.customer_id',
+                'document_items.item_id',
+                'persons.name',
+                'persons.number',
+                'documents.series',
+                'documents.number',
+                'document_items.total',
+                'documents.date_of_issue'
+            );
+
+        $sale_note_items->select(
+            'sale_notes.customer_id',
+            'sale_notes.series',
+            'sale_notes.date_of_issue',
+            'sale_notes.number',
+            DB::raw('SUM(sale_note_items.quantity) as total_quantity'),
+            'sale_note_items.item_id',
+            'sale_note_items.total',
+            'persons.name as customer_name',
+            'persons.number as customer_number',
+            'items.description as item_description'
+        )
+            ->join('sale_notes', 'sale_note_items.sale_note_id', '=', 'sale_notes.id')
+            ->join('persons', 'sale_notes.customer_id', '=', 'persons.id') // Agrega la relación con la tabla "persons"
+            //join con item
+            ->join('items', 'sale_note_items.item_id', '=', 'items.id')
+            // ->where('sale_notes.establishment_id', '=', $establishment_id)
+            ->groupBy(
+                'sale_notes.customer_id',
+                'sale_note_items.item_id',
+                'persons.name',
+                'persons.number',
+                'sale_notes.series',
+                'sale_notes.number',
+                'sale_note_items.total',
+                'sale_notes.date_of_issue'
+            );
+
+        // Combina las consultas de DocumentItem y SaleNoteItem
+        $combined_items = $document_items->union($sale_note_items);
+
+        $combined_items->groupBy('customer_id');
+
+        $result = $combined_items->orderBy('customer_id');
+
+        // return new ItemClientCollection($result->paginate(50));
+        $items = $result->get();
+        $establishment = null;
+            if($establishment_id){
+                $establishment = Establishment::find($establishment_id);
+            }
+        $company = Company::first();
+        return (new ItemClientProductExport)
+            ->establishment($establishment)
+            ->company($company)
+            ->items($items)
+            ->date_start($date_start)
+            ->date_end($date_end)
+            ->download('Reporte_productos_por_clientes' . Carbon::now() . '.xlsx');
+    }
     public function items_by_clients(Request $request)
     {
         $categoria_id = $request->categoria_id;
@@ -132,14 +267,22 @@ class ItemController extends Controller
             'persons.number as customer_number',
             'items.description as item_description'
         )
-        ->join('documents', 'document_items.document_id', '=', 'documents.id')
-        ->join('persons', 'documents.customer_id', '=', 'persons.id')
-        //join con item
-        ->join('items', 'document_items.item_id', '=', 'items.id')  
-        // ->where('documents.establishment_id', '=', $establishment_id)
-        ->groupBy('documents.customer_id', 'document_items.item_id', 'persons.name', 'persons.number','documents.series','documents.number',
-    'document_items.total', 'documents.date_of_issue');
-    
+            ->join('documents', 'document_items.document_id', '=', 'documents.id')
+            ->join('persons', 'documents.customer_id', '=', 'persons.id')
+            //join con item
+            ->join('items', 'document_items.item_id', '=', 'items.id')
+            // ->where('documents.establishment_id', '=', $establishment_id)
+            ->groupBy(
+                'documents.customer_id',
+                'document_items.item_id',
+                'persons.name',
+                'persons.number',
+                'documents.series',
+                'documents.number',
+                'document_items.total',
+                'documents.date_of_issue'
+            );
+
         $sale_note_items->select(
             'sale_notes.customer_id',
             'sale_notes.series',
@@ -152,21 +295,29 @@ class ItemController extends Controller
             'persons.number as customer_number',
             'items.description as item_description'
         )
-        ->join('sale_notes', 'sale_note_items.sale_note_id', '=', 'sale_notes.id')
-        ->join('persons', 'sale_notes.customer_id', '=', 'persons.id') // Agrega la relación con la tabla "persons"
-        //join con item
-        ->join('items', 'sale_note_items.item_id', '=', 'items.id')
-        // ->where('sale_notes.establishment_id', '=', $establishment_id)
-        ->groupBy('sale_notes.customer_id', 'sale_note_items.item_id', 'persons.name', 'persons.number','sale_notes.series','sale_notes.number',
-        'sale_note_items.total', 'sale_notes.date_of_issue');
-    
+            ->join('sale_notes', 'sale_note_items.sale_note_id', '=', 'sale_notes.id')
+            ->join('persons', 'sale_notes.customer_id', '=', 'persons.id') // Agrega la relación con la tabla "persons"
+            //join con item
+            ->join('items', 'sale_note_items.item_id', '=', 'items.id')
+            // ->where('sale_notes.establishment_id', '=', $establishment_id)
+            ->groupBy(
+                'sale_notes.customer_id',
+                'sale_note_items.item_id',
+                'persons.name',
+                'persons.number',
+                'sale_notes.series',
+                'sale_notes.number',
+                'sale_note_items.total',
+                'sale_notes.date_of_issue'
+            );
+
         // Combina las consultas de DocumentItem y SaleNoteItem
         $combined_items = $document_items->union($sale_note_items);
-    
+
         $combined_items->groupBy('customer_id');
 
         $result = $combined_items->orderBy('customer_id');
-    
+
         // return new ItemClientCollection($result->paginate(50));
         return $result->get();
     }

@@ -2473,6 +2473,8 @@ export default {
         this.getCommercialTreatments();
     },
     methods: {
+
+
         sendOrdens(orden) {
             this.$emit("sendOrdens", orden);
             this.ordenNumber = null;
@@ -3414,14 +3416,16 @@ export default {
                     `/caja/worker/record/${id}?precuenta=true`
                 );
                 let url = response.data.print;
-          
+
                 let config = qz.configs.create(response.data.printer, {
                     scaleContent: false
                 });
                 if (!qz.websocket.isActive()) {
                     await qz.websocket.connect(config);
                 }
-                         let isPosd = response.data.printer.split(" ")[response.data.printer.split(" ").length - 1];
+                let isPosd = response.data.printer.split(" ")[
+                    response.data.printer.split(" ").length - 1
+                ];
                 if (isPosd == "POSD") {
                     config.density = 200;
                 }
@@ -3533,8 +3537,6 @@ export default {
 
             this.commands_fisico = "";
 
-
- 
             form_submit.is_for_carry = this.to_carry;
             if (this.variation) {
                 form_submit.variationItems = this.foodDefaults;
@@ -3543,10 +3545,9 @@ export default {
             } else {
                 this.$emit("paymentsOrden", form_submit);
             }
-                this.loading = false;
+            this.loading = false;
             this.disableSend = false;
             this.to_carry = false;
-
         },
         mergeItems(items) {
             let hasFoodId = items.every(item => item.food && item.food.id);

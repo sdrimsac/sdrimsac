@@ -319,6 +319,7 @@ Route::prefix('caja')->group(function () {
             Route::get('search_orden_document', 'PosController@search_orden_document');
 
             Route::post('cancel-orden', 'OrdenController@cancelOrden');
+            Route::post('cancel-orden-hotel', 'OrdenController@cancelOrdenHotel');
             Route::post('change-orden', 'OrdenController@changeOrder');
             Route::get('destroyorden/{ordenid}', 'OrdenController@destroyorden');
 

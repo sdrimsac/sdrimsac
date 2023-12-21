@@ -308,17 +308,7 @@ class PosController extends Controller
             $time_to_leave = $configuration->alarm_to_end;
             $date = Carbon::now()->addMinutes($time_to_leave)->format('Y-m-d');
             $time = Carbon::now()->addMinutes($time_to_leave)->format('H:i:s');
-            $tablesLeave = Table::with(['hotel_rent_items' => function ($query) use ($date, $time) {
-                $query->where(function ($query) use ($date, $time) {
-                    $query->where('checkout_date_estimated', '<', $date)
-                        ->orWhere(function ($query) use ($date, $time) {
-                            $query->where('checkout_date_estimated', '=', $date)
-                                ->where('checkout_time_estimated', '<', $time);
-                        });
-                })
-                    // ->where('payment_status', 'Pendiente')
-                    ->where('was_cancel', 0);
-            }])
+            $tablesLeave = Table::with(['hotel_rent_items'])
                 ->whereHas('hotel_rent_items', function ($query) use ($date, $time) {
                     $query->where(function ($query) use ($date, $time) {
                         $query->where('checkout_date_estimated', '<', $date)
@@ -331,7 +321,7 @@ class PosController extends Controller
                         ->where('was_cancel', 0);
                 })
                 ->where('is_room', true)
-                ->where('status_table_id', '!=', 1)
+                ->where('status_table_id', '<>', 1)
                 ->get();
         }
         return compact(

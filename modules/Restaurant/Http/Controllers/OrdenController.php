@@ -761,6 +761,21 @@ class OrdenController extends Controller
         }
         return false;
     }
+    public function cancelOrdenHotel(Request $request){
+        $id = $request->id;
+
+        $items = OrdenItem::where('orden_id', $id)->get();
+        foreach ($items as $item) {
+            //cancelar orden
+            $items_message[] = $item->info_item();
+            $item->delete();
+            event(new OrdenCancelEvent($item->id));
+        }
+        $orden = Orden::find($id);
+        $orden->delete();
+
+        return ['success' => true, 'message' => 'Orden cancelada con éxito.'];
+    }
     public function cancelOrden(Request $request)
     {
         $configuration = Configuration::first();

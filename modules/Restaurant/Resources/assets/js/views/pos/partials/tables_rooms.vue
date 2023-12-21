@@ -347,7 +347,9 @@
                                 class="btn btn-secondary btn-sm"
                                 style="margin-top:20px;"
                             >
-                              Garantía  S/.{{ currentRoom.credit_line.toFixed(2) }}
+                                Garantía S/.{{
+                                    currentRoom.credit_line.toFixed(2)
+                                }}
                             </button>
                         </template>
                         <button
@@ -484,6 +486,7 @@
                                             style="margin-right:5px;"
                                             type="button"
                                             class="btn btn-danger btn-sm"
+                                            @click="deleteOrden(orden.id)"
                                         >
                                             <i class="fas fa-trash"></i>
                                         </button>
@@ -1094,6 +1097,35 @@ export default {
         };
     },
     methods: {
+        async deleteOrden(id) {
+            try {
+                await this.$confirm(
+                    "¿Está seguro de eliminar la orden?",
+                    "Confirmación",
+                    {
+                        confirmButtonText: "Aceptar",
+                        cancelButtonText: "Cancelar",
+                        type: "warning"
+                    }
+                );
+                const response = await this.$http.post(
+                    `/caja/worker/cancel-orden-hotel`,
+                    { id }
+                );
+                if (response.status == 200) {
+                    this.$toast.success("Orden eliminada");
+                        console.log("🚀 ~ file: tables_rooms.vue:1118 ~ deleteOrden ~ this.roomSeeId:", this.roomSeeId)
+                    if (this.currentRoom) {
+                        let table = this.all_tables.find(
+                            t => t.id == this.currentTable.id
+                        );
+                        this.selectTable(table);
+                    }
+                } else {
+                    this.$toast.error("Error al eliminar la orden");
+                }
+            } catch (e) {}
+        },
         filterByMonth() {
             this.showReserves = false;
             this.tables = this.all_tables
@@ -1404,7 +1436,7 @@ export default {
         },
 
         createOrden() {
-            let { number, id, is_room, } = this.currentTable;
+            let { number, id, is_room } = this.currentTable;
             this.$emit("creatingOrden", number, id, is_room);
             this.close();
         },

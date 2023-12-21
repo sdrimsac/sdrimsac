@@ -29,6 +29,8 @@ if ($hostname) {
                 'register' => false,
                 'verify'   => false
             ]);
+            Route::get('report_product_client/report/excel', [ItemController::class, 'items_by_clients_excel']);
+
             Route::get('credit-list/receipt/{id}/ticket', [CreditListController::class, 'receipt']);
             Route::get('buscar', [App\Http\Controllers\Tenant\SearchController::class, 'index'])->name('search.index');
             Route::get('search/tables', [App\Http\Controllers\Tenant\SearchController::class, 'tables']);

@@ -160,20 +160,20 @@
                                         ><i class="fa fa-file-pdf"></i>
                                         PDF</el-button
                                     > -->
-                                    <!-- <el-button
+                                    <el-button
                                         class="submit"
                                         type="success"
                                         @click.prevent="clickDownload('excel')"
                                         ><i class="fa fa-file-excel"></i>
                                         EXCEL</el-button
-                                    > -->
-                                    <!-- <el-button
+                                    >
+                                    <el-button
                                         class="submit"
                                         type="success"
                                         @click.prevent="openWhastappForm()"
                                         ><i class="icofont-brand-whatsapp"></i>
                                         WHATSAPP</el-button
-                                    > -->
+                                    >
                                
                                 </template>
                             </div>
@@ -224,7 +224,7 @@
                                                                 </small>
                                                             </td>
 
-                                                            <td>
+                                                            <td width="40%">
                                                                 <small>{{
                                                                  item.description
                                                                 }}</small>
@@ -368,13 +368,11 @@ export default {
             }
         },
         openWhastappForm() {
-            this.messageReport = `Reporte de ganancias ${
-                this.form.date_start
-            } ${this.form.date_end ? this.form.date_end : ""}`;
+            this.messageReport = `Reporte de productos por cliente ${
+                this.form.date_start || ""
+            } ${this.form.date_end ? this.form.date_end : ""}.xlsx`;
             console.log(this.messageReport);
-            this.resourceReport = `/${
-                this.resource
-            }/report/pdf?${this.getQueryParameters()}`;
+            this.resourceReport = `/report_product_client/report/excel?${this.getQueryParameters()}`;
             console.log(this.resourceReport);
             this.showWhatsappForm = true;
         },
@@ -494,7 +492,7 @@ export default {
 
         async clickDownload(id) {
             window.open(
-                `/${this.resource}/report/${id}?${this.getQueryParameters()}`,
+                `/report_product_client/report/excel?${this.getQueryParameters()}`,
                 "_blank"
             );
         },
