@@ -719,7 +719,7 @@ class TableRoomController extends Controller
                                 ->where('checkout_time_estimated', '<', $time);
                         });
                 })
-                    // ->where('payment_status', 'Pendiente')
+                    ->where('payment_status', 'Pendiente')
                     ->where('was_cancel', 0);
             })
             ->where('is_room', true)
