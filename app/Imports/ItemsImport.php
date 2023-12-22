@@ -270,17 +270,22 @@ class ItemsImport implements ToCollection
     function insertPriceifExist($item_id, $price, $warehouse_id)
     {
         if ($this->checkPrice($price)) {
+            $price_2 = $price['price'];
+            $qty = $price['qty'];
+            $price2 = floatval($price_2) / floatval($qty);
             ItemUnitType::create([
                 'item_id' => $item_id,
                 'unit_type_id' => 'NIU',
                 'quantity_unit' => $price['qty'],
-                'price2' => $price['price'],
+                // 'price2' =>  $price['price'],
+                'price2' =>  $price2,
                 'description' => $price['desc'],
                 'price1' => 0.0,
                 'price3' => 0.0,
                 'price_default' => 2,
                 // 'warehouse_id' => $warehouse_id,
-                'total' => floatval($price['qty']) * floatval($price['price']),
+                // 'total' => floatval($price['qty']) * floatval($price['price']),
+                'total' =>  floatval($price['price']),
             ]);
         }
     }
