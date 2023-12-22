@@ -181,7 +181,6 @@ class PosController extends Controller
             $foods = $foods->where('category_food_id', $category_id);
         }
         if ($value && $search_by_series == null || $search_by_series == false) {
-
             if (count($textoIntoArray) === 1) {
                 if ($external_id) {
                     $foods = $foods->whereHas('item', function ($query) use ($value) {
@@ -204,16 +203,22 @@ class PosController extends Controller
                 }
             } else {
 
-                $foods = $foods->where(function ($query) use ($value,  $textoIntoArray,$search_by_second_name) {
-                    foreach ($textoIntoArray as $key => $valor) {
-                        $query->where('description', 'LIKE', '%' . $valor . '%');
-                        if($search_by_second_name){
-                            $query->orWhereHas('item', function ($query) use ($valor) {
-                                $query->where('second_name', 'LIKE', '%' . $valor . '%');
-                            });
+                $foods = $foods->where(function ($query) use ($value, $textoIntoArray, $search_by_second_name) {
+                    $query->where(function ($subquery) use ($textoIntoArray) {
+                        foreach ($textoIntoArray as $key => $valor) {
+                            $subquery->where('description', 'LIKE', '%' . $valor . '%');
                         }
+                    });
+                
+                    if ($search_by_second_name) {
+                        $query->orWhereHas('item', function ($subquery) use ($textoIntoArray) {
+                            foreach ($textoIntoArray as $key => $valor) {
+                                $subquery->where('second_name', 'LIKE', '%' . $valor . '%');
+                            }
+                        });
                     }
                 });
+                
             }
         }
 

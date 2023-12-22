@@ -1106,6 +1106,16 @@
                                                     </el-input>
                                                 </template>
                                             </div>
+                                            <div class="col-12">
+                                                      <el-checkbox
+                                            v-model="barcode"
+                                            @change="saveInLocalStorageBarcode"
+                                        >
+                                            <h2 class="text-muted text-small">
+                                                Barcode
+                                            </h2>
+                                        </el-checkbox>
+                                            </div>
                                         </div>
                                         <div class="row d-flex flex-wrap">
                                             <div
@@ -4753,7 +4763,7 @@ export default {
         getQueryParameters(form = {}) {
             return queryString.stringify({
                 page: this.pagination.current_page,
-                external_id: this.type_code,
+                external_id: this.barcode,
                 search_by_series: this.searchSeries,
                 search_by_second_name : this.searchSecondName,
                 ...form

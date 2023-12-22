@@ -621,14 +621,23 @@
                             </tr>
                         </thead>
                         <tbody>
+                            @php
+                               $total_detail  = 0;
+                            @endphp
                             @foreach ($coinsReceive as $detail)
                                     <tr>
                                         <td class="f12">{{ number_format($detail->value,2)}}</td>
                                         <td class="f12">{{ $detail->quantity }}</td>
+                                        @php
+                                            $total_detail += $detail->quantity*$detail->value;
+                                        @endphp
                                         <td class="f12 right">{{ number_format($detail->quantity*$detail->value, 2) }}</td>
                                     </tr>
                             @endforeach
-
+                                    <tr>
+                                        <td colspan="2"></td>
+                                        <td class="f12 right">{{ number_format($total_detail, 2) }}</td>
+                                    </tr>
 
                         </tbody>
                     </table>
