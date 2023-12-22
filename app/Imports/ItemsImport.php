@@ -2,6 +2,7 @@
 
 namespace App\Imports;
 
+use App\Models\Tenant\Establishment;
 use App\Models\Tenant\Inventory;
 use Exception;
 use App\Models\Tenant\Item;
@@ -18,6 +19,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Tenant\Kardex;
 use App\Models\Tenant\InventoryKardex;
 use App\Models\Tenant\ItemUnitType;
+use App\Models\Tenant\ItemWarehousePrice;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use Modules\Item\Models\ItemLotsGroup;
@@ -93,7 +95,12 @@ class ItemsImport implements ToCollection
 
 
             $warehouse_id = request('warehouse_id');
-
+            $establishment = Establishment::first();
+            $is_main_establishment = false;
+            if ($warehouse_id) {
+                $warehouse = Warehouse::find($warehouse_id);
+                $is_main_establishment = ($warehouse->establishment_id == $establishment->id) ? true : false;
+            }
             if ($internal_id != null) {
 
                 $item = Item::where('internal_id', $internal_id)->first();
@@ -106,6 +113,7 @@ class ItemsImport implements ToCollection
 
                 //-------------------------------------------------------------
                 if ($item === null) {
+
                     //dd($item,"aqui...");
                     $brand = Brand::updateOrCreate(['name' => $brand_name]);
                     $item = Item::create([
@@ -144,10 +152,10 @@ class ItemsImport implements ToCollection
                         'item_id'     => $item->id
                     ]);
 
-                    if($lote_code && $lote_date){
-                        try{
+                    if ($lote_code && $lote_date) {
+                        try {
                             $format_date = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($lote_date)->format('Y-m-d');
-                            if($format_date){
+                            if ($format_date) {
                                 ItemLotsGroup::create([
                                     'code' => $lote_code,
                                     'item_id' => $item->id,
@@ -161,10 +169,18 @@ class ItemsImport implements ToCollection
                                     'lots_enabled' => true,
                                 ]);
                             }
-                         
-                        }catch(Exception $e){
+                        } catch (Exception $e) {
                             Log::error($e->getMessage());
                         }
+                    }
+                    if($warehouse_id){
+                        $item_whareouse_price = ItemWarehousePrice::create([
+                            'item_id' => $item->id,
+                            'warehouse_id' => $warehouse_id,
+                            'price' => $sale_unit_price,
+                        ]);
+
+
                     }
 
                     foreach ($prices as $price) {
@@ -185,7 +201,7 @@ class ItemsImport implements ToCollection
                         'item_code' => $item_code,
                         'unit_type_id' => $unit_type_id,
                         'currency_type_id' => $currency_type_id,
-                        'sale_unit_price' => $sale_unit_price,
+
                         'sale_affectation_igv_type_id' => $sale_affectation_igv_type_id,
                         'has_igv' => $has_igv,
                         'purchase_unit_price' => $purchase_unit_price,
@@ -194,16 +210,36 @@ class ItemsImport implements ToCollection
                         'series_enabled' => $has_series,
                     ]);
 
+                 
+
                     $food->update([
                         'description' => $description,
                         'code'        => $internal_id,
-                        'price'       => $sale_unit_price,
                         'active'      => 1,
                         'category_food_id' => $category->id,
                         'image'       => 'imagen-no-disponible.jpg',
                         'area_id'     => $area->id,
                         'item_id'     => $item->id
                     ]);
+
+                    if ($is_main_establishment) {
+                        $item->update([
+                            'sale_unit_price' => $sale_unit_price,
+                        ]);
+
+                        $food->update([
+                            'price' => $sale_unit_price,
+                        ]);
+                    }
+
+                    if($warehouse_id){
+                          $item_whareouse_price = ItemWarehousePrice::updateOrCreate([
+                            'item_id' => $item->id,
+                            'warehouse_id' => $warehouse_id,
+                        ],[
+                            'price' => $sale_unit_price,
+                        ]);
+                    }
 
                     $item_whareouse = ItemWarehouse::where('item_id', $item->id)->where('warehouse_id', $warehouse_id)->first();
                     if ($item_whareouse) {
@@ -262,7 +298,7 @@ class ItemsImport implements ToCollection
     {
         return $this->data;
     }
-    
+
     function checkPrice($price)
     {
         if ($price['desc'] == null && $price['qty'] == null && $price['price'] == null) {
