@@ -2,6 +2,8 @@
 
 namespace Modules\Inventory\Http\Resources;
 
+use App\Models\Tenant\HotelRent;
+use App\Models\Tenant\HotelRentItem;
 use Illuminate\Support\Carbon;
 use App\Models\Tenant\Purchase;
 use Illuminate\Support\Facades\DB;
@@ -237,13 +239,20 @@ class ReportKardexCollection extends ResourceCollection
 
                 ];
                 case $models[7]:
+                    $id = optional($row->inventory_kardexable)->id;
+                    $name = "";
+                    if($id){
+                        $hotel_item_rent = HotelRentItem::find($id);
+                        $name = $hotel_item_rent->getName();
+
+                    }
                     return [
                         'id' => $row->id,
                         'item_name' => $row->item->description,
                         'internal_id' => $row->item->internal_id,
                         'unit_type_id' => $row->item->unit_type_id,
                         'date_time' => $row->created_at->format('Y-m-d H:i:s'),
-                        'type_transaction' => "Por alquiler de habitación",
+                        'type_transaction' => "Por alquiler de habitación ".$name,
                         'date_of_issue' => isset($row->inventory_kardexable->date_of_issue) ? $row->inventory_kardexable->date_of_issue->format('Y-m-d') : '',
                         'number' => optional($row->inventory_kardexable)->id,
                         'input' => ($row->quantity > 0) ?  $row->quantity : "-",
