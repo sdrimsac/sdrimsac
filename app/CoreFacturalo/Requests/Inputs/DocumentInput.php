@@ -114,6 +114,7 @@ class DocumentInput
 
         // $from_dispatch = array_key_exists('dispatch_id', $inputs);
         return [
+            'vacate' => Functions::valueKeyInArray($inputs, 'vacate', false),
             'is_list_credit' => Functions::valueKeyInArray($inputs, 'is_list_credit', false),
             'is_advance' => Functions::valueKeyInArray($inputs, 'is_advance', false),
             'hotel_rent_item_ids' => Functions::valueKeyInArray($inputs, 'hotel_rent_item_ids', []),

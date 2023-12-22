@@ -1267,16 +1267,7 @@
                 </div>
                 <div class="p-3">
                     <div class="row">
-                        <template
-                        v-if="form.is_room"
-                        >
-                        <div class="col-lg-3 col-md-3 col-12">
-                            <label for="vacate">Desocupar habitación</label>
-                            <el-checkbox
-                                v-model="form.vacate"
-                            ></el-checkbox>
-                        </div>
-                        </template>
+                      
                         <template v-if="configuration.affectation_optional">
                             <div class="col-lg-6 col-md-6 col-12">
                                 <label>
@@ -1322,6 +1313,16 @@
                                 </button>
                             </div>
                         </div>
+                          <template
+                        v-if="form.is_room"
+                        >
+                        <div class="col-lg-3 col-md-3 col-12">
+                            <label for="vacate">Desocupar habitación</label>
+                            <el-checkbox
+                                v-model="form.vacate"
+                            ></el-checkbox>
+                        </div>
+                        </template>
                     </div>
                 </div>
             </div>

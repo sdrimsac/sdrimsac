@@ -493,7 +493,7 @@ class SaleNoteController extends Controller
                 $request["sumCoins"]  = Functions::valueKeyInArray($request->all(), "sumCoins", null);
                 $request["document_type_id"] = "80";
                 $all_ordens = Functions::valueKeyInArray($request->all(), "all_ordens", false);
-             
+
                 $data = $this->mergeData($request);
                 $data['time_of_issue'] = date('H:i:s');
                 $this->sale_note =  SaleNote::updateOrCreate(
@@ -562,6 +562,7 @@ class SaleNoteController extends Controller
                         }
                     }
                 }
+                $vacate = $request->vacate;
                 if ($request->hotel_rent_item_ids) {
                     $hotel_rent_items = HotelRentItem::whereIn('id', $request->hotel_rent_item_ids)->get();
                     foreach ($hotel_rent_items as $item) {
@@ -569,11 +570,21 @@ class SaleNoteController extends Controller
                         $item->sale_note_id = $this->sale_note->id;
                         $item->checkout_date = date('Y-m-d');
                         $item->checkout_time = date('H:i:s');
+                        if ($vacate) {
+                            $table = Table::where('id', $item->table_id)->first();
+                            $table->status_table_id = 5;
+                            $table->sendMessageDesocupied();
+                            $table->save();
+                        } else {
+                            HotelRentDocument::create([
+                                'hotel_rent_id' => $item->id,
+                                'sale_note_id' => $this->sale_note->id,
+                                'is_advance' => false,
+                            ]);
+                            $item->total = 0;
+                            $item->advances = 0;
+                        }
                         $item->save();
-                        $table = Table::where('id', $item->table_id)->first();
-                        $table->status_table_id = 5;
-                        $table->sendMessageDesocupied();
-                        $table->save();
                     }
                 }
                 if ($request->is_list_credit) {
@@ -603,10 +614,21 @@ class SaleNoteController extends Controller
                     } else {
                         foreach ($hotel_rent_items as $item) {
                             $item->payment_status = "Pagado";
-                            $table = Table::where('id', $item->table_id)->first();
-                            $table->status_table_id = 5;
-                            $table->sendMessageDesocupied();
-                            $table->save();
+                            if ($vacate) {
+                                $table = Table::where('id', $item->table_id)->first();
+                                $table->status_table_id = 5;
+                                $table->sendMessageDesocupied();
+                                $table->save();
+                            } else {
+                                HotelRentDocument::create([
+                                    'hotel_rent_id' => $item->id,
+                                    'sale_note_id' => $this->sale_note->id,
+                                    'is_advance' => false,
+                                ]);
+                                $item->total = 0;
+                                $item->advances = 0;
+                            }
+
                             $item->checkout_date = date('Y-m-d');
                             $item->checkout_time = date('H:i:s');
                             $item->save();
@@ -1043,7 +1065,6 @@ class SaleNoteController extends Controller
         if ($sum_coins) {
             $customer['sum_coins'] = $sum_coins;
         }
-        // dump($customer);
         $values = [
             'additional_information' => $inputs['additional_information'],
             'automatic_date_of_issue' => $automatic_date_of_issue,

@@ -382,11 +382,13 @@
                 if (count($advances) > 0) {
                     $observation_hotel = 'Adelantos : ';
                 
-                    foreach ($advances as $adv) {
-                        $document_hotel = $adv['document'] ?? $adv['sale_note'];
-                        $full_number = $document_hotel['series'] . '-' . $document_hotel['number'];
-                        $total = $document_hotel['total'];
-                        $observation_hotel .= ' ' . $full_number . ' S/' . $total . ' ';
+                    foreach($advances as $adv) {
+                       if($adv["is_advance"]){
+                        $document_hotel =   $adv['document'] ?? $adv['sale_note'];
+                        $full_number = $document_hotel["series"] . "-" . $document_hotel["number"];
+                        $total = $document_hotel["total"];
+                        $observation_hotel .=  ' ' . $full_number . ' S/' . $total . ' ';
+                       }
                     }
                 }
             @endphp

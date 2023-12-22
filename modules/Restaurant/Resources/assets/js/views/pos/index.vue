@@ -3983,6 +3983,7 @@ export default {
         async initForm(customer_default = null) {
             this.variation = false;
             this.form = {
+                vacate:false,
                 afectar_caja: true,
                 orden_id: null,
                 customer_telephone: null,

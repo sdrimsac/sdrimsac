@@ -824,7 +824,6 @@ class DocumentController extends Controller
     public function store(DocumentRequest $request)
     {
 
-
         $ids = [];
         if (key_exists('id', $request->all())) {
             $document_id = $request->id;
@@ -989,6 +988,7 @@ class DocumentController extends Controller
         if ($request->is_list_credit) {
             CreditList::where('customer_id', $document->customer_id)->update(['paid' => true]);
         }
+        $vacate = $request->vacate;
         if ($request->hotel_rent_item_ids) {
             $hotel_rent_items = HotelRentItem::whereIn('id', $request->hotel_rent_item_ids)->get();
             foreach ($hotel_rent_items as $item) {
@@ -996,11 +996,21 @@ class DocumentController extends Controller
                 $item->document = $document->id;
                 $item->checkout_date = date('Y-m-d');
                 $item->checkout_time = date('H:i:s');
+                if($vacate){
+                    $table = Table::where('id', $item->table_id)->first();
+                    $table->status_table_id = 5;
+                    $table->sendMessageDesocupied();
+                    $table->save();
+                }else{
+                    $item->total = 0;
+                    $item->advances = 0;
+                    HotelRentDocument::create([
+                        'hotel_rent_id' => $item->id,
+                        'document_id' => $document->id,
+                        'is_advance' => false,
+                    ]);
+                }
                 $item->save();
-                $table = Table::where('id', $item->table_id)->first();
-                $table->status_table_id = 5;
-                $table->sendMessageDesocupied();
-                $table->save();
             }
         }
         if ($request->hotel_rent_id) {
@@ -1027,10 +1037,20 @@ class DocumentController extends Controller
             } else {
                 foreach ($hotel_rent_items as $item) {
                     $item->payment_status = "Pagado";
-                    $table = Table::where('id', $item->table_id)->first();
-                    $table->status_table_id = 5;
-                    $table->sendMessageDesocupied();
-                    $table->save();
+                    if($vacate){
+                        $table = Table::where('id', $item->table_id)->first();
+                        $table->status_table_id = 5;
+                        $table->sendMessageDesocupied();
+                        $table->save();
+                    }else{
+                $item->total = 0;
+                $item->advances = 0;
+                HotelRentDocument::create([
+                    'hotel_rent_id' => $item->id,
+                    'document_id' => $document->id,
+                    'is_advance' => false,
+                ]);
+                    }
                     $item->checkout_date = date('Y-m-d');
                     $item->checkout_time = date('H:i:s');
                     $item->save();
