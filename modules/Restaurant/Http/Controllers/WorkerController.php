@@ -83,7 +83,7 @@ class WorkerController extends Controller
         } else {
             $records = User::query();
         }
-        return new UserCollection($records->paginate(config('tenant.items_per_page')));
+        return new UserCollection($records->paginate(50));
     }
     public function record($id)
     {
