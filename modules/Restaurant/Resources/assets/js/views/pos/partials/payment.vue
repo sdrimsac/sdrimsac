@@ -1267,6 +1267,16 @@
                 </div>
                 <div class="p-3">
                     <div class="row">
+                        <template
+                        v-if="form.is_room"
+                        >
+                        <div class="col-lg-3 col-md-3 col-12">
+                            <label for="vacate">Desocupar habitación</label>
+                            <el-checkbox
+                                v-model="form.vacate"
+                            ></el-checkbox>
+                        </div>
+                        </template>
                         <template v-if="configuration.affectation_optional">
                             <div class="col-lg-6 col-md-6 col-12">
                                 <label>
@@ -1631,6 +1641,7 @@ export default {
         }
     },
     async created() {
+        console.log("🚀 ~ file: payment.vue:1645 ~ created ~ this.form.customer_id:", this.form.customer_id)
         this.conf = this.establishments.conf ?? {};
         this.button_payment = true;
         this.currentDocumentsType = this.documentsType;
@@ -2043,6 +2054,7 @@ export default {
             }
         },
         async reloadDataCustomers(customer_id) {
+            console.log("dasdas");
             const response = await this.$http.get(
                 `/pos/table/customers?customer_id=${customer_id || ""}`
             );
@@ -2159,7 +2171,6 @@ export default {
             this.showDialogNewPerson = true;
         },
         add_customer(value) {},
-        reloadDataPersons() {},
         async keyupCustomer(e) {
             //buscar
             if (this.time) {
@@ -2315,6 +2326,7 @@ export default {
             }
         },
         async date_of_issue() {
+            console.log("🚀 ~ file: payment.vue:2329 ~ date_of_issue ~ this.value:", this.value)
             // this.discount_amount = 0;
             // this.form.customer_id
             // this.form.student_id = null;
@@ -3836,11 +3848,14 @@ export default {
                 this.deleteHotelRentItem(hotel_rent_id);
             }
             this.splitPayments = [];
+            this.value = null;
+
             //this.$emit("limpiarForm");
             if (!val) {
                 this.$emit("openDrawer");
             }
             this.$emit("update:is_payment", false);
+            // this.$emit("limpiarForm");
         },
         async initLStoPayment() {
             this.amount = await this.getLocalStoragePayment(
@@ -3909,6 +3924,8 @@ export default {
             } else {
                 if (this.customers.length > 0) {
                     let hasCustomerDefault = false;
+                        console.log("🚀 ~ file: payment.vue:3928 ~ filterCustomers ~ this.customer_default:", this.customer_default)
+                        console.log("🚀 ~ file: payment.vue:3933 ~ filterCustomers ~ this.customers:", this.customers)
                     if (this.customer_default) {
                         let { id } = this.customer_default;
                         hasCustomerDefault = this.customers.some(
@@ -3919,9 +3936,18 @@ export default {
                         let { id } = this.customer_default;
                         this.value = id;
                         this.form.customer_id = id;
-                    } else {
+                    } 
+                    
+                    else if(!hasCustomerDefault  && this.customer_default){
+                        this.customers.unshift(this.customer_default);
+                        this.value = this.customer_default.id;
+                        this.form.customer_id = this.customer_default.id;
+                    }
+                    else {
                         this.value = this.customers[0].id;
                         this.form.customer_id = this.customers[0].id;
+                        console.log("🚀 ~ file: payment.vue:3939 ~ filterCustomers ~ this.form.customer_id:", this.form.customer_id)
+                        
                     }
                     this.changeCustomer();
                 } else {

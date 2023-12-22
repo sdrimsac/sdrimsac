@@ -288,14 +288,16 @@ class BoxesController extends Controller
                             $data = $item->item;
                             $data = (array)$data;
                             $id_exist  = false;
-
+                            $key = $data['description']."-".$item->unit_price;
                             if (count($all_items) > 0) {
-                                $id_exist = array_search($data['description'], array_column($all_items, 'description'));
+                                // $id_exist = array_search($data['description'], array_column($all_items, 'description'));
+                                $id_exist = array_search($key, array_column($all_items, 'key'));
                             }
 
                             if (gettype($id_exist) == "integer") {
                                 $all_items[$id_exist] = [
                                     "price" => $item->unit_price,
+                                    "key" => $key,
                                     // "category" => isset($item->item->category) ?  $item->item->category->name : "OTROS",
                                     "category" => $this->get_category($item),
                                     "description" => $data['description'],
@@ -303,7 +305,9 @@ class BoxesController extends Controller
                                     "total" => $all_items[$id_exist]["total"] + $item->total
                                 ];
                             } else {
+                                // $key = $data['description']."-".$item->unit_price;
                                 $all_items[] = [
+                                    "key" => $key,
                                     "price" => $item->unit_price,
                                     "description" => $data['description'],
                                     "quantity" => $item->quantity,
@@ -340,20 +344,24 @@ class BoxesController extends Controller
                         $data = $item->item;
                         $data = (array)$data;
                         $id_exist  = false;
+                        $key = $data['description']."-".$item->unit_price;
                         if (count($all_items) > 0) {
-                            $id_exist = array_search($data['description'], array_column($all_items, 'description'));
+                            // $id_exist = array_search($data['description'], array_column($all_items, 'description'));
+                            $id_exist = array_search($key, array_column($all_items, 'key'));
                         }
                         if (gettype($id_exist) == "integer") {
                             $all_items[$id_exist] = [
                                 "price" => $data["sale_unit_price"],
                                 "description" => $data['description'],
                                 "category" => $this->get_category($item),
+                                "key" => $key,
                                 // "category" => isset($item->item->category) ?  $item->item->category->name : "OTROS",
                                 "quantity" => $all_items[$id_exist]["quantity"] + $item->quantity,
                                 "total" => $all_items[$id_exist]["total"] + $item->total
                             ];
                         } else {
                             $all_items[] = [
+                                "key" => $key,
                                 "price" => $data["sale_unit_price"],
                                 "description" => $data['description'],
                                 "category" => $this->get_category($item),

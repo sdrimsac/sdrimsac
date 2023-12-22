@@ -694,6 +694,7 @@ class TableRoomController extends Controller
                 'price' => $extra_service->price,
             ]);
         }
+        // $show_desoccupied = $hotel_rent_item->payment_status == "Pendiente";
         if ($single_room) {
 
             return compact('orden_ids', 'ordens_items', 'hotel_rent_id', 'customer_number', 'customer_id', 'credit_line');

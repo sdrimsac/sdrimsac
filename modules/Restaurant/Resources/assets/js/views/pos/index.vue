@@ -2957,6 +2957,7 @@ export default {
                 if (form.customer_id) {
                     this.form.customer_id = form.customer_id;
                 }
+               this.form.vacate = false;
                 this.form.credit_line = form.credit_line;
                 this.form.promotion_sale = form.promotion_sale;
                 this.form.hotel_rent_item_service_id =
@@ -3486,14 +3487,14 @@ export default {
                 console.log(e);
             }
         },
-        reloadDataCustomers(customer_id) {
-            this.$http
-                .get(`/document/search/customer/${customer_id}`)
-                .then(response => {
-                    this.all_customers = response.data.customers;
-                    this.form.customer_id = customer_id;
-                });
-        },
+        // reloadDataCustomers(customer_id) {
+        //     this.$http
+        //         .get(`/document/search/customer/${customer_id}`)
+        //         .then(response => {
+        //             this.all_customers = response.data.customers;
+        //             this.form.customer_id = customer_id;
+        //         });
+        // },
 
         updateOrdens() {
             this.createOrden();
@@ -4937,6 +4938,7 @@ export default {
             this.form.total_discount = 0;
             this.form.is_room = false;
             this.form.reference_number = null;
+            this.form.customer_id = this.customer_default.id;
             this.cancelOrden();
             if (
                 this.configuration.sales_quick == 1 ||
