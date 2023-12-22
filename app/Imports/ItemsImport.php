@@ -245,6 +245,10 @@ class ItemsImport implements ToCollection
                         'updated_at' => date('Y-m-d H:i:s '),
 
                     ]);
+                    ItemUnitType::where('item_id', $item->id)->delete();
+                    foreach ($prices as $price) {
+                        $this->insertPriceifExist($item->id, $price, $warehouse_id);
+                    }
                     $registered += 1;
                 }
                 //-------------------------------------------------------------
