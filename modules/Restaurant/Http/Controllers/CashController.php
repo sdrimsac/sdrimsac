@@ -1414,7 +1414,9 @@ class CashController extends Controller
         }
 
         $records->whereTypeUser($fromAdmin);
-        $records->orderBy('date_opening', 'desc');
+        $records->orderBy('date_opening', 'desc')
+        ->orderBy('time_opening', 'desc')
+        ;
 
         return new CashCollection($records->paginate(config('tenant.items_per_page')));
     }
