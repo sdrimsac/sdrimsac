@@ -161,7 +161,8 @@ class UserController extends Controller
     public function usertype()
     {
         $records = User::where('type', 'admin'); //$this->getRecords($request);
-        return new UserCollection($records->paginate(config('tenant.items_per_page')));
+        // return new UserCollection($records->paginate(config('tenant.items_per_page')));
+        return new UserCollection($records->paginate(50));
     }
     public function records($type)
     {
