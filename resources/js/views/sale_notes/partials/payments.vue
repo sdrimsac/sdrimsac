@@ -585,6 +585,7 @@ export default {
                         //this.receipt_link=response.data.pdf
                         //this.ClickPrint()
                         this.$eventHub.$emit("reloadData");
+                        this.$emit("reloadData");
                         this.showAddButton = true;
                         this.cancelCredit = false;
                     } else {

@@ -15,6 +15,7 @@ class SaleNote extends ModelTenant
     protected $with = ['user', 'soap_type', 'state_type', 'currency_type', 'items', 'document_type'];
 
     protected $fillable = [
+        'credit_cash',
         'to_carry',
         'seller_id',
         'from_consignment',
@@ -85,6 +86,7 @@ class SaleNote extends ModelTenant
         'from_consignment' => 'boolean',
         'date_of_issue' => 'date',
         'automatic_date_of_issue' => 'date',
+        'credit_cash' => 'boolean',
     ];
 
     protected static function boot()

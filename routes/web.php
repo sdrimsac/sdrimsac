@@ -143,6 +143,7 @@ if ($hostname) {
                 Route::post('pos/last_number_documents', [App\Http\Controllers\Tenant\PosController::class, 'last_number_documents']);
                 Route::get('pos/payment_tables', [App\Http\Controllers\Tenant\PosController::class, 'payment_tables']);
                 Route::post('sale-notes', [App\Http\Controllers\Tenant\SaleNoteController::class, 'store']);
+                Route::get('sale-notes/credit-cash/records', [App\Http\Controllers\Tenant\SaleNoteController::class, 'credit_cash_records']);
                 Route::post('cash/cash_document', [Modules\Restaurant\Http\Controllers\CashController::class, 'cash_document']);
                 Route::prefix('cash/main_cash')->group(function () {
                     Route::get('/', [CashController::class, 'index_main']);

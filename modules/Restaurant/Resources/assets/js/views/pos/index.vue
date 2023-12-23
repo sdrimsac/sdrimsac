@@ -65,7 +65,19 @@
                                             </button>
                                         </template>
                                     </template>
-
+                                    <template
+                                        v-if="
+                                            configuration.sale_note_credit_cash
+                                        "
+                                    >
+                                        <button
+                                            class="btn btn-sm btn-primary"
+                                            type="button"
+                                            @click="trigerFunction(195)"
+                                        >
+                                            <i class="fas fa-cash-register"></i>
+                                        </button>
+                                    </template>
                                     <div
                                         class="dropdown-menu dropdown-menu-end col-md-2 col-1 "
                                         style="width: 153px;"
@@ -197,7 +209,7 @@
                                                  segundo nombre
                                             </h2>
                                         </el-checkbox> -->
-                                          <el-checkbox
+                                        <el-checkbox
                                             v-if="
                                                 configuration.search_series_pos
                                             "
@@ -1107,14 +1119,18 @@
                                                 </template>
                                             </div>
                                             <div class="col-12">
-                                                      <el-checkbox
-                                            v-model="barcode"
-                                            @change="saveInLocalStorageBarcode"
-                                        >
-                                            <h2 class="text-muted text-small">
-                                                Barcode
-                                            </h2>
-                                        </el-checkbox>
+                                                <el-checkbox
+                                                    v-model="barcode"
+                                                    @change="
+                                                        saveInLocalStorageBarcode
+                                                    "
+                                                >
+                                                    <h2
+                                                        class="text-muted text-small"
+                                                    >
+                                                        Barcode
+                                                    </h2>
+                                                </el-checkbox>
                                             </div>
                                         </div>
                                         <div class="row d-flex flex-wrap">
@@ -1620,7 +1636,7 @@
             @sendOrdens="sendOrdens"
             :showTables.sync="showTables"
         ></tables>
-        <tables-rooms    
+        <tables-rooms
             :cash_id.sync="cashId"
             :configuration="configuration"
             :printer.sync="printer"
@@ -1640,7 +1656,7 @@
             @sendItems="sendItems"
             :establishment.sync="establishments"
             :area_id="area_id"
-             :printer.sync="printer"
+            :printer.sync="printer"
         ></documents-print>
         <PromotionCanje
             :showDialog.sync="showdialogPromocion"
@@ -1718,6 +1734,9 @@
             :establishment_id.sync="establishmentId"
         >
         </item-set>
+        <sale-note-credit-cash
+            :showDialog.sync="showSaleNoteCreditCash"
+        ></sale-note-credit-cash>
     </div>
 </template>
 
@@ -1769,6 +1788,7 @@ const CollegeParents = () =>
     import(
         "../../../../../../College/Resources/assets/js/views/persons/form.vue"
     );
+const SaleNoteCreditCash = () => import("./partials/sale_note_credit_cash.vue");
 const CategoryDrag = () => import("./partials/category_drag.vue");
 const ProductsDue = () => import("./partials/products_due.vue");
 const ItemSet = () =>
@@ -1791,7 +1811,7 @@ export default {
         "company",
         "lareaId",
         "area",
-        "areaId",
+        "areaId"
     ],
     components: {
         ItemSet,
@@ -1816,14 +1836,16 @@ export default {
         Tables,
         ListFoodMobiles,
         PromotionCanje,
-        TablesRooms
+        TablesRooms,
+        SaleNoteCreditCash
     },
     mixins: [functions, exchangeRate],
 
     data() {
         return {
-        searchSecondName:false,
-            area_id:null,
+            showSaleNoteCreditCash: false,
+            searchSecondName: false,
+            area_id: null,
             isHotelArea: false,
             isPiscinaArea: false,
             roomSeeId: null,
@@ -2046,9 +2068,8 @@ export default {
     sockets: {},
     computed: {},
     methods: {
-   
         async tableOpen(id) {
-            if(!this.cashId){
+            if (!this.cashId) {
                 this.$message({
                     showClose: true,
                     type: "warning",
@@ -2199,6 +2220,12 @@ export default {
                             "CAJA PISCINA"
                 },
                 {
+                    id: 195,
+                    title: [" Créditos", "Nota de venta "],
+                    icon: "fas fa-cash-register",
+                    visible: this.configuration.sale_note_credit_cash
+                },
+                {
                     id: 171,
                     title: [" Habitaciones "],
                     icon: "fas fa-map-pin ",
@@ -2300,8 +2327,11 @@ export default {
         saveInLocalStorageSearchSeries(searchSeries) {
             localStorage.setItem("searchSeries", searchSeries ? "1" : "0");
         },
-           saveInLocalStorageSearchSecondName(searchSecondName) {
-            localStorage.setItem("searchSecondName", searchSecondName ? "1" : "0");
+        saveInLocalStorageSearchSecondName(searchSecondName) {
+            localStorage.setItem(
+                "searchSecondName",
+                searchSecondName ? "1" : "0"
+            );
         },
         saveInLocalStorageBarcode(barcode) {
             localStorage.setItem("barcode", barcode ? "1" : "0");
@@ -2432,7 +2462,6 @@ export default {
             }
         },
         async getPrinter() {
-
             const response = await this.$http.get(
                 `/caja/worker/cash/get_printer/${this.worker.area_id}`
             );
@@ -2774,6 +2803,9 @@ export default {
         },
         trigerFunction(id) {
             switch (id) {
+                case 195:
+                    this.showSaleNoteCreditCash = true;
+                    break;
                 case 32:
                     this.showDialogItemSet = true;
                     break;
@@ -2967,7 +2999,7 @@ export default {
                 if (form.customer_id) {
                     this.form.customer_id = form.customer_id;
                 }
-               this.form.vacate = false;
+                this.form.vacate = false;
                 this.form.credit_line = form.credit_line;
                 this.form.promotion_sale = form.promotion_sale;
                 this.form.hotel_rent_item_service_id =
@@ -3983,7 +4015,7 @@ export default {
         async initForm(customer_default = null) {
             this.variation = false;
             this.form = {
-                vacate:false,
+                vacate: false,
                 afectar_caja: true,
                 orden_id: null,
                 customer_telephone: null,
@@ -4431,9 +4463,8 @@ export default {
             } //FIN IMPRESION DIRECTA A5
             //separa Printer por el espacio, coge el ultimo elemento y verifica si es "POSD"
             let isPosd = Printer.split(" ")[Printer.split(" ").length - 1];
-            if (isPosd == "POSD" && isTicket ) {
+            if (isPosd == "POSD" && isTicket) {
                 paperConfig.density = 200;
-             
             }
             let config = qz.configs.create(Printer, paperConfig);
 
@@ -4457,8 +4488,11 @@ export default {
                     this.$toast.error(e.message);
                 });
             }
-                     console.log("🚀 ~ file: index.vue:4388 ~ paperConfig:", paperConfig)
-            console.log("🚀 ~ file: index.vue:4392 ~ Printer:", Printer)
+            console.log(
+                "🚀 ~ file: index.vue:4388 ~ paperConfig:",
+                paperConfig
+            );
+            console.log("🚀 ~ file: index.vue:4392 ~ Printer:", Printer);
             // if (multiple_boxes == true && typeuser != "admin") {
             //     //  if (true) { this.auth_login - auth
             //     let config = qz.configs.create(Printer, paperConfig);
@@ -4766,7 +4800,7 @@ export default {
                 page: this.pagination.current_page,
                 external_id: this.barcode,
                 search_by_series: this.searchSeries,
-                search_by_second_name : this.searchSecondName,
+                search_by_second_name: this.searchSecondName,
                 ...form
 
                 // limit: this.limit

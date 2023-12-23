@@ -129,6 +129,14 @@ class SaleNoteController extends Controller
             'dscto_global' => $dscto_global,
         ], 200);
     }
+    public function credit_cash_records(Request $request)
+    {
+        $records = SaleNote::where('credit_cash', true)
+        ->where('paid', false)
+        ->latest();
+
+        return new SaleNoteCollection($records->paginate(config('tenant.items_per_page')));
+    }
     public function getItemsFromNotes(Request $request)
     {
         $request->validate([
@@ -820,9 +828,30 @@ class SaleNoteController extends Controller
                 $paid = $request->paid;
 
                 if (count($request->payments) > 0) {
-                    if ($request->payments[0]['payment_method_type_id'] == "01" || $request->payments[0]['payment_method_type_id'] == "10") {
-                        $paid = 1;
+                    $total_payment = 0;
+
+                    foreach($request->payments as $payment){
+
+                        $total_payment += $payment['payment'];
                     }
+                    
+                    if ($request->payments[0]['payment_method_type_id'] == "01" || $request->payments[0]['payment_method_type_id'] == "10") {
+                        if ($total_payment >= $this->sale_note->total) {
+                            $paid = 1;
+                        }
+                        // $paid = 1;
+                    }
+
+                    if($payment['payment'] > 0){
+                        $record = new SaleNotePayment;
+                        $record->fill($payment);
+                        $payment["payment_destination_id"] = "cash";
+                        $record->sale_note_id = $this->sale_note->id;
+                        $record->save();
+    
+                        $this->createGlobalPayment($record, $payment);
+                    }
+    
                 }
 
                 if ($request->generate === null || $request->generate === false) {
@@ -870,6 +899,9 @@ class SaleNoteController extends Controller
                     }
                 }
                 $saleNoteUpdate = SaleNote::findOrFail($this->sale_note->id);
+                if(!$paid && $configuration->sale_note_credit_cash ){
+                    $saleNoteUpdate->credit_cash = true;
+                }
                 $saleNoteUpdate->paid = $paid;
                 $saleNoteUpdate->save();
             });

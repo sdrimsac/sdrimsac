@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Config;
 class Configuration extends ModelTenant
 {
     protected $fillable = [
+        'sale_note_credit_cash',
         'print_document_cash',
         'reprint_whatsapp',
         'product_cash',
@@ -147,6 +148,7 @@ class Configuration extends ModelTenant
 
     ];
     protected $casts = [
+        'sale_note_credit_cash' => 'boolean',
         'print_document_cash' => 'boolean',
         'reprint_whatsapp' => 'boolean',
         'product_cash' => 'boolean',
@@ -245,6 +247,7 @@ class Configuration extends ModelTenant
         // $skins = Skin::all();
         $skins = [];
         return [
+            'sale_note_credit_cash' => (bool)$this->sale_note_credit_cash,
             'print_document_cash' => (bool)$this->print_document_cash,
             'reprint_whatsapp' => (bool)$this->reprint_whatsapp,
             'product_cash' => (bool)$this->product_cash,

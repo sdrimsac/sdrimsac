@@ -1368,7 +1368,6 @@
                 :recordId="collegePersonId"
             >
             </person-college-form>
-        </div>
 
         <list-items :showDialog.sync="showListItems" :form="form"> </list-items>
     </el-dialog>
@@ -3130,6 +3129,9 @@ export default {
             } else {
                 this.button_payment = true;
             }
+            if(this.configuration.sale_note_credit_cash){
+                this.button_payment = false;
+            }
             //this.form.difference = _.round(this.form.difference, 2);
 
             this.$eventHub.$emit("eventSetFormPosLocalStorage", this.form);
@@ -3441,7 +3443,7 @@ export default {
 
             if (form.document_type_id === "80") {
                 form.prefix = "NV";
-                form.paid = 1;
+                form.paid = this.form.total == this.form.enter_amount; 
                 this.resource_documents = "sale-notes";
                 this.resource_payments = "sale_note_payments";
                 this.resource_options = this.resource_documents;
@@ -3457,17 +3459,20 @@ export default {
             form.advances = 0.0;
             form.total_advances = 0.0;
             form.total_payment = form.total;
-            form.payments = [
-                {
-                    payment_method_type_id: "01",
-                    date_of_payment: form.date_of_issue,
-                    payment: form.total
-                }
-            ];
+            
+       
+                // {
+                //     payment_method_type_id: "01",
+                //     date_of_payment: form.date_of_issue,
+                //     payment: this.form.enter_amount,
+                // }
 
+                console.log("🚀 ~ file: payment.vue:3475 ~ clickPayment ~ this.currentPayments:", this.currentPayments)
             form.cash_id = this.cash_id;
             if (this.form.payment_condition_id == "01") {
                 form.boxes = this.currentPayments;
+           
+                  console.log("🚀 ~ file: payment.vue:3464 ~ clickPayment ~ form.payments:", JSON.stringify(form.payments))
                 if (this.form_payment.is_bank) {
                     this.changeBankAccount();
                 }
@@ -3539,6 +3544,12 @@ export default {
                 return;
             }
             this.verifyBoxesDuplicate();
+             form.payments =
+              this.form.boxes.map(p=>({
+                  payment_method_type_id: p.method_payment_id,
+                    date_of_payment: form.date_of_issue,
+                    payment: p.amount,
+                }))
             this.loading_submit = true;
             this.form.items = this.form.items.filter(
                 item => Number(item.quantity) > 0

@@ -1480,6 +1480,21 @@
                                             ></el-switch>
                                         </div>
                                     </div>
+                                     <div class="col-md-6 mt-4">
+                                            <div class="form-group">
+                                                <label
+                                                    class="control-label w-100"
+                                                    >Lista de cuenta por cobrar
+                                                </label>
+
+                                                <el-switch
+                                                    v-model="form.credit_list"
+                                                    active-text="Si"
+                                                    inactive-text="No"
+                                                    @change="submit"
+                                                ></el-switch>
+                                            </div>
+                                        </div>
                                     <template v-if="form.hotels">
                                         <div class="col-md-6 mt-4">
                                             <div class="form-group">
@@ -1550,21 +1565,7 @@
                                                 ></el-time-picker>
                                             </div>
                                         </div>
-                                        <div class="col-md-6 mt-4">
-                                            <div class="form-group">
-                                                <label
-                                                    class="control-label w-100"
-                                                    >Lista de cuenta por cobrar
-                                                </label>
-
-                                                <el-switch
-                                                    v-model="form.credit_list"
-                                                    active-text="Si"
-                                                    inactive-text="No"
-                                                    @change="submit"
-                                                ></el-switch>
-                                            </div>
-                                        </div>
+                                       
                                         <div class="col-md-6 mt-4">
                                             <div class="form-group">
                                                 <label
@@ -1782,6 +1783,23 @@
                                             <el-switch
                                                 v-model="
                                                     form.print_document_cash
+                                                "
+                                                active-text="Si"
+                                                inactive-text="No"
+                                                @change="submit"
+                                            ></el-switch>
+                                        </div>
+                                    </div>
+                                    
+                                         <div class="col-md-6 mt-4">
+                                        <div class="form-group">
+                                            <label class="control-label w-100"
+                                                >Dar a crédito nota de venta (sin cuotas)
+                                            </label>
+
+                                            <el-switch
+                                                v-model="
+                                                    form.sale_note_credit_cash
                                                 "
                                                 active-text="Si"
                                                 inactive-text="No"
