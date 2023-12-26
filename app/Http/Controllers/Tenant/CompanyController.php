@@ -11,6 +11,10 @@ use Illuminate\Http\Request;
 
 class CompanyController extends Controller
 {
+    public function info(){
+        $company = Company::active();
+        return new CompanyResource($company);
+    }
     public function create()
     {
         return view('tenant.companies.form');
