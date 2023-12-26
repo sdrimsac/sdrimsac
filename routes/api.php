@@ -50,7 +50,7 @@ if ($hostname) {
         Route::delete('users/{user}', 'UserController@destroy');
 
         Route::get('info',[CompanyController::class,'info']);
-
+        Route::get('categories/productsByCategory', [App\Http\Controllers\Tenant\ItemController::class, 'filterByCategory']);
         Route::get('services/ruc/{number}', 'Api\ServiceController@ruc');
         Route::get('services/dni/{number}', 'Api\ServiceController@dni');
         Route::get('services/numberletter/{number}', 'Api\ServiceController@numberletter');

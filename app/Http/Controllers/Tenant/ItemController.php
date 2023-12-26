@@ -405,6 +405,12 @@ class ItemController extends Controller
         ], 200);
     }
 
+    public function filterByCategory(Request $request){
+        $category_id = $request->input('category_id');
+        $items = Item::where('category_id', $category_id);
+        return new ItemCollection($items->paginate(config('tenant.items_per_page')));
+
+    }
     public function filtercategory($filtercategory)
     {
         $items = Item::where('category_id', '=', $filtercategory)->get();
