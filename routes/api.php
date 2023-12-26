@@ -48,7 +48,7 @@ if ($hostname) {
         Route::get('users/{type}/records', 'UserController@records');
         Route::delete('users/{user}', 'UserController@destroy');
 
-        Routen::get('info','CompanyController@info');
+        Route::get('info','CompanyController@info');
 
         Route::get('services/ruc/{number}', 'Api\ServiceController@ruc');
         Route::get('services/dni/{number}', 'Api\ServiceController@dni');
