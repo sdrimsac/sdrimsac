@@ -161,6 +161,10 @@ class SaleNote extends ModelTenant
 
         $payments = SaleNotePayment::where('sale_note_id', $this->id)->get();
     }
+    public function customer()
+    {
+        return $this->belongsTo(Person::class, 'customer_id');
+    }
     public function creditPayments()
     {
         return $this->hasMany(Payment::class);

@@ -6,8 +6,27 @@
         @close="close"
         append-to-body
     >
-        <div class="row m-2"></div>
+        <div class="row m-2">
+            <el-pagination
+                @current-change="getRecords"
+                layout="total, prev, pager, next"
+                :total="pagination.total"
+                :current-page.sync="pagination.current_page"
+                :page-size="pagination.per_page"
+            >
+            </el-pagination>
+        </div>
         <div class="row m-2 table-responsive">
+            <div class="col-12">
+                <el-input
+                    placeholder="Buscar"
+                    v-model="search"
+                    prefix-icon="el-icon-search"
+                    clearable
+                    @clear="getRecords"
+                    @input="getRecordsTimer"
+                ></el-input>
+            </div>
             <table class="table">
                 <thead>
                     <tr>
@@ -31,18 +50,23 @@
                         </td>
                         <td>{{ record.full_number }}</td>
                         <td>{{ record.total }}</td>
-                        <td class="text-warning">{{ record.remain.toFixed(2) }}</td>
+                        <td class="text-warning">
+                            {{ record.remain.toFixed(2) }}
+                        </td>
                         <td>
-                            <button type="button" class="btn btn-primary btn-sm"
-                            @click="pay(record.id)"
-                                >Pagar</button
+                            <button
+                                type="button"
+                                class="btn btn-primary btn-sm"
+                                @click="pay(record.id)"
                             >
+                                Pagar
+                            </button>
                         </td>
                     </tr>
                 </tbody>
             </table>
         </div>
-              <sale-note-payments
+        <sale-note-payments
             :showDialog.sync="showDialogPayments"
             :documentId="recordId"
             @reloadData="getRecords"
@@ -64,10 +88,19 @@ export default {
             records: [],
             resource: "sale-notes/credit-cash",
             pagination: {},
-            loading: false
+            loading: false,
+            timer: null,
+            search:"",
         };
     },
     methods: {
+        getRecordsTimer() {
+            console.log("object");
+            clearTimeout(this.timer);
+            this.timer = setTimeout(() => {
+                this.getRecords();
+            }, 500);
+        },
         open() {
             console.log("open");
             this.getRecords();
@@ -76,20 +109,17 @@ export default {
             this.recordId = recordId;
             this.showDialogPayments = true;
         },
-    
+
         close() {
             this.$emit("update:showDialog", false);
         },
         async getRecords() {
-            const response = await this.$http(`/${this.resource}/records`);
+            let search = this.search||"";
+            const response = await this.$http(`/${this.resource}/records?value=${search}&page=${this.pagination.current_page||1}`);
             let data = response.data;
             this.records = data.data;
-            this.pagination = data.meta;
-            //ale-notes/credit-cash/records
-            console.log(
-                "🚀 ~ file: sale_note_credit_cash.vue:30 ~ getRecords ~ response:",
-                response
-            );
+            this.pagination = response.data.meta;
+            this.pagination.per_page = parseInt(response.data.meta.per_page);
         }
     }
 };

@@ -229,855 +229,790 @@
                                         ></el-input>
                                     </div>
                                 </div>
-                              <template v-if="configuration.show_coins_to_receive">
-                                  <div
-                                    class="m-2 d-flex justify-content-center align-items"
+                                <template
+                                    v-if="configuration.show_coins_to_receive"
                                 >
-                                    <template v-if="sumCoins.length == 0">
-                                        Billetes/Monedas a recibir
-                                    </template>
-                                    <template v-else>
-                                        {{ formatSumCoins }}
-                                    </template>
-                                </div>
-                                <div
-                                    class="d-flex justify-content-center align-items-center"
-                                >
-                                    <el-button-group
-                                        class="d-flex flex-wrap justify-content-center"
+                                    <div
+                                        class="m-2 d-flex justify-content-center align-items"
                                     >
-                                        <el-button
-                                            v-for="(coin, idx) in coins"
-                                            type="primary"
-                                            :key="idx"
-                                            @click="addCoin(coin.id)"
-                                            size="small"
-                                            round
-                                        >
-                                            {{ coin.id }}</el-button
-                                        >
-                                        <!-- un boton con el icono de tacho de basura que al dar click setee sumCoins a null -->
-                                        <el-button
-                                            type="danger"
-                                            @click="clearSumCoins"
-                                            size="small"
-                                            round
-                                        >
-                                            <i class="fas fa-trash"></i>
-                                        </el-button>
-                                    </el-button-group>
-                                </div>
-                              </template>
-                                    <div class="col-md-4 form-group">
-                                        <label class="control-label"
-                                            >Monto Descuento</label
-                                        >
-                                        <el-input-number
-                                            :min="0"
-                                            controls-position="right"
-                                            @change="inputDiscountAmount"
-                                            class="w-100"
-                                            v-model="discount_amount"
-                                        ></el-input-number>
+                                        <template v-if="sumCoins.length == 0">
+                                            Billetes/Monedas a recibir
+                                        </template>
+                                        <template v-else>
+                                            {{ formatSumCoins }}
+                                        </template>
                                     </div>
                                     <div
-                                        v-if="
-                                            configuration.affectation_igv_type_id ==
-                                                '10'
-                                        "
-                                        class="col-md-4 form-group"
+                                        class="d-flex justify-content-center align-items-center"
                                     >
+                                        <el-button-group
+                                            class="d-flex flex-wrap justify-content-center"
+                                        >
+                                            <el-button
+                                                v-for="(coin, idx) in coins"
+                                                type="primary"
+                                                :key="idx"
+                                                @click="addCoin(coin.id)"
+                                                size="small"
+                                                round
+                                            >
+                                                {{ coin.id }}</el-button
+                                            >
+                                            <!-- un boton con el icono de tacho de basura que al dar click setee sumCoins a null -->
+                                            <el-button
+                                                type="danger"
+                                                @click="clearSumCoins"
+                                                size="small"
+                                                round
+                                            >
+                                                <i class="fas fa-trash"></i>
+                                            </el-button>
+                                        </el-button-group>
+                                    </div>
+                                </template>
+                                <div class="col-md-4 form-group">
+                                    <label class="control-label"
+                                        >Monto Descuento</label
+                                    >
+                                    <el-input-number
+                                        :min="0"
+                                        controls-position="right"
+                                        @change="inputDiscountAmount"
+                                        class="w-100"
+                                        v-model="discount_amount"
+                                    ></el-input-number>
+                                </div>
+                                <div
+                                    v-if="
+                                        configuration.affectation_igv_type_id ==
+                                            '10'
+                                    "
+                                    class="col-md-4 form-group"
+                                >
+                                    <label class="control-label"
+                                        >Tipo de descuento</label
+                                    >
+                                    <el-checkbox
+                                        v-model="discountTotal"
+                                        @change="reCalculateTotal"
+                                    >
+                                        {{
+                                            discountTotal
+                                                ? "Descuento del total"
+                                                : "Descuento a la base"
+                                        }}
+                                    </el-checkbox>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-12">
+                    <div class=" mb-2 ">
+                        <div class=" text-center text-dark card  bg-light  ">
+                            <div class="row">
+                                <div class="  col-lg-6 ">
+                                    <div class=" align-items-start ">
                                         <label class="control-label"
-                                            >Tipo de descuento</label
+                                            >Medios de Pago</label
                                         >
-                                        <el-checkbox
-                                            v-model="discountTotal"
-                                            @change="reCalculateTotal"
+                                        <label
+                                            role="button"
+                                            class="text-primary control-label"
+                                        ></label>
+                                    </div>
+                                    <div class="radio-tile-group2 flex-wrap">
+                                        <div
+                                            class="input-container2 border rounded-sm"
                                         >
-                                            {{
-                                                discountTotal
-                                                    ? "Descuento del total"
-                                                    : "Descuento a la base"
-                                            }}
-                                        </el-checkbox>
+                                            <input
+                                                :disabled="form_payment.is_bank"
+                                                id="cash"
+                                                v-model="method_payments"
+                                                class="radio-button2"
+                                                type="radio"
+                                                name="method_payment"
+                                                value="01"
+                                                @change="
+                                                    method_payment('Efectivo')
+                                                "
+                                            />
+                                            <div
+                                                class="radio-tile2"
+                                                style="background-image: url('../../images/botonEfectivo.png') ; background-size: contain ; background-repeat: no-repeat"
+                                            >
+                                                <div
+                                                    class="icon walk-icon"
+                                                ></div>
+                                                <label
+                                                    for="cash"
+                                                    class="radio-tile-label2"
+                                                ></label>
+                                            </div>
+                                        </div>
+                                        <div
+                                            class="input-container2 border rounded-sm"
+                                        >
+                                            <input
+                                                :disabled="form_payment.is_bank"
+                                                id="culqui"
+                                                v-model="method_payments"
+                                                class="radio-button2"
+                                                type="radio"
+                                                name="method_payment"
+                                                value="02"
+                                                @change="
+                                                    method_payment('Culqui')
+                                                "
+                                            />
+                                            <div
+                                                class="radio-tile2"
+                                                style="background-image: url('../../images/CulquiIcon.png') ; background-size: contain ; background-repeat: no-repeat"
+                                            >
+                                                <div
+                                                    class="icon bike-icon"
+                                                ></div>
+                                                <label
+                                                    for="Tarjeta"
+                                                    class="radio-tile-label2"
+                                                ></label>
+                                            </div>
+                                        </div>
+                                        <div
+                                            class="input-container2 border rounded-sm"
+                                        >
+                                            <input
+                                                :disabled="form_payment.is_bank"
+                                                id="plin"
+                                                v-model="method_payments"
+                                                class="radio-button2"
+                                                type="radio"
+                                                name="method_payment"
+                                                value="05"
+                                                @change="
+                                                    method_payment(
+                                                        'TARJETA: IZYPAY'
+                                                    )
+                                                "
+                                            />
+                                            <div
+                                                class="radio-tile2"
+                                                style="background-image: url('../../images/botonIzipay.png') ; background-size: contain ; background-repeat: no-repeat; "
+                                            >
+                                                <div
+                                                    class="icon bike-icon"
+                                                ></div>
+                                                <label
+                                                    for="Tarjeta"
+                                                    class="radio-tile-label2"
+                                                ></label>
+                                            </div>
+                                        </div>
+                                        <div
+                                            class="input-container2 border rounded-sm"
+                                        >
+                                            <input
+                                                :disabled="form_payment.is_bank"
+                                                id="plin"
+                                                v-model="method_payments"
+                                                class="radio-button2"
+                                                type="radio"
+                                                name="method_payment"
+                                                value="07"
+                                                @change="
+                                                    method_payment(
+                                                        'TARJETA: OPENPAY'
+                                                    )
+                                                "
+                                            />
+                                            <div
+                                                class="radio-tile2"
+                                                style="background-image: url('../../images/botonOpenpay.png') ; background-size: contain ; background-repeat: no-repeat; "
+                                            >
+                                                <div
+                                                    class="icon bike-icon"
+                                                ></div>
+                                                <label
+                                                    for="Tarjeta"
+                                                    class="radio-tile-label2"
+                                                ></label>
+                                            </div>
+                                        </div>
+                                        <div
+                                            class="input-container2 border rounded-sm"
+                                        >
+                                            <input
+                                                :disabled="form_payment.is_bank"
+                                                id="plin"
+                                                v-model="method_payments"
+                                                class="radio-button2"
+                                                type="radio"
+                                                name="method_payment"
+                                                value="06"
+                                                @change="
+                                                    method_payment(
+                                                        'TARJETA: NIUBIZ'
+                                                    )
+                                                "
+                                            />
+                                            <div
+                                                class="radio-tile2"
+                                                style="background-image: url('../../images/botonNiubiz.png') ; background-size: contain ; background-repeat: no-repeat; "
+                                            >
+                                                <div
+                                                    class="icon bike-icon"
+                                                ></div>
+                                                <label
+                                                    for="Tarjeta"
+                                                    class="radio-tile-label2"
+                                                ></label>
+                                            </div>
+                                        </div>
+                                        <div
+                                            class="input-container2 border rounded-sm"
+                                        >
+                                            <input
+                                                :disabled="form_payment.is_bank"
+                                                id="yape"
+                                                v-model="method_payments"
+                                                class="radio-button2"
+                                                type="radio"
+                                                name="method_payment"
+                                                value="03"
+                                                @change="method_payment('Yape')"
+                                            />
+                                            <div
+                                                class="radio-tile2"
+                                                style="background-image: url('../../images/yape-logo-3E473EE7E5-seeklogo.com.png') ; background-size: contain ; background-repeat: no-repeat"
+                                            >
+                                                <div
+                                                    class="icon bike-icon"
+                                                ></div>
+                                                <label
+                                                    for="Tarjeta"
+                                                    class="radio-tile-label2"
+                                                ></label>
+                                            </div>
+                                        </div>
+                                        <div
+                                            class="input-container2 border rounded-sm"
+                                        >
+                                            <input
+                                                :disabled="form_payment.is_bank"
+                                                id="plin"
+                                                v-model="method_payments"
+                                                class="radio-button2"
+                                                type="radio"
+                                                name="method_payment"
+                                                value="04"
+                                                @change="method_payment('PLIN')"
+                                            />
+                                            <div
+                                                class="radio-tile2"
+                                                style="background-image: url('../../images/plin-logo-0C4106153C-seeklogo.com.png') ; background-size: contain ; background-repeat: no-repeat; "
+                                            >
+                                                <div
+                                                    class="icon bike-icon"
+                                                ></div>
+                                                <label
+                                                    for="Tarjeta"
+                                                    class="radio-tile-label2"
+                                                ></label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row col-md-12">
+                                        <div
+                                            class="mt-2 d-flex justify-content-start align-items-end"
+                                            v-if="
+                                                hasCreditCardCharge &&
+                                                    configuration.credit_mode
+                                            "
+                                        >
+                                            <div class="col-md-6">
+                                                <label
+                                                    class="w-100"
+                                                    style="text-align:left;"
+                                                >
+                                                    {{
+                                                        chargeCredit.credit_type ==
+                                                        "1"
+                                                            ? "Porcentaje"
+                                                            : "Monto"
+                                                    }}
+                                                </label>
+                                                <el-input
+                                                    type="number"
+                                                    @input="calculateCharge"
+                                                    class="w-100"
+                                                    v-model="
+                                                        chargeCredit.amount
+                                                    "
+                                                >
+                                                </el-input>
+                                            </div>
+                                            <div
+                                                class="col-md-3"
+                                                style="text-align:left;margin-left:5px;"
+                                            >
+                                                <el-radio-group
+                                                    class="d-flex"
+                                                    @change="calculateCharge"
+                                                    v-model="
+                                                        chargeCredit.credit_type
+                                                    "
+                                                    size="small"
+                                                >
+                                                    <el-radio-button label="1"
+                                                        >%</el-radio-button
+                                                    >
+                                                    <el-radio-button label="2"
+                                                        >S/</el-radio-button
+                                                    >
+                                                </el-radio-group>
+                                            </div>
+                                            <div
+                                                class="col-md-3 align-self-center mt-4"
+                                                style="text-align:left;margin-left:5px;"
+                                            >
+                                                <label
+                                                    class="h5"
+                                                    v-if="
+                                                        chargeCredit.total_charge !=
+                                                            0 &&
+                                                            chargeCredit.amount
+                                                    "
+                                                >
+                                                    S/
+                                                    {{
+                                                        chargeCredit.total_charge.toFixed(
+                                                            2
+                                                        )
+                                                    }}
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <template v-if="bank_accounts.length != 0">
+                                        <label for="banks">
+                                            <el-checkbox
+                                                @change="transferPayment"
+                                                v-model="form_payment.is_bank"
+                                            ></el-checkbox>
+                                            Transferencia / Depositos</label
+                                        >
+                                        <el-select
+                                            :disabled="!form_payment.is_bank"
+                                            v-model="form.bank_account_id"
+                                            @change="changeBankAccount"
+                                        >
+                                            <el-option
+                                                v-for="bank in bank_accounts"
+                                                :key="bank.id"
+                                                :label="
+                                                    `${bank.description}-${bank.number}`
+                                                "
+                                                :value="bank.id"
+                                            >
+                                            </el-option>
+                                        </el-select>
+                                        <el-input
+                                            :disabled="!form_payment.is_bank"
+                                            class="mt-1"
+                                            placeholder="Nro Operación"
+                                            v-model="form.reference_number"
+                                        ></el-input
+                                    ></template>
+                                    <template v-else>
+                                        <span class="text-danger"
+                                            >No hay cuentas bancarias
+                                            registradas</span
+                                        >
+                                    </template>
+                                </div>
+                                <div class="col-lg-12">
+                                    <div
+                                        class="row"
+                                        v-if="
+                                            form.method_pay == 'Yape' ||
+                                                form.method_pay == 'PLIN'
+                                        "
+                                    >
+                                        <div class="col-md-6 col-lg-6 col-12">
+                                            <label
+                                                class="control-label text-left  d-flex align-items-start justify-content-start"
+                                            >
+                                                N° de operación
+                                            </label>
+                                            <el-input
+                                                v-model="operation_number"
+                                            >
+                                                <template slot="prepend"
+                                                    ><i
+                                                        class="fa fa-mobile"
+                                                    ></i>
+                                                </template>
+                                            </el-input>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-4 col-md-5 col-xl-6">
+                                            <label
+                                                class="control-label text-left  d-flex align-items-start justify-content-start"
+                                            >
+                                                Ingrese Nro Celular
+                                            </label>
+                                            <el-input
+                                                v-model="
+                                                    form.customer_telephone
+                                                "
+                                            >
+                                                <template slot="prepend"
+                                                    ><i
+                                                        class="fab fa-whatsapp fa-2x"
+                                                    ></i>
+                                                </template>
+                                            </el-input>
+                                        </div>
+                                        <div
+                                            class="radio-tile-group2 col-lg-6 col-xl-6 d "
+                                            style="padding-top: 12px;"
+                                        >
+                                            <div
+                                                class="input-container2 border rounded-sm col-lg-3"
+                                            >
+                                                <input
+                                                    id="imprimir"
+                                                    v-model="printerOn"
+                                                    @change="
+                                                        updateConfigutation
+                                                    "
+                                                    class="radio-button2"
+                                                    type="radio"
+                                                    name="imprimir"
+                                                    value="1"
+                                                />
+                                                <div class="radio-tile2">
+                                                    <div class="icon walk-icon">
+                                                        <i
+                                                            class="fa fa-print"
+                                                        ></i>
+                                                    </div>
+                                                    <label
+                                                        for="cash"
+                                                        class="radio-tile-label2"
+                                                        >Imprimir</label
+                                                    >
+                                                </div>
+                                            </div>
+                                            <div
+                                                class="input-container2 border rounded-sm col-lg-3"
+                                            >
+                                                <input
+                                                    id="noimprimir"
+                                                    v-model="printerOn"
+                                                    @change="
+                                                        updateConfigutation
+                                                    "
+                                                    class="radio-button2"
+                                                    type="radio"
+                                                    name="noimprimir"
+                                                    value="0"
+                                                />
+                                                <div class="radio-tile2">
+                                                    <div class="icon bike-icon">
+                                                        <i
+                                                            class="fa fa-print"
+                                                        ></i>
+                                                    </div>
+                                                    <label
+                                                        for="Tarjeta"
+                                                        class="radio-tile-label2"
+                                                        >No Imprimir</label
+                                                    >
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div
+                                            class="col-lg-8  d-flex flex-row align-items-end"
+                                        ></div>
+                                        <div class="d-flex flex-column"></div>
+                                    </div>
+                                    <div
+                                        class="row d-flex justify-content-start"
+                                    >
+                                        <table
+                                            class="table"
+                                            v-if="currentPayments.length != 0"
+                                        >
+                                            <thead>
+                                                <tr>
+                                                    <th
+                                                        colspan="4"
+                                                        class="text-left"
+                                                    >
+                                                        {{
+                                                            form.payment_condition_id !==
+                                                            "01"
+                                                                ? "Cuotas"
+                                                                : "Pagos"
+                                                        }}
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr
+                                                    v-for="(paymnt,
+                                                    idx) in currentPayments"
+                                                    :key="idx"
+                                                >
+                                                    <td>{{ idx + 1 }}</td>
+                                                    <td
+                                                        v-if="
+                                                            form.payment_condition_id !==
+                                                                '01'
+                                                        "
+                                                    >
+                                                        <el-date-picker
+                                                            v-model="
+                                                                paymnt.date
+                                                            "
+                                                        >
+                                                        </el-date-picker>
+                                                    </td>
+                                                    <td>
+                                                        {{ paymnt.method }}
+                                                    </td>
+                                                    <td>
+                                                        <strong>{{
+                                                            paymnt.amount
+                                                        }}</strong>
+                                                    </td>
+                                                    <td>
+                                                        <label
+                                                            for=""
+                                                            role="button"
+                                                            @click="
+                                                                removePayment(
+                                                                    paymnt.id
+                                                                )
+                                                            "
+                                                            class="text-danger"
+                                                        >
+                                                            <i
+                                                                class="fa fa-trash"
+                                                            ></i
+                                                        ></label>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-
                     <div class="col-lg-12">
-                        <div class=" mb-2 ">
-                            <div
-                                class=" text-center text-dark card  bg-light  "
-                            >
+                        <div class="mb-2">
+                            <div class=" card  bg-light ">
                                 <div class="row">
-                                    <div class="  col-lg-6 ">
-                                        <div class=" align-items-start ">
-                                            <label class="control-label"
-                                                >Medios de Pago</label
-                                            >
-                                            <label
-                                                role="button"
-                                                class="text-primary control-label"
-                                            ></label>
-                                        </div>
-                                        <div
-                                            class="radio-tile-group2 flex-wrap"
+                                    <div
+                                        class=" col-xl-4"
+                                        style="margin-top: 10px;padding-top: 5px;"
+                                        :class="{
+                                            'has-danger': form.difference < 0
+                                        }"
+                                    >
+                                        <label class="control-label h1"
+                                            >Total a cobrar: </label
+                                        ><br />
+                                        <span
+                                            class="control-label font-weight-semibold text-center h3"
                                         >
-                                            <div
-                                                class="input-container2 border rounded-sm"
+                                            S/ {{ " " + form.total }}
+                                        </span>
+                                    </div>
+                                    <div
+                                        class="col-xl-8"
+                                        v-if="
+                                            form_payment.payment_method_type_id ==
+                                                '01'
+                                        "
+                                    >
+                                        <div
+                                            class="btn-group btn-group-square m-0 flex-wrap justify-content-around"
+                                            role="group"
+                                            style="padding-top: 12px"
+                                        >
+                                            <label class="control-label"
+                                                >Ingrese monto</label
                                             >
-                                                <input
-                                                    :disabled="
-                                                        form_payment.is_bank
-                                                    "
-                                                    id="cash"
-                                                    v-model="method_payments"
-                                                    class="radio-button2"
-                                                    type="radio"
-                                                    name="method_payment"
-                                                    value="01"
-                                                    @change="
-                                                        method_payment(
-                                                            'Efectivo'
-                                                        )
-                                                    "
-                                                />
+                                            <div
+                                                class="d-flex flex-wrap justify-content-around"
+                                            >
                                                 <div
-                                                    class="radio-tile2"
-                                                    style="background-image: url('../../images/botonEfectivo.png') ; background-size: contain ; background-repeat: no-repeat"
+                                                    class="col-3 col-lg-2 col-md-2  col-xl-2"
                                                 >
-                                                    <div
-                                                        class="icon walk-icon"
-                                                    ></div>
-                                                    <label
-                                                        for="cash"
-                                                        class="radio-tile-label2"
-                                                    ></label>
-                                                </div>
-                                            </div>
-                                            <div
-                                                class="input-container2 border rounded-sm"
-                                            >
-                                                <input
-                                                    :disabled="
-                                                        form_payment.is_bank
-                                                    "
-                                                    id="culqui"
-                                                    v-model="method_payments"
-                                                    class="radio-button2"
-                                                    type="radio"
-                                                    name="method_payment"
-                                                    value="02"
-                                                    @change="
-                                                        method_payment('Culqui')
-                                                    "
-                                                />
-                                                <div
-                                                    class="radio-tile2"
-                                                    style="background-image: url('../../images/CulquiIcon.png') ; background-size: contain ; background-repeat: no-repeat"
-                                                >
-                                                    <div
-                                                        class="icon bike-icon"
-                                                    ></div>
-                                                    <label
-                                                        for="Tarjeta"
-                                                        class="radio-tile-label2"
-                                                    ></label>
-                                                </div>
-                                            </div>
-                                            <div
-                                                class="input-container2 border rounded-sm"
-                                            >
-                                                <input
-                                                    :disabled="
-                                                        form_payment.is_bank
-                                                    "
-                                                    id="plin"
-                                                    v-model="method_payments"
-                                                    class="radio-button2"
-                                                    type="radio"
-                                                    name="method_payment"
-                                                    value="05"
-                                                    @change="
-                                                        method_payment(
-                                                            'TARJETA: IZYPAY'
-                                                        )
-                                                    "
-                                                />
-                                                <div
-                                                    class="radio-tile2"
-                                                    style="background-image: url('../../images/botonIzipay.png') ; background-size: contain ; background-repeat: no-repeat; "
-                                                >
-                                                    <div
-                                                        class="icon bike-icon"
-                                                    ></div>
-                                                    <label
-                                                        for="Tarjeta"
-                                                        class="radio-tile-label2"
-                                                    ></label>
-                                                </div>
-                                            </div>
-                                            <div
-                                                class="input-container2 border rounded-sm"
-                                            >
-                                                <input
-                                                    :disabled="
-                                                        form_payment.is_bank
-                                                    "
-                                                    id="plin"
-                                                    v-model="method_payments"
-                                                    class="radio-button2"
-                                                    type="radio"
-                                                    name="method_payment"
-                                                    value="07"
-                                                    @change="
-                                                        method_payment(
-                                                            'TARJETA: OPENPAY'
-                                                        )
-                                                    "
-                                                />
-                                                <div
-                                                    class="radio-tile2"
-                                                    style="background-image: url('../../images/botonOpenpay.png') ; background-size: contain ; background-repeat: no-repeat; "
-                                                >
-                                                    <div
-                                                        class="icon bike-icon"
-                                                    ></div>
-                                                    <label
-                                                        for="Tarjeta"
-                                                        class="radio-tile-label2"
-                                                    ></label>
-                                                </div>
-                                            </div>
-                                            <div
-                                                class="input-container2 border rounded-sm"
-                                            >
-                                                <input
-                                                    :disabled="
-                                                        form_payment.is_bank
-                                                    "
-                                                    id="plin"
-                                                    v-model="method_payments"
-                                                    class="radio-button2"
-                                                    type="radio"
-                                                    name="method_payment"
-                                                    value="06"
-                                                    @change="
-                                                        method_payment(
-                                                            'TARJETA: NIUBIZ'
-                                                        )
-                                                    "
-                                                />
-                                                <div
-                                                    class="radio-tile2"
-                                                    style="background-image: url('../../images/botonNiubiz.png') ; background-size: contain ; background-repeat: no-repeat; "
-                                                >
-                                                    <div
-                                                        class="icon bike-icon"
-                                                    ></div>
-                                                    <label
-                                                        for="Tarjeta"
-                                                        class="radio-tile-label2"
-                                                    ></label>
-                                                </div>
-                                            </div>
-                                            <div
-                                                class="input-container2 border rounded-sm"
-                                            >
-                                                <input
-                                                    :disabled="
-                                                        form_payment.is_bank
-                                                    "
-                                                    id="yape"
-                                                    v-model="method_payments"
-                                                    class="radio-button2"
-                                                    type="radio"
-                                                    name="method_payment"
-                                                    value="03"
-                                                    @change="
-                                                        method_payment('Yape')
-                                                    "
-                                                />
-                                                <div
-                                                    class="radio-tile2"
-                                                    style="background-image: url('../../images/yape-logo-3E473EE7E5-seeklogo.com.png') ; background-size: contain ; background-repeat: no-repeat"
-                                                >
-                                                    <div
-                                                        class="icon bike-icon"
-                                                    ></div>
-                                                    <label
-                                                        for="Tarjeta"
-                                                        class="radio-tile-label2"
-                                                    ></label>
-                                                </div>
-                                            </div>
-                                            <div
-                                                class="input-container2 border rounded-sm"
-                                            >
-                                                <input
-                                                    :disabled="
-                                                        form_payment.is_bank
-                                                    "
-                                                    id="plin"
-                                                    v-model="method_payments"
-                                                    class="radio-button2"
-                                                    type="radio"
-                                                    name="method_payment"
-                                                    value="04"
-                                                    @change="
-                                                        method_payment('PLIN')
-                                                    "
-                                                />
-                                                <div
-                                                    class="radio-tile2"
-                                                    style="background-image: url('../../images/plin-logo-0C4106153C-seeklogo.com.png') ; background-size: contain ; background-repeat: no-repeat; "
-                                                >
-                                                    <div
-                                                        class="icon bike-icon"
-                                                    ></div>
-                                                    <label
-                                                        for="Tarjeta"
-                                                        class="radio-tile-label2"
-                                                    ></label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row col-md-12">
-                                            <div
-                                                class="mt-2 d-flex justify-content-start align-items-end"
-                                                v-if="
-                                                    hasCreditCardCharge &&
-                                                        configuration.credit_mode
-                                                "
-                                            >
-                                                <div class="col-md-6">
-                                                    <label
-                                                        class="w-100"
-                                                        style="text-align:left;"
-                                                    >
-                                                        {{
-                                                            chargeCredit.credit_type ==
-                                                            "1"
-                                                                ? "Porcentaje"
-                                                                : "Monto"
-                                                        }}
-                                                    </label>
-                                                    <el-input
-                                                        type="number"
-                                                        @input="calculateCharge"
-                                                        class="w-100"
-                                                        v-model="
-                                                            chargeCredit.amount
+                                                    <button
+                                                        class="btn btn-outline-primary  m-2"
+                                                        @click="
+                                                            setAmountCash(10)
                                                         "
                                                     >
+                                                        10
+                                                    </button>
+                                                </div>
+                                                <div
+                                                    class="col-3 col-lg-2 col-md-2  col-xl-2"
+                                                >
+                                                    <button
+                                                        class="btn btn-outline-primary  m-2"
+                                                        @click="
+                                                            setAmountCash(20)
+                                                        "
+                                                    >
+                                                        20
+                                                    </button>
+                                                </div>
+                                                <div
+                                                    class="col-3  col-lg-2 col-md-2  col-xl-2"
+                                                >
+                                                    <button
+                                                        class="btn btn-outline-primary  m-2"
+                                                        @click="
+                                                            setAmountCash(50)
+                                                        "
+                                                    >
+                                                        50
+                                                    </button>
+                                                </div>
+                                                <div
+                                                    class="col-3 col-lg-2 col-md-2  col-xl-2"
+                                                >
+                                                    <button
+                                                        class="btn btn-outline-primary  m-2"
+                                                        @click="
+                                                            setAmountCash(100)
+                                                        "
+                                                    >
+                                                        100
+                                                    </button>
+                                                </div>
+                                                <div
+                                                    class="col-3 col-lg-2 col-md-2  col-xl-2"
+                                                >
+                                                    <button
+                                                        class="btn btn-outline-primary m-2"
+                                                        @click="
+                                                            setAmountCash(200)
+                                                        "
+                                                    >
+                                                        200
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div class="row col-xl-12 col-12">
+                                                <div
+                                                    class=" col-xl-6 col-md-3 col-lg-3 col-12"
+                                                >
+                                                    <el-input
+                                                        id="inputTotal"
+                                                        ref="enter_amount"
+                                                        v-model="
+                                                            form.enter_amount
+                                                        "
+                                                        @blur="diferen()"
+                                                        @input="enterAmount()"
+                                                    >
+                                                        <template
+                                                            slot="prepend"
+                                                            >{{
+                                                                currencyTypeActive.symbol
+                                                            }}</template
+                                                        >
                                                     </el-input>
                                                 </div>
                                                 <div
-                                                    class="col-md-3"
-                                                    style="text-align:left;margin-left:5px;"
+                                                    class="col-xl-2 col-md-2 col-lg-2 col-6"
                                                 >
-                                                    <el-radio-group
-                                                        class="d-flex"
-                                                        @change="
-                                                            calculateCharge
-                                                        "
-                                                        v-model="
-                                                            chargeCredit.credit_type
-                                                        "
-                                                        size="small"
-                                                    >
-                                                        <el-radio-button
-                                                            label="1"
-                                                            >%</el-radio-button
-                                                        >
-                                                        <el-radio-button
-                                                            label="2"
-                                                            >S/</el-radio-button
-                                                        >
-                                                    </el-radio-group>
-                                                </div>
-                                                <div
-                                                    class="col-md-3 align-self-center mt-4"
-                                                    style="text-align:left;margin-left:5px;"
-                                                >
-                                                    <label
-                                                        class="h5"
-                                                        v-if="
-                                                            chargeCredit.total_charge !=
-                                                                0 &&
-                                                                chargeCredit.amount
+                                                    <el-button
+                                                        type="primary"
+                                                        @click="addPayment"
+                                                        :disabled="
+                                                            disabledAddPayment()
                                                         "
                                                     >
-                                                        S/
-                                                        {{
-                                                            chargeCredit.total_charge.toFixed(
-                                                                2
-                                                            )
-                                                        }}
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <template
-                                            v-if="bank_accounts.length != 0"
-                                        >
-                                            <label for="banks">
-                                                <el-checkbox
-                                                    @change="transferPayment"
-                                                    v-model="
-                                                        form_payment.is_bank
-                                                    "
-                                                ></el-checkbox>
-                                                Transferencia / Depositos</label
-                                            >
-                                            <el-select
-                                                :disabled="
-                                                    !form_payment.is_bank
-                                                "
-                                                v-model="form.bank_account_id"
-                                                @change="changeBankAccount"
-                                            >
-                                                <el-option
-                                                    v-for="bank in bank_accounts"
-                                                    :key="bank.id"
-                                                    :label="
-                                                        `${bank.description}-${bank.number}`
-                                                    "
-                                                    :value="bank.id"
-                                                >
-                                                </el-option>
-                                            </el-select>
-                                            <el-input
-                                                :disabled="
-                                                    !form_payment.is_bank
-                                                "
-                                                class="mt-1"
-                                                placeholder="Nro Operación"
-                                                v-model="form.reference_number"
-                                            ></el-input
-                                        ></template>
-                                        <template v-else>
-                                            <span class="text-danger"
-                                                >No hay cuentas bancarias
-                                                registradas</span
-                                            >
-                                        </template>
-                                    </div>
-                                    <div class="col-lg-12">
-                                        <div
-                                            class="row"
-                                            v-if="
-                                                form.method_pay == 'Yape' ||
-                                                    form.method_pay == 'PLIN'
-                                            "
-                                        >
-                                            <div
-                                                class="col-md-6 col-lg-6 col-12"
-                                            >
-                                                <label
-                                                    class="control-label text-left  d-flex align-items-start justify-content-start"
-                                                >
-                                                    N° de operación
-                                                </label>
-                                                <el-input
-                                                    v-model="operation_number"
-                                                >
-                                                    <template slot="prepend"
-                                                        ><i
-                                                            class="fa fa-mobile"
-                                                        ></i>
-                                                    </template>
-                                                </el-input>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div
-                                                class="col-lg-4 col-md-5 col-xl-6"
-                                            >
-                                                <label
-                                                    class="control-label text-left  d-flex align-items-start justify-content-start"
-                                                >
-                                                    Ingrese Nro Celular
-                                                </label>
-                                                <el-input
-                                                    v-model="
-                                                        form.customer_telephone
-                                                    "
-                                                >
-                                                    <template slot="prepend"
-                                                        ><i
-                                                            class="fab fa-whatsapp fa-2x"
-                                                        ></i>
-                                                    </template>
-                                                </el-input>
-                                            </div>
-                                            <div
-                                                class="radio-tile-group2 col-lg-6 col-xl-6 d "
-                                                style="padding-top: 12px;"
-                                            >
-                                                <div
-                                                    class="input-container2 border rounded-sm col-lg-3"
-                                                >
-                                                    <input
-                                                        id="imprimir"
-                                                        v-model="printerOn"
-                                                        @change="
-                                                            updateConfigutation
-                                                        "
-                                                        class="radio-button2"
-                                                        type="radio"
-                                                        name="imprimir"
-                                                        value="1"
-                                                    />
-                                                    <div class="radio-tile2">
-                                                        <div
-                                                            class="icon walk-icon"
-                                                        >
-                                                            <i
-                                                                class="fa fa-print"
-                                                            ></i>
-                                                        </div>
-                                                        <label
-                                                            for="cash"
-                                                            class="radio-tile-label2"
-                                                            >Imprimir</label
-                                                        >
-                                                    </div>
-                                                </div>
-                                                <div
-                                                    class="input-container2 border rounded-sm col-lg-3"
-                                                >
-                                                    <input
-                                                        id="noimprimir"
-                                                        v-model="printerOn"
-                                                        @change="
-                                                            updateConfigutation
-                                                        "
-                                                        class="radio-button2"
-                                                        type="radio"
-                                                        name="noimprimir"
-                                                        value="0"
-                                                    />
-                                                    <div class="radio-tile2">
-                                                        <div
-                                                            class="icon bike-icon"
-                                                        >
-                                                            <i
-                                                                class="fa fa-print"
-                                                            ></i>
-                                                        </div>
-                                                        <label
-                                                            for="Tarjeta"
-                                                            class="radio-tile-label2"
-                                                            >No Imprimir</label
-                                                        >
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div
-                                                class="col-lg-8  d-flex flex-row align-items-end"
-                                            ></div>
-                                            <div
-                                                class="d-flex flex-column"
-                                            ></div>
-                                        </div>
-                                        <div
-                                            class="row d-flex justify-content-start"
-                                        >
-                                            <table
-                                                class="table"
-                                                v-if="
-                                                    currentPayments.length != 0
-                                                "
-                                            >
-                                                <thead>
-                                                    <tr>
-                                                        <th
-                                                            colspan="4"
-                                                            class="text-left"
-                                                        >
-                                                            {{
-                                                                form.payment_condition_id !==
-                                                                "01"
-                                                                    ? "Cuotas"
-                                                                    : "Pagos"
-                                                            }}
-                                                        </th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr
-                                                        v-for="(paymnt,
-                                                        idx) in currentPayments"
-                                                        :key="idx"
-                                                    >
-                                                        <td>{{ idx + 1 }}</td>
-                                                        <td
+                                                        <span
                                                             v-if="
-                                                                form.payment_condition_id !==
+                                                                form.payment_condition_id ==
                                                                     '01'
                                                             "
                                                         >
-                                                            <el-date-picker
-                                                                v-model="
-                                                                    paymnt.date
-                                                                "
-                                                            >
-                                                            </el-date-picker>
-                                                        </td>
-                                                        <td>
-                                                            {{ paymnt.method }}
-                                                        </td>
-                                                        <td>
-                                                            <strong>{{
-                                                                paymnt.amount
-                                                            }}</strong>
-                                                        </td>
-                                                        <td>
-                                                            <label
-                                                                for=""
-                                                                role="button"
-                                                                @click="
-                                                                    removePayment(
-                                                                        paymnt.id
-                                                                    )
-                                                                "
-                                                                class="text-danger"
-                                                            >
-                                                                <i
-                                                                    class="fa fa-trash"
-                                                                ></i
-                                                            ></label>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-12">
-                            <div class="mb-2">
-                                <div class=" card  bg-light ">
-                                    <div class="row">
-                                        <div
-                                            class=" col-xl-4"
-                                            style="margin-top: 10px;padding-top: 5px;"
-                                            :class="{
-                                                'has-danger':
-                                                    form.difference < 0
-                                            }"
-                                        >
-                                            <label class="control-label h1"
-                                                >Total a cobrar: </label
-                                            ><br />
-                                            <span
-                                                class="control-label font-weight-semibold text-center h3"
-                                            >
-                                                S/ {{ " " + form.total }}
-                                            </span>
-                                        </div>
-                                        <div
-                                            class="col-xl-8"
-                                            v-if="
-                                                form_payment.payment_method_type_id ==
-                                                    '01'
-                                            "
-                                        >
-                                            <div
-                                                class="btn-group btn-group-square m-0 flex-wrap justify-content-around"
-                                                role="group"
-                                                style="padding-top: 12px"
-                                            >
-                                                <label class="control-label"
-                                                    >Ingrese monto</label
-                                                >
-                                                <div
-                                                    class="d-flex flex-wrap justify-content-around"
-                                                >
-                                                    <div
-                                                        class="col-3 col-lg-2 col-md-2  col-xl-2"
-                                                    >
-                                                        <button
-                                                            class="btn btn-outline-primary  m-2"
-                                                            @click="
-                                                                setAmountCash(
-                                                                    10
-                                                                )
-                                                            "
-                                                        >
-                                                            10
-                                                        </button>
-                                                    </div>
-                                                    <div
-                                                        class="col-3 col-lg-2 col-md-2  col-xl-2"
-                                                    >
-                                                        <button
-                                                            class="btn btn-outline-primary  m-2"
-                                                            @click="
-                                                                setAmountCash(
-                                                                    20
-                                                                )
-                                                            "
-                                                        >
-                                                            20
-                                                        </button>
-                                                    </div>
-                                                    <div
-                                                        class="col-3  col-lg-2 col-md-2  col-xl-2"
-                                                    >
-                                                        <button
-                                                            class="btn btn-outline-primary  m-2"
-                                                            @click="
-                                                                setAmountCash(
-                                                                    50
-                                                                )
-                                                            "
-                                                        >
-                                                            50
-                                                        </button>
-                                                    </div>
-                                                    <div
-                                                        class="col-3 col-lg-2 col-md-2  col-xl-2"
-                                                    >
-                                                        <button
-                                                            class="btn btn-outline-primary  m-2"
-                                                            @click="
-                                                                setAmountCash(
-                                                                    100
-                                                                )
-                                                            "
-                                                        >
-                                                            100
-                                                        </button>
-                                                    </div>
-                                                    <div
-                                                        class="col-3 col-lg-2 col-md-2  col-xl-2"
-                                                    >
-                                                        <button
-                                                            class="btn btn-outline-primary m-2"
-                                                            @click="
-                                                                setAmountCash(
-                                                                    200
-                                                                )
-                                                            "
-                                                        >
-                                                            200
-                                                        </button>
-                                                    </div>
+                                                            Agregar
+                                                        </span>
+                                                        <span v-else>
+                                                            Agregar cuota
+                                                        </span>
+                                                    </el-button>
                                                 </div>
                                                 <div
-                                                    class="row col-xl-12 col-12"
+                                                    v-if="
+                                                        form.payment_condition_id ==
+                                                            '01'
+                                                    "
+                                                    class="col-xl-3 col-md-3 col-lg-3 col-6 "
                                                 >
-                                                    <div
-                                                        class=" col-xl-6 col-md-3 col-lg-3 col-12"
-                                                    >
-                                                        <el-input
-                                                            id="inputTotal"
-                                                            ref="enter_amount"
-                                                            v-model="
-                                                                form.enter_amount
-                                                            "
-                                                            @blur="diferen()"
-                                                            @input="
-                                                                enterAmount()
-                                                            "
-                                                        >
-                                                            <template
-                                                                slot="prepend"
-                                                                >{{
-                                                                    currencyTypeActive.symbol
-                                                                }}</template
-                                                            >
-                                                        </el-input>
-                                                    </div>
-                                                    <div
-                                                        class="col-xl-2 col-md-2 col-lg-2 col-6"
-                                                    >
-                                                        <el-button
-                                                            type="primary"
-                                                            @click="addPayment"
-                                                            :disabled="
-                                                                disabledAddPayment()
-                                                            "
-                                                        >
-                                                            <span
-                                                                v-if="
-                                                                    form.payment_condition_id ==
-                                                                        '01'
-                                                                "
-                                                            >
-                                                                Agregar
-                                                            </span>
-                                                            <span v-else>
-                                                                Agregar cuota
-                                                            </span>
-                                                        </el-button>
-                                                    </div>
-                                                    <div
-                                                        v-if="
-                                                            form.payment_condition_id ==
-                                                                '01'
+                                                    <el-button
+                                                        type="success"
+                                                        @click="
+                                                            showSplitPayment = true
                                                         "
-                                                        class="col-xl-3 col-md-3 col-lg-3 col-6 "
+                                                        >Dividir pago</el-button
                                                     >
-                                                        <el-button
-                                                            type="success"
-                                                            @click="
-                                                                showSplitPayment = true
-                                                            "
-                                                            >Dividir
-                                                            pago</el-button
-                                                        >
-                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class=" row col-xl-4">
-                                            <div
-                                                class="col-xl-5"
-                                                style="margin-bottom: 10px"
-                                            ></div>
-                                        </div>
                                     </div>
-                                    <div class="row">
-                                        <div class="col-xl-3"></div>
-                                        <div class="col-xl-2"></div>
-                                        <div class="col-xl-3">
-                                            <el-select
-                                                v-if="
+                                    <div class=" row col-xl-4">
+                                        <div
+                                            class="col-xl-5"
+                                            style="margin-bottom: 10px"
+                                        ></div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xl-3"></div>
+                                    <div class="col-xl-2"></div>
+                                    <div class="col-xl-3">
+                                        <el-select
+                                            v-if="
+                                                form.document_type_id == '01' ||
                                                     form.document_type_id ==
-                                                        '01' ||
-                                                        form.document_type_id ==
-                                                            '03'
-                                                "
-                                                v-model="
-                                                    form.payment_condition_id
-                                                "
+                                                        '03'
+                                            "
+                                            v-model="form.payment_condition_id"
+                                        >
+                                            <el-option
+                                                value="01"
+                                                label="Contado"
                                             >
-                                                <el-option
-                                                    value="01"
-                                                    label="Contado"
-                                                >
-                                                </el-option>
-                                                <el-option
-                                                    value="02"
-                                                    label="Crédito"
-                                                >
-                                                </el-option>
-                                                <el-option
-                                                    value="03"
-                                                    label="Crédito a cuotas"
-                                                ></el-option>
-                                            </el-select>
-                                            <!-- <el-switch
+                                            </el-option>
+                                            <el-option
+                                                value="02"
+                                                label="Crédito"
+                                            >
+                                            </el-option>
+                                            <el-option
+                                                value="03"
+                                                label="Crédito a cuotas"
+                                            ></el-option>
+                                        </el-select>
+                                        <!-- <el-switch
                                                 v-if="
                                                     form.document_type_id ==
                                                         '01' ||
@@ -1088,286 +1023,272 @@
                                                 inactive-text="Contado"
                                                 v-model="form.is_credit"
                                             ></el-switch> -->
-                                        </div>
-                                        <div class="col-xl-4">
-                                            <div
-                                                class="form-group d-flex flex-row align-items-end"
-                                                :class="{
-                                                    'has-danger':
+                                    </div>
+                                    <div class="col-xl-4">
+                                        <div
+                                            class="form-group d-flex flex-row align-items-end"
+                                            :class="{
+                                                'has-danger':
+                                                    form.difference < 0
+                                            }"
+                                        >
+                                            <label
+                                                :class="
+                                                    `${
                                                         form.difference < 0
-                                                }"
+                                                            ? 'text-danger'
+                                                            : ''
+                                                    }`
+                                                "
+                                                class="control-label fs-4"
+                                                v-text="
+                                                    form.difference < 0
+                                                        ? 'Faltante: '
+                                                        : 'Vuelto: '
+                                                "
+                                            ></label>
+                                            <span
+                                                :class="
+                                                    `${
+                                                        form.difference < 0
+                                                            ? 'text-danger'
+                                                            : ''
+                                                    }`
+                                                "
+                                                class="control-label font-weight-semibold text-center fs-4"
                                             >
-                                                <label
-                                                    :class="
-                                                        `${
-                                                            form.difference < 0
-                                                                ? 'text-danger'
-                                                                : ''
-                                                        }`
-                                                    "
-                                                    class="control-label fs-4"
-                                                    v-text="
-                                                        form.difference < 0
-                                                            ? 'Faltante: '
-                                                            : 'Vuelto: '
-                                                    "
-                                                ></label>
-                                                <span
-                                                    :class="
-                                                        `${
-                                                            form.difference < 0
-                                                                ? 'text-danger'
-                                                                : ''
-                                                        }`
-                                                    "
-                                                    class="control-label font-weight-semibold text-center fs-4"
-                                                >
-                                                    {{
-                                                        currencyTypeActive.symbol
-                                                    }}{{
-                                                        form.difference
-                                                            .toFixed(2)
-                                                            .replace("-", "")
-                                                    }}</span
-                                                >
-                                            </div>
+                                                {{ currencyTypeActive.symbol
+                                                }}{{
+                                                    form.difference
+                                                        .toFixed(2)
+                                                        .replace("-", "")
+                                                }}</span
+                                            >
                                         </div>
                                     </div>
-                                    <div
-                                        v-if="hasExceedBank"
-                                        class="d-flex justify-content-center"
-                                    >
-                                        <div class="col-12 text-center">
-                                            <span class="text-danger">
-                                                Recuerde que debido al monto
-                                                deberá hacer esta operación
-                                                mediante Bancarización, y en el
-                                                campo <br />
-                                                "Observaciones" ingresar el
-                                                numero de voucher o numero de
-                                                operación.
-                                            </span>
-                                        </div>
+                                </div>
+                                <div
+                                    v-if="hasExceedBank"
+                                    class="d-flex justify-content-center"
+                                >
+                                    <div class="col-12 text-center">
+                                        <span class="text-danger">
+                                            Recuerde que debido al monto deberá
+                                            hacer esta operación mediante
+                                            Bancarización, y en el campo <br />
+                                            "Observaciones" ingresar el numero
+                                            de voucher o numero de operación.
+                                        </span>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div
-                    v-if="splitPayments.length != 0"
-                    class="row m-1 p-2  bg-light rounded"
-                >
-                    <span style="margin-bottom:5px;">Pagos divididos</span>
-                    <div class="d-flex flex-wrap ">
-                        <div
-                            v-for="(payment, idx) in splitPayments"
-                            :key="idx"
-                            class="col-2"
-                        >
-                            Pago {{ idx + 1 }}:
-                            <strong>S/. {{ payment.amount }}</strong>
-                        </div>
+            </div>
+            <div
+                v-if="splitPayments.length != 0"
+                class="row m-1 p-2  bg-light rounded"
+            >
+                <span style="margin-bottom:5px;">Pagos divididos</span>
+                <div class="d-flex flex-wrap ">
+                    <div
+                        v-for="(payment, idx) in splitPayments"
+                        :key="idx"
+                        class="col-2"
+                    >
+                        Pago {{ idx + 1 }}:
+                        <strong>S/. {{ payment.amount }}</strong>
                     </div>
                 </div>
-                <div
-                    v-if="splitProducts.length != 0"
-                    class="row m-1 p-2  bg-light rounded"
+            </div>
+            <div
+                v-if="splitProducts.length != 0"
+                class="row m-1 p-2  bg-light rounded"
+            >
+                <span style="margin-bottom:5px;"
+                    >Pagos divididos por producto</span
                 >
-                    <span style="margin-bottom:5px;"
-                        >Pagos divididos por producto</span
+                <div class="d-flex flex-wrap ">
+                    <div
+                        v-for="(payment, idx) in splitProducts"
+                        :key="idx"
+                        class="col-3 m-1"
                     >
-                    <div class="d-flex flex-wrap ">
-                        <div
-                            v-for="(payment, idx) in splitProducts"
-                            :key="idx"
-                            class="col-3 m-1"
+                        <table
+                            v-if="
+                                payment.products && payment.products.length > 0
+                            "
+                            class="col-12"
                         >
-                            <table
+                            <thead>
+                                <tr
+                                    role="button"
+                                    @click="selectAccount(idx)"
+                                    :class="
+                                        'bg-primary text-white border rounded-top'
+                                    "
+                                >
+                                    <th class="text-center" colspan="3">
+                                        <b> CUENTA {{ idx + 1 }} </b>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody
+                                class="border rounded-top "
                                 v-if="
                                     payment.products &&
                                         payment.products.length > 0
                                 "
-                                class="col-12"
                             >
-                                <thead>
-                                    <tr
-                                        role="button"
-                                        @click="selectAccount(idx)"
-                                        :class="
-                                            'bg-primary text-white border rounded-top'
-                                        "
-                                    >
-                                        <th class="text-center" colspan="3">
-                                            <b> CUENTA {{ idx + 1 }} </b>
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody
-                                    class="border rounded-top "
-                                    v-if="
-                                        payment.products &&
-                                            payment.products.length > 0
-                                    "
+                                <tr
+                                    v-for="(product, idx) in payment.products"
+                                    :key="idx"
                                 >
-                                    <tr
-                                        v-for="(product,
-                                        idx) in payment.products"
-                                        :key="idx"
-                                    >
-                                        <td>
-                                            <h3 class="text-muted text-small">
-                                                {{ product.quantity }}
-                                            </h3>
-                                        </td>
-                                        <td>
-                                            <h3 class="text-muted text-small">
-                                                {{ product.description }}
-                                            </h3>
-                                        </td>
-                                        <td style="text-align:right">
-                                            <h3 class="text-muted text-small">
-                                                {{
-                                                    product.price *
-                                                        product.quantity
-                                                }}
-                                            </h3>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td
-                                            colspan="2"
-                                            class="text-muted text-small"
-                                            style="text-align:right"
-                                        >
-                                            <b> Total</b>
-                                        </td>
-                                        <td class="text-muted text-small">
-                                            S/.
+                                    <td>
+                                        <h3 class="text-muted text-small">
+                                            {{ product.quantity }}
+                                        </h3>
+                                    </td>
+                                    <td>
+                                        <h3 class="text-muted text-small">
+                                            {{ product.description }}
+                                        </h3>
+                                    </td>
+                                    <td style="text-align:right">
+                                        <h3 class="text-muted text-small">
                                             {{
-                                                totalItemSelected(
-                                                    payment.products
-                                                )
+                                                product.price * product.quantity
                                             }}
-                                        </td>
-                                    </tr>
-                                </tbody>
-                                <tbody v-else class="border">
-                                    <tr>
-                                        <td colspan="3" class="text-center">
-                                            <h3 class="text-muted text-small">
-                                                Sin productos seleccionados
-                                            </h3>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-                <div class="p-3">
-                    <div class="row">
-                      
-                        <template v-if="configuration.affectation_optional">
-                            <div class="col-lg-6 col-md-6 col-12">
-                                <label>
-                                    Afectación IGV para el documento
-                                </label>
-                                <el-select
-                                    v-model="affectation_optional_id"
-                                    clearable
-                                    filterable
-                                >
-                                    <el-option
-                                        v-for="option in affectation_igv_types.filter(
-                                            affectation =>
-                                                affectation.id == '10'
-                                        )"
-                                        :key="option.id"
-                                        :label="option.description"
-                                        :value="option.id"
+                                        </h3>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td
+                                        colspan="2"
+                                        class="text-muted text-small"
+                                        style="text-align:right"
                                     >
-                                    </el-option>
-                                </el-select>
-                            </div>
-                        </template>
-                        <div
-                            class="col-lg-4 col-md-4 col-12 d-flex align-items-end justify-content-center"
-                        >
-                            <div>
-                                <button
-                                    class="btn btn-block btn-primary"
-                                    @click="sendPayment"
-                                    :disabled="button_payment"
-                                >
-                                    <i class="fas fa-money-bill-alt"></i>
-                                    PAGAR
-                                </button>
-                            </div>
-                            <div>
-                                <button
-                                    class="btn btn-block btn-dark"
-                                    @click="back(false)"
-                                >
-                                    <i class="fa fa-reply"></i> Cerrar
-                                </button>
-                            </div>
-                        </div>
-                          <template
-                        v-if="form.is_room"
-                        >
-                        <div class="col-lg-3 col-md-3 col-12">
-                            <label for="vacate">Desocupar habitación</label>
-                            <el-checkbox
-                                v-model="form.vacate"
-                            ></el-checkbox>
-                        </div>
-                        </template>
+                                        <b> Total</b>
+                                    </td>
+                                    <td class="text-muted text-small">
+                                        S/.
+                                        {{
+                                            totalItemSelected(payment.products)
+                                        }}
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tbody v-else class="border">
+                                <tr>
+                                    <td colspan="3" class="text-center">
+                                        <h3 class="text-muted text-small">
+                                            Sin productos seleccionados
+                                        </h3>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
+            <div class="p-3">
+                <div class="row">
+                    <template v-if="configuration.affectation_optional">
+                        <div class="col-lg-6 col-md-6 col-12">
+                            <label>
+                                Afectación IGV para el documento
+                            </label>
+                            <el-select
+                                v-model="affectation_optional_id"
+                                clearable
+                                filterable
+                            >
+                                <el-option
+                                    v-for="option in affectation_igv_types.filter(
+                                        affectation => affectation.id == '10'
+                                    )"
+                                    :key="option.id"
+                                    :label="option.description"
+                                    :value="option.id"
+                                >
+                                </el-option>
+                            </el-select>
+                        </div>
+                    </template>
+                    <div
+                        class="col-lg-4 col-md-4 col-12 d-flex align-items-end justify-content-center"
+                    >
+                        <div>
+                            <button
+                                class="btn btn-block btn-primary"
+                                @click="sendPayment"
+                                :disabled="button_payment"
+                            >
+                                <i class="fas fa-money-bill-alt"></i>
+                                PAGAR
+                            </button>
+                        </div>
+                        <div>
+                            <button
+                                class="btn btn-block btn-dark"
+                                @click="back(false)"
+                            >
+                                <i class="fa fa-reply"></i> Cerrar
+                            </button>
+                        </div>
+                    </div>
+                    <template v-if="form.is_room">
+                        <div class="col-lg-3 col-md-3 col-12">
+                            <label for="vacate">Desocupar habitación</label>
+                            <el-checkbox v-model="form.vacate"></el-checkbox>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </div>
 
-            <multiple-payment-form
-                :showDialog.sync="showDialogMultiplePayment"
-                :payments="payments"
-                @add="addRow"
-            ></multiple-payment-form>
+        <multiple-payment-form
+            :showDialog.sync="showDialogMultiplePayment"
+            :payments="payments"
+            @add="addRow"
+        ></multiple-payment-form>
 
-            <!-- <sale-notes-options :showDialog.sync="showDialogSaleNote"
+        <!-- <sale-notes-options :showDialog.sync="showDialogSaleNote"
                           :recordId="saleNotesNewId"
                           :showClose="true"></sale-notes-options>  -->
 
-            <card-brands-form
-                :showDialog.sync="showDialogNewCardBrand"
-                :external="true"
-                :recordId="null"
-            ></card-brands-form>
-            <person-form
-                :showDialog.sync="showDialogNewPerson"
-                type="customers"
-                :input_person="input_person"
-                :external="true"
-                :user_id.sync="form.user_id"
-                :document_type_id="form.document_type_id"
-                @add_customer="add_customer"
-                :recordId="form.customer_id"
-            >
-            </person-form>
-            <show-split-payment-form
-                :orden_items="orden_items"
-                @receivePayments="receivePayments"
-                @receiveProducts="receiveProducts"
-                :total="form.total"
-                :showSplitPayment.sync="showSplitPayment"
-            >
-            </show-split-payment-form>
-            <person-college-form
-                :showDialog.sync="showCollegePersonDialog"
-                :extern="true"
-                :fromPerson="true"
-                :recordId="collegePersonId"
-            >
-            </person-college-form>
+        <card-brands-form
+            :showDialog.sync="showDialogNewCardBrand"
+            :external="true"
+            :recordId="null"
+        ></card-brands-form>
+        <person-form
+            :showDialog.sync="showDialogNewPerson"
+            type="customers"
+            :input_person="input_person"
+            :external="true"
+            :user_id.sync="form.user_id"
+            :document_type_id="form.document_type_id"
+            @add_customer="add_customer"
+            :recordId="form.customer_id"
+        >
+        </person-form>
+        <show-split-payment-form
+            :orden_items="orden_items"
+            @receivePayments="receivePayments"
+            @receiveProducts="receiveProducts"
+            :total="form.total"
+            :showSplitPayment.sync="showSplitPayment"
+        >
+        </show-split-payment-form>
+        <person-college-form
+            :showDialog.sync="showCollegePersonDialog"
+            :extern="true"
+            :fromPerson="true"
+            :recordId="collegePersonId"
+        >
+        </person-college-form>
 
         <list-items :showDialog.sync="showListItems" :form="form"> </list-items>
     </el-dialog>
@@ -1622,7 +1543,6 @@ export default {
         };
     },
     computed: {
-
         formatSumCoins() {
             //regresa un string en formato (cantidad) moneda | (cantidad) moneda
             let sumCoins = this.sumCoins;
@@ -1641,7 +1561,10 @@ export default {
         }
     },
     async created() {
-        console.log("🚀 ~ file: payment.vue:1645 ~ created ~ this.form.customer_id:", this.form.customer_id)
+        console.log(
+            "🚀 ~ file: payment.vue:1645 ~ created ~ this.form.customer_id:",
+            this.form.customer_id
+        );
         this.conf = this.establishments.conf ?? {};
         this.button_payment = true;
         this.currentDocumentsType = this.documentsType;
@@ -1728,7 +1651,7 @@ export default {
     },
     mounted() {},
     methods: {
-                clearSumCoins() {
+        clearSumCoins() {
             this.sumCoins = [];
         },
         addCoin(id) {
@@ -2326,12 +2249,14 @@ export default {
             }
         },
         async date_of_issue() {
-            console.log("🚀 ~ file: payment.vue:2329 ~ date_of_issue ~ this.value:", this.value)
+            console.log(
+                "🚀 ~ file: payment.vue:2329 ~ date_of_issue ~ this.value:",
+                this.value
+            );
             // this.discount_amount = 0;
             // this.form.customer_id
             // this.form.student_id = null;
 
-     
             this.sumCoins = [];
             if (!this.form.is_room) {
                 this.value = null;
@@ -3092,7 +3017,11 @@ export default {
                 (parseFloat(this.form.enter_amount) || 0) +
                 this.totalPayments() -
                 parseFloat(this.form.total);
-            if (differen < 0 && this.form.payment_condition_id == "01") {
+            if (
+                differen < 0 &&
+                this.form.payment_condition_id == "01" &&
+                !this.configuration.sale_note_credit_cash
+            ) {
                 this.$toast.error(
                     "El monto de efectivo es menor al total de venta"
                 );
@@ -3129,7 +3058,7 @@ export default {
             } else {
                 this.button_payment = true;
             }
-            if(this.configuration.sale_note_credit_cash){
+            if (this.configuration.sale_note_credit_cash) {
                 this.button_payment = false;
             }
             //this.form.difference = _.round(this.form.difference, 2);
@@ -3357,6 +3286,26 @@ export default {
             }
         },
         async clickPayment(form) {
+            if (
+                this.configuration.sale_note_credit_cash &&
+                this.enter_amount != this.form.total &&
+                this.form.document_type_id == "80"
+            ) {
+                try {
+                    await this.$confirm(
+                        "¿Desear realizar la nota de venta al crédito?",
+                        "Advertencia",
+                        {
+                            confirmButtonText: "Sí",
+                            cancelButtonText: "No",
+                            type: "warning"
+                        }
+                    );
+                } catch (e) {
+                    return;
+                }
+            }
+
             if (this.configuration.auth_discount && this.discount_amount > 0) {
                 this.loading_submit = true;
                 //con async y await deten el flujo por 5 segundos
@@ -3443,7 +3392,7 @@ export default {
 
             if (form.document_type_id === "80") {
                 form.prefix = "NV";
-                form.paid = this.form.total == this.form.enter_amount; 
+                form.paid = this.form.total == this.form.enter_amount;
                 this.resource_documents = "sale-notes";
                 this.resource_payments = "sale_note_payments";
                 this.resource_options = this.resource_documents;
@@ -3459,20 +3408,25 @@ export default {
             form.advances = 0.0;
             form.total_advances = 0.0;
             form.total_payment = form.total;
-            
-       
-                // {
-                //     payment_method_type_id: "01",
-                //     date_of_payment: form.date_of_issue,
-                //     payment: this.form.enter_amount,
-                // }
 
-                console.log("🚀 ~ file: payment.vue:3475 ~ clickPayment ~ this.currentPayments:", this.currentPayments)
+            // {
+            //     payment_method_type_id: "01",
+            //     date_of_payment: form.date_of_issue,
+            //     payment: this.form.enter_amount,
+            // }
+
+            console.log(
+                "🚀 ~ file: payment.vue:3475 ~ clickPayment ~ this.currentPayments:",
+                this.currentPayments
+            );
             form.cash_id = this.cash_id;
             if (this.form.payment_condition_id == "01") {
                 form.boxes = this.currentPayments;
-           
-                  console.log("🚀 ~ file: payment.vue:3464 ~ clickPayment ~ form.payments:", JSON.stringify(form.payments))
+
+                console.log(
+                    "🚀 ~ file: payment.vue:3464 ~ clickPayment ~ form.payments:",
+                    JSON.stringify(form.payments)
+                );
                 if (this.form_payment.is_bank) {
                     this.changeBankAccount();
                 }
@@ -3544,12 +3498,11 @@ export default {
                 return;
             }
             this.verifyBoxesDuplicate();
-             form.payments =
-              this.form.boxes.map(p=>({
-                  payment_method_type_id: p.method_payment_id,
-                    date_of_payment: form.date_of_issue,
-                    payment: p.amount,
-                }))
+            form.payments = this.form.boxes.map(p => ({
+                payment_method_type_id: p.method_payment_id,
+                date_of_payment: form.date_of_issue,
+                payment: p.amount
+            }));
             this.loading_submit = true;
             this.form.items = this.form.items.filter(
                 item => Number(item.quantity) > 0
@@ -3592,8 +3545,8 @@ export default {
                     form.all_ordens = true;
                 }
                 // const response_efectivo = await this.$http.post(`/efectivo`,form_efectivo);
-                if(this.sumCoins.length > 0){
-                 form.sumCoins = this.sumCoins;
+                if (this.sumCoins.length > 0) {
+                    form.sumCoins = this.sumCoins;
                 }
                 const response = await this.$http.post(
                     `/${this.resource_documents}`,
@@ -3936,8 +3889,14 @@ export default {
             } else {
                 if (this.customers.length > 0) {
                     let hasCustomerDefault = false;
-                        console.log("🚀 ~ file: payment.vue:3928 ~ filterCustomers ~ this.customer_default:", this.customer_default)
-                        console.log("🚀 ~ file: payment.vue:3933 ~ filterCustomers ~ this.customers:", this.customers)
+                    console.log(
+                        "🚀 ~ file: payment.vue:3928 ~ filterCustomers ~ this.customer_default:",
+                        this.customer_default
+                    );
+                    console.log(
+                        "🚀 ~ file: payment.vue:3933 ~ filterCustomers ~ this.customers:",
+                        this.customers
+                    );
                     if (this.customer_default) {
                         let { id } = this.customer_default;
                         hasCustomerDefault = this.customers.some(
@@ -3948,18 +3907,17 @@ export default {
                         let { id } = this.customer_default;
                         this.value = id;
                         this.form.customer_id = id;
-                    } 
-                    
-                    else if(!hasCustomerDefault  && this.customer_default){
+                    } else if (!hasCustomerDefault && this.customer_default) {
                         this.customers.unshift(this.customer_default);
                         this.value = this.customer_default.id;
                         this.form.customer_id = this.customer_default.id;
-                    }
-                    else {
+                    } else {
                         this.value = this.customers[0].id;
                         this.form.customer_id = this.customers[0].id;
-                        console.log("🚀 ~ file: payment.vue:3939 ~ filterCustomers ~ this.form.customer_id:", this.form.customer_id)
-                        
+                        console.log(
+                            "🚀 ~ file: payment.vue:3939 ~ filterCustomers ~ this.form.customer_id:",
+                            this.form.customer_id
+                        );
                     }
                     this.changeCustomer();
                 } else {
