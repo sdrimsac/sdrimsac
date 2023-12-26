@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Tenant\ItemController;
 use App\Http\Controllers\Tenant\PersonController;
+use App\Http\Controllers\Tenant\CompanyController;
 use App\Http\Controllers\Tenant\WhatsappController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -48,7 +49,7 @@ if ($hostname) {
         Route::get('users/{type}/records', 'UserController@records');
         Route::delete('users/{user}', 'UserController@destroy');
 
-        Route::get('info','CompanyController@info');
+        Route::get('info',[CompanyController::class,'info']);
 
         Route::get('services/ruc/{number}', 'Api\ServiceController@ruc');
         Route::get('services/dni/{number}', 'Api\ServiceController@dni');
