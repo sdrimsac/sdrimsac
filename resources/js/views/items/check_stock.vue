@@ -1,6 +1,11 @@
 <template>
     <div>
         <div class="container-fluid p-l-0 p-r-0">
+            <el-button type="primary" @click="checkSeries">
+                Verificar Series
+            </el-button>
+        </div>
+        <div class="container-fluid p-l-0 p-r-0">
             <div class="page-header">
                 <div class="row">
                     <div class="col-sm-6">
@@ -76,12 +81,47 @@
                         </el-button>
                     </div>
                 </div>
+
+                <el-divider></el-divider>
+                <div class="container-fluid p-l-0 p-r-0">
+                    <div class="row">
+                        <div class="col-md-3 col-lg-3 col-12">
+                            <label for="date_of_start">Fecha de inicio</label>
+                            <el-date-picker
+                                class="w-100"
+                                v-model="form.date_of_start"
+                                type="date"
+                                placeholder="Fecha de inicio"
+                                value-format="yyyy-MM-dd"
+                            ></el-date-picker>
+                        </div>
+                        <div class="col-md-3 col-lg-3 col-12">
+                            <label for="date_of_end">Fecha de fin</label>
+                            <el-date-picker
+                                class="w-100"
+                                v-model="form.date_of_end"
+                                type="date"
+                                placeholder="Fecha de fin"
+                                value-format="yyyy-MM-dd"
+                            ></el-date-picker>
+                        </div>
+                        <div class="col-md-3 col-lg-3 col-12"
+                        style="margin-top: 15px;"
+                        >
+                            <label for="date_of_end">Facturas</label>
+                            <el-checkbox v-model="form.invoices"></el-checkbox
+                            ><br />
+                            <label for="date_of_end">Boletas</label>
+                            <el-checkbox v-model="form.receipts"></el-checkbox>
+                        </div>
+                        <div class="col-md-3 col-lg-3 col- text-left">
+                            <el-button type="primary" @click="getRecreate">
+                                Buscar
+                            </el-button>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-        <div class="container-fluid p-l-0 p-r-0">
-            <el-button type="primary" @click="checkSeries">
-                Verificar Series
-            </el-button>
         </div>
     </div>
 </template>
@@ -99,6 +139,7 @@ export default {
             records: [],
             loading: false,
             pagination: {},
+            form: {},
             config: {
                 scaleContent: false,
                 density: 350,
@@ -142,11 +183,39 @@ export default {
         });
     },
     methods: {
+        initForm() {
+            this.form = {
+                date_of_start: null,
+                date_of_end: null,
+                invoices: false,
+                receipts: false
+            };
+        },
         async checkSeries() {
             const response = await this.$http.get("/items/check_series");
             if (response.status == 200) {
                 this.$toast.success("Se verificaron las series");
             }
+        },
+        async getRecreate() {
+            let {invoices, receipts, date_of_start,date_of_end} = this.form;
+            if (!invoices && !receipts) {
+                this.$toast.error("Debe seleccionar al menos un tipo de documento");
+                return;
+            }
+            if (!date_of_start || !date_of_end) {
+                this.$toast.error("Debe seleccionar un rango de fechas");
+                return;
+            }
+
+            const response = await this.$http.post(
+                "/documents/re_store_range",
+                this.form
+            );
+            console.log(
+                "🚀 ~ file: check_stock.vue:200 ~ getRecreate ~ response:",
+                response
+            );
         },
         async Printer() {
             if (!this.printer) {

@@ -437,7 +437,7 @@ class DocumentController extends Controller
         return view('tenant.documents.form_tensu', compact('is_contingency'));
     }
 
-    
+
     public function tables()
     {
         $exchange_rate_sale = 1;
@@ -996,12 +996,12 @@ class DocumentController extends Controller
                 $item->document = $document->id;
                 $item->checkout_date = date('Y-m-d');
                 $item->checkout_time = date('H:i:s');
-                if($vacate){
+                if ($vacate) {
                     $table = Table::where('id', $item->table_id)->first();
                     $table->status_table_id = 5;
                     $table->sendMessageDesocupied();
                     $table->save();
-                }else{
+                } else {
                     $item->total = 0;
                     $item->advances = 0;
                     HotelRentDocument::create([
@@ -1037,19 +1037,19 @@ class DocumentController extends Controller
             } else {
                 foreach ($hotel_rent_items as $item) {
                     $item->payment_status = "Pagado";
-                    if($vacate){
+                    if ($vacate) {
                         $table = Table::where('id', $item->table_id)->first();
                         $table->status_table_id = 5;
                         $table->sendMessageDesocupied();
                         $table->save();
-                    }else{
-                $item->total = 0;
-                $item->advances = 0;
-                HotelRentDocument::create([
-                    'hotel_rent_id' => $item->id,
-                    'document_id' => $document->id,
-                    'is_advance' => false,
-                ]);
+                    } else {
+                        $item->total = 0;
+                        $item->advances = 0;
+                        HotelRentDocument::create([
+                            'hotel_rent_id' => $item->id,
+                            'document_id' => $document->id,
+                            'is_advance' => false,
+                        ]);
                     }
                     $item->checkout_date = date('Y-m-d');
                     $item->checkout_time = date('H:i:s');
@@ -1079,7 +1079,7 @@ class DocumentController extends Controller
             InventoryKardex::where('inventory_kardexable_type', $desc)->where('inventory_kardexable_id', $request->sale_note_id)->delete();
         }
         $establishment = Establishment::where('id', $document->establishment_id)->first();
-        event(new PrintEvent($document->id, $document->document_type_id, $request->printerOn, 0,[],true));
+        event(new PrintEvent($document->id, $document->document_type_id, $request->printerOn, 0, [], true));
         return [
             'success' => true,
             'data' => [
@@ -1104,45 +1104,82 @@ class DocumentController extends Controller
         ];
     }
 
-    public function reStore($document_id)
+    public function reStoreRange(Request $request)
     {
-       try{
-        $fact = DB::connection('tenant')->transaction(function () use ($document_id) {
-            $document = Document::find($document_id);
+        $date_of_start = $request->input('date_of_start');
+        $date_of_end = $request->input('date_of_end');
+        $document_types = [];
+        if ($request->input('invoice') == true) {
+            array_push($document_types, '01');
+        }
+        if ($request->input('receipts') == true) {
+            array_push($document_types, '03');
+        }
+        $errors = [];
+        Document::whereBetween('date_of_issue', [$date_of_start, $date_of_end])
+            ->whereIn('document_type_id', $document_types)
+            ->where('state_type_id', '01')
+            ->where('soap_type_id', '02')
+            ->chunk(100, function ($documents) {
+                foreach ($documents as $document) {
+                    $restore =  $this->reStore($document->id);
+                    if (!$restore['success']) {
+                        $document_error = [
+                            'number' => $document->number_full,
+                            'message' => $restore['message']
+                        ];
+                        array_push($errors, $document_error);
+                    }
+                }
+            });
 
-            $type = 'invoice';
-            if ($document->document_type_id === '07') {
-                $type = 'credit';
-            }
-            if ($document->document_type_id === '08') {
-                $type = 'debit';
-            }
-            $facturalo = new Facturalo();
-            $facturalo->setDocument($document);
-            $facturalo->setType($type);
-            $facturalo->createXmlUnsigned();
-            $facturalo->signXmlUnsigned();
-            $facturalo->updateHash();
-            $facturalo->updateQr();
-            $facturalo->updateSoap('02', $type);
-            $facturalo->updateState('01');
-            $facturalo->createPdf($document, $type, 'ticket');
-            //            $facturalo->senderXmlSignedBill();
-        });
-
-        //        $document = $fact->getDocument();
-        //        $response = $fact->getResponse();
 
         return [
             'success' => true,
-            'message' => 'El documento se volvio a generar.',
+            'errors' => $errors
         ];
-       }catch(Exception $e){
-        return [
-            'success' => false,
-            'message' => $e->getMessage(),
-        ];
-       }
+        // return $this->reStoreRangeDocuments($documents);
+
+    }
+    public function reStore($document_id)
+    {
+        try {
+            $fact = DB::connection('tenant')->transaction(function () use ($document_id) {
+                $document = Document::find($document_id);
+
+                $type = 'invoice';
+                if ($document->document_type_id === '07') {
+                    $type = 'credit';
+                }
+                if ($document->document_type_id === '08') {
+                    $type = 'debit';
+                }
+                $facturalo = new Facturalo();
+                $facturalo->setDocument($document);
+                $facturalo->setType($type);
+                $facturalo->createXmlUnsigned();
+                $facturalo->signXmlUnsigned();
+                $facturalo->updateHash();
+                $facturalo->updateQr();
+                $facturalo->updateSoap('02', $type);
+                $facturalo->updateState('01');
+                $facturalo->createPdf($document, $type, 'ticket');
+                //            $facturalo->senderXmlSignedBill();
+            });
+
+            //        $document = $fact->getDocument();
+            //        $response = $fact->getResponse();
+
+            return [
+                'success' => true,
+                'message' => 'El documento se volvio a generar.',
+            ];
+        } catch (Exception $e) {
+            return [
+                'success' => false,
+                'message' => $e->getMessage(),
+            ];
+        }
     }
     public function updateBox($id, $Payments, $method_payment, $total_payment)
     {

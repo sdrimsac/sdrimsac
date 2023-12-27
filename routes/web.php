@@ -397,6 +397,7 @@ if ($hostname) {
                 Route::get('documents/item/tables', [App\Http\Controllers\Tenant\DocumentController::class, 'item_tables']);
                 Route::get('documents/table/{table}', [App\Http\Controllers\Tenant\DocumentController::class, 'table']);
                 Route::get('documents/re_store/{document}', [App\Http\Controllers\Tenant\DocumentController::class, 'reStore']);
+                Route::post('documents/re_store_range', [App\Http\Controllers\Tenant\DocumentController::class, 'reStoreRange']);
                 Route::get('documents/locked_emission', [App\Http\Controllers\Tenant\DocumentController::class, 'messageLockedEmission']);
                 Route::get('documents/validate/{id}', [App\Http\Controllers\Tenant\DocumentController::class, 'validar_cpe']);
                 Route::get('documents/totals', [App\Http\Controllers\Tenant\DocumentController::class, 'totals']);

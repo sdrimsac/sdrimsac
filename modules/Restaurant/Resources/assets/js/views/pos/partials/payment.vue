@@ -2160,11 +2160,10 @@ export default {
                         customer.identity_document_type_id == "4" ||
                         customer.identity_document_type_id == "-"
                     ) {
-                        this.form.document_type_id = "03";
+                        this.form.customer_id = null;
+                        this.value = null;
                     }
-                    //  else {
-                    //     this.form.document_type_id = "01";
-                    // }
+              
                 }
 
                 this.form.customer_telephone = customer.phone;
@@ -3954,6 +3953,7 @@ export default {
             } else {
                 this.currentDocumentsType = this.documentsType;
             }
+            
             this.setSeries();
             //aqui
             //factura solo ruc
