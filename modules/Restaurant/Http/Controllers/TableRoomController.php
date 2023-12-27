@@ -821,7 +821,7 @@ class TableRoomController extends Controller
     public function tables(Request $request)
     {
         $configuration = Configuration::first();
-        $credit_line_limit = $configuration->credit_line_limit ?? 150;
+        $credit_line_hotel_limit = $configuration->credit_line_hotel_limit ?? 150;
         $insumos = DB::connection('tenant')
             ->table('insumos_hotels')
             ->get()->transform(function ($row) {
@@ -846,7 +846,7 @@ class TableRoomController extends Controller
 
         return compact(
             'insumos',
-            'credit_line_limit',
+            'credit_line_hotel_limit',
             'services',
             'towers',
             'floors',
@@ -1213,7 +1213,7 @@ class TableRoomController extends Controller
                 }
 
                 return [
-                    'credit_line_limit' => $credit_line_hotel_limit,
+                    'credit_line_hotel_limit' => $credit_line_hotel_limit,
                     'has_frigobar' => $row->has_frigobar,
                     'rent_month' => $rent_month,
                     'date_of_out' => $date_of_out,

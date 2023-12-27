@@ -680,14 +680,14 @@ export default {
                 floors,
                 tables,
                 services,
-                credit_line_limit
+                credit_line_hotel_limit
             } = response.data;
             this.all_towers = towers;
             this.insumos = insumos;
             this.all_floors = floors;
             this.all_tables = tables;
             this.all_services = services;
-            this.credit_line_limit = credit_line_limit || 150;
+            this.credit_line_limit = credit_line_hotel_limit || 150;
 
             ///
             // this.towers = towers;
