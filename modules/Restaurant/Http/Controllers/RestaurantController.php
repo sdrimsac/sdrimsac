@@ -208,6 +208,11 @@ class RestaurantController extends Controller
                 ];
             }
             Auth::login($user);
+            //comprobar si el $user tiene api_token en caso que no lo tuvieran crearle uno
+            if (!$user->api_token) {
+                $user->api_token = Str::random(60);
+                $user->save();
+            }
             $worker_type = $user->worker_type;
             $description =  "";
             if($worker_type){
@@ -265,6 +270,7 @@ class RestaurantController extends Controller
                 "collector" => $collector,
                 "cleaner" => $cleaner,
                 "maintenance" => $maintenance,
+                'user' => $user,
             ];
         } catch (Exception $e) {
             return [

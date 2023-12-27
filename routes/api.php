@@ -6,7 +6,7 @@ use App\Http\Controllers\Tenant\CompanyController;
 use App\Http\Controllers\Tenant\WhatsappController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-
+use Modules\Restaurant\Http\Controllers\RestaurantController;
 
 // Route::post('whatsapp/qr', [WhatsappController::class, 'receiveQr']);
 Route::get('qz/crt/override', function () {
@@ -30,6 +30,8 @@ $hostname = app(Hyn\Tenancy\Contracts\CurrentHostname::class);
 
 if ($hostname) {
     Route::domain($hostname->fqdn)->group(function () {
+
+        Route::post('/login-app', [RestaurantController::class, 'login']);
         Route::get('persons/customers/records', [PersonController::class, 'recordsApp']);
         // Route::get('/documents/series', 'Api\MobileController@getSeries');
         Route::get('categories/init', [ItemController::class, 'init_categories']);
