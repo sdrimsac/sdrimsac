@@ -40,7 +40,6 @@ Route::middleware(['auth', 'redirect.module', 'locked.tenant'])->group(function 
         Route::post('storeupdate', 'InventoryController@updatestore');
     });
 
-    Route::middleware(['just.admin'])->group(function () {
         Route::prefix('reports')->group(function () {
             Route::get('inventory', 'ReportInventoryController@index')->name('reports.inventory.index');
             Route::get('inventory/records', 'ReportInventoryController@records');
@@ -103,7 +102,6 @@ Route::middleware(['auth', 'redirect.module', 'locked.tenant'])->group(function 
             Route::get('series/reporteexcel', 'VentaSeriesController@reporteexcel');
             Route::post('series/envioReportWhastap', 'VentaSeriesController@envioReportWhastap');
         });
-    });
 
 
     Route::prefix('inventories')->group(function () {
