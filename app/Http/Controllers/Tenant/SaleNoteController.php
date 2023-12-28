@@ -751,6 +751,7 @@ class SaleNoteController extends Controller
 
                 $company = Company::first();
                 Box::where('sale_note_id', $this->sale_note->id)->delete();
+                $establishment = Establishment::where('id', auth()->user()->establishment_id)->first();
                 if ($request->afectar_caja == true) {
                     // $payments = PaymentMethodType::where('id', $request->payment_condition_id)->first();
                     // $method = $payments->description;
@@ -777,7 +778,7 @@ class SaleNoteController extends Controller
                             $cajas->state = '1';
                             $cajas->method = $method;
                             if ($method == "Yape" || $method == "PLIN") {
-                                $message .= "Pago por " . $method . " por S/" . $amount . "- N° Operación: " . $operation_number ?? "-";
+                                $message .= "Pago por " . $method." del establecimiento ".$establishment->description." de usuario ".auth()->user()->name. " por S/" . $amount."- N° Operación: " . $operation_number ?? "-";
                             }
                             $cajas->bank_account_id = $bank_account_id;
                             $cajas->bank_account_operation = $bank_account_operation;

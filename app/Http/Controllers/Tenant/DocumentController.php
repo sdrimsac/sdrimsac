@@ -858,6 +858,7 @@ class DocumentController extends Controller
         $response = $fact->getResponse();
         $company = Company::first();
         //&& $request->afectar_caja === true
+        $establishment = Establishment::where('id', $document->establishment_id)->first();
         $configuration = Configuration::first();
         if (!$request->has_related_sale_note && $request->variation == false && $request->payment_condition_id === "01") {
             if ($request->boxes) {
@@ -873,7 +874,7 @@ class DocumentController extends Controller
                     $box->operation_number = $operation_number;
                     $box->method = $method;
                     if ($method == "Yape" || $method == "PLIN") {
-                        $message .= "Pago por " . $method . " por S/" . $amount . "- N° Operación: " . $operation_number ?? "-";
+                        $message .= "Pago por " . $method." del establecimiento ".$establishment->description." de usuario ".auth()->user()->name. " por S/" . $amount."- N° Operación: " . $operation_number ?? "-";
                     }
                     $box->bank_account_id = $bank_account_id;
                     $box->bank_account_operation = $bank_account_operation;

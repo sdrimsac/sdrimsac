@@ -23,7 +23,9 @@ class ConfigurationController extends Controller
     {
         return view('tenant.configurations.form');
     }
-
+    public function app(){
+        
+    }
     public function addSeeder()
     {
         $reiniciar =  DB::connection('tenant')->table('format_templates')

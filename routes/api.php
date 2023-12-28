@@ -1,8 +1,10 @@
 <?php
 
+use App\CoreFacturalo\Services\Models\Person;
 use App\Http\Controllers\Tenant\ItemController;
 use App\Http\Controllers\Tenant\PersonController;
 use App\Http\Controllers\Tenant\CompanyController;
+use App\Http\Controllers\Tenant\ConfigurationController;
 use App\Http\Controllers\Tenant\WhatsappController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -32,6 +34,7 @@ if ($hostname) {
     Route::domain($hostname->fqdn)->group(function () {
 
         Route::post('/login-app', [RestaurantController::class, 'login']);
+        
         Route::get('persons/customers/records', [PersonController::class, 'recordsApp']);
         // Route::get('/documents/series', 'Api\MobileController@getSeries');
         Route::get('categories/init', [ItemController::class, 'init_categories']);
@@ -63,7 +66,7 @@ if ($hostname) {
         Route::get('sale-note/print/{external_id}/{format?}', '\App\Http\Controllers\Tenant\SaleNoteController@toPrint');
         Route::middleware(['auth:api', 'locked.tenant'])->group(function () {
 
-
+            Route::get('client-default',[PersonController::class,'client_default']);
 
 
             //Company

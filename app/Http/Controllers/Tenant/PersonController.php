@@ -32,6 +32,16 @@ class PersonController extends Controller
         $api_service_token = config('configuration.api_service_token');
         return view('tenant.persons.index', compact('type', 'api_service_token'));
     }
+    public function client_default(){
+        $establishment_id = auth()->user()->establishment_id;
+        $establishment = Establishment::find($establishment_id);
+        $customer_id = $establishment->customer_id;
+        if($customer_id){
+            $customer = Person::find($customer_id);
+            return new PersonResource($customer);
+        }
+        return null;
+    }
     public function clientsForGenerateCPE()
     {
         $typeFile = request('type');
