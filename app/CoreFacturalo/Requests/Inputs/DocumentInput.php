@@ -521,7 +521,7 @@ class DocumentInput
     private static function hotel($inputs)
     {
         // dd($inputs);
-        return $inputs['hotel'];
+        return Functions::valueKeyInArray($inputs, 'hotel', []);
     }
 
     private static function transport($inputs)
