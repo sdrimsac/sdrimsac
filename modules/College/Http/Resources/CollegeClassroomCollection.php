@@ -18,7 +18,9 @@ class CollegeClassroomCollection extends ResourceCollection
     public function toArray($request)
     {
         return $this->collection->transform(function ($row, $key) {
-            $students = CollegeStudent::where('classroom_id', $row->id)->get();
+            $students = CollegeStudent::where('classroom_id', $row->id)
+            ->where('active', 1)
+            ->get();
             return [
                 'id'          => $row->id,
                 'degree' => $row->degree->description,

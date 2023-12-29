@@ -3438,6 +3438,7 @@ export default {
             }
 
             if (this.form.payment_condition_id !== "01") {
+                console.log("🚀 ~ file: payment.vue:3447 ~ clickPayment ~ this.currentPayments:", this.currentPayments)
                 form.fee = this.currentPayments.map(b => ({
                     id: null,
                     currency_type_id: "PEN",
@@ -3497,11 +3498,13 @@ export default {
                 return;
             }
             this.verifyBoxesDuplicate();
-            form.payments = this.form.boxes.map(p => ({
+            if(this.form.boxes){
+                form.payments = this.form.boxes.map(p => ({
                 payment_method_type_id: p.method_payment_id,
                 date_of_payment: form.date_of_issue,
                 payment: p.amount
             }));
+            }
             this.loading_submit = true;
             this.form.items = this.form.items.filter(
                 item => Number(item.quantity) > 0

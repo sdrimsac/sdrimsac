@@ -4,7 +4,6 @@ function calculateRowItem(
     exchange_rate_sale = 1,
     pigv = 0.18
 ) {
-
     console.log("el igv en calculateRowItem es: " + pigv);
     // console.log(currency_type_id_new, exchange_rate_sale)
 
@@ -152,8 +151,6 @@ function calculateRowItem(
                 } else {
                     let aux_total_line = row.unit_price * row.quantity;
 
-          
-
                     discount.base = _.round(aux_total_line, 2);
                     //amount and percentage are equals in input
                     // discount.amount = _.round(discount.percentage, 2)
@@ -166,7 +163,6 @@ function calculateRowItem(
                         2
                     );
                     discount.factor = _.round(discount.percentage / 100, 5);
-            
                 }
             } else {
                 if (discount.discount_type.base) {
@@ -177,9 +173,8 @@ function calculateRowItem(
                         discount.base * discount.factor,
                         2
                     );
-            
+
                     discount_base += discount.amount;
-                
                 } else {
                     let aux_total_line = row.unit_price * row.quantity;
                     discount.factor = _.round(discount.percentage / 100, 5);
@@ -187,7 +182,6 @@ function calculateRowItem(
                         aux_total_line * discount.factor,
                         2
                     );
-
 
                     discount.base = _.round(aux_total_line, 2);
                 }
@@ -222,7 +216,6 @@ function calculateRowItem(
     let total_charge = charge_base + charge_no_base;
     let total_value = total_value_partial - total_discount + total_charge;
     let total_base_igv = total_value_partial - discount_base + total_isc;
-
 
     let total_igv = 0;
 
@@ -290,8 +283,6 @@ function calculateRowItem(
 
         //calcular nuevo precio unitario
         row.unit_price = _.round(total / row.quantity, 6);
-
-
     }
     //procedimiento para agregar isc
 
@@ -312,7 +303,6 @@ function calculateRowItem(
         row.unit_price =
             (total_value + total_taxes - sum_discount_no_base) / row.quantity;
 
-
         let total_discounts = sum_discount_no_base + sum_discount_base;
         row.total_discount = _.round(total_discounts, 2);
     }
@@ -330,7 +320,6 @@ function calculateRowItem(
         row.unit_value = 0;
 
         row.total = 0 + total_plastic_bag_taxes;
-
 
         row.total_without_rounding = 0;
     }
