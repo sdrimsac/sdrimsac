@@ -7,7 +7,9 @@ use App\Events\OrderEvent;
 use App\Events\ReceiveOrder;
 use App\Models\Tenant\Configuration;
 use App\Models\Tenant\Customer;
+use App\Models\Tenant\Establishment;
 use App\Models\Tenant\Person;
+use App\Models\Tenant\Series;
 use App\Models\Tenant\User;
 use Exception;
 use Illuminate\Http\Request;
@@ -261,7 +263,13 @@ class RestaurantController extends Controller
                     $kitchen = true;
                 }
             }
+            $series = Series::all();
+            $establishment = Establishment::find($user->establishment_id);
+            $configuration = Configuration::first();
             return [
+                'series' => $series,
+                'establishment' => $establishment,
+                'configuration' => $configuration,
                 'success' => true,
                 'kitchen' => $kitchen,
                 'logistic' => $logistic,
