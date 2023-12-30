@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Api;
 
 use Exception;
@@ -35,7 +36,7 @@ use Illuminate\Support\Facades\Cache;
 use App\Models\Tenant\PaymentMethodType;
 use App\Imports\DocumentsImportTwoFormat;
 use App\Models\Tenant\Catalogs\PriceType;
-use Modules\Finance\Traits\FinanceTrait; 
+use Modules\Finance\Traits\FinanceTrait;
 use App\Models\Tenant\Catalogs\CurrencyType;
 use App\Models\Tenant\Catalogs\DocumentType;
 use Modules\Item\Http\Requests\BrandRequest;
@@ -56,12 +57,12 @@ use App\Http\Requests\DocumentVoidedRequest;
 use App\CoreFacturalo\Helpers\Storage\StorageDocument;
 use App\Http\Resources\Tenant\Api\DocumentCollection;
 use Modules\Inventory\Models\Warehouse as ModuleWarehouse;
- 
+
 use App\Models\Tenant\Catalogs\PaymentMethodType as CatPaymentMethodType;
 use App\Services\RoleService;
 use Facades\App\Http\Controllers\DocumentController as DocumentControllerSend;
 
- class DocumentController extends Controller
+class DocumentController extends Controller
 {
     use StorageDocument;
 
@@ -69,10 +70,10 @@ use Facades\App\Http\Controllers\DocumentController as DocumentControllerSend;
     {
         $this->middleware('input.request:document,api', ['only' => ['store', 'storeServer']]);
     }
-   
+
     public function store(Request $request)
     {
-        $fact = DB::connection('tenant')->transaction(function () use($request) {
+        $fact = DB::connection('tenant')->transaction(function () use ($request) {
             $facturalo = new Facturalo();
             $facturalo->save($request->all());
             $facturalo->createXmlUnsigned();
@@ -104,21 +105,21 @@ use Facades\App\Http\Controllers\DocumentController as DocumentControllerSend;
             'links' => [
                 'xml' => $document->download_external_xml,
                 'pdf' => $document->download_external_pdf,
-                'cdr' => ($response['sent'])?$document->download_external_cdr:'',
+                'cdr' => ($response['sent']) ? $document->download_external_cdr : '',
             ],
-            'response' => ($response['sent'])?array_except($response, 'sent'):[]
+            'response' => ($response['sent']) ? array_except($response, 'sent') : []
         ];
     }
 
     public function send(Request $request)
     {
-        if($request->has('external_id')) {
+        if ($request->has('external_id')) {
             $external_id = $request->input('external_id');
             $document = Document::where('external_id', $external_id)->first();
-            if(!$document) {
+            if (!$document) {
                 throw new Exception("El documento con código externo {$external_id}, no se encuentra registrado.");
             }
-            if($document->group_id !== '01') {
+            if ($document->group_id !== '01') {
                 throw new Exception("El tipo de documento {$document->document_type_id} es inválido, no es posible enviar.");
             }
             $fact = new Facturalo();
@@ -143,8 +144,9 @@ use Facades\App\Http\Controllers\DocumentController as DocumentControllerSend;
         }
     }
 
-    public function storeServer(Request $request) {
-        $fact = DB::connection('tenant')->transaction(function() use($request) {
+    public function storeServer(Request $request)
+    {
+        $fact = DB::connection('tenant')->transaction(function () use ($request) {
             $facturalo = new Facturalo();
             $facturalo->save($request->all());
 
@@ -154,7 +156,7 @@ use Facades\App\Http\Controllers\DocumentController as DocumentControllerSend;
         $document = $fact->getDocument();
         $data_json = $document->data_json;
 
-       // $zipFly = new ZipFly();
+        // $zipFly = new ZipFly();
 
         $this->uploadStorage($document->filename, base64_decode($data_json->file_xml_signed), 'signed');
         $this->uploadStorage($document->filename, base64_decode($data_json->file_pdf), 'pdf');
@@ -165,7 +167,7 @@ use Facades\App\Http\Controllers\DocumentController as DocumentControllerSend;
         $document->save();
 
         // Send SUNAT
-        if($document->group_id === '01'){
+        if ($document->group_id === '01') {
             if ($data_json->query) DocumentControllerSend::send($document->id);
         }
 
@@ -174,13 +176,13 @@ use Facades\App\Http\Controllers\DocumentController as DocumentControllerSend;
         ];
     }
 
-    public function documentCheckServer($external_id) {
+    public function documentCheckServer($external_id)
+    {
         $document = Document::where('external_id', $external_id)->first();
 
         if ($document->state_type_id === '05' && $document->group_id === '01') {
             $file_cdr = base64_encode($this->getStorage($document->filename, 'cdr'));
-        }
-        else {
+        } else {
             $file_cdr = null;
         }
 
@@ -191,7 +193,8 @@ use Facades\App\Http\Controllers\DocumentController as DocumentControllerSend;
         ];
     }
 
-    private function getStateTypeDescription($id){
+    private function getStateTypeDescription($id)
+    {
         return StateType::find($id)->description;
     }
 
@@ -213,10 +216,11 @@ use Facades\App\Http\Controllers\DocumentController as DocumentControllerSend;
 
         return new DocumentCollection($records->paginate(config('tenant.items_per_page')));
     }
-    
+
     public function getRecords($request)
     {
         $d_end = $request->d_end;
+        $customer = $request->customer;
         $d_start = $request->d_start;
         $date_of_issue = $request->date_of_issue;
         $document_type_id = $request->document_type_id;
@@ -285,7 +289,12 @@ use Facades\App\Http\Controllers\DocumentController as DocumentControllerSend;
         if ($payment_condition_id) {
             $records = $records->where('payment_condition_id', $payment_condition_id);
         }
-
+        if ($customer) {
+            $records = $records->whereHas('customer', function ($query) use ($customer) {
+                $query->where('name', 'like', '%' . $customer . '%')
+                    ->orWhere('number', 'like', '%' . $customer . '%');
+            });
+        }
         if ($item_id) {
             $records = $records->whereHas('items', function ($query) use ($item_id) {
                 $query->where('item_id', $item_id);
