@@ -219,6 +219,7 @@ class DocumentController extends Controller
 
     public function getRecords($request)
     {
+        dump($request->all());
         $d_end = $request->d_end;
         $customer = $request->customer;
         $d_start = $request->d_start;
@@ -290,7 +291,7 @@ class DocumentController extends Controller
             $records = $records->where('payment_condition_id', $payment_condition_id);
         }
         if ($customer) {
-            $records = $records->whereHas('customer', function ($query) use ($customer) {
+            $records = $records->whereHas('person', function ($query) use ($customer) {
                 $query->where('name', 'like', '%' . $customer . '%')
                     ->orWhere('number', 'like', '%' . $customer . '%');
             });
