@@ -309,8 +309,10 @@ class DocumentController extends Controller
             $salenoteFind->save();
         }
     }
+
     public function records(Request $request)
     {
+
 
         $records = $this->getRecords($request);
 

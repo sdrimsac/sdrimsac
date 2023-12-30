@@ -212,7 +212,8 @@ if ($hostname) {
             Route::get('app/documents/tables', '\App\Http\Controllers\Tenant\DocumentController@tables');
             Route::get('documents/lists', 'Api\DocumentController@lists');
             Route::get('documents/record/{document}', '\App\Http\Controllers\Tenant\DocumentController@record');
-            Route::get('documents/records', '\App\Http\Controllers\Tenant\DocumentController@records');
+            // Route::get('documents/records', '\App\Http\Controllers\Tenant\DocumentController@records');
+            Route::get('documents/records', '\Api\DocumentController@records');
             Route::post('summaries', 'Api\SummaryController@store');
             Route::post('voided', 'Api\VoidedController@store');
             Route::post('retentions', 'Api\RetentionController@store');
