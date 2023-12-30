@@ -219,7 +219,6 @@ class DocumentController extends Controller
 
     public function getRecords($request)
     {
-        dump($request->all());
         $d_end = $request->d_end;
         $customer = $request->customer;
         $d_start = $request->d_start;
