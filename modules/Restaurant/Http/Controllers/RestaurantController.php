@@ -266,7 +266,9 @@ class RestaurantController extends Controller
             $series = Series::all();
             $establishment = Establishment::find($user->establishment_id);
             $configuration = Configuration::first();
+            $area = Area::find($user->area_id);
             return [
+                'area' => $area,
                 'series' => $series,
                 'establishment' => $establishment,
                 'configuration' => $configuration,
