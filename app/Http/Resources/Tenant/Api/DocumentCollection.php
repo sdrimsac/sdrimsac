@@ -23,7 +23,7 @@ class DocumentCollection extends ResourceCollection
                 'total_taxed' => number_format($row->total_taxed, 2),
                 'total_igv' => number_format($row->total_igv, 2),
                 'total' => number_format($row->total, 2),
-                'customer_number ' => $row->customer->number,
+                'customer_number' => $row->customer->number,
                 'customer_name' => $row->customer->name,
                 'date_of_issue' => $row->date_of_issue,
                 'full_number' => $row->series . '-' . $row->number,
