@@ -25,7 +25,7 @@ class DocumentCollection extends ResourceCollection
                 'total' => number_format($row->total, 2),
                 'customer_number ' => $row->customer->number,
                 'customer_name' => $row->customer->name,
-                'date_of_issue' => $row->date_of_issue->format('Y-m-d'),
+                'date_of_issue' => $row->date_of_issue,
                 'full_number' => $row->series . '-' . $row->number,
                 'state_type_description' => $row->state_type->description,
 
