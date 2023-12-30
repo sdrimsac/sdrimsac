@@ -263,7 +263,7 @@ class RestaurantController extends Controller
                     $kitchen = true;
                 }
             }
-            $series = Series::where('active', 1)->get();
+            $series = Series::whereIn('document_type_id', ["01","03","80"])->get();
             $establishment = Establishment::find($user->establishment_id);
             $configuration = Configuration::first();
             $area = Area::find($user->area_id);
