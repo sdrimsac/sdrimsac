@@ -73,18 +73,18 @@ if ($hostname) {
             Route::get('companies/record', 'CompanyController@record');
             //Customer
             //Persons
-            Route::get('persons/columns', 'PersonController@columns');
-            Route::get('persons/tables', 'PersonController@tables');
-            Route::get('persons/{type}', 'PersonController@index');
-            Route::get('persons/{type}/records', 'PersonController@records');
-            Route::get('persons/record/{person}', 'PersonController@record');
-            Route::get('persons/{type}/records', 'PersonController@records');
-            Route::get('persons/{type}/listcustomer', 'PersonController@listcustomer');
+            Route::get('persons/columns', '\App\Http\Controllers\Tenant\PersonController@columns');
+            Route::get('persons/tables', '\App\Http\Controllers\Tenant\PersonController@tables');
+            Route::get('persons/{type}', '\App\Http\Controllers\Tenant\PersonController@index');
+            Route::get('persons/{type}/records', '\App\Http\Controllers\Tenant\PersonController@records');
+            Route::get('persons/record/{person}', '\App\Http\Controllers\Tenant\PersonController@record');
+            Route::get('persons/{type}/records', '\App\Http\Controllers\Tenant\PersonController@records');
+            Route::get('persons/{type}/listcustomer', '\App\Http\Controllers\Tenant\PersonController@listcustomer');
 
-            Route::post('persons', 'PersonController@store');
-            Route::delete('persons/{person}', 'PersonController@destroy');
-            Route::post('persons/import', 'PersonController@import');
-            Route::get('persons/enabled/{type}/{person}', 'PersonController@enabled');
+            Route::post('persons', '\App\Http\Controllers\Tenant\PersonController@store');
+            Route::delete('persons/{person}', '\App\Http\Controllers\Tenant\PersonController@destroy');
+            Route::post('persons/import', '\App\Http\Controllers\Tenant\PersonController@import');
+            Route::get('persons/enabled/{type}/{person}', '\App\Http\Controllers\Tenant\PersonController@enabled');
 
             //Orders
             Route::get('orders', 'OrderController@index');
