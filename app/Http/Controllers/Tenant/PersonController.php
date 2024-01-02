@@ -32,11 +32,12 @@ class PersonController extends Controller
         $api_service_token = config('configuration.api_service_token');
         return view('tenant.persons.index', compact('type', 'api_service_token'));
     }
-    public function client_default(){
+    public function client_default()
+    {
         $establishment_id = auth()->user()->establishment_id;
         $establishment = Establishment::find($establishment_id);
         $customer_id = $establishment->customer_id;
-        if($customer_id){
+        if ($customer_id) {
             $customer = Person::find($customer_id);
             return new PersonResource($customer);
         }
@@ -67,7 +68,7 @@ class PersonController extends Controller
     }
     public function distritos()
     {
-        $asesores = User::where('active',1)->get();
+        $asesores = User::where('active', 1)->get();
         $district = District::where('province_id', '0501')->get();
         return compact('district', 'asesores');
     }
@@ -79,12 +80,13 @@ class PersonController extends Controller
             'district_id' => 'Distritos'
         ];
     }
-    public function recordsApp( Request $request)
+    public function recordsApp(Request $request)
     {
         //  return 'sd';
-        $records = Person::where($request->column, 'like', "%{$request->value}%")
-            ->where('type', 'customers')
-            ->orderBy($request->column);
+        $records = Person::where('name', 'like', "%{$request->value}%")
+            ->orWhere('number', 'like', "%{$request->value}%")
+            ->where('type', 'customers');
+            // ->orderBy($request->column);
 
         return new PersonCollection($records->paginate(config('tenant.items_per_page')));
     }
@@ -106,6 +108,7 @@ class PersonController extends Controller
 
         return new PersonCollection($records->paginate(config('tenant.items_per_page')));
     }
+
     public function printer(Request $request)
     {
         $company = Company::first();
@@ -146,7 +149,18 @@ class PersonController extends Controller
         $api_service_token = config('configuration.api_service_token');
         return compact(
             'configuration',
-            'social_media', 'zones', 'countries', 'departments', 'provinces', 'districts', 'identity_document_types', 'locations', 'person_types', 'api_service_token', 'users');
+            'social_media',
+            'zones',
+            'countries',
+            'departments',
+            'provinces',
+            'districts',
+            'identity_document_types',
+            'locations',
+            'person_types',
+            'api_service_token',
+            'users'
+        );
     }
 
     public function record($id)

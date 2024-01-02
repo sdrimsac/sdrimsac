@@ -35,7 +35,6 @@ if ($hostname) {
 
         Route::post('/login-app', [RestaurantController::class, 'login']);
         
-        Route::get('persons/customers/records', [PersonController::class, 'recordsApp']);
         // Route::get('/documents/series', 'Api\MobileController@getSeries');
         Route::get('categories/init', [ItemController::class, 'init_categories']);
         Route::post('whatsapp/qr', [WhatsappController::class, 'receiveQr']);
@@ -68,7 +67,8 @@ if ($hostname) {
 
             Route::get('client-default',[PersonController::class,'client_default']);
 
-
+            Route::get('persons/customers/records', [PersonController::class, 'recordsApp']);
+            
             //Company
             Route::get('companies/record', 'CompanyController@record');
             //Customer
@@ -78,7 +78,7 @@ if ($hostname) {
             Route::get('persons/{type}', '\App\Http\Controllers\Tenant\PersonController@index');
             Route::get('persons/{type}/records', '\App\Http\Controllers\Tenant\PersonController@records');
             Route::get('persons/record/{person}', '\App\Http\Controllers\Tenant\PersonController@record');
-            Route::get('persons/{type}/records', '\App\Http\Controllers\Tenant\PersonController@records');
+            // Route::get('persons/{type}/records', '\App\Http\Controllers\Tenant\PersonController@records');
             Route::get('persons/{type}/listcustomer', '\App\Http\Controllers\Tenant\PersonController@listcustomer');
 
             Route::post('persons', '\App\Http\Controllers\Tenant\PersonController@store');
