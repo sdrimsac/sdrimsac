@@ -148,6 +148,8 @@
                             <th class="">#</th>
                             <th class="">Codigo Interno</th>
                             <th class="">Producto</th>
+                            <th class="">Código de barras</th>
+                            <th class="">Unidad de medida</th>
                             <th class="">Categoría</th>
                             <th class="">Marca</th>
                             <th class="">Precio de Compra</th>
@@ -165,6 +167,9 @@
                             
                                 <td class="celda center">{{ $value->internal_id }}</td>
                                 <td class="celda">{{ $value->description }}</td>
+                                <td class="celda">{{ $value->barcode }}</td>
+                                <td class="celda">{{ $value->unit_type_id }}</td>
+
                                 <td class="celda">{{ $value->category ? $value->category->name :''}}</td>
                                 <td class="celda">{{ $value->brand ? $value->brand->name : '' }}</td>
                                 <td class="celda center">{{ $value->purchase_unit_price }}</td>

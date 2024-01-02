@@ -70,7 +70,7 @@
                             @foreach($records as $key => $value)
                             <tr>
                                 <td class="celda">{{$loop->iteration}}</td>
-                                <td class="celda">{{$value->lote}}</td>
+                                <td class="celda">{{$value->code}}</td>
                                 <td class="celda">{{$value->item->description}}</td> 
                                 <td class="celda">{{$value->date_of_due}}</td>
                                 <td class="celda">{{$value->warehouse->description}}</td>
