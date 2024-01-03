@@ -962,7 +962,7 @@ class ItemController extends Controller
     }
     public function excel(Request $request)
     {
-        $records = $this->getRecords($request, false)
+        $records = $this->getRecords($request, true)
 
             ->get();
         $company = Company::first();
