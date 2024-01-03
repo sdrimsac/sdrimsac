@@ -253,6 +253,17 @@ trait InventoryTrait
         //si el item es un servicio no se actualiza el stock
         $item = Item::findOrFail($item_id);
         if ($item->unit_type_id === 'ZZ') {
+            //checar si el servicio existe en el almacen, sino existe crearlo
+            $exist = ItemWarehouse::where('warehouse_id', $warehouse_id)->where('item_id', $item_id)->first();
+            if (!isset($exist)) {
+                ItemWarehouse::create([
+                    'warehouse_id' => $warehouse_id,
+                    'stock' => $quantity,
+                    'item_id' => $item_id,
+                    'created_at' => date('Y-m-d H:i:s '),
+                    'updated_at' => date('Y-m-d H:i:s '),
+                ]);
+            }
             return;
         }
         // $inventory_configuration = InventoryConfiguration::firstOrFail();
