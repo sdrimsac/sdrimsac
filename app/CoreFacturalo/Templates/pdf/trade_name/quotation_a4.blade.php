@@ -193,7 +193,7 @@
                         @endif
                     </td>
                     <td class="text-center align-top">{{ $row->item->unit_type_id }}</td>
-                    <td class="text-left align-top">
+                    <td class="text-left align-top" width="40%">
                         @if (isset($row->name_product_pdf))
                             {!! $row->name_product_pdf !!}
                         @else
