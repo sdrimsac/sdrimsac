@@ -1480,21 +1480,20 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                     <div class="col-md-6 mt-4">
-                                            <div class="form-group">
-                                                <label
-                                                    class="control-label w-100"
-                                                    >Lista de cuenta por cobrar
-                                                </label>
+                                    <div class="col-md-6 mt-4">
+                                        <div class="form-group">
+                                            <label class="control-label w-100"
+                                                >Lista de cuenta por cobrar
+                                            </label>
 
-                                                <el-switch
-                                                    v-model="form.credit_list"
-                                                    active-text="Si"
-                                                    inactive-text="No"
-                                                    @change="submit"
-                                                ></el-switch>
-                                            </div>
+                                            <el-switch
+                                                v-model="form.credit_list"
+                                                active-text="Si"
+                                                inactive-text="No"
+                                                @change="submit"
+                                            ></el-switch>
                                         </div>
+                                    </div>
                                     <template v-if="form.hotels">
                                         <div class="col-md-6 mt-4">
                                             <div class="form-group">
@@ -1565,7 +1564,7 @@
                                                 ></el-time-picker>
                                             </div>
                                         </div>
-                                       
+
                                         <div class="col-md-6 mt-4">
                                             <div class="form-group">
                                                 <label
@@ -1741,43 +1740,40 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                       <div class="col-md-6 mt-4">
+                                    <div class="col-md-6 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
                                                 >Whatsapp en reimpresión
                                             </label>
 
                                             <el-switch
-                                                v-model="
-                                                    form.reprint_whatsapp
-                                                "
+                                                v-model="form.reprint_whatsapp"
                                                 active-text="Si"
                                                 inactive-text="No"
                                                 @change="submit"
                                             ></el-switch>
                                         </div>
                                     </div>
-                                    
-                                       <div class="col-md-6 mt-4">
+
+                                    <div class="col-md-6 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
                                                 >Productos en caja
                                             </label>
 
                                             <el-switch
-                                                v-model="
-                                                    form.product_cash
-                                                "
+                                                v-model="form.product_cash"
                                                 active-text="Si"
                                                 inactive-text="No"
                                                 @change="submit"
                                             ></el-switch>
                                         </div>
                                     </div>
-                                         <div class="col-md-6 mt-4">
+                                    <div class="col-md-6 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
-                                                >Reimpresion de documentos - caja
+                                                >Reimpresion de documentos -
+                                                caja
                                             </label>
 
                                             <el-switch
@@ -1790,17 +1786,32 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                    
-                                         <div class="col-md-6 mt-4">
+
+                                    <div class="col-md-6 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
-                                                >Dar a crédito nota de venta (sin cuotas)
+                                                >Dar a crédito nota de venta
+                                                (sin cuotas)
                                             </label>
 
                                             <el-switch
                                                 v-model="
                                                     form.sale_note_credit_cash
                                                 "
+                                                active-text="Si"
+                                                inactive-text="No"
+                                                @change="submit"
+                                            ></el-switch>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mt-4">
+                                        <div class="form-group">
+                                            <label class="control-label w-100">
+                                                Imagenes en cotizaciones
+                                            </label>
+
+                                            <el-switch
+                                                v-model="form.image_quotation"
                                                 active-text="Si"
                                                 inactive-text="No"
                                                 @change="submit"
