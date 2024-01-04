@@ -4984,6 +4984,7 @@ export default {
             this.form.is_room = false;
             this.form.reference_number = null;
             this.form.customer_id = this.customer_default.id;
+                 this.form.observation = null;
             this.cancelOrden();
             if (
                 this.configuration.sales_quick == 1 ||

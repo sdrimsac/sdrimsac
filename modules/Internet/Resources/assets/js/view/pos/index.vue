@@ -1,4 +1,4 @@
-<template>
+f<template>
     <div>
         <div
             v-loading.fullscreen="loading"
@@ -3045,6 +3045,7 @@ export default {
             await this.calculateTotal();
             this.$refs.input_items.$el.getElementsByTagName("input")[0].focus();
             this.total_sales_pos = 0;
+            this.form.observation = null;
         },
         typesearch() {
             this.ordens = [];
