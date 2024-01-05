@@ -239,10 +239,7 @@ export default {
             });
             this.formDocument.series_id =
                 this.series.length > 0 ? this.series[0].id : null;
-            console.log(
-                "🚀 ~ file: index.vue:230 ~ setSeries ~ this.formDocument.series_id:",
-                this.formDocument.series_id
-            );
+       
         },
         async clickPayment(form) {
             // this.reCalculateTotal();
@@ -297,6 +294,7 @@ export default {
                     `/${this.resource_documents}`,
                     form
                 );
+                console.log("🚀 ~ file: index.vue:300 ~ clickPayment ~ response:", response)
                 let { data } = response;
                 if (response.status == 200 && data.data) {
                     let data = response.data.data;
@@ -306,7 +304,10 @@ export default {
 
                     if (response.data.success == true) {
                     }
-                } else {
+                }
+                let {success,message} = data;
+                if(!success){
+                    this.$toast.error(message);
                 }
             } catch (error) {
                 console.log(error);
@@ -349,10 +350,7 @@ export default {
                     this.list_ordens = records.map(o => o.orden_id);
                     //unique list_ordens
                     this.list_ordens = [...new Set(this.list_ordens)];
-                    console.log(
-                        "🚀 ~ file: index.vue:331 ~ getItemsOrdenClientId ~ this.list_ordens :",
-                        this.list_ordens
-                    );
+                    
 
                     this.paymentsOrden({ items: records });
                     await this.clickPayment(this.formDocument);
