@@ -28,7 +28,9 @@ use App\Http\Resources\Tenant\BoxCollection;
 use Modules\Report\Exports\BoxesExport;
 use Modules\Report\Exports\BoxesResumenExport;
 use App\Http\Resources\Tenant\PaymentMethodTypeCollection;
+use App\Models\Tenant\CreditList;
 use Modules\Dashboard\Helpers\DashboardSalePurchase;
+use Modules\Restaurant\Models\Food;
 
 class BoxController extends Controller
 {
@@ -185,6 +187,7 @@ class BoxController extends Controller
         $pdf = PDF::loadView('report::boxes.report_category', compact("user", "records", "company", "establishment", "date_start", "date_end"))->setPaper('a4', 'landscape');
         return $pdf->stream('Reporte_Ventas_' . date('YmdHis') . '.pdf');
     }
+ 
     public function reports_resumen_type(Request $request)
     {
         $date_close = $request['date_close'];
@@ -201,7 +204,6 @@ class BoxController extends Controller
         $d_start = null;
         $d_end = null;
         $user = User::find($user_id);
-
         switch ($period) {
             case 'month':
                 $d_start = Carbon::parse($month_start . '-01')->format('Y-m-d');

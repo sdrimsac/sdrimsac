@@ -2200,6 +2200,7 @@
             :showDialog.sync="showCreditListModal"
             :amountToAdd="creditListAmount"
             @sendOrdenToCreditList="sendOrdenToCreditList"
+            :cashId="cash_id"
         >
         </credit-list-modal>
 
@@ -3137,7 +3138,8 @@ export default {
                     "/credit-list/send-credit",
                     {
                         customer_id,
-                        items: this.localOrden
+                        items: this.localOrden,
+                        cash_id: this.cash_id
                     }
                 );
 

@@ -55,7 +55,7 @@
 
 <script>
 export default {
-    props: ["showDialog", "amountToAdd"],
+    props: ["showDialog", "amountToAdd","cashId"],
     data() {
         return {
             form: {

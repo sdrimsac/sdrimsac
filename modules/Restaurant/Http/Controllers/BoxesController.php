@@ -23,6 +23,7 @@ use Modules\Restaurant\Models\Area;
 use Modules\Restaurant\Models\Orden;
 use App\Http\Resources\Tenant\BoxCollection;
 use App\Models\Tenant\BankAccount;
+use App\Models\Tenant\CreditList;
 use App\Models\Tenant\DocumentPayment;
 use App\Models\Tenant\HotelRent;
 use App\Models\Tenant\HotelRentItem;
@@ -40,6 +41,7 @@ use Modules\Report\Exports\BoxesResumenExportPos;
 use Modules\Report\Exports\BoxesExportBancarioPos;
 use Modules\Dashboard\Helpers\DashboardSalePurchase;
 use Modules\Restaurant\Models\BoxesDetail;
+use Modules\Restaurant\Models\Food;
 use Modules\Restaurant\Models\HotelRentItemServices;
 
 class BoxesController extends Controller
@@ -865,15 +867,82 @@ class BoxesController extends Controller
         }
         return $info;
     }
+    function credit_list_ordens($cash_id)
+    {
+       //obten los registros del modelo CreditList que tenga cash_id 
+       $credit_list = CreditList::where('cash_id', $cash_id)->get();
+       $items = [];
+       foreach($credit_list as $credit){
+           $orden = $credit->orden;
+            $orden_items = $orden->orden_items;
+            foreach($orden_items as  $orden_item){
+                $food = Food::find($orden_item->food_id);
+                $description = $food->description;
+                $key = $description."-".$orden_item->price;
+                $price = floatval($orden_item->price);
+                $quantity = floatval($orden_item->quantity);
+                $total = $price * $quantity;
+
+                if(array_key_exists($key, $items)){
+                    $items[$description]['quantity'] += $quantity;
+                    $items[$description]['total'] += $total;
+                }else{
+                    $items[$key] = [
+                        'quantity' => $quantity,
+                        'price' => $price,
+                        'total' => $total,
+                        'description' => $description
+                    ];
+                }
+            }
+       }
+
+         return $items;
+
+    }
+    function get_anulate_documents($cash_id){
+        $all = [];
+        $documents = Document::
+        select(['series','number','date_of_issue','total'])
+        ->where('cash_id', $cash_id)->where('state_type_id', '11')->get();
+        $sale_notes = SaleNote::
+        select(['series','number','date_of_issue','total'])
+        ->where('cash_id', $cash_id)->where('state_type_id', '11')->get();
+        
+        foreach($documents as $document){
+            $all[] = [
+                'series' => $document->series,
+                'full_number' => $document->series."-".$document->number,
+                'date_of_issue' => $document->date_of_issue,
+                'total' => $document->total,
+            ];
+        }
+        foreach($sale_notes as $sale_note){
+            $all[] = [
+                'series' => $sale_note->series,
+                'full_number' => $document->series."-".$document->number,
+                'date_of_issue' => $sale_note->date_of_issue,
+                'total' => $sale_note->total,
+            ];
+        }
+
+        usort($all, function ($a, $b) {
+            return $a['date_of_issue'] < $b['date_of_issue'];
+        });
+        return $all;
+    }
     public function reports_resumen_type(Request $request)
     {
         $configuration = Configuration::first();
         $total_discount = 0;
         $cash_id = $request->cash_id;
         Box::where('cash_id', $cash_id)->update(['state' => 0]);
+        $credit_list_orden = $this->credit_list_ordens($cash_id);
         $deliveries = [];
         $promotions = [];
         $promotions_give = [];
+        $anulate_documents = $this->get_anulate_documents($cash_id); ;
+
         if ($configuration->hotels) {
             $promotions = SaleNotePromotion::where('cash_id', $cash_id)->get();
             $promotions = $this->formatPromotions($promotions);
@@ -1266,6 +1335,8 @@ class BoxesController extends Controller
 
         try {
             $pdf = PDF::loadView('report::boxes.report_resumen_pdf_pos', compact(
+                "credit_list_orden",
+                "anulate_documents",
                 "coinsReceive",
                 "promotions_give",
                 "promotions",

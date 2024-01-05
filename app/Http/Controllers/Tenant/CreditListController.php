@@ -195,6 +195,7 @@ class CreditListController extends Controller
     public function send_credit(Request $request)
     {   
         $configuration = Configuration::firstOrFail();
+        $cash_id = $request->cash_id;
         $user = auth()->user();
         try{
             DB::beginTransaction();
@@ -249,6 +250,7 @@ class CreditListController extends Controller
             event(new PrintEvent($orden->id, "0", true, $this->getBoxArea(), $orden_items_ids));
         }
         $credit_list =  CreditList::create([
+            'cash_id' => $cash_id,
             'orden_id' => $orden->id,
             'customer_id' => $customer_id,
             'user_id' => $user_id,

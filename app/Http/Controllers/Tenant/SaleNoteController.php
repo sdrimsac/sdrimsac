@@ -778,13 +778,14 @@ class SaleNoteController extends Controller
                             $cajas->state = '1';
                             $cajas->method = $method;
                             if ($method == "Yape" || $method == "PLIN") {
-                                $message .= "Pago por " . $method." del establecimiento ".$establishment->description." de usuario ".auth()->user()->name. " por S/" . $amount."- N° Operación: " . $operation_number ?? "-";
+                                $message .= "Pago por " . $method . " del establecimiento " . $establishment->description . " de usuario " . auth()->user()->name . " por S/" . $amount . "- N° Operación: " . $operation_number ?? "-";
                             }
                             $cajas->bank_account_id = $bank_account_id;
                             $cajas->bank_account_operation = $bank_account_operation;
                             $cajas->sale_note_id = $this->sale_note->id;
                             $cajas->orden_id =  $request->orden_id;
                             $cajas->cash_id = $request->cash_id;
+                      
                             $cajas->user_id = auth()->user()->id;
                             $cajas->description = "VENTAS " . $document;
                             if ($bank_account_id) {
@@ -906,6 +907,7 @@ class SaleNoteController extends Controller
                     }
                 }
                 $saleNoteUpdate = SaleNote::findOrFail($this->sale_note->id);
+                $saleNoteUpdate->cash_id = $request->cash_id;
                 if (!$paid && $configuration->sale_note_credit_cash) {
                     $saleNoteUpdate->credit_cash = true;
                 }

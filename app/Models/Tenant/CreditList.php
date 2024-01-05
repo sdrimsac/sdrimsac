@@ -8,6 +8,7 @@ class CreditList extends ModelTenant
 {
     protected $table="credit_lists";         //nombre tabla
     protected $fillable = [
+        'cash_id',
         'customer_id',                      // categoria 
         'orden_id',
         'establishment_id',
@@ -17,7 +18,11 @@ class CreditList extends ModelTenant
         'paid',
     ];
 
-
+    
+    public function cash()
+    {
+        return $this->belongsTo(Cash::class, 'cash_id');
+    }
     public function customer()
     {
         return $this->belongsTo(Person::class, 'customer_id');
