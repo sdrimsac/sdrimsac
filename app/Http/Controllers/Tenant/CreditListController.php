@@ -24,6 +24,7 @@ use Modules\Restaurant\Models\OrdenItem;
 use Modules\Restaurant\Models\Table;
 use Barryvdh\DomPDF\Facade as PDF;
 use Exception;
+use Modules\Restaurant\Events\OrdenEvent;
 use Modules\Restaurant\Events\PrintEvent;
 use Modules\Restaurant\Models\Food;
 
@@ -193,6 +194,8 @@ class CreditListController extends Controller
     }
     public function send_credit(Request $request)
     {   
+        $configuration = Configuration::firstOrFail();
+        $user = auth()->user();
         try{
             DB::beginTransaction();
             $customer_id = $request->customer_id;
@@ -205,6 +208,8 @@ class CreditListController extends Controller
             'status_orden_id' => $status_orden_id,
             'date' => date('Y-m-d'),
         ]);
+        $orden_items_ids = [];
+        $orden_items_ids_for_kitchen = [];
         foreach ($items as $item) {
             $orden_item = new OrdenItem;
             $orden_item->food_id = $item['food']['id'];
@@ -220,8 +225,29 @@ class CreditListController extends Controller
             $orden_item->time = date('H:i:s');
             $orden_item->area_id = $item['food']['area_id'];
             $orden_item->save();
+            $orden_items_ids[] = $orden_item->id;
+            $orden_items_ids_for_kitchen[] = [
+                "orden_id" => $orden_item->id,
+                "area_id" => $orden_item->area_id
+            ];
+            event(new OrdenEvent($orden_item->id));
         }
+        $print_box = $configuration->print_commands ;
+        $print_kitchen = $configuration->print_kitchen;
+        if ($print_kitchen) {
+            $ids_areas = array_unique(array_column($orden_items_ids_for_kitchen, "area_id"));
+            foreach ($ids_areas as $area_id) {
+                $filtered = array_column(array_filter($orden_items_ids_for_kitchen, function ($a) use ($area_id) {
+                    return $area_id == $a['area_id'];
+                }), "orden_id");
+                event(new PrintEvent($orden->id, "0", true, $area_id, $filtered));
+            }
+        }
+        // $isFromBox = $this->isArea("CAJ", $user->area_id);
 
+        if ($print_box) {
+            event(new PrintEvent($orden->id, "0", true, $this->getBoxArea(), $orden_items_ids));
+        }
         $credit_list =  CreditList::create([
             'orden_id' => $orden->id,
             'customer_id' => $customer_id,
