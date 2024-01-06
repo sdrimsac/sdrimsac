@@ -977,11 +977,16 @@ class ItemController extends Controller
             $row->stock = $item_sum_stock;
         }
     }
+    $warehouse = Warehouse::find($warehouse_id);
+    $description_warehouse = ($warehouse) ? $warehouse->description : 'Todos';
+    $description_warehouse = str_replace('-', '', $description_warehouse);
+    $description_warehouse = str_replace(' ', '_', $description_warehouse);
     return (new ItemExportGeneralForImport)
         ->records($records)
         ->company($company)
+        ->warehouse_id($warehouse_id)
         ->establishment($establishment)
-        ->download('Reporte_Productos_' . Carbon::now() . '.xlsx');
+        ->download('Productos_de_'.$description_warehouse.'_'. Carbon::now() . '.xlsx');
     }
     public function excel(Request $request)
     {

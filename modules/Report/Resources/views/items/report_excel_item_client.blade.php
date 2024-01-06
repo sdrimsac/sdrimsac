@@ -152,7 +152,6 @@ function format_unit($row, $uit)
                         
                         // Reindexar el array para tener índices numéricos
                         $items = array_values($groupedItems);
-                        // dump($items);
                     @endphp
                     <tbody>
                         @foreach ($items as $idx => $value)

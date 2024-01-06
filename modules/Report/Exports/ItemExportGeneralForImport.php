@@ -13,6 +13,7 @@ class ItemExportGeneralForImport implements  FromView, ShouldAutoSize
     protected $records;
     protected $company;
     protected $establishment;
+    protected $warehouse_id;
     public function records($records) {
         $this->records = $records;
         
@@ -25,6 +26,13 @@ class ItemExportGeneralForImport implements  FromView, ShouldAutoSize
         return $this;
     }
     
+
+    public function warehouse_id($warehouse_id) {
+        $this->warehouse_id = $warehouse_id;
+        
+        return $this;
+    }
+
     public function establishment($establishment) {
         $this->establishment = $establishment;
         
@@ -35,7 +43,8 @@ class ItemExportGeneralForImport implements  FromView, ShouldAutoSize
         return view('report::items.report_excel_general_for_import', [
             'records'=> $this->records,
             'company' => $this->company,
-            'establishment'=>$this->establishment
+            'establishment'=>$this->establishment,
+            'warehouse_id'=>$this->warehouse_id
         ]);
     }
 }

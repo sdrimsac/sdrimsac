@@ -78,9 +78,11 @@
                 </div>
                 <div class="card-body">
                     <data-table
+                        :typeUser="typeUser"
                         :resource="resource"
                         :config="config"
                         @clickReport="clickReport"
+                        @clickReportForImport="clickReportForImport"
                     >
                         <tr slot="heading" width="100%">
                             <th>#</th>
@@ -282,6 +284,7 @@ export default {
         };
     },
     created() {
+
         this.$http.get(`/configurations/record`).then(response => {
             this.config = response.data.data;
         });

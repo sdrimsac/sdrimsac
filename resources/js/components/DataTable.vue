@@ -205,7 +205,7 @@
                         >Exportar PDF</el-button
                     >
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-6 d-flex">
                     <el-button
                         class="submit"
                         type="success"
@@ -213,16 +213,16 @@
                         @click.prevent="clickDownload('excel')"
                         >Exportar Excel</el-button
                     >
-                </div>
-                    <!-- <div class="col-md-3">
-                    <el-button
+                        <el-button
                         class="submit"
                         type="success"
+                        v-if="search.warehouse_id && typeUser == 'superadmin'"
                         icon="el-icon-tickets"
                         @click.prevent="clickDownloadForImport('excel')"
                         >Exportar Excel - Formato de importacion</el-button
                     >
-                </div> -->
+                </div>
+       
             </div>
             <div class="col-md-12">
                 <div class="table-responsive">
@@ -260,6 +260,10 @@ import queryString from "query-string";
 
 export default {
     props: {
+        typeUser: {
+            type: String,
+            default: "admin"
+        },
         sellers: {
             type: Array,
             default: () => []
