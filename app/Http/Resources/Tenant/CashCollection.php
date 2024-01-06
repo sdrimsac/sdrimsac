@@ -44,7 +44,6 @@ class CashCollection extends ResourceCollection
                 }
             });
 
-            dump($incomes);
             $expense = Box::where('cash_id', $row->id)->where('expenses', 1)->sum('amount');
             $final_cash = $row->beginning_balance + $incomes - $expense;
 
