@@ -56,6 +56,7 @@ use Modules\Inventory\Models\Warehouse as WarehouseModule;
 use Modules\Report\Exports\ItemClientProductExport;
 use Modules\Report\Exports\ItemExport;
 use Modules\Report\Exports\ItemExportGeneral;
+use Modules\Report\Exports\ItemExportGeneralForImport;
 
 class ItemController extends Controller
 {
@@ -959,6 +960,28 @@ class ItemController extends Controller
             'success' => false,
             'message' =>  __('app.actions.upload.error'),
         ];
+    }
+    public function excelForImport(Request $request){
+        $records = $this->getRecords($request, true)
+
+        ->get();
+    $company = Company::first();
+    $warehouse_id = $request->warehouse_id;
+    $establishment = ($request->establishment_id) ? Establishment::findOrFail($request->establishment_id) : auth()->user()->establishment;
+    foreach ($records as $key => $row) {
+        if ($warehouse_id) {
+            $item_warehouse = ItemWarehouse::where([['item_id', $row->id], ['warehouse_id', $warehouse_id]])->first();
+            $row->stock = ($item_warehouse) ? $item_warehouse->stock : 0;
+        } else {
+            $item_sum_stock = ItemWarehouse::where('item_id', $row->id)->sum('stock');
+            $row->stock = $item_sum_stock;
+        }
+    }
+    return (new ItemExportGeneralForImport)
+        ->records($records)
+        ->company($company)
+        ->establishment($establishment)
+        ->download('Reporte_Productos_' . Carbon::now() . '.xlsx');
     }
     public function excel(Request $request)
     {

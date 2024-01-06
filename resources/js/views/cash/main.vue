@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div     v-if="!cash_id" class="col-md- d-flex justify-content-end">
+        <div     v-if="!has_cash" class="col-md- d-flex justify-content-end">
             <button
             
                 type="button"
@@ -176,7 +176,8 @@ export default {
     },
     created() {
         if (this.cashid != null) {
-            this.cash_id = true;
+            this.cash_id = this.cashid;
+            this.has_cash = true;
         }
     },
     mounted() {
@@ -184,6 +185,7 @@ export default {
     },
     data() {
         return {
+            has_cash: false,
             showDialogClose: false,
             showDialogCash: false,
             cash_id: null,

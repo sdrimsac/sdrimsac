@@ -869,6 +869,7 @@ class BoxesController extends Controller
     }
     function credit_list_ordens($cash_id)
     {
+
        //obten los registros del modelo CreditList que tenga cash_id 
        $credit_list = CreditList::where('cash_id', $cash_id)->get();
        $items = [];
@@ -920,7 +921,7 @@ class BoxesController extends Controller
         foreach($sale_notes as $sale_note){
             $all[] = [
                 'series' => $sale_note->series,
-                'full_number' => $document->series."-".$document->number,
+                'full_number' => $sale_note->series."-".$sale_note->number,
                 'date_of_issue' => $sale_note->date_of_issue,
                 'total' => $sale_note->total,
             ];

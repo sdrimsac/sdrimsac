@@ -214,6 +214,15 @@
                         >Exportar Excel</el-button
                     >
                 </div>
+                    <!-- <div class="col-md-3">
+                    <el-button
+                        class="submit"
+                        type="success"
+                        icon="el-icon-tickets"
+                        @click.prevent="clickDownloadForImport('excel')"
+                        >Exportar Excel - Formato de importacion</el-button
+                    >
+                </div> -->
             </div>
             <div class="col-md-12">
                 <div class="table-responsive">
@@ -309,6 +318,9 @@ export default {
     methods: {
         clickDownload() {
             this.$emit("clickReport", this.search);
+        },
+        clickDownloadForImport(){
+            this.$emit("clickReportForImport", this.search);
         },
 
         customIndex(index) {

@@ -287,6 +287,15 @@ export default {
         });
     },
     methods: {
+        clickReportForImport(query = null) {
+   let { column, value, warehouse_id, area_id } = query;
+            window.open(
+                `/items/excel-for-import?column=${column || ""}&value=${value ||
+                    ""}&warehouse_id=${warehouse_id || ""}&area_id=${area_id ||
+                    ""}`,
+                "_blank"
+            );
+        },
         clickReport(query = null) {
             let { column, value, warehouse_id, area_id } = query;
             window.open(
