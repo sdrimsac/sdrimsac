@@ -885,8 +885,8 @@ class BoxesController extends Controller
                 $total = $price * $quantity;
 
                 if(array_key_exists($key, $items)){
-                    $items[$description]['quantity'] += $quantity;
-                    $items[$description]['total'] += $total;
+                    $items[$key]['quantity'] += $quantity;
+                    $items[$key]['total'] += $total;
                 }else{
                     $items[$key] = [
                         'quantity' => $quantity,
