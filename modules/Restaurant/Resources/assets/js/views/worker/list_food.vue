@@ -398,7 +398,7 @@ export default {
                 } else {
                     qty += 1;
                 }
-                if (this.configuration.sales_stock == true) {
+                if (this.configuration.sales_stock == true && this.selectedFood.item.unit_type_id != "ZZ") {
                     if (qty > Number(this.selectedFood.item.stock)) {
                         this.$toast.warning("Limite de stock alcanzado");
                         return;
@@ -407,7 +407,7 @@ export default {
             } else {
                 if (type) {
                     let qty = Number( type.quantity_unit);
-                    if (this.configuration.sales_stock == true) {
+                    if (this.configuration.sales_stock == true && this.selectedFood.item.unit_type_id != "ZZ") {
                         let stock = Number(this.selectedFood.item.stock);
                         console.log(qty," as ",stock," sa" );
                         if ( qty > stock) {

@@ -345,7 +345,7 @@ export default {
                 } else {
                     qty += 1;
                 }
-                if (this.configuration.sales_stock == true) {
+                if (this.configuration.sales_stock == true &&  this.selectedFood.item.unit_type_id != "ZZ") {
                     if (qty > Number(this.selectedFood.item.stock)) {
                         this.$toast.warning("Limite de stock alcanzado");
                         return;
