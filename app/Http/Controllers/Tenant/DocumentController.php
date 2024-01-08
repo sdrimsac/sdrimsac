@@ -1520,6 +1520,7 @@ class DocumentController extends Controller
 
     public function excel(Request $request)
     {
+        ini_set('memory_limit', '2048M');
         $records = $this->getRecords($request)->get();
         $establishment = Establishment::first();
         $company = Company::active();
