@@ -1013,6 +1013,8 @@ class ItemController extends Controller
     }
     public function import(Request $request)
     {
+        set_time_limit(0);
+        ini_set('memory_limit', '2048M');
         if ($request->hasFile('file')) {
             try {
                 $import = new ItemsImport();
