@@ -799,10 +799,11 @@ if ($hostname) {
         Route::post('logout', 'System\LoginController@logout')->name('logout');
         Route::get('phone', 'System\UserController@getPhone');
 
-        Route::get('phpinfo', function () {
-            return phpinfo();
-        });
+  
         Route::middleware('auth:admin')->group(function () {
+            Route::get('phpinfo', function () {
+                return phpinfo();
+            });
             Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
             Route::get('/', function () {
                 return redirect()->route('system.dashboard');
