@@ -113,6 +113,16 @@ class CollegeRegisterController extends Controller
                     "active" => 1
                 ]);
                 $student->save();
+            }else{
+                //desactivar el anterior
+                $exists->active = 0;
+                $exists->save();
+                //crear uno nuevo
+                $student = new CollegeStudent([
+                    "student_id" => $member->children_id,
+                    "classroom_id" => $classroom_id,
+                    "active" => 1
+                ]);
             }
         }
         return ['success' => true, 'message' => 'Registro creado', 'id' => $register->id];
