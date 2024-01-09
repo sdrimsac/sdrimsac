@@ -211,16 +211,29 @@ class ItemsImport implements ToCollection
                     ]);
 
                  
-
-                    $food->update([
-                        'description' => $description,
+                    if($food){
+                        $food->update([
+                            'description' => $description,
+                            'code'        => $internal_id,
+                            'active'      => 1,
+                            'category_food_id' => $category->id,
+                            'image'       => 'imagen-no-disponible.jpg',
+                            'area_id'     => $area->id,
+                            'item_id'     => $item->id
+                        ]);
+                    }else{
+                        $food = Food::create([
+                            'description' => $description,
                         'code'        => $internal_id,
+                        'price'       => $sale_unit_price,
                         'active'      => 1,
                         'category_food_id' => $category->id,
                         'image'       => 'imagen-no-disponible.jpg',
                         'area_id'     => $area->id,
                         'item_id'     => $item->id
-                    ]);
+                        ]);
+                    }
+              
 
                     if ($is_main_establishment) {
                         $item->update([
