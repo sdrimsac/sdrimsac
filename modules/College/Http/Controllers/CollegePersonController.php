@@ -24,8 +24,10 @@ class CollegePersonController extends Controller
     public function members($parent_id)
     {
         $records = CollegeMember::where('parent_id', $parent_id)
-            ->doesntHave('student')->orWhereHas('student', function ($query) {
-                $query->where('active', 0);
+            ->where(function ($query){
+                $query->doesntHave('student')->orWhereHas('student', function ($query) {
+                    $query->where('active', 0);
+                });
             })
             ->get();
         return $records;
