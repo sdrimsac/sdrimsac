@@ -184,7 +184,7 @@ export default {
             try {
                 this.loading = true;
                 const response = await this.$http(
-                    `/caja/worker/cash/records?${query}`
+                    `/caja/worker/cash/records_closed?${query}`
                 );
                 if (response.status == 200) {
                     const { data, meta } = response.data;
