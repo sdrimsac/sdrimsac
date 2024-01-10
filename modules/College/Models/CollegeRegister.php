@@ -33,6 +33,7 @@ class CollegeRegister extends ModelTenant
 {
     return $this->hasOne(CollegePayment::class, 'register_id')->latest('created_at');
 }
+
     public function payments()
     {
 

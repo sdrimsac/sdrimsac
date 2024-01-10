@@ -49,6 +49,7 @@
                             @updateCustomer="updateCustomer"
                             @createFormRegister="createFormRegister"
                             :record="record"
+                            :multiRegister="multiRegister"
                             ref="register"
                         ></register-form>
                     </template>
@@ -60,7 +61,7 @@
                                 <div class="row col-lg-6 col-xl-12">
                                     <div class="form-group">
                                         <label class="control-label"
-                                            >Observaciones</label
+                                            >Observacionesw</label
                                         >
                                         <el-input
                                             type="textarea"
@@ -447,7 +448,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="card bg-light col-lg-12"></div>
+                                    <!-- <div class="card bg-light col-lg-12"></div> -->
                                 </div>
                             </div>
                         </div>
@@ -871,6 +872,7 @@ export default {
     components: { RegisterForm, ServiceForm, IncompleteForm },
 
     props: [
+        "multiRegister",
         "record",
         "title",
         "customer_default",

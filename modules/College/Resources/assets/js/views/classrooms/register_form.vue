@@ -1,6 +1,141 @@
 <template>
     <div>
-        <div class="card bg-light" v-loading="loading">
+        <div class="card bg-light" v-loading="loading" v-if="multiRegister">
+            <div class="row">
+                <div class="col-12">
+                    <label class="label-control w-100"
+                        >Apoderado
+                        <a
+                            href="#"
+                            class="control-label font-weight-bold text-info"
+                            @click="openCreateMember"
+                        >
+                            [ + Nuevo]</a
+                        >
+
+                        <a
+                            v-if="form.parent_id"
+                            href="#"
+                            class="control-label font-weight-bold text-info"
+                            @click="openCreateMember"
+                        >
+                            [ Editar]</a
+                        >
+                    </label>
+
+                    <el-select
+                        class="w-100"
+                        v-model="form.parent_id"
+                        filterable
+                        remote
+                        placeholder="Nombre o código interno"
+                        :remote-method="searchRemoteParent"
+                        :loading="loading_search_item"
+                        @change="getMember"
+                    >
+                        <el-option
+                            v-for="(parent, idx) in parents"
+                            :key="idx"
+                            :label="parent.person.name"
+                            :value="parent.id"
+                        ></el-option>
+                    </el-select>
+                </div>
+                <div class="col-md-6 col-12">
+                    <label class="label-control w-100">Estudiante</label>
+                    <el-select
+                        :disabled="!form.parent_id"
+                        v-model="form.member_id"
+                        @change="updateTotal"
+                    >
+                        <el-option
+                            v-for="(member, idx) in members"
+                            :key="idx"
+                            :label="member.person.name"
+                            :value="member.id"
+                        >
+                        </el-option>
+                    </el-select>
+                </div>
+                <div class="col-md-6 col-12 d-flex align-items-end">
+                    <el-button
+                        :disabled="!form.member_id"
+                        type="primary"
+                        @click="addMember"
+                    >
+                        Agregar
+                    </el-button>
+                </div>
+            </div>
+            <div class="row mt-2">
+                <div class="col-12">
+                    <label class="label-control w-100">Plan</label>
+                    <el-select
+                        slot="prepend"
+                        v-model="form.plan_id"
+                        @change="updateTotal"
+                    >
+                        <el-tooltip
+                            v-for="(plan, idx) in plans"
+                            :key="idx"
+                            placement="left"
+                            :disabled="!plan.validity_date"
+                        >
+                            <div slot="content">
+                                Vence: {{ plan.validity_date }}
+                            </div>
+                            <el-option
+                                :label="
+                                    `${plan.name} ${plan.description} S/${plan.total}`
+                                "
+                                :value="plan.id"
+                            ></el-option>
+                        </el-tooltip>
+                    </el-select>
+                </div>
+            </div>
+            <div class="row mt-2">
+                <!-- listar  en una tabla los estudiantes agregados y dar la posibilidad de eliminarlos -->
+                <div class="col-12">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Estudiante</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr
+                                v-for="(member, idx) in selectedMembers"
+                                :key="idx"
+                            >
+                                <td>{{ member.person.name }}</td>
+                                <td>
+                                    <el-button
+                                        type="primary"
+                                        @click="openClassrooms"
+                                    >
+                                        Salón
+                                    </el-button>
+                                    <el-button
+                                        type="danger"
+                                        @click="
+                                            selectedMembers = selectedMembers.filter(
+                                                m => m.id != member.id
+                                            )
+                                        "
+                                    >
+                                        Eliminar
+                                    </el-button>
+
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="card bg-light" v-loading="loading" v-else>
             <div class="row">
                 <div class="col-md-6 col-12">
                     <label class="label-control w-100"
@@ -101,7 +236,7 @@ import moment from "moment";
 const CreateForm = () => import("../persons/form.vue");
 const PaymentForm = () => import("../../components/payment_college.vue");
 export default {
-    props: ["showDialog", "record"],
+    props: ["showDialog", "record", "multiRegister"],
     components: { CreateForm, PaymentForm },
     data() {
         return {
@@ -136,13 +271,27 @@ export default {
             currencyTypes: [],
             documentsType: [],
             company: null,
-            categories: []
+            categories: [],
+            selectedMembers: [],
+            currentStudent: null,
+            openClassrooms: false
         };
     },
     async created() {
         await this.getTables();
     },
     methods: {
+        openClassrooms(id){
+            this.currentStudent = id;
+            this.openClassrooms = true;
+        },
+        addMember() {
+            let member = this.members.find(m => m.id == this.form.member_id);
+            if (this.selectedMembers.some(m => m.id == member.id)) {
+                return this.$toast.error("Ya agregó ese estudiante");
+            }
+            this.selectedMembers = [...this.selectedMembers, member];
+        },
         initForm() {
             this.form = {};
         },
@@ -155,6 +304,7 @@ export default {
                 return;
             }
             let plan = this.plans.find(p => p.id == this.form.plan_id);
+            console.log("🚀 ~ file: register_form.vue:294 ~ updateTotal ~ this.plans:", this.plans)
             let items = [];
             if (plan) {
                 items = plan.services.map(s => {
