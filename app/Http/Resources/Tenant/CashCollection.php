@@ -19,7 +19,7 @@ class CashCollection extends ResourceCollection
             // $final_cash = $row->beginning_balance + $row->income - $row->expense;
             // $income = Box::where('cash_id', $row->id)->where('expenses', 0)->sum('amount');
             $incomes = 0;
-            Box::where('cash_id', $row->id)->where('expenses', 0)->where('incomes', 1)->chunk(50, function ($rows) use (&$incomes) {
+            Box::where('cash_id', $row->id)->where('expenses', 0)->where('incomes', 0)->chunk(50, function ($rows) use (&$incomes) {
                 foreach ($rows as $row) {
                     $amount = $row->amount;
                     if ($row->salenote) {
