@@ -1885,7 +1885,7 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                    <!-- <div class="col-md-6 mt-4">
+                                  <div class="col-md-6 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
                                                 >Entorno Hotel</label
@@ -1897,7 +1897,7 @@
                                                 @change="submit"
                                             ></el-switch>
                                         </div>
-                                    </div> -->
+                                    </div> 
                                     <div class="col-md-6 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
