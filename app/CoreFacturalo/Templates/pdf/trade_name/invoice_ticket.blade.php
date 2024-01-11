@@ -271,46 +271,48 @@
             </tr>
         @endisset
         @isset($customer->sum_coins)
-        <tr>
-            <td>
-                <p class="desc">Pagó con: </p>
-            </td>
-            <td>
-                @php
-                    $txt = '';
-                    foreach ($customer->sum_coins as $coin) {
-                        $txt .= '(S/ ' . $coin->value . ') ' . $coin->quantity . ' | ';
-                    }
-                    $txt = substr($txt, 0, -2);
-                    
-                @endphp
-                <p class="desc">
-                    {{ $txt }}
-                </p>
-            </td>
-        </tr>
-    @endisset
-        @if ($student_name)
             <tr>
-                <td class="align-top">
-                    <p class="desc">Alumno:</p>
+                <td>
+                    <p class="desc">Pagó con: </p>
                 </td>
                 <td>
+                    @php
+                        $txt = '';
+                        foreach ($customer->sum_coins as $coin) {
+                            $txt .= '(S/ ' . $coin->value . ') ' . $coin->quantity . ' | ';
+                        }
+                        $txt = substr($txt, 0, -2);
+                        
+                    @endphp
                     <p class="desc">
-                        {{ $student_name }}
+                        {{ $txt }}
                     </p>
                 </td>
             </tr>
-            <tr>
-                <td class="align-top">
-                    <p class="desc">Clase:</p>
-                </td>
-                <td>
-                    <p class="desc">
-                        {{ $class }}
-                    </p>
-                </td>
-            </tr>
+        @endisset
+        @if (isset($students) && count($students) > 0)
+            @foreach ($students as $student)
+                <tr>
+                    <td class="align-top">
+                        <p class="desc">Alumno:</p>
+                    </td>
+                    <td>
+                        <p class="desc">
+                            {{ $student['name'] }}
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="align-top">
+                        <p class="desc">Clase:</p>
+                    </td>
+                    <td>
+                        <p class="desc">
+                            {{ $student['class'] }}
+                        </p>
+                    </td>
+                </tr>
+            @endforeach
         @endif
         @if ($customer->address !== '')
             <tr>
@@ -402,14 +404,14 @@
                 $observation_hotel = '';
                 if (count($advances) > 0) {
                     $observation_hotel = 'Adelantos : ';
-               
-                    foreach($advances as $adv) {
-                       if($adv["is_advance"]){
-                        $document_hotel =   $adv['document'] ?? $adv['sale_note'];
-                        $full_number = $document_hotel["series"] . "-" . $document_hotel["number"];
-                        $total = $document_hotel["total"];
-                        $observation_hotel .=  ' ' . $full_number . ' S/' . $total . ' ';
-                       }
+                
+                    foreach ($advances as $adv) {
+                        if ($adv['is_advance']) {
+                            $document_hotel = $adv['document'] ?? $adv['sale_note'];
+                            $full_number = $document_hotel['series'] . '-' . $document_hotel['number'];
+                            $total = $document_hotel['total'];
+                            $observation_hotel .= ' ' . $full_number . ' S/' . $total . ' ';
+                        }
                     }
                 }
             @endphp
@@ -425,7 +427,7 @@
                         @endif
                     @endforeach
                 @endisset
-                @isset ($observation_hotel)
+                @isset($observation_hotel)
                     <br>
                     <b>{{ $observation_hotel }}</b>
                 @endisset

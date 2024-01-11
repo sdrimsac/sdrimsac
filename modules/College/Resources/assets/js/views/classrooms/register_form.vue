@@ -109,11 +109,21 @@
                                 v-for="(member, idx) in selectedMembers"
                                 :key="idx"
                             >
-                                <td>{{ member.person.name }}</td>
+                                <td>
+                                    {{ member.person.name }}
+                                    <template
+                                        v-if="member.classroom_description"
+                                    >
+                                        <br />
+                                        <small>
+                                            {{ member.classroom_description }}
+                                        </small>
+                                    </template>
+                                </td>
                                 <td>
                                     <el-button
                                         type="primary"
-                                        @click="openClassrooms"
+                                        @click="openClassroom(member.id)"
                                     >
                                         Salón
                                     </el-button>
@@ -127,7 +137,6 @@
                                     >
                                         Eliminar
                                     </el-button>
-
                                 </td>
                             </tr>
                         </tbody>
@@ -228,6 +237,15 @@
             :recordId="form.parent_id"
         >
         </create-form>
+        <modal-classroom
+            @choose="choose"
+            :showDialog.sync="openClassrooms"
+            :studentId="currentStudent"
+            :sections.sync="sections"
+            :levels.sync="levels"
+            :turns.sync="turns"
+            :degrees.sync="degrees"
+        ></modal-classroom>
     </div>
 </template>
 
@@ -235,9 +253,19 @@
 import moment from "moment";
 const CreateForm = () => import("../persons/form.vue");
 const PaymentForm = () => import("../../components/payment_college.vue");
+const ModalClassroom = () => import("./modal_classroom.vue");
 export default {
-    props: ["showDialog", "record", "multiRegister"],
-    components: { CreateForm, PaymentForm },
+    props: [
+        "showDialog",
+        "record",
+        "multiRegister",
+
+        "sections",
+        "levels",
+        "turns",
+        "degrees"
+    ],
+    components: { CreateForm, PaymentForm, ModalClassroom },
     data() {
         return {
             currentParent: null,
@@ -281,9 +309,25 @@ export default {
         await this.getTables();
     },
     methods: {
-        openClassrooms(id){
+        openClassroom(id) {
             this.currentStudent = id;
             this.openClassrooms = true;
+        },
+        choose(record) {
+            console.log(
+                "🚀 ~ file: register_form.vue:317 ~ choose ~ record:",
+                record
+            );
+            let index = this.selectedMembers.findIndex(
+                m => m.id == this.currentStudent
+            );
+
+            if (index != -1) {
+                let { id, description } = record;
+                this.selectedMembers[index].classroom_id = id;
+                this.selectedMembers[index].classroom_description = description;
+            }
+            this.updateTotal();
         },
         addMember() {
             let member = this.members.find(m => m.id == this.form.member_id);
@@ -293,9 +337,15 @@ export default {
             this.selectedMembers = [...this.selectedMembers, member];
         },
         initForm() {
-            this.form = {};
+            this.form = {
+                parent_id: null,
+                member_id: null,
+                plan_id: null
+            };
         },
         updateTotal() {
+            this.$forceUpdate();
+
             if (
                 !this.form.plan_id ||
                 !this.form.parent_id ||
@@ -304,7 +354,7 @@ export default {
                 return;
             }
             let plan = this.plans.find(p => p.id == this.form.plan_id);
-            console.log("🚀 ~ file: register_form.vue:294 ~ updateTotal ~ this.plans:", this.plans)
+
             let items = [];
             if (plan) {
                 items = plan.services.map(s => {
@@ -315,25 +365,50 @@ export default {
                 });
             }
             let { name, description } = plan;
-            let { id, parent, person } = this.members.find(
-                m => m.id == this.form.member_id
-            );
 
-            let form = {
-                member_id: id,
-                plan_id: plan.id,
-                first_pay: "2023-01-30",
-                last_pay: "2023-01-30",
-                payment_count: 1,
-                active: 1,
-                detail: { items }
-            };
-            this.$emit("createFormRegister", form);
+            if (this.multiRegister) {
+                let [member] = this.selectedMembers;
+                let { parent } = member;
+
+                let form = {
+                    members_id: this.selectedMembers.map(m => m.id),
+                    classrooms_id: this.selectedMembers.map(
+                        m => m.classroom_id
+                    ),
+                    multi: true,
+                    plan_id: plan.id,
+                    first_pay: "2023-01-30",
+                    last_pay: "2023-01-30",
+                    payment_count: 1,
+                    active: 1,
+                    detail: { items }
+                };
+
+                this.$emit("createFormRegisterMultiple", form);
+
+                this.$emit("updateCustomer", parent.person);
+            } else {
+                let { id, parent } = this.members.find(
+                    m => m.id == this.form.member_id
+                );
+
+                let form = {
+                    member_id: id,
+                    plan_id: plan.id,
+                    first_pay: "2023-01-30",
+                    last_pay: "2023-01-30",
+                    payment_count: 1,
+                    active: 1,
+                    detail: { items }
+                };
+
+                this.$emit("createFormRegister", form);
+                this.$emit("updateCustomer", parent.person);
+            }
 
             let observation = `${name} - ${description} `.toUpperCase();
             this.$emit("updateItems", items);
             this.$emit("updateObservation", observation);
-            this.$emit("updateCustomer", parent.person);
             //member_id, plan_id, classroom_id, first_pay, last_pay, payment_count, active
             // this.$emit("updateTotal", total);
         },
@@ -387,6 +462,8 @@ export default {
             }
         },
         async getMember() {
+            this.members = [];
+            this.selectedMembers = [];
             if (!this.form.parent_id) {
                 this.form.member_id = null;
                 return;
@@ -485,10 +562,12 @@ export default {
         },
 
         open() {
+            
             this.form = {
                 year: moment().year()
             };
-
+            this.initForm();
+            this.selectedMembers = [];
             if (this.record) {
                 let record = this.record;
                 this.title = `Matricula ${record.level} | ${record.degree}-${record.section} | ${record.turn}`;

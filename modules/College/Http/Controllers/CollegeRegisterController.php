@@ -85,47 +85,97 @@ class CollegeRegisterController extends Controller
         //guardar matricula
 
         $member_id = $request->member_id;
+        $members_id = $request->members_id;
         $plan_id = $request->plan_id;
         $first_pay = $request->first_pay;
         $classroom_id = $request->classroom_id;
+        $classrooms_id = $request->classrooms_id;
+        $multi = $request->multi;
         $last_pay = $request->last_pay;
         $payment_count = $request->payment_count;
         $active = $request->active;
-        $register = new CollegeRegister([
-            "classroom_id" => $classroom_id,
-            "member_id" => $member_id,
-            "plan_id" => $plan_id,
-            "first_pay" => $first_pay,
-            "last_pay" => $last_pay,
-            "payment_count" => $payment_count,
-            "active" => $active,
-        ]);
-        $register->save();
-        if ($register->id) {
-            $member = CollegeMember::find($member_id);
-            $student_id = $member->children_id;
-            $exists  = CollegeStudent::where('student_id', $student_id)->first();
-
-            if (!isset($exists)) {
-                $student = new CollegeStudent([
-                    "student_id" => $member->children_id,
+        if($multi){
+            $ids = [];
+            foreach($members_id as $idx=>$member_id){
+                $classroom_id = $classrooms_id[$idx];
+                $register = new CollegeRegister([
                     "classroom_id" => $classroom_id,
-                    "active" => 1
+                    "member_id" => $member_id,
+                    "plan_id" => $plan_id,
+                    "first_pay" => $first_pay,
+                    "last_pay" => $last_pay,
+                    "payment_count" => $payment_count,
+                    "active" => $active,
                 ]);
-                $student->save();
-            }else{
-                //desactivar el anterior
-                $exists->active = 0;
-                $exists->save();
-                //crear uno nuevo
-                $student = new CollegeStudent([
-                    "student_id" => $member->children_id,
-                    "classroom_id" => $classroom_id,
-                    "active" => 1
-                ]);
+                $register->save();
+                if ($register->id) {
+                    $ids[] = $register->id;
+                    $member = CollegeMember::find($member_id);
+                    $student_id = $member->children_id;
+                    $exists  = CollegeStudent::where('student_id', $student_id)
+                    ->where('active', 1)
+                    ->first();
+                    
+                    if (!isset($exists)) {
+                        $student = new CollegeStudent([
+                            "student_id" => $member->children_id,
+                            "classroom_id" => $classroom_id,
+                            "active" => 1
+                        ]);
+                        $student->save();
+                    }else{
+                        //desactivar el anterior
+                        $exists->active = 0;
+                        $exists->save();
+                        //crear uno nuevo
+                        $student = new CollegeStudent([
+                            "student_id" => $member->children_id,
+                            "classroom_id" => $classroom_id,
+                            "active" => 1
+                        ]);
+                        $student->save();
+                    }
+                }
             }
+            return ['success' => true, 'message' => 'Registros creados', 'id' => $ids];
+        }else{
+            $register = new CollegeRegister([
+                "classroom_id" => $classroom_id,
+                "member_id" => $member_id,
+                "plan_id" => $plan_id,
+                "first_pay" => $first_pay,
+                "last_pay" => $last_pay,
+                "payment_count" => $payment_count,
+                "active" => $active,
+            ]);
+            $register->save();
+            if ($register->id) {
+                $member = CollegeMember::find($member_id);
+                $student_id = $member->children_id;
+                $exists  = CollegeStudent::where('student_id', $student_id)->first();
+    
+                if (!isset($exists)) {
+                    $student = new CollegeStudent([
+                        "student_id" => $member->children_id,
+                        "classroom_id" => $classroom_id,
+                        "active" => 1
+                    ]);
+                    $student->save();
+                }else{
+                    //desactivar el anterior
+                    $exists->active = 0;
+                    $exists->save();
+                    //crear uno nuevo
+                    $student = new CollegeStudent([
+                        "student_id" => $member->children_id,
+                        "classroom_id" => $classroom_id,
+                        "active" => 1
+                    ]);
+                }
+            }
+            return ['success' => true, 'message' => 'Registro creado', 'id' => $register->id];
         }
-        return ['success' => true, 'message' => 'Registro creado', 'id' => $register->id];
+      
     }
     public function parents(Request $request)
     {

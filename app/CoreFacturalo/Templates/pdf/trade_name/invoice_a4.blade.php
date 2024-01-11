@@ -136,7 +136,7 @@
                 <tr>
                     <td width="120px" height="20px"><b>FECHA DE EMISIÓN</b></td>
                     <td width="8px" height="20px">:</td>
-                    <td>{{ $document->date_of_issue }} {{$document->time_of_issue}}</td>
+                    <td>{{ $document->date_of_issue }} {{ $document->time_of_issue }}</td>
                     @if ($document->detraction)
                         <td width="120px" height="20px"><b>N. CTA DETRACCIONES</b></td>
                         <td width="8px" height="20px">:</td>
@@ -186,18 +186,21 @@
                     </tr>
                 @endisset
 
-                @if (@isset($student_name))
-                    <tr>
-                        <td height="20px"><b>ALUMNO</b></td>
-                        <td height="20px">:</td>
-                        <td height="20px">{{ $student_name }}</td>
-                        <td height="20px"><b>CLASE</b></td>
-                        <td height="20px">:</td>
-                        <td height="20px">{{ $class ?? '' }}</td>
 
-                    </tr>
+                @if (isset($students) && count($students) > 0)
+                    @foreach ($students as $student)
+                        <tr>
+                            <td height="20px"><b>ALUMNO</b></td>
+                            <td height="20px">:</td>
+                            <td height="20px">{{ $student['name'] }}</td>
+                            <td height="20px"><b>CLASE</b></td>
+                            <td height="20px">:</td>
+                            <td height="20px">
+                                {{ isset($student['class']) ? $student['class'] : '' }}</td>
+
+                        </tr>
+                    @endforeach
                 @endif
-
                 <tr>
 
 
@@ -258,48 +261,49 @@
             </table>
         @endif
         @if ($hotel_rent)
-        @php
-            $hotel_rent_items = $hotel_rent->items;
-            
-        @endphp
-       <table>
-        @foreach ($hotel_rent_items as $hri)
-        <tr>
-            <td height="18px">
-                <b>
-                    Habitación:
-                </b>
-            </td>
-            <td colspan="3" class="align-top">
-                {{ $hri->table->number }}
-            </td>
-        </tr>
-        <tr>
-            <td height="18px">
-                <b>
-                    Entrada:
-                </b>
+            @php
+                $hotel_rent_items = $hotel_rent->items;
+                
+            @endphp
+            <table>
+                @foreach ($hotel_rent_items as $hri)
+                    <tr>
+                        <td height="18px">
+                            <b>
+                                Habitación:
+                            </b>
+                        </td>
+                        <td colspan="3" class="align-top">
+                            {{ $hri->table->number }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td height="18px">
+                            <b>
+                                Entrada:
+                            </b>
 
-            </td>
-            <td colspan="3" class="align-top">
+                        </td>
+                        <td colspan="3" class="align-top">
 
-                {{ \Carbon\Carbon::parse($hri->checkin_date)->format('d/m/Y') }} {{ $hri->checkin_time }}
-            </td>
-        </tr>
-        <tr>
-            <td height="18px">
-                <b>
-                    Salida:
-                </b>
+                            {{ \Carbon\Carbon::parse($hri->checkin_date)->format('d/m/Y') }} {{ $hri->checkin_time }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td height="18px">
+                            <b>
+                                Salida:
+                            </b>
 
-            </td>
-            <td colspan="3" class="align-top">
-                {{ \Carbon\Carbon::parse($hri->checkout_date)->format('d/m/Y') }} {{ $hri->checkout_time }}
-            </td>
-        </tr>
-    @endforeach
-       </table>
-    @endif
+                        </td>
+                        <td colspan="3" class="align-top">
+                            {{ \Carbon\Carbon::parse($hri->checkout_date)->format('d/m/Y') }}
+                            {{ $hri->checkout_time }}
+                        </td>
+                    </tr>
+                @endforeach
+            </table>
+        @endif
         <div class="mt-2">
             <strong>Observación:</strong>
             @foreach ($document->additional_information as $information)
@@ -752,39 +756,39 @@
 
 
 
-            <table class="full-width">
-                @if ($document->payment_condition_id == '01')
+        <table class="full-width">
+            @if ($document->payment_condition_id == '01')
+                <tr>
+                    <td>
+                        <strong>PAGOS:</strong>
+                    </td>
+                </tr>
+                @foreach ($boxes as $box)
                     <tr>
-                        <td>
-                            <strong>PAGOS:</strong>
+                        <td colspan="4" class="text-left font-bold desc">{{ $box->method }}:
+                            {{ $document->currency_type->symbol }}</td>
+                        <td class="text-left font-bold desc">{{ number_format(abs($box->amount), 2, '.', '') }}
                         </td>
                     </tr>
-                    @foreach ($boxes as $box)
-                        <tr>
-                            <td colspan="4" class="text-left font-bold desc">{{ $box->method }}:
-                                {{ $document->currency_type->symbol }}</td>
-                            <td class="text-left font-bold desc">{{ number_format(abs($box->amount), 2, '.', '') }}
-                            </td>
-                        </tr>
-                    @endforeach
-                @endif
-                @if (count($document->fee) > 0)
+                @endforeach
+            @endif
+            @if (count($document->fee) > 0)
+                <tr>
+                    <td class="desc pt-5">
+                        <strong>CUOTAS:</strong>
+                    </td>
+                </tr>
+                @foreach ($document->fee as $key => $quote)
                     <tr>
-                        <td class="desc pt-5">
-                            <strong>CUOTAS:</strong>
-                        </td>
+                        <td class="desc">
+                            &#8226;
+                            {{ empty($quote->getStringPaymentMethodType()) ? 'Cuota #' . ($key + 1) : $quote->getStringPaymentMethodType() }}
+                            / Fecha: {{ $quote->date->format('d-m-Y') }} /
+                            Monto: {{ $quote->currency_type->symbol }}{{ $quote->amount }}</td>
                     </tr>
-                    @foreach ($document->fee as $key => $quote)
-                        <tr>
-                            <td class="desc">
-                                &#8226;
-                                {{ empty($quote->getStringPaymentMethodType()) ? 'Cuota #' . ($key + 1) : $quote->getStringPaymentMethodType() }}
-                                / Fecha: {{ $quote->date->format('d-m-Y') }} /
-                                Monto: {{ $quote->currency_type->symbol }}{{ $quote->amount }}</td>
-                        </tr>
-                    @endforeach
-                @endif
-                {{-- @php
+                @endforeach
+            @endif
+            {{-- @php
                     $payment = 0;
                 @endphp
                 @foreach ($payments as $row)
@@ -797,7 +801,7 @@
                 @endforeach
                 </tr> --}}
 
-            </table>
+        </table>
 
         @if ($document->user)
             <br>

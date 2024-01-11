@@ -45,7 +45,6 @@
                                     @click="clickMultiRegister"
                                     >Multi matricula</el-button
                                 >
-
                             </div>
                         </div>
                         <div class="row">
@@ -241,6 +240,10 @@
             :is_payment.sync="showPayment"
             @getRecords="getRecords"
             :multiRegister.sync="multiRegister"
+            :sections.sync="sections"
+            :levels.sync="levels"
+            :turns.sync="turns"
+            :degrees.sync="degrees"
         >
         </payment-form>
     </div>
@@ -330,8 +333,7 @@ export default {
         );
     },
     methods: {
-        clickMultiRegister()
-        {
+        clickMultiRegister() {
             this.showPayment = true;
             this.multiRegister = true;
         },
