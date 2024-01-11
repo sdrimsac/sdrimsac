@@ -7,6 +7,13 @@
         @close="close"
         append-to-body
     >
+        <div class="d-flex justify-content-end">
+            <div class="col-3 text-end">
+                <el-button type="primary" @click="clickMultiRegister"
+                    >Multi matricula</el-button
+                >
+            </div>
+        </div>
         <div class="row mt-3">
             <div class="col-12 col-md-3">
                 <label class="label-control w-100">
@@ -151,6 +158,11 @@
             :record="recordCreateRegisterForm"
             :is_payment.sync="showPayment"
             @getRecords="getRecords"
+            :multiRegister.sync="multiRegister"
+            :sections.sync="sections"
+            :levels.sync="levels"
+            :turns.sync="turns"
+            :degrees.sync="degrees"
         >
         </payment-form>
     </el-dialog>
@@ -194,10 +206,15 @@ export default {
             showStudentsView: false,
             recordCreateRegisterForm: null,
             showPayment: false,
-            paymentTitle: null
+            paymentTitle: null,
+            multiRegister: false
         };
     },
     methods: {
+        clickMultiRegister() {
+            this.showPayment = true;
+            this.multiRegister = true;
+        },
         clickRegister(record) {
             this.recordCreateRegisterForm = record;
             this.showPayment = true;

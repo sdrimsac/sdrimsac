@@ -368,7 +368,11 @@ export default {
 
             if (this.multiRegister) {
                 let [member] = this.selectedMembers;
-                let { parent } = member;
+                let parent = null;
+                if(member){
+                    parent = member.parent;
+                }
+                // let { parent } = member;
 
                 let form = {
                     members_id: this.selectedMembers.map(m => m.id),
@@ -385,8 +389,9 @@ export default {
                 };
 
                 this.$emit("createFormRegisterMultiple", form);
-
-                this.$emit("updateCustomer", parent.person);
+                if(parent){
+                    this.$emit("updateCustomer", parent.person);
+                }
             } else {
                 let { id, parent } = this.members.find(
                     m => m.id == this.form.member_id
