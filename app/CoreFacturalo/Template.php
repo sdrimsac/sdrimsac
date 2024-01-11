@@ -41,20 +41,28 @@ class Template
             $student_name = null;
             $class = null;
             $config = Configuration::first();
+            $students = [];
             $document_type = $document->document_type_id == "80" ? "sale_note_id" : "document_id";
-            $college_payment = CollegePayment::where($document_type, $document->id)->first();
-            if ($college_payment) {
-                $college_register = CollegeRegister::find($college_payment->register_id);
-                $member = $college_register->member;
-                $student = CollegeStudent::where('student_id', $member->children_id)->where('active', 1)->first();
-                if ($student) {
-                    $classroom = CollegeClassroom::find($student->classroom_id);
-                    if ($classroom) {
-                        $class = mb_strtoupper($classroom->description);
+            $college_payments = CollegePayment::where($document_type, $document->id)->get();
+            if (count($college_payments) > 0) {
+                foreach ($college_payments as $key => $college_payment) {
+                    $college_register = CollegeRegister::find($college_payment->register_id);
+                    $member = $college_register->member;
+                    $student = CollegeStudent::where('student_id', $member->children_id)->where('active', 1)->first();
+                    if ($student) {
+                        $classroom = CollegeClassroom::find($student->classroom_id);
+                        if ($classroom) {
+                            $class = mb_strtoupper($classroom->description);
+                        }
                     }
+                    $parent = $member->parent;
+                    $student_name = $member->person->name;
+                    $students[] = [
+                        'name' => $student_name,
+                        'parent' => $parent->person->name,
+                        'class' => $class
+                    ];
                 }
-                $parent = $member->parent;
-                $student_name = $member->person->name;
             }
 
             $show_unit_types = $config->show_unit_types_ticket;
@@ -87,7 +95,7 @@ class Template
             if ($stablishment) {
                 $is_principal = $stablishment->id == 1;
             }
-            return view($view, compact('company', 'document', 'boxes', 'show_unit_types',  'stablishment', 'is_principal', 'class', 'student_name'))->render();
+            return view($view, compact('company', 'document', 'boxes', 'show_unit_types',  'stablishment', 'is_principal', 'class', 'student_name','students'))->render();
         }
 
 

@@ -48,8 +48,14 @@
                             @updateObservation="updateObservation"
                             @updateCustomer="updateCustomer"
                             @createFormRegister="createFormRegister"
+                            @createFormRegisterMultiple="createFormRegisterMultiple"
                             :record="record"
+                            :multiRegister="multiRegister"
                             ref="register"
+                            :sections.sync="sections"
+                            :levels.sync="levels"
+                            :turns.sync="turns"
+                            :degrees.sync="degrees"
                         ></register-form>
                     </template>
                 </div>
@@ -60,7 +66,7 @@
                                 <div class="row col-lg-6 col-xl-12">
                                     <div class="form-group">
                                         <label class="control-label"
-                                            >Observaciones</label
+                                            >Observacionesw</label
                                         >
                                         <el-input
                                             type="textarea"
@@ -447,7 +453,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="card bg-light col-lg-12"></div>
+                                    <!-- <div class="card bg-light col-lg-12"></div> -->
                                 </div>
                             </div>
                         </div>
@@ -871,6 +877,7 @@ export default {
     components: { RegisterForm, ServiceForm, IncompleteForm },
 
     props: [
+        "multiRegister",
         "record",
         "title",
         "customer_default",
@@ -885,7 +892,11 @@ export default {
         "plan",
         "register",
         "services",
-        "payable"
+        "payable",
+        "sections",
+        "levels",
+        "turns",
+        "degrees"
     ],
     watch: {
         all_customers(newCustomer, _) {
@@ -898,6 +909,7 @@ export default {
             cash_id: null,
             documentId: null,
             registerId: null,
+            registerIds: null,
             showDialog: false,
             series: [],
             affectationIgvTypes: [],
@@ -1132,7 +1144,10 @@ export default {
                     name +
                     " de *" +
                     this.company.name +
-                    "*, ha sido generado correctamente a través del facturador electrónico de"+"*"+this.$desarrollador+"*";
+                    "*, ha sido generado correctamente a través del facturador electrónico de" +
+                    "*" +
+                    this.$desarrollador +
+                    "*";
                 if (message) {
                     basicMessage += "\n" + message;
                 }
@@ -1169,7 +1184,7 @@ export default {
                     }
                 }
                 this.$toast.error(msg);
-                console.log(e);
+                
             } finally {
             }
         },
@@ -1184,7 +1199,7 @@ export default {
             try {
                 this.socket = io.connect(this.$socketUrl);
             } catch (e) {
-                console.log(e);
+                
             }
 
             this.socket.on("connected", ({ message }) => {
@@ -1211,7 +1226,7 @@ export default {
             });
         },
         updateCustomer(person) {
-            console.log(person);
+            
             this.form.customer = person;
             this.form.customer_id = person.id;
             this.form.customer_telephone = person.telephone;
@@ -1230,10 +1245,13 @@ export default {
             this.observation = null;
             this.documentId = null;
             this.registerId = null;
+            this.registerIds = [];
             setTimeout(() => {
                 if (this.type == "service") {
                     this.$refs.service?.getTables();
                 } else if (this.type == "register") {
+
+                    this.$refs.register?.open();
                     this.$refs.register?.getTables();
                 } else {
                     this.$refs.incomplete?.getTables();
@@ -1253,10 +1271,15 @@ export default {
         createFormIncomplete(register) {
             this.formRegister = register;
         },
-        createFormRegister(register) {
+        
+        createFormRegisterMultiple(register) {
+            this.formRegister = register;
+        },
+         createFormRegister(register) {
             register.classroom_id = this.record.id;
             this.formRegister = register;
         },
+
         createFormService(register) {
             register.classroom_id = this.classroomId;
             this.formRegister = register;
@@ -1306,7 +1329,7 @@ export default {
                 this.form.user_id = this.user.id;
                 this.form.establishment_id = this.establishments.id;
             } catch (e) {
-                console.log(e);
+                
                 this.$toast.error("Ocurrió un problema");
             } finally {
                 this.loading = false;
@@ -1627,7 +1650,10 @@ export default {
                         number +
                         " de *" +
                         this.company.name +
-                        "*, ha sido generado correctamente a través del facturador electrónico de "+"*"+this.$desarrollador+"*"
+                        "*, ha sido generado correctamente a través del facturador electrónico de " +
+                        "*" +
+                        this.$desarrollador +
+                        "*"
                 };
                 try {
                     this.loading = true;
@@ -1655,7 +1681,7 @@ export default {
                         }
                     }
                 } catch (e) {
-                    console.log(e, " error");
+                    
                 } finally {
                     this.loading = false;
                 }
@@ -1790,7 +1816,7 @@ export default {
             let total_value = 0;
             let total = 0;
             let total_plastic_bag_taxes = 0;
-            console.log(this.form.items);
+            
             this.form.items.forEach(row => {
                 total_discount += parseFloat(row.total_discount);
                 total_charge += parseFloat(row.total_charge);
@@ -1910,7 +1936,7 @@ export default {
             // this.amount = acum_payment
             this.setAmount(acum_payment);
 
-            // console.log(this.form.payments)
+            // 
         },
         setAmount(amount) {
             // this.amount = parseFloat(this.amount) + parseFloat(amount)
@@ -2118,8 +2144,10 @@ export default {
                 this.registerId = this.register.id;
             }
 
+                
             if (registered) {
                 let payed = await this.clickPayment(form);
+                
                 if (payed) {
                     await this.sendCollegePayment();
                 }
@@ -2128,7 +2156,8 @@ export default {
         async sendCollegePayment() {
             try {
                 this.loading = true;
-                const response = await this.$http.post(`/college/payments`, {
+                if(this.registerIds == null){
+                      const response = await this.$http.post(`/college/payments`, {
                     document_id: this.documentId,
                     register_id: this.registerId,
                     months:
@@ -2139,31 +2168,66 @@ export default {
                     type: this.incomplete ? "incomplete" : "complete",
                     details: this.formRegister.detail
                 });
+                }else{
+                    for(let i = 0; i < this.registerIds.length; i++){
+                        const response = await this.$http.post(`/college/payments`, {
+                            document_id: this.documentId,
+                            register_id: this.registerIds[i],
+                            months:
+                                this.type == "incomplete"
+                                    ? []
+                                    : this.formRegister.months,
+                            active: 1,
+                            type: this.incomplete ? "incomplete" : "complete",
+                            details: this.formRegister.detail
+                        });
+                    }
+                }
 
                 this.$emit("getRecords");
             } catch (e) {
-                console.log(e);
+                
             } finally {
                 this.loading = false;
             }
         },
         async sendRegister() {
+            
             if (!this.formRegister) {
                 this.$toast.error("Seleccione un plan/estudiante");
                 return false;
             }
+            if(this.formRegister.multi){
+                let {classrooms_id, members_id} = this.formRegister;
+                classrooms_id = classrooms_id.filter(function (el) {
+                    return el != null;
+                  });
+                members_id = members_id.filter(function (el) {
+                    return el != null;
+                  });
+                if((classrooms_id.length == 0 && members_id.length == 0) || (classrooms_id.length != members_id.length)){
+                    this.$toast.error("Seleccione un estudiante y su respectivo salón.");
+                    return false;
+                }
+            }
             try {
                 this.loading = true;
-                console.log(this.formRegister);
+                
                 const response = await this.$http.post(
                     `/college/registers`,
                     this.formRegister
                 );
+                
                 const { id } = response.data;
-                this.registerId = id;
+                if(this.formRegister.multi){
+                    this.registerIds = id;
+                    }else{
+                    this.registerId = id;
+                }
+                    
                 return true;
             } catch (e) {
-                console.log(e);
+                
                 this.$toast.error("Ocurrió un error");
                 return false;
             } finally {
@@ -2260,8 +2324,8 @@ export default {
                 form.customer_telephone != null &&
                 form.customer_telephone != ""
             ) {
-                console.log(form.customer_telephone);
-                console.log(form.customer_telephone.length);
+                
+                
                 if (!this.existNumber()) {
                     this.$toast.error("Número para envío whatsapp inválido");
                     return;
@@ -2360,7 +2424,7 @@ export default {
                     return false;
                 }
             } catch (error) {
-                console.log(error);
+                
                 const response = error.response;
                 let {
                     data: { message }
@@ -2408,7 +2472,7 @@ export default {
                     }
                 })
                 .catch(error => {
-                    console.log(error);
+                    
                 });
         },
         savePaymentMethod() {
@@ -2416,7 +2480,7 @@ export default {
                 .post(`/${this.resource_payments}`, this.form_payment)
                 .then(response => {
                     if (response.data.success) {
-                        // console.log(response)
+                        // 
                     } else {
                         this.$toast.error(response.data.message);
                     }
@@ -2425,7 +2489,7 @@ export default {
                     if (error.response.status === 422) {
                         this.records[index].errors = error.response.data;
                     } else {
-                        console.log(error);
+                        
                     }
                 });
         },
@@ -2445,7 +2509,7 @@ export default {
             } else if (this.type == "incomplete") {
                 this.$refs.incomplete.initForm();
             } else {
-                console.log("object");
+                
             }
 
             this.splitPayments = [];

@@ -38,6 +38,15 @@
                 </div>
                 <div class="card-body">
                     <div class="col-md-12 col-lg-12 col-xl-12 mb-2">
+                        <div class="d-flex justify-content-end">
+                            <div class="col-3 text-end">
+                                <el-button
+                                    type="primary"
+                                    @click="clickMultiRegister"
+                                    >Multi matricula</el-button
+                                >
+                            </div>
+                        </div>
                         <div class="row">
                             <div class="col-12 col-md-3">
                                 <label class="label-control w-100">
@@ -230,6 +239,11 @@
             :record="recordCreateRegisterForm"
             :is_payment.sync="showPayment"
             @getRecords="getRecords"
+            :multiRegister.sync="multiRegister"
+            :sections.sync="sections"
+            :levels.sync="levels"
+            :turns.sync="turns"
+            :degrees.sync="degrees"
         >
         </payment-form>
     </div>
@@ -248,7 +262,7 @@ export default {
             loading: false,
             resource: "college/classrooms",
             search: {},
-
+            multiRegister: false,
             recordCreateForm: null,
             recordCreateRegisterForm: null,
             pagination: {},
@@ -319,6 +333,10 @@ export default {
         );
     },
     methods: {
+        clickMultiRegister() {
+            this.showPayment = true;
+            this.multiRegister = true;
+        },
         async Printer(Printer, linkpdf, copies) {
             let paperConfig = {
                 scaleContent: false
