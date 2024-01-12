@@ -50,58 +50,99 @@
                     $egresos=0;
                 @endphp
                 <table width="100%" class="">
-                        <tr>
+                        {{-- <tr>
                             <td class="encabezado">#</td>
                             <td class="encabezado">Fecha</td>
                             <td class="encabezado">Operacion</td>
                              <td class="encabezado">Concepto</td>
                             <td class="encabezado">Monto</td>
-                            <td class="encabezado">Usuario</td>
+                            <td class="encabezado">Usuario</td> --}}
                          <tr>
                             <td class="encabezado">#</td>
                             <td class="encabezado">Fecha</td>
                             <td class="encabezado">Operacion</td>
+                            <td class="encabezado" width="30">Ref</td>
                             <td class="encabezado">Cliente</td>
                             <td class="encabezado">Concepto</td>
                             <td class="encabezado">Monto</td>
                             <td class="encabezado">Usuario</td>
                         </tr>
                     <tbody>
-                        @foreach($records as $row)
-                       <?php
-                        if($row['type']=="1"){
-                         //   $ingresos=$ingresos+$row['amount'];
-                            if($row['method']=="Deposito"){
-                                $depositos=$depositos+$row['amount'];
-                            }
-                            if($row['method']=="YAPE"){
-                                $yape=$yape+$row['amount'];
-                            }
-                            if($row['method']=="PLIN"){
-                                $plin=$plin+$row['amount'];
-                            }
-                            if($row['method']=="Transferencia"){
-                                $transferencia=$transferencia+$row['amount'];
-                            }
+                        @foreach ($records as $row)
+                        <?php
+                        if ($row['type'] == '1' && $row['method'] == 'Efectivo') {
+                            $ingresos = $ingresos + $row['amount'];
                         }
-                        if($row['type']=="2"){
-                            $egresos=$egresos+$row['amount'];
+                        if ($row['type'] == '1' && $row['method'] == 'Depositos') {
+                            $depositos = $depositos + $row['amount'];
+                        }
+                        if ($row['type'] == '1' && $row['method'] == 'Transferencia') {
+                            $transferencia = $transferencia + $row['amount'];
                         }
 
-                       ?>
+                        if ($row['type'] == '2') {
+                            $egresos = $egresos + $row['amount'];
+                        }
+                        $date = \Carbon\Carbon::parse($row['date'])->format('d-m-Y')." ".\Carbon\Carbon::parse($row['created_at'])->format('h:m:s');
+                        
+                        if(isset($row["document_id"]) && $row["document_id"]!=null){
+                            $document = \App\Models\Tenant\Document::find($row["document_id"]);
+                            $date = $document->date_of_issue." ".$document->time_of_issue;
+                        }
+                        if(isset($row["sale_note_id"]) && $row["sale_note_id"]!=null){
+                            $document = \App\Models\Tenant\SaleNote::find($row["sale_note_id"]);
+                            $date = $document->date_of_issue->format('Y-m-d')." ".$document->time_of_issue;
+                        }
+                        ?>
                         <tr>
-                            <td class="celda_loop">{{$loop->iteration}}</td>
-                            <td class="celda_descrip">{{$row['date']}} {{$row['created_at']}}</td>
-                            @if($row['type']=="1")
-                            <td class="celda_date">Ingreso - Venta</td>
+                            <td class="celda_loop">{{ $loop->iteration }}</td>
+                            <td class="celda_descrip">
+                                {{$date}}
+                            </td>
+                      
+                         
+                            @if ($row['type'] == '1' && $row['method'])
+                                <td class="celda_left">{{$row['method']}}</td>
                             @endif
-                            @if($row['type']=="2")
-                            <td class="celda_date">Egresos</td>
+                           
+                            @if ($row['type'] == '2' && $row['method'] == 'Efectivo')
+                                    <td class="celda_left">
+                                       {{$row['method']}}
+                                    </td>
                             @endif
-
-                            <td class="celda_date">{{$row['description']}}</td>
-                            <td class="celda_date">{{$row['amount']}}</td>
-                            <td class="celda_date">{{$row['user']->name}}</td>
+                                <td class="celda_left">{{$row["cash"]["reference_number"]}}</td>
+                            @if ($row['type'] == '2' && $row['method'] == 'Efectivo')
+                                <td class="celda_left">
+                                    {{ $row['subcategories']->subcategory }}
+                                </td>
+                            @else
+                                @if ($row['type'] == '1' && $row['sale_note_id'] == null && $row['document_id'] == null)
+                                    <td class="celda_left">
+                                        {{ $row['subcategories']->subcategory }}
+                                    </td>
+                                @else
+                                    @if ($row['sale_note_id'] != null && $row['document_id'] == null)
+                                        <td class="celda_left">
+                                            {{ $row['salenote']['customer']->name }}
+                                        </td>
+                                    @else
+                                        @if ($row['sale_note_id'] != null && $row['document_id'] != null)
+                                            <td class="celda_left">
+                                                {{ $row['salenote']['customer']->name }}
+                                            </td>
+                                        @else
+                                            @if ($row['document_id'] != null && $row['sale_note_id'] == null)
+                                                <td class="celda_left">
+                                                    {{ $row['document']['customer']->name }}
+                                                </td>
+                                            @endif
+                                        @endif
+                                    @endif
+                                @endif
+                            @endif
+                            <td class="celda_left">{{ $row['description'] }}</td>
+                            <td class="celda_date">{{ $row['amount'] }}</td>
+                            <td class="celda_left">{{ $row['user']->name }}</td>
 
                         </tr>
                     @endforeach
@@ -109,44 +150,51 @@
                     </tbody>
                     </table>
                     <table>
-                        <tr>
-                           <td class="categoria celda_right"><b>RESUMEN DE ARQUEO</b></td>
-                       </tr>
-                       <tr>
-                           <td class="categoria celda_right">Ingresos - Venta : <b> S/. {{$ingresos}}</b></td>
-                       </tr>
-                       <tr>
-                           <td class="categoria celda_right">Egresos : <b> S/. {{$egresos}}</b></td>
-                       </tr>
+                            <tr>
+                               <td colspan="6" class="categoria celda_right"></td>
+                               <td  class="categoria celda_right"><b>RESUMEN DE ARQUEO</b></td>
+                           </tr>
+                           <tr>
+                               <td colspan="6" class="categoria celda_right">Ingresos - Venta : </td>
+                               <td class="categoria celda_right"><b> S/. {{$ingresos}}</b></td>
+                           </tr>
+                           <tr>
+                              
+                                <td colspan="6" class="categoria celda_right">Egresos - Gastos : </td>
+                                <td class="categoria celda_right"><b> S/. {{$egresos}}</b></td>
+                           </tr>
 
+                           @if($type_box=="2" && $type_box!=null)
+                           <tr>
+                               <td class="categoria celda_right">Gastos - Egresos : <b> S/. {{$egresos}}</b></td>
+                           </tr>
+                           @endif
 
+                           @if($depositos>0.00 || $transferencia>00)
+                           <tr>
+                               <td class="categoria celda_right">Depositos - Transferencia : <b> S/. {{number_format($depositos+$transferencia,2)}}</b></td>
+                           </tr>
+                           @endif
 
-                       @if($type_box=="2" && $type_box!=null)
-                       <tr>
-                           <td class="categoria celda_right">Gastos - Egresos : <b> S/. {{$egresos}}</b></td>
-                       </tr>
+                           @if($type_box=="1" && $type_box!=null)
+                           <tr>
+                               <td class="categoria celda_right">Totales : <b> S/. {{number_format(($ingresos-$egresos)+$depositos+$transferencia,2)}}</b></td>
+                           </tr>
+                           @endif
 
-                       @endif
-                       @if($depositos>0.00 || $transferencia>00)
-                       <tr>
-                           <td class="categoria celda_right">Depositos - Transferencia : <b> S/. {{number_format($depositos+$transferencia,2)}}</b></td>
-                       </tr>
-                       @endif
-                       @if($type_box=="1" && $type_box!=null)
-                       <tr>
-                           <td class="categoria celda_right">Totales : <b> S/. {{number_format(($ingresos-$egresos)+$depositos+$transferencia,2)}}</b></td>
-                       </tr>
-                       @if($type_box=="2" && $type_box!=null)
-                       <tr>
-                           <td class="categoria celda_right">Efectivo  Gastos: <b> S/. {{$egresos}}</b></td>
-                       </tr>
-                       @endif
-                       @endif
-                       @if($type_box=="1" && $type_box!=null)
-                       <tr>
-                           <td class="categoria celda_right">Efectivo : <b> S/. {{number_format($ingresos-$egresos,2)}}</b></td>
-                       </tr>
-                       @endif
+                           @if($type_box=="2" && $type_box!=null)
+                           <tr>
+                               <td class="categor1ia celda_right">Efectivo  Gastos: <b> S/. {{$egresos}}</b></td>
+                               
+                           </tr>
+                           @endif
+
+                           @if($type_box=="1" && $type_box!=null)
+                           <tr>
+                               <td colspan="6" class="categoria celda_right">Efectivo</td>
+                               <td class="categoria celda_right"><b> S/. {{number_format($ingresos-$egresos,2)}}</b></td>
+                           </tr>
+                           @endif
                </table>
                 @else
         <div class="callout callout-info">

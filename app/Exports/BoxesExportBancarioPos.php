@@ -12,6 +12,9 @@ class BoxesExportBancarioPos implements  FromView, ShouldAutoSize
 {
     use Exportable;
 
+    protected $records;
+    protected $company;
+    protected $type_box;
     public function records($records) {
 
         $this->records = $records;
@@ -29,14 +32,9 @@ class BoxesExportBancarioPos implements  FromView, ShouldAutoSize
         return $this;
     }
 
-    public function establishment($establishment) {
-        $this->establishment = $establishment;
-
-        return $this;
-    }
 
     public function view(): View {
-        return view('report::boxes.report_excel_bancario_pos', [
+        return view('report::boxes.report_excel', [
             'records'=> $this->records,
             'company' => $this->company,
             'type_box'=>$this->type_box,

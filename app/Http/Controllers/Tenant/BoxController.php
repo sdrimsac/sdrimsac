@@ -30,6 +30,7 @@ use Modules\Report\Exports\BoxesResumenExport;
 use App\Http\Resources\Tenant\PaymentMethodTypeCollection;
 use App\Models\Tenant\CreditList;
 use Modules\Dashboard\Helpers\DashboardSalePurchase;
+use App\Exports\BoxesExportCashClosed;
 use Modules\Restaurant\Models\Food;
 
 class BoxController extends Controller
@@ -522,6 +523,40 @@ class BoxController extends Controller
         }
 
         return new BoxCollection($data->paginate(config('tenant.items_per_page')));
+    }
+    public function reports_results_excel(Request $request){
+        $date_close = $request['date_close'];
+        $user_id = $request['user_id'];
+        $user = User::find($user_id);
+        $user = ($user) ? $user : auth()->user();
+        $establishment = Establishment::findOrFail($user->establishment_id);
+        $company = Company::first();
+        $date_start = $request['date_start'];
+        $date_end = $request['date_end'];
+        //------------------------------------------------------------------------------------------------------------
+        if ($date_close) {
+            $data = Box::whereHas('cash', function ($q) use ($date_close) {
+                $q->where('date_closed', $date_close);
+            });
+        } else {
+            $data  = Box::query();
+        }
+
+        $data->with(['cash'])
+            ->OrderBy("date", "desc")->OrderBy("type", "desc")->latest();
+
+        if ($user_id) {
+            $data =  $data->where('user_id', $user_id);
+        }
+        $type_box  = 1;
+        $boxes_report = $data->get();
+
+        return (new BoxesExportCashClosed)
+        ->records($boxes_report)
+        ->type_box($type_box)
+        ->company($company)
+        ->download('Lista_de_cajas _cerradas' . Carbon::now() . '.xlsx');
+    
     }
     public function reports_results_pdf(Request $request)
     {

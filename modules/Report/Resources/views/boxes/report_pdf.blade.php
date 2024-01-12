@@ -291,38 +291,15 @@
                                 <td class="celda_descrip">
                                     {{$date}}
                                 </td>
-                                @if ($row['type'] == '1' && $row['method'] == 'Transferencia')
-                                    <td>Transferencia Bancaria</td>
+                          
+                             
+                                @if ($row['type'] == '1' && $row['method'])
+                                    <td class="celda_left">{{$row['method']}}</td>
                                 @endif
-                                @if ($row['type'] == '1' && $row['method'] == 'Efectivo')
-                                    @if ($row['type'] == '1' && $row['sale_note_id'] == null && $row['document_id'] == null)
-                                        <td class="celda_left">
-                                            Ingreso
-                                        </td>
-                                    @else
-                                        <td class="celda_left">
-                                            Ingreso - Venta
-                                        </td>
-                                    @endif
-                                @endif
-                                @if ($row['type'] == '1' && $row['method'] == 'Deposito')
-                                    <td class="celda_left">Deposito Bancario</td>
-                                @endif
-                                @if ($row['type'] == '1' && $row['method'] == 'Deposito')
-                                    <td class="celda_left">Deposito Bancario</td>
-                                @endif
-                                @if ($row['type'] == '1' && $row['method'] == 'Transferencia')
-                                   <td class="celda_left">Transferencia Bancario</td>
-                                @endif
-                                @if ($row['type'] == '1' && $row['method'] == 'YAPE')
-                                    <td class="celda_left">YAPE</td>
-                                 @endif
-                                @if ($row['type'] == '1' && $row['method'] == 'PLIN')
-                                     <td class="celda_left">PLIN</td>
-                                @endif
+                               
                                 @if ($row['type'] == '2' && $row['method'] == 'Efectivo')
                                         <td class="celda_left">
-                                            Egresos - Gastos
+                                           {{$row['method']}}
                                         </td>
                                 @endif
                                     <td class="celda_left">{{$row["cash"]["reference_number"]}}</td>

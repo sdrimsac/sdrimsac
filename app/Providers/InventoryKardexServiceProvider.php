@@ -36,7 +36,6 @@ class InventoryKardexServiceProvider extends ServiceProvider
     {
         DocumentItem::created(function ($document_item) {
             $document = Document::whereIn('document_type_id', ['01', '03'])->find($document_item->document_id);
-
             if ($document) {
 
                 $inventory_kardex = $this->saveInventoryKardex($document, $document_item->item_id, $document->establishment_id, $document_item->quantity, $document->date_of_issue);

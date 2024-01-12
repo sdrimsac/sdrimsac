@@ -766,6 +766,7 @@ if ($hostname) {
                 Route::get('expensesbox', [App\Http\Controllers\Tenant\BoxController::class, 'index'])->name('tenant.expensesbox.index')->middleware('just.admin');
                 Route::get('expensesbox/reports', [App\Http\Controllers\Tenant\BoxController::class, 'reports_results']);
                 Route::get('expensesbox/reports_pdf', [App\Http\Controllers\Tenant\BoxController::class, 'reports_results_pdf']);
+                Route::get('expensesbox/reports_excel', [App\Http\Controllers\Tenant\BoxController::class, 'reports_results_excel']);
                 Route::get('expensesbox/create', [App\Http\Controllers\Tenant\BoxController::class, 'create']);
                 Route::get('expensesbox/columns', [App\Http\Controllers\Tenant\BoxController::class, 'columns']);
                 Route::get('expensesbox/tables', [App\Http\Controllers\Tenant\BoxController::class, 'tables']);

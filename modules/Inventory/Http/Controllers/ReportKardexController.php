@@ -216,7 +216,6 @@ class ReportKardexController extends Controller
     public function excel(Request $request)
     {
 
-
         $balance = 0;
         $company = Company::first();
         $establishment = Establishment::first();

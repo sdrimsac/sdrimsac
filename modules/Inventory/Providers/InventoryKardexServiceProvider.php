@@ -77,9 +77,11 @@ class InventoryKardexServiceProvider extends ServiceProvider
                 if (!$document_item->document->sale_note_id && !$document_item->document->order_note_id)
                     $this->updateStock($document_item->item_id, ($factor * ($quantity * $presentationQuantity)), $warehouse->id);
             } else {
+                $factor = ($document->document_type_id === '07') ? 1 : -1;
                 $item = Item::findOrFail($document_item->item_id);
                 $document = $document_item->document;
-                $factor = ($document->document_type_id === '07') ? 1 : -1;
+                $this->createInventoryKardex($document_item->document, $document_item->item_id, ($factor * ($document_item->quantity * $presentationQuantity)), $warehouse->id);
+
                 $this->updateStock($document_item->item_id, ($factor * ($document_item->quantity * $presentationQuantity)), $warehouse->id);
                 foreach ($item->sets as $it) {
                     $ind_item  = $it->individual_item;
@@ -166,7 +168,7 @@ class InventoryKardexServiceProvider extends ServiceProvider
                 }
             }
             if ($sale_note_item->item->is_stock == 'Si' && !$sale_note_item->sale_note->from_consignment) {
-
+                $warehouse = $this->findWarehouse($sale_note_item->sale_note->establishment_id);
                 if (!$sale_note_item->item->is_set) {
                     $quantity = $sale_note_item->quantity;
 
@@ -185,7 +187,9 @@ class InventoryKardexServiceProvider extends ServiceProvider
                         $this->updateStock($sale_note_item->item_id, (-1 * ($quantity * $presentationQuantity)), $warehouse->id);
                     }
                 } else {
-
+                    $quantity = $sale_note_item->quantity;
+                    $presentationQuantity = (!empty($sale_note_item->item->presentation)) ? $sale_note_item->item->presentation->quantity_unit : 1;
+                    $this->createInventoryKardexSaleNote($sale_note_item->sale_note, $sale_note_item->item_id, (-1 * ($quantity * $presentationQuantity)), $warehouse->id, $sale_note_item->id);
                     $item = Item::findOrFail($sale_note_item->item_id);
                     foreach ($item->sets as $it) {
                         $ind_item  = $it->individual_item;
