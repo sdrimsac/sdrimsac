@@ -1514,7 +1514,14 @@ class CashController extends Controller
         $amount = $cash->beginning_balance;
         $establishment = Establishment::find($user->establishment_id);
         $establishment_description = $establishment->description;
-        $message = "La caja de $name ha sido aperturada con $amount en $establishment_description";
+        $area = Area::find($user->area_id);
+        if($area){
+            $area_description = $area->description;
+            $message = "$area_description con usuario:$name, ha sido aperturada con S/ $amount en $establishment_description";
+        }else{
+            
+            $message = "usuario:$name, aperturó caja con S/ $amount en $establishment_description";
+        }
         (new WhatsappController)->sendMessageAll($message);
         return [
             "cash_id" => $cash->id,
