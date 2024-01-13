@@ -410,6 +410,7 @@ class PosController extends Controller
         });
         return $customers;
     }
+  
     public function table($table)
     {
         $configuration = Configuration::first();
@@ -420,13 +421,13 @@ class PosController extends Controller
 
 
 
-            if ($configuration->college) {
-                $customers = $customers->whereIn('id', function ($query) {
+            // if ($configuration->college) {
+            //     $customers = $customers->whereIn('id', function ($query) {
 
-                    $query->select('parent_id')
-                        ->from('parents');
-                });
-            }
+            //         $query->select('parent_id')
+            //             ->from('parents');
+            //     });
+            // }
             $customers = $customers->limit(5)->get();
 
             $customers = $customers->transform(function ($row) {

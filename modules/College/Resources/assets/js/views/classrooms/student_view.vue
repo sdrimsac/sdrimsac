@@ -4,7 +4,7 @@
         @close="close"
         :visible="showDialog"
         v-loading="loading"
-        width="650px"
+        width="750px"
         append-to-body
         title="Lista de estudiantes"
     >
@@ -66,6 +66,30 @@
                             >
                                 Cancelar pagos
                             </el-button>
+                            <el-tooltip
+                                effect="dark"
+                                content="Cambiar de salon"
+                                placement="top"
+                            >
+                                <el-button
+                                    @click="changeClassRoom(student)"
+                                    type="primary"
+                                >
+                                    <i class="fas fa-door-open"></i>
+                                </el-button>
+                            </el-tooltip>
+                            <el-tooltip
+                                effect="dark"
+                                content="Cambiar de apoderado"
+                                placement="top"
+                            >
+                                <el-button
+                                    @click="changeClassParent(student)"
+                                    type="primary"
+                                >
+                                    <i class="fas fa-user-friends"></i>
+                                </el-button>
+                            </el-tooltip>
                         </div>
                     </td>
                 </tr>
@@ -85,29 +109,73 @@
             :member="member"
             @getRecords="getRecords"
         ></payments-form>
+        <modal-change-class-room
+            :showDialog.sync="showChangeClassRoom"
+            :student="student"
+            @getRecords="getRecords"
+            @getRecordsClose="getRecordsClose"
+            :classroomId="classroomId"
+            :sections.sync="sections"
+            :levels.sync="levels"
+            :turns.sync="turns"
+            :degrees.sync="degrees"
+        >
+        </modal-change-class-room>
+          <modal-change-parent
+            :showDialog.sync="showChangeParent"
+            :student="student"
+            @getRecords="getRecords"
+            @getRecordsClose="getRecordsClose"
+       
+        >
+        </modal-change-parent>
     </el-dialog>
 </template>
 
 <script>
 const PaymentCollege = () => import("../../components/payment_college.vue");
 const PaymentsForm = () => import("../../components/payment_form.vue");
+const ModalChangeClassRoom = () => import("./modal_change_class_room.vue");
+const ModalChangeParent = () => import("./modal_change_parent.vue");
 export default {
-    props: ["showDialog", "classroomId"],
-    components: { PaymentCollege, PaymentsForm },
+    props: [
+        "showDialog",
+        "classroomId",
+        "levels",
+        "turns",
+        "degrees",
+        "sections"
+    ],
+    components: { PaymentCollege, PaymentsForm, ModalChangeClassRoom,ModalChangeParent },
     data() {
         return {
+            showChangeParent:false,
             loading: false,
             students: [],
             allStudents: [],
             description: null,
             showPayment: false,
             member: null,
-            showPaymentsForm: false
+            showPaymentsForm: false,
+            showChangeClassRoom: false,
+            student: null
         };
     },
     methods: {
+        changeClassParent(student) {
+            this.showChangeParent = true;
+            this.student = student;
+        },
+        changeClassRoom(student) {
+            this.showChangeClassRoom = true;
+            this.student = student;
+        },
+        getRecordsClose() {
+            this.$emit("getRecords");
+            this.close();
+        },
         getRecords() {
-            
+            this.$emit("getRecords");
         },
         openFormPayments(record) {
             this.showPaymentsForm = true;
@@ -129,6 +197,7 @@ export default {
             });
         },
         async open() {
+            console.log(this.levels);
             try {
                 this.loading = true;
                 const response = await this.$http(

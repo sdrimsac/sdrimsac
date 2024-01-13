@@ -25,7 +25,7 @@ class CollegePersonController extends Controller
     {
         $records = CollegeMember::where('parent_id', $parent_id)
             ->whereDoesntHave('student', function ($query) {
-                $query->where('active', 1); 
+                $query->where('active', 1);
             })
             // ->where(function ($query){
             //     $query->doesntHave('student')->orWhereHas('student', function ($query) {
@@ -36,6 +36,26 @@ class CollegePersonController extends Controller
         return $records;
     }
 
+    public function changeParent(Request $request)
+    {
+        $parent_id_new = $request->parent_id_new;
+        // $parent_id_old = $request->parent_id_old;
+        $member_id = $request->member_id;
+        $member = CollegeMember::find($member_id);
+        if($member){
+            $member->parent_id = $parent_id_new;
+            $member->save();
+
+            return [
+                'success' => true,
+                'message' => 'Padre cambiado'
+            ];
+        }
+        return [
+            'success' => false,
+            'message' => 'No se encontró el registro'
+        ];
+    }
     public function person($number, Request $request)
     {
 

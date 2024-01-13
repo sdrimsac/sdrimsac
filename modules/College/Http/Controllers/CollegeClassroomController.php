@@ -21,6 +21,25 @@ use Modules\College\Models\CollegeTurn;
 class CollegeClassroomController extends Controller
 {
 
+    public function changeClassroom(Request $request)
+    {
+        $classroom = CollegeStudent::where('student_id', $request->student_id)
+            ->where('classroom_id', $request->classroom_id_old)->first();
+
+        if (!isset($classroom)) {
+            $classroom = new CollegeStudent();
+            $classroom->student_id = $request->student_id;
+            $classroom->classroom_id = $request->classroom_id_new;
+            $classroom->save();
+        } else {
+            $classroom->classroom_id = $request->classroom_id_new;
+            $classroom->save();
+        }
+        return [
+            'success' => true,
+            'message' => 'Salón cambiado'
+        ];
+    }
     public function students($classroom_id)
     {
 

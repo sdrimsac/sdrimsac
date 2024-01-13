@@ -206,7 +206,7 @@
                                             </tr>
                                         </thead>
                                         <tbody v-if="form.items.length > 0">
-                                            <tr v-for="(row, index) in form.items">
+                                            <tr v-for="(row, index) in form.items" :key="index">
                                                 <td>{{index + 1}}</td>
                                                 <td>
                                                     {{row.item.description}}

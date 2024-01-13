@@ -55,6 +55,8 @@ class RestaurantController extends Controller
     {
         $configuration = Configuration::first();
         $value = $request->value;
+        $parents = $request->parents;
+
         $persons = Person::query();
 
 
@@ -66,7 +68,7 @@ class RestaurantController extends Controller
             ->whereType('customers')->orderBy('name')
             ->whereIsEnabled();
 
-        if ($configuration->college) {
+        if ($parents) {
             $persons = $persons->whereIn('id', function ($query) {
 
                 $query->select('parent_id')

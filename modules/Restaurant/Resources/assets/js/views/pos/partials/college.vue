@@ -150,6 +150,11 @@
         <student-view
             :showDialog.sync="showStudentsView"
             :classroomId="recordViewStudent"
+            :sections.sync="sections"
+            :levels.sync="levels"
+            :turns.sync="turns"
+            :degrees.sync="degrees"
+            @getRecords="getRecords"
         >
         </student-view>
         <payment-form

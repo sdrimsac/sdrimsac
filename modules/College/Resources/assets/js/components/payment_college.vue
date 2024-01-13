@@ -1417,8 +1417,10 @@ export default {
                 this.input_person.number = this.$refs.select_person.$el.getElementsByTagName(
                     "input"
                 )[0].value;
+                let url = `/caja/search_customers?value=${this.input_person.number}`;
+                
                 const response = await this.$http(
-                    `/caja/search_customers?value=${this.input_person.number}`
+                    url
                 );
                 const { persons } = response.data;
 

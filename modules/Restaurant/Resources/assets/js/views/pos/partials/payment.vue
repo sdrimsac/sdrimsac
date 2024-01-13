@@ -31,6 +31,14 @@
                     <div class="col-lg-12">
                         <div class="mb-2">
                             <div class="card bg-light">
+                                <div class="row"
+                                v-if="configuration.college"
+                                >
+                                <el-checkbox
+                                    @change="chageRegister"
+                                    v-model="notRegister"
+                                    >No registrado</el-checkbox>
+                                </div>
                                 <div class="row ">
                                     <div class="  col-md-6 col-lg-5 col-sm-6">
                                         <label class="control-label"
@@ -139,7 +147,7 @@
                                                     >
                                                     <el-button
                                                         v-if="
-                                                            !configuration.college
+                                                            !configuration.college || notRegister
                                                         "
                                                         @click="createClient"
                                                         >Nuevo
@@ -1395,6 +1403,7 @@ export default {
     },
     data() {
         return {
+            notRegister:false,
             sumCoins: [],
             coins: [
                 {
@@ -1651,6 +1660,13 @@ export default {
     },
     mounted() {},
     methods: {
+        chageRegister(){
+            if(this.notRegister){
+                this.bank = "Colocar el nombre del alumno";
+            }else{
+                this.bank = "";
+            }   
+        },
         clearSumCoins() {
             this.sumCoins = [];
         },
@@ -1977,7 +1993,7 @@ export default {
             }
         },
         async reloadDataCustomers(customer_id) {
-            console.log("dasdas");
+      
             const response = await this.$http.get(
                 `/pos/table/customers?customer_id=${customer_id || ""}`
             );
@@ -2103,8 +2119,10 @@ export default {
                 this.input_person.number = this.$refs.select_person.$el.getElementsByTagName(
                     "input"
                 )[0].value;
+                let url =   `/caja/search_customers?value=${this.input_person.number}`;
+                url = `${url}&parents=${this.notRegister ? 0 : 1}`;
                 const response = await this.$http(
-                    `/caja/search_customers?value=${this.input_person.number}`
+                  url
                 );
                 const { persons } = response.data;
 
@@ -3333,7 +3351,7 @@ export default {
             ) {
                 this.setSeries();
             }
-            if (this.configuration.college && !this.conf.pos_quick_sale) {
+            if (this.configuration.college && !this.conf.pos_quick_sale && !this.notRegister) {
                 if (!this.form.student_id) {
                     this.$toast.error("El alumno es obligatorio");
 

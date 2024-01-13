@@ -29,6 +29,7 @@ Route::prefix('college')->middleware(['auth', 'redirect.module', 'locked.tenant'
     Route::post('/persons/attorney', [CollegePersonController::class, 'create_attorney_type']);
     Route::get('/persons/attorney/records', [CollegePersonController::class, 'records_attorney']);
     Route::get('/persons/{number}', [CollegePersonController::class, 'person']);
+    Route::post('/persons/change', [CollegePersonController::class, 'changeParent']);
 
     //levels
     Route::get('/levels', [CollegeLevelsController::class, 'index'])->name('college.levels.index');
@@ -63,6 +64,7 @@ Route::prefix('college')->middleware(['auth', 'redirect.module', 'locked.tenant'
     Route::get('/classrooms/records', [CollegeClassroomController::class, 'records']);
     Route::get('/classrooms/tables', [CollegeClassroomController::class, 'tables']);
     Route::post('/classrooms', [CollegeClassroomController::class, 'store']);
+    Route::post('/classrooms/change', [CollegeClassroomController::class, 'changeClassroom']);
     Route::get('/classrooms/{id}', [CollegeClassroomController::class, 'students']);
 
     Route::post('/payments', [CollegePaymentController::class, 'store']);
