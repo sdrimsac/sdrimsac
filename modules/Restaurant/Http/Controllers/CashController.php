@@ -1508,7 +1508,14 @@ class CashController extends Controller
         //</Preparamos la cadena de texto que guardanermos en el parametro 'reference_number) >
 
         $cash->save();
-
+        //crea un mensaje con el nombre del usuario y el monto con el cual está abriendo caja
+        $user = User::find($cash->user_id);
+        $name = $user->name;
+        $amount = $cash->beginning_balance;
+        $establishment = Establishment::find($user->establishment_id);
+        $establishment_description = $establishment->description;
+        $message = "La caja de $name ha sido aperturada con $amount en $establishment_description";
+        (new WhatsappController)->sendMessageAll($message);
         return [
             "cash_id" => $cash->id,
             'success' => true,
