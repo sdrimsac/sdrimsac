@@ -1007,8 +1007,9 @@ class DocumentController extends Controller
                 } else {
                     $item->total = 0;
                     $item->advances = 0;
+                    $id_to_document =$item->hotel_rent_id;
                     HotelRentDocument::create([
-                        'hotel_rent_id' => $item->id,
+                        'hotel_rent_id' => $id_to_document,
                         'document_id' => $document->id,
                         'is_advance' => false,
                     ]);
@@ -1019,7 +1020,7 @@ class DocumentController extends Controller
         if ($request->hotel_rent_id) {
             $hotel_rent = HotelRent::findOrFail($request->hotel_rent_id);
             $hotel_rent_items = $hotel_rent->items;
-
+            
             if ($request->is_advance) {
                 HotelRentDocument::create([
                     'hotel_rent_id' => $hotel_rent->id,

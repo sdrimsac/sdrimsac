@@ -580,8 +580,10 @@ class SaleNoteController extends Controller
                 $vacate = $request->vacate;
                 if ($request->hotel_rent_item_ids) {
                     $hotel_rent_items = HotelRentItem::whereIn('id', $request->hotel_rent_item_ids)->get();
+             
                     foreach ($hotel_rent_items as $item) {
                         $item->payment_status = "Pagado";
+                        $id_to_document =$item->hotel_rent_id;
                         $item->sale_note_id = $this->sale_note->id;
                         $item->checkout_date = date('Y-m-d');
                         $item->checkout_time = date('H:i:s');
@@ -592,7 +594,7 @@ class SaleNoteController extends Controller
                             $table->save();
                         } else {
                             HotelRentDocument::create([
-                                'hotel_rent_id' => $item->id,
+                                'hotel_rent_id' => $id_to_document,
                                 'sale_note_id' => $this->sale_note->id,
                                 'is_advance' => false,
                             ]);
