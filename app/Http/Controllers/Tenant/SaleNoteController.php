@@ -637,8 +637,9 @@ class SaleNoteController extends Controller
                                 $table->sendMessageDesocupied();
                                 $table->save();
                             } else {
+                                $id_to_document =$item->hotel_rent_id;
                                 HotelRentDocument::create([
-                                    'hotel_rent_id' => $item->id,
+                                    'hotel_rent_id' => $id_to_document,
                                     'sale_note_id' => $this->sale_note->id,
                                     'is_advance' => false,
                                 ]);
