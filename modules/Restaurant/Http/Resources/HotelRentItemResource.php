@@ -122,6 +122,7 @@ class HotelRentItemResource extends JsonResource
         if($this->credit_line > 0){
             $credit_line = $this->credit_line - $total_all_orden;
         }
+        $tes = $this->total + $this->advances;
         return [
             'credit_line' => $credit_line,
             'has_services' => $has_services,
@@ -144,7 +145,7 @@ class HotelRentItemResource extends JsonResource
             'customer' => $customer,
             'total_room' => $this->total + $this->advances,
             'total_orden' => number_format($total_all_orden, 2),
-            'total' => number_format(($this->total+$this->advances) + $total_all_orden - $this->advances, 2),
+            'total' => number_format($this->total + $total_all_orden, 2),
             'is_month_rent' => $this->is_month_rent,
         ];
     }

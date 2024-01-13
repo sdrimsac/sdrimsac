@@ -27,6 +27,7 @@ class CreditListPersonCollection extends ResourceCollection
             $total = number_format($total, 2, ".", "");
             return [
                 'id' => $row->id,
+                'credit_list_id' => $credit_list->id,
                 'seller' => $seller,
                 'product' => optional($row->food)->description,
                 'price' => $total,

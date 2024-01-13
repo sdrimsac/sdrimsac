@@ -26,6 +26,7 @@ use Barryvdh\DomPDF\Facade as PDF;
 use Exception;
 use Modules\Restaurant\Events\OrdenEvent;
 use Modules\Restaurant\Events\PrintEvent;
+use Modules\Restaurant\Models\Area;
 use Modules\Restaurant\Models\Food;
 
 class CreditListController extends Controller
@@ -282,10 +283,19 @@ class CreditListController extends Controller
     }
     public function tables()
     {
+        $printers = Area::whereNotNull('printer')->get()
+        ->transform(function($row, $key){
+            return [
+                'id' => $row->id,
+                'description' => $row->description,
+                'printer' => $row->printer,
+            ];
+        });
         $establishments = Establishment::all();
         $series = Series::all();
         return [
             'success' => true,
+            'printers' => $printers,
             'establishments' => $establishments,
             'series' => $series,
         ];

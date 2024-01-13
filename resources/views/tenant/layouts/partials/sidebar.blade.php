@@ -522,7 +522,7 @@
                     data-clicked="{{ $path[0] === 'college' && $path[1] == 'students' ? true : false }}{{ $path[0] === 'college' && $path[1] == 'classrooms' ? true : false }}{{ $path[0] === 'college' && $path[1] == 'persons' ? true : false }}{{ $path[0] === 'college' && $path[1] == 'plans' ? true : false }}{{ $path[0] === 'college' && $path[1] == 'periods' ? true : false }}{{ $path[0] === 'college' && $path[1] == 'penalties' ? true : false }}{{ $path[0] === 'college' && $path[1] == 'levels' ? true : false }}{{ $path[0] === 'college' && $path[1] == 'listsuplies' ? true : false }}">
                     <i class="icofont-graduate icon-parent"></i>
 
-                    <span class="label">Suscripción Escoslar</span>
+                    <span class="label">Suscripción Escolar</span>
                 </a>
 
                 <ul id="college" class="collapse">

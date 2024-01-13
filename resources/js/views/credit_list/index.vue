@@ -153,8 +153,9 @@
                                         <th>FECHA</th>
                                         <th>PRODUCTO</th>
                                         <th>CANTIDAD</th>
-                                        <th class="text-end">TOTAL</th>
+                                        <th class="text-center">TOTAL</th>
                                         <th>VENDEDOR</th>
+                                        <th></th>
                                     </thead>
                                     <tbody>
                                         <tr
@@ -166,10 +167,21 @@
                                             <td>{{ record.date }}</td>
                                             <td>{{ record.product }}</td>
                                             <td>{{ record.quantity }}</td>
-                                            <td class="text-end">
+                                            <td class="text-center">
                                                 {{ record.price }}
                                             </td>
                                             <td>{{ record.seller }}</td>
+                                            <td>
+                                                <el-button
+                                                    @click="
+                                                        clickPrint(record.credit_list_id)
+                                                    "
+                                                    type="success"
+                                                    size="mini"
+                                                >
+                                                    <i class="fa fa-print"></i>
+                                                </el-button>
+                                            </td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -177,6 +189,32 @@
                         </div>
                     </div>
                 </div>
+                <el-dialog
+                    append-to-body
+                    :visible.sync="showDialogPrinters"
+                    title="Seleccione una impresora"
+                >
+                    <el-select
+                        class="m-2"
+                        v-model="printer_id"
+                        placeholder="Seleccione una impresora"
+                    >
+                        <el-option
+                            v-for="printer in printers"
+                            :key="printer.id"
+                            :label="printer.printer"
+                            :value="printer.id"
+                        ></el-option>
+                    </el-select>
+                    <span slot="footer" class="dialog-footer">
+                        <el-button @click="showDialogPrinters = false"
+                            >Cancelar</el-button
+                        >
+                        <el-button type="primary" @click="Printer"
+                            >Aceptar</el-button
+                        >
+                    </span>
+                </el-dialog>
             </div>
         </div>
     </div>
@@ -199,14 +237,15 @@ export default {
     components: {},
     data() {
         return {
-            showPaid:false,
+            showDialogPrinters: false,
+            showPaid: false,
             total: 0,
             loading: false,
             resource: "credit-list",
             records: [],
             establishments: [],
             form: {
-                paid:"0"
+                paid: "0"
             },
             input_person: {},
             loading_search: false,
@@ -218,7 +257,11 @@ export default {
             series: [],
             resource_payments: "",
             loading_submit: false,
-            list_ordens: []
+            list_ordens: [],
+            loading_print: true,
+            printers: [],
+            currentCreditList: null,
+            printer_id: null
         };
     },
     created() {
@@ -228,7 +271,74 @@ export default {
         //           this.closeBox=response.data.closebox
         //         })
     },
+    mounted() {
+        qz.security.setCertificatePromise((resolve, reject) => {
+            this.$http
+                .get("/api/qz/crt/override", {
+                    responseType: "text"
+                })
+                .then(response => {
+                    resolve(response.data);
+                })
+                .catch(error => {
+                    reject(error.data);
+                });
+        });
+        qz.security.setSignaturePromise(toSign => {
+            return (resolve, reject) => {
+                this.$http
+                    .post("/api/qz/signing", {
+                        request: toSign
+                    })
+                    .then(response => {
+                        resolve(response.data);
+                    })
+                    .catch(error => {
+                        reject(error.data);
+                    });
+            };
+        });
+    },
     methods: {
+        async Printer() {
+            let paperConfig = {
+                scaleContent: false
+            };
+
+            let printer = this.printers.find(printer => {
+                return printer.id == this.printer_id;
+            });
+
+            let config = qz.configs.create(printer.printer, paperConfig);
+            let linkpdf = `/credit-list/receipt/${this.currentCreditList}/ticket`;
+            if (!qz.websocket.isActive()) {
+                await qz.websocket.connect(config);
+            }
+            let data = [
+                {
+                    type: "pdf",
+                    format: "file",
+                    data: linkpdf
+                }
+            ];
+
+            // qz.print(config, data).catch(e => {
+            //     this.$toast.error(e.message);
+            // });
+            for (let index = 0; index < 2; index++) {
+                await new Promise(resolve => setTimeout(resolve, 1500));
+                qz.print(config, data).catch(e => {
+                    this.$toast.error(e.message);
+                });
+            }
+        },
+
+        clickPrint(credit_list) {
+            this.showDialogPrinters = true;
+            this.currentCreditList = credit_list;
+
+            // this.Printer(url);
+        },
         setSeries() {
             this.formDocument.series_id = null;
             this.series = _.filter(this.all_series, {
@@ -239,8 +349,8 @@ export default {
             });
             this.formDocument.series_id =
                 this.series.length > 0 ? this.series[0].id : null;
-       
         },
+
         async clickPayment(form) {
             // this.reCalculateTotal();
             // return;
@@ -294,7 +404,10 @@ export default {
                     `/${this.resource_documents}`,
                     form
                 );
-                console.log("🚀 ~ file: index.vue:300 ~ clickPayment ~ response:", response)
+                console.log(
+                    "🚀 ~ file: index.vue:300 ~ clickPayment ~ response:",
+                    response
+                );
                 let { data } = response;
                 if (response.status == 200 && data.data) {
                     let data = response.data.data;
@@ -305,8 +418,8 @@ export default {
                     if (response.data.success == true) {
                     }
                 }
-                let {success,message} = data;
-                if(!success){
+                let { success, message } = data;
+                if (!success) {
                     this.$toast.error(message);
                 }
             } catch (error) {
@@ -350,7 +463,6 @@ export default {
                     this.list_ordens = records.map(o => o.orden_id);
                     //unique list_ordens
                     this.list_ordens = [...new Set(this.list_ordens)];
-                    
 
                     this.paymentsOrden({ items: records });
                     await this.clickPayment(this.formDocument);
@@ -570,10 +682,9 @@ export default {
                 0
             );
 
-            if(this.total> 0 && this.form.paid == "0"){
+            if (this.total > 0 && this.form.paid == "0") {
                 this.showPaid = true;
-
-            }else{
+            } else {
                 this.showPaid = false;
             }
         },
@@ -597,6 +708,7 @@ export default {
 
             if (response.status == 200) {
                 let { data } = response;
+                this.printers = data.printers;
                 this.establishments = data.establishments;
                 this.all_series = data.series;
             }

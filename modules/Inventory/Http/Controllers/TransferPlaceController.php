@@ -73,7 +73,7 @@ class TransferPlaceController extends Controller
                 'printer' => $row->printer,
             ];
         });
-        ;
+        
         return [
             'printers' => $printers,
             //'items' => $this->optionsItemWareHouse(),
