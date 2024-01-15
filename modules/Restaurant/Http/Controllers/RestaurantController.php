@@ -68,7 +68,7 @@ class RestaurantController extends Controller
             ->whereType('customers')->orderBy('name')
             ->whereIsEnabled();
 
-        if ($parents) {
+        if ($parents && $configuration->college) {
             $persons = $persons->whereIn('id', function ($query) {
 
                 $query->select('parent_id')
