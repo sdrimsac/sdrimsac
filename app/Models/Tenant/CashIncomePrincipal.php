@@ -27,13 +27,9 @@ class CashIncomePrincipal extends ModelTenant
         return $this->belongsTo(Cash::class);
     }
 
-    //obtiene documentos y notas venta
     public function cash_principal()
     {
         return $this->hasMany(Cash::class, 'id', 'cash_principal_id');
     }
 
-
-
-    // public function get_ref
 }

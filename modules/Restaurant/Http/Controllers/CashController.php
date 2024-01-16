@@ -78,9 +78,15 @@ class CashController extends Controller
         $cash_income_principal = CashIncomePrincipal::findOrFail($id);
         $cash = $cash_income_principal->cash;
         $amount = $cash_income_principal->amount;
+        $user_id = $cash_income_principal->cash->user_id;
+        $user = User::findOrFail($user_id);
+        $user_name = $user->name;
+        $establishment_id = $user->establishment_id;
+        $establishment = Establishment::findOrFail($establishment_id);
+        $establishment_description = $establishment->description;
         $principal_cash_id = $cash_income_principal->cash_principal_id;
         $description_cash = $cash->reference_number;
-        $description = "Ingreso de la caja $description_cash";
+        $description = "Ingreso de la caja $description_cash del usuario $user_name del establecimiento $establishment_description";
 
         Box::create([
             'cash_id' => $principal_cash_id,
@@ -1581,6 +1587,8 @@ class CashController extends Controller
                 if ($user_principal_telephone) {
                     (new WhatsappController)->sendMessage($message, $user_principal_telephone);
                 }
+            }else{
+            
             }
         }
         $number_activity = $configuration->number_activity;

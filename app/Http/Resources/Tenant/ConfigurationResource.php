@@ -15,6 +15,7 @@ class ConfigurationResource extends JsonResource
     public function toArray($request)
     {
         return [
+            'transform_item' => (bool) $this->transform_item,
             'item_set_quantity_pos' => (bool) $this->item_set_quantity_pos,
             'image_quotation' => (bool) $this->image_quotation,
             'sale_note_credit_cash' => (bool) $this->sale_note_credit_cash,

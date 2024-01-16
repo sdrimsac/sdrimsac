@@ -627,7 +627,7 @@
                                     ></el-input>
                                 </div>
                             </div>
-                            <div class="d-flex">
+                            <div class="d-flex" v-if="configuration.transform_item">
                                 <div class="col-md-4">
                                     <div
                                         v-show="form.unit_type_id != 'ZZ'"

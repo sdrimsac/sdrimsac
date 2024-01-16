@@ -198,12 +198,15 @@
                                 <i class="icofont-soft-drinks"></i> Productos
                             </a>
                         </li>
+                        @if ($config->transform_item)
                         <li>
                             <a class="{{ $path[0] === 'manufactured' && $path[1] === '' ? 'active' : '' }}"
                                 href="{{ route('tenant.manufactured.index') }}">
-                                <i class="icofont-list"></i> Fabricados
+                                <i class="fas fa-exchange-alt"></i>
+                                 Transformación
                             </a>
                         </li>
+                        @endif
                         @if ($many_establishments)
                             <li>
                                 <a class="{{ $path[0] === 'transfers' && $path[1] === '' ? 'active' : '' }}"
