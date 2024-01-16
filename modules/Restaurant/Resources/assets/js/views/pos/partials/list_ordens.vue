@@ -1437,7 +1437,7 @@
                                                                 <span
                                                                     class="text-muted"
                                                                 >
-                                                                    Cantidasd<br />
+                                                                    Cantidad<br />
                                                                     <div
                                                                         class="input-group spinner"
                                                                         data-trigger="spinner"
@@ -1445,11 +1445,7 @@
                                                                         <input
                                                                             type="text"
                                                                             :readonly="
-                                                                                order_pend
-                                                                                    .food
-                                                                                    .item
-                                                                                    .is_set ==
-                                                                                    1 ||
+                                                                           (order_pend.food.item.is_set && !configuration.item_set_quantity_pos) ||
                                                                                     isConsignment ||
                                                                                     !configuration.quantity_cash ||
                                                                                     order_pend
@@ -1489,10 +1485,10 @@
                                                                                 class="spin-up"
                                                                                 data-spin="up"
                                                                                 :disabled="
-                                                                                    order_pend
+                                                                                   ( order_pend
                                                                                         .food
                                                                                         .item
-                                                                                        .is_set ==
+                                                                                        .is_set && !configuration.item_set_quantity_pos) ==
                                                                                         1 ||
                                                                                         isConsignment ||
                                                                                         order_pend

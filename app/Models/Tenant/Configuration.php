@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Config;
 class Configuration extends ModelTenant
 {
     protected $fillable = [
+        'item_set_quantity_pos',
         'image_quotation',
         'sale_note_credit_cash',
         'print_document_cash',
@@ -149,6 +150,7 @@ class Configuration extends ModelTenant
 
     ];
     protected $casts = [
+        'item_set_quantity_pos' => 'boolean',
         'image_quotation' => 'boolean',
         'sale_note_credit_cash' => 'boolean',
         'print_document_cash' => 'boolean',
@@ -249,6 +251,7 @@ class Configuration extends ModelTenant
         // $skins = Skin::all();
         $skins = [];
         return [
+            'item_set_quantity_pos' => (bool)$this->item_set_quantity_pos,
             'image_quotation' => (bool)$this->image_quotation,
             'sale_note_credit_cash' => (bool)$this->sale_note_credit_cash,
             'print_document_cash' => (bool)$this->print_document_cash,

@@ -226,7 +226,7 @@
                                         <div class="row h-100">
                                             <div class="col-5 mb-md-0 d-flex align-items-center">
                                                 <div class="input-group spinner" data-trigger="spinner">
-                                                    <input type="text" :disabled="true" class="form-control text-center"
+                                                    <input type="text" :disabled="   (order_pend.food.item.is_set && !configuration.item_set_quantity_pos)" class="form-control text-center"
                                                         v-model="order_pend.quantity
                                                             " data-rule="currency" @change="
                                                                     verifyStock(
