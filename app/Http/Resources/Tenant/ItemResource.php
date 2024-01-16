@@ -30,6 +30,7 @@ class ItemResource extends JsonResource
         }
 
         return [
+            'is_manufactured' => (bool) $this->is_manufactured,
             'max_quantity_description' => $this->max_quantity_description,
             'id' => $this->id,
             'max_quantity' => $this->max_quantity,

@@ -7,6 +7,18 @@ Route::get('lotes/excel', [ItemLotsGroupController::class, 'excel']);
 Route::get('lotes/to_due/excel', [ItemLotsGroupController::class, 'to_due_excel']);
 Route::middleware(['auth', 'locked.tenant'])->group(function () {
 
+    Route::prefix('manufactured')->group(function (){
+        Route::get('/', 'ItemManufacturedController@index')->name('tenant.manufactured.index')->middleware('redirect.level');
+        Route::get('records', 'ItemManufacturedController@records');
+        Route::get('columns', 'ItemManufacturedController@columns');
+        Route::get('search', 'ItemManufacturedController@searchItems');
+        Route::get('tables', 'ItemManufacturedController@tables');
+        Route::post('send-items', 'ItemManufacturedController@sendItems');
+        Route::get('record/{id}', 'ItemManufacturedController@record');
+        Route::get('get-last-items/{id}', 'ItemManufacturedController@getLastItems');
+        Route::post('', 'ItemManufacturedController@store');
+        
+    });
 
     Route::get('lotes', [ItemLotsGroupController::class, 'index'])->name("lotes");
     Route::get('lotes/records', [ItemLotsGroupController::class, 'records']);

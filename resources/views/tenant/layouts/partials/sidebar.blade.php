@@ -198,6 +198,12 @@
                                 <i class="icofont-soft-drinks"></i> Productos
                             </a>
                         </li>
+                        <li>
+                            <a class="{{ $path[0] === 'manufactured' && $path[1] === '' ? 'active' : '' }}"
+                                href="{{ route('tenant.manufactured.index') }}">
+                                <i class="icofont-list"></i> Fabricados
+                            </a>
+                        </li>
                         @if ($many_establishments)
                             <li>
                                 <a class="{{ $path[0] === 'transfers' && $path[1] === '' ? 'active' : '' }}"

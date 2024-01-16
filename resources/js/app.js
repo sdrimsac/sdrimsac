@@ -586,6 +586,11 @@ const app = new Vue({
                 "../../modules/Item/Resources/assets/js/views/brands/index.vue"
             ),
 
+            "tenant-manufactured-index": () =>
+            import(
+                /* webpackChunkName:"js/tenant-manufactured-index"*/
+                "../../modules/Item/Resources/assets/js/views/manufactured/index.vue"
+            ),
         "tenant-report-valued-kardex": () =>
             import(
                 /* webpackChunkName:"js/tenat-report-valued-kardex"*/

@@ -77,7 +77,7 @@
                             >[&#10004; Seleccionar lotes]</a
                         >
                     </div>
-                    <div class="col-12" v-if="config.observation_translate">
+                    <div class="col-12" v-if="config && config.observation_translate">
                         <div class="form-group">
                             <label class="control-label">Comentario</label>
                             <el-input

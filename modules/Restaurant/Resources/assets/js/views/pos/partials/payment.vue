@@ -2120,7 +2120,9 @@ export default {
                     "input"
                 )[0].value;
                 let url =   `/caja/search_customers?value=${this.input_person.number}`;
-                url = `${url}&parents=${this.notRegister ? 0 : 1}`;
+                if(this.configuration.college){
+                    url = `${url}&parents=${this.notRegister ? 0 : 1}`;
+                }
                 const response = await this.$http(
                   url
                 );

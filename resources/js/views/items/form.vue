@@ -403,11 +403,12 @@
                                     <label v-else class="control-label">
                                         Stock Inicial en cada establecimiento
                                     </label>
-                          <el-input 
-                                    
-                                    :disabled="configuration.init_stock == 1"
-                                    v-model="form.stock">
-
+                                    <el-input
+                                        :disabled="
+                                            configuration.init_stock == 1
+                                        "
+                                        v-model="form.stock"
+                                    >
                                         <i
                                             slot="prefix"
                                             class="el-icon-edit-outline"
@@ -421,16 +422,37 @@
                                 </div>
                             </div>
                             <div class="col-md-3">
-                        <div class="form-group" :class="{'has-danger': errors.barcode}">
-                            <label class="control-label">Código Externo
-                                <el-tooltip class="item" effect="dark" content="Código Barra de la empresa para el control de sus productos" placement="top-start">
-                                    <i class="fa fa-info-circle"></i>
-                                </el-tooltip>
-                            </label>
-                            <el-input v-model="form.barcode" dusk="barcode"> <i slot="prefix" class="el-icon-edit-outline"></i></el-input>
-                            <small class="text-danger" v-if="errors.barcode" v-text="errors.barcode[0]"></small>
-                        </div>
-                    </div>
+                                <div
+                                    class="form-group"
+                                    :class="{ 'has-danger': errors.barcode }"
+                                >
+                                    <label class="control-label"
+                                        >Código Externo
+                                        <el-tooltip
+                                            class="item"
+                                            effect="dark"
+                                            content="Código Barra de la empresa para el control de sus productos"
+                                            placement="top-start"
+                                        >
+                                            <i class="fa fa-info-circle"></i>
+                                        </el-tooltip>
+                                    </label>
+                                    <el-input
+                                        v-model="form.barcode"
+                                        dusk="barcode"
+                                    >
+                                        <i
+                                            slot="prefix"
+                                            class="el-icon-edit-outline"
+                                        ></i
+                                    ></el-input>
+                                    <small
+                                        class="text-danger"
+                                        v-if="errors.barcode"
+                                        v-text="errors.barcode[0]"
+                                    ></small>
+                                </div>
+                            </div>
                             <!-- <div class="col-md-3">
                         <div class="form-group" :class="{'has-danger': errors.item_code}">
                             <label class="control-label">Código Sunat
@@ -445,17 +467,31 @@
                  
 -->
 
-                    <div class="col-md-3" v-show="form.unit_type_id !='ZZ'">
-                        <div class="form-group" :class="{'has-danger': errors.stock_min}">
-                            <label class="control-label">Stock Mínimo</label>
-                            <el-input v-model="form.stock_min"> <i slot="prefix" class="el-icon-edit-outline"></i></el-input>
-                            <small class="text-danger" v-if="errors.stock_min" v-text="errors.stock_min[0]"></small>
-                        </div>
-                    </div>
                             <div
                                 class="col-md-3"
-                                v-show="recordId == null"
+                                v-show="form.unit_type_id != 'ZZ'"
                             >
+                                <div
+                                    class="form-group"
+                                    :class="{ 'has-danger': errors.stock_min }"
+                                >
+                                    <label class="control-label"
+                                        >Stock Mínimo</label
+                                    >
+                                    <el-input v-model="form.stock_min">
+                                        <i
+                                            slot="prefix"
+                                            class="el-icon-edit-outline"
+                                        ></i
+                                    ></el-input>
+                                    <small
+                                        class="text-danger"
+                                        v-if="errors.stock_min"
+                                        v-text="errors.stock_min[0]"
+                                    ></small>
+                                </div>
+                            </div>
+                            <div class="col-md-3" v-show="recordId == null">
                                 <div
                                     class="form-group"
                                     :class="{
@@ -565,9 +601,7 @@
                                         </el-tooltip>
                                     </label>
                                     <el-input
-                                        :disabled="
-                                            !form.max_quantity
-                                        "
+                                        :disabled="!form.max_quantity"
                                         v-model="form.max_quantity_description"
                                     ></el-input>
                                 </div>
@@ -593,6 +627,21 @@
                                     ></el-input>
                                 </div>
                             </div>
+                            <div class="d-flex">
+                                <div class="col-md-4">
+                                    <div
+                                        v-show="form.unit_type_id != 'ZZ'"
+                                        class="col-md-3 center-el-checkbox"
+                                    >
+                                        <div class="form-group">
+                                            <el-checkbox
+                                                v-model="form.is_manufactured"
+                                                >¿Se fabrica?</el-checkbox
+                                            >
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="d-flex" v-if="showSeries">
                                 <div class="col-md-4">
                                     <div
@@ -611,8 +660,8 @@
                                         class="col-md-4 d-flex align-items-end"
                                         v-if="
                                             form.unit_type_id != 'ZZ' &&
-                                                                                                form.series_enabled && recordId == null
-
+                                                form.series_enabled &&
+                                                recordId == null
                                         "
                                     >
                                         <div
@@ -685,24 +734,31 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="d-flex" v-if="configuration.promotions_sell">
+                            <div
+                                class="d-flex"
+                                v-if="configuration.promotions_sell"
+                            >
                                 <div class="col-md-3">
                                     <div
                                         v-show="form.unit_type_id != 'ZZ'"
                                         class="col-md-6 center-el-checkbox"
                                     >
                                         <div class="form-group">
-                                            <el-checkbox v-model="form.is_promotion"
-                                                
-                                                >¿Maneja Promocion ?</el-checkbox
+                                            <el-checkbox
+                                                v-model="form.is_promotion"
+                                                >¿Maneja Promocion
+                                                ?</el-checkbox
                                             ><br />
                                         </div>
-                                        <el-input type="number"  v-model="form.promotion_count">
-                                                <i
-                                                    slot="prefix"
-                                                    class="el-icon-edit-outline"
-                                                ></i
-                                            ></el-input>
+                                        <el-input
+                                            type="number"
+                                            v-model="form.promotion_count"
+                                        >
+                                            <i
+                                                slot="prefix"
+                                                class="el-icon-edit-outline"
+                                            ></i
+                                        ></el-input>
                                     </div>
                                 </div>
                             </div>
@@ -1615,7 +1671,7 @@ export default {
 
     data() {
         return {
-            loading:true,
+            loading: true,
             allEstablishment: false,
             showDialogLots: false,
             form_category: { add: false, name: null, id: null },
@@ -1630,7 +1686,7 @@ export default {
             resource: "items",
             errors: {},
             headers: headers_token,
-            form: {promotion_count: null },
+            form: { promotion_count: null },
             configuration: {},
             unit_types: [],
             areas: [],
@@ -1863,6 +1919,7 @@ export default {
         initForm() {
             (this.loading_submit = false), (this.errors = {});
             this.form = {
+                is_manufactured: false,
                 id: null,
                 item_type_id: "01",
                 location: null,
@@ -1903,8 +1960,7 @@ export default {
                 lots: [],
                 attributes: [],
                 series_enabled: false,
-                area_id: 2,
-                
+                area_id: 2
             };
             this.show_has_igv = true;
             this.enabled_percentage_of_profit = false;
@@ -1954,13 +2010,12 @@ export default {
                     : null;
             this.setDefaultConfiguration();
         },
-        async generateCode(){
-            this.loading = true
+        async generateCode() {
+            this.loading = true;
             const response = await this.$http(`/items/generate_code`);
             this.form.internal_id = response.data;
-            this.loading = false
-        }
-        ,
+            this.loading = false;
+        },
         async create() {
             this.titleDialog = this.recordId
                 ? "Editar Productos"
@@ -2019,16 +2074,16 @@ export default {
                         } else this.form.series_enabled = false;
                     });
             } else {
-                   if (this.warehouses.length > 0) {
-                this.form.warehouse_id = this.warehouses[0].id;
-                this.form.warehouse_prices = this.warehouses.map(w => ({
-                    id: null,
-                    item_id: null,
-                    warehouse_id: w.id,
-                    price: null,
-                    warehouse: w.description
-                }));
-            }
+                if (this.warehouses.length > 0) {
+                    this.form.warehouse_id = this.warehouses[0].id;
+                    this.form.warehouse_prices = this.warehouses.map(w => ({
+                        id: null,
+                        item_id: null,
+                        warehouse_id: w.id,
+                        price: null,
+                        warehouse: w.description
+                    }));
+                }
                 await this.generateCode();
                 this.showSeries = true;
                 this.form.area_id = 2;
@@ -2125,12 +2180,13 @@ export default {
                     100;
         },
         async submit() {
-
-            if(this.form.max_quantity && !this.form.max_quantity_description){
-                this.$toast.warning("Ingrese una descripción del contenedor para la cantidad máxima");
+            if (this.form.max_quantity && !this.form.max_quantity_description) {
+                this.$toast.warning(
+                    "Ingrese una descripción del contenedor para la cantidad máxima"
+                );
                 return false;
             }
-             if(!this.form.category_id){
+            if (!this.form.category_id) {
                 this.$toast.warning("Seleccione una categoria");
                 return false;
             }
@@ -2170,7 +2226,7 @@ export default {
 
             this.loading_submit = true;
             this.form.all_establishment = this.allEstablishment;
-            
+
             await this.$http
                 .post(`/${this.resource}`, this.form)
                 .then(response => {

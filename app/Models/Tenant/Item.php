@@ -20,6 +20,7 @@ class Item extends ModelTenant
     protected $with = ['item_warehouse_prices', 'item_type', 'unit_type', 'currency_type', 'warehouses', 'item_unit_types', 'category', 'lots_group'];
     protected $fillable = [
         'max_quantity_description',
+        'is_manufactured',
         'delivery_cost',
         'warehouse_id',
         'name',
@@ -170,6 +171,7 @@ class Item extends ModelTenant
 
         $data = [
             'id'                               => $this->id,
+            'is_manufactured'                 => (bool)$this->is_manufactured,
             'item_code'                    => $this->item_code,
             'full_description'                 => $detail['full_description'],
             'model'                            => $this->model,
