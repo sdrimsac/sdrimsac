@@ -573,6 +573,7 @@ class ItemController extends Controller
 
         $brands = Brand::all();
         $configuration = Configuration::select(
+            'transform_item',
             'init_stock',
             'affectation_igv_type_id',
             'restaurant',
