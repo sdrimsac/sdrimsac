@@ -16,6 +16,22 @@
                             </li>
                         </ol>
                     </div>
+                    <div class="col-6 text-end">
+                        <button
+                            type="button"
+                            class="btn btn-success"
+                            @click.prevent="clickCreate('input')"
+                        >
+                            Ingreso
+                        </button>
+                        <button
+                            type="button"
+                            class="btn btn-success"
+                            @click.prevent="clickOutput()"
+                        >
+                            Salida
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -114,15 +130,41 @@
                 </div>
             </div>
         </div>
+        <inventories-form
+            :showDialog.sync="showDialog"
+            :type="typeTransaction"
+        ></inventories-form>
+
+        <inventories-form-output
+            :showDialog.sync="showDialogOutput"
+        ></inventories-form-output>
+
+        <inventories-move
+            :showDialog.sync="showDialogMove"
+            :recordId="recordId"
+        ></inventories-move>
+        <inventories-remove
+            :showDialog.sync="showDialogRemove"
+            :recordId="recordId"
+        ></inventories-remove>
     </div>
 </template>
 
 <script>
 import DataTable from "../../../assets/components/DataTableValuedInventory";
-
+import InventoriesForm from "./form.vue";
+import InventoriesFormOutput from "./form_output.vue";
+import InventoriesMove from "./move.vue";
+import InventoriesRemove from "./remove.vue";
 export default {
     props: ["type", "typeUser"],
-    components: { DataTable },
+    components: {
+        DataTable,
+        InventoriesForm,
+        InventoriesMove,
+        InventoriesRemove,
+        InventoriesFormOutput
+    },
     data() {
         return {
             title: null,
@@ -139,7 +181,7 @@ export default {
         this.title = "Inventario";
     },
     methods: {
-        async clickSetStockReal(itemId, realStock,stock, warehouse_id) {
+        async clickSetStockReal(itemId, realStock, stock, warehouse_id) {
             //inventory/stock
 
             const response = await this.$http.post(`/inventory/stock`, {
@@ -148,13 +190,13 @@ export default {
                 quantity: stock,
                 warehouse_id: warehouse_id
             });
-            if(response.data.success){
+            if (response.data.success) {
                 this.$message({
                     type: "success",
                     message: response.data.message
                 });
                 this.$refs.dataTable.getRecords();
-            }else{
+            } else {
                 this.$message({
                     type: "error",
                     message: response.data.message

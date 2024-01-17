@@ -107,7 +107,7 @@ export default {
                 this.loading_search = true;
                 let parameters = `input=${input}`;
                 const response = await this.$http.get(
-                    `/documents/search/customers?${parameters}`
+                    `/documents/search/customers?${parameters}&credit_list=1`
                 );
                 this.customers = response.data.customers;
                 this.loading_search = false;

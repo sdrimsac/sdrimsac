@@ -330,14 +330,17 @@ class DocumentController extends Controller
         //tru de boletas en env esta en true filtra a los con dni   , false a todos
         $identity_document_type_id = $this->getIdentityDocumentTypeId($request->document_type_id, $request->operation_type_id);
         //        $operation_type_id_id = $this->getIdentityDocumentTypeId($request->operation_type_id);
-
-        $customers = Person::where('number', 'like', "%{$request->input}%")
+        $credit_list = $request->credit_list;
+        $customers = Person::where('numer', 'like', "%{$request->input}%")
             ->orWhere('name', 'like', "%{$request->input}%")
             ->orWhere('address', 'like', "%{$request->input}%")
             ->whereType('customers')->orderBy('name')
             ->whereIn('identity_document_type_id', $identity_document_type_id)
-            ->whereIsEnabled()
-            ->get()->transform(function ($row) {
+            ->whereIsEnabled();
+        if($credit_list){
+            $customers = $customers->where('has_credit_line', 1);
+        }
+        $customers = $customers->get()->transform(function ($row) {
                 return [
                     'id' => $row->id,
                     'description' => $row->number . ' - ' . $row->name,

@@ -30,6 +30,7 @@ Route::middleware(['auth', 'redirect.module', 'locked.tenant'])->group(function 
         Route::post('/', 'InventoryController@store');
         Route::post('/transaction', 'InventoryController@store_transaction');
         Route::post('move', 'InventoryController@move');
+        Route::get('tables', 'InventoryController@tables');
         Route::post('stock', 'InventoryController@stock');
 
         Route::get('moves', 'MovesController@index')->name('inventory.moves.index');

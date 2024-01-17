@@ -190,8 +190,13 @@
                         <i class="icofont-box icon-parent"></i>
                         <span class="label">Inventario</span>
                     </a>
-
+                    
                     <ul id="invetories" class="collapse ">
+                        {{-- <li>
+                            <a class="{{ $path[0] === 'inventory' && $path[1] === '' ? 'active' : '' }}"
+                                href="{{ route('inventory.index') }}">Movimientos</a>
+                        </li> --}}
+
                         <li>
                             <a class="{{ $path[0] === 'items' && $path[1] === '' ? 'active' : '' }}"
                                 href="{{ route('tenant.items.index') }}">
