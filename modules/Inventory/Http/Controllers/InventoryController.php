@@ -147,7 +147,46 @@ class InventoryController extends Controller
 
         return $record;
     }
+    
+    public function getItems(Request $request){
+        $value = $request->value;
+        $records = Item::where([['item_type_id', '01'], ['unit_type_id', '!=', 'ZZ']])->whereNotIsSet()
+        ->where(function ($query) use ($value) {
+            $query->where('description', 'like', '%' . $value . '%')
+                ->orWhere('internal_id', 'like', '%' . $value . '%');
+        })
+        ->take(25)
+        ->get();
 
+    return collect($records)->transform(function ($row) {
+        return  [
+            'id' => $row->id,
+            'description' => ($row->internal_id) ? "{$row->internal_id} - {$row->description}" : $row->description,
+            'lots_enabled' => (bool) $row->lots_enabled,
+            'series_enabled' => (bool) $row->series_enabled,
+            'lots' => $row->item_lots->where('has_sale', false)->transform(function ($row) {
+                return [
+                    'id' => $row->id,
+                    'series' => $row->series,
+                    'date' => $row->date,
+                    'item_id' => $row->item_id,
+                    'warehouse_id' => $row->warehouse_id,
+                    'has_sale' => (bool)$row->has_sale,
+                    'lot_code' => ($row->item_loteable_type) ? (isset($row->item_loteable->lot_code) ? $row->item_loteable->lot_code : null) : null
+                ];
+            }),
+            'lots_group' => collect($row->lots_group)->transform(function ($row) {
+                return [
+                    'id'  => $row->id,
+                    'code' => $row->code,
+                    'quantity' => $row->quantity,
+                    'date_of_due' => $row->date_of_due,
+                    'checked'  => false
+                ];
+            })
+        ];
+    });
+    }
 
     public function tables_transaction($type)
     {

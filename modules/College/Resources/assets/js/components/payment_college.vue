@@ -2158,7 +2158,7 @@ export default {
         async sendCollegePayment() {
             try {
                 this.loading = true;
-                if(this.registerIds == null){
+                if(this.registerIds == null || this.registerIds && this.registerIds.length == 0){
                       const response = await this.$http.post(`/college/payments`, {
                     document_id: this.documentId,
                     register_id: this.registerId,

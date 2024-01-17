@@ -141,9 +141,12 @@ trait InventoryTrait
     }
 
 
+
     public function optionsItemFull()
     {
-        $records = Item::where([['item_type_id', '01'], ['unit_type_id', '!=', 'ZZ']])->whereNotIsSet()->get();
+        $records = Item::where([['item_type_id', '01'], ['unit_type_id', '!=', 'ZZ']])->whereNotIsSet()
+            ->take(25)
+            ->get();
 
         return collect($records)->transform(function ($row) {
             return  [
