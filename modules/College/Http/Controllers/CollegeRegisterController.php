@@ -154,7 +154,7 @@ class CollegeRegisterController extends Controller
                 $student_id = $member->children_id;
                 $exists  = CollegeStudent::where('student_id', $student_id)->first();
     
-                if (!isset($exists)) {
+                if ($exists == null) {
                     $student = new CollegeStudent([
                         "student_id" => $member->children_id,
                         "classroom_id" => $classroom_id,
@@ -171,6 +171,7 @@ class CollegeRegisterController extends Controller
                         "classroom_id" => $classroom_id,
                         "active" => 1
                     ]);
+                    $student->save();
                 }
             }
             return ['success' => true, 'message' => 'Registro creado', 'id' => $register->id];
