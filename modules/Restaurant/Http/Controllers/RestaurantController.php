@@ -80,7 +80,10 @@ class RestaurantController extends Controller
                 $query->whereHas('parent', function ($query) use ($row) {
                     $query->where('parent_id', $row->id);
                 });
-            })->get()->transform(function ($student) {
+            })
+            
+            ->where('active', 1)
+            ->get()->transform(function ($student) {
                 return [
                     'id' => $student->id,
                     'name' => $student->person->name,
