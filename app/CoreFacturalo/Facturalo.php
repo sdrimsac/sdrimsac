@@ -615,12 +615,12 @@ class Facturalo
 
         if (($format_pdf != 'ticket') and ($format_pdf != 'ticket_58')) {
             // dd($base_pdf_template);// = config(['tenant.pdf_template'=> $configuration]);
-            // if (config('tenant.pdf_template_footer')) {
-            //     $html_footer = $template->pdfFooter($base_pdf_template);
-            //     $pdf->SetHTMLFooter($html_footer);
-            // }
-            //            $html_footer = $template->pdfFooter();
-            //            $pdf->SetHTMLFooter($html_footer);
+            if (config('tenant.pdf_template_footer')) {
+                $html_footer = $template->pdfFooter($base_pdf_template);
+                $pdf->SetHTMLFooter($html_footer);
+            }
+                    //    $html_footer = $template->pdfFooter();
+                    //    $pdf->SetHTMLFooter($html_footer);
         }
 
         $this->uploadFile($pdf->output('', 'S'), 'pdf');

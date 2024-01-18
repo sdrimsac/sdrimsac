@@ -343,7 +343,11 @@
             </tr>
         @endforeach
     @endif
-
+    @if($footer_text)
+    <tr>
+        <td colspan="6" class="text-center desc pt-5">{{$footer_text}}</td>
+    </tr>
+    @endif
     <tr>
         <td class="text-center desc pt-5">Para consultar el comprobante ingresar a {!! url('/buscar') !!}</td>
     </tr>

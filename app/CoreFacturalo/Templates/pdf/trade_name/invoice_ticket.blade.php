@@ -939,6 +939,11 @@
             </td>
 
         </tr>
+        @if($footer_text)
+        <tr>
+            <td colspan="6" class="text-center desc pt-3">{{$footer_text}}</td>
+        </tr>
+        @endif
         <tr>
             <td colspan="6" class="text-center desc pt-3">Para consultar el comprobante ingresar a
                 {!! url('/buscar') !!}</td>

@@ -2052,6 +2052,30 @@
                                             @input="saveSubmitDebounce"
                                         ></el-input>
                                     </div>
+                                    <div class="col-12">
+                                        <label for="text-3">
+                                            Texto pie de página
+                                              <el-tooltip
+                                                class="item"
+                                                effect="dark"
+                                                content="Texto que va en la parte inferior de los documentos"
+                                                placement="top-start"
+                                            >
+                                                <i
+                                                    class="fa fa-info-circle"
+                                                ></i>
+                                            </el-tooltip>
+                                        </label>
+                                        <el-input
+                                            class="w-100"
+                                            v-model="form.footer_text"
+                                            placeholder="Pie de página"
+                                            size="normal"
+                                            type="textarea"
+                                            rows="3"
+                                            @input="saveSubmitDebounce"
+                                        ></el-input>
+                                    </div>
                                 </div>
                             </el-tab-pane>
                         </el-tabs>

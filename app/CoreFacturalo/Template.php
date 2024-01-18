@@ -95,7 +95,8 @@ class Template
             if ($stablishment) {
                 $is_principal = $stablishment->id == 1;
             }
-            return view($view, compact('company', 'document', 'boxes', 'show_unit_types',  'stablishment', 'is_principal', 'class', 'student_name','students'))->render();
+            $footer_text = $config->footer_text;
+            return view($view, compact('company', 'document', 'boxes', 'show_unit_types',  'stablishment', 'is_principal', 'class', 'student_name','students','footer_text'))->render();
         }
 
 

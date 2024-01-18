@@ -1378,10 +1378,10 @@ class SaleNoteController extends Controller
         $pdf->WriteHTML($stylesheet, HTMLParserMode::HEADER_CSS);
         $pdf->WriteHTML($html, HTMLParserMode::HTML_BODY);
 
-        // if (config('tenant.pdf_template_footer')) {
-        //     $html_footer = $template->pdfFooter($base_template);
-        //     $pdf->SetHTMLFooter($html_footer);
-        // }
+        if (config('tenant.pdf_template_footer')) {
+            $html_footer = $template->pdfFooter($base_template);
+            $pdf->SetHTMLFooter($html_footer);
+        }
 
         $this->uploadFile($this->document->filename, $pdf->output('', 'S'), 'sale_note');
     }

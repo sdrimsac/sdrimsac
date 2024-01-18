@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Config;
 class Configuration extends ModelTenant
 {
     protected $fillable = [
+        'footer_text',
         'transform_item',
         'item_set_quantity_pos',
         'image_quotation',
@@ -253,6 +254,7 @@ class Configuration extends ModelTenant
         // $skins = Skin::all();
         $skins = [];
         return [
+            'footer_text' => $this->footer_text,
             'transform_item' => (bool)$this->transform_item,
             'item_set_quantity_pos' => (bool)$this->item_set_quantity_pos,
             'image_quotation' => (bool)$this->image_quotation,
