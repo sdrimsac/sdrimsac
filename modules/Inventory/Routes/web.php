@@ -121,6 +121,15 @@ Route::middleware(['auth', 'redirect.module', 'locked.tenant'])->group(function 
     });
 
 
+    Route::prefix('transactions')->group(function () {
+        Route::get('/', 'InventoryTransactionController@index')->name('transactions.index');
+        Route::get('records', 'InventoryTransactionController@records');
+        Route::get('columns', 'InventoryTransactionController@columns');
+        Route::get('tables', 'InventoryTransactionController@tables');
+        Route::get('record/{inventory}', 'InventoryTransactionController@record');
+        Route::post('/', 'InventoryTransactionController@store');
+        Route::delete('{inventory}', 'InventoryTransactionController@destroy');
+    });
     Route::prefix('transfers')->group(function () {
         Route::get('/', 'TransferController@index')->name('transfers.index');
 

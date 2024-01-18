@@ -60,6 +60,12 @@
                         </a>
                     </li>
                     <li>
+                        <a class="{{ $path[0] === 'transactions' ? 'active' : '' }}"
+                            href="{{ route('transactions.index') }}">
+                            <i class="icofont-id-card"></i> Tipo de transacciónes -  Inventario
+                        </a>
+                    </li>
+                    <li>
                         <a class="{{ $path[0] === 'sellers' && $path[1] === '' ? 'active' : '' }}"
                             href="{{ route('tenant.sellers.index') }}">
                             <i class="icofont-id-card"></i> Vendedores

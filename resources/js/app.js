@@ -473,6 +473,11 @@ const app = new Vue({
                 /* webpackChunkName:"js/tenant-category-index" */ "./views/category/index.vue"
             ),
 
+        "inventory-transactions-index": () =>
+                import(
+                    /* we */
+                    "../../modules/Inventory/Resources/assets/js/transactions/index.vue"
+                ),
         "inventory-transfers-index": () =>
             import(
                 /* webpackChunkName:"js/inventory-transfers-index" */
