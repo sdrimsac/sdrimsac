@@ -331,7 +331,7 @@ class DocumentController extends Controller
         $identity_document_type_id = $this->getIdentityDocumentTypeId($request->document_type_id, $request->operation_type_id);
         //        $operation_type_id_id = $this->getIdentityDocumentTypeId($request->operation_type_id);
         $credit_list = $request->credit_list;
-        $customers = Person::where('numer', 'like', "%{$request->input}%")
+        $customers = Person::where('number', 'like', "%{$request->input}%")
             ->orWhere('name', 'like', "%{$request->input}%")
             ->orWhere('address', 'like', "%{$request->input}%")
             ->whereType('customers')->orderBy('name')
