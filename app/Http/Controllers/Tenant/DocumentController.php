@@ -1918,7 +1918,7 @@ class DocumentController extends Controller
                 'message' => $deleted ? 'Documento anulado con exito ' : 'El documento no se puede eliminar, debido a que tiene mas de dos días de emitido. ' . $date_now
             ];
         } catch (Exception $e) {
-
+            Log::error($e->getMessage());
             return ($e->getCode() == '23000') ? ['success' => false, 'message' => 'El Documento esta siendo usada por otros registros, no puede eliminar'] : ['success' => false, 'message' => 'Error inesperado, no se pudo eliminar el Documento'];
         }
     }
