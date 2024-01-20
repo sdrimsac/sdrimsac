@@ -65,12 +65,21 @@ if ($hostname) {
                                 Route::get('/records/{commercial_treatment_id}', [CommercialTreatmentController::class, 'records_categories']);
                                 Route::post('/{commercial_treatment_id}', [CommercialTreatmentController::class, 'store_categories']);
                             });
+                        Route::prefix('items')
+                            ->group(function () {
+
+                                Route::get('/records/{commercial_treatment_id}', [CommercialTreatmentController::class, 'records_items']);
+                                Route::get('/record/{item_id}/{commercial_treatment_id}', [CommercialTreatmentController::class, 'record_items']);
+                                Route::post('/{commercial_treatment_id}', [CommercialTreatmentController::class, 'store_items']);
+                                Route::post('/record/{item_id}/{commercial_treatment_id}', [CommercialTreatmentController::class, 'set_item']);
+                                Route::post('/get-items/{commercial_treatment_id}', [CommercialTreatmentController::class, 'get_items']);
+                            });
                     });
                 Route::prefix('credit-list')->group(function () {
                     Route::get('/', [CreditListController::class, 'credit_list_report_index'])->name('tenant.credit_list.index');
                     Route::get('/tables', [CreditListController::class, 'tables']);
                     Route::post('/send-credit', [CreditListController::class, 'send_credit']);
-               
+
                     Route::get('/balance/{customer_id}', [CreditListController::class, 'get_balance']);
                     Route::get('/records', [CreditListController::class, 'records']);
                     Route::get('/records_by_person/download', [CreditListController::class, 'download']);
@@ -150,7 +159,6 @@ if ($hostname) {
                     Route::get('/records', [CashController::class, 'records_principal']);
                     Route::get('/accept/{id}', [CashController::class, 'accept_register']);
                     Route::post('/observ/{id}', [CashController::class, 'observ_register']);
-                   
                 });
                 Route::post('documents', [App\Http\Controllers\Tenant\DocumentController::class, 'store']);
                 Route::post('sale_note_payments', [App\Http\Controllers\Tenant\SaleNotePaymentController::class, 'store']);
@@ -800,7 +808,7 @@ if ($hostname) {
         Route::post('logout', 'System\LoginController@logout')->name('logout');
         Route::get('phone', 'System\UserController@getPhone');
 
-  
+
         Route::middleware('auth:admin')->group(function () {
             Route::get('phpinfo', function () {
                 return phpinfo();

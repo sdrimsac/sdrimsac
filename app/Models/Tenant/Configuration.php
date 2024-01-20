@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Config;
 class Configuration extends ModelTenant
 {
     protected $fillable = [
+        'commercial_treatment_items',
         'footer_text',
         'transform_item',
         'item_set_quantity_pos',
@@ -152,6 +153,7 @@ class Configuration extends ModelTenant
 
     ];
     protected $casts = [
+        'commercial_treatment_items' => 'boolean',
         'transform_item' => 'boolean',
         'item_set_quantity_pos' => 'boolean',
         'image_quotation' => 'boolean',
@@ -254,6 +256,7 @@ class Configuration extends ModelTenant
         // $skins = Skin::all();
         $skins = [];
         return [
+            'commercial_treatment_items' => (bool)$this->commercial_treatment_items,
             'footer_text' => $this->footer_text,
             'transform_item' => (bool)$this->transform_item,
             'item_set_quantity_pos' => (bool)$this->item_set_quantity_pos,

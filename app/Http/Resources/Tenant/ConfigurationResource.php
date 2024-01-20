@@ -15,6 +15,7 @@ class ConfigurationResource extends JsonResource
     public function toArray($request)
     {
         return [
+            'commercial_treatment_items' => (bool) $this->commercial_treatment_items,
             'footer_text' => $this->footer_text,
             'transform_item' => (bool) $this->transform_item,
             'item_set_quantity_pos' => (bool) $this->item_set_quantity_pos,

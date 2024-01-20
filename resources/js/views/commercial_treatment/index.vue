@@ -77,6 +77,7 @@
                             <th>Descripción</th>
                             <th class="text-end">Afectación</th>
                             <th class="text-end">Categorias</th>
+                            <th class="text-end">Productos</th>
                             <th class="text-end">Acciones</th>
                         </tr>
 
@@ -87,16 +88,25 @@
                         >
                             <td>{{ index }}</td>
                             <td>{{ row.description }}</td>
-                            <td class="text-end">{{ row.is_amount ? 'Monto' : 'Porcentaje'  }}</td>
-                          
+                            <td class="text-end">
+                                {{ row.is_amount ? "Monto" : "Porcentaje" }}
+                            </td>
+
                             <td class="text-end">
                                 <el-button
-                                size="mini"
-                                @click="clickOpenCategories(row)"
+                                    size="mini"
+                                    @click="clickOpenCategories(row)"
                                 >
-                                Modificar
+                                    Modificar
                                 </el-button>
-
+                            </td>
+                            <td class="text-end">
+                                <el-button
+                                    size="mini"
+                                    @click="clickOpenItems(row)"
+                                >
+                                    Modificar
+                                </el-button>
                             </td>
                             <td class="text-end">
                                 <template v-if="row.active">
@@ -150,9 +160,13 @@
                 :showDialog.sync="showDialog"
             ></commercial-treatment-form>
             <categories
-            :showDialog.sync="showDialogCategories"
-            :commercialTreatment="commercialTreatment"
+                :showDialog.sync="showDialogCategories"
+                :commercialTreatment="commercialTreatment"
             ></categories>
+            <items
+                :showDialog.sync="showDialogItems"
+                :commercialTreatment="commercialTreatment"
+            ></items>
         </div>
     </div>
 </template>
@@ -160,13 +174,14 @@
 <script>
 const CommercialTreatmentForm = () => import("./form.vue");
 const Categories = () => import("./categories.vue");
+const Items = () => import("./items.vue");
 import DataTable from "../../components/DataTablePersons.vue";
 import { deletable } from "../../mixins/deletable";
 
 export default {
     mixins: [deletable],
     props: ["type", "typeUser", "api_service_token"],
-    components: { DataTable, CommercialTreatmentForm,Categories },
+    components: { DataTable, CommercialTreatmentForm, Categories, Items },
     data() {
         return {
             title: null,
@@ -176,6 +191,7 @@ export default {
             recordId: null,
             showDialogPrinter: false,
             showDialogCategories: false,
+            showDialogItems: false,
             commercialTreatment: null
         };
     },
@@ -184,7 +200,11 @@ export default {
         //    console.log(resource+`/${this.type}`)
     },
     methods: {
-        clickOpenCategories(row){
+        clickOpenItems(row) {
+            this.commercialTreatment = row;
+            this.showDialogItems = true;
+        },
+        clickOpenCategories(row) {
             this.commercialTreatment = row;
             this.showDialogCategories = true;
         },

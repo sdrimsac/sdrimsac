@@ -1377,11 +1377,11 @@
                                     <div class="col-md-6 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
-                                                >Tratamiento comercial
+                                                >Tratamiento comercial Categoría
                                                 <el-tooltip
                                                     class="item"
                                                     effect="dark"
-                                                    content="Acciones, como anulación de comprobantes, pagos, nota de crédito"
+                                                    content="Trato comercial"
                                                     placement="top-start"
                                                 >
                                                     <i
@@ -1393,6 +1393,32 @@
                                             <el-switch
                                                 v-model="
                                                     form.commercial_treatments
+                                                "
+                                                active-text="Si"
+                                                inactive-text="No"
+                                                @change="submit"
+                                            ></el-switch>
+                                        </div>
+                                    </div>
+                                       <div class="col-md-6 mt-4">
+                                        <div class="form-group">
+                                            <label class="control-label w-100"
+                                                >Tratamiento comercial Producto
+                                                <el-tooltip
+                                                    class="item"
+                                                    effect="dark"
+                                                    content="Trato comercial"
+                                                    placement="top-start"
+                                                >
+                                                    <i
+                                                        class="fa fa-info-circle"
+                                                    ></i>
+                                                </el-tooltip>
+                                            </label>
+
+                                            <el-switch
+                                                v-model="
+                                                    form.commercial_treatment_items
                                                 "
                                                 active-text="Si"
                                                 inactive-text="No"
@@ -2309,7 +2335,8 @@ export default {
                     "Debe activar el pin al eliminar para notificar la orden"
                 );
             }
-
+            // let {commercial_treatment,commercial_treatment_items} = this.form
+            
             this.loading_submit = true;
             this.$http
                 .post(`/${this.resource}`, this.form)

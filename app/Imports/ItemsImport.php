@@ -2,6 +2,8 @@
 
 namespace App\Imports;
 
+use App\Models\Tenant\CommercialTreatment;
+use App\Models\Tenant\CommercialTreatmentItem;
 use App\Models\Tenant\Establishment;
 use App\Models\Tenant\Inventory;
 use Exception;
@@ -76,6 +78,18 @@ class ItemsImport implements ToCollection
             $stock_min = $row[13];
             $has_series = (strtoupper($row[17]) === 'SI') ? 1 : 0;
             $prices = [];
+            $commercial_treatments = [];
+            for ($i = 1; $i <= 5; $i++) {
+                $descIndex = 34 + (($i - 1) * 2);
+                $priceIndex = $descIndex + 1;
+                if (empty($row[$descIndex])) {
+                    continue;
+                }
+                $commercial_treatments["commerical_treatment_$i"] = [
+                    'desc' => $row[$descIndex],
+                    'price' => $row[$priceIndex],
+                ];
+            }
             //30 31
 
             for ($i = 1; $i <= 4; $i++) {
@@ -173,20 +187,20 @@ class ItemsImport implements ToCollection
                             Log::error($e->getMessage());
                         }
                     }
-                    if($warehouse_id){
+                    if ($warehouse_id) {
                         $item_whareouse_price = ItemWarehousePrice::create([
                             'item_id' => $item->id,
                             'warehouse_id' => $warehouse_id,
                             'price' => $sale_unit_price,
                         ]);
-
-
                     }
 
                     foreach ($prices as $price) {
                         $this->insertPriceifExist($item->id, $price, $warehouse_id);
                     }
-
+                    foreach ($commercial_treatments as $commercial_treatment) {
+                        $this->insertCommercialTreatment($item->id, $commercial_treatment);
+                    }
                     $registered += 1;
                 } else {
 
@@ -210,8 +224,8 @@ class ItemsImport implements ToCollection
                         'series_enabled' => $has_series,
                     ]);
 
-                 
-                    if($food){
+
+                    if ($food) {
                         $food->update([
                             'description' => $description,
                             'code'        => $internal_id,
@@ -221,19 +235,19 @@ class ItemsImport implements ToCollection
                             'area_id'     => $area->id,
                             'item_id'     => $item->id
                         ]);
-                    }else{
+                    } else {
                         $food = Food::create([
                             'description' => $description,
-                        'code'        => $internal_id,
-                        'price'       => $sale_unit_price,
-                        'active'      => 1,
-                        'category_food_id' => $category->id,
-                        'image'       => 'imagen-no-disponible.jpg',
-                        'area_id'     => $area->id,
-                        'item_id'     => $item->id
+                            'code'        => $internal_id,
+                            'price'       => $sale_unit_price,
+                            'active'      => 1,
+                            'category_food_id' => $category->id,
+                            'image'       => 'imagen-no-disponible.jpg',
+                            'area_id'     => $area->id,
+                            'item_id'     => $item->id
                         ]);
                     }
-              
+
 
                     if ($is_main_establishment) {
                         $item->update([
@@ -245,11 +259,11 @@ class ItemsImport implements ToCollection
                         ]);
                     }
 
-                    if($warehouse_id){
-                          $item_whareouse_price = ItemWarehousePrice::updateOrCreate([
+                    if ($warehouse_id) {
+                        $item_whareouse_price = ItemWarehousePrice::updateOrCreate([
                             'item_id' => $item->id,
                             'warehouse_id' => $warehouse_id,
-                        ],[
+                        ], [
                             'price' => $sale_unit_price,
                         ]);
                     }
@@ -298,6 +312,10 @@ class ItemsImport implements ToCollection
                     foreach ($prices as $price) {
                         $this->insertPriceifExist($item->id, $price, $warehouse_id);
                     }
+                    CommercialTreatmentItem::where('item_id', $item->id)->delete();
+                    foreach ($commercial_treatments as $commercial_treatment) {
+                        $this->insertCommercialTreatment($item->id, $commercial_treatment);
+                    }
                     $registered += 1;
                 }
                 //-------------------------------------------------------------
@@ -320,6 +338,39 @@ class ItemsImport implements ToCollection
         return true;
     }
 
+    function insertCommercialTreatment($item_id, $commercial_treatment)
+    {
+        $desc = $commercial_treatment['desc'];
+        //toupper
+        $desc = strtoupper($desc);
+        $commercial_treatment_general = CommercialTreatment::where('description', $desc)->first();
+        if (!$commercial_treatment_general) {
+            $commercial_treatment_general = CommercialTreatment::create([
+                'description' => $desc,
+                'is_amount' => true,
+                'active' => true,
+            ]);
+            $commercial_treatment_general->save();
+        }
+
+        $item = CommercialTreatmentItem::where('item_id', $item_id)
+            ->where('commercial_treatment_id', $commercial_treatment_general->id)
+            ->first();
+        if (!$item) {
+            $item = CommercialTreatmentItem::create([
+                'item_id' => $item_id,
+                'commercial_treatment_id' => $commercial_treatment_general->id,
+                'amount' => $commercial_treatment['price'],
+                'active' => true,
+            ]);
+            $item->save();
+        } else {
+            $item->update([
+                'amount' => $commercial_treatment['price'],
+            ]);
+            $item->save();
+        }
+    }
     function insertPriceifExist($item_id, $price, $warehouse_id)
     {
         if ($this->checkPrice($price)) {

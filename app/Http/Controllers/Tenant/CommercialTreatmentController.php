@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Tenant;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Tenant\CommercialTreatmentCollection;
+use App\Http\Resources\Tenant\CommercialTreatmentItemCollection;
 use App\Http\Resources\Tenant\CommercialTreatmentResource;
 use App\Models\Tenant\CommercialTreatment;
 use App\Models\Tenant\CommercialTreatmentCategory;
+use App\Models\Tenant\CommercialTreatmentItem;
 use Illuminate\Http\Request;
 use Modules\Item\Models\CategoryItem;
 
@@ -23,7 +25,8 @@ class CommercialTreatmentController extends Controller
             'description' => 'Descripción'
         ];
     }
-    public function delete($id){
+    public function delete($id)
+    {
         $commercial_treatment = CommercialTreatment::findOrFail($id);
         $commercial_treatment->delete();
         return [
@@ -60,7 +63,100 @@ class CommercialTreatmentController extends Controller
             'data'    => $commercial_treatment
         ];
     }
+    public function get_items(Request $request, $commercial_treatment_id)
+    {
+        $item_ids = $request->itemIds;
+        //necesito regresar un array con los  precios si son encontrados en la tabla commercial_treatment_items
+        //pero si no es encontrada una posicion colocar null
+        $records = [];
+        foreach ($item_ids as $item_id) {
+            $commercial_treatment_item = CommercialTreatmentItem::where('item_id', $item_id)
+                ->where('commercial_treatment_id', $commercial_treatment_id)
+                ->first();
+            if ($commercial_treatment_item) {
+                $records[] = [
+                    'id' => $item_id,
+                    'amount' => $commercial_treatment_item->amount
+                ];
+            } else {
+                $records[] = [
+                    'id' => $item_id,
+                    'amount' => null
+                ];
+            }
+        }
+        return [
+            'success' => true,
+            'message' => 'Datos obtenidos',
+            'data'    => $records
+        ];
+    }
+    public function set_item(Request $request, $item_id, $commercial_treatment_id)
+    {
 
+        $amount = $request->amount;
+        $commercial_treatment_item = CommercialTreatmentItem::where('item_id', $item_id)
+            ->where('commercial_treatment_id', $commercial_treatment_id)
+            ->first();
+        if ($commercial_treatment_item) {
+            $commercial_treatment_item->amount = $amount;
+            $commercial_treatment_item->save();
+        } else {
+            $commercial_treatment_item = new CommercialTreatmentItem();
+            $commercial_treatment_item->commercial_treatment_id = $commercial_treatment_id;
+            $commercial_treatment_item->item_id = $item_id;
+            $commercial_treatment_item->amount = $amount;
+            $commercial_treatment_item->active = true;
+            $commercial_treatment_item->save();
+        }
+        return [
+            'success' => true,
+            'message' => 'Actualizado con éxito',
+            'data'    => $commercial_treatment_item
+        ];
+    }
+    public function store_items(Request $request, $id)
+    {
+        $table_data = $request->data;
+        // CommercialTreatmentItem::where('commercial_treatment_id', $id)->delete();
+        foreach ($table_data as $row) {
+            $commercial_treatment_category = new CommercialTreatmentItem();
+            $commercial_treatment_category->commercial_treatment_id = $id;
+            $commercial_treatment_category->item_id = $row['id'];
+            $commercial_treatment_category->amount = $row['amount'];
+            $commercial_treatment_category->save();
+        }
+        return [
+            'success' => true,
+            'message' => 'Actualizado con éxito',
+            'data'    => $table_data
+        ];
+    }
+    public function record_items($item_id, $commercial_treatment_id)
+    {
+        $record = CommercialTreatmentItem::where('item_id', $item_id)
+            ->where('commercial_treatment_id', $commercial_treatment_id)
+            ->first();
+        if (!$record) {
+            return [
+                'success' => false,
+                'message' => 'No existe el registro',
+            ];
+        }
+        return [
+            'success' => true,
+            'message' => 'Existe el registro',
+            'data'    => $record
+        ];
+    }
+    public function records_items($commercial_treatment_id)
+    {
+        $records = CommercialTreatmentItem::with(['item:id,description'])
+            ->where('commercial_treatment_id', $commercial_treatment_id)
+            ->orderBy('id');
+
+        return new CommercialTreatmentItemCollection($records->paginate(config('tenant.items_per_page')));
+    }
     public function records_categories($commercial_treatment_id)
     {
         $categories = CategoryItem::select(['id', 'name'])->get();
@@ -85,7 +181,7 @@ class CommercialTreatmentController extends Controller
     }
 
     public function records(Request $request)
-    {   
+    {
         $all = $request->input('all');
         $records = CommercialTreatment::query();
         if ($request->column == 'description') {

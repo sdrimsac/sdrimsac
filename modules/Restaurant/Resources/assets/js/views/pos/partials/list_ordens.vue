@@ -612,8 +612,9 @@
                         </template>
                         <template
                             v-if="
-                                commercialTreatments.length > 0 &&
-                                    configuration.commercial_treatments
+                                (commercialTreatments.length > 0 &&
+                                    configuration.commercial_treatments) ||
+                                    configuration.commercial_treatment_items
                             "
                         >
                             <el-select
@@ -1226,6 +1227,9 @@
                                             v-for="(order_pend,
                                             indexx) in localOrden"
                                             :key="indexx"
+                                            v-loading="
+                                                loadingCommercialTreatment
+                                            "
                                         >
                                             <!--  -->
                                             <div
@@ -1445,7 +1449,11 @@
                                                                         <input
                                                                             type="text"
                                                                             :readonly="
-                                                                           (order_pend.food.item.is_set && !configuration.item_set_quantity_pos) ||
+                                                                                (order_pend
+                                                                                    .food
+                                                                                    .item
+                                                                                    .is_set &&
+                                                                                    !configuration.item_set_quantity_pos) ||
                                                                                     isConsignment ||
                                                                                     !configuration.quantity_cash ||
                                                                                     order_pend
@@ -1485,10 +1493,11 @@
                                                                                 class="spin-up"
                                                                                 data-spin="up"
                                                                                 :disabled="
-                                                                                   ( order_pend
+                                                                                    (order_pend
                                                                                         .food
                                                                                         .item
-                                                                                        .is_set && !configuration.item_set_quantity_pos) ==
+                                                                                        .is_set &&
+                                                                                        !configuration.item_set_quantity_pos) ==
                                                                                         1 ||
                                                                                         isConsignment ||
                                                                                         order_pend
@@ -2317,6 +2326,7 @@ export default {
 
     data() {
         return {
+            loadingCommercialTreatment: false,
             ordenNumber: null,
             timer: null,
             promotionCode: null,
@@ -2470,8 +2480,6 @@ export default {
         this.getCommercialTreatments();
     },
     methods: {
-
-
         sendOrdens(orden) {
             this.$emit("sendOrdens", orden);
             this.ordenNumber = null;
@@ -2640,45 +2648,90 @@ export default {
                 }
             });
         },
-        getCommercialTreatment() {
+        async getCommercialTreatment() {
             if (this.commercialTreatmentId) {
-                let commercialTreatment = this.commercialTreatments.find(
-                    c => c.id == this.commercialTreatmentId
-                );
-                if (commercialTreatment) {
-                    let {
-                        commercial_treatment_categories
-                    } = commercialTreatment;
-                    if (commercial_treatment_categories.length > 0) {
-                        let is_amount = commercialTreatment.is_amount == 1;
+                if (this.configuration.commercial_treatment_items) {
+                    let commercialTreatment = this.commercialTreatments.find(
+                        c => c.id == this.commercialTreatmentId
+                    );
+                    if (commercialTreatment) {
                         let ordens = [...this.localOrden];
+                        let itemIds = [];
                         ordens.forEach(orden => {
-                            let {
-                                food: { category }
-                            } = orden;
-                            let category_id = category.id;
-                            if (!orden.original_price) {
-                                orden.original_price = orden.price;
-                            }
-                            let price = orden.original_price;
-                            let factor = commercial_treatment_categories.find(
-                                c => c.category_item_id == category_id
-                            );
-                            if (factor) {
-                                let amount = Number(factor.amount);
-                                if (is_amount) {
-                                    if (price >= amount) {
-                                        orden.price = price - factor.amount;
-                                    }
-                                } else {
-                                    orden.price =
-                                        price / (1 + factor.amount / 100);
-                                }
-                                orden.price = Number(
-                                    Number(orden.price).toFixed(2)
-                                );
-                            }
+                            itemIds.push(orden.food.item.id);
                         });
+                        try {
+                            this.loadingCommercialTreatment = true;
+                            const response = await this.$http.post(
+                                `/commercial_treatment/items/get-items/${this.commercialTreatmentId}`,
+                                { itemIds }
+                            );
+                            if (response.status == 200) {
+                                let { data, success } = response.data;
+                                if (success) {
+                                    for (let i = 0; i < ordens.length; i++) {
+                                        let orden = ordens[i];
+                                        let newPrice = data[i];
+                                        if (!orden.original_price) {
+                                            orden.original_price = orden.price;
+                                        }
+                                        if (newPrice.amount) {
+                                            orden.price = Number(
+                                                Number(newPrice.amount).toFixed(
+                                                    2
+                                                )
+                                            );
+                                        }
+                                    }
+                                }
+                            }
+                        } catch (e) {
+                            this.$toast.error(
+                                "Error al obtener el tratamiento comercial"
+                            );
+                        } finally {
+                            this.loadingCommercialTreatment = false;
+                        }
+                    }
+                } else {
+                    let commercialTreatment = this.commercialTreatments.find(
+                        c => c.id == this.commercialTreatmentId
+                    );
+                    if (commercialTreatment) {
+                        let {
+                            commercial_treatment_categories
+                        } = commercialTreatment;
+                        if (commercial_treatment_categories.length > 0) {
+                            let is_amount = commercialTreatment.is_amount == 1;
+                            let ordens = [...this.localOrden];
+                            ordens.forEach(orden => {
+                                let {
+                                    food: { category }
+                                } = orden;
+                                let category_id = category.id;
+                                if (!orden.original_price) {
+                                    orden.original_price = orden.price;
+                                }
+                                let price = orden.original_price;
+                                let factor = commercial_treatment_categories.find(
+                                    c => c.category_item_id == category_id
+                                );
+                                if (factor) {
+                                    let amount = Number(factor.amount);
+                                    if (is_amount) {
+                                        if (price >= amount) {
+                                            orden.price = price - factor.amount;
+                                        }
+                                    } else {
+                                        orden.price =
+                                            price / (1 + factor.amount / 100);
+                                    }
+                                    orden.price = Number(
+                                        Number(orden.price).toFixed(2)
+                                    );
+                                }
+                            });
+                        }
                     }
                 }
             }
