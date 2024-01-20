@@ -37,7 +37,7 @@
                             </a>
                         </li>
                     @endif
-                    @if($config->commercial_treatments)
+                    @if($config->commercial_treatments||$config->commercial_treatment_items)
                     <li>
                         <a class="{{ $path[0] === 'bank_accounts' && $path[1] === '' ? 'active' : '' }}"
                             href="{{ route('tenant.commercial_treatment.index') }}">
