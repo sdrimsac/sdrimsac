@@ -339,12 +339,17 @@ export default {
                     `/${this.resource}/close`,
                     body
                 );
+              
 
                 if (response.data.success) {
                     this.$eventHub.$emit("reloadData");
                     this.open_cash = true;
                     this.$toast.success(response.data.message);
                     this.ocultarBoton();
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 500);
+
                     if (this.fromBox) {
                         this.$emit("updateCashId", null);
                     }

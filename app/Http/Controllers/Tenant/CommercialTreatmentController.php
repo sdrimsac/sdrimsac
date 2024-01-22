@@ -63,32 +63,12 @@ class CommercialTreatmentController extends Controller
             'data'    => $commercial_treatment
         ];
     }
-    public function get_items(Request $request, $commercial_treatment_id)
+    public function deleteItem( $commercial_treatment_item_id)
     {
-        $item_ids = $request->itemIds;
-        //necesito regresar un array con los  precios si son encontrados en la tabla commercial_treatment_items
-        //pero si no es encontrada una posicion colocar null
-        $records = [];
-        foreach ($item_ids as $item_id) {
-            $commercial_treatment_item = CommercialTreatmentItem::where('item_id', $item_id)
-                ->where('commercial_treatment_id', $commercial_treatment_id)
-                ->first();
-            if ($commercial_treatment_item) {
-                $records[] = [
-                    'id' => $item_id,
-                    'amount' => $commercial_treatment_item->amount
-                ];
-            } else {
-                $records[] = [
-                    'id' => $item_id,
-                    'amount' => null
-                ];
-            }
-        }
+       CommercialTreatmentItem::where('id', $commercial_treatment_item_id)->delete();
         return [
             'success' => true,
-            'message' => 'Datos obtenidos',
-            'data'    => $records
+            'message' => 'Eliminado con éxito',
         ];
     }
     public function set_item(Request $request, $item_id, $commercial_treatment_id)

@@ -73,6 +73,7 @@ if ($hostname) {
                                 Route::post('/{commercial_treatment_id}', [CommercialTreatmentController::class, 'store_items']);
                                 Route::post('/record/{item_id}/{commercial_treatment_id}', [CommercialTreatmentController::class, 'set_item']);
                                 Route::post('/get-items/{commercial_treatment_id}', [CommercialTreatmentController::class, 'get_items']);
+                                Route::delete('/record/{commercial_treatment_items_id}', [CommercialTreatmentController::class, 'deleteItem']);
                             });
                     });
                 Route::prefix('credit-list')->group(function () {

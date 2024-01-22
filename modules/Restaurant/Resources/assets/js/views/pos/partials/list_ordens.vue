@@ -2681,6 +2681,12 @@ export default {
                                                     2
                                                 )
                                             );
+                                        } else {
+                                            orden.price = Number(
+                                                Number(
+                                                    orden.original_price
+                                                ).toFixed(2)
+                                            );
                                         }
                                     }
                                 }

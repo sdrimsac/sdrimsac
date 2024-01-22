@@ -13,6 +13,21 @@
         class="algunaClase"
     >
         <div v-loading="loading" class="mb-0">
+            <div class="col-6 col-md-4 col-lg-4 pt-1">
+                <div class="form-group">
+                    <label class="control-label">Fecha de Emisión</label>
+                    <el-date-picker
+                        style="width:100%;"
+                        @change="changeDateOfIssue"
+                        v-model="form.date_of_issue"
+                        type="date"
+                        value-format="yyyy-MM-dd"
+                        :clearable="false"
+                        format="dd-MM-yyyy"
+                    >
+                    </el-date-picker>
+                </div>
+            </div>
             <div class="pt-1" v-loading="loading_submit">
                 <template v-if="data">
                     <div class="row">
@@ -824,12 +839,13 @@ import _ from "lodash";
 const ServiceForm = () => import("./service_form.vue");
 // const IncompleteForm = () =>
 //     import("../../js/components/payment_incomplete.vue");
-
+import { functions, exchangeRate } from "../../../../../../../../resources/js/mixins/functions";
 export default {
     components: {
         ServiceForm
         //  RegisterForm, ServiceForm, IncompleteForm
     },
+    mixins: [functions, exchangeRate],
 
     props: [
         "updatePlan",
@@ -999,11 +1015,11 @@ export default {
             payment_method_types: [],
             last_date: null,
             customers: [],
-            datEmision: {
-                disabledDate(time) {
-                    return time.getTime() > moment();
-                }
-            },
+            // datEmision: {
+            //     disabledDate(time) {
+            //         return time.getTime() > moment();
+            //     }
+            // },
             activeColo: "black",
             socket: null,
             plan: {},
@@ -1237,7 +1253,10 @@ export default {
                     name +
                     " de *" +
                     this.company.name +
-                    "*, ha sido generado correctamente a través del facturador electrónico de "+"*"+this.$desarrollador+"*"
+                    "*, ha sido generado correctamente a través del facturador electrónico de " +
+                    "*" +
+                    this.$desarrollador +
+                    "*";
                 if (message) {
                     basicMessage += "\n" + message;
                 }
@@ -1744,7 +1763,10 @@ export default {
                         number +
                         " de *" +
                         this.company.name +
-                        "*, ha sido generado correctamente a través del facturador electrónico de "+"*"+this.$desarrollador+"*"
+                        "*, ha sido generado correctamente a través del facturador electrónico de " +
+                        "*" +
+                        this.$desarrollador +
+                        "*"
                 };
                 try {
                     this.loading = true;
@@ -2218,11 +2240,11 @@ export default {
 
                 this.changePrice(newPrice);
                 this.reCalculateTotal();
-            }   
-           
-            if (this.form.total == 0 && !this.emit_sale_note ) {
+            }
+
+            if (this.form.total == 0 && !this.emit_sale_note) {
                 if (this.data) {
-                    if (!this.data.oldClient && this.registerInternetId ) {
+                    if (!this.data.oldClient && this.registerInternetId) {
                         this.$toast.error("Monto inválido.");
                         return;
                     }
@@ -2600,7 +2622,7 @@ export default {
             this.form.total = 0;
             this.form.customer_telephone = null;
             this.form.enter_amount = undefined;
-            
+
             this.observation = null;
             this.documentId = null;
             this.registerId = null;

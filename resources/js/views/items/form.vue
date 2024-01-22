@@ -627,7 +627,10 @@
                                     ></el-input>
                                 </div>
                             </div>
-                            <div class="d-flex" v-if="configuration.transform_item">
+                            <div
+                                class="d-flex"
+                                v-if="configuration.transform_item"
+                            >
                                 <div class="col-md-4">
                                     <div
                                         v-show="form.unit_type_id != 'ZZ'"
@@ -762,7 +765,59 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="d-flex">
+                                <div class="col-md-3">
+                                    <div
+                                        v-show="form.unit_type_id != 'ZZ'"
+                                        class="col-md-6 center-el-checkbox"
+                                    >
+                                        <div class="form-group">
+                                            <el-checkbox
+                                                v-model="form.has_size_color"
+                                                >¿Maneja Color y Talla
+                                                ?</el-checkbox
+                                            ><br />
+                                        </div>
+                                        <div
+                                            class="d-flex align-items-end"
+                                            v-if="
+                                                form.unit_type_id != 'ZZ' &&
+                                                    form.has_size_color &&
+                                                    recordId == null
+                                            "
+                                        >
+                                            <div
+                                                class="form-group "
+                                                :class="{
+                                                    'has-danger':
+                                                        errors.has_size_color
+                                                }"
+                                            >
+                                                <label class="control-label">
+                                                    Ingrese color - tallas
+                                                </label>
 
+                                                <el-button
+                                                    style="margin-top:2%;margin-left:15px;"
+                                                    type="primary"
+                                                    icon="el-icon-edit-outline"
+                                                    @click.prevent="
+                                                        clickColorSize
+                                                    "
+                                                ></el-button>
+
+                                                <small
+                                                    class="text-danger"
+                                                    v-if="errors.has_size_color"
+                                                    v-text="
+                                                        errors.has_size_color[0]
+                                                    "
+                                                ></small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             <!--    <div class="col-md-3 center-el-checkbox" >
                         <div class="form-group"  >
                             <el-checkbox v-model="form.has_perception" @change="changeHasPerception">Incluye percepción</el-checkbox><br>
@@ -1658,22 +1713,31 @@
             @addRowLot="addRowLot"
         >
         </lots-form>
+        <color-size
+            :showDialog.sync="showDialogColorSize"
+            :recordId="recordId"
+            :colorSizes="form.color_sizes"
+            @addRowColorSize="addRowColorSize"
+            :stock="form.stock"
+        >
+        </color-size>
     </el-dialog>
 </template>
 
 <script>
 // import PercentagePerception from './partials/percentage_perception.vue'
 import LotsForm from "./partials/lots.vue";
-
+import ColorSize from "./partials/color_size.vue";
 export default {
     props: ["showDialog", "recordId", "external", "worker"],
-    components: { LotsForm },
+    components: { LotsForm, ColorSize },
 
     data() {
         return {
             loading: true,
             allEstablishment: false,
             showDialogLots: false,
+            showDialogColorSize: false,
             form_category: { add: false, name: null, id: null },
             form_brand: { add: false, name: null, id: null },
             warehouses: [],
@@ -1777,6 +1841,12 @@ export default {
     },
 
     methods: {
+        addRowColorSize(color_sizes) {
+            this.form.color_sizes = color_sizes;
+        },
+        clickColorSize() {
+            this.showDialogColorSize = true;
+        },
         selectedMax(idx) {
             let selected = this.form.item_unit_types[idx].selected;
             for (let i = 0; i < this.form.item_unit_types.length; i++) {
@@ -1921,6 +1991,7 @@ export default {
             this.form = {
                 is_manufactured: false,
                 id: null,
+                color_sizes: [],
                 item_type_id: "01",
                 location: null,
                 internal_id: null,
@@ -2018,7 +2089,7 @@ export default {
         },
         async create() {
             this.titleDialog = this.recordId
-                ? "Editar Productos"
+                ? "Editar Producto"
                 : "Nuevo Producto";
 
             if (this.recordId) {

@@ -47,6 +47,7 @@
                         <th>#</th>
                         <th>Producto</th>
                         <th>Valor - Tratamiento comercial</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -54,6 +55,14 @@
                         <td>{{ customIndex(index) }}</td>
                         <td>{{ item.item.description }}</td>
                         <td>{{ item.amount }}</td>
+                        <td>
+                            <el-button
+                                type="danger"
+                                icon="el-icon-delete"
+                                size="mini"
+                                @click="deleteRecord(item.id)"
+                            ></el-button>
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -91,8 +100,7 @@
             </span>
         </el-dialog>
         <span slot="footer" class="dialog-footer">
-            <el-button @click="close">Cancelar</el-button>
-            <el-button type="primary" @click="submit">Guardar</el-button>
+            <el-button @click="close">Cerrar</el-button>
         </span>
     </el-dialog>
 </template>
@@ -125,6 +133,34 @@ export default {
                 index +
                 1
             );
+        },
+        async deleteRecord(id) {
+            try {
+                await this.$confirm(
+                    "¿Está seguro de eliminar este registro?",
+                    "Advertencia",
+                    {
+                        confirmButtonText: "Aceptar",
+                        cancelButtonText: "Cancelar",
+                        type: "warning"
+                    }
+                );
+                this.loading = true;
+                const response = await this.$http.delete(
+                    `${this.resource}/record/${id}`
+                );
+                if (response.status == 200) {
+                    this.$message({
+                        message: "Datos eliminados correctamente",
+                        type: "success"
+                    });
+                    this.getRecords();
+                }
+            } catch (e) {
+                console.log(e);
+            } finally {
+                this.loading = false;
+            }
         },
         async setGeneralValue() {
             try {
@@ -186,10 +222,6 @@ export default {
         async openRecord() {
             const response = await this.$http.get(
                 `${this.resource}/record/${this.item.id}/${this.commercialTreatment.id}`
-            );
-            console.log(
-                "🚀 ~ file: items.vue:132 ~ openRecord ~ response:",
-                response
             );
         },
         async submit() {
