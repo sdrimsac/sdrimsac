@@ -127,6 +127,7 @@ export default {
             this.getRecords();
         },
         async printEvent(url) {
+            console.log("🚀 ~ file: documents_print.vue:130 ~ printEvent ~ url:", url)
             let paperConfig = {
                 scaleContent: false
             };

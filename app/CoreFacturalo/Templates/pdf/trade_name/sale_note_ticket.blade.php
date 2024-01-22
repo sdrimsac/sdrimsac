@@ -608,11 +608,24 @@
         <tr>
             <td class="desc pt-3">
                 <b>Vendedor</b>: {{ $document->user->name }} <br>
+                @php
+                $code = null;
+                $box = \App\Models\Tenant\Box::where('sale_note_id', $document->id)->first();
+                if($box){
+                    $cash = \App\Models\Tenant\Cash::where('id', $box->cash_id)->first();
+                    if($cash){
+                        $code = $cash->reference_number;
+                    }
+                }
+                @endphp
+                @if ($code)
+                <b>Código A.</b>: {{ $code }} <br>
+                @endif
             </td>
         </tr>
-        <tr>
+        {{-- <tr>
             <td align="center" height="60"><b>Gracias por su Preferencia</b></td>
-        </tr>
+        </tr> --}}
     </table>
 
 </body>

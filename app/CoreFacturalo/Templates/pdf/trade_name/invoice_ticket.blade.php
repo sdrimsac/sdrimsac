@@ -936,6 +936,20 @@
             <td class="text-left " style="vertical-align: top; padding-top:5px">
                 <b>Código Hash</b>: {{ $document->hash }} <br>
                 <b>Vendedor</b>: {{ $document->user->name }} <br>
+                @php
+                $code = null;
+                $box = \App\Models\Tenant\Box::where('document_id', $document->id)->first();
+                if($box){
+                    $cash = \App\Models\Tenant\Cash::where('id', $box->cash_id)->first();
+                    if($cash){
+                        $code = $cash->reference_number;
+                    }
+                }
+                @endphp
+                @if ($code)
+                <b>Código A.</b>: {{ $code }} <br>
+                @endif
+
             </td>
 
         </tr>

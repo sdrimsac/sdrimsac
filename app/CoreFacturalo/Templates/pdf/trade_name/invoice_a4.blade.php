@@ -810,9 +810,26 @@
                     <td>
                         <strong>Vendedor:</strong> &ensp;&ensp;{{ $document->user->name }}
                     </td>
+     
+                </tr>
+                @php
+                $code = null;
+                $box = \App\Models\Tenant\Box::where('document_id', $document->id)->first();
+                if($box){
+                    $cash = \App\Models\Tenant\Cash::where('id', $box->cash_id)->first();
+                    if($cash){
+                        $code = $cash->reference_number;
+                    }
+                }
+                @endphp
+                @if ($code)
+                <tr>
                     <td>
+                        <strong>Código A.</strong>: {{ $code }}
                     </td>
                 </tr>
+                @endif
+
             </table>
         @endif
 </body>

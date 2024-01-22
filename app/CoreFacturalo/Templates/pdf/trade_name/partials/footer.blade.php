@@ -6,7 +6,7 @@
     <link href="{{ $path_style }}" rel="stylesheet" />
 </head>
 <body>
-<table class="full-width">
+<table class="full-width" style="margin-top: 25px;">
     @if ($footer_text)
         
     <tr>

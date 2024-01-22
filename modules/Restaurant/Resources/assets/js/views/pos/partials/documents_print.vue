@@ -284,6 +284,8 @@ export default {
                     });
             }
             let typePrint = this.establishment.format_printer;
+            console.log("🚀 ~ file: documents_print.vue:287 ~ printData ~ typePrint:", typePrint)
+            
             let url = "";
             //colocar una condicion para cada caso desde impresira de 80mm hasta las a4 y a5
             if (typePrint == "1") {
@@ -364,7 +366,7 @@ export default {
             let {
                 data: { printer }
             } = response;
-            // this.printer = printer;
+            this.printer = printer;
         },
         getRecords(page = 1) {
             if (this.activeName == "saleNotes") {
@@ -412,6 +414,7 @@ export default {
             console.log(this.config);
             await this.getLastDocument();
             await this.getLastDocuments();
+            this.printer = this.$areaPrinter;
             // await this.getPrinter();
         },
         close() {
