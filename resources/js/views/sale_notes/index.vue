@@ -26,6 +26,7 @@
                             </button>
                             <button
                                 @click.prevent="onOpenModalGenerateCPE"
+                                v-if="just_sale_notes"
                                 type="button"
                                 class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto"
                             >
@@ -590,7 +591,9 @@ import SaleNoteDetail from "./partials/detail.vue";
 import { deletable } from "../../mixins/deletable";
 import ModalGenerateCpe from "./ModalGenerateCPE";
 export default {
-    props: ["soapCompany", "company", "configuration", "user_type"],
+    props: [
+        "just_sale_notes",
+        "soapCompany", "company", "configuration", "user_type"],
     mixins: [deletable],
     components: {
         ModalGenerateCpe,
@@ -666,7 +669,8 @@ export default {
             }
         };
     },
-    created() {},
+    created() {
+    },
     filters: {
         period(name) {
             let res = "";

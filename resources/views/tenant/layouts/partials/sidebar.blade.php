@@ -9,11 +9,11 @@
     $has_series = (bool) \Modules\Item\Models\ItemLot::count();
     $has_lotes = (bool) \Modules\Item\Models\ItemLotsGroup::count();
     $many_establishments = \App\Models\Tenant\Establishment::count() > 1;
-@endphp
+    @endphp
 
 <div class="menu-container flex-grow-1" style="margin-top:20px; ">
     <ul id="menu" class="menu">
-
+        
         
         @inject('roleService', 'App\Services\RoleService')
         @if (!$roleService->isAccountant($user->worker_type_id)&&!$roleService->isArca())
@@ -309,7 +309,7 @@
                 <span class="label">Comprobante Pago</span>
             </a>
             <ul id="documents" class="collapse ">
-                @if (!$roleService->isInterno())
+                @if (!$roleService->isInterno()&&!$roleService->documentsDisabled())
                     @if (!$roleService->isAccountant($user->worker_type_id))
                         <li>
                             <a class="{{ $path[0] === 'documents' && $path[1] === 'create' ? 'active' : '' }}"
@@ -349,7 +349,7 @@
                         </a>
                     </li>
                 @endif
-                @if (!$roleService->isInterno())
+                @if (!$roleService->isInterno() && !$roleService->documentsDisabled())
                     <li>
                         <a class="{{ $path[0] === 'summaries' ? 'active' : '' }}"
                             href="{{ route('tenant.summaries.index') }}">
