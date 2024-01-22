@@ -773,7 +773,7 @@
                                     >
                                         <div class="form-group">
                                             <el-checkbox
-                                                v-model="form.has_size_color"
+                                                v-model="form.has_color_size"
                                                 >¿Maneja Color y Talla
                                                 ?</el-checkbox
                                             ><br />
@@ -782,7 +782,7 @@
                                             class="d-flex align-items-end"
                                             v-if="
                                                 form.unit_type_id != 'ZZ' &&
-                                                    form.has_size_color &&
+                                                    form.has_color_size &&
                                                     recordId == null
                                             "
                                         >
@@ -790,7 +790,7 @@
                                                 class="form-group "
                                                 :class="{
                                                     'has-danger':
-                                                        errors.has_size_color
+                                                        errors.has_color_size
                                                 }"
                                             >
                                                 <label class="control-label">
@@ -808,9 +808,9 @@
 
                                                 <small
                                                     class="text-danger"
-                                                    v-if="errors.has_size_color"
+                                                    v-if="errors.has_color_size"
                                                     v-text="
-                                                        errors.has_size_color[0]
+                                                        errors.has_color_size[0]
                                                     "
                                                 ></small>
                                             </div>

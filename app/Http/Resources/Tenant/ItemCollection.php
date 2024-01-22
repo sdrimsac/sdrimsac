@@ -45,7 +45,7 @@ class ItemCollection extends ResourceCollection
                 });
             }
             return [
-                'has_size_color' => (bool)$row->has_size_color,
+                'has_color_size' => (bool)$row->has_color_size,
                 'max_quantity_description' => $row->max_quantity_description,
                 'id' => $row->id,
                 'unit_type_id' => $row->unit_type_id,

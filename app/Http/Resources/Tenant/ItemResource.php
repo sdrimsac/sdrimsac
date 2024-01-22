@@ -30,7 +30,7 @@ class ItemResource extends JsonResource
         }
 
         return [
-            'has_size_color' => (bool) $this->has_size_color,
+            'has_color_size' => (bool) $this->has_color_size,
             'is_manufactured' => (bool) $this->is_manufactured,
             'max_quantity_description' => $this->max_quantity_description,
             'id' => $this->id,

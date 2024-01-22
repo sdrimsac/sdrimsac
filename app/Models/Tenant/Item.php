@@ -19,7 +19,7 @@ class Item extends ModelTenant
 {
     protected $with = ['item_warehouse_prices', 'item_type', 'unit_type', 'currency_type', 'warehouses', 'item_unit_types', 'category', 'lots_group'];
     protected $fillable = [
-        'has_size_color',
+        'has_color_size',
         'max_quantity_description',
         'is_manufactured',
         'delivery_cost',
@@ -171,7 +171,7 @@ class Item extends ModelTenant
         // }
 
         $data = [
-            'has_size_color' => (bool)$this->has_size_color,
+            'has_color_size' => (bool)$this->has_color_size,
             'id'                               => $this->id,
             'is_manufactured'                 => (bool)$this->is_manufactured,
             'item_code'                    => $this->item_code,
