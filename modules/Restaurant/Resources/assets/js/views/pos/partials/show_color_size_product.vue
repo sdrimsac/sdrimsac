@@ -122,12 +122,12 @@ export default {
             ];
              color_size = color_size.filter(s => s.id != colorSize.id);
             if (colorSize.quantity !== 0) {
-                if(colorSize.quantity > colorSize.stock){
-                    colorSize.quantity = colorSize.stock;
-                    return this.$toast.error(
-                        "La cantidad no puede ser mayor al stock"
-                    );
-                }
+                //if(colorSize.quantity > colorSize.stock){
+                    //colorSize.quantity = colorSize.stock;
+                   // return this.$toast.error(
+                  //      "La cantidad no puede ser mayor al stock"
+                //    );
+              //  }
                 colorSize.disabled = false;
                 color_size = [...color_size, colorSize];
             } else {
