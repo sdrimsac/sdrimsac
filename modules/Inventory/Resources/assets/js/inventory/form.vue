@@ -14,10 +14,10 @@
                             :class="{ 'has-danger': errors.item_id }"
                         >
                             <label class="control-label">Producto</label>
-                              <el-select
+                            <el-select
                                 v-model="form.item_id"
                                 class="w-100"
-                                  filterable
+                                filterable
                                 remote
                                 popper-class="el-select-customers"
                                 clearable
@@ -202,11 +202,11 @@
 </template>
 
 <script>
-// import InputLotsForm from '../../../../../../resources/js/views/tenant/items/partials/lots.vue'
+import InputLotsForm from "../../../../../../resources/js/views/items/partials/lots.vue";
 import OutputLotsForm from "./partials/lots.vue";
 
 export default {
-    components: { OutputLotsForm },
+    components: { OutputLotsForm, InputLotsForm },
     props: ["showDialog", "recordId", "type"],
     data() {
         return {
@@ -219,14 +219,15 @@ export default {
             form: {},
             items: [],
             warehouses: [],
-            inventory_transactions: []
+            inventory_transactions: [],
+            loading_search_item: false
         };
     },
     created() {
         this.initForm();
     },
     methods: {
-          searchRemoteItems(input) {
+        searchRemoteItems(input) {
             if (input.length > 2) {
                 clearTimeout(this.timer);
                 this.loading_search_item = true;

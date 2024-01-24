@@ -6,10 +6,13 @@ namespace App\Http\Controllers\Tenant;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Tenant\ItemColorSizeCollection;
 use App\Http\Resources\Tenant\ItemColorSizeResource;
+use App\Imports\ItemColorSizeImport;
 use App\Models\Tenant\Item;
 use App\Models\Tenant\ItemColorSize;
 use App\Models\Tenant\ItemWarehouse;
+use Exception;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Excel;
 
 class ItemColorSizeController extends Controller
 {
@@ -17,7 +20,32 @@ class ItemColorSizeController extends Controller
     {
         return view('tenant.item_color_sizes.index');
     }
-
+    public function import(Request $request)
+    {
+        set_time_limit(0);
+        ini_set('memory_limit', '2048M');
+        if ($request->hasFile('file')) {
+            try {
+                $import = new ItemColorSizeImport();
+                $import->import($request->file('file'), null, Excel::XLSX);
+                $data = $import->getData();
+                return [
+                    'success' => true,
+                    'message' =>  __('app.actions.upload.success'),
+                    'data' => $data
+                ];
+            } catch (Exception $e) {
+                return [
+                    'success' => false,
+                    'message' =>  $e->getMessage()
+                ];
+            }
+        }
+        return [
+            'success' => false,
+            'message' =>  __('app.actions.upload.error'),
+        ];
+    }
 
     public function records(Request $request)
     {

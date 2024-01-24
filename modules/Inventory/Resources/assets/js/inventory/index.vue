@@ -88,7 +88,6 @@
     import InventoriesMove from './move.vue'
     import InventoriesRemove from './remove.vue'
     import DataTable from '../../../../../../resources/js/components/DataTable.vue'
-
     export default {
         props: ['type', 'typeUser'],
         components: {DataTable, InventoriesForm, InventoriesMove, InventoriesRemove, InventoriesFormOutput},

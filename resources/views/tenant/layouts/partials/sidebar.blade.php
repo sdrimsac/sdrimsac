@@ -267,7 +267,7 @@
                         <li>
                             <a class="{{ $path[0] === 'item-color-size'  ? 'active' : '' }}"
                                 href="{{ route('tenant.item_color_size.index') }}">
-                                <i class="icofont-price"></i> Color & Tallas
+                                <i class="icofont-site-map"></i> Color & Tallas
                             </a>
                         </li>
                         {{-- @if ($has_series)

@@ -640,7 +640,7 @@
                 <template
                     v-if="
                         type == 'customers' &&
-                            configuration.hotels &&
+                           configuration.credit_list &&
                             (typeUser == 'admin' || typeUser == 'superadmin')
                     "
                 >

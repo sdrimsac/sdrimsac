@@ -1509,7 +1509,7 @@
                                     <div class="col-md-6 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
-                                                >Lista de cuenta por cobrar
+                                                >A cuenta 
                                             </label>
 
                                             <el-switch

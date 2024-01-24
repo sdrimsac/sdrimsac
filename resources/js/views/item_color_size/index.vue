@@ -48,10 +48,10 @@
                             <i data-cs-icon="plus"></i>
                             <span>Nuevo</span>
                         </button> -->
-                        <!-- <button type="button" class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto" @click.prevent="clickImportSet()">
+                        <button type="button" class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto" @click.prevent="clickImportColorSize()">
                      <i class="fa fa-upload"></i>
-                    <span>Importar Productos compuestos</span>
-                    </button> -->
+                    <span>Importar colores y  tallas</span>
+                    </button>
                         <!-- Contact Button End -->
                     </div>
                 </div>
@@ -112,11 +112,15 @@
                 :showDialog.sync="showDialog"
                 :recordId="recordId"
             ></items-form>
+            <import-color-size
+                :showDialog.sync="showImportColorSizeDialog"
+            ></import-color-size>
         </div>
     </div>
 </template>
 <script>
 import ItemsForm from "./form.vue";
+import ImportColorSize from "./import.vue";
 import DataTable from "../../../../resources/js/components/DataTable.vue";
 //'../../../components/DataTable.vue'
 import { deletable } from "../../../../resources/js/mixins/deletable";
@@ -126,12 +130,13 @@ export default {
     mixins: [deletable],
     components: {
         ItemsForm,
-        DataTable
+        DataTable,
+        ImportColorSize
     },
     data() {
         return {
             showDialog: false,
-            showImportSetDialog: false,
+            showImportColorSizeDialog: false,
             showImportSetIndividualDialog: false,
             showWarehousesDetail: false,
             resource: "item-color-size",
@@ -152,8 +157,8 @@ export default {
             this.recordId = recordId;
             this.showDialog = true;
         },
-        clickImportSet() {
-            this.showImportSetDialog = true;
+        clickImportColorSize() {
+            this.showImportColorSizeDialog = true;
         },
         clickDelete(id) {
             this.destroy(`/${this.resource}/${id}`).then(() =>

@@ -17,7 +17,7 @@
                             <el-select
                                 v-model="form.item_id"
                                 class="w-100"
-                                  filterable
+                                filterable
                                 remote
                                 popper-class="el-select-customers"
                                 clearable
@@ -113,7 +113,19 @@
                             >[&#10004; Seleccionar series]</a
                         >
                     </div>
-
+ <div
+                        style="padding-top: 3%;"
+                        class="col-md-3 col-sm-3"
+                        v-if="form.item_id && form.has_color_size && form.warehouse_id"
+                    >
+                        <!-- <el-button type="primary" native-type="submit" icon="el-icon-check">Elegir serie</el-button> -->
+                        <a
+                            href="#"
+                            class="text-center font-weight-bold text-info"
+                            @click.prevent="clickSelectColorSize"
+                            >[&#10004; Seleccionar color & talla]</a
+                        >
+                    </div>
                     <!-- <div class="col-md-3" v-show="form.lots_enabled">
                         <div
                             class="form-group"
@@ -135,7 +147,7 @@
                             ></small>
                         </div>
                     </div> -->
-
+                    <!-- 
                     <div
                         style="padding-top: 3%"
                         class="col-md-4"
@@ -147,7 +159,7 @@
                             @click.prevent="clickLotcode"
                             >[&#10004; Ingresar series]</a
                         >
-                    </div>
+                    </div> -->
                     <div class="col-md-8">
                         <div
                             class="form-group"
@@ -201,6 +213,16 @@
             @addRowSelectLot="addRowSelectLot"
         >
         </select-lots-form>
+        <color-size-output
+            :showDialog.sync="showDialogColorSizeOutput"
+            :item_id="form.item_id"
+            :item.sync="item"
+            
+            :warehouse_id="form.warehouse_id"
+            :quantity="form.quantity"
+            @addRowOutputLot="addRowOutputLot"
+        >
+        </color-size-output>
     </el-dialog>
 </template>
 
@@ -209,9 +231,10 @@
 // import OutputLotsForm from './partials/lots.vue'
 import LotsGroup from "./lots_group.vue";
 import SelectLotsForm from "./lots.vue";
+import ColorSizeOutput from "./partials/color_size_output.vue";
 
 export default {
-    components: { LotsGroup, SelectLotsForm },
+    components: { LotsGroup, SelectLotsForm, ColorSizeOutput },
     props: ["showDialog", "recordId"],
     data() {
         return {
@@ -228,13 +251,18 @@ export default {
             items: [],
             warehouses: [],
             inventory_transactions: [],
-            timer: null
+            timer: null,
+            item:null,
+            showDialogColorSizeOutput: false
         };
     },
     created() {
         this.initForm();
     },
     methods: {
+        clickSelectColorSize(){
+            this.showDialogColorSizeOutput = true
+        },
         searchRemoteItems(input) {
             if (input.length > 2) {
                 clearTimeout(this.timer);
@@ -256,6 +284,7 @@ export default {
                 "🚀 ~ file: form_output.vue:232 ~ changeItem ~ item:",
                 item
             );
+            this.item = item
             this.form.lots_enabled = item.lots_enabled;
             let lots = await _.filter(item.lots, {
                 warehouse_id: this.form.warehouse_id
@@ -265,6 +294,8 @@ export default {
             this.form.lots_enabled = item.lots_enabled;
             this.form.series_enabled = item.series_enabled;
             this.form.lots_group = item.lots_group;
+            this.form.has_color_size = item.has_color_size;
+            this.form.color_size = item.color_size;
         },
         addRowOutputLot(lots) {
             this.form.lots = lots;

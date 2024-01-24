@@ -83,6 +83,7 @@ if ($hostname) {
                     Route::get('/columns',[ItemColorSizeController::class,'columns']);
                     Route::get('/records',[ItemColorSizeController::class,'records']);
                     Route::get('/record/{id}',[ItemColorSizeController::class,'record']);
+                    Route::post('/import',[ItemColorSizeController::class,'import']);
                     Route::delete('/{id}',[ItemColorSizeController::class,'delete']);
                     Route::post('/',[ItemColorSizeController::class,'store']);
 
