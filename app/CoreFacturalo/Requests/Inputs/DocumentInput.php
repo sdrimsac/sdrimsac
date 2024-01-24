@@ -265,6 +265,7 @@ class DocumentInput
                             $row['item']['lots'] : [],
 
                         'lotes' => (isset($row['item']['lotes'])) ? $row['item']['lotes'] : [],
+                        'color_size' => (isset($row['item']['color_size'])) ? $row['item']['color_size'] : [],
                         'IdLoteSelected' => (isset($row['IdLoteSelected']) ? $row['IdLoteSelected'] : null)
                     ],
 

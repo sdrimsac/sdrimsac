@@ -5,6 +5,7 @@ use App\Http\Controllers\Tenant\CommercialTreatmentController;
 use App\Http\Controllers\Tenant\CreditListController;
 use App\Http\Controllers\Tenant\DispatchController;
 use App\Http\Controllers\Tenant\InventoryController;
+use App\Http\Controllers\Tenant\ItemColorSizeController;
 use App\Http\Controllers\Tenant\ItemController;
 use App\Http\Controllers\Tenant\PersonController;
 use App\Http\Controllers\Tenant\TollController;
@@ -76,6 +77,16 @@ if ($hostname) {
                                 Route::delete('/record/{commercial_treatment_items_id}', [CommercialTreatmentController::class, 'deleteItem']);
                             });
                     });
+                Route::prefix('item-color-size')
+                ->group(function (){
+                    Route::get('/',[ItemColorSizeController::class,'index'])->name('tenant.item_color_size.index');
+                    Route::get('/columns',[ItemColorSizeController::class,'columns']);
+                    Route::get('/records',[ItemColorSizeController::class,'records']);
+                    Route::get('/record/{id}',[ItemColorSizeController::class,'record']);
+                    Route::delete('/{id}',[ItemColorSizeController::class,'delete']);
+                    Route::post('/',[ItemColorSizeController::class,'store']);
+
+                });
                 Route::prefix('credit-list')->group(function () {
                     Route::get('/', [CreditListController::class, 'credit_list_report_index'])->name('tenant.credit_list.index');
                     Route::get('/tables', [CreditListController::class, 'tables']);

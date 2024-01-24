@@ -234,6 +234,12 @@ const app = new Vue({
                 "../../modules/Restaurant/Resources/assets/js/views/login/login.vue"
             ),
 
+        "tenant-item-color-size-index": () =>
+        import(
+            /* webpackChunkName:tenant-item-color-size-index"js/ " */
+
+            "./views/item_color_size/index.vue"
+        ),
         "tenant-item-sets-index": () =>
             import(
                 /* webpackChunkName:"tenat-tem-sets-indexjs/ " */ "./views/item_sets/index.vue"

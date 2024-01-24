@@ -768,11 +768,15 @@
                             <div class="d-flex">
                                 <div class="col-md-3">
                                     <div
-                                        v-show="form.unit_type_id != 'ZZ'"
+                                        v-show="
+                                            form.unit_type_id != 'ZZ' &&
+                                                form.stock > 0
+                                        "
                                         class="col-md-6 center-el-checkbox"
                                     >
                                         <div class="form-group">
                                             <el-checkbox
+                                                :disabled="recordId != null"
                                                 v-model="form.has_color_size"
                                                 >¿Maneja Color y Talla
                                                 ?</el-checkbox
@@ -1843,6 +1847,10 @@ export default {
     methods: {
         addRowColorSize(color_sizes) {
             this.form.color_sizes = color_sizes;
+            console.log(
+                "🚀 ~ file: form.vue:1850 ~ addRowColorSize ~ this.form.color_sizes:",
+                this.form.color_sizes
+            );
         },
         clickColorSize() {
             this.showDialogColorSize = true;
@@ -2298,6 +2306,10 @@ export default {
             this.loading_submit = true;
             this.form.all_establishment = this.allEstablishment;
 
+            console.log(
+                "🚀 ~ file: form.vue:2309 ~ submit ~ this.form:",
+                this.form
+            );
             await this.$http
                 .post(`/${this.resource}`, this.form)
                 .then(response => {

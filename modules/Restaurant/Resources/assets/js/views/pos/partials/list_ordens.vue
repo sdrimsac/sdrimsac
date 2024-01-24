@@ -1461,6 +1461,11 @@
                                                                                         .item
                                                                                         .series_enabled ==
                                                                                         1 ||
+                                                                                     order_pend
+                                                                                        .food
+                                                                                        .item
+                                                                                        .has_color_size ==
+                                                                                        1 ||
                                                                                     (order_pend
                                                                                         .food
                                                                                         .item
@@ -1505,6 +1510,11 @@
                                                                                             .item
                                                                                             .series_enabled ==
                                                                                             1 ||
+                                                                                            order_pend
+                                                                                            .food
+                                                                                            .item
+                                                                                            .has_color_size ==
+                                                                                            1 ||
                                                                                         (order_pend
                                                                                             .food
                                                                                             .item
@@ -1537,6 +1547,11 @@
                                                                                             .food
                                                                                             .item
                                                                                             .series_enabled ==
+                                                                                            1 ||
+                                                                                            order_pend
+                                                                                            .food
+                                                                                            .item
+                                                                                            .has_color_size ==
                                                                                             1 ||
                                                                                         (order_pend
                                                                                             .food
@@ -1766,6 +1781,79 @@
                                                                     "
                                                                     type="success"
                                                                     >Ver Series
+                                                                </el-tag>
+                                                            </template>
+                                                        </div>
+                                                             <div
+                                                            v-if="
+                                                                order_pend.food
+                                                                    .item
+                                                                    .has_color_size
+                                                            "
+                                                        >
+                                                            <template
+                                                                v-if="
+                                                                    order_pend.color_size && order_pend
+                                                                        .color_size
+                                                                        .length ==
+                                                                        0
+                                                                "
+                                                            >
+                                                                <el-tag
+                                                                    style="margin-top: 5px"
+                                                                    role="button"
+                                                                    @click="
+                                                                        showColorSizeDialog(
+                                                                            order_pend,
+                                                                            indexx
+                                                                        )
+                                                                    "
+                                                                    type="danger"
+                                                                    >**Seleccione
+                                                                    un color y talla
+                                                                </el-tag>
+                                                            </template>
+                                                            <template v-else>
+                                                                <div
+                                                                    v-for="(color_size,
+                                                                    idx) in order_pend.color_size"
+                                                                    :key="idx"
+                                                                    style="margin-top: 5px"
+                                                                >
+                                                                    <el-tag
+                                                                        type="primary"
+                                                                        closable
+                                                                        :disable-transitions="
+                                                                            false
+                                                                        "
+                                                                        @close="
+                                                                            deleteColorSize(
+                                                                                indexx,
+                                                                                color_size.id
+                                                                            )
+                                                                        "
+                                                                    >
+                                                                        {{
+                                                                            color_size.color
+                                                                        }} - {{
+                                                                            color_size.size
+                                                                        }} - Cant. {{
+                                                                            color_size.quantity
+                                                                        }}
+                                                                    </el-tag>
+                                                                    <br />
+                                                                </div>
+                                                                <el-tag
+                                                                    style="margin-top: 5px"
+                                                                    role="button"
+                                                                    @click="
+                                                                        showColorSizeDialog(
+                                                                            order_pend,
+                                                                            indexx
+                                                                        )
+                                                                    "
+                                                                    type="success"
+                                                                    >Ver Colores & Tallas
                                                                 </el-tag>
                                                             </template>
                                                         </div>
@@ -2010,7 +2098,16 @@
             :establishments="establishments"
         >
         </show-series-product>
-
+        <show-color-size-product
+            :limitQty="limitQty"
+            :idx="currentIdx"
+            :item="currentItem"
+            :showDialog.sync="showColorSize"
+            :colorSizeSelected.sync="currentColorSize"
+            @updateColorSize="updateColorSize"
+            :establishments="establishments"
+        >
+        </show-color-size-product>
         <orden-pull-apart
             @restoreToLocalOrdens="restoreToLocalOrdens"
             :showPullApart.sync="listApart"
@@ -2278,6 +2375,7 @@ const TableOrdensPending = () => import("./list_pending_ordens.vue");
 const ObservationForm = () => import("../../partials/observation_form.vue");
 const ExpensesIncomes = () => import("../partials/expenses_incomes.vue");
 const ShowSeriesProduct = () => import("../partials/show_series_product.vue");
+const ShowColorSizeProduct = () => import("../partials/show_color_size_product.vue");
 const ShowLotesProduct = () => import("../partials/show_lotes_product.vue");
 const TransfersModal = () => import("../partials/transfer_modal.vue");
 const CreditListModal = () => import("../partials/credit_list_modal.vue");
@@ -2297,7 +2395,8 @@ export default {
         ShowSeriesProduct,
         ShowLotesProduct,
         TransfersModal,
-        QuotationForm
+        QuotationForm,
+        ShowColorSizeProduct
     },
     props: [
         "sellers",
@@ -2326,6 +2425,8 @@ export default {
 
     data() {
         return {
+            showColorSize:false,
+            currentColorSize:null,
             loadingCommercialTreatment: false,
             ordenNumber: null,
             timer: null,
@@ -2480,6 +2581,37 @@ export default {
         this.getCommercialTreatments();
     },
     methods: {
+        showColorSizeDialog(orden,index = null){
+               this.limitQty = orden.type_quantity ?? 0;
+
+            let ordens = this.localOrden.filter(l => l.id == orden.id);
+            if (ordens.length == 1) {
+                let [currentOrden] = ordens;
+                let color_size = currentOrden.color_size.map(s => ({
+                    ...s,
+                    quantity: s.quantity||0
+                }));
+                this.currentColorSize = color_size;
+            } else {
+                let color_size = [];
+                for (let i = 0; i < ordens.length; i++) {
+                    let currentOrden = ordens[i];
+                    color_size = [
+                        ...color_size,
+                        ...currentOrden.color_size.map(s => ({
+                            ...s,
+                            quantity: s.quantity||0
+                        }))
+                    ];
+                }
+                this.currentColorSize = color_size;
+            }
+            this.currentItem = orden.food.item;
+            // this.currentSeries = orden.series;
+
+            this.currentIdx = index;
+            this.showColorSize = true;
+        },
         sendOrdens(orden) {
             this.$emit("sendOrdens", orden);
             this.ordenNumber = null;
@@ -2841,6 +2973,18 @@ export default {
         showTransfers() {
             this.showTransfersDialog = true;
         },
+                deleteColorSize(index, color_size_id) {
+            let ordens = [...this.localOrden];
+
+            ordens[index].color_size = ordens[index].color_size.filter(
+                s => s.id != color_size_id
+            );
+            ordens[index].quantity = ordens[index].color_size.reduce(
+                (a, b) => a + Number(b.quantity),
+                0
+            );
+            this.$emit("update:localOrden", ordens);
+        },
         deleteSerie(index, serie_id) {
             let ordens = [...this.localOrden];
 
@@ -2848,6 +2992,15 @@ export default {
                 s => s.id != serie_id
             );
             ordens[index].quantity = ordens[index].series.length;
+            this.$emit("update:localOrden", ordens);
+        },
+        updateColorSize(idx, color_size) {
+            let ordens = [...this.localOrden];
+            ordens[idx].color_size = color_size;
+            ordens[idx].quantity = color_size.reduce(
+                (a, b) => a + Number(b.quantity),
+                0
+            );
             this.$emit("update:localOrden", ordens);
         },
         updateSeries(idx, series) {
@@ -2956,6 +3109,7 @@ export default {
             if (isNaN(sub) || sub <= 0) {
                 ordensModified[idx].change_subtotal = false;
                 ordensModified[idx].series = [];
+                ordensModified[idx].color_size = [];
                 ordensModified[idx].lotes = [];
                 ordensModified[idx].newSubtotal = null;
                 this.$emit("update:localOrden", ordensModified);
@@ -2967,6 +3121,7 @@ export default {
             ordensModified[idx].price = price;
             ordensModified[idx].change_subtotal = false;
             ordensModified[idx].series = [];
+            ordensModified[idx].color_size = [];
             ordensModified[idx].lotes = [];
             ordensModified[idx].newSubtotal = null;
             this.$emit("update:localOrden", ordensModified);

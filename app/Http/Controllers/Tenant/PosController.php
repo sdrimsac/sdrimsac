@@ -302,13 +302,16 @@ class PosController extends Controller
         $tablesClean = [];
         $tablesLeave = [];
         if ($config->hotels) {
-            $tablesClean = DB::connection('tenant')->table('tables')->where('is_cleaning', true)->get();
+            $tablesClean = DB::connection('tenant')->table('tables')
+            ->where('establishment_id', auth()->user()->establishment_id)
+            ->where('is_cleaning', true)->get();
 
             $configuration = Configuration::first();
             $time_to_leave = $configuration->alarm_to_end;
             $date = Carbon::now()->addMinutes($time_to_leave)->format('Y-m-d');
             $time = Carbon::now()->addMinutes($time_to_leave)->format('H:i:s');
             $tablesLeave = Table::with(['hotel_rent_items'])
+                ->where('establishment_id', auth()->user()->establishment_id)
                 ->whereHas('hotel_rent_items', function ($query) use ($date, $time) {
                     $query->where(function ($query) use ($date, $time) {
                         $query->where('checkout_date_estimated', '<', $date)

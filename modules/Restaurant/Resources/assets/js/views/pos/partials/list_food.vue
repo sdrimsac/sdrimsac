@@ -70,28 +70,43 @@
                                         justify-content-between
                                         p-1
                                         "
-                                :style="`${configuration.trunc_txt ? 'min-height: 190px;':'height: 190px;'}`"
+                                :style="
+                                    `${
+                                        configuration.trunc_txt
+                                            ? 'min-height: 190px;'
+                                            : 'height: 190px;'
+                                    }`
+                                "
                             >
                                 <div @click="addFood(index)">
                                     <div>
-                                        
                                         <span
-                                            :class="`lead-font-weight-700 ${configuration.trunc_txt ? 'd-inline-block text-truncate':'' }`"
+                                            :class="
+                                                `lead-font-weight-700 ${
+                                                    configuration.trunc_txt
+                                                        ? 'd-inline-block text-truncate'
+                                                        : ''
+                                                }`
+                                            "
                                         >
                                             {{ data.description.toUpperCase() }}
                                         </span>
-                                       <template v-if="configuration.trunc_txt">
-                                         <el-tooltip
-                                            class="item"
-                                            effect="dark"
-                                            :content="
-                                                data.description.toUpperCase()
-                                            "
-                                            placement="top-start"
+                                        <template
+                                            v-if="configuration.trunc_txt"
                                         >
-                                            <i class="fas fa-ellipsis-h"></i>
-                                        </el-tooltip>
-                                       </template>
+                                            <el-tooltip
+                                                class="item"
+                                                effect="dark"
+                                                :content="
+                                                    data.description.toUpperCase()
+                                                "
+                                                placement="top-start"
+                                            >
+                                                <i
+                                                    class="fas fa-ellipsis-h"
+                                                ></i>
+                                            </el-tooltip>
+                                        </template>
                                     </div>
                                     <div
                                         class="d-flex align-items-end justify-content-between"
@@ -102,43 +117,46 @@
                                                 style="  height: 64px;  width: 64px;"
                                             >
                                                 <div class="icon-container_box">
-                                                  <el-tooltip
-                                                  :disabled="data.second_name == null"
-                                                    effect="dark"
-                                                    :content="
-                                                        data.second_name
-                                                    "
-                                                    placement="top-start"
-                                                  >
-                                                      <template
-                                                        v-if="
-                                                            data.image ==
-                                                                'imagen-no-disponible.jpg'
+                                                    <el-tooltip
+                                                        :disabled="
+                                                            data.second_name ==
+                                                                null
                                                         "
+                                                        effect="dark"
+                                                        :content="
+                                                            data.second_name
+                                                        "
+                                                        placement="top-start"
                                                     >
-                                                        <img
-                                                            src="/images/imagen-no-disponible.jpg"
-                                                            alt="User Img"
-                                                            class="thumbail"
-                                                        />
-                                                    </template>
-                                                    <template v-else>
-                                                        <img
-                                                            :src="
-                                                                formatUrlImage(
-                                                                    data.image
-                                                                )
+                                                        <template
+                                                            v-if="
+                                                                data.image ==
+                                                                    'imagen-no-disponible.jpg'
                                                             "
-                                                            class="thumbail"
-                                                            style="  max-height: 69px;  max-width: 69px;"
-                                                        />
-                                                    </template>
-                                                  </el-tooltip>
+                                                        >
+                                                            <img
+                                                                src="/images/imagen-no-disponible.jpg"
+                                                                alt="User Img"
+                                                                class="thumbail"
+                                                            />
+                                                        </template>
+                                                        <template v-else>
+                                                            <img
+                                                                :src="
+                                                                    formatUrlImage(
+                                                                        data.image
+                                                                    )
+                                                                "
+                                                                class="thumbail"
+                                                                style="  max-height: 69px;  max-width: 69px;"
+                                                            />
+                                                        </template>
+                                                    </el-tooltip>
                                                 </div>
                                             </div>
                                         </div>
                                         <div>
-                                            {{ data.code }} 
+                                            {{ data.code }}
                                         </div>
                                     </div>
                                 </div>
@@ -191,30 +209,31 @@
                                         </el-dropdown>
                                     </div>
                                 </div>
-                                    <div class="d-flex justify-content-center m-1"
-                                            v-if="
-                                                data.item.lots_enabled == 1 &&
-                                                    data.item.date_of_due
-                                            "
-                                        >
-                                            <el-tag
-                                                :type="
-                                                    `${
-                                                        isExpired(
-                                                            data.item
-                                                                .date_of_due
-                                                        )
-                                                            ? 'danger'
-                                                            : 'primary'
-                                                    }`
-                                                "
-                                            >
-                                                {{data.item.lot_code}} - 
-                                                {{ data.item.date_of_due }}
-                                            </el-tag>
-                                        </div>
                                 <div
-                                    v-if="data.item.is_set == 0 && data.item.unit_type_id != 'ZZ'"
+                                    class="d-flex justify-content-center m-1"
+                                    v-if="
+                                        data.item.lots_enabled == 1 &&
+                                            data.item.date_of_due
+                                    "
+                                >
+                                    <el-tag
+                                        :type="
+                                            `${
+                                                isExpired(data.item.date_of_due)
+                                                    ? 'danger'
+                                                    : 'primary'
+                                            }`
+                                        "
+                                    >
+                                        {{ data.item.lot_code }} -
+                                        {{ data.item.date_of_due }}
+                                    </el-tag>
+                                </div>
+                                <div
+                                    v-if="
+                                        data.item.is_set == 0 &&
+                                            data.item.unit_type_id != 'ZZ'
+                                    "
                                     class="row justify-content-end "
                                     style="margin-left: 2px; margin-right: 2px; margin-bottom: 2px;"
                                 >
@@ -405,14 +424,13 @@ export default {
     },
 
     methods: {
-          isExpired(date){
+        isExpired(date) {
             let today = new Date();
             let dateOfDue = new Date(date);
-            if(today > dateOfDue){
+            if (today > dateOfDue) {
                 return true;
             }
             return false;
-    
         },
         handleResize() {
             this.screenWidth = window.innerWidth;
@@ -452,11 +470,14 @@ export default {
                 f.price = Number(f.price).toFixed(2);
                 return { ...f, select: false };
             });
-            if (this.barcode && this.listFoods.length == 1 || this.type_code && this.listFoods.length == 1) {
+            if (
+                (this.barcode && this.listFoods.length == 1) ||
+                (this.type_code && this.listFoods.length == 1)
+            ) {
                 this.addFood(0);
             }
-            if(this.searchSeries && this.listFoods.length == 1){
-                this.addFood(0,null,true);
+            if (this.searchSeries && this.listFoods.length == 1) {
+                this.addFood(0, null, true);
             }
         },
         formatedStockPresentation(
@@ -551,20 +572,22 @@ export default {
                 this.listFoods = _.filter(this.foods, { category_food_id: id });
             }
         },
-        async setItemCheckStock(id,quantity) {
+        async setItemCheckStock(id, quantity) {
             //item-sets/check/{id}
             let pass = true;
-            const response = await this.$http.get(`/item-sets/check/${id}/${quantity}`);
-            if(response.status == 200){
-                const {success,message} = response.data;
-                if(!success){
+            const response = await this.$http.get(
+                `/item-sets/check/${id}/${quantity}`
+            );
+            if (response.status == 200) {
+                const { success, message } = response.data;
+                if (!success) {
                     this.$toast.error(message);
                     pass = false;
                 }
             }
             return pass;
         },
-       async addFood(index = 0, type = null, selectSerie = false) {
+        async addFood(index = 0, type = null, selectSerie = false) {
             let quotation_stock = localStorage.getItem("quotation_stock") || 0;
             quotation_stock = quotation_stock == 1;
 
@@ -577,29 +600,39 @@ export default {
             );
 
             if (!this.selectedFood) return;
-            
+
             let foodFound = this.localOrden.filter(
                 f => f.id == this.selectedFood.id
             );
 
             if (this.selectedFood.item.is_set == 1) {
-                if (this.configuration.sales_stock == true && !quotation_stock && this.selectedFood.item.unit_type_id != 'ZZ') {
+                if (
+                    this.configuration.sales_stock == true &&
+                    !quotation_stock &&
+                    this.selectedFood.item.unit_type_id != "ZZ"
+                ) {
                     let qty = 1;
-                    if(foodFound.length != 0){
-                        qty = foodFound.reduce((a, b) => a + Number(b.quantity), 0);
+                    if (foodFound.length != 0) {
+                        qty = foodFound.reduce(
+                            (a, b) => a + Number(b.quantity),
+                            0
+                        );
                         qty += 1;
                     }
-                    let pass = await this.setItemCheckStock(this.selectedFood.item.id,qty);
-                    if(!pass){
+                    let pass = await this.setItemCheckStock(
+                        this.selectedFood.item.id,
+                        qty
+                    );
+                    if (!pass) {
                         return;
                     }
                 }
             } else {
                 if (
                     Number(this.selectedFood.item.stock) <= 0 &&
-                    this.configuration.sales_stock == true
-                    && !quotation_stock
-                    && this.selectedFood.item.unit_type_id != 'ZZ'
+                    this.configuration.sales_stock == true &&
+                    !quotation_stock &&
+                    this.selectedFood.item.unit_type_id != "ZZ"
                 ) {
                     this.$toast.warning("Stock insuficiente");
                     return;
@@ -620,7 +653,7 @@ export default {
                     }
                 }
 
-                if (item.series_enabled ) {
+                if (item.series_enabled) {
                     if (item.item_unit_types.length == 0 && !selectSerie) {
                         let message = "Producto con serie, ya  agregado";
                         this.$toast.warning(message);
@@ -628,8 +661,7 @@ export default {
                     } else {
                         if (type) {
                             if (foodFound.some(i => i.type_id == type.id)) {
-                                let message =
-                                    "Tipo de producto agregado";
+                                let message = "Tipo de producto agregado";
                                 this.$toast.warning(message);
                                 return;
                             }
@@ -645,7 +677,12 @@ export default {
                 } else {
                     qty += 1;
                 }
-                if (this.configuration.sales_stock == true && this.selectedFood.item.is_set == 0 && !quotation_stock && this.selectedFood.item.unit_type_id != 'ZZ') {
+                if (
+                    this.configuration.sales_stock == true &&
+                    this.selectedFood.item.is_set == 0 &&
+                    !quotation_stock &&
+                    this.selectedFood.item.unit_type_id != "ZZ"
+                ) {
                     if (qty > Number(this.selectedFood.item.stock)) {
                         this.$toast.warning("Limite de stock alcanzado");
                         return;
@@ -654,22 +691,34 @@ export default {
             } else {
                 if (type) {
                     let qty = type.quantity_unit;
-                    if (this.configuration.sales_stock == true && this.selectedFood.item.is_set == 0 && !quotation_stock && this.selectedFood.item.unit_type_id != 'ZZ') {
+                    if (
+                        this.configuration.sales_stock == true &&
+                        this.selectedFood.item.is_set == 0 &&
+                        !quotation_stock &&
+                        this.selectedFood.item.unit_type_id != "ZZ"
+                    ) {
                         let stock = Number(this.selectedFood.item.stock);
-                        if ( qty > stock) {
+                        if (qty > stock) {
                             this.$toast.warning("Limite de stock alcanzado");
                             return;
                         }
                     }
                 }
             }
-
+            let setQuantity = 1;
+            if (this.selectedFood.item.series_enabled) {
+                setQuantity = 0;
+            }
+            if (this.selectedFood.item.has_color_size) {
+                setQuantity = 0;
+            }
             this.currentFood = {
                 id: this.selectedFood.id,
                 food: this.selectedFood,
                 observation: null,
                 price: this.selectedFood.price,
-                quantity: !!this.selectedFood.item.series_enabled ? 0 : 1
+                // quantity: !!this.selectedFood.item.series_enabled ? 0 : 1
+                quantity: setQuantity
             };
             this.$emit(
                 "insertOrden",
@@ -677,7 +726,6 @@ export default {
                 this.selectedFood.id,
                 type,
                 selectSerie
-
             );
             this.$notify({
                 title: this.currentFood.food.description.toLowerCase(),

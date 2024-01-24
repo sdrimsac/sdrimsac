@@ -47,6 +47,7 @@ use Modules\Item\Models\ItemLotsGroup;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Tenant\Catalogs\AffectationIgvType;
 use App\Models\Tenant\InventoryKardex;
+use App\Models\Tenant\ItemColorSize;
 use App\Models\Tenant\ItemWarehousePrice;
 use App\Models\Tenant\Kardex;
 use Carbon\Carbon;
@@ -722,6 +723,15 @@ class ItemController extends Controller
                 $newUnitType->fill($unit);
                 $newUnitType->item_id = $item->id;
                 $newUnitType->save();
+            }
+        }
+        if ($request['color_sizes'] != null) {
+            foreach ($request['color_sizes'] as $color_size) {
+                $newColorSize = new ItemColorSize;
+                $newColorSize->fill($color_size);
+                $newColorSize->item_id = $item->id;
+                $newColorSize->warehouse_id = $request['warehouse_id'];
+                $newColorSize->save();
             }
         }
         if ($request['warehouse_prices'] != null) {

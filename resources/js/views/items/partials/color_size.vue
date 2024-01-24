@@ -40,10 +40,10 @@
                                 <el-input v-model="row.size"></el-input>
                             </td>
                             <td>
-                                <el-input 
-                                
-                                @input="verifyStock"
-                                v-model="row.stock"></el-input>
+                                <el-input
+                                    type="number"
+                                    v-model="row.stock"
+                                ></el-input>
                             </td>
                             <td>
                                 <el-button
@@ -60,7 +60,7 @@
         </div>
         <span slot="footer" class="dialog-footer">
             <el-button @click="close">Cancelar</el-button>
-            <el-button type="primary" @click="close">Aceptar</el-button>
+            <el-button type="primary" @click="addColorSize">Aceptar</el-button>
         </span>
     </el-dialog>
 </template>
@@ -70,31 +70,51 @@ export default {
     props: ["showDialog", "colorSizes", "stock", "recordId"],
     data() {
         return {
-            titleDialog: "Color - Talla",
+            titleDialog: `Color - Talla`,
             loading: false
         };
     },
     methods: {
-        verifyStock(){
-            let total = 0;
-            this.colorSizes.forEach((item) => {
-                total += parseInt(item.stock);
-            });
-            if (total > this.stock) {
-                this.$message({
-                    message: "El stock no puede ser mayor al total",
-                    type: "warning"
-                });
+        addColorSize() {
+            if (this.verifyStock()) {
+                if (this.verifyCompleteData()) {
+                    this.sortItems();
+                    this.$emit("addRowColorSize", this.colorSizes);
+                    this.close();
+                } else {
+                    this.$toast.warning("Debe llenar todos los campos");
+                }
             }
         },
-        clickAddColorSize() {
-            this.colorSizes.push([
-                {
-                    color: "",
-                    size: "",
-                    stock: 0
+        verifyCompleteData() {
+            //verificar si todos los campos estan llenos
+            let complete = true;
+            this.colorSizes.forEach(item => {
+                if (item.color == "" || item.size == "" || item.stock == 0) {
+                    complete = false;
                 }
-            ]);
+            });
+            return complete;
+        },
+        verifyStock() {
+            let total = 0;
+            this.colorSizes.forEach(item => {
+                total += parseInt(item.stock);
+            });
+            if (total != this.stock) {
+                this.$toast.warning(
+                    "El stock total debe ser igual al stock del producto"
+                );
+                return false;
+            }
+            return true;
+        },
+        clickAddColorSize() {
+            this.colorSizes.push({
+                color: "",
+                size: "",
+                stock: 0
+            });
         },
         addMoreColorSizes() {
             this.clickAddColorSize();
@@ -108,18 +128,13 @@ export default {
             if (!this.recordId) {
                 if (this.colorSizes.length == 0) {
                     this.addMoreColorSizes();
-                } else {
-                    let quantity = this.stock - this.colorSizes.length;
-                    if (quantity > 0) {
-                        this.addMoreColorSizes(quantity);
-                    } else {
-                        this.deleteMoreColorSizes(quantity);
-                    }
                 }
             }
             if (this.colorSizes.length > 0) {
                 this.sortItems();
             }
+
+            this.titleDialog = `Color - Talla - Stock: ${this.stock}`;
         },
         close() {
             this.$emit("update:showDialog", false);
@@ -143,6 +158,13 @@ export default {
                     return -1;
                 }
                 return 0;
+            });
+
+            this.colorSizes.forEach(item => {
+                if (item.size && item.color) {
+                    item.color = item.color.toUpperCase();
+                    item.size = item.size.toUpperCase();
+                }
             });
         }
     }

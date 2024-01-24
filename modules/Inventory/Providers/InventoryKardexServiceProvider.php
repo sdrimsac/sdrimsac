@@ -5,6 +5,7 @@ namespace Modules\Inventory\Providers;
 use App\Models\Tenant\DocumentItem;
 use App\Models\Tenant\Document;
 use App\Models\Tenant\Item;
+use App\Models\Tenant\ItemColorSize;
 use App\Models\Tenant\ItemUnitType;
 use App\Models\Tenant\PurchaseItem;
 use App\Models\Tenant\SaleNoteItem;
@@ -105,7 +106,15 @@ class InventoryKardexServiceProvider extends ServiceProvider
                     $lot->save();
                 }
             }
-
+            if (isset($document_item->item->color_size)) {
+                foreach ($document_item->item->color_size as $it) {
+                    $color_size_found = ItemColorSize::find($it->id);
+                    if ($color_size_found) {
+                        $color_size_found->stock = ($document->document_type_id === '07') ? ($color_size_found->stock+ $it->quantity) : ($color_size_found->stock - $it->quantity);
+                        $color_size_found->save();
+                    }
+                }
+            }
             if (isset($document_item->item->lots)) {
                 foreach ($document_item->item->lots as $it) {
 
@@ -155,6 +164,15 @@ class InventoryKardexServiceProvider extends ServiceProvider
                         }
                         $lot_found->quantity = $lot_found->quantity - $quantityLot;
                         $lot_found->save();
+                    }
+                }
+            }
+            if (isset($sale_note_item->item->color_size)) {
+                foreach ($sale_note_item->item->color_size as $it) {
+                    $color_size_found = ItemColorSize::find($it->id);
+                    if ($color_size_found) {
+                        $color_size_found->stock = $color_size_found->stock - $it->quantity;
+                        $color_size_found->save();
                     }
                 }
             }

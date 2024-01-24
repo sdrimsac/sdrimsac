@@ -1843,6 +1843,8 @@ export default {
 
     data() {
         return {
+            showColorSize:false,
+            currentColorSize: [],
             showSaleNoteCreditCash: false,
             searchSecondName: false,
             area_id: null,
@@ -2671,6 +2673,7 @@ export default {
                 this.ordens[i].food.item.quantity = item.quantity;
                 this.ordens[i].food.item.lotes = item.lotes;
                 this.ordens[i].food.item.lots = item.series;
+                this.ordens[i].food.item.color_size = item.color_size;
                 this.ordens[i].food.item.sale_unit_price = item.price;
                 this.ordens[i].food.price = item.price;
                 // this.ordens[i].food.item.price = item.price;
@@ -2699,6 +2702,7 @@ export default {
                     return this.$toast.error("Seleccione un cliente");
                 }
             }
+                    console.log("🚀 ~ file: index.vue:2691 ~ setPaymentOrden ~ this.form:", this.form)
             this.is_payment = true;
         },
         sendOrdensAllTables(orden_items) {
@@ -3023,6 +3027,7 @@ export default {
                 this.ordens[i].food.item.quantity = item.quantity;
                 this.ordens[i].food.item.lotes = item.lotes;
                 this.ordens[i].food.item.lots = item.series;
+                this.ordens[i].food.item.color_size = item.color_size;
                 this.ordens[i].food.item.sale_unit_price = item.price;
                 this.ordens[i].food.price = item.price;
                 // this.ordens[i].food.item.price = item.price;
@@ -3087,6 +3092,7 @@ export default {
                 if (this.variation) {
                     this.isNoteIsDefault();
                 }
+                    console.log("🚀 ~ file: index.vue:3080 ~ asyncpaymentsOrden(form,variationItem ~ this.form:", this.form)
                 this.is_payment = true;
             }
         },
@@ -3190,7 +3196,7 @@ export default {
                 } else {
                     orden.series = [];
                 }
-
+                orden.color_size = [];
                 orden.lotes = [];
                 let added = false;
                 let {
@@ -3267,6 +3273,7 @@ export default {
                         orden.change_subtotal = false;
                         orden.series = [];
                         orden.lotes = [];
+                        orden.color_size = [];
                         let {
                             food: {
                                 item: { lots_group }
@@ -3336,6 +3343,7 @@ export default {
                         orden.change_subtotal = false;
                         orden.series = [];
                         orden.lotes = [];
+                        orden.color_size = [];
                         this.localOrden.unshift(orden);
                     }
                 }
@@ -4183,6 +4191,7 @@ export default {
             if (!this.form.customer_id)
                 return this.$toast.error("Seleccione un cliente");
             this.form.establishment_id = this.establishment.id;
+            console.log("🚀 ~ file: index.vue:4193 ~ clickPayment ~ this.form:", this.form)
 
             this.is_payment = true;
         },
@@ -4368,6 +4377,7 @@ export default {
                     exchangeRateSale
                 );
                 this.form.items.push(this.row);
+                console.log("🚀 ~ file: index.vue:4371 ~ this.row:", this.row)
                 item.aux_quantity = 1;
             }
 
