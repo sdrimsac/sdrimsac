@@ -10,6 +10,9 @@ use Illuminate\Support\Facades\Config;
 class Configuration extends ModelTenant
 {
     protected $fillable = [
+        'series_enabled',
+        'lots_enabled',
+        'color_size_enabled',
         'commercial_treatment_items',
         'footer_text',
         'transform_item',
@@ -153,6 +156,9 @@ class Configuration extends ModelTenant
 
     ];
     protected $casts = [
+        'series_enabled' => 'boolean',
+        'lots_enabled' => 'boolean',
+        'color_size_enabled' => 'boolean',
         'commercial_treatment_items' => 'boolean',
         'transform_item' => 'boolean',
         'item_set_quantity_pos' => 'boolean',
@@ -256,6 +262,9 @@ class Configuration extends ModelTenant
         // $skins = Skin::all();
         $skins = [];
         return [
+            'series_enabled' => (bool)$this->series_enabled,
+            'lots_enabled' => (bool)$this->lots_enabled,
+            'color_size_enabled' => (bool)$this->color_size_enabled,
             'commercial_treatment_items' => (bool)$this->commercial_treatment_items,
             'footer_text' => $this->footer_text,
             'transform_item' => (bool)$this->transform_item,

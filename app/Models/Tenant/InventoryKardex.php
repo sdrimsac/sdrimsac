@@ -15,6 +15,7 @@ class InventoryKardex extends ModelTenant
         'inventory_kardexable_type',
         'warehouse_id',
         'quantity', 
+        'is_import_excel',
     ];
  
 

@@ -143,6 +143,9 @@
                                         @case($models[5])
                                             {{ 'A cuenta' }}
                                         @break
+                                        @case($models[7])
+                                        {{ $value->is_import_excel == 1 ? 'Importación' :'Ingreso' }}
+                                    @break
                                     @endswitch
 
 

@@ -21,6 +21,7 @@ class ItemColorSizeCollection extends ResourceCollection
                 'stock' => $row->stock,
                 'warehouse_id' => $row->warehouse_id,
                 'item_description' => $row->item->description,
+                'item_internal_id' => $row->item->internal_id,
             ];
         });
     }

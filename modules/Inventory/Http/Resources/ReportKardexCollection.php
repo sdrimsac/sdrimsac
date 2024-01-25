@@ -46,6 +46,7 @@ class ReportKardexCollection extends ResourceCollection
             "App\Models\Tenant\CreditList",
             "App\Models\Tenant\HotelRentItem",
             "Modules\Item\Models\ItemManufactured",
+            "App\Models\Tenant\ItemColorSize",
         ];
         switch ($row->inventory_kardexable_type) {
 
@@ -286,6 +287,33 @@ class ReportKardexCollection extends ResourceCollection
                             'view' => true  
         
                         ];
+                        case $models[9]:
+                            $id = optional($row->inventory_kardexable)->id;
+                           $type_transaction = "";
+                           if($row->is_import_excel == 1){
+                            $type_transaction = "Importación";
+                           }else{
+                            $type_transaction = ($row->quantity < 0) ? "Usado para fabricación" : "Ingreso por fabricación";
+                           }
+                            return [
+                                'id' => $row->id,
+                                'item_name' => $row->item->description,
+                                'internal_id' => $row->item->internal_id,
+                                'unit_type_id' => $row->item->unit_type_id,
+                                'date_time' => $row->created_at->format('Y-m-d H:i:s'),
+                                // 'type_transaction' => ($row->is_import_excel == 1 ? 'Importación' : ($row->quantity < 0) )? "Salida" : "Ingreso",
+                                'type_transaction' => $type_transaction,
+                                'date_of_issue' => isset($row->inventory_kardexable->date_of_issue) ? $row->inventory_kardexable->date_of_issue : '',
+                                'anumber' => optional($row->inventory_kardexable)->id,
+                                'input' => ($row->quantity > 0) ?  $row->quantity : "-",
+                                'output' => ($row->quantity < 0) ?  $row->quantity : "-",
+                                'balance' => self::$balance += $row->quantity,
+                                'sale_note_asoc' => '-',
+                                'order_note_asoc' => '-',
+                                'doc_asoc' => '-',
+                                'view' => true  
+            
+                            ];
         }
     }
 

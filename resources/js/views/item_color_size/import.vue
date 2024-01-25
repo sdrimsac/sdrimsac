@@ -56,7 +56,7 @@
                         </div>
                     </div>
                     <div class="col-md-12">
-                        <a href="/formats/item_sets.xlsx" target="_new"
+                        <a href="/formats/item_color_size.xlsx" target="_new"
                             >Descargar formato</a
                         >
                     </div>

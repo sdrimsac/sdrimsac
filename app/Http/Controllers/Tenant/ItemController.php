@@ -574,6 +574,9 @@ class ItemController extends Controller
 
         $brands = Brand::all();
         $configuration = Configuration::select(
+            'series_enabled',
+            'lots_enabled',
+            'color_size_enabled',
             'transform_item',
             'init_stock',
             'affectation_igv_type_id',

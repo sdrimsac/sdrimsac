@@ -646,7 +646,7 @@
                                 </div>
                             </div>
                             <div class="d-flex" v-if="showSeries">
-                                <div class="col-md-4">
+                                <div class="col-md-4" v-if="configuration.series_enabled">
                                     <div
                                         v-show="form.unit_type_id != 'ZZ'"
                                         class="col-md-3 center-el-checkbox"
@@ -692,7 +692,8 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-4">
+                               
+                                <div class="col-md-4" v-if="configuration.lots_enabled">
                                     <div
                                         v-show="form.unit_type_id != 'ZZ'"
                                         class="col-md-3 center-el-checkbox"
@@ -765,7 +766,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="d-flex">
+                            <div class="d-flex" v-if="configuration.color_size_enabled">
                                 <div class="col-md-3">
                                     <div
                                         v-show="
@@ -1809,6 +1810,7 @@ export default {
             this.brands = response.data.brands;
             this.attribute_types = response.data.attribute_types;
             this.configuration = response.data.configuration;
+            console.log("🚀 ~ file: form.vue:1812 ~ awaitthis.$http.get ~ this.configuration:", this.configuration)
             this.areas = response.data.areas;
 
             this.form.sale_affectation_igv_type_id =

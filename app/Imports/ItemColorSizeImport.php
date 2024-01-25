@@ -2,6 +2,7 @@
 
 namespace App\Imports;
 
+use App\Models\Tenant\InventoryKardex;
 use App\Models\Tenant\Item;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\Importable;
@@ -40,6 +41,8 @@ class ItemColorSizeImport implements ToCollection
 
 
                 if ($item !== null) {
+                    $item->has_color_size = true;
+                    $item->save();
                     $item_id = $item->id;
                     $item_warehouse = ItemWarehouse::where('item_id', $item_id)
                         ->where('warehouse_id', $warehouse_id)
@@ -55,7 +58,7 @@ class ItemColorSizeImport implements ToCollection
                         $item_warehouse->stock = $item_warehouse->stock + $stock;
                         $item_warehouse->save();
                     }
-
+                    $color_size_id = null;
                     $color_size_exits = ItemColorSize::where('item_id', $item_id)
                         ->where('color', $color)
                         ->where('size', $size)
@@ -70,10 +73,24 @@ class ItemColorSizeImport implements ToCollection
                             'warehouse_id' => $warehouse_id,
                         ]);
                         $item_color_size->save();
+                        $color_size_id = $item_color_size->id;
                     } else {
                         $color_size_exits->stock = $color_size_exits->stock + $stock;
                         $color_size_exits->save();
+                        $color_size_id = $color_size_exits->id;
                     }
+
+                    InventoryKardex::create([
+                        'date_of_issue' => date('Y-m-d'),
+                        'item_id' => $item_id,
+                        'warehouse_id' => $warehouse_id,
+                        'inventory_kardexable_type' => 'App\Models\Tenant\ItemColorSize',
+                        'inventory_kardexable_id' => $color_size_id,
+                        'quantity' => $stock,
+                        'created_at' => date('Y-m-d H:i:s'),
+                        'updated_at' => date('Y-m-d H:i:s'),
+                        'is_import_excel' => true,
+                    ]);
 
                     $registered += 1;
                 }

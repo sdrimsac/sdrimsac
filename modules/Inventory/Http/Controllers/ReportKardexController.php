@@ -52,6 +52,7 @@ class ReportKardexController extends Controller
         "Modules\Order\Models\OrderNote",
         "App\Models\Tenant\CreditList",
         "Modules\Item\Models\ItemManufactured",
+        "App\Models\Tenant\ItemColorSize",
     ];
 
     public function index()

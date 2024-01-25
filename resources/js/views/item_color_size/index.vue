@@ -65,6 +65,7 @@
                 <data-table ref="datatable" :resource="resource">
                     <tr slot="heading" width="100%">
                         <th>#</th>
+                        <th>Código</th>
                         <th>Producto</th>
                         <th>Color</th>
                         <th>Talla</th>
@@ -76,6 +77,7 @@
                     <tr></tr>
                     <tr slot-scope="{ index, row }">
                         <td>{{ index }}</td>
+                        <td>{{ row.item_internal_id }}</td>
                         <td>{{ row.item_description }}</td>
                         <td>{{ row.color }}</td>
                         <td>{{ row.size }}</td>

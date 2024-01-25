@@ -1400,7 +1400,7 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                       <div class="col-md-6 mt-4">
+                                    <div class="col-md-6 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
                                                 >Tratamiento comercial Producto
@@ -1509,7 +1509,7 @@
                                     <div class="col-md-6 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
-                                                >A cuenta 
+                                                >A cuenta
                                             </label>
 
                                             <el-switch
@@ -1844,21 +1844,24 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                       <div class="col-md-6 mt-4">
+                                    <div class="col-md-6 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100">
-                                                Modificar cantidad de productos compuestos (Caja)
+                                                Modificar cantidad de productos
+                                                compuestos (Caja)
                                             </label>
 
                                             <el-switch
-                                                v-model="form.item_set_quantity_pos"
+                                                v-model="
+                                                    form.item_set_quantity_pos
+                                                "
                                                 active-text="Si"
                                                 inactive-text="No"
                                                 @change="submit"
                                             ></el-switch>
                                         </div>
                                     </div>
-                                          <div class="col-md-6 mt-4">
+                                    <div class="col-md-6 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100">
                                                 Transformación de producto
@@ -1872,6 +1875,7 @@
                                             ></el-switch>
                                         </div>
                                     </div>
+                                    
                                 </div>
                             </el-tab-pane>
                             <el-tab-pane label="Impresion">
@@ -1939,7 +1943,7 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                  <div class="col-md-6 mt-4">
+                                    <div class="col-md-6 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
                                                 >Entorno Hotel</label
@@ -1951,7 +1955,7 @@
                                                 @change="submit"
                                             ></el-switch>
                                         </div>
-                                    </div> 
+                                    </div>
                                     <div class="col-md-6 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
@@ -1978,6 +1982,7 @@
                                             ></el-switch>
                                         </div>
                                     </div>
+                                    
                                     <div class="col-md-6 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
@@ -1985,6 +1990,48 @@
                                             >
                                             <el-switch
                                                 v-model="form.accounting_mode"
+                                                active-text="Si"
+                                                inactive-text="No"
+                                                @change="submit"
+                                            ></el-switch>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mt-4">
+                                        <div class="form-group">
+                                            <label class="control-label w-100">
+                                                Habilitar series - productos
+                                            </label>
+
+                                            <el-switch
+                                                v-model="form.series_enabled"
+                                                active-text="Si"
+                                                inactive-text="No"
+                                                @change="submit"
+                                            ></el-switch>
+                                        </div>
+                                    </div>
+                                      <div class="col-md-6 mt-4">
+                                        <div class="form-group">
+                                            <label class="control-label w-100">
+                                                Habilitar lotes - productos
+                                            </label>
+
+                                            <el-switch
+                                                v-model="form.lots_enabled"
+                                                active-text="Si"
+                                                inactive-text="No"
+                                                @change="submit"
+                                            ></el-switch>
+                                        </div>
+                                    </div>
+                                      <div class="col-md-6 mt-4">
+                                        <div class="form-group">
+                                            <label class="control-label w-100">
+                                                Habilitar color & talla - productos
+                                            </label>
+
+                                            <el-switch
+                                                v-model="form.color_size_enabled"
                                                 active-text="Si"
                                                 inactive-text="No"
                                                 @change="submit"
@@ -2081,7 +2128,7 @@
                                     <div class="col-12">
                                         <label for="text-3">
                                             Texto pie de página
-                                              <el-tooltip
+                                            <el-tooltip
                                                 class="item"
                                                 effect="dark"
                                                 content="Texto que va en la parte inferior de los documentos"
@@ -2336,7 +2383,7 @@ export default {
                 );
             }
             // let {commercial_treatment,commercial_treatment_items} = this.form
-            
+
             this.loading_submit = true;
             this.$http
                 .post(`/${this.resource}`, this.form)
