@@ -241,7 +241,7 @@
                                 Guias de remisión
                             </a>
                         </li>
-                        @if ($has_series)
+                        @if ($has_series && $config->series_enabled)
                             <li>
                                 <a class="{{ $path[0] === 'itemlots' && $path[1] === '' ? 'active' : '' }}"
                                     href="{{ route('itemlots') }}">
@@ -250,7 +250,7 @@
                             </li>
                         @endif
 
-                        @if ($has_lotes)
+                        @if ($has_lotes && $config->lots_enabled)
                             <li>
                                 <a class="{{ $path[0] === 'lotes' && $path[1] === '' ? 'active' : '' }}"
                                     href="{{ route('lotes') }}">
@@ -264,12 +264,14 @@
                                 <i class="icofont-price"></i> Promocion / Ofertas
                             </a>
                         </li>
+                        @if($config->color_size_enabled)
                         <li>
                             <a class="{{ $path[0] === 'item-color-size'  ? 'active' : '' }}"
                                 href="{{ route('tenant.item_color_size.index') }}">
                                 <i class="icofont-site-map"></i> Color & Tallas
                             </a>
                         </li>
+                        @endif
                         {{-- @if ($has_series)
                         <li>
                             <a class="{{ $path[0] === 'lotes_due' && $path[1] === '' ? 'active' : '' }}"
