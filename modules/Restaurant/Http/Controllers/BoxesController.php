@@ -245,7 +245,15 @@ class BoxesController extends Controller
                 return "HABITACIONES";
             }
         }
-        return isset($item->item->category) ?  $item->item->category->name : "OTROS";
+        $category = isset($item->item->category) ?  $item->item->category : null;
+        if($category == null){
+            return "OTROS";
+        }
+        if (gettype($category) == "string") {
+            return $category;
+        } else {
+            return isset($item->item->category) ?  $item->item->category->name : "OTROS";
+        }
     }
     function get_items_from_box($cash_id)
     {
