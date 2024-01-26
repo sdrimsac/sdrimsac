@@ -753,6 +753,12 @@ class SaleNoteController extends Controller
                 }
 
                 $company = Company::first();
+                //obtener el primer registro de box
+                $box = Box::where('sale_note_id', $this->sale_note->id)->first();
+                $original_cash_id = null;
+                if ($box) {
+                    $original_cash_id = $box->cash_id;
+                }
                 Box::where('sale_note_id', $this->sale_note->id)->delete();
                 $establishment = Establishment::where('id', auth()->user()->establishment_id)->first();
                 if ($request->afectar_caja == true) {
@@ -787,7 +793,7 @@ class SaleNoteController extends Controller
                             $cajas->bank_account_operation = $bank_account_operation;
                             $cajas->sale_note_id = $this->sale_note->id;
                             $cajas->orden_id =  $request->orden_id;
-                            $cajas->cash_id = $request->cash_id;
+                            $cajas->cash_id = $original_cash_id ? $original_cash_id : $request->cash_id;
                       
                             $cajas->user_id = auth()->user()->id;
                             $cajas->description = "VENTAS " . $document;
@@ -824,7 +830,7 @@ class SaleNoteController extends Controller
                         $cajas->method =  $request->method_pay;
                         $cajas->sale_note_id = $this->sale_note->id;
                         $cajas->orden_id =  $request->orden_id;
-                        $cajas->cash_id = $request->cash_id;
+                        $cajas->cash_id = $original_cash_id ? $original_cash_id : $request->cash_id;
                         $cajas->user_id = auth()->user()->id;
                         $cajas->description = "VENTAS " . $document;
                         $cajas->soap_type_id = $company->soap_type_id;
