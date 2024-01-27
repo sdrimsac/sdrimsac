@@ -3,6 +3,7 @@
 namespace App\Imports;
 
 use App\Models\Tenant\InventoryKardex;
+use App\Models\Tenant\InventoryKardexDetail;
 use App\Models\Tenant\Item;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\Importable;
@@ -90,6 +91,11 @@ class ItemColorSizeImport implements ToCollection
                         'created_at' => date('Y-m-d H:i:s'),
                         'updated_at' => date('Y-m-d H:i:s'),
                         'is_import_excel' => true,
+                    ]);
+                    $detail = "Color: $color, Talla: $size";
+                    InventoryKardexDetail::create([
+                        'inventory_kardex_id' => $color_size_id,
+                        'detail' => $detail,
                     ]);
 
                     $registered += 1;

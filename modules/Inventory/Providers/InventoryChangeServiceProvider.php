@@ -3,6 +3,7 @@
 namespace Modules\Inventory\Providers;
 
 use App\Models\Tenant\Configuration;
+use App\Models\Tenant\InventoryKardexDetail;
 use App\Models\Tenant\Item;
 use App\Models\Tenant\Warehouse;
 use Illuminate\Support\ServiceProvider;
@@ -37,7 +38,7 @@ class InventoryChangeServiceProvider extends ServiceProvider
                 $id = $item->id;
                 foreach ($warehouses as $wh) {
                     $exist = ItemWarehouse::where('warehouse_id', $wh)->where('item_id', $id)->first();
-    
+
                     if (!isset($exist)) {
                         ItemWarehouse::create([
                             'warehouse_id' => $wh,
@@ -46,7 +47,6 @@ class InventoryChangeServiceProvider extends ServiceProvider
                             'created_at' => date('Y-m-d H:i:s '),
                             'updated_at' => date('Y-m-d H:i:s '),
                         ]);
-                   
                     }
                 }
                 return;
@@ -91,11 +91,37 @@ class InventoryChangeServiceProvider extends ServiceProvider
 
                     if ($inventory_transaction->type === 'input') {
 
-                        $this->createInventoryKardex($inventory, $inventory->item_id, $inventory->quantity, $inventory->warehouse_id);
+                        $inventory_kardex = $this->createInventoryKardex($inventory, $inventory->item_id, $inventory->quantity, $inventory->warehouse_id);
+                        if (isset($inventory->lots)) {
+                            $lots = (array)$inventory->lots;
+                            if (count($lots) > 0) {
+                                foreach ($lots as $lot) {
+                                    InventoryKardexDetail::create([
+                                        'inventory_kardex_id' => $inventory_kardex->id,
+                                        'detail' => 'Salida de la serie ' . $lot->series,
+                                    ]);
+                                }
+                            }
+                        }
+
                         $this->updateStock($inventory->item_id, $inventory->quantity, $inventory->warehouse_id);
                     } else {
-                        
-                        $this->createInventoryKardex($inventory, $inventory->item_id, -1 * $inventory->quantity, $inventory->warehouse_id);
+
+                        $inventory_kardex = $this->createInventoryKardex($inventory, $inventory->item_id, -1 * $inventory->quantity, $inventory->warehouse_id);
+
+                        if (isset($inventory->lots)) {
+                            $lots = (array) $inventory->lots;
+                            if (count($lots) > 0) {
+                                foreach ($lots as $lot) {
+                                    if ($lot->has_sale) {
+                                        InventoryKardexDetail::create([
+                                            'inventory_kardex_id' => $inventory_kardex->id,
+                                            'detail' => 'Salida de la serie ' . $lot->series,
+                                        ]);
+                                    }
+                                }
+                            }
+                        }
                         $this->updateStock($inventory->item_id, -1 * $inventory->quantity, $inventory->warehouse_id);
                     }
                     break;

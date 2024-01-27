@@ -5449,12 +5449,14 @@ export default {
             async e => {
                 console.log("imprimiendoxd", e);
 
-                let area_id = e.data.area_id;
-                let sameArea = this.area_id == area_id;
+                // let area_id = e.data.area_id;
+                let user_establishment_id = e.data.user_establishment_id;
+                let isSameEstablishment = this.establishments.id == user_establishment_id;
+
                 let isHotels = this.configuration.hotels;
                 let canPrint = true;
                 if (isHotels) {
-                    if (sameArea) {
+                    if (isSameEstablishment) {
                         canPrint = true;
                     } else {
                         canPrint = false;

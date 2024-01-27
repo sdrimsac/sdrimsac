@@ -192,7 +192,7 @@ function format_serie($id)
     }
 
     @page {
-        margin: 15px;
+        margin: 3px;
     }
 
     td,
@@ -268,7 +268,7 @@ function format_serie($id)
 <body>
     <div id="register">
 
-        <table border="0" style="border:0px solid;width:90%">
+        <table border="0" style="border:0px solid;width:80%">
             <thead>
                 <tr>
                     <th colspan="4" class="header_title text-center">
@@ -329,12 +329,12 @@ function format_serie($id)
       
 
         </table>
-        <table style="width:90%">
+        <table style="width:80%">
             <thead>
                 <tr>
                     <th colspan="2" class="text-left border-box">PRODUCTO</th>
-                    <th class="text-end border-box">CANT</th>
-                    <th class="text-end border-box">PREC</th>
+                    <th class="text-end border-box">CANT.</th>
+                    <th class="text-end border-box">PREC.</th>
                 </tr>
             </thead>
             <tbody>
@@ -350,7 +350,7 @@ function format_serie($id)
         </table>
 
         {{-- centrar el nombre y numero del cliente para que firme --}}
-        <div style="width:90%;text-align:center;">
+        <div style="width:80%;text-align:center;">
             <p style="margin-top: 20px;">_____________________________</p>
             <p style="margin-top: -10px;">{{ $customer->name }}</p>
             <p style="margin-top: -10px;">{{ $customer->number }}</p>

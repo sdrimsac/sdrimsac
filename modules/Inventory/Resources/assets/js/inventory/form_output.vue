@@ -217,10 +217,9 @@
             :showDialog.sync="showDialogColorSizeOutput"
             :item_id="form.item_id"
             :item.sync="item"
-            
+            @updateColorSize="colorSizeSelected"
             :warehouse_id="form.warehouse_id"
             :quantity="form.quantity"
-            @addRowOutputLot="addRowOutputLot"
         >
         </color-size-output>
     </el-dialog>
@@ -260,6 +259,10 @@ export default {
         this.initForm();
     },
     methods: {
+        colorSizeSelected(color_size) {
+            console.log("🚀 ~ file: form_output.vue:263 ~ colorSizeSelected ~ color_size:", color_size)
+            this.form.color_size = color_size;
+        },
         clickSelectColorSize(){
             this.showDialogColorSizeOutput = true
         },

@@ -42,13 +42,12 @@
                         <td>{{ colorsize.size }}</td>
                         <td class="text-end">{{ colorsize.stock }}</td>
                         <td>
-                          <el-input
-                          type="number"
-                            v-model="colorsize.quantity"
-                            @input="saveColorSize(colorsize)"
-                          >
-
-                          </el-input>
+                            <el-input
+                                type="number"
+                                v-model="colorsize.quantity"
+                                @input="saveColorSize(colorsize)"
+                            >
+                            </el-input>
                         </td>
                     </tr>
                 </tbody>
@@ -77,9 +76,8 @@ export default {
         "limitQty",
         "item",
         "idx",
-        "colorSizeSelected",
         "establishments",
-        "warehouse_id",
+        "warehouse_id"
     ],
     data() {
         return {
@@ -88,7 +86,8 @@ export default {
             pagination: {},
             inputSearch: null,
             timer: null,
-            showSelecteds: false
+            showSelecteds: false,
+            colorSizeSelected: []
         };
     },
     methods: {
@@ -117,36 +116,33 @@ export default {
             );
         },
         saveColorSize(colorSize) {
-            let color_size = [
-                ...this.colorSizeSelected.filter(
-                    s => s.quantity && s.quantity != 0
-                )
-            ];
-             color_size = color_size.filter(s => s.id != colorSize.id);
+            console.log("🚀 ~ file: color_size_output.vue:119 ~ saveColorSize ~ colorSize:", colorSize)
+            let color_size = [];
+            color_size = color_size.filter(s => s.id != colorSize.id);
             if (colorSize.quantity !== 0) {
                 //if(colorSize.quantity > colorSize.stock){
-                    //colorSize.quantity = colorSize.stock;
-                   // return this.$toast.error(
-                  //      "La cantidad no puede ser mayor al stock"
+                //colorSize.quantity = colorSize.stock;
+                // return this.$toast.error(
+                //      "La cantidad no puede ser mayor al stock"
                 //    );
-              //  }
+                //  }
                 colorSize.disabled = false;
                 color_size = [...color_size, colorSize];
             } else {
                 color_size = color_size.filter(s => s.id != colorSize.id);
             }
             this.$forceUpdate();
-            this.$emit("update:colorSizeSelected", color_size);
+            this.colorSizeSelected = [...color_size];
         },
         save() {
-            if (this.limitQty != 0) {
-                if (this.colorSizeSelected.length % this.limitQty != 0) {
-                    return this.$toast.error(
-                        "La cantidad de series no coninciden con la cantidad de venta por politica de precio"
-                    );
-                }
-            }
-            this.$emit("updateColorSize", this.idx, this.colorSizeSelected);
+            // if (this.limitQty != 0) {
+            //     if (this.colorSizeSelected.length % this.limitQty != 0) {
+            //         return this.$toast.error(
+            //             "La cantidad de series no coninciden con la cantidad de venta por politica de precio"
+            //         );
+            //     }
+            // }
+            this.$emit("updateColorSize", this.colorSizeSelected);
             this.close();
         },
         getQueryParameters() {
@@ -159,8 +155,7 @@ export default {
             });
         },
         open() {
-            
-            console.log("🚀 ~ file: color_size_output.vue:163 ~ open ~ this.item:", this.item)
+    
             if (this.item) {
                 this.getColorSize();
             }

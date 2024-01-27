@@ -111,8 +111,8 @@
                         <tr slot="heading">
                             <th>#</th>
                             <th>Nombre</th>
-                            <th class="text-end">Número</th>
-                            <th class="text-end">Dirección</th>
+                            <th class="text-end">DNI/RUC</th>
+                            <th class="text-end">Zona</th>
                             <th class="text-end">Telefonos</th>
                             <th class="text-end">Acciones</th>
                         </tr>
@@ -125,7 +125,7 @@
                             <td>{{ index }}</td>
                             <td>{{ row.name }}</td>
                             <td class="text-end">{{ row.number }}</td>
-                            <td class="text-end">{{ row.address }}</td>
+                            <td class="text-end">{{ row.zone_description }}</td>
                             <td class="text-end">{{ row.telephone }}</td>
                             <td class="text-end">
                                 <template v-if="row.enabled">

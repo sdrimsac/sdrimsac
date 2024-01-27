@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Traits;
-use App\Models\Tenant\InventoryKardex;
 use App\Models\Tenant\ItemWarehouse;
 use App\Models\Tenant\Warehouse;
 

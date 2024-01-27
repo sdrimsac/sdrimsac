@@ -86,7 +86,7 @@ class PersonController extends Controller
         $records = Person::where('name', 'like', "%{$request->value}%")
             ->orWhere('number', 'like', "%{$request->value}%")
             ->where('type', 'customers');
-            // ->orderBy($request->column);
+        // ->orderBy($request->column);
 
         return new PersonCollection($records->paginate(config('tenant.items_per_page')));
     }
@@ -101,10 +101,15 @@ class PersonController extends Controller
     }
     public function records($type, Request $request)
     {
+        $has_credit_line = $request->credit == 'true' ? true : false;
         //  return 'sd';
         $records = Person::where($request->column, 'like', "%{$request->value}%")
-            ->where('type', $type)
-            ->orderBy($request->column);
+            ->where('type', $type);
+
+        if ($has_credit_line) {
+            $records = $records->where('has_credit_line', $has_credit_line);
+        }
+        $records  =  $records->orderBy($request->column);
 
         return new PersonCollection($records->paginate(config('tenant.items_per_page')));
     }

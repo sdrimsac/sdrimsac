@@ -23,6 +23,7 @@ use Modules\Inventory\Http\Requests\InventoryRequest;
 use Modules\Inventory\Http\Resources\InventoryResource;
 use Modules\Inventory\Http\Resources\InventoryCollection;
 use App\Http\Controllers\Tenant\WhatsappController;
+use App\Models\Tenant\ItemColorSize;
 use App\Models\Tenant\NumberActivity;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat\Wizard\Number;
 
@@ -147,48 +148,49 @@ class InventoryController extends Controller
 
         return $record;
     }
-    
-    public function getItems(Request $request){
+
+    public function getItems(Request $request)
+    {
         $value = $request->value;
         $records = Item::where([['item_type_id', '01'], ['unit_type_id', '!=', 'ZZ']])->whereNotIsSet()
-        ->where(function ($query) use ($value) {
-            $query->where('description', 'like', '%' . $value . '%')
-                ->orWhere('internal_id', 'like', '%' . $value . '%');
-        })
-        ->take(25)
-        ->get();
-
-    return collect($records)->transform(function ($row) {
-        return  [
-            'id' => $row->id,
-            'description' => ($row->internal_id) ? "{$row->internal_id} - {$row->description}" : $row->description,
-            'lots_enabled' => (bool) $row->lots_enabled,
-            'series_enabled' => (bool) $row->series_enabled,
-            'has_color_size' => (bool) $row->has_color_size,
-            'color_size' => collect($row->color_size),
-           
-            'lots' => $row->item_lots->where('has_sale', false)->transform(function ($row) {
-                return [
-                    'id' => $row->id,
-                    'series' => $row->series,
-                    'date' => $row->date,
-                    'item_id' => $row->item_id,
-                    'warehouse_id' => $row->warehouse_id,
-                    'has_sale' => (bool)$row->has_sale,
-                    'lot_code' => ($row->item_loteable_type) ? (isset($row->item_loteable->lot_code) ? $row->item_loteable->lot_code : null) : null
-                ];
-            }),
-            'lots_group' => collect($row->lots_group)->transform(function ($row) {
-                return [
-                    'id'  => $row->id,
-                    'code' => $row->code,
-                    'quantity' => $row->quantity,
-                    'date_of_due' => $row->date_of_due,
-                    'checked'  => false
-                ];
+            ->where(function ($query) use ($value) {
+                $query->where('description', 'like', '%' . $value . '%')
+                    ->orWhere('internal_id', 'like', '%' . $value . '%');
             })
-        ];
-    });
+            ->take(25)
+            ->get();
+
+        return collect($records)->transform(function ($row) {
+            return  [
+                'id' => $row->id,
+                'description' => ($row->internal_id) ? "{$row->internal_id} - {$row->description}" : $row->description,
+                'lots_enabled' => (bool) $row->lots_enabled,
+                'series_enabled' => (bool) $row->series_enabled,
+                'has_color_size' => (bool) $row->has_color_size,
+                'color_size' => collect($row->color_size),
+
+                'lots' => $row->item_lots->where('has_sale', false)->transform(function ($row) {
+                    return [
+                        'id' => $row->id,
+                        'series' => $row->series,
+                        'date' => $row->date,
+                        'item_id' => $row->item_id,
+                        'warehouse_id' => $row->warehouse_id,
+                        'has_sale' => (bool)$row->has_sale,
+                        'lot_code' => ($row->item_loteable_type) ? (isset($row->item_loteable->lot_code) ? $row->item_loteable->lot_code : null) : null
+                    ];
+                }),
+                'lots_group' => collect($row->lots_group)->transform(function ($row) {
+                    return [
+                        'id'  => $row->id,
+                        'code' => $row->code,
+                        'quantity' => $row->quantity,
+                        'date_of_due' => $row->date_of_due,
+                        'checked'  => false
+                    ];
+                })
+            ];
+        });
     }
 
     public function tables_transaction($type)
@@ -338,14 +340,33 @@ class InventoryController extends Controller
             $inventory->quantity = $quantity;
             $inventory->inventory_transaction_id = $inventory_transaction_id;
             $inventory->lot_code = $lot_code;
+            $inventory->lots = $lots;
+            if ($type == 'output') {
+                $lots = array_filter($lots, function ($lot) {
+                    return $lot['has_sale'] == true;
+                });
+                $inventory->lots = $lots;
+            }
             $inventory->save();
 
-
+            $color_size = isset($request->color_size) ? $request->color_size : [];
             $lots_enabled = isset($request->lots_enabled) ? $request->lots_enabled : false;
 
             if ($type == 'input') {
+                foreach ($color_size as $row) {
+                    $stock = $row["stock"];
+                    $color = $row["color"];
+                    $size = $row["size"];
+                    ItemColorSize::create([
+                        'item_id' => $item_id,
+                        'warehouse_id' => $warehouse_id,
+                        'stock' => $stock,
+                        'color' => $color,
+                        'size' => $size,
+                    ]);
+                }
                 foreach ($lots as $lot) {
-
+                 
                     /*$inventory->lots()->create([
                         'date' => $lot['date'],
                         'series' => $lot['series'],
@@ -373,7 +394,15 @@ class InventoryController extends Controller
                     ]);
                 }
             } else {
-
+                foreach ($color_size as $row) {
+                    if (isset($row["quantity"]) && $row["quantity"] > 0) {
+                        $quantity = $row["quantity"];
+                        $id = $row["id"];
+                        $item_color_size = ItemColorSize::findOrFail($id);
+                        $item_color_size->stock = $item_color_size->stock - $quantity;
+                        $item_color_size->save();
+                    }
+                }
                 foreach ($lots as $lot) {
 
                     if ($lot['has_sale']) {

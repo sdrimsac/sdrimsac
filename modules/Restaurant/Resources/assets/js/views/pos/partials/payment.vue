@@ -31,13 +31,12 @@
                     <div class="col-lg-12">
                         <div class="mb-2">
                             <div class="card bg-light">
-                                <div class="row"
-                                v-if="configuration.college"
-                                >
-                                <el-checkbox
-                                    @change="chageRegister"
-                                    v-model="notRegister"
-                                    >No registrado</el-checkbox>
+                                <div class="row" v-if="configuration.college">
+                                    <el-checkbox
+                                        @change="chageRegister"
+                                        v-model="notRegister"
+                                        >No registrado</el-checkbox
+                                    >
                                 </div>
                                 <div class="row ">
                                     <div class="  col-md-6 col-lg-5 col-sm-6">
@@ -147,7 +146,8 @@
                                                     >
                                                     <el-button
                                                         v-if="
-                                                            !configuration.college || notRegister
+                                                            !configuration.college ||
+                                                                notRegister
                                                         "
                                                         @click="createClient"
                                                         >Nuevo
@@ -1403,7 +1403,7 @@ export default {
     },
     data() {
         return {
-            notRegister:false,
+            notRegister: false,
             sumCoins: [],
             coins: [
                 {
@@ -1660,12 +1660,12 @@ export default {
     },
     mounted() {},
     methods: {
-        chageRegister(){
-            if(this.notRegister){
+        chageRegister() {
+            if (this.notRegister) {
                 this.bank = "Colocar el nombre del alumno";
-            }else{
+            } else {
                 this.bank = "";
-            }   
+            }
         },
         clearSumCoins() {
             this.sumCoins = [];
@@ -1993,7 +1993,6 @@ export default {
             }
         },
         async reloadDataCustomers(customer_id) {
-      
             const response = await this.$http.get(
                 `/pos/table/customers?customer_id=${customer_id || ""}`
             );
@@ -2119,13 +2118,11 @@ export default {
                 this.input_person.number = this.$refs.select_person.$el.getElementsByTagName(
                     "input"
                 )[0].value;
-                let url =   `/caja/search_customers?value=${this.input_person.number}`;
-                if(this.configuration.college){
+                let url = `/caja/search_customers?value=${this.input_person.number}`;
+                if (this.configuration.college) {
                     url = `${url}&parents=${this.notRegister ? 0 : 1}`;
                 }
-                const response = await this.$http(
-                  url
-                );
+                const response = await this.$http(url);
                 const { persons } = response.data;
 
                 this.customers = persons.filter(n => n.number != "88888888");
@@ -2183,7 +2180,6 @@ export default {
                         this.form.customer_id = null;
                         this.value = null;
                     }
-              
                 }
 
                 this.form.customer_telephone = customer.phone;
@@ -3353,7 +3349,11 @@ export default {
             ) {
                 this.setSeries();
             }
-            if (this.configuration.college && !this.conf.pos_quick_sale && !this.notRegister) {
+            if (
+                this.configuration.college &&
+                !this.conf.pos_quick_sale &&
+                !this.notRegister
+            ) {
                 if (!this.form.student_id) {
                     this.$toast.error("El alumno es obligatorio");
 
@@ -3458,7 +3458,10 @@ export default {
             }
 
             if (this.form.payment_condition_id !== "01") {
-                console.log("🚀 ~ file: payment.vue:3447 ~ clickPayment ~ this.currentPayments:", this.currentPayments)
+                console.log(
+                    "🚀 ~ file: payment.vue:3447 ~ clickPayment ~ this.currentPayments:",
+                    this.currentPayments
+                );
                 form.fee = this.currentPayments.map(b => ({
                     id: null,
                     currency_type_id: "PEN",
@@ -3518,12 +3521,12 @@ export default {
                 return;
             }
             this.verifyBoxesDuplicate();
-            if(this.form.boxes){
+            if (this.form.boxes) {
                 form.payments = this.form.boxes.map(p => ({
-                payment_method_type_id: p.method_payment_id,
-                date_of_payment: form.date_of_issue,
-                payment: p.amount
-            }));
+                    payment_method_type_id: p.method_payment_id,
+                    date_of_payment: form.date_of_issue,
+                    payment: p.amount
+                }));
             }
             this.loading_submit = true;
             this.form.items = this.form.items.filter(
@@ -3534,18 +3537,17 @@ export default {
             }
 
             try {
-                let form_efectivo = {
-                    enter_amount: form.enter_amount,
-                    difference: form.difference
-                };
                 let ordenId = this.idOrden;
 
                 let hotels = this.configuration.hotels;
                 let printOrdenHotel = true;
+          
                 if (hotels) {
-                    printOrdenHotel =
-                        this.form.is_room && this.form.promotion_sale;
+                    let resultado = (this.form.is_room !== undefined && this.form.promotion_sale !== undefined) ? (this.form.is_room && this.form.promotion_sale) : false;
+                    printOrdenHotel = resultado
+
                 }
+              
                 if (
                     (ordenId == undefined || ordenId == null) &&
                     (form.variation == undefined || form.variation == null) &&
@@ -3976,7 +3978,7 @@ export default {
             } else {
                 this.currentDocumentsType = this.documentsType;
             }
-            
+
             this.setSeries();
             //aqui
             //factura solo ruc

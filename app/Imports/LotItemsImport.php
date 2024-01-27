@@ -2,6 +2,9 @@
 
 namespace App\Imports;
 
+use App\Models\Tenant\Inventory;
+use App\Models\Tenant\InventoryKardex;
+use App\Models\Tenant\InventoryKardexDetail;
 use App\Models\Tenant\Item;
 use App\Models\Tenant\ItemWarehouse;
 use Carbon\Carbon;
@@ -63,6 +66,27 @@ class LotItemsImport implements ToCollection
                                     'stock' => 1,
                                 ]);
                             }
+                            $inventory = Inventory::create([
+                                'type' => 1,
+                                'description' => 'Ingreso importación',
+                                'item_id' => $item->id,
+                                'warehouse_id' => $warehouse_id,
+                                'quantity' => 1,
+                                'date_of_issue' => date('Y-m-d')
+                            ]);
+                          $inventory_kardex =  InventoryKardex::create([
+                                'date_of_issue' => date('Y-m-d'),
+                                'item_id' => $item_id,
+                                'warehouse_id' => $warehouse_id,
+                                'quantity' => 1,
+                                'type' => 'input',
+                                'inventory_kardexable_type' => 'Modules\Inventory\Models\Inventory',
+                                'inventory_kardexable_id' => $inventory->id,
+                            ]);
+                            InventoryKardexDetail::create([
+                                'inventory_kardex_id' => $inventory_kardex->id,
+                                'detail' => 'Ingreso de la serie ' . $serie,
+                            ]);
                         }
                         $registered += 1;
                     }

@@ -136,6 +136,11 @@ class PrintEvent implements ShouldBroadcast
         if($isEmit){
             $copies = $area->copies;
         }
+        $user_establishment_id = null;
+        $user_area = User::where('area_id', $area_id)->first();
+        if ($user_area) {
+            $user_establishment_id = $user_area->establishment_id;
+        }
 
 
         $this->data = array(
@@ -148,7 +153,8 @@ class PrintEvent implements ShouldBroadcast
             'multiple_boxes' => (bool) $configuration->multiple_boxes,
             'typeuser' => auth()->user()->type,
             'user_id' => $user->id,
-            'area_id' => $area_id
+            'area_id' => $area_id,
+            'user_establishment_id' => $user_establishment_id,
         );
     }
 

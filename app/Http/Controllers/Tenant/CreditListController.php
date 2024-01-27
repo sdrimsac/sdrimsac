@@ -14,6 +14,7 @@ use App\Models\Tenant\Establishment;
 use App\Models\Tenant\InventoryKardex;
 use App\Models\Tenant\Item;
 use App\Models\Tenant\ItemWarehouse;
+use App\Models\Tenant\Person;
 use App\Models\Tenant\Series;
 use App\Models\Tenant\Warehouse;
 use Carbon\Carbon;
@@ -159,7 +160,7 @@ class CreditListController extends Controller
         }
         return $warehouse;
     }
-    function createInventoryKardex($item_id, $quantity, $warehouse_id,$credit_list)
+    function createInventoryKardex($item_id, $quantity, $warehouse_id, $credit_list)
     {
         InventoryKardex::create([
             'inventory_kardexable_id' => $credit_list->id,
@@ -184,94 +185,96 @@ class CreditListController extends Controller
             $item = Item::find($item_id);
             if ($item->unit_type_id  !== 'ZZ') {
                 if (!$item->is_set) {
-    
-                    $this->createInventoryKardex($item_id, $quantity, $warehouse->id,$credit_list);
+
+                    $this->createInventoryKardex($item_id, $quantity, $warehouse->id, $credit_list);
                     $this->updateStock($item_id, $quantity, $warehouse->id);
                 } else {
                 }
             }
         }
-      
     }
     public function send_credit(Request $request)
-    {   
+    {
         $configuration = Configuration::firstOrFail();
         $cash_id = $request->cash_id;
         $user = auth()->user();
-        try{
+        try {
             DB::beginTransaction();
             $customer_id = $request->customer_id;
-        $items = $request->items;
-        $user_id = auth()->id();
-        $table_caja_id = Table::get_caja();
-        $status_orden_id = 4;
-        $orden = Orden::create([
-            'table_id' => $table_caja_id,
-            'status_orden_id' => $status_orden_id,
-            'date' => date('Y-m-d'),
-        ]);
-        $orden_items_ids = [];
-        $orden_items_ids_for_kitchen = [];
-        foreach ($items as $item) {
-            $orden_item = new OrdenItem;
-            $orden_item->food_id = $item['food']['id'];
-            $orden_item->observations = $item['observation'] ?? '-';
-            $orden_item->quantity = $item['quantity'];
-            $orden_item->unit_type_id = Functions::valueKeyInArray($item, 'type_id', null);
-            $orden_item->price = $item['price'];
-            $orden_item->user_id = $user_id;
-            $orden_item->orden_id = $orden->id;
-            $orden_item->to_carry = Functions::valueKeyInArray($item, 'to_carry', 0);
-            $orden_item->status_orden_id = 1;
-            $orden_item->date = Carbon::today();
-            $orden_item->time = date('H:i:s');
-            $orden_item->area_id = $item['food']['area_id'];
-            $orden_item->save();
-            $orden_items_ids[] = $orden_item->id;
-            $orden_items_ids_for_kitchen[] = [
-                "orden_id" => $orden_item->id,
-                "area_id" => $orden_item->area_id
-            ];
-            event(new OrdenEvent($orden_item->id));
-        }
-        $print_box = $configuration->print_commands ;
-        $print_kitchen = $configuration->print_kitchen;
-        if ($print_kitchen) {
-            $ids_areas = array_unique(array_column($orden_items_ids_for_kitchen, "area_id"));
-            foreach ($ids_areas as $area_id) {
-                $filtered = array_column(array_filter($orden_items_ids_for_kitchen, function ($a) use ($area_id) {
-                    return $area_id == $a['area_id'];
-                }), "orden_id");
-                event(new PrintEvent($orden->id, "0", true, $area_id, $filtered));
+            $customer = Person::find($customer_id);
+            $customer_name = $customer->name;
+            $items = $request->items;
+            $user_id = auth()->id();
+            $table_caja_id = Table::get_caja();
+            $status_orden_id = 4;
+            $orden = Orden::create([
+                'table_id' => $table_caja_id,
+                'status_orden_id' => $status_orden_id,
+                'date' => date('Y-m-d'),
+                'ref' => $customer_name
+            ]);
+            $orden_items_ids = [];
+            $orden_items_ids_for_kitchen = [];
+            foreach ($items as $item) {
+                $orden_item = new OrdenItem;
+                $orden_item->food_id = $item['food']['id'];
+                $orden_item->observations = $item['observation'] ?? '-';
+                $orden_item->quantity = $item['quantity'];
+                $orden_item->unit_type_id = Functions::valueKeyInArray($item, 'type_id', null);
+                $orden_item->price = $item['price'];
+                $orden_item->user_id = $user_id;
+                $orden_item->orden_id = $orden->id;
+                $orden_item->to_carry = Functions::valueKeyInArray($item, 'to_carry', 0);
+                $orden_item->status_orden_id = 1;
+                $orden_item->date = Carbon::today();
+                $orden_item->time = date('H:i:s');
+                $orden_item->area_id = $item['food']['area_id'];
+                $orden_item->save();
+                $orden_items_ids[] = $orden_item->id;
+                $orden_items_ids_for_kitchen[] = [
+                    "orden_id" => $orden_item->id,
+                    "area_id" => $orden_item->area_id
+                ];
+                event(new OrdenEvent($orden_item->id));
             }
-        }
-        // $isFromBox = $this->isArea("CAJ", $user->area_id);
+            $print_box = $configuration->print_commands;
+            $print_kitchen = $configuration->print_kitchen;
+            if ($print_kitchen) {
+                $ids_areas = array_unique(array_column($orden_items_ids_for_kitchen, "area_id"));
+                foreach ($ids_areas as $area_id) {
+                    $filtered = array_column(array_filter($orden_items_ids_for_kitchen, function ($a) use ($area_id) {
+                        return $area_id == $a['area_id'];
+                    }), "orden_id");
+                    event(new PrintEvent($orden->id, "0", true, $area_id, $filtered));
+                }
+            }
+            // $isFromBox = $this->isArea("CAJ", $user->area_id);
 
-        if ($print_box) {
-            event(new PrintEvent($orden->id, "0", true, $this->getBoxArea(), $orden_items_ids));
-        }
-        $credit_list =  CreditList::create([
-            'cash_id' => $cash_id,
-            'orden_id' => $orden->id,
-            'customer_id' => $customer_id,
-            'user_id' => $user_id,
-            'establishment_id' => auth()->user()->establishment_id,
-            'observation' => $request->observation,
-            'paid' => false,
-        ]);
-        $this->update_stock($credit_list);
+            if ($print_box) {
+                event(new PrintEvent($orden->id, "0", true, $this->getBoxArea(), $orden_items_ids));
+            }
+            $credit_list =  CreditList::create([
+                'cash_id' => $cash_id,
+                'orden_id' => $orden->id,
+                'customer_id' => $customer_id,
+                'user_id' => $user_id,
+                'establishment_id' => auth()->user()->establishment_id,
+                'observation' => $request->observation,
+                'paid' => false,
+            ]);
+            $this->update_stock($credit_list);
 
-        event(new PrintEvent($credit_list->id, 'S', true, null, []));
-        sleep(1);
-        event(new PrintEvent($credit_list->id, 'S', true, null, []));
+            event(new PrintEvent($credit_list->id, 'S', true, null, []));
+            sleep(1);
+            event(new PrintEvent($credit_list->id, 'S', true, null, []));
 
-        DB::commit();
+            DB::commit();
 
-        return [
-            'success' => true,
-            'message' => 'Credito enviado correctamente'
-        ];
-        }catch(Exception $e){
+            return [
+                'success' => true,
+                'message' => 'Credito enviado correctamente'
+            ];
+        } catch (Exception $e) {
             DB::rollBack();
             return [
                 'success' => false,
@@ -284,13 +287,13 @@ class CreditListController extends Controller
     public function tables()
     {
         $printers = Area::whereNotNull('printer')->get()
-        ->transform(function($row, $key){
-            return [
-                'id' => $row->id,
-                'description' => $row->description,
-                'printer' => $row->printer,
-            ];
-        });
+            ->transform(function ($row, $key) {
+                return [
+                    'id' => $row->id,
+                    'description' => $row->description,
+                    'printer' => $row->printer,
+                ];
+            });
         $establishments = Establishment::all();
         $series = Series::all();
         return [

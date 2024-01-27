@@ -23,14 +23,23 @@ class Inventory extends ModelTenant
         'detail',
         'inventories_transfer_id',
         "real_stock",
-        "system_stock"
+        "system_stock",
+        'lots'
     ];
 
     public function warehouse()
     {
         return $this->belongsTo(Warehouse::class);
     }
+    public function getLotsAttribute($value)
+    {
+        return (is_null($value)) ? null : json_decode($value);
+    }
 
+    public function setLotsAttribute($value)
+    {
+        $this->attributes['lots'] = (is_null($value)) ? null : json_encode($value);
+    }
     public function warehouse_destination()
     {
         return $this->belongsTo(Warehouse::class, 'warehouse_destination_id');

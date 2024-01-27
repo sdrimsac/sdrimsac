@@ -851,7 +851,7 @@
                     </div> -->
 
                             <!--<div class="col-md-12" v-if="form.warehouses">
-                        <table class="table">
+                        <table class="table table-striped">
                             <thead>
                             <tr>
                                 <th>Ubicación</th>
@@ -1016,7 +1016,7 @@
                                             class="col-md-12"
                                         >
                                             <div class="table-responsive">
-                                                <table class="table">
+                                                <table class="table table-striped">
                                                     <thead>
                                                         <tr>
                                                             <th>Tipo</th>
@@ -1156,7 +1156,7 @@
                                 v-if="form.item_unit_types.length > 0"
                             >
                                 <div class="table-responsive">
-                                    <table class="table">
+                                    <table class="table table-striped">
                                         <thead>
                                             <tr>
                                                 <th class="text-center">
@@ -1540,7 +1540,7 @@
                                         </div>
                                         <div v-if="form.attributes.length > 0" class="col-md-12">
                                             <div class="table-responsive">
-                                                <table class="table">
+                                                <table class="table table-striped">
                                                     <thead>
                                                         <tr>
                                                             <th>Tipo</th>

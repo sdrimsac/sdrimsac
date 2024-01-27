@@ -145,6 +145,19 @@
                             >[&#10004; Ingresar series]</a
                         >
                     </div>
+                    <div
+                        style="padding-top: 3%"
+                        class="col-md-4"
+                        v-if="form.warehouse_id && form.has_color_size"
+                    >
+                        <!-- <el-button type="primary" native-type="submit" icon="el-icon-check">Elegir serie</el-button> -->
+                        <a
+                            href="#"
+                            class="text-center font-weight-bold text-info"
+                            @click.prevent="clickColorSize"
+                            >[&#10004; Ingresar Color & Talla]</a
+                        >
+                    </div>
                     <div class="col-md-8">
                         <div
                             class="form-group"
@@ -198,26 +211,34 @@
             @addRowOutputLot="addRowOutputLot"
         >
         </output-lots-form>
+        <color-size
+            :showDialog.sync="showDialogColorSizeInput"
+            :stock="form.quantity"
+            :recordId="form.item_id"
+            @addRowColorSize="updateColorSize"
+        ></color-size>
     </el-dialog>
 </template>
 
 <script>
 import InputLotsForm from "../../../../../../resources/js/views/items/partials/lots.vue";
 import OutputLotsForm from "./partials/lots.vue";
-
+import ColorSize from "./partials/color_size.vue";
 export default {
-    components: { OutputLotsForm, InputLotsForm },
+    components: { OutputLotsForm, InputLotsForm, ColorSize },
     props: ["showDialog", "recordId", "type"],
     data() {
         return {
             loading_submit: false,
             showDialogLots: false,
             showDialogLotsOutput: false,
+            showDialogColorSizeInput: false,
             titleDialog: null,
             resource: "inventory",
             errors: {},
             form: {},
             items: [],
+            item: null,
             warehouses: [],
             inventory_transactions: [],
             loading_search_item: false
@@ -227,6 +248,16 @@ export default {
         this.initForm();
     },
     methods: {
+        clickColorSize() {
+            this.showDialogColorSizeInput = true;
+        },
+        updateColorSize(color_size) {
+            console.log(
+                "🚀 ~ file: form.vue:256 ~ updateColorSize ~ color_size:",
+                color_size
+            );
+            this.form.color_size = color_size;
+        },
         searchRemoteItems(input) {
             if (input.length > 2) {
                 clearTimeout(this.timer);
@@ -245,6 +276,11 @@ export default {
             if (this.type == "output") {
                 this.form.lots = [];
                 let item = await _.find(this.items, { id: this.form.item_id });
+                console.log(
+                    "🚀 ~ file: form.vue:277 ~ changeItem ~ item:",
+                    item
+                );
+                this.item = item;
                 this.form.lots_enabled = item.lots_enabled;
                 let lots = await _.filter(item.lots, {
                     warehouse_id: this.form.warehouse_id
@@ -253,10 +289,17 @@ export default {
                 this.form.lots = lots;
                 this.form.lots_enabled = item.lots_enabled;
                 this.form.series_enabled = item.series_enabled;
+                this.form.has_color_size = item.has_color_size;
             } else {
                 let item = await _.find(this.items, { id: this.form.item_id });
+                console.log(
+                    "🚀 ~ file: form.vue:277 ~ changeItem ~ item:",
+                    item
+                );
+                this.item = item;
                 this.form.lots_enabled = item.lots_enabled;
                 this.form.series_enabled = item.series_enabled;
+                this.form.has_color_size = item.has_color_size;
             }
         },
         addRowOutputLot(lots) {

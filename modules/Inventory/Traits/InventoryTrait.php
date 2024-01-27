@@ -242,12 +242,14 @@ trait InventoryTrait
 
     private function createInventoryKardex($model, $item_id, $quantity, $warehouse_id)
     {
-        $model->inventory_kardex()->create([
+      $inventory_kardex =  $model->inventory_kardex()->create([
             'date_of_issue' => date('Y-m-d'),
             'item_id' => $item_id,
             'warehouse_id' => $warehouse_id,
             'quantity' => $quantity,
         ]);
+
+        return $inventory_kardex;
     }
 
 
