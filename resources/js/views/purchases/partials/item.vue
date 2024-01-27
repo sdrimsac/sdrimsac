@@ -284,6 +284,59 @@
                         <br />
                         <div
                             class="form-group"
+                            :class="{ 'has-danger': errors.has_color_size }"
+                            v-if="form.item.has_color_size"
+                        >
+                            <div class="d-flex">
+                                <div class="col-md-6">
+                                    <label class="control-label w-100">
+                                        <!-- <el-checkbox v-model="enabled_lots"  @change="changeEnabledPercentageOfProfit">Código lote</el-checkbox> -->
+                                        Ingrese color & talla
+                                    </label>
+
+                                    <el-button
+                                        style="margin-top:2%;"
+                                        type="primary"
+                                        icon="el-icon-edit-outline"
+                                        @click.prevent="clickColorSize"
+                                    ></el-button>
+
+                                    <small
+                                        class="form-control-feedback"
+                                        v-if="errors.has_color_size"
+                                        v-text="errors.has_color_size[0]"
+                                    ></small>
+                                </div>
+                                <div>
+                                    <label class="control-label w-100">
+                                        Subir excel
+
+                                        <a href="/formats/color_talla_compras.xlsx"
+                                            >Descargar formato</a
+                                        >
+                                    </label>
+
+                                    <el-button
+                                        style="margin-top:2%;"
+                                        type="primary"
+                                        icon="el-icon-tickets"
+                                        @click.prevent="$refs.file.click()"
+                                    ></el-button>
+                                    <input
+                                        type="file"
+                                        @change="uploadExcelColorSize"
+                                        style="visibility:hidden;"
+                                        ref="file"
+                                        accept=".xlsx,.xls"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3" v-show="form.item_id">
+                        <br />
+                        <div
+                            class="form-group"
                             :class="{ 'has-danger': errors.lot_code }"
                             v-if="form.item.series_enabled"
                         >
@@ -424,6 +477,14 @@
             @addRowLot="addRowLot"
         >
         </lots-form>
+        <color-size-form
+            :showDialog.sync="showColorSize"
+            :stock="form.quantity"
+            :colorSizes="color_size"
+            @addRowColorSize="addRowColorSize"
+            :recordId="form.item_id"
+        >
+        </color-size-form>
     </el-dialog>
 </template>
 <style>
@@ -436,6 +497,7 @@
 import itemForm from "../../items/form.vue";
 import { calculateRowItem } from "../../../helpers/functions";
 import LotsForm from "../../items/partials/lots.vue";
+import ColorSizeForm from "../../items/partials/color_size.vue";
 import readXlsxFile from "read-excel-file";
 import moment from "moment";
 
@@ -447,9 +509,10 @@ export default {
         "includes",
         "percentage_igv"
     ],
-    components: { itemForm, LotsForm },
+    components: { itemForm, LotsForm, ColorSizeForm },
     data() {
         return {
+            colorSizes: [],
             changing_name: false,
             input_barcode: null,
             barcode_lector: false,
@@ -475,29 +538,65 @@ export default {
             lot_code: null,
             change_affectation_igv_type_id: false,
             activeName: "first",
-            loading_search: false
+            loading_search: false,
+            showColorSize: false,
+            color_size: [],
         };
     },
     created() {
-            this.inititem();
+        this.inititem();
 
         this.$eventHub.$on("reloadDataItems", item_id => {
             this.reloadDataItems(item_id);
         });
     },
     methods: {
-        inititem(){
-               this.initForm();
-        this.$http.get(`/${this.resource}/item/tables`).then(response => {
-            this.items = response.data.items;
-            this.affectation_igv_types = response.data.affectation_igv_types;
-            this.system_isc_types = response.data.system_isc_types;
-            this.discount_types = response.data.discount_types;
-            this.charge_types = response.data.charge_types;
-            this.attribute_types = response.data.attribute_types;
-            this.warehouses = response.data.warehouses;
-            // this.filterItems()
-        });
+        addRowColorSize(color_size) {
+            this.color_size = color_size;
+        },
+        clickColorSize() {
+            this.showColorSize = true;
+        },
+        inititem() {
+            this.initForm();
+            this.$http.get(`/${this.resource}/item/tables`).then(response => {
+                this.items = response.data.items;
+                this.affectation_igv_types =
+                    response.data.affectation_igv_types;
+                this.system_isc_types = response.data.system_isc_types;
+                this.discount_types = response.data.discount_types;
+                this.charge_types = response.data.charge_types;
+                this.attribute_types = response.data.attribute_types;
+                this.warehouses = response.data.warehouses;
+                // this.filterItems()
+            });
+        },
+            uploadExcelColorSize(event) {
+            let file = event.target.files[0];
+            readXlsxFile(file).then(rows => {
+                //skip header
+                rows.shift();
+                // `rows` is an array of rows
+                // each row being an array of cells.
+
+                this.color_size = rows.map(row => {
+                    let color = row[0];
+                    let size = row[1];
+                    let stock = row[2];
+
+                    return {
+                        color,
+                        size,
+                        stock
+                    };
+                });
+                this.form.quantity = this.color_size.reduce(
+                    (a, b) => a + Number(b.stock),
+                    0
+                );
+                // this.form.quantity = this.lots.length;
+                event.target.value = "";
+            });
         },
         uploadExcel(event) {
             let file = event.target.files[0];
@@ -822,6 +921,7 @@ export default {
             this.row.sale_unit_price = this.form.sale_unit_price;
             this.row.lot_code = await this.lot_code;
             this.row.lots = await this.lots;
+            this.row.color_size = this.color_size;
 
             this.row = this.changeWarehouse(this.row);
 

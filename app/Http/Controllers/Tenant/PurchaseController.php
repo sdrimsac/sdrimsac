@@ -41,6 +41,7 @@ use App\Http\Requests\Tenant\PurchaseFacturarRequest;
 use App\CoreFacturalo\Requests\Inputs\Common\LegendInput;
 use App\CoreFacturalo\Requests\Inputs\Common\PersonInput;
 use App\Exports\PurchaseExport;
+use App\Models\Tenant\ItemColorSize;
 use App\Models\Tenant\ItemWarehousePrice;
 use Exception;
 use Modules\Restaurant\Models\Food;
@@ -349,7 +350,28 @@ class PurchaseController extends Controller
                     }
                     $item->purchase_affectation_igv_type_id = $row['affectation_igv_type_id'];
                     $item->save();
-                 
+                    
+                    if (array_key_exists('color_size', $row)) {
+                        foreach ($row['color_size'] as $color_size) {
+                            $color_size_exists = ItemColorSize::where('item_id', $row['item_id'])
+                            ->where('warehouse_id', $row['warehouse_id'])
+                            ->where('color', $color_size['color'])
+                            ->where('size', $color_size['size'])
+                            ->first();
+                            if($color_size_exists){
+                                $color_size_exists->stock += $color_size['stock'];
+                                $color_size_exists->save();
+                            }else{
+                                $item->color_size()->create([
+                                    'item_id' => $row['item_id'],
+                                    'warehouse_id' => $row['warehouse_id'],
+                                    'color' => $color_size['color'],
+                                    'size' => $color_size['size'],
+                                    'stock' => $color_size['stock'],
+                                ]);
+                            }
+                        }
+                    }
                     if (array_key_exists('lots', $row)) {
                         foreach ($row['lots'] as $lot) {
                             // Verificar si el lote existe en la tabla item_lots
