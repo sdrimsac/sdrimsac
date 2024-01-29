@@ -206,7 +206,7 @@ class CreditListController extends Controller
             $items = $request->items;
             $user_id = auth()->id();
             $table_caja_id = Table::get_caja();
-            $status_orden_id = 4;
+            $status_orden_id = 1;
             $orden = Orden::create([
                 'table_id' => $table_caja_id,
                 'status_orden_id' => $status_orden_id,
@@ -303,11 +303,18 @@ class CreditListController extends Controller
             'series' => $series,
         ];
     }
-    public function records()
+    public function records(Request $request)
     {
+        $value = $request->value;
         //saca los registros que tengan paid en false pero agrupados por customer_id
-        $credit_lists = CreditList::select('customer_id', DB::raw('count(*) as count'))
-            ->where('paid', false)
+        $credit_lists = CreditList::select('customer_id', DB::raw('count(*) as count'));
+        if ($value) {
+            $credit_lists = $credit_lists->whereHas('customer', function ($query) use ($value) {
+                $query->where('name', 'like', "%{$value}%")
+                    ->orWhere('number', 'like', "%{$value}%");
+            });
+        }
+        $credit_lists =            $credit_lists->where('paid', false)
             ->groupBy('customer_id');
 
         return new CreditListCollection($credit_lists->paginate(config('tenant.items_per_page')));

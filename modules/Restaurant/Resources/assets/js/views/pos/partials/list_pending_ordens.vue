@@ -25,7 +25,7 @@
                         <th>Orden #</th>
                         <th>Referencia</th>
                         <th>Cantidad</th>
-                        <th>Hora</th>
+                        <th>Fecha</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -45,14 +45,41 @@
                         </td>
                         <td>{{ ord.orden_items.length }}</td>
                         <td>
-                            {{ ord.time }}
+                            {{ ord.date }}
+                            <br />
+                            <small>
+                                {{ ord.time }}
+                            </small>
                         </td>
                         <td>
+                            <el-tooltip
+                                v-if="ord.credit_list_id"
+                                content="Imprimir a cuenta"
+                                placement="top"
+                            >
+                                <el-button
+                                    type="success"
+                                    icon="el-icon-printer"
+                                    @click="
+                                        printCreditList(ord.credit_list_id)
+                                    "
+                                ></el-button>
+                            </el-tooltip>
                             <el-button
                                 type="primary"
                                 icon="el-icon-printer"
                                 @click="printTicket(ord.id)"
                             ></el-button>
+                                <el-tooltip
+                                    content="Ver detalle"
+                                    placement="top"
+                                >
+                                 <el-button
+                                type="warning"
+                                icon="el-icon-tickets"
+                                @click="listOrden(ord.id)"
+                            ></el-button>
+                                </el-tooltip>
                         </td>
                     </tr>
                 </tbody>
@@ -65,6 +92,49 @@
                 :page-size="Number(pagination.per_page)"
             >
             </el-pagination>
+            <el-dialog
+            :visible.sync="showDialog"
+            title="Listado de ordenes"
+            width="60%"
+            append-to-body
+            @open="getOrdenItems"
+            @close="showDialog = false"
+            >
+            <div class="row">
+                <div class="table-responsive">
+                    <table class="table table striped">
+                        <thead>
+                            <tr>
+                                <th>
+                                    #
+                                </th>
+                                <th>
+                                    Pedido
+                                </th>
+                                <th>
+                                    Cantidad
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="(item, idx) in currentOrdenItems" :key="idx">
+                                <td>
+                                    {{ idx + 1 }}
+                                </td>
+                                <td>
+                                    {{ item.food.description }}
+                                </td>
+                                <td>
+                                    {{ item.quantity }}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            </el-dialog>
+
+
         </div>
     </el-dialog>
 </template>
@@ -79,10 +149,50 @@ export default {
             ordens: [],
             loading: false,
             pagination: {},
-            timer: null
+            timer: null,
+            showDialog:false,
+            currentOrdenId:null,
+            currentOrdenItems:[]
         };
     },
     methods: {
+        listOrden(id){
+            this.showDialog = true;
+            this.currentOrdenId = id;
+            let orden = this.ordens.find(ord => ord.id == id);
+            this.currentOrdenItems = orden.orden_items;
+        },
+        getOrdenItems(){
+
+        },
+        ///credit-list/receipt/${this.currentCreditList}/ticket
+        async printCreditList(id) {
+            let paperConfig = {
+                scaleContent: false
+            };
+
+            let printer = this.$areaPrinter;
+
+            let config = qz.configs.create(printer, paperConfig);
+            let linkpdf = `/credit-list/receipt/${id}/ticket`;
+            if (!qz.websocket.isActive()) {
+                await qz.websocket.connect(config);
+            }
+            let data = [
+                {
+                    type: "pdf",
+                    format: "file",
+                    data: linkpdf
+                }
+            ];
+
+            for (let index = 0; index < 2; index++) {
+                await new Promise(resolve => setTimeout(resolve, 1500));
+                qz.print(config, data).catch(e => {
+                    this.$toast.error(e.message);
+                });
+            }
+        },
         async printTicket(id) {
             try {
                 const response = await this.$http.get(

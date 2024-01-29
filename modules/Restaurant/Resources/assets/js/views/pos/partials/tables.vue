@@ -12,6 +12,13 @@
         <div class="card" v-if="ordens.length == 0 || hasSelectedOrdenToChange">
             <div class="d-flex justify-content-end p-2">
                 <button
+                    type="button"
+                    :class="`btn ${isDisabling ? 'btn-danger' : 'btn-warning'}`"
+                    @click="disablingTable"
+                >
+                    {{ isDisabling ? "Cancelar" : "Deshabilitar" }}
+                </button>
+                <button
                     v-if="hasTableOcuped"
                     type="button"
                     :class="
@@ -52,11 +59,13 @@
                     v-for="(table, idx) in tables"
                     :class="
                         `${
-                            table.status_table_id == 1
+                            table.enabled == false
+                                ? 'btn-light'
+                                : table.status_table_id == 1
                                 ? 'btn-primary'
-                                : (table.status_table_id == 2
+                                : table.status_table_id == 2
                                 ? 'btn-danger'
-                                : 'btn-warning')
+                                : 'btn-warning'
                         }`
                     "
                     class=" col-2 btn   m-1 d-flex flex-column justify-content-center align-items-center "
@@ -66,7 +75,7 @@
                 >
                     <strong class="h3 text-white  ">Mesa</strong>
                     <i class="icofont-dining-table icofont-4x"></i>
-                    
+
                     <span class="h2  text-white">
                         {{ table.number }}
                     </span>
@@ -130,10 +139,64 @@ export default {
             changingOrden: false,
             hasSelectedTableToChange: false,
             hasSelectedOrdenToChange: false,
-            ordenToChange: null
+            ordenToChange: null,
+            isDisabling: false
         };
     },
     methods: {
+        async disabledTable(id) {
+            try {
+                await this.$confirm(
+                    "¿Está seguro de deshabilitar la mesa?",
+                    "Advertencia",
+                    {
+                        confirmButtonText: "Aceptar",
+                        cancelButtonText: "Cancelar",
+                        type: "warning"
+                    }
+                );
+                const response = await this.$http.post(
+                    `/caja/tables/disabled-table`,
+                    {
+                        table_id: id
+                    }
+                );
+                console.log(
+                    "🚀 ~ file: tables.vue:154 ~ disabledTable ~ response:",
+                    response
+                );
+            } catch (e) {
+                console.log(e);
+            }
+        },
+        async enabledTable(id) {
+            try {
+                await this.$confirm(
+                    "¿Está seguro de habilitar la mesa?",
+                    "Advertencia",
+                    {
+                        confirmButtonText: "Aceptar",
+                        cancelButtonText: "Cancelar",
+                        type: "warning"
+                    }
+                );
+                const response = await this.$http.post(
+                    `/caja/tables/enabled-table`,
+                    {
+                        table_id: id
+                    }
+                );
+                console.log(
+                    "🚀 ~ file: tables.vue:169 ~ enabledTable ~ response:",
+                    response
+                );
+            } catch (e) {
+                console.log(e);
+            }
+        },
+        disablingTable() {
+            this.isDisabling = !this.isDisabling;
+        },
         changeOrden() {
             console.log("object");
             this.changingOrden = !this.changingOrden;
@@ -187,6 +250,18 @@ export default {
         },
 
         async selectTable(table) {
+            if (table.enabled == false) {
+                this.changingOrden = false;
+                await this.enabledTable(table.id);
+                await this.getTables();
+                return;
+            }
+            if (this.isDisabling && table.enabled) {
+                await this.disabledTable(table.id);
+                this.isDisabling = false;
+                await this.getTables();
+                return;
+            }
             if (
                 this.changingOrden &&
                 !this.hasSelectedTableToChange &&
@@ -200,7 +275,7 @@ export default {
                 //     return;
                 // }
 
-                     this.sendOrdenToNewTable(this.ordenToChange, table);
+                this.sendOrdenToNewTable(this.ordenToChange, table);
             }
 
             if (this.addingOrden) {
@@ -241,6 +316,9 @@ export default {
         },
         async open() {
             this.closeOrden();
+            await this.getTables();
+        },
+        async getTables() {
             try {
                 this.loading = true;
                 const response = await this.$http(this.resource);

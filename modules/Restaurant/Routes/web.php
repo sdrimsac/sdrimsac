@@ -214,6 +214,8 @@ Route::prefix('caja')->group(function () {
         Route::get('tables/orden/{id}', 'TableController@get_ordens');
         Route::get('tables/record/{id}', 'TableController@record');
         Route::post('tables', 'TableController@store');
+        Route::post('tables/disabled-table', 'TableController@disabled');
+        Route::post('tables/enabled-table', 'TableController@enabled');
         Route::post('tables/massive', 'TableController@store_massive');
         //**** TRABAJADORES */
         Route::get('workers', 'WorkerController@index')->name('restaurant.workers');

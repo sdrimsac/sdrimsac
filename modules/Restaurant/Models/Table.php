@@ -17,6 +17,7 @@ class Table extends ModelTenant
     public $timestamps = false;
     protected $with = ["type","area", "status_table","floor"];
     protected $fillable = [
+        'enabled',
         'month_price',
         'is_cleaning',
         'cleaning_start_date',
@@ -34,6 +35,7 @@ class Table extends ModelTenant
     protected $casts = [
         'has_frigobar' => 'boolean',
         'is_cleaning' => 'boolean',
+        'enabled' => 'boolean',
     ];
     protected static function boot()
     {

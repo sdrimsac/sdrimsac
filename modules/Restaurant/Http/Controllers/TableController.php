@@ -17,6 +17,28 @@ class TableController extends Controller
 {
 
 
+    public function disabled(Request $request){
+        $table_id = $request->input('table_id');
+        $table = Table::find($table_id);
+        $table->enabled = false;
+        $table->save();
+
+        return [
+            'success' => true,
+            'message' => 'Mesa desactivada con éxito'
+        ];
+    }
+    public function enabled(Request $request){
+        $table_id = $request->input('table_id');
+        $table = Table::find($table_id);
+        $table->enabled = true;
+        $table->save();
+
+        return [
+            'success' => true,
+            'message' => 'Mesa activada con éxito'
+        ];
+    }
     public function check()
     {
         $total = 0;

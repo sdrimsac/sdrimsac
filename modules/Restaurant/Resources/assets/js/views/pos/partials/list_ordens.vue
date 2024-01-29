@@ -2741,7 +2741,7 @@ export default {
                 {
                     id: 5,
                     title: ["Ordenes"],
-                    icon: "fas fa-hourglass",
+                    icon: "fas fa-tasks",
                     visible:
                         this.configuration.restaurant &&
                         !this.configuration.college &&
@@ -2750,7 +2750,7 @@ export default {
                 {
                     id: 6,
                     title: ["Lista de crédito"],
-                    icon: "fas fa-hourglass",
+                    icon: "fas fa-file-invoice",
                     visible: this.configuration.credit_list
                 }
             ];

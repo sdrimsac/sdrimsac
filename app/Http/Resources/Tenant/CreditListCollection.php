@@ -31,7 +31,7 @@ class CreditListCollection extends ResourceCollection
             return [
                 'customer_id' => $row->customer_id,
                 'customer' => $customer,
-                'balance' => $balance,
+                'balance' => number_format($balance, 2, ".", "")
               
             ];
         });

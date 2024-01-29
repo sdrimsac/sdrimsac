@@ -6,6 +6,7 @@
         @open="open"
         @close="close"
         append-to-body
+        v-loading="loading"
     >
         <div class="row m-2">
             <div class="col-12">
@@ -58,6 +59,7 @@ export default {
     props: ["showDialog", "amountToAdd","cashId"],
     data() {
         return {
+            loading: false,
             form: {
                 total: 0,
                 balance: 0,
@@ -84,20 +86,27 @@ export default {
             this.close();
         },
         async getBalance(customer_id) {
-            const response = await this.$http(
+            try{
+            this.loading = true;
+             const response = await this.$http(
                 `/credit-list/balance/${customer_id}`
             );
             this.form.balance = response.data;
             this.form.total =
                 parseFloat(this.form.balance) + parseFloat(this.amountToAdd);
+            }catch(e){
+                this.$toast.error(e.message);
+            }finally{
+                this.loading = false;
+            }
         },
-        changeCustomer(customer_id) {
+        async changeCustomer(customer_id) {
             let customer = this.customers.find(
                 customer => customer.id == customer_id
             );
             this.form.credit_line = customer.credit_line;
             this.form.has_credit_line = customer.has_credit_line;
-            this.getBalance(customer_id);
+           await this.getBalance(customer_id);
         },
 
         async searchRemoteCustomers(input) {

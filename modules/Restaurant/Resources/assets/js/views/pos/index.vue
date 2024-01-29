@@ -2644,7 +2644,7 @@ export default {
                 is_room
             };
         },
-        async setPaymentOrden(items) {
+        async setPaymentOrden(items,allTables = false) {
             let form = {
                 id: null,
                 caja: true,
@@ -2658,7 +2658,8 @@ export default {
                     status_orden_id: 1
                 },
                 pin: null,
-                items
+                items,
+                allTables
             };
             this.orden_items = form;
             this.form.printDocument = form.printDocument;
@@ -2743,13 +2744,14 @@ export default {
             this.blockCart = true;
             this.isCreatingOrden = false;
             this.ordens_all_table = true;
-            this.setPaymentOrden(orden_items);
+            this.setPaymentOrden(orden_items,true);
             // this.idOrden = orden.id;
         },
 
         //aqui se envia los productos desde la mesa
         sendOrdens(orden) {
             if (this.localOrden.length != 0 && !this.configuration.box_orden) {
+                
                 this.$toast.warning("Tiene productos seleccionados.");
                 return;
             }

@@ -162,13 +162,18 @@ class OrdenController extends Controller
         // if ($to_kitchen) {
         // }
         // $orden_items = OrdenItem::whereIn('id', $ordens_items_extern)->get();
-        $orden_items = OrdenItem::whereIn('id', $ordens_items_extern)->get()->groupBy(function ($elemento) {
+        $diff_ordens = [];
+        $orden_items = OrdenItem::whereIn('id', $ordens_items_extern)->get()->groupBy(function ($elemento) use (&$diff_ordens) {
+            $diff_ordens[] = $elemento->orden_id;
             return $elemento->food_id . '-' . $elemento->price;
         })->map(function ($grupo) {
+     
             $cantidadTotal = $grupo->sum('quantity');
             return $grupo->first()->forceFill(['quantity' => $cantidadTotal]);
         });
-
+        // eliminar los elementos repetidos de $diff_ordens
+        $diff_ordens = array_unique($diff_ordens);
+        $two_or_more = count($diff_ordens) > 1;
         $to_carry = [];
         $users = [];
         $date = null;
@@ -222,9 +227,10 @@ class OrdenController extends Controller
         }
 
         // 
-
+        
         try {
             $pdf = PDF::loadView('restaurant::ordens.ticket', compact(
+                'two_or_more',
                 'is_restaurant',
                 'precuenta',
                 'configuration',
@@ -381,7 +387,8 @@ class OrdenController extends Controller
     public function ordenspending(Request $request)
     {
 
-        $ordens = Orden::query();
+        $ordens = Orden::where('status_orden_id', '<>', 4)->where('status_orden_id', '<>', 5);
+        // $ordens = Orden::query();
         if ($request->value) {
             $ordens = $ordens->where('id', 'like', '%' . $request->value . '%');
         }

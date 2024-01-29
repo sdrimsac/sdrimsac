@@ -675,7 +675,8 @@ class SaleNoteController extends Controller
                 if ($all_ordens) {
                     $tables = Table::where('establishment_id', auth()->user()->establishment_id)
                         ->orWhereNull('establishment_id')
-                        ->where('status_table_id', 2)
+                        ->where('is_room', false)
+                        // ->where('status_table_id', 2)
                         ->get();
                     foreach ($tables as $table) {
                         $ordens = Orden::where('table_id', $table->id)->whereIn('status_orden_id', [1, 2, 3])->get();

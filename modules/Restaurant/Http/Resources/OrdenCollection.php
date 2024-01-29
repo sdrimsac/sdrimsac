@@ -7,6 +7,7 @@ use App\Models\Tenant\Person;
 use App\Models\Tenant\Document;
 use App\Models\Tenant\SaleNote;
 use App\Models\Tenant\Configuration;
+use App\Models\Tenant\CreditList;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Modules\Restaurant\Models\Orden;
@@ -45,7 +46,9 @@ class OrdenCollection extends ResourceCollection
                 $total = 0;
                 $document_type_id = null;
             }
+            $credit_list = CreditList::where('orden_id', $row->id)->first();
             return [
+                'credit_list_id'   => ($credit_list) ? $credit_list->id : null,
                 'table'             => $row->mesa->number,
                 'id'                => ($configuration->commands_fisico == "1") ? $row->commands_fisico : $row->id,
                 'date'              => \Carbon\Carbon::parse($row->date)->format('d-m-Y'),
@@ -60,6 +63,7 @@ class OrdenCollection extends ResourceCollection
                 'sale_note'         => $row->salenote,
                 'ref' => $row->ref,
                 'time' => $row->created_at ? Carbon::createFromTimeStamp(strtotime($row->created_at))->format('H:i:s') : "-",
+        
                 'orden_items'       => $row->orden_items,
                 'total'             =>  $total
             ];
