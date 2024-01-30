@@ -81,7 +81,7 @@ class ItemColorSizeImport implements ToCollection
                         $color_size_id = $color_size_exits->id;
                     }
 
-                    InventoryKardex::create([
+                $inventory =    InventoryKardex::create([
                         'date_of_issue' => date('Y-m-d'),
                         'item_id' => $item_id,
                         'warehouse_id' => $warehouse_id,
@@ -94,7 +94,7 @@ class ItemColorSizeImport implements ToCollection
                     ]);
                     $detail = "Color: $color, Talla: $size";
                     InventoryKardexDetail::create([
-                        'inventory_kardex_id' => $color_size_id,
+                        'inventory_kardex_id' => $inventory->id,
                         'detail' => $detail,
                     ]);
 
