@@ -11,6 +11,7 @@ class CreditListExport implements  FromView, ShouldAutoSize
 {
     use Exportable;
     protected $records;
+    protected $person;
     protected $company;
 
     public function records($records) {
@@ -21,6 +22,12 @@ class CreditListExport implements  FromView, ShouldAutoSize
     
     public function company($company) {
         $this->company = $company;
+        
+        return $this;
+    }
+
+    public function person($person) {
+        $this->person = $person;
         
         return $this;
     }
@@ -35,6 +42,7 @@ class CreditListExport implements  FromView, ShouldAutoSize
         return view('tenant.reports.credit_list.report_excel', [
             'records'=> $this->records,
             'company' => $this->company,
+            'person' => $this->person,
             //'establishment'=>$this->establishment
         ]);
     }

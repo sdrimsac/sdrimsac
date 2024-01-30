@@ -324,8 +324,8 @@ export default {
                 const response = await this.$http(this.resource);
                 if (response.status == 200) {
                     const { tables } = response.data;
-                    //  this.tables = tables.filter(f => f.number != "caja");
-                    this.tables = tables;
+                    this.tables = tables.filter(f => f.number.toLowerCase() != "caja");
+                    // this.tables = tables;
                     this.hasTableOcuped = tables.some(
                         s => s.status_table_id == 2
                     );

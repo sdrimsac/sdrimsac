@@ -170,6 +170,9 @@ if ($hostname) {
                 Route::prefix('cash/main_cash')->group(function () {
                     Route::get('/', [CashController::class, 'index_main']);
                     Route::get('/records', [CashController::class, 'records_principal']);
+                    Route::get('/records_excel', [CashController::class, 'records_principal_excel']);
+                    Route::get('/columns', [CashController::class, 'columns_principal']);
+                    Route::get('/tables', [CashController::class, 'tables_principal']);
                     Route::get('/accept/{id}', [CashController::class, 'accept_register']);
                     Route::post('/observ/{id}', [CashController::class, 'observ_register']);
                 });

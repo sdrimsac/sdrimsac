@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Models\Tenant\Catalogs\AffectationIgvType;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Client;
-
+use App\Services\RoleService;
 class ConfigurationController extends Controller
 {
     public function create()

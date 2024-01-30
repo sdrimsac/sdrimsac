@@ -2,6 +2,7 @@
 
 namespace Modules\Restaurant\Http\Controllers;
 
+use App\Exports\CashPrincipalExport;
 use Exception;
 use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
@@ -1536,13 +1537,65 @@ class CashController extends Controller
         ];
     }
 
+    public function tables_principal(){
+        $users = User::where('type', 'seller')->get();
+
+        return [
+            'users' => $users,
+        ];
+    }
+    public function columns_principal(){
+        return [
+            'user_id' => 'Usuario',
+            'date_closed' => 'Fecha de Cierre',
+        ];
+    }
+    public function records_principal_excel(Request $request){
+        $column = $request->column;
+        $value = $request->value;
+        $state = $request->input('status');
+        $user_id_principal = auth()->user()->id;
+        $records = CashIncomePrincipal::whereHas('cash_principal', function ($query) use ($user_id_principal) {
+            $query->where('user_id', $user_id_principal);
+
+        })
+        ->whereHas('cash', function ($query) use ($column,$value) {
+            if($column && $value){
+                $query->where($column, 'like', $value);
+            }
+        });
+        if($state){
+            $records = $records->where('status', $state);
+        }
+
+       $records =  $records->orderBy('id', 'desc');
+
+       return (new CashPrincipalExport)
+         ->records($records->get())
+         ->company(Company::active())
+         ->download('Reporte_Caja_Principal.xlsx');
+
+    }
     public function records_principal(Request $request)
     {
+        $column = $request->column;
+        $value = $request->value;
+        $state = $request->input('status');
+        $user_id_principal = auth()->user()->id;
+        $records = CashIncomePrincipal::whereHas('cash_principal', function ($query) use ($user_id_principal) {
+            $query->where('user_id', $user_id_principal);
 
-        $user_id = auth()->user()->id;
-        $records = CashIncomePrincipal::whereHas('cash_principal', function ($query) use ($user_id) {
-            $query->where('user_id', $user_id);
-        })->orderBy('id', 'desc');
+        })
+        ->whereHas('cash', function ($query) use ($column,$value) {
+            if($column && $value){
+                $query->where($column, 'like', $value);
+            }
+        });
+        if($state){
+            $records = $records->where('status', $state);
+        }
+
+       $records =  $records->orderBy('id', 'desc');
 
         return new CashIncomePrincipalCollection($records->paginate(config('tenant.items_per_page')));
     }

@@ -18,7 +18,7 @@ class JustAdmin
      */
     public function handle($request, Closure $next)
     {
-      
+
         $config = Configuration::first();
         $user = $request->user();
         $path = $request->path();
@@ -45,7 +45,11 @@ class JustAdmin
         }
 
         $paths = ["documents", "documents/not-sent", "summaries", "voided", "reports/inventory"];
-        $paths_arca = ["incomes", "expenses", "boxes", "report_closed_cash"];
+        $paths_arca = [
+            "advanced",
+            "sale-notes", "quotations", "summaries", "voided",
+            "incomes", "expenses", "boxes", "report_closed_cash", "documents"
+        ];
         $paths_logistic = [
             "items", "purchases", "purchases/create",
             "transfers", "transfers/transfer_place", "dispatches", "item-sets",

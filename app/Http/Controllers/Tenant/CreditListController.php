@@ -62,8 +62,10 @@ class CreditListController extends Controller
     {
         $company = Company::first();
         $records = $this->getData($request)->get();
+        $person = Person::find($request->person_id);
         return (new CreditListExport)
             ->records($records)
+            ->person($person)
             ->company($company)
             ->download('Lista_de_credito_' . Carbon::now() . '.xlsx');
     }
@@ -197,7 +199,6 @@ class CreditListController extends Controller
     {
         $configuration = Configuration::firstOrFail();
         $cash_id = $request->cash_id;
-        $user = auth()->user();
         try {
             DB::beginTransaction();
             $customer_id = $request->customer_id;
@@ -206,6 +207,9 @@ class CreditListController extends Controller
             $items = $request->items;
             $user_id = auth()->id();
             $table_caja_id = Table::get_caja();
+            $table_caja = Table::find($table_caja_id);
+            $table_caja->status_table_id = 2;
+            $table_caja->save();
             $status_orden_id = 1;
             $orden = Orden::create([
                 'table_id' => $table_caja_id,

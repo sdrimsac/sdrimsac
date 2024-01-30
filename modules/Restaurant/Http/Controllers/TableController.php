@@ -61,7 +61,9 @@ class TableController extends Controller
         $number_ordens = 0;
         $orden_items = [];
         foreach ($tables as $table) {
-            $ordens = Orden::where('table_id', $table->id)->whereIn('status_orden_id', [1, 2, 3])->get();
+            $ordens = Orden::where('table_id', $table->id)
+            ->whereDoesntHave ('credit_list')
+            ->whereIn('status_orden_id', [1, 2, 3])->get();
             $number_ordens += count($ordens);
             foreach ($ordens as $orden) {
                 $ordens_desc[] = $orden->id;
@@ -71,7 +73,11 @@ class TableController extends Controller
                 $total += OrdenItem::where('orden_id', $orden->id)->selectRaw('SUM(price * quantity) as total')->value('total');
             }
         }
-
+        if($total == 0){
+            return [
+                'success' => false,
+            ];
+        }
         return [
             'items' => $orden_items,
             'ordenes' => $number_ordens,

@@ -1,8 +1,7 @@
 <template>
     <div>
-        <div     v-if="!has_cash" class="col-md- d-flex justify-content-end">
+        <div v-if="!has_cash" class="col-md- d-flex justify-content-end">
             <button
-            
                 type="button"
                 class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto"
                 @click.prevent="clickCreate()"
@@ -12,35 +11,35 @@
             </button>
         </div>
 
-            <template v-else>
-                <div class="d-flex justify-content-between">
-                    <div
-                        class="alert alert-success d-flex justify-content-start align-items-center"
-                    >
-                        <span>Efectivo disponible: S/ {{total.toFixed(2)}}</span>
-                    </div>
-                    <button
-                        type="button"
-                        class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto"
-                        @click.prevent="clickClose()"
-                    >
-                        <span>Cerrar caja</span>
-                    </button>
+        <template v-else>
+            <div class="d-flex justify-content-between">
+                <div
+                    class="alert alert-success d-flex justify-content-start align-items-center"
+                >
+                    <span>Efectivo disponible: S/ {{ total.toFixed(2) }}</span>
                 </div>
-            </template>
-            <cash-form
-                :showDialog.sync="showDialogCash"
-                :recordId="cash_id"
-                @updateCashId="updateCashId"
-                :principal="true"
-            ></cash-form>
-            <close-cash
-                :recordId.sync="cash_id"
-                :showDialogClose.sync="showDialogClose"
-                :configuration="configuration"
-                @updateCashId="updateCashId"
-            >
-            </close-cash>
+                <button
+                    type="button"
+                    class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto"
+                    @click.prevent="clickClose()"
+                >
+                    <span>Cerrar caja</span>
+                </button>
+            </div>
+        </template>
+        <cash-form
+            :showDialog.sync="showDialogCash"
+            :recordId="cash_id"
+            @updateCashId="updateCashId"
+            :principal="true"
+        ></cash-form>
+        <close-cash
+            :recordId.sync="cash_id"
+            :showDialogClose.sync="showDialogClose"
+            :configuration="configuration"
+            @updateCashId="updateCashId"
+        >
+        </close-cash>
         <div class="card">
             <div class="card-header bg-primary">
                 <h6 class="my-0 text-white">Ingreso de cierres de caja</h6>
@@ -59,11 +58,88 @@
             </div>
             <div class="card-body">
                 <div class="row">
+                    <div class="col-md-3">
+                        <el-select
+                            v-model="search.column"
+                            placeholder="Seleccione"
+                            size="small"
+                        >
+                            <el-option
+                                v-for="(item, key) in columns"
+                                :key="key"
+                                :label="item"
+                                :value="key"
+                            ></el-option>
+                        </el-select>
+                    </div>
+                    <div class="col-md-3">
+                        <el-select
+                            v-if="search.column !== 'date_closed'"
+                            v-model="search.value"
+                            placeholder="Seleccione usuario"
+                            size="small"
+                            filterable
+                            clearable
+                        >
+                            <el-option
+                                v-for="(item, key) in users"
+                                :key="key"
+                                :label="item.name"
+                                :value="item.id"
+                            ></el-option>
+                        </el-select>
+                        <el-date-picker
+                            v-else
+                            class="w-100"
+                            v-model="search.value"
+                            type="date"
+                            value-format="yyyy-MM-dd"
+                            placeholder="Seleccione la fecha"
+                            size="small"
+                            
+                        ></el-date-picker>
+                    </div>
+                    <div class="col-md-3">
+                        <el-select
+                            v-model="search.status"
+                            clearable
+                            placeholder="Seleccione el estado"
+                            size="small"
+                        >
+                            <el-option
+                                v-for="(item, key) in [{id:1,description:'Pendiente'},{id:2,description:'Observado'},{id:3,description:'Aceptado'}]"
+                                :key="key"
+                                :label="item.description"
+                                :value="item.id"
+                            ></el-option>
+                        </el-select>
+                    </div>
+                    <div class="col-md-3">
+                        <el-button
+                            type="primary"
+                            size="small"
+                            @click="getRecords"
+                        >
+                            Buscar
+                        </el-button>
+                        <el-button
+                            v-if="records.length > 0"
+                            type="default"
+                            size="small"
+                            @click="exportRecords"
+                        >
+                            Exportar
+                        <i class="icofont-file-excel"></i>
+                        </el-button>
+                    </div>
+                </div>
+                <div class="row">
                     <div class="table-responsive">
                         <table class="table">
                             <thead>
                                 <tr>
                                     <th>#</th>
+                                    <th>FECHA DE CIERRE</th>
                                     <th>CAJA</th>
                                     <th>USUARIO</th>
                                     <th>MONTO</th>
@@ -74,7 +150,10 @@
                             </thead>
                             <tbody>
                                 <tr v-for="(record, idx) in records" :key="idx">
-                                    <td>{{ idx + 1 }}</td>
+                                    <td>{{ customIndex(idx) }}</td>
+                                    <td>
+                                        {{ record.cash.date_closed }}
+                                    </td>
                                     <td>{{ record.cash.reference_number }}</td>
                                     <td>{{ record.user_name }}</td>
                                     <td>{{ record.amount }}</td>
@@ -133,6 +212,13 @@
                                 </tr>
                             </tbody>
                         </table>
+                        <el-pagination
+                            @current-change="getRecords"
+                            :current-page.sync="pagination.current_page"
+                            :page-size="parseInt(pagination.per_page)"
+                            layout="prev, pager, next"
+                            :total="pagination.total"
+                        ></el-pagination>
                     </div>
                 </div>
                 <el-dialog
@@ -167,9 +253,9 @@
 <script>
 const CashForm = () => import("./partials/form.vue");
 const CloseCash = () => import("./partials/closecash.vue");
-
+import queryString from "query-string";
 export default {
-    props: ["configuration", "cashid","total"],
+    props: ["configuration", "cashid", "total"],
     components: {
         CashForm,
         CloseCash
@@ -182,20 +268,54 @@ export default {
     },
     mounted() {
         this.getRecords();
+        this.getTables();
+        this.getColumns();
     },
     data() {
         return {
             has_cash: false,
+            pagination: {},
             showDialogClose: false,
             showDialogCash: false,
             cash_id: null,
             records: [],
             dialogVisible: false,
             form: {},
-            currentRegister: null, 
+            currentRegister: null,
+            search: {
+                column: 'user_id',
+            },
+            columns: [],
+            users: []
         };
     },
     methods: {
+        exportRecords(){
+            window.open(`/cash/main_cash/records_excel?${this.getQueryParameters()}`, '_blank');
+        },
+        customIndex(index) {
+            return (
+                this.pagination.per_page * (this.pagination.current_page - 1) +
+                index +
+                1
+            );
+        },
+        getTables() {
+            this.$http.get(`/cash/main_cash/tables`).then(response => {
+                let data = response.data;
+                this.users = data.users;
+                console.log("🚀 ~ file: main.vue:273 ~ this.$http.get ~ this.users:", this.users)
+            });
+        },
+        getColumns() {
+            this.$http.get(`/cash/main_cash/columns`).then(response => {
+                this.columns = response.data;
+                console.log(
+                    "🚀 ~ file: main.vue:263 ~ this.$http.get ~ this.columns:",
+                    this.columns
+                );
+            });
+        },
         initForm() {
             this.form = {
                 comment: null
@@ -255,13 +375,24 @@ export default {
             this.initForm();
             this.dialogVisible = true;
         },
+        getQueryParameters() {
+            return queryString.stringify({
+                page: this.pagination.current_page,
+                value: this.search.value,
+                column: this.search.column,
+                status: this.search.status,
+            });
+        },
         async getRecords() {
-            const response = await this.$http.get(`/cash/main_cash/records`);
+            const response = await this.$http.get(
+                `/cash/main_cash/records?${this.getQueryParameters()}`
+            );
             if (response.status == 200) {
                 let {
-                    data: { data }
+                    data: { data, meta }
                 } = response;
                 this.records = data;
+                this.pagination = meta;
             }
         },
         clickClose() {

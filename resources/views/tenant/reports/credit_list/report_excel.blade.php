@@ -18,6 +18,16 @@
     <div style="margin-top:20px; margin-bottom:15px;">
         <table>
             <tr>
+                <td colspan="4">
+                    <p>
+                        <b>
+                           {{$person->number}} - {{$person->name}}
+                        </b>
+                    </p>
+
+                </td>
+            </tr>
+            <tr>
                 <td>
                     <p><b>Empresa: </b></p>
                 </td>

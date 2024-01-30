@@ -22,11 +22,16 @@
           <!-- Container-fluid starts-->
        
        </div>
+       @inject('roleService', 'App\Services\RoleService')
        <div class="col-lg-8 col-md-12">
-            <tenant-configurations-form :type-user="{{ json_encode(auth()->user()->type) }}"></tenant-configurations-form>
+            <tenant-configurations-form 
+            :is-arca="{{json_encode($roleService->isArca())}}"
+            :type-user="{{ json_encode(auth()->user()->type) }}"></tenant-configurations-form>
         </div>
+        @if(!$roleService->isArca())
         <div class="col-lg-4 col-md-12">
             <tenant-options-form></tenant-options-form>
         </div>
+        @endif
     </div>
 @endsection

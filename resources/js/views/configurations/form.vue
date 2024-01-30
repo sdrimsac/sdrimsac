@@ -8,7 +8,151 @@
                 <form autocomplete="off">
                     <div class="form-body">
                         <el-tabs type="border-card">
-                            <el-tab-pane label="Servicios">
+                            <el-tab-pane label="Visual" v-if="isArca">
+                               <div class="row">
+                                 <template v-if="form.hotels">
+                                    <div class="col-md-6 mt-4">
+                                        <div class="form-group">
+                                            <label class="control-label w-100"
+                                                >Tiempo para limpiar la
+                                                habitación
+                                            </label>
+                                            <el-input-number
+                                                @change="submit"
+                                                v-model="form.time_to_clean"
+                                            >
+                                            </el-input-number>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mt-4">
+                                        <div class="form-group">
+                                            <label class="control-label w-100"
+                                                >Tiempo de alarma de alquileres
+                                                por vencer
+                                            </label>
+
+                                            <el-input-number
+                                                @change="submit"
+                                                v-model="form.alarm_to_end"
+                                            >
+                                            </el-input-number>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mt-4">
+                                        <div class="form-group">
+                                            <label class="control-label w-100"
+                                                >Tiempo para el calculo del
+                                                inicio del dia
+                                            </label>
+
+                                            <el-time-picker
+                                                style="width: 100%;"
+                                                value-format="HH:mm:ss"
+                                                :format="'hh:mm A'"
+                                                :picker-options="{
+                                                    format: 'hh:mm A' // Utiliza 'hh' para las horas en formato de 12 horas y 'A' para AM/PM
+                                                }"
+                                                timezone="America/Lima"
+                                                v-model="form.time_to_enter"
+                                            ></el-time-picker>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mt-4">
+                                        <div class="form-group">
+                                            <label class="control-label w-100"
+                                                >Tiempo para el calculo del
+                                                final del dia
+                                            </label>
+
+                                            <el-time-picker
+                                                style="width: 100%;"
+                                                value-format="HH:mm:ss"
+                                                :format="'hh:mm A'"
+                                                :picker-options="{
+                                                    format: 'hh:mm A' // Utiliza 'hh' para las horas en formato de 12 horas y 'A' para AM/PM
+                                                }"
+                                                timezone="America/Lima"
+                                                v-model="form.time_to_leave"
+                                            ></el-time-picker>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6 mt-4">
+                                        <div class="form-group">
+                                            <label class="control-label w-100"
+                                                >Autorización de descuento
+                                            </label>
+
+                                            <el-switch
+                                                v-model="form.auth_discount"
+                                                active-text="Si"
+                                                inactive-text="No"
+                                                @change="submit"
+                                            ></el-switch>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mt-4">
+                                        <div class="form-group">
+                                            <label class="control-label w-100"
+                                                >Tiempo de mantenimiento
+                                            </label>
+
+                                            <el-input-number
+                                                @change="submit"
+                                                v-model="form.time_manteniment"
+                                            >
+                                            </el-input-number>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mt-4">
+                                        <div class="form-group">
+                                            <label class="control-label w-100"
+                                                >Control de mantenimiento
+                                            </label>
+
+                                            <el-switch
+                                                active-text="Si"
+                                                inactive-text="No"
+                                                @change="submit"
+                                                v-model="
+                                                    form.maintenance_workers
+                                                "
+                                            ></el-switch>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mt-4">
+                                        <div class="form-group">
+                                            <label class="control-label w-100"
+                                                >Limite de la garantía -
+                                                frigobar
+                                            </label>
+                                            <el-input-number
+                                                @change="submit"
+                                                v-model="
+                                                    form.credit_line_hotel_limit
+                                                "
+                                            >
+                                            </el-input-number>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mt-4">
+                                        <div class="form-group">
+                                            <label class="control-label w-100"
+                                                >Manejo de caja principal
+                                            </label>
+
+                                            <el-switch
+                                                active-text="Si"
+                                                inactive-text="No"
+                                                @change="submit"
+                                                v-model="form.principal_cash"
+                                            ></el-switch>
+                                        </div>
+                                    </div>
+                                </template>
+                               </div>
+                            </el-tab-pane>
+                            <el-tab-pane label="Servicios" v-if="!isArca">
                                 <div class="row">
                                     <div class="col-md-4">
                                         <label class="control-label"
@@ -72,7 +216,7 @@
                                 </div> -->
                                 </div>
                             </el-tab-pane>
-                            <el-tab-pane label="Contable">
+                            <el-tab-pane label="Contable" v-if="!isArca">
                                 <div class="row">
                                     <div
                                         class="col-md-4"
@@ -238,7 +382,7 @@
                                     </div> -->
                                 </div>
                             </el-tab-pane>
-                            <el-tab-pane label="Visual">
+                            <el-tab-pane label="Visual" v-if="!isArca">
                                 <div class="row">
                                     <div class="col-md-6 mt-2">
                                         <label class="control-label"
@@ -1875,10 +2019,9 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                    
                                 </div>
                             </el-tab-pane>
-                            <el-tab-pane label="Impresion">
+                            <el-tab-pane label="Impresion" v-if="!isArca">
                                 <div class="row">
                                     <div class="col-md-6 mt-2">
                                         <label class="control-label w-100">
@@ -1915,7 +2058,7 @@
                                     </div>
                                 </div>
                             </el-tab-pane>
-                            <el-tab-pane label="Modos">
+                            <el-tab-pane label="Modos" v-if="!isArca">
                                 <div class="row">
                                     <div class="col-md-6 mt-4">
                                         <div class="form-group">
@@ -1982,7 +2125,7 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                    
+
                                     <div class="col-md-6 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
@@ -2010,7 +2153,7 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                      <div class="col-md-6 mt-4">
+                                    <div class="col-md-6 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100">
                                                 Habilitar lotes - productos
@@ -2024,14 +2167,17 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                      <div class="col-md-6 mt-4">
+                                    <div class="col-md-6 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100">
-                                                Habilitar color & talla - productos
+                                                Habilitar color & talla -
+                                                productos
                                             </label>
 
                                             <el-switch
-                                                v-model="form.color_size_enabled"
+                                                v-model="
+                                                    form.color_size_enabled
+                                                "
                                                 active-text="Si"
                                                 inactive-text="No"
                                                 @change="submit"
@@ -2040,7 +2186,7 @@
                                     </div>
                                 </div>
                             </el-tab-pane>
-                            <el-tab-pane label="Promociones">
+                            <el-tab-pane label="Promociones" v-if="!isArca">
                                 <div class="row">
                                     <div class="col-md-6">
                                         <label class="control-label w-100">
@@ -2075,7 +2221,7 @@
                                     </div>
                                 </div>
                             </el-tab-pane>
-                            <el-tab-pane label="Consumo">
+                            <el-tab-pane label="Consumo" v-if="!isArca">
                                 <div class="row">
                                     <div class="col-md-6">
                                         <label class="control-label w-100">
@@ -2183,7 +2329,7 @@
 //  import TermsCondition from '@views/quotations/partials/terms_condition.vue'
 
 export default {
-    props: ["typeUser"],
+    props: ["typeUser", "isArca"],
     //  components: {TermsCondition},
     //
     data() {
@@ -2215,7 +2361,7 @@ export default {
     async created() {
         await this.loadTables();
         await this.initForm();
-
+        console.log(this.isArca);
         await this.$http.get(`/${this.resource}/record`).then(response => {
             if (response.data !== "") {
                 this.form = response.data.data;

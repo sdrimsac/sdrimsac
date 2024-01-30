@@ -325,7 +325,7 @@
                                                         `/dispatches/create_new/document/${row.id}`
                                                     "
                                                     class="dropdown-item"
-                                                    v-if="row.btn_guide"
+                                                    v-if="row.btn_guide &&  typeUser == 'admin' || typeUser == 'superadmin'"
                                                 >
                                                     Guía
                                                 </a>
