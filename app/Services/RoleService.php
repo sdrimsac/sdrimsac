@@ -9,6 +9,18 @@ use Modules\Restaurant\Models\WorkersType;
 
 class RoleService
 {
+    public static function isArcaUserId($id){
+        $user = \App\Models\Tenant\User::find($id);
+        $worker_type_id = $user->worker_type_id;
+        if ($worker_type_id == null) {
+            return false;
+        }
+        $worker_types = WorkersType::where('description', 'ARCA')->first();
+        if ($worker_types != null) {
+            return $worker_types->id == $worker_type_id;
+        }
+        return false;
+    }
     public static function isLogistic()
     {
         $worker_type_id = auth()->user()->worker_type_id;

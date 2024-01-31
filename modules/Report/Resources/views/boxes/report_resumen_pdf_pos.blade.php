@@ -238,6 +238,7 @@
     }
     
 @endphp
+@inject('roleService', 'App\Services\RoleService')
 
 <body>
     <header>
@@ -324,6 +325,8 @@
         </table>
         <table style="margin-top: 10px;">
             <tr>
+                @if(!$roleService->isArcaUserId($user->id))
+
                 <td width="60%">
                     <div>
                         <span class="f12">DIRECCIÓN:{{ mb_strtoupper($establishment->address) }}</span>
@@ -335,6 +338,8 @@
                     </div>
                     <table>
                         <tr>
+                            @if(!$roleService->isArcaUserId($user->id))
+                                
                             <td width="58%">
                                 <table class="border">
                                     <thead>
@@ -394,6 +399,8 @@
                                     </tbody>
                                 </table>
                             </td>
+                            @endif
+
                             <td width="42%" style="vertical-align: top">
                                 <table class="border">
                                     <thead>
@@ -509,10 +516,13 @@
                         </tr>
                     </table>
                 </td>
+                @endif
             </tr>
         </table>
         <table>
             <tr>
+                @if(!$roleService->isArcaUserId($user->id))
+
                 <td width="35%">
                     @if (count($anulate_documents) > 0)
                         <table class="border f12">
@@ -581,6 +591,7 @@
 
                         </table>
                     @endif
+
                     <table class="border f12">
                         <thead>
                             <tr class="thead">
@@ -601,8 +612,39 @@
                         </tbody>
 
                     </table>
-
                 </td>
+                @endif
+                @if($roleService->isArcaUserId($user->id))
+                <td width="35%">
+                    <table class="border">
+                        <thead>
+                            <tr>
+                                <th colspan="2" style="text-align: center;" class="thead">
+                                    <span class="f12">
+                                        E/SALIDAS DE EFECTIVO
+                                    </span>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="f12">INGRESO</span></td>
+                                <td class="right"><span
+                                        class="f12 right">{{ number_format($incomes_expenses_cash['incomes']['amount'], 2) }}</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span class="f12">SALIDA</span></td>
+                                <td class="right"><span class="f12 right">
+                                        {{ number_format($incomes_expenses_cash['expenses']['amount'], 2) }}</span>
+                                </td>
+                            </tr>
+
+
+                        </tbody>
+                    </table>
+                </td>
+                @endif
                 <td width="65%" style="text-align: right;">
                     <span style="font-size:20px !important;">EFECTIVO : S/.</span>
                     <span style="font-size:20px !important; color: blue;">

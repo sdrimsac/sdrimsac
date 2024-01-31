@@ -7,6 +7,7 @@ use App\Models\Tenant\User;
 use Illuminate\Routing\Controller;
 use Modules\Restaurant\Models\Table;
 use App\Http\Resources\Tenant\UserCollection;
+use App\Models\Tenant\Cash;
 use App\Models\Tenant\Company;
 use App\Models\Tenant\Establishment;
 use App\Models\Tenant\ItemWarehouse;
@@ -26,8 +27,10 @@ class WorkerController extends Controller
     }
     public function report_products_w(Request $request){
         $user_id = $request->user_id;
-        $user = User::find($user_id);
-        $establishment_id = $user->establishment_id;
+        $cash_id = $request->cash_id;
+        $cash = Cash::find($cash_id);
+        $user = $user_id ? User::find($user_id) : auth()->user();
+        $establishment_id = isset($user->establishment_id) ? $user->establishment_id : auth()->user()->establishment_id;
         $establishment = Establishment::find($establishment_id);
         $company = Company::active();
         $records = ItemWarehouse::where('warehouse_id', $establishment_id)
@@ -40,18 +43,26 @@ class WorkerController extends Controller
                     'id' => $row->id,
                     'description' => $row->item->description,
                     'stock' => $row->stock,
+                    'internal_id' => $row->item->internal_id,
+                    'category' => optional($row->item->category)->name,
+                    'unit_type_id' => $row->item->unit_type_id,
                 ];
             });
+            $turn = $cash->turn->turn_desc;
         return (new ReportProductWarehouse)
             ->records($records)
             ->company($company)
             ->user($user)
+            ->turn($turn)
             ->establishment($establishment)
             ->download('Stock_al_cerrar_caja_' . Carbon::now() . '.xlsx');
     }
     public function report_products()
     {
         $user = auth()->user();
+        //el ultimo registro de Cash del usuario
+        $cash = Cash::where('user_id', $user->id)->latest()->first();
+        $turn = $cash->turn->turn_desc;
         $company = Company::active();
         $establishment_id = auth()->user()->establishment_id;
         $establishment = Establishment::find($establishment_id);
@@ -65,12 +76,16 @@ class WorkerController extends Controller
                     'id' => $row->id,
                     'description' => $row->item->description,
                     'stock' => $row->stock,
+                    'internal_id' => $row->item->internal_id,
+                    'category' => optional($row->item->category)->name,
+                    'unit_type_id' => $row->item->unit_type_id,
                 ];
             });
         return (new ReportProductWarehouse)
             ->records($records)
             ->company($company)
             ->user($user)
+            ->turn($turn)
             ->establishment($establishment)
             ->download('Stock_al_cerrar_caja_' . Carbon::now() . '.xlsx');
     }

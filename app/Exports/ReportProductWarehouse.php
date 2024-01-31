@@ -14,6 +14,7 @@ class ReportProductWarehouse implements  FromView, ShouldAutoSize
     protected $establishment;
     protected $user;
     protected $company;
+    protected $turn;
 
     public function records($records) {
         $this->records = $records;
@@ -29,6 +30,12 @@ class ReportProductWarehouse implements  FromView, ShouldAutoSize
 
     public function user($user) {
         $this->user = $user;
+        
+        return $this;
+    }
+
+    public function turn($turn) {
+        $this->turn = $turn;
         
         return $this;
     }
@@ -50,7 +57,8 @@ class ReportProductWarehouse implements  FromView, ShouldAutoSize
             'records'=> $this->records,
             'company' => $this->company,
             'user' => $this->user,
-            'establishment'=>$this->establishment
+            'establishment'=>$this->establishment,
+            'turn'=>$this->turn
         ]);
     }
 }

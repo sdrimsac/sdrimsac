@@ -441,6 +441,13 @@
                             Reporte de Cierre de Caja
                         </a>
                     </li>
+                    {{-- <li>
+                        <a class="{{ $path[0] === 'index_report_closed_cash' ? 'active' : '' }}"
+                            href="{{ route('tenant.reportincomebox.global_index') }}">
+                            <i class="icofont-globe"></i>
+                            Reporte globalizado
+                        </a>
+                    </li> --}}
                 </ul>
             </li>
         @endif

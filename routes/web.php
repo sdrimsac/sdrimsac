@@ -786,6 +786,9 @@ if ($hostname) {
                 Route::get('reports/boxes/reports_resumen_type', [App\Http\Controllers\Tenant\BoxController::class, 'reports_resumen_type']);
                 Route::get('reports/boxes/reports_categoria_type', [App\Http\Controllers\Tenant\BoxController::class, 'reports_categoria_type']);
                 Route::get('reports/boxes/reports_bancario_type', [App\Http\Controllers\Tenant\BoxController::class, 'reports_bancario_type']);
+                Route::get('reports/boxes/global', [App\Http\Controllers\Tenant\BoxController::class, 'global_index'])->name('tenant.reportincomebox.global_index')->middleware('just.admin');
+                Route::get('reports/boxes/global/tables', [App\Http\Controllers\Tenant\BoxController::class, 'global_index']);
+                Route::get('reports/boxes/global/records', [App\Http\Controllers\Tenant\BoxController::class, 'global_index']);
 
                 Route::get('expensesbox', [App\Http\Controllers\Tenant\BoxController::class, 'index'])->name('tenant.expensesbox.index')->middleware('just.admin');
                 Route::get('expensesbox/reports', [App\Http\Controllers\Tenant\BoxController::class, 'reports_results']);

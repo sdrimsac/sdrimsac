@@ -51,9 +51,10 @@
                 </td>
                 <td align="center">{{ $company->number }}</td>
                 <td>
+                    <p><strong>Turno:</strong></p>
                 </td>
                 <td align="center">
-
+                    <p><strong>{{ $turn }}</strong></p>
                 </td>
             </tr>
         </table>
@@ -66,7 +67,10 @@
                     <thead>
                         <tr>
                             <th>#</th>
+                            <th>Código</th>
+                            <th>Categoria</th>
                             <th>Producto</th>
+                            <th>Unidad</th>
                             <th>Stock</th>
                         </tr>
                     </thead>
@@ -74,7 +78,10 @@
                         @foreach ($records as $key => $value)
                             <tr>
                                 <td class="celda">{{ $key + 1 }}</td>
+                                <td class="celda">&nbsp;{{ $value['internal_id'] }}</td>
+                                <td class="celda">{{ $value['category'] }}</td>
                                 <td class="celda">{{ $value['description'] }}</td>
+                                <td class="celda">{{ $value['unit_type_id'] }}</td>
                                 <td class="celda">{{ $value['stock'] }}</td>
 
 

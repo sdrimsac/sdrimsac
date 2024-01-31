@@ -722,7 +722,11 @@ const app = new Vue({
                 /* webpackChunkName:"js/tenant-boxes-reports"*/
                 "./views/boxes/report.vue"
             ),
-
+            "tenant-boxes-reports-global": () =>
+            import(
+                /* webpackChunkName:"js/tenant-boxes-reports"*/
+                "./views/boxes/global.vue"
+            ),
         "tenant-boxes-reports-pos": () =>
             import(
                 /* webpackChunkName: "js/tentant-boxes-report" */

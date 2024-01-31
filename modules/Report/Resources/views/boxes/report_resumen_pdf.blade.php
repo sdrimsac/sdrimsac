@@ -176,7 +176,6 @@
 
     </style>
 </head>
-
 <body>
     <header>
         <table style="border-collapse: collapse;border-bottom:1px solid #ddd;border:0px !important; ">

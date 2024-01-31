@@ -48,7 +48,9 @@
                             @updateObservation="updateObservation"
                             @updateCustomer="updateCustomer"
                             @createFormRegister="createFormRegister"
-                            @createFormRegisterMultiple="createFormRegisterMultiple"
+                            @createFormRegisterMultiple="
+                                createFormRegisterMultiple
+                            "
                             :record="record"
                             :multiRegister="multiRegister"
                             ref="register"
@@ -1184,7 +1186,6 @@ export default {
                     }
                 }
                 this.$toast.error(msg);
-                
             } finally {
             }
         },
@@ -1198,9 +1199,7 @@ export default {
                 .join("");
             try {
                 this.socket = io.connect(this.$socketUrl);
-            } catch (e) {
-                
-            }
+            } catch (e) {}
 
             this.socket.on("connected", ({ message }) => {
                 this.$toast.success(message);
@@ -1226,7 +1225,6 @@ export default {
             });
         },
         updateCustomer(person) {
-            
             this.form.customer = person;
             this.form.customer_id = person.id;
             this.form.customer_telephone = person.telephone;
@@ -1250,7 +1248,6 @@ export default {
                 if (this.type == "service") {
                     this.$refs.service?.getTables();
                 } else if (this.type == "register") {
-
                     this.$refs.register?.open();
                     this.$refs.register?.getTables();
                 } else {
@@ -1271,11 +1268,11 @@ export default {
         createFormIncomplete(register) {
             this.formRegister = register;
         },
-        
+
         createFormRegisterMultiple(register) {
             this.formRegister = register;
         },
-         createFormRegister(register) {
+        createFormRegister(register) {
             register.classroom_id = this.record.id;
             this.formRegister = register;
         },
@@ -1329,7 +1326,6 @@ export default {
                 this.form.user_id = this.user.id;
                 this.form.establishment_id = this.establishments.id;
             } catch (e) {
-                
                 this.$toast.error("Ocurrió un problema");
             } finally {
                 this.loading = false;
@@ -1388,7 +1384,8 @@ export default {
             if (
                 this.form.enter_amount != "" &&
                 !isNaN(this.form.enter_amount) &&
-                this.form.enter_amount != undefined
+                this.form.enter_amount != undefined &&
+                this.form.enter_amunt != 0
             ) {
                 this.currentPayments.push({
                     id,
@@ -1396,6 +1393,8 @@ export default {
                     method,
                     amount: this.form.enter_amount
                 });
+                this.form.enter_amount = 0;
+                           this.method_payment("Efectivo");
             }
         },
         customerForm(isNew) {
@@ -1418,10 +1417,8 @@ export default {
                     "input"
                 )[0].value;
                 let url = `/caja/search_customers?value=${this.input_person.number}`;
-                
-                const response = await this.$http(
-                    url
-                );
+
+                const response = await this.$http(url);
                 const { persons } = response.data;
 
                 this.customers = persons.filter(n => n.number != "88888888");
@@ -1683,7 +1680,6 @@ export default {
                         }
                     }
                 } catch (e) {
-                    
                 } finally {
                     this.loading = false;
                 }
@@ -1818,7 +1814,7 @@ export default {
             let total_value = 0;
             let total = 0;
             let total_plastic_bag_taxes = 0;
-            
+
             this.form.items.forEach(row => {
                 total_discount += parseFloat(row.total_discount);
                 total_charge += parseFloat(row.total_charge);
@@ -1938,7 +1934,7 @@ export default {
             // this.amount = acum_payment
             this.setAmount(acum_payment);
 
-            // 
+            //
         },
         setAmount(amount) {
             // this.amount = parseFloat(this.amount) + parseFloat(amount)
@@ -1962,6 +1958,10 @@ export default {
             }
         },
         totalPayments() {
+            console.log(
+                "🚀 ~ file: payment_college.vue:1966 ~ totalPayments ~ this.currentPayments:",
+                this.currentPayments
+            );
             if (this.currentPayments.length != 0) {
                 let enter_amount = 0.0;
                 this.currentPayments.forEach(cp => {
@@ -1974,8 +1974,21 @@ export default {
         async enterAmount(amount = 0) {
             this.amount = amount;
 
-            let enter_amount = parseFloat(this.form.enter_amount) || 0;
-            // +this.totalPayments();
+            console.log(
+                "🚀 ~ file: payment_college.vue:1979 ~ enterAmount ~ this.totalPayments():",
+                this.totalPayments()
+            );
+            console.log(
+                "🚀 ~ file: payment_college.vue:1980 ~ enterAmount ~ parseFloat(this.form.enter_amount) :",
+                parseFloat(this.form.enter_amount)
+            );
+            let enter_amount =
+                (parseFloat(this.form.enter_amount) || 0) +
+                this.totalPayments();
+            console.log(
+                "🚀 ~ file: payment_college.vue:1978 ~ enterAmount ~ enter_amount:",
+                enter_amount
+            );
 
             let differen = enter_amount - parseFloat(this.form.total);
 
@@ -2092,6 +2105,37 @@ export default {
             }
             return newBoxes;
         },
+        verifyBoxesDuplicate(boxes) {
+            if (boxes) {
+                let { total } = this.form;
+                let total_boxes = 0;
+                if (boxes.length > 0) {
+                    total_boxes = boxes.reduce(
+                        (a, b) => a + (parseFloat(b["amount"]) || 0),
+                        0
+                    );
+                    total = parseFloat(total);
+                    if (total_boxes > total) {
+                        let difference = total_boxes - total;
+                        //remove box with difference
+                        let index = boxes.findIndex(
+                            b => parseFloat(b["amount"]) == difference
+                        );
+                        if (index >= 0) {
+                            boxes.splice(index, 1);
+                        }
+                    }
+
+                    let new_total = boxes.reduce(
+                        (a, b) => a + (parseFloat(b["amount"]) || 0),
+                        0
+                    );
+                    this.form.difference = total - new_total;
+                }
+                return boxes;
+            }
+            return [];
+        },
         async sendPayment($event, form = null) {
             if (!this.cash_id) {
                 this.$toast.error("Seleccione o abra una caja.");
@@ -2100,7 +2144,8 @@ export default {
 
             let payIncomplete = false;
             let different =
-                parseFloat(this.form.enter_amount) -
+                parseFloat(this.form.enter_amount) +
+                this.totalPayments() -
                 parseFloat(this.form.total);
             if (different < 0) {
                 try {
@@ -2146,10 +2191,9 @@ export default {
                 this.registerId = this.register.id;
             }
 
-                
             if (registered) {
                 let payed = await this.clickPayment(form);
-                
+
                 if (payed) {
                     await this.sendCollegePayment();
                 }
@@ -2158,23 +2202,15 @@ export default {
         async sendCollegePayment() {
             try {
                 this.loading = true;
-                if(this.registerIds == null || this.registerIds && this.registerIds.length == 0){
-                      const response = await this.$http.post(`/college/payments`, {
-                    document_id: this.documentId,
-                    register_id: this.registerId,
-                    months:
-                        this.type == "incomplete"
-                            ? []
-                            : this.formRegister.months,
-                    active: 1,
-                    type: this.incomplete ? "incomplete" : "complete",
-                    details: this.formRegister.detail
-                });
-                }else{
-                    for(let i = 0; i < this.registerIds.length; i++){
-                        const response = await this.$http.post(`/college/payments`, {
+                if (
+                    this.registerIds == null ||
+                    (this.registerIds && this.registerIds.length == 0)
+                ) {
+                    const response = await this.$http.post(
+                        `/college/payments`,
+                        {
                             document_id: this.documentId,
-                            register_id: this.registerIds[i],
+                            register_id: this.registerId,
                             months:
                                 this.type == "incomplete"
                                     ? []
@@ -2182,54 +2218,75 @@ export default {
                             active: 1,
                             type: this.incomplete ? "incomplete" : "complete",
                             details: this.formRegister.detail
-                        });
+                        }
+                    );
+                } else {
+                    for (let i = 0; i < this.registerIds.length; i++) {
+                        const response = await this.$http.post(
+                            `/college/payments`,
+                            {
+                                document_id: this.documentId,
+                                register_id: this.registerIds[i],
+                                months:
+                                    this.type == "incomplete"
+                                        ? []
+                                        : this.formRegister.months,
+                                active: 1,
+                                type: this.incomplete
+                                    ? "incomplete"
+                                    : "complete",
+                                details: this.formRegister.detail
+                            }
+                        );
                     }
                 }
 
                 this.$emit("getRecords");
             } catch (e) {
-                
             } finally {
                 this.loading = false;
             }
         },
         async sendRegister() {
-            
             if (!this.formRegister) {
                 this.$toast.error("Seleccione un plan/estudiante");
                 return false;
             }
-            if(this.formRegister.multi){
-                let {classrooms_id, members_id} = this.formRegister;
-                classrooms_id = classrooms_id.filter(function (el) {
+            if (this.formRegister.multi) {
+                let { classrooms_id, members_id } = this.formRegister;
+                classrooms_id = classrooms_id.filter(function(el) {
                     return el != null;
-                  });
-                members_id = members_id.filter(function (el) {
+                });
+                members_id = members_id.filter(function(el) {
                     return el != null;
-                  });
-                if((classrooms_id.length == 0 && members_id.length == 0) || (classrooms_id.length != members_id.length)){
-                    this.$toast.error("Seleccione un estudiante y su respectivo salón.");
+                });
+                if (
+                    (classrooms_id.length == 0 && members_id.length == 0) ||
+                    classrooms_id.length != members_id.length
+                ) {
+                    this.$toast.error(
+                        "Seleccione un estudiante y su respectivo salón."
+                    );
                     return false;
                 }
             }
             try {
                 this.loading = true;
-                
+
                 const response = await this.$http.post(
                     `/college/registers`,
                     this.formRegister
                 );
-                
+
                 const { id } = response.data;
-                if(this.formRegister.multi){
+                if (this.formRegister.multi) {
                     this.registerIds = id;
-                    }else{
+                } else {
                     this.registerId = id;
                 }
-                    
+
                 return true;
             } catch (e) {
-                
                 this.$toast.error("Ocurrió un error");
                 return false;
             } finally {
@@ -2326,8 +2383,6 @@ export default {
                 form.customer_telephone != null &&
                 form.customer_telephone != ""
             ) {
-                
-                
                 if (!this.existNumber()) {
                     this.$toast.error("Número para envío whatsapp inválido");
                     return;
@@ -2366,9 +2421,11 @@ export default {
 
             form.boxes = this.currentPayments;
             this.addPayment();
+            form.boxes = this.verifyBoxesDuplicate(form.boxes);
             this.form.observation = this.observation;
+            form.observation = this.observation;
             this.loading_submit = true;
-
+            this.method_payment("Efectivo");
             try {
                 form.orden_id = null;
 
@@ -2426,7 +2483,6 @@ export default {
                     return false;
                 }
             } catch (error) {
-                
                 const response = error.response;
                 let {
                     data: { message }
@@ -2473,16 +2529,14 @@ export default {
                         this.$toast.error(response.data.message);
                     }
                 })
-                .catch(error => {
-                    
-                });
+                .catch(error => {});
         },
         savePaymentMethod() {
             this.$http
                 .post(`/${this.resource_payments}`, this.form_payment)
                 .then(response => {
                     if (response.data.success) {
-                        // 
+                        //
                     } else {
                         this.$toast.error(response.data.message);
                     }
@@ -2491,7 +2545,6 @@ export default {
                     if (error.response.status === 422) {
                         this.records[index].errors = error.response.data;
                     } else {
-                        
                     }
                 });
         },
@@ -2511,7 +2564,6 @@ export default {
             } else if (this.type == "incomplete") {
                 this.$refs.incomplete.initForm();
             } else {
-                
             }
 
             this.splitPayments = [];

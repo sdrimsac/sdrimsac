@@ -6,6 +6,7 @@ use App\Traits\RegisterMovementTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Modules\Finance\Models\GlobalPayment;
+use Modules\Restaurant\Models\Turns;
 
 class Cash extends ModelTenant
 {
@@ -80,6 +81,10 @@ class Cash extends ModelTenant
         );
     }
 
+    public function turn()
+    {
+        return $this->belongsTo(Turns::class);
+    }
 
     public function user()
     {

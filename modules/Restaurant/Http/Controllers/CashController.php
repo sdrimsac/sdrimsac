@@ -1667,7 +1667,7 @@ class CashController extends Controller
             (new WhatsappController)->sendHistorial($request);
         }
 
-        $resource = "http://" . $hostname->fqdn . "/caja/report-product-warehouse-w?user_id=" . $cash->user_id;
+        $resource = "http://" . $hostname->fqdn . "/caja/report-product-warehouse-w?user_id=" . $cash->user_id."&cash_id=".$cash->id;
         $file = file_get_contents($resource);
 
         $file_name = $cash->id . "_" . "Stock_al_cerrar_caja_" . Carbon::now()->format("Y-m-d") . ".xlsx";

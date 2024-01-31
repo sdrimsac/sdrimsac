@@ -336,17 +336,15 @@ export default {
                     `/cash/main_cash/accept/${id}`
                 );
                 if (response.status == 200) {
-                    this.$message({
-                        message: "Se acepto el ingreso",
-                        type: "success"
-                    });
+                    this.$toast.success(
+                         "Se acepto el ingreso",
+                    );
                     this.getRecords();
                 }
             } catch (e) {
-                this.$message({
-                    message: "Ocurrio un error",
-                    type: "error"
-                });
+                this.$toast.error(
+                    "Ocurrio un error",
+                );
             }
         },
         async sendToObservation() {

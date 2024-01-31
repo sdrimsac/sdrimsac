@@ -46,6 +46,7 @@ class JustAdmin
 
         $paths = ["documents", "documents/not-sent", "summaries", "voided", "reports/inventory"];
         $paths_arca = [
+            "reports/boxes/global",
             "advanced",
             "sale-notes", "quotations", "summaries", "voided",
             "incomes", "expenses", "boxes", "report_closed_cash", "documents"
@@ -56,7 +57,7 @@ class JustAdmin
             "reports/inventory", "reports/stockmin", "reports/kardex",
         ];
 
-        if ($type != 'admin' && $type != "superadmin" || $isLogistic) {
+        if ($type != 'admin' && $type != "superadmin" || $isLogistic||$isArca) {
             if ($isAccountant) {
                 $pathPass = in_array($path, $paths);
                 if (!$pathPass) {
@@ -75,6 +76,8 @@ class JustAdmin
                     return redirect('/purchases');
                 }
             } else if ($isArca) {
+               
+
                 $pathPass = in_array($path, $paths_arca);
                 if (!$pathPass) {
 

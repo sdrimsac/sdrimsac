@@ -595,6 +595,10 @@ class BoxController extends Controller
     {
         return view('tenant.boxes.reports.index');
     }
+    public function global_index(Request $request)
+    {
+        return view('tenant.boxes.reports.global');
+    }
     public function records(Request $request)
     {
         $records = Box::where($request->column, 'like', "%{$request->value}%")->where('type', '2')->orderBy('id', 'desc'); //para ordenar
