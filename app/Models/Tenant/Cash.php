@@ -111,6 +111,8 @@ class Cash extends ModelTenant
     {
         return $this->morphMany(GlobalPayment::class, 'destination');
     }
-
+    public function boxes(){
+        return $this->hasMany(Box::class);
+    }
     // public function get_ref
 }

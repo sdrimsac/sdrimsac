@@ -31,6 +31,7 @@ use App\Http\Resources\Tenant\PaymentMethodTypeCollection;
 use App\Models\Tenant\CreditList;
 use Modules\Dashboard\Helpers\DashboardSalePurchase;
 use App\Exports\BoxesExportCashClosed;
+use App\Exports\GlobalBoxExport;
 use Modules\Restaurant\Models\Food;
 
 class BoxController extends Controller
@@ -188,7 +189,7 @@ class BoxController extends Controller
         $pdf = PDF::loadView('report::boxes.report_category', compact("user", "records", "company", "establishment", "date_start", "date_end"))->setPaper('a4', 'landscape');
         return $pdf->stream('Reporte_Ventas_' . date('YmdHis') . '.pdf');
     }
- 
+
     public function reports_resumen_type(Request $request)
     {
         $date_close = $request['date_close'];
@@ -524,7 +525,8 @@ class BoxController extends Controller
 
         return new BoxCollection($data->paginate(config('tenant.items_per_page')));
     }
-    public function reports_results_excel(Request $request){
+    public function reports_results_excel(Request $request)
+    {
         $date_close = $request['date_close'];
         $user_id = $request['user_id'];
         $user = User::find($user_id);
@@ -552,11 +554,10 @@ class BoxController extends Controller
         $boxes_report = $data->get();
 
         return (new BoxesExportCashClosed)
-        ->records($boxes_report)
-        ->type_box($type_box)
-        ->company($company)
-        ->download('Lista_de_cajas _cerradas' . Carbon::now() . '.xlsx');
-    
+            ->records($boxes_report)
+            ->type_box($type_box)
+            ->company($company)
+            ->download('Lista_de_cajas _cerradas' . Carbon::now() . '.xlsx');
     }
     public function reports_results_pdf(Request $request)
     {
@@ -594,6 +595,192 @@ class BoxController extends Controller
     public function reports(Request $request)
     {
         return view('tenant.boxes.reports.index');
+    }
+    public function global_records(Request $request)
+    {
+        $date_open = $request['date_open'];
+        $all_data = $this->global_get_records($date_open);
+        $records = $all_data['records'];
+        $columns = $all_data['columns'];
+        return [
+            'success' => true,
+            'data' => $records,
+            'columns' => $columns
+        ];
+    }
+    // function global_get_records($date_open)
+    // {
+    //     $cashes = Cash::select(['id', 'user_id', 'turn_id'])->where('date_opening', $date_open);
+    //     //solo sacar user_id de cashes
+    //     $found = $cashes->get()->transform(function ($row) {
+    //         return [
+    //             'id' => $row->id,
+    //             'user_id' => $row->user_id,
+    //             'turn_id' => $row->turn_id,
+    //         ];
+    //     });
+    //     $establishment = Establishment::select(['id', 'description'])->get();
+    //     $records_by_establishment = [];
+    //     $payments = ["Efectivo", "Culqui", "Yape", "PLIN", "TARJETA: IZYPAY",  "TARJETA:NIUBIZ", "TARJETA: OPENPAY"];
+    //     foreach ($establishment as $key => $value) {
+
+    //         $users_id = User::where('establishment_id', $value['id'])->pluck('id');
+
+    //         $cashes_establishment = $cashes->whereIn("user_id",$users_id)
+    //             ->with('turn')
+    //             ->get()
+    //             ->transform(function ($row) use ($payments) {
+    //                 $allMethods = $row->boxes->pluck('method')->unique();
+    //                 $unmatchedMethods = $allMethods->diff($payments);
+
+    //                 $records = [];
+    //                 foreach ($payments as $key => $value) {
+    //                     $record = $row->boxes->where('method', $value)->sum('amount');
+    //                     $records[] = [
+    //                         'method' => $value,
+    //                         'amount' => $record
+    //                     ];
+    //                 }
+    //                 foreach ($unmatchedMethods as $key => $value) {
+    //                     $record = $row->boxes->where('method', $value)->sum('amount');
+    //                     $records[] = [
+    //                         'method' => $value,
+    //                         'amount' => $record
+    //                     ];
+    //                 }
+    //                 return [
+    //                     'id' => $row->id,
+    //                     'turn' => optional($row->turn)->turn_desc ?? "MAÑANA",
+    //                     'turn_id' => optional($row->turn)->id ?? 1,
+    //                     'records' => $records
+    //                 ];
+    //             });
+    //         $records_by_establishment[] = [
+    //             'cash' => $cashes_establishment,
+    //             'establishment_id' => $value['id'],
+    //             'establishment_description' => $value['description'],
+    //         ];
+    //     }
+
+    //     return (array)$records_by_establishment;
+    // }
+
+    public function global_export(Request $request){
+
+        $type = $request->type;
+        $date_open = $request->date_open;
+        $all_info = $this->global_get_records($date_open);
+        $records = $all_info['records'];
+        $columns = $all_info['columns'];
+        $company = Company::first();
+        if($type == 'pdf'){
+            $pdf = PDF::loadView('tenant.reports.box_global.report_pdf', compact("records", "company", "date_open","columns"))->setPaper('a4', 'landscape');
+            return $pdf->stream('Reporte_global_caja_' . date('YmdHis') . '.pdf');
+        }else{
+                
+                return (new GlobalBoxExport)
+                    ->records($records)
+                    ->company($company)
+                    ->columns($columns)
+                    ->download('Reporte_global_caja_' . Carbon::now() . '.xlsx');
+        }
+
+    }
+    function global_get_records($date_open)
+    {
+        $establishments = Establishment::select(['id', 'description'])->get();
+        $payments = ["Efectivo", "Culqui", "Yape", "PLIN", "TARJETA: IZYPAY", "TARJETA:NIUBIZ", "TARJETA: OPENPAY"];
+        $columns = [];
+        $diff_payments = [];
+        $records_by_establishment = [];
+
+        foreach ($establishments as $establishment) {
+            $users_id = User::where('establishment_id', $establishment->id)->pluck('id');
+
+            $cashes_establishment = Cash::select(['id', 'user_id', 'turn_id'])
+                ->where('date_opening', $date_open)
+                ->whereIn('user_id', $users_id)
+                ->with('turn')
+                ->get()
+                ->map(function ($row) use ($payments, &$diff_payments) {
+                    $allMethods = $row->boxes->pluck('method')->unique();
+                    $records = [];
+
+                    foreach ($payments as $value) {
+                        if ($value != "Efectivo") {
+                            $record = $row->boxes->where('method', $value)->sum('amount');
+                            $records[] = [
+                                'method' => $value,
+                                'amount' => $record
+                            ];
+                        } else {
+
+                            $total = 0;
+                            $row->boxes->where('type', '1')->where('method', 'Efectivo')->where('expenses', 0)->where('incomes', 0)->where('state', 0)
+                                ->each(function ($box)  use (&$total) {
+                                    if ($box->sale_note_id) {
+                                        $sale_note = $box->salenote;
+                                        if ($sale_note->total > $box->amount) {
+                                            $total += $box->amount;
+                                        } else {
+                                            $total += $sale_note->total;
+                                        }
+                                        if ($sale_note->total_discount) {
+                                            $total += $sale_note->total_discount;
+                                        }
+                                    }
+                                    if ($box->document_id) {
+                                        $document = $box->document;
+                                        if ($document->total > $box->amount) {
+                                            $total += $box->amount;
+                                        } else {
+                                            $total += $document->total;
+                                        }
+                                        if ($document->total_discount) {
+                                            $total += $document->total_discount;
+                                        }
+                                    }
+                                });
+                         
+                            $records[] = [
+                                'method' => $value,
+                                'amount' => $total
+                            ];
+                        }
+                    }
+                    $diff = $allMethods->diff($payments)->values()->all();
+                    if (count($diff) > 0) {
+                        $diff_payments = array_merge($diff_payments, $diff);
+                    }
+                    foreach ($diff as $key => $value) {
+                        $record = $row->boxes->where('method', $value)->sum('amount');
+                        $records[] = [
+                            'method' => $value,
+                            'amount' => $record
+                        ];
+                    }
+
+                    return [
+                        'id' => $row->id,
+                        'turn' => optional($row->turn)->turn_desc ?? "MAÑANA",
+                        'turn_id' => optional($row->turn)->id ?? 1,
+                        'records' => $records
+                    ];
+                });
+
+            $records_by_establishment[] = [
+                'cash' => $cashes_establishment,
+                'establishment_id' => $establishment->id,
+                'establishment_description' => $establishment->description,
+            ];
+        }
+        $columns = array_merge($payments, array_unique($diff_payments));
+
+        return ["records" => $records_by_establishment, "columns" => $columns];
+    }
+
+    public function global_tables(Request $request)
+    {
     }
     public function global_index(Request $request)
     {

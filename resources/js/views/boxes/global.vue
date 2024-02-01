@@ -1,7 +1,7 @@
 <template>
     <div class="card mb-0 pt-2 pt-md-0">
         <div class="card-header bg-primary">
-            <h6 class="my-0 text-white">Reporte de globalizado</h6>
+            <h6 class="my-0 text-white">Reporte globalizado</h6>
         </div>
         <div class="tab-content p-3">
             <form autocomplete="off" @submit.prevent="submit">
@@ -56,97 +56,127 @@
                             </template>
                         </div>
                     </div>
-                    <div class="row" v-if="records.length > 0">
-                        <div class="col-md-12">
-                            <div class="table-responsive mt-2">
-                                <table class="table table-striped">
-                                    <thead>
-                                        <tr>
-                                            <th>#</th>
-                                            <th>Fecha</th>
-                                            <th>Operacion</th>
-                                            <th>Referencia</th>
-                                            <th>Cliente</th>
-                                            <th>Concepto</th>
-                                            <th>Usuario</th>
-                                            <th>Monto</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr
-                                            v-for="(row, index) in records"
-                                            :key="index"
-                                        >
-                                            <td scope="row">
-                                                {{ customIndex(index) }}
-                                            </td>
-                                            <td>{{ row.date }}</td>
-                                            <td>{{ row.type }}</td>
-                                            <td>{{ row.reference }}</td>
-                                            <td>{{ row.cliente }}</td>
-                                            <td>{{ row.description }}</td>
-                                            <td>{{ row.user }}</td>
-                                            <td>{{ row.amount }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-end" colspan="7">
-                                                Total Gastos
-                                            </td>
-                                            <td class="text-center">
-                                                {{ totals_egresos }}
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-end" colspan="7">
-                                                Total Ingreso
-                                            </td>
-                                            <td class="text-center">
-                                                {{ totals_ingresos }}
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-end" colspan="7">
-                                                Total Efectivo
-                                            </td>
-                                            <td class="text-center">
-                                                {{ totals_efectivos }}
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-end" colspan="7">
-                                                Total Depositos - Transferencias
-                                            </td>
-                                            <td class="text-center">
-                                                {{ totals_depositos }}
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-end" colspan="7">
-                                                Total S/
-                                            </td>
-                                            <td class="text-center">
-                                                {{
-                                                    totals_depositos +
-                                                        totals_efectivos
-                                                }}
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                                <div>
-                                    <el-pagination
-                                        @current-change="getRecords"
-                                        layout="total, prev, pager, next"
-                                        :total="pagination.total"
-                                        :current-page.sync="
-                                            pagination.current_page
-                                        "
-                                        :page-size="pagination.per_page"
+                    <div
+                        class="row table-responsive mt-3"
+                        v-if="records.length > 0"
+                    >
+                        <table
+                            class="table table-striped"
+                            v-for="(record, index) in records"
+                            :key="index"
+                        >
+                            <thead>
+                                <tr
+                                    style="margin-top: 29px"
+                                    class="bg-primary text-white"
+                                >
+                                    <th
+                                        :colspan="columns.length + 2"
+                                        class="text-white"
                                     >
-                                    </el-pagination>
-                                </div>
-                            </div>
-                        </div>
+                                        {{ record.establishment_description }}
+                                    </th>
+                                </tr>
+                                <tr v-if="record.cash.length != 0">
+                                    <th></th>
+                                    <th
+                                        class="text-end"
+                                        v-for="(column, indexcolumn) in columns"
+                                        :key="indexcolumn"
+                                    >
+                                        {{ column.toUpperCase() }}
+                                    </th>
+                                    <th class="text-end">TOTAL</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr
+                                    v-for="(item, indexcash) in record.cash"
+                                    :key="indexcash"
+                                >
+                                    <td width="8%">
+                                        {{ item.turn }}
+                                    </td>
+                                    <td
+                                        :width="`${84 / columns.length}%`"
+                                        class="text-end"
+                                        v-for="(column, indexcolumn) in columns"
+                                        :key="indexcolumn"
+                                    >
+                                        {{ getValueColumn(column, item) }}
+                                    </td>
+                                    <td class="text-end">
+                                        {{
+                                            calculateSumEstablishment(
+                                                item
+                                            ).toFixed(2)
+                                        }}
+                                    </td>
+                                </tr>
+                                <tr v-if="record.cash.length != 0">
+                                    <td>
+                                        <strong>SUBTOTAL</strong>
+                                    </td>
+                                    <td
+                                        class="text-end"
+                                        v-for="(column,
+                                        indexcolumnAmount) in columns"
+                                        :key="indexcolumnAmount"
+                                    >
+                                        {{
+                                            calculateSum(
+                                                record.cash,
+                                                column
+                                            ).toFixed(2)
+                                        }}
+                                    </td>
+                                    <td width="8%" class="text-end">
+                                        <strong>
+                                            {{
+                                                calculateSumRow(
+                                                    record.cash
+                                                ).toFixed(2)
+                                            }}
+                                        </strong>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <table>
+                            <tfoot v-if="records.length != 0">
+                                <tr>
+                                    <td width="8%">
+                                        <strong>TOTAL GENERAL</strong>
+                                    </td>
+                                    <td
+                                        :width="`${84 / totals.length}%`"
+                                        class="text-end"
+                                        v-for="(total, idx) in totals"
+                                        :key="idx"
+                                    >
+                                        {{ total.toFixed(2) }}
+                                    </td>
+                                    <td width="8%"></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        TOTAL VENTAL DEL DÍA
+                                    </td>
+                                    <td class="text-end">
+                                        {{
+                                            totals
+                                                .reduce((sum, item) => {
+                                                    return (
+                                                        sum + parseFloat(item)
+                                                    );
+                                                }, 0)
+                                                .toFixed(2)
+                                        }}
+                                    </td>
+                                    <td :colspan="totals.length-1"></td>
+                                </tr>
+                            </tfoot>
+                        </table>
                     </div>
                 </div>
             </form>
@@ -177,6 +207,7 @@ export default {
             form_category: [],
             form_subcategory: [],
             pagination: {},
+            columns: [],
             search: {},
             pagination: {},
             records: [],
@@ -186,6 +217,7 @@ export default {
             totals_depositos: 0,
             modaltype: false,
             ruta: null,
+            totals: [],
             pickerOptionsDates: {
                 disabledDate: time => {
                     time = moment(time).format("YYYY-MM-DD");
@@ -209,6 +241,37 @@ export default {
         //                })
     },
     methods: {
+        calculateSumEstablishment(item) {
+      
+            let { records } = item;
+            return records.reduce((sum, item) => {
+                return sum + parseFloat(item.amount);
+            }, 0);
+        },
+        calculateSumRow(cash) {
+            let total = 0;
+            for (let i = 0; i < this.columns.length; i++) {
+                total += this.calculateSum(cash, this.columns[i]);
+            }
+            return total;
+        },
+        calculateSum(cash, column) {
+            return cash.reduce((sum, item) => {
+                return sum + parseFloat(this.getValueColumn(column, item));
+            }, 0);
+        },
+        getValueColumn(column, item) {
+            let { records } = item;
+
+            let methodMap = records.reduce((map, record) => {
+                map[record.method] = record.amount;
+                return map;
+            }, {});
+
+            let amount = methodMap[column] || 0;
+
+            return amount.toFixed(2);
+        },
         customIndex(index) {
             return (
                 this.pagination.per_page * (this.pagination.current_page - 1) +
@@ -257,15 +320,28 @@ export default {
             // window.open(`/expensesbox/reports?${this.getQueryParameters()}`, '_blank');
             this.loading_submit = true;
             this.$http
-                .get(`/expensesbox/reports?${this.getQueryParameters()}`)
+                .get(
+                    `/reports/boxes/global/records?${this.getQueryParameters()}`
+                )
                 .then(response => {
-                    this.records = response.data.data;
-                    this.pagination = response.data.meta;
-                    this.pagination.per_page = parseInt(
-                        response.data.meta.per_page
+                    console.log(
+                        "🚀 ~ file: global.vue:198 ~ getRecords ~ response:",
+                        response
                     );
+                    this.records = response.data.data;
+                    this.columns = response.data.columns;
+                    this.totals = [];
+                    for (let i = 0; i < this.columns.length; i++) {
+                        let column = this.columns[i];
+                        let total = this.records.reduce((sum, record) => {
+                            return sum + this.calculateSum(record.cash, column);
+                        }, 0);
+                        this.totals.push(total);
+                    }
+                })
+
+                .finally(() => {
                     this.loading_submit = false;
-                    this.Totals();
                 });
         },
         Totals() {
@@ -339,15 +415,12 @@ export default {
         clickDownload(type) {
             this.modaltype = true;
             this.form.type = type;
-            let form_data = this.form;
             let query = queryString.stringify({
                 ...this.form
             });
             //expensesbox/reports_pd
-            let ruta = `/expensesbox/reports_pdf?${query}`;
-            if (type === "excel") {
-                ruta = `/expensesbox/reports_excel?${query}`;
-            }
+            let ruta = `/reports/boxes/global/export?${query}`;
+         
             let link = `${ruta}`;
             window.open(`${link}`, "_blank");
         },
