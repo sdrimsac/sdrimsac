@@ -689,7 +689,7 @@ class BoxController extends Controller
     function global_get_records($date_open)
     {
         $establishments = Establishment::select(['id', 'description'])->get();
-        $payments = ["Efectivo", "Culqui", "Yape", "PLIN", "TARJETA: IZYPAY", "TARJETA:NIUBIZ", "TARJETA: OPENPAY"];
+        $payments = ["Efectivo", "Yape", "PLIN", "TARJETA: IZYPAY","Culqui", "TARJETA:NIUBIZ", "TARJETA: OPENPAY"];
         $columns = [];
         $diff_payments = [];
         $records_by_establishment = [];
@@ -774,7 +774,11 @@ class BoxController extends Controller
                 'establishment_description' => $establishment->description,
             ];
         }
-        $columns = array_merge($payments, array_unique($diff_payments));
+        // $columns = array_merge($payments, array_unique($diff_payments));
+        //quiero que payments y diff_payments sean unicos insertar diff_payments en el segundo indice de payments
+        $first_element = $payments[0];
+        $rest_elements = array_slice($payments, 1);
+        $columns = array_merge([$first_element], array_unique($diff_payments), $rest_elements);
 
         return ["records" => $records_by_establishment, "columns" => $columns];
     }
