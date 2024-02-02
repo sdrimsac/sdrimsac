@@ -253,6 +253,7 @@ class DocumentInput
                         'description' => $desc == null ? $item->description : $desc,
                         'item_type_id' => $item->item_type_id,
                         'second_name' => $item->second_name,
+                        
                         'internal_id' => $item->internal_id,
                         'item_code' => trim($item->item_code),
                         'item_code_gs1' => $item->item_code_gs1,

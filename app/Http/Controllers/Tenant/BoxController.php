@@ -774,12 +774,27 @@ class BoxController extends Controller
                 'establishment_description' => $establishment->description,
             ];
         }
-        // $columns = array_merge($payments, array_unique($diff_payments));
-        //quiero que payments y diff_payments sean unicos insertar diff_payments en el segundo indice de payments
         $first_element = $payments[0];
         $rest_elements = array_slice($payments, 1);
         $columns = array_merge([$first_element], array_unique($diff_payments), $rest_elements);
-
+        $to_check = ["TARJETA: IZYPAY","Culqui", "TARJETA:NIUBIZ", "TARJETA: OPENPAY"];
+        foreach ($records_by_establishment as $key => $value) {
+            $cash = $value['cash'];
+            foreach ($cash as $key2 => $value2) {
+                $records = $value2['records'];
+                foreach ($to_check as $key3 => $value3) {
+                    $record = collect($records)->where('method', $value3)->first();
+                    if ($record) {
+                        if ($record['amount'] > 0) {
+                            $to_check = array_diff($to_check, [$value3]);
+                        }
+                    }
+                }
+            }
+        }
+        if (count($to_check) > 0) {
+            $columns = array_diff($columns, $to_check);
+        }
         return ["records" => $records_by_establishment, "columns" => $columns];
     }
 

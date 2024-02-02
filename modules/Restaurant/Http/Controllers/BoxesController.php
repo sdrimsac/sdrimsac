@@ -27,6 +27,7 @@ use App\Models\Tenant\CreditList;
 use App\Models\Tenant\DocumentPayment;
 use App\Models\Tenant\HotelRent;
 use App\Models\Tenant\HotelRentItem;
+use App\Models\Tenant\Item;
 use App\Models\Tenant\Receipt;
 use App\Models\Tenant\SaleNoteCredit;
 use App\Models\Tenant\SaleNoteItem;
@@ -239,14 +240,21 @@ class BoxesController extends Controller
     {
         $hotels = $this->configuration->hotels;
         if ($hotels) {
-            $item = $item->item;
-            $description = $item->description;
+            $item_hotel = $item->item;
+            $description = $item_hotel->description;
             if (mb_stripos($description, 'HABITACIÓN') !== false) {
                 return "HABITACIONES";
             }
         }
         $category = isset($item->item->category) ?  $item->item->category : null;
-        if($category == null){
+        if ($category == null) {
+            // $item_id = $item->item_id;
+            // $item = Item::select('category_id')->find($item_id);
+            // if ($item) {
+            //     $category = Category::find($item->category_id);
+            //     return $category->name;
+            // } else {
+            // }
             return "OTROS";
         }
         if (gettype($category) == "string") {
@@ -298,7 +306,7 @@ class BoxesController extends Controller
                             $data = $item->item;
                             $data = (array)$data;
                             $id_exist  = false;
-                            $key = $data['description']."-".$item->unit_price;
+                            $key = $data['description'] . "-" . $item->unit_price;
                             if (count($all_items) > 0) {
                                 // $id_exist = array_search($data['description'], array_column($all_items, 'description'));
                                 $id_exist = array_search($key, array_column($all_items, 'key'));
@@ -354,7 +362,7 @@ class BoxesController extends Controller
                         $data = $item->item;
                         $data = (array)$data;
                         $id_exist  = false;
-                        $key = $data['description']."-".$item->unit_price;
+                        $key = $data['description'] . "-" . $item->unit_price;
                         if (count($all_items) > 0) {
                             // $id_exist = array_search($data['description'], array_column($all_items, 'description'));
                             $id_exist = array_search($key, array_column($all_items, 'key'));
@@ -878,24 +886,30 @@ class BoxesController extends Controller
     function credit_list_ordens($cash_id)
     {
 
-       //obten los registros del modelo CreditList que tenga cash_id 
-       $credit_list = CreditList::where('cash_id', $cash_id)->get();
-       $items = [];
-       foreach($credit_list as $credit){
-           $orden = $credit->orden;
+        //obten los registros del modelo CreditList que tenga cash_id 
+        $credit_list = CreditList::where('cash_id', $cash_id)->get();
+        $items = [];
+        $customers = [];
+        foreach ($credit_list as $credit) {
+            $customer = $credit->customer;
+            $customer_name = $customer->name;
+
+            $orden = $credit->orden;
+            $orden_date = $orden->created_at->format('Y-m-d H:i:s');
             $orden_items = $orden->orden_items;
-            foreach($orden_items as  $orden_item){
+            $totals = 0;
+            foreach ($orden_items as  $orden_item) {
                 $food = Food::find($orden_item->food_id);
                 $description = $food->description;
-                $key = $description."-".$orden_item->price;
+                $key = $description . "-" . $orden_item->price;
                 $price = floatval($orden_item->price);
                 $quantity = floatval($orden_item->quantity);
                 $total = $price * $quantity;
 
-                if(array_key_exists($key, $items)){
+                if (array_key_exists($key, $items)) {
                     $items[$key]['quantity'] += $quantity;
                     $items[$key]['total'] += $total;
-                }else{
+                } else {
                     $items[$key] = [
                         'quantity' => $quantity,
                         'price' => $price,
@@ -903,33 +917,40 @@ class BoxesController extends Controller
                         'description' => $description
                     ];
                 }
+                $totals += $total;
             }
-       }
 
-         return $items;
+            $customers[$customer_name][] = [
+                "date" => $orden_date,
+                "total" => $totals,
+            ];
+        }
 
+        return [
+            "items" => $items,
+            "customers" => $customers
+        ];
     }
-    function get_anulate_documents($cash_id){
+    function get_anulate_documents($cash_id)
+    {
         $all = [];
-        $documents = Document::
-        select(['series','number','date_of_issue','total'])
-        ->where('cash_id', $cash_id)->where('state_type_id', '11')->get();
-        $sale_notes = SaleNote::
-        select(['series','number','date_of_issue','total'])
-        ->where('cash_id', $cash_id)->where('state_type_id', '11')->get();
-        
-        foreach($documents as $document){
+        $documents = Document::select(['series', 'number', 'date_of_issue', 'total'])
+            ->where('cash_id', $cash_id)->where('state_type_id', '11')->get();
+        $sale_notes = SaleNote::select(['series', 'number', 'date_of_issue', 'total'])
+            ->where('cash_id', $cash_id)->where('state_type_id', '11')->get();
+
+        foreach ($documents as $document) {
             $all[] = [
                 'series' => $document->series,
-                'full_number' => $document->series."-".$document->number,
+                'full_number' => $document->series . "-" . $document->number,
                 'date_of_issue' => $document->date_of_issue,
                 'total' => $document->total,
             ];
         }
-        foreach($sale_notes as $sale_note){
+        foreach ($sale_notes as $sale_note) {
             $all[] = [
                 'series' => $sale_note->series,
-                'full_number' => $sale_note->series."-".$sale_note->number,
+                'full_number' => $sale_note->series . "-" . $sale_note->number,
                 'date_of_issue' => $sale_note->date_of_issue,
                 'total' => $sale_note->total,
             ];
@@ -946,11 +967,13 @@ class BoxesController extends Controller
         $total_discount = 0;
         $cash_id = $request->cash_id;
         Box::where('cash_id', $cash_id)->update(['state' => 0]);
-        $credit_list_orden = $this->credit_list_ordens($cash_id);
+        $credit_list_ordens = $this->credit_list_ordens($cash_id);
+        $credit_list_orden = $credit_list_ordens["items"];
+        $credit_list_ordens_customers = $credit_list_ordens["customers"];
         $deliveries = [];
         $promotions = [];
         $promotions_give = [];
-        $anulate_documents = $this->get_anulate_documents($cash_id); ;
+        $anulate_documents = $this->get_anulate_documents($cash_id);;
 
         if ($configuration->hotels) {
             $promotions = SaleNotePromotion::where('cash_id', $cash_id)->get();
@@ -1046,7 +1069,7 @@ class BoxesController extends Controller
         usort($coinsReceive, function ($a, $b) {
             return $a->value < $b->value;
         });
-      
+
         $sales_izypay = Box::where('type', '1')->where('method', 'TARJETA: IZYPAY')->where('expenses', 0)->where('incomes', 0)->where('state', 0)->where('cash_id', $cash_id)->OrderBy('date', 'asc');
         $sales_izypay_sum = $sales_izypay->sum('amount');
         $sales_izypay_quantity = $sales_izypay->count();
@@ -1341,9 +1364,9 @@ class BoxesController extends Controller
         $all_credit_invoices_documents = $invoices_credit['documents'];
 
         $all_credit_items = array_merge($all_credit_items, $all_credit_invoices_items);
-
         try {
             $pdf = PDF::loadView('report::boxes.report_resumen_pdf_pos', compact(
+                "credit_list_ordens_customers",
                 "credit_list_orden",
                 "anulate_documents",
                 "coinsReceive",

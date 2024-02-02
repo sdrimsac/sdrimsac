@@ -325,325 +325,328 @@
         </table>
         <table style="margin-top: 10px;">
             <tr>
-                @if(!$roleService->isArcaUserId($user->id))
+                @if (!$roleService->isArcaUserId($user->id))
 
-                <td width="60%">
-                    <div>
-                        <span class="f12">DIRECCIÓN:{{ mb_strtoupper($establishment->address) }}</span>
-                    </div>
-                    <div>
-                        <span class="f12"> USER:
-                            {{ mb_strtoupper($user->name) }}
-                        </span>
-                    </div>
-                    <table>
-                        <tr>
-                            @if(!$roleService->isArcaUserId($user->id))
-                                
-                            <td width="58%">
-                                <table class="border">
-                                    <thead>
-                                        <tr>
-                                            <th colspan="3" style="text-align: center;" class="thead">
-                                                <span class="f12">
-                                                    LISTADO DE DOCUMENTOS
-                                                </span>
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>
-                                                <span class="f12">{{ $documents['facturas']['quantity'] }}</span>
-                                            </td>
-                                            <td><span class="f12">FACTURAS</span></td>
-                                            <td class="right"><span class="f12 right">
-                                                    {{ number_format($documents['facturas']['total'], 2) }}
-                                                </span></td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <span class="f12">{{ $documents['boletas']['quantity'] }}</span>
-                                            </td>
-                                            <td><span class="f12">BOLETAS</span></td>
-                                            <td class="right"><span class="f12 right">
-                                                    {{ number_format($documents['boletas']['total'], 2) }}
-                                                </span></td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <span class="f12">{{ $documents['notas']['quantity'] }}</span>
-                                            </td>
-                                            <td><span class="f12">NOTAS</span></td>
-                                            <td class="right"><span class="f12">
-                                                    {{ number_format($documents['notas']['total'], 2) }}
-                                                </span></td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <span class="f12">{{ $documents['recibos']['quantity'] }}</span>
-                                            </td>
-                                            <td><span class="f12">RECIBOS</span></td>
-                                            <td class="right"><span class="f12">
-                                                    {{ number_format($documents['recibos']['total'], 2) }}
-                                                </span></td>
-                                        </tr>
-                                        <tr>
-                                            <td class="right" colspan="3">
-                                                <span class="f12">
-                                                    S/
-                                                    {{ number_format($documents['facturas']['total'] + $documents['boletas']['total'] + $documents['notas']['total'] + $documents['recibos']['total'], 2) }}
-                                                </span>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </td>
-                            @endif
+                    <td width="60%">
+                        <div>
+                            <span class="f12">DIRECCIÓN:{{ mb_strtoupper($establishment->address) }}</span>
+                        </div>
+                        <div>
+                            <span class="f12"> USER:
+                                {{ mb_strtoupper($user->name) }}
+                            </span>
+                        </div>
+                        <table>
+                            <tr>
+                                @if (!$roleService->isArcaUserId($user->id))
+                                    <td width="58%">
+                                        <table class="border">
+                                            <thead>
+                                                <tr>
+                                                    <th colspan="3" style="text-align: center;" class="thead">
+                                                        <span class="f12">
+                                                            LISTADO DE DOCUMENTOS
+                                                        </span>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>
+                                                        <span
+                                                            class="f12">{{ $documents['facturas']['quantity'] }}</span>
+                                                    </td>
+                                                    <td><span class="f12">FACTURAS</span></td>
+                                                    <td class="right"><span class="f12 right">
+                                                            {{ number_format($documents['facturas']['total'], 2) }}
+                                                        </span></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <span
+                                                            class="f12">{{ $documents['boletas']['quantity'] }}</span>
+                                                    </td>
+                                                    <td><span class="f12">BOLETAS</span></td>
+                                                    <td class="right"><span class="f12 right">
+                                                            {{ number_format($documents['boletas']['total'], 2) }}
+                                                        </span></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <span
+                                                            class="f12">{{ $documents['notas']['quantity'] }}</span>
+                                                    </td>
+                                                    <td><span class="f12">NOTAS</span></td>
+                                                    <td class="right"><span class="f12">
+                                                            {{ number_format($documents['notas']['total'], 2) }}
+                                                        </span></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <span
+                                                            class="f12">{{ $documents['recibos']['quantity'] }}</span>
+                                                    </td>
+                                                    <td><span class="f12">RECIBOS</span></td>
+                                                    <td class="right"><span class="f12">
+                                                            {{ number_format($documents['recibos']['total'], 2) }}
+                                                        </span></td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="right" colspan="3">
+                                                        <span class="f12">
+                                                            S/
+                                                            {{ number_format($documents['facturas']['total'] + $documents['boletas']['total'] + $documents['notas']['total'] + $documents['recibos']['total'], 2) }}
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                @endif
 
-                            <td width="42%" style="vertical-align: top">
-                                <table class="border">
-                                    <thead>
-                                        <tr>
-                                            <th colspan="2" style="text-align: center;" class="thead">
-                                                <span class="f12">
-                                                    E/SALIDAS DE EFECTIVO
-                                                </span>
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td><span class="f12">INGRESO</span></td>
-                                            <td class="right"><span
-                                                    class="f12 right">{{ number_format($incomes_expenses_cash['incomes']['amount'], 2) }}</span>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td><span class="f12">SALIDA</span></td>
-                                            <td class="right"><span class="f12 right">
-                                                    {{ number_format($incomes_expenses_cash['expenses']['amount'], 2) }}</span>
-                                            </td>
-                                        </tr>
+                                <td width="42%" style="vertical-align: top">
+                                    <table class="border">
+                                        <thead>
+                                            <tr>
+                                                <th colspan="2" style="text-align: center;" class="thead">
+                                                    <span class="f12">
+                                                        E/SALIDAS DE EFECTIVO
+                                                    </span>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td><span class="f12">INGRESO</span></td>
+                                                <td class="right"><span
+                                                        class="f12 right">{{ number_format($incomes_expenses_cash['incomes']['amount'], 2) }}</span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><span class="f12">SALIDA</span></td>
+                                                <td class="right"><span class="f12 right">
+                                                        {{ number_format($incomes_expenses_cash['expenses']['amount'], 2) }}</span>
+                                                </td>
+                                            </tr>
 
 
-                                    </tbody>
-                                </table>
-                            </td>
-                        </tr>
-                    </table>
-                </td>
-                <td width="40%" style="vertical-align: top">
-                    <table class="border f12">
-                        <tr>
-                            <td>
-                                <span class="f12">SALDO DE APERTURA</span>
-                            </td>
-                            <td class="right">
-                                <span class="f12">{{ number_format($cash->beginning_balance, 2) }}</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="f12">VENTAS EFECTIVO</span>
-                            </td>
-                            <td class="right">
-                                <span class="f12"> {{ number_format($sales_detail['cash']['sum'], 2) }}</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="f12">VENTAS DIGITAL</span>
-                            </td>
-                            <td class="right">
-                                <span class="f12">
-                                    {{ number_format(round($digital * 10) / 10, 2) }}
-                                </span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="f12">VENTAS BANCO</span>
-                            </td>
-                            <td class="right">
-                                <span class="f12">
-                                    {{ number_format(round($bank * 10) / 10, 2) }}
-                                </span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="f12">TRANSFERENCIAS</span>
-                            </td>
-                            <td class="right">
-                                <span class="f12">
-                                    {{ number_format(round($transfer * 10) / 10, 2) }}
-                                </span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="f12">INGRESO EFECTIVO</span>
-                            </td>
-                            <td class="right">
-                                <span class="f12">
-                                    {{ number_format($incomes_expenses_cash['incomes']['amount'], 2) }}
-                                </span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span class="f12">SALIDA EFECTIVO</span>
-                            </td>
-                            <td class="right">
-                                <span class="f12" style="color: red">
-                                    {{ number_format($incomes_expenses_cash['expenses']['amount'], 2) }}
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td width="40%" style="vertical-align: top">
+                        <table class="border f12">
+                            <tr>
+                                <td>
+                                    <span class="f12">SALDO DE APERTURA</span>
+                                </td>
+                                <td class="right">
+                                    <span class="f12">{{ number_format($cash->beginning_balance, 2) }}</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <span class="f12">VENTAS EFECTIVO</span>
+                                </td>
+                                <td class="right">
+                                    <span class="f12"> {{ number_format($sales_detail['cash']['sum'], 2) }}</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <span class="f12">VENTAS DIGITAL</span>
+                                </td>
+                                <td class="right">
+                                    <span class="f12">
+                                        {{ number_format(round($digital * 10) / 10, 2) }}
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <span class="f12">VENTAS BANCO</span>
+                                </td>
+                                <td class="right">
+                                    <span class="f12">
+                                        {{ number_format(round($bank * 10) / 10, 2) }}
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <span class="f12">TRANSFERENCIAS</span>
+                                </td>
+                                <td class="right">
+                                    <span class="f12">
+                                        {{ number_format(round($transfer * 10) / 10, 2) }}
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <span class="f12">INGRESO EFECTIVO</span>
+                                </td>
+                                <td class="right">
+                                    <span class="f12">
+                                        {{ number_format($incomes_expenses_cash['incomes']['amount'], 2) }}
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <span class="f12">SALIDA EFECTIVO</span>
+                                </td>
+                                <td class="right">
+                                    <span class="f12" style="color: red">
+                                        {{ number_format($incomes_expenses_cash['expenses']['amount'], 2) }}
 
-                                </span>
-                            </td>
-                        </tr>
+                                    </span>
+                                </td>
+                            </tr>
 
-                        <tr>
-                            <td>
-                                <span class="f12">TOTAL CIERRE</span>
-                            </td>
-                            <td class="right">
-                                @php
-                                    $total_cierre = $transfer + $bank + $digital + $sales_detail['cash']['sum'] + $cash->beginning_balance + $incomes_expenses_cash['incomes']['amount'] - $incomes_expenses_cash['expenses']['amount'];
-                                @endphp
-                                <span class="f12">S/ {{ number_format($total_cierre, 2) }}</span>
-                            </td>
-                        </tr>
-                    </table>
-                </td>
+                            <tr>
+                                <td>
+                                    <span class="f12">TOTAL CIERRE</span>
+                                </td>
+                                <td class="right">
+                                    @php
+                                        $total_cierre = $transfer + $bank + $digital + $sales_detail['cash']['sum'] + $cash->beginning_balance + $incomes_expenses_cash['incomes']['amount'] - $incomes_expenses_cash['expenses']['amount'];
+                                    @endphp
+                                    <span class="f12">S/ {{ number_format($total_cierre, 2) }}</span>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
                 @endif
             </tr>
         </table>
         <table>
             <tr>
-                @if(!$roleService->isArcaUserId($user->id))
+                @if (!$roleService->isArcaUserId($user->id))
 
-                <td width="35%">
-                    @if (count($anulate_documents) > 0)
-                        <table class="border f12">
-                            <thead>
-                                <tr class="thead">
-                                    <th colspan="4">
-                                        <span class="f12">DOCUMENTOS ANULADOS</span>
-                                    </th>
-                                </tr>
-                                <tr>
-                                    <th class="center">FECHA</th>
-                                    <th colspan="2" class="center">NRO DOC</th>
-                                    <th class="center">TOTAL</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @php
-                                    $t_d = 0;
-                                    
-                                @endphp
-                                @foreach ($anulate_documents as $document)
+                    <td width="35%">
+                        @if (count($anulate_documents) > 0)
+                            <table class="border f12">
+                                <thead>
+                                    <tr class="thead">
+                                        <th colspan="4">
+                                            <span class="f12">DOCUMENTOS ANULADOS</span>
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <th class="center">FECHA</th>
+                                        <th colspan="2" class="center">NRO DOC</th>
+                                        <th class="center">TOTAL</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @php
+                                        $t_d = 0;
+                                        
+                                    @endphp
+                                    @foreach ($anulate_documents as $document)
+                                        <tr>
+                                            <td class="center">
+                                                <span class="f12">{{ $document['date_of_issue'] }}</span>
+                                            </td>
+                                            <td colspan="2" class="center">
+                                                <span class="f12">{{ $document['full_number'] }}</span>
+                                            </td>
+                                            @php
+                                                $t_d += $document['total'];
+                                            @endphp
+                                            <td class="right">
+                                                <span class="f12">{{ number_format($document['total'], 2) }}</span>
+                                            </td>
+                                        </tr>
+                                    @endforeach
                                     <tr>
                                         <td class="center">
-                                            <span class="f12">{{ $document['date_of_issue'] }}</span>
+                                            <span class="f12">TOTAL</span>
                                         </td>
-                                        <td colspan="2" class="center">
-                                            <span class="f12">{{ $document['full_number'] }}</span>
-                                        </td>
-                                        @php
-                                            $t_d += $document['total'];
-                                        @endphp
-                                        <td class="right">
-                                            <span class="f12">{{ number_format($document['total'], 2) }}</span>
+                                        <td colspan="3" class="right">
+                                            <span class="f12">S/ {{ number_format($t_d, 2) }}</span>
                                         </td>
                                     </tr>
-                                @endforeach
-                                <tr>
-                                    <td class="center">
-                                        <span class="f12">TOTAL</span>
-                                    </td>
-                                    <td colspan="3" class="right">
-                                        <span class="f12">S/ {{ number_format($t_d, 2) }}</span>
-                                    </td>
-                                </tr>
-                            </tbody>
+                                </tbody>
 
-                        </table>
-                    @endif
-                    @if ($total_discount > 0)
+                            </table>
+                        @endif
+                        @if ($total_discount > 0)
+                            <table class="border f12">
+                                <thead>
+                                    <tr class="thead">
+                                        <th colspan="4">
+                                            <span class="f12">TOTAL DESCUENTOS</span>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td colspan="4" class="center">
+                                            <span class="f12 bold">S/ {{ number_format($total_discount, 2) }}</span>
+
+                                        </td>
+                                    </tr>
+                                </tbody>
+
+                            </table>
+                        @endif
+
                         <table class="border f12">
                             <thead>
                                 <tr class="thead">
                                     <th colspan="4">
-                                        <span class="f12">TOTAL DESCUENTOS</span>
+                                        <span class="f12">ARTICULOS VENDIDOS</span>
                                     </th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
                                     <td colspan="4" class="center">
-                                        <span class="f12 bold">S/ {{ number_format($total_discount, 2) }}</span>
-
+                                        <span class="f12 bold">ARTICULOS</span>
+                                        <span class="f12">{{ $items_detail['uniques'] }}</span>
+                                        <span class="f12 bold">UND</span>
+                                        <span class="f12">{{ $items_detail['unds'] }}</span>
                                     </td>
                                 </tr>
                             </tbody>
 
                         </table>
-                    @endif
-
-                    <table class="border f12">
-                        <thead>
-                            <tr class="thead">
-                                <th colspan="4">
-                                    <span class="f12">ARTICULOS VENDIDOS</span>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td colspan="4" class="center">
-                                    <span class="f12 bold">ARTICULOS</span>
-                                    <span class="f12">{{ $items_detail['uniques'] }}</span>
-                                    <span class="f12 bold">UND</span>
-                                    <span class="f12">{{ $items_detail['unds'] }}</span>
-                                </td>
-                            </tr>
-                        </tbody>
-
-                    </table>
-                </td>
+                    </td>
                 @endif
-                @if($roleService->isArcaUserId($user->id))
-                <td width="35%">
-                    <table class="border">
-                        <thead>
-                            <tr>
-                                <th colspan="2" style="text-align: center;" class="thead">
-                                    <span class="f12">
-                                        E/SALIDAS DE EFECTIVO
-                                    </span>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><span class="f12">INGRESO</span></td>
-                                <td class="right"><span
-                                        class="f12 right">{{ number_format($incomes_expenses_cash['incomes']['amount'], 2) }}</span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><span class="f12">SALIDA</span></td>
-                                <td class="right"><span class="f12 right">
-                                        {{ number_format($incomes_expenses_cash['expenses']['amount'], 2) }}</span>
-                                </td>
-                            </tr>
+                @if ($roleService->isArcaUserId($user->id))
+                    <td width="35%">
+                        <table class="border">
+                            <thead>
+                                <tr>
+                                    <th colspan="2" style="text-align: center;" class="thead">
+                                        <span class="f12">
+                                            E/SALIDAS DE EFECTIVO
+                                        </span>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><span class="f12">INGRESO</span></td>
+                                    <td class="right"><span
+                                            class="f12 right">{{ number_format($incomes_expenses_cash['incomes']['amount'], 2) }}</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><span class="f12">SALIDA</span></td>
+                                    <td class="right"><span class="f12 right">
+                                            {{ number_format($incomes_expenses_cash['expenses']['amount'], 2) }}</span>
+                                    </td>
+                                </tr>
 
 
-                        </tbody>
-                    </table>
-                </td>
+                            </tbody>
+                        </table>
+                    </td>
                 @endif
                 <td width="65%" style="text-align: right;">
                     <span style="font-size:20px !important;">EFECTIVO : S/.</span>
@@ -1342,6 +1345,81 @@
                     </tbody>
                 </table>
 
+            </div>
+        @endif
+        @if ($credit_list_ordens_customers && count($credit_list_ordens_customers) > 0)
+            <div style="text-align:center;">
+                <span style="font-size: 18px !important;">
+                    DETALLE DE PERSONAL/CLIENTES RECIBIERON A CUENTA
+                </span>
+
+                <table class="border">
+                    <thead>
+
+                        <tr>
+                            <th>
+                                <span class="f12">NOMBRE</span>
+                            </th>
+                            <th>
+                                <span class="f12">FECHA</span>
+                            </th>
+                            <th>
+                                <span class="f12">TOTAL</span>
+                            </th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($credit_list_ordens_customers as $name => $orden_items)
+                            @foreach ($orden_items as $idx => $ord_item)
+                                <tr>
+                                    @if ($idx == 0)
+                                        <td class="f12 center"
+                                            rowspan="{{ count($orden_items) }}">
+                                            {{ $name }}
+                                        </td>
+                                    @endif
+                                    <td class="f12 right">
+                                        @php
+                                            $date_array = explode(' ', $ord_item['date']);
+                                            $date = $date_array[0];
+                                            $time = $date_array[1];
+                                        @endphp
+                                        {{ $date }}
+                                        <br>
+                                        <small>
+                                            {{ $time }}
+                                        </small>
+                                    </td>
+                                    <td class="f12 right">
+                                        {{ number_format($ord_item['total'],2) }}
+                                    </td>
+                                </tr>
+                            @endforeach
+                        @endforeach
+                        <tr>
+                            <td class="f12 text-left" colspan="2">TOTAL</td>
+                            <td class="f12 right">
+                              @php
+                                  $t = array_reduce(
+                                      $credit_list_ordens_customers,
+                                      function ($carry, $item) {
+                                          return $carry + array_reduce(
+                                              $item,
+                                              function ($carry, $item) {
+                                                  return $carry + $item['total'];
+                                              },
+                                              0,
+                                          );
+                                      },
+                                      0,
+                                  );
+                                @endphp
+                                S/ {{ number_format($t, 2) }}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         @endif
         @if ($credit_list_orden && count($credit_list_orden) > 0)
