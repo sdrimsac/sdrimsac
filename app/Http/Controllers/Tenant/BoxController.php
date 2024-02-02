@@ -794,6 +794,8 @@ class BoxController extends Controller
         }
         if (count($to_check) > 0) {
             $columns = array_diff($columns, $to_check);
+            $columns = array_values($columns);
+            
         }
         return ["records" => $records_by_establishment, "columns" => $columns];
     }
