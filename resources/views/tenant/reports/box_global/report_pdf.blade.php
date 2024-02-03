@@ -12,6 +12,8 @@
         html {
             font-family: sans-serif;
             font-size: 12px;
+            margin: 0 15px;
+            padding: 0;
         }
 
         .table {
@@ -23,18 +25,18 @@
 
         .celda {
             text-align: center;
-            padding: 5px;
+            padding: 2px;
             border: 0.1px solid black;
         }
         .table td{
-            padding: 5px;
+            padding: 2px;
             text-align: left;
             border-color: #bebebe;
             border: 0.1px solid black;
         }
 
         th {
-            padding: 5px;
+            padding: 2px;
             text-align: left;
             border-color: #bebebe;
             border: 0.1px solid black;
@@ -42,7 +44,7 @@
 
         .title {
             font-weight: bold;
-            padding: 5px;
+            /* padding: 5px; */
             font-size: 20px !important;
             text-decoration: underline;
         }
@@ -140,7 +142,7 @@
         <h3 align="center" class="title"><strong>Reporte global</strong></h3>
     </div>
     <br>
-    <div style="margin-top:20px; margin-bottom:15px;">
+    <div style="">
         <table>
 
             <tr>
