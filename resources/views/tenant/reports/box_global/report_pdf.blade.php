@@ -28,7 +28,8 @@
             padding: 2px;
             border: 0.1px solid black;
         }
-        .table td{
+
+        .table td {
             padding: 2px;
             text-align: left;
             border-color: #bebebe;
@@ -48,12 +49,15 @@
             font-size: 20px !important;
             text-decoration: underline;
         }
-
+        .text-center {
+            text-align: center;
+        }
         p>strong {
             margin-left: 5px;
             font-size: 13px;
         }
-       .table td.text-end{
+
+        .table td.text-end {
             text-align: right;
         }
 
@@ -102,7 +106,7 @@
         }
     }
     if (!function_exists('calculateSumRow')) {
-        function calculateSumRow($cash,$columns)
+        function calculateSumRow($cash, $columns)
         {
             $total = 0;
             for ($i = 0; $i < count($columns); $i++) {
@@ -139,7 +143,27 @@
 
 <body>
     <div>
-        <h3 align="center" class="title"><strong>Reporte global</strong></h3>
+        <table width="100%">
+            <tr>
+                <td width="33%">
+                    @if ($company->logo)
+                        <div>
+                            @if ($company->document_logo)
+                                <img src="data:{{ mime_content_type(public_path("storage/uploads/logos/{$company->document_logo}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/uploads/logos/{$company->document_logo}"))) }}"
+                                    alt="{{ $company->trade_name }}" class="company_logo" style="max-width: 230px;">
+                            @else
+                                <img src="data:{{ mime_content_type(public_path("storage/uploads/logos/{$company->logo}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/uploads/logos/{$company->logo}"))) }}"
+                                    alt="{{ $company->trade_name }}" class="company_logo" style="max-width: 230px;">
+                            @endif
+                        </div>
+                    @endif
+                </td>
+                <td class="text-center" >
+                    <p class="title text-center">Reporte de caja global</p>
+                </td>
+                <td width="33%"></td>
+            </tr>
+        </table>
     </div>
     <br>
     <div style="">
@@ -205,9 +229,7 @@
                                 {{ $item['turn'] }}
                             </td>
                             @foreach ($columns as $column)
-                                <td 
-                                width="{{ 84 / $length_columns }}%"
-                                class="text-end">
+                                <td width="{{ 84 / $length_columns }}%" class="text-end">
                                     {{ getValueColumn($column, $item) }}
                                 </td>
                             @endforeach
@@ -232,7 +254,7 @@
                                 </td>
                             @endforeach
                             <td class="text-end">
-                                {{ calculateSumRow($record->cash,$columns) }}
+                                {{ calculateSumRow($record->cash, $columns) }}
                             </td>
                         </tr>
                     @endif
@@ -248,9 +270,7 @@
                         </strong>
                     </td>
                     @foreach ($totals as $total)
-                        <td 
-                        width="{{ 84 / $length_columns }}%"
-                        class="text-end">
+                        <td width="{{ 84 / $length_columns }}%" class="text-end">
                             {{ $total }}
                         </td>
                     @endforeach
