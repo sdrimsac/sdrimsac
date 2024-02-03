@@ -139,7 +139,7 @@
                             <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>FECHA DE CIERRE</th>
+                                    <th>FECHA DE APERTURA</th>
                                     <th>CAJA</th>
                                     <th>USUARIO</th>
                                     <th>MONTO</th>
@@ -152,7 +152,7 @@
                                 <tr v-for="(record, idx) in records" :key="idx">
                                     <td>{{ customIndex(idx) }}</td>
                                     <td>
-                                        {{ record.cash.date_closed }}
+                                        {{ record.cash.date_opening }}
                                     </td>
                                     <td>{{ record.cash.reference_number }}</td>
                                     <td>{{ record.user_name }}</td>

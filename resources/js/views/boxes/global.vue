@@ -338,6 +338,7 @@ export default {
                         }, 0);
                         this.totals.push(total);
                     }
+                        console.log("🚀 ~ file: global.vue:340 ~ getRecords ~ this.totals:", this.totals)
                 })
 
                 .finally(() => {

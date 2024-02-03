@@ -1547,7 +1547,7 @@ class CashController extends Controller
     public function columns_principal(){
         return [
             'user_id' => 'Usuario',
-            'date_closed' => 'Fecha de Cierre',
+            'date_opening' => 'Fecha de apertura',
         ];
     }
     public function records_principal_excel(Request $request){

@@ -1570,6 +1570,9 @@ export default {
         }
     },
     async created() {
+        this.$eventHub.$on("initInputPerson", () => {
+            this.initInputPerson();
+        });
         console.log(
             "🚀 ~ file: payment.vue:1645 ~ created ~ this.form.customer_id:",
             this.form.customer_id
@@ -1660,6 +1663,12 @@ export default {
     },
     mounted() {},
     methods: {
+        initInputPerson() {
+            this.input_person = {
+                number: null,
+                identity_document_type_id: null
+            };
+        },
         chageRegister() {
             if (this.notRegister) {
                 this.bank = "Colocar el nombre del alumno";
@@ -3541,13 +3550,16 @@ export default {
 
                 let hotels = this.configuration.hotels;
                 let printOrdenHotel = true;
-          
-                if (hotels) {
-                    let resultado = (this.form.is_room !== undefined && this.form.promotion_sale !== undefined) ? (this.form.is_room && this.form.promotion_sale) : false;
-                    printOrdenHotel = resultado
 
+                if (hotels) {
+                    let resultado =
+                        this.form.is_room !== undefined &&
+                        this.form.promotion_sale !== undefined
+                            ? this.form.is_room && this.form.promotion_sale
+                            : false;
+                    printOrdenHotel = resultado;
                 }
-              
+
                 if (
                     (ordenId == undefined || ordenId == null) &&
                     (form.variation == undefined || form.variation == null) &&

@@ -48,7 +48,7 @@
 
                     <tr>
                         <th class="encabezado">#</th>
-                        <th class="encabezado">FECHA DE CIERRE</th>
+                        <th class="encabezado">FECHA DE APERTURA</th>
                         <th class="encabezado">CAJA</th>
                         <th class="encabezado">USUARIO</th>
                         <th class="encabezado">MONTO</th>
@@ -81,7 +81,7 @@
                                     {{ $idx + 1 }}
                                 </td>
                                 <td>
-                                    {{ $value['cash']->date_closed }}
+                                    {{ $value['cash']->date_opening }}
                                 </td>
                                 <td>
                                     {{ $value['cash']->reference_number }}

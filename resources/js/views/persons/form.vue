@@ -822,6 +822,12 @@ export default {
                     this.form.number = this.input_person.number
                         ? this.input_person.number
                         : "";
+                    if(this.form.number.length == 11){
+                        this.form.identity_document_type_id = "6";
+                    }else{
+                        this.form.identity_document_type_id = "1";
+                    }
+
                 }
             }
 
