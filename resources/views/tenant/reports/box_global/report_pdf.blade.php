@@ -230,11 +230,11 @@
                             </td>
                             @foreach ($columns as $column)
                                 <td width="{{ 84 / $length_columns }}%" class="text-end">
-                                    {{ getValueColumn($column, $item) }}
+                                    {{ number_format(getValueColumn($column, $item),2) }}
                                 </td>
                             @endforeach
                             <td width="8%" class="text-end">
-                                {{ calculateSumEstablishment($item) }}
+                                {{ number_format(calculateSumEstablishment($item), 2) }}
                             </td>
 
 
@@ -250,11 +250,11 @@
                             </td>
                             @foreach ($columns as $column)
                                 <td class="text-end">
-                                    {{ calculateSum($record->cash, $column) }}
+                                    {{ number_format(calculateSum($record->cash, $column),2) }}
                                 </td>
                             @endforeach
                             <td class="text-end">
-                                {{ calculateSumRow($record->cash, $columns) }}
+                                {{ number_format(calculateSumRow($record->cash, $columns),2) }}
                             </td>
                         </tr>
                     @endif
@@ -271,7 +271,7 @@
                     </td>
                     @foreach ($totals as $total)
                         <td width="{{ 84 / $length_columns }}%" class="text-end">
-                            {{ $total }}
+                            {{ number_format($total, 2) }}
                         </td>
                     @endforeach
                     <td class="text-end" width="8%"></td>
@@ -286,7 +286,7 @@
                         @php
                             $sum_totals = array_sum($totals);
                         @endphp
-                        {{ $sum_totals }}
+                        {{ number_format($sum_totals, 2) }}
                     </td>
                     <td colspan="{{ $length_columns - 1 }}"></td>
 
