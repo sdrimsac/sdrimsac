@@ -368,8 +368,8 @@
                             <el-button
                                 v-if="
                                     data.state_type_id != '11' &&
-                                        data.state_type_id != '13'
-                                        && configuration.print_document_cash
+                                        data.state_type_id != '13' &&
+                                        configuration.print_document_cash
                                 "
                                 size="mini"
                                 plain
@@ -420,7 +420,7 @@
                             "
                         >
                             {{ data.date_of_issue }}
-                            <br>
+                            <br />
                             <small>
                                 {{ data.time_of_issue }}
                             </small>
@@ -509,6 +509,9 @@
             :current-page.sync="pagination.current_page"
             :page-size="pagination.per_page"
         ></el-pagination>
+        <br /><br /><br /><br />
+        <br />
+        <br />
         <whatsapp-modal
             :documentNumber="currentNumber"
             :company="company"

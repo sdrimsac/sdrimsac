@@ -689,7 +689,7 @@ class BoxController extends Controller
     function global_get_records($date_open)
     {
         $establishments = Establishment::select(['id', 'description'])->get();
-        $payments = ["Efectivo", "Yape", "PLIN", "TARJETA: IZYPAY","Culqui", "TARJETA:NIUBIZ", "TARJETA: OPENPAY"];
+        $payments = ["Efectivo", "Yape", "PLIN", "TARJETA: IZYPAY","Culqui", "TARJETA: NIUBIZ", "TARJETA: OPENPAY"];
         $columns = [];
         $diff_payments = [];
         $records_by_establishment = [];
@@ -777,7 +777,7 @@ class BoxController extends Controller
         $first_element = $payments[0];
         $rest_elements = array_slice($payments, 1);
         $columns = array_merge([$first_element], array_unique($diff_payments), $rest_elements);
-        $to_check = ["TARJETA: IZYPAY","Culqui", "TARJETA:NIUBIZ", "TARJETA: OPENPAY"];
+        $to_check = ["TARJETA: IZYPAY","Culqui", "TARJETA: NIUBIZ", "TARJETA: OPENPAY"];
         foreach ($records_by_establishment as $key => $value) {
             $cash = $value['cash'];
             foreach ($cash as $key2 => $value2) {

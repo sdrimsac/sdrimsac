@@ -1560,7 +1560,7 @@
                                         <div class="form-group">
                                             <label class="control-label w-100"
                                                 >Requerir número de operación
-                                                (YAPE/PLIN)
+                                                (YAPE/PLIN/TARJETAS)
                                                 <el-tooltip
                                                     class="item"
                                                     effect="dark"

@@ -645,8 +645,9 @@
                                     <div
                                         class="row"
                                         v-if="
-                                            form.method_pay == 'Yape' ||
-                                                form.method_pay == 'PLIN'
+                                            methodsValidate.includes(
+                                                form.method_pay
+                                            )
                                         "
                                     >
                                         <div class="col-md-6 col-lg-6 col-12">
@@ -1403,6 +1404,14 @@ export default {
     },
     data() {
         return {
+            methodsValidate: [
+                "Yape",
+                "PLIN",
+                "TARJETA: IZYPAY",
+                "Culqui",
+                "TARJETA: NIUBIZ",
+                "TARJETA: OPENPAY"
+            ],
             notRegister: false,
             sumCoins: [],
             coins: [
@@ -3284,8 +3293,9 @@ export default {
         verifyHasOperationNumber() {
             //itera sobre this.currentPayments si el method es "Yape" o "PLIN" verifica que tengan el operation_number, en caso que no regresa un error
             let pass = true;
+
             this.currentPayments.forEach(p => {
-                if (p.method == "Yape" || p.method == "PLIN") {
+                if (this.methodsValidate.includes(p.payment_method_type_id)) {
                     if (!p.operation_number) {
                         this.$toast.error(
                             "Debe ingresar el número de operación"
@@ -3297,6 +3307,12 @@ export default {
             return pass;
         },
         async validOperationNumber(form) {
+            console.log("🚀 ~ file: payment.vue:3310 ~ validOperationNumber ~ form:", form)
+            let { operation_number } = form;
+            if(!operation_number){
+                this.$toast.error("Debe ingresar el número de operación");
+                return false;
+            }
             const response = await this.$http.post(
                 "/caja/boxes/validation",
                 form
@@ -3490,7 +3506,7 @@ export default {
                             this.currentPayments
                                 .filter(
                                     p =>
-                                        p.method == "Yape" || p.method == "PLIN"
+                                       this.methodsValidate.includes(p.method)
                                 )
                                 .map(p => ({
                                     method: p.method,
@@ -3502,8 +3518,7 @@ export default {
                                     payments: this.currentPayments
                                         .filter(
                                             p =>
-                                                p.method == "Yape" ||
-                                                p.method == "PLIN"
+                                                this.methodsValidate.includes(p.method)
                                         )
                                         .map(p => ({
                                             method: p.method,
