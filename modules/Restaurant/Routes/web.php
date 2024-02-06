@@ -52,7 +52,7 @@ Route::prefix('caja')->group(function () {
     Route::get('report-boxes/reports_type', [BoxesController::class, 'reports_type']);
     Route::get('report-boxes/reports_bancario_type', 'BoxesController@reports_bancario_type');
     Route::get('report-boxes/reports', 'BoxesController@reports_results');
-    Route::get('report-product-warehouse-w', [WorkerController::class,'report_products_w'] );
+    Route::get('report-product-warehouse-w', [WorkerController::class, 'report_products_w']);
 
     Route::get('login', 'RestaurantController@loginWorker');
     Route::post('login', [RestaurantController::class, 'login']);
@@ -81,7 +81,7 @@ Route::prefix('caja')->group(function () {
             return view('restaurant::kitchen', compact('configuration'));
         });
 
-        Route::get('report-product-warehouse', [WorkerController::class,'report_products'] );
+        Route::get('report-product-warehouse', [WorkerController::class, 'report_products']);
         //*** ORDENS */
         Route::get('cashes', 'BoxesController@cashes')->name('restaurant.cash');
         Route::get('ordens', 'OrdenController@index')->name('restaurant.ordens');
@@ -142,7 +142,7 @@ Route::prefix('caja')->group(function () {
         Route::get('status-orden/record/{id}', 'StatusOrdenController@record');
         Route::post('status-orden', 'StatusOrdenController@store');
         //***MANTENIMENTO */
-        Route::prefix('maintenance')->group(function (){
+        Route::prefix('maintenance')->group(function () {
             Route::get('workers', [TableMaintenanceController::class, 'workers']);
             Route::get('records', [TableMaintenanceController::class, 'records']);
             Route::get('record/{id}', [TableMaintenanceController::class, 'record']);
@@ -150,7 +150,13 @@ Route::prefix('caja')->group(function () {
             Route::post('', [TableMaintenanceController::class, 'store']);
             Route::delete('delete/{id}', [TableMaintenanceController::class, 'destroy']);
         });
-        Route::get('rooms', 'TableRoomController@index')->name('restaurant.rooms');
+        Route::prefix('rooms/reports')
+            ->group(function () {
+                Route::get('', 'TableRoomReportController@index')->name('hotels.reports.rooms');
+                Route::get('records', 'TableRoomReportController@records');
+                Route::get('export', 'TableRoomReportController@export');
+            });
+
         //**** MESAS */
         Route::get('rooms', 'TableRoomController@index')->name('restaurant.rooms');
         Route::get('rooms/columns', 'TableRoomController@columns');
@@ -159,6 +165,7 @@ Route::prefix('caja')->group(function () {
         Route::delete('rooms/insumos/record/{id}', 'TableRoomController@deleteInsumo');
 
         Route::get('rooms/tables_to_clean', 'TableRoomController@tablesToClean');
+        Route::get('rooms/reports_rooms', 'TableRoomController@reportsRooms');
         Route::get('rooms/tables_to_leave', 'TableRoomController@tablesToLeave');
         Route::get('rooms/check', 'TableRoomController@check');
         Route::get('rooms/advance/{id}', 'TableRoomController@advanceDocument');
@@ -247,7 +254,7 @@ Route::prefix('caja')->group(function () {
 
 
             Route::get('data_reports', [BoxesController::class, 'data_reports']);
-            Route::post('check_pin',[PosController::class, 'check_pin']);
+            Route::post('check_pin', [PosController::class, 'check_pin']);
             Route::post('logout', 'RestaurantController@logout');
             Route::get('print_last_document', [OrdenController::class, 'print_last_document']);
             Route::post('pos/last_number_documents', [App\Http\Controllers\Tenant\PosController::class, 'last_number_documents']);
@@ -309,7 +316,7 @@ Route::prefix('caja')->group(function () {
             Route::get('cash/search/customers', [CashController::class, 'searchCustomers']);
             Route::get('cash/search/customer/{id}', [CashController::class, 'searchCustomerById']);
             Route::get('cash/report/products/{cash}', [CashController::class, 'report_products']);
-        
+
 
             Route::get('dashboard/tables/{area_id}', 'DashboardController@tables');
             //
@@ -346,12 +353,11 @@ Route::prefix('caja')->group(function () {
 
 
             //Promociones 
-            Route::post('pos/processPromo','PromocionPorItemController@processPromo');
-            Route::get('pos/showCliePromos','PromocionPorItemController@showCliePromos');
-            Route::post('pos/getPrductosPromo','PromocionPorItemController@getPrductosPromo');
-            Route::post('pos/canjearPromo','PromocionPorItemController@canjearPromo');
-            Route::post('pos/HistCanje','PromocionPorItemController@HistCanje');
-
+            Route::post('pos/processPromo', 'PromocionPorItemController@processPromo');
+            Route::get('pos/showCliePromos', 'PromocionPorItemController@showCliePromos');
+            Route::post('pos/getPrductosPromo', 'PromocionPorItemController@getPrductosPromo');
+            Route::post('pos/canjearPromo', 'PromocionPorItemController@canjearPromo');
+            Route::post('pos/HistCanje', 'PromocionPorItemController@HistCanje');
         });
 
 

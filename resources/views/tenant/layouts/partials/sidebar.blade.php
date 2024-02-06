@@ -462,6 +462,16 @@
                     <span class="label">Reporte </span>
                 </a>
                 <ul id="reporte" class="collapse ">
+                    @if ($config->hotels)
+                    <li>
+                        <a class="{{ $path[0] === 'rooms' && $path[1] === 'reports' ? 'active' : '' }}"
+                            href="{{ route('hotels.reports.rooms') }}">
+                            <i class="icofont-file-excel"></i>
+
+                            Reporte habitaciones
+                        </a>
+                    </li>
+                @endif
                     @if ($config->consignment)
                         <li>
                             <a class="{{ $path[0] === 'reports' && $path[1] === 'consignment' ? 'active' : '' }}"

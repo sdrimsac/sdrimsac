@@ -46,33 +46,33 @@ document.addEventListener("DOMContentLoaded", function() {
     getDesarrollador();
     getAreaPrinter();
 });
-const getDesarrollador = async () =>{
+const getDesarrollador = async () => {
     const { data } = await Axios.get("/getDesarrollador");
-    
-    if(data == null){
+
+    if (data == null) {
         Vue.prototype.$desarrollador = "sdrimsac solutions";
-    }else{
-        if(data.name){
+    } else {
+        if (data.name) {
             Vue.prototype.$desarrollador = data.name;
-        }else{
+        } else {
             Vue.prototype.$desarrollador = data;
         }
     }
-}
-const getAreaPrinter = async () =>{
+};
+const getAreaPrinter = async () => {
     const { data } = await Axios.get("/getAreaPrinter");
-    console.log("🚀 ~ file: app.js:51 ~ getDesarrollador ~ data:", data)
+    console.log("🚀 ~ file: app.js:51 ~ getDesarrollador ~ data:", data);
 
-    if(data == null){
+    if (data == null) {
         Vue.prototype.$areaPrinter = null;
-    }else{
-        if(data.printer){
+    } else {
+        if (data.printer) {
             Vue.prototype.$areaPrinter = data.printer;
-        }else{
+        } else {
             Vue.prototype.$areaPrinter = null;
         }
     }
-}
+};
 /* Vue toast (notificaciones personalizadas )  */
 
 //Vue.prototype.$http.defaults.withCredentials = false;
@@ -164,7 +164,6 @@ Vue.component("x-input-service", require("./components/InputService.vue"));
 Vue.component("x-graph", require("./components/graph/src/Graph.vue"));
 Vue.component("x-graph-line", require("./components/graph/src/GraphLine.vue"));
 const app = new Vue({
-
     store,
     el: "#main",
 
@@ -235,11 +234,11 @@ const app = new Vue({
             ),
 
         "tenant-item-color-size-index": () =>
-        import(
-            /* webpackChunkName:tenant-item-color-size-index"js/ " */
+            import(
+                /* webpackChunkName:tenant-item-color-size-index"js/ " */
 
-            "./views/item_color_size/index.vue"
-        ),
+                "./views/item_color_size/index.vue"
+            ),
         "tenant-item-sets-index": () =>
             import(
                 /* webpackChunkName:"tenat-tem-sets-indexjs/ " */ "./views/item_sets/index.vue"
@@ -269,7 +268,6 @@ const app = new Vue({
                 /* webpackChunkName:"js/tenant-dashboard-index" */
                 "../../modules/Dashboard/Resources/assets/js/views/index.vue"
             ),
-
 
         // "x-graph": () =>
         //     import(
@@ -323,7 +321,7 @@ const app = new Vue({
                 /* webpackChunkName:"js/tenant-configurations-pdf" */
                 "./views/configurations/pdf_templates.vue"
             ),
-            //
+        //
         "tenant-items-client": () =>
             import(
                 /* webpackChunkName:"js/tenant-items-client" */
@@ -459,7 +457,7 @@ const app = new Vue({
                 /* webpackChunkName:"js/tenant-cash-closed" */
                 "@views/cash/closed.vue"
             ),
-            "cash-index-main": () =>
+        "cash-index-main": () =>
             import(
                 /* webpackChunkName:"js/tenant-cash-main" */
                 "@views/cash/main.vue"
@@ -480,10 +478,10 @@ const app = new Vue({
             ),
 
         "inventory-transactions-index": () =>
-                import(
-                    /* we */
-                    "../../modules/Inventory/Resources/assets/js/transactions/index.vue"
-                ),
+            import(
+                /* we */
+                "../../modules/Inventory/Resources/assets/js/transactions/index.vue"
+            ),
         "inventory-transfers-index": () =>
             import(
                 /* webpackChunkName:"js/inventory-transfers-index" */
@@ -597,7 +595,7 @@ const app = new Vue({
                 "../../modules/Item/Resources/assets/js/views/brands/index.vue"
             ),
 
-            "tenant-manufactured-index": () =>
+        "tenant-manufactured-index": () =>
             import(
                 /* webpackChunkName:"js/tenant-manufactured-index"*/
                 "../../modules/Item/Resources/assets/js/views/manufactured/index.vue"
@@ -722,7 +720,7 @@ const app = new Vue({
                 /* webpackChunkName:"js/tenant-boxes-reports"*/
                 "./views/boxes/report.vue"
             ),
-            "tenant-boxes-reports-global": () =>
+        "tenant-boxes-reports-global": () =>
             import(
                 /* webpackChunkName:"js/tenant-boxes-reports"*/
                 "./views/boxes/global.vue"
@@ -764,7 +762,12 @@ const app = new Vue({
 
                 "../../modules/Restaurant/Resources/assets/js/views/boxes/report.vue"
             ),
+        "tenant-hotels-room-report": () =>
+            import(
+                /* webpackChunkName:"js/tenant-hotels-room-report"*/
 
+                "../../modules/Restaurant/Resources/assets/js/views/reports/rooms.vue"
+            ),
         "tenant-login-default": () =>
             import(
                 /* webpackChunkName:"js/tenant-login-default"*/
@@ -933,42 +936,40 @@ const app = new Vue({
                 /*webpackChunkName:"reporte-series-vendidas"*/
                 "../../modules/Inventory/Resources/assets/js/series/reporteSeriesSell.vue"
             ),
-            "tenant-sellers-index": () =>
+        "tenant-sellers-index": () =>
             import(
                 /*webpackChunkName:"reporte-series-vendidas"*/
                 "./views/sellers/index.vue"
             ),
-                "tenant-bank_accounts-index": ()=>
-
-                import(
-                    /*webpackChunkName:"bank_accounts"*/
-                    "./views/bank_accounts/index.vue")
-            ,
-            "tenant-banks-index": ()=>
+        "tenant-bank_accounts-index": () =>
+            import(
+                /*webpackChunkName:"bank_accounts"*/
+                "./views/bank_accounts/index.vue"
+            ),
+        "tenant-banks-index": () =>
             import(
                 /*webpackChunkName:"banks"*/
-                "./views/banks/index.vue")
-            ,
-            "tenant-commercial-treatment-index":  ()=>
+                "./views/banks/index.vue"
+            ),
+        "tenant-commercial-treatment-index": () =>
             import(
                 /*webpackChunkName:"commercial_treatment"*/
-                "./views/commercial_treatment/index.vue")
-            ,
-            "tenant-credit-list-index": ()=>
+                "./views/commercial_treatment/index.vue"
+            ),
+        "tenant-credit-list-index": () =>
             import(
                 /*webpackChunkName:"credit_list"*/
-                "./views/credit_list/index.vue")
-            ,
-            "worker-cleaner" : ()=>
+                "./views/credit_list/index.vue"
+            ),
+        "worker-cleaner": () =>
             import(
                 /*webpackChunkName:"worker-cleaner"*/
-                "../../modules/Restaurant/Resources/assets/js/views/cleaner/index.vue")
-            ,
-            "worker-maintenance" : ()=>
+                "../../modules/Restaurant/Resources/assets/js/views/cleaner/index.vue"
+            ),
+        "worker-maintenance": () =>
             import(
                 /*webpackChunkName:"worker-cleaner"*/
-                "../../modules/Restaurant/Resources/assets/js/views/maintenance/index.vue")
-            ,
-    },
- 
+                "../../modules/Restaurant/Resources/assets/js/views/maintenance/index.vue"
+            )
+    }
 });

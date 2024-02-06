@@ -45,6 +45,7 @@ use Modules\Restaurant\Events\PrintEvent;
 
 class TableRoomController extends Controller
 {
+   
     public function deleteInsumo($id)
     {
         $insumo = DB::connection('tenant')
