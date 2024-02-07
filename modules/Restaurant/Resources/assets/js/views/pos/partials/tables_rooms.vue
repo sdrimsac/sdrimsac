@@ -951,6 +951,7 @@
             </div>
         </el-dialog>
         <room-form
+            :configuration="configuration"
             @getTables="getTables"
             :showDialog.sync="showRoom"
             :table="currentTable"
@@ -987,7 +988,7 @@
                         :min="1"
                         class="w-100"
                         id="days"
-                        v-model="currentRoom.duration"
+                        v-model="currentRoom.new_duration"
                     ></el-input-number>
                 </div>
             </div>
@@ -1300,7 +1301,7 @@ export default {
         },
         async addDays() {
             await this.$http(
-                `/caja/rooms/add_days/${this.currentRoom.id}/${this.currentRoom.duration}`
+                `/caja/rooms/add_days/${this.currentRoom.id}/${this.currentRoom.new_duration}`
             );
             this.showAddDays = false;
             this.getRoomDetail(this.currentTable.id);

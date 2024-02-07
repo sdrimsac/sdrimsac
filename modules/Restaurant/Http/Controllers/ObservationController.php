@@ -5,6 +5,7 @@ namespace Modules\Restaurant\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Tenant\Configuration;
+use App\Services\RoleService;
 use Illuminate\Routing\Controller;
 use Modules\Restaurant\Http\Requests\ObservationRequest;
 use Modules\Restaurant\Models\Observation;
@@ -42,7 +43,8 @@ class ObservationController extends Controller
             $records = Observation::orderBy('created_at', 'desc');
         }
         $user = auth()->user()->type;
-        if ($user == "admin" || $user == "superadmin") {
+        $isArca = (new RoleService)->isArca();
+        if ($user == "admin" || $user == "superadmin" || $isArca) {
             return new ObservationCollection($records->paginate(config('tenant.items_per_page')));
         } else {
             return $records->get()->transform(function ($row) {

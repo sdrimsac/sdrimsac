@@ -9,107 +9,130 @@
                     <div class="form-body">
                         <el-tabs type="border-card">
                             <el-tab-pane label="Visual" v-if="isArca">
-                               <div class="row">
-                                 <template v-if="form.hotels">
-                                    <div class="col-md-6 mt-4">
-                                        <div class="form-group">
-                                            <label class="control-label w-100"
-                                                >Tiempo para limpiar la
-                                                habitación
-                                            </label>
-                                            <el-input-number
-                                                @change="submit"
-                                                v-model="form.time_to_clean"
-                                            >
-                                            </el-input-number>
+                                <div class="row">
+                                    <template v-if="form.hotels">
+                                        <div class="col-md-6 mt-4">
+                                            <div class="form-group">
+                                                <label
+                                                    class="control-label w-100"
+                                                    >Tiempo para limpiar la
+                                                    habitación
+                                                </label>
+                                                <el-input-number
+                                                    @change="submit"
+                                                    v-model="form.time_to_clean"
+                                                >
+                                                </el-input-number>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-md-6 mt-4">
-                                        <div class="form-group">
-                                            <label class="control-label w-100"
-                                                >Tiempo de alarma de alquileres
-                                                por vencer
-                                            </label>
+                                        <div class="col-md-6 mt-4">
+                                            <div class="form-group">
+                                                <label
+                                                    class="control-label w-100"
+                                                    >Tiempo de alarma de
+                                                    alquileres por vencer
+                                                </label>
 
-                                            <el-input-number
-                                                @change="submit"
-                                                v-model="form.alarm_to_end"
-                                            >
-                                            </el-input-number>
+                                                <el-input-number
+                                                    @change="submit"
+                                                    v-model="form.alarm_to_end"
+                                                >
+                                                </el-input-number>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-md-6 mt-4">
-                                        <div class="form-group">
-                                            <label class="control-label w-100"
-                                                >Tiempo para el calculo del
-                                                inicio del dia
-                                            </label>
+                                        <div class="col-md-6 mt-4">
+                                            <div class="form-group">
+                                                <label
+                                                    class="control-label w-100"
+                                                    >Tiempo para el calculo del
+                                                    inicio del dia
+                                                </label>
 
-                                            <el-time-picker
-                                                style="width: 100%;"
-                                                value-format="HH:mm:ss"
-                                                :format="'hh:mm A'"
-                                                :picker-options="{
-                                                    format: 'hh:mm A' // Utiliza 'hh' para las horas en formato de 12 horas y 'A' para AM/PM
-                                                }"
-                                                timezone="America/Lima"
-                                                v-model="form.time_to_enter"
-                                            ></el-time-picker>
+                                                <el-time-picker
+                                                    style="width: 100%;"
+                                                    value-format="HH:mm:ss"
+                                                    :format="'hh:mm A'"
+                                                    :picker-options="{
+                                                        format: 'hh:mm A' // Utiliza 'hh' para las horas en formato de 12 horas y 'A' para AM/PM
+                                                    }"
+                                                    timezone="America/Lima"
+                                                    v-model="form.time_to_enter"
+                                                ></el-time-picker>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-md-6 mt-4">
-                                        <div class="form-group">
-                                            <label class="control-label w-100"
-                                                >Tiempo para el calculo del
-                                                final del dia
-                                            </label>
+                                        <div class="col-md-6 mt-4">
+                                            <div class="form-group">
+                                                <label
+                                                    class="control-label w-100"
+                                                    >Tiempo para el calculo del
+                                                    final del dia
+                                                </label>
 
-                                            <el-time-picker
-                                                style="width: 100%;"
-                                                value-format="HH:mm:ss"
-                                                :format="'hh:mm A'"
-                                                :picker-options="{
-                                                    format: 'hh:mm A' // Utiliza 'hh' para las horas en formato de 12 horas y 'A' para AM/PM
-                                                }"
-                                                timezone="America/Lima"
-                                                v-model="form.time_to_leave"
-                                            ></el-time-picker>
+                                                <el-time-picker
+                                                    style="width: 100%;"
+                                                    value-format="HH:mm:ss"
+                                                    :format="'hh:mm A'"
+                                                    :picker-options="{
+                                                        format: 'hh:mm A' // Utiliza 'hh' para las horas en formato de 12 horas y 'A' para AM/PM
+                                                    }"
+                                                    timezone="America/Lima"
+                                                    v-model="form.time_to_leave"
+                                                ></el-time-picker>
+                                            </div>
                                         </div>
-                                    </div>
 
-                             
-                                    <div class="col-md-6 mt-4">
-                                        <div class="form-group">
-                                            <label class="control-label w-100"
-                                                >Tiempo de mantenimiento
-                                            </label>
+                                        <div class="col-md-6 mt-4">
+                                            <div class="form-group">
+                                                <label
+                                                    class="control-label w-100"
+                                                    >Tiempo de mantenimiento
+                                                </label>
 
-                                            <el-input-number
-                                                @change="submit"
-                                                v-model="form.time_manteniment"
-                                            >
-                                            </el-input-number>
+                                                <el-input-number
+                                                    @change="submit"
+                                                    v-model="
+                                                        form.time_manteniment
+                                                    "
+                                                >
+                                                </el-input-number>
+                                            </div>
                                         </div>
-                                    </div>
-                                 
-                                    <div class="col-md-6 mt-4">
-                                        <div class="form-group">
-                                            <label class="control-label w-100"
-                                                >Limite de la garantía -
-                                                frigobar
-                                            </label>
-                                            <el-input-number
-                                                @change="submit"
-                                                v-model="
-                                                    form.credit_line_hotel_limit
-                                                "
-                                            >
-                                            </el-input-number>
+
+                                        <div class="col-md-6 mt-4">
+                                            <div class="form-group">
+                                                <label
+                                                    class="control-label w-100"
+                                                    >Limite de la garantía -
+                                                    frigobar
+                                                </label>
+                                                <el-input-number
+                                                    @change="submit"
+                                                    v-model="
+                                                        form.credit_line_hotel_limit
+                                                    "
+                                                >
+                                                </el-input-number>
+                                            </div>
                                         </div>
-                                    </div>
-                               
-                                </template>
-                               </div>
+                                        <div class="col-md-6 mt-4">
+                                            <div class="form-group">
+                                                <label
+                                                    class="control-label w-100"
+                                                    >Descuento aplicado por día
+                                                    a cambio del servicio x
+                                                    habitación
+                                                </label>
+                                                <el-input-number
+                                                    @change="submit"
+                                                    v-model="
+                                                        form.discount_amount_instead_service
+                                                    "
+                                                >
+                                                </el-input-number>
+                                            </div>
+                                        </div>
+                                    </template>
+                                </div>
                             </el-tab-pane>
                             <el-tab-pane label="Servicios" v-if="!isArca">
                                 <div class="row">
@@ -1773,6 +1796,23 @@
                                                         form.principal_cash
                                                     "
                                                 ></el-switch>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 mt-4">
+                                            <div class="form-group">
+                                                <label
+                                                    class="control-label w-100"
+                                                    >Descuento aplicado por día
+                                                    a cambio del servicio x
+                                                    habitación
+                                                </label>
+                                                <el-input-number
+                                                    @change="submit"
+                                                    v-model="
+                                                        form.discount_amount_instead_service
+                                                    "
+                                                >
+                                                </el-input-number>
                                             </div>
                                         </div>
                                     </template>

@@ -642,7 +642,9 @@ export default {
             }
         },
         async create() {
-            await this.getTables();
+            if(this.type == 'caja/rooms'){
+                await this.getTables();
+            }
             this.getDetails();
             this.titleDialog = this.recordId
                 ? "Modificar Registro"

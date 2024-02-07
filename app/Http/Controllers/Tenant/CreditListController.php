@@ -111,12 +111,37 @@ class CreditListController extends Controller
             'records' => $records,
         ];
     }
+    public function recordByPersonTotal(Request $request) {
+        try {
+            $data = $this->getData($request);
+            // Verificar si $data es un objeto y obtener los resultados
+            if (is_object($data)) {
+                // Realizar las operaciones necesarias con los resultados
+                $total = $data->get()->sum(function ($row) {
+                    return $row->quantity * $row->price;
+                });
+    
+                return [
+                    'success' => true,
+                    'total' => $total,
+                ];
+            } else {
+                throw new \Exception('La función getData() no devolvió un objeto válido.');
+            }
+        } catch (\Exception $e) {
+            return [
+                'success' => false,
+                'error' => $e->getMessage(),
+            ];
+        }
+    }
     public function recordByPerson(Request $request)
     {
 
         $orden_items = $this->getData($request);
+      
 
-        return new CreditListPersonCollection($orden_items->paginate(config('tenant.items_per_page')));
+        return new CreditListPersonCollection($orden_items->paginate(100));
     }
     public function credit_list_report_index(Request $request)
     {

@@ -97,6 +97,7 @@ if ($hostname) {
                     Route::get('/records', [CreditListController::class, 'records']);
                     Route::get('/records_by_person/download', [CreditListController::class, 'download']);
                     Route::post('/records_by_person', [CreditListController::class, 'recordByPerson']);
+                    Route::post('/records_by_person_total', [CreditListController::class, 'recordByPersonTotal']);
                     Route::post('/records_by_person_to_pay', [CreditListController::class, 'recordByPersonToPay']);
                     Route::get('/get-ordens/{customer_id}', [CreditListController::class, 'get_ordens']);
                 });

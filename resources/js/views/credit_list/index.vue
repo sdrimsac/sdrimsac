@@ -659,6 +659,7 @@ export default {
         },
         clickDownload() {
             let parameters = this.getQueryParameters();
+            console.log("🚀 ~ file: index.vue:662 ~ clickDownload ~ parameters:", parameters)
             window.open(
                 `/${this.resource}/records_by_person/download?${parameters}`,
                 "_blank"
@@ -670,6 +671,14 @@ export default {
                 this.$toast.error("Debe seleccionar un cliente/personal");
                 return;
             }
+            const responseTotal = await this.$http.post(
+                `/${this.resource}/records_by_person_total`,
+                this.form
+            );
+            let {data} = responseTotal;
+            if(data.total){
+                this.total = data.total;
+            }
             const response = await this.$http.post(
                 `/${this.resource}/records_by_person`,
                 this.form
@@ -677,10 +686,10 @@ export default {
 
             this.records = response.data.data;
 
-            this.total = this.records.reduce(
-                (a, b) => a + (Number(b.price) || 0),
-                0
-            );
+            // this.total = this.records.reduce(
+            //     (a, b) => a + (Number(b.price) || 0),
+            //     0
+            // );
 
             if (this.total > 0 && this.form.paid == "0") {
                 this.showPaid = true;

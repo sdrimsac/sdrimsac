@@ -257,7 +257,11 @@
                             ></el-option>
                         </el-select>
                     </div>
-                    <div class="col-md-3 d-flex align-items-end">
+                    <div class="col-md-3 d-flex"
+                    :class="`${
+                        room.discount_instead_services ? ' align-items-center' : ' align-items-end'
+                    }`"
+                    >
                         <el-button @click="addGuess(idx)" type="primary">
                             Agregar Huesped
                         </el-button>
@@ -273,9 +277,15 @@
                         </el-input>
                     </div>
                     <div class="col-md-3">
-                        <label for="total_room">Subtotal </label>
+                        <label for="total_room">Subtotal</label>
                         <el-input type="number" readonly v-model="room.total">
                         </el-input>
+                        <small 
+                        class="text-danger"
+                        v-if="room.discount_instead_services">
+                           Descuento S/{{ configuration.discount_amount_instead_service * room.duration }}
+                           
+                        </small>
                     </div>
                     <div
                         class="row mt-2"
@@ -304,7 +314,14 @@
                     <el-divider
                         v-if="room.services.length > 0"
                         content-position="left"
-                        >Promociones</el-divider
+                        >Promociones
+                        
+                        <el-checkbox
+                            @change="discountService(room)"
+                            v-model="room.discount_instead_services"
+                            label="Cambiar por descuento"
+                        ></el-checkbox>
+                        </el-divider
                     >
                     <div v-if="room.services.length > 0" class="row">
                         <div
@@ -312,14 +329,15 @@
                             v-for="(service, sidx) in room.services"
                             :key="`_sidx${sidx}`"
                         >
-                            <label for="total_room">{{ service.name }} </label>
-                            <el-input
-                                type="number"
+                            <label for="total_room" class="w-100">{{ service.name }} </label>
+                            <el-input-number
                                 :min="0"
+                                :max="2"
+                                :disabled="room.discount_instead_services"
                                 @input="updateServices"
                                 v-model="service.quantity"
                             >
-                            </el-input>
+                            </el-input-number>
                         </div>
                     </div>
                     <template v-if="room.has_frigobar">
@@ -390,7 +408,9 @@
 const PersonForm = () =>
     import("../../../../../../../../resources/js/views/persons/form.vue");
 export default {
-    props: ["showDialog", "table", "isReserve", "hotelRentId"],
+    props: [
+        "configuration",
+        "showDialog", "table", "isReserve", "hotelRentId"],
     components: {
         PersonForm
     },
@@ -429,6 +449,16 @@ export default {
         };
     },
     methods: {
+        discountService(room){
+            let {discount_instead_services} = room;
+            if(discount_instead_services){
+                room.services = room.services.map(s=>{
+                    s.quantity = 0;
+                    return s;
+                });
+            }
+            this.calculateTotal();
+        },
         limitInsumos(room,idx) {
             if (room.insumos > 2) {
                 this.$message({
@@ -583,9 +613,15 @@ export default {
                         }
                         price = price * room.duration;
                         room.original_price = price;
-                        room.total = price - Number(advances);
+                        let result = price - Number(advances);
+                        if(room.discount_instead_services){
+                            let {discount_amount_instead_service} = this.configuration;
+                            discount_amount_instead_service = Number(discount_amount_instead_service);
+                            result -= discount_amount_instead_service * room.duration;
+                        }
+                        room.total = result;
 
-                        subtotal += price - Number(advances);
+                        subtotal += result;
                     }
                 }
                 // advance += Number(advances);
@@ -633,11 +669,13 @@ export default {
         },
         addRoom({ tower_id, floor_id, table_id }) {
             let room = {
+                discount_instead_services:false,
                 insumos: 1,
                 enable_frigobar: false,
                 credit_line: 0,
                 is_reserve: this.isReserve,
                 total: 0,
+                original_total: 0,
                 is_month_rent: false,
                 advances: 0,
                 guess_id: null,
