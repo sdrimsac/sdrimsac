@@ -451,7 +451,6 @@
                 </ul>
             </li>
         @endif
-        @if (!$roleService->isLogistic())
 
             <li>
                 <a href="#reporte" data-bs-toggle="collapse" data-role="button"
@@ -462,7 +461,7 @@
                     <span class="label">Reporte </span>
                 </a>
                 <ul id="reporte" class="collapse ">
-                    @if ($config->hotels)
+                    @if ($config->hotels && !$roleService->isLogistic())
                     <li>
                         <a class="{{ $path[0] === 'rooms' && $path[1] === 'reports' ? 'active' : '' }}"
                             href="{{ route('hotels.reports.rooms') }}">
@@ -492,7 +491,7 @@
                             </a>
                         </li>
                     @endif
-                    @if (!$roleService->isArca())
+                    @if (!$roleService->isLogistic())
                         <li>
                             <a class="{{ $path[0] === 'report_cash' ? 'active' : '' }}"
                                 href="{{ route('reports.cash.index') }}">
@@ -553,7 +552,6 @@
                 </ul>
             </li>
 
-        @endif
 
         @if (!$roleService->isArca() && !$roleService->isLogistic() && $config->accounting_mode)
             <li>
