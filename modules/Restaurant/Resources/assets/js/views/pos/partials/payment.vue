@@ -3295,8 +3295,20 @@ export default {
             let pass = true;
 
             this.currentPayments.forEach(p => {
-                if (this.methodsValidate.includes(p.payment_method_type_id)) {
+                console.log(
+                    "🚀 ~ file: payment.vue:3298 ~ verifyHasOperationNumber ~ p:",
+                    p
+                );
+                if (this.methodsValidate.includes(p.method)) {
+                    console.log(
+                        "🚀 ~ file: payment.vue:3301 ~ verifyHasOperationNumber ~ p.operation_number:",
+                        p.operation_number
+                    );
                     if (!p.operation_number) {
+                        console.log(
+                            "🚀 ~ file: payment.vue:3302 ~ verifyHasOperationNumber ~ operation_number:",
+                            "entr aqui.."
+                        );
                         this.$toast.error(
                             "Debe ingresar el número de operación"
                         );
@@ -3307,12 +3319,19 @@ export default {
             return pass;
         },
         async validOperationNumber(form) {
-            console.log("🚀 ~ file: payment.vue:3310 ~ validOperationNumber ~ form:", form)
-            let { operation_number } = form;
-            if(!operation_number){
-                this.$toast.error("Debe ingresar el número de operación");
-                return false;
+            console.log(
+                "🚀 ~ file: payment.vue:3310 ~ validOperationNumber ~ form:",
+                form
+            );
+            let { payments } = form;
+            for (let i = 0; i < payments.length; i++) {
+                let { operation_number } = payments[i];
+                if (!operation_number) {
+                    this.$toast.error("Debe ingresar el número de operación");
+                    return false;
+                }
             }
+
             const response = await this.$http.post(
                 "/caja/boxes/validation",
                 form
@@ -3504,9 +3523,8 @@ export default {
                     } else {
                         if (
                             this.currentPayments
-                                .filter(
-                                    p =>
-                                       this.methodsValidate.includes(p.method)
+                                .filter(p =>
+                                    this.methodsValidate.includes(p.method)
                                 )
                                 .map(p => ({
                                     method: p.method,
@@ -3516,9 +3534,10 @@ export default {
                             if (
                                 !(await this.validOperationNumber({
                                     payments: this.currentPayments
-                                        .filter(
-                                            p =>
-                                                this.methodsValidate.includes(p.method)
+                                        .filter(p =>
+                                            this.methodsValidate.includes(
+                                                p.method
+                                            )
                                         )
                                         .map(p => ({
                                             method: p.method,
@@ -3553,6 +3572,8 @@ export default {
                 }));
             }
             this.loading_submit = true;
+            this.button_payment = true;
+
             this.form.items = this.form.items.filter(
                 item => Number(item.quantity) > 0
             );
@@ -3769,6 +3790,7 @@ export default {
                     } = response;
                     this.$toast.error(message || "Ocurrió un error");
                     this.loading_submit = false;
+                    
                 }
             } catch (error) {
                 console.log(error);
@@ -3779,6 +3801,9 @@ export default {
 
                 this.$toast.error(message || "Ocurrió un error");
                 this.loading_submit = false;
+
+            }finally{
+                this.button_payment = false;
             }
         },
 
