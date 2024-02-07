@@ -46,6 +46,8 @@ class JustAdmin
 
         $paths = ["documents", "documents/not-sent", "summaries", "voided", "reports/inventory"];
         $paths_arca = [
+            "item-sets",
+            "reports/inventory", "reports/stockmin", "reports/kardex",
             "persons/customers",
             "persons/suppliers",
             "reports/boxes/global",

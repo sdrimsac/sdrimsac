@@ -451,7 +451,7 @@
                 </ul>
             </li>
         @endif
-        @if (!$roleService->isArca())
+        @if (!$roleService->isLogistic())
 
             <li>
                 <a href="#reporte" data-bs-toggle="collapse" data-role="button"
@@ -492,7 +492,7 @@
                             </a>
                         </li>
                     @endif
-                    @if (!$roleService->isLogistic())
+                    @if (!$roleService->isArca())
                         <li>
                             <a class="{{ $path[0] === 'report_cash' ? 'active' : '' }}"
                                 href="{{ route('reports.cash.index') }}">
