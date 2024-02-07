@@ -376,6 +376,8 @@ class TableRoomController extends Controller
     }
     public function addDays($id, $days)
     {
+       try{
+        DB::connection('tenant')->beginTransaction();
         $hotel_rent_item = HotelRentItem::find($id);
         $hotel_rent =  $hotel_rent_item->hotel_rent;
         $old_total = $hotel_rent->total;
@@ -389,22 +391,47 @@ class TableRoomController extends Controller
         $hotel_rent_item->total = $total;
         $hotel_rent->total -= $old_total;
         $hotel_rent->total += $total;
-        // $services = $hotel_rent_item->services;
-        // for($i = 0; $i <  $days; $i++){
-        //     foreach ($services as $service) {
-        //         $duplicate = $service->replicate();
-
-        //     }
-        // }
+        $services = $hotel_rent_item->services;
+        $date_taken = Carbon::parse($hotel_rent_item->checkin_date)->addDays($hotel_rent_item->duration);
+        $checkin_time = $hotel_rent_item->checkin_time;
+        for($i = 0; $i <  $days; $i++){
+            foreach ($services as $service) {
+                $duplicate = $service->replicate();
+                $room_service = RoomService::find($duplicate->room_service_id);
+                $due_time = $room_service->due_time;
+                $date_take_inside = $date_taken;
+                if ($due_time) {
+                    //si $due_time es menor a $checkin_time entonces sumarle un día a $date_take
+                    $date_take_inside = Carbon::parse($date_taken->format('Y-m-d') . " " . $checkin_time);
+                    if ($due_time < $checkin_time) {
+                        $date_take_inside->addDay();
+                    }
+                  
+                }
+                $date_take_inside = $date_take_inside->format('Y-m-d');
+                $duplicate->code = $this->generate_code();
+                $duplicate->date_take = $date_take_inside;
+                $duplicate->save();
+            }
+        }
         $hotel_rent->save();
         $estimated = $this->getDateAndTimeToLeave($hotel_rent_item->checkin_date, $hotel_rent_item->checkin_time, $new_duration, $hotel_rent_item->is_month_rent);
         $hotel_rent_item->checkout_date_estimated = $estimated['checkout_date_estimated'];
         $hotel_rent_item->checkout_time_estimated = $estimated['checkout_time_estimated'];
         $hotel_rent_item->save();
+        DB::connection('tenant')->commit();
         return [
             'success' => true,
             'message' => $hotel_rent_item->is_month_rent ? 'Meses agregados' : 'Días agregados'
         ];
+       }catch(Exception $e){
+        DB::connection('tenant')->rollBack();
+        return [
+            'success' => false,
+            'message' => $e->getMessage()
+        ];
+
+       }
     }
     public function cleaned($id)
     {

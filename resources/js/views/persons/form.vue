@@ -641,7 +641,7 @@
                     v-if="
                         type == 'customers' &&
                            configuration.credit_list &&
-                            (typeUser == 'admin' || typeUser == 'superadmin')
+                            (typeUser == 'admin' || typeUser == 'superadmin' || isArca)
                     "
                 >
                     <div class="row">
@@ -697,7 +697,8 @@ export default {
         "input_person",
         "user_id",
         "newTech",
-        "typeUser"
+        "typeUser",
+        "isArca",
     ],
     data() {
         return {
@@ -804,7 +805,9 @@ export default {
                 }
             }
         },
+    
         create() {
+            console.log("🚀 ~ file: form.vue:809 ~ create ~ this.user_id:", this.user_id)
             this.initForm();
             if (this.external) {
                 if (this.document_type_id === "01") {

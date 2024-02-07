@@ -23,14 +23,16 @@ use App\Http\Resources\Tenant\PersonCollection;
 use App\Models\Tenant\Catalogs\IdentityDocumentType;
 use App\Models\Tenant\ClientZone;
 use App\Models\Tenant\Configuration;
+use App\Services\RoleService;
 use Modules\Vip\Models\SocialMedias;
 
 class PersonController extends Controller
 {
     public function index($type)
-    {
+    {       
+        $is_arca = (new RoleService)->isArca();
         $api_service_token = config('configuration.api_service_token');
-        return view('tenant.persons.index', compact('type', 'api_service_token'));
+        return view('tenant.persons.index', compact('type', 'api_service_token','is_arca'));
     }
     public function client_default()
     {

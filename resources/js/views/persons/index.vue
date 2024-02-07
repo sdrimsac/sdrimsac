@@ -180,6 +180,7 @@
                     :type="type"
                     :recordId="recordId"
                     :api_service_token="api_service_token"
+                    :isArca="isArca"
                 ></persons-form>
 
                 <persons-import
@@ -202,7 +203,7 @@ import DataTable from "../../components/DataTablePersons.vue";
 import { deletable } from "../../mixins/deletable";
 export default {
     mixins: [deletable],
-    props: ["type", "typeUser", "api_service_token"],
+    props: ["type", "typeUser", "api_service_token","isArca"],
     components: { PersonsForm, PersonsImport, DataTable, Printer, ClientZones },
     data() {
         return {
