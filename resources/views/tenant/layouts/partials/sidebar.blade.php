@@ -460,105 +460,107 @@
             </li>
         @endif
 
-            <li>
-                <a href="#reporte" data-bs-toggle="collapse" data-role="button"
-                    aria-expanded="{{ $path[0] === 'reports' && $path[1] === 'inventory' ? true : false }}{{ ($path[0] === 'reports' && $path[1] === 'stockmin' ? true : false && $path[1] === 'kardex') ? true : false }}"
-                    class="{{ $path[0] === 'reports' && $path[1] === 'inventory' ? 'active' : '' }}{{ ($path[0] === 'reports' && $path[1] === 'stockmin' ? 'active' : '' && $path[1] === 'kardex') ? true : false }}"
-                    data-clicked="{{ $path[0] === 'reports' && $path[1] === 'inventory' ? true : false }}{{ ($path[0] === 'reports' && $path[1] === 'stockmin' ? true : false && $path[1] === 'kardex') ? true : false }}">
-                    <i class="icofont-file-alt icon-parent"></i>
-                    <span class="label">Reporte </span>
-                </a>
-                <ul id="reporte" class="collapse ">
-                    @if ($config->hotels && !$roleService->isLogistic())
+         @if(!$roleService->isArca())
+         <li>
+            <a href="#reporte" data-bs-toggle="collapse" data-role="button"
+                aria-expanded="{{ $path[0] === 'reports' && $path[1] === 'inventory' ? true : false }}{{ ($path[0] === 'reports' && $path[1] === 'stockmin' ? true : false && $path[1] === 'kardex') ? true : false }}"
+                class="{{ $path[0] === 'reports' && $path[1] === 'inventory' ? 'active' : '' }}{{ ($path[0] === 'reports' && $path[1] === 'stockmin' ? 'active' : '' && $path[1] === 'kardex') ? true : false }}"
+                data-clicked="{{ $path[0] === 'reports' && $path[1] === 'inventory' ? true : false }}{{ ($path[0] === 'reports' && $path[1] === 'stockmin' ? true : false && $path[1] === 'kardex') ? true : false }}">
+                <i class="icofont-file-alt icon-parent"></i>
+                <span class="label">Reporte </span>
+            </a>
+            <ul id="reporte" class="collapse ">
+                @if ($config->hotels && !$roleService->isLogistic())
+                <li>
+                    <a class="{{ $path[0] === 'rooms' && $path[1] === 'reports' ? 'active' : '' }}"
+                        href="{{ route('hotels.reports.rooms') }}">
+                        <i class="icofont-file-excel"></i>
+
+                        Reporte habitaciones
+                    </a>
+                </li>
+            @endif
+                @if ($config->consignment)
                     <li>
-                        <a class="{{ $path[0] === 'rooms' && $path[1] === 'reports' ? 'active' : '' }}"
-                            href="{{ route('hotels.reports.rooms') }}">
+                        <a class="{{ $path[0] === 'reports' && $path[1] === 'consignment' ? 'active' : '' }}"
+                            href="{{ route('reports.consignment.index') }}">
                             <i class="icofont-file-excel"></i>
 
-                            Reporte habitaciones
+                            Consignamiento
                         </a>
                     </li>
                 @endif
-                    @if ($config->consignment)
-                        <li>
-                            <a class="{{ $path[0] === 'reports' && $path[1] === 'consignment' ? 'active' : '' }}"
-                                href="{{ route('reports.consignment.index') }}">
-                                <i class="icofont-file-excel"></i>
-
-                                Consignamiento
-                            </a>
-                        </li>
-                    @endif
-                    @if ($config->credits)
-                        <li>
-                            <a class="{{ $path[0] === 'reports' && $path[1] === 'credits' ? 'active' : '' }}"
-                                href="{{ route('reports.credits.index') }}">
-                                <i class="fas fa-window-restore"></i>
-
-                                Créditos
-                            </a>
-                        </li>
-                    @endif
-                    @if (!$roleService->isLogistic())
-                        <li>
-                            <a class="{{ $path[0] === 'report_cash' ? 'active' : '' }}"
-                                href="{{ route('reports.cash.index') }}">
-                                <i class="icofont-money-bag"></i>
-                                Ganancias
-                            </a>
-                        </li>
-                        <li>
-                            <a class="{{ $path[0] === 'report_product_client' ? 'active' : '' }}"
-                                href="{{ route('reports.products-clients.index') }}">
-                                <i class="fas fa-window-restore"></i>
-                                R. productos
-                            </a>
-                        </li>
-                        <li>
-                            <a class="{{ $path[0] === 'reports' && $path[1] === 'valued' ? 'active' : '' }}"
-                                href="{{ route('reports.valued.index') }}">
-
-                                <i class="icofont-dollar"></i> Stock valorizado
-                            </a>
-                        </li>
-                    @endif
+                @if ($config->credits)
                     <li>
-                        <a class="{{ $path[0] === 'reports' && $path[1] === 'inventory' ? 'active' : '' }}"
-                            href="{{ route('reports.inventory.index') }}">
-                            <i class="icofont-box"></i> Stock Producto
+                        <a class="{{ $path[0] === 'reports' && $path[1] === 'credits' ? 'active' : '' }}"
+                            href="{{ route('reports.credits.index') }}">
+                            <i class="fas fa-window-restore"></i>
+
+                            Créditos
+                        </a>
+                    </li>
+                @endif
+                @if (!$roleService->isLogistic())
+                    <li>
+                        <a class="{{ $path[0] === 'report_cash' ? 'active' : '' }}"
+                            href="{{ route('reports.cash.index') }}">
+                            <i class="icofont-money-bag"></i>
+                            Ganancias
                         </a>
                     </li>
                     <li>
-                        <a class="{{ $path[0] === 'reports' && $path[1] === 'stockmin' ? 'active' : '' }}"
-                            href="{{ route('reports.stockmin.index') }}">
-                            <i class="fas fa-boxes"> </i> Stock Minimo
+                        <a class="{{ $path[0] === 'report_product_client' ? 'active' : '' }}"
+                            href="{{ route('reports.products-clients.index') }}">
+                            <i class="fas fa-window-restore"></i>
+                            R. productos
                         </a>
                     </li>
                     <li>
-                        <a class="{{ $path[0] === 'reports' && $path[1] === 'kardex' ? 'active' : '' }}"
-                            href="{{ route('reports.kardex.index') }}">
-                            <i class="icofont-chart-bar-graph"></i> Kardex
+                        <a class="{{ $path[0] === 'reports' && $path[1] === 'valued' ? 'active' : '' }}"
+                            href="{{ route('reports.valued.index') }}">
+
+                            <i class="icofont-dollar"></i> Stock valorizado
                         </a>
                     </li>
-                    @if ($config->credit_list && !$roleService->isLogistic())
-                        <li>
-                            <a class="{{ $path[0] === 'reports' && $path[1] === 'credit_list' ? 'active' : '' }}"
-                                href="{{ route('tenant.credit_list.index') }}">
-                                <i class="icofont-chart-bar-graph"></i> Lista de crédito
-                            </a>
-                        </li>
-                    @endif
-                    @if ($has_series)
-                        <li>
-                            <a class="{{ $path[0] === 'reports' && $path[1] === 'series' ? 'active' : '' }}"
-                                href="{{ route('reports.series.index') }}">
-                                <i class="fas fa-fingerprint"></i> Venta de Series
-                            </a>
-                        </li>
-                    @endif
+                @endif
+                <li>
+                    <a class="{{ $path[0] === 'reports' && $path[1] === 'inventory' ? 'active' : '' }}"
+                        href="{{ route('reports.inventory.index') }}">
+                        <i class="icofont-box"></i> Stock Producto
+                    </a>
+                </li>
+                <li>
+                    <a class="{{ $path[0] === 'reports' && $path[1] === 'stockmin' ? 'active' : '' }}"
+                        href="{{ route('reports.stockmin.index') }}">
+                        <i class="fas fa-boxes"> </i> Stock Minimo
+                    </a>
+                </li>
+                <li>
+                    <a class="{{ $path[0] === 'reports' && $path[1] === 'kardex' ? 'active' : '' }}"
+                        href="{{ route('reports.kardex.index') }}">
+                        <i class="icofont-chart-bar-graph"></i> Kardex
+                    </a>
+                </li>
+                @if ($config->credit_list && !$roleService->isLogistic())
+                    <li>
+                        <a class="{{ $path[0] === 'reports' && $path[1] === 'credit_list' ? 'active' : '' }}"
+                            href="{{ route('tenant.credit_list.index') }}">
+                            <i class="icofont-chart-bar-graph"></i> Lista de crédito
+                        </a>
+                    </li>
+                @endif
+                @if ($has_series)
+                    <li>
+                        <a class="{{ $path[0] === 'reports' && $path[1] === 'series' ? 'active' : '' }}"
+                            href="{{ route('reports.series.index') }}">
+                            <i class="fas fa-fingerprint"></i> Venta de Series
+                        </a>
+                    </li>
+                @endif
 
-                </ul>
-            </li>
+            </ul>
+        </li>
+         @endif
 
 
         @if (!$roleService->isArca() && !$roleService->isLogistic() && $config->accounting_mode)
