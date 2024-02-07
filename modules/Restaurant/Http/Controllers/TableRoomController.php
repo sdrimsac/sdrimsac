@@ -394,26 +394,26 @@ class TableRoomController extends Controller
         $services = $hotel_rent_item->services;
         $date_taken = Carbon::parse($hotel_rent_item->checkin_date)->addDays($hotel_rent_item->duration);
         $checkin_time = $hotel_rent_item->checkin_time;
-        for($i = 0; $i <  $days; $i++){
-            foreach ($services as $service) {
-                $duplicate = $service->replicate();
-                $room_service = RoomService::find($duplicate->room_service_id);
-                $due_time = $room_service->due_time;
-                $date_take_inside = $date_taken;
-                if ($due_time) {
-                    //si $due_time es menor a $checkin_time entonces sumarle un día a $date_take
-                    $date_take_inside = Carbon::parse($date_taken->format('Y-m-d') . " " . $checkin_time);
-                    if ($due_time < $checkin_time) {
-                        $date_take_inside->addDay();
-                    }
+        // for($i = 0; $i <  $days; $i++){
+        //     foreach ($services as $service) {
+        //         $duplicate = $service->replicate();
+        //         $room_service = RoomService::find($duplicate->room_service_id);
+        //         $due_time = $room_service->due_time;
+        //         $date_take_inside = $date_taken;
+        //         if ($due_time) {
+        //             //si $due_time es menor a $checkin_time entonces sumarle un día a $date_take
+        //             $date_take_inside = Carbon::parse($date_taken->format('Y-m-d') . " " . $checkin_time);
+        //             if ($due_time < $checkin_time) {
+        //                 $date_take_inside->addDay();
+        //             }
                   
-                }
-                $date_take_inside = $date_take_inside->format('Y-m-d');
-                $duplicate->code = $this->generate_code();
-                $duplicate->date_take = $date_take_inside;
-                $duplicate->save();
-            }
-        }
+        //         }
+        //         $date_take_inside = $date_take_inside->format('Y-m-d');
+        //         $duplicate->code = $this->generate_code();
+        //         $duplicate->date_take = $date_take_inside;
+        //         $duplicate->save();
+        //     }
+        // }
         $hotel_rent->save();
         $estimated = $this->getDateAndTimeToLeave($hotel_rent_item->checkin_date, $hotel_rent_item->checkin_time, $new_duration, $hotel_rent_item->is_month_rent);
         $hotel_rent_item->checkout_date_estimated = $estimated['checkout_date_estimated'];
