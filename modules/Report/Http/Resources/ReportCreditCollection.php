@@ -50,13 +50,14 @@ class ReportCreditCollection extends ResourceCollection
                 $amount_due = $last_payment->amount;
             }
             $amount_due -= $advances + $payments_records;
+            $to_due = $row->total - $advances + $payments_records;
             return [
                 'id' => $row->id,
                 'date_of_issue' => $row->date_of_issue->format('Y-m-d'),
                 'customer' => ["name" => $customer->name, "number" => $customer->number],
                 'number' => $row->number_full,
                 'dues' => $dues,
-                'date_of_due' => $date_of_due,
+                'date_of_due' => $to_due,
                 'canceled' => (bool) $row->paid,
                 // 'amount_due' => number_format($amount_due, 2, ".", ""),
                 'amount_due' => number_format($amount_due, 2, ".", ""),
