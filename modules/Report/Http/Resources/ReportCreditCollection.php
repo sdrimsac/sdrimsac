@@ -3,6 +3,8 @@
 namespace Modules\Report\Http\Resources;
 
 use App\Models\Tenant\Payment;
+use App\Models\Tenant\SaleNote;
+use App\Models\Tenant\SaleNotePayment;
 use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
@@ -15,6 +17,7 @@ class ReportCreditCollection extends ResourceCollection
 
 
         return $this->collection->transform(function ($row, $key) {
+            $advances  = $row->advances;
             $payment = Payment::where('sale_note_id', $row->id);
             $payment_not_paid = $payment->where('paid', 0)
                 ->where('date_payment', '<=', Carbon::now()->startOfDay())
@@ -36,6 +39,7 @@ class ReportCreditCollection extends ResourceCollection
             $dues = $payment_not_paid->count();
             $customer = $row->customer;
             $amount_due = 0;
+            $payments_records = SaleNotePayment::where('sale_note_id', $row->id)->sum('payment');
             if ($last_payment == null) {
                 $last_paid =  Payment::where('sale_note_id', $row->id)
                     ->where('paid', 1)
@@ -45,6 +49,7 @@ class ReportCreditCollection extends ResourceCollection
             } else {
                 $amount_due = $last_payment->amount;
             }
+            $amount_due -= $advances + $payments_records;
             return [
                 'id' => $row->id,
                 'date_of_issue' => $row->date_of_issue->format('Y-m-d'),

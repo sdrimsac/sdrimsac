@@ -61,9 +61,9 @@ class SaleNotePaymentController extends Controller
             $interes = 0;
         }
         if ($sale_note->total_payment == 0) {
-            $total = $sale_note->total;
+            $total = $sale_note->total - $sale_note->advances;
         } else {
-            $total = $sale_note->total_payment;
+            $total = $sale_note->total_payment - $sale_note->advances;
         }
         $total_difference = round($total - $total_paid, 2);
 
@@ -239,6 +239,7 @@ class SaleNotePaymentController extends Controller
 
     public function createPdf($sale_note_id, $format = null)
     {
+        ini_set("pcre.backtrack_limit", "5000000");
         $sale_note = SaleNote::find($sale_note_id);
         $total_paid = round(collect($sale_note->payments)->sum('payment'), 2);
         $total = $sale_note->total;

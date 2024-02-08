@@ -150,7 +150,7 @@
             ?>
             @foreach ($data as $row)
                 <?php
-                $amount = $amount + $row['amount'];
+                $amount = $amount + $row['amount'] - $row['amount_paid'];
                 ?>
                 <tr>
                     <td align="center" class="border-bottom">
