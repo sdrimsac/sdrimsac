@@ -132,7 +132,7 @@ class ItemSetController extends Controller
         $warehouse_id = $request->warehouse_id;
         $input = $request->input;
         
-        $individual_items = Item::whereWarehouse()->whereTypeUser()->whereNotIsSet()->whereIsActive();
+        $individual_items = Item::whereTypeUser()->whereNotIsSet()->whereIsActive();
         if($input){
             $individual_items = $individual_items->where(function($query) use($input){
                 $query->where('description', 'like', "%{$input}%")
