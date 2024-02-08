@@ -127,7 +127,7 @@ class OptionController extends Controller
     {
         
         $this->delete_quantity = 0;
-        Document::where('id', '<>', null)->update(['orden_id' => null]);
+        Document::where('id', '<>', null)->update(['orden_id' => null,'sale_note_id' => null]);
         SaleNote::where('id', '<>', null)->update(['orden_id' => null]);
         DB::connection('tenant')->table('credit_lists')->delete();
         DB::connection('tenant')->table('invoices')->delete();
@@ -154,7 +154,6 @@ class OptionController extends Controller
         DB::connection('tenant')->table('boxes_detail')->delete();
         DB::connection('tenant')->table('boxes')->delete();
         DB::connection('tenant')->table('orden_item')->delete();
-        DB::connection('tenant')->table('documents')->update(['sale_note_id' => null]);
         DB::connection('tenant')->table('ordens')->delete();
         DB::connection('tenant')->table('sale_note_items')->delete();
         DB::connection('tenant')->table('inventory_kardex')->delete();
