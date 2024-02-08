@@ -49,7 +49,7 @@ class ReportCreditCollection extends ResourceCollection
             } else {
                 $amount_due = $last_payment->amount;
             }
-            $amount_due -= $advances + $payments_records;
+            // $amount_due -= $advances + $payments_records;
             $to_due =  floatval($row->total)  - floatval( $advances) + floatval($payments_records);
             return [
                 'id' => $row->id,
@@ -63,7 +63,7 @@ class ReportCreditCollection extends ResourceCollection
                 'date_of_due' => $date_of_due,
                 'canceled' => (bool) $row->paid,
                 // 'amount_due' => number_format($amount_due, 2, ".", ""),
-                'amount_due' => number_format($amount_due, 2, ".", ""),
+                'amount_due' => number_format($to_due, 2, ".", ""),
                 'differenc_days' => $differenc_days,
                 'is_credit' => true,
             ];
