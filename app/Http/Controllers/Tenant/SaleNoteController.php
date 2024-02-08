@@ -580,10 +580,10 @@ class SaleNoteController extends Controller
                 $vacate = $request->vacate;
                 if ($request->hotel_rent_item_ids) {
                     $hotel_rent_items = HotelRentItem::whereIn('id', $request->hotel_rent_item_ids)->get();
-             
+
                     foreach ($hotel_rent_items as $item) {
                         $item->payment_status = "Pagado";
-                        $id_to_document =$item->hotel_rent_id;
+                        $id_to_document = $item->hotel_rent_id;
                         $item->sale_note_id = $this->sale_note->id;
                         $item->checkout_date = date('Y-m-d');
                         $item->checkout_time = date('H:i:s');
@@ -637,7 +637,7 @@ class SaleNoteController extends Controller
                                 $table->sendMessageDesocupied();
                                 $table->save();
                             } else {
-                                $id_to_document =$item->hotel_rent_id;
+                                $id_to_document = $item->hotel_rent_id;
                                 HotelRentDocument::create([
                                     'hotel_rent_id' => $id_to_document,
                                     'sale_note_id' => $this->sale_note->id,
@@ -795,7 +795,7 @@ class SaleNoteController extends Controller
                             $cajas->sale_note_id = $this->sale_note->id;
                             $cajas->orden_id =  $request->orden_id;
                             $cajas->cash_id = $original_cash_id ? $original_cash_id : $request->cash_id;
-                      
+
                             $cajas->user_id = auth()->user()->id;
                             $cajas->description = "VENTAS " . $document;
                             if ($bank_account_id) {
@@ -854,21 +854,26 @@ class SaleNoteController extends Controller
                         $total_payment += $payment['payment'];
                     }
 
-                    if ($request->payments[0]['payment_method_type_id'] == "01" || $request->payments[0]['payment_method_type_id'] == "10") {
+                    if (isset($request->payments[0]['payment_method_type_id']) && $request->payments[0]['payment_method_type_id'] == "01" || isset($request->payments[0]['payment_method_type_id']) && $request->payments[0]['payment_method_type_id'] == "10") {
                         if ($total_payment >= $this->sale_note->total) {
                             $paid = 1;
                         }
                         // $paid = 1;
                     }
+                    //si el index payment_method_type_id no existe poner paid a true
+                    if (!isset($request->payments[0]['payment_method_type_id'])) {
+                        $paid = 1;
+                    } else {
 
-                    if ($payment['payment'] > 0) {
-                        $record = new SaleNotePayment;
-                        $record->fill($payment);
-                        $payment["payment_destination_id"] = "cash";
-                        $record->sale_note_id = $this->sale_note->id;
-                        $record->save();
+                        if ($payment['payment'] > 0) {
+                            $record = new SaleNotePayment;
+                            $record->fill($payment);
+                            $payment["payment_destination_id"] = "cash";
+                            $record->sale_note_id = $this->sale_note->id;
+                            $record->save();
 
-                        $this->createGlobalPayment($record, $payment);
+                            $this->createGlobalPayment($record, $payment);
+                        }
                     }
                 }
 
