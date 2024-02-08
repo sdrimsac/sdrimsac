@@ -136,6 +136,7 @@ class OptionController extends Controller
         DB::connection('tenant')->table('tables')->update(['status_table_id' => 1]);
         DB::connection('tenant')->table('kardex')->delete();
         DB::connection('tenant')->table('sale_notes_promotions')->delete();
+        DB::connection('tenant')->table('sale_note_credits')->delete();
 
         DB::connection('tenant')->table('receipts')->delete();
         DB::connection('tenant')->table('summary_documents')->delete();
@@ -153,7 +154,7 @@ class OptionController extends Controller
         DB::connection('tenant')->table('boxes_detail')->delete();
         DB::connection('tenant')->table('boxes')->delete();
         DB::connection('tenant')->table('orden_item')->delete();
-
+        DB::connection('tenant')->table('documents')->update(['sale_note_id' => null]);
         DB::connection('tenant')->table('ordens')->delete();
         DB::connection('tenant')->table('sale_note_items')->delete();
         DB::connection('tenant')->table('inventory_kardex')->delete();
