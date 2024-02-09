@@ -21,6 +21,7 @@ class HotelRentItemResource extends JsonResource
         $customer = $this->setCustomer($this->hotel_rent->customer);
         $hotel_rent_id = $this->hotel_rent_id;
         $has_services = $this->services->count() > 0;
+        $advances_document = 0;
         $documents = HotelRentDocument::where('hotel_rent_id', $hotel_rent_id)->get()
             ->transform(function ($row) {
                 $document = $row->document ? $row->document : $row->sale_note;

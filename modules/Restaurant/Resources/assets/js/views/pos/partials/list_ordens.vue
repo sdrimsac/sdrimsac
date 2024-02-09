@@ -2165,6 +2165,7 @@
             :cash_id="cash_id"
             :all_series.sync="all_series"
             :establishments="establishments"
+            :configuration="configuration"
         >
         </credit-form>
         <el-dialog

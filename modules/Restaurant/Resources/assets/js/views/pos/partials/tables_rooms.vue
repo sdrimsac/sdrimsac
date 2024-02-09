@@ -1270,6 +1270,7 @@ export default {
             this.showReserves = false;
             this.tables = this.all_tables
                 .filter(table => table.status_table_id == id)
+                .filter(table => table.floor)
                 .map(table => {
                     table.tower_name = table.floor.tower.name;
                     return table;

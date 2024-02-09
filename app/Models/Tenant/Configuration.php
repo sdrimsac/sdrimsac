@@ -263,6 +263,7 @@ class Configuration extends ModelTenant
         // $skins = Skin::all();
         $skins = [];
         return [
+            'rates' => $this->rates,
             'discount_amount_instead_service' => $this->discount_amount_instead_service,
             'series_enabled' => (bool)$this->series_enabled,
             'lots_enabled' => (bool)$this->lots_enabled,

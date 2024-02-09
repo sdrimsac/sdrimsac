@@ -1026,7 +1026,6 @@ class BoxesController extends Controller
                     $sales_cash_sum += $sale_note->total;
                 }
                 if ($sale_note->total_discount) {
-
                     $total_discount += $sale_note->total_discount;
                 }
             }
@@ -1045,7 +1044,6 @@ class BoxesController extends Controller
                     $sales_cash_sum += $document->total;
                 }
                 if ($document->total_discount) {
-
                     $total_discount += $document->total_discount;
                 }
             }

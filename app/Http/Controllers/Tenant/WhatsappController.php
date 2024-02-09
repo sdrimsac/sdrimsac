@@ -35,6 +35,9 @@ class WhatsappController extends Controller
     }
     public function sendMessageAll($message)
     {
+        $company = Company::first();
+        $name = "*".$company->name."*: ";
+        $message = $name.$message;
         $configuration = Configuration::first();
         $number_activity = $configuration->number_activity;
         if ($number_activity) {

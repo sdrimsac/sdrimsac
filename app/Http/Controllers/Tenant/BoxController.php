@@ -725,8 +725,8 @@ class BoxController extends Controller
                                         } else {
                                             $total += $sale_note->total;
                                         }
-                                        if ($sale_note->total_discount) {
-                                            $total += $sale_note->total_discount;
+                                        if ($sale_note->total_discount && $sale_note->total_discount > 0) {
+                                            // $total += $sale_note->total_discount;
                                         }
                                     }
                                     if ($box->document_id) {
@@ -736,16 +736,17 @@ class BoxController extends Controller
                                         } else {
                                             $total += $document->total;
                                         }
-                                        if ($document->total_discount) {
-                                            $total += $document->total_discount;
+                                        if ($document->total_discount && $document->total_discount > 0)  {
+                                            // $total += $document->total_discount;
                                         }
                                     }
                                 });
-                         
+                                
                             $records[] = [
                                 'method' => $value,
                                 'amount' => $total
                             ];
+                         
                         }
                     }
                     $diff = $allMethods->diff($payments)->values()->all();

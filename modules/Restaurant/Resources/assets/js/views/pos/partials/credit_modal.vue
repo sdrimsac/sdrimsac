@@ -149,7 +149,7 @@
                 v-if="form.total"
                 style="margin-right:auto;display:inline-block"
             >
-                <h6>S/. {{ form.total }}</h6>
+                <h6>S/. {{ form.total  - credit.advances}}</h6>
             </span>
             <el-button @click="close">Cancelar</el-button>
             <el-button type="primary" @click="submit">Enviar</el-button>
@@ -169,6 +169,7 @@ const PersonForm = () =>
     import("../../../../../../../../resources/js/views/persons/form.vue");
 export default {
     props: [
+    "configuration",
         "items",
         "cash_id",
         "all_customers",
@@ -497,6 +498,9 @@ export default {
             }
         },
         open() {
+            let {rates} = this.configuration;
+            rates = parseFloat(rates);
+            this.tasaInteres = rates;
             this.initCredit();
             this.customers = this.all_customers;
             this.form = {
@@ -558,12 +562,16 @@ export default {
                 user_id: null,
                 observation: null,
                 difference: 0,
-                type_payment: "Diario",
+                type_payment: "Mensual",
                 num_cuota: 0,
                 amount: 0,
                 method_pay: "Efectivo"
             };
             this.paymentsOrden();
+
+            this.credit.month = 1;
+            this.credit.type_payment = "Mensual";
+            this.calculate();
         },
         close() {
             this.$emit("update:showDialog", false);
