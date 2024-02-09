@@ -49,12 +49,13 @@ class TableRoomController extends Controller
     public function deleteInsumo($id)
     {
         $insumo = DB::connection('tenant')
-            ->table('insumos_hotel_items')
+            ->table('insumos_hotels')
             ->where('id', $id)
             ->first();
+            dump($id);
         if ($insumo) {
             DB::connection('tenant')
-                ->table('insumos_hotel_items')
+                ->table('insumos_hotels')
                 ->where('id', $id)
                 ->delete();
             return [
