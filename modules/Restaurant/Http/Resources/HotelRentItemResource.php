@@ -97,7 +97,6 @@ class HotelRentItemResource extends JsonResource
         $extra_time = 0;
         $checkout_date_estimated = Carbon::parse($this->checkout_date_estimated . " " . $this->checkout_time_estimated);
         $now = Carbon::now();
-     
         if ($now->greaterThan($checkout_date_estimated)) {
             $difference_days = $checkout_date_estimated->diffInDays($now);
             if ($difference_days == 0) {
@@ -118,7 +117,7 @@ class HotelRentItemResource extends JsonResource
         // }else{
         //     $extra_time = $price_table * $checkout_date_estimated->diffInDays($now);
         // }
-        $toPay = ($this->total +  $total_all_orden) > 0 ;
+        $toPay = ($this->total +  $total_all_orden + $extra_time) > 0  ;
         $credit_line =0;
         if($this->credit_line > 0){
             $credit_line = $this->credit_line - $total_all_orden;
