@@ -1843,7 +1843,7 @@ export default {
 
     data() {
         return {
-            showColorSize:false,
+            showColorSize: false,
             currentColorSize: [],
             showSaleNoteCreditCash: false,
             searchSecondName: false,
@@ -2644,7 +2644,7 @@ export default {
                 is_room
             };
         },
-        async setPaymentOrden(items,allTables = false) {
+        async setPaymentOrden(items, allTables = false) {
             let form = {
                 id: null,
                 caja: true,
@@ -2703,7 +2703,10 @@ export default {
                     return this.$toast.error("Seleccione un cliente");
                 }
             }
-                    console.log("🚀 ~ file: index.vue:2691 ~ setPaymentOrden ~ this.form:", this.form)
+            console.log(
+                "🚀 ~ file: index.vue:2691 ~ setPaymentOrden ~ this.form:",
+                this.form
+            );
             this.is_payment = true;
         },
         sendOrdensAllTables(orden_items) {
@@ -2744,14 +2747,13 @@ export default {
             this.blockCart = true;
             this.isCreatingOrden = false;
             this.ordens_all_table = true;
-            this.setPaymentOrden(orden_items,true);
+            this.setPaymentOrden(orden_items, true);
             // this.idOrden = orden.id;
         },
 
         //aqui se envia los productos desde la mesa
         sendOrdens(orden) {
             if (this.localOrden.length != 0 && !this.configuration.box_orden) {
-                
                 this.$toast.warning("Tiene productos seleccionados.");
                 return;
             }
@@ -3094,7 +3096,10 @@ export default {
                 if (this.variation) {
                     this.isNoteIsDefault();
                 }
-                    console.log("🚀 ~ file: index.vue:3080 ~ asyncpaymentsOrden(form,variationItem ~ this.form:", this.form)
+                console.log(
+                    "🚀 ~ file: index.vue:3080 ~ asyncpaymentsOrden(form,variationItem ~ this.form:",
+                    this.form
+                );
                 this.is_payment = true;
             }
         },
@@ -4193,7 +4198,10 @@ export default {
             if (!this.form.customer_id)
                 return this.$toast.error("Seleccione un cliente");
             this.form.establishment_id = this.establishment.id;
-            console.log("🚀 ~ file: index.vue:4193 ~ clickPayment ~ this.form:", this.form)
+            console.log(
+                "🚀 ~ file: index.vue:4193 ~ clickPayment ~ this.form:",
+                this.form
+            );
 
             this.is_payment = true;
         },
@@ -4379,7 +4387,7 @@ export default {
                     exchangeRateSale
                 );
                 this.form.items.push(this.row);
-                console.log("🚀 ~ file: index.vue:4371 ~ this.row:", this.row)
+                console.log("🚀 ~ file: index.vue:4371 ~ this.row:", this.row);
                 item.aux_quantity = 1;
             }
 
@@ -4995,8 +5003,12 @@ export default {
             this.form.total_discount = 0;
             this.form.is_room = false;
             this.form.reference_number = null;
+            this.form.hotel_customer_number = null;
+            this.form.hotel_rent_item_service_id = null;
+            this.form.hotel_rent_item_ids = null;
+            this.form.hotel_rent_id = null;
             this.form.customer_id = this.customer_default.id;
-                 this.form.observation = null;
+            this.form.observation = null;
             this.cancelOrden();
             if (
                 this.configuration.sales_quick == 1 ||
@@ -5453,7 +5465,8 @@ export default {
 
                 // let area_id = e.data.area_id;
                 let user_establishment_id = e.data.user_establishment_id;
-                let isSameEstablishment = this.establishments.id == user_establishment_id;
+                let isSameEstablishment =
+                    this.establishments.id == user_establishment_id;
 
                 let isHotels = this.configuration.hotels;
                 let canPrint = true;

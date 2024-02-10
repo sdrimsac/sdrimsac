@@ -46,6 +46,32 @@ use Modules\Restaurant\Events\PrintEvent;
 class TableRoomController extends Controller
 {
    
+    public function updateInsumo(Request $request){
+        $id = $request->input('id');
+       DB::connection('tenant')->beginTransaction();
+         try{
+            DB::connection('tenant')
+            ->table('insumos_hotels')
+            ->where('id', $id)
+            ->update([
+                'days_factor' => $request->input('days_factor'),
+                'persons_factor' => $request->input('persons_factor'),
+            ]);
+            DB::connection('tenant')->commit();
+            return [
+                'success' => true,
+                'message' => 'Insumo actualizado con éxito'
+            ];
+        }
+        catch(Exception $e){
+            DB::connection('tenant')->rollBack();
+            return [
+                'success' => false,
+                'message' => $e->getMessage()
+            ];
+        }
+
+    }
     public function deleteInsumo($id)
     {
         $insumo = DB::connection('tenant')
@@ -77,6 +103,8 @@ class TableRoomController extends Controller
             ->get()->transform(function ($row) {
                 $item = Item::find($row->item_id);
                 $row->item = $item;
+                $row->days_factor = (bool) $row->days_factor;
+                $row->persons_factor = (bool) $row->persons_factor;
                 return $row;
             });
         return [
@@ -380,6 +408,9 @@ class TableRoomController extends Controller
        try{
         DB::connection('tenant')->beginTransaction();
         $hotel_rent_item = HotelRentItem::find($id);
+        $discount_instead_services = $hotel_rent_item->discount_instead_services;
+        $configuration = Configuration::first();
+        $discount_amount_instead_service = $configuration->discount_amount_instead_service;
         $hotel_rent =  $hotel_rent_item->hotel_rent;
         $old_total = $hotel_rent->total;
         $old_duration = $hotel_rent_item->duration;
@@ -402,32 +433,42 @@ class TableRoomController extends Controller
                 }
             }
         $total -= $advances;
-        $hotel_rent_item->total = $total;
-        $hotel_rent->total -= $old_total;
-        $hotel_rent->total += $total;
+      
         $services = $hotel_rent_item->services;
         $date_taken = Carbon::parse($hotel_rent_item->checkin_date)->addDays($old_duration);
         $checkin_time = $hotel_rent_item->checkin_time;
+        $discount_instead_services_total = $discount_amount_instead_service * $old_duration;
         for($i = 0; $i <  $days; $i++){
-            foreach ($services as $service) {
-                $duplicate = $service->replicate();
-                $room_service = RoomService::find($duplicate->room_service_id);
-                $due_time = $room_service->due_time;
-                $date_take_inside = $date_taken;
-                if ($due_time) {
-                    //si $due_time es menor a $checkin_time entonces sumarle un día a $date_take
-                    $date_take_inside = Carbon::parse($date_taken->format('Y-m-d') . " " . $checkin_time);
-                    if ($due_time < $checkin_time) {
-                        $date_take_inside->addDays($i + 1);
+            if($services->count() > 0){
+                foreach ($services as $service) {
+                    $duplicate = $service->replicate();
+                    $room_service = RoomService::find($duplicate->room_service_id);
+                    $due_time = $room_service->due_time;
+                    $date_take_inside = $date_taken;
+                    if ($due_time) {
+                        //si $due_time es menor a $checkin_time entonces sumarle un día a $date_take
+                        $date_take_inside = Carbon::parse($date_taken->format('Y-m-d') . " " . $checkin_time);
+                        if ($due_time < $checkin_time) {
+                            $date_take_inside->addDays($i + 1);
+                        }
+                      
                     }
-                  
+                    $date_take_inside = $date_take_inside->format('Y-m-d');
+                    $duplicate->code = $this->generate_code();
+                    $duplicate->date_take = $date_take_inside;
+                    $duplicate->save();
                 }
-                $date_take_inside = $date_take_inside->format('Y-m-d');
-                $duplicate->code = $this->generate_code();
-                $duplicate->date_take = $date_take_inside;
-                $duplicate->save();
+            }else{
+                if($discount_instead_services){
+                    $discount_instead_services_total += $discount_amount_instead_service;
+                }
             }
         }
+        $total -= $discount_instead_services_total;
+        $hotel_rent_item->total = $total;
+        $hotel_rent->total -= $old_total;
+        $hotel_rent->total += $total;
+
         $hotel_rent->save();
         $estimated = $this->getDateAndTimeToLeave($hotel_rent_item->checkin_date, $hotel_rent_item->checkin_time, $new_duration, $hotel_rent_item->is_month_rent);
         $hotel_rent_item->checkout_date_estimated = $estimated['checkout_date_estimated'];
@@ -895,6 +936,8 @@ class TableRoomController extends Controller
                     return[
                         'id' => $row->id,   
                         'item_description' => $item->description,
+                        'days_factor' => $row->days_factor,
+                         'persons_factor' => $row->persons_factor,
                     ];
             });
         $is_reserve = $request->input('is_reserve');
@@ -1038,6 +1081,7 @@ class TableRoomController extends Controller
                 $hotel_rent_item = new HotelRentItem;
                 $hotel_rent_item->hotel_rent_id = $hotel_rent->id;
                 $hotel_rent_item->table_id = $room['table_id'];
+                $hotel_rent_item->discount_instead_services = $room['discount_instead_services'];
                 $hotel_rent_item->is_reserve = $room['is_reserve'];
                 $hotel_rent_item->duration = $room['duration'];
                 $hotel_rent_item->is_month_rent = $room['is_month_rent'];
@@ -1059,17 +1103,24 @@ class TableRoomController extends Controller
                 $establishment = Establishment::find(auth()->user()->establishment_id);
                 $warehouse_id = Warehouse::where('establishment_id', $establishment->id)->first()->id;
                     foreach ($exist_insumos as $insumo) {
+                        $quantity_insumo = 1;
+                        if($insumo->days_factor){
+                            $quantity_insumo = $quantity_insumo * $room['duration'];
+                        }
+                        if($insumo->persons_factor){
+                            $quantity_insumo = $quantity_insumo * $room['quantity_persons'];
+                        }
                         DB::connection('tenant')
                             ->table('insumos_hotel_items')
                             ->insert([
                                 'insumos_hotel_id' => $insumo->id,
                                 'hotel_rent_item_id' => $hotel_rent_item->id,
-                                'quantity' => $insumos,
+                                'quantity' => $quantity_insumo,
                             ]);
                             //checa si el producto existe en  itemwarehouse
                             $item_warehouse = ItemWarehouse::where('item_id', $insumo->item_id)->where('warehouse_id', $warehouse_id)->first();
                             if ($item_warehouse) {
-                                $item_warehouse->stock -= $insumos;
+                                $item_warehouse->stock -= $quantity_insumo;
                                 $item_warehouse->save();
                             }else{
                                //trae todos los almancenes
@@ -1079,7 +1130,7 @@ class TableRoomController extends Controller
                                         $item_warehouse = ItemWarehouse::where('item_id', $insumo->item_id)->where('warehouse_id', $warehouse->id)->first();
                                         if ($item_warehouse) {
                                             $warehouse_id = $warehouse->id;
-                                            $item_warehouse->stock -= $insumos;
+                                            $item_warehouse->stock -= $quantity_insumo;
                                             $item_warehouse->save();
                                             break;
                                         }
@@ -1089,7 +1140,7 @@ class TableRoomController extends Controller
                             'date_of_issue' => date('Y-m-d'),
                             'item_id' => $insumo->item_id,
                             'warehouse_id' => $warehouse_id,
-                            'quantity' => $insumos,
+                            'quantity' => $quantity_insumo,
                             'type' => 'output',
                             'description' => 'Salida por habitación',
                             'inventory_kardexable_id' => $hotel_rent_item->id,

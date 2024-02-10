@@ -44,16 +44,49 @@
                 <thead>
                     <tr>
                         <th>Descripción</th>
-                     
+                        <th>
+                            Factor por días
+
+                            <el-tooltip
+                                class="item"
+                                effect="dark"
+                                content="Cada insumo se multiplica por el número de días que fue ocupada la habitación"
+                                placement="top"
+                            >
+                                <i class="el-icon-info"></i>
+                            </el-tooltip>
+                        </th>
+                        <th>
+                            Factor por personas
+
+                            <el-tooltip
+                                class="item"
+                                effect="dark"
+                                content="Cada insumo se multiplica por el número de personas que se encuentran en la habitación"
+                                placement="top"
+                            >
+                                <i class="el-icon-info"></i>
+                            </el-tooltip>
+                        </th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr v-for="record in records" :key="record.id">
                         <td>{{ record.item.description }}</td>
-                      
+                        <td class="text-center">
+                            <el-checkbox
+                                @change="updateRecord(record.id)"
+                                v-model="record.days_factor"
+                            ></el-checkbox>
+                        </td>
+                        <td class="text-center">
+                            <el-checkbox
+                                @change="updateRecord(record.id)"
+                                v-model="record.persons_factor"
+                            ></el-checkbox>
+                        </td>
                         <td>
-                           
                             <el-button
                                 type="danger"
                                 icon="el-icon-delete"
@@ -108,6 +141,25 @@ export default {
                         this.loading_search = false;
                     }
                 }, 250);
+            }
+        },
+        async updateRecord(id) {
+            console.log("🚀 ~ file: insumos.vue:147 ~ updateRecord ~ id:", id);
+            let insumo = this.records.find(record => record.id == id);
+            const response = await this.$http.post(
+                `/caja/rooms/insumos/record/update`,
+                insumo
+            );
+            if (response.status == 200) {
+                this.$message({
+                    message: "Registro actualizado correctamente",
+                    type: "success"
+                });
+            } else {
+                this.$message({
+                    message: "Ocurrió un error",
+                    type: "error"
+                });
             }
         },
         async add() {

@@ -125,6 +125,7 @@ class HotelRentItemResource extends JsonResource
         }
         $tes = $this->total + $this->advances;
         return [
+            'discount_instead_services' => $this->discount_instead_services,
             'credit_line' => $credit_line,
             'has_services' => $has_services,
             'toPay' => $toPay,

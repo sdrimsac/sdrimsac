@@ -2127,6 +2127,15 @@ export default {
             this.showDialogNewPerson = true;
         },
         add_customer(value) {},
+             async searchClientOne(number) {
+ let url = `/caja/search_customers?value=${number}`;
+                
+                const response = await this.$http(url);
+                const { persons } = response.data;
+
+                this.customers = persons.filter(n => n.number != "88888888");
+                this.updateAllCustomers(this.customers);
+             },
         async keyupCustomer(e) {
             //buscar
             if (this.time) {
@@ -2136,6 +2145,7 @@ export default {
                 this.input_person.number = this.$refs.select_person.$el.getElementsByTagName(
                     "input"
                 )[0].value;
+                console.log("🚀 ~ file: payment.vue:2139 ~ this.time=setTimeout ~ this.input_person.number:", this.input_person.number)
                 let url = `/caja/search_customers?value=${this.input_person.number}`;
                 if (this.configuration.college) {
                     url = `${url}&parents=${this.notRegister ? 0 : 1}`;
@@ -2353,17 +2363,7 @@ export default {
             }
             this.checkTotal("01");
 
-            // if (this.form.hotel_customer_number) {
-            //     setTimeout(() => {
-            //         this.$refs.select_person.$el.getElementsByTagName(
-            //             "input"
-            //         )[0].value = this.form.hotel_customer_number;
-            //         this.keyupCustomer();
-            //     }, 800);
-            //     // this.value = this.form.hotel_customer_number;
-            //     // this.form.customer_id = this.form.hotel_customer_number;
-            //     // this.changeCustomer();
-            // }
+              
             if (this.configuration.save_pos_printing) {
                 this.printerOn = this.configuration.print_in_pos ? 1 : 0;
             }
@@ -3775,6 +3775,26 @@ export default {
                                 if (this.conf.pos_quick_sale) {
                                     this.$toast.success("Venta realizada.");
                                 }
+                                if (this.form.customer_telephone) {
+                                    if (this.personalWhatsapp) {
+                                        await this.$emit("getFile", {
+                                            total: this.form.total,
+                                            documentId: this.documentNewId,
+                                            documentTypeId:
+                                                form.document_type_id,
+                                            number: this.form
+                                                .customer_telephone,
+                                            message: this.form.message
+                                        });
+                                    } else {
+                                        await this.clickSendWhatsapp(
+                                            form.document_type_id,
+                                            this.documentNewId,
+                                            this.number,
+                                            form
+                                        );
+                                    }
+                                }
                                 this.$emit("limpiarForm");
                                 this.$emit("removeConsignment");
                                 this.loading_submit = false;
@@ -3790,7 +3810,6 @@ export default {
                     } = response;
                     this.$toast.error(message || "Ocurrió un error");
                     this.loading_submit = false;
-                    
                 }
             } catch (error) {
                 console.log(error);
@@ -3801,8 +3820,7 @@ export default {
 
                 this.$toast.error(message || "Ocurrió un error");
                 this.loading_submit = false;
-
-            }finally{
+            } finally {
                 this.button_payment = false;
             }
         },
@@ -3884,14 +3902,15 @@ export default {
             );
         },
         back(val = false) {
+          
             let { is_advance, hotel_rent_id } = this.form;
             if (is_advance && hotel_rent_id && !val) {
+                this.$emit("limpiarForm");
                 this.deleteHotelRentItem(hotel_rent_id);
             }
             this.splitPayments = [];
             this.value = null;
 
-            //this.$emit("limpiarForm");
             if (!val) {
                 this.$emit("openDrawer");
             }
@@ -4004,7 +4023,7 @@ export default {
             }
         },
 
-        filterSeries() {
+       async filterSeries() {
             this.filterCustomers();
             // let check = this.checkCustomers();
             // if (!check && !this.started) {
@@ -4115,6 +4134,14 @@ export default {
             if (this.form.document_type_id != "01") {
                 this.customers = [...this.customers, this.customer_default];
             }
+            console.log(
+                "🚀 ~ file: payment.vue:4120 ~ filterSeries ~ this.form:",
+                this.form
+            );
+              if (this.form.hotel_customer_number) {
+                  await  this.searchClientOne(this.form.hotel_customer_number);
+                    this.changeCustomer();
+                } 
             this.changeCustomer();
             if (this.form.document_type_id == "80") {
                 this.discount_amount = 0;

@@ -163,6 +163,7 @@ Route::prefix('caja')->group(function () {
         Route::post('rooms/insumos', 'TableRoomController@setInsumo');
         Route::get('rooms/insumos/records', 'TableRoomController@getInsumos');
         Route::delete('rooms/insumos/record/{id}', 'TableRoomController@deleteInsumo');
+        Route::post('rooms/insumos/record/update', 'TableRoomController@updateInsumo');
 
         Route::get('rooms/tables_to_clean', 'TableRoomController@tablesToClean');
         Route::get('rooms/reports_rooms', 'TableRoomController@reportsRooms');
