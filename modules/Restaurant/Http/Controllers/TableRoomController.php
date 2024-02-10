@@ -78,7 +78,6 @@ class TableRoomController extends Controller
             ->table('insumos_hotels')
             ->where('id', $id)
             ->first();
-            dump($id);
         if ($insumo) {
             DB::connection('tenant')
                 ->table('insumos_hotels')
