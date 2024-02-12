@@ -2117,7 +2117,7 @@ export default {
 
                 //crea una nueva fecha con las propiedades checkout_date_estimated checkout_time_estimated de t
                 let { hotel_rent_items } = t;
-                let [hotel_rent_item] = hotel_rent_items;
+                let hotel_rent_item = hotel_rent_items[hotel_rent_items.length - 1];
                 let {
                     checkout_date_estimated,
                     checkout_time_estimated
