@@ -999,7 +999,7 @@ class DocumentController extends Controller
             $hotel_rent_items = HotelRentItem::whereIn('id', $request->hotel_rent_item_ids)->get();
             foreach ($hotel_rent_items as $item) {
                 $item->payment_status = "Pagado";
-                $item->document = $document->id;
+                // $item->document = $document->id;
                 // $item->checkout_date = date('Y-m-d');
                 // $item->checkout_time = date('H:i:s');
                 if ($vacate) {
