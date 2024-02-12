@@ -173,7 +173,11 @@
                                         @click="tableOpen(t.id)"
                                         style="margin-right: 2px;margin-left: 2px;"
                                         type="button"
-                                        :class="`btn btn-${t.timer?'warning':'danger'}`"
+                                        :class="
+                                            `btn btn-${
+                                                t.timer ? 'warning' : 'danger'
+                                            }`
+                                        "
                                     >
                                         <span>{{ t.timer }}</span>
 
@@ -2117,7 +2121,8 @@ export default {
 
                 //crea una nueva fecha con las propiedades checkout_date_estimated checkout_time_estimated de t
                 let { hotel_rent_items } = t;
-                let hotel_rent_item = hotel_rent_items[hotel_rent_items.length - 1];
+                let hotel_rent_item =
+                    hotel_rent_items[hotel_rent_items.length - 1];
                 let {
                     checkout_date_estimated,
                     checkout_time_estimated
@@ -2125,24 +2130,29 @@ export default {
                 let date = new Date(
                     `${checkout_date_estimated} ${checkout_time_estimated}`
                 );
-
+                let alarm_to_end = this.configuration.alarm_to_end;
+                alarm_to_end = alarm_to_end * 60 * 1000;
                 let diff = date.getTime() - now.getTime();
                 if (diff < 0) {
                     t.timer = null;
                 } else {
-                    diff = Math.floor(diff / 1000);
-                    let seconds = diff % 60;
-                    diff = Math.floor(diff / 60);
-                    let minutes = diff % 60;
-                    let hours = Math.floor(diff / 60);
-                    if (hours >= 1) {
-                        t.timer = `${hours < 10 ? "0" : ""}${hours}:${
-                            minutes < 10 ? "0" : ""
-                        }${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+                    if (diff <= alarm_to_end) {
+                        diff = Math.floor(diff / 1000);
+                        let seconds = diff % 60;
+                        diff = Math.floor(diff / 60);
+                        let minutes = diff % 60;
+                        let hours = Math.floor(diff / 60);
+                        if (hours >= 1) {
+                            t.timer = `${hours < 10 ? "0" : ""}${hours}:${
+                                minutes < 10 ? "0" : ""
+                            }${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+                        } else {
+                            t.timer = `${minutes < 10 ? "0" : ""}${minutes}:${
+                                seconds < 10 ? "0" : ""
+                            }${seconds}`;
+                        }
                     } else {
-                        t.timer = `${minutes < 10 ? "0" : ""}${minutes}:${
-                            seconds < 10 ? "0" : ""
-                        }${seconds}`;
+                        t.timer = null;
                     }
                 }
             });
