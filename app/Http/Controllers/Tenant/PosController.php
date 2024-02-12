@@ -312,7 +312,7 @@ class PosController extends Controller
             $time = Carbon::now()->addMinutes($time_to_leave)->format('H:i:s');
            
             $tablesLeave = Table::with(['hotel_rent_items' => function ($query) {
-                $query->latest()->take(5); // Obtener solo los últimos 5 hotel_rent_items
+                $query->latest()->take(1);
             }])
                 ->where('establishment_id', auth()->user()->establishment_id)
                 ->whereHas('hotel_rent_items', function ($query) use ($date, $time) {
