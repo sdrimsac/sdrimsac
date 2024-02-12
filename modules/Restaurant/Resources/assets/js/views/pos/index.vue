@@ -174,8 +174,8 @@
                                         style="margin-right: 2px;margin-left: 2px;"
                                         type="button"
                                         :class="
-                                            `btn btn-${
-                                                t.timer ? 'warning-color' : 'danger'
+                                            `btn ${
+                                                t.timer ? 'warning-color' : 'btn-danger'
                                             }`
                                         "
                                     >
