@@ -29,6 +29,7 @@ use App\Models\Tenant\Catalogs\AffectationIgvType;
 use App\Models\Tenant\Configuration;
 use App\Models\Tenant\Establishment;
 use App\Models\Tenant\ItemSet;
+use App\Models\Tenant\ItemWarehouse;
 use PSpell\Config;
 
 class ItemSetController extends Controller
@@ -282,12 +283,14 @@ class ItemSetController extends Controller
     public function set_item_check_stock($id,$quantity = 1)
     {
 
+        $establishment = Establishment::where('id', auth()->user()->establishment_id)->first();
         $item_set = ItemSet::where('item_id', $id)->get();
         $message = "";
         $no_stock = false;
-        $item_set->each(function ($row) use (&$message,&$no_stock,$quantity) {
+        $item_set->each(function ($row) use (&$message,&$no_stock,$quantity,$establishment) {
             $item = Item::find($row->individual_item_id);
-            $stock = $item->stock;
+            $item_warehouse = ItemWarehouse::where('item_id', $row->individual_item_id)->where('warehouse_id', $establishment->id)->first();
+            $stock = $item_warehouse->stock;
             $stock_indivual = floatval($row->quantity) * floatval($quantity);
             if ($stock < $stock_indivual) {
                 $no_stock = true;

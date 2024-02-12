@@ -636,7 +636,7 @@ export default {
                             discount_amount_instead_service = Number(discount_amount_instead_service);
                             result -= discount_amount_instead_service * room.duration;
                         }
-                        if(this.form.discount_pack > 0){
+                        if(this.form.discount_pack > 0 && this.rooms.length > 1){
                             result -= this.form.discount_pack;
                         }
                         room.total = result;

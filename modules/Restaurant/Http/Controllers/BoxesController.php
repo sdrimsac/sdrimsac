@@ -319,40 +319,46 @@ class BoxesController extends Controller
                             }
                             $description_item = $data['description'];
                             if (mb_stripos($description_item, 'Media tarifa') !== false) {
-                                $hotel_rent_document = $document->hotel_rent;
-                                if ($hotel_rent_document) {
-                                    $hotel_rent =  $hotel_rent_document->hotel_rent;
-                                    $hotel_rent_item = $hotel_rent->first_hotel_rent_item();
-                                    $table_id = $hotel_rent_item->table_id;
-                                    $table = Table::find($table_id);
-                                    $table_name = $table->getTableFullName();
-                                    $description_item = "Habitación: $table_name - $description_item";
+                                if ($document) {
+                                    //primer item de document
+                                    $first_item = $document->items->first();
+                                    $item_document = $first_item->item;
+                                    $description_item = $item_document->description. " - Media tarifa";
+                                    // $hotel_rent =  $hotel_rent_document->hotel_rent;
+                                    // $hotel_rent_item = $hotel_rent->first_hotel_rent_item();
+                                    // $table_id = $hotel_rent_item->table_id;
+                                    // $table = Table::find($table_id);
+                                    // $table_name = $table->getTableFullName();
+                                    // $description_item = "Habitación: $table_name - $description_item";
+
                                 }
                             }
-                            if (gettype($id_exist) == "integer") {
-                                $all_items[$id_exist] = [
-                                    "price" => $item->unit_price,
-                                    "key" => $key,
-                                    // "category" => isset($item->item->category) ?  $item->item->category->name : "OTROS",
-                                    "category" => $this->get_category($item),
-                                    // "description" => $data['description'],
-                                    "description" => $description_item,
-                                    "quantity" => $all_items[$id_exist]["quantity"] + $item->quantity,
-                                    "total" => $all_items[$id_exist]["total"] + $item->total
-                                ];
-                            } else {
-                                // $key = $data['description']."-".$item->unit_price;
-                                $all_items[] = [
-                                    "key" => $key,
-                                    "price" => $item->unit_price,
-                                    // "description" => $data['description'],
-                                    "description" => $description_item,
-                                    "quantity" => $item->quantity,
-                                    "category" => $this->get_category($item),
-
-                                    // "category" => isset($item->item->category) ?  $item->item->category->name : "OTROS",
-                                    "total" => $item->total
-                                ];
+                            if($item->unit_price !== 0 && $item->unit_price !==  "0.000000"){
+                                if (gettype($id_exist) == "integer") {
+                                    $all_items[$id_exist] = [
+                                        "price" => $item->unit_price,
+                                        "key" => $key,
+                                        // "category" => isset($item->item->category) ?  $item->item->category->name : "OTROS",
+                                        "category" => $this->get_category($item),
+                                        // "description" => $data['description'],
+                                        "description" => $description_item,
+                                        "quantity" => $all_items[$id_exist]["quantity"] + $item->quantity,
+                                        "total" => $all_items[$id_exist]["total"] + $item->total
+                                    ];
+                                } else {
+                                    // $key = $data['description']."-".$item->unit_price;
+                                    $all_items[] = [
+                                        "key" => $key,
+                                        "price" => $item->unit_price,
+                                        // "description" => $data['description'],
+                                        "description" => $description_item,
+                                        "quantity" => $item->quantity,
+                                        "category" => $this->get_category($item),
+    
+                                        // "category" => isset($item->item->category) ?  $item->item->category->name : "OTROS",
+                                        "total" => $item->total
+                                    ];
+                                }
                             }
                         }
                     }

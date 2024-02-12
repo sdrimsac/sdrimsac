@@ -2339,7 +2339,10 @@ export default {
                     // this.form.customer_id = this.establishments.customer_id;
                 }
             }
-            this.checkForCustomer();
+            if(!this.hotel_customer_number){
+                this.checkForCustomer();
+            }
+            // this.checkForCustomer();
             let form_efectivo = {
                 enter_amount: 0,
                 difference: 0
@@ -4136,10 +4139,7 @@ export default {
             if (this.form.document_type_id != "01") {
                 this.customers = [...this.customers, this.customer_default];
             }
-            console.log(
-                "🚀 ~ file: payment.vue:4120 ~ filterSeries ~ this.form:",
-                this.form
-            );
+        
               if (this.form.hotel_customer_number) {
                   await  this.searchClientOne(this.form.hotel_customer_number);
 //                    this.changeCustomer();
