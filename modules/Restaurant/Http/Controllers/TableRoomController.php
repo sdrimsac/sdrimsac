@@ -418,25 +418,27 @@ class TableRoomController extends Controller
         $table = $hotel_rent_item->table;
         $price = $hotel_rent_item->is_month_rent ? $table->month_price : $table->price;
         $total = $price * $new_duration;
-    
         $documents = $hotel_rent->documents;
         $advances = 0;
-            foreach ($documents as $document) {
-                if($document->is_advance){
-                    if($document->document){
-                        $advances += $document->document->total;
-                    }
-                    if($document->sale_note){
-                        $advances += $document->sale_note->total;
-                    }
+        foreach ($documents as $document) {
+            if($document->is_advance){
+                if($document->document){
+                    $advances += $document->document->total;
+                }
+                if($document->sale_note){
+                    $advances += $document->sale_note->total;
                 }
             }
+        }
         $total -= $advances;
-      
+        
         $services = $hotel_rent_item->services;
         $date_taken = Carbon::parse($hotel_rent_item->checkin_date)->addDays($old_duration);
         $checkin_time = $hotel_rent_item->checkin_time;
-        $discount_instead_services_total = $discount_amount_instead_service * $old_duration;
+        $discount_instead_services_total = 0;
+        if($discount_instead_services){
+            $discount_instead_services_total = $discount_amount_instead_service * $old_duration;
+        }
         for($i = 0; $i <  $days; $i++){
             if($services->count() > 0){
                 foreach ($services as $service) {
@@ -877,6 +879,9 @@ class TableRoomController extends Controller
             'data' => $tables
         ];
     }
+    public function tablesCloseToLeave(){
+
+    }
     public function tablesToLeave()
     {
         $configuration = Configuration::first();
@@ -891,7 +896,7 @@ class TableRoomController extends Controller
                             ->where('checkout_time_estimated', '<', $time);
                     });
             })
-                ->where('payment_status', 'Pendiente')
+                // ->where('payment_status', 'Pendiente')
                 ->where('was_cancel', 0);
         }])
             ->whereHas('hotel_rent_items', function ($query) use ($date, $time) {
@@ -902,7 +907,7 @@ class TableRoomController extends Controller
                                 ->where('checkout_time_estimated', '<', $time);
                         });
                 })
-                    ->where('payment_status', 'Pendiente')
+                    // ->where('payment_status', 'Pendiente')
                     ->where('was_cancel', 0);
             })
             ->where('is_room', true)

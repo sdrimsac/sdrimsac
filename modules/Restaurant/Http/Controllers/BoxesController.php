@@ -41,9 +41,11 @@ use Modules\Restaurant\Models\WorkersType;
 use Modules\Report\Exports\BoxesResumenExportPos;
 use Modules\Report\Exports\BoxesExportBancarioPos;
 use Modules\Dashboard\Helpers\DashboardSalePurchase;
+use Modules\Item\Models\CategoryItem;
 use Modules\Restaurant\Models\BoxesDetail;
 use Modules\Restaurant\Models\Food;
 use Modules\Restaurant\Models\HotelRentItemServices;
+use Modules\Restaurant\Models\Table;
 
 class BoxesController extends Controller
 {
@@ -242,18 +244,22 @@ class BoxesController extends Controller
         if ($hotels) {
             $item_hotel = $item->item;
             $description = $item_hotel->description;
-            if (mb_stripos($description, 'HABITACIÓN') !== false) {
+            //si $description contiene la palabra "Media tarifa"
+            $is_media_tarifa = mb_stripos($description, 'Media tarifa') !== false;
+            if (mb_stripos($description, 'HABITACIÓN') !== false || $is_media_tarifa) {
                 return "HABITACIONES";
             }
         }
         $category = isset($item->item->category) ?  $item->item->category : null;
         if ($category == null) {
-            // $item_id = $item->item_id;
-            // $item = Item::select('category_id')->find($item_id);
-            // if ($item) {
-            //     $category = Category::find($item->category_id);
-            //     return $category->name;
-            // } else {
+            $item_id = $item->item_id;
+            $item = Item::select('category_id')->find($item_id);
+            if ($item) {
+                $category = CategoryItem::find($item->category_id);
+                if ($category) {
+                    return $category->name;
+                }
+            }
             // }
             return "OTROS";
         }
@@ -311,14 +317,26 @@ class BoxesController extends Controller
                                 // $id_exist = array_search($data['description'], array_column($all_items, 'description'));
                                 $id_exist = array_search($key, array_column($all_items, 'key'));
                             }
-
+                            $description_item = $data['description'];
+                            if (mb_stripos($description_item, 'Media tarifa') !== false) {
+                                $hotel_rent_document = $document->hotel_rent;
+                                if ($hotel_rent_document) {
+                                    $hotel_rent =  $hotel_rent_document->hotel_rent;
+                                    $hotel_rent_item = $hotel_rent->first_hotel_rent_item();
+                                    $table_id = $hotel_rent_item->table_id;
+                                    $table = Table::find($table_id);
+                                    $table_name = $table->getTableFullName();
+                                    $description_item = "Habitación: $table_name - $description_item";
+                                }
+                            }
                             if (gettype($id_exist) == "integer") {
                                 $all_items[$id_exist] = [
                                     "price" => $item->unit_price,
                                     "key" => $key,
                                     // "category" => isset($item->item->category) ?  $item->item->category->name : "OTROS",
                                     "category" => $this->get_category($item),
-                                    "description" => $data['description'],
+                                    // "description" => $data['description'],
+                                    "description" => $description_item,
                                     "quantity" => $all_items[$id_exist]["quantity"] + $item->quantity,
                                     "total" => $all_items[$id_exist]["total"] + $item->total
                                 ];
@@ -327,7 +345,8 @@ class BoxesController extends Controller
                                 $all_items[] = [
                                     "key" => $key,
                                     "price" => $item->unit_price,
-                                    "description" => $data['description'],
+                                    // "description" => $data['description'],
+                                    "description" => $description_item,
                                     "quantity" => $item->quantity,
                                     "category" => $this->get_category($item),
 
@@ -367,10 +386,23 @@ class BoxesController extends Controller
                             // $id_exist = array_search($data['description'], array_column($all_items, 'description'));
                             $id_exist = array_search($key, array_column($all_items, 'key'));
                         }
+                        $description_item = $data['description'];
+                        if (mb_stripos($description_item, 'Media tarifa') !== false) {
+                            $hotel_rent_document = $sale_note->hotel_rent;
+                            if ($hotel_rent_document) {
+                                $hotel_rent =  $hotel_rent_document->hotel_rent;
+                                $hotel_rent_item = $hotel_rent->first_hotel_rent_item();
+                                $table_id = $hotel_rent_item->table_id;
+                                $table = Table::find($table_id);
+                                $table_name = $table->getTableFullName();
+                                $description_item = "Habitación: $table_name - $description_item";
+                            }
+                        }
                         if (gettype($id_exist) == "integer") {
                             $all_items[$id_exist] = [
                                 "price" => $data["sale_unit_price"],
-                                "description" => $data['description'],
+                                // "description" => $data['description'],
+                                "description" => $description_item,
                                 "category" => $this->get_category($item),
                                 "key" => $key,
                                 // "category" => isset($item->item->category) ?  $item->item->category->name : "OTROS",
@@ -381,7 +413,8 @@ class BoxesController extends Controller
                             $all_items[] = [
                                 "key" => $key,
                                 "price" => $data["sale_unit_price"],
-                                "description" => $data['description'],
+                                // "description" => $data['description'],
+                                "description" => $description_item,
                                 "category" => $this->get_category($item),
                                 // "category" => isset($item->item->category) ?  $item->item->category->name : "OTROS",
                                 "quantity" => $item->quantity,

@@ -2184,7 +2184,12 @@ export default {
                     this.value = newData[0].id;
                     this.form.customer_id = newData[0].id;
                     this.changeCustomer();
+                }else{
+                    this.value = null;
+                    this.form.customer_id = null;
                 }
+
+                
             }
         },
         changeCustomer() {
@@ -2292,10 +2297,7 @@ export default {
             }
         },
         async date_of_issue() {
-            console.log(
-                "🚀 ~ file: payment.vue:2329 ~ date_of_issue ~ this.value:",
-                this.value
-            );
+          
             // this.discount_amount = 0;
             // this.form.customer_id
             // this.form.student_id = null;
@@ -4140,7 +4142,7 @@ export default {
             );
               if (this.form.hotel_customer_number) {
                   await  this.searchClientOne(this.form.hotel_customer_number);
-                    this.changeCustomer();
+//                    this.changeCustomer();
                 } 
             this.changeCustomer();
             if (this.form.document_type_id == "80") {

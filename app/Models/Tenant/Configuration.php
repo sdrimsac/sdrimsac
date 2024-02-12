@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Config;
 class Configuration extends ModelTenant
 {
     protected $fillable = [
+        'minute_close_to_leave',
         'discount_amount_instead_service',
         'series_enabled',
         'lots_enabled',
@@ -263,6 +264,7 @@ class Configuration extends ModelTenant
         // $skins = Skin::all();
         $skins = [];
         return [
+            'minute_close_to_leave' => $this->minute_close_to_leave,
             'rates' => $this->rates,
             'discount_amount_instead_service' => $this->discount_amount_instead_service,
             'series_enabled' => (bool)$this->series_enabled,

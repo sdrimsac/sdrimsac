@@ -42,6 +42,23 @@
                     Agregar habitación
                 </el-button>
             </div>
+            <div class="col-md-5"
+                v-if="rooms.length > 1"
+            >
+                <label 
+                class="w-100"
+                for="discount_pack">Pack - Dscto por cada habitación</label>
+               <el-input
+               class="w-100"
+                    type="number"
+                    :min="1"
+                    @input="calculateTotal"
+                    v-model="form.discount_pack"
+                    placeholder="Descuento por paquete"
+                    size="small"
+                >
+                </el-input>
+            </div>
         </div>
         <div class="row mt-2">
             <div class="col-md-4">
@@ -619,6 +636,9 @@ export default {
                             discount_amount_instead_service = Number(discount_amount_instead_service);
                             result -= discount_amount_instead_service * room.duration;
                         }
+                        if(this.form.discount_pack > 0){
+                            result -= this.form.discount_pack;
+                        }
                         room.total = result;
 
                         subtotal += result;
@@ -802,8 +822,11 @@ export default {
         },
 
         async submit() {
-            this.form.rooms = this.rooms;
 
+            this.form.rooms = this.rooms;
+            if(this.rooms.length == 0){
+                this.form.discount_pack = 0;
+            }
             if (!this.validate()) {
                 return;
             }

@@ -273,7 +273,10 @@ class SaleNote extends ModelTenant
     {
         return (is_null($value)) ? null : (object) json_decode($value);
     }
-
+    public function hotel_rent()
+    {
+        return $this->hasOne(HotelRentDocument::class);
+    }
     public function setLegendsAttribute($value)
     {
         $this->attributes['legends'] = (is_null($value)) ? null : json_encode($value);

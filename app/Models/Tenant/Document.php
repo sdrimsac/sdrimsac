@@ -10,6 +10,7 @@ use Exception;
 use Hyn\Tenancy\Traits\UsesTenantConnection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Modules\BusinessTurn\Models\DocumentHotel;
 
 //use Modules\BusinessTurn\Models\DocumentHotel;
 //use Modules\BusinessTurn\Models\DocumentTransport;
@@ -422,10 +423,10 @@ class Document extends ModelTenant
         return $this->belongsTo(SaleNote::class, 'sale_note_id');
     }
 
-    // public function hotel()
-    // {
-    //     return $this->hasOne(DocumentHotel::class);
-    // }
+    public function hotel_rent()
+    {
+        return $this->hasOne(HotelRentDocument::class, 'document_id');
+    }
 
     // public function transport()
     // {

@@ -310,6 +310,7 @@ class PosController extends Controller
             $time_to_leave = $configuration->alarm_to_end;
             $date = Carbon::now()->addMinutes($time_to_leave)->format('Y-m-d');
             $time = Carbon::now()->addMinutes($time_to_leave)->format('H:i:s');
+           
             $tablesLeave = Table::with(['hotel_rent_items'])
                 ->where('establishment_id', auth()->user()->establishment_id)
                 ->whereHas('hotel_rent_items', function ($query) use ($date, $time) {
@@ -320,7 +321,7 @@ class PosController extends Controller
                                     ->where('checkout_time_estimated', '<', $time);
                             });
                     })
-                        ->where('payment_status', 'Pendiente')
+                        // ->where('payment_status', 'Pendiente')
                         ->where('was_cancel', 0);
                 })
                 ->where('is_room', true)

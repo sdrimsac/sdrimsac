@@ -7,6 +7,8 @@ namespace App\Models\Tenant;
 class HotelRent extends ModelTenant
 {
     protected $fillable = [
+        'discount_pack',
+        'is_pack',
         'customer_id',
         'user_id',
         'establishment_id',
@@ -70,5 +72,8 @@ class HotelRent extends ModelTenant
         return $this->belongsTo(User::class);
     }
 
-    
+    public function first_hotel_rent_item()
+    {
+        return $this->items->first();
+    }
 }

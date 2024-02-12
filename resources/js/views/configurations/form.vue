@@ -11,7 +11,7 @@
                             <el-tab-pane label="Visual" v-if="isArca">
                                 <div class="row">
                                     <template v-if="form.hotels">
-                                        <div class="col-md-6 mt-4">
+                                        <!-- <div class="col-md-6 mt-4">
                                             <div class="form-group">
                                                 <label
                                                     class="control-label w-100"
@@ -24,7 +24,7 @@
                                                 >
                                                 </el-input-number>
                                             </div>
-                                        </div>
+                                        </div> -->
                                         <div class="col-md-6 mt-4">
                                             <div class="form-group">
                                                 <label
@@ -1647,6 +1647,22 @@
                                         </div>
                                     </div>
                                     <template v-if="form.hotels">
+                                        <div class="col-md-6 mt-4">
+                                            <div class="form-group">
+                                                <label
+                                                    class="control-label w-100"
+                                                    >Tiempo para aviso de salida
+                                                    de habitación
+                                                </label>
+                                                <el-input-number
+                                                    @change="submit"
+                                                    v-model="
+                                                        form.minute_close_to_leave
+                                                    "
+                                                >
+                                                </el-input-number>
+                                            </div>
+                                        </div>
                                         <div class="col-md-6 mt-4">
                                             <div class="form-group">
                                                 <label

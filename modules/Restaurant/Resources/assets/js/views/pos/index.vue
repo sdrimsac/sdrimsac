@@ -173,7 +173,7 @@
                                         @click="tableOpen(t.id)"
                                         style="margin-right: 2px;margin-left: 2px;"
                                         type="button"
-                                        class="btn  btn-danger"
+                                        :class="`btn btn-${t.timer?'warning':'danger'}`"
                                     >
                                         <span>{{ t.timer }}</span>
 
@@ -2134,9 +2134,16 @@ export default {
                     let seconds = diff % 60;
                     diff = Math.floor(diff / 60);
                     let minutes = diff % 60;
-                    t.timer = `${minutes < 10 ? "0" : ""}${minutes}:${
-                        seconds < 10 ? "0" : ""
-                    }${seconds}`;
+                    let hours = Math.floor(diff / 60);
+                    if (hours >= 1) {
+                        t.timer = `${hours < 10 ? "0" : ""}${hours}:${
+                            minutes < 10 ? "0" : ""
+                        }${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+                    } else {
+                        t.timer = `${minutes < 10 ? "0" : ""}${minutes}:${
+                            seconds < 10 ? "0" : ""
+                        }${seconds}`;
+                    }
                 }
             });
 

@@ -123,7 +123,9 @@ class HotelRentItemResource extends JsonResource
             $credit_line = $this->credit_line - $total_all_orden;
         }
         $tes = $this->total + $this->advances;
+        $table_name = $this->table->getTableFullName();
         return [
+            'table_name' => $table_name,
             'discount_instead_services' => $this->discount_instead_services,
             'credit_line' => $credit_line,
             'has_services' => $has_services,

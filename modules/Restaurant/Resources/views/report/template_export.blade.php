@@ -252,7 +252,6 @@
                     <tbody>
                         @foreach ($records as $row)
                             @php
-                                // dump($row->customer->name);
                                 if ($filter_type == 1) {
                                     $value = [
                                         'item_count' => $row->item_count,

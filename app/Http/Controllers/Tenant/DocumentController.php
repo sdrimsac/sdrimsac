@@ -1000,8 +1000,8 @@ class DocumentController extends Controller
             foreach ($hotel_rent_items as $item) {
                 $item->payment_status = "Pagado";
                 $item->document = $document->id;
-                $item->checkout_date = date('Y-m-d');
-                $item->checkout_time = date('H:i:s');
+                // $item->checkout_date = date('Y-m-d');
+                // $item->checkout_time = date('H:i:s');
                 if ($vacate) {
                     $table = Table::where('id', $item->table_id)->first();
                     $table->status_table_id = 5;

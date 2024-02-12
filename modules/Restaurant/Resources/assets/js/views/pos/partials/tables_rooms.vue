@@ -5,7 +5,7 @@
         @open="open"
         @close="close"
         width="70%"
-        title="ZONA DE ATENCIÓN HOTEL"
+        :title="titleDialog"
         :close-on-click-modal="false"
         :class="{ top }"
     >
@@ -188,14 +188,14 @@
                         <label for="customer"
                             >Cliente
 
-                            <a
+                            <!-- <a
                                 v-if="currentRoom.has_many_rooms"
                                 href="#"
                                 data-toggle="tooltip"
                                 @click="showRoom = true"
                             >
                                 [+ Cancelar más de 1 habitación]
-                            </a>
+                            </a> -->
                         </label>
                         <input
                             type="text"
@@ -1051,6 +1051,8 @@ export default {
     },
     data() {
         return {
+            titleDialogOriginal: "ZONA DE ATENCIÓN HOTEL",
+            titleDialog: "ZONA DE ATENCIÓN HOTEL",
             tableNameMaintenance: null,
             typeMaintenance: null,
             tableIdMaintenance: null,
@@ -1308,6 +1310,7 @@ export default {
             this.getRoomDetail(this.currentTable.id);
         },
         close2() {
+            this.titleDialog = this.titleDialogOriginal;
             this.viewingRoom = false;
             // this.currentTable = null;
             this.currentRoom = null;
@@ -1460,6 +1463,8 @@ export default {
                     data: { data }
                 } = response;
                 this.currentRoom = data;
+                let {table_name} = data;
+                this.titleDialog = `Habitación ${table_name}`;
                 this.extra_time = data.extra_time;
                 this.viewingRoom = true;
             } catch (e) {
@@ -1657,6 +1662,7 @@ export default {
             }, 1000);
             if (this.roomSeeId) {
                 let table = this.all_tables.find(t => t.id == this.roomSeeId);
+                console.log("🚀 ~ file: tables_rooms.vue:1661 ~ open ~ table:", table)
                 this.selectTable(table);
             }
         },

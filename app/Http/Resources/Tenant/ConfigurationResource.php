@@ -15,6 +15,7 @@ class ConfigurationResource extends JsonResource
     public function toArray($request)
     {
         return [
+            'minute_close_to_leave' => $this->minute_close_to_leave,
             'discount_amount_instead_service' => $this->discount_amount_instead_service,
             'series_enabled' => (bool) $this->series_enabled,
             'lots_enabled' => (bool) $this->lots_enabled,
