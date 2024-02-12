@@ -175,7 +175,7 @@
                                         type="button"
                                         :class="
                                             `btn btn-${
-                                                t.timer ? 'warning' : 'danger'
+                                                t.timer ? 'warning-color' : 'danger'
                                             }`
                                         "
                                     >
@@ -1745,6 +1745,10 @@
 </template>
 
 <style>
+    .warning-color{
+        background-color: #ffa407 !important;
+        color: #fff !important;
+    }
 /* .el-checkbox#barcode .el-checkbox__label {
     padding-top: 10px !important;
 } */
