@@ -311,9 +311,7 @@ class PosController extends Controller
             $date = Carbon::now()->addMinutes($time_to_leave)->format('Y-m-d');
             $time = Carbon::now()->addMinutes($time_to_leave)->format('H:i:s');
            
-            $tablesLeave = Table::with(['hotel_rent_items' => function ($query) {
-             $query->latest()->take(1);
-            }])
+            $tablesLeave = Table::with(['hotel_rent_items'])
                 ->where('establishment_id', auth()->user()->establishment_id)
                 ->whereHas('hotel_rent_items', function ($query) use ($date, $time) {
                     $query->where(function ($query) use ($date, $time) {
