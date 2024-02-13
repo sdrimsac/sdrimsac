@@ -27,6 +27,7 @@ use Modules\Inventory\Models\Warehouse;
 use Modules\Finance\Traits\FinanceTrait;
 use App\Models\Tenant\Catalogs\AffectationIgvType;
 use App\Models\Tenant\Catalogs\IdentityDocumentType;
+use App\Models\Tenant\HotelRentItem;
 use App\Models\Tenant\Seller;
 use Carbon\Carbon;
 use Modules\College\Models\CollegeStudent;
@@ -311,8 +312,8 @@ class PosController extends Controller
             $date = Carbon::now()->addMinutes($time_to_leave)->format('Y-m-d');
             $time = Carbon::now()->addMinutes($time_to_leave)->format('H:i:s');
            
-            $tablesLeave = Table::with(['hotel_rent_items'])
-                ->where('establishment_id', auth()->user()->establishment_id)
+            $tablesLeave = Table
+                ::where('establishment_id', auth()->user()->establishment_id)
                 ->whereHas('hotel_rent_items', function ($query) use ($date, $time) {
                     $query->where(function ($query) use ($date, $time) {
                         $query->where('checkout_date_estimated', '<', $date)
@@ -327,6 +328,12 @@ class PosController extends Controller
                 ->where('is_room', true)
                 ->where('status_table_id', '<>', 1)
                 ->get();
+
+            foreach ($tablesLeave as $table) {
+                $hotel_rent_items = HotelRentItem::where('table_id', $table->id)
+                ->latest('id')->first();
+                $table->hotel_rent_items = collect($hotel_rent_items);
+            }
         }
         return compact(
             'tablesLeave',
