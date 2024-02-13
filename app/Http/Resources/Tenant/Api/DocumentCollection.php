@@ -29,8 +29,7 @@ class DocumentCollection extends ResourceCollection
                 'full_number' => $row->series . '-' . $row->number,
                 'state_type_description' => $row->state_type->description,
                 'state_type_id' => $row->state_type_id,
-
-
+                'items' => $row->items
             ];
         });
     }
