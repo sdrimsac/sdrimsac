@@ -29,7 +29,17 @@ class DocumentCollection extends ResourceCollection
                 'full_number' => $row->series . '-' . $row->number,
                 'state_type_description' => $row->state_type->description,
                 'state_type_id' => $row->state_type_id,
-                'items' => $row->items
+                'items' => $row->items->transform(function($row) {
+                    return [
+                        'id' => $row->id,
+                        'item_id' => $row->item_id,
+                        'quantity' => $row->quantity,
+                        'unit_price' => $row->unit_price,
+                        'total' => $row->total,
+                        'description' => $row->item->description,
+                    
+                    ];
+                }),
             ];
         });
     }
