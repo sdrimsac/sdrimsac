@@ -773,7 +773,7 @@ class SaleNoteController extends Controller
                 }
                 Box::where('sale_note_id', $this->sale_note->id)->delete();
                 $establishment = Establishment::where('id', auth()->user()->establishment_id)->first();
-                if ($request->afectar_caja == true) {
+                if ($request->afectar_caja == true && $request->generate != true) {
                     // $payments = PaymentMethodType::where('id', $request->payment_condition_id)->first();
                     // $method = $payments->description;
                     $document_save = SaleNote::where('id', $this->sale_note->id)->first();
