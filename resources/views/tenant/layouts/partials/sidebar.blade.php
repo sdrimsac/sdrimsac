@@ -4,7 +4,10 @@
     $path[2] = array_key_exists(2, $path) > 0 ? $path[2] : '';
     $path[0] = $path[0] === '' ? 'documents' : $path[0];
     $user = auth()->user();
-    
+    $cash = \App\Models\Tenant\Cash::where('state', 1)
+        ->where('user_id', auth()->user()->id)
+        ->get()
+        ->last();
     $config = \App\Models\Tenant\Configuration::first();
     $has_series = (bool) \Modules\Item\Models\ItemLot::count();
     $has_lotes = (bool) \Modules\Item\Models\ItemLotsGroup::count();
@@ -174,119 +177,119 @@
     
         </ul>
       </li> --}}
-      @if (!$roleService->isArca())
-          
-            <li>
-                <a href="#compras" data-bs-toggle="collapse" data-role="button"
-                    aria-expanded="{{ $path[0] === 'purchases' ? true : false }}{{ $path[0] === 'purchases' && $path[1] === 'create' ? true : false }}"
-                    class="{{ $path[0] === 'purchases' ? 'active' : '' }}{{ $path[0] === 'purchases' && $path[1] === 'create' ? 'active' : '' }}"
-                    data-clicked="{{ $path[0] === 'purchases' ? true : false }}{{ $path[0] === 'purchases' && $path[1] === 'create' ? true : false }}">
-                    <i class="icofont-shopping-cart icon-parent"></i>
-                    <span class="label">Compras</span>
-                </a>
+            @if (!$roleService->isArca())
 
-                <ul id="compras" class="collapse ">
-                    <li>
-                        <a class="{{ $path[0] === 'purchases' && $path[1] === '' ? 'active' : '' }}"
-                            href="{{ route('tenant.purchases.index') }}">
-                            <i class="icofont-list"></i> Lista de Compras
-                        </a>
-                    </li>
-                    <li>
-                        <a class="{{ $path[0] === 'purchases' && $path[1] === 'create' ? 'active' : '' }}"
-                            href="{{ route('tenant.purchases.create') }}">
-                            <i class="icofont-credit-card"></i> Nueva Compras
-                        </a>
-                    </li>
+                <li>
+                    <a href="#compras" data-bs-toggle="collapse" data-role="button"
+                        aria-expanded="{{ $path[0] === 'purchases' ? true : false }}{{ $path[0] === 'purchases' && $path[1] === 'create' ? true : false }}"
+                        class="{{ $path[0] === 'purchases' ? 'active' : '' }}{{ $path[0] === 'purchases' && $path[1] === 'create' ? 'active' : '' }}"
+                        data-clicked="{{ $path[0] === 'purchases' ? true : false }}{{ $path[0] === 'purchases' && $path[1] === 'create' ? true : false }}">
+                        <i class="icofont-shopping-cart icon-parent"></i>
+                        <span class="label">Compras</span>
+                    </a>
 
-                </ul>
-            </li>
-            {{-- @if (!$config->college) --}}
-            <li>
-                <a href="#invetories" data-bs-toggle="collapse" data-role="button"
-                    aria-expanded="{{ $path[0] === 'invetories' ? true : false }}{{ $path[0] === 'invetories' && $path[1] === 'create' ? true : false }}{{ $path[0] === 'items' ? true : false }}"
-                    class="{{ $path[0] === 'invetories' ? 'active' : '' }}{{ $path[0] === 'invetories' && $path[1] === 'create' ? 'active' : '' }}{{ $path[0] === 'items' ? 'active' : '' }}"
-                    data-clicked="{{ $path[0] === 'invetories' ? true : false }}{{ $path[0] === 'invetories' && $path[1] === 'create' ? true : false }}{{ $path[0] === 'items' ? true : false }}">
-                    <i class="icofont-box icon-parent"></i>
-                    <span class="label">Inventario</span>
-                </a>
+                    <ul id="compras" class="collapse ">
+                        <li>
+                            <a class="{{ $path[0] === 'purchases' && $path[1] === '' ? 'active' : '' }}"
+                                href="{{ route('tenant.purchases.index') }}">
+                                <i class="icofont-list"></i> Lista de Compras
+                            </a>
+                        </li>
+                        <li>
+                            <a class="{{ $path[0] === 'purchases' && $path[1] === 'create' ? 'active' : '' }}"
+                                href="{{ route('tenant.purchases.create') }}">
+                                <i class="icofont-credit-card"></i> Nueva Compras
+                            </a>
+                        </li>
 
-                <ul id="invetories" class="collapse ">
-                    {{-- <li>
+                    </ul>
+                </li>
+                {{-- @if (!$config->college) --}}
+                <li>
+                    <a href="#invetories" data-bs-toggle="collapse" data-role="button"
+                        aria-expanded="{{ $path[0] === 'invetories' ? true : false }}{{ $path[0] === 'invetories' && $path[1] === 'create' ? true : false }}{{ $path[0] === 'items' ? true : false }}"
+                        class="{{ $path[0] === 'invetories' ? 'active' : '' }}{{ $path[0] === 'invetories' && $path[1] === 'create' ? 'active' : '' }}{{ $path[0] === 'items' ? 'active' : '' }}"
+                        data-clicked="{{ $path[0] === 'invetories' ? true : false }}{{ $path[0] === 'invetories' && $path[1] === 'create' ? true : false }}{{ $path[0] === 'items' ? true : false }}">
+                        <i class="icofont-box icon-parent"></i>
+                        <span class="label">Inventario</span>
+                    </a>
+
+                    <ul id="invetories" class="collapse ">
+                        {{-- <li>
                             <a class="{{ $path[0] === 'inventory' && $path[1] === '' ? 'active' : '' }}"
                                 href="{{ route('inventory.index') }}">Movimientos</a>
                         </li> --}}
 
-                    <li>
-                        <a class="{{ $path[0] === 'items' && $path[1] === '' ? 'active' : '' }}"
-                            href="{{ route('tenant.items.index') }}">
-                            <i class="icofont-soft-drinks"></i> Productos
-                        </a>
-                    </li>
-                    @if ($config->transform_item)
                         <li>
-                            <a class="{{ $path[0] === 'manufactured' && $path[1] === '' ? 'active' : '' }}"
-                                href="{{ route('tenant.manufactured.index') }}">
-                                <i class="fas fa-exchange-alt"></i>
-                                Transformación
+                            <a class="{{ $path[0] === 'items' && $path[1] === '' ? 'active' : '' }}"
+                                href="{{ route('tenant.items.index') }}">
+                                <i class="icofont-soft-drinks"></i> Productos
                             </a>
                         </li>
-                    @endif
-                    @if ($many_establishments)
-                        <li>
-                            <a class="{{ $path[0] === 'transfers' && $path[1] === '' ? 'active' : '' }}"
-                                href="{{ route('transfers.index') }}">
-                                <i class="icofont-list"></i> Traslados
-                            </a>
-                        </li>
+                        @if ($config->transform_item)
+                            <li>
+                                <a class="{{ $path[0] === 'manufactured' && $path[1] === '' ? 'active' : '' }}"
+                                    href="{{ route('tenant.manufactured.index') }}">
+                                    <i class="fas fa-exchange-alt"></i>
+                                    Transformación
+                                </a>
+                            </li>
+                        @endif
+                        @if ($many_establishments)
+                            <li>
+                                <a class="{{ $path[0] === 'transfers' && $path[1] === '' ? 'active' : '' }}"
+                                    href="{{ route('transfers.index') }}">
+                                    <i class="icofont-list"></i> Traslados
+                                </a>
+                            </li>
+                            <li>
+                                <a class="{{ $path[0] === 'transfers_place' && $path[1] === '' ? 'active' : '' }}"
+                                    href="{{ route('transfers_place.index') }}">
+                                    <i class="icofont-list"></i> Traslados por aceptar
+                                </a>
+                            </li>
+                        @endif
+
                         <li>
                             <a class="{{ $path[0] === 'transfers_place' && $path[1] === '' ? 'active' : '' }}"
-                                href="{{ route('transfers_place.index') }}">
-                                <i class="icofont-list"></i> Traslados por aceptar
-                            </a>
-                        </li>
-                    @endif
+                                href="{{ route('tenant.dispatches.index') }}">
+                                <i class="far fa-file-alt"></i>
 
-                    <li>
-                        <a class="{{ $path[0] === 'transfers_place' && $path[1] === '' ? 'active' : '' }}"
-                            href="{{ route('tenant.dispatches.index') }}">
-                            <i class="far fa-file-alt"></i>
+                                Guias de remisión
+                            </a>
+                        </li>
+                        @if ($has_series && $config->series_enabled)
+                            <li>
+                                <a class="{{ $path[0] === 'itemlots' && $path[1] === '' ? 'active' : '' }}"
+                                    href="{{ route('itemlots') }}">
+                                    <i class="icofont-soft-drinks"></i> Series (productos)
+                                </a>
+                            </li>
+                        @endif
 
-                            Guias de remisión
-                        </a>
-                    </li>
-                    @if ($has_series && $config->series_enabled)
+                        @if ($has_lotes && $config->lots_enabled)
+                            <li>
+                                <a class="{{ $path[0] === 'lotes' && $path[1] === '' ? 'active' : '' }}"
+                                    href="{{ route('lotes') }}">
+                                    <i class="icofont-bar-code"></i> Lotes
+                                </a>
+                            </li>
+                        @endif
                         <li>
-                            <a class="{{ $path[0] === 'itemlots' && $path[1] === '' ? 'active' : '' }}"
-                                href="{{ route('itemlots') }}">
-                                <i class="icofont-soft-drinks"></i> Series (productos)
+                            <a class="{{ $path[0] === 'item-sets' && $path[1] === '' ? 'active' : '' }}"
+                                href="{{ route('tenant.item_sets.index') }}">
+                                <i class="icofont-price"></i> Promocion / Ofertas
                             </a>
                         </li>
-                    @endif
-
-                    @if ($has_lotes && $config->lots_enabled)
-                        <li>
-                            <a class="{{ $path[0] === 'lotes' && $path[1] === '' ? 'active' : '' }}"
-                                href="{{ route('lotes') }}">
-                                <i class="icofont-bar-code"></i> Lotes
-                            </a>
-                        </li>
-                    @endif
-                    <li>
-                        <a class="{{ $path[0] === 'item-sets' && $path[1] === '' ? 'active' : '' }}"
-                            href="{{ route('tenant.item_sets.index') }}">
-                            <i class="icofont-price"></i> Promocion / Ofertas
-                        </a>
-                    </li>
-                    @if ($config->color_size_enabled)
-                        <li>
-                            <a class="{{ $path[0] === 'item-color-size' ? 'active' : '' }}"
-                                href="{{ route('tenant.item_color_size.index') }}">
-                                <i class="icofont-site-map"></i> Color & Tallas
-                            </a>
-                        </li>
-                    @endif
-                    {{-- @if ($has_series)
+                        @if ($config->color_size_enabled)
+                            <li>
+                                <a class="{{ $path[0] === 'item-color-size' ? 'active' : '' }}"
+                                    href="{{ route('tenant.item_color_size.index') }}">
+                                    <i class="icofont-site-map"></i> Color & Tallas
+                                </a>
+                            </li>
+                        @endif
+                        {{-- @if ($has_series)
                         <li>
                             <a class="{{ $path[0] === 'lotes_due' && $path[1] === '' ? 'active' : '' }}"
                                 href="{{ route('lotes') }}">
@@ -296,10 +299,10 @@
                         @endif --}}
 
 
-                </ul>
-            </li>
-            {{-- @endif --}}
-      @endif
+                    </ul>
+                </li>
+                {{-- @endif --}}
+            @endif
 
         @endif
         {{-- consignación --}}
@@ -401,14 +404,14 @@
                 </a>
                 <ul id="boxes" class="collapse ">
                     @if ($roleService->isArca())
-                    <li>
-                        <a class="{{ $path[0] === 'rooms' && $path[1] === 'reports' ? 'active' : '' }}"
-                            href="{{ route('hotels.reports.rooms') }}">
-                            <i class="icofont-file-excel"></i>
+                        <li>
+                            <a class="{{ $path[0] === 'rooms' && $path[1] === 'reports' ? 'active' : '' }}"
+                                href="{{ route('hotels.reports.rooms') }}">
+                                <i class="icofont-file-excel"></i>
 
-                            Reporte habitaciones
-                        </a>
-                    </li>
+                                Reporte habitaciones
+                            </a>
+                        </li>
                         <li>
                             <a href="/cash/main_cash"
                                 class="{{ $path[0] === 'cash' && $path[1] == 'main_cash' ? 'active' : '' }}">
@@ -426,16 +429,37 @@
                         @endif
                     @endif
                     <li>
-                        <a href="/incomes" class="{{ $path[0] === 'incomes' ? 'active' : '' }}">
-                            <i class="icofont-money icon-parent"></i>
-                            <span class="label">Ingresos</span>
-                        </a>
+                        @if ($cash)
+                            <a href="/incomes" class="{{ $path[0] === 'incomes' ? 'active' : '' }}">
+                                <i class="icofont-money icon-parent"></i>
+                                <span class="label">Ingresos</span>
+                            </a>
+                        @else
+                            <a href="#">
+
+                                <i class="icofont-money icon-parent"></i>
+                                <span class="label text-danger">
+                                    Ingresos - abra una caja
+                                </span>
+                            </a>
+                        @endif
                     </li>
                     <li>
-                        <a href="/expenses" class="{{ $path[0] === 'expenses' ? 'active' : '' }}">
-                            <i class="icofont-spreadsheet icon-parent"></i>
-                            <span class="label">Gastos</span>
-                        </a>
+                        @if ($cash)
+                            <a href="/expenses" class="{{ $path[0] === 'expenses' ? 'active' : '' }}">
+                                <i class="icofont-spreadsheet icon-parent"></i>
+                                <span class="label">Gastos</span>
+                            </a>
+                        @else
+                            <a href="#">
+
+                                <i class="icofont-spreadsheet icon-parent"></i>
+                                <span class="label text-danger">
+                                    Gastos - abra una caja
+                                </span>
+                            </a>
+                        @endif
+
                     </li>
                     <li>
                         <a class="{{ $path[0] === 'boxes' ? 'active' : '' }}" href="{{ route('boxes') }}">
@@ -460,107 +484,107 @@
             </li>
         @endif
 
-         @if(!$roleService->isArca())
-         <li>
-            <a href="#reporte" data-bs-toggle="collapse" data-role="button"
-                aria-expanded="{{ $path[0] === 'reports' && $path[1] === 'inventory' ? true : false }}{{ ($path[0] === 'reports' && $path[1] === 'stockmin' ? true : false && $path[1] === 'kardex') ? true : false }}"
-                class="{{ $path[0] === 'reports' && $path[1] === 'inventory' ? 'active' : '' }}{{ ($path[0] === 'reports' && $path[1] === 'stockmin' ? 'active' : '' && $path[1] === 'kardex') ? true : false }}"
-                data-clicked="{{ $path[0] === 'reports' && $path[1] === 'inventory' ? true : false }}{{ ($path[0] === 'reports' && $path[1] === 'stockmin' ? true : false && $path[1] === 'kardex') ? true : false }}">
-                <i class="icofont-file-alt icon-parent"></i>
-                <span class="label">Reporte </span>
-            </a>
-            <ul id="reporte" class="collapse ">
-                @if ($config->hotels && !$roleService->isLogistic())
-                <li>
-                    <a class="{{ $path[0] === 'rooms' && $path[1] === 'reports' ? 'active' : '' }}"
-                        href="{{ route('hotels.reports.rooms') }}">
-                        <i class="icofont-file-excel"></i>
+        @if (!$roleService->isArca())
+            <li>
+                <a href="#reporte" data-bs-toggle="collapse" data-role="button"
+                    aria-expanded="{{ $path[0] === 'reports' && $path[1] === 'inventory' ? true : false }}{{ ($path[0] === 'reports' && $path[1] === 'stockmin' ? true : false && $path[1] === 'kardex') ? true : false }}"
+                    class="{{ $path[0] === 'reports' && $path[1] === 'inventory' ? 'active' : '' }}{{ ($path[0] === 'reports' && $path[1] === 'stockmin' ? 'active' : '' && $path[1] === 'kardex') ? true : false }}"
+                    data-clicked="{{ $path[0] === 'reports' && $path[1] === 'inventory' ? true : false }}{{ ($path[0] === 'reports' && $path[1] === 'stockmin' ? true : false && $path[1] === 'kardex') ? true : false }}">
+                    <i class="icofont-file-alt icon-parent"></i>
+                    <span class="label">Reporte </span>
+                </a>
+                <ul id="reporte" class="collapse ">
+                    @if ($config->hotels && !$roleService->isLogistic())
+                        <li>
+                            <a class="{{ $path[0] === 'rooms' && $path[1] === 'reports' ? 'active' : '' }}"
+                                href="{{ route('hotels.reports.rooms') }}">
+                                <i class="icofont-file-excel"></i>
 
-                        Reporte habitaciones
-                    </a>
-                </li>
-            @endif
-                @if ($config->consignment)
-                    <li>
-                        <a class="{{ $path[0] === 'reports' && $path[1] === 'consignment' ? 'active' : '' }}"
-                            href="{{ route('reports.consignment.index') }}">
-                            <i class="icofont-file-excel"></i>
+                                Reporte habitaciones
+                            </a>
+                        </li>
+                    @endif
+                    @if ($config->consignment)
+                        <li>
+                            <a class="{{ $path[0] === 'reports' && $path[1] === 'consignment' ? 'active' : '' }}"
+                                href="{{ route('reports.consignment.index') }}">
+                                <i class="icofont-file-excel"></i>
 
-                            Consignamiento
-                        </a>
-                    </li>
-                @endif
-                @if ($config->credits)
-                    <li>
-                        <a class="{{ $path[0] === 'reports' && $path[1] === 'credits' ? 'active' : '' }}"
-                            href="{{ route('reports.credits.index') }}">
-                            <i class="fas fa-window-restore"></i>
+                                Consignamiento
+                            </a>
+                        </li>
+                    @endif
+                    @if ($config->credits)
+                        <li>
+                            <a class="{{ $path[0] === 'reports' && $path[1] === 'credits' ? 'active' : '' }}"
+                                href="{{ route('reports.credits.index') }}">
+                                <i class="fas fa-window-restore"></i>
 
-                            Créditos
-                        </a>
-                    </li>
-                @endif
-                @if (!$roleService->isLogistic())
-                    <li>
-                        <a class="{{ $path[0] === 'report_cash' ? 'active' : '' }}"
-                            href="{{ route('reports.cash.index') }}">
-                            <i class="icofont-money-bag"></i>
-                            Ganancias
-                        </a>
-                    </li>
-                    <li>
-                        <a class="{{ $path[0] === 'report_product_client' ? 'active' : '' }}"
-                            href="{{ route('reports.products-clients.index') }}">
-                            <i class="fas fa-window-restore"></i>
-                            R. productos
-                        </a>
-                    </li>
-                    <li>
-                        <a class="{{ $path[0] === 'reports' && $path[1] === 'valued' ? 'active' : '' }}"
-                            href="{{ route('reports.valued.index') }}">
+                                Créditos
+                            </a>
+                        </li>
+                    @endif
+                    @if (!$roleService->isLogistic())
+                        <li>
+                            <a class="{{ $path[0] === 'report_cash' ? 'active' : '' }}"
+                                href="{{ route('reports.cash.index') }}">
+                                <i class="icofont-money-bag"></i>
+                                Ganancias
+                            </a>
+                        </li>
+                        <li>
+                            <a class="{{ $path[0] === 'report_product_client' ? 'active' : '' }}"
+                                href="{{ route('reports.products-clients.index') }}">
+                                <i class="fas fa-window-restore"></i>
+                                R. productos
+                            </a>
+                        </li>
+                        <li>
+                            <a class="{{ $path[0] === 'reports' && $path[1] === 'valued' ? 'active' : '' }}"
+                                href="{{ route('reports.valued.index') }}">
 
-                            <i class="icofont-dollar"></i> Stock valorizado
-                        </a>
-                    </li>
-                @endif
-                <li>
-                    <a class="{{ $path[0] === 'reports' && $path[1] === 'inventory' ? 'active' : '' }}"
-                        href="{{ route('reports.inventory.index') }}">
-                        <i class="icofont-box"></i> Stock Producto
-                    </a>
-                </li>
-                <li>
-                    <a class="{{ $path[0] === 'reports' && $path[1] === 'stockmin' ? 'active' : '' }}"
-                        href="{{ route('reports.stockmin.index') }}">
-                        <i class="fas fa-boxes"> </i> Stock Minimo
-                    </a>
-                </li>
-                <li>
-                    <a class="{{ $path[0] === 'reports' && $path[1] === 'kardex' ? 'active' : '' }}"
-                        href="{{ route('reports.kardex.index') }}">
-                        <i class="icofont-chart-bar-graph"></i> Kardex
-                    </a>
-                </li>
-                @if ($config->credit_list && !$roleService->isLogistic())
+                                <i class="icofont-dollar"></i> Stock valorizado
+                            </a>
+                        </li>
+                    @endif
                     <li>
-                        <a class="{{ $path[0] === 'reports' && $path[1] === 'credit_list' ? 'active' : '' }}"
-                            href="{{ route('tenant.credit_list.index') }}">
-                            <i class="icofont-chart-bar-graph"></i> Lista de crédito
+                        <a class="{{ $path[0] === 'reports' && $path[1] === 'inventory' ? 'active' : '' }}"
+                            href="{{ route('reports.inventory.index') }}">
+                            <i class="icofont-box"></i> Stock Producto
                         </a>
                     </li>
-                @endif
-                @if ($has_series)
                     <li>
-                        <a class="{{ $path[0] === 'reports' && $path[1] === 'series' ? 'active' : '' }}"
-                            href="{{ route('reports.series.index') }}">
-                            <i class="fas fa-fingerprint"></i> Venta de Series
+                        <a class="{{ $path[0] === 'reports' && $path[1] === 'stockmin' ? 'active' : '' }}"
+                            href="{{ route('reports.stockmin.index') }}">
+                            <i class="fas fa-boxes"> </i> Stock Minimo
                         </a>
                     </li>
-                @endif
+                    <li>
+                        <a class="{{ $path[0] === 'reports' && $path[1] === 'kardex' ? 'active' : '' }}"
+                            href="{{ route('reports.kardex.index') }}">
+                            <i class="icofont-chart-bar-graph"></i> Kardex
+                        </a>
+                    </li>
+                    @if ($config->credit_list && !$roleService->isLogistic())
+                        <li>
+                            <a class="{{ $path[0] === 'reports' && $path[1] === 'credit_list' ? 'active' : '' }}"
+                                href="{{ route('tenant.credit_list.index') }}">
+                                <i class="icofont-chart-bar-graph"></i> Lista de crédito
+                            </a>
+                        </li>
+                    @endif
+                    @if ($has_series)
+                        <li>
+                            <a class="{{ $path[0] === 'reports' && $path[1] === 'series' ? 'active' : '' }}"
+                                href="{{ route('reports.series.index') }}">
+                                <i class="fas fa-fingerprint"></i> Venta de Series
+                            </a>
+                        </li>
+                    @endif
 
-            </ul>
-        </li>
-         @endif
+                </ul>
+            </li>
+        @endif
 
 
         @if (!$roleService->isArca() && !$roleService->isLogistic() && $config->accounting_mode)
@@ -696,13 +720,13 @@
                 </a>
 
                 <ul id="configuration" class="collapse ">
-                    @if(!$roleService->isArca())
-                    <li>
-                        <a class="{{ $path[0] === 'companies' && $path[1] === 'create' ? 'active' : '' }}"
-                            href="{{ route('tenant.companies.create') }}">
-                            <i class="icofont-building-alt"></i> Empresa
-                        </a>
-                    </li>
+                    @if (!$roleService->isArca())
+                        <li>
+                            <a class="{{ $path[0] === 'companies' && $path[1] === 'create' ? 'active' : '' }}"
+                                href="{{ route('tenant.companies.create') }}">
+                                <i class="icofont-building-alt"></i> Empresa
+                            </a>
+                        </li>
                     @endif
                     {{-- <li>
             <a class="{{ $path[0] === 'establishments' ? 'active' : '' }}"
@@ -723,76 +747,77 @@
                         </a>
                     </li>
                     @if (!$roleService->isArca())
-                    <li>
-                        <a class="{{ $path[0] === 'tasks' ? 'active' : '' }}"
-                            href="{{ route('tenant.tasks.index') }}"><i class="icofont-tasks-alt"></i> Tareas</a>
-                    </li>
-
-                    <li>
-                        <a class="{{ $path[1] === 'pdf_templates' ? 'active' : '' }}"
-                            href="{{ route('tenant.advanced.pdf_templates') }}">
-                            <i class="icofont-file-pdf"></i> Plantillas
-                        </a>
-                    </li>
-
-                    <li>
-                        <a class="{{ $path[0] === 'series-configurations' ? 'active' : '' }}"
-                            href="{{ route('tenant.series_configurations.index') }}">
-                            <i class="icofont-numbered"></i> Numeración
-                        </a>
-                    </li>
-                    <li>
-                        <a class="{{ $path[0] === 'caja' && $path[1] === 'workers' ? 'active' : '' }}"
-                            href="{{ route('restaurant.workers') }}">
-                            <i class="icofont-users-alt-1"></i> Usuarios
-                        </a>
-                    </li>
-                    <li>
-                        <a class="{{ $path[0] === 'caja' && $path[1] === 'workers-type' ? 'active' : '' }}"
-                            href="{{ route('restaurant.workers_type') }}">
-                            <i class="icofont-company"></i> Tipo Usuario
-                        </a>
-                    </li>
-                    <li>
-                        <a class="{{ $path[0] === 'caja' && $path[1] === 'tables' ? 'active' : '' }}"
-                            href="{{ route('restaurant.tables') }}">
-                            <i class="icofont-dining-table"></i> Mesas
-                        </a>
-                    </li>
-                    @if ($config->hotels)
                         <li>
-                            <a class="{{ $path[0] === 'caja' && $path[1] === 'rooms' ? 'active' : '' }}"
-                                href="{{ route('restaurant.rooms') }}">
-                                <i class="fas fa-bed"></i>
-                                Habitaciones
+                            <a class="{{ $path[0] === 'tasks' ? 'active' : '' }}"
+                                href="{{ route('tenant.tasks.index') }}"><i class="icofont-tasks-alt"></i>
+                                Tareas</a>
+                        </li>
+
+                        <li>
+                            <a class="{{ $path[1] === 'pdf_templates' ? 'active' : '' }}"
+                                href="{{ route('tenant.advanced.pdf_templates') }}">
+                                <i class="icofont-file-pdf"></i> Plantillas
                             </a>
                         </li>
-                    @endif
 
-                    <li>
-                        <a class="{{ $path[0] === 'caja' && $path[1] === 'areas' ? 'active' : '' }}"
-                            href="{{ route('restaurant.areas') }}">
-                            <i class="icofont-billboard"></i> Áreas
-                        </a>
-                    </li>
-                    <li>
-                        <a class="{{ $path[0] === 'caja' && $path[1] === 'status-orden' ? 'active' : '' }}"
-                            href="{{ route('restaurant.status_orden') }}">
-                            <i class="icofont-read-book"></i> Estados de pedidos
-                        </a>
-                    </li>
-                    <li>
-                        <a class="{{ $path[0] === 'caja' && $path[1] === 'status-tables' ? 'active' : '' }}"
-                            href="{{ route('restaurant.status_table') }}">
-                            <i class="icofont-dining-table"></i> Estados de mesas
-                        </a>
-                    </li>
-                    <li>
-                        <a class="{{ $path[0] === 'caja' && $path[1] === 'status-tables' ? 'active' : '' }}"
-                            href="{{ route('tenant.items.check_stock') }}">
-                            <i class="icofont-search-stock"></i> Herramientas
-                        </a>
-                    </li>
+                        <li>
+                            <a class="{{ $path[0] === 'series-configurations' ? 'active' : '' }}"
+                                href="{{ route('tenant.series_configurations.index') }}">
+                                <i class="icofont-numbered"></i> Numeración
+                            </a>
+                        </li>
+                        <li>
+                            <a class="{{ $path[0] === 'caja' && $path[1] === 'workers' ? 'active' : '' }}"
+                                href="{{ route('restaurant.workers') }}">
+                                <i class="icofont-users-alt-1"></i> Usuarios
+                            </a>
+                        </li>
+                        <li>
+                            <a class="{{ $path[0] === 'caja' && $path[1] === 'workers-type' ? 'active' : '' }}"
+                                href="{{ route('restaurant.workers_type') }}">
+                                <i class="icofont-company"></i> Tipo Usuario
+                            </a>
+                        </li>
+                        <li>
+                            <a class="{{ $path[0] === 'caja' && $path[1] === 'tables' ? 'active' : '' }}"
+                                href="{{ route('restaurant.tables') }}">
+                                <i class="icofont-dining-table"></i> Mesas
+                            </a>
+                        </li>
+                        @if ($config->hotels)
+                            <li>
+                                <a class="{{ $path[0] === 'caja' && $path[1] === 'rooms' ? 'active' : '' }}"
+                                    href="{{ route('restaurant.rooms') }}">
+                                    <i class="fas fa-bed"></i>
+                                    Habitaciones
+                                </a>
+                            </li>
+                        @endif
+
+                        <li>
+                            <a class="{{ $path[0] === 'caja' && $path[1] === 'areas' ? 'active' : '' }}"
+                                href="{{ route('restaurant.areas') }}">
+                                <i class="icofont-billboard"></i> Áreas
+                            </a>
+                        </li>
+                        <li>
+                            <a class="{{ $path[0] === 'caja' && $path[1] === 'status-orden' ? 'active' : '' }}"
+                                href="{{ route('restaurant.status_orden') }}">
+                                <i class="icofont-read-book"></i> Estados de pedidos
+                            </a>
+                        </li>
+                        <li>
+                            <a class="{{ $path[0] === 'caja' && $path[1] === 'status-tables' ? 'active' : '' }}"
+                                href="{{ route('restaurant.status_table') }}">
+                                <i class="icofont-dining-table"></i> Estados de mesas
+                            </a>
+                        </li>
+                        <li>
+                            <a class="{{ $path[0] === 'caja' && $path[1] === 'status-tables' ? 'active' : '' }}"
+                                href="{{ route('tenant.items.check_stock') }}">
+                                <i class="icofont-search-stock"></i> Herramientas
+                            </a>
+                        </li>
                     @endif
 
                 </ul>

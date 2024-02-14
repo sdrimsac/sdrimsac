@@ -61,6 +61,7 @@ if ($hostname) {
         Route::get('sale-notes/downloadExternal/{external_id}', '\App\Http\Controllers\Tenant\SaleNoteController@downloadExternal');
         Route::get('sale-notes/records', '\App\Http\Controllers\Tenant\SaleNoteController@records');
         Route::get('sale-notes/records2', '\App\Http\Controllers\Tenant\SaleNoteController@records2');
+        Route::get('sale-notes/record/{id}', '\App\Http\Controllers\Tenant\SaleNoteController@record');
 
         Route::get('sale-note/print/{external_id}/{format?}', '\App\Http\Controllers\Tenant\SaleNoteController@toPrint');
         Route::middleware(['auth:api', 'locked.tenant'])->group(function () {

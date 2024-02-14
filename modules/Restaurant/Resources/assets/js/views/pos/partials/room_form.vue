@@ -323,7 +323,7 @@
                                 type="danger"
                                 icon="el-icon-delete"
                                 size="mini"
-                                @click="room.guesses.splice(gidx, 1)"
+                                @click.prevent="removeGuess(room, gidx)"
                                 circle
                             ></el-button>
                         </div>
@@ -466,6 +466,14 @@ export default {
         };
     },
     methods: {
+        removeGuess(room, idx) {
+            room.guesses.splice(idx, 1);
+            room.quantity_persons = room.guesses.length;
+            if(room.quantity_persons == 0){
+                room.quantity_persons = 1;
+            }
+            // this.calculateTotal();
+        },
         discountService(room){
             let {discount_instead_services} = room;
             if(discount_instead_services){
@@ -673,6 +681,10 @@ export default {
                 c => c.id == this.rooms[idx].guess_id
             );
             this.rooms[idx].guesses.push(customer);
+            if(this.rooms[idx].guesses){
+                this.rooms[idx].quantity_persons = this.rooms[idx].guesses.length;
+            }
+            // this.form.quantity_persons = this.rooms[idx].quantity_persons;
             this.rooms[idx].guess_id = null;
         },
         checkRoomIsExist({ tower_id, floor_id, table_id }) {

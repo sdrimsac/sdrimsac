@@ -404,10 +404,10 @@ if ($hostname) {
                 Route::get('documents/search/customers', [App\Http\Controllers\Tenant\DocumentController::class, 'searchCustomers']);
                 Route::get('documents/search/customer/{id}', [App\Http\Controllers\Tenant\DocumentController::class, 'searchCustomerById']);
 
-                Route::get('documents', [App\Http\Controllers\Tenant\DocumentController::class, 'index'])->name('tenant.documents.index')->middleware(['redirect.level', 'tenant.internal.mode', 'just.admin']);
+                Route::get('documents', [App\Http\Controllers\Tenant\DocumentController::class, 'index'])->name('tenant.documents.index')->middleware(['just.admin']);
                 Route::get('documents/columns', [App\Http\Controllers\Tenant\DocumentController::class, 'columns']);
 
-                Route::get('documents/create/{documents?}', [App\Http\Controllers\Tenant\DocumentController::class, 'create'])->name('tenant.documents.create')->middleware(['redirect.level', 'tenant.internal.mode'])->middleware('just.admin');
+                Route::get('documents/create/{documents?}', [App\Http\Controllers\Tenant\DocumentController::class, 'create'])->name('tenant.documents.create')->middleware('just.admin');
                 Route::get('documents/record2/{salenote}', [App\Http\Controllers\Tenant\DocumentController::class, 'record2']);
                 Route::get('documents/create_tensu', [App\Http\Controllers\Tenant\DocumentController::class, 'create_tensu'])->name('tenant.documents.create_tensu')->middleware('just.admin');
 
