@@ -20,6 +20,7 @@ use App\CoreFacturalo\Requests\Inputs\Common\PersonInput;
 use App\CoreFacturalo\Requests\Inputs\Common\EstablishmentInput;
 use App\CoreFacturalo\Helpers\Storage\StorageDocument;
 use App\CoreFacturalo\Template;
+use App\Http\Resources\Tenant\SaleNoteResource;
 use Mpdf\Mpdf;
 use Mpdf\HTMLParserMode;
 use Mpdf\Config\ConfigVariables;
@@ -46,6 +47,11 @@ class SaleNoteController extends Controller
         return $records;
     }
 
+    public function record($id){
+        $record = new SaleNoteResource(SaleNote::findOrFail($id));
+        return $record;
+
+    }
     public function store(SaleNoteRequest $request)
     {
 
