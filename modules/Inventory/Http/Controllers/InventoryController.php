@@ -120,7 +120,7 @@ class InventoryController extends Controller
                 ->whereHas('warehouse', function ($query) use ($request) {
                     $query->where('description', 'like', '%' . $request->value . '%');
                 })
-                ->orderBy('item_id');
+                ->orderBy('item.description');
         } else {
 
             $records = ItemWarehouse::with(['item', 'warehouse'])
@@ -128,7 +128,7 @@ class InventoryController extends Controller
                     $query->where('unit_type_id', '!=', 'ZZ');
                     $query->whereNotIsSet();
                     $query->where($request->column, 'like', '%' . $request->value . '%');
-                })->orderBy('item_id');
+                })->orderBy('item.description');
         }
 
         return new InventoryCollection($records->paginate(config('tenant.items_per_page')));
