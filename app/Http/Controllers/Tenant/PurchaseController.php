@@ -646,7 +646,8 @@ class PurchaseController extends Controller
 
             case 'items':
 
-                $items = Item::whereNotIsSet()->whereIsActive()->orderBy('description')->get(); //whereWarehouse()
+                $items = Item::whereNotIsSet()->whereIsActive()->orderBy('description')
+                ->take(20)->get(); //whereWarehouse()
                 return collect($items)->transform(function ($row) {
                     $full_description = ($row->internal_id) ? $row->internal_id . ' - ' . $row->description : $row->description;
                     return [
@@ -679,13 +680,13 @@ class PurchaseController extends Controller
                         }),
                         'series_enabled' => (bool) $row->series_enabled,
 
-                        // 'warehouses' => collect($row->warehouses)->transform(function($row) {
-                        //     return [
-                        //         'warehouse_id' => $row->warehouse->id,
-                        //         'warehouse_description' => $row->warehouse->description,
-                        //         'stock' => $row->stock,
-                        //     ];
-                        // })
+                        'warehouses' => collect($row->warehouses)->transform(function($row) {
+                            return [
+                                'warehouse_id' => $row->warehouse->id,
+                                'warehouse_description' => $row->warehouse->description,
+                                'stock' => $row->stock,
+                            ];
+                        })
                     ];
                 });
                 //                return $items;

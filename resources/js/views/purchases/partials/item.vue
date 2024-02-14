@@ -12,7 +12,7 @@
         >
             <div class="form-body">
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-8">
                         <div
                             class="form-group"
                             :class="{ 'has-danger': errors.item_id }"
@@ -25,23 +25,45 @@
                                     >[+ Nuevo]</a
                                 >
                             </label>
-                            <el-select
-                                v-if="!barcode_lector"
-                                v-model="form.item_id"
-                                :loading="loading_search"
-                                :remote-method="searchRemoteItems"
-                                filterable
-                                placeholder="Buscar"
-                                remote
-                                @change="changeItem"
+                            <div
+                                class="el-input el-input-group el-input-group--append"
                             >
-                                <el-option
-                                    v-for="option in items"
-                                    :key="option.id"
-                                    :value="option.id"
-                                    :label="option.full_description"
-                                ></el-option>
-                            </el-select>
+                                <el-select
+                                    v-if="!barcode_lector"
+                                    v-model="form.item_id"
+                                    :loading="loading_search"
+                                    :remote-method="searchRemoteItems"
+                                    filterable
+                                    placeholder="Buscar"
+                                    remote
+                                    @change="changeItem"
+                                >
+                                    <el-option
+                                        v-for="option in items"
+                                        :key="option.id"
+                                        :value="option.id"
+                                        :label="option.full_description"
+                                    ></el-option>
+                                </el-select>
+                                <el-tooltip
+                                    slot="append"
+                                    class="item"
+                                    effect="dark"
+                                    content="Ver Stock del Producto"
+                                    placement="bottom"
+                                    :disabled="!form.item_id"
+                                >
+                                    <div class="el-input-group__append">
+                                        <el-button
+                                         :disabled="!form.item_id"
+                                            @click.prevent="
+                                                clickWarehouseDetail()
+                                            "
+                                            ><i class="fa fa-search"></i
+                                        ></el-button>
+                                    </div>
+                                </el-tooltip>
+                            </div>
                             <el-input
                                 ref="input_barcode"
                                 v-if="barcode_lector"
@@ -55,7 +77,7 @@
                             >
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <div
                             class="form-group"
                             :class="{
@@ -311,7 +333,8 @@
                                     <label class="control-label w-100">
                                         Subir excel
 
-                                        <a href="/formats/color_talla_compras.xlsx"
+                                        <a
+                                            href="/formats/color_talla_compras.xlsx"
                                             >Descargar formato</a
                                         >
                                     </label>
@@ -485,6 +508,11 @@
             :recordId="form.item_id"
         >
         </color-size-form>
+        <warehouses-detail
+            :showDialog.sync="showWarehousesDetail"
+            :warehouses="warehousesDetail"
+        >
+        </warehouses-detail>
     </el-dialog>
 </template>
 <style>
@@ -499,6 +527,7 @@ import { calculateRowItem } from "../../../helpers/functions";
 import LotsForm from "../../items/partials/lots.vue";
 import ColorSizeForm from "../../items/partials/color_size.vue";
 import readXlsxFile from "read-excel-file";
+import WarehousesDetail from "./select_warehouse.vue";
 import moment from "moment";
 
 export default {
@@ -509,7 +538,7 @@ export default {
         "includes",
         "percentage_igv"
     ],
-    components: { itemForm, LotsForm, ColorSizeForm },
+    components: { itemForm, LotsForm, ColorSizeForm, WarehousesDetail },
     data() {
         return {
             colorSizes: [],
@@ -520,7 +549,7 @@ export default {
             insertTotalPrice: false,
             unids: 0,
             noIsUnid: false,
-            titleDialog: "Agregar Producto o Servicio",
+            titleDialog: "Agregar Producto o Servicios",
             showDialogLots: false,
             resource: "purchases",
             showDialogNewItem: false,
@@ -541,6 +570,8 @@ export default {
             loading_search: false,
             showColorSize: false,
             color_size: [],
+            showWarehousesDetail: false,
+            warehousesDetail: []
         };
     },
     created() {
@@ -551,6 +582,14 @@ export default {
         });
     },
     methods: {
+        clickWarehouseDetail() {
+            if (!this.form.item_id) {
+                return this.$toast.error("Seleccione un item");
+            }
+            let item = _.find(this.items, { id: this.form.item_id });
+            this.warehousesDetail = item.warehouses;
+            this.showWarehousesDetail = true;
+        },
         addRowColorSize(color_size) {
             this.color_size = color_size;
         },
@@ -571,7 +610,7 @@ export default {
                 // this.filterItems()
             });
         },
-            uploadExcelColorSize(event) {
+        uploadExcelColorSize(event) {
             let file = event.target.files[0];
             readXlsxFile(file).then(rows => {
                 //skip header

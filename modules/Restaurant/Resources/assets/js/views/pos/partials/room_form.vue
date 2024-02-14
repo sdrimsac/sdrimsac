@@ -474,7 +474,7 @@ export default {
             }
             // this.calculateTotal();
         },
-        discountService(room){
+        discountService(room){i
             let {discount_instead_services} = room;
             if(discount_instead_services){
                 room.services = room.services.map(s=>{
