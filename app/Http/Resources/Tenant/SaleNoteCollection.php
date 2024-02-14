@@ -69,7 +69,9 @@ class SaleNoteCollection extends ResourceCollection
             }
 
 
-            $boxes = Box::where('sale_note_id', $row->id)->get();
+            $boxes = Box::where('sale_note_id', $row->id);
+            $total_boxes = $boxes->sum('amount');
+            $boxes = $boxes->get();
             $dispatches = $row->dispatches->transform(function ($dispatch) {
                 return [
                     'id' => $dispatch->id,
@@ -85,7 +87,8 @@ class SaleNoteCollection extends ResourceCollection
                 'pending' => $pending,
                 'remain' => $pending,
                 'advances' => $row->advances,
-                'paid_amount' => $paid,
+                'paid_amount' => $total_boxes,
+                // 'paid_amount' => $paid,
                 'tax_rate' => $tax_rate,
                 'is_credit' => $is_credit,
                 'dispatches' => $dispatches,
