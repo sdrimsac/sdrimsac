@@ -51,6 +51,7 @@ class JustAdmin
             "persons/customers",
             "persons/suppliers",
             "reports/boxes/global",
+            "category",
             "advanced",
             "sale-notes", "quotations", "summaries", "voided",
             "incomes", "expenses", "boxes", "report_closed_cash", "documents","banks"
