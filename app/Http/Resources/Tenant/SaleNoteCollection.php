@@ -70,7 +70,7 @@ class SaleNoteCollection extends ResourceCollection
 
 
             $boxes = Box::where('sale_note_id', $row->id);
-            $total_boxes = $boxes->sum('amount');
+            $total_boxes = floatval($boxes->sum('amount'));
             $boxes = $boxes->get();
             $dispatches = $row->dispatches->transform(function ($dispatch) {
                 return [
