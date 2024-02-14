@@ -53,7 +53,7 @@ class JustAdmin
             "reports/boxes/global",
             "advanced",
             "sale-notes", "quotations", "summaries", "voided",
-            "incomes", "expenses", "boxes", "report_closed_cash", "documents"
+            "incomes", "expenses", "boxes", "report_closed_cash", "documents","banks"
         ];
         $paths_logistic = [
             "items", "purchases", "purchases/create",
