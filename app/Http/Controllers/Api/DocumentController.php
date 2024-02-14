@@ -93,6 +93,7 @@ class DocumentController extends Controller
         return [
             'success' => true,
             'data' => [
+                'document_id' => $document->id, 
                 'number' => $document->number_full,
                 'filename' => $document->filename,
                 'external_id' => $document->external_id,
@@ -223,6 +224,7 @@ class DocumentController extends Controller
         $customer = $request->customer;
         $d_start = $request->d_start;
         $date_of_issue = $request->date_of_issue;
+        
         $document_type_id = $request->document_type_id;
         $state_type_id = $request->state_type_id;
         $seller_id = $request->seller_id;
