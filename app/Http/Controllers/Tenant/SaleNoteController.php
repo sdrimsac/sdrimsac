@@ -733,6 +733,17 @@ class SaleNoteController extends Controller
                         // $payment = Payment::firstOrNew(['id' => $id]);
                     }
 
+                    if ($request["advances"] > 0) {
+                        $payment = Payment::where('sale_note_id', $this->sale_note->id)->first();
+
+                        $payment->amount_paid = $request["advances"];
+                        if ($payment->amount < $request["advances"]) {
+                            $payment->paid = true;
+                            $payment->save();
+                        }
+                    }
+
+
                     if ($cash == null) {
                         $cash = Cash::create([
                             'user_id' => auth()->user()->id,
