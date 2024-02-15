@@ -31,6 +31,7 @@
                         <th>Color</th>
                         <th>Size</th>
                         <th>Stock</th>
+                        <th>Precio</th>
                         <th>Cantidad</th>
                     </tr>
                 </thead>
@@ -40,6 +41,7 @@
                         <td>{{ colorsize.color }}</td>
                         <td>{{ colorsize.size }}</td>
                         <td>{{ colorsize.stock }}</td>
+                        <td>{{ colorsize.price }}</td>
                         <td>
                           <el-input
                           type="number"

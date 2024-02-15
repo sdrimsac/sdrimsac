@@ -20,6 +20,7 @@ class ItemColorSizeResource extends JsonResource
             'color' => $this->color,
             'size' => $this->size,
             'stock' => $this->stock,
+            'price' => $this->price,
             'warehouse_id' => $this->warehouse_id,
         ];
     }

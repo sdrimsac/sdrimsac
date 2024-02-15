@@ -32,6 +32,7 @@ class ItemColorSizeImport implements ToCollection
             $color = strtoupper($row[1]);
             $size = strtoupper($row[2]);
             $stock = $row[3];
+            $price = $row[4];
 
 
 
@@ -71,11 +72,16 @@ class ItemColorSizeImport implements ToCollection
                             'color' => $color,
                             'size' => $size,
                             'stock' => $stock,
+                            'price' => $price,
                             'warehouse_id' => $warehouse_id,
                         ]);
                         $item_color_size->save();
                         $color_size_id = $item_color_size->id;
                     } else {
+                        if ($price != null||$price != 0) {
+                            $color_size_exits->price = $price;
+                        }
+                        // $color_size_exits->price = $price;
                         $color_size_exits->stock = $color_size_exits->stock + $stock;
                         $color_size_exits->save();
                         $color_size_id = $color_size_exits->id;

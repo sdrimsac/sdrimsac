@@ -3,6 +3,7 @@
 namespace Modules\Inventory\Http\Resources;
 
 use App\Models\Tenant\Item;
+use App\Models\Tenant\ItemColorSize;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Modules\Item\Models\ItemLot;
 
@@ -29,7 +30,19 @@ class InventoryCollection extends ResourceCollection
                         'lot_code' => ($row->item_loteable_type) ? (isset($row->item_loteable->lot_code) ? $row->item_loteable->lot_code : null) : null
                     ];
                 });
+            $color_size = ItemColorSize::where('item_id', $row->item_id)->where('warehouse_id', $row->warehouse_id)->get()
+                ->transform(function ($row) {
+                    return [
+                        'id' => $row->id,
+                        'color' => $row->color,
+                        'size' => $row->size,
+                        'stock' => $row->stock,
+                        'price' => $row->price,
+                    ];
+                });
             return [
+                'has_color_size' => count($color_size) > 0,
+                'color_size' => $color_size,
                 'id' => $row->id,
                 'item_id' => $row->item_id,
                 'warehouse_id' => $row->warehouse_id,

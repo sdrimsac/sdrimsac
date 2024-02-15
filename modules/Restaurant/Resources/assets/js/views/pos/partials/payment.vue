@@ -1779,6 +1779,8 @@ export default {
             } else {
                 this.form.boxes = [];
             }
+
+            this.$forceUpdate();
         },
         async getBankAccounts() {
             const response = await this.$http.get(`/bank_accounts/records`);

@@ -357,16 +357,31 @@ class InventoryController extends Controller
                     $stock = $row["stock"];
                     $color = $row["color"];
                     $size = $row["size"];
-                    ItemColorSize::create([
-                        'item_id' => $item_id,
-                        'warehouse_id' => $warehouse_id,
-                        'stock' => $stock,
-                        'color' => $color,
-                        'size' => $size,
-                    ]);
+                    $price = $row["price"];
+                    $color_size_exist = ItemColorSize::where('item_id', $item_id)
+                        ->where('warehouse_id', $warehouse_id)
+                        ->where('color', $color)
+                        ->where('size', $size)
+                        ->first();
+                    if ($color_size_exist) {
+                        $color_size_exist->stock = $color_size_exist->stock + $stock;
+                        if ($price != null || $price != '' || $price != 0) {
+                            $color_size_exist->price = $price;
+                        }
+                        $color_size_exist->save();
+                    } else {
+                        ItemColorSize::create([
+                            'item_id' => $item_id,
+                            'warehouse_id' => $warehouse_id,
+                            'stock' => $stock,
+                            'color' => $color,
+                            'size' => $size,
+                            'price' => $price
+                        ]);
+                    }
                 }
                 foreach ($lots as $lot) {
-                 
+
                     /*$inventory->lots()->create([
                         'date' => $lot['date'],
                         'series' => $lot['series'],

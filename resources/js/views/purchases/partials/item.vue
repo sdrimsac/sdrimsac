@@ -622,11 +622,14 @@ export default {
                     let color = row[0];
                     let size = row[1];
                     let stock = row[2];
+                    let price = row[3];
+
 
                     return {
                         color,
                         size,
-                        stock
+                        stock,
+                        price
                     };
                 });
                 this.form.quantity = this.color_size.reduce(
@@ -901,6 +904,7 @@ export default {
             this.form.total_price = this.form.unit_price * this.form.quantity;
         },
         changeItem(changing_name = false) {
+            this.color_size = [];
             this.form.item = _.find(this.items, { id: this.form.item_id });
             if (changing_name) {
                 this.changing_name = true;

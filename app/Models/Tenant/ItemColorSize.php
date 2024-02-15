@@ -12,7 +12,8 @@ class ItemColorSize extends ModelTenant
         'item_id',
         'color', 
         'size',
-        'stock'   
+        'stock',
+        'price'
     ];
 
     public function item()

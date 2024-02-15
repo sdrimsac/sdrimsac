@@ -223,8 +223,53 @@
                     </div>
                 </div>
 
+                <div class="col-lg-6">
+                    <div
+                        class="form-group"
+                        :class="{ 'has-danger': errors.method_payment }"
+                    >
+                        <!--<label class="control-label">Fecha de emisión</label>-->
+                        <label class="control-label">Método de pago</label>
+                        <el-select
+                            v-model="method_payment"
+                            filterable
+                            class="border-left rounded-left border-info"
+                            popper-class="el-select-method_payment"
+                            placeholder="Seleccione el método de pago"
+                        >
+                            <el-option
+                                v-for="(option, idx) in allMethodsPayments"
+                                :key="idx"
+                                :value="option.description"
+                                :label="option.description"
+                            ></el-option>
+                        </el-select>
+                        <small
+                            class="form-control-feedback"
+                            v-if="errors.method_payment"
+                            v-text="errors.method_payment[0]"
+                        ></small>
+                    </div>
+                </div>
+                <div class="col-lg-6" v-if="method_payment != 'Efectivo' && method_payment!=null">
+                    <div
+                        class="form-group"
+                        :class="{ 'has-danger': errors.reference_number }"
+                    >
+                        <!--<label class="control-label">Fecha de emisión</label>-->
+                        <label class="control-label">Número de operación</label>
+                        <el-input v-model="reference_number">
+                            <i slot="prefix" class="el-icon-edit-outline"></i>
+                        </el-input>
+                        <small
+                            class="form-control-feedback"
+                            v-if="errors.reference_number"
+                            v-text="errors.reference_number[0]"
+                        ></small>
+                    </div>
+                </div>
                 <br />
-                <div class="col-lg-4">
+                <!-- <div class="col-lg-4">
                     <div
                         class="form-group"
                         v-show="document.document_type_id == '03'"
@@ -235,9 +280,9 @@
                             >¿Es venta por cobrar?</el-checkbox
                         >
                     </div>
-                </div>
+                </div> -->
                 <br />
-                <div class="col-lg-12" v-show="is_document_type_invoice">
+                <!-- <div class="col-lg-12" v-show="is_document_type_invoice">
                     <table>
                         <thead>
                             <tr width="100%">
@@ -334,7 +379,7 @@
                             </tr>
                         </tbody>
                     </table>
-                </div>
+                </div> -->
             </div>
 
             <span slot="footer" class="dialog-footer">
@@ -410,6 +455,7 @@ export default {
     ],
     data() {
         return {
+            method_payment: null,
             loading: false,
             customer_email: "",
             titleDialog: null,
@@ -433,7 +479,11 @@ export default {
             payment_destinations: [],
             loading_search: false,
             payment_method_types: [],
-            configuration: {}
+            configuration: {},
+            allMethodsPayments: [],
+            reference_number: null
+
+            //  payments = ["Efectivo", "Yape", "PLIN", "TARJETA: IZYPAY","Culqui", "TARJETA: NIUBIZ", "TARJETA: OPENPAY"];
         };
     },
     created() {
@@ -539,6 +589,15 @@ export default {
                 payment: 0
             });
         },
+        getMethodsPayments() {
+            this.$http.get(`/all_methods_payment`).then(response => {
+                this.allMethodsPayments = response.data.data;
+                console.log(
+                    "🚀 ~ file: options.vue:549 ~ getMethodsPayments ~ this.allMethodsPayments:",
+                    this.allMethodsPayments
+                );
+            });
+        },
         initForm() {
             this.generate = this.showGenerate ? true : false;
             this.errors = {};
@@ -635,9 +694,29 @@ export default {
             this.changeDocumentType();
         },
         submit() {
+            if (this.method_payment == null) {
+                return this.$toast.error("Seleccione un método de pago");
+            }
             this.loading_submit = true;
             this.assignDocument();
 
+            let method = this.allMethodsPayments.find(
+                m => m.description == this.method_payment
+            );
+
+            let box = {
+                id: null,
+                bank_account_id: method.bank_account,
+
+                amount: this.document.total,
+                method: this.method_payment
+            };
+            if (box.bank_account_id == null) {
+                box.operation_number = this.reference_number;
+            } else {
+                box.number_operation = this.reference_number;
+            }
+            this.document.boxes = [box];
             if (this.document.document_type_id === "nv") {
                 this.document.prefix = "NV";
                 this.resource_documents = "sale-notes";
@@ -727,25 +806,23 @@ export default {
             this.document.quotation_id = this.form.id;
         },
         async create() {
-             this.$http
-                .get(`/${this.resource}/option/tables`)
-                .then(response => {
-                    this.all_document_types =
-                        response.data.document_types_invoice;
-                    this.all_series = response.data.series;
-                    this.payment_destinations =
-                        response.data.payment_destinations;
-                    this.payment_method_types =
-                        response.data.payment_method_types;
-                    // this.document.document_type_id = (this.all_document_types.length > 0)?this.all_document_types[0].id:null
-                    // this.changeDocumentType()
-                });
+            this.$http.get(`/${this.resource}/option/tables`).then(response => {
+                this.all_document_types = response.data.document_types_invoice;
+                this.all_series = response.data.series;
+                this.payment_destinations = response.data.payment_destinations;
+                this.payment_method_types = response.data.payment_method_types;
+                // this.document.document_type_id = (this.all_document_types.length > 0)?this.all_document_types[0].id:null
+                // this.changeDocumentType()
+            });
 
-             this.$http
+            this.$http
                 .get(`/${this.resource}/record2/${this.recordId}`)
                 .then(response => {
                     this.form = response.data.data;
-                    console.log("🚀 ~ file: options.vue:748 ~ create ~  this.form :",  this.form )
+                    console.log(
+                        "🚀 ~ file: options.vue:748 ~ create ~  this.form :",
+                        this.form
+                    );
                     this.document.payments =
                         response.data.data.quotation.payments;
                     // console.log(this.form)
@@ -755,6 +832,8 @@ export default {
                     this.titleDialog =
                         `Cotización ${type}: ` + this.form.identifier;
                 });
+
+            this.getMethodsPayments();
         },
         changeDocumentType() {
             // this.filterSeries()

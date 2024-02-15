@@ -28,6 +28,9 @@
                             <th>
                                 STOCK
                             </th>
+                                                        <th>
+                                PRECIO
+                            </th>
                             <th></th>
                         </tr>
                     </thead>
@@ -43,6 +46,13 @@
                                 <el-input
                                     type="number"
                                     v-model="row.stock"
+                                ></el-input>
+                            </td>
+                               <td>
+                                <el-input
+                                    type="number"
+                                    step="0.01"
+                                    v-model="row.price"
                                 ></el-input>
                             </td>
                             <td>
@@ -114,7 +124,8 @@ export default {
             this.colorSizes.push({
                 color: "",
                 size: "",
-                stock: 0
+                stock: 0,
+                price: 0
             });
         },
         addMoreColorSizes() {

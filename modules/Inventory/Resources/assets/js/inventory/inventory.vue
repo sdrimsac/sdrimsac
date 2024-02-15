@@ -95,6 +95,51 @@
                                         >{{serie.series}}</small> 
                                     </span> -->
                                 </template>
+                                <template
+                                    v-if="
+                                        row.has_color_size &&
+                                            row.color_size.length != 0
+                                    "
+                                >
+                                    <table class="table table-responsive ">
+                                        <thead>
+                                            <tr>
+                                                <th>
+                                                    COLOR
+                                                </th>
+                                                <th>
+                                                    TALLA
+                                                </th>
+                                                <th>
+                                                    PRECIO
+                                                </th>
+                                                <th>
+                                                    STOCK
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr
+                                                v-for="(color_size,
+                                                idx) in row.color_size"
+                                                :key="idx"
+                                            >
+                                                <td>
+                                                    {{ color_size.color }}
+                                                </td>
+                                                <td>
+                                                    {{ color_size.size }}
+                                                </td>
+                                                <td>
+                                                    {{ color_size.price }}
+                                                </td>
+                                                <td>
+                                                    {{ color_size.stock }}
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </template>
                             </td>
                             <td class="text-left">
                                 {{ row.warehouse_description }}
@@ -105,12 +150,20 @@
                             <td class="text-center">
                                 <div class="flex">
                                     <el-input
+                                        :disabled="
+                                            row.series_enabled ||
+                                                row.has_color_size
+                                        "
                                         size="mini"
                                         class="w-50"
                                         type="number"
                                         v-model="row.realStock"
                                     >
                                         <el-button
+                                            :disabled="
+                                                row.series_enabled ||
+                                                    row.has_color_size
+                                            "
                                             @click="
                                                 clickSetStockReal(
                                                     row.item_id,

@@ -2695,7 +2695,7 @@ export default {
                 this.ordens[i].food.item.quantity = item.quantity;
                 this.ordens[i].food.item.lotes = item.lotes;
                 this.ordens[i].food.item.lots = item.series;
-                this.ordens[i].food.item.color_size = item.color_size;
+                this.ordens[i].food.item.color_size = [...item.color_size];
                 this.ordens[i].food.item.sale_unit_price = item.price;
                 this.ordens[i].food.price = item.price;
                 // this.ordens[i].food.item.price = item.price;
@@ -2724,10 +2724,6 @@ export default {
                     return this.$toast.error("Seleccione un cliente");
                 }
             }
-            console.log(
-                "🚀 ~ file: index.vue:2691 ~ setPaymentOrden ~ this.form:",
-                this.form
-            );
             this.is_payment = true;
         },
         sendOrdensAllTables(orden_items) {
@@ -3052,9 +3048,10 @@ export default {
                 this.ordens[i].food.item.quantity = item.quantity;
                 this.ordens[i].food.item.lotes = item.lotes;
                 this.ordens[i].food.item.lots = item.series;
-                this.ordens[i].food.item.color_size = item.color_size;
+                this.ordens[i].food.item.color_size = [...item.color_size];
                 this.ordens[i].food.item.sale_unit_price = item.price;
                 this.ordens[i].food.price = item.price;
+                console.log("🚀 ~ file: index.vue:3054 ~ asyncpaymentsOrden(form,variationItem ~ item.price:", item.price)
                 // this.ordens[i].food.item.price = item.price;
                 this.ordens[i].food.item.toWarehouse = item.toWarehouse;
                 this.ordens[i].food.item.consignment_item_id =
@@ -3086,6 +3083,8 @@ export default {
                 this.calculateTotalVariation(this.formVariation);
             }
             this.form.items = this.ordens.map(o => o.food.item);
+            console.log("🚀 ~ file: index.vue:3087 ~ asyncpaymentsOrden(form,variationItem ~ this.form.items:", JSON.stringify(this.form.items))
+            
             this.formatItems();
             this.calculateTotal();
             this.form.enter_amount = this.form.total;
@@ -3117,10 +3116,7 @@ export default {
                 if (this.variation) {
                     this.isNoteIsDefault();
                 }
-                console.log(
-                    "🚀 ~ file: index.vue:3080 ~ asyncpaymentsOrden(form,variationItem ~ this.form:",
-                    this.form
-                );
+
                 this.is_payment = true;
             }
         },
@@ -4219,11 +4215,6 @@ export default {
             if (!this.form.customer_id)
                 return this.$toast.error("Seleccione un cliente");
             this.form.establishment_id = this.establishment.id;
-            console.log(
-                "🚀 ~ file: index.vue:4193 ~ clickPayment ~ this.form:",
-                this.form
-            );
-
             this.is_payment = true;
         },
         getLocalPrinter(key) {
@@ -4408,7 +4399,6 @@ export default {
                     exchangeRateSale
                 );
                 this.form.items.push(this.row);
-                console.log("🚀 ~ file: index.vue:4371 ~ this.row:", this.row);
                 item.aux_quantity = 1;
             }
 
@@ -4529,11 +4519,6 @@ export default {
                     this.$toast.error(e.message);
                 });
             }
-            console.log(
-                "🚀 ~ file: index.vue:4388 ~ paperConfig:",
-                paperConfig
-            );
-            console.log("🚀 ~ file: index.vue:4392 ~ Printer:", Printer);
             // if (multiple_boxes == true && typeuser != "admin") {
             //     //  if (true) { this.auth_login - auth
             //     let config = qz.configs.create(Printer, paperConfig);
@@ -4976,10 +4961,6 @@ export default {
                 // this.changeExchangeRate();
                 this.config = response.data.config;
                 let area = this.areas.find(a => a.id == this.area_id);
-                console.log(
-                    "🚀 ~ file: index.vue:4824 ~ awaitthis.$http.get ~ area:",
-                    area
-                );
                 if (area.description == "HOTEL") {
                     this.isHotelArea = true;
                 }

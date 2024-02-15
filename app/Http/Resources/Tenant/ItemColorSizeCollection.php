@@ -19,6 +19,7 @@ class ItemColorSizeCollection extends ResourceCollection
                 'color' => $row->color,
                 'size' => $row->size,
                 'stock' => $row->stock,
+                'price' => $row->price,
                 'warehouse_id' => $row->warehouse_id,
                 'item_description' => $row->item->description,
                 'item_internal_id' => $row->item->internal_id,

@@ -51,10 +51,11 @@ class PurchaseController extends Controller
 
     use FinanceTrait;
 
-    public function ne76_correlative(){
+    public function ne76_correlative()
+    {
         //NE01
         $record = Purchase::where('document_type_id', 'NE76')->where('series', 'NE01')->orderBy('id', 'desc')->first();
-        if(!$record){
+        if (!$record) {
             return [
                 'series' => 'NE01',
                 'number' => '00000001'
@@ -88,25 +89,25 @@ class PurchaseController extends Controller
         ];
     }
 
-    public function exports($type = 'excel',Request $request){
+    public function exports($type = 'excel', Request $request)
+    {
         $records = $this->records_export($request);
 
         return $this->excel($records);
-
-
     }
-    function excel($records) {
+    function excel($records)
+    {
 
         $company = Company::first();
         $establishment = Establishment::first();
 
-       
+
 
         return (new PurchaseExport)
             ->records($records)
             ->company($company)
             ->establishment($establishment)
-            ->download('ReporteKar'.Carbon::now().'.xlsx');
+            ->download('ReporteKar' . Carbon::now() . '.xlsx');
     }
     public function records(Request $request)
     {
@@ -119,8 +120,8 @@ class PurchaseController extends Controller
     public function getRecords($request)
     {
 
-      
-       
+
+
 
         switch ($request->column) {
             case 'name':
@@ -136,9 +137,9 @@ class PurchaseController extends Controller
 
             case 'date_of_payment':
                 $records = Purchase::whereHas('purchase_payments', function ($query) use ($request) {
-                    if($request->end_date){
+                    if ($request->end_date) {
                         return $query->whereBetween($request->column, [$request->value, $request->end_date]);
-                    }else{
+                    } else {
                         return $query->where($request->column, 'like', "%{$request->value}%");
                     }
                 })
@@ -148,9 +149,9 @@ class PurchaseController extends Controller
 
             default:
                 $records = Purchase::query();
-                if($request->end_date){
+                if ($request->end_date) {
                     $records = $records->whereBetween($request->column, [$request->value, $request->end_date]);
-                }else{
+                } else {
                     $records = $records->where($request->column, 'like', "%{$request->value}%");
                 }
                 $records =
@@ -284,7 +285,8 @@ class PurchaseController extends Controller
         return view('tenant.purchases.form_edit', compact('resourceId'));
     }
 
- function records_export(Request $request){
+    function records_export(Request $request)
+    {
 
         switch ($request->column) {
             case 'name':
@@ -300,9 +302,9 @@ class PurchaseController extends Controller
 
             case 'date_of_payment':
                 $records = Purchase::whereHas('purchase_payments', function ($query) use ($request) {
-                    if($request->end_date){
+                    if ($request->end_date) {
                         return $query->whereBetween($request->column, [$request->value, $request->end_date]);
-                    }else{
+                    } else {
                         return $query->where($request->column, 'like', "%{$request->value}%");
                     }
                 })
@@ -312,9 +314,9 @@ class PurchaseController extends Controller
 
             default:
                 $records = Purchase::query();
-                if($request->end_date){
+                if ($request->end_date) {
                     $records = $records->whereBetween($request->column, [$request->value, $request->end_date]);
-                }else{
+                } else {
                     $records = $records->where($request->column, 'like', "%{$request->value}%");
                 }
                 $records =
@@ -324,8 +326,7 @@ class PurchaseController extends Controller
 
                 break;
         }
-         return $records->get();
-
+        return $records->get();
     }
 
     public function store(PurchaseRequest $request)
@@ -342,30 +343,35 @@ class PurchaseController extends Controller
                     $p_item->purchase_id = $doc->id;
                     $p_item->save();
                     $item = Item::findOrFail($row['item_id']);
-                    if($row['sale_unit_price']!=0 && $row['sale_unit_price']!=null){
-                        $item->sale_unit_price = $row['sale_unit_price'] ;
+                    if ($row['sale_unit_price'] != 0 && $row['sale_unit_price'] != null) {
+                        $item->sale_unit_price = $row['sale_unit_price'];
                         Food::where('item_id', $row['item_id'])->update(['price' => $row['sale_unit_price']]);
                         ItemWarehousePrice::where('item_id', $row['item_id'])
-                        ->where('warehouse_id', $doc->establishment_id)->update(['price' => $row['sale_unit_price']]);
+                            ->where('warehouse_id', $doc->establishment_id)->update(['price' => $row['sale_unit_price']]);
                     }
                     $item->purchase_affectation_igv_type_id = $row['affectation_igv_type_id'];
                     $item->save();
-                    
+
                     if (array_key_exists('color_size', $row)) {
                         foreach ($row['color_size'] as $color_size) {
                             $color_size_exists = ItemColorSize::where('item_id', $row['item_id'])
-                            ->where('warehouse_id', $row['warehouse_id'])
-                            ->where('color', $color_size['color'])
-                            ->where('size', $color_size['size'])
-                            ->first();
-                            if($color_size_exists){
+                                ->where('warehouse_id', $row['warehouse_id'])
+                                ->where('color', $color_size['color'])
+                                ->where('size', $color_size['size'])
+                                ->first();
+                            if ($color_size_exists) {
                                 $color_size_exists->stock += $color_size['stock'];
+                                $price = $color_size['price'];
+                                if ($price != 0 && $price != null || $price != '') {
+                                    $color_size_exists->price = $price;
+                                }
                                 $color_size_exists->save();
-                            }else{
+                            } else {
                                 $item->color_size()->create([
                                     'item_id' => $row['item_id'],
                                     'warehouse_id' => $row['warehouse_id'],
                                     'color' => $color_size['color'],
+                                    'price' => $color_size['price'],
                                     'size' => $color_size['size'],
                                     'stock' => $color_size['stock'],
                                 ]);
@@ -376,12 +382,12 @@ class PurchaseController extends Controller
                         foreach ($row['lots'] as $lot) {
                             // Verificar si el lote existe en la tabla item_lots
                             $item_lot = ItemLot::where('series', $lot['series'])
-                            ->where('item_id', $row['item_id'])
-                            ->whereRaw('LENGTH(series) = ?', [strlen($lot['series'])])
-                            ->first();
+                                ->where('item_id', $row['item_id'])
+                                ->whereRaw('LENGTH(series) = ?', [strlen($lot['series'])])
+                                ->first();
 
                             if ($item_lot) {
-                             
+
                                 $message = "La serie {$lot['series']} ya existe en el sistema";
                                 $has_error = true;
                                 DB::rollBack();
@@ -647,7 +653,7 @@ class PurchaseController extends Controller
             case 'items':
 
                 $items = Item::whereNotIsSet()->whereIsActive()->orderBy('description')
-                ->take(20)->get(); //whereWarehouse()
+                    ->take(20)->get(); //whereWarehouse()
                 return collect($items)->transform(function ($row) {
                     $full_description = ($row->internal_id) ? $row->internal_id . ' - ' . $row->description : $row->description;
                     return [
@@ -680,7 +686,7 @@ class PurchaseController extends Controller
                         }),
                         'series_enabled' => (bool) $row->series_enabled,
 
-                        'warehouses' => collect($row->warehouses)->transform(function($row) {
+                        'warehouses' => collect($row->warehouses)->transform(function ($row) {
                             return [
                                 'warehouse_id' => $row->warehouse->id,
                                 'warehouse_description' => $row->warehouse->description,

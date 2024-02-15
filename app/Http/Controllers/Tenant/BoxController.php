@@ -32,6 +32,7 @@ use App\Models\Tenant\CreditList;
 use Modules\Dashboard\Helpers\DashboardSalePurchase;
 use App\Exports\BoxesExportCashClosed;
 use App\Exports\GlobalBoxExport;
+use App\Models\Tenant\BankAccount;
 use Modules\Restaurant\Models\Food;
 
 class BoxController extends Controller
@@ -665,7 +666,8 @@ class BoxController extends Controller
     //     return (array)$records_by_establishment;
     // }
 
-    public function global_export(Request $request){
+    public function global_export(Request $request)
+    {
 
         $type = $request->type;
         $date_open = $request->date_open;
@@ -673,23 +675,48 @@ class BoxController extends Controller
         $records = $all_info['records'];
         $columns = $all_info['columns'];
         $company = Company::first();
-        if($type == 'pdf'){
-            $pdf = PDF::loadView('tenant.reports.box_global.report_pdf', compact("records", "company", "date_open","columns"))->setPaper('a4', 'landscape');
+        if ($type == 'pdf') {
+            $pdf = PDF::loadView('tenant.reports.box_global.report_pdf', compact("records", "company", "date_open", "columns"))->setPaper('a4', 'landscape');
             return $pdf->stream('Reporte_global_caja_' . date('YmdHis') . '.pdf');
-        }else{
-                
-                return (new GlobalBoxExport)
-                    ->records($records)
-                    ->company($company)
-                    ->columns($columns)
-                    ->download('Reporte_global_caja_' . Carbon::now() . '.xlsx');
-        }
+        } else {
 
+            return (new GlobalBoxExport)
+                ->records($records)
+                ->company($company)
+                ->columns($columns)
+                ->download('Reporte_global_caja_' . Carbon::now() . '.xlsx');
+        }
+    }
+    public function get_all_payments_methods()
+    {
+        $payments = ["Efectivo", "Yape", "PLIN", "TARJETA: IZYPAY", "Culqui", "TARJETA: NIUBIZ", "TARJETA: OPENPAY"];
+        //convertir cada elemento de payments en un array que contenga la descripcion y is_bank en false
+        $payments = collect($payments)->transform(function ($payment) {
+            return [
+                'description' => $payment,
+                'is_bank' => false
+            ];
+        });
+        $account_banks = BankAccount::where('status', true)->get()
+            ->transform(function ($account) {
+
+                return [
+                    'description' => $account->description . "-" . $account->number,
+                    'is_bank' => true,
+                    'bank_account' => $account->id
+                ];
+            });
+
+        $all = $payments->merge($account_banks);
+        return [
+            'success' => true,
+            'data' => $all
+        ];
     }
     function global_get_records($date_open)
     {
         $establishments = Establishment::select(['id', 'description'])->get();
-        $payments = ["Efectivo", "Yape", "PLIN", "TARJETA: IZYPAY","Culqui", "TARJETA: NIUBIZ", "TARJETA: OPENPAY"];
+        $payments = ["Efectivo", "Yape", "PLIN", "TARJETA: IZYPAY", "Culqui", "TARJETA: NIUBIZ", "TARJETA: OPENPAY"];
         $columns = [];
         $diff_payments = [];
         $records_by_establishment = [];
@@ -736,17 +763,16 @@ class BoxController extends Controller
                                         } else {
                                             $total += $document->total;
                                         }
-                                        if ($document->total_discount && $document->total_discount > 0)  {
+                                        if ($document->total_discount && $document->total_discount > 0) {
                                             // $total += $document->total_discount;
                                         }
                                     }
                                 });
-                                
+
                             $records[] = [
                                 'method' => $value,
                                 'amount' => $total
                             ];
-                         
                         }
                     }
                     $diff = $allMethods->diff($payments)->values()->all();
@@ -778,7 +804,7 @@ class BoxController extends Controller
         $first_element = $payments[0];
         $rest_elements = array_slice($payments, 1);
         $columns = array_merge([$first_element], array_unique($diff_payments), $rest_elements);
-        $to_check = ["TARJETA: IZYPAY","Culqui", "TARJETA: NIUBIZ", "TARJETA: OPENPAY"];
+        $to_check = ["TARJETA: IZYPAY", "Culqui", "TARJETA: NIUBIZ", "TARJETA: OPENPAY"];
         foreach ($records_by_establishment as $key => $value) {
             $cash = $value['cash'];
             foreach ($cash as $key2 => $value2) {
@@ -796,7 +822,6 @@ class BoxController extends Controller
         if (count($to_check) > 0) {
             $columns = array_diff($columns, $to_check);
             $columns = array_values($columns);
-            
         }
         return ["records" => $records_by_establishment, "columns" => $columns];
     }

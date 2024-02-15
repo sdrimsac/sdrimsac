@@ -123,7 +123,7 @@
                                     {{ $value->sale_unit_price }}
                                 </td>
                                 <td>
-                                    {{ $value->affectation_igv_type_id }}
+                                    {{ $value->sale_affectation_igv_type_id }}
                                 </td>
                                 <td>
                                     {{ $value->has_igv == 1 ? 'SI' : 'NO' }}

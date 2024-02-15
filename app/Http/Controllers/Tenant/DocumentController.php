@@ -337,24 +337,24 @@ class DocumentController extends Controller
             ->whereType('customers')->orderBy('name')
             ->whereIn('identity_document_type_id', $identity_document_type_id)
             ->whereIsEnabled();
-        if($credit_list){
+        if ($credit_list) {
             $customers = $customers->where('has_credit_line', 1);
         }
         $customers = $customers->get()->transform(function ($row) {
-                return [
-                    'id' => $row->id,
-                    'description' => $row->number . ' - ' . $row->name,
-                    'name' => $row->name,
-                    'number' => $row->number,
-                    'has_credit_line' => (bool) $row->has_credit_line,
-                    'credit_line' => $row->credit_line,
-                    'identity_document_type_id' => $row->identity_document_type_id,
-                    'identity_document_type_code' => $row->identity_document_type->code,
-                    'addresses' => $row->addresses,
-                    'address' =>  $row->address,
-                    'seller_id' =>  $row->seller_id
-                ];
-            });
+            return [
+                'id' => $row->id,
+                'description' => $row->number . ' - ' . $row->name,
+                'name' => $row->name,
+                'number' => $row->number,
+                'has_credit_line' => (bool) $row->has_credit_line,
+                'credit_line' => $row->credit_line,
+                'identity_document_type_id' => $row->identity_document_type_id,
+                'identity_document_type_code' => $row->identity_document_type->code,
+                'addresses' => $row->addresses,
+                'address' =>  $row->address,
+                'seller_id' =>  $row->seller_id
+            ];
+        });
 
         return compact('customers');
     }
@@ -859,7 +859,27 @@ class DocumentController extends Controller
         $this->associateSaleNoteToDocument($request, $document->id);
         Box::where('document_id', $document->id)->delete();
         // $Payments = DocumentPayment::where('document_id', $document->id)->first();
-
+        if ($request->cash_id == null && $document_id == null) {
+            $user_id = auth()->user()->id;
+            $cash = Cash::where('user_id', $user_id)
+                ->where('state', true)
+                ->first();
+            if ($cash == null) {
+                $cash = Cash::create([
+                    'user_id' => auth()->user()->id,
+                    'date_opening' => date('Y-m-d'),
+                    'time_opening' => date('H:i:s'),
+                    'date_closed' => null,
+                    'time_closed' => null,
+                    'beginning_balance' => 0,
+                    'final_balance' => 0,
+                    'income' => 0,
+                    'state' => true,
+                    'reference_number' => null
+                ]);
+            }
+            $request->merge(['cash_id' => $cash->id]);
+        }
         $response = $fact->getResponse();
         $company = Company::first();
         //&& $request->afectar_caja === true
@@ -879,7 +899,7 @@ class DocumentController extends Controller
                     $box->operation_number = $operation_number;
                     $box->method = $method;
                     if ($method == "Yape" || $method == "PLIN") {
-                        $message .= "Pago por " . $method." del establecimiento ".$establishment->description." de usuario ".auth()->user()->name. " por S/" . $amount."- N° Operación: " . $operation_number ?? "-";
+                        $message .= "Pago por " . $method . " del establecimiento " . $establishment->description . " de usuario " . auth()->user()->name . " por S/" . $amount . "- N° Operación: " . $operation_number ?? "-";
                     }
                     $box->bank_account_id = $bank_account_id;
                     $box->bank_account_operation = $bank_account_operation;
@@ -1010,7 +1030,7 @@ class DocumentController extends Controller
                 } else {
                     $item->total = 0;
                     $item->advances = 0;
-                    $id_to_document =$item->hotel_rent_id;
+                    $id_to_document = $item->hotel_rent_id;
                     HotelRentDocument::create([
                         'hotel_rent_id' => $id_to_document,
                         'document_id' => $document->id,
@@ -1052,7 +1072,7 @@ class DocumentController extends Controller
                     } else {
                         $item->total = 0;
                         $item->advances = 0;
-                        $id_to_document =$item->hotel_rent_id;
+                        $id_to_document = $item->hotel_rent_id;
                         HotelRentDocument::create([
                             'hotel_rent_id' => $id_to_document,
                             'document_id' => $document->id,
