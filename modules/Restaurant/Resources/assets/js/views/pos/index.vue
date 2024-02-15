@@ -2695,7 +2695,7 @@ export default {
                 this.ordens[i].food.item.quantity = item.quantity;
                 this.ordens[i].food.item.lotes = item.lotes;
                 this.ordens[i].food.item.lots = item.series;
-                this.ordens[i].food.item.color_size = [...item.color_size];
+                this.ordens[i].food.item.color_size = item.color_size ? [...item.color_size] : [];
                 this.ordens[i].food.item.sale_unit_price = item.price;
                 this.ordens[i].food.price = item.price;
                 // this.ordens[i].food.item.price = item.price;
@@ -3048,10 +3048,9 @@ export default {
                 this.ordens[i].food.item.quantity = item.quantity;
                 this.ordens[i].food.item.lotes = item.lotes;
                 this.ordens[i].food.item.lots = item.series;
-                this.ordens[i].food.item.color_size = [...item.color_size];
+                this.ordens[i].food.item.color_size = item.color_size ? [...item.color_size] : [];
                 this.ordens[i].food.item.sale_unit_price = item.price;
                 this.ordens[i].food.price = item.price;
-                console.log("🚀 ~ file: index.vue:3054 ~ asyncpaymentsOrden(form,variationItem ~ item.price:", item.price)
                 // this.ordens[i].food.item.price = item.price;
                 this.ordens[i].food.item.toWarehouse = item.toWarehouse;
                 this.ordens[i].food.item.consignment_item_id =
@@ -3083,7 +3082,6 @@ export default {
                 this.calculateTotalVariation(this.formVariation);
             }
             this.form.items = this.ordens.map(o => o.food.item);
-            console.log("🚀 ~ file: index.vue:3087 ~ asyncpaymentsOrden(form,variationItem ~ this.form.items:", JSON.stringify(this.form.items))
             
             this.formatItems();
             this.calculateTotal();
