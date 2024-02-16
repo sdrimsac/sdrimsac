@@ -2852,6 +2852,7 @@ export default {
                     2
                 );
             });
+                    console.log("🚀 ~ file: index.vue:2851 ~ calculateTotal ~ total:", total)
 
             //  total_igv = _.round((total / (1+(this.percentage_igv/100))) * (this.percentage_igv/100), 2);
 

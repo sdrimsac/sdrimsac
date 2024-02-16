@@ -16,6 +16,7 @@ use Modules\Restaurant\Models\OrdenItem;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use Illuminate\Support\Facades\Log;
 
 class PrintEvent implements ShouldBroadcast
 {
@@ -27,7 +28,7 @@ class PrintEvent implements ShouldBroadcast
      * @return void
      */
     public $data;
-    public function __construct($id, $document_type = 0, $printing = true, $area_id = null, $ids = [],$isEmit = false)
+    public function __construct($id, $document_type = 0, $printing = true, $area_id = null, $ids = [],$isEmit = false,$isPrecuenta=false)
     {
 
         $establishment = Establishment::findOrFail(auth()->user()->establishment_id);
@@ -87,6 +88,9 @@ class PrintEvent implements ShouldBroadcast
                 case "CL":
                     $documentLink = url('') . "/caja/rooms/print_warranty/{$id}";
                     break;
+            case "00":
+            $documentLink = url('') . "/caja/worker/print-ticket?id={$id}&area_id={$area_id}&ids={$ids_string}&precuenta={$isPrecuenta}";
+                        break;
             case "0":
                 $documentLink = url('') . "/caja/worker/print-ticket?id={$id}&area_id={$area_id}&ids={$ids_string}";
                 break;
@@ -118,6 +122,7 @@ class PrintEvent implements ShouldBroadcast
         if ($printer == null) {
             if ($area_printer->search_print) {
                 $printer = $establishment->printer;
+              
                 if($printer){
                     $area_with_printer = Area::where('printer',$printer)->first();
                     if($area_with_printer){
@@ -129,7 +134,8 @@ class PrintEvent implements ShouldBroadcast
             }
         }
         $conf_establishment = ConfEstablishment::where('establishment_id', $establishment->id)->first();
-        if ($conf_establishment && $conf_establishment->print_command == false && $document_type == "0") {
+        if ($conf_establishment && $conf_establishment->print_command == false && $document_type == "0" && $document_type == "00") {
+            Log::info('No se imprime el comando');
             $printing = false;
         }
         $copies = 0;
@@ -144,6 +150,7 @@ class PrintEvent implements ShouldBroadcast
 
 
         $this->data = array(
+            'document_type' => $document_type,
             'printer' => $printer,
             'printing' => $printing,
             // 'copies' => ($multiple_boxes == true && auth()->user()->type != 'admin') ? $area->copies : $establishment->copies,

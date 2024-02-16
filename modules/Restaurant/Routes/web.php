@@ -327,6 +327,7 @@ Route::prefix('caja')->group(function () {
             Route::get('pos/selecttabled/{idOrden}', 'PosController@selecttabled');
             Route::get('pos/foods', 'PosController@foods');
             Route::get('record/{id}', 'OrdenController@record');
+            Route::get('record-worker/{id}', 'OrdenController@recordWorker');
 
             //ORDERS
             Route::post('send-orden', 'OrdenController@store');

@@ -175,7 +175,9 @@
                                         type="button"
                                         :class="
                                             `btn ${
-                                                t.timer ? 'warning-color' : 'btn-danger'
+                                                t.timer
+                                                    ? 'warning-color'
+                                                    : 'btn-danger'
                                             }`
                                         "
                                     >
@@ -1745,10 +1747,10 @@
 </template>
 
 <style>
-    .warning-color{
-        background-color: #ffa407 !important;
-        color: #fff !important;
-    }
+.warning-color {
+    background-color: #ffa407 !important;
+    color: #fff !important;
+}
 /* .el-checkbox#barcode .el-checkbox__label {
     padding-top: 10px !important;
 } */
@@ -2126,7 +2128,7 @@ export default {
                 //crea una nueva fecha con las propiedades checkout_date_estimated checkout_time_estimated de t
                 let { hotel_rent_items } = t;
                 let hotel_rent_item = hotel_rent_items;
-                    // hotel_rent_items[hotel_rent_items.length - 1];
+                // hotel_rent_items[hotel_rent_items.length - 1];
                 let {
                     checkout_date_estimated,
                     checkout_time_estimated
@@ -2695,7 +2697,9 @@ export default {
                 this.ordens[i].food.item.quantity = item.quantity;
                 this.ordens[i].food.item.lotes = item.lotes;
                 this.ordens[i].food.item.lots = item.series;
-                this.ordens[i].food.item.color_size = item.color_size ? [...item.color_size] : [];
+                this.ordens[i].food.item.color_size = item.color_size
+                    ? [...item.color_size]
+                    : [];
                 this.ordens[i].food.item.sale_unit_price = item.price;
                 this.ordens[i].food.price = item.price;
                 // this.ordens[i].food.item.price = item.price;
@@ -2705,6 +2709,7 @@ export default {
             }
             this.form.items = this.ordens.map(o => o.food.item);
             this.formatItems();
+
             this.calculateTotal();
             this.form.enter_amount = this.form.total;
             this.form.difference = 0;
@@ -3038,9 +3043,26 @@ export default {
                 //this.form.caja = true;
             }
             let { items } = form;
+            let x = 0;
+            items.forEach(o => {
+                x = x + 1;
+                console.log(
+                    "🚀 ~ file: index.vue:3091 ~ this.ordens.forEach ~ new Date.toString():",
+                    x
+                );
+                console.log(
+                    "🚀 ~ file: index.vue:2711 ~ this.ordens.each ~ o:",
+                    JSON.stringify(o)
+                );
+            });
             this.ordens = items;
+            console.log(
+                "🚀 ~ file: index.vue:3043 ~ asyncpaymentsOrden(form,variationItem ~ this.ordens:",
+                this.ordens.length
+            );
+
             for (let i = 0; i < items.length; i++) {
-                let item = items[i];
+                let item = { ...items[i] };
                 this.ordens[i].food.item.from_unit_type_id = item.type_id;
                 this.ordens[i].food.item.from_unit_type_id_desc =
                     item.type_description;
@@ -3048,7 +3070,9 @@ export default {
                 this.ordens[i].food.item.quantity = item.quantity;
                 this.ordens[i].food.item.lotes = item.lotes;
                 this.ordens[i].food.item.lots = item.series;
-                this.ordens[i].food.item.color_size = item.color_size ? [...item.color_size] : [];
+                this.ordens[i].food.item.color_size = item.color_size
+                    ? [...item.color_size]
+                    : [];
                 this.ordens[i].food.item.sale_unit_price = item.price;
                 this.ordens[i].food.price = item.price;
                 // this.ordens[i].food.item.price = item.price;
@@ -3082,8 +3106,9 @@ export default {
                 this.calculateTotalVariation(this.formVariation);
             }
             this.form.items = this.ordens.map(o => o.food.item);
-            
+            console.log("🚀 ~ file: index.vue:3109 ~ asyncpaymentsOrden(form,variationItem ~ this.form.items:", JSON.stringify(this.form.items))
             this.formatItems();
+
             this.calculateTotal();
             this.form.enter_amount = this.form.total;
             this.form.difference = 0;
@@ -4747,6 +4772,10 @@ export default {
                 );
                 total += t;
             });
+            console.log(
+                "🚀 ~ file: index.vue:4749 ~ calculateTotal ~ total:",
+                total
+            );
 
             this.form.items.forEach(row => {
                 total_discount += parseFloat(row.total_discount);

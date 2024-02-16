@@ -3028,48 +3028,48 @@ export default {
         },
         async updateColorSize(idx, color_size) {
             let ordens = [...this.localOrden];
-            ordens[idx].color_size = [...color_size];
-            // if (price != 0) {
-            //     ordens[idx].price = price;
-            // }
-            ordens[idx].quantity = color_size.reduce(
-                (a, b) => a + Number(b.quantity),
-                0
-            );
-            // if (this.hasSamePrice(color_size)) {
-            //     let [first] = color_size;
-            //     let { price } = first;
-            //     price = Number(price || "0");
-            //     ordens[idx].color_size = [...color_size];
-            //     if (price != 0) {
-            //         ordens[idx].price = price;
-            //     }
-            //     ordens[idx].quantity = color_size.reduce(
-            //         (a, b) => a + Number(b.quantity),
-            //         0
-            //     );
-            // } else {
-            //     let orden = { ...ordens[idx] };
-            //     //remove the current orden
-            //     ordens = ordens.filter((o, i) => i != idx);
-            //     let colors_sizes = this.splitByPrice(color_size);
-            //     for (let i = 0; i < colors_sizes.length; i++) {
-            //         let color_size = colors_sizes[i];
-            //         let newOrden = { ...orden };
-            //         let [first] = color_size;
-            //         let { price } = first;
-            //         newOrden.color_size = [...color_size];
-            //         price = Number(price || "0");
-            //         if (price != 0) {
-            //             newOrden.price = price;
-            //         }
-            //         newOrden.quantity = color_size.reduce(
-            //             (a, b) => a + Number(b.quantity),
-            //             0
-            //         );
-            //         ordens.push(newOrden);
-            //     }
-            // }
+            // ordens[idx].color_size = [...color_size];
+            // // if (price != 0) {
+            // //     ordens[idx].price = price;
+            // // }
+            // ordens[idx].quantity = color_size.reduce(
+            //     (a, b) => a + Number(b.quantity),
+            //     0
+            // );
+            if (this.hasSamePrice(color_size)) {
+                let [first] = color_size;
+                let { price } = first;
+                price = Number(price || "0");
+                ordens[idx].color_size = [...color_size];
+                if (price != 0) {
+                    ordens[idx].price = price;
+                }
+                ordens[idx].quantity = color_size.reduce(
+                    (a, b) => a + Number(b.quantity),
+                    0
+                );
+            } else {
+                let orden = { ...ordens[idx] };
+                //remove the current orden
+                ordens = ordens.filter((o, i) => i != idx);
+                let colors_sizes = this.splitByPrice(color_size);
+                for (let i = 0; i < colors_sizes.length; i++) {
+                    let color_size = colors_sizes[i];
+                    let newOrden = { ...orden };
+                    let [first] = color_size;
+                    let { price } = first;
+                    newOrden.color_size = [...color_size];
+                    price = Number(price || "0");
+                    if (price != 0) {
+                        newOrden.price = price;
+                    }
+                    newOrden.quantity = color_size.reduce(
+                        (a, b) => a + Number(b.quantity),
+                        0
+                    );
+                    ordens.push(newOrden);
+                }
+            }
             await this.$emit("update:localOrden", ordens);
         },
         updateSeries(idx, series) {

@@ -2070,7 +2070,7 @@ export default {
             }
             if (this.form.total + 200 <= this.form.enter_amount) {
                 this.$toast.error(
-                    "el monto a agregar no puede ser 200 soles mayor al pago total "
+                    "El monto a agregar no puede ser 200 soles mayor al pago total "
                 );
                 return;
             }

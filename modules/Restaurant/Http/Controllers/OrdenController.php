@@ -440,6 +440,49 @@ class OrdenController extends Controller
             'message' => 'Área ' . ($orden->active ? 'activada' : 'desactivada')
         ];
     }
+    public function recordWorker($id, Request $request){
+        $orden = Orden::find($id);
+        $precuenta = $request->precuenta ?? false;
+        $to_kitchen = $request->to_kitchen;
+        $establishment = Establishment::findOrFail(auth()->user()->establishment_id);
+        $user = auth()->user();
+        $printer = null;
+        if (!$to_kitchen) {
+            $area_id = $user->area_id;
+            $area = Area::find($area_id);
+        } else {
+            $area = Area::where('description', 'like', '%COCIN%')->first();
+            $area_id = $area->id;
+        }
+
+        if ($area != null) {
+            $printer = $area->printer;
+        }
+        if ($printer == null) {
+            $printer = $establishment->printer;
+        }
+        if ($orden == null) {
+            return [
+                'success' => false,
+                'print'  => "Nº Orden no existe"
+            ];
+        } else {
+            $orden_items = OrdenItem::where('orden_id', $id)->pluck('id')->toArray();
+            $ids_string = "";
+            if (count($orden_items) != 0) {
+                $ids_string = join("_", $orden_items);
+            }
+            event(new PrintEvent($orden->id, "00", true, $area_id, $orden_items,false,$precuenta));
+            return [
+                'success' => true,
+                'data' => $orden,
+                'printer' => $printer,
+                'direct_printing' => (bool) $establishment->direct_printing,
+                'printer_serve' => $establishment->printer_serve,
+                'print'   => url('') . "/caja/worker/print-ticket?id={$id}&ids={$ids_string}&area_id={$area_id}&precuenta={$precuenta}"
+            ];
+        }
+    }
     public function record($id, Request $request)
     {
         $orden = Orden::find($id);

@@ -598,35 +598,35 @@ export default {
             //   }
             try {
                 const response = await this.$http.get(
-                    `/caja/worker/record/${id}`
+                    `/caja/worker/record-worker/${id}`
                 );
-                let config = qz.configs.create(response.data.printer, {
-                    usingSecure: false,
-                    scaleContent: false
-                });
-                if (!qz.websocket.isActive()) {
-                    await qz.websocket.connect(config);
-                }
-                // console.log(qz.websocket.isActive(), "aqui");
-                let url = response.data.print;
-                // console.log(url);
-                let ordenIdToPrint = url.split("/");
-                ordenIdToPrint = ordenIdToPrint[ordenIdToPrint.length - 1];
-                // url = url.split("/");
-                // url = url.slice(0, -1);
-                // url = url.join("/");
-                // url = url + `?id=${ordenIdToPrint}&area_id=0`;
-                let data = [
-                    {
-                        type: "pdf",
-                        format: "file",
-                        data: url
-                    }
-                ];
-                qz.print(config, data).catch(e => {
-                    console.log(e);
-                    this.$toast.error(e.message);
-                });
+                // let config = qz.configs.create(response.data.printer, {
+                //     usingSecure: false,
+                //     scaleContent: false
+                // });
+                // if (!qz.websocket.isActive()) {
+                //     await qz.websocket.connect(config);
+                // }
+                // // console.log(qz.websocket.isActive(), "aqui");
+                // let url = response.data.print;
+                // // console.log(url);
+                // let ordenIdToPrint = url.split("/");
+                // ordenIdToPrint = ordenIdToPrint[ordenIdToPrint.length - 1];
+                // // url = url.split("/");
+                // // url = url.slice(0, -1);
+                // // url = url.join("/");
+                // // url = url + `?id=${ordenIdToPrint}&area_id=0`;
+                // let data = [
+                //     {
+                //         type: "pdf",
+                //         format: "file",
+                //         data: url
+                //     }
+                // ];
+                // qz.print(config, data).catch(e => {
+                //     console.log(e);
+                //     this.$toast.error(e.message);
+                // });
 
                 // this.$toast.success(
                 //     "se esta imprimiendo el comprobante con exito"
