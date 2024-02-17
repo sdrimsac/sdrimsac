@@ -3049,13 +3049,15 @@ export default {
                     0
                 );
             } else {
-                let orden = { ...ordens[idx] };
+                // let orden = { ...ordens[idx] };
+                //clona la orden actual
+                let orden = JSON.parse(JSON.stringify(ordens[idx]));
                 //remove the current orden
                 ordens = ordens.filter((o, i) => i != idx);
                 let colors_sizes = this.splitByPrice(color_size);
                 for (let i = 0; i < colors_sizes.length; i++) {
                     let color_size = colors_sizes[i];
-                    let newOrden = { ...orden };
+                    let newOrden = JSON.parse(JSON.stringify(orden));
                     let [first] = color_size;
                     let { price } = first;
                     newOrden.color_size = [...color_size];
@@ -3158,10 +3160,12 @@ export default {
         changeVariation() {
             if (this.customer_variation == null) {
                 this.variation = false;
+                // this.$emit("update:variation", false);
 
                 return this.$toast.error("Clientes modificado no creado");
             }
             if (this.itemDefault == null) {
+            //   this.$emit("update:variation", false);
                 this.variation = false;
 
                 return this.$toast.error(
@@ -3856,6 +3860,7 @@ export default {
         },
 
         calculateTotal(w = null) {
+            
             this.totalOrdenItems = 0.0;
             this.total = 0.0;
             this.totalOrden = 0.0;

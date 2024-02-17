@@ -2186,9 +2186,6 @@ export default {
                     this.value = newData[0].id;
                     this.form.customer_id = newData[0].id;
                     this.changeCustomer();
-                }else{
-                    this.value = null;
-                    this.form.customer_id = null;
                 }
 
                 
@@ -2309,7 +2306,6 @@ export default {
                 this.value = null;
                 this.form.customer_id = null;
             }
-
             if (!this.configuration.restrict_receipt_date) {
                 this.form.date_of_issue = moment().format("YYYY-MM-DD");
             }
@@ -2322,6 +2318,9 @@ export default {
             }
             if (document_default) {
                 this.form.document_type_id = document_default;
+            }
+            if(this.variation){
+                this.form.document_type_id = "03";
             }
             this.customers = this.all_customers.filter(
                 n => n.number != "88888888"
@@ -2370,7 +2369,7 @@ export default {
             }
             this.checkTotal("01");
 
-              
+
             if (this.configuration.save_pos_printing) {
                 this.printerOn = this.configuration.print_in_pos ? 1 : 0;
             }

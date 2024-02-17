@@ -5,6 +5,7 @@ namespace Modules\Restaurant\Models;
 use App\Http\Controllers\Tenant\WhatsappController;
 use App\Models\Tenant\Configuration;
 use App\Models\Tenant\Establishment;
+use App\Models\Tenant\HotelRent;
 use App\Models\Tenant\HotelRentItem;
 use App\Traits\RegisterMovementTrait;
   use App\Models\Tenant\ModelTenant;
@@ -136,6 +137,7 @@ class Table extends ModelTenant
                 foreach ($numbers_activity as $number) {
                     (new WhatsappController)->sendMessage($message,$number->number);
                 }
+                HotelRent::where('table_id',$this->id)->where('active',true)->update(['active'=>false]);
             }
     }
   

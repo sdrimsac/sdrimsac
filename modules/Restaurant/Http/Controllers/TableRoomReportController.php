@@ -792,6 +792,7 @@ class TableRoomReportController extends Controller
                     });
             })
                 // ->where('payment_status', 'Pendiente')
+                ->where('active', true)
                 ->where('was_cancel', 0);
         }])
             ->whereHas('hotel_rent_items', function ($query) use ($date, $time) {
@@ -803,6 +804,7 @@ class TableRoomReportController extends Controller
                         });
                 })
                     // ->where('payment_status', 'Pendiente')
+                    ->where('active', true)
                     ->where('was_cancel', 0);
             })
             ->where('is_room', true)

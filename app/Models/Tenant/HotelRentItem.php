@@ -29,12 +29,14 @@ class HotelRentItem extends ModelTenant
         'extra_time',
         'is_month_rent',
         'credit_line',
+        'active',
     ];
 
     protected $casts = [
         'is_month_rent' => 'boolean',
         'is_reserve' => 'boolean',
         'credit_line' => 'float',
+        'active' => 'boolean',
     ];
 
     public function hotel_rent()

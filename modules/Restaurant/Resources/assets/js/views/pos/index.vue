@@ -3043,26 +3043,13 @@ export default {
                 //this.form.caja = true;
             }
             let { items } = form;
-            let x = 0;
-            items.forEach(o => {
-                x = x + 1;
-                console.log(
-                    "🚀 ~ file: index.vue:3091 ~ this.ordens.forEach ~ new Date.toString():",
-                    x
-                );
-                console.log(
-                    "🚀 ~ file: index.vue:2711 ~ this.ordens.each ~ o:",
-                    JSON.stringify(o)
-                );
-            });
-            this.ordens = items;
-            console.log(
-                "🚀 ~ file: index.vue:3043 ~ asyncpaymentsOrden(form,variationItem ~ this.ordens:",
-                this.ordens.length
-            );
+     
+            this.ordens = [...items];
+
+            let ixd=[];
 
             for (let i = 0; i < items.length; i++) {
-                let item = { ...items[i] };
+                let item = JSON.parse(JSON.stringify(items[i]));
                 this.ordens[i].food.item.from_unit_type_id = item.type_id;
                 this.ordens[i].food.item.from_unit_type_id_desc =
                     item.type_description;
@@ -3074,6 +3061,7 @@ export default {
                     ? [...item.color_size]
                     : [];
                 this.ordens[i].food.item.sale_unit_price = item.price;
+                ixd.push(item.price);
                 this.ordens[i].food.price = item.price;
                 // this.ordens[i].food.item.price = item.price;
                 this.ordens[i].food.item.toWarehouse = item.toWarehouse;
@@ -3104,9 +3092,11 @@ export default {
                 }
 
                 this.calculateTotalVariation(this.formVariation);
+            }else{
+                this.variation = false;
             }
-            this.form.items = this.ordens.map(o => o.food.item);
-            console.log("🚀 ~ file: index.vue:3109 ~ asyncpaymentsOrden(form,variationItem ~ this.form.items:", JSON.stringify(this.form.items))
+
+            this.form.items = this.ordens.map(o => Object.assign({}, o.food.item));
             this.formatItems();
 
             this.calculateTotal();
@@ -4312,7 +4302,7 @@ export default {
                     affectation_igv_type: i.sale_affectation_igv_type_id
                 };
             });
-            this.calculateTotal();
+           // this.calculateTotal();
         },
         isNoteIsDefault() {
             if (this.form.document_type_id == "80") {
@@ -4772,11 +4762,6 @@ export default {
                 );
                 total += t;
             });
-            console.log(
-                "🚀 ~ file: index.vue:4749 ~ calculateTotal ~ total:",
-                total
-            );
-
             this.form.items.forEach(row => {
                 total_discount += parseFloat(row.total_discount);
                 total_charge += parseFloat(row.total_charge);

@@ -125,6 +125,7 @@ class HotelRentItemResource extends JsonResource
         $tes = $this->total + $this->advances;
         $table_name = $this->table->getTableFullName();
         return [
+            'active' => (bool) $this->active,
             'table_name' => $table_name,
             'discount_instead_services' => $this->discount_instead_services,
             'credit_line' => $credit_line,
