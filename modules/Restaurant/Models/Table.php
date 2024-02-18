@@ -137,7 +137,7 @@ class Table extends ModelTenant
                 foreach ($numbers_activity as $number) {
                     (new WhatsappController)->sendMessage($message,$number->number);
                 }
-                HotelRent::where('table_id',$this->id)->where('active',true)->update(['active'=>false]);
+                HotelRentItem::where('table_id',$this->id)->where('active',true)->update(['active'=>false]);
             }
     }
   
