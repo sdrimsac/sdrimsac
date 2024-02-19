@@ -75,8 +75,8 @@ class ItemController extends Controller
         $date_end = $request->date_end ? Carbon::parse($request->date_end)->format("y-m-d") : null;
 
 
-        $document_items = DocumentItem::query();
-        $sale_note_items = SaleNoteItem::query();
+        $document_items = DocumentItem::whereIn('state_type_id',['01','03','05']);
+        $sale_note_items = SaleNoteItem::whereIn('state_type_id',['01','03','05']);
 
         if ($item_id) {
             $document_items->where('item_id', $item_id);
@@ -210,8 +210,8 @@ class ItemController extends Controller
         $date_end = $request->date_end ? Carbon::parse($request->date_end)->format("y-m-d") : null;
 
 
-        $document_items = DocumentItem::query();
-        $sale_note_items = SaleNoteItem::query();
+        $document_items = DocumentItem::whereIn('state_type_id',['01','03','05']);
+        $sale_note_items = SaleNoteItem::whereIn('state_type_id',['01','03','05']);
 
         if ($item_id) {
             $document_items->where('item_id', $item_id);
