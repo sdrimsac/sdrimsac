@@ -55,7 +55,7 @@ class CreditListController extends Controller
                 }
             });
         });
-        $orden_items->orderBy('created_at', 'desc');
+        $orden_items->orderBy('created_at', 'asc');
         return $orden_items;
     }
     public function download(Request $request)
