@@ -51,7 +51,7 @@ class CreditListController extends Controller
                     $qq->whereMonth('created_at', $date);
                 }
                 if ($paid !== null) {
-                    $qq->where('paid', $paid);
+                    $qq->where('date', $paid);
                 }
             });
         });
