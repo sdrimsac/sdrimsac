@@ -51,11 +51,11 @@ class CreditListController extends Controller
                     $qq->whereMonth('created_at', $date);
                 }
                 if ($paid !== null) {
-                    $qq->where('date', $paid);
+                    $qq->where('paid', $paid);
                 }
             });
         });
-        $orden_items->orderBy('created_at', 'asc');
+        $orden_items->orderBy('date', 'asc');
         return $orden_items;
     }
     public function download(Request $request)
