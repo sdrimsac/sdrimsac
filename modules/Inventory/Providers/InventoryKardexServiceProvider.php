@@ -85,7 +85,7 @@ class InventoryKardexServiceProvider extends ServiceProvider
                 $document = $document_item->document;
               $inventory_kardex =  $this->createInventoryKardex($document_item->document, $document_item->item_id, ($factor * ($document_item->quantity * $presentationQuantity)), $warehouse->id);
 
-                $this->updateStock($document_item->item_id, ($factor * ($document_item->quantity * $presentationQuantity)), $warehouse->id);
+                // $this->updateStock($document_item->item_id, ($factor * ($document_item->quantity * $presentationQuantity)), $warehouse->id);
                 foreach ($item->sets as $it) {
                     $ind_item  = $it->individual_item;
                     $presentationQuantity = $it->quantity;
