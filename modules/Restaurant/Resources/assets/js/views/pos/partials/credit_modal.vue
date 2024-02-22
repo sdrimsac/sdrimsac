@@ -149,7 +149,7 @@
                 v-if="form.total"
                 style="margin-right:auto;display:inline-block"
             >
-                <h6>S/. {{ form.total  - credit.advances}}</h6>
+                <h6>S/. {{ form.total - credit.advances }}</h6>
             </span>
             <el-button @click="close">Cancelar</el-button>
             <el-button type="primary" @click="submit">Enviar</el-button>
@@ -169,7 +169,7 @@ const PersonForm = () =>
     import("../../../../../../../../resources/js/views/persons/form.vue");
 export default {
     props: [
-    "configuration",
+        "configuration",
         "items",
         "cash_id",
         "all_customers",
@@ -267,6 +267,9 @@ export default {
                         break;
                 }
                 if (this.tasaInteres > 0) {
+                    let total = parseFloat(this.form.total || "0");
+                    let advances = parseFloat(advance || "0");
+
                     let total_financiar =
                         parseFloat(this.form.total || "0") -
                         parseFloat(this.credit.advances || "0");
@@ -280,7 +283,8 @@ export default {
                     this.credit.amount = calcular_cuota.toFixed(2);
                 } else {
                     let amount =
-                        parseInt(this.form.total) /
+                        (parseInt(this.form.total || "0") -
+                            parseFloat(this.credit.advances || "0")) /
                         parseInt(this.credit.num_cuota);
                     this.credit.amount = amount.toFixed(2);
                 }
@@ -498,7 +502,7 @@ export default {
             }
         },
         open() {
-            let {rates} = this.configuration;
+            let { rates } = this.configuration;
             rates = parseFloat(rates);
             this.tasaInteres = rates;
             this.initCredit();

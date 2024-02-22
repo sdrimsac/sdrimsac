@@ -1619,31 +1619,7 @@ class CashController extends Controller
         $all_cash = Box::where('cash_id', $id)->where('method', 'Efectivo')->sum('amount');
         $user_name = $cash->user->name;
         $configuration = Configuration::first();
-        $principal_cash =  $configuration->principal_cash;
-        if ($principal_cash) {
-            $cash_principal = Cash::where('state', 1)
-                ->where('principal', 1)
-                ->first();
-            if ($cash_principal) {
-                $cash_principal_id = $cash_principal->id;
-                $user_principal = $cash_principal->user;
-                $user_principal_telephone = $user_principal->telephone;
-                $cash_id = $cash->id;
-                CashIncomePrincipal::create([
-                    'cash_principal_id' => $cash_principal_id,
-                    'cash_id' => $cash_id,
-                    'amount' => $all_cash,
-                ]);
-                $user = User::find($cash->user_id);
-                $name = $user->name;
-                $message = "La caja de $name ha sido cerrada, el monto total es de $all_cash";
-                if ($user_principal_telephone) {
-                    (new WhatsappController)->sendMessage($message, $user_principal_telephone);
-                }
-            }else{
-            
-            }
-        }
+       
         $number_activity = $configuration->number_activity;
         $hostname =  app(Environment::class)->hostname();
         $resource = "http://" . $hostname->fqdn . "/caja/report-boxes/reports_resumen_type?cash_id=" . $id;
@@ -1698,7 +1674,29 @@ class CashController extends Controller
             (new WhatsappController)->sendHistorial($request);
         }
         
-
+        $principal_cash =  $configuration->principal_cash;
+        if ($principal_cash) {
+            $cash_principal = Cash::where('state', 1)
+                ->where('principal', 1)
+                ->first();
+            if ($cash_principal) {
+                $cash_principal_id = $cash_principal->id;
+                $user_principal = $cash_principal->user;
+                $user_principal_telephone = $user_principal->telephone;
+                $cash_id = $cash->id;
+                CashIncomePrincipal::create([
+                    'cash_principal_id' => $cash_principal_id,
+                    'cash_id' => $cash_id,
+                    'amount' => $all_cash,
+                ]);
+                $user = User::find($cash->user_id);
+                $name = $user->name;
+                $message = "La caja de $name ha sido cerrada, el monto total es de $all_cash";
+                if ($user_principal_telephone) {
+                    (new WhatsappController)->sendMessage($message, $user_principal_telephone);
+                }
+            }
+        }
         return [
             'success' => true,
             'message' => 'Caja cerrada con éxito',

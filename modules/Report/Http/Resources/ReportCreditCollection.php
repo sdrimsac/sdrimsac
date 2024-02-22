@@ -50,14 +50,22 @@ class ReportCreditCollection extends ResourceCollection
                 $amount_due = $last_payment->amount;
             }
             // $amount_due -= $advances + $payments_records;
-            $to_due =  floatval($row->total)  -( floatval( $advances) + floatval($payments_records));
+            $payment = Payment::where('sale_note_id', $row->id);
+            $int = 0;
+            if($payment->count() > 0){
+                $payment_first = $payment->first();
+              
+                $int = ($row->total - $advances) * ($payment_first->tasa / 100);
+            }
+            $to_due =  floatval($row->total - $advances + $int)  - ( floatval($payments_records));
+          
             return [
                 'id' => $row->id,
                 'date_of_issue' => $row->date_of_issue->format('Y-m-d'),
                 'customer' => ["name" => $customer->name, "number" => $customer->number],
                 'number' => $row->number_full,
                 'dues' => $dues,
-                'total' => $row->total,
+                'total' => $row->total  - $advances+ $int,
                 'advances' => $advances,
                 'payment' => $payments_records,
                 'date_of_due' => $date_of_due,

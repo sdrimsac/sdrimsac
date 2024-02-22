@@ -1190,6 +1190,7 @@ export default {
             }
         },
         socketWhatsappConfig() {
+return;
             let hostName = window.location.hostname;
             let url = `https://${hostName}`;
             this.sender = hostName
@@ -1199,7 +1200,9 @@ export default {
                 .join("");
             try {
                 this.socket = io.connect(this.$socketUrl);
-            } catch (e) {}
+            } catch (e) {
+
+            }
 
             this.socket.on("connected", ({ message }) => {
                 this.$toast.success(message);

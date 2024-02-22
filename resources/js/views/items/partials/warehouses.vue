@@ -121,8 +121,8 @@
                                         <th>{{ row.price2 }}</th>
                                         <th>
                                             {{
-                                                Number(row.price2) *
-                                                    Number(row.quantity_unit)
+                                                (Number(row.price2) *
+                                                    Number(row.quantity_unit)).toFixed(2)
                                             }}
                                         </th>
                                     </tr>

@@ -53,9 +53,13 @@ class SaleNotePaymentController extends Controller
         $payment = Payment::where('sale_note_id', $sale_note_id);
         $payment_tasa = $payment->first();
         $schedule = $payment->count();
+        $advances = $sale_note->advances;
+        $amount_schedule = 0;
         if ($schedule > 0) {
             $btn_schedule = true;
-            $interes = $sale_note->total * ($payment_tasa->tasa / 100);
+            $schedule_first = $payment->first();
+            $amount_schedule = $schedule_first->amount;
+            $interes = ($sale_note->total - $advances) * ($payment_tasa->tasa / 100);
         } else {
             $btn_schedule = false;
             $interes = 0;
@@ -73,6 +77,9 @@ class SaleNotePaymentController extends Controller
         }
 
         return [
+            'amount_schedule' => floatval($amount_schedule),
+            'btn_schedule' => $btn_schedule,
+            'num_schedule' => $schedule,
             'number_full' => $sale_note->identifier,
             'series' => $sale_note->series,
             'number' => $sale_note->number,
@@ -148,10 +155,10 @@ class SaleNotePaymentController extends Controller
         $receipt->date_of_issue = Carbon::parse($request->date)->format('Y-m-d');
         $last_receipt = Receipt::orderBy('id', 'desc')->first();
         $number_receipt = null;
-        if($last_receipt){
+        if ($last_receipt) {
             $number_receipt = intval($last_receipt->number);
         }
-        
+
         if ($number_receipt !== null) {
             $number = str_pad(($number_receipt + 1), 7, "0", STR_PAD_LEFT);
         } else {
@@ -161,14 +168,54 @@ class SaleNotePaymentController extends Controller
         $receipt->amount = $request->input('payment');
         $receipt->external_id = Str::uuid()->toString();
         $receipt->save();
+
         $payment = Payment::where('sale_note_id', $request->sale_note_id)
             ->where('paid', 0)
-            ->where('amount_paid', 0)
-            ->first();
-        if ($payment) {
-            $payment->paid = true;
-            $payment->amount_paid = $request->input('payment');
-            $payment->save();
+            ->where('amount_paid', 0);
+
+        //
+        $count_payment = $payment->count();
+        if ($count_payment == 1) {
+            $payment = $payment->first();
+            if ($payment) {
+                $payment->paid = true;
+                $payment->amount_paid = $request->input('payment');
+                $payment->save();
+            }
+        } else {
+            $amount_to_paid = $payment->first()->amount;
+            $amount_payed = $request->input('payment');
+            $last_payment = Payment::where('sale_note_id', $request->sale_note_id)
+                ->where('paid', 0)
+                ->first();
+            if($last_payment->amount_paid > 0){
+                $amount_payed += $last_payment->amount_paid;
+            }
+
+            $payments_cancel = intval($amount_payed / $amount_to_paid);
+            $rest = $amount_payed - ($amount_to_paid * $payments_cancel);
+
+            if ($rest > 0) {
+                $payments_cancel++;
+            }
+            $payments = Payment::where('sale_note_id', $request->sale_note_id)
+            ->where('paid', 0)->get();
+
+            foreach ($payments as $key => $value) {
+                if ($key < $payments_cancel - 1) {
+                    $value->paid = true;
+                    $value->amount_paid = $amount_to_paid;
+                    $value->save();
+                } elseif ($key == $payments_cancel - 1) {
+                    $value->paid = false;
+                    $value->amount_paid = $rest;
+                    $value->save();
+                } else {
+                    // $value->paid = false;
+                    // $value->amount_paid = $rest;
+                    // $value->save();
+                }
+            }
         }
         if ($request->paid == true) {
             $sale_note = SaleNote::find($request->sale_note_id);

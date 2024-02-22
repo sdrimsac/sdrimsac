@@ -175,7 +175,9 @@ export default {
             this.colorSizes.forEach(item => {
                 if (item.size && item.color) {
                     item.color = item.color.toUpperCase();
-                    item.size = item.size.toUpperCase();
+                   if(isNaN(item.size)){
+                        item.size = item.size.toUpperCase();
+                    }
                 }
             });
         }

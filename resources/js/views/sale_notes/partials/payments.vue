@@ -42,37 +42,36 @@
                                         </td>
                                         <td>{{ row.reference }}</td>
                                         <td class="text-center">
-                                           <template v-if="row.filename">
-                                             <button
-                                                v-if="isImage(row.filename)"
-                                                type="button"
-                                                class="btn waves-effect waves-light btn-sm btn-primary"
-                                                @click.prevent="
-                                                    clickImagePreview(
-                                                        row.filename
-                                                    )
-                                                "
-                                            >
-                                                <i
-                                                    class="fas fa-file-image"
-                                                ></i>
-                                            </button>
-                                            <button
-                                                v-else
-                                                type="button"
-                                             
-                                                class="btn waves-effect waves-light btn-sm btn-primary"
-                                                @click.prevent="
-                                                    clickDownloadFile(
-                                                        row.filename
-                                                    )
-                                                "
-                                            >
-                                                <i
-                                                    class="fas fa-file-download"
-                                                ></i>
-                                            </button>
-                                           </template>
+                                            <template v-if="row.filename">
+                                                <button
+                                                    v-if="isImage(row.filename)"
+                                                    type="button"
+                                                    class="btn waves-effect waves-light btn-sm btn-primary"
+                                                    @click.prevent="
+                                                        clickImagePreview(
+                                                            row.filename
+                                                        )
+                                                    "
+                                                >
+                                                    <i
+                                                        class="fas fa-file-image"
+                                                    ></i>
+                                                </button>
+                                                <button
+                                                    v-else
+                                                    type="button"
+                                                    class="btn waves-effect waves-light btn-sm btn-primary"
+                                                    @click.prevent="
+                                                        clickDownloadFile(
+                                                            row.filename
+                                                        )
+                                                    "
+                                                >
+                                                    <i
+                                                        class="fas fa-file-download"
+                                                    ></i>
+                                                </button>
+                                            </template>
                                         </td>
                                         <td class="text-end">
                                             {{ row.payment }}
@@ -289,6 +288,7 @@
                                             class="series-table-actions text-end"
                                         >
                                             <button
+                                                :disabled="is_paying"
                                                 type="button"
                                                 class="btn waves-effect waves-light btn-sm btn-info"
                                                 @click.prevent="
@@ -394,7 +394,7 @@
 
 <script>
 import { deletable } from "../../../mixins/deletable";
-import ImagePreviewModal  from "../../../components/ImagePreviewModal.vue";
+import ImagePreviewModal from "../../../components/ImagePreviewModal.vue";
 export default {
     props: ["showDialog", "documentId"],
     mixins: [deletable],
@@ -403,6 +403,7 @@ export default {
     },
     data() {
         return {
+            is_paying: false,
             showImagePreviewModal: false,
             imagePreview: null,
             creditDiscount: 0,
@@ -433,9 +434,7 @@ export default {
             return url.match(/\.(jpeg|jpg|gif|png)$/) != null;
         },
         clickImagePreview(url) {
-            
-            this.imagePreview = 
-            `/finances/payment-file/download-file/${url}/sale_notes`;
+            this.imagePreview = `/finances/payment-file/download-file/${url}/sale_notes`;
             this.showImagePreviewModal = true;
         },
         calculateDiscountCredit() {
@@ -505,6 +504,10 @@ export default {
             await this.$http
                 .get(`/${this.resource}/document/${this.documentId}`)
                 .then(response => {
+                    console.log(
+                        "🚀 ~ file: payments.vue:508 ~ getData ~ response:",
+                        response
+                    );
                     this.document = response.data;
                     this.title =
                         "Pagos del comprobante: " +
@@ -540,7 +543,34 @@ export default {
             this.cancelCredit = false;
             this.fileList = [];
         },
-        clickSubmit(index) {
+        async clickSubmit(index) {
+            console.log(
+                "🚀 ~ file: payments.vue:548 ~ clickSubmit ~ this.is_paying:",
+                this.is_paying
+            );
+
+            let { num_schedule, amount_schedule } = this.document;
+            let payment = this.records[index].payment;
+            let difference = parseFloat(this.document.total_difference);
+            if (difference > amount_schedule && payment < amount_schedule) {
+                this.$toast.error(
+                    "El monto ingresado debe ser igual o mayor a la cuota: " +
+                        amount_schedule +
+                        " para poder realizar el pago."
+                );
+                return;
+            }
+            if (num_schedule == 1) {
+                if (
+                    this.records[index].payment <
+                    parseFloat(this.document.total_difference)
+                ) {
+                    this.$toast.error(
+                        "No se puede hacer pago parcial teniendo una sola cuota."
+                    );
+                    return;
+                }
+            }
             if (
                 this.records[index].payment >
                 parseFloat(this.document.total_difference)
@@ -575,30 +605,35 @@ export default {
                 paid: paid,
                 creditDiscount: this.creditDiscount
             };
+            try {
+                this.is_paying = true;
 
-            this.$http
-                .post(`/${this.resource}`, form)
-                .then(response => {
-                    if (response.data.success) {
-                        this.$toast.success(response.data.message);
-                        this.getData();
-                        //this.receipt_link=response.data.pdf
-                        //this.ClickPrint()
-                        this.$eventHub.$emit("reloadData");
-                        this.$emit("reloadData");
-                        this.showAddButton = true;
-                        this.cancelCredit = false;
-                    } else {
-                        this.$toast.error(response.data.message);
-                    }
-                })
-                .catch(error => {
-                    if (error.response.status === 422) {
-                        this.records[index].errors = error.response.data;
-                    } else {
-                        console.log(error);
-                    }
-                });
+                const response = await this.$http.post(
+                    `/${this.resource}`,
+                    form
+                );
+
+                if (response.data.success) {
+                    this.$toast.success(response.data.message);
+                    this.getData();
+                    //this.receipt_link=response.data.pdf
+                    //this.ClickPrint()
+                    this.$eventHub.$emit("reloadData");
+                    this.$emit("reloadData");
+                    this.showAddButton = true;
+                    this.cancelCredit = false;
+                } else {
+                    this.$toast.error(response.data.message);
+                }
+            } catch (error) {
+                if (error.response.status === 422) {
+                    this.records[index].errors = error.response.data;
+                } else {
+                    console.log(error);
+                }
+            } finally {
+                this.is_paying = false;
+            }
         },
         // filterDocumentType(row){
         //

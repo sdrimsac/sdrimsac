@@ -562,7 +562,7 @@
                             </div>
                             <div
                                 class="col-md-3"
-                                v-show="form.unit_type_id != 'ZZ'"
+                                v-show="form.unit_type_id != 'ZZ' && !form.has_color_size"
                             >
                                 <div class="form-group">
                                     <label class="control-label"
@@ -586,7 +586,7 @@
                             </div>
                             <div
                                 class="col-md-3"
-                                v-show="form.unit_type_id != 'ZZ'"
+                                v-show="form.unit_type_id != 'ZZ' && !form.has_color_size"
                             >
                                 <div class="form-group">
                                     <label class="control-label"

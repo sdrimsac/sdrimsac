@@ -132,6 +132,33 @@
                 </td>
             </tr>
 
+            @if ($sale->advances > 0)
+                <tr>
+                    <td colspan="2" valign="top" class="border-bottom">
+                        <span class="patient"><b> TOTAL VENTA : </b> <br>{{ number_format($sale->total, 2) }}</span><br>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td colspan="2" valign="top" class="border-bottom">
+                        <span class="patient"><b> TOTAL INICIAL : </b>
+                            <br>{{ number_format($sale->advances, 2) }}</span><br>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" valign="top" class="border-bottom">
+                        <span class="patient"><b> TOTAL CRÉDITO : </b>
+                            <br>{{ number_format($sale->total - $sale->advances, 2) }}</span><br>
+                    </td>
+                </tr>
+            @else
+                <tr>
+                    <td colspan="2" valign="top" class="border-bottom">
+                        <span class="patient"><b> TOTAL VENTA - CRÉDITO : </b>
+                            <br>{{ number_format($sale->total, 2) }}</span><br>
+                    </td>
+                </tr>
+            @endif
         </tbody>
     </table>
     <table class="full-width" width="100%" border="0" cellspacing="0" cellpadding="0"
@@ -147,10 +174,21 @@
         <tbody>
             <?php
             $amount = 0;
+            $amount_to_paid = 0;
+            $total_paid = 0;
+            $has_index = false;
+            $index = null;
+            if($sale->payments->count() > 0){
+                $total_paid = $sale->payments->sum('payment');
+            }
+
+            $showing_partial = false;
+            $partial = 0;
             ?>
             @foreach ($data as $row)
                 <?php
                 $amount = $amount + $row['amount'] - $row['amount_paid'];
+                $amount_to_paid = $amount_to_paid + $row['amount'];
                 ?>
                 <tr>
                     <td align="center" class="border-bottom">
@@ -160,13 +198,23 @@
                         {{ \Carbon\Carbon::parse($row->date_payment)->format('d-m-Y') }}
                     </td>
                     <td align="right" class="border-bottom" style="padding-right:20px">
-                        {{ number_format($row->amount, 2) }}
+                        @php
+                            $row_amount = $row->amount;
+                            if ($showing_partial == false && $row->paid == false && $total_paid > 0) {
+                                $row_amount = $amount_to_paid - $total_paid;
+                                $showing_partial = true;
+                            }
+                            
+                        @endphp
+                        {{ number_format($row_amount, 2) }}
+
+
                     </td>
                     <td align="right" class="border-bottom" style="padding-right:20px">
                         @if ($row->paid)
                             <small>
                                 Cancelado
-                                <br> S/ {{ $row->amount_paid }}
+                                {{-- <br> S/ {{ $row->amount_paid }} --}}
                             </small>
                         @endif
                     </td>
@@ -174,7 +222,7 @@
             @endforeach
             <tr>
                 <td colspan="3" align="right" style="padding-right:20px">
-                    <b>Total a Pagar S/. {{ number_format($amount) }}</b>
+                    <b>Total a Pagar S/. {{ number_format($amount,2) }}</b>
                 </td>
                 <td></td>
             </tr>

@@ -113,7 +113,7 @@
                     SR(A). <b>{{$sale->customer->name}}</b>  DNI N° {{$sale->customer->number}} DOMICILIO EN {{$sale->customer->address}} DEL DISTRITO {{strtoupper($sale->establishment->district->description)}} PROVINCIA {{strtoupper($sale->establishment->province->description)}} DEPARTAMENTO {{ strtoupper($sale->establishment->department->description)}} <br>  </p>
                    
                     UN <b>{{$sale->items[0]->item->description}}</b><br><br>
-                    MONTO DEL CREDITO S/ <b>{{$sale->total}}</b></p><br><br>
+                    MONTO DEL CREDITO S/ <b>{{$sale->total - $sale->advances}}</b></p><br><br>
                     Nº CUOTA <b>{{count($payment)}}</b><br><br>
                     VALOR DE LA CUOTA <b>{{number_format($payment[0]->amount,2)}}</b><br><br>
                     <?php
