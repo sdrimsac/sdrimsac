@@ -129,6 +129,34 @@ class CommercialTreatmentController extends Controller
             'data'    => $record
         ];
     }
+    public function get_items(Request $request, $commercial_treatment_id)
+    {
+        $item_ids = $request->itemIds;
+    
+        $records = [];
+        foreach ($item_ids as $item_id) {
+            $commercial_treatment_item = CommercialTreatmentItem::where('item_id', $item_id)
+                ->where('commercial_treatment_id', $commercial_treatment_id)
+                ->first();
+            if ($commercial_treatment_item) {
+                $records[] = [
+                    'id' => $item_id,
+                    'amount' => $commercial_treatment_item->amount
+                ];
+            } else {
+                $records[] = [
+                    'id' => $item_id,
+                    'amount' => null
+                ];
+            }
+        }
+        return [
+            'success' => true,
+            'message' => 'Datos obtenidos',
+            'data'    => $records
+        ];
+    }
+
     public function records_items($commercial_treatment_id)
     {
         $records = CommercialTreatmentItem::with(['item:id,description'])
