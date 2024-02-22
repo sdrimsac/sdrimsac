@@ -2878,6 +2878,7 @@ export default {
                         }
                     }
                 }
+                this.calculateTotal();
             }
         },
 
