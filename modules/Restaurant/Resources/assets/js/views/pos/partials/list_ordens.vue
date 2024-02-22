@@ -2785,6 +2785,7 @@ export default {
                     orden.price = orden.original_price;
                 }
             });
+            this.calculateTotal();
         },
         async getCommercialTreatment() {
             if (this.commercialTreatmentId) {
