@@ -17,14 +17,16 @@ use App\Models\Tenant\Catalogs\AffectationIgvType;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Client;
 use App\Services\RoleService;
+use Illuminate\Queue\Worker;
+
 class ConfigurationController extends Controller
 {
     public function create()
     {
         return view('tenant.configurations.form');
     }
-    public function app(){
-        
+    public function app()
+    {
     }
     public function addSeeder()
     {
@@ -84,18 +86,14 @@ class ConfigurationController extends Controller
         $record = new ConfigurationResource($configuration);
         return  $record;
     }
-    function check_and_set_restaurant(){
+    function check_and_set_restaurant()
+    {
         $areas = [
             ['description' => 'BARRA', 'copies' => 0, 'printer' => null, 'active' => 1],
             ['description' => 'COCINA', 'copies' => 0, 'printer' => null, 'active' => 1],
             ['description' => 'MESA', 'copies' => 0, 'printer' => null, 'active' => 1]
         ];
 
-        $users = [
-            ['name' => 'BARRA', 'email' => null, 'password' => null, 'api_token' => null, 'establishment_id' => 1, 'locked' => 0, 'number' => 2, 'pin' => 5822, 'type' => 'seller', 'worker_type_id' => 4, 'area_id' => 1, 'active' => 1],
-            ['name' => 'COCINA', 'email' => null, 'password' => null, 'api_token' => null, 'establishment_id' => 1, 'locked' => 0, 'number' => 3, 'pin' => 5725, 'type' => 'seller', 'worker_type_id' => 3, 'area_id' => 3, 'active' => 1],
-            ['name' => 'MOZO', 'email' => null, 'password' => null, 'api_token' => null, 'establishment_id' => 1, 'locked' => 0, 'number' => 4, 'pin' => 7808, 'type' => 'seller', 'worker_type_id' => 2, 'area_id' => 4, 'active' => 1]
-        ];
 
         $workersType = [
             ['description' => 'MOZO', 'active' => 1],
@@ -104,27 +102,63 @@ class ConfigurationController extends Controller
         ];
 
         foreach ($areas as $area) {
-            $existingArea = DB::table('areas')->where('description', $area['description'])->first();
+            $existingArea = DB::connection('tenant')->table('areas')->where('description', $area['description'])->first();
             if (!$existingArea) {
-                DB::table('areas')->insert($area);
+                DB::connection('tenant')->table('areas')->insert($area);
             }
         }
-
-        foreach ($users as $user) {
-            $existingUser = DB::table('users')->where('name', $user['name'])->first();
-            if (!$existingUser) {
-                DB::table('users')->insert($user);
-            }
-        }
-
         foreach ($workersType as $workerType) {
-            $existingWorkerType = DB::table('workers_type')->where('description', $workerType['description'])->first();
+            $existingWorkerType = DB::connection('tenant')->table('workers_type')->where('description', $workerType['description'])->first();
             if (!$existingWorkerType) {
-                DB::table('workers_type')->insert($workerType);
+                DB::connection('tenant')->table('workers_type')->insert($workerType);
+            }
+        }
+        $users = [
+            ['name' => 'BARRA', 'email' => null, 'password' => null, 'api_token' => null, 'establishment_id' => 1, 'locked' => 0, 'number' => 2, 'pin' => 5822, 'type' => 'seller', 'worker_type_id' => 4, 'area_id' => 1, 'active' => 1],
+            ['name' => 'COCINA', 'email' => null, 'password' => null, 'api_token' => null, 'establishment_id' => 1, 'locked' => 0, 'number' => 3, 'pin' => 5725, 'type' => 'seller', 'worker_type_id' => 3, 'area_id' => 3, 'active' => 1],
+            ['name' => 'MOZO', 'email' => null, 'password' => null, 'api_token' => null, 'establishment_id' => 1, 'locked' => 0, 'number' => 4, 'pin' => 7808, 'type' => 'seller', 'worker_type_id' => 2, 'area_id' => 4, 'active' => 1]
+        ];
+        foreach ($users as $user) {
+            $existingUser = DB::connection('tenant')->table('users')->where('name', $user['name'])->first();
+            if (!$existingUser) {
+                $worker_type_id = $this->get_type_id($user['name']);
+                $area_id = $this->get_area_id($user['name']);
+                if ($worker_type_id && $area_id) {
+                    $user['worker_type_id'] = $worker_type_id;
+                    $user['area_id'] = $area_id;
+                    DB::connection('tenant')->table('users')->insert($user);
+                }
             }
         }
     }
-
+    function get_area_id($name)
+    {
+        if ($name == 'MOZO') {
+            $worker_type_id = DB::connection('tenant')->table('areas')->where('description', 'COCINA')->first();
+            if ($worker_type_id) {
+                return $worker_type_id->id;
+            }
+        }
+        $worker_type_id = DB::connection('tenant')->table('areas')->where('description', $name)->first();
+        if ($worker_type_id) {
+            return $worker_type_id->id;
+        }
+        return null;
+    }
+    function get_type_id($name)
+    {
+        if ($name == 'BARRA') {
+            $worker_type_id = DB::connection('tenant')->table('workers_type')->where('description', 'BARMAN')->first();
+            if ($worker_type_id) {
+                return $worker_type_id->id;
+            }
+        }
+        $worker_type_id = DB::connection('tenant')->table('workers_type')->where('description', $name)->first();
+        if ($worker_type_id) {
+            return $worker_type_id->id;
+        }
+        return null;
+    }
     public function store(ConfigurationRequest $request)
     {
         $id = $request->input('id');
@@ -133,7 +167,7 @@ class ConfigurationController extends Controller
         //dd($request->all());
         $configuration->save();
 
-        if($configuration->restaurant){
+        if ($configuration->restaurant) {
             $this->check_and_set_restaurant();
         }
 
