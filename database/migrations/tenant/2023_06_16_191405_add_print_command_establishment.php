@@ -15,7 +15,7 @@ class AddPrintCommandEstablishment extends Migration
 	{
 
 		Schema::table('conf_establishment',function (Blueprint $table){
-			$table->boolean('print_command')->default(true);
+			$table->boolean('print_command')->default(false);
 		});
 		
 	

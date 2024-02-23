@@ -39,7 +39,9 @@ use App\CoreFacturalo\WS\Validator\XmlErrorCodeProvider;
 use App\Models\Tenant\DispatchItem;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
-
+use Modules\College\Models\CollegePayment;
+use Modules\College\Models\CollegeRegister;
+use Modules\College\Models\CollegeStudent;
 
 class Facturalo
 {
@@ -216,6 +218,24 @@ class Facturalo
 
                     $itemwarehouse->stock = $itemwarehouse->stock + $row->quantity;
                     $itemwarehouse->save();
+                }
+                $configuration = Configuration::first();
+                if ($configuration->college) {
+                    $payments = CollegePayment::where('document_id', $this->document->id)->get();
+                    foreach ($payments as $payment) {
+                        $payment->delete();
+                        $register = $payment->register;
+                        if ($register->plan_id) {
+                            $plan = $register->plan;
+                            $type_id = $plan->type_id;
+                            if ($type_id == 1) {
+                                $member = $register->member;
+                                $student_id = $member->children_id;
+                                $classroom_id = $register->classroom_id;
+                                CollegeStudent::where('student_id', $student_id)->where('classroom_id', $classroom_id)->delete();
+                            }
+                        }
+                    }
                 }
                 break;
             case 'retention':
@@ -427,10 +447,10 @@ class Facturalo
             foreach ($this->document->items as $it) {
                 if (strlen($it->item->description) > 100) {
                     $extra_by_item_description += 24;
-                    if (isset($it->item->has_unit_type)&&$it->item->has_unit_type) {
+                    if (isset($it->item->has_unit_type) && $it->item->has_unit_type) {
                         $extra_by_item_description += strlen($it->item->has_unit_type);
                     }
-                    if (isset($it->item->second_name)&&$it->item->second_name) {
+                    if (isset($it->item->second_name) && $it->item->second_name) {
                         $extra_by_item_description += strlen($it->item->second_name);
                     }
                 }
@@ -531,10 +551,10 @@ class Facturalo
             foreach ($this->document->items as $it) {
                 if (strlen($it->item->description) > 100) {
                     $extra_by_item_description += 24;
-                    if (isset($it->item->has_unit_type)&&$it->item->has_unit_type) {
+                    if (isset($it->item->has_unit_type) && $it->item->has_unit_type) {
                         $extra_by_item_description += strlen($it->item->has_unit_type);
                     }
-                    if (isset($it->item->second_name)&&$it->item->second_name) {
+                    if (isset($it->item->second_name) && $it->item->second_name) {
                         $extra_by_item_description += strlen($it->item->second_name);
                     }
                 }
@@ -619,8 +639,8 @@ class Facturalo
                 $html_footer = $template->pdfFooter($base_pdf_template);
                 $pdf->SetHTMLFooter($html_footer);
             }
-                    //    $html_footer = $template->pdfFooter();
-                    //    $pdf->SetHTMLFooter($html_footer);
+            //    $html_footer = $template->pdfFooter();
+            //    $pdf->SetHTMLFooter($html_footer);
         }
 
         $this->uploadFile($pdf->output('', 'S'), 'pdf');

@@ -14,7 +14,7 @@ class AddDocumentDefaultToEstablishments extends Migration
     public function up()
     {
         Schema::table('establishments', function (Blueprint $table) {
-            $table->string('document_default')->nullable()->after('direct_printing'); 
+            $table->string('document_default')->default("80")->nullable()->after('direct_printing'); 
         });
     }
 

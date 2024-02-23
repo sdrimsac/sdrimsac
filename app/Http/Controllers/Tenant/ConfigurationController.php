@@ -84,6 +84,46 @@ class ConfigurationController extends Controller
         $record = new ConfigurationResource($configuration);
         return  $record;
     }
+    function check_and_set_restaurant(){
+        $areas = [
+            ['description' => 'BARRA', 'copies' => 0, 'printer' => null, 'active' => 1],
+            ['description' => 'COCINA', 'copies' => 0, 'printer' => null, 'active' => 1],
+            ['description' => 'MESA', 'copies' => 0, 'printer' => null, 'active' => 1]
+        ];
+
+        $users = [
+            ['name' => 'BARRA', 'email' => null, 'password' => null, 'api_token' => null, 'establishment_id' => 1, 'locked' => 0, 'number' => 2, 'pin' => 5822, 'type' => 'seller', 'worker_type_id' => 4, 'area_id' => 1, 'active' => 1],
+            ['name' => 'COCINA', 'email' => null, 'password' => null, 'api_token' => null, 'establishment_id' => 1, 'locked' => 0, 'number' => 3, 'pin' => 5725, 'type' => 'seller', 'worker_type_id' => 3, 'area_id' => 3, 'active' => 1],
+            ['name' => 'MOZO', 'email' => null, 'password' => null, 'api_token' => null, 'establishment_id' => 1, 'locked' => 0, 'number' => 4, 'pin' => 7808, 'type' => 'seller', 'worker_type_id' => 2, 'area_id' => 4, 'active' => 1]
+        ];
+
+        $workersType = [
+            ['description' => 'MOZO', 'active' => 1],
+            ['description' => 'COCINA', 'active' => 1],
+            ['description' => 'BARMAN', 'active' => 1],
+        ];
+
+        foreach ($areas as $area) {
+            $existingArea = DB::table('areas')->where('description', $area['description'])->first();
+            if (!$existingArea) {
+                DB::table('areas')->insert($area);
+            }
+        }
+
+        foreach ($users as $user) {
+            $existingUser = DB::table('users')->where('name', $user['name'])->first();
+            if (!$existingUser) {
+                DB::table('users')->insert($user);
+            }
+        }
+
+        foreach ($workersType as $workerType) {
+            $existingWorkerType = DB::table('workers_type')->where('description', $workerType['description'])->first();
+            if (!$existingWorkerType) {
+                DB::table('workers_type')->insert($workerType);
+            }
+        }
+    }
 
     public function store(ConfigurationRequest $request)
     {
@@ -92,6 +132,10 @@ class ConfigurationController extends Controller
         $configuration->fill($request->all());
         //dd($request->all());
         $configuration->save();
+
+        if($configuration->restaurant){
+            $this->check_and_set_restaurant();
+        }
 
         return [
             'success' => true,

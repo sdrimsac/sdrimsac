@@ -24,9 +24,9 @@ class TenantEstablishmentsTable extends Migration
             $table->string('email');
             $table->string('telephone');
             $table->string('code');
-            $table->string('printer')->default(1)->nullable();
-            $table->integer('copies')->nullable();
-            $table->string('format_printer')->nullable();
+            $table->string('printer')->default("POS-80C")->nullable();
+            $table->integer('copies')->default(0)->nullable();
+            $table->string('format_printer')->default("3")->nullable();
             $table->boolean('direct_printing')->default(true);
             $table->timestamps();
 

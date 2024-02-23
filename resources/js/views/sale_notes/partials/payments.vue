@@ -566,7 +566,7 @@ export default {
                     parseFloat(this.document.total_difference)
                 ) {
                     this.$toast.error(
-                        "No se puede hacer pago parcial teniendo una sola cuota."
+                        "No se puede hacer pago parcial teniendo una sola cuota por cancelar."
                     );
                     return;
                 }

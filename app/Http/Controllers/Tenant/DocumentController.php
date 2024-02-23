@@ -99,6 +99,10 @@ use Modules\Restaurant\Events\OrdenReadyEvent;
 use Modules\Restaurant\Models\OrdenItem;
 use Modules\Services\Data\ServiceData;
 use GuzzleHttp\Client as ClientGuzzleHttp;
+use Modules\College\Models\CollegePayment;
+use Modules\College\Models\CollegePlan;
+use Modules\College\Models\CollegeRegister;
+use Modules\College\Models\CollegeStudent;
 use Modules\Restaurant\Models\Table;
 
 class DocumentController extends Controller
@@ -1928,6 +1932,24 @@ class DocumentController extends Controller
                         OrdenItem::where('orden_id', $orden->id)->update(["status_orden_id" => 5]);
                         $orden->status_orden_id = 5;
                         $orden->save();
+                    }
+                    $configuration = Configuration::first();
+                    if ($configuration->college) {
+                        $payments = CollegePayment::where('document_id', $document_id)->get();
+                        foreach ($payments as $payment) {
+                            $payment->delete();
+                            $register = $payment->register;
+                            if ($register->plan_id) {
+                                $plan = $register->plan;
+                                $type_id = $plan->type_id;
+                                if ($type_id == 1) {
+                                    $member = $register->member;
+                                    $student_id = $member->children_id;
+                                    $classroom_id = $register->classroom_id;
+                                    CollegeStudent::where('student_id', $student_id)->where('classroom_id', $classroom_id)->delete();
+                                }
+                            }
+                        }
                     }
                     return true;
                 }
