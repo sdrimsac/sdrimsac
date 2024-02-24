@@ -122,7 +122,7 @@
 <script>
 export default {
     //tabla color verde
-    props: ["showTables", "table"],
+    props: ["showTables", "table", "configuration"],
 
     data() {
         return {
@@ -324,7 +324,14 @@ export default {
                 const response = await this.$http(this.resource);
                 if (response.status == 200) {
                     const { tables } = response.data;
-                    this.tables = tables.filter(f => f.number.toLowerCase() != "caja");
+                    let { show_caja_table } = this.configuration;
+                    if (!show_caja_table ) {
+                        this.tables = tables.filter(
+                            f => f.number.toLowerCase() != "caja"
+                        );
+                    }else{
+                        this.tables = tables;
+                    }
                     // this.tables = tables;
                     this.hasTableOcuped = tables.some(
                         s => s.status_table_id == 2

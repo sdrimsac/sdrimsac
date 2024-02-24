@@ -1638,6 +1638,7 @@
         >
         </warehouses-detail>
         <tables
+            :configuration="configuration"
             @creatingOrden="creatingOrden"
             @sendOrdens="sendOrdens"
             :showTables.sync="showTables"
@@ -2551,7 +2552,7 @@ export default {
             });
         },
         socketWhatsappConfig() {
-return;
+            return;
             let hostName = window.location.hostname;
             let url = `https://${hostName}`;
             this.sender = hostName
@@ -3045,10 +3046,10 @@ return;
                 //this.form.caja = true;
             }
             let { items } = form;
-     
+
             this.ordens = [...items];
 
-            let ixd=[];
+            let ixd = [];
 
             for (let i = 0; i < items.length; i++) {
                 let item = JSON.parse(JSON.stringify(items[i]));
@@ -3094,11 +3095,13 @@ return;
                 }
 
                 this.calculateTotalVariation(this.formVariation);
-            }else{
+            } else {
                 this.variation = false;
             }
 
-            this.form.items = this.ordens.map(o => Object.assign({}, o.food.item));
+            this.form.items = this.ordens.map(o =>
+                Object.assign({}, o.food.item)
+            );
             this.formatItems();
 
             this.calculateTotal();
@@ -4304,7 +4307,7 @@ return;
                     affectation_igv_type: i.sale_affectation_igv_type_id
                 };
             });
-           // this.calculateTotal();
+            // this.calculateTotal();
         },
         isNoteIsDefault() {
             if (this.form.document_type_id == "80") {

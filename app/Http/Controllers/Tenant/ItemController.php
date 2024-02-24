@@ -574,6 +574,7 @@ class ItemController extends Controller
 
         $brands = Brand::all();
         $configuration = Configuration::select(
+            'show_caja_table',
             'series_enabled',
             'lots_enabled',
             'color_size_enabled',

@@ -2034,6 +2034,21 @@
                                             ></el-switch>
                                         </div>
                                     </div>
+                                    
+                                        <div class="col-md-6 mt-4">
+                                        <div class="form-group">
+                                            <label class="control-label w-100">
+                                                Mostrar mesa "caja"
+                                            </label>
+
+                                            <el-switch
+                                                v-model="form.show_caja_table"
+                                                active-text="Si"
+                                                inactive-text="No"
+                                                @change="submit"
+                                            ></el-switch>
+                                        </div>
+                                    </div>
                                 </div>
                             </el-tab-pane>
                             <el-tab-pane label="Impresion" v-if="!isArca">
