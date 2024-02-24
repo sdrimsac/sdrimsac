@@ -3026,6 +3026,7 @@ return;
             this.form.printDocument = form.printDocument;
             this.form.is_room = form.is_room;
             this.form.to_carry = form.to_carry;
+            this.form.ref = form.ref;
             if (this.form.is_room) {
                 if (form.customer_id) {
                     this.form.customer_id = form.customer_id;

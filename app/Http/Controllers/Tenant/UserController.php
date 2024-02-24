@@ -10,6 +10,7 @@ use App\Models\Tenant\Module;
 use App\Models\Tenant\User;
 use Illuminate\Http\Request;
 use App\Http\Resources\Tenant\UserCollection;
+use App\Models\Tenant\Cash;
 use App\Models\Tenant\Desarrollador;
 use Exception;
 use Modules\LevelAccess\Models\ModuleLevel;
@@ -18,6 +19,27 @@ class UserController extends Controller
 {
 
 
+    public function getCashId()
+    {
+        $user = auth()->user();
+        if ($user == null) {
+            return [
+                'success' => false,
+                'message' => 'Usuario no encontrado'
+            ];
+        }
+        $cash = Cash::where('user_id', $user->id)->where('state', true)->first();
+        if ($cash == null) {
+            return [
+                'success' => false,
+                'message' => 'Caja no encontrada'
+            ];
+        }
+        return [
+            'success' => true,
+            'cash_id' => $cash->id
+        ];
+    }
     public function getAreaPrinter()
     {
         try {

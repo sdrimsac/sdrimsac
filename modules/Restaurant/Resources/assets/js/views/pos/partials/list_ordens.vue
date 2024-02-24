@@ -2770,6 +2770,10 @@ export default {
             this.$emit("paymentsOrden", items);
         },
         toCreditList() {
+            if(!this.cash_id){
+                this.$toast.error("Debe abrir caja para poder dar a cuenta");
+                return;
+            }
             this.creditListAmount = 0;
             this.localOrden.forEach(orden => {
                 this.creditListAmount +=
@@ -2966,6 +2970,10 @@ export default {
             this.foodDefaults = [...this.foodDefaults, foodDefault];
         },
         openCredit() {
+            if(!this.cash_id){
+                this.$toast.error("Debe abrir caja para poder dar a crédito");
+                return;
+            }
             this.showCreditForm = true;
         },
         openQuotation() {
@@ -3818,6 +3826,9 @@ export default {
                 form_submit.items = this.ordens;
             } else {
                 form_submit.items = this.localOrden;
+            }
+            if(this.clientTableData.ref){
+                form_submit.ref = this.clientTableData.ref;
             }
             form_submit.items = this.mergeItems(form_submit.items);
             this.loading = true;

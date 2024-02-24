@@ -71,7 +71,7 @@ class SaleNotePaymentController extends Controller
         }
         $total_difference = round($total - $total_paid, 2);
 
-        if ($total_difference < 1) {
+        if ($total_difference < 0.01) {
             $sale_note->paid = true;
             $sale_note->save();
         }

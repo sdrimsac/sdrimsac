@@ -47,11 +47,12 @@ if ($hostname) {
             Route::get('receipt/print/{external_id}', [App\Http\Controllers\Tenant\ReceiptController::class, 'toPrint']);
             Route::get('getDesarrollador', [App\Http\Controllers\Tenant\UserController::class, 'getDesarrollador']);
             Route::get('getAreaPrinter', [App\Http\Controllers\Tenant\UserController::class, 'getAreaPrinter']);
-
+            
             //Route::post('logout', [App\Http\Controllers\Tenant\LoginController::class, 'logout'])->name('logout');
             Route::post('auth', [App\Http\Controllers\Tenant\LoginController::class, 'authenticate'])->name('authenticate');
-
+            
             Route::middleware(['auth', 'redirect.module', 'locked.tenant'])->group(function () {
+                Route::get('getCashId', [App\Http\Controllers\Tenant\UserController::class, 'getCashId']);
                 Route::prefix('/commercial_treatment')
                     ->group(function () {
                         Route::get('/', [CommercialTreatmentController::class, 'index'])->name('tenant.commercial_treatment.index');

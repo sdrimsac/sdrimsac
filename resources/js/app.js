@@ -45,7 +45,18 @@ Vue.use(Toast, options);
 document.addEventListener("DOMContentLoaded", function() {
     getDesarrollador();
     getAreaPrinter();
+    getCashId();
 });
+const getCashId = async () => {
+    const { data } = await Axios.get("/getCashId");
+    Vue.prototype.$cashId = null;
+
+    if (data != null) {
+        if (data.cash_id) {
+            Vue.prototype.$cashId = data.cash_id;
+        }
+    }
+};
 const getDesarrollador = async () => {
     const { data } = await Axios.get("/getDesarrollador");
 
