@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use Carbon\Carbon;
 use Database\Seeders\Tenants\AddClientVariation;
 use Database\Seeders\Tenants\CollegeSeeder;
 use Database\Seeders\Tenants\StatusOrdenVoidedSeeder;
@@ -243,6 +244,40 @@ class TenantSeeder extends Seeder
         DB::table('college_plans')->insert([
             ['name' => 'OTROS', 'description' => 'ADQUISICION', 'period_id' => 1, 'type_id' => 3, 'count' => 1, 'days_extension' => 0, 'active' => 1],
         ]);
+        DB::table('taks')->insert(
+            [
+                'class' => 'App\Console\Commands\SummarySendCommand',
+                'execution_time' => '00:00:00',
+            ],
+            [
+                'class' => 'App\Console\Commands\SummaryQueryCommand',
+                'execution_time' => '00:30:00',
+            ],
+            [
+                'class' => 'App\Console\Commands\SendAllSunatCommand',
+                'execution_time' => '01:00:00',
+            ],
+            [
+                'class' => 'App\Console\Commands\ValidateDocumentsCommand',
+                'execution_time' => '01:30:00',
+            ],
+            [
+                'class' => 'App\Console\Commands\SummarySendCommand',
+                'execution_time' => '02:00:00',
+            ],
+            [
+                'class' => 'App\Console\Commands\SummaryQueryCommand',
+                'execution_time' => '02:30:00',
+            ],
+            [
+                'class' => 'App\Console\Commands\SendAllSunatCommand',
+                'execution_time' => '03:00:00',
+            ],
+            [
+                'class' => 'App\Console\Commands\ValidateDocumentsCommand',
+                'execution_time' => '03:30:00',
+            ],
+        );
         // $this->call([
         // TurnsSeeder::class,
         // StatusOrdenVoidedSeeder::class,
