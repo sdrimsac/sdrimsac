@@ -16,6 +16,7 @@
     $hotel_rent_advance = \App\Models\Tenant\HotelRentDocument::where('sale_note_id', $document->id)->first();
     $sale_note_promotion = \App\Models\Tenant\SaleNotePromotion::where('sale_note_id', $document->id)->first();
     $is_chifa_china = $company->number == '15609876309';
+    $configuration = \App\Models\Tenant\Configuration::select('show_logo_in_documents')->first();
 @endphp
 <html>
 
@@ -26,58 +27,61 @@
 
 <body>
 
-    @if ($stablishment->logo || $stablishment->document_logo)
-        @if ($is_chifa_china)
-            <div class="text-center company_logo_box" style="padding-top:2rem;width: 350px;">
-                @if ($stablishment->document_logo)
-                    <img src="data:{{ mime_content_type(public_path("storage/uploads/logos/{$stablishment->document_logo}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/uploads/logos/{$stablishment->document_logo}"))) }}"
-                        alt="{{ $company->trade_name }}" class="
-    contain" style=" max-width: 400px; max-height: 150px">
-                @else
-                    <img src="data:{{ mime_content_type(public_path("storage/uploads/logos/{$stablishment->logo}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/uploads/logos/{$stablishment->logo}"))) }}"
-                        alt="{{ $company->trade_name }}" class="
-    contain" style=" max-width: 400px; max-height: 150px">
-                @endif
-            </div>
-        @else
-            <div class="text-center full-width company_logo_box pt-5">
-                @if ($stablishment->document_logo)
-                    <img src="data:{{ mime_content_type(public_path("storage/uploads/logos/{$stablishment->document_logo}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/uploads/logos/{$stablishment->document_logo}"))) }}"
-                        alt="{{ $company->trade_name }}" class="company_logo_ticket contain">
-                @else
-                    <img src="data:{{ mime_content_type(public_path("storage/uploads/logos/{$stablishment->logo}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/uploads/logos/{$stablishment->logo}"))) }}"
-                        alt="{{ $company->trade_name }}" class="company_logo_ticket contain">
-                @endif
-            </div>
-        @endif
-    @else
-        @if ($company->logo)
+    @if ($configuration->show_logo_in_documents)
+        @if ($stablishment->logo || $stablishment->document_logo)
             @if ($is_chifa_china)
                 <div class="text-center company_logo_box" style="padding-top:2rem;width: 350px;">
-                    @if ($company->document_logo)
-                        <img src="data:{{ mime_content_type(public_path("storage/uploads/logos/{$company->document_logo}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/uploads/logos/{$company->document_logo}"))) }}"
+                    @if ($stablishment->document_logo)
+                        <img src="data:{{ mime_content_type(public_path("storage/uploads/logos/{$stablishment->document_logo}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/uploads/logos/{$stablishment->document_logo}"))) }}"
                             alt="{{ $company->trade_name }}" class="
-  contain"
-                            style=" max-width: 400px; max-height: 150px">
+contain" style=" max-width: 400px; max-height: 150px">
                     @else
-                        <img src="data:{{ mime_content_type(public_path("storage/uploads/logos/{$company->logo}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/uploads/logos/{$company->logo}"))) }}"
+                        <img src="data:{{ mime_content_type(public_path("storage/uploads/logos/{$stablishment->logo}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/uploads/logos/{$stablishment->logo}"))) }}"
                             alt="{{ $company->trade_name }}" class="
-  contain"
-                            style=" max-width: 400px; max-height: 150px">
+contain" style=" max-width: 400px; max-height: 150px">
                     @endif
                 </div>
             @else
                 <div class="text-center full-width company_logo_box pt-5">
-                    @if ($company->document_logo)
-                        <img src="data:{{ mime_content_type(public_path("storage/uploads/logos/{$company->document_logo}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/uploads/logos/{$company->document_logo}"))) }}"
+                    @if ($stablishment->document_logo)
+                        <img src="data:{{ mime_content_type(public_path("storage/uploads/logos/{$stablishment->document_logo}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/uploads/logos/{$stablishment->document_logo}"))) }}"
                             alt="{{ $company->trade_name }}" class="company_logo_ticket contain">
                     @else
-                        <img src="data:{{ mime_content_type(public_path("storage/uploads/logos/{$company->logo}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/uploads/logos/{$company->logo}"))) }}"
+                        <img src="data:{{ mime_content_type(public_path("storage/uploads/logos/{$stablishment->logo}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/uploads/logos/{$stablishment->logo}"))) }}"
                             alt="{{ $company->trade_name }}" class="company_logo_ticket contain">
                     @endif
                 </div>
             @endif
+        @else
+            @if ($company->logo)
+                @if ($is_chifa_china)
+                    <div class="text-center company_logo_box" style="padding-top:2rem;width: 350px;">
+                        @if ($company->document_logo)
+                            <img src="data:{{ mime_content_type(public_path("storage/uploads/logos/{$company->document_logo}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/uploads/logos/{$company->document_logo}"))) }}"
+                                alt="{{ $company->trade_name }}" class="
+contain"
+                                style=" max-width: 400px; max-height: 150px">
+                        @else
+                            <img src="data:{{ mime_content_type(public_path("storage/uploads/logos/{$company->logo}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/uploads/logos/{$company->logo}"))) }}"
+                                alt="{{ $company->trade_name }}" class="
+contain"
+                                style=" max-width: 400px; max-height: 150px">
+                        @endif
+                    </div>
+                @else
+                    <div class="text-center full-width company_logo_box pt-5">
+                        @if ($company->document_logo)
+                            <img src="data:{{ mime_content_type(public_path("storage/uploads/logos/{$company->document_logo}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/uploads/logos/{$company->document_logo}"))) }}"
+                                alt="{{ $company->trade_name }}" class="company_logo_ticket contain">
+                        @else
+                            <img src="data:{{ mime_content_type(public_path("storage/uploads/logos/{$company->logo}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/uploads/logos/{$company->logo}"))) }}"
+                                alt="{{ $company->trade_name }}" class="company_logo_ticket contain">
+                        @endif
+                    </div>
+                @endif
+            @endif
         @endif
+
     @endif
     <table class="full-width">
         <tr>
@@ -382,13 +386,13 @@
                 if (count($advances) > 0) {
                     $observation_hotel = 'Adelantos : ';
                 
-                    foreach($advances as $adv) {
-                       if($adv["is_advance"]){
-                        $document_hotel =   $adv['document'] ?? $adv['sale_note'];
-                        $full_number = $document_hotel["series"] . "-" . $document_hotel["number"];
-                        $total = $document_hotel["total"];
-                        $observation_hotel .=  ' ' . $full_number . ' S/' . $total . ' ';
-                       }
+                    foreach ($advances as $adv) {
+                        if ($adv['is_advance']) {
+                            $document_hotel = $adv['document'] ?? $adv['sale_note'];
+                            $full_number = $document_hotel['series'] . '-' . $document_hotel['number'];
+                            $total = $document_hotel['total'];
+                            $observation_hotel .= ' ' . $full_number . ' S/' . $total . ' ';
+                        }
                     }
                 }
             @endphp
@@ -460,10 +464,11 @@
                             @endforeach
                         @endif
                         @if (isset($row->item->color_size))
-                        @foreach ($row->item->color_size as $color_size)
-                            <br />{!! "<strong>Color: </strong>". $color_size->color !!} {!!" <strong>Talla:</strong> ". $color_size->size !!} <strong>- Cant:</strong> {{ $color_size->quantity }}
-                        @endforeach
-                    @endif
+                            @foreach ($row->item->color_size as $color_size)
+                                <br />{!! '<strong>Color: </strong>' . $color_size->color !!} {!! ' <strong>Talla:</strong> ' . $color_size->size !!} <strong>- Cant:</strong>
+                                {{ $color_size->quantity }}
+                            @endforeach
+                        @endif
                         @if ($row->attributes)
                             @foreach ($row->attributes as $attr)
                                 <br />{!! $attr->description !!} : {{ $attr->value }}
@@ -613,17 +618,17 @@
             <td class="desc pt-3">
                 <b>Vendedor</b>: {{ $document->user->name }} <br>
                 @php
-                $code = null;
-                $box = \App\Models\Tenant\Box::where('sale_note_id', $document->id)->first();
-                if($box){
-                    $cash = \App\Models\Tenant\Cash::where('id', $box->cash_id)->first();
-                    if($cash){
-                        $code = $cash->reference_number;
+                    $code = null;
+                    $box = \App\Models\Tenant\Box::where('sale_note_id', $document->id)->first();
+                    if ($box) {
+                        $cash = \App\Models\Tenant\Cash::where('id', $box->cash_id)->first();
+                        if ($cash) {
+                            $code = $cash->reference_number;
+                        }
                     }
-                }
                 @endphp
                 @if ($code)
-                <b>Código A.</b>: {{ $code }} <br>
+                    <b>Código A.</b>: {{ $code }} <br>
                 @endif
             </td>
         </tr>

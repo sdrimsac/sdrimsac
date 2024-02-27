@@ -389,6 +389,14 @@
                             {{ conf.print_command ? "Si" : "No" }}
                         </el-checkbox>
                     </div>
+                        <div class="col-md-3 flex-column justify-content-end">
+                        <label class="control-label"
+                            >Descuentos en caja</label
+                        ><br>
+                        <el-checkbox v-model="conf.show_discounts_payment">
+                            {{ conf.show_discounts_payment ? "Si" : "No" }}
+                        </el-checkbox>
+                    </div>
                 </div>
                 <div class="row">
                     <div class="col-md-6">

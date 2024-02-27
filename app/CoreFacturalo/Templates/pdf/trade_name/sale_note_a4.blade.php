@@ -7,6 +7,7 @@
     $tittle = $left . '-' . str_pad($document->number, 8, '0', STR_PAD_LEFT);
     $payments = $document->payments;
     $hotel_rent = \App\Models\Tenant\HotelRent::where('sale_note_id', $document->id)->first();
+    $configuration = \App\Models\Tenant\Configuration::select('show_logo_in_documents')->first();
 @endphp
 <html>
 
@@ -18,35 +19,40 @@
 <body>
     <table class="full-width">
         <tr>
-            @if ($stablishment->logo || $stablishment->document_logo)
-                <td width="20%">
-                    <div class="company_logo_box">
-                        @if ($stablishment->document_logo)
-                            <img src="data:{{ mime_content_type(public_path("storage/uploads/logos/{$stablishment->document_logo}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/uploads/logos/{$stablishment->document_logo}"))) }}"
-                                alt="{{ $company->trade_name }}" class="company_logo" style="max-width: 150px;">
-                        @else
-                            <img src="data:{{ mime_content_type(public_path("storage/uploads/logos/{$stablishment->logo}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/uploads/logos/{$stablishment->logo}"))) }}"
-                                alt="{{ $company->trade_name }}" class="company_logo" style="max-width: 150px;">
-                        @endif
-                    </div>
-                </td>
-            @else
-                @if ($company->logo)
+            @if ($configuration->show_logo_in_documents)
+                @if ($stablishment->logo || $stablishment->document_logo)
                     <td width="20%">
                         <div class="company_logo_box">
-                            @if ($company->document_logo)
-                                <img src="data:{{ mime_content_type(public_path("storage/uploads/logos/{$company->document_logo}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/uploads/logos/{$company->document_logo}"))) }}"
+                            @if ($stablishment->document_logo)
+                                <img src="data:{{ mime_content_type(public_path("storage/uploads/logos/{$stablishment->document_logo}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/uploads/logos/{$stablishment->document_logo}"))) }}"
                                     alt="{{ $company->trade_name }}" class="company_logo" style="max-width: 150px;">
                             @else
-                                <img src="data:{{ mime_content_type(public_path("storage/uploads/logos/{$company->logo}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/uploads/logos/{$company->logo}"))) }}"
+                                <img src="data:{{ mime_content_type(public_path("storage/uploads/logos/{$stablishment->logo}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/uploads/logos/{$stablishment->logo}"))) }}"
                                     alt="{{ $company->trade_name }}" class="company_logo" style="max-width: 150px;">
                             @endif
                         </div>
                     </td>
                 @else
-                    <td width="20%">
-                    </td>
+                    @if ($company->logo)
+                        <td width="20%">
+                            <div class="company_logo_box">
+                                @if ($company->document_logo)
+                                    <img src="data:{{ mime_content_type(public_path("storage/uploads/logos/{$company->document_logo}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/uploads/logos/{$company->document_logo}"))) }}"
+                                        alt="{{ $company->trade_name }}" class="company_logo" style="max-width: 150px;">
+                                @else
+                                    <img src="data:{{ mime_content_type(public_path("storage/uploads/logos/{$company->logo}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/uploads/logos/{$company->logo}"))) }}"
+                                        alt="{{ $company->trade_name }}" class="company_logo"
+                                        style="max-width: 150px;">
+                                @endif
+                            </div>
+                        </td>
+                    @else
+                        <td width="20%">
+                        </td>
+                    @endif
                 @endif
+            @else
+                <td width="20%"></td>
             @endif
             <td width="50%" class="pl-3">
                 <div class="text-left">
@@ -97,7 +103,7 @@
             <td height="18px"><b>Telefono:</b></td>
             <td>{{ $customer->telephone }}</td>
             <td><b>Fecha Emisión</b></td>
-            <td>{{ $document->date_of_issue->format('d-m-Y') }} {{$document->time_of_issue}}</td>
+            <td>{{ $document->date_of_issue->format('d-m-Y') }} {{ $document->time_of_issue }}</td>
 
         </tr>
 
@@ -227,10 +233,11 @@
                             @endforeach
                         @endif
                         @if (isset($row->item->color_size))
-                        @foreach ($row->item->color_size as $color_size)
-                            <br />{!! "<strong>Color: </strong>". $color_size->color !!} {!!" <strong>Talla:</strong> ". $color_size->size !!} <strong>- Cant:</strong> {{ $color_size->quantity }}
-                        @endforeach
-                    @endif
+                            @foreach ($row->item->color_size as $color_size)
+                                <br />{!! '<strong>Color: </strong>' . $color_size->color !!} {!! ' <strong>Talla:</strong> ' . $color_size->size !!} <strong>- Cant:</strong>
+                                {{ $color_size->quantity }}
+                            @endforeach
+                        @endif
                         @if (!empty($row->item->presentation))
                             {!! $row->item->presentation->description !!}
                         @endif
@@ -377,34 +384,34 @@
 
     </table>
     @if ($document->user)
-    <br>
-    <table class="full-width">
-        <tr>
-            <td>
-                <strong>Vendedor:</strong> &ensp;&ensp;{{ $document->user->name }}
-            </td>
+        <br>
+        <table class="full-width">
+            <tr>
+                <td>
+                    <strong>Vendedor:</strong> &ensp;&ensp;{{ $document->user->name }}
+                </td>
 
-        </tr>
-        @php
-        $code = null;
-        $box = \App\Models\Tenant\Box::where('sale_note_id', $document->id)->first();
-        if($box){
-            $cash = \App\Models\Tenant\Cash::where('id', $box->cash_id)->first();
-            if($cash){
-                $code = $cash->reference_number;
-            }
-        }
-        @endphp
-        @if ($code)
-        <tr>
-            <td>
-                <strong>Código A.</strong>: {{ $code }}
-            </td>
-        </tr>
-        @endif
+            </tr>
+            @php
+                $code = null;
+                $box = \App\Models\Tenant\Box::where('sale_note_id', $document->id)->first();
+                if ($box) {
+                    $cash = \App\Models\Tenant\Cash::where('id', $box->cash_id)->first();
+                    if ($cash) {
+                        $code = $cash->reference_number;
+                    }
+                }
+            @endphp
+            @if ($code)
+                <tr>
+                    <td>
+                        <strong>Código A.</strong>: {{ $code }}
+                    </td>
+                </tr>
+            @endif
 
-    </table>
-@endif
+        </table>
+    @endif
     {{-- <table align="center" width="70%" style="margin-top:50px">
         <tr>
             <td align="center" width="45%" style="border-top:1px solid #000;font-weight:bold">Recibi

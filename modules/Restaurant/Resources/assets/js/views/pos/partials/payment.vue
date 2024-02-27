@@ -278,39 +278,42 @@
                                         </el-button-group>
                                     </div>
                                 </template>
-                                <div class="col-md-4 form-group">
-                                    <label class="control-label"
-                                        >Monto Descuento</label
+
+                                <template v-if="conf.show_discounts_payment">
+                                    <div class="col-md-4 form-group">
+                                        <label class="control-label"
+                                            >Monto Descuento</label
+                                        >
+                                        <el-input-number
+                                            :min="0"
+                                            controls-position="right"
+                                            @change="inputDiscountAmount"
+                                            class="w-100"
+                                            v-model="discount_amount"
+                                        ></el-input-number>
+                                    </div>
+                                    <div
+                                        v-if="
+                                            configuration.affectation_igv_type_id ==
+                                                '10'
+                                        "
+                                        class="col-md-4 form-group"
                                     >
-                                    <el-input-number
-                                        :min="0"
-                                        controls-position="right"
-                                        @change="inputDiscountAmount"
-                                        class="w-100"
-                                        v-model="discount_amount"
-                                    ></el-input-number>
-                                </div>
-                                <div
-                                    v-if="
-                                        configuration.affectation_igv_type_id ==
-                                            '10'
-                                    "
-                                    class="col-md-4 form-group"
-                                >
-                                    <label class="control-label"
-                                        >Tipo de descuento</label
-                                    >
-                                    <el-checkbox
-                                        v-model="discountTotal"
-                                        @change="reCalculateTotal"
-                                    >
-                                        {{
-                                            discountTotal
-                                                ? "Descuento del total"
-                                                : "Descuento a la base"
-                                        }}
-                                    </el-checkbox>
-                                </div>
+                                        <label class="control-label"
+                                            >Tipo de descuento</label
+                                        >
+                                        <el-checkbox
+                                            v-model="discountTotal"
+                                            @change="reCalculateTotal"
+                                        >
+                                            {{
+                                                discountTotal
+                                                    ? "Descuento del total"
+                                                    : "Descuento a la base"
+                                            }}
+                                        </el-checkbox>
+                                    </div>
+                                </template>
                             </div>
                         </div>
                     </div>
@@ -1587,6 +1590,10 @@ export default {
             this.form.customer_id
         );
         this.conf = this.establishments.conf ?? {};
+        console.log(
+            "🚀 ~ file: payment.vue:1590 ~ created ~ this.conf:",
+            this.conf
+        );
         this.button_payment = true;
         this.currentDocumentsType = this.documentsType;
         this.form.identity_document_type_id = this.currentDocumentsType[0].id;
@@ -2129,15 +2136,15 @@ export default {
             this.showDialogNewPerson = true;
         },
         add_customer(value) {},
-             async searchClientOne(number) {
- let url = `/caja/search_customers?value=${number}`;
-                
-                const response = await this.$http(url);
-                const { persons } = response.data;
+        async searchClientOne(number) {
+            let url = `/caja/search_customers?value=${number}`;
 
-                this.customers = persons.filter(n => n.number != "88888888");
-                this.updateAllCustomers(this.customers);
-             },
+            const response = await this.$http(url);
+            const { persons } = response.data;
+
+            this.customers = persons.filter(n => n.number != "88888888");
+            this.updateAllCustomers(this.customers);
+        },
         async keyupCustomer(e) {
             //buscar
             if (this.time) {
@@ -2147,7 +2154,10 @@ export default {
                 this.input_person.number = this.$refs.select_person.$el.getElementsByTagName(
                     "input"
                 )[0].value;
-                console.log("🚀 ~ file: payment.vue:2139 ~ this.time=setTimeout ~ this.input_person.number:", this.input_person.number)
+                console.log(
+                    "🚀 ~ file: payment.vue:2139 ~ this.time=setTimeout ~ this.input_person.number:",
+                    this.input_person.number
+                );
                 let url = `/caja/search_customers?value=${this.input_person.number}`;
                 if (this.configuration.college) {
                     url = `${url}&parents=${this.notRegister ? 0 : 1}`;
@@ -2187,8 +2197,6 @@ export default {
                     this.form.customer_id = newData[0].id;
                     this.changeCustomer();
                 }
-
-                
             }
         },
         changeCustomer() {
@@ -2296,7 +2304,6 @@ export default {
             }
         },
         async date_of_issue() {
-          
             // this.discount_amount = 0;
             // this.form.customer_id
             // this.form.student_id = null;
@@ -2310,6 +2317,14 @@ export default {
                 this.form.date_of_issue = moment().format("YYYY-MM-DD");
             }
             let { documents, document_default } = this.establishments;
+            console.log(
+                "🚀 ~ file: payment.vue:2313 ~ date_of_issue ~ this.establishments:",
+                this.establishments
+            );
+            console.log(
+                "🚀 ~ file: payment.vue:2315 ~ date_of_issue ~ documents:",
+                documents
+            );
             if (documents) {
                 let { invoice, sale_note, receipt } = documents;
                 this.invoice = invoice;
@@ -2319,7 +2334,7 @@ export default {
             if (document_default) {
                 this.form.document_type_id = document_default;
             }
-            if(this.variation){
+            if (this.variation) {
                 this.form.document_type_id = "03";
             }
             this.customers = this.all_customers.filter(
@@ -2340,7 +2355,7 @@ export default {
                     // this.form.customer_id = this.establishments.customer_id;
                 }
             }
-            if(!this.hotel_customer_number){
+            if (!this.hotel_customer_number) {
                 this.checkForCustomer();
             }
             // this.checkForCustomer();
@@ -2368,7 +2383,6 @@ export default {
                 }
             }
             this.checkTotal("01");
-
 
             if (this.configuration.save_pos_printing) {
                 this.printerOn = this.configuration.print_in_pos ? 1 : 0;
@@ -3908,7 +3922,6 @@ export default {
             );
         },
         back(val = false) {
-          
             let { is_advance, hotel_rent_id } = this.form;
             if (is_advance && hotel_rent_id && !val) {
                 this.$emit("limpiarForm");
@@ -4029,7 +4042,7 @@ export default {
             }
         },
 
-       async filterSeries() {
+        async filterSeries() {
             this.filterCustomers();
             // let check = this.checkCustomers();
             // if (!check && !this.started) {
@@ -4140,11 +4153,11 @@ export default {
             if (this.form.document_type_id != "01") {
                 this.customers = [...this.customers, this.customer_default];
             }
-        
-              if (this.form.hotel_customer_number) {
-                  await  this.searchClientOne(this.form.hotel_customer_number);
-//                    this.changeCustomer();
-                } 
+
+            if (this.form.hotel_customer_number) {
+                await this.searchClientOne(this.form.hotel_customer_number);
+                //                    this.changeCustomer();
+            }
             this.changeCustomer();
             if (this.form.document_type_id == "80") {
                 this.discount_amount = 0;

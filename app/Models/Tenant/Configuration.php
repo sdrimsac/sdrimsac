@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Config;
 class Configuration extends ModelTenant
 {
     protected $fillable = [
+        'show_logo_in_documents',
         'show_caja_table',
         'minute_close_to_leave',
         'discount_amount_instead_service',
@@ -159,6 +160,7 @@ class Configuration extends ModelTenant
 
     ];
     protected $casts = [
+        'show_logo_in_documents' => 'boolean',
         'show_caja_table' => 'boolean',
         'series_enabled' => 'boolean',
         'lots_enabled' => 'boolean',
@@ -266,6 +268,7 @@ class Configuration extends ModelTenant
         // $skins = Skin::all();
         $skins = [];
         return [
+            'show_logo_in_documents' => (bool)$this->show_logo_in_documents,
             'show_caja_table' => (bool)$this->show_caja_table,
             'minute_close_to_leave' => $this->minute_close_to_leave,
             'rates' => $this->rates,

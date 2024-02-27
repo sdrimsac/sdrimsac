@@ -2034,8 +2034,8 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                    
-                                        <div class="col-md-6 mt-4">
+
+                                    <div class="col-md-6 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100">
                                                 Mostrar mesa "caja"
@@ -2083,6 +2083,19 @@
                                             v-model="form.a5_orientation"
                                             active-text="Horizontal"
                                             inactive-text="Vertical"
+                                            @change="submit"
+                                        ></el-switch>
+                                    </div>
+                                    <div class="col-md-6 mt-2">
+                                        <label class="control-label w-100">
+                                            Mostrar logo en documentos
+                                        </label>
+                                        <el-switch
+                                            v-model="
+                                                form.show_logo_in_documents
+                                            "
+                                            active-text="Si"
+                                            inactive-text="No"
                                             @change="submit"
                                         ></el-switch>
                                     </div>

@@ -21,7 +21,7 @@
     } else {
         $affected_document_number = null;
     }
-    
+    $configuration = \App\Models\Tenant\Configuration::select('show_logo_in_documents')->first();
     $total_payment = $document->payments->sum('payment');
     //$balance = ($document->total - $total_payment) - $document->payments->sum('change');
     $balance = -5;
@@ -37,57 +37,60 @@
 </head>
 
 <body>
-
-    @if ($stablishment->logo || $stablishment->document_logo)
-        @if ($is_chifa_china)
-            <div class="text-center company_logo_box" style="padding-top:2rem;width: 350px;">
-                @if ($stablishment->document_logo)
-                    <img src="data:{{ mime_content_type(public_path("storage/uploads/logos/{$stablishment->document_logo}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/uploads/logos/{$stablishment->document_logo}"))) }}"
-                        alt="{{ $company->trade_name }}" class="
-    contain" style=" max-width: 400px;max-height: 150px">
-                @else
-                    <img src="data:{{ mime_content_type(public_path("storage/uploads/logos/{$stablishment->logo}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/uploads/logos/{$stablishment->logo}"))) }}"
-                        alt="{{ $company->trade_name }}" class="
-    contain" style=" max-width: 400px;max-height: 150px">
-                @endif
-            </div>
-        @else
-            <div class="text-center company_logo_box pt-5 pl-5">
-                @if ($stablishment->document_logo)
-                    <img src="data:{{ mime_content_type(public_path("storage/uploads/logos/{$stablishment->document_logo}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/uploads/logos/{$stablishment->document_logo}"))) }}"
-                        alt="{{ $company->trade_name }}" class="company_logo_ticket contain">
-                @else
-                    <img src="data:{{ mime_content_type(public_path("storage/uploads/logos/{$stablishment->logo}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/uploads/logos/{$stablishment->logo}"))) }}"
-                        alt="{{ $company->trade_name }}" class="company_logo_ticket contain">
-                @endif
-            </div>
-        @endif
-    @else
-        @if ($company->logo)
+    @if ($configuration->show_logo_in_documents)
+        @if ($stablishment->logo || $stablishment->document_logo)
             @if ($is_chifa_china)
                 <div class="text-center company_logo_box" style="padding-top:2rem;width: 350px;">
-                    @if ($company->document_logo)
-                        <img src="data:{{ mime_content_type(public_path("storage/uploads/logos/{$company->document_logo}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/uploads/logos/{$company->document_logo}"))) }}"
+                    @if ($stablishment->document_logo)
+                        <img src="data:{{ mime_content_type(public_path("storage/uploads/logos/{$stablishment->document_logo}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/uploads/logos/{$stablishment->document_logo}"))) }}"
                             alt="{{ $company->trade_name }}" class="
-        contain"
+    contain"
                             style=" max-width: 400px;max-height: 150px">
                     @else
-                        <img src="data:{{ mime_content_type(public_path("storage/uploads/logos/{$company->logo}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/uploads/logos/{$company->logo}"))) }}"
+                        <img src="data:{{ mime_content_type(public_path("storage/uploads/logos/{$stablishment->logo}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/uploads/logos/{$stablishment->logo}"))) }}"
                             alt="{{ $company->trade_name }}" class="
-        contain"
+    contain"
                             style=" max-width: 400px;max-height: 150px">
                     @endif
                 </div>
             @else
                 <div class="text-center company_logo_box pt-5 pl-5">
-                    @if ($company->document_logo)
-                        <img src="data:{{ mime_content_type(public_path("storage/uploads/logos/{$company->document_logo}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/uploads/logos/{$company->document_logo}"))) }}"
+                    @if ($stablishment->document_logo)
+                        <img src="data:{{ mime_content_type(public_path("storage/uploads/logos/{$stablishment->document_logo}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/uploads/logos/{$stablishment->document_logo}"))) }}"
                             alt="{{ $company->trade_name }}" class="company_logo_ticket contain">
                     @else
-                        <img src="data:{{ mime_content_type(public_path("storage/uploads/logos/{$company->logo}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/uploads/logos/{$company->logo}"))) }}"
+                        <img src="data:{{ mime_content_type(public_path("storage/uploads/logos/{$stablishment->logo}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/uploads/logos/{$stablishment->logo}"))) }}"
                             alt="{{ $company->trade_name }}" class="company_logo_ticket contain">
                     @endif
                 </div>
+            @endif
+        @else
+            @if ($company->logo)
+                @if ($is_chifa_china)
+                    <div class="text-center company_logo_box" style="padding-top:2rem;width: 350px;">
+                        @if ($company->document_logo)
+                            <img src="data:{{ mime_content_type(public_path("storage/uploads/logos/{$company->document_logo}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/uploads/logos/{$company->document_logo}"))) }}"
+                                alt="{{ $company->trade_name }}" class="
+        contain"
+                                style=" max-width: 400px;max-height: 150px">
+                        @else
+                            <img src="data:{{ mime_content_type(public_path("storage/uploads/logos/{$company->logo}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/uploads/logos/{$company->logo}"))) }}"
+                                alt="{{ $company->trade_name }}" class="
+        contain"
+                                style=" max-width: 400px;max-height: 150px">
+                        @endif
+                    </div>
+                @else
+                    <div class="text-center company_logo_box pt-5 pl-5">
+                        @if ($company->document_logo)
+                            <img src="data:{{ mime_content_type(public_path("storage/uploads/logos/{$company->document_logo}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/uploads/logos/{$company->document_logo}"))) }}"
+                                alt="{{ $company->trade_name }}" class="company_logo_ticket contain">
+                        @else
+                            <img src="data:{{ mime_content_type(public_path("storage/uploads/logos/{$company->logo}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/uploads/logos/{$company->logo}"))) }}"
+                                alt="{{ $company->trade_name }}" class="company_logo_ticket contain">
+                        @endif
+                    </div>
+                @endif
             @endif
         @endif
     @endif
@@ -616,10 +619,11 @@
                                 @endforeach
                             @endif
                             @if (isset($row->item->color_size))
-                            @foreach ($row->item->color_size as $color_size)
-                                <br />{!! "<strong>Color: </strong>". $color_size->color !!} {!!" <strong>Talla:</strong> ". $color_size->size !!} <strong>- Cant:</strong> {{ $color_size->quantity }}
-                            @endforeach
-                        @endif
+                                @foreach ($row->item->color_size as $color_size)
+                                    <br />{!! '<strong>Color: </strong>' . $color_size->color !!} {!! ' <strong>Talla:</strong> ' . $color_size->size !!} <strong>- Cant:</strong>
+                                    {{ $color_size->quantity }}
+                                @endforeach
+                            @endif
                             @if (isset($row->item->second_name))
                                 - {!! $row->item->second_name !!}
                             @endif
@@ -941,26 +945,26 @@
                 <b>Código Hash</b>: {{ $document->hash }} <br>
                 <b>Vendedor</b>: {{ $document->user->name }} <br>
                 @php
-                $code = null;
-                $box = \App\Models\Tenant\Box::where('document_id', $document->id)->first();
-                if($box){
-                    $cash = \App\Models\Tenant\Cash::where('id', $box->cash_id)->first();
-                    if($cash){
-                        $code = $cash->reference_number;
+                    $code = null;
+                    $box = \App\Models\Tenant\Box::where('document_id', $document->id)->first();
+                    if ($box) {
+                        $cash = \App\Models\Tenant\Cash::where('id', $box->cash_id)->first();
+                        if ($cash) {
+                            $code = $cash->reference_number;
+                        }
                     }
-                }
                 @endphp
                 @if ($code)
-                <b>Código A.</b>: {{ $code }} <br>
+                    <b>Código A.</b>: {{ $code }} <br>
                 @endif
 
             </td>
 
         </tr>
-        @if($footer_text)
-        <tr>
-            <td colspan="6" class="text-center desc pt-3">{{$footer_text}}</td>
-        </tr>
+        @if ($footer_text)
+            <tr>
+                <td colspan="6" class="text-center desc pt-3">{{ $footer_text }}</td>
+            </tr>
         @endif
         <tr>
             <td colspan="6" class="text-center desc pt-3">Para consultar el comprobante ingresar a
