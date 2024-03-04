@@ -20,6 +20,18 @@ class CollegeRegister extends ModelTenant
         'active',
     ];
 
+    public function isRegister()
+    {
+        $plan = $this->plan;
+        if ($plan) {
+            $type = $plan->type;
+            if ($type) {
+                $id = $type->id;
+                return $id == 1;
+            }
+        }
+        return false;
+    }
     public function member()
     {
         return $this->belongsTo(CollegeMember::class, 'member_id');
@@ -30,9 +42,9 @@ class CollegeRegister extends ModelTenant
         return $this->belongsTo(CollegePlan::class, 'plan_id');
     }
     public function lastCollegePayment()
-{
-    return $this->hasOne(CollegePayment::class, 'register_id')->latest('created_at');
-}
+    {
+        return $this->hasOne(CollegePayment::class, 'register_id')->latest('created_at');
+    }
 
     public function payments()
     {

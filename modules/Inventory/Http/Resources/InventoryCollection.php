@@ -57,8 +57,8 @@ class InventoryCollection extends ResourceCollection
                 'series_enabled' => (bool) $row->item->series_enabled,
                 'series' => $lots,
                 'stock' => count($lots) > 0 ? count($lots) : $row->stock,
-                'created_at' => $row->created_at->format('Y-m-d H:i:s'),
-                'updated_at' => $row->updated_at->format('Y-m-d H:i:s'),
+                'created_at' => $row->created_at ? $row->created_at->format('Y-m-d H:i:s') : null,
+                'updated_at' => $row->update_at ? $row->updated_at->format('Y-m-d H:i:s'): null,
             ];
         });
     }

@@ -64,16 +64,16 @@ class TransferPlaceController extends Controller
 
 
     public function tables()
-    {   
+    {
         $printers = Area::whereNotNull('printer')->get()
-        ->transform(function($row, $key){
-            return [
-                'id' => $row->id,
-                'description' => $row->description,
-                'printer' => $row->printer,
-            ];
-        });
-        
+            ->transform(function ($row, $key) {
+                return [
+                    'id' => $row->id,
+                    'description' => $row->description,
+                    'printer' => $row->printer,
+                ];
+            });
+
         return [
             'printers' => $printers,
             //'items' => $this->optionsItemWareHouse(),
@@ -187,9 +187,24 @@ class TransferPlaceController extends Controller
                     $it->item_id
                 )->where('warehouse_id', $transfer->warehouse_id)->first();
                 if ($item) {
-                    $item->stock += $it->quantity;
+                    $item->stock -= $it->quantity;
                     $item->save();
                 }
+                $item_destination = ItemWarehouse::where(
+                    'item_id',
+                    $it->item_id
+                )->where('warehouse_id', $transfer->warehouse_id_destination)->first();
+                if ($item_destination) {
+                    $item_destination->stock += $it->quantity;
+                    $item_destination->save();
+                } else {
+                    $item_destination = new ItemWarehouse;
+                    $item_destination->item_id = $it->item_id;
+                    $item_destination->warehouse_id = $transfer->warehouse_id_destination;
+                    $item_destination->stock = $it->quantity;
+                    $item_destination->save();
+                }
+
                 $inventory = new Inventory;
                 $inventory->type = 2;
                 $inventory->description = 'Traslado';
@@ -330,11 +345,11 @@ class TransferPlaceController extends Controller
         }
         $establishment = Establishment::find($request->printer);
         $configuration = Configuration::first();
-        if($configuration->translate_direct){
+        if ($configuration->translate_direct) {
             $request->merge(['code' => $code]);
             $response = $this->accept_transfer($request);
             return $response;
-        }else{
+        } else {
             return [
                 "message" => "Transferencia por aceptar",
                 "code" => url('') . "/transfers/print_places/" . $code,
@@ -342,6 +357,5 @@ class TransferPlaceController extends Controller
                 "success" => true,
             ];
         }
-
     }
 }
