@@ -239,7 +239,7 @@ class InventoryController extends Controller
         if ($quantity_real < $quantity) {
             $inventory->inventory_transaction_id = 28;
         }
-
+        
         $inventory->real_stock = $request->quantity_real;
         $inventory->system_stock = $request->quantity;
 
