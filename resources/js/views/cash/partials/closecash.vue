@@ -220,6 +220,16 @@
                                         <h6>{{ totalBills.toFixed(2) }}</h6>
                                     </td>
                                 </tr>
+                                <tr>
+                                    <td colspan="3">
+                                        <el-button
+                                            type="primary"
+                                            @click="showSeriesBills"
+                                        >
+                                            INGRESAR SERIES
+                                        </el-button>
+                                    </td>
+                                </tr>
                             </tfoot>
                         </table>
                     </div>
@@ -521,6 +531,9 @@ export default {
     },
 
     methods: {
+        showSeriesBills(){
+
+        },
         returnTextObfuscated(text) {
             let textObfuscated = "";
             for (let i = 0; i < text.length; i++) {
@@ -667,7 +680,7 @@ export default {
             // );
             //     }, 3000);
             // }
-            this.closeDialog(); 
+            this.closeDialog();
         }
     }
 };

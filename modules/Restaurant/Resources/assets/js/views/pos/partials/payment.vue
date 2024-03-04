@@ -1364,6 +1364,7 @@ export default {
     },
 
     props: [
+        "quotationId",
         "clientSaleNoteNumber",
         "clientSaleNoteDiscount",
         "ordens_all_table",
@@ -1585,15 +1586,7 @@ export default {
         this.$eventHub.$on("initInputPerson", () => {
             this.initInputPerson();
         });
-        console.log(
-            "🚀 ~ file: payment.vue:1645 ~ created ~ this.form.customer_id:",
-            this.form.customer_id
-        );
         this.conf = this.establishments.conf ?? {};
-        console.log(
-            "🚀 ~ file: payment.vue:1590 ~ created ~ this.conf:",
-            this.conf
-        );
         this.button_payment = true;
         this.currentDocumentsType = this.documentsType;
         this.form.identity_document_type_id = this.currentDocumentsType[0].id;
@@ -2154,10 +2147,6 @@ export default {
                 this.input_person.number = this.$refs.select_person.$el.getElementsByTagName(
                     "input"
                 )[0].value;
-                console.log(
-                    "🚀 ~ file: payment.vue:2139 ~ this.time=setTimeout ~ this.input_person.number:",
-                    this.input_person.number
-                );
                 let url = `/caja/search_customers?value=${this.input_person.number}`;
                 if (this.configuration.college) {
                     url = `${url}&parents=${this.notRegister ? 0 : 1}`;
@@ -2317,14 +2306,6 @@ export default {
                 this.form.date_of_issue = moment().format("YYYY-MM-DD");
             }
             let { documents, document_default } = this.establishments;
-            console.log(
-                "🚀 ~ file: payment.vue:2313 ~ date_of_issue ~ this.establishments:",
-                this.establishments
-            );
-            console.log(
-                "🚀 ~ file: payment.vue:2315 ~ date_of_issue ~ documents:",
-                documents
-            );
             if (documents) {
                 let { invoice, sale_note, receipt } = documents;
                 this.invoice = invoice;
@@ -3315,20 +3296,8 @@ export default {
             let pass = true;
 
             this.currentPayments.forEach(p => {
-                console.log(
-                    "🚀 ~ file: payment.vue:3298 ~ verifyHasOperationNumber ~ p:",
-                    p
-                );
                 if (this.methodsValidate.includes(p.method)) {
-                    console.log(
-                        "🚀 ~ file: payment.vue:3301 ~ verifyHasOperationNumber ~ p.operation_number:",
-                        p.operation_number
-                    );
                     if (!p.operation_number) {
-                        console.log(
-                            "🚀 ~ file: payment.vue:3302 ~ verifyHasOperationNumber ~ operation_number:",
-                            "entr aqui.."
-                        );
                         this.$toast.error(
                             "Debe ingresar el número de operación"
                         );
@@ -3339,10 +3308,6 @@ export default {
             return pass;
         },
         async validOperationNumber(form) {
-            console.log(
-                "🚀 ~ file: payment.vue:3310 ~ validOperationNumber ~ form:",
-                form
-            );
             let { payments } = form;
             for (let i = 0; i < payments.length; i++) {
                 let { operation_number } = payments[i];
@@ -3497,19 +3462,9 @@ export default {
             //     date_of_payment: form.date_of_issue,
             //     payment: this.form.enter_amount,
             // }
-
-            console.log(
-                "🚀 ~ file: payment.vue:3475 ~ clickPayment ~ this.currentPayments:",
-                this.currentPayments
-            );
             form.cash_id = this.cash_id;
             if (this.form.payment_condition_id == "01") {
                 form.boxes = this.currentPayments;
-
-                console.log(
-                    "🚀 ~ file: payment.vue:3464 ~ clickPayment ~ form.payments:",
-                    JSON.stringify(form.payments)
-                );
                 if (this.form_payment.is_bank) {
                     this.changeBankAccount();
                 }
@@ -3522,10 +3477,6 @@ export default {
             }
 
             if (this.form.payment_condition_id !== "01") {
-                console.log(
-                    "🚀 ~ file: payment.vue:3447 ~ clickPayment ~ this.currentPayments:",
-                    this.currentPayments
-                );
                 form.fee = this.currentPayments.map(b => ({
                     id: null,
                     currency_type_id: "PEN",
@@ -3590,6 +3541,9 @@ export default {
                     date_of_payment: form.date_of_issue,
                     payment: p.amount
                 }));
+            }
+            if (this.quotationId) {
+                form.quotation_id = this.quotationId;
             }
             this.loading_submit = true;
             this.button_payment = true;
@@ -3916,12 +3870,9 @@ export default {
             const response = await this.$http.delete(
                 `/caja/rooms/hotel/rents/${id}`
             );
-            console.log(
-                "🚀 ~ file: payment.vue:3711 ~ deleteHotelRentItem ~ response:",
-                response
-            );
         },
         back(val = false) {
+            
             let { is_advance, hotel_rent_id } = this.form;
             if (is_advance && hotel_rent_id && !val) {
                 this.$emit("limpiarForm");
@@ -4003,14 +3954,6 @@ export default {
             } else {
                 if (this.customers.length > 0) {
                     let hasCustomerDefault = false;
-                    console.log(
-                        "🚀 ~ file: payment.vue:3928 ~ filterCustomers ~ this.customer_default:",
-                        this.customer_default
-                    );
-                    console.log(
-                        "🚀 ~ file: payment.vue:3933 ~ filterCustomers ~ this.customers:",
-                        this.customers
-                    );
                     if (this.customer_default) {
                         let { id } = this.customer_default;
                         hasCustomerDefault = this.customers.some(
@@ -4028,10 +3971,6 @@ export default {
                     } else {
                         this.value = this.customers[0].id;
                         this.form.customer_id = this.customers[0].id;
-                        console.log(
-                            "🚀 ~ file: payment.vue:3939 ~ filterCustomers ~ this.form.customer_id:",
-                            this.form.customer_id
-                        );
                     }
                     this.changeCustomer();
                 } else {

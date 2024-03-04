@@ -15,6 +15,8 @@ class ConfigurationResource extends JsonResource
     public function toArray($request)
     {
         return [
+            'turn_principal' => $this->turn_principal,
+            'health_network' => (bool) $this->health_network,
             'show_logo_in_documents' => (bool)$this->show_logo_in_documents,
             'show_caja_table' => (bool) $this->show_caja_table,
             'minute_close_to_leave' => $this->minute_close_to_leave,

@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Config;
 class Configuration extends ModelTenant
 {
     protected $fillable = [
+        'turn_principal',
+        'health_network',
         'show_logo_in_documents',
         'show_caja_table',
         'minute_close_to_leave',
@@ -160,6 +162,7 @@ class Configuration extends ModelTenant
 
     ];
     protected $casts = [
+        'health_network' => 'boolean',
         'show_logo_in_documents' => 'boolean',
         'show_caja_table' => 'boolean',
         'series_enabled' => 'boolean',
@@ -268,6 +271,8 @@ class Configuration extends ModelTenant
         // $skins = Skin::all();
         $skins = [];
         return [
+            'turn_principal' => $this->turn_principal,
+            'health_network' => (bool)$this->health_network,
             'show_logo_in_documents' => (bool)$this->show_logo_in_documents,
             'show_caja_table' => (bool)$this->show_caja_table,
             'minute_close_to_leave' => $this->minute_close_to_leave,

@@ -7,17 +7,21 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Modules\Finance\Models\GlobalPayment;
 use Modules\Restaurant\Models\Turns;
+use Carbon\Carbon;
 
 class Cash extends ModelTenant
 {
     use RegisterMovementTrait;
     // protected $with = ['cash_documents'];
     protected $casts = [
+        'bill_series' => 'array',
         'counter' => 'array',
         'principal' => 'boolean',
     ];
     protected $table = 'cash';
     protected $fillable = [
+        'group_code',
+        'bill_series',
         'stock_file',
         'principal',
         'user_id',
@@ -43,7 +47,9 @@ class Cash extends ModelTenant
         //created
         static::created(function ($model) {
             $request = Request::capture();
-            $description = "Caja abierto";
+            $description = "Caja abierta";
+            $original_model = Cash::find($model->id);
+            $original_model->set_or_create_code();
             $data = $model->toArray();
             RegisterMovementTrait::registerCreate(
                 $model,
@@ -96,7 +102,40 @@ class Cash extends ModelTenant
     {
         return $this->hasMany(CashDocument::class);
     }
-
+    function create_code($after = false)
+    {
+        $date = Carbon::now('America/Lima')->format('Y-m-d');
+        if ($after) {
+            $date = Carbon::parse($date)->addDay()->format('Y-m-d');
+        }
+        $date = str_replace('-', '', $date);
+        $code = $date;
+        return $code;
+    }
+    function set_or_create_code()
+    {
+        $configuration = Configuration::first();
+        if ($configuration->turn_principal) {
+            $turn_id = $configuration->turn_principal;
+            //si la caja actual tiene el  id del turno principal
+            if ($this->turn_id == $turn_id) {
+                if ($turn_id != 3) {
+                    $code = $this->create_code(true);
+                } else {
+                    $code = $this->create_code();
+                }
+                $this->group_code = $code;
+                $this->save();
+            } else {
+                //se busca la ultima caja con el id del turno principal y se obtiene el codigo
+                $last_cash = Cash::where('turn_id', $turn_id)->orderBy('id', 'desc')->first();
+                if ($last_cash) {
+                    $this->group_code = $last_cash->group_code;
+                    $this->save();
+                }
+            }
+        }
+    }
 
     public function scopeWhereTypeUser($query, $fromAdmin)
     {
@@ -111,7 +150,8 @@ class Cash extends ModelTenant
     {
         return $this->morphMany(GlobalPayment::class, 'destination');
     }
-    public function boxes(){
+    public function boxes()
+    {
         return $this->hasMany(Box::class);
     }
     // public function get_ref

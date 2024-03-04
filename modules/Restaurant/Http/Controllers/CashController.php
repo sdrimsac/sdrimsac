@@ -1606,10 +1606,12 @@ class CashController extends Controller
         $id = $request->id;
         $final_balance = $request->final_balance;
         $counter = $request->counter;
+        $bill_series = $request->bill_series;
         $difference = $request->difference ?? 0.00;
         $cash = Cash::findOrFail($id);
         $cash->final_balance = $final_balance;
         $cash->counter = $counter;
+        $cash->bill_series = $bill_series;
         $cash->difference = $difference;
         $cash->state = 0;
         $cash->date_closed = date('Y-m-d');

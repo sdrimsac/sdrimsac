@@ -608,6 +608,7 @@ if ($hostname) {
                 //quotations
                 Route::get('quotations', [App\Http\Controllers\Tenant\QuotationController::class, 'index'])->name('tenant.quotations.index')->middleware('redirect.level')->middleware('just.admin');
                 Route::get('quotations/columns', [App\Http\Controllers\Tenant\QuotationController::class, 'columns']);
+                Route::get('quotations/items-to-cash/{id}', [App\Http\Controllers\Tenant\QuotationController::class, 'itemsToCash']);
                 Route::get('quotations/records', [App\Http\Controllers\Tenant\QuotationController::class, 'records']);
                 Route::get('quotations/create/{saleOpportunityId?}', [App\Http\Controllers\Tenant\QuotationController::class, 'create'])->name('tenant.quotations.create')->middleware('redirect.level')->middleware('just.admin');
                 Route::get('quotations/edit/{id}', [App\Http\Controllers\Tenant\QuotationController::class, 'edit'])->middleware('redirect.level')->middleware('just.admin');

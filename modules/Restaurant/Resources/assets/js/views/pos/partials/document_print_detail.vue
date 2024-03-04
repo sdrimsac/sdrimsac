@@ -19,6 +19,12 @@
                         <th>
                             Cliente
                         </th>
+                        <th v-if="type == 'quotations'">
+                            Vendedor
+                        </th>
+                        <th v-if="type == 'quotations'">
+                            Dctos
+                        </th>
                         <th v-if="type == 'documents'">
                             N/V
                         </th>
@@ -314,13 +320,127 @@
                                     'text-white'}`
                             "
                         >
-                            <template
-                                v-if="
-                                    type == 'quotations' &&
-                                        data.state_type_id != '11'
-                                "
-                            >
-                                <el-tooltip content="Generar documento">
+                            <template v-if="type == 'quotations'">
+                                <div
+                                    class="dropdown-as-select d-inline-block"
+                                    data-childselector="span"
+                                >
+                                    <button
+                                        v-if="data.state_type_id != '11'"
+                                        class="btn p-0"
+                                        type="button"
+                                        data-bs-toggle="dropdown"
+                                        aria-haspopup="true"
+                                        aria-expanded="false"
+                                    >
+                                        <span
+                                            class="btn btn-primary dropdown-toggle"
+                                            data-bs-toggle="tooltip"
+                                            data-bs-placement="top"
+                                            data-bs-delay="0"
+                                            title=""
+                                            data-bs-original-title="Item Count"
+                                            aria-label="Item Count"
+                                            ><i class="fas fa-list"></i
+                                        ></span>
+                                    </button>
+
+                                    <div
+                                        class="dropdown-menu dropdown-menu-end col-md-2 col-1"
+                                    >
+                                        <el-button
+                                            class="col-md-12 col-12"
+                                            @click="clickEditQuotation(data.id)"
+                                        >
+                                            Editar
+                                        </el-button>
+                                        <br />
+                                        <el-button
+                                            v-if="
+                                                data.document_type_id == '01' &&
+                                                    data.state_type_id == '05'
+                                            "
+                                            class="col-md-12 col-12"
+                                            @click="
+                                                clickAnulateQuotation(data.id)
+                                            "
+                                        >
+                                            Anular
+                                        </el-button>
+                                        <br
+                                            v-if="
+                                                data.document_type_id == '01' &&
+                                                    data.state_type_id == '05'
+                                            "
+                                        />
+                                        <el-button
+                                            v-if="
+                                                data.state_type_id != '11' &&
+                                                    data.state_type_id != '13'
+                                            "
+                                            class="col-md-12 col-12"
+                                            @click="clickOpenWhatsapp(data)"
+                                        >
+                                            Enviar whatsapp
+                                        </el-button>
+                                        <br
+                                            v-if="
+                                                data.state_type_id != '11' &&
+                                                    data.state_type_id != '13'
+                                            "
+                                        />
+                                        <el-button
+                                            v-if="
+                                                data.state_type_id != '11' &&
+                                                    data.state_type_id !=
+                                                        '13' &&
+                                                    configuration.print_document_cash
+                                            "
+                                            class="col-md-12 col-12"
+                                            @click="
+                                                print(
+                                                    data.external_id,
+                                                    data.document_type_id
+                                                )
+                                            "
+                                        >
+                                            Imprimir
+                                        </el-button>
+                                        <br
+                                            v-if="
+                                                data.state_type_id != '11' &&
+                                                    data.state_type_id !=
+                                                        '13' &&
+                                                    configuration.print_document_cash
+                                            "
+                                        />
+                                        <el-button
+                                            class="col-md-12 col-12"
+                                            @click="
+                                                previsualitation(
+                                                    data.external_id,
+                                                    data.document_type_id
+                                                )
+                                            "
+                                        >
+                                            Previsualización
+                                        </el-button>
+                                        <br />
+                                    </div>
+                                </div>
+                                <el-tooltip
+                                    v-if="!data.changed"
+                                    content="Generar documento"
+                                >
+                                    <el-button
+                                        size="mini"
+                                        style="margin-bottom:3px;"
+                                        @click="clickOptionsQuotation(data.id)"
+                                    >
+                                        <i class="fas fa-file-import"></i>
+                                    </el-button>
+                                </el-tooltip>
+                                <!-- <el-tooltip content="Generar documento">
                                     <el-button
                                         size="mini"
                                         style="margin-bottom:3px;"
@@ -347,53 +467,55 @@
                                     >
                                         <i class="fas fa-ban"></i>
                                     </el-button>
-                                </el-tooltip>
+                                </el-tooltip> -->
                             </template>
-                            <el-button
-                                v-if="
-                                    data.state_type_id != '11' &&
-                                        data.state_type_id != '13'
-                                "
-                                size="mini"
-                                type="success"
-                                style="margin-bottom:3px;"
-                                @click="clickOpenWhatsapp(data)"
-                            >
-                                <i
-                                    class="fab fa-whatsapp"
-                                    aria-hidden="true"
-                                ></i>
-                            </el-button>
+                            <template v-if="type !== 'quotations'">
+                                <el-button
+                                    v-if="
+                                        data.state_type_id != '11' &&
+                                            data.state_type_id != '13'
+                                    "
+                                    size="mini"
+                                    type="success"
+                                    style="margin-bottom:3px;"
+                                    @click="clickOpenWhatsapp(data)"
+                                >
+                                    <i
+                                        class="fab fa-whatsapp"
+                                        aria-hidden="true"
+                                    ></i>
+                                </el-button>
 
-                            <el-button
-                                v-if="
-                                    data.state_type_id != '11' &&
-                                        data.state_type_id != '13' &&
-                                        configuration.print_document_cash
-                                "
-                                size="mini"
-                                plain
-                                @click="
-                                    print(
-                                        data.external_id,
-                                        data.document_type_id
-                                    )
-                                "
-                            >
-                                <i class="fas fa-print"></i>
-                            </el-button>
-                            <el-button
-                                size="mini"
-                                plain
-                                @click="
-                                    previsualitation(
-                                        data.external_id,
-                                        data.document_type_id
-                                    )
-                                "
-                            >
-                                <i class="far fa-file-pdf"></i>
-                            </el-button>
+                                <el-button
+                                    v-if="
+                                        data.state_type_id != '11' &&
+                                            data.state_type_id != '13' &&
+                                            configuration.print_document_cash
+                                    "
+                                    size="mini"
+                                    plain
+                                    @click="
+                                        print(
+                                            data.external_id,
+                                            data.document_type_id
+                                        )
+                                    "
+                                >
+                                    <i class="fas fa-print"></i>
+                                </el-button>
+                                <el-button
+                                    size="mini"
+                                    plain
+                                    @click="
+                                        previsualitation(
+                                            data.external_id,
+                                            data.document_type_id
+                                        )
+                                    "
+                                >
+                                    <i class="far fa-file-pdf"></i>
+                                </el-button>
+                            </template>
                         </td>
                         <td
                             :class="
@@ -457,6 +579,18 @@
                                     >
                                 </small>
                             </template>
+                        </td>
+                        <td v-if="type == 'quotations'">
+                            {{ data.user_name }}
+                        </td>
+                        <td v-if="type == 'quotations'">
+                            <template v-if="data.documents.length > 0">
+                                {{ data.documents[0].number_full }}
+                            </template>
+                            <template v-if="data.sale_notes.length > 0">
+                                {{ data.sale_notes[0].identifier }}
+                            </template>
+                            <!-- {{ data.user_name }} -->
                         </td>
                         <td v-if="type == 'documents'">
                             <template
@@ -684,7 +818,12 @@ export default {
             let url = null;
             if (type == "80") {
                 url = `/sale-notes/print/${external_id}/ticket`;
-            } else if (type == "03" || type == "01") {
+            } else if (
+                type == "03" ||
+                type == "01" ||
+                type == "07" ||
+                type == "08"
+            ) {
                 url = `/print/document/${external_id}/ticket`;
             } else {
                 url = `/quotations/print/${external_id}/ticket`;
@@ -702,9 +841,30 @@ export default {
             this.quotationId = recordId;
             this.showEditQuotationDialog = true;
         },
-        clickOptionsQuotation(recordId = null) {
+        async clickOptionsQuotation(recordId = null) {
             this.quotationId = recordId;
-            this.showDialogOptions = true;
+            try {
+                this.loading = true;
+                const response = await this.$http(
+                    `/quotations/items-to-cash/${recordId}`
+                );
+                if (response.status) {
+                    let data = response.data;
+                    if (data.orden) {
+                        let orden = data.orden;
+                        orden.quotation_id = recordId;
+                        this.$emit("sendOrdens", data.orden);
+                        this.$emit("closeDialog");
+                    }
+                }
+            } catch (e) {
+                this.$toast.error(
+                    "Error al obtener los items de la cotización"
+                );
+            } finally {
+                this.loading = false;
+            }
+            // this.showDialogOptions = true;
         },
         clickOpenWhatsapp(record) {
             console.log(this.establishment, " mode");

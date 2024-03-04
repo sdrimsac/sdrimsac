@@ -48,7 +48,7 @@
                     <el-date-picker class="w-100" v-model="form.date_of_due">
                     </el-date-picker>
                 </div>
-                 <div class="col-md-6">
+                 <div class="col-md-6" v-if="!isSeller">
                     <label>
                         Vendedor
                      
@@ -115,7 +115,7 @@ const QuotationOptions = () =>
 const PersonForm = () =>
     import("../../../../../../../../resources/js/views/persons/form.vue");
 export default {
-    props: ["items", "cash_id", "all_customers", "showDialog","sellers"],
+    props: ["items", "cash_id", "all_customers", "showDialog","sellers","isSeller"],
     components: { PersonForm,QuotationOptions },
     data() {
         return {
@@ -335,7 +335,7 @@ export default {
             }
         },
         open() {
-            this.customers = this.all_customers;
+    
             this.form = {
                 date_of_issue: new Date(),
                 currency_type_id: "PEN",
@@ -380,6 +380,13 @@ export default {
                 sale_opportunity_id: null
             };
             this.paymentsOrden();
+                    this.customers = this.all_customers;
+            let customer = this.customers.find(
+                c => c.number == "99999999"
+            );
+            if(customer){
+                this.form.customer_id = customer.id;
+            }
         },
         close() {
             this.$emit("update:showDialog", false);

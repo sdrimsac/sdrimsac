@@ -21,6 +21,7 @@ class CategoryCollection extends ResourceCollection
                 'id' => $row->id,
                 'name' => $row->name,
                 'drag' =>(bool) $row->pos_drag,
+                'identifier' => $row->identifier,
                 // $directory = 'public'.DIRECTORY_SEPARATOR.'uploads'.DIRECTORY_SEPARATOR.'category'.DIRECTORY_SEPARATOR;
                 'icono' => ($row->icono !== 'imagen-no-disponible.jpg') ? asset('storage/uploads/category/'.$row->icono) : asset("/logo/{$row->icono}"),
                 'created_at' => Carbon::parse($row->created_at)->format('Y-m-d'),

@@ -38,7 +38,7 @@
                                         </span>
                                     </button>
 
-                                    <template v-if="configuration.restaurant">
+                                    <template v-if="configuration.restaurant && !this.isSeller">
                                         <template
                                             v-if="
                                                 !configuration.hotels ||
@@ -67,7 +67,7 @@
                                     </template>
                                     <template
                                         v-if="
-                                            configuration.sale_note_credit_cash
+                                            configuration.sale_note_credit_cash && !this.isSeller
                                         "
                                     >
                                         <button
@@ -972,6 +972,8 @@
                 <div class="col-5 col-sm-7 col-lg-6 col-md-7 col-xl-5">
                     <div class="card-body p-2">
                         <list-orden
+                            :quotationId.sync="quotationId"
+                            :isSeller.sync="isSeller"
                             @sendOrdens="sendOrdens"
                             :isHotelArea.sync="isHotelArea"
                             :clientSaleNoteNumber.sync="clientSaleNoteNumber"
@@ -1561,6 +1563,7 @@
 
         <template>
             <payment-form
+            :quotationId.sync="quotationId"
                 :clientSaleNoteNumber.sync="clientSaleNoteNumber"
                 :clientSaleNoteDiscount.sync="clientSaleNoteDiscount"
                 :sellers.sync="sellers"
@@ -1660,6 +1663,7 @@
             :company="company"
             :showDialog.sync="showDocumentsPrint"
             :config.sync="config"
+            @sendOrdens="sendOrdens"
             @sendItems="sendItems"
             :establishment.sync="establishments"
             :area_id="area_id"
@@ -1854,6 +1858,7 @@ export default {
 
     data() {
         return {
+            isSeller: false,
             showColorSize: false,
             currentColorSize: [],
             showSaleNoteCreditCash: false,
@@ -1939,6 +1944,7 @@ export default {
                 slidesToShow: 3
                 // Any other options that can be got from plugin documentation
             },
+            quotationId: null,
             category_selected: 0,
             history_item_id: null,
             date_last: null,
@@ -1998,9 +2004,12 @@ export default {
     beforeDestroy() {
         clearInterval(this.timer);
     },
+
     async created() {
         this.area_id = this.worker.area_id;
-
+        
+        this.isSeller = this.checkWorkerType("vendedor");
+        console.log("🚀 ~ created ~ this.isSeller:", this.isSeller)
         localStorage.setItem("quotation_stock", 0);
         let type_code = localStorage.getItem("type_code");
         let barcode = localStorage.getItem("barcode");
@@ -2081,6 +2090,14 @@ export default {
     sockets: {},
     computed: {},
     methods: {
+        checkWorkerType(type) {
+            if (!type) return false;
+            let { worker_type } = this.worker;
+            if (!worker_type) return false;
+            let { description } = worker_type;
+            if (description.toLowerCase() == type.toLowerCase()) return true;
+            return false;
+        },
         async tableOpen(id) {
             if (!this.cashId) {
                 this.$message({
@@ -2206,7 +2223,7 @@ export default {
                     id: 1,
                     title: ["Comprobantes"],
                     icon: "fas fa-print ",
-                    visible: true
+                    visible: true && !this.isSeller
                 },
                 /* {
                     id: 2,
@@ -2237,7 +2254,7 @@ export default {
                     id: 5,
                     title: [" Zona "],
                     icon: "fas fa-map-pin ",
-                    visible:
+                    visible:!this.isSeller && 
                         this.configuration.restaurant &&
                         !this.configuration.college &&
                         this.worker.area.description.toUpperCase() !==
@@ -2249,7 +2266,7 @@ export default {
                     id: 195,
                     title: [" Créditos", "Nota de venta "],
                     icon: "fas fa-cash-register",
-                    visible: this.configuration.sale_note_credit_cash
+                    visible: this.configuration.sale_note_credit_cash && !this.isSeller
                 },
                 {
                     id: 171,
@@ -2257,53 +2274,53 @@ export default {
                     icon: "fas fa-map-pin ",
                     visible:
                         this.configuration.hotels &&
-                        this.worker.area.description.toUpperCase() == "HOTEL"
+                        this.worker.area.description.toUpperCase() == "HOTEL" && !this.isSeller
                 },
                 {
                     id: 6,
                     title: ["Venta", "del Dia"],
                     icon: "icofont-money-bag",
                     visible:
-                        this.configuration.view_daily_cash ||
-                        this.configuration.view_daily_cash_pin
+                        (this.configuration.view_daily_cash ||
+                        this.configuration.view_daily_cash_pin) && !this.isSeller
                 },
 
                 {
                     id: 7,
                     title: ["Historial", ""],
                     icon: "fas fa-history ",
-                    visible: true
+                    visible: true && !this.isSeller
                 },
 
                 {
                     id: 9,
                     title: ["Matriculas", "Mensualidades"],
                     icon: "fas fa-user-edit",
-                    visible: this.configuration.college
+                    visible: this.configuration.college && !this.isSeller
                 },
                 {
                     id: 10,
                     title: ["Canjear", "Promocion"],
                     icon: "fas fa-user-tag",
-                    visible: this.configuration.promotions_sell
+                    visible: this.configuration.promotions_sell && !this.isSeller
                 },
                 {
                     id: 33,
                     title: ["Créditos"],
                     icon: "fas fa-credit-card",
-                    visible: this.configuration.credits
+                    visible: this.configuration.credits && !this.isSeller
                 },
                 {
                     id: 25,
                     title: ["Guías", "Remisión"],
                     icon: "fas fa-file",
-                    visible: this.configuration.dispatch
+                    visible: this.configuration.dispatch && !this.isSeller
                 },
                 {
                     id: 102,
                     title: ["Cambiar", "Categorías"],
                     icon: "fa fa-bars",
-                    visible: this.configuration.pos_drag_category
+                    visible: this.configuration.pos_drag_category && !this.isSeller
                 },
                 {
                     id: 103,
@@ -2315,19 +2332,19 @@ export default {
                     id: 109,
                     title: ["Ver", "Consignaciones"],
                     icon: "fa fa-edit",
-                    visible: this.configuration.consignment
+                    visible: this.configuration.consignment && !this.isSeller
                 },
                 {
                     id: 42,
                     title: ["Productos", "Por vencer", this.products_to_due],
                     icon: "far fa-calendar-alt",
-                    visible: this.configuration.items_due_caja
+                    visible: this.configuration.items_due_caja && !this.isSeller
                 },
                 {
                     id: 32,
                     title: ["Crear", "Producto compuesto"],
                     icon: "el-icon-connection",
-                    visible: this.configuration.item_set_caja
+                    visible: this.configuration.item_set_caja && !this.isSeller
                 }
 
                 // {
@@ -2780,6 +2797,9 @@ export default {
             if (this.localOrden.length != 0 && !this.configuration.box_orden) {
                 this.$toast.warning("Tiene productos seleccionados.");
                 return;
+            }
+            if(orden.quotation_id){
+                this.quotationId = orden.quotation_id;
             }
             if (orden.mesa != undefined && orden.id != undefined) {
                 this.clientTableData = {
@@ -5011,6 +5031,7 @@ export default {
                 this.getTablesToLeave();
             }
             this.clientSaleNoteNumber = null;
+            this.quotationId = null;
             this.clientSaleNoteDiscount = 0;
             this.ordens_all_table = false;
             this.isConsignment = false;

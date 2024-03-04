@@ -108,7 +108,7 @@ class JustAdmin
 
                 if (str_contains($description_type, 'COCI')) {
                     $redirect_to .= 'dashboard-kitchen';
-                } else if (str_contains($description_type, 'CAJ')) {
+                } else if (str_contains($description_type, 'CAJ')||str_contains($description_type, 'VEN')) {
                     $redirect_to .= 'dashboard-pos';
                 } else if ($description_type == 'LIMPIEZA') {
                     $redirect_to .= 'cleaner';

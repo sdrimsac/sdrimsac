@@ -59,6 +59,8 @@ class CashCollection extends ResourceCollection
                 }
             }
             return [
+                'group_code' => $row->group_code,
+                'bill_series' => $row->bill_series,
                 'id' => $row->id,
                 'user_id' => $row->user_id,
                 'user' => $row->user->name,

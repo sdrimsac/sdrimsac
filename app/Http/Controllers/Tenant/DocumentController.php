@@ -88,6 +88,7 @@ use App\Models\Tenant\HotelRentDocument;
 use App\Models\Tenant\HotelRentItem;
 use App\Models\Tenant\ItemUnitType;
 use App\Models\Tenant\NumberActivity;
+use App\Models\Tenant\Quotation;
 use App\Models\Tenant\Seller;
 use App\Models\Tenant\Summary;
 use App\Services\RoleService;
@@ -1109,6 +1110,11 @@ class DocumentController extends Controller
             $desc = "App\Models\SaleNote";
             SaleNoteItem::where('sale_note_id', $request->sale_note_id)->update(["inventory_kardex_id" => null]);
             InventoryKardex::where('inventory_kardexable_type', $desc)->where('inventory_kardexable_id', $request->sale_note_id)->delete();
+        }
+        if($document->quotation_id){
+            $quotation = Quotation::find($document->quotation_id);
+            $quotation->changed = true;
+            $quotation->save();
         }
         $establishment = Establishment::where('id', $document->establishment_id)->first();
         event(new PrintEvent($document->id, $document->document_type_id, $request->printerOn, 0, [], true));

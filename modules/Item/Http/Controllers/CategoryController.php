@@ -3,6 +3,7 @@
 namespace Modules\Item\Http\Controllers;
 
 use App\Http\Resources\Tenant\ItemCollection;
+use App\Imports\CategoryImport;
 use App\Models\Tenant\Company;
 use App\Models\Tenant\Configuration;
 use App\Models\Tenant\Item;
@@ -23,6 +24,17 @@ use Modules\Restaurant\Models\Food;
 class CategoryController extends Controller
 {
 
+    public function import(Request $request)
+    {
+        $file = $request->file('file');
+        $import = new CategoryImport();
+        $import->import($file);
+        $data = $import->getData();
+        return [
+            'success' => true,
+            'data' => $data
+        ];
+    }
     public function index()
     {
         $configuration = Configuration::first();

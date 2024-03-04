@@ -28,7 +28,7 @@
                         </span>
                     </button>
                     <button
-                        v-if="!cash_id"
+                        v-if="!cash_id && !isSeller"
                         class="btn btn-danger"
                         type="button"
                         @click="openCash"
@@ -159,7 +159,7 @@
                     <div class="h5 text-white col-6" style="padding-left: 25px">
                         <strong v-if="!clientTableData.table">
                             <template v-if="!isConsignment">
-                                VENTA DIRECTA
+                                {{quotationId ? "GENERANDO COMPROBANTE - COTIZACIÓN" : "VENTA DIRECTA"}}
                             </template>
                             <template v-else>
                                 LIQUIDACIÓN DE CONSIGNACIÓN
@@ -198,9 +198,10 @@
                     <div>
                         <template
                             v-if="
-                                this.quotation_stock &&
+                                (this.quotation_stock &&
                                     configuration.quotation &&
-                                    localOrden.length != 0
+                                    localOrden.length != 0) ||
+                                    this.isSeller
                             "
                         >
                             <button
@@ -257,7 +258,8 @@
                             v-if="
                                 isCreatingOrden == false &&
                                     configuration.credit_list &&
-                                    localOrden.length != 0
+                                    localOrden.length != 0 &&
+                                    !this.isSeller
                             "
                             class="btn btn-light mt-2"
                             type="button"
@@ -275,7 +277,8 @@
                             v-if="
                                 (isCreatingOrden == true ||
                                     clientTableData.orden_id) &&
-                                    localOrden.length != 0
+                                    localOrden.length != 0 &&
+                                    !this.isSeller
                             "
                             class="btn btn-light mt-2"
                             type="button"
@@ -438,7 +441,7 @@
                                     <el-button
                                         v-if="
                                             configuration.consignment &&
-                                                localOrden.length != 0
+                                                localOrden.length != 0 &&  !isSeller
                                         "
                                         class="btn btn-light
                                             m-1
@@ -473,7 +476,7 @@
                                     <el-button
                                         v-if="
                                             configuration.credits &&
-                                                localOrden.length != 0
+                                                localOrden.length != 0 && !isSeller
                                         "
                                         @click="openCredit"
                                         class="
@@ -569,7 +572,8 @@
                             <el-checkbox
                                 v-if="
                                     localOrden.length != 0 &&
-                                        !configuration.college
+                                        !configuration.college &&
+                                        !isSeller
                                 "
                                 v-model="to_carry"
                                 @change="allToCarry"
@@ -584,7 +588,10 @@
                                 class="margin-left:5px;"
                                 v-model="variation"
                                 @change="changeVariation"
-                                v-if="configuration.show_variation_dcto"
+                                v-if="
+                                    configuration.show_variation_dcto &&
+                                        !isSeller
+                                "
                             >
                                 <span class="text-white"
                                     >Variación</span
@@ -594,6 +601,7 @@
                         <template>
                             <el-checkbox
                                 class="margin-left:5px;"
+                                :disabled="isSeller"
                                 v-model="quotation_stock"
                                 @change="setQuotationStock"
                                 v-if="configuration.quotation"
@@ -620,6 +628,7 @@
                             <el-select
                                 style="margin-bottom: 5px;"
                                 clearable
+                                class="black-placeholder"
                                 v-model="commercialTreatmentId"
                                 placeholder="Seleccione un tratamiento comercial"
                                 @change="getCommercialTreatment"
@@ -641,8 +650,7 @@
                                         configuration.restaurant
                                 "
                                 type="text"
-                                maxlength="11"
-                                show-word-limit
+                                class="black-placeholder"
                                 v-model="clientTableData.ref"
                                 placeholder="Referencia (DNI)"
                             ></el-input>
@@ -2152,9 +2160,10 @@
         >
         </observation-form>
         <quotation-form
+            :isSeller="isSeller"
             :showDialog.sync="showQuotationForm"
             :items="localOrden"
-            :customers="customers"
+            :all_customers="customers"
             @limpiarForm="limpiarForm"
             :cash_id="cash_id"
             :sellers="sellers"
@@ -2338,6 +2347,13 @@
     </div>
 </template>
 <style>
+.black-placeholder::placeholder {
+    color: black;
+    
+}
+.el-input__inner::placeholder {
+    color: rgb(6, 6, 6);
+}
 .el-input-group__prepend {
     padding-left: 6px !important;
     padding-right: 6px !important;
@@ -2405,6 +2421,8 @@ export default {
         ShowColorSizeProduct
     },
     props: [
+        "quotationId",
+        "isSeller",
         "sellers",
         "affectation_igv_types",
         "all_series",
@@ -2539,6 +2557,7 @@ export default {
     },
 
     mounted() {
+        this.quotation_stock = this.isSeller;
         this.screenWidth = window.innerWidth;
         window.addEventListener("resize", this.handleResize);
         this.foodDefault = this.itemDefault;
@@ -2723,19 +2742,22 @@ export default {
                     id: 2,
                     title: ["Recibir ", "mercaderia"],
                     icon: "fas fa-people-carry",
-                    visible: this.configuration.receive_merchandise
+                    visible:
+                        this.configuration.receive_merchandise && !this.isSeller
                 },
                 {
                     id: 3,
                     title: [this.boxOperation, " Caja"],
                     icon: "fas fa-cash-register",
-                    visible: true
+                    visible: true && !this.isSeller
                 },
                 {
                     id: 7,
                     title: ["Ingresos/", "/Gastos"],
                     icon: "fas fa-money-bill-wave-alt",
-                    visible: this.configuration.show_expenses_incomes_caja
+                    visible:
+                        this.configuration.show_expenses_incomes_caja &&
+                        !this.isSeller
                 },
                 {
                     id: 4,
@@ -2751,13 +2773,14 @@ export default {
                     visible:
                         this.configuration.restaurant &&
                         !this.configuration.college &&
-                        !this.isHotel
+                        !this.isHotel &&
+                        !this.isSeller
                 },
                 {
                     id: 6,
                     title: ["Lista de crédito"],
                     icon: "fas fa-file-invoice",
-                    visible: this.configuration.credit_list
+                    visible: this.configuration.credit_list && !this.isSeller
                 }
             ];
         },
@@ -2770,7 +2793,7 @@ export default {
             this.$emit("paymentsOrden", items);
         },
         toCreditList() {
-            if(!this.cash_id){
+            if (!this.cash_id) {
                 this.$toast.error("Debe abrir caja para poder dar a cuenta");
                 return;
             }
@@ -2814,6 +2837,7 @@ export default {
                                 if (success) {
                                     for (let i = 0; i < ordens.length; i++) {
                                         let orden = ordens[i];
+                                        if (orden.type_id) continue;
                                         let newPrice = data[i];
                                         if (!orden.original_price) {
                                             orden.original_price = orden.price;
@@ -2835,6 +2859,7 @@ export default {
                                 }
                             }
                         } catch (e) {
+                            console.log("🚀 ~ getCommercialTreatment ~ e:", e);
                             this.$toast.error(
                                 "Error al obtener el tratamiento comercial"
                             );
@@ -2861,11 +2886,12 @@ export default {
                                 if (!orden.original_price) {
                                     orden.original_price = orden.price;
                                 }
+
                                 let price = orden.original_price;
                                 let factor = commercial_treatment_categories.find(
                                     c => c.category_item_id == category_id
                                 );
-                                if (factor) {
+                                if (factor && orden.type_id == null) {
                                     let amount = Number(factor.amount);
                                     if (is_amount) {
                                         if (price >= amount) {
@@ -2970,7 +2996,7 @@ export default {
             this.foodDefaults = [...this.foodDefaults, foodDefault];
         },
         openCredit() {
-            if(!this.cash_id){
+            if (!this.cash_id) {
                 this.$toast.error("Debe abrir caja para poder dar a crédito");
                 return;
             }
@@ -3175,7 +3201,7 @@ export default {
                 return this.$toast.error("Clientes modificado no creado");
             }
             if (this.itemDefault == null) {
-            //   this.$emit("update:variation", false);
+                //   this.$emit("update:variation", false);
                 this.variation = false;
 
                 return this.$toast.error(
@@ -3583,7 +3609,7 @@ export default {
         },
         limpiarForm() {
             this.commercialTreatmentId = null;
-            this.quotation_stock = false;
+            this.quotation_stock = this.isSeller;
             this.$emit("limpiarForm");
         },
         openApart() {
@@ -3827,7 +3853,7 @@ export default {
             } else {
                 form_submit.items = this.localOrden;
             }
-            if(this.clientTableData.ref){
+            if (this.clientTableData.ref) {
                 form_submit.ref = this.clientTableData.ref;
             }
             form_submit.items = this.mergeItems(form_submit.items);
@@ -3873,7 +3899,6 @@ export default {
         },
 
         calculateTotal(w = null) {
-            
             this.totalOrdenItems = 0.0;
             this.total = 0.0;
             this.totalOrden = 0.0;

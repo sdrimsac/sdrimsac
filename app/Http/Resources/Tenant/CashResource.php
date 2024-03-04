@@ -15,6 +15,7 @@ class CashResource extends JsonResource
     public function toArray($request)
     {
             return [
+                'group_code' => $this->group_code,
                 'id' => $this->id,
                 'stock_file' => $this->stock_file,
                 'user_id' => $this->user_id,

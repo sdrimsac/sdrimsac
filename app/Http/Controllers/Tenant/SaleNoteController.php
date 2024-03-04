@@ -75,6 +75,7 @@ use App\Models\Tenant\HotelRentDocument;
 use App\Models\Tenant\HotelRentItem;
 use App\Models\Tenant\ItemUnitType;
 use App\Models\Tenant\NumberActivity;
+use App\Models\Tenant\Quotation;
 use App\Models\Tenant\SaleNoteCredit;
 use App\Models\Tenant\SaleNotePromotion;
 use App\Models\Tenant\Seller;
@@ -941,7 +942,12 @@ class SaleNoteController extends Controller
                 $saleNoteUpdate->save();
             });
 
-
+            if($this->sale_note->quotation_id){
+                $quotation = Quotation::find($this->sale_note->quotation_id);
+                $quotation->changed = true;
+                $quotation->save();
+            }
+            
 
             $establishment = Establishment::where('id', $this->sale_note->establishment_id)->first();
             if (auth()->user()->type != 'admin') {

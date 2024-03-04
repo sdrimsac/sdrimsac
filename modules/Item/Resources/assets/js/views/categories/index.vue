@@ -25,6 +25,14 @@
                         <button
                             type="button"
                             class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto"
+                            @click.prevent="clickImport()"
+                        >
+                            <i class="icofont-plus-circle"></i>
+                            <span>Importar</span>
+                        </button>
+                        <button
+                            type="button"
+                            class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto"
                             @click.prevent="clickCreate()"
                         >
                             <i class="icofont-plus-circle"></i>
@@ -55,15 +63,16 @@
                     <h6 class="my-0 text-white">Listado de {{ title }}</h6>
                 </div>
                 <div class="card-body">
-                    <data-table :resource="resource"
-                    @clickReport="clickReport"
-                    >
+                    <data-table :resource="resource" @clickReport="clickReport">
                         <tr slot="heading">
                             <th>#</th>
                             <th>Nombre</th>
-                                     <th>Creado por</th>
+                            <th>Identificador</th>
+                            <th>Creado por</th>
                             <th>Fecha creación</th>
-                            <th v-if="configuration.pos_drag_category"> Caja arrastre</th>
+                            <th v-if="configuration.pos_drag_category">
+                                Caja arrastre
+                            </th>
                             <th class="text-right">Acciones</th>
                         </tr>
 
@@ -71,8 +80,9 @@
                         <tr slot-scope="{ index, row }">
                             <td>{{ index }}</td>
                             <td>{{ row.name }}</td>
+                            <td>{{ row.identifier }}</td>
                             <td>
-                                {{row.user_name}}
+                                {{ row.user_name }}
                             </td>
                             <td>{{ row.created_at }}</td>
                             <td v-if="configuration.pos_drag_category">
@@ -106,6 +116,7 @@
                     :showDialog.sync="showDialog"
                     :recordId="recordId"
                 ></category-form>
+                <import-form :showDialog.sync="showImportDialog"></import-form>
             </div>
         </div>
     </div>
@@ -113,19 +124,21 @@
 
 <script>
 import CategoryForm from "./form.vue";
+import ImportForm from "./import.vue";
 import DataTable from "../../../../../../../resources/js/components/DataTable.vue";
 import { deletable } from "../../../../../../../resources/js/mixins/deletable";
 export default {
-    props:["configuration"],
+    props: ["configuration"],
     mixins: [deletable],
-    components: { DataTable, CategoryForm },
+    components: { DataTable, CategoryForm, ImportForm },
     data() {
         return {
             title: null,
             showDialog: false,
             resource: "items/categories",
             recordId: null,
-            loading: false
+            loading: false,
+            showImportDialog: false
         };
     },
     created() {
@@ -133,9 +146,16 @@ export default {
         this.title = "Categorías";
     },
     methods: {
-                clickReport(query = null) {
+        clickImport() {
+            this.showImportDialog = true;
+        },
+        clickReport(query = null) {
             let { column, value } = query;
-            window.open(`/items/categories/export?column=${column||''}&value=${value||''}`, '_blank');
+            window.open(
+                `/items/categories/export?column=${column ||
+                    ""}&value=${value || ""}`,
+                "_blank"
+            );
         },
         async changeDrag(row) {
             try {

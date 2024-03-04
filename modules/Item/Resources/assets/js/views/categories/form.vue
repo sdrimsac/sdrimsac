@@ -10,6 +10,13 @@
                             <small class="form-control-feedback" v-if="errors.name" v-text="errors.name[0]"></small>
                         </div>
                     </div>
+                        <div class="col-md-12">
+                        <div class="form-group" :class="{'has-danger': errors.identifier}">
+                            <label class="control-label">Identificador</label>
+                            <el-input v-model="form.identifier"> <i slot="prefix" class="el-icon-edit-outline"></i></el-input>
+                            <small class="form-control-feedback" v-if="errors.identifier" v-text="errors.identifier[0]"></small>
+                        </div>
+                    </div>
                     <div class="col-md-12">
                         <div class="form-group" :class="{'has-danger': errors.icono}">
                        <label class="control-label">Icono </label>

@@ -117,6 +117,8 @@
                         name="quotations"
                     >
                         <document-print-detail
+                            @sendOrdens="sendOrdens"
+                            @closeDialog="close"
                             :configuration="config"
                             :sender="sender"
                             :company="company"
@@ -188,6 +190,9 @@ export default {
         };
     },
     methods: {
+        sendOrdens(orden){
+            this.$emit("sendOrdens", orden);
+        },
         closeCpe() {
             this.showModalGenerateCPE = false;
             this.close();
@@ -292,7 +297,7 @@ export default {
                 //tamaño a4
                 if (type == "80") {
                     url = `/sale-notes/print/${external_id}/a4`;
-                } else if (type == "03" || type == "01") {
+                } else if (type == "03" || type == "01" || type == "07" || type == "08") {
                     url = `/print/document/${external_id}/a4`;
                 } else {
                     url = `/quotations/print/${external_id}/a4`;

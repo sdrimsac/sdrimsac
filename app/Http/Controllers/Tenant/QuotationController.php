@@ -28,6 +28,7 @@ use Illuminate\Support\Str;
 use App\CoreFacturalo\Requests\Inputs\Common\PersonInput;
 use App\CoreFacturalo\Requests\Inputs\Common\EstablishmentInput;
 use App\CoreFacturalo\Helpers\Storage\StorageDocument;
+use App\CoreFacturalo\Requests\Inputs\Functions;
 use App\CoreFacturalo\Template;
 use Mpdf\Mpdf;
 use Mpdf\HTMLParserMode;
@@ -36,12 +37,18 @@ use Mpdf\Config\FontVariables;
 use Exception;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\QuotationEmail;
+use App\Models\Tenant\Cash;
 use App\Models\Tenant\PaymentMethodType;
 use Modules\Finance\Traits\FinanceTrait;
 use App\Models\Tenant\Configuration;
 use App\Models\Tenant\Seller;
 use App\Models\Tenant\StateType;
-
+use Carbon\Carbon;
+use Modules\Restaurant\Events\OrdenEvent;
+use Modules\Restaurant\Events\PrintEvent;
+use Modules\Restaurant\Models\Orden;
+use Modules\Restaurant\Models\OrdenItem;
+use Modules\Restaurant\Models\Table;
 
 class QuotationController extends Controller
 {
@@ -51,6 +58,93 @@ class QuotationController extends Controller
     protected $quotation;
     protected $company;
 
+    public function itemsToCash($id){
+        $quotation = Quotation::find($id);
+        $cash = Cash::where('user_id', auth()->user()->id)->where('state', 1)->first();
+        if(!$cash){
+            return [
+                'success' => false,
+                'message' => 'No se encontró caja activa'
+            ];
+        }
+        // $cash_id = $cash->id;
+        try{
+            DB::beginTransaction();
+            $configuration = Configuration::firstOrFail();
+            $customer_id = $quotation->customer_id;
+            $customer = Person::find($customer_id);
+            $customer_name = $customer->name;
+            $items = $quotation->items;
+            $user_id = auth()->id();
+            $table_caja_id = Table::get_caja();
+            $table_caja = Table::find($table_caja_id);
+            $table_caja->status_table_id = 2;
+            $table_caja->save();
+            $status_orden_id = 1;
+            $orden = Orden::create([
+                'table_id' => $table_caja_id,
+                'status_orden_id' => $status_orden_id,
+                'date' => date('Y-m-d'),
+                'ref' => $customer_name
+            ]);
+            $orden_items_ids = [];
+            $orden_items_ids_for_kitchen = [];
+            foreach ($items as $it) {
+                $item = Item::find($it->item_id)
+                ->load('food');
+                $item = $item->toArray();
+                $orden_item = new OrdenItem;
+                $orden_item->food_id = $item["food"]["id"];
+                $orden_item->observations = $item['observation'] ?? '-';
+                $orden_item->quantity = $it->quantity;
+                $orden_item->unit_type_id = Functions::valueKeyInArray($item, 'type_id', null);
+                $orden_item->price = $it->unit_price;
+                $orden_item->user_id = $user_id;
+                $orden_item->orden_id = $orden->id;
+                $orden_item->to_carry = Functions::valueKeyInArray($item, 'to_carry', 0);
+                $orden_item->status_orden_id = 1;
+                $orden_item->date = Carbon::today();
+                $orden_item->time = date('H:i:s');
+                $orden_item->area_id = $item['food']['area_id'];
+                $orden_item->save();
+                $orden_items_ids[] = $orden_item->id;
+                $orden_items_ids_for_kitchen[] = [
+                    "orden_id" => $orden_item->id,
+                    "area_id" => $orden_item->area_id
+                ];
+                event(new OrdenEvent($orden_item->id));
+                $print_box = $configuration->print_commands;
+                $print_kitchen = $configuration->print_kitchen;
+                if ($print_kitchen) {
+                    $ids_areas = array_unique(array_column($orden_items_ids_for_kitchen, "area_id"));
+                    foreach ($ids_areas as $area_id) {
+                        $filtered = array_column(array_filter($orden_items_ids_for_kitchen, function ($a) use ($area_id) {
+                            return $area_id == $a['area_id'];
+                        }), "orden_id");
+                        // event(new PrintEvent($orden->id, "0", true, $area_id, $filtered));
+                    }
+                }
+                // $isFromBox = $this->isArea("CAJ", $user->area_id);
+    
+                // if ($print_box) {
+                //     event(new PrintEvent($orden->id, "0", true, $this->getBoxArea(), $orden_items_ids));
+                // }
+                
+            }
+            DB::commit();
+            return [
+                'success' => true,
+                'orden' => Orden::find($orden->id),
+                'message' => 'Items enviados a caja'
+            ];
+        }
+        catch(Exception $e){
+            return [
+                'success' => false,
+                'message' => $e->getMessage()
+            ];
+        }
+    }
     public function index()
     {
         $company = Company::select('soap_type_id')->first();

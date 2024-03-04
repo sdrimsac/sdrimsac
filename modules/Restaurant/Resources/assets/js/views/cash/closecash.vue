@@ -16,7 +16,7 @@
                             }"
                         >
                             <label class="control-label disabled w-100"
-                                >Fecha
+                                >Fechaa
                             </label>
                             <h3>
                                 {{ date_closed }}
@@ -218,6 +218,16 @@
                                     <td></td>
                                     <td class="text-center">
                                         <h6>{{ totalBills.toFixed(2) }}</h6>
+                                    </td>
+                                </tr>
+                                <tr v-if="configuration.health_network">
+                                    <td colspan="3">
+                                        <el-button
+                                            type="primary"
+                                            @click="showSeriesBills"
+                                        >
+                                            INGRESAR SERIES
+                                        </el-button>
                                     </td>
                                 </tr>
                             </tfoot>
@@ -483,6 +493,10 @@
                 </span>
             </el-dialog>
         </div>
+        <series-bills-dialog
+            :showDialog.sync="showSeriesBillsDialog"
+            :seriesBills.sync="seriesBills"
+        ></series-bills-dialog>
     </div>
 </template>
 <style>
@@ -497,8 +511,11 @@
 //'../../../../components/DataTable.vue'
 import { deletable } from "../../../../../../../resources/js/mixins/deletable";
 ///mixins/deletable'
-
+import SeriesBillsDialog from "./series_bills.vue";
 export default {
+    components: {
+        SeriesBillsDialog
+    },
     mixins: [deletable],
     props: ["showDialogClose", "recordId", "fromBox", "configuration"],
     data() {
@@ -518,11 +535,16 @@ export default {
             totalSales: 0,
             totalCoins: 0,
             totalBills: 0,
-            difference: 0
+            difference: 0,
+            seriesBills: {},
+            showSeriesBillsDialog: false
         };
     },
 
     methods: {
+        showSeriesBills() {
+            this.showSeriesBillsDialog = true;
+        },
         returnTextObfuscated(text) {
             let textObfuscated = "";
             for (let i = 0; i < text.length; i++) {
@@ -564,6 +586,7 @@ export default {
             this.difference = (this.totalSales - this.final_balance).toFixed(2);
         },
         async clickCloseCash() {
+            
             const h = this.$createElement;
             this.$msgbox({
                 title: "Cerrar caja",
@@ -627,7 +650,8 @@ export default {
                 id: this.recordId,
                 final_balance: this.final_balance,
                 counter: this.count,
-                difference: this.difference
+                difference: this.difference,
+                bill_series: this.seriesBills,
             };
             try {
                 this.loading = true;
@@ -669,7 +693,7 @@ export default {
             // );
             //     }, 3000);
             // }
-            this.closeDialog(); 
+            this.closeDialog();
         }
     }
 };

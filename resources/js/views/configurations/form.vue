@@ -2049,6 +2049,36 @@
                                             ></el-switch>
                                         </div>
                                     </div>
+                                    <div class="col-md-6 mt-4">
+                                        <div class="form-group">
+                                            <label class="control-label w-100">
+                                                Turno principal
+                                                <el-tooltip
+                                                    class="item"
+                                                    effect="dark"
+                                                    content="Turno elegido para agrupar las cajas"
+                                                    placement="top-start"
+                                                >
+                                                    <i
+                                                        class="fa fa-info-circle"
+                                                    ></i>
+                                                </el-tooltip>
+                                            </label>
+
+                                            <el-select
+                                                v-model="form.turn_principal"
+                                                @change="submit"
+                                                clearable
+                                            >
+                                                <el-option
+                                                    v-for="turn in turns"
+                                                    :key="turn.id"
+                                                    :label="turn.label"
+                                                    :value="turn.id"
+                                                ></el-option>
+                                            </el-select>
+                                        </div>
+                                    </div>
                                 </div>
                             </el-tab-pane>
                             <el-tab-pane label="Impresion" v-if="!isArca">
@@ -2227,6 +2257,21 @@
                                             ></el-switch>
                                         </div>
                                     </div>
+
+                                    <div class="col-md-6 mt-4">
+                                        <div class="form-group">
+                                            <label class="control-label w-100">
+                                                Boticas & Hospital
+                                            </label>
+
+                                            <el-switch
+                                                v-model="form.health_network"
+                                                active-text="Si"
+                                                inactive-text="No"
+                                                @change="submit"
+                                            ></el-switch>
+                                        </div>
+                                    </div>
                                 </div>
                             </el-tab-pane>
                             <el-tab-pane label="Promociones" v-if="!isArca">
@@ -2377,6 +2422,20 @@ export default {
     //
     data() {
         return {
+            turns: [
+                {
+                    id: 1,
+                    label: "MAÑANA"
+                },
+                {
+                    id: 2,
+                    label: "TARDE"
+                },
+                {
+                    id: 3,
+                    label: "NOCHE"
+                }
+            ],
             showAddNumberwhatsapp: false,
             numberWhatsapp: null,
             timer: null,

@@ -53,6 +53,9 @@ class ItemsImport implements ToCollection
             $sale_affectation_igv_type_id = $row[8];
             $affectation_igv_types_exonerated_unaffected = ['20', '21', '30', '31', '32', '33', '34', '35', '36', '37'];
             $category_name = strtoupper($row[14]);
+            if($category_name == ''){
+                $category_name = 'OTROS';
+            }
             $brand_name = strtoupper($row[15]);
             $area_description = strtoupper($row[16]);
             $max_quantity = $row[30];

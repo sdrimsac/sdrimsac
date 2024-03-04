@@ -895,6 +895,79 @@
             </table>
         @endif
 
+        @if (count($bill_series) > 0)
+            @php
+                $bills = [
+                    [
+                        'label' => '10',
+                        'value' => 'diez',
+                    ],
+                    [
+                        'label' => '20',
+                        'value' => 'veinte',
+                    ],
+                    [
+                        'label' => '50',
+                        'value' => 'cincuenta',
+                    ],
+                    [
+                        'label' => '100',
+                        'value' => 'cien',
+                    ],
+                    [
+                        'label' => '200',
+                        'value' => 'doscientos',
+                    ],
+                ];
+                
+            @endphp
+            <table class="border" style="margin-top:10px;">
+                <thead>
+                    <tr>
+                        <th colspan="{{ count($bill_series) }}">
+                            <span style="font-size: 18px !important; font-weight: bold;">
+                                SERIE DE BILLETES
+                            </span>
+                        </th>
+                    </tr>
+                    <tr>
+                        @foreach ($bills as $bill)
+                            <th>
+                                <span class="f12">
+                                    {{ $bill['label'] }}
+                                </span>
+                            </th>
+                        @endforeach
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @if (count($bill_series) > 0)
+                        @php
+                            $maxRows = max(array_map('count', $bill_series));
+                        @endphp
+
+                        @for ($i = 0; $i < $maxRows; $i++)
+                            <tr>
+                                @foreach ($bill_series as $values)
+                                    <td>
+                                        @if (isset($values[$i]))
+                                            <span class="f12">
+                                                {{ $values[$i] }}
+                                            </span>
+                                        @endif
+                                    </td>
+                                @endforeach
+                            </tr>
+                        @endfor
+                    @else
+                        <tr>
+                            <td colspan="{{ count($bill_series) }}">-</td>
+                        </tr>
+                    @endif
+                </tbody>
+            </table>
+        @endif
         <table style="margin-top:10px;">
             <td width="50%">
                 <div style="text-align:center;">
@@ -1374,8 +1447,7 @@
                             @foreach ($orden_items as $idx => $ord_item)
                                 <tr>
                                     @if ($idx == 0)
-                                        <td class="f12 center"
-                                            rowspan="{{ count($orden_items) }}">
+                                        <td class="f12 center" rowspan="{{ count($orden_items) }}">
                                             {{ $name }}
                                         </td>
                                     @endif
@@ -1392,7 +1464,7 @@
                                         </small>
                                     </td>
                                     <td class="f12 right">
-                                        {{ number_format($ord_item['total'],2) }}
+                                        {{ number_format($ord_item['total'], 2) }}
                                     </td>
                                 </tr>
                             @endforeach
@@ -1400,20 +1472,21 @@
                         <tr>
                             <td class="f12 text-left" colspan="2">TOTAL</td>
                             <td class="f12 right">
-                              @php
-                                  $t = array_reduce(
-                                      $credit_list_ordens_customers,
-                                      function ($carry, $item) {
-                                          return $carry + array_reduce(
-                                              $item,
-                                              function ($carry, $item) {
-                                                  return $carry + $item['total'];
-                                              },
-                                              0,
-                                          );
-                                      },
-                                      0,
-                                  );
+                                @php
+                                    $t = array_reduce(
+                                        $credit_list_ordens_customers,
+                                        function ($carry, $item) {
+                                            return $carry +
+                                                array_reduce(
+                                                    $item,
+                                                    function ($carry, $item) {
+                                                        return $carry + $item['total'];
+                                                    },
+                                                    0,
+                                                );
+                                        },
+                                        0,
+                                    );
                                 @endphp
                                 S/ {{ number_format($t, 2) }}
                             </td>

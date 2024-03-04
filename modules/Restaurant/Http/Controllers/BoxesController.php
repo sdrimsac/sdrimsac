@@ -323,7 +323,7 @@ class BoxesController extends Controller
                                     //primer item de document
                                     $first_item = $document->items->first();
                                     $item_document = $first_item->item;
-                                    $description_item = $item_document->description. " - Media tarifa";
+                                    $description_item = $item_document->description . " - Media tarifa";
                                     // $hotel_rent =  $hotel_rent_document->hotel_rent;
                                     // $hotel_rent_item = $hotel_rent->first_hotel_rent_item();
                                     // $table_id = $hotel_rent_item->table_id;
@@ -333,7 +333,7 @@ class BoxesController extends Controller
 
                                 }
                             }
-                            if($item->unit_price !== 0 && $item->unit_price !==  "0.000000"){
+                            if ($item->unit_price !== 0 && $item->unit_price !==  "0.000000") {
                                 if (gettype($id_exist) == "integer") {
                                     $all_items[$id_exist] = [
                                         "price" => $item->unit_price,
@@ -354,7 +354,7 @@ class BoxesController extends Controller
                                         "description" => $description_item,
                                         "quantity" => $item->quantity,
                                         "category" => $this->get_category($item),
-    
+
                                         // "category" => isset($item->item->category) ?  $item->item->category->name : "OTROS",
                                         "total" => $item->total
                                     ];
@@ -1401,8 +1401,10 @@ class BoxesController extends Controller
         $all_credit_invoices_documents = $invoices_credit['documents'];
 
         $all_credit_items = array_merge($all_credit_items, $all_credit_invoices_items);
+        $bill_series = $this->format_bill_series($cash->bill_series);
         try {
             $pdf = PDF::loadView('report::boxes.report_resumen_pdf_pos', compact(
+                "bill_series",
                 "credit_list_ordens_customers",
                 "credit_list_orden",
                 "anulate_documents",
@@ -1443,6 +1445,13 @@ class BoxesController extends Controller
             return ['m' => $e->getMessage()];
         }
         return $pdf->stream('pdf_file.pdf');
+    }
+    function format_bill_series($bill_series)
+    {
+        if ($bill_series == null || count($bill_series) == 0) {
+            return [];
+        }
+        return $bill_series;
     }
     public function reports_resumen_type_(Request $request)
     {

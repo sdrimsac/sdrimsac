@@ -15,6 +15,7 @@ class CategoryItem extends ModelTenant
 
     protected $fillable = [
         'name',
+        'identifier',
         'icono',
         'pos_drag',
         'user_id'

@@ -60,13 +60,18 @@ class DashboardController extends Controller
     public function pos()
     {
         $user = auth()->user();
-        $cash_worker = WorkersType::where('description', 'like', '%CAJ%')->orWhere('description', 'like', '%caj%')->first();
-        if ($cash_worker) {
-            $id = $cash_worker->id;
-
-            if ($user->worker_type_id != $id) {
-                return redirect('/');
+        $worker_types = WorkersType::where(function ($query) {
+            $searchValue = '%search_value%';
+            foreach (['CAJ', 'caj', 'VEN', 'ven'] as $value) {
+                $query->orWhere('description', 'LIKE', str_replace('search_value', $value, $searchValue));
             }
+        })->get();
+        $worker_type_ids = $worker_types->pluck('id');
+        if (!$worker_type_ids->contains($user->worker_type_id)) {
+
+            // if ($user->worker_type_id != $id) {
+                return redirect('/');
+            // }
         }
         $user_id = $user->id;
         $cash = Cash::where('user_id', $user_id)

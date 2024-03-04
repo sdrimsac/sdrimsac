@@ -1,10 +1,12 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Modules\Item\Http\Controllers\CategoryController;
 use Modules\Item\Http\Controllers\ItemLotsGroupController;
 
 Route::get('lotes/excel', [ItemLotsGroupController::class, 'excel']);
 Route::get('lotes/to_due/excel', [ItemLotsGroupController::class, 'to_due_excel']);
+Route::get('items/categories/excel', [CategoryController::class, 'export']);
 Route::middleware(['auth', 'locked.tenant'])->group(function () {
 
     Route::prefix('manufactured')->group(function (){
@@ -32,6 +34,7 @@ Route::middleware(['auth', 'locked.tenant'])->group(function () {
     Route::get('items/categories/update_drag/{id}', 'CategoryController@changeDrag');
     Route::get('items/categories/drag', 'CategoryController@recordsDrag');
     Route::get('items/categories/columns', 'CategoryController@columns');
+    Route::post('items/categories/import', 'CategoryController@import');
     Route::get('items/categories/record/{category}', 'CategoryController@record');
     Route::get('items/categories/update_category/{category_id}/{item_id}', 'CategoryController@update_category');
     Route::post('items/categories/uploads', 'CategoryController@uploads');
