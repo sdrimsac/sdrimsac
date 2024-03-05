@@ -187,23 +187,23 @@ class TransferPlaceController extends Controller
                     $it->item_id
                 )->where('warehouse_id', $transfer->warehouse_id)->first();
                 if ($item) {
-                    $item->stock -= $it->quantity;
+                    $item->stock += $it->quantity;
                     $item->save();
                 }
-                $item_destination = ItemWarehouse::where(
-                    'item_id',
-                    $it->item_id
-                )->where('warehouse_id', $transfer->warehouse_id_destination)->first();
-                if ($item_destination) {
-                    $item_destination->stock += $it->quantity;
-                    $item_destination->save();
-                } else {
-                    $item_destination = new ItemWarehouse;
-                    $item_destination->item_id = $it->item_id;
-                    $item_destination->warehouse_id = $transfer->warehouse_id_destination;
-                    $item_destination->stock = $it->quantity;
-                    $item_destination->save();
-                }
+                // $item_destination = ItemWarehouse::where(
+                //     'item_id',
+                //     $it->item_id
+                // )->where('warehouse_id', $transfer->warehouse_id_destination)->first();
+                // if ($item_destination) {
+                //     $item_destination->stock += $it->quantity;
+                //     $item_destination->save();
+                // } else {
+                //     $item_destination = new ItemWarehouse;
+                //     $item_destination->item_id = $it->item_id;
+                //     $item_destination->warehouse_id = $transfer->warehouse_id_destination;
+                //     $item_destination->stock = $it->quantity;
+                //     $item_destination->save();
+                // }
 
                 $inventory = new Inventory;
                 $inventory->type = 2;
