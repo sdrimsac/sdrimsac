@@ -2490,7 +2490,7 @@ export default {
                     mensaje:
                         "Su comprobante de pago electrónico " +
                         number +
-                        "por S/" +
+                        " por S/" +
                         this.form.total +
                         " de *" +
                         this.establishments.description +

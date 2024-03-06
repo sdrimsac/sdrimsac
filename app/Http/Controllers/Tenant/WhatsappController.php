@@ -9,6 +9,7 @@ use App\Models\Tenant\Document;
 use App\Models\Tenant\SaleNote;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Jobs\WhatsappSendDocumentProccess;
 use App\Models\Tenant\Cash;
 use App\Models\Tenant\Configuration;
 use App\Models\Tenant\Quotation;
@@ -17,7 +18,9 @@ use App\Models\System\Configuration as Config;
 use App\Models\Tenant\Company;
 use App\Models\Tenant\Dispatch;
 use App\Models\Tenant\NumberActivity;
+use App\Traits\JobReportTrait;
 use Exception;
+use Hyn\Tenancy\Environment;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -25,6 +28,7 @@ use PhpOffice\PhpSpreadsheet\Style\NumberFormat\Wizard\Number;
 
 class WhatsappController extends Controller
 {
+    use JobReportTrait;
     protected $client;
     public function sendSupportMessage($message)
     {
@@ -36,8 +40,8 @@ class WhatsappController extends Controller
     public function sendMessageAll($message)
     {
         $company = Company::first();
-        $name = "*".$company->name."*: ";
-        $message = $name.$message;
+        $name = "*" . $company->name . "*: ";
+        $message = $name . $message;
         $configuration = Configuration::first();
         $number_activity = $configuration->number_activity;
         if ($number_activity) {
@@ -276,6 +280,22 @@ class WhatsappController extends Controller
     }
     public function sendwhatsapp(Request $request)
     {
+        $website = $this->getTenantWebsite();
+        // $message,
+        // $website_id,
+        // $url_file,
+        // $document_id,
+        // $document_type_id,
+        // $xml,
+        // $customer_telephone
+        $hostname =  app(Environment::class)->hostname();
+        $fqdn = $hostname->fqdn;
+        WhatsappSendDocumentProccess::dispatch($request->mensaje, $website->id, $request->url_file, $request->document_id, $request->document_type_id, $request->xml, $request->customer_telephone, $fqdn);
+        return [
+            "success" => true,
+            "message" => "Enviando documento por whatsapp"
+        ];
+
         $message = $request->mensaje;
         $url1 = url("");
         $external_id = "";
