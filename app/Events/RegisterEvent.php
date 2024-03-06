@@ -12,7 +12,6 @@ use App\Models\Tenant\SaleNote;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
-use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 use Modules\Restaurant\Models\Area;
 use Modules\Restaurant\Models\Food;
@@ -23,13 +22,14 @@ use App\Models\Tenant\Box;
 
 class RegisterEvent implements ShouldBroadcast
 {
-    use Dispatchable, InteractsWithSockets, SerializesModels;
+    use  InteractsWithSockets, SerializesModels;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
+    public $broadcastQueue = null;
     public $register;
     protected $model;
     protected $data;
