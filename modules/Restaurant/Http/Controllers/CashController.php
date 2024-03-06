@@ -29,6 +29,7 @@ use App\Http\Resources\Tenant\CashCollection;
 use App\Http\Resources\Tenant\DocumentCollection;
 use App\Http\Resources\Tenant\QuotationCollection;
 use App\Http\Resources\Tenant\SaleNoteCollection;
+use App\Jobs\WhatsappSendCashReportProccess;
 use App\Models\Tenant\BankAccount;
 use App\Models\Tenant\CashIncomePrincipal;
 use App\Models\Tenant\Catalogs\AttributeType;
@@ -44,6 +45,7 @@ use App\Models\Tenant\Quotation;
 use App\Models\Tenant\Receipt;
 use App\Models\Tenant\SaleNoteItem;
 use App\Models\Tenant\SaleNotePayment;
+use App\Traits\JobReportTrait;
 use Barryvdh\Debugbar\Twig\Extension\Dump;
 use GuzzleHttp\Psr7\Response;
 use Hyn\Tenancy\Environment;
@@ -58,9 +60,9 @@ use Modules\Restaurant\Models\BoxesDetail;
 use Mpdf\Mpdf;
 use NumberFormatter;
 
-class CashController extends Controller
+class CashController extends Controller 
 {
-
+    use JobReportTrait;
     public function observ_register(Request $request)
     {
 
@@ -1620,61 +1622,64 @@ class CashController extends Controller
         Box::where('cash_id', $id)->update(['close' => date('Y-m-d'), 'state' => 0]);
         $all_cash = Box::where('cash_id', $id)->where('method', 'Efectivo')->sum('amount');
         $user_name = $cash->user->name;
+        $website = $this->getTenantWebsite();
+        $hostname =  app(Environment::class)->hostname();
+        $fqdn = $hostname->fqdn;
+        WhatsappSendCashReportProccess::dispatch($website->id, $cash->id, $user_name,$fqdn);
         $configuration = Configuration::first();
        
-        $number_activity = $configuration->number_activity;
-        $hostname =  app(Environment::class)->hostname();
-        $resource = "http://" . $hostname->fqdn . "/caja/report-boxes/reports_resumen_type?cash_id=" . $id;
-        $request = new Request(
-            [
-                'from_server' => true,
-                'sender' => 'sdrimsac',
-                'number' => $number_activity,
-                'resource' => $resource,
-                'file_name' => 'Reporte_Caja' . Carbon::now()->format("Y-m-d"),
-                'message' => "Caja cerrada por " . $user_name
-            ]
-        );
-        if ($number_activity) {
+        // $number_activity = $configuration->number_activity;
+        // $resource = "http://" . $hostname->fqdn . "/caja/report-boxes/reports_resumen_type?cash_id=" . $id;
+        // $request = new Request(
+        //     [
+        //         'from_server' => true,
+        //         'sender' => 'sdrimsac',
+        //         'number' => $number_activity,
+        //         'resource' => $resource,
+        //         'file_name' => 'Reporte_Caja' . Carbon::now()->format("Y-m-d"),
+        //         'message' => "Caja cerrada por " . $user_name
+        //     ]
+        // );
+        // if ($number_activity) {
 
-            (new WhatsappController)->sendHistorial($request);
-        }
-        $numbers = NumberActivity::all();
-        foreach ($numbers as $number) {
-            $request['number'] = $number->number;
-            (new WhatsappController)->sendHistorial($request);
-        }
+        //     (new WhatsappController)->sendHistorial($request);
+        // }
+        // $numbers = NumberActivity::all();
+        // foreach ($numbers as $number) {
+        //     $request['number'] = $number->number;
+        //     (new WhatsappController)->sendHistorial($request);
+        // }
 
-        $resource = "http://" . $hostname->fqdn . "/caja/report-product-warehouse-w?user_id=" . $cash->user_id."&cash_id=".$cash->id;
-        $file = file_get_contents($resource);
+        // $resource = "http://" . $hostname->fqdn . "/caja/report-product-warehouse-w?user_id=" . $cash->user_id."&cash_id=".$cash->id;
+        // $file = file_get_contents($resource);
 
-        $file_name = $cash->id . "_" . "Stock_al_cerrar_caja_" . Carbon::now()->format("Y-m-d") . ".xlsx";
+        // $file_name = $cash->id . "_" . "Stock_al_cerrar_caja_" . Carbon::now()->format("Y-m-d") . ".xlsx";
 
-        $directory = 'public' . DIRECTORY_SEPARATOR . 'stock_excel_cierre_caja';
-        Storage::disk('tenant')->put($directory . DIRECTORY_SEPARATOR . $file_name, $file);
+        // $directory = 'public' . DIRECTORY_SEPARATOR . 'stock_excel_cierre_caja';
+        // Storage::disk('tenant')->put($directory . DIRECTORY_SEPARATOR . $file_name, $file);
 
-        $cash->stock_file = $file_name;
-        $cash->save();
+        // $cash->stock_file = $file_name;
+        // $cash->save();
 
 
-        $request = new Request(
-            [
-                'from_server' => true,
-                'sender' => 'sdrimsac',
-                'number' => $number_activity,
-                'resource' => $resource,
-                'file_name' => 'Stock_al_cerrar_caja_' . Carbon::now()->format("Y-m-d") . ".xlsx",
-                'message' => "Caja cerrada por " . $user_name
-            ]
-        );
-        if ($number_activity) {
-            (new WhatsappController)->sendHistorial($request);
-        }
-        $numbers = NumberActivity::all();
-        foreach ($numbers as $number) {
-            $request['number'] = $number->number;
-            (new WhatsappController)->sendHistorial($request);
-        }
+        // $request = new Request(
+        //     [
+        //         'from_server' => true,
+        //         'sender' => 'sdrimsac',
+        //         'number' => $number_activity,
+        //         'resource' => $resource,
+        //         'file_name' => 'Stock_al_cerrar_caja_' . Carbon::now()->format("Y-m-d") . ".xlsx",
+        //         'message' => "Caja cerrada por " . $user_name
+        //     ]
+        // );
+        // if ($number_activity) {
+        //     (new WhatsappController)->sendHistorial($request);
+        // }
+        // $numbers = NumberActivity::all();
+        // foreach ($numbers as $number) {
+        //     $request['number'] = $number->number;
+        //     (new WhatsappController)->sendHistorial($request);
+        // }
         
         $principal_cash =  $configuration->principal_cash;
         if ($principal_cash) {

@@ -390,10 +390,10 @@ class WhatsappController extends Controller
 
         if ($from_server) {
 
-            $content_file = file_get_contents($resource, 0, stream_context_create(["http" => ["timeout" => 60]]));
+            $content_file = file_get_contents($resource, 0, stream_context_create(["http" => ["timeout" => 300]]));
         } else {
 
-            $content_file = file_get_contents($request->root() . $resource, 0, stream_context_create(["http" => ["timeout" => 60]]));
+            $content_file = file_get_contents($request->root() . $resource, 0, stream_context_create(["http" => ["timeout" => 300]]));
         }
         $this->client = new Client([
             'verify' => false,

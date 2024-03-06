@@ -79,6 +79,7 @@ class WorkersTypeController extends Controller
     }
     public function store(WorkersTypeRequest $request)
     {
+        
         $id = $request->input('id');
         $worker_type = WorkersType::firstOrNew(['id' => $id]);
         $worker_type->fill($request->all());

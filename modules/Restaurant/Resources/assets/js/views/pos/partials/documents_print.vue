@@ -190,7 +190,7 @@ export default {
         };
     },
     methods: {
-        sendOrdens(orden){
+        sendOrdens(orden) {
             this.$emit("sendOrdens", orden);
         },
         closeCpe() {
@@ -208,6 +208,12 @@ export default {
         },
         async printEvent(url) {
             console.log(url);
+            const response = await this.$http.post(`/caja/re-print`, {
+                url: url
+            });
+            // console.log("🚀 ~ printEvent ~ response:", response);
+
+            return;
             let paperConfig = {
                 scaleContent: false
             };
@@ -289,15 +295,19 @@ export default {
                     });
             }
             let typePrint = this.establishment.format_printer;
-            console.log("🚀 ~ file: documents_print.vue:287 ~ printData ~ typePrint:", typePrint)
-            
+
             let url = "";
             //colocar una condicion para cada caso desde impresira de 80mm hasta las a4 y a5
             if (typePrint == "1") {
                 //tamaño a4
                 if (type == "80") {
                     url = `/sale-notes/print/${external_id}/a4`;
-                } else if (type == "03" || type == "01" || type == "07" || type == "08") {
+                } else if (
+                    type == "03" ||
+                    type == "01" ||
+                    type == "07" ||
+                    type == "08"
+                ) {
                     url = `/print/document/${external_id}/a4`;
                 } else {
                     url = `/quotations/print/${external_id}/a4`;

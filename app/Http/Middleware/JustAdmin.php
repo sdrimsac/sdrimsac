@@ -62,7 +62,7 @@ class JustAdmin
             "reports/inventory", "reports/stockmin", "reports/kardex",
         ];
 
-        if ($type != 'admin' && $type != "superadmin" || $isLogistic||$isArca) {
+        if ($type != 'admin' && $type != "superadmin" || $isLogistic || $isArca) {
             if ($isAccountant) {
                 $pathPass = in_array($path, $paths);
                 if (!$pathPass) {

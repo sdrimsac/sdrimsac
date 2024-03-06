@@ -24,10 +24,20 @@ use Modules\Restaurant\Models\WorkersType;
 use Illuminate\Support\Facades\Session;
 use Modules\College\Models\CollegeParent;
 use Modules\College\Models\CollegeStudent;
+use Modules\Restaurant\Events\PrintEvent;
 use Modules\Restaurant\Models\Table;
 
 class RestaurantController extends Controller
 {
+    public function rePrint(Request $request)
+    {
+        $url = $request->url;
+        event(new PrintEvent(null, 'URL', true, null, [], false, false, $url));
+        return [
+            'success' => true,
+            'message' => 'Imprimiendo'
+        ];
+    }
     /**
      * Display a listing of the resource.
      * @return Response
@@ -81,15 +91,15 @@ class RestaurantController extends Controller
                     $query->where('parent_id', $row->id);
                 });
             })
-            
-            ->where('active', 1)
-            ->get()->transform(function ($student) {
-                return [
-                    'id' => $student->id,
-                    'name' => $student->person->name,
-                    'class' => mb_strtoupper($student->classroom->description),
-                ];
-            });
+
+                ->where('active', 1)
+                ->get()->transform(function ($student) {
+                    return [
+                        'id' => $student->id,
+                        'name' => $student->person->name,
+                        'class' => mb_strtoupper($student->classroom->description),
+                    ];
+                });
             return [
                 'students' => $students,
                 'id' => $row->id,
@@ -222,10 +232,10 @@ class RestaurantController extends Controller
             }
             $worker_type = $user->worker_type;
             $description =  "";
-            if($worker_type){
+            if ($worker_type) {
                 $description =  strtolower($worker_type->description);
             }
-            if ($user->type == "admin" || $user->type == "superadmin" ||$description == "contador" || $description == "arca") {
+            if ($user->type == "admin" || $user->type == "superadmin" || $description == "contador" || $description == "arca") {
                 return ['success' => true,];
             }
             $pos = false;
@@ -239,18 +249,13 @@ class RestaurantController extends Controller
                 $waiter = true;
             } else if (strtolower($user->worker_type->description) == "peaje") {
                 $collector =  true;
-            } 
-            else if (strtolower($user->worker_type->description) == "limpieza") {
+            } else if (strtolower($user->worker_type->description) == "limpieza") {
                 $cleaner =  true;
-            } 
-            else if (strtolower($user->worker_type->description) == "logistica") {
+            } else if (strtolower($user->worker_type->description) == "logistica") {
                 $logistic =  true;
-            } 
-            else if (strtolower($user->worker_type->description) == "mantenimiento") {
+            } else if (strtolower($user->worker_type->description) == "mantenimiento") {
                 $maintenance =  true;
-            }
-            
-            else {
+            } else {
                 $cocina = strripos(strtolower($user->area->description), "cocina");
                 $caja = strripos(strtolower($user->area->description), "caja");
                 $hotel = strripos(strtolower($user->area->description), "hotel");
@@ -259,16 +264,13 @@ class RestaurantController extends Controller
                     $kitchen = true;
                 } else if ($caja !== false) {
                     $pos = true;
-                }
-                
-                else if($hotel !== false ){
+                } else if ($hotel !== false) {
                     $pos = true;
-                }
-                else {
+                } else {
                     $kitchen = true;
                 }
             }
-            $series = Series::whereIn('document_type_id', ["01","03","80"])->get();
+            $series = Series::whereIn('document_type_id', ["01", "03", "80"])->get();
             $establishment = Establishment::find($user->establishment_id);
             $configuration = Configuration::first();
             $area = Area::find($user->area_id);

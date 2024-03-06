@@ -14,12 +14,17 @@ class WhatsappProccess implements ShouldQueue
     use  Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     protected $message;
+    protected $website_id;
+    protected $url_file;
 
 
-    public function __construct($message)
+    public function __construct($website_id, $message, $url_file = null)
     {
         $this->message = $message;
+        $this->website_id = $website_id;
+        $this->url_file = $url_file;
     }
+
 
     public function handle()
     {

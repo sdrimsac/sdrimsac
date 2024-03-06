@@ -30,6 +30,7 @@ use Modules\Restaurant\Http\Controllers\WorkerController;
 Route::prefix('caja')->group(function () {
     //Route::get('/', 'RestaurantController@index');
     //Route::get('documents', 'OrdenController@printTicket');
+    Route::post('/re-print', [RestaurantController::class, 'rePrint']);
     Route::get('rooms/print_service/{id}', [TableRoomController::class, 'print_service']);
     Route::get('rooms/print_warranty/{id}', [TableRoomController::class, 'print_warranty']);
     Route::get('sale-notes', [App\Http\Controllers\SaleNoteController::class, 'pos'])->name('pos.sale_notes.index')->middleware('redirect.level');

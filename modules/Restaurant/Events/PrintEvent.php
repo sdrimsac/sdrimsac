@@ -28,7 +28,7 @@ class PrintEvent implements ShouldBroadcast
      * @return void
      */
     public $data;
-    public function __construct($id, $document_type = 0, $printing = true, $area_id = null, $ids = [],$isEmit = false,$isPrecuenta=false)
+    public function __construct($id, $document_type = 0, $printing = true, $area_id = null, $ids = [],$isEmit = false,$isPrecuenta=false,$url=null)
     {
 
         $establishment = Establishment::findOrFail(auth()->user()->establishment_id);
@@ -78,6 +78,9 @@ class PrintEvent implements ShouldBroadcast
         // $copies = 0;
         $documentLink = null;
         switch ($document_type) {
+            case "URL":
+                $documentLink = url('').$url;
+                break;
             case "S":
                 // $copies = 1;
                 $documentLink = url('') . "/credit-list/receipt/{$id}/ticket";

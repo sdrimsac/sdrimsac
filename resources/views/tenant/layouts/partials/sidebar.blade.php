@@ -142,7 +142,7 @@
                 </li>
             @endif
 
-            @if ($roleService->isArca())
+            @if ($roleService->isArca() && $config->hotels)
                 <li>
                     <a class="{{ $path[0] === 'caja' && $path[1] === 'rooms' ? 'active' : '' }}"
                         href="{{ url('/caja/rooms') }}">

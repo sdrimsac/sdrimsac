@@ -1002,6 +1002,7 @@ class BoxesController extends Controller
     }
     public function reports_resumen_type(Request $request)
     {
+        ini_set('memory_limit', '4096M');
         $configuration = Configuration::first();
         $total_discount = 0;
         $cash_id = $request->cash_id;
@@ -1402,6 +1403,7 @@ class BoxesController extends Controller
 
         $all_credit_items = array_merge($all_credit_items, $all_credit_invoices_items);
         $bill_series = $this->format_bill_series($cash->bill_series);
+        ini_restore('memory_limit');
         try {
             $pdf = PDF::loadView('report::boxes.report_resumen_pdf_pos', compact(
                 "bill_series",
