@@ -25,7 +25,7 @@ class FormatController extends Controller
 
     public function download(Request $request)
     {
-        ini_set('memory_limit', '2048M');
+        ini_set('memory_limit', '8098M');
         $type = $request->input('type');
         $export = $request->input('export');
         $month = $request->input('month');
