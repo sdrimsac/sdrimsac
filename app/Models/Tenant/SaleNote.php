@@ -94,17 +94,17 @@ class SaleNote extends ModelTenant
     {
         parent::boot();
         //created
-        static::created(function ($model) {
-            $request = Request::capture();
-            $description = "Nota de venta creada";
-            $data = $model->toArray();
-            RegisterMovementTrait::registerCreate(
-                $model,
-                $request,
-                $description,
-                $data
-            );
-        });
+        // static::created(function ($model) {
+        //     $request = Request::capture();
+        //     $description = "Nota de venta creada";
+        //     $data = $model->toArray();
+        //     RegisterMovementTrait::registerCreate(
+        //         $model,
+        //         $request,
+        //         $description,
+        //         $data
+        //     );
+        // });
         static::updated(function ($model) {
             $request = Request::capture();
             $description = null;

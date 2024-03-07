@@ -48,17 +48,17 @@ class Box extends ModelTenant
     {
         parent::boot();
         //created
-        static::created(function ($model) {
-            $request = Request::capture();
-            $description = "Registro de caja creado";
-            $data = $model->toArray();
-            RegisterMovementTrait::registerCreate(
-                $model,
-                $request,
-                $description,
-                $data
-            );
-        });
+        // static::created(function ($model) {
+        //     $request = Request::capture();
+        //     $description = "Registro de caja creado";
+        //     $data = $model->toArray();
+        //     RegisterMovementTrait::registerCreate(
+        //         $model,
+        //         $request,
+        //         $description,
+        //         $data
+        //     );
+        // });
         static::updated(function ($model) {
             $request = Request::capture();
             $original_model = Box::find($model->id);
