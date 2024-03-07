@@ -403,9 +403,9 @@ class PurchaseController extends Controller
                                 'state' => $lot['state']
                             ]);
 
-                            ItemWarehouse::where('item_id', $row['item_id'])
-                                ->where('warehouse_id', $row['warehouse_id'])
-                                ->increment('stock', 1);
+                            // ItemWarehouse::where('item_id', $row['item_id'])
+                            //     ->where('warehouse_id', $row['warehouse_id'])
+                            //     ->increment('stock', 1);
                         }
                     }
 
@@ -420,6 +420,8 @@ class PurchaseController extends Controller
                             ]);
                         }
                     }
+
+                    
                 }
 
                 foreach ($data['payments'] as $payment) {
