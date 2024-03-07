@@ -402,6 +402,10 @@ class PurchaseController extends Controller
                                 'has_sale' => false,
                                 'state' => $lot['state']
                             ]);
+
+                            ItemWarehouse::where('item_id', $row['item_id'])
+                                ->where('warehouse_id', $row['warehouse_id'])
+                                ->increment('stock', 1);
                         }
                     }
 
