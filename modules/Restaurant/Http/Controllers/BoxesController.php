@@ -1379,13 +1379,13 @@ class BoxesController extends Controller
         $total_coins = 0.0;
         $total_coins_virtual = 0;
         foreach ($sales_detail as $sale_detail) {
-            if ($sale_detail["digital"]) {
+            if (isset($sale_detail["digital"])&&$sale_detail["digital"]) {
                 $total_coins_virtual += $sale_detail["sum"];
             }
         }
         $total_coins_transfert =  0;
         foreach ($sales_detail as $sale_detail) {
-            if ($sale_detail["transfer"]) {
+            if (isset($sale_detail["transfer"])&&$sale_detail["transfer"]) {
                 $total_coins_transfert += $sale_detail["sum"];
             }
         }
