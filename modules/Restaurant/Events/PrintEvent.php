@@ -166,6 +166,8 @@ class PrintEvent implements ShouldBroadcast
             'area_id' => $area_id,
             'user_establishment_id' => $user_establishment_id,
         );
+
+        Log::info(json_encode($this->data));
     }
 
     /**
