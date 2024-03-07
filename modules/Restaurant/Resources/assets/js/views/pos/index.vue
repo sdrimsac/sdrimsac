@@ -38,7 +38,12 @@
                                         </span>
                                     </button>
 
-                                    <template v-if="configuration.restaurant && !this.isSeller">
+                                    <template
+                                        v-if="
+                                            configuration.restaurant &&
+                                                !this.isSeller
+                                        "
+                                    >
                                         <template
                                             v-if="
                                                 !configuration.hotels ||
@@ -67,7 +72,8 @@
                                     </template>
                                     <template
                                         v-if="
-                                            configuration.sale_note_credit_cash && !this.isSeller
+                                            configuration.sale_note_credit_cash &&
+                                                !this.isSeller
                                         "
                                     >
                                         <button
@@ -1563,7 +1569,7 @@
 
         <template>
             <payment-form
-            :quotationId.sync="quotationId"
+                :quotationId.sync="quotationId"
                 :clientSaleNoteNumber.sync="clientSaleNoteNumber"
                 :clientSaleNoteDiscount.sync="clientSaleNoteDiscount"
                 :sellers.sync="sellers"
@@ -2007,9 +2013,9 @@ export default {
 
     async created() {
         this.area_id = this.worker.area_id;
-        
+
         this.isSeller = this.checkWorkerType("vendedor");
-        console.log("🚀 ~ created ~ this.isSeller:", this.isSeller)
+        console.log("🚀 ~ created ~ this.isSeller:", this.isSeller);
         localStorage.setItem("quotation_stock", 0);
         let type_code = localStorage.getItem("type_code");
         let barcode = localStorage.getItem("barcode");
@@ -2254,7 +2260,8 @@ export default {
                     id: 5,
                     title: [" Zona "],
                     icon: "fas fa-map-pin ",
-                    visible:!this.isSeller && 
+                    visible:
+                        !this.isSeller &&
                         this.configuration.restaurant &&
                         !this.configuration.college &&
                         this.worker.area.description.toUpperCase() !==
@@ -2266,7 +2273,9 @@ export default {
                     id: 195,
                     title: [" Créditos", "Nota de venta "],
                     icon: "fas fa-cash-register",
-                    visible: this.configuration.sale_note_credit_cash && !this.isSeller
+                    visible:
+                        this.configuration.sale_note_credit_cash &&
+                        !this.isSeller
                 },
                 {
                     id: 171,
@@ -2274,7 +2283,8 @@ export default {
                     icon: "fas fa-map-pin ",
                     visible:
                         this.configuration.hotels &&
-                        this.worker.area.description.toUpperCase() == "HOTEL" && !this.isSeller
+                        this.worker.area.description.toUpperCase() == "HOTEL" &&
+                        !this.isSeller
                 },
                 {
                     id: 6,
@@ -2282,7 +2292,8 @@ export default {
                     icon: "icofont-money-bag",
                     visible:
                         (this.configuration.view_daily_cash ||
-                        this.configuration.view_daily_cash_pin) && !this.isSeller
+                            this.configuration.view_daily_cash_pin) &&
+                        !this.isSeller
                 },
 
                 {
@@ -2302,7 +2313,8 @@ export default {
                     id: 10,
                     title: ["Canjear", "Promocion"],
                     icon: "fas fa-user-tag",
-                    visible: this.configuration.promotions_sell && !this.isSeller
+                    visible:
+                        this.configuration.promotions_sell && !this.isSeller
                 },
                 {
                     id: 33,
@@ -2320,7 +2332,8 @@ export default {
                     id: 102,
                     title: ["Cambiar", "Categorías"],
                     icon: "fa fa-bars",
-                    visible: this.configuration.pos_drag_category && !this.isSeller
+                    visible:
+                        this.configuration.pos_drag_category && !this.isSeller
                 },
                 {
                     id: 103,
@@ -2798,7 +2811,7 @@ export default {
                 this.$toast.warning("Tiene productos seleccionados.");
                 return;
             }
-            if(orden.quotation_id){
+            if (orden.quotation_id) {
                 this.quotationId = orden.quotation_id;
             }
             if (orden.mesa != undefined && orden.id != undefined) {
@@ -3739,9 +3752,17 @@ export default {
             const response = await this.$http.get(
                 `/caja/worker/totales_sales?cash_id=${this.cashId}&send=1`
             );
-            this.$toast(
-                ` Venta Acumulada S/ ` + response.data.total_sales.toFixed(2)
-            );
+            let { total_sales } = response.data;
+            console.log("🚀 ~ view_modal ~ total_sales:", total_sales);
+            if (total_sales) {
+                this.$toast(
+                    ` Venta Acumulada S/ ` +
+                        response.data.total_sales.toFixed(2)
+                );
+            } else {
+                this.$toast(`Sin ventas acumuladas en el día`);
+            }
+
             this.loading = false;
         },
         async list_tables() {

@@ -839,7 +839,10 @@ import _ from "lodash";
 const ServiceForm = () => import("./service_form.vue");
 // const IncompleteForm = () =>
 //     import("../../js/components/payment_incomplete.vue");
-import { functions, exchangeRate } from "../../../../../../../../resources/js/mixins/functions";
+import {
+    functions,
+    exchangeRate
+} from "../../../../../../../../resources/js/mixins/functions";
 export default {
     components: {
         ServiceForm
@@ -1298,7 +1301,7 @@ export default {
             }
         },
         socketWhatsappConfig() {
-return;
+            return;
             let hostName = window.location.hostname;
             let url = `https://${hostName}`;
             this.sender = hostName
@@ -1532,6 +1535,7 @@ return;
                     method,
                     amount: this.form.enter_amount
                 });
+                this.form.enter_amount = 0.0;
             }
         },
         customerForm(isNew) {
@@ -2081,8 +2085,9 @@ return;
             this.isCredit = false;
             this.amount = amount;
 
-            let enter_amount = parseFloat(this.form.enter_amount) || 0;
-            // +this.totalPayments();
+            let enter_amount =
+                (parseFloat(this.form.enter_amount) || 0) +
+                this.totalPayments();
 
             let differen = enter_amount - parseFloat(this.form.total);
 
@@ -2213,7 +2218,8 @@ return;
 
             let payIncomplete = false;
             let different =
-                parseFloat(this.form.enter_amount) -
+                parseFloat(this.form.enter_amount) +
+                this.totalPayments() -
                 parseFloat(this.form.total);
             if (different < 0) {
                 try {

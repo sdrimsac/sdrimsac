@@ -1036,8 +1036,7 @@ export default {
     watch: {
         all_customers(newCustomer, _) {
             this.customers = newCustomer.filter(n => n.number != "88888888");
-        },
-        
+        }
     },
     data() {
         return {
@@ -1108,11 +1107,9 @@ export default {
                 }
             },
             activeColo: "black",
-            students: [],
+            students: []
         };
     },
-
-    
 
     async created() {
         this.conf = this.establishments.conf ?? {};
@@ -1179,7 +1176,6 @@ export default {
     },
     mounted() {},
     methods: {
-     
         openDialogPerson() {
             if (this.configuration.college) {
                 if (
@@ -1243,6 +1239,15 @@ export default {
             this.currentPayments = this.currentPayments.filter(c => c.id != id);
             this.enterAmount();
         },
+        checkPaymentTotal() {
+            let total = this.currentPayments.reduce(
+                (a, b) => a + Number(b.amount),
+                0
+            );
+            return total != this.form.total
+                ? Number(this.form.total) - total
+                : 0.0;
+        },
         addPayment() {
             let id = this.currentPayments.length + 1;
 
@@ -1259,7 +1264,11 @@ export default {
                     method,
                     amount: this.form.enter_amount
                 });
-                this.form.enter_amount = undefined;
+                console.log(
+                    "🚀 ~ addPayment ~ this.form.enter_amount:",
+                    this.form.enter_amount
+                );
+                this.form.enter_amount = 0.0;
             }
         },
         customerForm(isNew) {
@@ -1392,6 +1401,7 @@ export default {
             // this.form.customer_id
             // this.form.student_id = null;
             let { documents } = this.establishments;
+            console.log("🚀 ~ date_of_issue ~ documents:", documents)
             if (documents) {
                 let { invoice, sale_note, receipt } = documents;
                 this.invoice = invoice;
@@ -1523,7 +1533,10 @@ export default {
                         number +
                         " de *" +
                         this.company.name +
-                        "*, ha sido generado correctamente a través del facturador electrónico de "+"*"+this.$desarrollador+"*"
+                        "*, ha sido generado correctamente a través del facturador electrónico de " +
+                        "*" +
+                        this.$desarrollador +
+                        "*"
                 };
                 try {
                     this.loading = true;
@@ -1836,6 +1849,36 @@ export default {
             }
             return 0;
         },
+        verifyBoxesDuplicate() {
+            let boxes = this.form.boxes;
+            if (boxes) {
+                let { total } = this.form;
+                let total_boxes = 0;
+                if (boxes.length > 0) {
+                    total_boxes = boxes.reduce(
+                        (a, b) => a + (parseFloat(b["amount"]) || 0),
+                        0
+                    );
+                    total = parseFloat(total);
+                    if (total_boxes > total) {
+                        let difference = total_boxes - total;
+                        //remove box with difference
+                        let index = boxes.findIndex(
+                            b => parseFloat(b["amount"]) == difference
+                        );
+                        if (index >= 0) {
+                            boxes.splice(index, 1);
+                        }
+                    }
+                    this.form.boxes = boxes;
+                    let new_total = boxes.reduce(
+                        (a, b) => a + (parseFloat(b["amount"]) || 0),
+                        0
+                    );
+                    this.form.difference = total - new_total;
+                }
+            }
+        },
         async enterAmount(amount = 0) {
             this.amount = amount;
 
@@ -1900,9 +1943,7 @@ export default {
                 this.amount == 0 ? this.form.total - this.amount : 0
             );
         },
-        close(){
-            
-        },
+        close() {},
         initFormPayment() {
             this.form.difference = this.form.total - this.form.enter_amount;
             this.form_payment = {

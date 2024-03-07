@@ -10,6 +10,7 @@ use App\Models\Tenant\SaleNote;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Jobs\WhatsappSendDocumentProccess;
+use App\Jobs\WhatsappSendMessageProccess;
 use App\Models\Tenant\Cash;
 use App\Models\Tenant\Configuration;
 use App\Models\Tenant\Quotation;
@@ -39,17 +40,20 @@ class WhatsappController extends Controller
     }
     public function sendMessageAll($message)
     {
+        $website = $this->getTenantWebsite();
         $company = Company::first();
         $name = "*" . $company->name . "*: ";
         $message = $name . $message;
         $configuration = Configuration::first();
         $number_activity = $configuration->number_activity;
         if ($number_activity) {
-            $this->sendMessage($message, $number_activity);
+            WhatsappSendMessageProccess::dispatch($website->id, $message, $number_activity);
+            // $this->sendMessage($message, $number_activity);
         }
         $numbers_activity = NumberActivity::all();
         foreach ($numbers_activity as $key => $value) {
-            $this->sendMessage($message, $value->number);
+            WhatsappSendMessageProccess::dispatch($website->id, $message, $number_activity);
+            // $this->sendMessage($message, $value->number);
         }
     }
     public function getNumbers()
