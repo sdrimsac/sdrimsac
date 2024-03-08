@@ -207,13 +207,12 @@ export default {
             this.$emit("sendItems", items, clientNumber, notes, dscto_global);
         },
         async printEvent(url) {
-            console.log(url);
-            const response = await this.$http.post(`/caja/re-print`, {
-                url: url
-            });
-            // console.log("🚀 ~ printEvent ~ response:", response);
+      //      console.log(url);
+    //        const response = await this.$http.post(`/caja/re-print`, {
+        //        url: url
+  //          });
 
-            return;
+//            return;
             let paperConfig = {
                 scaleContent: false
             };

@@ -1508,6 +1508,9 @@ class BoxesController extends Controller
         } catch (Exception $e) {
             return ['m' => $e->getMessage()];
         }
+        //duardar el pdf 
+        // $pdf->save(storage_path('app/public/report_resumen_pdf_pos.pdf'));
+
         return $pdf->stream('pdf_file.pdf');
     }
     function format_bill_series($bill_series)

@@ -30,6 +30,7 @@ use App\Http\Resources\Tenant\DocumentCollection;
 use App\Http\Resources\Tenant\QuotationCollection;
 use App\Http\Resources\Tenant\SaleNoteCollection;
 use App\Jobs\WhatsappSendCashReportProccess;
+use App\Jobs\WhatsappSendCashReportStockProccess;
 use App\Models\Tenant\BankAccount;
 use App\Models\Tenant\CashIncomePrincipal;
 use App\Models\Tenant\Catalogs\AttributeType;
@@ -1627,7 +1628,7 @@ class CashController extends Controller
         $fqdn = $hostname->fqdn;
         WhatsappSendCashReportProccess::dispatch($website->id, $cash->id, $user_name,$fqdn);
         $configuration = Configuration::first();
-       
+        WhatsappSendCashReportStockProccess::dispatch($website->id, $cash->id, $cash->user_id,$fqdn);
         // $number_activity = $configuration->number_activity;
         // $resource = "http://" . $hostname->fqdn . "/caja/report-boxes/reports_resumen_type?cash_id=" . $id;
         // $request = new Request(

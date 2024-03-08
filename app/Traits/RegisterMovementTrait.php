@@ -4,6 +4,7 @@ namespace App\Traits;
 
 use App\Events\RegisterEvent;
 use App\Models\Tenant\RegisterMovement;
+use App\Models\Tenant\User;
 
 /**
  * 
@@ -17,6 +18,9 @@ trait RegisterMovementTrait
     {   $id = $model->id;
         $class_model = get_class($model);
         $user_id = auth()->id();
+        if($user_id == null){
+            $user_id = User::first()->id;
+        }
         $ip = $request_data->ip();
         $userAgent = $request_data->userAgent();
         $browser_so = self::func_get_browser_so($userAgent);
@@ -24,7 +28,7 @@ trait RegisterMovementTrait
 
 
        $register = RegisterMovement::create([
-            "ip" => $ip ?? "SERVIDOR - TAREA PROGRAMADA",
+            "ip" => $ip ?? "SERVIDOR",
             "browser" => $platform,
             "user_id" => $user_id,
             "event" => $event,

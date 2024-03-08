@@ -3757,6 +3757,7 @@ export default {
                         data: url
                     }
                 ];
+                    console.log("🚀 ~ qz.print ~ config:", config)
                 qz.print(config, data).catch(e => {
                     this.$toast.error(e.message);
                 });
