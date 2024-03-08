@@ -1605,6 +1605,7 @@
                 @limpiarForm="limpiarForm"
                 :orden="ordenId"
                 @openDrawer="openDrawer"
+                @printer="Printer"
                 :all_customers.sync="all_customers"
                 :formVariation="formVariation"
                 :customer_variation="customer_variation"
