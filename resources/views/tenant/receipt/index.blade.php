@@ -191,7 +191,7 @@
                         <tr>
                             <td>
                                 {{ $establishment->description !== '-' ? $establishment->description : '' }}
-                                
+
                             </td>
                         </tr>
                     </table>
@@ -242,76 +242,76 @@
                         <td height="5"></td>
                     </tr>
                     <tr>
-                      @if ($data->sale_note_id)
-                      <td class="full-width" valign="top">
-                        <table border="0" cellspacing="0" cellpadding="0" class="full-width" width="100%"
-                            style="border: 1px solid #333;">
+                        @if ($data->sale_note_id)
+                            <td class="full-width" valign="top">
+                                <table border="0" cellspacing="0" cellpadding="0" class="full-width" width="100%"
+                                    style="border: 1px solid #333;">
 
-                            <tbody>
+                                    <tbody>
 
-                                <tr>
-                                    <td colspan="2" align="right" valign="top" class="border-right border-top"
-                                        style="padding: 5px !important;">
-                                        <b>CREDITO OTORGADO S/.</b>
-                                    </td>
-                                    <td align="center" valign="top" class="border-top"
-                                        style="padding: 5px !important;">
-                                        <b><span style="font-size: 17px;">
-                                                {{ number_format($data->sale_note->total + $interes, 2) }}
-                                                <?php
-                                                //dd($data->amount);
-                                                ?>
-                                            </span></b>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="2" align="right" valign="top" class="border-right border-top"
-                                        style="padding: 5px !important;">
-                                        <b>ADELANTOS ANTERIOR S/.</b>
-                                    </td>
-                                    <td align="center" valign="top" class="border-top"
-                                        style="padding: 5px !important;">
-                                        <b><span style="font-size: 17px;">
-                                                {{ number_format($payments->total_payment - $data->amount, 2) }}
-                                            </span></b>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="2" align="right" valign="top" class="border-right border-top"
-                                        style="padding: 5px !important;">
-                                        <b>MONTO PAGADO S/.</b>
-                                    </td>
-                                    <td align="center" valign="top" class="border-top"
-                                        style="padding: 5px !important;">
-                                        <b><span style="font-size: 17px;">
-                                                {{ $data->amount }}
-                                            </span></b>
-                                    </td>
-                                </tr>
+                                        <tr>
+                                            <td colspan="2" align="right" valign="top"
+                                                class="border-right border-top" style="padding: 5px !important;">
+                                                <b>CREDITO OTORGADO S/.</b>
+                                            </td>
+                                            <td align="center" valign="top" class="border-top"
+                                                style="padding: 5px !important;">
+                                                <b><span style="font-size: 17px;">
+                                                        {{ number_format($data->sale_note->total - $data->sale_note->advances + $interes, 2) }}
+                                                        <?php
+                                                        //dd($data->amount);
+                                                        ?>
+                                                    </span></b>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2" align="right" valign="top"
+                                                class="border-right border-top" style="padding: 5px !important;">
+                                                <b>PAGOS ANTERIORES S/.</b>
+                                            </td>
+                                            <td align="center" valign="top" class="border-top"
+                                                style="padding: 5px !important;">
+                                                <b><span style="font-size: 17px;">
+                                                        {{ number_format($payments->total_payment - $data->amount, 2) }}
+                                                    </span></b>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2" align="right" valign="top"
+                                                class="border-right border-top" style="padding: 5px !important;">
+                                                <b>MONTO PAGADO S/.</b>
+                                            </td>
+                                            <td align="center" valign="top" class="border-top"
+                                                style="padding: 5px !important;">
+                                                <b><span style="font-size: 17px;">
+                                                        {{ $data->amount }}
+                                                    </span></b>
+                                            </td>
+                                        </tr>
 
-                                <tr>
-                                    <td colspan="2" align="right" valign="top" class="border-right border-top"
-                                        style="padding: 5px !important;">
-                                        <b>DEUDA PENDIENTE S/.</b>
-                                    </td>
-                                    <td align="center" valign="top" class="border-top"
-                                        style="padding: 5px !important;">
-                                        <b><span style="font-size: 17px;">
+                                        <tr>
+                                            <td colspan="2" align="right" valign="top"
+                                                class="border-right border-top" style="padding: 5px !important;">
+                                                <b>DEUDA PENDIENTE S/.</b>
+                                            </td>
+                                            <td align="center" valign="top" class="border-top"
+                                                style="padding: 5px !important;">
+                                                <b><span style="font-size: 17px;">
 
 
-                                                {{ number_format($deuda + $interes, 2) }}
-                                            </span></b>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <table style="margin-top: 15px" border="0" class="full-width" width="100%">
-                            <tr>
-                                <td class="negrita">CAJERO : </td>
-                                <td>{{ strtoupper($user->name) }}</td>
-                            </tr>
-                        </table>
-                        {{-- <table border="0" class="full-width" width="100%">
+                                                        {{ number_format($deuda + $interes, 2) }}
+                                                    </span></b>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <table style="margin-top: 15px" border="0" class="full-width" width="100%">
+                                    <tr>
+                                        <td class="negrita">CAJERO : </td>
+                                        <td>{{ strtoupper($user->name) }}</td>
+                                    </tr>
+                                </table>
+                                {{-- <table border="0" class="full-width" width="100%">
                             <tr>
                                 <td colspan="3" height="80px"></td>
                             </tr>
@@ -323,79 +323,79 @@
                                     CLIENTE</td>
                             </tr>
                         </table> --}}
-                    </td>
-                    @else
-                    <td class="full-width" valign="top">
-                        <table border="0" cellspacing="0" cellpadding="0" class="full-width" width="100%"
-                            style="border: 1px solid #333;">
+                            </td>
+                        @else
+                            <td class="full-width" valign="top">
+                                <table border="0" cellspacing="0" cellpadding="0" class="full-width"
+                                    width="100%" style="border: 1px solid #333;">
 
-                            <tbody>
+                                    <tbody>
 
-                                <tr>
-                                    <td colspan="2" align="right" valign="top" class="border-right border-top"
-                                        style="padding: 5px !important;">
-                                        <b>CREDITO OTORGADO S/.</b>
-                                    </td>
-                                    <td align="center" valign="top" class="border-top"
-                                        style="padding: 5px !important;">
-                                        <b><span style="font-size: 17px;">
-                                                {{ number_format($data->document->total, 2) }}
-                                                <?php
-                                                //dd($data->amount);
-                                                ?>
-                                            </span></b>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="2" align="right" valign="top" class="border-right border-top"
-                                        style="padding: 5px !important;">
-                                        <b>MONTO PAGADO S/.</b>
-                                    </td>
-                                    <td align="center" valign="top" class="border-top"
-                                        style="padding: 5px !important;">
-                                        <b><span style="font-size: 17px;">
-                                                {{ number_format($payments->total_payment - $data->amount, 2) }}
-                                            </span></b>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="2" align="right" valign="top" class="border-right border-top"
-                                        style="padding: 5px !important;">
-                                        <b>MONTO PAGADO S/.</b>
-                                    </td>
-                                    <td align="center" valign="top" class="border-top"
-                                        style="padding: 5px !important;">
-                                        <b><span style="font-size: 17px;">
-                                                {{ $data->amount }}
-                                            </span></b>
-                                    </td>
-                                </tr>
+                                        <tr>
+                                            <td colspan="2" align="right" valign="top"
+                                                class="border-right border-top" style="padding: 5px !important;">
+                                                <b>CREDITO OTORGADO S/.</b>
+                                            </td>
+                                            <td align="center" valign="top" class="border-top"
+                                                style="padding: 5px !important;">
+                                                <b><span style="font-size: 17px;">
+                                                        {{ number_format($data->document->total - $data->document->advances, 2) }}
+                                                        <?php
+                                                        //dd($data->amount);
+                                                        ?>
+                                                    </span></b>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2" align="right" valign="top"
+                                                class="border-right border-top" style="padding: 5px !important;">
+                                                <b>MONTO PAGADO S/.</b>
+                                            </td>
+                                            <td align="center" valign="top" class="border-top"
+                                                style="padding: 5px !important;">
+                                                <b><span style="font-size: 17px;">
+                                                        {{ number_format($payments->total_payment - $data->amount, 2) }}
+                                                    </span></b>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2" align="right" valign="top"
+                                                class="border-right border-top" style="padding: 5px !important;">
+                                                <b>MONTO PAGADO S/.</b>
+                                            </td>
+                                            <td align="center" valign="top" class="border-top"
+                                                style="padding: 5px !important;">
+                                                <b><span style="font-size: 17px;">
+                                                        {{ $data->amount }}
+                                                    </span></b>
+                                            </td>
+                                        </tr>
 
-                                <tr>
-                                    <td colspan="2" align="right" valign="top" class="border-right border-top"
-                                        style="padding: 5px !important;">
-                                        <b>DEUDA PENDIENTE S/.</b>
-                                    </td>
-                                    <td align="center" valign="top" class="border-top"
-                                        style="padding: 5px !important;">
-                                        <b><span style="font-size: 17px;">
+                                        <tr>
+                                            <td colspan="2" align="right" valign="top"
+                                                class="border-right border-top" style="padding: 5px !important;">
+                                                <b>DEUDA PENDIENTE S/.</b>
+                                            </td>
+                                            <td align="center" valign="top" class="border-top"
+                                                style="padding: 5px !important;">
+                                                <b><span style="font-size: 17px;">
 
 
-                                                {{ number_format($deuda, 2) }}
-                                            </span></b>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <table style="margin-top: 15px" border="0" class="full-width" width="100%">
-                            <tr>
-                                <td class="negrita">CAJERO : </td>
-                                <td>{{ strtoupper($user->name) }}</td>
-                            </tr>
-                        </table>
-                      
-                    </td>
-                      @endif
+                                                        {{ number_format($deuda, 2) }}
+                                                    </span></b>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <table style="margin-top: 15px" border="0" class="full-width" width="100%">
+                                    <tr>
+                                        <td class="negrita">CAJERO : </td>
+                                        <td>{{ strtoupper($user->name) }}</td>
+                                    </tr>
+                                </table>
+
+                            </td>
+                        @endif
                     </tr>
                 </table>
             </td>

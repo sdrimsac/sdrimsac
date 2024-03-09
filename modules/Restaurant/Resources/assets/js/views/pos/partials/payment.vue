@@ -3615,10 +3615,9 @@ export default {
                             break;
                     }
                     if (this.printer && format && this.printerOn == 1) {
-                        console.log("🚀 ~ clickPayment ~ this.printer: mandando a imprimir")
                         // this.printerDocument(this.printer,format)
                         
-                        this.$emit("printer",this.printer,format,1);
+                        //this.$emit("printer",this.printer,format,1);
                     }
                     this.operation_number = null;
                     if (response.data.success == true) {

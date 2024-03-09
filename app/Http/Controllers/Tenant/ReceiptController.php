@@ -45,10 +45,10 @@ class ReceiptController extends Controller
                 $interes = $data->sale_note->total * ($data_payments->tasa / 100);
             }
             $payments = SaleNotePayment::select(DB::raw('SUM(payment) as total_payment'))->where('sale_note_id', $data->sale_note_id)->first();
-            $deuda = $data->sale_note->total - $payments->total_payment;
+            $deuda = $data->sale_note->total - $data->sale_note->advances - $payments->total_payment;
         } else {
             $payments = DocumentPayment::select(DB::raw('SUM(payment) as total_payment'))->where('document_id', $data->document_id)->first();
-            $deuda = $data->document->total - $payments->total_payment;
+            $deuda = $data->document->total - $data->document->advances - $payments->total_payment;
         }
 
         if (!$data) throw new Exception("El código {$external_id} es inválido, no se encontro la cotización relacionada");
