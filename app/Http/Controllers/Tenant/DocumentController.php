@@ -248,7 +248,6 @@ class DocumentController extends Controller
                     if (count($resultsPorDB) > 0) {
 
                         if ($companies[0]['soap_type_id'] == '02' && $configuration[0]['locked_tenant'] == 0) {
-                            $this->info('El Sistema ' . $result->Database . ' tiene Documentos sin procesar ' . $fechaHoy);
                             $infoCompleta[] = $resultsPorDB;
                         }
                     }
