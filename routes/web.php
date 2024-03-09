@@ -1,9 +1,11 @@
 <?php
 
+use App\Http\Controllers\Api\DocumentController;
 use App\Http\Controllers\Tenant\ClientZoneController;
 use App\Http\Controllers\Tenant\CommercialTreatmentController;
 use App\Http\Controllers\Tenant\CreditListController;
 use App\Http\Controllers\Tenant\DispatchController;
+use App\Http\Controllers\Tenant\DocumentController as TenantDocumentController;
 use App\Http\Controllers\Tenant\InventoryController;
 use App\Http\Controllers\Tenant\ItemColorSizeController;
 use App\Http\Controllers\Tenant\ItemController;
@@ -31,6 +33,7 @@ if ($hostname) {
                 'verify'   => false
             ]);
             Route::get('report_product_client/report/excel', [ItemController::class, 'items_by_clients_excel']);
+            Route::get('check-documents', [TenantDocumentController::class, 'checkDocuments']);
 
             Route::get('credit-list/receipt/{id}/ticket', [CreditListController::class, 'receipt']);
             Route::get('buscar', [App\Http\Controllers\Tenant\SearchController::class, 'index'])->name('search.index');

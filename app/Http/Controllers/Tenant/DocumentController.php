@@ -100,10 +100,12 @@ use Modules\Restaurant\Events\OrdenReadyEvent;
 use Modules\Restaurant\Models\OrdenItem;
 use Modules\Services\Data\ServiceData;
 use GuzzleHttp\Client as ClientGuzzleHttp;
+use Illuminate\Http\File;
 use Modules\College\Models\CollegePayment;
 use Modules\College\Models\CollegePlan;
 use Modules\College\Models\CollegeRegister;
 use Modules\College\Models\CollegeStudent;
+use Modules\Report\Exports\ReportDocumentStatus;
 use Modules\Restaurant\Models\Table;
 
 class DocumentController extends Controller
@@ -173,6 +175,95 @@ class DocumentController extends Controller
             'message' => 'Se consultó los resumenes'
 
         ];
+    }
+    public function checkDocuments()
+    {
+        $this->info('The command was started');
+        $fechaHoy = Carbon::now()->format('Y-m-d');
+        $fecha7Dias = Carbon::now()->subDays(7)->format('Y-m-d');
+        $infoCompleta = [];
+
+        $number = [995764963,  987828697, 972053723];
+        // $number = 
+        $message = 'Reporte de sistemas que no completaron el envio de documentos ';
+        $file_name = 'TenantProcesosCaidos' . Carbon::now() . '.xlsx';
+        $sender = 'sdrimsac';
+        $envio = new WhatsappController;
+
+        $primerDiaDelMes = Carbon::now()->startOfMonth()->format('Y-m-d');
+
+
+
+
+        try {
+            $results = DB::select("            SHOW DATABASES;            ");
+
+            foreach ($results as $result) {
+                //$this->line($result->Database);
+                if (
+                    strpos($result->Database, 'xyz') !== false ||
+                    strpos($result->Database, 'facturador5_') === 0 ||
+                    strpos($result->Database, 'tn_') === 0 ||
+                    strpos($result->Database, 'tenancy_') === 0
+                ) {
+
+
+
+                    $resultsPorDB = DB::select('
+                    SELECT documents.id as document_id, 
+                    state_types.description statusDoc,
+                    soap_types.description modo,
+                    documents.series as document_series,
+                    documents.number as document_number,
+                    documents.date_of_issue as document_date_of_due,
+                    ( SELECT trade_name FROM ' . $result->Database . '.companies LIMIT 1 ) AS proyecto
+                    FROM ' . $result->Database . '.`documents`
+                    INNER JOIN state_types ON documents.state_type_id = state_types.id
+                    INNER JOIN soap_types ON documents.soap_type_id = soap_types.id 
+                     where soap_type_id = "02" and documents.state_type_id in  ("01","03") and documents.date_of_issue >= "' . $fecha7Dias . '"  and documents.date_of_issue < "' . $fechaHoy . '" 	ORDER BY 4,5 ');
+                    $resultsPorDB = json_decode(json_encode($resultsPorDB), true);
+
+                    $companies = DB::select('select soap_type_id from ' . $result->Database . '.companies  ');
+                    $configuration = DB::select('select * from ' . $result->Database . '.configurations  ');
+                    $companies = json_decode(json_encode($companies), true);
+                    $configuration = json_decode(json_encode($configuration), true);
+
+                    if (count($resultsPorDB) > 0) {
+
+                        if ($companies[0]['soap_type_id'] == '02' && $configuration[0]['locked_tenant'] == 0) {
+                            $this->info('El Sistema ' . $result->Database . ' tiene Documentos sin procesar ' . $fechaHoy);
+                            $infoCompleta[] = $resultsPorDB;
+                        }
+                    }
+                }
+            }
+
+
+            $documento = (new ReportDocumentStatus)
+                ->infoCompleta($infoCompleta)
+                ->download('ReporteDoc' . Carbon::now() . '.xlsx');
+
+
+
+
+            $file = new File($documento->getFile());
+            $request = new Request(['file' => $file, 'number' => $number, 'message' => $message, 'file_name' => $file_name, 'sender' => $sender]);
+
+            $envio->sendReporteDocumentos($request);
+
+
+            $this->info('The command is finished');
+            return [
+                'success' => true,
+                'message' => 'Se consultó los documentos'
+            ];
+        } catch (\Throwable $th) {
+            $this->error('The command was failed' . $th);
+            return [
+                'success' => false,
+                'message' => 'Ocurrió un problema'
+            ];
+        }
     }
     public function createSummarie()
     {
@@ -1111,7 +1202,7 @@ class DocumentController extends Controller
             SaleNoteItem::where('sale_note_id', $request->sale_note_id)->update(["inventory_kardex_id" => null]);
             InventoryKardex::where('inventory_kardexable_type', $desc)->where('inventory_kardexable_id', $request->sale_note_id)->delete();
         }
-        if($document->quotation_id){
+        if ($document->quotation_id) {
             $quotation = Quotation::find($document->quotation_id);
             $quotation->changed = true;
             $quotation->save();
