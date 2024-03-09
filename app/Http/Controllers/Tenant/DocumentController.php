@@ -200,14 +200,8 @@ class DocumentController extends Controller
             foreach ($results as $result) {
                 //$this->line($result->Database);
                 if (
-                    strpos($result->Database, 'xyz') !== false ||
-                    strpos($result->Database, 'facturador5_') === 0 ||
-                    strpos($result->Database, 'tn_') === 0 ||
                     strpos($result->Database, 'tenancy_') === 0
                 ) {
-
-
-
                     $resultsPorDB = DB::select('
                     SELECT documents.id as document_id, 
                     state_types.description statusDoc,
