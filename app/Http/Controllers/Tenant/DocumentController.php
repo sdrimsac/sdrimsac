@@ -251,16 +251,14 @@ class DocumentController extends Controller
             $envio->sendReporteDocumentos($request);
 
 
-            $this->info('The command is finished');
             return [
                 'success' => true,
                 'message' => 'Se consultó los documentos'
             ];
-        } catch (\Throwable $th) {
-            $this->error('The command was failed' . $th);
+        } catch (Exception $e) {
             return [
                 'success' => false,
-                'message' => 'Ocurrió un problema'
+                'message' => $e->getMessage()
             ];
         }
     }
