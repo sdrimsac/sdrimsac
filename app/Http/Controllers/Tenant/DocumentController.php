@@ -178,7 +178,6 @@ class DocumentController extends Controller
     }
     public function checkDocuments()
     {
-        $this->info('The command was started');
         $fechaHoy = Carbon::now()->format('Y-m-d');
         $fecha7Dias = Carbon::now()->subDays(7)->format('Y-m-d');
         $infoCompleta = [];
