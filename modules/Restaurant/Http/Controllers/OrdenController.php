@@ -704,8 +704,8 @@ class OrdenController extends Controller
                         return $area_id == $a['area_id'];
                     }), "orden_id");
                     //esperar un segundo
-                    sleep(1);
                     event(new PrintEvent($orden->id, "0", true, $area_id, $filtered));
+                    sleep(1);
 
                 }
             }
