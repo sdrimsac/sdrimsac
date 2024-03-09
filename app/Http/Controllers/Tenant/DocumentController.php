@@ -185,7 +185,7 @@ class DocumentController extends Controller
         $number = [995764963,  987828697, 972053723];
         // $number = 
         $message = 'Reporte de sistemas que no completaron el envio de documentos ';
-        $file_name = 'TenantProcesosCaidos' . Carbon::now() . '.xlsx';
+        $file_name = 'Tenant_Procesos_Caidos_XYZ_' . Carbon::now() . '.xlsx';
         $sender = 'sdrimsac';
         $envio = new WhatsappController;
 
