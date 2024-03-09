@@ -203,17 +203,41 @@ class DocumentController extends Controller
                     strpos($result->Database, 'tenancy_') === 0
                 ) {
                     $resultsPorDB = DB::select('
-                    SELECT documents.id as document_id, 
-                    state_types.description statusDoc,
-                    soap_types.description modo,
-                    documents.series as document_series,
-                    documents.number as document_number,
-                    documents.date_of_issue as document_date_of_due,
-                    ( SELECT trade_name FROM ' . $result->Database . '.companies LIMIT 1 ) AS proyecto
-                    FROM ' . $result->Database . '.`documents`
-                    INNER JOIN state_types ON documents.state_type_id = state_types.id
-                    INNER JOIN soap_types ON documents.soap_type_id = soap_types.id 
-                     where soap_type_id = "02" and documents.state_type_id in  ("01","03") and documents.date_of_issue >= "' . $fecha7Dias . '"  and documents.date_of_issue < "' . $fechaHoy . '" 	ORDER BY 4,5 ');
+    SELECT 
+        ' . $result->Database . '.documents.id AS document_id, 
+        ' . $result->Database . '.state_types.description AS statusDoc,
+        ' . $result->Database . '.soap_types.description AS modo,
+        ' . $result->Database . '.documents.series AS document_series,
+        ' . $result->Database . '.documents.number AS document_number,
+        ' . $result->Database . '.documents.date_of_issue AS document_date_of_due,
+        (SELECT trade_name FROM ' . $result->Database . '.companies LIMIT 1) AS proyecto
+    FROM 
+        ' . $result->Database . '.documents
+    INNER JOIN 
+        ' . $result->Database . '.state_types ON ' . $result->Database . '.documents.state_type_id = ' . $result->Database . '.state_types.id
+    INNER JOIN 
+        ' . $result->Database . '.soap_types ON ' . $result->Database . '.documents.soap_type_id = ' . $result->Database . '.soap_types.id
+    WHERE 
+        soap_type_id = "02" 
+        AND ' . $result->Database . '.documents.state_type_id IN ("01", "03") 
+        AND ' . $result->Database . '.documents.date_of_issue >= "' . $fecha7Dias . '" 
+        AND ' . $result->Database . '.documents.date_of_issue < "' . $fechaHoy . '"
+    ORDER BY 
+        4, 5
+');
+
+                    // $resultsPorDB = DB::select('
+                    // SELECT documents.id as document_id, 
+                    // state_types.description statusDoc,
+                    // soap_types.description modo,
+                    // documents.series as document_series,
+                    // documents.number as document_number,
+                    // documents.date_of_issue as document_date_of_due,
+                    // ( SELECT trade_name FROM ' . $result->Database . '.companies LIMIT 1 ) AS proyecto
+                    // FROM ' . $result->Database . '.`documents`
+                    // INNER JOIN state_types ON documents.state_type_id = state_types.id
+                    // INNER JOIN soap_types ON documents.soap_type_id = soap_types.id 
+                    //  where soap_type_id = "02" and documents.state_type_id in  ("01","03") and documents.date_of_issue >= "' . $fecha7Dias . '"  and documents.date_of_issue < "' . $fechaHoy . '" 	ORDER BY 4,5 ');
                     $resultsPorDB = json_decode(json_encode($resultsPorDB), true);
 
                     $companies = DB::select('select soap_type_id from ' . $result->Database . '.companies  ');
