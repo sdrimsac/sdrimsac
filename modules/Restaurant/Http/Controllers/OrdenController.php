@@ -694,7 +694,7 @@ class OrdenController extends Controller
 
             }
 
-            $print_box = $configuration->print_commands ;
+            $print_box = $configuration->print_commands;
             $print_kitchen = $configuration->print_kitchen;
 
             if ($print_kitchen) {
@@ -703,7 +703,10 @@ class OrdenController extends Controller
                     $filtered = array_column(array_filter($orden_items_ids_for_kitchen, function ($a) use ($area_id) {
                         return $area_id == $a['area_id'];
                     }), "orden_id");
+                    //esperar un segundo
+                    sleep(1);
                     event(new PrintEvent($orden->id, "0", true, $area_id, $filtered));
+
                 }
             }
             $isFromBox = $this->isArea("CAJ", $user->area_id);
