@@ -9,6 +9,7 @@ class ConfEstablishment extends ModelTenant
     protected $table = "conf_establishment";
     protected $casts = [
         'show_discounts_payment' => 'boolean',
+        'show_payment_method' => 'boolean',
         'print_command'  => 'boolean', // 'print_command' => 'boolean
         "direct_sale" => "boolean",
         "pos_quick_sale" => "boolean",
@@ -16,6 +17,7 @@ class ConfEstablishment extends ModelTenant
     ];
     protected $fillable = [
         'show_discounts_payment',
+        'show_payment_method',
         'print_command',
         'establishment_id',
         'direct_sale',

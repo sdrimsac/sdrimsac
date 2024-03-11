@@ -15,6 +15,7 @@ class SaleNoteCredit extends ModelTenant
     public function sale_note(){
         return $this->belongsTo(SaleNote::class);
     }
+    
     public function cash(){
         return $this->belongsTo(Cash::class);
     }

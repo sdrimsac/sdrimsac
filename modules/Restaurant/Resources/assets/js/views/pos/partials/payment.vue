@@ -320,7 +320,7 @@
                 </div>
 
                 <div class="col-lg-12">
-                    <div class=" mb-2 ">
+                    <div class=" mb-2" v-if="conf.show_payment_method">
                         <div class=" text-center text-dark card  bg-light  ">
                             <div class="row">
                                 <div class="  col-lg-6 ">
@@ -949,6 +949,7 @@
                                                         >
                                                     </el-input>
                                                 </div>
+                                                <template v-if="conf.show_payment_method">
                                                 <div
                                                     class="col-xl-2 col-md-2 col-lg-2 col-6"
                                                 >
@@ -987,6 +988,7 @@
                                                         >Dividir pago</el-button
                                                     >
                                                 </div>
+                                                </template>
                                             </div>
                                         </div>
                                     </div>

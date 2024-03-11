@@ -130,6 +130,9 @@ class EstablishmentController extends Controller
                 Functions::valueKeyInArray($conf, 'print_command', true);
                 $exist->show_discounts_payment =
                 Functions::valueKeyInArray($conf, 'show_discounts_payment', true);
+                $exist->show_payment_method =
+                Functions::valueKeyInArray($conf, 'show_payment_method', true);
+                
             $exist->save();
         }
         //series
