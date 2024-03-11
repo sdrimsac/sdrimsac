@@ -324,6 +324,7 @@
                         <thead>
                             <tr>
                                 <th class="">#</th>
+                                <th>Acciones</th>
                                 <th>Logo</th>
                                 <th class="text-center">Bloquear cuenta</th>
                                 <th class="text-center">Notificaciones</th>
@@ -360,16 +361,62 @@
                                     Total<br />(Comprobantes <br />y <br />notas
                                     de venta)
                                 </th>
-
+<!-- 
                                 <th class="text-right">Acciones</th>
                                 <th class="text-right">Pagos</th>
                                 <th class="text-right">E. Cuenta</th>
-                                <th class="text-right">Editar</th>
+                                <th class="text-right">Editar</th> -->
                             </tr>
                         </thead>
                         <tbody>
                             <tr v-for="(row, index) in records" :key="index">
                                 <td class="">{{ index + 1 }}</td>
+                                <td>
+                                    <el-dropdown @command="manageIndexCommand" trigger="click">
+                                        <el-button type="primary">
+                                            Acciones<i
+                                                class="el-icon-arrow-down el-icon--right"
+                                            ></i>
+                                        </el-button>
+                                        <el-dropdown-menu slot="dropdown">
+                                            <el-dropdown-item
+                                                :command="[
+                                                    'clickPassword',
+                                                    row.id
+                                                ]"
+                                            >
+                                                Resetar clave
+                                            </el-dropdown-item>
+                                            <el-dropdown-item
+                                                :command="['clickDelete', row]"
+                                            >
+                                                Eliminar
+                                            </el-dropdown-item>
+                                            <el-dropdown-item
+                                                :command="[
+                                                    'clickPayments',
+                                                    row.id
+                                                ]"
+                                            >
+                                                Pagos
+                                            </el-dropdown-item>
+                                            <el-dropdown-item
+                                                :command="[
+                                                    'clickAccountStatus',
+                                                    row.id
+                                                ]"
+                                            >
+                                                E. Cuenta
+                                            </el-dropdown-item>
+                                            <el-dropdown-item
+                                                :command="['clickEdit', row.id]"
+                                            >
+                                                Editar
+                                            </el-dropdown-item>
+                                        </el-dropdown-menu>
+                                    </el-dropdown>
+                                </td>
+
                                 <td class="">
                                     <img
                                         :src="
@@ -637,7 +684,7 @@
                                     }}</strong>
                                 </td>
 
-                                <td class="text-right">
+                                <!-- <td class="text-right">
                                     <template v-if="!row.locked">
                                         <el-tooltip
                                             content="Se ingresa con el RUC"
@@ -690,7 +737,7 @@
                                     >
                                         Editar
                                     </button>
-                                </td>
+                                </td> -->
                             </tr>
                         </tbody>
                     </table>
@@ -722,7 +769,17 @@
         ></client-delete>
     </div>
 </template>
-<style></style>
+<style>
+.el-dropdown {
+    vertical-align: top;
+}
+.el-dropdown + .el-dropdown {
+    margin-left: 15px;
+}
+.el-icon-arrow-down {
+    font-size: 12px;
+}
+</style>
 
 <script>
 import CompaniesForm from "./form.vue";
@@ -737,7 +794,7 @@ import DataLimitNotification from "./partials/DataLimitNotification.vue";
 
 export default {
     mixins: [deletable, changeable],
-    props: [ "discUsed", "iUsed", "storageSize", "version"],
+    props: ["discUsed", "iUsed", "storageSize", "version"],
     components: {
         CompaniesForm,
         ChartLine,
@@ -798,6 +855,25 @@ export default {
         this.text_limit_users = "El límite de usuarios fue superado";
     },
     methods: {
+        manageIndexCommand([command, arg1 = null, arg2 = null]) {
+            switch (command) {
+                case "clickPassword":
+                    this.clickPassword(arg1);
+                    break;
+                case "clickDelete":
+                    this.clickDelete(arg1);
+                    break;
+                case "clickPayments":
+                    this.clickPayments(arg1);
+                    break;
+                case "clickAccountStatus":
+                    this.clickAccountStatus(arg1);
+                    break;
+                case "clickEdit":
+                    this.clickEdit(arg1);
+                    break;
+            }
+        },
         formatDateTime(date) {
             let days = date.days;
             let hours = date.hours;
