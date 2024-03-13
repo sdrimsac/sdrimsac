@@ -5,7 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-class ChangeInToDecimalQtyOrdenItem extends Migration
+class ChangeIntToDecimalQtyOrdenItem extends Migration
 {
     /**
      * Run the migrations.
