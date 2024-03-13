@@ -1002,7 +1002,9 @@
                                 <div class="row">
                                     <div class="col-xl-3"></div>
                                     <div class="col-xl-2"></div>
-                                    <div class="col-xl-3">
+                                    <div class="col-xl-3"
+                                    v-show="conf.show_payment_method"
+                                    >
                                         <el-select
                                             v-if="
                                                 form.document_type_id == '01' ||
