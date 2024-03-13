@@ -39,7 +39,7 @@ class OrderEvent implements ShouldBroadcast
 
     public function broadcastAs()
     {
-        $configuration = Configuration::first();
+        $configuration = Configuration::select('socket_channel')->first();
         $event_name = $configuration->socket_channel;
         return 'order-' . $event_name;
     }

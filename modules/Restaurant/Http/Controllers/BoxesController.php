@@ -1001,6 +1001,78 @@ class BoxesController extends Controller
         return $all;
     }
 
+    public function cashes_salud(Request $request)
+    {
+        $group_code = $request->group_code;
+        $cashes = Cash::where('group_code', $group_code)->pluck('id')
+            ->toArray();
+        $company = Company::first();
+        $items = [];
+        $boxes = Box::select(['document_id', 'sale_note_id'])
+            ->whereIn('cash_id', $cashes)->where('incomes', 0)->where('expenses', 0)->OrderBy('date', 'asc')->chunk(50,function ($boxes) use (&$items) {
+                foreach ($boxes as $box) {
+                    $document = null;
+                    if ($box->sale_note_id) {
+                        $document = SaleNote::find($box->sale_note_id);
+                    }
+                    if ($box->document_id) {
+                        $document = Document::find($box->document_id);
+                    }
+                    $document_items = $document->items;
+                    foreach ($document_items as $item) {
+                        $original_item = Item::select(['barcode','category_id'])->find($item->item_id);
+                        $description = $item->item->description;
+                        $internal_id = $item->item->internal_id;
+                        $barcode = isset($item->item->barcode) ? $item->item->barcode : "";
+                        $key = $description . "-" . $internal_id;
+                        $price = floatval($item->unit_price);
+                        $quantity = floatval($item->quantity);
+                        $total = $price * $quantity;
+
+                        if (array_key_exists($key, $items)) {
+                            $items[$key]['quantity'] += $quantity;
+                            $items[$key]['total'] += $total;
+                        } else {
+                            $items[$key] = [
+                                'quantity' => $quantity,
+                                'barcode' => $original_item->barcode,
+                                'category_id' => $original_item->category_id,
+                                'price' => $price,
+                                'total' => $total,
+                                'description' => $description
+                            ];
+                        }
+
+
+                }
+            }
+            });
+        $category_ids = array_unique(array_column($items, 'category_id'));
+        $categories = CategoryItem::
+        select(['id', 'name'])->
+        whereIn('id', $category_ids)->get();
+
+        //split items by category
+        $items_by_category = [];
+        foreach ($categories as $category) {
+            $items_by_category[$category->name] = array_filter($items, function ($item) use ($category) {
+                return $item['category_id'] == $category->id;
+            });
+        }
+        try {
+            $pdf = PDF::loadView(
+                'report::boxes.cashes_salud',
+                compact('cashes', 'company', 'items_by_category')
+            )
+                ->setPaper('a4');
+        } catch (Exception $e) {
+            return ['m' => $e->getMessage()];
+        }
+        //duardar el pdf 
+        // $pdf->save(storage_path('app/public/report_resumen_pdf_pos.pdf'));
+
+        return $pdf->stream('pdf_file.pdf');
+    }
     public function reports_resumen_type(Request $request)
     {
         ini_set('memory_limit', '4096M');
@@ -1379,13 +1451,13 @@ class BoxesController extends Controller
         $total_coins = 0.0;
         $total_coins_virtual = 0;
         foreach ($sales_detail as $sale_detail) {
-            if (isset($sale_detail["digital"])&&$sale_detail["digital"]) {
+            if (isset($sale_detail["digital"]) && $sale_detail["digital"]) {
                 $total_coins_virtual += $sale_detail["sum"];
             }
         }
         $total_coins_transfert =  0;
         foreach ($sales_detail as $sale_detail) {
-            if (isset($sale_detail["transfer"])&&$sale_detail["transfer"]) {
+            if (isset($sale_detail["transfer"]) && $sale_detail["transfer"]) {
                 $total_coins_transfert += $sale_detail["sum"];
             }
         }

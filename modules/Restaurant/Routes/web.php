@@ -45,6 +45,7 @@ Route::prefix('caja')->group(function () {
     Route::get('report-boxes', 'BoxesController@report')->name('restaurant.report.boxes');
     Route::get('report-boxes/tables', 'BoxesController@tables');
 
+    Route::get('report-boxes/cashes_salud', 'BoxesController@cashes_salud');
     Route::get('report-boxes/reports_resumen_type', 'BoxesController@reports_resumen_type');
     Route::get('report-boxes/reports_resumen_type_page', 'BoxesController@reports_resumen_type_page');
     Route::get('cash/balance-final/{date_closed}', 'BoxesController@balance_final');

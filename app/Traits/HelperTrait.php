@@ -12,7 +12,28 @@ use Illuminate\Support\Facades\Cache;
 
 trait HelperTrait
 {
+    
  
+    public function func_get_month($index){
+        $months = [
+            '01' => 'Enero',
+            '02' => 'Febrero',
+            '03' => 'Marzo',
+            '04' => 'Abril',
+            '05' => 'Mayo',
+            '06' => 'Junio',
+            '07' => 'Julio',
+            '08' => 'Agosto',
+            '09' => 'Setiembre',
+            '10' => 'Octubre',
+            '11' => 'Noviembre',
+            '12' => 'Diciembre'
+        ];
+        if(strlen($index) == 1){
+            $index = '0'.$index;
+        }
+        return $months[$index];
+    }
     public function func_search_in_path($path, $search)
     {
         $split_path = explode('/', $path);

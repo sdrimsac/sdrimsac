@@ -1797,23 +1797,7 @@
                                                 </el-input-number>
                                             </div>
                                         </div>
-                                        <div class="col-md-6 mt-4">
-                                            <div class="form-group">
-                                                <label
-                                                    class="control-label w-100"
-                                                    >Manejo de caja principal
-                                                </label>
-
-                                                <el-switch
-                                                    active-text="Si"
-                                                    inactive-text="No"
-                                                    @change="submit"
-                                                    v-model="
-                                                        form.principal_cash
-                                                    "
-                                                ></el-switch>
-                                            </div>
-                                        </div>
+                                        
                                         <div class="col-md-6 mt-4">
                                             <div class="form-group">
                                                 <label
@@ -1832,6 +1816,23 @@
                                             </div>
                                         </div>
                                     </template>
+                                    <div class="col-md-6 mt-4">
+                                            <div class="form-group">
+                                                <label
+                                                    class="control-label w-100"
+                                                    >Manejo de caja principal
+                                                </label>
+
+                                                <el-switch
+                                                    active-text="Si"
+                                                    inactive-text="No"
+                                                    @change="submit"
+                                                    v-model="
+                                                        form.principal_cash
+                                                    "
+                                                ></el-switch>
+                                            </div>
+                                        </div>
                                     <div class="col-md-6 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"

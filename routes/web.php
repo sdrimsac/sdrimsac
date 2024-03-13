@@ -664,6 +664,7 @@ if ($hostname) {
                 Route::get('sale-notes/print-a5/{sale_note_id}/{format}', [App\Http\Controllers\Tenant\SaleNotePaymentController::class, 'toPrint']);
                 // Route::get('sale-notes/dispatches', [App\Http\Controllers\Tenant\SaleNoteController::class, 'dispatches']);
                 Route::get('sale-notes/contract/{id}', [App\Http\Controllers\Tenant\SaleNoteController::class, 'contract']);
+                Route::get('sale-notes/fianza/{id}', [App\Http\Controllers\Tenant\SaleNoteController::class, 'fianza']);
                 Route::delete('sale-notes/destroy_sale_note_item/{sale_note_item}', [App\Http\Controllers\Tenant\SaleNoteController::class, 'destroy_sale_note_item']);
 
                 Route::get('sale_note_payments/records/{sale_note}', [App\Http\Controllers\Tenant\SaleNotePaymentController::class, 'records']);

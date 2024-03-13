@@ -474,6 +474,15 @@ class SaleNoteController extends Controller
 
         return $record;
     }
+    public function fianza($id)
+    {
+        $company = Company::first();
+        $sale = SaleNote::findOrFail($id);
+        $establishment = Establishment::where('id', auth()->user()->establishment_id)->first();
+        $payment = Payment::where('sale_note_id', $id)->get();
+        $recibo = PDF::loadView('tenant.contract.fianza', ['company' => $company, 'sale' => $sale, 'payment' => $payment, 'establishment' => $establishment]);
+        return $recibo->setPaper('a4', 'portrait')->stream();
+    }
     public function contract($id)
     {
         $company = Company::first();
@@ -942,12 +951,12 @@ class SaleNoteController extends Controller
                 $saleNoteUpdate->save();
             });
 
-            if($this->sale_note->quotation_id){
+            if ($this->sale_note->quotation_id) {
                 $quotation = Quotation::find($this->sale_note->quotation_id);
                 $quotation->changed = true;
                 $quotation->save();
             }
-            
+
 
             $establishment = Establishment::where('id', $this->sale_note->establishment_id)->first();
             if (auth()->user()->type != 'admin') {
