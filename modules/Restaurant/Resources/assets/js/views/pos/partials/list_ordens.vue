@@ -121,7 +121,7 @@
                 style="padding-top: 12px"
             >
                 <div class="row col-12" v-if="clientTableData.table">
-                    <div class="col-6">
+                    <div class="col-6" v-if="configuration.restaurant">
                         <h3 class="text-white">
                             <strong style="padding-left: 20px">
                                 {{
@@ -147,7 +147,7 @@
                 <div
                     class="row h5 text-white col-12"
                     style="padding-left: 25px"
-                    v-if="clientTableData.table"
+                    v-if="clientTableData.table && configuration.restaurant"
                 >
                     <strong>
                         {{ clientTableData.is_room ? "Habitación" : "Mesa" }}
@@ -3840,6 +3840,7 @@ export default {
                 printDocument: this.printing,
                 printing: this.configuration.print_commands,
                 commands_fisico: this.commands_fisico,
+                comercial_treatment_id: this.commercialTreatmentId,
                 print_kitchen: this.configuration.print_kitchen,
                 to_carry: this.to_carry,
                 orden: {

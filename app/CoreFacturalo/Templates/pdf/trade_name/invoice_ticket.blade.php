@@ -436,7 +436,13 @@
                 @endisset
             </td>
         </tr>
-
+        @if($document->comercial_treatment)
+        <tr>
+            <td colspan="2" class="align-top">
+                <b>Tratamiento Comercial:</b> {{ $document->comercial_treatment->description }}
+            </td>
+        </tr>
+        @endif
         @if ($document->detraction)
             {{-- <strong>Operación sujeta a detracción</strong> --}}
             <tr>

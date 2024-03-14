@@ -59,6 +59,8 @@ class CashCollection extends ResourceCollection
                 }
             }
             return [
+                'pharmacy_info' => $row->pharmacy_info ? (array) $row->pharmacy_info : null, 
+                'principal' => (bool) $row->principal,
                 'group_code' => $row->group_code,
                 'bill_series' => $row->bill_series,
                 'id' => $row->id,

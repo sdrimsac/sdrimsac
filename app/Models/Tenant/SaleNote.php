@@ -15,6 +15,7 @@ class SaleNote extends ModelTenant
     protected $with = ['user', 'soap_type', 'state_type', 'currency_type', 'items', 'document_type'];
 
     protected $fillable = [
+        'comercial_treatment_id',
         'cash_id',
         'credit_cash',
         'to_carry',
@@ -134,7 +135,8 @@ class SaleNote extends ModelTenant
 
         );
     }
-    public function boxes(){
+    public function boxes()
+    {
         return $this->hasMany(Box::class);
     }
     public function variationDocument()

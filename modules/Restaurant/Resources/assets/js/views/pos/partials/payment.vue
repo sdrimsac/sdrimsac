@@ -1285,7 +1285,7 @@
             :input_person="input_person"
             :external="true"
             :user_id.sync="form.user_id"
-            :document_type_id="form.document_type_id"
+            :document_type_id.sync="form.document_type_id"
             @add_customer="add_customer"
             :recordId="form.customer_id"
         >
@@ -2001,7 +2001,7 @@ export default {
         },
         createClient() {
             this.value = null;
-            this.form.document_type_id;
+            
             this.form.customer_id = null;
             this.showDialogNewPerson = true;
         },

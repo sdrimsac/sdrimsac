@@ -3061,6 +3061,7 @@ export default {
             this.form.printDocument = form.printDocument;
             this.form.is_room = form.is_room;
             this.form.to_carry = form.to_carry;
+            this.form.comercial_treatment_id = form.comercial_treatment_id;
             this.form.ref = form.ref;
             if (this.form.is_room) {
                 if (form.customer_id) {
@@ -5051,6 +5052,9 @@ export default {
         async limpiarForm() {
             if (this.configuration.hotels) {
                 this.getTablesToLeave();
+            }
+            if(this.$refs.list_orden){
+                this.$refs.list_orden.commercialTreatmentId = null;
             }
             this.clientSaleNoteNumber = null;
             this.quotationId = null;

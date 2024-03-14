@@ -13,11 +13,7 @@
             font-size: 11px;
         }
 
-        table {
-            width: 100%;
-            border-spacing: 0;
-            border:1px solid #ccc;
-        }
+        table {}
 
         .table {
             border: 0.1px solid #ccc;
@@ -116,7 +112,7 @@
         }
 
         .celda_descrip {
-            width: 60% !important;
+            width: 50% !important;
             text-align: left;
             padding: 5px;
             border: 0.1px solid #ccc;
@@ -158,12 +154,14 @@
         }
 
         @page {
-            margin: 0.5cm 0.5cm 0cm 0.5cm;
+            margin: 0.5cm 0.5cm 0.5cm 0.5cm;
             font-family: sans-serif;
         }
-        td{
+
+        /* td {
             border-bottom: 1px solid #ccc;
-        }
+        } */
+
         td,
         th {
             font-size: 10px !important;
@@ -174,14 +172,23 @@
             margin: 1.5cm 0.5cm 0.5cm 0.5cm;
         }
 
+        .text-end {
+            text-align: right;
+        }
+
+        .text-center {
+            text-align: center;
+        }
     </style>
 </head>
-<body>
-    <header>
-    
-    </header>
 
-    <div>
+<body>
+    <div style="font-size:15px;">
+        <strong>MINISTERIO DE SALUD</strong><br>
+        <strong>{{ $company->name }}</strong><br>
+    </div>
+
+    {{-- <div>
         <table cellpadding="0" cellspacing="0"
             style="border-collapse: collapse;border:1px solid #ddd; margin-top: 10px !important;">
             <tr>
@@ -193,41 +200,189 @@
                 </td>
             </tr>
         </table>
+    </div> --}}
+    <div class="text-center"
+        style="text-decoration: underline; margin-top: 10px !important; margin-bottom: 10px !important;
+    font-size:14px;
+    ">
+        <strong>
+            RELACION TABULADA DE INGRESOS DIARIOS
+        </strong>
     </div>
+    <table>
+        <tr>
+            <td>
+                <strong>FECHA:</strong>
+                {{ \Carbon\Carbon::parse($cash->date_opening)->format('d/m/Y') }}
+            </td>
+            <td>
+                <strong>RESPONSABLE:</strong>
+                {{ $cash->user->name }}
+            </td>
+        </tr>
+    </table>
+    <table width="90%" cellpadding="0" cellspacing="0">
+        <thead>
+            <tr>
+                <th colspan="5">
+                    DOCUMENTOS
+                </th>
+            </tr>
+            <tr>
+                <th></th>
+                <th>SERIE</th>
+                <th>DEL</th>
+                <th>AL</th>
+                <th>TOTAL S/</th>
+            </tr>
+        <tbody>
+            @if (isset($info_documents['min_03']) || isset($info_documents['max_03']))
+                <tr>
 
-    <div>
-        <table cellpadding="0" cellspacing="0" style="border-collapse: collapse; border:1px solid #ddd; margin-top: 10px !important;">
-            <thead>
-                <tr>
-                    <th class="encabezado">Código</th>
-                    <th class="encabezado">Concepto</th>
-                    <th class="encabezado">Subtotal</th>
-                    <th class="encabezado">Total</th>
+                    <td class="celda">BV-{{ $establishment->description }}</td>
+                    <td class="celda text-center">
+                        @if (isset($info_documents['min_03']))
+                            {{ $info_documents['min_03']->series }}
+                        @endif
+                    </td>
+                    <td class="celda text-center">
+                        @isset($info_documents['min_03'])
+                            {{ $info_documents['min_03']->number }}
+                        @endisset
+                    </td>
+                    <td class="celda text-center">
+                        @isset($info_documents['max_03'])
+                            {{ $info_documents['max_03']->number }}
+                        @endisset
+                    </td>
+                    <td class="celda text-end">
+                        @isset($info_documents['total_03'])
+                            {{ number_format($info_documents['total_03'], 2) }}
+                        @endisset
+                    </td>
                 </tr>
-            </thead>
-            <tbody>
-                @foreach($items_by_category as $category => $items)
+            @endif
+            @if (isset($info_documents['min_01']) || isset($info_documents['max_01']))
                 <tr>
-                    <td class="categoria"></td>
-                    <td class="categoria">{{ $category }}</td>
-                    <td class="categoria"></td>
+                    <td class="celda">FT-{{ $establishment->description }}</td>
+                    <td class="celda text-center">
+                        @isset($info_documents['min_01'])
+                            {{ $info_documents['min_01']->series }}
+                        @endisset
+
+                    </td>
+                    <td class="celda text-center">
+                        @isset($info_documents['min_01'])
+                            {{ $info_documents['min_01']->number }}
+                        @endisset
+                    </td>
+                    <td class="celda text-center">
+                        @isset($info_documents['max_01'])
+                            {{ $info_documents['max_01']->number }}
+                        @endisset
+                    </td>
+                    <td class="celda text-end">
+                        @isset($info_documents['total_01'])
+                            {{ number_format($info_documents['total_01'], 2) }}
+                        @endisset
+                    </td>
+                </tr>
+            @endif
+            @if ($cash->pharmacy_info)
+                @php
+                    $info = (array) $cash->pharmacy_info;
+                @endphp
+                @foreach ($info as $key => $value)
+                    @if (isset($value->serie_bv))
+                        <tr>
+                            <td class="celda">BV-{{ $value->pharmacy_name }}</td>
+                            <td class="celda text-center">
+                                {{ $value->serie_bv }}
+                            </td>
+                            <td class="celda text-center">
+                                {{ $value->min_bv }}
+                            </td>
+                            <td class="celda text-center">
+                                {{ $value->max_bv }}
+                            </td>
+                            <td class="celda text-end">
+                                {{ number_format($value->total_bv,2) }}
+                            </td>
+                        </tr>
+                    @endif
+                    @if (isset($value->serie_ft))
+                        <tr>
+                            <td class="celda">FT-{{ $value->pharmacy_name }}</td>
+                            <td class="celda text-center">
+                                {{ $value->serie_ft }}
+
+                            </td>
+                            <td class="celda text-center">
+                                {{ $value->min_ft }}
+                            </td>
+                            <td class="celda text-center">
+                                {{ $value->max_ft }}
+                            </td>
+                            <td class="celda text-end">
+                                {{ number_format($value->total_ft,2) }}
+                            </td>
+                        </tr>
+                    @endif
+                @endforeach
+            @endif
+        </tbody>
+        </thead>
+
+    </table>
+    <table width="90%" cellpadding="0" cellspacing="0"
+        style="border-collapse: collapse; border:1px solid #ddd; margin-top: 10px !important;">
+        <thead>
+            <tr>
+                <th class="encabezado">Código</th>
+                <th class="encabezado">Concepto</th>
+                <th class="encabezado">Subtotal</th>
+                <th class="encabezado">Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            @php
+                $total_general = 0;
+            @endphp
+            @foreach ($items_by_category as $category => $items)
+                <tr>
+                    <td class="categoria celda">
+                        {{ reset($items)['barcode'] }}
+                    </td>
+                    <td class="categoria celda_descrip">{{ $category }}</td>
+                    <td class="categoria celda"></td>
                     @php
-                    $category_sum = array_sum(array_column($items, 'total'));
+                        $category_sum = array_sum(array_column($items, 'total'));
+                        $total_general += $category_sum;
                     @endphp
-                    <td class="categoria">{{$category_sum}}</td>
+
+                    <td class="categoria celda text-end">{{ number_format($category_sum, 2) }}</td>
                 </tr>
-                @foreach($items as $item)
-                <tr>
-                    <td class="celda_loop">{{ $item['barcode'] }}</td>
-                    <td class="celda_loop">{{ $item['description'] }}</td>
-                    <td class="celda_descrip text-end">{{ $item['total'] }}</td>
-                    <td class="celda_date"></td>
-                </tr>
+                @foreach ($items as $item)
+                    <tr>
+                        <td class="celda_loop"></td>
+                        <td class="celda_descrip">{{ $item['description'] }}</td>
+                        <td class="celda_loop text-end">{{ number_format($item['total'], 2) }}</td>
+                        <td class="celda_date"></td>
+                    </tr>
                 @endforeach
-                @endforeach
-            </tbody>
-        </table>
-    </div>
+            @endforeach
+            <tr>
+                <td class="celda_loop" colspan="2"></td>
+                <td class="text-end celda_loop">
+                    <strong>Total General</strong>
+                </td>
+                <td class="celda_date text-end
+                    ">
+                    <strong>{{ number_format($total_general, 2) }}</strong>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 
 </body>
 

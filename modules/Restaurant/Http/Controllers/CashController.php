@@ -31,6 +31,7 @@ use App\Http\Resources\Tenant\QuotationCollection;
 use App\Http\Resources\Tenant\SaleNoteCollection;
 use App\Jobs\WhatsappSendCashReportProccess;
 use App\Jobs\WhatsappSendCashReportStockProccess;
+use App\Jobs\WhatsappSendMessageProccess;
 use App\Models\Tenant\BankAccount;
 use App\Models\Tenant\CashIncomePrincipal;
 use App\Models\Tenant\Catalogs\AttributeType;
@@ -1400,6 +1401,7 @@ class CashController extends Controller
     {
         $user_id  = $request->input('user_id');
         $date_close = $request->input('date_close');
+        $is_principal = $request->input('is_principal');
         $records = Cash::query();
         // $records = Cash::where('state', '=', 0);
         if ($user_id) {
@@ -1408,7 +1410,9 @@ class CashController extends Controller
         if ($date_close) {
             $records = $records->where('date_closed', '=', $date_close);
         }
-
+        if($is_principal){
+            $records->where('principal', true);
+        }
         $records->orderBy('date_opening', 'desc');
 
         return new CashCollection($records->paginate(config('tenant.items_per_page')));
@@ -1416,13 +1420,12 @@ class CashController extends Controller
     public function records(Request $request)
     {
         $fromAdmin = $request->input('fromAdmin');
-
+        $is_principal = $request->input('is_principal');
         $records = Cash::query();
         if ($request->column) {
-
             $records = $records->where($request->column, 'like', "%{$request->value}%");
         }
-
+    
         $records->whereTypeUser($fromAdmin);
         $records->orderBy('date_opening', 'desc')
         ->orderBy('time_opening', 'desc')
@@ -1466,7 +1469,9 @@ class CashController extends Controller
 
     public function opening_cash_check($user_id)
     {
-        $cash = Cash::where([['user_id', $user_id], ['state', true]])->first();
+        $cash = Cash::where([['user_id', $user_id], ['state', true]])
+        // ->where('principal', false)
+        ->first();
         return compact('cash');
     }
 
@@ -1560,7 +1565,6 @@ class CashController extends Controller
         $user_id_principal = auth()->user()->id;
         $records = CashIncomePrincipal::whereHas('cash_principal', function ($query) use ($user_id_principal) {
             $query->where('user_id', $user_id_principal);
-
         })
         ->whereHas('cash', function ($query) use ($column,$value) {
             if($column && $value){
@@ -1701,7 +1705,8 @@ class CashController extends Controller
                 $name = $user->name;
                 $message = "La caja de $name ha sido cerrada, el monto total es de $all_cash";
                 if ($user_principal_telephone) {
-                    (new WhatsappController)->sendMessage($message, $user_principal_telephone);
+                    WhatsappSendMessageProccess::dispatch($website->id, $message, $user_principal_telephone);
+                    // (new WhatsappController)->sendMessage($message, $user_principal_telephone);
                 }
             }
         }

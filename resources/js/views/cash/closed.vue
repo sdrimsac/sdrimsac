@@ -39,6 +39,12 @@
                                 </el-select>
                             </div>
                         </template>
+                        <div class="col-md 3">
+                            <el-checkbox
+                                v-model="form.is_principal"
+                                label="Principal"
+                            ></el-checkbox>
+                        </div>
                         <div
                             class="col-lg-7 col-md-7 col-md-7 col-sm-12"
                             style="margin-top: 29px"
@@ -89,19 +95,20 @@
                                             </td>
                                             <td>{{ row.user }}</td>
                                             <td>{{ row.reference_number }}</td>
-                                            <td>{{ row.date_opening }}
-                                                <br>
+                                            <td>
+                                                {{ row.date_opening }}
+                                                <br />
                                                 <small>
-                                                    {{row.time_opening}}
+                                                    {{ row.time_opening }}
                                                 </small>
                                             </td>
                                             <td>{{ row.beginning_balance }}</td>
-                                            <td>{{ row.date_closed }}
-<br>
-<small>
-    {{row.time_closed}}
-</small>
-
+                                            <td>
+                                                {{ row.date_closed }}
+                                                <br />
+                                                <small>
+                                                    {{ row.time_closed }}
+                                                </small>
                                             </td>
                                             <td>{{ row.final_balance }}</td>
                                             <td>
@@ -124,6 +131,33 @@
                                                     @click="openA4(row)"
                                                     >Exportar PDF</el-button
                                                 >
+                                                <template
+                                                    v-if="
+                                                        row.principal &&
+                                                            configuration.health_network
+                                                    "
+                                                >
+                                                    <el-button
+                                                        class="submit"
+                                                        type="primary"
+                                                        icon="el-icon-tickets"
+                                                        @click="
+                                                            openSalud(row.id)
+                                                        "
+                                                        >Relacion
+                                                        tabulada</el-button
+                                                    >
+                                                    <el-button
+                                                        class="submit"
+                                                        type="primary"
+                                                        icon="el-icon-tickets"
+                                                        @click="
+                                                            openInfoData(row.id)
+                                                        "
+                                                        >Info.
+                                                        farmacia</el-button
+                                                    >
+                                                </template>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -142,6 +176,112 @@
                                 </div>
                             </div>
                         </div>
+                        <el-dialog
+                            append-to-body
+                            width="70%"
+                            title="Información de farmacia"
+                            :visible.sync="showInfoPharmacy"
+                        >
+                            <div class="row">
+                                <div class="col-12 text-end">
+                                    <a href="#" @click.prevent="addInfoPharmacy"
+                                        >[<i class="fas fa-plus"></i>
+                                        Agregar]</a
+                                    >
+                                </div>
+                            </div>
+                            <div
+                                class="row"
+                                v-for="(row, index) in infoPharmacy"
+                                :key="index"
+                            >
+                                <div class="col-12 text-end">
+                                    <el-button
+                                        v-if="infoPharmacy.length > 1"
+                                        type="danger"
+                                        icon="el-icon-delete"
+                                        @click="infoPharmacy.splice(index, 1)"
+                                    >
+                                        <i class="fas fa-trash"></i>
+                                    </el-button>
+                                </div>
+                                <div class="col-12">
+                                    <label for="">Farmacia</label>
+                                    <el-input
+                                        v-model="row.pharmacy_name"
+                                        style="width:100%"
+                                    ></el-input>
+                                </div>
+                                <div class="col-md-3 col-lg-3 col-12">
+                                    <label for="">SERIE BOLETA</label>
+                                    <el-input
+                                        v-model="row.serie_bv"
+                                        style="width:100%"
+                                    ></el-input>
+                                </div>
+                                <div class="col-md-3 col-lg-3 col-12">
+                                    <label for="">DE</label>
+                                    <el-input
+                                        v-model="row.min_bv"
+                                        style="width:100%"
+                                    ></el-input>
+                                </div>
+                                <div class="col-md-3 col-lg-3 col-12">
+                                    <label for="">HASTA</label>
+                                    <el-input
+                                        v-model="row.max_bv"
+                                        style="width:100%"
+                                    ></el-input>
+                                </div>
+                                <div class="col-md-3 col-lg-3 col-12">
+                                    <label for="">TOTAL</label>
+                                    <el-input
+                                        v-model="row.total_bv"
+                                        style="width:100%"
+                                    ></el-input>
+                                </div>
+                                <div class="col-md-3 col-lg-3 col-12">
+                                    <label for="">SERIE FACTURA</label>
+                                    <el-input
+                                        v-model="row.serie_ft"
+                                        style="width:100%"
+                                    ></el-input>
+                                </div>
+                                <div class="col-md-3 col-lg-3 col-12">
+                                    <label for="">DE</label>
+                                    <el-input
+                                        v-model="row.min_ft"
+                                        style="width:100%"
+                                    ></el-input>
+                                </div>
+                                <div class="col-md-3 col-lg-3 col-12">
+                                    <label for="">HASTA</label>
+                                    <el-input
+                                        v-model="row.max_ft"
+                                        style="width:100%"
+                                    ></el-input>
+                                </div>
+                                <div class="col-md-3 col-lg-3 col-12">
+                                    <label for="">TOTAL</label>
+                                    <el-input
+                                        v-model="row.total_ft"
+                                        style="width:100%"
+                                    ></el-input>
+                                </div>
+                                <el-divider></el-divider>
+                            </div>
+                            <!-- footer -->
+                            <span slot="footer" class="dialog-footer">
+                                <el-button
+                                    type="primary"
+                                    @click="saveInfoPharmacy"
+                                    >Aceptar</el-button
+                                >
+                                <el-button @click="showInfoPharmacy = false"
+                                    >Cancelar</el-button
+                                >
+                            </span>
+                        </el-dialog>
                         <el-dialog
                             append-to-body
                             width="40%"
@@ -180,6 +320,9 @@ export default {
     components: {},
     data() {
         return {
+            infoPharmacy: [],
+            showInfoPharmacy: false,
+            currentCashId: null,
             loading: false,
             loading_submit: false,
             titleDialog: null,
@@ -223,6 +366,41 @@ export default {
         this.initForm();
     },
     methods: {
+        addInfoPharmacy() {
+            this.infoPharmacy.push({
+                cash_id: this.currentCashId,
+                pharmacy_name: null,
+                serie_bv: null,
+                min_bv: null,
+                max_bv: null,
+                total_bv: null,
+                serie_ft: null,
+                min_ft: null,
+                max_ft: null,
+                total_ft: null
+            });
+        },
+        
+        async saveInfoPharmacy() {
+            const response = await this.$http.post(
+                `/caja/report-boxes/save_info_pharmacy/${this.currentCashId}`,
+                {
+                    data: this.infoPharmacy
+                }
+            );
+            this.showInfoPharmacy = false;
+        },
+        openInfoData(id) {
+            this.currentCashId = id;
+            this.showInfoPharmacy = true;
+            let data = this.records.find(item => item.id == id);
+            if(data.pharmacy_info){
+                this.infoPharmacy = data.pharmacy_info;
+            }
+        },
+        openSalud(id) {
+            window.open(`/caja/report-boxes/cashes_salud?cash_id=${id}`);
+        },
         async sendWhatsapp() {
             if (!this.number || this.number.length != 9 || isNaN(this.number)) {
                 return this.$toast.error("Ingrese un número válido");

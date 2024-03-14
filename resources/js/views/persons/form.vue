@@ -640,8 +640,10 @@
                 <template
                     v-if="
                         type == 'customers' &&
-                           configuration.credit_list &&
-                            (typeUser == 'admin' || typeUser == 'superadmin' || isArca)
+                            configuration.credit_list &&
+                            (typeUser == 'admin' ||
+                                typeUser == 'superadmin' ||
+                                isArca)
                     "
                 >
                     <div class="row">
@@ -698,7 +700,7 @@ export default {
         "user_id",
         "newTech",
         "typeUser",
-        "isArca",
+        "isArca"
     ],
     data() {
         return {
@@ -805,9 +807,12 @@ export default {
                 }
             }
         },
-    
+
         create() {
-            console.log("🚀 ~ file: form.vue:809 ~ create ~ this.user_id:", this.user_id)
+            console.log(
+                "🚀 ~ file: form.vue:809 ~ create ~ this.user_id:",
+                this.user_id
+            );
             this.initForm();
             if (this.external) {
                 if (this.document_type_id === "01") {
@@ -817,6 +822,10 @@ export default {
                     this.form.identity_document_type_id = "1";
                 }
 
+                console.log(
+                    "🚀 ~ create ~ this.input_person:",
+                    this.input_person
+                );
                 if (this.input_person) {
                     this.form.identity_document_type_id = this.input_person
                         .identity_document_type_id
@@ -825,12 +834,16 @@ export default {
                     this.form.number = this.input_person.number
                         ? this.input_person.number
                         : "";
-                    if(this.form.number.length == 11){
-                        this.form.identity_document_type_id = "6";
-                    }else{
-                        this.form.identity_document_type_id = "1";
-                    }
-
+                    if (
+                        this.input_person.number &&
+                        this.input_person.number != ""
+                    ) {
+                        if (this.form.number.length == 11) {
+                            this.form.identity_document_type_id = "6";
+                        } else {
+                            this.form.identity_document_type_id = "1";
+                        }
+                    } 
                 }
             }
 
@@ -897,7 +910,10 @@ export default {
                 return;
             }
             this.loading_submit = true;
-                    console.log("🚀 ~ file: form.vue:893 ~ submit ~ this.form:", this.form)
+            console.log(
+                "🚀 ~ file: form.vue:893 ~ submit ~ this.form:",
+                this.form
+            );
             this.$http
                 .post(`/${this.resource}`, this.form)
                 .then(response => {

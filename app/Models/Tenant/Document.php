@@ -22,6 +22,7 @@ class Document extends ModelTenant
     protected $with = ['user', 'establecimientos', 'soap_type', 'user', 'state_type', 'document_type', 'currency_type', 'group', 'items', 'invoice', 'payments'];
     public $timestamps = true;
     protected $fillable = [
+        'comercial_treatment_id',
         'to_carry',
         'has_related_sale_note',
         'cash_id',
@@ -171,6 +172,9 @@ class Document extends ModelTenant
         return $count > 1;
       
     }
+  public function comercial_treatment(){
+    return $this->belongsTo(CommercialTreatment::class);
+  }
   public function canceled(){
     $boxes = Box::where('document_id', $this->id)->sum('amount');
     if($boxes > 0){

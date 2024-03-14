@@ -17,6 +17,7 @@ class Cash extends ModelTenant
         'bill_series' => 'array',
         'counter' => 'array',
         'principal' => 'boolean',
+
     ];
     protected $table = 'cash';
     protected $fillable = [
@@ -36,7 +37,8 @@ class Cash extends ModelTenant
         'reference_number',
         'counter',
         'turn_id',
-        'difference'
+        'difference',
+        'pharmacy_info'
 
     ];
 
@@ -86,7 +88,15 @@ class Cash extends ModelTenant
 
         );
     }
+    public function getPharmacyInfoAttribute($value)
+    {
+        return (is_null($value))?null:(object) json_decode($value);
+    }
 
+    public function setPharmacyInfoAttribute($value)
+    {
+        $this->attributes['pharmacy_info'] = (is_null($value))?null:json_encode($value);
+    }
     public function turn()
     {
         return $this->belongsTo(Turns::class);

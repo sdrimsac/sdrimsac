@@ -131,6 +131,7 @@ class DocumentInput
             'type' => $inputs['type'],
             'group_id' => $inputs['group_id'],
             'quotation_id' => Functions::valueKeyInArray($inputs, 'quotation_id', null),
+            'comercial_treatment_id' => Functions::valueKeyInArray($inputs, 'comercial_treatment_id', null),
             'user_id' =>  Functions::valueKeyInArray($inputs, 'user_id', auth()->id()),
             // 'user_id' => $inputs['user_id'], // auth()->id(),
             'afectar_caja' => Functions::valueKeyInArray($inputs, 'afectar_caja', true),

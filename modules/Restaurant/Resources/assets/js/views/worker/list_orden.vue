@@ -99,7 +99,7 @@
                                                                     style="font-weight: bold;"
                                                                 >
                                                                     ({{
-                                                                        orden.quantity
+                                                                        Number(orden.quantity)
                                                                     }})
                                                                 </h3></a
                                                             >
