@@ -1060,15 +1060,27 @@ class BoxesController extends Controller
                             $total_01_document += $document->total;
                             if ($min_01_document_id == null) {
                                 $min_01_document_id = $document->id;
+                            } else {
+                                $min_01_document_id = ($document->id < $min_01_document_id) ? $document->id : $min_01_document_id;
                             }
-                            $max_01_document_id = $document->id;
+                            if ($max_01_document_id == null) {
+                                $max_01_document_id = $document->id;
+                            } else {
+                                $max_01_document_id = ($document->id > $max_01_document_id) ? $document->id : $max_01_document_id;
+                            }
                         }
                         if ($document->document_type_id == '03') {
                             $total_03_document += $document->total;
                             if ($min_03_document_id == null) {
                                 $min_03_document_id = $document->id;
+                            } else {
+                                $min_03_document_id = ($document->id < $min_03_document_id) ? $document->id : $min_03_document_id;
                             }
-                            $max_03_document_id = $document->id;
+                            if ($max_03_document_id == null) {
+                                $max_03_document_id = $document->id;
+                            } else {
+                                $max_03_document_id = ($document->id > $max_03_document_id) ? $document->id : $max_03_document_id;
+                            }
                         }
                     }
                     $document_items = $document->items;
