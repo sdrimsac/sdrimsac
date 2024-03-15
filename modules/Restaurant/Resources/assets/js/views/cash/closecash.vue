@@ -228,6 +228,21 @@
                                         >
                                             INGRESAR SERIES
                                         </el-button>
+                                        <el-button
+                                            style="margin-top:2%;"
+                                            type="primary"
+                                            icon="el-icon-tickets"
+                                            @click.prevent="$refs.file.click()"
+                                        >
+                                            Subir excel
+                                        </el-button>
+                                        <input
+                                            type="file"
+                                            @change="uploadExcelBillsSeries"
+                                            style="visibility:hidden;"
+                                            ref="file"
+                                            accept=".xlsx,.xls"
+                                        />
                                     </td>
                                 </tr>
                             </tfoot>
@@ -512,6 +527,7 @@
 import { deletable } from "../../../../../../../resources/js/mixins/deletable";
 ///mixins/deletable'
 import SeriesBillsDialog from "./series_bills.vue";
+import readXlsxFile from "read-excel-file";
 export default {
     components: {
         SeriesBillsDialog
@@ -542,6 +558,47 @@ export default {
     },
 
     methods: {
+        uploadExcelBillsSeries(event) {
+            let file = event.target.files[0];
+            let localSeries = {
+                diez: [],
+                veinte: [],
+                cincuenta: [],
+                cien: [],
+                doscientos: []
+            };
+            readXlsxFile(file).then(rows => {
+                rows.forEach(columns => {
+                    let serie = this.getSerieBills(columns[0]);
+                    console.log("🚀 ~ readXlsxFile ~ columns[0]:", columns[0]);
+                    console.log("🚀 ~ readXlsxFile ~ serie:", serie);
+                    for (let i = 0; i < columns.length; i++) {
+                        if (i != 0 && columns[i] != null) {
+                            localSeries[serie].push(columns[i]);
+                        }
+                    }
+                });
+                this.seriesBills = localSeries;
+                this.$toast.success("Series cargadas correctamente");
+                event.target.value = "";
+            });
+        },
+        getSerieBills(serie) {
+            switch (serie) {
+                case 10:
+                    return "diez";
+                case 20:
+                    return "veinte";
+                case 50:
+                    return "cincuenta";
+                case 100:
+                    return "cien";
+                case 200:
+                    return "doscientos";
+                default:
+                    return "";
+            }
+        },
         showSeriesBills() {
             this.showSeriesBillsDialog = true;
         },
@@ -586,7 +643,6 @@ export default {
             this.difference = (this.totalSales - this.final_balance).toFixed(2);
         },
         async clickCloseCash() {
-            
             const h = this.$createElement;
             this.$msgbox({
                 title: "Cerrar caja",
@@ -651,7 +707,7 @@ export default {
                 final_balance: this.final_balance,
                 counter: this.count,
                 difference: this.difference,
-                bill_series: this.seriesBills,
+                bill_series: this.seriesBills
             };
             try {
                 this.loading = true;

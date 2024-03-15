@@ -133,6 +133,7 @@ class QuotationController extends Controller
             }
             DB::commit();
             return [
+                'cot' => $quotation->number_full,
                 'success' => true,
                 'orden' => Orden::find($orden->id),
                 'message' => 'Items enviados a caja'

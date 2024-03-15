@@ -962,6 +962,12 @@ const app = new Vue({
                 /*webpackChunkName:"banks"*/
                 "./views/banks/index.vue"
             ),
+        "tenant-principal-categories-index": () =>
+            import(
+                /*webpackChunkName:"principal_categories"*/
+                "./views/principal_categories/index.vue"
+            ),        
+
         "tenant-commercial-treatment-index": () =>
             import(
                 /*webpackChunkName:"commercial_treatment"*/

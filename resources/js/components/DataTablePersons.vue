@@ -67,7 +67,7 @@
                             </el-input>
                         </template>
                     </div>
-                    <div class="col-lg-3 col-md-4 col-sm-12 pb-2">
+                    <div class="col-lg-3 col-md-4 col-sm-12 pb-2" v-if="resource == 'persons/customers'||resource == 'persons/suppliers'">
                         <el-checkbox
                             v-model="search.credit"
                             @change="getRecords"

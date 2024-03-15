@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
+@php
+    // $company = \App\Models\Company::select('health_network_image')->first();
 
+@endphp
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -154,7 +157,7 @@
         }
 
         @page {
-            margin: 0.5cm 0.5cm 0.5cm 0.5cm;
+            margin: 0cm 0.5cm 0.5cm 0.5cm;
             font-family: sans-serif;
         }
 
@@ -169,7 +172,7 @@
         }
 
         body {
-            margin: 1.5cm 0.5cm 0.5cm 0.5cm;
+            margin: 0.5cm 0.5cm 0.5cm 0.5cm;
         }
 
         .text-end {
@@ -183,6 +186,13 @@
 </head>
 
 <body>
+    @if($company->health_network_image &&  file_exists(public_path("storage/uploads/logos/{$company->health_network_image}")))
+    <div >
+        <img src="data:{{ mime_content_type(public_path("storage/uploads/logos/{$company->health_network_image}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/uploads/logos/{$company->health_network_image}"))) }}"
+        alt="{{ $company->health_network_image }}" 
+        style="max-width: 230px;">
+    </div>
+    @endif
     <div style="font-size:15px;">
         <strong>MINISTERIO DE SALUD</strong><br>
         <strong>{{ $company->name }}</strong><br>
@@ -306,7 +316,7 @@
                                 {{ $value->max_bv }}
                             </td>
                             <td class="celda text-end">
-                                {{ number_format($value->total_bv,2) }}
+                                {{ number_format($value->total_bv, 2) }}
                             </td>
                         </tr>
                     @endif
@@ -324,7 +334,7 @@
                                 {{ $value->max_ft }}
                             </td>
                             <td class="celda text-end">
-                                {{ number_format($value->total_ft,2) }}
+                                {{ number_format($value->total_ft, 2) }}
                             </td>
                         </tr>
                     @endif
@@ -349,9 +359,17 @@
                 $total_general = 0;
             @endphp
             @foreach ($items_by_category as $category => $items)
+                @php
+                    $barcode = reset($items)['barcode'];
+                    $cat = \Modules\Item\Models\PrincipalCategory::where('identifier', $barcode)->first();
+                    $is_expanded = true;
+                    if ($cat) {
+                        $is_expanded = $cat->is_expanded;
+                    }
+                @endphp
                 <tr>
                     <td class="categoria celda">
-                        {{ reset($items)['barcode'] }}
+                        {{ $barcode }}
                     </td>
                     <td class="categoria celda_descrip">{{ $category }}</td>
                     <td class="categoria celda"></td>
@@ -362,14 +380,16 @@
 
                     <td class="categoria celda text-end">{{ number_format($category_sum, 2) }}</td>
                 </tr>
-                @foreach ($items as $item)
-                    <tr>
-                        <td class="celda_loop"></td>
-                        <td class="celda_descrip">{{ $item['description'] }}</td>
-                        <td class="celda_loop text-end">{{ number_format($item['total'], 2) }}</td>
-                        <td class="celda_date"></td>
-                    </tr>
-                @endforeach
+                @if ($is_expanded)
+                    @foreach ($items as $item)
+                        <tr>
+                            <td class="celda_loop"></td>
+                            <td class="celda_descrip">{{ $item['description'] }}</td>
+                            <td class="celda_loop text-end">{{ number_format($item['total'], 2) }}</td>
+                            <td class="celda_date"></td>
+                        </tr>
+                    @endforeach
+                @endif
             @endforeach
             <tr>
                 <td class="celda_loop" colspan="2"></td>

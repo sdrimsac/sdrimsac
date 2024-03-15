@@ -49,6 +49,15 @@
                                 </a>
                             </li>
                         @endif
+                        @if ($config->health_network)
+                        <li>
+                            <a class="{{ $path[0] === 'principal_categories' ? 'active' : '' }}"
+                                href="{{ route('tenant.principal_categories.index') }}">
+                                <i class="fas fa-layer-group"></i>
+                                Categorias principales
+                            </a>
+                        </li>
+                    @endif
                         <li>
                             <a class="{{ $path[0] === 'bank_accounts' && $path[1] === '' ? 'active' : '' }}"
                                 href="{{ route('tenant.bank_accounts.index') }}">

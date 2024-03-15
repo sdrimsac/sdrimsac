@@ -979,6 +979,7 @@
                     <div class="card-body p-2">
                         <list-orden
                             :quotationId.sync="quotationId"
+                            :cotIdentifier.sync="cotIdentifier"
                             :isSeller.sync="isSeller"
                             @sendOrdens="sendOrdens"
                             :isHotelArea.sync="isHotelArea"
@@ -1865,6 +1866,7 @@ export default {
 
     data() {
         return {
+            cotIdentifier:null,
             isSeller: false,
             showColorSize: false,
             currentColorSize: [],
@@ -2814,6 +2816,7 @@ export default {
             }
             if (orden.quotation_id) {
                 this.quotationId = orden.quotation_id;
+                this.cotIdentifier = orden.cot;
             }
             if (orden.mesa != undefined && orden.id != undefined) {
                 this.clientTableData = {

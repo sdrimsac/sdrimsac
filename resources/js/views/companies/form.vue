@@ -417,17 +417,14 @@
                                             </el-input>
                                             <div class="badge text-danger">
                                                 <small
-                                                   style="margin-right: 10px; !important"
+                                                    style="margin-right: 10px; !important"
                                                     >Se recomienda resoluciones
                                                     700x300</small
                                                 >
 
                                                 <el-checkbox
-                                                 
                                                     @change="setConfiguration"
-                                                    v-model="
-                                                        show_image_a5
-                                                    "
+                                                    v-model="show_image_a5"
                                                 >
                                                     Mostrar imagen en A5
                                                 </el-checkbox>
@@ -440,6 +437,48 @@
                                             class="img-thumbnail"
                                             :src="
                                                 `/storage/uploads/logos/${form.a5_image}`
+                                            "
+                                            style="  max-height: 100px;"
+                                        />
+                                    </div>
+                                </div>
+
+                                <div class="row" v-if="configuration.health_network">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="control-label"
+                                                >Reporte red de salud</label
+                                            >
+                                            <el-input
+                                                v-model="
+                                                    form.health_network_image
+                                                "
+                                                :readonly="true"
+                                            >
+                                                <el-upload
+                                                    slot="append"
+                                                    :headers="headers"
+                                                    :data="{
+                                                        type: 'health_network_image'
+                                                    }"
+                                                    action="/companies/uploads"
+                                                    :show-file-list="false"
+                                                    :on-success="successUpload"
+                                                >
+                                                    <el-button
+                                                        type="primary"
+                                                        icon="el-icon-upload"
+                                                    ></el-button>
+                                                </el-upload>
+                                            </el-input>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-6">
+                                        <img
+                                            class="img-thumbnail"
+                                            :src="
+                                                `/storage/uploads/logos/${form.health_network_image}`
                                             "
                                             style="  max-height: 100px;"
                                         />

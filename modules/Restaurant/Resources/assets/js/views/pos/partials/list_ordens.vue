@@ -137,6 +137,11 @@
                             </strong>
                         </h3>
                     </div>
+                <div class="h5 text-white col-6" style="padding-left: 25px" v-else>
+                        <template v-if="quotationId">
+                            GENERANDO COMPROBANTE - COTIZACIÓN {{cotIdentifier}}
+                        </template>
+                    </div>
                     <div class="col-6">
                         <h3 class="text-white" style="text-align: right">
                             Total S/. {{ (total + totalOrdenItems).toFixed(2) }}
@@ -159,7 +164,11 @@
                     <div class="h5 text-white col-6" style="padding-left: 25px">
                         <strong v-if="!clientTableData.table">
                             <template v-if="!isConsignment">
-                                {{quotationId ? "GENERANDO COMPROBANTE - COTIZACIÓN" : "VENTA DIRECTA"}}
+                                {{
+                                    quotationId
+                                        ? "GENERANDO COMPROBANTE - COTIZACIÓN"
+                                        : "VENTA DIRECTA"
+                                }}
                             </template>
                             <template v-else>
                                 LIQUIDACIÓN DE CONSIGNACIÓN
@@ -441,7 +450,8 @@
                                     <el-button
                                         v-if="
                                             configuration.consignment &&
-                                                localOrden.length != 0 &&  !isSeller
+                                                localOrden.length != 0 &&
+                                                !isSeller
                                         "
                                         class="btn btn-light
                                             m-1
@@ -476,7 +486,8 @@
                                     <el-button
                                         v-if="
                                             configuration.credits &&
-                                                localOrden.length != 0 && !isSeller
+                                                localOrden.length != 0 &&
+                                                !isSeller
                                         "
                                         @click="openCredit"
                                         class="
@@ -2349,7 +2360,6 @@
 <style>
 .black-placeholder::placeholder {
     color: black;
-    
 }
 .el-input__inner::placeholder {
     color: rgb(6, 6, 6);
@@ -2421,6 +2431,7 @@ export default {
         ShowColorSizeProduct
     },
     props: [
+        "cotIdentifier",
         "quotationId",
         "isSeller",
         "sellers",
@@ -3757,7 +3768,7 @@ export default {
                         data: url
                     }
                 ];
-                    console.log("🚀 ~ qz.print ~ config:", config)
+                console.log("🚀 ~ qz.print ~ config:", config);
                 qz.print(config, data).catch(e => {
                     this.$toast.error(e.message);
                 });

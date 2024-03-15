@@ -62,7 +62,7 @@ use Modules\Restaurant\Models\BoxesDetail;
 use Mpdf\Mpdf;
 use NumberFormatter;
 
-class CashController extends Controller 
+class CashController extends Controller
 {
     use JobReportTrait;
     public function observ_register(Request $request)
@@ -1410,7 +1410,7 @@ class CashController extends Controller
         if ($date_close) {
             $records = $records->where('date_closed', '=', $date_close);
         }
-        if($is_principal){
+        if ($is_principal) {
             $records->where('principal', true);
         }
         $records->orderBy('date_opening', 'desc');
@@ -1425,11 +1425,10 @@ class CashController extends Controller
         if ($request->column) {
             $records = $records->where($request->column, 'like', "%{$request->value}%");
         }
-    
+
         $records->whereTypeUser($fromAdmin);
         $records->orderBy('date_opening', 'desc')
-        ->orderBy('time_opening', 'desc')
-        ;
+            ->orderBy('time_opening', 'desc');
 
         return new CashCollection($records->paginate(config('tenant.items_per_page')));
     }
@@ -1470,8 +1469,8 @@ class CashController extends Controller
     public function opening_cash_check($user_id)
     {
         $cash = Cash::where([['user_id', $user_id], ['state', true]])
-        // ->where('principal', false)
-        ->first();
+            // ->where('principal', false)
+            ->first();
         return compact('cash');
     }
 
@@ -1530,11 +1529,11 @@ class CashController extends Controller
         $establishment = Establishment::find($user->establishment_id);
         $establishment_description = $establishment->description;
         $area = Area::find($user->area_id);
-        if($area){
+        if ($area) {
             $area_description = $area->description;
             $message = "$area_description con usuario:$name, ha sido aperturada con S/ $amount en $establishment_description";
-        }else{
-            
+        } else {
+
             $message = "usuario:$name, aperturó caja con S/ $amount en $establishment_description";
         }
         (new WhatsappController)->sendMessageAll($message);
@@ -1545,20 +1544,23 @@ class CashController extends Controller
         ];
     }
 
-    public function tables_principal(){
+    public function tables_principal()
+    {
         $users = User::where('type', 'seller')->get();
 
         return [
             'users' => $users,
         ];
     }
-    public function columns_principal(){
+    public function columns_principal()
+    {
         return [
             'user_id' => 'Usuario',
             'date_opening' => 'Fecha de apertura',
         ];
     }
-    public function records_principal_excel(Request $request){
+    public function records_principal_excel(Request $request)
+    {
         $column = $request->column;
         $value = $request->value;
         $state = $request->input('status');
@@ -1566,22 +1568,21 @@ class CashController extends Controller
         $records = CashIncomePrincipal::whereHas('cash_principal', function ($query) use ($user_id_principal) {
             $query->where('user_id', $user_id_principal);
         })
-        ->whereHas('cash', function ($query) use ($column,$value) {
-            if($column && $value){
-                $query->where($column, 'like', $value);
-            }
-        });
-        if($state){
+            ->whereHas('cash', function ($query) use ($column, $value) {
+                if ($column && $value) {
+                    $query->where($column, 'like', $value);
+                }
+            });
+        if ($state) {
             $records = $records->where('status', $state);
         }
 
-       $records =  $records->orderBy('id', 'desc');
+        $records =  $records->orderBy('id', 'desc');
 
-       return (new CashPrincipalExport)
-         ->records($records->get())
-         ->company(Company::active())
-         ->download('Reporte_Caja_Principal.xlsx');
-
+        return (new CashPrincipalExport)
+            ->records($records->get())
+            ->company(Company::active())
+            ->download('Reporte_Caja_Principal.xlsx');
     }
     public function records_principal(Request $request)
     {
@@ -1591,18 +1592,17 @@ class CashController extends Controller
         $user_id_principal = auth()->user()->id;
         $records = CashIncomePrincipal::whereHas('cash_principal', function ($query) use ($user_id_principal) {
             $query->where('user_id', $user_id_principal);
-
         })
-        ->whereHas('cash', function ($query) use ($column,$value) {
-            if($column && $value){
-                $query->where($column, 'like', $value);
-            }
-        });
-        if($state){
+            ->whereHas('cash', function ($query) use ($column, $value) {
+                if ($column && $value) {
+                    $query->where($column, 'like', $value);
+                }
+            });
+        if ($state) {
             $records = $records->where('status', $state);
         }
 
-       $records =  $records->orderBy('id', 'desc');
+        $records =  $records->orderBy('id', 'desc');
 
         return new CashIncomePrincipalCollection($records->paginate(config('tenant.items_per_page')));
     }
@@ -1630,9 +1630,9 @@ class CashController extends Controller
         $website = $this->getTenantWebsite();
         $hostname =  app(Environment::class)->hostname();
         $fqdn = $hostname->fqdn;
-        WhatsappSendCashReportProccess::dispatch($website->id, $cash->id, $user_name,$fqdn);
+        WhatsappSendCashReportProccess::dispatch($website->id, $cash->id, $user_name, $fqdn);
         $configuration = Configuration::first();
-        WhatsappSendCashReportStockProccess::dispatch($website->id, $cash->id, $cash->user_id,$fqdn);
+        WhatsappSendCashReportStockProccess::dispatch($website->id, $cash->id, $cash->user_id, $fqdn);
         // $number_activity = $configuration->number_activity;
         // $resource = "http://" . $hostname->fqdn . "/caja/report-boxes/reports_resumen_type?cash_id=" . $id;
         // $request = new Request(
@@ -1685,7 +1685,7 @@ class CashController extends Controller
         //     $request['number'] = $number->number;
         //     (new WhatsappController)->sendHistorial($request);
         // }
-        
+
         $principal_cash =  $configuration->principal_cash;
         if ($principal_cash) {
             $cash_principal = Cash::where('state', 1)
@@ -1717,10 +1717,11 @@ class CashController extends Controller
     }
 
 
-    public function get_stock_file($id){
+    public function get_stock_file($id)
+    {
         $cash = Cash::findOrFail($id);
         $file_path = $cash->stock_file;
-        $directory = 'public' . DIRECTORY_SEPARATOR.'stock_excel_cierre_caja'.DIRECTORY_SEPARATOR.$file_path;
+        $directory = 'public' . DIRECTORY_SEPARATOR . 'stock_excel_cierre_caja' . DIRECTORY_SEPARATOR . $file_path;
         // $file = Storage::disk('tenant')->get($directory);
 
         // $response = Response::make($file, 200);

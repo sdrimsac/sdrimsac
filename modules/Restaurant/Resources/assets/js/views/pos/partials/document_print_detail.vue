@@ -853,6 +853,7 @@ export default {
                     if (data.orden) {
                         let orden = data.orden;
                         orden.quotation_id = recordId;
+                        orden.cot = data.cot;
                         this.$emit("sendOrdens", data.orden);
                         this.$emit("closeDialog");
                     }

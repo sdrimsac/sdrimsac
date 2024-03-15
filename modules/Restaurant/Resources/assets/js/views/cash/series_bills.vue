@@ -206,7 +206,15 @@ export default {
         },
 
         open() {
-            // this.activeName = this.seriesBills;
+            //si seriesBills tiene propiedades entonces se asigna a localSeries, iterar
+            if (this.seriesBills) {
+                for (let key in this.seriesBills) {
+                    if (this.localSeries[key]) {
+                        this.localSeries[key] = this.seriesBills[key];
+                    }
+                }
+            }
+
         },
         close() {
             this.$emit("update:showDialog", false);

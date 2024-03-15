@@ -15,6 +15,7 @@ class PrincipalCategory extends ModelTenant
     protected $fillable = [
         'name',
         'identifier',
+        'is_expanded',
         'active'
     ];
 

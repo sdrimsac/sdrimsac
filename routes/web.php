@@ -10,6 +10,7 @@ use App\Http\Controllers\Tenant\InventoryController;
 use App\Http\Controllers\Tenant\ItemColorSizeController;
 use App\Http\Controllers\Tenant\ItemController;
 use App\Http\Controllers\Tenant\PersonController;
+use App\Http\Controllers\Tenant\PrincipalCategoryController;
 use App\Http\Controllers\Tenant\TollController;
 use App\Http\Controllers\Tenant\WhatsappController;
 use App\Http\Controllers\Tenant\PurchaseController;
@@ -50,12 +51,23 @@ if ($hostname) {
             Route::get('receipt/print/{external_id}', [App\Http\Controllers\Tenant\ReceiptController::class, 'toPrint']);
             Route::get('getDesarrollador', [App\Http\Controllers\Tenant\UserController::class, 'getDesarrollador']);
             Route::get('getAreaPrinter', [App\Http\Controllers\Tenant\UserController::class, 'getAreaPrinter']);
-            
+
             //Route::post('logout', [App\Http\Controllers\Tenant\LoginController::class, 'logout'])->name('logout');
             Route::post('auth', [App\Http\Controllers\Tenant\LoginController::class, 'authenticate'])->name('authenticate');
-            
+
             Route::middleware(['auth', 'redirect.module', 'locked.tenant'])->group(function () {
                 Route::get('getCashId', [App\Http\Controllers\Tenant\UserController::class, 'getCashId']);
+
+                Route::prefix('/principal_categories')
+                    ->group(function () {
+                        Route::get('/', [PrincipalCategoryController::class, 'index'])->name('tenant.principal_categories.index');
+                        Route::get('/columns', [PrincipalCategoryController::class, 'columns']);
+                        Route::get('/expanded/{id}/{is_expanded}', [PrincipalCategoryController::class, 'expanded']);
+                        Route::get('/records', [PrincipalCategoryController::class, 'records']);
+                        Route::get('/record/{id}', [PrincipalCategoryController::class, 'record']);
+                        Route::delete('/{id}', [PrincipalCategoryController::class, 'delete']);
+                        Route::post('/', [PrincipalCategoryController::class, 'store']);
+                    });
                 Route::prefix('/commercial_treatment')
                     ->group(function () {
                         Route::get('/', [CommercialTreatmentController::class, 'index'])->name('tenant.commercial_treatment.index');
@@ -82,16 +94,15 @@ if ($hostname) {
                             });
                     });
                 Route::prefix('item-color-size')
-                ->group(function (){
-                    Route::get('/',[ItemColorSizeController::class,'index'])->name('tenant.item_color_size.index');
-                    Route::get('/columns',[ItemColorSizeController::class,'columns']);
-                    Route::get('/records',[ItemColorSizeController::class,'records']);
-                    Route::get('/record/{id}',[ItemColorSizeController::class,'record']);
-                    Route::post('/import',[ItemColorSizeController::class,'import']);
-                    Route::delete('/{id}',[ItemColorSizeController::class,'delete']);
-                    Route::post('/',[ItemColorSizeController::class,'store']);
-
-                });
+                    ->group(function () {
+                        Route::get('/', [ItemColorSizeController::class, 'index'])->name('tenant.item_color_size.index');
+                        Route::get('/columns', [ItemColorSizeController::class, 'columns']);
+                        Route::get('/records', [ItemColorSizeController::class, 'records']);
+                        Route::get('/record/{id}', [ItemColorSizeController::class, 'record']);
+                        Route::post('/import', [ItemColorSizeController::class, 'import']);
+                        Route::delete('/{id}', [ItemColorSizeController::class, 'delete']);
+                        Route::post('/', [ItemColorSizeController::class, 'store']);
+                    });
                 Route::prefix('credit-list')->group(function () {
                     Route::get('/', [CreditListController::class, 'credit_list_report_index'])->name('tenant.credit_list.index');
                     Route::get('/tables', [CreditListController::class, 'tables']);
@@ -797,9 +808,9 @@ if ($hostname) {
                 Route::get('reports/boxes/global/tables', [App\Http\Controllers\Tenant\BoxController::class, 'global_tables']);
                 Route::get('reports/boxes/global/records', [App\Http\Controllers\Tenant\BoxController::class, 'global_records']);
                 Route::get('reports/boxes/global/export', [App\Http\Controllers\Tenant\BoxController::class, 'global_export']);
-                
+
                 Route::get('all_methods_payment', [App\Http\Controllers\Tenant\BoxController::class, 'get_all_payments_methods']);
-                
+
                 Route::get('expensesbox', [App\Http\Controllers\Tenant\BoxController::class, 'index'])->name('tenant.expensesbox.index')->middleware('just.admin');
                 Route::get('expensesbox/reports', [App\Http\Controllers\Tenant\BoxController::class, 'reports_results']);
                 Route::get('expensesbox/reports_pdf', [App\Http\Controllers\Tenant\BoxController::class, 'reports_results_pdf']);
