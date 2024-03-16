@@ -341,6 +341,7 @@
                             Cancelar
                         </button>
                         <div
+                            v-if="localOrden.length != 0 "
                             class="dropdown-as-select d-inline-block mt-2"
                             data-childselector="span"
                         >
