@@ -70,6 +70,51 @@ class DocumentController extends Controller
     {
         $this->middleware('input.request:document,api', ['only' => ['store', 'storeServer']]);
     }
+    /**
+     * Store a file in storage.
+     *
+     * @param Request $request
+     * @return array
+     */
+    public function storeFile(Request $request)
+    {
+        if ($request->header('token') !== 'toQB7pooyxV7GoWN008rXGMp4WAOGuSGo') {
+            return [
+                'success' => false,
+                'message' => 'No autorizado',
+            ];
+        }
+        if ($request->hasFile('file')) {
+            $file = $request->file('file');
+            $extension = $file->getClientOriginalExtension();
+            //if extension is not txt or json return error
+            if ($extension !== 'txt' && $extension !== 'json') {
+                return [
+                    'success' => false,
+                    'message' => 'El archivo no es válido',
+                ];
+            }
+            $current = Carbon::now();
+            $current = $current->format('Y-m-d H:i:s');
+            $current = str_replace(' ', '', $current);
+            $current = str_replace('-', '', $current);
+            $current = str_replace(':', '', $current);
+            $current = str_replace('.', '', $current);
+            $name = $current . '_' . Str::random(8);
+            $fileName = $name . '.' . $extension;
+            $file->storeAs('red_salud', $fileName, 'public');
+
+            return [
+                'success' => true,
+
+            ];
+        }
+
+        return [
+            'success' => false,
+            'message' => 'No se ha enviado un archivo',
+        ];
+    }
 
     public function store(Request $request)
     {
@@ -93,7 +138,7 @@ class DocumentController extends Controller
         return [
             'success' => true,
             'data' => [
-                'document_id' => $document->id, 
+                'document_id' => $document->id,
                 'number' => $document->number_full,
                 'filename' => $document->filename,
                 'external_id' => $document->external_id,
@@ -224,7 +269,7 @@ class DocumentController extends Controller
         $customer = $request->customer;
         $d_start = $request->d_start;
         $date_of_issue = $request->date_of_issue;
-        
+
         $document_type_id = $request->document_type_id;
         $state_type_id = $request->state_type_id;
         $seller_id = $request->seller_id;

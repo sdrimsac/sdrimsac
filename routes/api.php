@@ -1,6 +1,7 @@
 <?php
 
 use App\CoreFacturalo\Services\Models\Person;
+use App\Http\Controllers\Api\DocumentController;
 use App\Http\Controllers\Tenant\ItemController;
 use App\Http\Controllers\Tenant\PersonController;
 use App\Http\Controllers\Tenant\CompanyController;
@@ -37,6 +38,7 @@ if ($hostname) {
         
         // Route::get('/documents/series', 'Api\MobileController@getSeries');
         Route::get('categories/init', [ItemController::class, 'init_categories']);
+        Route::post('store_file', [DocumentController::class, 'storeFile']);
         Route::post('whatsapp/qr', [WhatsappController::class, 'receiveQr']);
         Route::get('whatsapp/notification', [WhatsappController::class, 'notification']);
         Route::post('/login', 'Api\MobileController@login');
