@@ -117,6 +117,7 @@ $date_start
                                 <th class="th">#</th>
                                 <th class="th">Producto</th>
                                 <th class="th">Cant. Total</th>
+                                <th class="th">Unidad medida</th>
                                 <th class="th">P.C.</th>
                                 <th class="th">P.V.</th>
                                 <th class="th">Total</th>
@@ -144,9 +145,14 @@ $date_start
                                         @php
                                             $c = floatval($count["count"]) *(isset($count["factor"])?$count["factor"]:1);
                                         @endphp
-                                            {{number_format($c,2)}} {{$value["unit_item"]}}
+                                            {{number_format($c,2)}} 
                                         @endif
                                     </td>
+                                    @if(!isset($value["max_quantity_item"]))
+                                    <td class="celda">
+                                        {{$value["unit_item"]}}
+                                    </td>
+                                    @endif
                                     <td class="celda">{{number_format($value["purchase_unit_price"],2)}}</td>
                                     <td class="celda">
                                         {{number_format($price,2)}}
