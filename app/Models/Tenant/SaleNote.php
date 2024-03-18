@@ -41,6 +41,7 @@ class SaleNote extends ModelTenant
         'total_prepayment',
         'total_discount',
         'total_charge',
+        'type_payment',
         'total_exportation',
         'total_free',
         'total_taxed',

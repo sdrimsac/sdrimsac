@@ -510,6 +510,7 @@ class SaleNoteController extends Controller
             ]);
             // $payment = Payment::firstOrNew(['id' => $id]);
         }
+        $sale_note->date_of_issue = $request->date_of_issue;
         $sale_note->type_payment = $request->type_payment;
         $sale_note->advances = $request->advances;
         $sale_note->month = $request->month;
