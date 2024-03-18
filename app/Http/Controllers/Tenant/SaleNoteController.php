@@ -594,6 +594,7 @@ class SaleNoteController extends Controller
                 $request["total_rounded"] = Functions::valueKeyInArray($request->all(), "total", 0.0);
                 $request["total_payment"] = Functions::valueKeyInArray($request->all(), "total_payment", 0.0);
                 $request["sumCoins"]  = Functions::valueKeyInArray($request->all(), "sumCoins", null);
+                $request["type_payment"]  = Functions::valueKeyInArray($request->all(), "type_payment", "Diario");
                 $request["document_type_id"] = "80";
                 $all_ordens = Functions::valueKeyInArray($request->all(), "all_ordens", false);
 
