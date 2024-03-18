@@ -77,7 +77,7 @@
 <script>
 import SaleNotePayments from "../../../../../../../../resources/js/views/sale_notes/partials/payments.vue";
 export default {
-    props: ["showDialog"],
+    props: ["showDialog","configuration"],
     components: {
         SaleNotePayments
     },

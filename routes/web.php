@@ -176,6 +176,8 @@ if ($hostname) {
                 Route::get('documents/record/{document}', [App\Http\Controllers\Tenant\DocumentController::class, 'record']);
                 Route::get('documents/get_record/{document}', [App\Http\Controllers\Tenant\DocumentController::class, 'getRecord']);
                 Route::get('sale-notes/record/{salenote}', [App\Http\Controllers\Tenant\SaleNoteController::class, 'record']);
+                Route::post('sale-notes/update-credit/{salenote}', [App\Http\Controllers\Tenant\SaleNoteController::class, 'updateCredit']);
+                Route::get('sale-notes/record-credit/{salenote}', [App\Http\Controllers\Tenant\SaleNoteController::class, 'recordCredit']);
                 Route::get('pos/print_default', [App\Http\Controllers\Tenant\PosController::class, 'print_default']);
                 Route::post('pos/date_of_issue', [App\Http\Controllers\Tenant\PosController::class, 'date_of_issue']);
                 Route::post('pos/last_number_documents', [App\Http\Controllers\Tenant\PosController::class, 'last_number_documents']);

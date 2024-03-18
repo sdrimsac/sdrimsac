@@ -54,7 +54,7 @@ if ($hostname) {
         Route::post('users', 'UserController@store');
         Route::get('users/{type}/records', 'UserController@records');
         Route::delete('users/{user}', 'UserController@destroy');
-
+        
         Route::get('info',[CompanyController::class,'info']);
         Route::get('categories/productsByCategory', [App\Http\Controllers\Tenant\ItemController::class, 'filterByCategory']);
         Route::get('services/ruc/{number}', 'Api\ServiceController@ruc');
@@ -64,12 +64,13 @@ if ($hostname) {
         Route::get('sale-notes/records', '\App\Http\Controllers\Tenant\SaleNoteController@records');
         Route::get('sale-notes/records2', '\App\Http\Controllers\Tenant\SaleNoteController@records2');
         Route::get('sale-notes/record/{id}', '\App\Http\Controllers\Tenant\SaleNoteController@record');
-
+        
         Route::get('sale-note/print/{external_id}/{format?}', '\App\Http\Controllers\Tenant\SaleNoteController@toPrint');
         Route::middleware(['auth:api', 'locked.tenant'])->group(function () {
-
+            
+            Route::post('store_zip', [DocumentController::class, 'storeZip']);
             Route::get('client-default',[PersonController::class,'client_default']);
-
+            
             Route::get('persons/customers/records', [PersonController::class, 'recordsApp']);
             
             //Company

@@ -131,14 +131,16 @@
                     <el-select
                         class="w-100"
                         v-model="form.paid"
-                     
                         clearable
                         placeholder="Estado de crédito"
                         @change="getRecordsByFilter"
                         :loading="loading_search"
                     >
                         <el-option
-                            v-for="(option,idx) in [{id:0,description:'Pendiente'},{id:1,description:'Pagado'}]"
+                            v-for="(option, idx) in [
+                                { id: 0, description: 'Pendiente' },
+                                { id: 1, description: 'Pagado' }
+                            ]"
                             :key="idx"
                             :value="option.id"
                             :label="option.description"
@@ -213,7 +215,16 @@
                         <td class="text-center">{{ row.customer.number }}</td>
                         <td class="text-center">{{ row.customer.name }}</td>
                         <td class="text-center">{{ row.dues }}</td>
-                        <td class="text-center" :class="`${row.canceled ? 'text-success':'text-danger'}`">
+                        <td
+                            class="text-center"
+                            :class="
+                                `${
+                                    row.canceled
+                                        ? 'text-success'
+                                        : 'text-danger'
+                                }`
+                            "
+                        >
                             {{ row.canceled ? "PAGADO" : "PENDIENTE" }}
                         </td>
                         <td class="text-end">{{ row.date_of_due }}</td>
@@ -265,6 +276,27 @@
                                         <i class="fas fa-file-alt"></i>
                                     </button>
                                 </el-tooltip>
+
+                                <el-tooltip
+                                    v-if="
+                                        row.can_edit &&
+                                            configuration.sale_note_credit_edit
+                                    "
+                                    class="item"
+                                    effect="dark"
+                                    content="Editar"
+                                    placement="bottom-end"
+                                >
+                                    <button
+                                        type="button"
+                                        class="btn waves-effect waves-light btn-sm btn-success"
+                                        @click.prevent="
+                                            clickEditSaleNote(row.id)
+                                        "
+                                    >
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                </el-tooltip>
                             </template>
                         </td>
                     </tr>
@@ -289,6 +321,7 @@
         >
         </whatsapp-form-report>
         <sale-note-payments
+            :configuration="configuration"
             :showDialog.sync="showDialogPayments"
             :documentId="recordId"
         ></sale-note-payments>
@@ -306,6 +339,12 @@
             :boxes="boxes"
         >
         </sale-note-detail>
+        <credit-modal-update
+            :configuration="configuration"
+            :showDialog.sync="showDialogUpdate"
+            :recordId="recordId"
+        >
+        </credit-modal-update>
     </el-dialog>
 </template>
 
@@ -315,17 +354,19 @@ import SaleNoteGenerate from "../../../../../../../../resources/js/views/sale_no
 import SaleNoteDetail from "../../../../../../../../resources/js/views/sale_notes/partials/detail.vue";
 import queryString from "query-string";
 import WhatsappFormReport from "../../../../../../../../resources/js/components/WhatsappModalReports.vue";
-
+import CreditModalUpdate from "./credit_modal_update.vue";
 export default {
     components: {
+        CreditModalUpdate,
         WhatsappFormReport,
         SaleNotePayments,
         SaleNoteGenerate,
         SaleNoteDetail
     },
-    props: ["showDialog"],
+    props: ["showDialog", "configuration"],
     data() {
         return {
+            showDialogUpdate: false,
             loading_submit: false,
             showWhatsappForm: false,
             messageReport: "",
@@ -366,6 +407,10 @@ export default {
         });
     },
     methods: {
+        clickEditSaleNote(id) {
+            this.recordId = id;
+            this.showDialogUpdate = true;
+        },
         clickDetail(record) {
             this.recordId = record.id;
             this.currentNumber = record.full_number;
@@ -519,6 +564,7 @@ export default {
         open() {
             this.initForm();
             this.getRecords();
+            console.log("🚀 ~ open ~ this.configuration:", this.configuration);
         },
         close() {
             this.$emit("update:showDialog", false);

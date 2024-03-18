@@ -460,6 +460,83 @@ class SaleNoteController extends Controller
         );
     }
 
+    public function updateCredit(Request $request, $id)
+    {
+        $sale_note = SaleNote::find($id);
+        Payment::where('sale_note_id', $id)->delete();
+        $sale_note_credit = SaleNoteCredit::where('sale_note_id', $id)->first();
+        $cash_id = $sale_note_credit->cash_id;
+        $date = Carbon::parse($request->date_of_issue);
+        for ($i = 0; $i < $request->num_cuota; $i++) {
+            switch ($request->type_payment) {
+                case "Diario":
+                    $dias = 1;
+                    $date_payment = \Carbon\Carbon::parse($date->addDay($dias))->format('Y-m-d');
+                    $Week = date("w", strtotime($date_payment)); //date('W',strtotime($date_payment));
+                    if ($Week == 0) {
+                        $date_payment = \Carbon\Carbon::parse($date->addDay($dias))->format('Y-m-d');
+                    }
+                    break;
+                case "Semanal":
+                    $dias = 7;
+                    $date_payment = \Carbon\Carbon::parse($date->addDay($dias))->format('Y-m-d');
+                    $Week = date("w", strtotime($date_payment)); //date('W',strtotime($date_payment));
+                    if ($Week == 0) {
+                        $date_payment = \Carbon\Carbon::parse($date->addDay($dias + 1))->format('Y-m-d');
+                    }
+                    break;
+                case "Quincenal":
+                    $dias = 15;
+                    $date_payment = \Carbon\Carbon::parse($date->addDay($dias))->format('Y-m-d');
+                    $week = date("w", strtotime($date_payment)); //date('W',strtotime($date_payment));
+                    if ($week == 0) {
+                        $date_payment = \Carbon\Carbon::parse($date->addDay($dias + 1))->format('Y-m-d');
+                    }
+                    break;
+                case "Mensual":
+                    $dias = 30;
+                    $date_payment = \Carbon\Carbon::parse($date->addDay($dias))->format('Y-m-d');
+                    break;
+            }
+
+
+            Payment::create([
+                "user_id"     => auth()->user()->id,
+                "amount"       => $request->amount,
+                "sale_note_id" => $id,
+                "type_payment" => $request->type_payment,
+                "date_payment" => $date_payment,
+                "tasa"         => $request->tasadefault
+            ]);
+            // $payment = Payment::firstOrNew(['id' => $id]);
+        }
+        $sale_note->type_payment = $request->type_payment;
+        $sale_note->advances = $request->advances;
+        $sale_note->month = $request->month;
+        $sale_note->save();
+        SaleNoteCredit::where('sale_note_id', $id)->delete();
+        SaleNoteCredit::create([
+            'cash_id' => $cash_id,
+            'sale_note_id' => $id,
+        ]);
+
+        return [
+            'success' => true,
+            'message' => 'Nota de venta actualizada',
+        ];
+    }
+    public function recordCredit($id)
+    {
+        $sale_note = SaleNote::find($id);
+        $payment = Payment::where('sale_note_id', $id)->first();
+        $tasa = $payment->tasa;
+        $month = $sale_note->month;
+        $advances = $sale_note->advances;
+        $total = $sale_note->total;
+        $type_payment = $sale_note->type_payment;
+
+        return compact( 'tasa', 'month', 'advances', 'total', 'type_payment');
+    }
     public function record($id)
     {
 
@@ -722,6 +799,14 @@ class SaleNoteController extends Controller
                                 $date_payment = \Carbon\Carbon::parse($date->addDay($dias))->format('Y-m-d');
                                 $Week = date("w", strtotime($date_payment)); //date('W',strtotime($date_payment));
                                 if ($Week == 0) {
+                                    $date_payment = \Carbon\Carbon::parse($date->addDay($dias + 1))->format('Y-m-d');
+                                }
+                                break;
+                            case "Quincenal":
+                                $dias = 15;
+                                $date_payment = \Carbon\Carbon::parse($date->addDay($dias))->format('Y-m-d');
+                                $week = date("w", strtotime($date_payment)); //date('W',strtotime($date_payment));
+                                if ($week == 0) {
                                     $date_payment = \Carbon\Carbon::parse($date->addDay($dias + 1))->format('Y-m-d');
                                 }
                                 break;

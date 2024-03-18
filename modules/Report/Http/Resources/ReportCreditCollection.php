@@ -61,6 +61,7 @@ class ReportCreditCollection extends ResourceCollection
           
             return [
                 'id' => $row->id,
+                'can_edit' => SaleNotePayment::where('sale_note_id', $row->id)->count() > 0 ? false : true,
                 'date_of_issue' => $row->date_of_issue->format('Y-m-d'),
                 'customer' => ["name" => $customer->name, "number" => $customer->number],
                 'number' => $row->number_full,

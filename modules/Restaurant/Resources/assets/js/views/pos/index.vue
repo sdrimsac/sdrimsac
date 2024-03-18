@@ -1683,7 +1683,9 @@
             :establishment.sync="establishment"
         >
         </PromotionCanje>
-        <credits-list :showDialog.sync="showCredits"> </credits-list>
+        <credits-list :showDialog.sync="showCredits"
+        :configuration="configuration"
+        > </credits-list>
 
         <dispatch-modal
             :configuration="configuration"
@@ -1754,6 +1756,7 @@
         >
         </item-set>
         <sale-note-credit-cash
+            :configuration="configuration"
             :showDialog.sync="showSaleNoteCreditCash"
         ></sale-note-credit-cash>
     </div>
@@ -2585,7 +2588,6 @@ export default {
             });
         },
         socketWhatsappConfig() {
-            return;
             let hostName = window.location.hostname;
             let url = `https://${hostName}`;
             this.sender = hostName

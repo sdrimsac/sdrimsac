@@ -954,7 +954,7 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mt-4">
+                                    <!-- <div class="col-md-6 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
                                                 >Crédito nota de venta
@@ -966,7 +966,7 @@
                                                 @change="submit"
                                             ></el-switch>
                                         </div>
-                                    </div>
+                                    </div> -->
                                     <div class="col-md-6 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
@@ -1797,7 +1797,7 @@
                                                 </el-input-number>
                                             </div>
                                         </div>
-                                        
+
                                         <div class="col-md-6 mt-4">
                                             <div class="form-group">
                                                 <label
@@ -1817,22 +1817,19 @@
                                         </div>
                                     </template>
                                     <div class="col-md-6 mt-4">
-                                            <div class="form-group">
-                                                <label
-                                                    class="control-label w-100"
-                                                    >Manejo de caja principal
-                                                </label>
+                                        <div class="form-group">
+                                            <label class="control-label w-100"
+                                                >Manejo de caja principal
+                                            </label>
 
-                                                <el-switch
-                                                    active-text="Si"
-                                                    inactive-text="No"
-                                                    @change="submit"
-                                                    v-model="
-                                                        form.principal_cash
-                                                    "
-                                                ></el-switch>
-                                            </div>
+                                            <el-switch
+                                                active-text="Si"
+                                                inactive-text="No"
+                                                @change="submit"
+                                                v-model="form.principal_cash"
+                                            ></el-switch>
                                         </div>
+                                    </div>
                                     <div class="col-md-6 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
@@ -2132,8 +2129,116 @@
                                     </div>
                                 </div>
                             </el-tab-pane>
+                            <el-tab-pane label="Crédito NV" v-if="form.credits">
+                                <div class="row">
+                                    <div class="col-md-6 mt-4">
+                                        <div class="form-group">
+                                            <label class="control-label w-100"
+                                                >Penalidades
+                                            </label>
+                                            <el-switch
+                                                v-model="
+                                                    form.sale_note_credit_penalty
+                                                "
+                                                active-text="Si"
+                                                inactive-text="No"
+                                                @change="submit"
+                                            ></el-switch>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mt-4">
+                                        <div class="form-group">
+                                            <label class="control-label w-100"
+                                                >Confirmación de aprobación
+                                            </label>
+                                            <el-switch
+                                                v-model="
+                                                    form.sale_note_credit_confirm
+                                                "
+                                                active-text="Si"
+                                                inactive-text="No"
+                                                @change="submit"
+                                            ></el-switch>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mt-4">
+                                        <div class="form-group">
+                                            <label class="control-label w-100">
+                                                Aceptar monto menores en la
+                                                cuotas
+                                            </label>
+                                            <el-switch
+                                                v-model="
+                                                    form.sale_note_credit_low_pay
+                                                "
+                                                active-text="Si"
+                                                inactive-text="No"
+                                                @change="submit"
+                                            ></el-switch>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mt-4">
+                                        <div class="form-group">
+                                            <label class="control-label w-100"
+                                                >Editar
+                                            </label>
+                                            <el-switch
+                                                v-model="
+                                                    form.sale_note_credit_edit
+                                                "
+                                                active-text="Si"
+                                                inactive-text="No"
+                                                @change="submit"
+                                            ></el-switch>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mt-4">
+                                        <div class="form-group">
+                                            <label class="control-label w-100"
+                                                >Enviar whatsapp a clientes
+                                            </label>
+                                            <el-switch
+                                                v-model="
+                                                    form.sale_note_credit_send_whatsapp
+                                                "
+                                                active-text="Si"
+                                                inactive-text="No"
+                                                @change="submit"
+                                            ></el-switch>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mt-4">
+                                        <div class="form-group">
+                                            <label class="control-label w-100"
+                                                >Mostrar formatos adicionales
+                                            </label>
+                                            <el-switch
+                                                v-model="
+                                                    form.sale_note_credit_formats
+                                                "
+                                                active-text="Si"
+                                                inactive-text="No"
+                                                @change="submit"
+                                            ></el-switch>
+                                        </div>
+                                    </div>
+                                </div>
+                            </el-tab-pane>
                             <el-tab-pane label="Modos" v-if="!isArca">
                                 <div class="row">
+                                    <div class="col-md-6 mt-4">
+                                        <div class="form-group">
+                                            <label class="control-label w-100"
+                                                >Crédito nota de venta
+                                            </label>
+                                            <el-switch
+                                                v-model="form.credits"
+                                                active-text="Si"
+                                                inactive-text="No"
+                                                @change="submit"
+                                            ></el-switch>
+                                        </div>
+                                    </div>
                                     <div class="col-md-6 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"

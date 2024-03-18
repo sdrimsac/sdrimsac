@@ -224,7 +224,7 @@
                     </tr>
                     <tr>
                         <td align="left">
-                            <div class="border_round" style="height: 1.1cm !important;">
+                            <div class="border_round" style="height: 1.3cm !important;">
                                 <table border="0" class="full-width" border="0">
                                     <tr>
                                         <td class="negrita">Fecha : </td>
@@ -233,7 +233,34 @@
                                         <td class="negrita">Hora : </td>
                                         <td>{{ strtoupper($data->hour) }}</td>
                                     </tr>
+                                    @if ($data->num_cuota)
+                                        <tr>
+                                            <td class="negrita">N° Cuota : </td>
+                                            <td>{{ $data->num_cuota }}</td>
+                                            <td colspan="2"></td>
+                                        </tr>
+                                    @endif
+                                </table>
+                            </div>
+                        </td>
 
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="border_round">
+                                <table border="0" class="full-width" border="0">
+                                    <tr>
+                                        <td colspan="2">
+                                            <h5 class="text-center"><b>DETALLE DEL
+                                                    CREDITO</b></h5>
+                                        </td>
+                                    </tr>
+                                    @foreach ($data->sale_note->items as $item)
+                                        <tr>
+                                            <td class="negrita">{{ $item->quantity }}</td>
+                                            <td>{{ $item->item->description }}</td>
+                                        </tr>
+                                    @endforeach
                                 </table>
                             </div>
                         </td>

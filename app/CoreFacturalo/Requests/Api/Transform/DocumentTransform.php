@@ -18,12 +18,12 @@ class DocumentTransform
         //     $inputs['items'][$key]['codigo_interno'] = ($inputs['items'][$key]['codigo_interno']) ? $inputs['items'][$key]['codigo_interno']:'';
         //     $inputs['items'][$key]['codigo_producto_sunat'] = ($inputs['items'][$key]['codigo_producto_sunat']) ? $inputs['items'][$key]['codigo_producto_sunat']:'';
         // }
-
         $inputs_transform = [
             'series' => Functions::valueKeyInArray($inputs, 'serie_documento'),
             'user_id' => Functions::valueKeyInArray($inputs, 'user_id'),
             'afectar_caja' => Functions::valueKeyInArray($inputs, 'afectar_caja'),
             'method_pay' => 'Efectivo',
+            'operation_type_id' => '0101',
             'printerOn' => Functions::valueKeyInArray($inputs, 'printerOn'),
             'number' => Functions::valueKeyInArray($inputs, 'numero_documento'),
             'date_of_issue' => Functions::valueKeyInArray($inputs, 'fecha_de_emision'),

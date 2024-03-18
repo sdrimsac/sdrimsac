@@ -20,4 +20,19 @@ class PersonTransform
             'telephone' => Functions::valueKeyInArray($inputs, 'telefono'),
         ];
     }
+
+    public static function transformSalud($inputs)
+    {
+        return [
+            'identity_document_type_id' => $inputs['tipoDocReceptor'],
+            'number' => $inputs['numDocReceptor'],
+            'name' => $inputs['nombreReceptor'],
+            'trade_name' => null,
+            'country_id' => "PE",
+            'district_id' => Functions::valueKeyInArray($inputs, 'direccionUbigeo'),
+            'address' => Functions::valueKeyInArray($inputs, 'direccionOrigen'),
+            'email' => null,
+            'telephone' => null,
+        ];
+    }
 }

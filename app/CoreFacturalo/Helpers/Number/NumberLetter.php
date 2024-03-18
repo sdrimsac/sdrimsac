@@ -1,6 +1,8 @@
 <?php
 namespace App\CoreFacturalo\Helpers\Number;
 
+use Illuminate\Support\Facades\Log;
+
 class NumberLetter
 {
     private static $UNIDADES = [
@@ -53,6 +55,7 @@ class NumberLetter
 
     public static function convertToLetter($number, $currency = '', $format = false, $decimals = '')
     {
+        $number = str_replace(',', '.', $number);
         $base_number = $number;
         $decNumberStr = '00';
         $converted = '';

@@ -546,6 +546,7 @@
         </div>
         <sale-note-payments
             :showDialog.sync="showDialogPayments"
+            :configuration.sync="configuration"
             :documentId="recordId"
         ></sale-note-payments>
 

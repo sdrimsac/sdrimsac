@@ -1301,7 +1301,6 @@ export default {
             }
         },
         socketWhatsappConfig() {
-            return;
             let hostName = window.location.hostname;
             let url = `https://${hostName}`;
             this.sender = hostName

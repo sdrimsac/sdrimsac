@@ -141,6 +141,7 @@ class SaleNotePaymentController extends Controller
             $boxes->cash_id = $cash->id;
             $boxes->save();
         }
+        $num_cuota = 1;
         /////////////////////////////////////////////////////////////////////////////////////////////////
         $receipt = Receipt::firstOrNew(['id' => $request->id]);
         $receipt->fill($request->all());
@@ -215,10 +216,12 @@ class SaleNotePaymentController extends Controller
                     if ($key < $payments_cancel - 1) {
                         $value->paid = true;
                         $value->amount_paid = $amount_to_paid;
+                        $num_cuota = $key + 1;
                         $value->save();
                     } elseif ($key == $payments_cancel - 1) {
                         $value->paid = false;
                         $value->amount_paid = $rest;
+                        $num_cuota = $key + 1;
                         $value->save();
                     } else {
                         // $value->paid = false;
@@ -231,6 +234,7 @@ class SaleNotePaymentController extends Controller
                     if ($key < $payments_cancel) {
                         $value->paid = true;
                         $value->amount_paid = $amount_to_paid;
+                        $num_cuota = $key + 1;
                         $value->save();
                     } else {
                         // $value->paid = false;
@@ -278,6 +282,8 @@ class SaleNotePaymentController extends Controller
             }
             $sale_note->save();
         }
+        $receipt->num_cuota = $num_cuota;
+        $receipt->save();
         //    $document_save->updateCreditsPayment();
         $this->createPdf($request->input('sale_note_id'));
         return response()->json([

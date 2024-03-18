@@ -10,6 +10,7 @@ use App\Models\Tenant\{
     Item
 };
 use Exception;
+use Illuminate\Support\Facades\Log;
 
 class Functions
 {
@@ -76,6 +77,10 @@ class Functions
             'unit_type_id' => $inputs['unit_type_id'],
             'currency_type_id' => $inputs['currency_type_id'],
             'unit_price' =>  $inputs['unit_price'],
+            'sale_unit_price' =>  $inputs['unit_price'],
+            'sale_affectation_igv_type_id' =>  $inputs['affectation_igv_type_id'],
+            'purchase_affectation_igv_type_id' =>  $inputs['affectation_igv_type_id'],
+            'attributes' =>  [],
         ]);
 
         return $item->id;
@@ -129,7 +134,7 @@ class Functions
     {
 
         $person = Person::find($inputs['customer_id']);
-
+        Log::info(json_encode($inputs));
         if ($person) {
 
             if (($inputs['operation_type_id'] == '0101')) {

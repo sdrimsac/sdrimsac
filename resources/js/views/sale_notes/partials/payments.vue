@@ -396,7 +396,7 @@
 import { deletable } from "../../../mixins/deletable";
 import ImagePreviewModal from "../../../components/ImagePreviewModal.vue";
 export default {
-    props: ["showDialog", "documentId"],
+    props: ["showDialog", "documentId","configuration"],
     mixins: [deletable],
     components: {
         ImagePreviewModal
@@ -552,7 +552,12 @@ export default {
             let { num_schedule, amount_schedule } = this.document;
             let payment = this.records[index].payment;
             let difference = parseFloat(this.document.total_difference);
-            if (difference > amount_schedule && payment < amount_schedule) {
+            let passLowPay =  false;
+                console.log("🚀 ~ clickSubmit ~ this.configuration:", this.configuration)
+            if(this.configuration && this.configuration.sale_note_credit_low_pay){
+                passLowPay = true;
+            }
+            if (difference > amount_schedule && payment < amount_schedule && !passLowPay) {
                 this.$toast.error(
                     "El monto ingresado debe ser igual o mayor a la cuota: " +
                         amount_schedule +

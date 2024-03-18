@@ -273,7 +273,7 @@ class DocumentInput
 
                     'quantity' => $row['quantity'],
                     'unit_value' => $row['unit_value'],
-                    'price_type_id' => $row['price_type_id'],
+                    'price_type_id' => Functions::valueKeyInArray($row, 'price_type_id', '01'),
                     'unit_price' => $row['unit_price'],
                     'affectation_igv_type_id' => $row['affectation_igv_type_id'],
                     'total_base_igv' => $row['total_base_igv'],

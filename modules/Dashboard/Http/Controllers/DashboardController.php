@@ -66,6 +66,7 @@ class DashboardController extends Controller
 
     public function data_aditional(Request $request)
     {
+        // RarEntry::setUsingExceptions(true);
         return [
             'data' => (new DashboardSalePurchase())->data($request->all()),
         ];

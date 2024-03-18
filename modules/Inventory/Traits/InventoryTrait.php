@@ -236,7 +236,7 @@ trait InventoryTrait
             'description' => 'Stock inicial',
             'item_id' => $item_id,
             'warehouse_id' => $warehouse_id,
-            'quantity' => $quantity
+            'quantity' => $quantity ?? 0,
         ]);
     }
 

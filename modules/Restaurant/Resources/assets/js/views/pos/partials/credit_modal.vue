@@ -6,6 +6,7 @@
         @close="close"
         v-loading="loading"
         width="950px"
+        append-to-body
     >
         <div class="m-2">
             <div class="row">
@@ -62,7 +63,7 @@
                     </div>
                 </div>
 
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <label class="control-label w-100"
                         >Cronograma de Pago
                         <span class="text-danger">*</span></label
@@ -74,6 +75,7 @@
                     >
                         <el-radio-button label="Diario"></el-radio-button>
                         <el-radio-button label="Semanal"></el-radio-button>
+                        <el-radio-button label="Quincenal"></el-radio-button>
                         <el-radio-button label="Mensual"></el-radio-button>
                     </el-radio-group>
                     <small
@@ -164,6 +166,7 @@
 
 <script>
 import moment from "moment";
+
 const PersonForm = () =>
     import("../../../../../../../../resources/js/views/persons/form.vue");
 export default {
@@ -259,6 +262,10 @@ export default {
                     case "Semanal":
                         this.credit.num_cuota = 4 * this.credit.month;
                         // dias = 7 * this.credit.month;
+                        break;
+                    case "Quincenal":
+                        this.credit.num_cuota = 2 * this.credit.month;
+                        // dias = 15 * this.credit.month;
                         break;
                     case "Mensual":
                         this.credit.num_cuota = this.credit.month;

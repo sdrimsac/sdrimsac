@@ -6,50 +6,54 @@ use App\CoreFacturalo\Requests\Web\Validation\Functions;
 
 class DocumentValidation
 {
-    // public static function validation($inputs) {
-    //     $inputs['establishment_id'] = auth()->user()->establishment_id;// Functions::establishment($inputs['establishment']);
-    //     //unset($inputs['establishment']);
+    public static function validationSalud($inputs) {
+        // $inputs['establishment_id'] = auth()->user()->establishment_id;// Functions::establishment($inputs['establishment']);
+        $inputs['establishment_id'] = 1;// Functions::establishment($inputs['establishment']);
+        //unset($inputs['establishment']);
         
-    //     Functions::validateSeries($inputs);
+        Functions::validateSeries($inputs);
         
-    //     if (in_array($inputs['document_type_id'], ['07', '08'])) {
+        if (in_array($inputs['document_type_id'], ['07', '08'])) {
 
-    //         if($inputs['affected_document_external_id']){
-    //             $document = Functions::findAffectedDocumentByExternalId($inputs['affected_document_external_id']);
-    //             $inputs['affected_document_id'] = $document->id;
-    //             $inputs['data_affected_document'] = null;
+            if($inputs['affected_document_external_id']){
+                $document = Functions::findAffectedDocumentByExternalId($inputs['affected_document_external_id']);
+                $inputs['affected_document_id'] = $document->id;
+                $inputs['data_affected_document'] = null;
 
-    //         }else{
-    //             //validar campos json doc afectado
-    //             $inputs['affected_document_id'] = null;
+            }else{
+                //validar campos json doc afectado
+                $inputs['affected_document_id'] = null;
 
-    //         }
+            }
             
-    //         unset($inputs['affected_document_external_id']);
-    //     }
+            unset($inputs['affected_document_external_id']);
+        }
         
-    //     $inputs['customer_id'] = Functions::person($inputs['customer'], 'customers');
-    //     unset($inputs['customer']);
+        $inputs['customer_id'] = Functions::person($inputs['customer'], 'customers');
+        if(!isset($inputs['date_of_due'])) {
+            $inputs['date_of_due'] = $inputs['date_of_issue'];
+        }
+        unset($inputs['customer']);
         
-    //     $inputs['items'] = self::items($inputs['items']);
+        $inputs['items'] = self::items($inputs['items']);
         
-    //     Functions::DNI($inputs);
-    //     Functions::identityDocumentTypeInvoice($inputs);
+        Functions::DNI($inputs);
+        Functions::identityDocumentTypeInvoice($inputs);
         
-    //     return $inputs;
-    // }
+        return $inputs;
+    }
     
-    // private static function items($inputs) {
-    //     foreach ($inputs as &$row) {
-    //         $row['item_id'] = Functions::item($row);
-    //         unset($row['internal_id'], $row['description']);
-    //         unset($row['item_type_id'], $row['item_code']);
-    //         unset($row['item_code_gs1'], $row['unit_type_id']);
-    //         unset($row['currency_type_id']);
-    //     }
+    private static function items($inputs) {
+        foreach ($inputs as &$row) {
+            $row['item_id'] = Functions::item($row);
+            unset($row['internal_id'], $row['description']);
+            unset($row['item_type_id'], $row['item_code']);
+            unset($row['item_code_gs1'], $row['unit_type_id']);
+            unset($row['currency_type_id']);
+        }
         
-    //     return $inputs;
-    // }
+        return $inputs;
+    }
 
     public static function validation($inputs) {
         $series = Functions::findSeries($inputs);

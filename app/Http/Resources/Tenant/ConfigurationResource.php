@@ -15,6 +15,12 @@ class ConfigurationResource extends JsonResource
     public function toArray($request)
     {
         return [
+            'sale_note_credit_penalty' => $this->sale_note_credit_penalty,
+            'sale_note_credit_confirm' => $this->sale_note_credit_confirm,
+            'sale_note_credit_low_pay' => $this->sale_note_credit_low_pay,
+            'sale_note_credit_edit' => $this->sale_note_credit_edit,
+            'sale_note_credit_send_whatsapp' => $this->sale_note_credit_send_whatsapp,
+            'sale_note_credit_formats' => $this->sale_note_credit_formats,
             'turn_principal' => $this->turn_principal,
             'health_network' => (bool) $this->health_network,
             'show_logo_in_documents' => (bool)$this->show_logo_in_documents,

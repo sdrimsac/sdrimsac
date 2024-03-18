@@ -54,7 +54,7 @@ class ReceiptController extends Controller
         if (!$data) throw new Exception("El código {$external_id} es inválido, no se encontro la cotización relacionada");
         $company = Company::first();
         $user = User::findOrFail($data->user_id);
-
+        $num_cuota = 0;
         $establishment = Establishment::find($user->establishment_id);
         $recibo = PDF::loadView('tenant.receipt.index', ['data' => $data, 'company' => $company, 'interes' => $interes, 'establishment' => $establishment, "deuda" => $deuda, "payments" => $payments, "user" => $user]);
         //    return view('tenant.receipt.index', ['data' => $data, 'company' => $company, 'interes' => $interes, 'establishment' => $establishment, "deuda" => $deuda, "payments" => $payments]);

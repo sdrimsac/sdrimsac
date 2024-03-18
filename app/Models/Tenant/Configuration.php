@@ -10,6 +10,12 @@ use Illuminate\Support\Facades\Config;
 class Configuration extends ModelTenant
 {
     protected $fillable = [
+        'sale_note_credit_penalty',
+        'sale_note_credit_confirm',
+        'sale_note_credit_low_pay',
+        'sale_note_credit_edit',
+        'sale_note_credit_send_whatsapp',
+        'sale_note_credit_formats',
         'turn_principal',
         'health_network',
         'show_logo_in_documents',
@@ -162,6 +168,12 @@ class Configuration extends ModelTenant
 
     ];
     protected $casts = [
+        'sale_note_credit_penalty' => 'boolean',
+        'sale_note_credit_confirm' => 'boolean',
+        'sale_note_credit_low_pay' => 'boolean',
+        'sale_note_credit_edit' => 'boolean',
+        'sale_note_credit_send_whatsapp' => 'boolean',
+        'sale_note_credit_formats' => 'boolean',
         'health_network' => 'boolean',
         'show_logo_in_documents' => 'boolean',
         'show_caja_table' => 'boolean',
@@ -271,6 +283,12 @@ class Configuration extends ModelTenant
         // $skins = Skin::all();
         $skins = [];
         return [
+            'sale_note_credit_penalty' => (bool) $this->sale_note_credit_penalty,
+            'sale_note_credit_confirm' => (bool) $this->sale_note_credit_confirm,
+            'sale_note_credit_low_pay' => (bool) $this->sale_note_credit_low_pay,
+            'sale_note_credit_edit' => (bool) $this->sale_note_credit_edit,
+            'sale_note_credit_send_whatsapp' => (bool) $this->sale_note_credit_send_whatsapp,
+            'sale_note_credit_formats' => (bool) $this->sale_note_credit_formats,
             'turn_principal' => $this->turn_principal,
             'health_network' => (bool)$this->health_network,
             'show_logo_in_documents' => (bool)$this->show_logo_in_documents,
