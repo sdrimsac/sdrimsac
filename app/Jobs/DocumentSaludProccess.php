@@ -212,10 +212,10 @@ class DocumentSaludProccess implements ShouldQueue
                     }
                     try {
                         $document_transform = self::transform_document($document);
-                        $document_validated = DocumentValidation::validationSalud($document_transform);
-                        $series = $document_validated['series'];
+                        $series = $document_transform['series'];
                         $establishment_id = self::get_establishment_by_serie($series);
-                        $document_validated['establishment_id'] = $establishment_id;
+                        $document_transform['establishment_id'] = $establishment_id;
+                        $document_validated = DocumentValidation::validationSalud($document_transform);
                         $document_input = DocumentInput::set($document_validated);
 
                         $result = (new DocumentController)->storeTransform($document_input);

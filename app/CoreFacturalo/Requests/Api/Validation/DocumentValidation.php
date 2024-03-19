@@ -8,7 +8,11 @@ class DocumentValidation
 {
     public static function validationSalud($inputs) {
         // $inputs['establishment_id'] = auth()->user()->establishment_id;// Functions::establishment($inputs['establishment']);
-        $inputs['establishment_id'] = 1;// Functions::establishment($inputs['establishment']);
+        // $inputs['establishment_id'] = 1;
+        //check if exists  key establishment_id and if is not null
+        if(!array_key_exists('establishment_id', $inputs) || $inputs['establishment_id'] == null){
+            $inputs['establishment_id'] = 1;
+        }
         //unset($inputs['establishment']);
         
         Functions::validateSeries($inputs);
