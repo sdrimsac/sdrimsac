@@ -190,7 +190,10 @@ class DocumentSaludProccess implements ShouldQueue
                     $document_salud->date_of_charge = $date;
                     $document_salud->file_name = $file;
                     $document_salud->identifier = $identifier;
-                    $document_salud_exists = DocumentSalud::where('identifier', $identifier)->first();
+                    $document_salud_exists = DocumentSalud::where('identifier', $identifier)
+                    ->whereNull('error')
+                    ->where('status', 'Aceptado')
+                    ->first();
                     if ($document_salud_exists) {
                         $document_salud->status = 'Repetido';
                         $document_salud->error = 'Documento repetido';
