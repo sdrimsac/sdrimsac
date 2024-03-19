@@ -216,7 +216,7 @@ trait InventoryTrait
         if ($establishment_id) {
             $establishment = Establishment::find($establishment_id);
         } else {
-            $establishment = auth()->user()->establishment;
+            $establishment = auth()->user() ?  auth()->user()->establishment : null;
             if (!$establishment) {
                 $establishment = Establishment::first();
             }

@@ -19,6 +19,16 @@
                     <div
                         class="col-12 col-md-6 d-flex align-items-start justify-content-end"
                     >
+                        <template v-if="configuration.health_network">
+                            <button
+                                type="button"
+                                class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto"
+                                @click.prevent="clickDocumentSalud()"
+                            >
+                                <i class="icofont-plus-circle"></i>
+                                <span>Documentos farmacia</span>
+                            </button>
+                        </template>
                         <!-- Contact Button Start -->
                         <button
                             type="button"
@@ -31,6 +41,7 @@
                             <i class="icofont-plus-circle"></i>
                             <span>Nuevo</span>
                         </button>
+
                         <!-- Contact Button End -->
 
                         <!-- Dropdown Button Start -->
@@ -152,7 +163,7 @@
                                     </th>
                                     <th>Cliente</th>
                                     <th>Número</th>
-                                            <th v-if="columns.sale_note.visible">
+                                    <th v-if="columns.sale_note.visible">
                                         Nota de venta
                                     </th>
                                     <th v-if="columns.dispatch.visible">
@@ -325,7 +336,13 @@
                                                         `/dispatches/create_new/document/${row.id}`
                                                     "
                                                     class="dropdown-item"
-                                                    v-if="row.btn_guide &&  typeUser == 'admin' || typeUser == 'superadmin'"
+                                                    v-if="
+                                                        (row.btn_guide &&
+                                                            typeUser ==
+                                                                'admin') ||
+                                                            typeUser ==
+                                                                'superadmin'
+                                                    "
                                                 >
                                                     Guía
                                                 </a>
@@ -360,8 +377,14 @@
                                                 <a
                                                     type="button"
                                                     class="dropdown-item"
-                                                    v-if="!(row.state_type_id ==
-                                                                '13' && row.document_type_id =='03')"
+                                                    v-if="
+                                                        !(
+                                                            row.state_type_id ==
+                                                                '13' &&
+                                                            row.document_type_id ==
+                                                                '03'
+                                                        )
+                                                    "
                                                     @click.prevent="
                                                         clickValidarCpe(row.id)
                                                     "
@@ -515,7 +538,7 @@
                                             v-text="row.affected_document"
                                         ></small>
                                     </td>
-                                        <td v-if="columns.sale_note.visible">
+                                    <td v-if="columns.sale_note.visible">
                                         <template
                                             v-for="(row,
                                             index) in row.sale_note_related"
@@ -867,7 +890,9 @@
                             :showDialog.sync="showDialogPayments"
                             :documentId="recordId"
                         ></document-payments>
-
+                        <document-salud-modal
+                        :showDialog.sync="showDialogDocumentSalud"
+                        ></document-salud-modal>
                         <report-payment
                             :showDialog.sync="showDialogReportPayment"
                         ></report-payment>
@@ -882,6 +907,7 @@
 </template>
 
 <script>
+import DocumentSaludModal from "./partials/document_salud_modal.vue";
 import DocumentsVoided from "./partials/voided.vue";
 import DocumentValidate from "./partials/validate.vue";
 import DocumentOptions from "./partials/options.vue";
@@ -904,6 +930,7 @@ export default {
         "configuration"
     ],
     components: {
+        DocumentSaludModal,
         DocumentsVoided,
         ItemsImport,
         DocumentImportSecond,
@@ -915,6 +942,7 @@ export default {
     },
     data() {
         return {
+            showDialogDocumentSalud: false,
             showDialogReportPayment: false,
             showDialogVoided: false,
             showImportDialog: false,
@@ -931,7 +959,7 @@ export default {
             editDocument: false,
             print: false,
             columns: {
-                 sale_note: {
+                sale_note: {
                     title: "Nota de venta",
                     visible: true
                 },
@@ -989,6 +1017,9 @@ export default {
         //         })
     },
     methods: {
+        clickDocumentSalud() {
+            this.showDialogDocumentSalud = true;
+        },
         teclasInit() {
             document.onkeydown = e => {
                 const key = e.key;
@@ -1184,7 +1215,7 @@ export default {
             this.showImportDialog = true;
         },
         clickValidate() {
-            this.showDialogValidate = true
+            this.showDialogValidate = true;
         },
         clickDownloadReportPagos(type) {
             window.open(`/${this.resource}/payments/${type}`, "_blank");

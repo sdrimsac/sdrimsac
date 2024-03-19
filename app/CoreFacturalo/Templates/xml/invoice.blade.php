@@ -2,9 +2,11 @@
     $invoice = $document->invoice;
     $establishment = $document->establishment;
     $customer = $document->customer;
-    function replaceCommaWithDot($string)
-    {
-        return str_replace(',', '.', $string);
+    if (!function_exists('replaceCommaWithDot')) {
+        function replaceCommaWithDot($string)
+        {
+            return str_replace(',', '.', $string);
+        }
     }
     
     $amount_discount = 0;

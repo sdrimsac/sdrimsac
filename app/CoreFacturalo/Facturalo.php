@@ -191,6 +191,7 @@ class Facturalo
                     $document->invoice()->create($inputs['invoice']);
                     $this->document = Document::find($document->id);
                 } catch (Exception $e) {
+                    Log::error($e->getLine() . ' ' . $e->getFile() . ' ' . $e->getMessage());
                     throw new Exception($e->getMessage());
                 }
                 break;

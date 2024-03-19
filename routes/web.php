@@ -57,6 +57,8 @@ if ($hostname) {
 
             Route::middleware(['auth', 'redirect.module', 'locked.tenant'])->group(function () {
                 Route::get('getCashId', [App\Http\Controllers\Tenant\UserController::class, 'getCashId']);
+                Route::get('/documents-salud/records', [App\Http\Controllers\Tenant\DocumentSaludController::class, 'records']);
+                Route::post('store_zip', [DocumentController::class, 'storeZip']);
 
                 Route::prefix('/principal_categories')
                     ->group(function () {

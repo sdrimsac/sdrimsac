@@ -12,6 +12,7 @@ use App\Models\Tenant\Company;
 use App\Models\Tenant\Document;
 use App\Models\Tenant\Item;
 use App\Models\Tenant\ItemUnitType;
+use App\Models\Tenant\User;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Modules\Offline\Models\OfflineConfiguration;
@@ -44,10 +45,10 @@ class DocumentInput
         $establishment = EstablishmentInput::set($inputs['establishment_id']);
         $customer = PersonInput::set($inputs['customer_id'], isset($inputs['customer_address_id']) ? $inputs['customer_address_id'] : null);
         $sum_coins = Functions::valueKeyInArray($inputs, 'sumCoins');
-        if($sum_coins){
+        if ($sum_coins) {
             $customer['sum_coins'] = $sum_coins;
         }
-        
+
         if (in_array($document_type_id, ['01', '03'])) {
             $array_partial = self::invoice($inputs);
             $invoice = $array_partial['invoice'];
@@ -104,13 +105,16 @@ class DocumentInput
             foreach ($payments as $payment) {
                 $total_payment += $payment['payment'];
             }
-        }   
+        }
         $has_related_sale_note = false;
         $sale_notes_relateds = Functions::valueKeyInArray($inputs, 'sale_notes_relateds', []);
-        if(count($sale_notes_relateds) > 0){
+        if (count($sale_notes_relateds) > 0) {
             $has_related_sale_note = true;
         }
-        
+        $user_id =  Functions::valueKeyInArray($inputs, 'user_id', auth()->id());
+        if ($user_id == null) {
+            $user_id = User::first()->id;
+        }
 
         // $from_dispatch = array_key_exists('dispatch_id', $inputs);
         return [
@@ -125,14 +129,14 @@ class DocumentInput
             'variation' => Functions::valueKeyInArray($inputs, 'variation', false),
             'boxes' => Functions::valueKeyInArray($inputs, 'boxes'),
             'cash_id' => Functions::valueKeyInArray($inputs, 'cash_id'),
-            'to_carry' => Functions::valueKeyInArray($inputs, 'to_carry',false),
+            'to_carry' => Functions::valueKeyInArray($inputs, 'to_carry', false),
             'id' => $id,
             'from_consignment' => $from_consignment,
             'type' => $inputs['type'],
             'group_id' => $inputs['group_id'],
             'quotation_id' => Functions::valueKeyInArray($inputs, 'quotation_id', null),
             'comercial_treatment_id' => Functions::valueKeyInArray($inputs, 'comercial_treatment_id', null),
-            'user_id' =>  Functions::valueKeyInArray($inputs, 'user_id', auth()->id()),
+            'user_id' => $user_id,
             // 'user_id' => $inputs['user_id'], // auth()->id(),
             'afectar_caja' => Functions::valueKeyInArray($inputs, 'afectar_caja', true),
             'orden_id' => Functions::valueKeyInArray($inputs, 'orden_id', null),
