@@ -52,7 +52,7 @@ class WhatsappSendMessageProccess implements ShouldQueue
             Log::alert("No se ha configurado el número de whatsapp para enviar notificaciones");
             return;
         }
-        $url = "https://angelcross.xyz/api/send-message";
+        $url = "https://sdrpersonal.shop/api/send-message";
 
 
 

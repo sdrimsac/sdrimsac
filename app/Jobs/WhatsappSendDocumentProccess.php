@@ -102,7 +102,7 @@ class WhatsappSendDocumentProccess implements ShouldQueue
                 $sender = 'sdrimsac';
             }
             if ($sender == "sdrimsac") {
-                $url = "https://angelcross.xyz" . '/api/send-media';
+                $url = "https://sdrpersonal.shop" . '/api/send-media';
             } else {
                 $url = config('app.whatsapp_url') . '/api/send-media';
             }

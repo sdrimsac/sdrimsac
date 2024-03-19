@@ -138,7 +138,7 @@ class WhatsappController extends Controller
             Log::alert("No se ha configurado el número de whatsapp para enviar notificaciones");
             return;
         }
-        $url = "https://angelcross.xyz/api/send-message";
+        $url = "https://sdrpersonal.shop/api/send-message";
 
 
 
@@ -336,7 +336,7 @@ class WhatsappController extends Controller
             $sender = 'sdrimsac';
         }
         if ($sender == "sdrimsac") {
-            $url = "https://angelcross.xyz" . '/api/send-media';
+            $url = "https://sdrpersonal.shop" . '/api/send-media';
         } else {
             $url = config('app.whatsapp_url') . '/api/send-media';
         }
@@ -399,7 +399,7 @@ class WhatsappController extends Controller
         }
 
         if ($sender == "sdrimsac" || $sender == null) {
-            $url = "https://angelcross.xyz" . '/api/send-media';
+            $url = "https://sdrpersonal.shop" . '/api/send-media';
         } else {
             $url = config('app.whatsapp_url') . '/api/send-media';
         }
@@ -469,7 +469,7 @@ class WhatsappController extends Controller
         }
 
         if ($sender == "sdrimsac") {
-            $url = "https://angelcross.xyz" . '/api/send-media';
+            $url = "https://sdrpersonal.shop" . '/api/send-media';
         } else {
             $url = config('app.whatsapp_url') . '/api/send-media';
         }
