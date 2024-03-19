@@ -134,7 +134,7 @@ class Functions
     {
 
         $person = Person::find($inputs['customer_id']);
-        Log::info(json_encode($inputs));
+        // Log::info(json_encode($inputs));
         if ($person) {
 
             if (($inputs['operation_type_id'] == '0101')) {
