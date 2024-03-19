@@ -162,6 +162,7 @@ class OptionController extends Controller
         DB::connection('tenant')->table('purchase_items')->delete();
         DB::connection('tenant')->table('purchase_payments')->delete();
         DB::connection('tenant')->table('purchases')->delete();
+        DB::connection('tenant')->table('cash_income_principal')->delete();
         DB::connection('tenant')->table('cash')->delete();
         DB::connection('tenant')->table('global_payments')->delete();
         DB::connection('tenant')->table('social_media_clients')->delete();
