@@ -296,7 +296,6 @@ class DocumentController extends Controller
                 foreach ($files as $file) {
                     $extension = pathinfo($file, PATHINFO_EXTENSION);
                     if ($extension === 'txt') {
-                        if ($file == 'Registro_2.txt') {
                             $path =  storage_path('app/public/red_salud/' . $name . '/' . $file);
                             if (file_exists($path) && is_readable($path)) {
                                 $document = file_get_contents($path);
@@ -307,11 +306,10 @@ class DocumentController extends Controller
                                 $document_validated = DocumentValidation::validationSalud($document_transform);
                                 $document_input = DocumentInput::set($document_validated);
                                 $result = $this->storeTransform($document_input);
-                                return $result;
+                                // return $result;
                             } else {
                                 Log::info('no existe: ' . $path);
                             }
-                        }
                     }
                 }
                 return [
