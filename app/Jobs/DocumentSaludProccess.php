@@ -10,6 +10,7 @@ use App\CoreFacturalo\Requests\Inputs\Functions;
 use App\Http\Controllers\Api\DocumentController;
 use App\Models\Tenant\Configuration;
 use App\Models\Tenant\DocumentSalud;
+use App\Models\Tenant\Series;
 use App\Traits\JobReportTrait;
 use Exception;
 use Hyn\Tenancy\Environment;
@@ -35,7 +36,7 @@ class DocumentSaludProccess implements ShouldQueue
         $this->store_path = $store_path;
     }
 
-     function items($inputs)
+    function items($inputs)
     {
         $document = $inputs['documento'];
         if (key_exists('detalle', $inputs)) {
@@ -160,6 +161,15 @@ class DocumentSaludProccess implements ShouldQueue
 
         return $inputs_transform;
     }
+    function get_establishment_by_serie($serie)
+    {
+        $serie = Series::where('number', $serie)->first();
+        if ($serie) {
+            $establishment_id = $serie->establishment_id;
+            return $establishment_id;
+        }
+        return null;
+    }
     public function handle()
     {
         $date = date('Y-m-d');
@@ -191,9 +201,9 @@ class DocumentSaludProccess implements ShouldQueue
                     $document_salud->file_name = $file;
                     $document_salud->identifier = $identifier;
                     $document_salud_exists = DocumentSalud::where('identifier', $identifier)
-                    ->whereNull('error')
-                    ->where('status', 'Aceptado')
-                    ->first();
+                        ->whereNull('error')
+                        ->where('status', 'Aceptado')
+                        ->first();
                     if ($document_salud_exists) {
                         $document_salud->status = 'Repetido';
                         $document_salud->error = 'Documento repetido';
@@ -203,7 +213,11 @@ class DocumentSaludProccess implements ShouldQueue
                     try {
                         $document_transform = self::transform_document($document);
                         $document_validated = DocumentValidation::validationSalud($document_transform);
+                        $series = $document_validated['series'];
+                        $establishment_id = self::get_establishment_by_serie($series);
+                        $document_validated['establishment_id'] = $establishment_id;
                         $document_input = DocumentInput::set($document_validated);
+
                         $result = (new DocumentController)->storeTransform($document_input);
                         if (isset($result['success']) && $result['success'] === true) {
                             $document_salud->status = 'Aceptado';
@@ -216,7 +230,7 @@ class DocumentSaludProccess implements ShouldQueue
                         //limitar a 255 caracteres
                         $message = substr($message, 0, 190);
                         $document_salud->error = $message;
-                        Log::info('error: file: ' . $file . " " . $e->getMessage(). " " . $e->getLine() . " " . $e->getFile());
+                        Log::info('error: file: ' . $file . " " . $e->getMessage() . " " . $e->getLine() . " " . $e->getFile());
                     } finally {
                         $document_salud->save();
                     }
@@ -228,9 +242,6 @@ class DocumentSaludProccess implements ShouldQueue
         return [
             'success' => true,
         ];
-    
-
-        
     }
 
 
