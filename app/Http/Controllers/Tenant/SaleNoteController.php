@@ -67,6 +67,7 @@ use App\CoreFacturalo\Requests\Inputs\Common\PersonInput;
 use App\CoreFacturalo\Requests\Inputs\Common\EstablishmentInput;
 use App\CoreFacturalo\Requests\Inputs\Functions;
 use App\Exports\SaleNoteExport;
+use App\Http\Resources\Tenant\SaleNoteCreditPenaltyCollection;
 use App\Models\Tenant\BankAccount;
 use App\Models\Tenant\Cash;
 use App\Models\Tenant\CreditList;
@@ -77,8 +78,10 @@ use App\Models\Tenant\ItemUnitType;
 use App\Models\Tenant\NumberActivity;
 use App\Models\Tenant\Quotation;
 use App\Models\Tenant\SaleNoteCredit;
+use App\Models\Tenant\SaleNoteCreditPenalty;
 use App\Models\Tenant\SaleNotePromotion;
 use App\Models\Tenant\Seller;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 use Modules\Restaurant\Events\OrdenReadyEvent;
 use Modules\Restaurant\Models\Food;
 use Modules\Restaurant\Models\HotelRentItemServices;
@@ -212,6 +215,44 @@ class SaleNoteController extends Controller
         ], 200);
     }
 
+    public function columns_penalty()
+    {
+        return [
+            'amount_by_day' => 'Monto',
+        ];
+    }
+    public function index_penalty()
+    {
+        $company = Company::first();
+        $configuration = Configuration::first();
+        return view(
+            'tenant.sale_notes.penalty',
+            compact('company', 'configuration')
+        );
+    }
+    public function records_penalty(Request $request)
+    {
+        $records = SaleNoteCreditPenalty::query();
+        return new SaleNoteCreditPenaltyCollection($records->paginate(config('tenant.items_per_page')));
+    }
+    public function store_penalty(Request $request)
+    {
+        $id = $request->id;
+        $amount_by_day = $request->amount_by_day;
+        if ($id) {
+            $penalty = SaleNoteCreditPenalty::findOrFail($id);
+            $penalty->amount_by_day = $amount_by_day;
+            $penalty->save();
+        } else {
+            SaleNoteCreditPenalty::create([
+                'amount_by_day' => $amount_by_day,
+            ]);
+        }
+        return [
+            'success' => true,
+            'message' => 'Multa actualizada',
+        ];
+    }
     public function index()
     {
         $company = Company::select('soap_type_id', 'name')->first();
@@ -359,6 +400,28 @@ class SaleNoteController extends Controller
 
 
         return new SaleNoteCollection($records->paginate(config('tenant.items_per_page')));
+    }
+    public function setStatusCredit(Request $request)
+    {
+        $id = $request->id;
+        $status = $request->status;
+        $observations = $request->observations;
+
+        $sale_note = SaleNote::find($id);
+        $sale_note->status = $status;
+        if ($status == 'R') {
+            $this->anulate($id);
+            // Receipt::where('sale_note_id', $id)->delete();
+            SaleNoteCredit::where('sale_note_id', $id)->delete();
+            Payment::where('sale_note_id', $id)->delete();
+        }
+        $sale_note->observation = $observations;
+        $sale_note->save();
+
+        return [
+            'success' => true,
+            'message' => 'Crédito actualizado',
+        ];
     }
     public function searchCustomers(Request $request)
     {
@@ -536,7 +599,7 @@ class SaleNoteController extends Controller
         $total = $sale_note->total;
         $type_payment = $sale_note->type_payment;
 
-        return compact( 'tasa', 'month', 'advances', 'total', 'type_payment');
+        return compact('tasa', 'month', 'advances', 'total', 'type_payment');
     }
     public function record($id)
     {
@@ -785,6 +848,8 @@ class SaleNoteController extends Controller
                 }
                 /////------------------------------------------
                 if ($request->generate == true) {
+                    $this->sale_note->status = 'P';
+                    $this->sale_note->save();
                     $date = Carbon::parse($request->date_of_issue);
                     for ($i = 0; $i < $request->num_cuota; $i++) {
                         switch ($request->type_payment) {
@@ -855,10 +920,18 @@ class SaleNoteController extends Controller
                             'reference_number' => null
                         ]);
                     }
-                    SaleNoteCredit::create([
+                    $sale_note_credit =  SaleNoteCredit::create([
                         'cash_id' => $cash->id,
                         'sale_note_id' => $this->sale_note->id,
                     ]);
+                    if ($configuration->sale_note_credit_penalty && $request->type_payment) {
+                        $type_payment = $request->type_payment;
+                        $penalty = DB::connection('tenant')->table('penalties_sale_note_credit')->where('type', $type_payment)->first();
+                        if ($penalty) {
+                            $sale_note_credit->penalty_amount_by_day = $penalty->amount_by_day;
+                            $sale_note_credit->save();
+                        }
+                    }
                 }
 
                 $company = Company::first();

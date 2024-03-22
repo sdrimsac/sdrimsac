@@ -202,7 +202,20 @@
                         <th class="text-center">Estado</th>
                         <th class="text-end">Fecha de cobro</th>
                         <th class="text-end">Monto</th>
+                        <th
+                            v-if="configuration.sale_note_credit_penalty"
+                            class="text-end"
+                        >
+                            Penalidad
+                        </th>
+
                         <th class="text-end">Días de atraso</th>
+                        <th
+                            v-if="configuration.sale_note_credit_confirm"
+                            class="text-end"
+                        >
+                            Aprobado
+                        </th>
                         <th class="text-end">Acciones</th>
                     </tr>
                 </thead>
@@ -229,53 +242,135 @@
                         </td>
                         <td class="text-end">{{ row.date_of_due }}</td>
                         <td class="text-end">{{ row.amount_due }}</td>
+                        <td
+                            v-if="configuration.sale_note_credit_penalty"
+                            class="text-end"
+                        >
+                            {{ row.penalty }}
+                        </td>
                         <td class="text-end">{{ row.differenc_days }}</td>
+                        <td
+                            v-if="configuration.sale_note_credit_confirm"
+                            class="text-end"
+                            :class="
+                                `${
+                                    row.status == 'P'
+                                        ? 'text-warning'
+                                        : row.status == 'A'
+                                        ? 'text-success'
+                                        : 'text-danger'
+                                }`
+                            "
+                        >
+                            <strong>
+                                {{
+                                    row.status == "P"
+                                        ? "POR APROBAR"
+                                        : row.status == "A"
+                                        ? "ACEPTADO"
+                                        : "RECHAZADO"
+                                }}
+                            </strong>
+                        </td>
                         <td class="text-center">
                             <template v-if="row.is_credit">
-                                <el-tooltip
-                                    class="item"
-                                    effect="dark"
-                                    content="Registrar Pagos"
-                                    placement="bottom-end"
+                                <template
+                                    v-if="!isAnalist && row.status != 'A' && row.status!='R'"
                                 >
-                                    <button
-                                        type="button"
-                                        class="btn waves-effect waves-light btn-sm btn-primary"
-                                        v-if="row.state_type_id != '11'"
-                                        @click.prevent="clickPayment(row.id)"
+                                    <el-tooltip
+                                        class="item"
+                                        effect="dark"
+                                        content="Aceptar crédito"
+                                        placement="bottom-end"
                                     >
-                                        <i class="fas fa-money-bill-alt"></i>
-                                    </button>
-                                </el-tooltip>
+                                        <button
+                                            type="button"
+                                            class="btn waves-effect waves-light btn-sm btn-primary"
+                                            v-if="row.state_type_id != '11'"
+                                            @click.prevent="
+                                                clickSetStatus(row.id, 'A')
+                                            "
+                                        >
+                                            <i class="fas fa-check"></i>
+                                        </button>
+                                    </el-tooltip>
 
-                                <el-tooltip
-                                    class="item"
-                                    effect="dark"
-                                    content="Imprimir Contrato"
-                                    placement="bottom-end"
-                                >
-                                    <button
-                                        type="button"
-                                        class="btn waves-effect waves-light btn-sm btn-info"
-                                        @click.prevent="clickContract(row.id)"
+                                    <el-tooltip
+                                        class="item"
+                                        effect="dark"
+                                        content="Rechazar crédito"
+                                        placement="bottom-end"
                                     >
-                                        <i class="fas fa-file-alt"></i>
-                                    </button>
-                                </el-tooltip>
-                                <el-tooltip
-                                    class="item"
-                                    effect="dark"
-                                    content="Imprimir Cronograma de Pagos"
-                                    placement="bottom-end"
-                                >
-                                    <button
-                                        type="button"
-                                        class="btn waves-effect waves-light btn-sm btn-success"
-                                        @click.prevent="clickSchedule(row.id)"
+                                        <button
+                                            type="button"
+                                            class="btn waves-effect waves-light btn-sm btn-warning"
+                                            v-if="row.state_type_id != '11'"
+                                            @click.prevent="
+                                                clickSetStatus(row.id, 'R')
+                                            "
+                                        >
+                                            <i
+                                                class="fas fa-times
+                                        "
+                                            ></i>
+                                        </button>
+                                    </el-tooltip>
+                                </template>
+                                <template v-if="row.show_formats && row.status!='R'">
+                                    <el-tooltip
+                                        v-if="row.status == 'A'"
+                                        class="item"
+                                        effect="dark"
+                                        content="Registrar Pagos"
+                                        placement="bottom-end"
                                     >
-                                        <i class="fas fa-file-alt"></i>
-                                    </button>
-                                </el-tooltip>
+                                        <button
+                                            type="button"
+                                            class="btn waves-effect waves-light btn-sm btn-primary"
+                                            v-if="row.state_type_id != '11'"
+                                            @click.prevent="
+                                                clickPayment(row.id)
+                                            "
+                                        >
+                                            <i
+                                                class="fas fa-money-bill-alt"
+                                            ></i>
+                                        </button>
+                                    </el-tooltip>
+
+                                    <el-tooltip
+                                        class="item"
+                                        effect="dark"
+                                        content="Imprimir Contrato"
+                                        placement="bottom-end"
+                                    >
+                                        <button
+                                            type="button"
+                                            class="btn waves-effect waves-light btn-sm btn-info"
+                                            @click.prevent="
+                                                clickContract(row.id)
+                                            "
+                                        >
+                                            <i class="fas fa-file-alt"></i>
+                                        </button>
+                                    </el-tooltip>
+                                    <el-tooltip
+                                        class="item"
+                                        effect="dark"
+                                        content="Imprimir Cronograma de Pagos"
+                                        placement="bottom-end"
+                                    >
+                                        <button
+                                            type="button"
+                                            class="btn waves-effect waves-light btn-sm btn-success"
+                                            @click.prevent="
+                                                clickSchedule(row.id)
+                                            "
+                                        >
+                                            <i class="fas fa-file-alt"></i>
+                                        </button>
+                                    </el-tooltip>
+                                </template>
 
                                 <el-tooltip
                                     v-if="
@@ -302,6 +397,33 @@
                     </tr>
                 </tbody>
             </table>
+            <el-dialog
+                :visible.sync="showObservationsDialog"
+                title="Rechazo de crédito"
+                @open="openObservationsDialog"
+                append-to-body
+            >
+                <div class="row m-2">
+                    <div class="col-md-12">
+                        <el-input
+                            type="textarea"
+                            v-model="observations"
+                            placeholder="Motivo de rechazo"
+                        ></el-input>
+                    </div>
+                </div>
+
+                <span slot="footer" class="dialog-footer">
+                    <el-button @click="showObservationsDialog = false"
+                        >Cancelar</el-button
+                    >
+                    <el-button
+                        type="primary"
+                        @click="changeStatus(recordId, 'R')"
+                        >Aceptar</el-button
+                    >
+                </span>
+            </el-dialog>
         </div>
 
         <div>
@@ -363,9 +485,11 @@ export default {
         SaleNoteGenerate,
         SaleNoteDetail
     },
-    props: ["showDialog", "configuration"],
+    props: ["showDialog", "configuration", "isAnalist"],
     data() {
         return {
+            showObservationsDialog: false,
+            observations: "",
             showDialogUpdate: false,
             loading_submit: false,
             showWhatsappForm: false,
@@ -407,6 +531,42 @@ export default {
         });
     },
     methods: {
+        openObservationsDialog() {
+            this.observations = "";
+        },
+        async changeStatus(id, status) {
+            const response = await this.$http.post(
+                "/sale-notes/set-status-credit",
+                {
+                    id,
+                    status,
+                    observations: this.observations
+                }
+            );
+            console.log("🚀 ~ changeStatus ~ response:", response);
+            this.showObservationsDialog = false;
+            this.getRecords();
+        },
+        async clickSetStatus(id, status) {
+            this.recordId = id;
+            let statusDescription = status == "A" ? "aceptar" : "rechazar";
+            try {
+                await this.$confirm(
+                    `¿Está seguro de ${statusDescription} el crédito?`,
+                    "Atención",
+                    {
+                        confirmButtonText: "Aceptar",
+                        cancelButtonText: "Cancelar",
+                        type: "warning"
+                    }
+                );
+                if (status == "R") {
+                    this.showObservationsDialog = true;
+                } else {
+                    await this.changeStatus(id, status);
+                }
+            } catch (e) {}
+        },
         clickEditSaleNote(id) {
             this.recordId = id;
             this.showDialogUpdate = true;

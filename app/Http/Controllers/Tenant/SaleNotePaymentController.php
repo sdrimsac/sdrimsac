@@ -49,6 +49,7 @@ class SaleNotePaymentController extends Controller
     public function document($sale_note_id)
     {
         $sale_note = SaleNote::find($sale_note_id);
+        $penalty = $sale_note->getPenalties();
         $total_paid = round(collect($sale_note->payments)->sum('payment'), 2);
         $payment = Payment::where('sale_note_id', $sale_note_id);
         $payment_tasa = $payment->first();
@@ -64,6 +65,7 @@ class SaleNotePaymentController extends Controller
             $btn_schedule = false;
             $interes = 0;
         }
+        // $total = $sale_note->total  + $penalty;
         if ($sale_note->total_payment == 0) {
             $total = $sale_note->total - $sale_note->advances;
         } else {
@@ -84,8 +86,8 @@ class SaleNotePaymentController extends Controller
             'series' => $sale_note->series,
             'number' => $sale_note->number,
             'total_paid' => $total_paid,
-            'total' => $total + $interes,
-            'total_difference' => $total_difference + $interes,
+            'total' => $total + $interes + $penalty,
+            'total_difference' => $total_difference + $interes + $penalty,
             'paid' => $sale_note->paid,
 
         ];
@@ -172,7 +174,9 @@ class SaleNotePaymentController extends Controller
 
         $payment = Payment::where('sale_note_id', $request->sale_note_id)
             ->where('paid', 0);
+        // ->where('penalty_amount', '>', 0);
 
+        $penalty_paid = 0;
 
         //
         $count_payment = $payment->count();
@@ -181,6 +185,7 @@ class SaleNotePaymentController extends Controller
             if ($payment) {
                 $amount_to_paid = $payment->amount;
                 $payment->paid = true;
+                $penalty_paid += $payment->penalty_amount;
                 $payment->amount_paid = $request->input('payment');
                 $payment->save();
                 $all_payed = Payment::where('sale_note_id', $request->sale_note_id)
@@ -194,7 +199,10 @@ class SaleNotePaymentController extends Controller
                 }
             }
         } else {
+            //en amount_to_paid deseo obtener la suma de la columna amount y la  columna penalty_amount
             $amount_to_paid = $payment->first()->amount;
+            // $amount_to_paid = $payment->sum('amount') + $payment->sum('penalty_amount');
+            // $amount_to_paid = $amount_to_paid->amount + $amount_to_paid->penalty;
             $amount_payed = $request->input('payment');
             $last_payment = Payment::where('sale_note_id', $request->sale_note_id)
                 ->where('paid', 0)
@@ -203,44 +211,75 @@ class SaleNotePaymentController extends Controller
                 $amount_payed += $last_payment->amount_paid;
             }
 
-            $payments_cancel = intval($amount_payed / $amount_to_paid);
-            $rest = $amount_payed - ($amount_to_paid * $payments_cancel);
-            if ($rest > 0) {
-                $payments_cancel++;
-            }
-            $payments = Payment::where('sale_note_id', $request->sale_note_id)
-                ->where('paid', 0)->get(); //3 2
+            // $payments_cancel = intval($amount_payed / $amount_to_paid);
 
-            if($rest!=0){
-                foreach ($payments as $key => $value) {
-                    if ($key < $payments_cancel - 1) {
-                        $value->paid = true;
-                        $value->amount_paid = $amount_to_paid;
-                        $num_cuota = $key + 1;
-                        $value->save();
-                    } elseif ($key == $payments_cancel - 1) {
-                        $value->paid = false;
-                        $value->amount_paid = $rest;
-                        $num_cuota = $key + 1;
-                        $value->save();
-                    } else {
-                        // $value->paid = false;
-                        // $value->amount_paid = $rest;
-                        // $value->save();
-                    }
+            // $rest = $amount_payed - ($amount_to_paid * $payments_cancel);
+            // if ($rest > 0) {
+            //     $payments_cancel++;
+            // }
+
+            $payments = Payment::where('sale_note_id', $request->sale_note_id)
+                ->where('paid', 0)
+
+                ->get(); //3 2
+            // $amount_payed_remain = $request->input('payment');
+            // if($rest!=0){
+            //     foreach ($payments as $key => $value) {
+            //         if ($key < $payments_cancel - 1) {
+            //             $value->paid = true;
+            //             $value->amount_paid = $value->amount + $value->penalty_amount;
+            //             $num_cuota = $key + 1;
+            //             $value->save();
+            //         } elseif ($key == $payments_cancel - 1) {
+            //             $value->paid = false;
+            //             $value->amount_paid = $rest;
+            //             $num_cuota = $key + 1;
+            //             $value->save();
+            //         } else {
+            //             // $value->paid = false;
+            //             // $value->amount_paid = $rest;
+            //             // $value->save();
+            //         }
+            //     }
+            // }else{
+            //     foreach ($payments as $key => $value) {
+            //         if ($key < $payments_cancel) {
+            //             $value->paid = true;
+            //             $value->amount_paid = $value->amount + $value->penalty_amount;
+            //             $num_cuota = $key + 1;
+            //             $value->save();
+            //         } else {
+            //             // $value->paid = false;
+            //             // $value->amount_paid = $rest;
+            //             // $value->save();
+            //         }
+            //     }
+            // }
+            $amount_payed_remain = $request->input('payment');
+            foreach ($payments as $key => $value) {
+                if ($amount_payed_remain <= 0) {
+                    break; // Si no hay fondos disponibles, salir del bucle
                 }
-            }else{
-                foreach ($payments as $key => $value) {
-                    if ($key < $payments_cancel) {
+
+                if ($amount_payed_remain > 0) {
+                    // Si el índice de la cuota es menor que el número de pagos cancelados
+                    $amount_to_pay = $value->amount + $value->penalty_amount;
+
+                    if ($amount_payed_remain >= $amount_to_pay) {
+                        // Si el monto restante es suficiente para pagar la cuota completa
                         $value->paid = true;
-                        $value->amount_paid = $amount_to_paid;
-                        $num_cuota = $key + 1;
-                        $value->save();
+                        $penalty_paid += $value->penalty_amount;
+                        // $value->penalty_amount = 0;
+                        $value->amount_paid = $amount_to_pay;
+                        $amount_payed_remain -= $amount_to_pay;
                     } else {
-                        // $value->paid = false;
-                        // $value->amount_paid = $rest;
-                        // $value->save();
+                        // Si el monto restante no es suficiente para pagar la cuota completa
+                        $value->paid = false;
+                        $value->amount_paid = $amount_payed_remain;
+                        $amount_payed_remain = 0; // Establecer el monto restante a cero
                     }
+
+                    $value->save();
                 }
             }
             $all_payed = Payment::where('sale_note_id', $request->sale_note_id)
@@ -250,7 +289,7 @@ class SaleNotePaymentController extends Controller
                 $sale_note->paid = true;
                 $sale_note->save();
                 Payment::where('sale_note_id', $request->sale_note_id)
-                    ->update(['amount_paid' => $amount_to_paid]);
+                    ->update(['amount_paid' => $amount_to_paid, 'penalty_amount' => 0]);
             }
         }
         if ($request->paid == true) {
@@ -283,6 +322,7 @@ class SaleNotePaymentController extends Controller
             $sale_note->save();
         }
         $receipt->num_cuota = $num_cuota;
+        $receipt->penalty_paid = $penalty_paid;
         $receipt->save();
         //    $document_save->updateCreditsPayment();
         $this->createPdf($request->input('sale_note_id'));

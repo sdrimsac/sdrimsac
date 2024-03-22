@@ -247,7 +247,9 @@
                                             : 'btn btn-success btn-sm'
                                     "
                                     class="btn waves-effect waves-light btn-sm"
-                                    @click.prevent="clickDelete(row.id)"
+                                    @click.prevent="
+                                        clickDelete(row.id, row.active)
+                                    "
                                 >
                                     <template
                                         v-if="type == 'caja/workers-type'"
@@ -449,10 +451,22 @@ export default {
             this.recordId = recordId;
             this.showDialog = true;
         },
-        clickDelete(id) {
-            this.destroy(`/${this.resource}/${id}`).then(() =>
-                this.$eventHub.$emit("reloadData")
-            );
+        clickDelete(id, active) {
+            if (active == undefined) {
+                this.destroy(`/${this.resource}/${id}`).then(() =>
+                    this.$eventHub.$emit("reloadData")
+                );
+            } else {
+                if (active) {
+                    this.disable(`/${this.resource}/${id}`).then(() =>
+                        this.$eventHub.$emit("reloadData")
+                    );
+                } else {
+                    this.enable(`/${this.resource}/${id}`).then(() =>
+                        this.$eventHub.$emit("reloadData")
+                    );
+                }
+            }
         }
     }
 };

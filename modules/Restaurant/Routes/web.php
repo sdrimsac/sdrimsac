@@ -120,7 +120,7 @@ Route::prefix('caja')->group(function () {
         Route::get('workers-type/records', 'WorkersTypeController@records');
         Route::get('workers-type/actives', 'WorkersTypeController@actives');
         Route::get('workers-type/record/{id}', 'WorkersTypeController@record');
-        Route::delete('workers-type/{id}', 'WorkersTypeController@active');
+        Route::get('workers-type/{id}', 'WorkersTypeController@active');
         Route::post('workers-type', 'WorkersTypeController@store');
         //**** AREAS */
         Route::get('areas', 'AreaController@index')->name('restaurant.areas')->middleware("just.super");

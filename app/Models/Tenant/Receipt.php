@@ -16,7 +16,8 @@ class Receipt extends ModelTenant
         'document_id',
         'document_payment_id',
         'sale_note_id',
-
+        'penalty_paid',
+        'num_cuota',
         'sale_note_payment_id',
         'number',
         'external_id',

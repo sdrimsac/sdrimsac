@@ -95,7 +95,16 @@ class User extends Authenticatable
 
         ];
     }
-
+    public function isWorkerType($worker_type)
+    {
+        $to_upper = strtoupper($worker_type);
+        $worker_types = WorkersType::where('description',  $to_upper)->first();
+        if ($worker_types != null) {
+            $worker_type_id = $this->worker_type_id;
+            return $worker_type_id == $worker_types->id;
+        }
+        return false;
+    }
     public function getDataOnlyAuthUser()
     {
         return [

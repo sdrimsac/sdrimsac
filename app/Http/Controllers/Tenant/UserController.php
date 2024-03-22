@@ -14,6 +14,7 @@ use App\Models\Tenant\Cash;
 use App\Models\Tenant\Desarrollador;
 use Exception;
 use Modules\LevelAccess\Models\ModuleLevel;
+use Modules\Restaurant\Models\WorkersType;
 
 class UserController extends Controller
 {
@@ -64,6 +65,7 @@ class UserController extends Controller
             ];
         }
     }
+    
     public function index()
     {
         //   $type = [['type' => 'admin', 'description'=>'Administrador'], ['type' => 'seller', 'description'=>'Vendedor'],['type' => 'driver', 'description'=>'Conductor']];

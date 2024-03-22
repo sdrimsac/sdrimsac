@@ -38,7 +38,7 @@
 
         .header_left {
             width: 60%;
-            height: auto;
+            /* height: auto; */
             float: left;
             height: 2cm;
             text-align: left;
@@ -66,7 +66,7 @@
             border: thin solid #333 !important;
             border-radius: 5px !important;
             padding: 5px;
-            height: 2.cm;
+            /* height: 2.cm; */
             /** Extra personal styles **/
             color: #000;
             text-align: center;
@@ -82,7 +82,7 @@
 
         .width {
             width: 100%;
-            height: 2cm;
+            /* height: 2cm; */
             float: left;
             border: 1px solid;
         }
@@ -155,7 +155,7 @@
 <body>
     <table border="0" style="width: 80%">
         <tr>
-            <td height="80px" valign="top">
+            <td valign="top">
                 <table border="0" class="full-width">
                     <tr>
                         <td width="20%" valign="top" align="center">
@@ -163,7 +163,7 @@
                                 <img src="data:{{ mime_content_type(public_path("storage/uploads/logos/{$company->logo}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/uploads/logos/{$company->logo}"))) }}"
                                     alt="{{ $company->name }}" class="full-width logotipo">
                             @else
-                                <div style="width:100%;display:block;height:40px"></div>
+                                <div style="width:100%;display:block;"></div>
                             @endif
                         </td>
                     </tr>
@@ -224,7 +224,7 @@
                     </tr>
                     <tr>
                         <td align="left">
-                            <div class="border_round" style="height: 1.3cm !important;">
+                            <div class="border_round" >
                                 <table border="0" class="full-width" border="0">
                                     <tr>
                                         <td class="negrita">Fecha : </td>
@@ -233,13 +233,17 @@
                                         <td class="negrita">Hora : </td>
                                         <td>{{ strtoupper($data->hour) }}</td>
                                     </tr>
-                                    @if ($data->num_cuota)
-                                        <tr>
+                                    <tr>
+                                        @if ($data->num_cuota)
                                             <td class="negrita">N° Cuota : </td>
                                             <td>{{ $data->num_cuota }}</td>
-                                            <td colspan="2"></td>
-                                        </tr>
-                                    @endif
+                                        @endif
+                                        @if ($data->penalty_paid)
+                                            <td class="negrita">Penalidad : </td>
+                                            <td>{{ $data->penalty_paid }}</td>
+                                        @endif
+                                    </tr>
+
                                 </table>
                             </div>
                         </td>
@@ -381,7 +385,7 @@
                                             <td align="center" valign="top" class="border-top"
                                                 style="padding: 5px !important;">
                                                 <b><span style="font-size: 17px;">
-                                                        {{ number_format($payments->total_payment - $data->amount, 2) }}
+                                                        {{ number_format($data->amount, 2) }}
                                                     </span></b>
                                             </td>
                                         </tr>

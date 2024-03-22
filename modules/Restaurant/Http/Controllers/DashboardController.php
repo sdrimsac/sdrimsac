@@ -62,7 +62,7 @@ class DashboardController extends Controller
         $user = auth()->user();
         $worker_types = WorkersType::where(function ($query) {
             $searchValue = '%search_value%';
-            foreach (['CAJ', 'caj', 'VEN', 'ven'] as $value) {
+            foreach (['CAJ', 'caj', 'VEN','ANALI','anali', 'ven'] as $value) {
                 $query->orWhere('description', 'LIKE', str_replace('search_value', $value, $searchValue));
             }
         })->get();

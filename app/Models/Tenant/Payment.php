@@ -14,6 +14,7 @@ class Payment extends ModelTenant
         'sale_note_id',
         'amount',
         'type_payment',
+        'penalty_amount',
         'payment_method_type_id',
         'tasa'
     ];

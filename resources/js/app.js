@@ -449,6 +449,10 @@ const app = new Vue({
                 /* webpackChunkName:"js/tenant-task-form" */ "./views/tasks/form.vue"
             ),
 
+        "tenant-sale-notes-credit-penalty": () =>
+            import(
+                /* webpackChunkName:"js/tenant-sale-notes-credit-penalty" */ "./views/sale_notes/credit_penalty.vue"
+            ),
         "tenant-sale-notes-index": () =>
             import(
                 /* webpackChunkName:"js/tenant-sale-notes-index" */ "./views/sale_notes/index.vue"

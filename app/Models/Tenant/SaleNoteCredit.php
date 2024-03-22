@@ -9,7 +9,8 @@ class SaleNoteCredit extends ModelTenant
 
     protected $fillable = [
       "cash_id",
-      "sale_note_id"
+      "sale_note_id",
+      "penalty_amount_by_day"
     ];
 
     public function sale_note(){

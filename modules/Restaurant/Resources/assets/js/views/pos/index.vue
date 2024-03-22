@@ -981,6 +981,7 @@
                             :quotationId.sync="quotationId"
                             :cotIdentifier.sync="cotIdentifier"
                             :isSeller.sync="isSeller"
+                            :isAnalist.sync="isAnalist"
                             @sendOrdens="sendOrdens"
                             :isHotelArea.sync="isHotelArea"
                             :clientSaleNoteNumber.sync="clientSaleNoteNumber"
@@ -1683,9 +1684,12 @@
             :establishment.sync="establishment"
         >
         </PromotionCanje>
-        <credits-list :showDialog.sync="showCredits"
-        :configuration="configuration"
-        > </credits-list>
+        <credits-list
+            :showDialog.sync="showCredits"
+            :configuration="configuration"
+            :isAnalist="isAnalist"
+        >
+        </credits-list>
 
         <dispatch-modal
             :configuration="configuration"
@@ -1869,8 +1873,9 @@ export default {
 
     data() {
         return {
-            cotIdentifier:null,
+            cotIdentifier: null,
             isSeller: false,
+            isAnalist: false,
             showColorSize: false,
             currentColorSize: [],
             showSaleNoteCreditCash: false,
@@ -2021,7 +2026,7 @@ export default {
         this.area_id = this.worker.area_id;
 
         this.isSeller = this.checkWorkerType("vendedor");
-        console.log("🚀 ~ created ~ this.isSeller:", this.isSeller);
+        this.isAnalist = this.checkWorkerType("analista");
         localStorage.setItem("quotation_stock", 0);
         let type_code = localStorage.getItem("type_code");
         let barcode = localStorage.getItem("barcode");
@@ -2235,7 +2240,7 @@ export default {
                     id: 1,
                     title: ["Comprobantes"],
                     icon: "fas fa-print ",
-                    visible: true && !this.isSeller
+                    visible: true && !this.isSeller && !this.isAnalist
                 },
                 /* {
                     id: 2,
@@ -2290,7 +2295,8 @@ export default {
                     visible:
                         this.configuration.hotels &&
                         this.worker.area.description.toUpperCase() == "HOTEL" &&
-                        !this.isSeller
+                        !this.isSeller &&
+                        !this.isAnalist
                 },
                 {
                     id: 6,
@@ -5058,7 +5064,7 @@ export default {
             if (this.configuration.hotels) {
                 this.getTablesToLeave();
             }
-            if(this.$refs.list_orden){
+            if (this.$refs.list_orden) {
                 this.$refs.list_orden.commercialTreatmentId = null;
             }
             this.clientSaleNoteNumber = null;

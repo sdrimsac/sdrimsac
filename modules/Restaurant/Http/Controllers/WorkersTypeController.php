@@ -32,14 +32,13 @@ class WorkersTypeController extends Controller
     {
         if ($request->column && $request->value == "Activado") {
             $records = WorkersType::where($request->column, '=', 1);
-        } 
-        else if ($request->column && $request->value == "Desactivado") {
+        } else if ($request->column && $request->value == "Desactivado") {
             $records = WorkersType::where($request->column, '=', 0);
-        }
-        
-        else {
+        } else if ($request->column && $request->value) {
             $records = WorkersType::where($request->column, 'like', "%{$request->value}%")
                 ->where('active', 1);
+        } else {
+            $records = WorkersType::where('active', 1);
         }
 
         return new WorkersTypeCollection($records->paginate(config('tenant.items_per_page')));
@@ -79,7 +78,7 @@ class WorkersTypeController extends Controller
     }
     public function store(WorkersTypeRequest $request)
     {
-        
+
         $id = $request->input('id');
         $worker_type = WorkersType::firstOrNew(['id' => $id]);
         $worker_type->fill($request->all());

@@ -205,7 +205,8 @@
             <div :class="`p-1 bg-primary`">
                 <div class="row col-md-12 mx-1">
                     <div>
-                        <template
+                        <template v-if="!isAnalist">
+                            <template
                             v-if="
                                 (this.quotation_stock &&
                                     configuration.quotation &&
@@ -244,6 +245,7 @@
                                 <br />
                                 Cobrar
                             </button>
+                        </template>
                         </template>
 
                         <button
@@ -601,8 +603,8 @@
                                 v-model="variation"
                                 @change="changeVariation"
                                 v-if="
-                                    configuration.show_variation_dcto &&
-                                        !isSeller
+                                    configuration.show_variation_dcto && 
+                                        !isSeller && !isAnalist
                                 "
                             >
                                 <span class="text-white"
@@ -610,7 +612,7 @@
                                 ></el-checkbox
                             >
                         </template>
-                        <template>
+                        <template v-if="!isAnalist">
                             <el-checkbox
                                 class="margin-left:5px;"
                                 :disabled="isSeller"
@@ -2435,6 +2437,7 @@ export default {
         "cotIdentifier",
         "quotationId",
         "isSeller",
+        "isAnalist",
         "sellers",
         "affectation_igv_types",
         "all_series",
@@ -2769,7 +2772,7 @@ export default {
                     icon: "fas fa-money-bill-wave-alt",
                     visible:
                         this.configuration.show_expenses_incomes_caja &&
-                        !this.isSeller
+                        !this.isSeller && !this.isAnalist
                 },
                 {
                     id: 4,
@@ -2786,7 +2789,7 @@ export default {
                         this.configuration.restaurant &&
                         !this.configuration.college &&
                         !this.isHotel &&
-                        !this.isSeller
+                        !this.isSeller 
                 },
                 {
                     id: 6,

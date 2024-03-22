@@ -760,6 +760,7 @@ export default {
                 .catch(error => {
                     if (error.response.status === 422) {
                         this.errors = error.response.data;
+                        this.$toast.error("Ocurrió un error / Verifique los datos");
                     } else {
                         console.log(error);
                     }

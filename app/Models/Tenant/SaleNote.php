@@ -5,6 +5,7 @@ namespace App\Models\Tenant;
 use App\Models\Tenant\Catalogs\CurrencyType;
 use App\Models\Tenant\Catalogs\DocumentType;
 use App\Traits\RegisterMovementTrait;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 
@@ -15,6 +16,7 @@ class SaleNote extends ModelTenant
     protected $with = ['user', 'soap_type', 'state_type', 'currency_type', 'items', 'document_type'];
 
     protected $fillable = [
+        'status',
         'comercial_treatment_id',
         'cash_id',
         'credit_cash',
@@ -135,6 +137,28 @@ class SaleNote extends ModelTenant
             }
 
         );
+    }
+    public function sale_note_credit(){
+        return $this->hasOne(SaleNoteCredit::class);
+    }
+    public function getPenalties(){
+        $date_now =  Carbon::now()->startOfDay();
+        $sale_note_credit = $this->sale_note_credit;
+        $penalty_by_day = $sale_note_credit->penalty_amount_by_day;
+        $payments = $this->creditPayments
+        ->where('paid',0)
+        ->where('date_payment','<=',$date_now);
+        $penalty_amount = 0;
+        foreach ($payments as $key => $payment) {
+            $days = Carbon::parse($payment->date_payment)->diffInDays($date_now);
+            $penalty = $days * $penalty_by_day;
+            $penalty_amount += $penalty;
+            $payment->penalty_amount = $penalty;
+            $payment->save();
+        }
+
+        return $penalty_amount;
+
     }
     public function boxes()
     {

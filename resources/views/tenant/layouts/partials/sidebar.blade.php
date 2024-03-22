@@ -31,7 +31,14 @@
                         <span class="label"> Mantenimiento</span>
                     </a>
                     <ul id="restaurantComponents" class="collapse ">
-
+                        @if ($config->sale_note_credit_penalty)
+                        <li>
+                            <a class="{{ $path[0] === 'sale-notes' && $path[1] === 'penalties' ? 'active' : '' }}"
+                                href="{{  route('tenant.sale_note_credit_penalty.index') }}">
+                                <i class="icofont-users-alt-1"></i> Penalidades - Notas de venta crédito
+                            </a>
+                        </li>
+                    @endif
                         @if ($config->users_views)
                             <li>
                                 <a class="{{ $path[0] === 'caja' && $path[1] === 'workers' ? 'active' : '' }}"

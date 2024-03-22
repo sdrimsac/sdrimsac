@@ -5,6 +5,7 @@ namespace Modules\Report\Http\Resources;
 use App\Models\Tenant\Payment;
 use App\Models\Tenant\SaleNote;
 use App\Models\Tenant\SaleNotePayment;
+use App\Models\Tenant\User;
 use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
@@ -58,10 +59,22 @@ class ReportCreditCollection extends ResourceCollection
                 $int = ($row->total - $advances) * ($payment_first->tasa / 100);
             }
             $to_due =  floatval($row->total - $advances + $int)  - ( floatval($payments_records));
-          
+            $show_formats = true;
+            // $user_id = auth()->user()->id;
+            $user = User::find(auth()->user()->id);
+            $is_analist = $user->isWorkerType('analista');
+            if ($is_analist && $row->status != "A") {
+                $show_formats = false;
+            }
+            $can_edit = SaleNotePayment::where('sale_note_id', $row->id)->count() > 0 ? false : true;
+            if($row->status == "R"){
+                $can_edit = false;
+            }
             return [
+                'show_formats' => $show_formats,
                 'id' => $row->id,
-                'can_edit' => SaleNotePayment::where('sale_note_id', $row->id)->count() > 0 ? false : true,
+                'status' => $row->status,
+                'can_edit' => $can_edit,
                 'date_of_issue' => $row->date_of_issue->format('Y-m-d'),
                 'customer' => ["name" => $customer->name, "number" => $customer->number],
                 'number' => $row->number_full,
@@ -71,6 +84,7 @@ class ReportCreditCollection extends ResourceCollection
                 'payment' => $payments_records,
                 'date_of_due' => $date_of_due,
                 'canceled' => (bool) $row->paid,
+                'penalty' => $row->getPenalties(),
                 // 'amount_due' => number_format($amount_due, 2, ".", ""),
                 'amount_due' => number_format($to_due, 2, ".", ""),
                 'differenc_days' => $differenc_days,
