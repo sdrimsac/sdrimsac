@@ -152,7 +152,7 @@
 import CreateForm from "./form.vue";
 import { deletable } from "../../../../../../../resources/js/mixins/deletable";
 export default {
-    props: ["establishments"],
+    props: ["establishments","typeUser"],
     mixins: [deletable],
     components: { CreateForm },
     data() {
@@ -175,7 +175,7 @@ export default {
         this.$eventHub.$on("reloadData", () => {
             this.getData();
         });
-
+console.log(this.typeUser);
         this.getTables();
 
         this.getData();

@@ -24,11 +24,34 @@ class InventoryChangeServiceProvider extends ServiceProvider
         $this->createdItem();
         $this->inventory();
     }
-
+    function itemHealthNetwork($item)
+    {
+        $warehouses = Warehouse::all();
+        $stock = 0;
+        $id = $item->id;
+        foreach ($warehouses as $wh) {
+            $exist = ItemWarehouse::where('warehouse_id', $wh)->where('item_id', $id)->first();
+            $establishment = $wh->establishment;
+            $is_service = (bool) $establishment->is_service;
+            $item_is_service = $item->unit_type_id == 'ZZ';
+            $same = $is_service === $item_is_service;
+            if (!isset($exist) && $same) {
+                ItemWarehouse::create([
+                    'warehouse_id' => $wh->id,
+                    'stock' => $stock,
+                    'item_id' => $item->id,
+                    'created_at' => date('Y-m-d H:i:s '),
+                    'updated_at' => date('Y-m-d H:i:s '),
+                ]);
+            }
+        }
+    }
     private function createdItem()
     {
 
         Item::created(function ($item) {
+
+
 
             $configuration = Configuration::firstOrFail();
 
@@ -50,6 +73,10 @@ class InventoryChangeServiceProvider extends ServiceProvider
                     }
                 }
                 return;
+            } else {
+                if ($configuration->health_network) {
+                    $this->itemHealthNetwork($item);
+                }
             }
 
             $warehouse = ($item->warehouse_id) ? $this->findWarehouse($this->findWarehouseById($item->warehouse_id)->establishment_id) : $this->findWarehouse();

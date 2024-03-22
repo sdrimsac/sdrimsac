@@ -562,7 +562,10 @@
                             </div>
                             <div
                                 class="col-md-3"
-                                v-show="form.unit_type_id != 'ZZ' && !form.has_color_size"
+                                v-show="
+                                    form.unit_type_id != 'ZZ' &&
+                                        !form.has_color_size
+                                "
                             >
                                 <div class="form-group">
                                     <label class="control-label"
@@ -586,7 +589,10 @@
                             </div>
                             <div
                                 class="col-md-3"
-                                v-show="form.unit_type_id != 'ZZ' && !form.has_color_size"
+                                v-show="
+                                    form.unit_type_id != 'ZZ' &&
+                                        !form.has_color_size
+                                "
                             >
                                 <div class="form-group">
                                     <label class="control-label"
@@ -646,7 +652,10 @@
                                 </div>
                             </div>
                             <div class="d-flex" v-if="showSeries">
-                                <div class="col-md-4" v-if="configuration.series_enabled">
+                                <div
+                                    class="col-md-4"
+                                    v-if="configuration.series_enabled"
+                                >
                                     <div
                                         v-show="form.unit_type_id != 'ZZ'"
                                         class="col-md-3 center-el-checkbox"
@@ -692,8 +701,11 @@
                                         </div>
                                     </div>
                                 </div>
-                               
-                                <div class="col-md-4" v-if="configuration.lots_enabled">
+
+                                <div
+                                    class="col-md-4"
+                                    v-if="configuration.lots_enabled"
+                                >
                                     <div
                                         v-show="form.unit_type_id != 'ZZ'"
                                         class="col-md-3 center-el-checkbox"
@@ -766,7 +778,10 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="d-flex" v-if="configuration.color_size_enabled">
+                            <div
+                                class="d-flex"
+                                v-if="configuration.color_size_enabled"
+                            >
                                 <div class="col-md-3">
                                     <div
                                         v-show="
@@ -1016,7 +1031,9 @@
                                             class="col-md-12"
                                         >
                                             <div class="table-responsive">
-                                                <table class="table table-striped">
+                                                <table
+                                                    class="table table-striped"
+                                                >
                                                     <thead>
                                                         <tr>
                                                             <th>Tipo</th>
@@ -1462,7 +1479,41 @@
                             </div>
                         </div>
                     </el-tab-pane>
-
+                    <el-tab-pane
+                        v-if="configuration.commercial_treatment_items"
+                        label="Tratamiento Comercial"
+                    >
+                        <div class="row m-2">
+                            <table>
+                                <tbody>
+                                    <tr
+                                        v-for="(commercial_treatment_item,
+                                        index) in form.commercial_treatments"
+                                        :key="`${index}treatment`"
+                                    >
+                                        <td>
+                                            {{
+                                                commercial_treatment_item.commercial_treatment_description
+                                            }}
+                                        </td>
+                                        <td width="15%">
+                                            <el-input
+                                                @input="
+                                                    updateCommercialTreatmentItem(
+                                                        index
+                                                    )
+                                                "
+                                                type="number"
+                                                v-model="
+                                                    commercial_treatment_item.amount
+                                                "
+                                            ></el-input>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </el-tab-pane>
                     <!-- <el-tab-pane label="Atributos">
                         <div class="row">
                             <div class="col-md-12">
@@ -1778,7 +1829,8 @@ export default {
                 price_default: 2
             },
             attribute_types: [],
-            area_id: 2
+            area_id: 2,
+            timer: null
         };
     },
     async created() {
@@ -1810,7 +1862,10 @@ export default {
             this.brands = response.data.brands;
             this.attribute_types = response.data.attribute_types;
             this.configuration = response.data.configuration;
-            console.log("🚀 ~ file: form.vue:1812 ~ awaitthis.$http.get ~ this.configuration:", this.configuration)
+            console.log(
+                "🚀 ~ awaitthis.$http.get ~ this.configuration:",
+                this.configuration
+            );
             this.areas = response.data.areas;
 
             this.form.sale_affectation_igv_type_id =
@@ -1847,6 +1902,21 @@ export default {
     },
 
     methods: {
+        updateCommercialTreatmentItem(idx) {
+            if (this.timer) clearTimeout(this.timer);
+            this.timer = setTimeout(async () => {
+                let commercial_treatment_item = this.form.commercial_treatments[
+                    idx
+                ];
+                const response = await this.$http.post(
+                    `/commercial_treatment/items/update/${commercial_treatment_item.id}`,
+                    commercial_treatment_item
+                );
+                if (response.data.success) {
+                    this.$toast.success("Se actualizó correctamente");
+                }
+            }, 700);
+        },
         addRowColorSize(color_sizes) {
             this.form.color_sizes = color_sizes;
             console.log(
@@ -2107,6 +2177,7 @@ export default {
                     .get(`/${this.resource}/record/${this.recordId}`)
                     .then(response => {
                         this.form = response.data.data;
+                        console.log("🚀 ~ create ~ this.form:", this.form);
 
                         if (this.form.warehouse_prices.length == 0) {
                             if (this.warehouses.length > 0) {

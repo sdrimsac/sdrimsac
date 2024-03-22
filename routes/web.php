@@ -90,6 +90,7 @@ if ($hostname) {
                                 Route::get('/records/{commercial_treatment_id}', [CommercialTreatmentController::class, 'records_items']);
                                 Route::get('/record/{item_id}/{commercial_treatment_id}', [CommercialTreatmentController::class, 'record_items']);
                                 Route::post('/{commercial_treatment_id}', [CommercialTreatmentController::class, 'store_items']);
+                                Route::post('/update/{commercial_treatment_id}', [CommercialTreatmentController::class, 'update_item']);
                                 Route::post('/record/{item_id}/{commercial_treatment_id}', [CommercialTreatmentController::class, 'set_item']);
                                 Route::post('/get-items/{commercial_treatment_id}', [CommercialTreatmentController::class, 'get_items']);
                                 Route::delete('/record/{commercial_treatment_items_id}', [CommercialTreatmentController::class, 'deleteItem']);

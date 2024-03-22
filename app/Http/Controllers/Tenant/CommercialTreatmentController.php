@@ -15,6 +15,17 @@ use Modules\Item\Models\CategoryItem;
 
 class CommercialTreatmentController extends Controller
 {
+
+    public function update_item(Request $request, $id){
+        $commercial_treatment_item = CommercialTreatmentItem::findOrFail($id);
+        $commercial_treatment_item->amount = $request->amount;
+        $commercial_treatment_item->save();
+        return [
+            'success' => true,
+            'message' => 'Actualizado con éxito',
+            'data'    => $commercial_treatment_item
+        ];
+    }
     public function index()
     {
         return view('tenant.commercial_treatment.index');

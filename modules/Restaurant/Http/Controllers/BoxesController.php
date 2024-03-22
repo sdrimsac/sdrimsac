@@ -1110,6 +1110,11 @@ class BoxesController extends Controller
                     }
                 }
             });
+        //sumar los totales del array items
+        $total_items = 0;
+        foreach ($items as $item) {
+            $total_items += $item["total"];
+        }
         $category_ids = array_unique(array_column($items, 'barcode'));
         $categories = PrincipalCategory::select(['id', 'name', 'identifier'])->whereIn('identifier', $category_ids)->get();
 
@@ -1120,6 +1125,8 @@ class BoxesController extends Controller
                 return $item['barcode'] == $category->identifier;
             });
         }
+        //imprimir el totalde items_by_category
+        
         $info_documents = [];
         if ($min_01_document_id) {
             $min_01_document = Document::select(['series', 'number'])->find($min_01_document_id);

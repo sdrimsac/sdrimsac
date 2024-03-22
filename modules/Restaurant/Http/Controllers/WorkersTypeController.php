@@ -5,6 +5,7 @@ namespace Modules\Restaurant\Http\Controllers;
 
 use App\Models\Tenant\Configuration;
 use App\Models\Tenant\Establishment;
+use App\Models\Tenant\User;
 use App\Models\Tenant\Warehouse;
 use Illuminate\Routing\Controller;
 
@@ -45,7 +46,15 @@ class WorkersTypeController extends Controller
     }
     public function actives()
     {
-        $workers_type = WorkersType::where('active', 1)->get();
+        $user = User::find(auth()->user()->id);
+        $is_arca = $user->isWorkerType('arca');
+        $workers_type = WorkersType::where('active', 1);
+        if ($is_arca) {
+            //no mostrar el tipo de trabajador arca
+            $workers_type = $workers_type->where('description', '<>', 'ARCA');
+        }
+
+        $workers_type = $workers_type->get();
         $establishments = Establishment::all();
         $warehouses = Warehouse::all();
         return [

@@ -340,6 +340,9 @@ class Item extends ModelTenant
             'warehouse_description' => $warehouse->description,
         ];
     }
+    public function commercial_treatments(){
+        return $this->hasMany(CommercialTreatmentItem::class);
+    }
     public function warehousePrices()
     {
         return $this->hasMany(ItemWarehousePrice::class, 'item_id')->select('id', 'item_id', 'price', 'warehouse_id');

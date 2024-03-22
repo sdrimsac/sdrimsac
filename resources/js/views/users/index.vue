@@ -122,6 +122,7 @@ export default {
         };
     },
     created() {
+        console.log(this.typeUser, this.type);
         this.$eventHub.$on("reloadData", () => {
             this.getData();
         });

@@ -221,6 +221,8 @@
                     </ul>
                 </li>
                 {{-- @if (!$config->college) --}}
+                @endif
+                
                 <li>
                     <a href="#invetories" data-bs-toggle="collapse" data-role="button"
                         aria-expanded="{{ $path[0] === 'invetories' ? true : false }}{{ $path[0] === 'invetories' && $path[1] === 'create' ? true : false }}{{ $path[0] === 'items' ? true : false }}"
@@ -242,6 +244,7 @@
                                 <i class="icofont-soft-drinks"></i> Productos
                             </a>
                         </li>
+                        @if (!$roleService->isArca())
                         @if ($config->transform_item)
                             <li>
                                 <a class="{{ $path[0] === 'manufactured' && $path[1] === '' ? 'active' : '' }}"
@@ -305,6 +308,7 @@
                                 </a>
                             </li>
                         @endif
+                        @endif
                         {{-- @if ($has_series)
                         <li>
                             <a class="{{ $path[0] === 'lotes_due' && $path[1] === '' ? 'active' : '' }}"
@@ -318,7 +322,7 @@
                     </ul>
                 </li>
                 {{-- @endif --}}
-            @endif
+        
 
         @endif
         {{-- consignación --}}

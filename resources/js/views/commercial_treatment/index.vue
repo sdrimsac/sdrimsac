@@ -77,7 +77,7 @@
                             <th>Descripción</th>
                             <th class="text-end">Afectación</th>
                             <th class="text-end">Categorias</th>
-                            <th class="text-end">Productos</th>
+                            <!-- <th class="text-end">Productos</th> -->
                             <th class="text-end">Acciones</th>
                         </tr>
 
@@ -100,14 +100,14 @@
                                     Modificar
                                 </el-button>
                             </td>
-                            <td class="text-end">
+                            <!-- <td class="text-end">
                                 <el-button
                                     size="mini"
                                     @click="clickOpenItems(row)"
                                 >
                                     Modificar
                                 </el-button>
-                            </td>
+                            </td> -->
                             <td class="text-end">
                                 <template v-if="row.active">
                                     <button

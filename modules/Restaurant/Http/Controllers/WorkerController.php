@@ -25,7 +25,8 @@ class WorkerController extends Controller
         $establishments = Establishment::all();
         return view('restaurant::workers', compact('establishments'));
     }
-    public function report_products_w(Request $request){
+    public function report_products_w(Request $request)
+    {
         $user_id = $request->user_id;
         $cash_id = $request->cash_id;
         $cash = Cash::find($cash_id);
@@ -48,7 +49,7 @@ class WorkerController extends Controller
                     'unit_type_id' => $row->item->unit_type_id,
                 ];
             });
-            $turn = $cash->turn->turn_desc;
+        $turn = $cash->turn->turn_desc;
         return (new ReportProductWarehouse)
             ->records($records)
             ->company($company)
@@ -93,10 +94,16 @@ class WorkerController extends Controller
     {
 
         $user_type = auth()->user()->type;
+        $establishment_id = auth()->user()->establishment_id;
         if ($user_type == 'admin') {
             $records = User::where('type', '<>', 'superadmin');
         } else {
             $records = User::query();
+        }
+        if ($user_type == 'seller') {
+            $records = $records->where('type', '<>', 'superadmin')
+                ->where('type', '<>', 'admin')
+                ->where('establishment_id', $establishment_id);;
         }
         return new UserCollection($records->paginate(50));
     }

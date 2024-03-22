@@ -130,6 +130,7 @@
                     </div> -->
                 </div>
                 <establishments-form
+                    :configuration="configuration"
                     :seriesDefault.sync="seriesDefault"
                     :soap_type_id="soap_type_id"
                     :showDialog.sync="showDialog"
@@ -152,7 +153,7 @@ import { deletable } from "../../mixins/deletable";
 import EstablishmentSeries from "./partials/series.vue";
 
 export default {
-    props: ["typeUser", "soap_type_id"],
+    props: ["typeUser", "soap_type_id","configuration"],
     mixins: [deletable],
     components: { EstablishmentsForm, EstablishmentSeries },
     data() {
@@ -167,6 +168,7 @@ export default {
         };
     },
     created() {
+        console.log(this.configuration);
         this.$eventHub.$on("reloadData", () => {
             this.getData();
         });

@@ -405,6 +405,14 @@
                             {{ conf.show_payment_method ? "Si" : "No" }}
                         </el-checkbox>
                     </div>
+                    <div v-if="configuration.health_network" class="col-md-3 flex-column justify-content-end">
+                        <label class="control-label"
+                            >Es servicio</label
+                        ><br>
+                        <el-checkbox v-model="form.is_service">
+                            {{ form.is_service ? "Si" : "No" }}
+                        </el-checkbox>
+                    </div>
                 </div>
                 <div class="row">
                     <div class="col-md-6">
@@ -569,7 +577,8 @@ export default {
         "recordId",
         "soap_type_id",
         "seriesDefault",
-        "number"
+        "number",
+        "configuration"
     ],
     data() {
         return {

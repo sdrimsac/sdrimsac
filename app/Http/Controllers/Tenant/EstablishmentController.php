@@ -17,6 +17,7 @@ use App\Http\Resources\Tenant\EstablishmentCollection;
 
 use App\Models\Tenant\Company;
 use App\Models\Tenant\ConfEstablishment;
+use App\Models\Tenant\Configuration;
 use App\Models\Tenant\Series;
 use Illuminate\Http\Request;
 
@@ -25,7 +26,8 @@ class EstablishmentController extends Controller
     public function index()
     {
         $company = Company::first();
-        return view('tenant.establishments.index', compact('company'));
+        $config = Configuration::first();
+        return view('tenant.establishments.index', compact('company','config'));
     }
 
     public function create()

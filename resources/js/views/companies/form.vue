@@ -816,6 +816,7 @@
                 </div>
                 <!-- <el-divider></el-divider> -->
                 <establishments-index
+                    :configuration="configuration"
                     :soap_type_id="form.soap_type_id"
                 ></establishments-index>
             </div>
