@@ -1617,7 +1617,7 @@ class CashController extends Controller
         $difference = $request->difference ?? 0.00;
         $cash = Cash::findOrFail($id);
         $cash->final_balance = $final_balance;
-        $beginning_balance = $cash->beginning_balance;
+        // $beginning_balance = $cash->beginning_balance;
         $cash->counter = $counter;
         $cash->bill_series = $bill_series;
         $cash->difference = $difference;
@@ -1626,9 +1626,24 @@ class CashController extends Controller
         $cash->time_closed = date('H:i:s');
         $cash->save();
         Box::where('cash_id', $id)->update(['close' => date('Y-m-d'), 'state' => 0]);
-        $all_cash = Box::where('cash_id', $id)->where('method', 'Efectivo')
+        $all_cash = Box::
+        select(['document_id','sale_note_id'])
+        ->where('cash_id', $id)->where('method', 'Efectivo')
         ->where('expenses', 0)
-        ->sum('amount');
+        ->get();
+
+        $all_cash = $all_cash->map(function ($item) {
+            if ($item->document_id) {
+                $document = Document::find($item->document_id);
+                return $document->total;
+            }
+            if ($item->sale_note_id) {
+                $sale_note = SaleNote::find($item->sale_note_id);
+                return $sale_note->total;
+            }
+        });
+        $all_cash = $all_cash->sum();
+
         $all_cash += $cash->beginning_balance;
         $user_name = $cash->user->name;
         $website = $this->getTenantWebsite();
