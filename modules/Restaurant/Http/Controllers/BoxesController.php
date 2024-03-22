@@ -1091,7 +1091,8 @@ class BoxesController extends Controller
                         $key = $description . "-" . $internal_id;
                         $price = floatval($item->unit_price);
                         $quantity = floatval($item->quantity);
-                        $total = $price * $quantity;
+                        // $total = $price * $quantity;
+                        $total = floatval($item->total);
 
                         if (array_key_exists($key, $items)) {
                             $items[$key]['quantity'] += $quantity;
