@@ -155,7 +155,7 @@
         }
 
         @page {
-            margin: 0cm 0.5cm 0.5cm 0.5cm;
+            margin: 0cm 0.2cm 0.2cm 0.2cm;
             font-family: sans-serif;
         }
 
@@ -231,11 +231,11 @@
     </table>
     <table width="100%" cellpadding="0" cellspacing="0">
         <thead>
-            <tr>
+            {{-- <tr>
                 <th colspan="5">
                     DOCUMENTOS
                 </th>
-            </tr>
+            </tr> --}}
             <tr>
                 <th></th>
                 <th>SERIE</th>
