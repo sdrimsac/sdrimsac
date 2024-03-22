@@ -24,19 +24,19 @@
 
         .celda {
             text-align: left;
-            padding: 5px;
+            padding: 2px;
             border: 0.1px solid #ccc;
         }
 
         .celda_center {
             text-align: center;
-            padding: 5px;
+            padding: 2px;
             border: 0.1px solid #ccc;
         }
 
         .celda_right {
             text-align: right;
-            padding: 5px;
+            padding: 2px;
             border: 0.1px solid #ccc;
         }
 
@@ -51,7 +51,7 @@
         }
 
         td {
-            padding: 5px;
+            padding: 2px;
         }
 
         th {
@@ -62,22 +62,22 @@
         }
 
         .headers {
-            padding: 5px !important;
+            padding: 2px !important;
             border-bottom: 0.1px solid #ccc;
-            height: 25px;
+            height: 15px;
             font-size: 14px !important;
         }
 
         .title {
             font-weight: bold;
-            padding: 5px;
+            padding: 2px;
             font-size: 20px !important;
             text-decoration: underline;
         }
 
         p>strong {
-            margin-left: 5px;
-            font-size: 13px;
+            margin-left: 2px;
+            font-size: 10px;
         }
 
         thead {
@@ -89,22 +89,20 @@
         .title {
             font-weight: bold;
             padding: 3px;
-            font-size: 20px !important;
+            font-size: 15px !important;
             text-decoration: underline;
         }
 
         .encabezado {
             background-color: #ccc;
             text-transform: uppercase;
-            padding: 5px;
-            padding-left: 10px;
+            text-align: center
         }
 
         .categoria {
             background-color: #eee;
             text-transform: uppercase;
-            padding: 5px;
-            padding-left: 50px;
+        
         }
 
         .celda_loop {
@@ -115,7 +113,7 @@
         }
 
         .celda_descrip {
-            width: 50% !important;
+            width: 80% !important;
             text-align: left;
             padding: 5px;
             border: 0.1px solid #ccc;
@@ -231,7 +229,7 @@
             </td>
         </tr>
     </table>
-    <table width="90%" cellpadding="0" cellspacing="0">
+    <table width="100%" cellpadding="0" cellspacing="0">
         <thead>
             <tr>
                 <th colspan="5">
@@ -344,14 +342,14 @@
         </thead>
 
     </table>
-    <table width="90%" cellpadding="0" cellspacing="0"
+    <table width="100%" cellpadding="0" cellspacing="0"
         style="border-collapse: collapse; border:1px solid #ddd; margin-top: 10px !important;">
         <thead>
             <tr>
                 <th class="encabezado">Código</th>
                 <th class="encabezado">Concepto</th>
                 <th class="encabezado">Subtotal</th>
-                <th class="encabezado">Total</th>
+                <th  class="encabezado">Total</th>
             </tr>
         </thead>
         <tbody>
@@ -371,14 +369,14 @@
                     <td class="categoria celda">
                         {{ $barcode }}
                     </td>
-                    <td class="categoria celda_descrip">{{ $category }}</td>
+                    <td class="categoria ">{{ $category }}</td>
                     <td class="categoria celda"></td>
                     @php
                         $category_sum = array_sum(array_column($items, 'total'));
                         $total_general += $category_sum;
                     @endphp
 
-                    <td class="categoria celda text-end">{{ number_format($category_sum, 2) }}</td>
+                    <td  class="categoria celda text-end">{{ number_format($category_sum, 2) }}</td>
                 </tr>
                 @if ($is_expanded)
                     @foreach ($items as $item)
