@@ -115,7 +115,7 @@
         .celda_descrip {
             width: 80% !important;
             text-align: left;
-            padding: 5px;
+            padding: 2px;
             border: 0.1px solid #ccc;
         }
 
@@ -165,8 +165,8 @@
 
         td,
         th {
-            font-size: 10px !important;
-            height: 15px;
+            font-size: 9px !important;
+            /* height: 15px; */
         }
 
         body {
