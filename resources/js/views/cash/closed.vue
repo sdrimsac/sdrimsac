@@ -110,7 +110,7 @@
                                                     {{ row.time_closed }}
                                                 </small>
                                             </td>
-                                            <td>{{ row.final_balance }}</td>
+                                            <td>{{ row.final_balance.toFixed(2) }}</td>
                                             <td>
                                                 <el-button
                                                     type="success"

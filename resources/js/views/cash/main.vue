@@ -96,7 +96,6 @@
                             value-format="yyyy-MM-dd"
                             placeholder="Seleccione la fecha"
                             size="small"
-                            
                         ></el-date-picker>
                     </div>
                     <div class="col-md-3">
@@ -107,7 +106,11 @@
                             size="small"
                         >
                             <el-option
-                                v-for="(item, key) in [{id:1,description:'Pendiente'},{id:2,description:'Observado'},{id:3,description:'Aceptado'}]"
+                                v-for="(item, key) in [
+                                    { id: 1, description: 'Pendiente' },
+                                    { id: 2, description: 'Observado' },
+                                    { id: 3, description: 'Aceptado' }
+                                ]"
                                 :key="key"
                                 :label="item.description"
                                 :value="item.id"
@@ -129,7 +132,7 @@
                             @click="exportRecords"
                         >
                             Exportar
-                        <i class="icofont-file-excel"></i>
+                            <i class="icofont-file-excel"></i>
                         </el-button>
                     </div>
                 </div>
@@ -140,6 +143,7 @@
                                 <tr>
                                     <th>#</th>
                                     <th>FECHA DE APERTURA</th>
+                                    <th>CODIGO PRINCIPAL</th>
                                     <th>CAJA</th>
                                     <th>USUARIO</th>
                                     <th>MONTO</th>
@@ -153,6 +157,23 @@
                                     <td>{{ customIndex(idx) }}</td>
                                     <td>
                                         {{ record.cash.date_opening }}
+                                    </td>
+                                    <td
+                                        :class="
+                                            `${
+                                                references_principal.findIndex(
+                                                    item =>
+                                                        item ==
+                                                        record.ref_principal
+                                                ) %
+                                                    2 ==
+                                                0
+                                                    ? 'text-secondary'
+                                                    : 'text-success'
+                                            }`
+                                        "
+                                    >
+                                        {{ record.ref_principal }}
                                     </td>
                                     <td>{{ record.cash.reference_number }}</td>
                                     <td>{{ record.user_name }}</td>
@@ -195,19 +216,6 @@
                                                 ></el-button>
                                             </el-tooltip>
                                         </template>
-                                        <!-- <template v-if="record.status == 2">
-                                    <el-button
-                                        type="success"
-                                        icon="el-icon-check"
-                                        size="mini"
-                                        @click="accept(record.id)"
-                                    ></el-button>
-                                </template> -->
-                                        <!-- <template
-                            v-if-else="record.status == 3"
-                            >
-                            
-                            </template> -->
                                     </td>
                                 </tr>
                             </tbody>
@@ -283,15 +291,19 @@ export default {
             form: {},
             currentRegister: null,
             search: {
-                column: 'user_id',
+                column: "user_id"
             },
             columns: [],
-            users: []
+            users: [],
+            references_principal: []
         };
     },
     methods: {
-        exportRecords(){
-            window.open(`/cash/main_cash/records_excel?${this.getQueryParameters()}`, '_blank');
+        exportRecords() {
+            window.open(
+                `/cash/main_cash/records_excel?${this.getQueryParameters()}`,
+                "_blank"
+            );
         },
         customIndex(index) {
             return (
@@ -304,7 +316,10 @@ export default {
             this.$http.get(`/cash/main_cash/tables`).then(response => {
                 let data = response.data;
                 this.users = data.users;
-                console.log("🚀 ~ file: main.vue:273 ~ this.$http.get ~ this.users:", this.users)
+                console.log(
+                    "🚀 ~ file: main.vue:273 ~ this.$http.get ~ this.users:",
+                    this.users
+                );
             });
         },
         getColumns() {
@@ -336,15 +351,11 @@ export default {
                     `/cash/main_cash/accept/${id}`
                 );
                 if (response.status == 200) {
-                    this.$toast.success(
-                         "Se acepto el ingreso",
-                    );
+                    this.$toast.success("Se acepto el ingreso");
                     this.getRecords();
                 }
             } catch (e) {
-                this.$toast.error(
-                    "Ocurrio un error",
-                );
+                this.$toast.error("Ocurrio un error");
             }
         },
         async sendToObservation() {
@@ -378,7 +389,7 @@ export default {
                 page: this.pagination.current_page,
                 value: this.search.value,
                 column: this.search.column,
-                status: this.search.status,
+                status: this.search.status
             });
         },
         async getRecords() {
@@ -390,6 +401,13 @@ export default {
                     data: { data, meta }
                 } = response;
                 this.records = data;
+                this.references_principal = Array.from(
+                    new Set(data.map(item => item.ref_principal))
+                );
+                console.log(
+                    "🚀 ~ getRecords ~ this.references_principal:",
+                    this.references_principal
+                );
                 this.pagination = meta;
             }
         },

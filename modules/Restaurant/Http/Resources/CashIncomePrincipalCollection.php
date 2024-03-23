@@ -21,10 +21,12 @@ class CashIncomePrincipalCollection extends ResourceCollection
             $user_id = $cash->user_id;
             $user = User::find($user_id);
             $user_name = $user->name;
+            $ref_principal = $row->cash_principal->first()->reference_number;
             return [
                 'user_name' => $user_name,
                 'id'          => $row->id,
                 'cash_principal_id' => $row->cash_principal_id,
+                'ref_principal' => $ref_principal,
                 'cash_id' => $row->cash_id,
                 'comment' => $row->comment,
                 'amount' => $row->amount,

@@ -1489,7 +1489,11 @@ class CashController extends Controller
         $turn_principal = $configuration->turn_principal;
         $id = $request->input('id');
         $turn_id = $request->input('turn_id');
-        if ($configuration->automatic_principal_cash) {
+        $cash_user = User::find(auth()->user()->id);
+        $establishment_id = $cash_user->establishment_id;
+        $establishment = Establishment::find($establishment_id);
+        $tab_single = (bool) $establishment->tab_single;
+        if ($configuration->automatic_principal_cash && !$tab_single) {
             // if ($turn_id == $turn_principal) {
             $exist_principal_cash = Cash::where('principal', true)->where('state', true)->first();
             if (!$exist_principal_cash) {
@@ -1641,6 +1645,9 @@ class CashController extends Controller
         $cash->counter = $counter;
         $cash->bill_series = $bill_series;
         $cash->difference = $difference;
+        $cash_user = $cash->user;
+        $establishment_id = $cash_user->establishment_id;
+        $establishment = Establishment::find($establishment_id);
         $cash->state = 0;
         $cash->date_closed = date('Y-m-d');
         $cash->time_closed = date('H:i:s');
@@ -1756,7 +1763,8 @@ class CashController extends Controller
                 }
             }
         }
-        if ($configuration->automatic_principal_cash) {
+        $tab_single = (bool)$establishment->tab_single;
+        if ($configuration->automatic_principal_cash && !$tab_single) {
             $turn_end = $configuration->turn_end;
             if ($cash->turn_id == $turn_end) {
                 Cash::where('principal', true)->update([
