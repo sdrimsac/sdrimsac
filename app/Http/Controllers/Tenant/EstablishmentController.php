@@ -18,7 +18,10 @@ use App\Http\Resources\Tenant\EstablishmentCollection;
 use App\Models\Tenant\Company;
 use App\Models\Tenant\ConfEstablishment;
 use App\Models\Tenant\Configuration;
+use App\Models\Tenant\Item;
+use App\Models\Tenant\ItemWarehouse;
 use App\Models\Tenant\Series;
+use App\Models\Tenant\User;
 use Illuminate\Http\Request;
 
 class EstablishmentController extends Controller
@@ -104,6 +107,28 @@ class EstablishmentController extends Controller
         $establishment = Establishment::firstOrNew(['id' => $id]);
 
         $establishment->fill($request->all());
+        $is_service = $establishment->is_service;
+        $is_product = $establishment->is_product;
+        $warehouse = Warehouse::where('establishment_id', $id)->first();
+        if($is_service && $id == null){
+            $item_id = Item::where('unit_type_id', 'ZZ')->pluck('id')->toArray();
+            //crea en la tabla item_warehouse todo los registros
+            foreach ($item_id as $item) {
+                $item_warehouse = new ItemWarehouse();
+                $item_warehouse->item_id = $item;
+                $item_warehouse->warehouse_id = $warehouse->id;
+                $item_warehouse->save();
+            }
+        }
+        if($is_product && $id == null){
+            $item_id = Item::where('unit_type_id','<>','ZZ')->pluck('id')->toArray();
+            foreach ($item_id as $item) {
+                $item_warehouse = new ItemWarehouse();
+                $item_warehouse->item_id = $item;
+                $item_warehouse->warehouse_id = $warehouse->id;
+                $item_warehouse->save();
+            }
+        }
         $direct_printing = $request->input('direct_printing');
         if($direct_printing){
             $establishment->direct_printing = 1;
@@ -168,6 +193,8 @@ class EstablishmentController extends Controller
     public function destroy($id)
     {
         $establishment = Establishment::findOrFail($id);
+        ConfEstablishment::where('establishment_id', $id)->delete();
+        User::where('establishment_id', $id)->delete();
         $establishment->delete();
 
         return [

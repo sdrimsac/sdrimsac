@@ -16,6 +16,7 @@ class Establishment extends ModelTenant
         'conf'
     ];
     protected $fillable = [
+        'is_product',
         'is_service',
         'etiquetadora',
         'description',
