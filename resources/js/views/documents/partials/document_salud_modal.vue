@@ -9,7 +9,7 @@
     >
         <div class="row mt-2">
             <!-- un boton para subir un archivo de tipo zip -->
-            <div class="col-md-12 text-center">
+            <div class="col-md-12 text-center m-2">
                 <el-upload
                     :headers="headers"
                     class="upload-demo"

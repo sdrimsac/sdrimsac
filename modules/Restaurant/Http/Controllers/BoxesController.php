@@ -35,6 +35,7 @@ use App\Models\Tenant\SaleNoteItem;
 use App\Models\Tenant\SaleNotePayment;
 use App\Models\Tenant\SaleNotePromotion;
 use Exception;
+use Illuminate\Support\Facades\Storage;
 use Modules\Report\Exports\BoxesExport;
 use Modules\Restaurant\Models\OrdenItem;
 use Modules\Report\Exports\BoxesExportPos;
@@ -1014,10 +1015,194 @@ class BoxesController extends Controller
             "message" => "Se guardo con exito"
         ];
     }
+    public function cashes_salud_single(Request $request)
+    {
+        $cash_id = $request->cash_id;
+        $generate = $request->generate;
+        $cash = Cash::find($cash_id);
+        $directory = 'public/tabulacion';
+        $reference_formate = str_replace('-', '_', $cash->reference_number);
+        $reference_formate = str_replace(':','_',$reference_formate); 
+        $name = $cash->user_id . '_' . $reference_formate."_".$cash->turn_id;
+        if(!$generate && $cash->state == 0){
+            //buscar el archivo en la carpeta //    $pdf->save(storage_path('app/public/'.$name.'.pdf'));
+            $path = storage_path('app/'.$directory.'/'.$name.'.pdf');
+            //si existe regresalo en stream
+            if (file_exists($path)) {
+                return response()->file($path);
+            }
+            
+        }
+        $user = $cash->user;
+        $establishment = $user->establishment;
+    
+        $company = Company::first();
+        $items = [];
+
+
+        $min_01_document_id = null;
+        $max_01_document_id = null;
+        $total_01_document = 0;
+        $total_03_document = 0;
+        $min_03_document_id = null;
+        $max_03_document_id = null;
+        $boxes = Box::select(['document_id', 'sale_note_id'])
+            ->where('cash_id', $cash_id)->where('incomes', 0)->where('expenses', 0)->OrderBy('date', 'asc')->chunk(50, function ($boxes) use (
+                &$items,
+                &$min_01_document_id,
+                &$max_01_document_id,
+                &$min_03_document_id,
+                &$max_03_document_id,
+                &$total_01_document,
+                &$total_03_document
+
+            ) {
+                foreach ($boxes as $box) {
+                    $document = null;
+                    if ($box->sale_note_id) {
+
+                        $document = SaleNote::find($box->sale_note_id);
+                    }
+                    if ($box->document_id) {
+
+                        $document = Document::select(['id', 'document_type_id', 'total'])
+                            ->with('items')
+                            ->find($box->document_id);
+                        if ($document->document_type_id == '01') {
+                            $total_01_document += $document->total;
+                            if ($min_01_document_id == null) {
+                                $min_01_document_id = $document->id;
+                            } else {
+                                $min_01_document_id = ($document->id < $min_01_document_id) ? $document->id : $min_01_document_id;
+                            }
+                            if ($max_01_document_id == null) {
+                                $max_01_document_id = $document->id;
+                            } else {
+                                $max_01_document_id = ($document->id > $max_01_document_id) ? $document->id : $max_01_document_id;
+                            }
+                        }
+                        if ($document->document_type_id == '03') {
+                            $total_03_document += $document->total;
+                            if ($min_03_document_id == null) {
+                                $min_03_document_id = $document->id;
+                            } else {
+                                $min_03_document_id = ($document->id < $min_03_document_id) ? $document->id : $min_03_document_id;
+                            }
+                            if ($max_03_document_id == null) {
+                                $max_03_document_id = $document->id;
+                            } else {
+                                $max_03_document_id = ($document->id > $max_03_document_id) ? $document->id : $max_03_document_id;
+                            }
+                        }
+                    }
+                    $document_items = $document->items;
+                    foreach ($document_items as $item) {
+                        $original_item = Item::select(['barcode', 'category_id'])->find($item->item_id);
+                        $description = $item->item->description;
+                        $internal_id = $item->item->internal_id;
+                        $key = $description . "-" . $internal_id;
+                        $price = floatval($item->unit_price);
+                        $quantity = floatval($item->quantity);
+                        // $total = $price * $quantity;
+                        $total = floatval($item->total);
+
+                        if (array_key_exists($key, $items)) {
+                            $items[$key]['quantity'] += $quantity;
+                            $items[$key]['total'] += $total;
+                        } else {
+                            $items[$key] = [
+                                'quantity' => $quantity,
+                                'barcode' => $original_item->barcode,
+                                'category_id' => $original_item->category_id,
+                                'price' => $price,
+                                'total' => $total,
+                                'description' => $description
+                            ];
+                        }
+                    }
+                }
+            });
+        //sumar los totales del array items
+        $total_items = 0;
+        foreach ($items as $item) {
+            $total_items += $item["total"];
+        }
+        $category_ids = array_unique(array_column($items, 'barcode'));
+        $categories = PrincipalCategory::select(['id', 'name', 'identifier'])->whereIn('identifier', $category_ids)->get();
+
+        //split items by category
+        $items_by_category = [];
+        foreach ($categories as $category) {
+            $items_by_category[$category->name] = array_filter($items, function ($item) use ($category) {
+                return $item['barcode'] == $category->identifier;
+            });
+        }
+        //imprimir el totalde items_by_category
+        
+        $info_documents = [];
+        $min_01_document = null;
+        if ($min_01_document_id) {
+            $min_01_document = Document::select(['series', 'number'])->find($min_01_document_id);
+            $info_documents['min_01'] = $min_01_document;
+            $info_documents['total_01'] = $total_01_document;
+        }
+        $max_01_document = null;
+        if ($max_01_document_id) {
+            $max_01_document = Document::select(['series', 'number'])->find($max_01_document_id);
+            $info_documents['max_01'] = $max_01_document;
+        }
+        $min_03_document = null;
+        if ($min_03_document_id) {
+            $min_03_document = Document::select(['series', 'number'])->find($min_03_document_id);
+            $info_documents['min_03'] = $min_03_document;
+        }
+        $max_03_document = null;
+        if ($max_03_document_id) {
+            $max_03_document = Document::select(['series', 'number'])->find($max_03_document_id);
+        }
+        $info_documents['max_03'] = $max_03_document;
+        $info_documents['total_03'] = $total_03_document;
+        try {
+            $pdf = PDF::loadView(
+                'report::boxes.cashes_salud',
+                compact(
+                    'company',
+                    'items_by_category',
+                    'user',
+                    'cash',
+                    'info_documents',
+                    'establishment'
+                )
+            )
+                ->setPaper('a4');
+        } catch (Exception $e) {
+            return ['m' => $e->getMessage()];
+        }
+        if (!Storage::exists($directory)) {
+            Storage::makeDirectory($directory);
+        }
+        $pdf->save(storage_path('app/'.$directory.'/'.$name.'.pdf'));
+
+        return $pdf->stream('pdf_file.pdf');
+    }
     public function cashes_salud(Request $request)
     {
         $cash_id = $request->cash_id;
+        $generate = $request->generate;
         $cash = Cash::find($cash_id);
+        $directory = 'public/tabulacion';
+        $reference_formate = str_replace('-', '_', $cash->reference_number);
+        $reference_formate = str_replace(':','_',$reference_formate); 
+        $name = $cash->user_id . '_' . $reference_formate."_".$cash->turn_id;
+        if(!$generate && $cash->state == 0){
+            //buscar el archivo en la carpeta //    $pdf->save(storage_path('app/public/'.$name.'.pdf'));
+            $path = storage_path('app/'.$directory.'/'.$name.'.pdf');
+            //si existe regresalo en stream
+            if (file_exists($path)) {
+                return response()->file($path);
+            }
+            
+        }
         $user = $cash->user;
         $establishment = $user->establishment;
         $cashes = CashIncomePrincipal::where('cash_principal_id', $cash_id)
@@ -1128,19 +1313,23 @@ class BoxesController extends Controller
         //imprimir el totalde items_by_category
         
         $info_documents = [];
+        $min_01_document = null;
         if ($min_01_document_id) {
             $min_01_document = Document::select(['series', 'number'])->find($min_01_document_id);
             $info_documents['min_01'] = $min_01_document;
             $info_documents['total_01'] = $total_01_document;
         }
+        $max_01_document = null;
         if ($max_01_document_id) {
             $max_01_document = Document::select(['series', 'number'])->find($max_01_document_id);
             $info_documents['max_01'] = $max_01_document;
         }
+        $min_03_document = null;
         if ($min_03_document_id) {
             $min_03_document = Document::select(['series', 'number'])->find($min_03_document_id);
             $info_documents['min_03'] = $min_03_document;
         }
+        $max_03_document = null;
         if ($max_03_document_id) {
             $max_03_document = Document::select(['series', 'number'])->find($max_03_document_id);
         }
@@ -1163,8 +1352,10 @@ class BoxesController extends Controller
         } catch (Exception $e) {
             return ['m' => $e->getMessage()];
         }
-        //duardar el pdf 
-        // $pdf->save(storage_path('app/public/report_resumen_pdf_pos.pdf'));
+        if (!Storage::exists($directory)) {
+            Storage::makeDirectory($directory);
+        }
+        $pdf->save(storage_path('app/'.$directory.'/'.$name.'.pdf'));
 
         return $pdf->stream('pdf_file.pdf');
     }

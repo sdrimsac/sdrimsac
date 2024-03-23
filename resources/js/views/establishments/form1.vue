@@ -288,7 +288,7 @@
                             ></small>
                         </div>
                     </div>
-                         <div class="col-md-3">
+                    <div class="col-md-3">
                         <div
                             class="form-group"
                             :class="{ 'has-danger': errors.etiquetadora }"
@@ -372,45 +372,60 @@
                     </div>
                     <div class="col-md-3 flex-column justify-content-end">
                         <label class="control-label"
-                            >Impresión dirección de la 
-                            <br>
-                            empresa y
-                            establecimiento</label
-                        ><br>
+                            >Impresión dirección de la
+                            <br />
+                            empresa y establecimiento</label
+                        ><br />
                         <el-checkbox v-model="conf.company_address">
                             {{ conf.company_address ? "Si" : "No" }}
                         </el-checkbox>
                     </div>
-                        <div class="col-md-3 flex-column justify-content-end">
-                        <label class="control-label"
-                            >Imprimir comandas</label
-                        ><br>
+                    <div class="col-md-3 flex-column justify-content-end">
+                        <label class="control-label">Imprimir comandas</label
+                        ><br />
                         <el-checkbox v-model="conf.print_command">
                             {{ conf.print_command ? "Si" : "No" }}
                         </el-checkbox>
                     </div>
-                        <div class="col-md-3 flex-column justify-content-end">
-                        <label class="control-label"
-                            >Descuentos en caja</label
-                        ><br>
+                    <div class="col-md-3 flex-column justify-content-end">
+                        <label class="control-label">Descuentos en caja</label
+                        ><br />
                         <el-checkbox v-model="conf.show_discounts_payment">
                             {{ conf.show_discounts_payment ? "Si" : "No" }}
                         </el-checkbox>
                     </div>
-                        <div class="col-md-3 flex-column justify-content-end">
-                        <label class="control-label"
-                            >Metodos de pago</label
-                        ><br>
+                    <div class="col-md-3 flex-column justify-content-end">
+                        <label class="control-label">Metodos de pago</label
+                        ><br />
                         <el-checkbox v-model="conf.show_payment_method">
                             {{ conf.show_payment_method ? "Si" : "No" }}
                         </el-checkbox>
                     </div>
-                    <div v-if="configuration.health_network" class="col-md-3 flex-column justify-content-end">
-                        <label class="control-label"
-                            >Es servicio</label
-                        ><br>
+                    <div
+                        v-if="configuration.health_network"
+                        class="col-md-3 flex-column justify-content-end"
+                    >
+                        <label class="control-label">Es servicio</label><br />
                         <el-checkbox v-model="form.is_service">
                             {{ form.is_service ? "Si" : "No" }}
+                        </el-checkbox>
+                    </div>
+                    <div
+                        v-if="configuration.health_network"
+                        class="col-md-3 flex-column justify-content-end"
+                    >
+                        <label class="control-label">Es producto</label><br />
+                        <el-checkbox v-model="form.is_product">
+                            {{ form.is_product ? "Si" : "No" }}
+                        </el-checkbox>
+                    </div>
+                        <div
+                        v-if="configuration.health_network"
+                        class="col-md-3 flex-column justify-content-end"
+                    >
+                        <label class="control-label">Report. Tab por cada caja</label><br />
+                        <el-checkbox v-model="form.tab_single">
+                            {{ form.tab_single ? "Si" : "No" }}
                         </el-checkbox>
                     </div>
                 </div>

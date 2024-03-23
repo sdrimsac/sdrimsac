@@ -3,6 +3,7 @@
 namespace App\Http\Resources\Tenant;
 
 use App\Models\Tenant\Box;
+use App\Models\Tenant\Establishment;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
 class CashCollection extends ResourceCollection
@@ -58,7 +59,11 @@ class CashCollection extends ResourceCollection
                     ];
                 }
             }
+            $user_cash = $row->user;
+            $establishment = Establishment::where('id', $user_cash->establishment_id)->first();
+            $tab_single =  (bool)$establishment->tab_single;
             return [
+                'tab_single' => $tab_single,
                 'pharmacy_info' => $row->pharmacy_info ? (array) $row->pharmacy_info : null, 
                 'principal' => (bool) $row->principal,
                 'group_code' => $row->group_code,

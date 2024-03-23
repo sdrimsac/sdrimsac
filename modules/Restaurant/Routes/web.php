@@ -46,6 +46,7 @@ Route::prefix('caja')->group(function () {
     Route::get('report-boxes/tables', 'BoxesController@tables');
 
     Route::get('report-boxes/cashes_salud', 'BoxesController@cashes_salud');
+    Route::get('report-boxes/cashes_salud_single', 'BoxesController@cashes_salud_single');
     Route::post('report-boxes/save_info_pharmacy/{id}', 'BoxesController@save_info_pharmacy');
     Route::get('report-boxes/reports_resumen_type', 'BoxesController@reports_resumen_type');
     Route::get('report-boxes/reports_resumen_type_page', 'BoxesController@reports_resumen_type_page');

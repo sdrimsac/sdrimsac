@@ -39,7 +39,7 @@
                                 </el-select>
                             </div>
                         </template>
-                        <div class="col-md 3">
+                        <div class="col-md 3" v-if="configuration.principal_cash">
                             <el-checkbox
                                 v-model="form.is_principal"
                                 label="Principal"
@@ -156,6 +156,19 @@
                                                         "
                                                         >Info.
                                                         farmacia</el-button
+                                                    >
+                                                </template>
+                                                <template v-else-if="row.tab_single"
+                                                >
+                                                    <el-button
+                                                        class="submit"
+                                                        type="primary"
+                                                        icon="el-icon-tickets"
+                                                        @click="
+                                                            openSaludSingle(row.id)
+                                                        "
+                                                        >Relacion
+                                                        tabulada</el-button
                                                     >
                                                 </template>
                                             </td>
@@ -400,6 +413,9 @@ export default {
         },
         openSalud(id) {
             window.open(`/caja/report-boxes/cashes_salud?cash_id=${id}`);
+        },
+            openSaludSingle(id) {
+            window.open(`/caja/report-boxes/cashes_salud_single?cash_id=${id}`);
         },
         async sendWhatsapp() {
             if (!this.number || this.number.length != 9 || isNaN(this.number)) {
