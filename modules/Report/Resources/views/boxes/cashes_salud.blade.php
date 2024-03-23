@@ -2,8 +2,8 @@
 <html lang="en">
 @php
     // $company = \App\Models\Company::select('health_network_image')->first();
-
 @endphp
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -102,7 +102,7 @@
         .categoria {
             background-color: #eee;
             text-transform: uppercase;
-        
+
         }
 
         .celda_loop {
@@ -184,12 +184,13 @@
 </head>
 
 <body>
-    @if($company->health_network_image &&  file_exists(public_path("storage/uploads/logos/{$company->health_network_image}")))
-    <div >
-        <img src="data:{{ mime_content_type(public_path("storage/uploads/logos/{$company->health_network_image}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/uploads/logos/{$company->health_network_image}"))) }}"
-        alt="{{ $company->health_network_image }}" 
-        style="max-width: 230px;">
-    </div>
+    @if (
+        $company->health_network_image &&
+            file_exists(public_path("storage/uploads/logos/{$company->health_network_image}")))
+        <div>
+            <img src="data:{{ mime_content_type(public_path("storage/uploads/logos/{$company->health_network_image}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/uploads/logos/{$company->health_network_image}"))) }}"
+                alt="{{ $company->health_network_image }}" style="max-width: 230px;">
+        </div>
     @endif
     <div style="font-size:15px;">
         <strong>MINISTERIO DE SALUD</strong><br>
@@ -222,6 +223,11 @@
             <td>
                 <strong>FECHA:</strong>
                 {{ \Carbon\Carbon::parse($cash->date_opening)->format('d/m/Y') }}
+
+            </td>
+            <td>
+                <strong>ESTABLECIMIENTO:</strong>
+                {{ $establishment->description }}
             </td>
             <td>
                 <strong>RESPONSABLE:</strong>
@@ -349,7 +355,7 @@
                 <th class="encabezado">Código</th>
                 <th class="encabezado">Concepto</th>
                 <th class="encabezado">Subtotal</th>
-                <th  class="encabezado">Total</th>
+                <th class="encabezado">Total</th>
             </tr>
         </thead>
         <tbody>
@@ -376,7 +382,7 @@
                         $total_general += $category_sum;
                     @endphp
 
-                    <td  class="categoria celda text-end">{{ number_format($category_sum, 2) }}</td>
+                    <td class="categoria celda text-end">{{ number_format($category_sum, 2) }}</td>
                 </tr>
                 @if ($is_expanded)
                     @foreach ($items as $item)
