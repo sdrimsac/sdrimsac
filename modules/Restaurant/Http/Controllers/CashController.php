@@ -1485,7 +1485,28 @@ class CashController extends Controller
     public function store(CashRequest $request)
     {
 
+        $configuration = Configuration::first();
+        $turn_principal = $configuration->turn_principal;
         $id = $request->input('id');
+        $turn_id = $request->input('turn_id');
+        if ($configuration->automatic_principal_cash) {
+            // if ($turn_id == $turn_principal) {
+            $exist_principal_cash = Cash::where('principal', true)->where('state', true)->first();
+            if (!$exist_principal_cash) {
+                $user_arca = User::getUserArca();
+                Cash::create([
+                    'user_id' => $user_arca->id,
+                    'beginning_balance' => 0,
+                    'state' => 1,
+                    'principal' => true,
+                    'turn_id' => $turn_principal,
+                    'date_opening' => date('Y-m-d'),
+                    'time_opening' => date('H:i:s'),
+                    'reference_number' => 'ARCA-' . date('H:i:s'),
+                ]);
+            }
+            // }
+        }
         $cash = Cash::firstOrNew(['id' => $id]);
         $cash->fill($request->all());
 
@@ -1617,7 +1638,6 @@ class CashController extends Controller
         $difference = $request->difference ?? 0.00;
         $cash = Cash::findOrFail($id);
         $cash->final_balance = $final_balance;
-        // $beginning_balance = $cash->beginning_balance;
         $cash->counter = $counter;
         $cash->bill_series = $bill_series;
         $cash->difference = $difference;
@@ -1626,11 +1646,10 @@ class CashController extends Controller
         $cash->time_closed = date('H:i:s');
         $cash->save();
         Box::where('cash_id', $id)->update(['close' => date('Y-m-d'), 'state' => 0]);
-        $all_cash = Box::
-        select(['document_id','sale_note_id'])
-        ->where('cash_id', $id)->where('method', 'Efectivo')
-        ->where('expenses', 0)
-        ->get();
+        $all_cash = Box::select(['document_id', 'sale_note_id'])
+            ->where('cash_id', $id)->where('method', 'Efectivo')
+            ->where('expenses', 0)
+            ->get();
 
         $all_cash = $all_cash->map(function ($item) {
             if ($item->document_id) {
@@ -1706,10 +1725,18 @@ class CashController extends Controller
         // }
 
         $principal_cash =  $configuration->principal_cash;
+        $health_network = $configuration->health_network;
         if ($principal_cash) {
             $cash_principal = Cash::where('state', 1)
-                ->where('principal', 1)
-                ->first();
+                ->where('principal', 1);
+            if ($health_network) {
+                $cash_user = $cash->user;
+                $establishment_id = $cash_user->establishment_id;
+                $cash_principal = $cash_principal->whereHas('user', function ($query) use ($establishment_id) {
+                    $query->where('establishment_id', $establishment_id);
+                });
+            }
+            $cash_principal = $cash_principal->first();
             if ($cash_principal) {
                 $cash_principal_id = $cash_principal->id;
                 $user_principal = $cash_principal->user;
@@ -1727,6 +1754,16 @@ class CashController extends Controller
                     WhatsappSendMessageProccess::dispatch($website->id, $message, $user_principal_telephone);
                     // (new WhatsappController)->sendMessage($message, $user_principal_telephone);
                 }
+            }
+        }
+        if ($configuration->automatic_principal_cash) {
+            $turn_end = $configuration->turn_end;
+            if ($cash->turn_id == $turn_end) {
+                Cash::where('principal', true)->update([
+                    'state' => 0,
+                    'time_closed' => date('H:i:s'),
+                    'date_closed' => date('Y-m-d')
+                ]);
             }
         }
         return [

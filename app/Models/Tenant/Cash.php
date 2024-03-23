@@ -90,12 +90,12 @@ class Cash extends ModelTenant
     }
     public function getPharmacyInfoAttribute($value)
     {
-        return (is_null($value))?null:(object) json_decode($value);
+        return (is_null($value)) ? null : (object) json_decode($value);
     }
 
     public function setPharmacyInfoAttribute($value)
     {
-        $this->attributes['pharmacy_info'] = (is_null($value))?null:json_encode($value);
+        $this->attributes['pharmacy_info'] = (is_null($value)) ? null : json_encode($value);
     }
     public function turn()
     {
@@ -124,6 +124,8 @@ class Cash extends ModelTenant
     }
     function set_or_create_code()
     {
+        $user = User::find($this->user_id);
+        $establishment_id = $user->establishment_id;
         $configuration = Configuration::first();
         if ($configuration->turn_principal) {
             $turn_id = $configuration->turn_principal;
@@ -138,7 +140,10 @@ class Cash extends ModelTenant
                 $this->save();
             } else {
                 //se busca la ultima caja con el id del turno principal y se obtiene el codigo
-                $last_cash = Cash::where('turn_id', $turn_id)->orderBy('id', 'desc')->first();
+                $last_cash = Cash::where('turn_id', $turn_id)
+                    ->whereHas('user', function ($query) use ($establishment_id) {
+                        $query->where('establishment_id', $establishment_id);
+                    })->orderBy('id', 'desc')->first();
                 if ($last_cash) {
                     $this->group_code = $last_cash->group_code;
                     $this->save();

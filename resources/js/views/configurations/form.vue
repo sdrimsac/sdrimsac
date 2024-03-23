@@ -2050,7 +2050,7 @@
                                     <div class="col-md-6 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100">
-                                                Turno principal
+                                                Turno inicio
                                                 <el-tooltip
                                                     class="item"
                                                     effect="dark"
@@ -2075,6 +2075,62 @@
                                                     :value="turn.id"
                                                 ></el-option>
                                             </el-select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mt-4">
+                                        <div class="form-group">
+                                            <label class="control-label w-100">
+                                                Turno final
+                                                <el-tooltip
+                                                    class="item"
+                                                    effect="dark"
+                                                    content="Turno elegido para agrupar las cajas"
+                                                    placement="top-start"
+                                                >
+                                                    <i
+                                                        class="fa fa-info-circle"
+                                                    ></i>
+                                                </el-tooltip>
+                                            </label>
+
+                                            <el-select
+                                                v-model="form.turn_end"
+                                                @change="submit"
+                                                clearable
+                                            >
+                                                <el-option
+                                                    v-for="turn in turns"
+                                                    :key="turn.id"
+                                                    :label="turn.label"
+                                                    :value="turn.id"
+                                                ></el-option>
+                                            </el-select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mt-4">
+                                        <div class="form-group">
+                                            <label class="control-label w-100">
+                                                Caja principal automatica
+                                                <el-tooltip
+                                                    class="item"
+                                                    effect="dark"
+                                                    content="Caja principal se cierra y abre en base al turno  inicial - final"
+                                                    placement="top-start"
+                                                >
+                                                    <i
+                                                        class="fa fa-info-circle"
+                                                    ></i>
+                                                </el-tooltip>
+                                            </label>
+
+                                            <el-switch
+                                                v-model="
+                                                    form.automatic_principal_cash
+                                                "
+                                                active-text="Si"
+                                                inactive-text="No"
+                                                @change="submit"
+                                            ></el-switch>
                                         </div>
                                     </div>
                                 </div>

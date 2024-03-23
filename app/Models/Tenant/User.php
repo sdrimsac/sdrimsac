@@ -95,6 +95,17 @@ class User extends Authenticatable
 
         ];
     }
+    static function getUserArca(){
+        $worker_type_arca = WorkersType::where('description', 'ARCA')->first();
+        if($worker_type_arca){
+            $user = User::where('worker_type_id', $worker_type_arca->id)
+            ->where('active', true)
+            ->first();
+            return $user;
+        }
+
+        return null;
+    }
     public function isWorkerType($worker_type)
     {
         $to_upper = strtoupper($worker_type);
