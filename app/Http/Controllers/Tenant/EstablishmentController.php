@@ -195,6 +195,7 @@ class EstablishmentController extends Controller
         $establishment = Establishment::findOrFail($id);
         ConfEstablishment::where('establishment_id', $id)->delete();
         User::where('establishment_id', $id)->delete();
+        Series::where('establishment_id', $id)->delete();
         $establishment->delete();
 
         return [
