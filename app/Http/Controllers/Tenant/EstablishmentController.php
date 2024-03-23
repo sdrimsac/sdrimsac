@@ -109,7 +109,28 @@ class EstablishmentController extends Controller
         $establishment->fill($request->all());
         $is_service = $establishment->is_service;
         $is_product = $establishment->is_product;
-        $warehouse = Warehouse::where('establishment_id', $id)->first();
+        
+        $direct_printing = $request->input('direct_printing');
+        if($direct_printing){
+            $establishment->direct_printing = 1;
+        }else{
+            $establishment->direct_printing = 0;
+        }
+        $establishment->save();
+    
+        $series = $request->series;
+        if (!$id) {
+            $warehouse = new Warehouse();
+            $warehouse->establishment_id = $establishment->id;
+            $warehouse->description = 'Almacén - ' . $establishment->description;
+            $warehouse->save();
+        } else {
+            $warehouse =  Warehouse::where('establishment_id', $id)->first();
+            $warehouse->description = 'Almacén - ' . $establishment->description;
+            $warehouse->save();
+        }
+        // $warehouse = Warehouse::where('establishment_id', $establishment->id)->first();
+
         if($is_service && $id == null){
             $item_id = Item::where('unit_type_id', 'ZZ')->pluck('id')->toArray();
             //crea en la tabla item_warehouse todo los registros
@@ -128,24 +149,6 @@ class EstablishmentController extends Controller
                 $item_warehouse->warehouse_id = $warehouse->id;
                 $item_warehouse->save();
             }
-        }
-        $direct_printing = $request->input('direct_printing');
-        if($direct_printing){
-            $establishment->direct_printing = 1;
-        }else{
-            $establishment->direct_printing = 0;
-        }
-        $establishment->save();
-        $series = $request->series;
-        if (!$id) {
-            $warehouse = new Warehouse();
-            $warehouse->establishment_id = $establishment->id;
-            $warehouse->description = 'Almacén - ' . $establishment->description;
-            $warehouse->save();
-        } else {
-            $warehouse =  Warehouse::where('establishment_id', $id)->first();
-            $warehouse->description = 'Almacén - ' . $establishment->description;
-            $warehouse->save();
         }
         if (isset($conf)) {
             $exist = ConfEstablishment::firstOrNew(['establishment_id' => $establishment->id]);
