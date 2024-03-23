@@ -1,7 +1,16 @@
 <template>
-    <el-dialog v-loading="loading" :visible="showHistoryCash" @open="open" @close="close" :title="title">
+    <el-dialog
+        v-loading="loading"
+        :visible="showHistoryCash"
+        @open="open"
+        @close="close"
+        :title="title"
+    >
         <div class="card container table-responsive col-md-12">
-            <table class="table table-hover table-striped table-condensed  table-responsive"   style="width:100%;     white-space: nowrap;">
+            <table
+                class="table table-hover table-striped table-condensed  table-responsive"
+                style="width:100%;     white-space: nowrap;"
+            >
                 <thead>
                     <tr>
                         <th>
@@ -28,29 +37,47 @@
                             {{ idx + 1 }}
                         </td>
                         <td>
-                            {{ `${box.date_opening}/ ${box.reference_number ||'SIN REFERENCIA'}` }}
+                            {{
+                                `${box.date_opening}/ ${box.reference_number ||
+                                    "SIN REFERENCIA"}`
+                            }}
                         </td>
                         <td>
                             {{ box.beginning_balance }}
                         </td>
                         <td>
-                            {{ box.date_closed || 'Sin cierre'}}
+                            {{ box.date_closed || "Sin cierre" }}
                         </td>
                         <td>
-                            {{ box.date_closed ? box.final_balance.toFixed(2) : "" }}
+                            {{
+                                box.date_closed
+                                    ? box.final_balance.toFixed(2)
+                                    : ""
+                            }}
                         </td>
                         <td>
-                            <el-button type="success" class="text-white" @click="openWhastappForm(box)">
-                                <i class="fab fa-whatsapp" aria-hidden="true"></i>
+                            <el-button
+                                type="success"
+                                class="text-white"
+                                @click="openWhastappForm(box)"
+                            >
+                                <i
+                                    class="fab fa-whatsapp"
+                                    aria-hidden="true"
+                                ></i>
                             </el-button>
                             <el-button type="primary" @click="seeDetail(box)">
                                 Ver
                             </el-button>
-                            <el-button class="margin-left:10px;" type="primary" @click="openA4(box)">
+                            <el-button
+                                class="margin-left:10px;"
+                                type="primary"
+                                @click="openA4(box)"
+                            >
                                 A4
                             </el-button>
                             <!-- un boton para bajar un excel -->
-                           <el-tooltip
+                            <el-tooltip
                                 class="item"
                                 effect="dark"
                                 content="Descargar Excel del stock al momento de cerrar caja"
@@ -64,20 +91,52 @@
                                     @click="openExcel(box)"
                                 ></el-button>
                             </el-tooltip>
-
+                            <el-tooltip
+                                v-if="box.tab_single"
+                                class="item"
+                                effect="dark"
+                                content="Reporte tabulado"
+                                placement="top"
+                            >
+                                <el-button
+                                    type="primary"
+                                    icon="el-icon-download"
+                                    circle
+                                    v-if="box.stock_file"
+                                    @click="openSaludSingle(box.id)"
+                                ></el-button>
+                            </el-tooltip>
                         </td>
                     </tr>
                 </tbody>
             </table>
-            <el-pagination @current-change="getRecords" layout="total, prev, pager, next" :total="pagination.total"
-                :current-page.sync="pagination.current_page" :page-size="Number(pagination.per_page)">
+            <el-pagination
+                @current-change="getRecords"
+                layout="total, prev, pager, next"
+                :total="pagination.total"
+                :current-page.sync="pagination.current_page"
+                :page-size="Number(pagination.per_page)"
+            >
             </el-pagination>
         </div>
 
-        <cash-modal v-if="currentBox" :cash.sync="currentBox" :area_id="area_id"
-            :showDetail.sync="showDetail"></cash-modal>
-        <el-dialog append-to-body width="40%" title="Enviar reporte por whatsapp" :visible.sync="showWhatsappForm">
-            <div class="p-3" v-loading="loading" element-loading-text="Enviando..">
+        <cash-modal
+            v-if="currentBox"
+            :cash.sync="currentBox"
+            :area_id="area_id"
+            :showDetail.sync="showDetail"
+        ></cash-modal>
+        <el-dialog
+            append-to-body
+            width="40%"
+            title="Enviar reporte por whatsapp"
+            :visible.sync="showWhatsappForm"
+        >
+            <div
+                class="p-3"
+                v-loading="loading"
+                element-loading-text="Enviando.."
+            >
                 <label for="">Número</label>
                 <el-input v-model="number" style="width:100%"></el-input>
                 <div class="d-flex justify-content-end p-1">
@@ -109,8 +168,11 @@ export default {
         };
     },
     methods: {
+        openSaludSingle(id) {
+            window.open(`/caja/report-boxes/cashes_salud_single?cash_id=${id}`);
+        },
         openExcel(cash) {
-          let {id} = cash;
+            let { id } = cash;
             window.open(`/get_stock_file/${id}`);
         },
         openWhastappForm(cash) {
@@ -154,7 +216,7 @@ export default {
         },
         getQueryParameters() {
             return queryString.stringify({
-                page: this.pagination.current_page,
+                page: this.pagination.current_page
                 // column: "state",
                 // value: 0
 

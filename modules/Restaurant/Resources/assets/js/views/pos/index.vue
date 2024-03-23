@@ -1323,6 +1323,7 @@
                                                                                     .item
                                                                                     .unit_type_id !=
                                                                                     'ZZ'
+                                                                                    || !configuration.sales_stock
                                                                         "
                                                                     >
                                                                         <template
