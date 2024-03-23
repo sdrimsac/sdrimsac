@@ -138,6 +138,7 @@ class EstablishmentController extends Controller
                 $item_warehouse = new ItemWarehouse();
                 $item_warehouse->item_id = $item;
                 $item_warehouse->warehouse_id = $warehouse->id;
+                $item_warehouse->stock = 0;
                 $item_warehouse->save();
             }
         }
@@ -147,6 +148,7 @@ class EstablishmentController extends Controller
                 $item_warehouse = new ItemWarehouse();
                 $item_warehouse->item_id = $item;
                 $item_warehouse->warehouse_id = $warehouse->id;
+                $item_warehouse->stock = 0;
                 $item_warehouse->save();
             }
         }
