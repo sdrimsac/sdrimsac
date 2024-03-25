@@ -43,6 +43,16 @@
                 </div>
             </div>
             <div class="mt-1 d-flex align-items-center justify-content-between">
+                <div v-if="config.health_network && establishment.is_product">
+                    <button
+                        type="button"
+                        class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto"
+                        @click.prevent="clickDocumentSalud()"
+                    >
+                        <i class="icofont-plus-circle"></i>
+                        <span>Documentos farmacia</span>
+                    </button>
+                </div>
                 <div>
                     <button
                         v-if="activeName == 'saleNotes'"
@@ -139,6 +149,9 @@
                 @close="closeCpe"
             >
             </modal-generate-cpe>
+            <document-salud-modal
+                :showDialog.sync="showDialogDocumentSalud"
+            ></document-salud-modal>
         </div>
     </el-dialog>
 </template>
@@ -154,12 +167,13 @@
 }
 </style>
 <script>
+import DocumentSaludModal from "../../../../../../../../resources/js/views/documents/partials/document_salud_modal.vue";
 import DocumentPrintDetail from "./document_print_detail.vue";
 import queryString from "query-string";
 import ModalGenerateCpe from "./modal_generate_cpe.vue";
 
 export default {
-    components: { DocumentPrintDetail, ModalGenerateCpe },
+    components: { DocumentPrintDetail, ModalGenerateCpe,DocumentSaludModal },
     props: [
         "showDialog",
         "company",
@@ -171,6 +185,7 @@ export default {
     ],
     data() {
         return {
+            showDialogDocumentSalud: false,
             remain: false,
             time: null,
             loading: false,
@@ -190,6 +205,9 @@ export default {
         };
     },
     methods: {
+        clickDocumentSalud() {
+            this.showDialogDocumentSalud = true;
+        },
         sendOrdens(orden) {
             this.$emit("sendOrdens", orden);
         },
@@ -207,12 +225,12 @@ export default {
             this.$emit("sendItems", items, clientNumber, notes, dscto_global);
         },
         async printEvent(url) {
-           console.log(url);
-           const response = await this.$http.post(`/caja/re-print`, {
-               url: url
-           });
+            console.log(url);
+            const response = await this.$http.post(`/caja/re-print`, {
+                url: url
+            });
 
-           return;
+            return;
             let paperConfig = {
                 scaleContent: false
             };
@@ -426,6 +444,7 @@ export default {
         },
         async open() {
             console.log(this.config);
+            console.log(this.establishment);
             await this.getLastDocument();
             await this.getLastDocuments();
             this.printer = this.$areaPrinter;

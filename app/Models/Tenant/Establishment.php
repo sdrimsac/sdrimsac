@@ -45,6 +45,8 @@ class Establishment extends ModelTenant
         'documents',
     ];
     protected $casts = [
+        'is_product' => 'boolean',
+        'is_service' => 'boolean',
         'has_igv_31556' => 'boolean',
         'documents' => 'array'
     ];

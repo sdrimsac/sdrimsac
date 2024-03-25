@@ -1779,7 +1779,7 @@ class SaleNoteController extends Controller
             $obj =  SaleNote::find($id);
             $obj->state_type_id = 11;
             $obj->save();
-            $boxes = Box::where('sale_note_id', $obj->id)->delete();
+            Box::where('sale_note_id', $obj->id)->delete();
             $establishment = Establishment::where('id', $obj->establishment_id)->first();
             $warehouse = Warehouse::where('establishment_id', $establishment->id)->first();
 

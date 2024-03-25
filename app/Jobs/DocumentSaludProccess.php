@@ -200,6 +200,7 @@ class DocumentSaludProccess implements ShouldQueue
                     $document_salud->date_of_charge = $date;
                     $document_salud->file_name = $file;
                     $document_salud->identifier = $identifier;
+                    DocumentSalud::where('identifier', $identifier)->whereNotNull('error')->delete();
                     $document_salud_exists = DocumentSalud::where('identifier', $identifier)
                         ->whereNull('error')
                         ->where('status', 'Aceptado')
