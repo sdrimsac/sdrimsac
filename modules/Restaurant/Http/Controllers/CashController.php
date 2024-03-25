@@ -1413,7 +1413,9 @@ class CashController extends Controller
         if ($is_principal) {
             $records->where('principal', true);
         }
-        $records->orderBy('date_opening', 'desc');
+        $records->orderBy('date_opening', 'desc')
+        ->orderBy('time_opening', 'desc')
+        ;
 
         return new CashCollection($records->paginate(config('tenant.items_per_page')));
     }
