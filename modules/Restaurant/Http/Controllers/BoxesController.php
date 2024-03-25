@@ -1194,15 +1194,15 @@ class BoxesController extends Controller
         $reference_formate = str_replace('-', '_', $cash->reference_number);
         $reference_formate = str_replace(':','_',$reference_formate); 
         $name = $cash->user_id . '_' . $reference_formate."_".$cash->turn_id;
-        if(!$generate && $cash->state == 0){
-            //buscar el archivo en la carpeta //    $pdf->save(storage_path('app/public/'.$name.'.pdf'));
-            $path = storage_path('app/'.$directory.'/'.$name.'.pdf');
-            //si existe regresalo en stream
-            if (file_exists($path)) {
-                return response()->file($path);
-            }
+        // if(!$generate && $cash->state == 0){
+        //     //buscar el archivo en la carpeta //    $pdf->save(storage_path('app/public/'.$name.'.pdf'));
+        //     $path = storage_path('app/'.$directory.'/'.$name.'.pdf');
+        //     //si existe regresalo en stream
+        //     if (file_exists($path)) {
+        //         return response()->file($path);
+        //     }
             
-        }
+        // }
         $user = $cash->user;
         $establishment = $user->establishment;
         $cashes = CashIncomePrincipal::where('cash_principal_id', $cash_id)
@@ -1352,10 +1352,10 @@ class BoxesController extends Controller
         } catch (Exception $e) {
             return ['m' => $e->getMessage()];
         }
-        if (!Storage::exists($directory)) {
-            Storage::makeDirectory($directory);
-        }
-        $pdf->save(storage_path('app/'.$directory.'/'.$name.'.pdf'));
+        // if (!Storage::exists($directory)) {
+        //     Storage::makeDirectory($directory);
+        // }
+        // $pdf->save(storage_path('app/'.$directory.'/'.$name.'.pdf'));
 
         return $pdf->stream('pdf_file.pdf');
     }
