@@ -980,11 +980,12 @@ class BoxesController extends Controller
             ->where('cash_id', $cash_id)->pluck('id')->toArray();
         $credit_notes = Note::whereIn('affected_document_id', $documents)->get();
         foreach ($credit_notes as $credit_note) {
+            $document = Document::find($credit_note->document_id);
             $all[] = [
-                'series' => $credit_note->series,
-                'full_number' => $credit_note->series . "-" . $credit_note->number,
-                'date_of_issue' => $credit_note->date_of_issue,
-                'total' => $credit_note->total,
+                'series' => $document->series,
+                'full_number' => $document->series . "-" . $document->number,
+                'date_of_issue' => $document->date_of_issue,
+                'total' => $document->total,
             ];
         }
         usort($all, function ($a, $b) {
