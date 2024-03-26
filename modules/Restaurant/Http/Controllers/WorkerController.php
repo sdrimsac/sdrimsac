@@ -105,7 +105,7 @@ class WorkerController extends Controller
                 ->where('type', '<>', 'admin')
                 ->where('establishment_id', $establishment_id);;
         }
-        return new UserCollection($records->paginate(50));
+        return new UserCollection($records->paginate(150));
     }
     public function record($id)
     {
