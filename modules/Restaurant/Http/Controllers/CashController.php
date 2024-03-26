@@ -1769,7 +1769,9 @@ class CashController extends Controller
         if ($configuration->automatic_principal_cash && !$tab_single) {
             $turn_end = $configuration->turn_end;
             if ($cash->turn_id == $turn_end) {
-                Cash::where('principal', true)->update([
+                Cash::where('principal', true)
+                ->where('state', 1)
+                ->update([
                     'state' => 0,
                     'time_closed' => date('H:i:s'),
                     'date_closed' => date('Y-m-d')
@@ -1810,6 +1812,7 @@ class CashController extends Controller
 
     public function destroy($id)
     {
+
         $cash = Cash::findOrFail($id);
 
         if ($cash->global_destination->count() > 0) {
