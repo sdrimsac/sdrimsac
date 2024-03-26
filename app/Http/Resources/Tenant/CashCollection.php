@@ -46,7 +46,8 @@ class CashCollection extends ResourceCollection
             });
 
             $expense = Box::where('cash_id', $row->id)->where('expenses', 1)->sum('amount');
-            $final_cash = $row->beginning_balance + $incomes - $expense;
+            $incomes_s = Box::where('cash_id', $row->id)->where('incomes', 1)->sum('amount');
+            $final_cash = $row->beginning_balance + $incomes - $expense + $incomes_s;
 
             // $total_cierre = $transfer + $digital + $sales_detail['cash']['sum'] + $cash->beginning_balance + $incomes_expenses_cash['incomes']['amount'] - $incomes_expenses_cash['expenses']['amount'];
             $counter = [];
