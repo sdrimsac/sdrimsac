@@ -29,6 +29,7 @@ use App\Models\Tenant\DocumentPayment;
 use App\Models\Tenant\HotelRent;
 use App\Models\Tenant\HotelRentItem;
 use App\Models\Tenant\Item;
+use App\Models\Tenant\Note;
 use App\Models\Tenant\Receipt;
 use App\Models\Tenant\SaleNoteCredit;
 use App\Models\Tenant\SaleNoteItem;
@@ -973,6 +974,24 @@ class BoxesController extends Controller
             "customers" => $customers
         ];
     }
+    function get_credit_notes($cash_id){
+        $all = [];
+        $documents = Document::select(['id'])
+            ->where('cash_id', $cash_id)->pluck('id')->toArray();
+        $credit_notes = Note::whereIn('affected_document_id', $documents)->get();
+        foreach ($credit_notes as $credit_note) {
+            $all[] = [
+                'series' => $credit_note->series,
+                'full_number' => $credit_note->series . "-" . $credit_note->number,
+                'date_of_issue' => $credit_note->date_of_issue,
+                'total' => $credit_note->total,
+            ];
+        }
+        usort($all, function ($a, $b) {
+            return $a['date_of_issue'] < $b['date_of_issue'];
+        });
+        return $all;
+    }
     function get_anulate_documents($cash_id)
     {
         $all = [];
@@ -1373,6 +1392,7 @@ class BoxesController extends Controller
         $promotions = [];
         $promotions_give = [];
         $anulate_documents = $this->get_anulate_documents($cash_id);;
+        $credit_notes = $this->get_credit_notes($cash_id);
 
         if ($configuration->hotels) {
             $promotions = SaleNotePromotion::where('cash_id', $cash_id)->get();
@@ -1830,6 +1850,7 @@ class BoxesController extends Controller
                 "credit_list_ordens_customers",
                 "credit_list_orden",
                 "anulate_documents",
+                "credit_notes",
                 "coinsReceive",
                 "promotions_give",
                 "promotions",

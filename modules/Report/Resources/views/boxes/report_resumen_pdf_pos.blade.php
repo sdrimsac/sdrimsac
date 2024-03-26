@@ -574,6 +574,53 @@
 
                             </table>
                         @endif
+                        @if (count($credit_notes) > 0)
+                        <table class="border f12">
+                            <thead>
+                                <tr class="thead">
+                                    <th colspan="4">
+                                        <span class="f12">NOTAS DE CRÉDITO</span>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th class="center">FECHA</th>
+                                    <th colspan="2" class="center">NRO DOC</th>
+                                    <th class="center">TOTAL</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @php
+                                    $t_d = 0;
+                                    
+                                @endphp
+                                @foreach ($credit_notes as $document)
+                                    <tr>
+                                        <td class="center">
+                                            <span class="f12">{{ $document['date_of_issue'] }}</span>
+                                        </td>
+                                        <td colspan="2" class="center">
+                                            <span class="f12">{{ $document['full_number'] }}</span>
+                                        </td>
+                                        @php
+                                            $t_d += $document['total'];
+                                        @endphp
+                                        <td class="right">
+                                            <span class="f12">{{ number_format($document['total'], 2) }}</span>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                                <tr>
+                                    <td class="center">
+                                        <span class="f12">TOTAL</span>
+                                    </td>
+                                    <td colspan="3" class="right">
+                                        <span class="f12">S/ {{ number_format($t_d, 2) }}</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+
+                        </table>
+                    @endif
                         @if ($total_discount > 0)
                             <table class="border f12">
                                 <thead>
