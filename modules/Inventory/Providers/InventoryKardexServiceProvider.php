@@ -239,6 +239,7 @@ class InventoryKardexServiceProvider extends ServiceProvider
     {
         if (!$this->checkInventory($item_id, $warehouse_id)) {
             $item = $this->findItem($item_id);
+            dump("entro ".$warehouse_id);
             $this->createInitialInventory($item_id, $item->stock + (-1 * $quantity), $warehouse_id);
         }
     }

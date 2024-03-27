@@ -1124,7 +1124,7 @@
                                                         @input="search()"
                                                         @focus="clear_input()"
                                                         autofocus
-                                                        placeholder="Ingrese aca Un Producto"
+                                                        placeholder="Ingrese Un Producto"
                                                     >
                                                         <el-button
                                                             slot="append"
@@ -1323,7 +1323,7 @@
                                                                                     .item
                                                                                     .unit_type_id !=
                                                                                     'ZZ'
-                                                                                    || !configuration.sales_stock
+                                                                                    || configuration.sales_stock == true
                                                                         "
                                                                     >
                                                                         <template

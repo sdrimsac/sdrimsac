@@ -232,7 +232,7 @@
                                 <div
                                     v-if="
                                         data.item.is_set == 0 &&
-                                            data.item.unit_type_id != 'ZZ'
+                                            data.item.unit_type_id != 'ZZ' && configuration.sales_stock == true
                                     "
                                     class="row justify-content-end "
                                     style="margin-left: 2px; margin-right: 2px; margin-bottom: 2px;"
@@ -411,6 +411,7 @@ export default {
         if (this.foods.length > 0) {
             this.loading = false;
         }
+        console.log("🚀 ~ mounted ~ this.configuration:", this.configuration)
     },
     watch: {
         foods(__, _) {

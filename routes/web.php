@@ -169,6 +169,10 @@ if ($hostname) {
                 Route::post('whatsapp/init', [WhatsappController::class, 'initWhatsapp']);
                 Route::post('whatsapp/get-file', [WhatsappController::class, 'getFile']);
 
+                Route::prefix('health-global')->group(function () {
+                    Route::get('/', [App\Http\Controllers\Tenant\HealthGlobalController::class, 'index'])->name('tenant.health_global.index');
+                    Route::get('/report', [App\Http\Controllers\Tenant\HealthGlobalController::class, 'report']);
+                });
 
                 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index');
                 Route::get('validar', [App\Http\Controllers\Tenant\ValidateController::class, 'validar_cpe']);

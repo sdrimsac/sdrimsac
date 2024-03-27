@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\DocumentController;
 use App\Models\Tenant\Configuration;
 use App\Models\Tenant\DocumentSalud;
 use App\Models\Tenant\Series;
+use App\Models\Tenant\Warehouse;
 use App\Traits\JobReportTrait;
 use Exception;
 use Hyn\Tenancy\Environment;
@@ -39,6 +40,12 @@ class DocumentSaludProccess implements ShouldQueue
     function items($inputs)
     {
         $document = $inputs['documento'];
+        $establishment_id = self::get_establishment_by_serie(Functions::valueKeyInArray($document, 'serie'));
+        $warehouse_id = null;
+        $warehouse = Warehouse::where('establishment_id', $establishment_id)->first();
+        if ($warehouse) {
+            $warehouse_id = $warehouse->id;
+        }
         if (key_exists('detalle', $inputs)) {
             $items = [];
             foreach ($inputs['detalle'] as $row) {
@@ -46,6 +53,7 @@ class DocumentSaludProccess implements ShouldQueue
                 $price = $row['precioItem'];
                 $total = $quantity * $price;
                 $items[] = [
+                    'warehouse_id' => $warehouse_id,
                     'internal_id' => isset($row['codItem']) ? $row['codItem'] : '',
                     'description' => $row['nombreItem'],
                     'name' => null,
@@ -91,6 +99,7 @@ class DocumentSaludProccess implements ShouldQueue
     }
     function transform_document($inputs)
     {
+
         $document = $inputs['documento'];
         $total = $document['mntTotal'];
         //redondeo de totales

@@ -189,6 +189,8 @@ export default {
             } else {
                 this.$message.error(response.message);
             }
+            fileList.splice(0, 1);
+
             this.close();
         },
         handleError(err, file, fileList) {

@@ -2,6 +2,7 @@
 
 namespace App\CoreFacturalo\Requests\Web\Validation;
 
+use App\CoreFacturalo\Requests\Inputs\Functions as InputsFunctions;
 use App\Models\Tenant\{
     Establishment,
     Document,
@@ -81,6 +82,7 @@ class Functions
             'sale_affectation_igv_type_id' =>  $inputs['affectation_igv_type_id'],
             'purchase_affectation_igv_type_id' =>  $inputs['affectation_igv_type_id'],
             'attributes' =>  [],
+            'warehouse_id' =>  InputsFunctions::valueKeyInArray($inputs, 'warehouse_id'),
         ]);
 
         return $item->id;

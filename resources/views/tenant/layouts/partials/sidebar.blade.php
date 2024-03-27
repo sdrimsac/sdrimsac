@@ -526,6 +526,17 @@
                             </a>
                         </li>
                     @endif
+                    
+                    @if ($config->health_network )
+                    <li>
+                        <a class="{{ $path[0] === 'health-global' ? 'active' : '' }}"
+                            href="{{ route('tenant.health_global.index') }}">
+                            <i class="icofont-file-excel"></i>
+
+                            Reporte global salud
+                        </a>
+                    </li>
+                @endif
                     @if ($config->consignment)
                         <li>
                             <a class="{{ $path[0] === 'reports' && $path[1] === 'consignment' ? 'active' : '' }}"

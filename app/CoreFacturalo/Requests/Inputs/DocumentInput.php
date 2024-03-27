@@ -10,9 +10,11 @@ use App\CoreFacturalo\Requests\Inputs\Transform\DocumentWebTransform;
 use App\Models\Tenant\Catalogs\DocumentType;
 use App\Models\Tenant\Company;
 use App\Models\Tenant\Document;
+use App\Models\Tenant\Establishment;
 use App\Models\Tenant\Item;
 use App\Models\Tenant\ItemUnitType;
 use App\Models\Tenant\User;
+use App\Models\Tenant\Warehouse;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Modules\Offline\Models\OfflineConfiguration;
@@ -219,7 +221,15 @@ class DocumentInput
 
     private static function items($inputs)
     {
-
+        $establishment_id = Functions::valueKeyInArray($inputs, 'establishment_id');
+        $warehouse_id_default = null;
+        if($establishment_id){
+            $warehouse = Warehouse::where('establishment_id', $establishment_id)->first();
+            if($warehouse){
+                $warehouse_id_default = $warehouse->id;
+            }
+        }
+        dump($warehouse_id_default." warehouse_id_default");
         $variation = Functions::valueKeyInArray($inputs, 'variation', false);
         if (array_key_exists('items', $inputs)) {
 
@@ -299,7 +309,7 @@ class DocumentInput
                     'attributes' => self::attributes($row),
                     'discounts' => self::discounts($row),
                     'charges' => self::charges($row),
-                    'warehouse_id' => Functions::valueKeyInArray($row, 'warehouse_id'),
+                    'warehouse_id' => Functions::valueKeyInArray($row, 'warehouse_id', $warehouse_id_default),
                     'additional_information' => Functions::valueKeyInArray($row, 'additional_information'),
                     'name_product_pdf' => Functions::valueKeyInArray($row, 'name_product_pdf')
                 ];

@@ -1,15 +1,29 @@
 <template>
-    <el-dialog title="Buscar Producto" width="30%" @close="close" :visible="showDialogViewItems">
-        
+    <el-dialog
+        title="Buscar Producto"
+        width="30%"
+        @close="close"
+        :visible="showDialogViewItems"
+    >
         <div class="row col-12">
             <div class="col-6">
                 <template>
                     <h2 class="text-muted text-small">
                         Categorias
                     </h2>
-                    <el-select v-model="categoryChild" filterable clearable placeholder="Selecionar aqui...."
-                        @change="UpdateparentCategory">
-                        <el-option v-for="item in categories" :key="item.id" :label="item.name" :value="item.id">
+                    <el-select
+                        v-model="categoryChild"
+                        filterable
+                        clearable
+                        placeholder="Selecionar aqui...."
+                        @change="UpdateparentCategory"
+                    >
+                        <el-option
+                            v-for="item in categories"
+                            :key="item.id"
+                            :label="item.name"
+                            :value="item.id"
+                        >
                         </el-option>
                     </el-select>
                 </template>
@@ -19,49 +33,89 @@
                     Buscar
                 </h2>
                 <template v-if="selectOption == 4">
-                    <el-input ref="input_items" size="small" v-model="input_itemMobil" @input="emitData()"
-                        @focus="clear_input()" autofocus placeholder="Ingrese aca Un Producto">
-                        <el-button slot="append" icon="el-icon-search" @click="emitData" ></el-button>
+                    <el-input
+                        ref="input_items"
+                        size="small"
+                        v-model="input_itemMobil"
+                        @input="emitData()"
+                        @focus="clear_input()"
+                        autofocus
+                        placeholder="Ingrese aca Un Producto"
+                    >
+                        <el-button
+                            slot="append"
+                            icon="el-icon-search"
+                            @click="emitData"
+                        ></el-button>
                     </el-input>
                 </template>
 
                 <template v-else>
-                    <el-input ref="input_itemMobil" size="small" v-model="input_itemMobil" @input="emitData()"
-                        @focus="clear_input()" autofocus placeholder="Ingrese aca Un Producto">
-                        <el-button slot="append" icon="el-icon-search" @click="emitData"></el-button>
+                    <el-input
+                        ref="input_itemMobil"
+                        size="small"
+                        v-model="input_itemMobil"
+                        @input="emitData()"
+                        @focus="clear_input()"
+                        autofocus
+                        placeholder="Ingrese aca Un Producto"
+                    >
+                        <el-button
+                            slot="append"
+                            icon="el-icon-search"
+                            @click="emitData"
+                        ></el-button>
                     </el-input>
                 </template>
             </div>
         </div>
         <div class="row">
-            <div class="col-6 col-lg-4 col-xl-4 col-xxl-4 p-1" v-for="(data, index) in foods" :key="index">
-                        <el-tooltip effect="dark" :disabled="
-                            data.item.warehouses.length == 1 ||
+            <div
+                class="col-6 col-lg-4 col-xl-4 col-xxl-4 p-1"
+                v-for="(data, index) in foods"
+                :key="index"
+            >
+                <el-tooltip
+                    effect="dark"
+                    :disabled="
+                        data.item.warehouses.length == 1 ||
                             !configuration.show_stock_establishment_box
-                        ">
-                            <div slot="content">
-                                Stock Almacenes <br />
-                                <span v-for="(info, idx) in data.item.warehouses" :key="idx">
-                                    <label v-if="info.warehouse.id != establishmentId">
-                                        <template v-if="data.item.max_quantity">
-                                            <!-- {{
+                    "
+                >
+                    <div slot="content">
+                        Stock Almacenes <br />
+                        <span
+                            v-for="(info, idx) in data.item.warehouses"
+                            :key="idx"
+                        >
+                            <label v-if="info.warehouse.id != establishmentId">
+                                <template v-if="data.item.max_quantity">
+                                    <!-- {{
                                                 `${
                                                     info.warehouse.description
                                                 }: ${Number(info.stock) /
                                                     data.item.max_quantity}`
                                             }} -->
-                                            {{ formatedStockPresentation(data.item, info.stock) }}
-                                        </template>
-                                        <template v-else>
-                                            {{
-                                            `${info.warehouse.description}: ${Number(
-                                                info.stock
-                                            ).toFixed(2)}`
-                                            }}
-                                        </template> </label><br />
-                                </span>
-                            </div>
-                            <div id="card" class="
+                                    {{
+                                        formatedStockPresentation(
+                                            data.item,
+                                            info.stock
+                                        )
+                                    }}
+                                </template>
+                                <template v-else>
+                                    {{
+                                        `${
+                                            info.warehouse.description
+                                        }: ${Number(info.stock).toFixed(2)}`
+                                    }}
+                                </template> </label
+                            ><br />
+                        </span>
+                    </div>
+                    <div
+                        id="card"
+                        class="
                                         overflow-hidden
                                         coupon
                                         rounded
@@ -69,52 +123,88 @@
                                         flex-column
                                         justify-content-between
                                         p-1
-                                        ">
-                                <div @click="addFood(index)">
-                                    <div>
-                                        <span class="lead-font-weight-700 h5">
-                                            {{ data.description.toUpperCase() }}
-                                        </span>
+                                        "
+                    >
+                        <div @click="addFood(index)">
+                            <div>
+                                <span class="lead-font-weight-700 h5">
+                                    {{ data.description.toUpperCase() }}
+                                </span>
+                            </div>
+                            <div
+                                class="d-flex align-items-end justify-content-between"
+                            >
+                                <div class="p-1">
+                                    <div class="icon-container">
+                                        <div class="icon-container_box">
+                                            <template
+                                                v-if="
+                                                    data.image ==
+                                                        'imagen-no-disponible.jpg'
+                                                "
+                                            >
+                                                <img
+                                                    hidden
+                                                    src="/images/imagen-no-disponible.jpg"
+                                                    alt="User Img"
+                                                    class="thumbail"
+                                                />
+                                            </template>
+                                            <template v-else>
+                                                <img
+                                                    :src="
+                                                        formatUrlImage(
+                                                            data.image
+                                                        )
+                                                    "
+                                                    class="thumbail"
+                                                />
+                                            </template>
+                                        </div>
                                     </div>
-                                    <div class="d-flex align-items-end justify-content-between">
-                                        <div class="p-1">
-                                            <div class="icon-container">
-                                                <div class="icon-container_box">
-                                                    <template v-if="data.image == 'imagen-no-disponible.jpg'">
-                                                        <img hidden src="/images/imagen-no-disponible.jpg"
-                                                            alt="User Img" class="thumbail" />
-                                                    </template>
-                                                    <template v-else>
-                                                        <img :src="formatUrlImage(data.image)" class="thumbail" />
-                                                    </template>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div>
-                                            {{ data.code }}
-                                        </div>
-                                        <div class="d-flex flex-column align-items-end">
-                                            <!-- <div class="text-uppercase font-weight-light h5">
+                                </div>
+                                <div>
+                                    {{ data.code }}
+                                </div>
+                                <div class="d-flex flex-column align-items-end">
+                                    <!-- <div class="text-uppercase font-weight-light h5">
                         {{ data.category.name }}
                       </div> -->
-                                            <div class="block mb-2">
-                                                <span class="time font-weight-light">
-                                                    <span class="text-muted lead-font-weight-700">
-                                                        S/
-                                                        {{ data.price }}</span>
-                                                </span>
-                                            </div>
-                                            <div   v-if="data.item.is_set == 0 && data.item.unit_type_id != 'ZZ'">
-                                                <template v-if="data.item.stock > 0">
-                                                    <span class="badge rounded-pill bg-primary m-l-0">Stock
-                                                        <template v-if="data.item.max_quantity">
-                                                            {{
-                                                                formatedStockPresentation(
-                                                                    data.item,
-                                                                data.item.stock
-                                                                                                                        )
-                                                            }}
-                                                            <!-- {{
+                                    <div class="block mb-2">
+                                        <span class="time font-weight-light">
+                                            <span
+                                                class="text-muted lead-font-weight-700"
+                                            >
+                                                S/
+                                                {{ data.price }}</span
+                                            >
+                                        </span>
+                                    </div>
+                                    <div
+                                        v-if="
+                                            data.item.is_set == 0 &&
+                                                data.item.unit_type_id !=
+                                                    'ZZ' &&
+                                                configuration.sales_stock ==
+                                                    true
+                                        "
+                                    >
+                                        <template v-if="data.item.stock > 0">
+                                            <span
+                                                class="badge rounded-pill bg-primary m-l-0"
+                                                >Stock
+                                                <template
+                                                    v-if="
+                                                        data.item.max_quantity
+                                                    "
+                                                >
+                                                    {{
+                                                        formatedStockPresentation(
+                                                            data.item,
+                                                            data.item.stock
+                                                        )
+                                                    }}
+                                                    <!-- {{
                                                                 parseFloat(
                                                                     data.item
                                                                         .stock /
@@ -123,55 +213,64 @@
                                                                             .max_quantity
                                                                 )
                                                             }} -->
-                                                        </template>
-                                                        <template v-else>
-                                                            {{ parseFloat(data.item.stock) }}
-                                                        </template>
-                                                    </span>
                                                 </template>
                                                 <template v-else>
-                                                    <span class="badge rounded-pill bg-danger m-l-0">
-                                                        Agotado
-                                                    </span>
+                                                    {{
+                                                        parseFloat(
+                                                            data.item.stock
+                                                        )
+                                                    }}
                                                 </template>
-                                            </div>
-                                        </div>
+                                            </span>
+                                        </template>
+                                        <template v-else>
+                                            <span
+                                                class="badge rounded-pill bg-danger m-l-0"
+                                            >
+                                                Agotado
+                                            </span>
+                                        </template>
                                     </div>
                                 </div>
-                                <div @click="nthing" v-if="data.types.length > 0" class="d-flex justify-content-end"
-                                    style="padding-right: 10px; margin-top: 5px">
-                                    <el-dropdown @command="clickCommand">
-                                        <span class="el-dropdown-link">
-                                            Precios<i class="el-icon-arrow-down el-icon--right"></i>
-                                        </span>
-                                        <el-dropdown-menu slot="dropdown">
-                                            <el-dropdown-item v-for="(type, idx) in data.types" :key="idx"
-                                                :command="type">
-                                                {{ formatDescriptionType(type) }}
-                                            </el-dropdown-item>
-                                        </el-dropdown-menu>
-                                    </el-dropdown>
-                                </div>
                             </div>
-                        </el-tooltip>
+                        </div>
+                        <div
+                            @click="nthing"
+                            v-if="data.types.length > 0"
+                            class="d-flex justify-content-end"
+                            style="padding-right: 10px; margin-top: 5px"
+                        >
+                            <el-dropdown @command="clickCommand">
+                                <span class="el-dropdown-link">
+                                    Precios<i
+                                        class="el-icon-arrow-down el-icon--right"
+                                    ></i>
+                                </span>
+                                <el-dropdown-menu slot="dropdown">
+                                    <el-dropdown-item
+                                        v-for="(type, idx) in data.types"
+                                        :key="idx"
+                                        :command="type"
+                                    >
+                                        {{ formatDescriptionType(type) }}
+                                    </el-dropdown-item>
+                                </el-dropdown-menu>
+                            </el-dropdown>
+                        </div>
                     </div>
+                </el-tooltip>
+            </div>
         </div>
         <div class="row">
-            <div class="col-6"><el-button @click="close">Cancel</el-button></div>
-            
-            
-            
+            <div class="col-6">
+                <el-button @click="close">Cancel</el-button>
+            </div>
         </div>
-
     </el-dialog>
-
-
-
 </template>
 
 <script>
-    
-export default ({
+export default {
     props: [
         "foods",
         "configuration",
@@ -184,7 +283,7 @@ export default ({
         "showDialogViewItems",
         "selectOption"
     ],
-    data(){
+    data() {
         return {
             selectCategory: 0,
             activeName: "menu",
@@ -226,25 +325,25 @@ export default ({
                             slidesToShow: 3,
                             slidesToScroll: 3,
                             infinite: true,
-                            dots: true,
-                        },
+                            dots: true
+                        }
                     },
                     {
                         breakpoint: 600,
                         settings: {
                             slidesToShow: 2,
                             slidesToScroll: 2,
-                            initialSlide: 2,
-                        },
+                            initialSlide: 2
+                        }
                     },
                     {
                         breakpoint: 480,
                         settings: {
                             slidesToShow: 1,
-                            slidesToScroll: 1,
-                        },
-                    },
-                ],
+                            slidesToScroll: 1
+                        }
+                    }
+                ]
             },
             settings_tables: {
                 dots: true,
@@ -265,34 +364,34 @@ export default ({
                             slidesToShow: 2,
                             slidesToScroll: 2,
                             infinite: true,
-                            dots: true,
-                        },
+                            dots: true
+                        }
                     },
                     {
                         breakpoint: 600,
                         settings: {
                             slidesToShow: 2,
                             slidesToScroll: 2,
-                            initialSlide: 2,
-                        },
+                            initialSlide: 2
+                        }
                     },
                     {
                         breakpoint: 480,
                         settings: {
                             slidesToShow: 2,
-                            slidesToScroll: 2,
-                        },
-                    },
-                ],
+                            slidesToScroll: 2
+                        }
+                    }
+                ]
             },
             screenWidth: 0,
-            input_itemMobil:"",
+            input_itemMobil: "",
             categoryChild: ""
-        }
+        };
     },
     mounted() {
         this.screenWidth = window.innerWidth;
-        window.addEventListener('resize', this.handleResize);
+        window.addEventListener("resize", this.handleResize);
 
         if (this.foods.length > 0) {
             this.loading = false;
@@ -301,7 +400,7 @@ export default ({
     watch: {
         foods(__, _) {
             this.updateListFoods();
-        },
+        }
     },
     created() {
         this.ordenItems = [];
@@ -310,26 +409,26 @@ export default ({
     },
 
     methods: {
-        UpdateparentCategory(){
-           this.$emit("update:category",this.categoryChild)
-            this.$emit('data-received', this.input_itemMobil)
+        UpdateparentCategory() {
+            this.$emit("update:category", this.categoryChild);
+            this.$emit("data-received", this.input_itemMobil);
         },
-        
-        emitData(){
+
+        emitData() {
             //this.$emit("update:category")
-            if(this.input_itemMobil.length > 2){
-                this.$emit('data-received', this.input_itemMobil)
+            if (this.input_itemMobil.length > 2) {
+                this.$emit("data-received", this.input_itemMobil);
             }
-            
         },
-        
+
         handleResize() {
-            this.screenWidth = window.innerWidth
+            this.screenWidth = window.innerWidth;
         },
-        nthing() { },
+        nthing() {},
         getDefaultPrice(type) {
             let listPricesDescription = ["price1", "price2", "price3"];
-            let currentPriceIndx = listPricesDescription[type.price_default - 1];
+            let currentPriceIndx =
+                listPricesDescription[type.price_default - 1];
             let price = type[currentPriceIndx];
             if (type.total == null) {
                 // this.$toast.error(
@@ -349,24 +448,23 @@ export default ({
 
         clickCommand(type) {
             let idxFood = this.listFoods.findIndex(
-                (food) => food.item.id == type.item_id
+                food => food.item.id == type.item_id
             );
             if (idxFood >= 0) {
                 this.addFood(idxFood, type);
             }
         },
         updateListFoods() {
-            this.listFoods = this.foods.map((f) => {
+            this.listFoods = this.foods.map(f => {
                 return { ...f, select: false };
             });
-
         },
         formatedStockPresentation(
             {
                 max_quantity,
                 item_unit_types,
 
-                unit_type,
+                unit_type
             },
             stock
         ) {
@@ -376,7 +474,7 @@ export default ({
             let text = `${general} ${unit_type.id}`;
             if (part != 0) {
                 let item_unit = item_unit_types.find(
-                    (i) => Number(i.quantity_unit) == Number(max_quantity)
+                    i => Number(i.quantity_unit) == Number(max_quantity)
                 );
                 if (item_unit) {
                     text += ` ${part * max_quantity} ${item_unit.unit_type.id}`;
@@ -390,7 +488,7 @@ export default ({
             this.$emit("changePage", currentPage);
         },
         deleteOrden(id) {
-            this.ordenItems = this.ordenItems.filter((o) => o.id != id);
+            this.ordenItems = this.ordenItems.filter(o => o.id != id);
         },
         calculateOrden() {
             // this.$refs.ordenRef.calculateTotal();
@@ -419,21 +517,23 @@ export default ({
                 this.$toast.error("No puede agregar productos a esta orden.");
                 return;
             }
-            this.selectedFood = JSON.parse(JSON.stringify(this.listFoods[index]));
+            this.selectedFood = JSON.parse(
+                JSON.stringify(this.listFoods[index])
+            );
 
             if (!this.selectedFood) return;
 
             if (
                 Number(this.selectedFood.item.stock) <= 0 &&
-                this.configuration.sales_stock == true
-                 && !quotation_stock
-                    && this.selectedFood.item.unit_type_id != 'ZZ'
+                this.configuration.sales_stock == true &&
+                !quotation_stock &&
+                this.selectedFood.item.unit_type_id != "ZZ"
             ) {
                 this.$toast.warning("Stock insuficiente");
                 return;
             }
             let foodFound = this.localOrden.filter(
-                (f) => f.id == this.selectedFood.id
+                f => f.id == this.selectedFood.id
             );
 
             if (foodFound.length != 0) {
@@ -453,8 +553,9 @@ export default ({
                         return;
                     } else {
                         if (type) {
-                            if (foodFound.some((i) => i.type_id == type.id)) {
-                                let message = "Producto con serie, ya  agregado";
+                            if (foodFound.some(i => i.type_id == type.id)) {
+                                let message =
+                                    "Producto con serie, ya  agregado";
                                 this.$toast.warning(message);
                                 return;
                             }
@@ -470,7 +571,12 @@ export default ({
                 } else {
                     qty += 1;
                 }
-                if (this.configuration.sales_stock == true && this.selectedFood.item.is_set == 0 && !quotation_stock && this.selectedFood.item.unit_type_id != 'ZZ') {
+                if (
+                    this.configuration.sales_stock == true &&
+                    this.selectedFood.item.is_set == 0 &&
+                    !quotation_stock &&
+                    this.selectedFood.item.unit_type_id != "ZZ"
+                ) {
                     if (qty > Number(this.selectedFood.item.stock)) {
                         this.$toast.warning("Limite de stock alcanzado");
                         return;
@@ -479,9 +585,14 @@ export default ({
             } else {
                 if (type) {
                     let qty = type.quantity_unit;
-                    if (this.configuration.sales_stock == true && this.selectedFood.item.is_set == 0 && !quotation_stock && this.selectedFood.item.unit_type_id != 'ZZ') {
+                    if (
+                        this.configuration.sales_stock == true &&
+                        this.selectedFood.item.is_set == 0 &&
+                        !quotation_stock &&
+                        this.selectedFood.item.unit_type_id != "ZZ"
+                    ) {
                         let stock = Number(this.selectedFood.item.stock);
-                        if ( qty > stock) {
+                        if (qty > stock) {
                             this.$toast.warning("Limite de stock alcanzado");
                             return;
                         }
@@ -494,22 +605,27 @@ export default ({
                 food: this.selectedFood,
                 observation: null,
                 price: this.selectedFood.price,
-                quantity: !!this.selectedFood.item.series_enabled ? 0 : 1,
+                quantity: !!this.selectedFood.item.series_enabled ? 0 : 1
             };
-            this.$emit("insertOrden", this.currentFood, this.selectedFood.id, type);
+            this.$emit(
+                "insertOrden",
+                this.currentFood,
+                this.selectedFood.id,
+                type
+            );
             this.$notify({
                 title: this.currentFood.food.description.toLowerCase(),
                 duration: 800,
                 iconClass: "el-icon-food",
                 message: "Agregado con èxito",
-                position: "bottom-left",
+                position: "bottom-left"
             });
 
             this.currentFood = {
                 food: null,
                 observation: null,
                 quantity: 0,
-                price: 0,
+                price: 0
             };
             this.selectedFood = null;
             this.item = null;
@@ -518,7 +634,7 @@ export default ({
             //this.$forceUpdate();
         },
         setFalse() {
-            this.listFoods = this.listFoods.map((f) => {
+            this.listFoods = this.listFoods.map(f => {
                 f.select = false;
                 return f;
             });
@@ -543,7 +659,7 @@ export default ({
                 this.listFoods = this.foods;
             } else {
                 this.listFoods = _.filter(this.foods, {
-                    category_food_id: value,
+                    category_food_id: value
                 });
             }
         },
@@ -551,12 +667,12 @@ export default ({
             !this.allFalse && this.setFalse();
             if (value) {
                 if (optionsSelected == "Descripcion") {
-                    this.listFoods = this.foods.filter((f) =>
+                    this.listFoods = this.foods.filter(f =>
                         f.description.toLowerCase().includes(value)
                     );
                 } else {
                     //this.listFoods=_.filter(this.foods,{'code':value})
-                    this.listFoods = this.foods.filter((ff) =>
+                    this.listFoods = this.foods.filter(ff =>
                         ff.code.toLowerCase().includes(value)
                     );
                 }
@@ -579,13 +695,13 @@ export default ({
                 this.ordenId = this.table.orden.id;
                 setTimeout(() => this.calculateOrden(), 50);
             }
-            if (!this.categories.some((c) => c.id == 0)) {
+            if (!this.categories.some(c => c.id == 0)) {
                 this.categories.unshift({
                     id: 0,
-                    description: "todos",
+                    description: "todos"
                 });
             }
-            this.listFoods = this.foods.map((f) => ({ ...f, select: false }));
+            this.listFoods = this.foods.map(f => ({ ...f, select: false }));
             this.title = `Mesa N°${this.table.number}`;
         },
         close() {
@@ -593,10 +709,7 @@ export default ({
         },
         clear_input() {
             this.input_itemMobil = "";
-        },
-        
-    },
-})
+        }
+    }
+};
 </script>
-
-

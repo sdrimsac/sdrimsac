@@ -19,4 +19,9 @@ class VoidedDocument extends ModelTenant
     {
         return $this->belongsTo(Document::class);
     }
+
+    public function voided()
+    {
+        return $this->belongsTo(Voided::class);
+    }
 }
