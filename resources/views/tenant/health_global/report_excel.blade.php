@@ -251,6 +251,7 @@
                             <th class="celda">Nro_ini</th>
                             <th class="celda">Nro_fin</th>
                             <th class="celda">Anulados</th>
+                            <th class="celda">Rechazados</th>
                             <th class="celda_right">Importe total</th>
                         </tr>
                     </thead>
@@ -265,6 +266,8 @@
                                         count($record['anulates_voided_ft']) > 0
                                             ? join(',', $record['anulates_voided_ft'])
                                             : '';
+                                    $rejected_ft =
+                                        count($record['rejected_ft']) > 0 ? join(',', $record['rejected_ft']) : '';
                                 @endphp
                                 <tr>
                                     <td class="celda">{{ $record['is_service'] == 1 ? 'Servicios' : 'Medicamentos' }}
@@ -276,6 +279,7 @@
                                     <td class="celda">{{ $nro_ini_ft }}</td>
                                     <td class="celda">{{ $nro_fin_ft }}</td>
                                     <td class="celda">{{ $anulates_voided_ft }}</td>
+                                    <td class="celda">{{ $rejected_ft }}</td>
                                     <td class=" celda_right">{{ $record['ft_total'] }}</td>
                                 </tr>
                             @endif
@@ -288,6 +292,8 @@
                                         count($record['anulates_voided_bv']) > 0
                                             ? join(',', $record['anulates_voided_bv'])
                                             : '';
+                                    $rejected_bv =
+                                        count($record['rejected_bv']) > 0 ? join(',', $record['rejected_bv']) : '';
                                 @endphp
                                 <tr>
                                     <td class="celda">{{ $record['is_service'] == 1 ? 'Servicios' : 'Medicamentos' }}
@@ -299,6 +305,7 @@
                                     <td class="celda">{{ $nro_ini_bv }}</td>
                                     <td class="celda">{{ $nro_fin_bv }}</td>
                                     <td class="celda">{{ $anulates_voided_bv }}</td>
+                                    <td class="celda">{{ $rejected_bv }}</td>
                                     <td class=" celda_right">{{ $record['bv_total'] }}</td>
 
                                 </tr>
@@ -314,13 +321,14 @@
                                     <td class="celda">-</td>
                                     <td class="celda">-</td>
                                     <td class="celda"></td>
+                                    <td class="celda"></td>
                                     <td class=" celda_right">0</td>
                                 </tr>
                             @endif
                         @endforeach
                         @if (count($records_service) > 0)
                             <tr>
-                                <td class="celda" colspan="8">
+                                <td class="celda" colspan="9">
                                     <strong>
                                         Total Servicios
                                     </strong>
@@ -343,6 +351,8 @@
                                         count($record['anulates_voided_ft']) > 0
                                             ? join(',', $record['anulates_voided_ft'])
                                             : '';
+                                    $rejected_ft =
+                                        count($record['rejected_ft']) > 0 ? join(',', $record['rejected_ft']) : '';
                                 @endphp
                                 <tr>
                                     <td class="celda">{{ $record['is_service'] == 1 ? 'Servicios' : 'Medicamentos' }}
@@ -354,6 +364,7 @@
                                     <td class="celda">{{ $nro_ini_ft }}</td>
                                     <td class="celda">{{ $nro_fin_ft }}</td>
                                     <td class="celda">{{ $anulates_voided_ft }}</td>
+                                    <td class="celda">{{ $rejected_ft }}</td>
                                     <td class=" celda_right">{{ $record['ft_total'] }}</td>
                                 </tr>
                             @endif
@@ -366,6 +377,8 @@
                                         count($record['anulates_voided_bv']) > 0
                                             ? join(',', $record['anulates_voided_bv'])
                                             : '';
+                                    $rejected_bv =
+                                        count($record['rejected_bv']) > 0 ? join(',', $record['rejected_bv']) : '';
                                 @endphp
                                 <tr>
                                     <td class="celda">{{ $record['is_service'] == 1 ? 'Servicios' : 'Medicamentos' }}
@@ -377,6 +390,7 @@
                                     <td class="celda">{{ $nro_ini_bv }}</td>
                                     <td class="celda">{{ $nro_fin_bv }}</td>
                                     <td class="celda">{{ $anulates_voided_bv }}</td>
+                                    <td class="celda">{{ $rejected_bv }}</td>
                                     <td class=" celda_right">{{ $record['bv_total'] }}</td>
 
                                 </tr>
@@ -392,13 +406,14 @@
                                     <td class="celda">-</td>
                                     <td class="celda">-</td>
                                     <td class="celda"></td>
+                                    <td class="celda"></td>
                                     <td class=" celda_right">0</td>
                                 </tr>
                             @endif
                         @endforeach
                         @if (count($records_medicine) > 0)
                             <tr>
-                                <td class="celda" colspan="8">
+                                <td class="celda" colspan="9">
                                     <strong>
                                         Total Medicamentos
                                     </strong>
@@ -411,7 +426,7 @@
                             </tr>
                         @endif
                         <tr>
-                            <td class="celda" colspan="8">
+                            <td class="celda" colspan="9">
                                 <strong>
                                     Total General
                                 </strong>

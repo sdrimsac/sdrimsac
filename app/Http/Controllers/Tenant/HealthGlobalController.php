@@ -86,6 +86,8 @@ class HealthGlobalController
 
         foreach ($establishments as $establishment) {
             $is_service = $establishment->is_service;
+            $rejected_ft = [];
+            $rejected_bv = [];
             $anulates_voided_ft = [];
             $anulates_voided_bv = [];
             $anulates_voided = VoidedDocument::whereHas('voided', function ($query) use ($month, $year) {
@@ -111,6 +113,7 @@ class HealthGlobalController
                 ->where('document_type_id', '01')
                 ->where('state_type_id', '11')
                 ->get();
+
             foreach ($ft_anulate as $ft) {
                 $series = $ft->series;
                 $number = $ft->number;
@@ -119,6 +122,35 @@ class HealthGlobalController
                     $anulates_voided_ft[] = $document_full_number;
                 }
             }
+            $ft_rejected = Document::select(['series', 'number'])->where('establishment_id', $establishment->id)
+                ->whereMonth('date_of_issue', $month)
+                ->whereYear('date_of_issue', $year)
+                ->where('document_type_id', '01')
+                ->where('state_type_id', '09')
+                ->get();
+            foreach ($ft_rejected as $ft) {
+                $series = $ft->series;
+                $number = $ft->number;
+                $document_full_number = $series . '-' . $number;
+                if (!in_array($document_full_number, $rejected_ft)) {
+                    $rejected_ft[] = $document_full_number;
+                }
+            }
+            $bv_rejected = Document::select(['series', 'number'])->where('establishment_id', $establishment->id)
+                ->whereMonth('date_of_issue', $month)
+                ->whereYear('date_of_issue', $year)
+                ->where('document_type_id', '03')
+                ->where('state_type_id', '09')
+                ->get();
+            foreach ($bv_rejected as $bv) {
+                $series = $bv->series;
+                $number = $bv->number;
+                $document_full_number = $series . '-' . $number;
+                if (!in_array($document_full_number, $rejected_bv)) {
+                    $rejected_bv[] = $document_full_number;
+                }
+            }
+
             $ft_total = Document::where('establishment_id', $establishment->id)
                 ->where('state_type_id', '05')
                 ->whereMonth('date_of_issue', $month)
@@ -178,6 +210,8 @@ class HealthGlobalController
             $has_bv_info = $first_bv || $last_bv || $bv_total || count($anulates_voided_bv) > 0;
             $has_ft_info = $first_ft || $last_ft || $ft_total || count($anulates_voided_ft) > 0;
             $records[] = [
+                'rejected_ft' => $rejected_ft,
+                'rejected_bv' => $rejected_bv,
                 'has_bv_info' => $has_bv_info,
                 'has_ft_info' => $has_ft_info,
                 'establishment_id' => $establishment->id,
