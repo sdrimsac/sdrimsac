@@ -9,12 +9,14 @@ use Modules\Restaurant\Models\Table;
 use App\Http\Resources\Tenant\UserCollection;
 use App\Models\Tenant\Cash;
 use App\Models\Tenant\Company;
+use App\Models\Tenant\Configuration;
 use App\Models\Tenant\Establishment;
 use App\Models\Tenant\ItemWarehouse;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Modules\Restaurant\Http\Requests\TableRequest;
 use Modules\Restaurant\Http\Requests\WorkerRequest;
+use Modules\Restaurant\Models\WorkersType;
 
 class WorkerController extends Controller
 {
@@ -92,6 +94,7 @@ class WorkerController extends Controller
     }
     public function records()
     {
+        $configuration =  Configuration::first();
 
         $user_type = auth()->user()->type;
         $establishment_id = auth()->user()->establishment_id;
@@ -102,8 +105,10 @@ class WorkerController extends Controller
         }
         if ($user_type == 'seller') {
             $records = $records->where('type', '<>', 'superadmin')
-                ->where('type', '<>', 'admin')
-                ->where('establishment_id', $establishment_id);;
+                ->where('type', '<>', 'admin');
+            if ($configuration->health_network) {
+                $records =  $records->where('establishment_id', $establishment_id);
+            }
         }
         return new UserCollection($records->paginate(150));
     }

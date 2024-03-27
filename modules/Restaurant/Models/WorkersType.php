@@ -16,4 +16,7 @@ class WorkersType extends ModelTenant
         'active',
 
     ];
+
+
+    
 }
