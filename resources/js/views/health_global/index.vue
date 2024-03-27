@@ -166,7 +166,7 @@ export default {
                 id: null,
                 user_id: null,
                 date_open: moment().format("YYYY-MM-DD"),
-                type: "pdf",
+                // type: "pdf",
                 type_box: null,
                 period: "month",
                 date_start: null,
@@ -242,6 +242,7 @@ export default {
             );
         },
         getQueryParameters(type) {
+            console.log("🚀 ~ getQueryParameters ~ type:", type)
             return queryString.stringify({
                 page: this.pagination.current_page,
                 limit: this.limit,
@@ -289,6 +290,7 @@ export default {
             // this.loadAll();
         },
         clickDownload(type) {
+        console.log("🚀 ~ clickDownload ~ type:", type)
 
             this.getRecords(type);
             return;

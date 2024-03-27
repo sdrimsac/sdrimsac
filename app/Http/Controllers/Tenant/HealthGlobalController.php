@@ -179,6 +179,15 @@ class HealthGlobalController
             ];
         }
 
+        //order records first is_service and then by establishment_id
+        $filteredRecords = array_filter($records, function ($record) {
+            return $record['is_service'] == 1;
+        });
+
+        usort($filteredRecords, function ($a, $b) {
+            return $a['establishment_id'] <=> $b['establishment_id'];
+        });
+
         return $records;
     }
 }
