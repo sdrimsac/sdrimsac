@@ -3,6 +3,7 @@
 namespace Modules\Inventory\Providers;
 
 use App\Models\Tenant\Configuration;
+use App\Models\Tenant\Establishment;
 use App\Models\Tenant\InventoryKardexDetail;
 use App\Models\Tenant\Item;
 use App\Models\Tenant\Warehouse;
@@ -80,6 +81,20 @@ class InventoryChangeServiceProvider extends ServiceProvider
             }
 
             $warehouse = ($item->warehouse_id) ? $this->findWarehouse($this->findWarehouseById($item->warehouse_id)->establishment_id) : $this->findWarehouse();
+            if ($configuration->health_network) {
+                $is_service = (bool) $item->unit_type_id == 'ZZ';
+                if ($is_service) {
+                    $establishment = Establishment::where('is_service', true)->first();
+                } else {
+                    $establishment = Establishment::where('is_product', true)->first();
+                }
+                if ($establishment) {
+                    $warehouse_found  = Warehouse::where('establishment_id', $establishment->id)->first();
+                    if ($warehouse_found) {
+                        $warehouse = $warehouse_found;
+                    }
+                }
+            }
             if (!$item->is_set) {
                 $this->createInitialInventory($item->id, $item->stock, $warehouse->id);
             } else {

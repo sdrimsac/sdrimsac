@@ -229,7 +229,6 @@ class DocumentInput
                 $warehouse_id_default = $warehouse->id;
             }
         }
-        dump($warehouse_id_default." warehouse_id_default");
         $variation = Functions::valueKeyInArray($inputs, 'variation', false);
         if (array_key_exists('items', $inputs)) {
 
