@@ -698,6 +698,7 @@
                                             ></el-switch>
                                         </div>
                                     </div>
+
                                     <div class="col-md-6 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
@@ -714,7 +715,22 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-
+                                    <div class="col-md-6 mt-4">
+                                        <div class="form-group">
+                                            <label class="control-label w-100"
+                                                >Mostrar stock caja</label
+                                            >
+                                            <el-switch
+                                                v-model="form.show_stock_cash"
+                                                active-text="Si"
+                                                inactive-text="No"
+                                                @change="
+                                                    submit();
+                                                    stock_control();
+                                                "
+                                            ></el-switch>
+                                        </div>
+                                    </div>
                                     <div class="col-md-6 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"

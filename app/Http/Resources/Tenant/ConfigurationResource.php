@@ -15,6 +15,7 @@ class ConfigurationResource extends JsonResource
     public function toArray($request)
     {
         return [
+            'show_stock_cash' => (bool)$this->show_stock_cash,
             'turn_end' => $this->turn_end,
             'automatic_principal_cash' => (bool) $this->automatic_principal_cash,
             'sale_note_credit_penalty' => $this->sale_note_credit_penalty,

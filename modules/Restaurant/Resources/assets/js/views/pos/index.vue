@@ -1323,7 +1323,7 @@
                                                                                     .item
                                                                                     .unit_type_id !=
                                                                                     'ZZ'
-                                                                                    || configuration.sales_stock == true
+                                                                                    || configuration.show_stock_cash == true
                                                                         "
                                                                     >
                                                                         <template

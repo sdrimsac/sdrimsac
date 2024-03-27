@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Config;
 class Configuration extends ModelTenant
 {
     protected $fillable = [
+        'show_stock_cash',
         'turn_end',
         'automatic_principal_cash',
         'sale_note_credit_penalty',
@@ -170,6 +171,7 @@ class Configuration extends ModelTenant
 
     ];
     protected $casts = [
+        'show_stock_cash' => 'boolean',
         'automatic_principal_cash' => 'boolean',
         'sale_note_credit_penalty' => 'boolean',
         'sale_note_credit_confirm' => 'boolean',
@@ -286,6 +288,7 @@ class Configuration extends ModelTenant
         // $skins = Skin::all();
         $skins = [];
         return [
+            'show_stock_cash' => (bool)$this->show_stock_cash,
             'turn_end' => $this->turn_end,
             'automatic_principal_cash' =>  (bool)$this->automatic_principal_cash,
             'sale_note_credit_penalty' => (bool) $this->sale_note_credit_penalty,

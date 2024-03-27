@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Modules\Report\Exports\HealthGlobalExport;
 use Barryvdh\DomPDF\Facade as PDF;
+
 class HealthGlobalController
 {
     public function index()
@@ -24,51 +25,49 @@ class HealthGlobalController
         $type = $request->type;
         $records = $this->getRecords($month);
         $company = Company::first();
-        if($type == 'excel'){
-        $export = (new HealthGlobalExport)
-            ->records($records)
-            ->company($company)
-            ->month($month);
-        //remove all files in the folder
-        $files = glob(storage_path('app/public/global_reports/*'));
-        foreach ($files as $file) {
-            if (is_file($file)) {
-                unlink($file);
+        if ($type == 'excel') {
+            $export = (new HealthGlobalExport)
+                ->records($records)
+                ->company($company)
+                ->month($month);
+            //remove all files in the folder
+            $files = glob(storage_path('app/public/global_reports/*'));
+            foreach ($files as $file) {
+                if (is_file($file)) {
+                    unlink($file);
+                }
             }
-        }
-        $filename = 'Reporte_Global_Salud_' . Carbon::now()->format('Y_m_d_H_i_s') . '.xlsx';
-        $export->store('global_reports/' . $filename, 'public');
+            $filename = 'Reporte_Global_Salud_' . Carbon::now()->format('Y_m_d_H_i_s') . '.xlsx';
+            $export->store('global_reports/' . $filename, 'public');
 
 
-        //get the url and returnet to the frontend
-        $url = asset('storage/global_reports/' . $filename);
-        return [
-            'success' => true,
-            'data' => $url,
-        ];
-
-    }else{
-        $pdf = PDF::loadView('tenant.health_global.report_excel', compact("records", "company","month"))->setPaper('a4', 'landscape');
-        //  $pdf->stream('Listado_Clientes' . date('YmdHis') . '.pdf');
-        //save the pdf in the storage
-        //remove all files in the folder
-        $files = glob(storage_path('app/public/global_reports/*'));
-        foreach ($files as $file) {
-            if (is_file($file)) {
-                unlink($file);
+            //get the url and returnet to the frontend
+            $url = asset('storage/global_reports/' . $filename);
+            return [
+                'success' => true,
+                'data' => $url,
+            ];
+        } else {
+            $pdf = PDF::loadView('tenant.health_global.report_excel', compact("records", "company", "month"))->setPaper('a4', 'landscape');
+            //  $pdf->stream('Listado_Clientes' . date('YmdHis') . '.pdf');
+            //save the pdf in the storage
+            //remove all files in the folder
+            $files = glob(storage_path('app/public/global_reports/*'));
+            foreach ($files as $file) {
+                if (is_file($file)) {
+                    unlink($file);
+                }
             }
+
+            $filename = 'Reporte_Global_Salud_' . Carbon::now()->format('Y_m_d_H_i_s') . '.pdf';
+            $pdf->save(storage_path('app/public/global_reports/' . $filename));
+            //get the url and returnet to the frontend
+            $url = asset('storage/global_reports/' . $filename);
+            return [
+                'success' => true,
+                'data' => $url,
+            ];
         }
-
-        $filename = 'Reporte_Global_Salud_' . Carbon::now()->format('Y_m_d_H_i_s') . '.pdf';
-        $pdf->save(storage_path('app/public/global_reports/' . $filename));
-        //get the url and returnet to the frontend
-        $url = asset('storage/global_reports/' . $filename);
-        return [
-            'success' => true,
-            'data' => $url,
-        ];
-
-    }
         // return [
         //     'success' => true,
         //     'data' => $records,
@@ -121,6 +120,7 @@ class HealthGlobalController
                 }
             }
             $ft_total = Document::where('establishment_id', $establishment->id)
+                ->where('state_type_id', '05')
                 ->whereMonth('date_of_issue', $month)
                 ->whereYear('date_of_issue', $year)
                 ->where('document_type_id', '01')
@@ -140,6 +140,7 @@ class HealthGlobalController
                 }
             }
             $bv_total = Document::where('establishment_id', $establishment->id)
+                ->where('state_type_id', '05')
                 ->whereMonth('date_of_issue', $month)
                 ->whereYear('date_of_issue', $year)
                 ->where('document_type_id', '03')
