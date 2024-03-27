@@ -29,7 +29,13 @@ class HealthGlobalController
             ->records($records)
             ->company($company)
             ->month($month);
-
+        //remove all files in the folder
+        $files = glob(storage_path('app/public/global_reports/*'));
+        foreach ($files as $file) {
+            if (is_file($file)) {
+                unlink($file);
+            }
+        }
         $filename = 'Reporte_Global_Salud_' . Carbon::now()->format('Y_m_d_H_i_s') . '.xlsx';
         $export->store('global_reports/' . $filename, 'public');
 
@@ -45,6 +51,14 @@ class HealthGlobalController
         $pdf = PDF::loadView('tenant.health_global.report_excel', compact("records", "company","month"))->setPaper('a4', 'landscape');
         //  $pdf->stream('Listado_Clientes' . date('YmdHis') . '.pdf');
         //save the pdf in the storage
+        //remove all files in the folder
+        $files = glob(storage_path('app/public/global_reports/*'));
+        foreach ($files as $file) {
+            if (is_file($file)) {
+                unlink($file);
+            }
+        }
+
         $filename = 'Reporte_Global_Salud_' . Carbon::now()->format('Y_m_d_H_i_s') . '.pdf';
         $pdf->save(storage_path('app/public/global_reports/' . $filename));
         //get the url and returnet to the frontend
