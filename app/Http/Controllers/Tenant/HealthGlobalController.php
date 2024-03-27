@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Tenant;
 use App\Models\Tenant\Company;
 use App\Models\Tenant\Document;
 use App\Models\Tenant\Establishment;
+use App\Models\Tenant\Note;
 use App\Models\Tenant\VoidedDocument;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -86,6 +87,8 @@ class HealthGlobalController
 
         foreach ($establishments as $establishment) {
             $is_service = $establishment->is_service;
+            $notes_ft = [];
+            $notes_bv = [];
             $rejected_ft = [];
             $rejected_bv = [];
             $anulates_voided_ft = [];
@@ -136,6 +139,20 @@ class HealthGlobalController
                     $rejected_ft[] = $document_full_number;
                 }
             }
+            $fv_notes = Note::where('note_type', 'credit')->whereHas('affected_document', function ($query) use ($establishment, $month, $year) {
+                $query->where('establishment_id', $establishment->id)
+                    ->whereMonth('date_of_issue', $month)
+                    ->where('document_type_id', '01')
+                    ->whereYear('date_of_issue', $year);
+            })->get();
+            foreach ($fv_notes as $note) {
+                $series = $note->document->series;
+                $number = $note->document->number;
+                $document_full_number = $series . '-' . $number;
+                if (!in_array($document_full_number, $notes_ft)) {
+                    $notes_ft[] = $document_full_number;
+                }
+            }
             $bv_rejected = Document::select(['series', 'number'])->where('establishment_id', $establishment->id)
                 ->whereMonth('date_of_issue', $month)
                 ->whereYear('date_of_issue', $year)
@@ -148,6 +165,21 @@ class HealthGlobalController
                 $document_full_number = $series . '-' . $number;
                 if (!in_array($document_full_number, $rejected_bv)) {
                     $rejected_bv[] = $document_full_number;
+                }
+            }
+            $bv_notes = Note::where('note_type', 'credit')->whereHas('affected_document', function ($query) use ($establishment, $month, $year) {
+                $query->where('establishment_id', $establishment->id)
+                    ->whereMonth('date_of_issue', $month)
+                    ->where('document_type_id', '03')
+                    ->whereYear('date_of_issue', $year);
+            })->get();
+
+            foreach ($bv_notes as $note) {
+                $series = $note->document->series;
+                $number = $note->document->number;
+                $document_full_number = $series . '-' . $number;
+                if (!in_array($document_full_number, $notes_bv)) {
+                    $notes_bv[] = $document_full_number;
                 }
             }
 
@@ -210,6 +242,8 @@ class HealthGlobalController
             $has_bv_info = $first_bv || $last_bv || $bv_total || count($anulates_voided_bv) > 0;
             $has_ft_info = $first_ft || $last_ft || $ft_total || count($anulates_voided_ft) > 0;
             $records[] = [
+                'notes_ft' => $notes_ft,
+                'notes_bv' => $notes_bv,
                 'rejected_ft' => $rejected_ft,
                 'rejected_bv' => $rejected_bv,
                 'has_bv_info' => $has_bv_info,
