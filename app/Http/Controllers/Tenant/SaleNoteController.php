@@ -1061,7 +1061,9 @@ class SaleNoteController extends Controller
                 $this->setFilename();
                 $this->createPdf($this->sale_note, "a4", $this->sale_note->filename, $boxes);
                 $paid = $request->paid;
-
+                if (auth()->user()->type != 'admin') {
+                    event(new PrintEvent($this->sale_note->id, "80", $request->printerOn, 0, [], true));
+                }
                 if (count($request->payments) > 0) {
                     $total_payment = 0;
 
@@ -1154,9 +1156,7 @@ class SaleNoteController extends Controller
 
 
             $establishment = Establishment::where('id', $this->sale_note->establishment_id)->first();
-            if (auth()->user()->type != 'admin') {
-                event(new PrintEvent($this->sale_note->id, "80", $request->printerOn, 0, [], true));
-            }
+        
             return [
                 'success' => true,
                 'data' => [

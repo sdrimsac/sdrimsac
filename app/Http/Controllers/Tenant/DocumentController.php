@@ -1090,6 +1090,8 @@ class DocumentController extends Controller
                 }
             }
         }
+        event(new PrintEvent($document->id, $document->document_type_id, $request->printerOn, 0, [], true));
+
         if ($request->orden_id != null) {
             $Orden = Orden::FindOrFail($request->orden_id);
             $Orden->document_id = $document->id;
@@ -1222,7 +1224,6 @@ class DocumentController extends Controller
             $quotation->save();
         }
         $establishment = Establishment::where('id', $document->establishment_id)->first();
-        event(new PrintEvent($document->id, $document->document_type_id, $request->printerOn, 0, [], true));
         return [
             'success' => true,
             'data' => [
