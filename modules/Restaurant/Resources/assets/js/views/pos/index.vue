@@ -1315,15 +1315,16 @@
                                                                     </div>
                                                                     <div
                                                                         v-if="
-                                                                            data
+                                                                            (data
                                                                                 .item
                                                                                 .is_set ==
                                                                                 0 &&
                                                                                 data
                                                                                     .item
                                                                                     .unit_type_id !=
-                                                                                    'ZZ'
-                                                                                    || configuration.show_stock_cash == true
+                                                                                    'ZZ') ||
+                                                                                configuration.show_stock_cash ==
+                                                                                    true
                                                                         "
                                                                     >
                                                                         <template
@@ -1765,6 +1766,7 @@
             :configuration="configuration"
             :showDialog.sync="showSaleNoteCreditCash"
         ></sale-note-credit-cash>
+        <iframe ref="pdfFrame" style="display: none;"></iframe>
     </div>
 </template>
 
@@ -4507,6 +4509,17 @@ export default {
             typeuser = null,
             printing = true
         ) {
+            let userAgent = navigator.userAgent;
+            let isFirefox = userAgent.indexOf("Firefox") != -1;
+            if (isFirefox) {
+                const pdfUrl = linkpdf;
+                const pdfFrame = this.$refs.pdfFrame;
+                pdfFrame.src = pdfUrl;
+                pdfFrame.onload = () => {
+                    pdfFrame.contentWindow.print();
+                };
+                return;
+            }
             let paperConfig = {
                 scaleContent: false
             };

@@ -370,6 +370,7 @@ export default {
                 let isFirefox = userAgent.indexOf("Firefox") != -1;
                 if (isFirefox) {
                     const pdfUrl = url;
+                    console.log("🚀 ~ printData ~ url:", url)
                     const pdfFrame = this.$refs.pdfFrame;
                     pdfFrame.src = pdfUrl;
                     pdfFrame.onload = () => {
