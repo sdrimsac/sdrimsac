@@ -199,10 +199,7 @@ class SaleNotePaymentController extends Controller
                 }
             }
         } else {
-            //en amount_to_paid deseo obtener la suma de la columna amount y la  columna penalty_amount
             $amount_to_paid = $payment->first()->amount;
-            // $amount_to_paid = $payment->sum('amount') + $payment->sum('penalty_amount');
-            // $amount_to_paid = $amount_to_paid->amount + $amount_to_paid->penalty;
             $amount_payed = $request->input('payment');
             $last_payment = Payment::where('sale_note_id', $request->sale_note_id)
                 ->where('paid', 0)
@@ -211,51 +208,13 @@ class SaleNotePaymentController extends Controller
                 $amount_payed += $last_payment->amount_paid;
             }
 
-            // $payments_cancel = intval($amount_payed / $amount_to_paid);
-
-            // $rest = $amount_payed - ($amount_to_paid * $payments_cancel);
-            // if ($rest > 0) {
-            //     $payments_cancel++;
-            // }
 
             $payments = Payment::where('sale_note_id', $request->sale_note_id)
                 ->where('paid', 0)
 
-                ->get(); //3 2
-            // $amount_payed_remain = $request->input('payment');
-            // if($rest!=0){
-            //     foreach ($payments as $key => $value) {
-            //         if ($key < $payments_cancel - 1) {
-            //             $value->paid = true;
-            //             $value->amount_paid = $value->amount + $value->penalty_amount;
-            //             $num_cuota = $key + 1;
-            //             $value->save();
-            //         } elseif ($key == $payments_cancel - 1) {
-            //             $value->paid = false;
-            //             $value->amount_paid = $rest;
-            //             $num_cuota = $key + 1;
-            //             $value->save();
-            //         } else {
-            //             // $value->paid = false;
-            //             // $value->amount_paid = $rest;
-            //             // $value->save();
-            //         }
-            //     }
-            // }else{
-            //     foreach ($payments as $key => $value) {
-            //         if ($key < $payments_cancel) {
-            //             $value->paid = true;
-            //             $value->amount_paid = $value->amount + $value->penalty_amount;
-            //             $num_cuota = $key + 1;
-            //             $value->save();
-            //         } else {
-            //             // $value->paid = false;
-            //             // $value->amount_paid = $rest;
-            //             // $value->save();
-            //         }
-            //     }
-            // }
-            $amount_payed_remain = $request->input('payment');
+                ->get(); 
+        
+            $amount_payed_remain = $amount_payed;
             foreach ($payments as $key => $value) {
                 if ($amount_payed_remain <= 0) {
                     break; // Si no hay fondos disponibles, salir del bucle

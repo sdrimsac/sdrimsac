@@ -79,7 +79,7 @@
                                         >
                                             <i class="fas fa-eye"></i>
                                         </button>
-                                        
+
                                         <button
                                             class="btn ml-1 btn-sm btn-primary"
                                             @click="editPin(row)"
@@ -100,7 +100,13 @@
                                         </button>
                                         <button
                                             type="button"
-                                            :class="`btn waves-effect waves-light btn-sm btn-${!row.active ? 'success' : 'danger'}`"
+                                            :class="
+                                                `btn waves-effect waves-light btn-sm btn-${
+                                                    !row.active
+                                                        ? 'success'
+                                                        : 'danger'
+                                                }`
+                                            "
                                             @click.prevent="clickDelete(row.id)"
                                         >
                                             {{
@@ -116,6 +122,7 @@
                     </div>
                 </div>
                 <create-form
+                    :configuration="configuration"
                     :showDialog.sync="showDialog"
                     :areas="areas"
                     :recordId="recordId"
@@ -126,23 +133,31 @@
                 ></create-form>
             </div>
             <el-dialog
-            :visible.sync = "showEditPin"
-            title="Editar PIN"
-            v-if="currentUser"
-            width="350px"
-            v-loading="loading"
+                :visible.sync="showEditPin"
+                title="Editar PIN"
+                v-if="currentUser"
+                width="350px"
+                v-loading="loading"
             >
-            <div class="row m-2">
-                <div class="col-12">
-                    <label for="">PIN</label>
-                    <input type="text" class="form-control" v-model="newPin">
+                <div class="row m-2">
+                    <div class="col-12">
+                        <label for="">PIN</label>
+                        <input
+                            type="text"
+                            class="form-control"
+                            v-model="newPin"
+                        />
+                    </div>
                 </div>
-            </div>
-            <div class="d-flex justify-content-end m-2">
-                    <button class="btn btn-primary" @click="updatePin">Guardar</button>
-                    <button class="btn" @click="showEditPin = false">Cerrar</button>
-            </div>
-            <div class="row m-2"></div>
+                <div class="d-flex justify-content-end m-2">
+                    <button class="btn btn-primary" @click="updatePin">
+                        Guardar
+                    </button>
+                    <button class="btn" @click="showEditPin = false">
+                        Cerrar
+                    </button>
+                </div>
+                <div class="row m-2"></div>
             </el-dialog>
         </div>
     </div>
@@ -152,7 +167,7 @@
 import CreateForm from "./form.vue";
 import { deletable } from "../../../../../../../resources/js/mixins/deletable";
 export default {
-    props: ["establishments","typeUser"],
+    props: ["establishments", "typeUser", "configuration"],
     mixins: [deletable],
     components: { CreateForm },
     data() {
@@ -164,44 +179,44 @@ export default {
             areas: [],
             workersType: [],
             records: [],
-            currentUser:null,
-            newPin:null,
-            loading:false,
+            currentUser: null,
+            newPin: null,
+            loading: false,
             allWarehouses: [],
             allEstablishments: []
         };
     },
     created() {
+        console.log(this.configuration);
         this.$eventHub.$on("reloadData", () => {
             this.getData();
         });
-console.log(this.typeUser);
+        console.log(this.typeUser);
         this.getTables();
 
         this.getData();
     },
     methods: {
-       async updatePin(){
-            try{
+        async updatePin() {
+            try {
                 this.loading = true;
-                const response = await this.$http.post("/users/update_pin",{
-                    id:this.currentUser.id,
-                    pin:this.newPin
+                const response = await this.$http.post("/users/update_pin", {
+                    id: this.currentUser.id,
+                    pin: this.newPin
                 });
-                if(response.status == 200){
+                if (response.status == 200) {
                     this.$toast.success(response.data.message);
                     this.getData();
                     this.newPin = null;
                     this.showEditPin = false;
                 }
-            }catch(e){
+            } catch (e) {
                 console.log(e);
-            }finally{
+            } finally {
                 this.loading = false;
             }
         },
-        editPin(user)
-        {
+        editPin(user) {
             this.showEditPin = true;
             this.currentUser = user;
         },
@@ -232,7 +247,7 @@ console.log(this.typeUser);
             if (response.status == 200) {
                 const { message } = response.data;
                 this.$toast.success(message);
-               this.getData();
+                this.getData();
             }
         }
     }

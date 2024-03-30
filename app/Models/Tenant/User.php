@@ -41,7 +41,8 @@ class User extends Authenticatable
         'address',
         'telephone',
         'license',
-        'category'
+        'category',
+        'can_accept_credit_sale_note',
     ];
 
     /**
@@ -55,6 +56,7 @@ class User extends Authenticatable
     protected $cast = [
         'locked' => 'boolean',
         'active' => 'boolean',
+        'can_accept_credit_sale_note' => 'boolean',
     ];
     public function getCollectionData()
     {

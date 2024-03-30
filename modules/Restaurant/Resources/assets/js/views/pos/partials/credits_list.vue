@@ -186,10 +186,11 @@
                 </template>
             </div>
         </div>
-        <div class="row">
+        <div>
+            <div class="container table-responsive">
             <table
-                class="table table-responsive table-striped 
-        "
+                class="table table-hover table-striped table-condensed  table-responsive"
+                style="width: 100%; white-space: nowrap;"
             >
                 <thead>
                     <tr>
@@ -274,124 +275,130 @@
                         </td>
                         <td class="text-center">
                             <template v-if="row.is_credit">
-                                <template
-                                    v-if="!isAnalist && row.status != 'A' && row.status!='R'"
+                                <el-dropdown
+                                    size="medium"
+                                    split-button
+                                    type="primary"
                                 >
-                                    <el-tooltip
-                                        class="item"
-                                        effect="dark"
-                                        content="Aceptar crédito"
-                                        placement="bottom-end"
-                                    >
-                                        <button
-                                            type="button"
-                                            class="btn waves-effect waves-light btn-sm btn-primary"
-                                            v-if="row.state_type_id != '11'"
-                                            @click.prevent="
-                                                clickSetStatus(row.id, 'A')
+                                    Acciones
+                                    <el-dropdown-menu slot="dropdown">
+                                        <template
+                                            v-if="
+                                                user.can_accept_credit_sale_note &&
+                                                    row.status != 'A' &&
+                                                    row.status != 'R'
                                             "
                                         >
-                                            <i class="fas fa-check"></i>
-                                        </button>
-                                    </el-tooltip>
-
-                                    <el-tooltip
-                                        class="item"
-                                        effect="dark"
-                                        content="Rechazar crédito"
-                                        placement="bottom-end"
-                                    >
-                                        <button
-                                            type="button"
-                                            class="btn waves-effect waves-light btn-sm btn-warning"
-                                            v-if="row.state_type_id != '11'"
-                                            @click.prevent="
-                                                clickSetStatus(row.id, 'R')
+                                            <el-dropdown-item
+                                                v-if="row.state_type_id != '11'"
+                                            >
+                                                <span
+                                                    role="button"
+                                                    class="text-success"
+                                                    @click.prevent="
+                                                        clickSetStatus(
+                                                            row.id,
+                                                            'A'
+                                                        )
+                                                    "
+                                                >
+                                                    Aceptar créditos
+                                                </span>
+                                            </el-dropdown-item>
+                                            <el-dropdown-item
+                                                v-if="row.state_type_id != '11'"
+                                            >
+                                                <span
+                                                    role="button"
+                                                    class="text-danger"
+                                                    @click.prevent="
+                                                        clickSetStatus(
+                                                            row.id,
+                                                            'R'
+                                                        )
+                                                    "
+                                                >
+                                                    Rechazar crédito
+                                                </span>
+                                            </el-dropdown-item>
+                                        </template>
+                                        <template
+                                            v-if="
+                                                row.show_formats &&
+                                                    row.status != 'R'
                                             "
                                         >
-                                            <i
-                                                class="fas fa-times
-                                        "
-                                            ></i>
-                                        </button>
-                                    </el-tooltip>
-                                </template>
-                                <template v-if="row.show_formats && row.status!='R'">
-                                    <el-tooltip
-                                        v-if="row.status == 'A'"
-                                        class="item"
-                                        effect="dark"
-                                        content="Registrar Pagos"
-                                        placement="bottom-end"
-                                    >
-                                        <button
-                                            type="button"
-                                            class="btn waves-effect waves-light btn-sm btn-primary"
-                                            v-if="row.state_type_id != '11'"
-                                            @click.prevent="
-                                                clickPayment(row.id)
+                                            <el-dropdown-item
+                                                v-if="
+                                                    row.status == 'A' &&
+                                                        row.state_type_id !=
+                                                            '11'
+                                                "
+                                            >
+                                                <span
+                                                    role="button"
+                                                    @click.prevent="
+                                                        clickPayment(row.id)
+                                                    "
+                                                >
+                                                    Registrar pagos
+                                                </span>
+                                            </el-dropdown-item>
+                                            <el-dropdown-item>
+                                                <span
+                                                    role="button"
+                                                    @click.prevent="
+                                                        clickContract(row.id)
+                                                    "
+                                                >
+                                                    Imprimir contrato
+                                                </span>
+                                            </el-dropdown-item>
+                                            <el-dropdown-item>
+                                                <span
+                                                    role="button"
+                                                    @click.prevent="
+                                                        clickSchedule(row.id)
+                                                    "
+                                                >
+                                                    Cronograma de pagos
+                                                </span>
+                                            </el-dropdown-item>
+                                        </template>
+                                        <el-dropdown-item
+                                            v-if="
+                                                row.status == 'A' &&
+                                                    row.state_type_id != '11' &&
+                                                    user.can_accept_credit_sale_note
                                             "
                                         >
-                                            <i
-                                                class="fas fa-money-bill-alt"
-                                            ></i>
-                                        </button>
-                                    </el-tooltip>
-
-                                    <el-tooltip
-                                        class="item"
-                                        effect="dark"
-                                        content="Imprimir Contrato"
-                                        placement="bottom-end"
-                                    >
-                                        <button
-                                            type="button"
-                                            class="btn waves-effect waves-light btn-sm btn-info"
-                                            @click.prevent="
-                                                clickContract(row.id)
+                                            <span
+                                                role="button"
+                                                class="text-primary"
+                                                @click.prevent="
+                                                    clickInitPayment(row.id)
+                                                "
+                                            >
+                                                Registrar pagos anteriores
+                                            </span>
+                                        </el-dropdown-item>
+                                        <el-dropdown-item
+                                            v-if="
+                                                row.can_edit &&
+                                                    configuration.sale_note_credit_edit
                                             "
                                         >
-                                            <i class="fas fa-file-alt"></i>
-                                        </button>
-                                    </el-tooltip>
-                                    <el-tooltip
-                                        class="item"
-                                        effect="dark"
-                                        content="Imprimir Cronograma de Pagos"
-                                        placement="bottom-end"
-                                    >
-                                        <button
-                                            type="button"
-                                            class="btn waves-effect waves-light btn-sm btn-success"
-                                            @click.prevent="
-                                                clickSchedule(row.id)
-                                            "
-                                        >
-                                            <i class="fas fa-file-alt"></i>
-                                        </button>
-                                    </el-tooltip>
-                                </template>
-
-                                <el-tooltip
-                                    v-if="
-                                        row.can_edit &&
-                                            configuration.sale_note_credit_edit
-                                    "
-                                    class="item"
-                                    effect="dark"
-                                    content="Editar"
-                                    placement="bottom-end"
-                                >
-                                    <button
-                                        type="button"
-                                        class="btn waves-effect waves-light btn-sm btn-success"
-                                        @click.prevent="
-                                            clickEditSaleNote(row.id)
-                                        "
-                                    >
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                </el-tooltip>
+                                            <span
+                                                role="button"
+                                                @click.prevent="
+                                                    clickEditSaleNote(row.id)
+                                                "
+                                            >
+                                                Editar
+                                            </span>
+                                        </el-dropdown-item>
+                                    </el-dropdown-menu>
+                                </el-dropdown>
                             </template>
                         </td>
                     </tr>
@@ -424,6 +431,7 @@
                     >
                 </span>
             </el-dialog>
+        </div>
         </div>
 
         <div>
@@ -467,6 +475,10 @@
             :recordId="recordId"
         >
         </credit-modal-update>
+        <credits-init-payment
+            :showDialog.sync="showDialogInitPayments"
+            :recordId="recordId"
+        ></credits-init-payment>
     </el-dialog>
 </template>
 
@@ -477,15 +489,17 @@ import SaleNoteDetail from "../../../../../../../../resources/js/views/sale_note
 import queryString from "query-string";
 import WhatsappFormReport from "../../../../../../../../resources/js/components/WhatsappModalReports.vue";
 import CreditModalUpdate from "./credit_modal_update.vue";
+import CreditsInitPayment from "./credits_init_payment.vue";
 export default {
     components: {
+        CreditsInitPayment,
         CreditModalUpdate,
         WhatsappFormReport,
         SaleNotePayments,
         SaleNoteGenerate,
         SaleNoteDetail
     },
-    props: ["showDialog", "configuration", "isAnalist"],
+    props: ["showDialog", "configuration", "isAnalist", "user"],
     data() {
         return {
             showObservationsDialog: false,
@@ -521,7 +535,8 @@ export default {
             boxes: [],
             showDialogDetail: false,
             showDialogGenerate: false,
-            showDialogPayments: false
+            showDialogPayments: false,
+            showDialogInitPayments: false
         };
     },
     created() {
@@ -531,6 +546,10 @@ export default {
         });
     },
     methods: {
+        clickInitPayment(id) {
+            this.recordId = id;
+            this.showDialogInitPayments = true;
+        },
         openObservationsDialog() {
             this.observations = "";
         },

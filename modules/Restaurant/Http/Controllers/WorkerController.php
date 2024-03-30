@@ -25,7 +25,8 @@ class WorkerController extends Controller
     public function index()
     {
         $establishments = Establishment::all();
-        return view('restaurant::workers', compact('establishments'));
+        $configuration = Configuration::first();
+        return view('restaurant::workers', compact('establishments','configuration'));
     }
     public function report_products_w(Request $request)
     {

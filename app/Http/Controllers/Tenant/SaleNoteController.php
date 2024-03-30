@@ -523,6 +523,13 @@ class SaleNoteController extends Controller
         );
     }
 
+    public function paymentsInit($id)
+    {
+        $payments = Payment::where('sale_note_id', $id)
+            ->get();
+
+        return compact('payments');
+    }
     public function updateCredit(Request $request, $id)
     {
         $sale_note = SaleNote::find($id);
@@ -615,6 +622,34 @@ class SaleNoteController extends Controller
 
         return $record;
     }
+    public function central_de_riesgo($id)
+    {
+        $company = Company::first();
+        $sale = SaleNote::findOrFail($id);
+        $establishment = Establishment::where('id', auth()->user()->establishment_id)->first();
+        $payment = Payment::where('sale_note_id', $id)->get();
+        $recibo = PDF::loadView('tenant.contract.central_de_riesgo', ['company' => $company, 'sale' => $sale, 'payment' => $payment, 'establishment' => $establishment]);
+        return $recibo->setPaper('a4', 'portrait')->stream();
+    }
+    public function pagare($id)
+    {
+        $company = Company::first();
+        $sale = SaleNote::findOrFail($id);
+        $establishment = Establishment::where('id', auth()->user()->establishment_id)->first();
+        $payment = Payment::where('sale_note_id', $id)->get();
+        $recibo = PDF::loadView('tenant.contract.pagare', ['company' => $company, 'sale' => $sale, 'payment' => $payment, 'establishment' => $establishment]);
+        return $recibo->setPaper('a4', 'portrait')->stream();
+    }
+    public function intereses_moratorios($id)
+    {
+        $company = Company::first();
+        $sale = SaleNote::findOrFail($id);
+        $establishment = Establishment::where('id', auth()->user()->establishment_id)->first();
+        $payment = Payment::where('sale_note_id', $id)->get();
+        $recibo = PDF::loadView('tenant.contract.intereses_moratorios', ['company' => $company, 'sale' => $sale, 'payment' => $payment, 'establishment' => $establishment]);
+        return $recibo->setPaper('a4', 'portrait')->stream();
+    }
+
     public function fianza($id)
     {
         $company = Company::first();

@@ -40,6 +40,7 @@ class UserCollection extends ResourceCollection
                 'email' => $row->email,
                 'name' => $row->name,
                 'pin' => $row->pin,
+                'can_accept_credit_sale_note' => (bool) $row->can_accept_credit_sale_note,
                 'api_token' => $row->api_token,
                 'establishment_id' => $row->establishment_id,
                 'establishment_description' => optional($row->establishment)->description,

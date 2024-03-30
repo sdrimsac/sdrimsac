@@ -162,6 +162,17 @@
                             ></el-option>
                         </el-select>
                     </div>
+                    <div class="col-md-4" v-if="configuration.sale_note_credit_confirm">
+                        <label for="product"
+                            >Acepta los créditos de notas de venta
+                                <i class="fas fa-info-circle"></i>
+                        </label>
+                        <el-checkbox
+                            v-model="form.can_accept_credit_sale_note"
+                            label="Acepta crédito"
+                        >
+                        </el-checkbox>
+                    </div>
                 </div>
             </div>
             <div class="form-actions text-end pt-2 pb-2">
@@ -183,6 +194,8 @@ export default {
         "showDialog",
         "recordId",
         "areas",
+
+        "configuration",
         "workersType",
         "establishments",
         "allEstablishments",

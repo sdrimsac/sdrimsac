@@ -141,6 +141,7 @@
                         >
                         </document-print-detail>
                     </el-tab-pane>
+                    <iframe ref="pdfFrame" style="display: none;"></iframe>
                 </el-tabs>
             </div>
             <modal-generate-cpe
@@ -173,7 +174,7 @@ import queryString from "query-string";
 import ModalGenerateCpe from "./modal_generate_cpe.vue";
 
 export default {
-    components: { DocumentPrintDetail, ModalGenerateCpe,DocumentSaludModal },
+    components: { DocumentPrintDetail, ModalGenerateCpe, DocumentSaludModal },
     props: [
         "showDialog",
         "company",
@@ -365,7 +366,20 @@ export default {
             if (this.establishment.direct_printing == 0) {
                 window.open(url, "_blank");
             } else {
-                await this.printEvent(url);
+                let userAgent = navigator.userAgent;
+                let isFirefox = userAgent.indexOf("Firefox") != -1;
+                if (isFirefox) {
+                    const pdfUrl = url;
+                    const pdfFrame = this.$refs.pdfFrame;
+                    pdfFrame.src = pdfUrl;
+                    pdfFrame.onload = () => {
+                        pdfFrame.contentWindow.print();
+                    };
+                } else {
+                    await this.printEvent(url);
+                }
+                // await this.printEvent(url);
+                console.log(navigator.userAgent);
             }
         },
         async getLastDocument() {

@@ -184,6 +184,7 @@ if ($hostname) {
                 Route::get('documents/get_record/{document}', [App\Http\Controllers\Tenant\DocumentController::class, 'getRecord']);
                 Route::get('sale-notes/record/{salenote}', [App\Http\Controllers\Tenant\SaleNoteController::class, 'record']);
                 Route::post('sale-notes/update-credit/{salenote}', [App\Http\Controllers\Tenant\SaleNoteController::class, 'updateCredit']);
+                Route::get('sale-notes/payments-init/{salenote}', [App\Http\Controllers\Tenant\SaleNoteController::class, 'paymentsInit']);
                 Route::get('sale-notes/record-credit/{salenote}', [App\Http\Controllers\Tenant\SaleNoteController::class, 'recordCredit']);
                 Route::get('pos/print_default', [App\Http\Controllers\Tenant\PosController::class, 'print_default']);
                 Route::post('pos/date_of_issue', [App\Http\Controllers\Tenant\PosController::class, 'date_of_issue']);
@@ -690,6 +691,9 @@ if ($hostname) {
                 // Route::get('sale-notes/dispatches', [App\Http\Controllers\Tenant\SaleNoteController::class, 'dispatches']);
                 Route::get('sale-notes/contract/{id}', [App\Http\Controllers\Tenant\SaleNoteController::class, 'contract']);
                 Route::get('sale-notes/fianza/{id}', [App\Http\Controllers\Tenant\SaleNoteController::class, 'fianza']);
+                Route::get('sale-notes/central_de_riesgo/{id}', [App\Http\Controllers\Tenant\SaleNoteController::class, 'central_de_riesgo']);
+                Route::get('sale-notes/pagare/{id}', [App\Http\Controllers\Tenant\SaleNoteController::class, 'pagare']);
+                Route::get('sale-notes/intereses_moratorios/{id}', [App\Http\Controllers\Tenant\SaleNoteController::class, 'intereses_moratorios']);
                 Route::delete('sale-notes/destroy_sale_note_item/{sale_note_item}', [App\Http\Controllers\Tenant\SaleNoteController::class, 'destroy_sale_note_item']);
 
                 Route::get('sale_note_payments/records/{sale_note}', [App\Http\Controllers\Tenant\SaleNotePaymentController::class, 'records']);

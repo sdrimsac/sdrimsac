@@ -1689,6 +1689,7 @@
             :showDialog.sync="showCredits"
             :configuration="configuration"
             :isAnalist="isAnalist"
+            :user="user"
         >
         </credits-list>
 
