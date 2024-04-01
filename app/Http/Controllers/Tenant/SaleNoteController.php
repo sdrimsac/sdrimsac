@@ -1177,9 +1177,18 @@ class SaleNoteController extends Controller
                 ],
             ];
         } catch (Exception $e) {
+            //create the message with the file, path and message
+            $file = $e->getFile();
+            $line = $e->getLine();
+            $trace = $e->getTraceAsString();
+        
+
             return [
                 'success' => false,
-                'message' => $e->getMessage()
+                'message' => $e->getMessage(),
+                'file' => $file,
+                'line' => $line,
+                'trace' => $trace,
             ];
         }
     }
