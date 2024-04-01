@@ -14,7 +14,7 @@
                                 >
                                 <el-date-picker
                                     class="w-100"
-                                    v-model="form.date_open"
+                                    v-model="form.month_start"
                                     type="month"
                                     @change="changeDisabledDates"
                                     value-format="yyyy-MM-dd"

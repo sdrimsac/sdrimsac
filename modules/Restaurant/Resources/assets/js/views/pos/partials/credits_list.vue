@@ -328,7 +328,7 @@
                                             </template>
                                             <template>
                                                 <el-dropdown-item
-                                                    v-if="
+                                                    v-if="!row.canceled &&
                                                         row.state_type_id !=
                                                             '11'
                                                     "
