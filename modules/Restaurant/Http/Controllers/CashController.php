@@ -1445,6 +1445,8 @@ class CashController extends Controller
         $user = auth()->user();
         $type = $user->type;
         $users = array();
+        $configuration = Configuration::select(['health_network'])
+        ->first();
         $turnsTable = [];
         switch ($type) {
             case 'admin':
@@ -1457,7 +1459,7 @@ class CashController extends Controller
                 break;
         }
 
-        return compact('users', 'user', 'turnsTable');
+        return compact('users','configuration', 'user', 'turnsTable');
     }
 
     public function opening_cash()
@@ -1490,14 +1492,21 @@ class CashController extends Controller
         $configuration = Configuration::first();
         $turn_principal = $configuration->turn_principal;
         $id = $request->input('id');
+        $cash_type = $request->input('cash_type_id');
         $turn_id = $request->input('turn_id');
         $cash_user = User::find(auth()->user()->id);
         $establishment_id = $cash_user->establishment_id;
         $establishment = Establishment::find($establishment_id);
         $tab_single = (bool) $establishment->tab_single;
-        if ($configuration->automatic_principal_cash && !$tab_single) {
+        if ($configuration->automatic_principal_cash && !$tab_single && $request->input('principal') == false) {
             // if ($turn_id == $turn_principal) {
-            $exist_principal_cash = Cash::where('principal', true)->where('state', true)->first();
+            $exist_principal_cash = Cash::where('principal', true)
+            ->whereHas('user', function ($query) use ($establishment_id,$configuration) {
+                if($configuration->health_network){
+                    $query->where('establishment_id', $establishment_id);
+                }
+            })
+            ->where('state', true)->first();
             if (!$exist_principal_cash) {
                 $user_arca = User::getUserArca();
                 Cash::create([
@@ -1639,6 +1648,7 @@ class CashController extends Controller
 
         $id = $request->id;
         $final_balance = $request->final_balance;
+        
         $counter = $request->counter;
         $bill_series = $request->bill_series;
         $difference = $request->difference ?? 0.00;
@@ -1648,6 +1658,7 @@ class CashController extends Controller
         $cash->bill_series = $bill_series;
         $cash->difference = $difference;
         $cash_user = $cash->user;
+        $user = User::find($cash->user_id);
         $establishment_id = $cash_user->establishment_id;
         $establishment = Establishment::find($establishment_id);
         $cash->state = 0;
@@ -1737,6 +1748,11 @@ class CashController extends Controller
         $health_network = $configuration->health_network;
         if ($principal_cash) {
             $cash_principal = Cash::where('state', 1)
+                ->whereHas('user', function ($query) use ($establishment_id,$configuration) {
+                    if($configuration->health_network){
+                        $query->where('establishment_id', $establishment_id);
+                    }
+                })
                 ->where('principal', 1);
             if ($health_network) {
                 $cash_user = $cash->user;
@@ -1768,9 +1784,15 @@ class CashController extends Controller
         $tab_single = (bool)$establishment->tab_single;
         if ($configuration->automatic_principal_cash && !$tab_single) {
             $turn_end = $configuration->turn_end;
-            if ($cash->turn_id == $turn_end) {
+            // if ($cash->turn_id == $turn_end) {
+                if($cash->cash_type == 2||$cash->cash_type == 4){
                 Cash::where('principal', true)
                 ->where('state', 1)
+                ->whereHas('user', function ($query) use ($establishment_id,$configuration) {
+                    if($configuration->health_network){
+                        $query->where('establishment_id', $establishment_id);
+                    }
+                })
                 ->update([
                     'state' => 0,
                     'time_closed' => date('H:i:s'),
