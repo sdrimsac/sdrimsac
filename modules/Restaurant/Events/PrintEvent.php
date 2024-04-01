@@ -28,7 +28,7 @@ class PrintEvent implements ShouldBroadcast
      * @return void
      */
     public $data;
-    public function __construct($id, $document_type = 0, $printing = true, $area_id = null, $ids = [],$isEmit = false,$isPrecuenta=false,$url=null)
+    public function __construct($id, $document_type = 0, $printing = true, $area_id = null, $ids = [], $isEmit = false, $isPrecuenta = false, $url = null)
     {
 
         $establishment = Establishment::findOrFail(auth()->user()->establishment_id);
@@ -58,10 +58,12 @@ class PrintEvent implements ShouldBroadcast
             $user = User::where('id', auth()->user()->id)->first();
             $area = Area::where('id', $user->area_id)->first();
         }
-        if ($area_id != null) {
+        if ($area_id != null && $area_id != 0) {
             $area_printer = Area::findOrFail($area_id);
         } else {
-            if (auth()->user()->type == 'admin' || auth()->user()->type == 'superadmin') {
+            $user = User::where('id', auth()->user()->id)->first();
+            $isArca = $user->isWorkerType('arca');
+            if (auth()->user()->type == 'admin' || auth()->user()->type == 'superadmin' || $isArca) {
                 $area = Area::where('description', 'like', '%caja%')->first();
                 $area_printer = Area::findOrFail($area->id);
             } else {
@@ -79,7 +81,7 @@ class PrintEvent implements ShouldBroadcast
         $documentLink = null;
         switch ($document_type) {
             case "URL":
-                $documentLink = url('').$url;
+                $documentLink = url('') . $url;
                 break;
             case "S":
                 // $copies = 1;
@@ -88,12 +90,12 @@ class PrintEvent implements ShouldBroadcast
             case "H":
                 $documentLink = url('') . "/caja/rooms/print_service/{$id}";
                 break;
-                case "CL":
-                    $documentLink = url('') . "/caja/rooms/print_warranty/{$id}";
-                    break;
+            case "CL":
+                $documentLink = url('') . "/caja/rooms/print_warranty/{$id}";
+                break;
             case "00":
-            $documentLink = url('') . "/caja/worker/print-ticket?id={$id}&area_id={$area_id}&ids={$ids_string}&precuenta={$isPrecuenta}";
-                        break;
+                $documentLink = url('') . "/caja/worker/print-ticket?id={$id}&area_id={$area_id}&ids={$ids_string}&precuenta={$isPrecuenta}";
+                break;
             case "0":
                 $documentLink = url('') . "/caja/worker/print-ticket?id={$id}&area_id={$area_id}&ids={$ids_string}";
                 break;
@@ -125,10 +127,10 @@ class PrintEvent implements ShouldBroadcast
         if ($printer == null) {
             if ($area_printer->search_print) {
                 $printer = $establishment->printer;
-              
-                if($printer){
-                    $area_with_printer = Area::where('printer',$printer)->first();
-                    if($area_with_printer){
+
+                if ($printer) {
+                    $area_with_printer = Area::where('printer', $printer)->first();
+                    if ($area_with_printer) {
                         $area_id = $area_with_printer->id;
                     }
                 }
@@ -142,7 +144,7 @@ class PrintEvent implements ShouldBroadcast
             $printing = false;
         }
         $copies = 0;
-        if($isEmit){
+        if ($isEmit) {
             $copies = $area->copies;
         }
         $user_establishment_id = null;
@@ -157,7 +159,7 @@ class PrintEvent implements ShouldBroadcast
             'printer' => $printer,
             'printing' => $printing,
             // 'copies' => ($multiple_boxes == true && auth()->user()->type != 'admin') ? $area->copies : $establishment->copies,
-            'copies' =>$copies,
+            'copies' => $copies,
             'direct_printing' => (bool) $establishment->direct_printing,
             'print'   => $documentLink,
             'multiple_boxes' => (bool) $configuration->multiple_boxes,
