@@ -1629,7 +1629,7 @@ class CashController extends Controller
             $records = $records->where('status', $state);
         }
 
-        $records =  $records->orderBy('id', 'desc');
+        $records =  $records->orderBy('created_at', 'desc');
 
         return new CashIncomePrincipalCollection($records->paginate(config('tenant.items_per_page')));
     }
