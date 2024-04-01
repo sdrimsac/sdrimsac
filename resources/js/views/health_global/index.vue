@@ -16,8 +16,7 @@
                                     class="w-100"
                                     v-model="form.month_start"
                                     type="month"
-                                    @change="changeDisabledDates"
-                                    value-format="yyyy-MM-dd"
+                                    value-format="yyyy-MM"
                                     clearable
                                 ></el-date-picker>
                             </div>
@@ -100,22 +99,12 @@ export default {
             modaltype: false,
             ruta: null,
             totals: [],
-            pickerOptionsDates: {
-                disabledDate: time => {
-                    time = moment(time).format("YYYY-MM-DD");
-                    return this.form.date_start > time;
-                }
-            },
-            pickerOptionsMonths: {
-                disabledDate: time => {
-                    time = moment(time).format("YYYY-MM");
-                    return this.form.month_start > time;
-                }
-            }
+        
         };
     },
     created() {
         this.initForm();
+        console.log(this.form);
         //                .then(response => {
         //                    if (response.data !== '') {
         //                        this.form = response.data.data
@@ -161,18 +150,16 @@ export default {
             );
         },
         initForm() {
+        console.log(moment().format("YYYY-MM"));
             this.errors = {};
             this.form = {
                 id: null,
                 user_id: null,
-                date_open: moment().format("YYYY-MM-DD"),
                 // type: "pdf",
                 type_box: null,
                 period: "month",
-                date_start: null,
-                date_end: moment().format("YYYY-MM-DD"),
+            
                 month_start: moment().format("YYYY-MM"),
-                month_end: moment().format("YYYY-MM")
             };
         },
         date_start() {
@@ -250,45 +237,8 @@ export default {
                 ...this.form
             });
         },
-        changeDisabledDates() {
-            if (this.form.date_end < this.form.date_start) {
-                this.form.date_end = this.form.date_start;
-            }
-            // this.loadAll();
-        },
-        changeDisabledMonths() {
-            if (this.form.month_end < this.form.month_start) {
-                this.form.month_end = this.form.month_start;
-            }
-            // this.loadAll();
-        },
-        changePeriod() {
-            if (this.form.period === "month") {
-                this.form.month_start = moment().format("YYYY-MM");
-                this.form.month_end = moment().format("YYYY-MM");
-            }
-            if (this.form.period === "between_months") {
-                this.form.month_start = moment()
-                    .startOf("year")
-                    .format("YYYY-MM"); //'2019-01';
-                this.form.month_end = moment()
-                    .endOf("year")
-                    .format("YYYY-MM");
-            }
-            if (this.form.period === "date") {
-                this.form.date_start = moment().format("YYYY-MM-DD");
-                this.form.date_end = moment().format("YYYY-MM-DD");
-            }
-            if (this.form.period === "between_dates") {
-                this.form.date_start = moment()
-                    .startOf("month")
-                    .format("YYYY-MM-DD");
-                this.form.date_end = moment()
-                    .endOf("month")
-                    .format("YYYY-MM-DD");
-            }
-            // this.loadAll();
-        },
+    
+    
         clickDownload(type) {
         console.log("🚀 ~ clickDownload ~ type:", type)
 
@@ -307,7 +257,7 @@ export default {
         },
         close() {
             this.$emit("update:showDialog_report", false);
-            this.initForm();
+            // this.initForm();
         }
     }
 };
