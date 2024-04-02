@@ -34,6 +34,7 @@ use App\Models\Tenant\Item;
 use App\Models\Tenant\ItemWarehouse;
 use App\Models\Tenant\NumberActivity;
 use App\Models\Tenant\Seller;
+use App\Models\Tenant\User;
 use Barryvdh\DomPDF\Facade as PDF;
 use Exception;
 use Modules\Item\Models\CategoryItem;
@@ -147,6 +148,7 @@ class PosController extends Controller
             $category_ins_id = $category_ins->id;
         }
         $configuration = Configuration::first();
+        // $user = User::find(auth()->user()->id);
         $search_by_second_name = $configuration->search_by_second_name;
         $datafoods = $request->all();
         $search_by_series = $request->search_by_series == "true" ? true : false;
@@ -154,6 +156,7 @@ class PosController extends Controller
         $external_id =  $request->external_id == "true" ? true : false;
         $value = $request->value;
         $establishment_id = auth()->user()->establishment_id;
+        $establishment = Establishment::find($establishment_id);
         $warehouse = Warehouse::where('establishment_id', $establishment_id)->first();
         $warehouse_id = $warehouse->id;
         $textoIntoArray =  explode(' ', $value);
@@ -161,7 +164,7 @@ class PosController extends Controller
 
         $foods = Food::query()->whereHas(
             "item",
-            function ($query) use ($warehouse_id, $search_by_series, $value) {
+            function ($query) use ($warehouse_id, $search_by_series, $value, $configuration, $establishment) {
                 $query
                     ->where('active', 1)->whereHas('warehouses', function ($query) use ($warehouse_id, $value) {
                         $query->where('warehouse_id', $warehouse_id);
@@ -172,6 +175,14 @@ class PosController extends Controller
                             $query->where('warehouse_id', $warehouse_id)->where('has_sale', 0)
                                 ->where('series', 'like', '%' . $value . '%');
                         });
+                }
+                if ($configuration->health_network) {
+                    if ($establishment->is_service) {
+                        $query->where('unit_type_id', 'ZZ');
+                    }
+                    if ($establishment->is_product) {
+                        $query->where('unit_type_id', '<>', 'ZZ');
+                    }
                 }
             }
         );
@@ -191,10 +202,10 @@ class PosController extends Controller
                     });
                 } else {
 
-                    $foods = $foods->where(function ($query) use ($value,$search_by_second_name) {
+                    $foods = $foods->where(function ($query) use ($value, $search_by_second_name) {
                         $query->where('description', 'LIKE', '%' . $value . '%')
                             ->orWhere('code', 'LIKE', '%' . $value . '%');
-                        if($search_by_second_name){
+                        if ($search_by_second_name) {
                             $query->orWhereHas('item', function ($query) use ($value) {
                                 $query->where('second_name', 'LIKE', '%' . $value . '%');
                             });
@@ -209,7 +220,7 @@ class PosController extends Controller
                             $subquery->where('description', 'LIKE', '%' . $valor . '%');
                         }
                     });
-                
+
                     if ($search_by_second_name) {
                         $query->orWhereHas('item', function ($subquery) use ($textoIntoArray) {
                             foreach ($textoIntoArray as $key => $valor) {
@@ -218,7 +229,6 @@ class PosController extends Controller
                         });
                     }
                 });
-                
             }
         }
 
