@@ -1785,7 +1785,7 @@ class CashController extends Controller
         if ($configuration->automatic_principal_cash && !$tab_single) {
             $turn_end = $configuration->turn_end;
             // if ($cash->turn_id == $turn_end) {
-                if($cash->cash_type == 2||$cash->cash_type == 4){
+                if($cash->cash_type_id == 2||$cash->cash_type_id == 4){
                 Cash::where('principal', true)
                 ->where('state', 1)
                 ->whereHas('user', function ($query) use ($establishment_id,$configuration) {

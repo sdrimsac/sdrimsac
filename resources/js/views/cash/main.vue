@@ -1,6 +1,7 @@
 <template>
     <div>
-        <div v-if="!has_cash" class="col-md- d-flex justify-content-end">
+        <template>
+            <div v-if="!has_cash && !configuration.health_network" class="col-md- d-flex justify-content-end">
             <button
                 type="button"
                 class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto"
@@ -19,6 +20,7 @@
                     <span>Efectivo disponible: S/ {{ total.toFixed(2) }}</span>
                 </div>
                 <button
+                    v-if="!configuration.health_network"
                     type="button"
                     class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto"
                     @click.prevent="clickClose()"
@@ -26,6 +28,7 @@
                     <span>Cerrar caja</span>
                 </button>
             </div>
+        </template>
         </template>
         <cash-form
             :showDialog.sync="showDialogCash"

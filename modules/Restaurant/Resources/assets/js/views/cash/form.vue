@@ -78,6 +78,65 @@
                             ></small>
                         </div>
                     </div>
+                    <div
+                        class="col-md-6"
+                        v-if="configuration.health_network == 1"
+                    >
+                        <div
+                            class="form-group"
+                            :class="{ 'has-danger': errors.cash_type_id }"
+                        >
+                            <label class="control-label"
+                                >Seleccionar Tipo de Turno
+                                <el-tooltip
+                                    class="item"
+                                    effect="dark"
+                                    placement="top"
+                                >
+                                    <div slot="content">
+                                        <p>
+                                            <strong>INICIO:</strong> Turno de
+                                            apertura <br />
+                                            Normalmente Noche | Mañana, si no
+                                            se trabajó en la noche
+                                        </p>
+                                        <p>
+                                            <strong>INTERMEDIO:</strong> Turno
+                                            intermedio <br />
+                                            Normalmente Mañana | Turno entre el inicio y el fin
+                                            
+                                        </p>
+                                        <p>
+                                            <strong>FIN:</strong> Turno de
+                                            cierre <br />
+                                            Normalmente Tarde | Mañana, si se trabaja doble turno (Mañana - Tarde)
+                                        </p>
+                                        <p>
+                                            <strong>UNICO:</strong> Turno unico
+                                            <br />
+                                            Turno unico para el dia: Mañana
+                                            - Tarde (Si noche no se trabajó)
+                                        </p>
+                                    </div>
+                                    <i class="el-icon-info"></i>
+                                </el-tooltip>
+                            </label>
+                            <el-select v-model="form.cash_type_id">
+                                <el-option
+                                    v-for="option in turnsHealthNetwork"
+                                    :key="option.id"
+                                    :value="option.value"
+                                    :label="option.description"
+                                ></el-option>
+                            </el-select>
+
+                            <small
+                                class="form-control-feedback"
+                                v-if="errors.cash_type_id"
+                                v-text="errors.cash_type_id[0]"
+                            ></small>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="form-actions text-end pt-2 pb-2">
@@ -95,9 +154,32 @@
 
 <script>
 export default {
-    props: ["showDialog", "recordId", "typeUser", "fromBox","principal"],
+    props: ["showDialog", "recordId", "typeUser", "fromBox", "principal"],
     data() {
         return {
+            turnsHealthNetwork: [
+                {
+                    id: 1,
+                    description: "INICIO",
+                    value: 3
+                },
+                {
+                    id: 2,
+                    description: "INTERMEDIO",
+                    value: 1
+                },
+                {
+                    id: 3,
+                    description: "FIN",
+                    value: 2
+                },
+                {
+                    id: 4,
+                    description: "UNICO",
+                    value: 4
+                }
+            ],
+            configuration: {},
             loading_submit: false,
             titleDialog: null,
             resource: "caja/worker/cash",
@@ -120,6 +202,7 @@ export default {
             this.users = response.data.users;
             this.user = response.data.user;
             this.turnsTable = response.data.turnsTable;
+            this.configuration = response.data.configuration;
         });
 
         this.initForm();
@@ -177,7 +260,17 @@ export default {
         },
         async submit() {
             this.loading_submit = true;
+            if (
+                this.configuration.health_network == 1 &&
+                this.form.cash_type_id == undefined
+            ) {
+                this.$toast.warning(
+                    `'Tipo de Turno' no puede ser un campo vacio, por favor seleccione una opcion`
+                );
 
+                this.loading_submit = false;
+                return false;
+            }
             if (this.form.turn_id == undefined) {
                 this.$toast.warning(
                     `La opcion 'Seleccionar turno de apertura' no puede ser un campo vacio, por favor seleccione una opcion`

@@ -741,7 +741,7 @@ export default {
                 `/caja/report-boxes/reports_resumen_type?cash_id=${this.recordId}`,
                 "_blank"
             );
-            location.reload();
+            // location.reload();
             // if(this.configuration.hotels){
             //     setTimeout(() => {
             //                window.open(
