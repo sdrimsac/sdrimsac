@@ -222,7 +222,7 @@
         <tr>
             <td>
                 <strong>FECHA:</strong>
-                {{ \Carbon\Carbon::parse($cash->date_opening)->format('d/m/Y') }}
+                {{ \Carbon\Carbon::parse($cash->date_closed)->format('d/m/Y') }}
 
             </td>
             <td>
