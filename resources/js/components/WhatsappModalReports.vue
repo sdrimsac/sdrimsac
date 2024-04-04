@@ -29,7 +29,7 @@ export default {
         };
     },
     async created() {
-        this.socketWhatsappConfig();
+        //this.socketWhatsappConfig();
         await this.getConfiguration();
     },
 

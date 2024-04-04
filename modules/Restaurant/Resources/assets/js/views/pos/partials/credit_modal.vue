@@ -7,6 +7,7 @@
         v-loading="loading"
         width="950px"
         append-to-body
+        :close-on-click-modal="false"
     >
         <div class="m-2">
             <div class="row">
@@ -38,10 +39,7 @@
                 </div>
                 <div class="col-md-6">
                     <label>Fecha de emisión</label>
-                    <el-date-picker
-                        class="w-100"
-                        v-model="form.date_of_issue"
-                    >
+                    <el-date-picker class="w-100" v-model="form.date_of_issue">
                     </el-date-picker>
                 </div>
                 <div class="col-md-2">
@@ -145,6 +143,25 @@
                 </div> -->
             </div>
         </div>
+        <div class="row"
+        v-if="user && user.can_accept_credit_sale_note"
+        >
+            <div class="col-md-3 col-lg-3 col-12">
+                <el-checkbox v-model="isMigration" @change="setPayment">
+                    <strong>
+                        Ingresar pagos anteriores
+                    </strong>
+                </el-checkbox>
+            </div>
+            <div class="row">
+                <div v-for="(payment, index) in payments" :key="index">
+                    <el-checkbox v-model="payment.isPrepayment">
+                        Cuota N° {{ index + 1 }}
+                        </el-checkbox
+                    >
+                </div>
+            </div>
+        </div>
         <div slot="footer" class="dialog-footer">
             <span
                 v-if="form.total"
@@ -171,6 +188,7 @@ const PersonForm = () =>
     import("../../../../../../../../resources/js/views/persons/form.vue");
 export default {
     props: [
+        "user",
         "configuration",
         "items",
         "cash_id",
@@ -182,6 +200,8 @@ export default {
     components: { PersonForm },
     data() {
         return {
+            payments: [],
+            isMigration: false,
             form: {},
             tasaInteres: 17,
             disabled_month: false,
@@ -206,6 +226,20 @@ export default {
         }
     },
     methods: {
+        setPayment() {
+            if (this.isMigration) {
+                let { num_cuota, amount } = this.credit;
+
+                for (let i = 0; i < num_cuota; i++) {
+                    this.payments.push({
+                        amount,
+                        isPrepayment: false
+                    });
+                }
+            }else{
+                this.payments = [];
+            }
+        },
         validate() {
             let flag = true;
             if (this.tasaInteres < 0) {
@@ -250,6 +284,7 @@ export default {
             }
         },
         calculate(advance = 0) {
+            
             // let dias = 0;
             let tasa_interes = 0;
             if (this.form.total > 0 && this.credit.month > 0) {
@@ -295,6 +330,10 @@ export default {
                     this.credit.amount = amount.toFixed(2);
                 }
                 this.credit.tasadefault = tasa_interes;
+            }
+            if(this.isMigration){
+                this.payments = [];
+                this.setPayment();
             }
         },
         reloadDataCustomers(customer_id) {
@@ -485,7 +524,8 @@ export default {
                 this.loading = true;
                 this.form = {
                     ...this.form,
-                    ...this.credit
+                    ...this.credit,
+                    prepayments: this.payments,
                 };
                 this.form.time_of_issue = moment().format("HH:mm:ss");
                 const response = await this.$http.post(
@@ -508,6 +548,8 @@ export default {
             }
         },
         open() {
+            this.payments = [];
+            this.isMigration = false;
             let { rates } = this.configuration;
             rates = parseFloat(rates);
             this.tasaInteres = rates;

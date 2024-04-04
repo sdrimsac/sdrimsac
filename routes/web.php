@@ -691,6 +691,7 @@ if ($hostname) {
                 // Route::get('sale-notes/dispatches', [App\Http\Controllers\Tenant\SaleNoteController::class, 'dispatches']);
                 Route::get('sale-notes/contract/{id}', [App\Http\Controllers\Tenant\SaleNoteController::class, 'contract']);
                 Route::get('sale-notes/fianza/{id}', [App\Http\Controllers\Tenant\SaleNoteController::class, 'fianza']);
+                Route::get('sale-notes/contrato/{id}', [App\Http\Controllers\Tenant\SaleNoteController::class, 'contrato']);
                 Route::get('sale-notes/central_de_riesgo/{id}', [App\Http\Controllers\Tenant\SaleNoteController::class, 'central_de_riesgo']);
                 Route::get('sale-notes/pagare/{id}', [App\Http\Controllers\Tenant\SaleNoteController::class, 'pagare']);
                 Route::get('sale-notes/intereses_moratorios/{id}', [App\Http\Controllers\Tenant\SaleNoteController::class, 'intereses_moratorios']);

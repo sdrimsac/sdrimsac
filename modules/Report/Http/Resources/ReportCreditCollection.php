@@ -46,9 +46,9 @@ class ReportCreditCollection extends ResourceCollection
                     ->where('paid', 1)
                     ->orderBy('date_payment', 'asc')
                     ->first();
-                $amount_due = $last_paid->amount;
+                // $amount_due = $last_paid->amount;
             } else {
-                $amount_due = $last_payment->amount;
+                // $amount_due = $last_payment->amount;
             }
             // $amount_due -= $advances + $payments_records;
             $payment = Payment::where('sale_note_id', $row->id);
@@ -84,11 +84,12 @@ class ReportCreditCollection extends ResourceCollection
                 'payment' => $payments_records,
                 'date_of_due' => $date_of_due,
                 'canceled' => (bool) $row->paid,
-                'penalty' => $row->getPenalties(),
+                'penalty' => $row->status ==  'A' ? $row->getPenalties() : 0,
                 // 'amount_due' => number_format($amount_due, 2, ".", ""),
                 'amount_due' => number_format($to_due, 2, ".", ""),
                 'differenc_days' => $differenc_days,
                 'is_credit' => true,
+                'observation' => $row->observation,
             ];
         });
     }

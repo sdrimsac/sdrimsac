@@ -7,6 +7,37 @@
         width="90%"
         append-to-body
     >
+        <div class="row mt-2">
+            <div class="col-lg-6 col-md-6 col-12 d-flex justify-content-start">
+                <h4>
+                    {{ document.customer_name }}
+                </h4>
+            </div>
+            <div class="col-lg-6 col-md-6 col-12 d-flex justify-content-end">
+                <template
+                    v-if="
+                        document.current_payment && document.current_payment.num
+                    "
+                >
+                    <h4>
+                        Cuota N° {{ document.current_payment.num }} de
+                        {{ Number(document.current_payment.amount).toFixed(2) }}
+
+                        <span
+                            class="text-danger"
+                            v-if="document.current_payment.penalty > 0"
+                        >
+                            Penalidad:
+                            {{
+                                Number(
+                                    document.current_payment.penalty
+                                ).toFixed(2)
+                            }}
+                        </span>
+                    </h4>
+                </template>
+            </div>
+        </div>
         <div class="form-body">
             <div class="row">
                 <div class="col-md-12" v-if="records.length > 0">
@@ -396,13 +427,15 @@
 import { deletable } from "../../../mixins/deletable";
 import ImagePreviewModal from "../../../components/ImagePreviewModal.vue";
 export default {
-    props: ["showDialog", "documentId","configuration"],
+    props: ["showDialog", "documentId", "configuration"],
     mixins: [deletable],
     components: {
         ImagePreviewModal
     },
     data() {
         return {
+            customerName: null,
+            currentPayment: {},
             is_paying: false,
             showImagePreviewModal: false,
             imagePreview: null,
@@ -523,11 +556,20 @@ export default {
             this.$eventHub.$emit("reloadDataUnpaid");
         },
         clickAddRow() {
+            let payment_destination_id = null;
+            if (this.payment_destinations.length > 0) {
+                let payment_with_cash_id = this.payment_destinations.find(
+                    item => item.cash_id
+                );
+                if (payment_with_cash_id) {
+                    payment_destination_id = payment_with_cash_id.id;
+                }
+            }
             this.records.push({
                 id: null,
                 date_of_payment: moment().format("YYYY-MM-DD"),
-                payment_method_type_id: null,
-                payment_destination_id: null,
+                payment_method_type_id: "01",
+                payment_destination_id,
                 reference: null,
                 filename: null,
                 temp_path: null,
@@ -552,12 +594,22 @@ export default {
             let { num_schedule, amount_schedule } = this.document;
             let payment = this.records[index].payment;
             let difference = parseFloat(this.document.total_difference);
-            let passLowPay =  false;
-                console.log("🚀 ~ clickSubmit ~ this.configuration:", this.configuration)
-            if(this.configuration && this.configuration.sale_note_credit_low_pay){
+            let passLowPay = false;
+            console.log(
+                "🚀 ~ clickSubmit ~ this.configuration:",
+                this.configuration
+            );
+            if (
+                this.configuration &&
+                this.configuration.sale_note_credit_low_pay
+            ) {
                 passLowPay = true;
             }
-            if (difference > amount_schedule && payment < amount_schedule && !passLowPay) {
+            if (
+                difference > amount_schedule &&
+                payment < amount_schedule &&
+                !passLowPay
+            ) {
                 this.$toast.error(
                     "El monto ingresado debe ser igual o mayor a la cuota: " +
                         amount_schedule +

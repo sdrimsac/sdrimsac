@@ -488,7 +488,7 @@ export default {
     },
     created() {
         this.initForm();
-        this.socketWhatsappConfig();
+        //this.socketWhatsappConfig();
         this.initDocument();
         this.clickAddPayment();
     },

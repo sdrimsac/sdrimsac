@@ -650,6 +650,15 @@ class SaleNoteController extends Controller
         return $recibo->setPaper('a4', 'portrait')->stream();
     }
 
+    public function contrato($id)
+    {
+        $company = Company::first();
+        $sale = SaleNote::findOrFail($id);
+        $establishment = Establishment::where('id', auth()->user()->establishment_id)->first();
+        $payment = Payment::where('sale_note_id', $id)->get();
+        $recibo = PDF::loadView('tenant.contract.contrato', ['company' => $company, 'sale' => $sale, 'payment' => $payment, 'establishment' => $establishment]);
+        return $recibo->setPaper('a4', 'portrait')->stream();
+    }
     public function fianza($id)
     {
         $company = Company::first();
@@ -883,8 +892,18 @@ class SaleNoteController extends Controller
                 }
                 /////------------------------------------------
                 if ($request->generate == true) {
-                    $this->sale_note->status = 'P';
+                    if ($configuration->sale_note_credit_confirm) {
+                        $user = User::find($request->user_id);
+                        if ($user->can_accept_credit_sale_note) {
+                            $this->sale_note->status = 'A';
+                        } else {
+                            $this->sale_note->status = 'P';
+                        }
+                    } else {
+                        $this->sale_note->status = 'A';
+                    }
                     $this->sale_note->save();
+                    $payments_ = $request->prepayments;
                     $date = Carbon::parse($request->date_of_issue);
                     for ($i = 0; $i < $request->num_cuota; $i++) {
                         switch ($request->type_payment) {
@@ -919,7 +938,7 @@ class SaleNoteController extends Controller
                         }
 
 
-                        Payment::create([
+                        $payment_ = Payment::create([
                             "user_id"     => auth()->user()->id,
                             "amount"       => $request->amount,
                             "sale_note_id" => $this->sale_note->id,
@@ -927,7 +946,28 @@ class SaleNoteController extends Controller
                             "date_payment" => $date_payment,
                             "tasa"         => $request->tasadefault
                         ]);
+                        if ($payments_ != null && count($payments_) > 0) {
+                            if ($payments_[$i]['isPrepayment']) {
+                                $payment_->paid = true;
+                                $payment_->amount_paid = $payment_->amount;
+                                $payment_->save();
+                                SaleNotePayment::create([
+                                    'sale_note_id' => $this->sale_note->id,
+                                    // 'payment_id' => $payment_->id,
+                                    'payment_method_type_id' => '01',
+                                    'date_of_payment' => $date_payment,
+                                    'payment' => $payment_->amount,
+                                ]);
+                            }
+                        }
+
                         // $payment = Payment::firstOrNew(['id' => $id]);
+                    }
+
+                    $has_payments_payed = Payment::where('sale_note_id', $this->sale_note->id)->where('paid', true)->count();
+                    if ($has_payments_payed > 0) {
+                        $this->sale_note->status = 'A';
+                        $this->sale_note->save();
                     }
 
                     // if ($request["advances"] > 0) {
@@ -1156,7 +1196,7 @@ class SaleNoteController extends Controller
 
 
             $establishment = Establishment::where('id', $this->sale_note->establishment_id)->first();
-        
+
             return [
                 'success' => true,
                 'data' => [
@@ -1181,7 +1221,7 @@ class SaleNoteController extends Controller
             $file = $e->getFile();
             $line = $e->getLine();
             $trace = $e->getTraceAsString();
-        
+
 
             return [
                 'success' => false,

@@ -266,6 +266,8 @@ function format_serie($id)
 ?>
 
 <body>
+    
+    
     <div id="register">
 
         <table border="0" style="border:0px solid;width:80%">

@@ -978,6 +978,7 @@
                 <div class="col-5 col-sm-7 col-lg-6 col-md-7 col-xl-5">
                     <div class="card-body p-2">
                         <list-orden
+                    :user.sync="user"
                             :quotationId.sync="quotationId"
                             :cotIdentifier.sync="cotIdentifier"
                             :isSeller.sync="isSeller"
@@ -2053,7 +2054,7 @@ export default {
         this.cashId = this.cash_id;
         this.ordensPending = this.pending_order;
         this.loading = true;
-        this.socketWhatsappConfig();
+        //this.socketWhatsappConfig();
         await this.getTables();
         await this.getSeries();
         await this.initForm(this.customer_default.id);
@@ -2499,6 +2500,13 @@ export default {
         handleKeydown(event) {
             let { keyCode, key } = event;
             switch (keyCode) {
+                //f4 
+                case 115:
+                    event.preventDefault(); // Evita la función por defecto del navegador
+
+                    this.openCredit();
+                    // this.openDrawer();
+                    break;
                 case 113:
                     event.preventDefault(); // Evita la función por defecto del navegador
                     if (this.configuration.hotels) {

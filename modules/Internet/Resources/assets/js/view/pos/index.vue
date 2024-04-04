@@ -859,7 +859,7 @@ export default {
         this.cashId = this.cash_id;
         this.ordensPending = this.pending_order;
         this.loading = true;
-        this.socketWhatsappConfig();
+        //this.socketWhatsappConfig();
         await this.getTables();
         await this.getRecords();
         await this.getSeries();

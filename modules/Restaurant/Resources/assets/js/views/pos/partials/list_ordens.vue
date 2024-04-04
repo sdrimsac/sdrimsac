@@ -2185,6 +2185,7 @@
         </quotation-form>
 
         <credit-form
+            :user.sync="user"
             :showDialog.sync="showCreditForm"
             :items="localOrden"
             :customers="customers"
@@ -2459,7 +2460,8 @@ export default {
         "isCreatingOrden",
         "ordenId",
         "cash_id",
-        "isHotelArea"
+        "isHotelArea",
+        "user"
     ],
 
     data() {

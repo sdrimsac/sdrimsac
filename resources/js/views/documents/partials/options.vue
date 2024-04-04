@@ -202,7 +202,7 @@ export default {
     },
     async created() {
         this.initForm();
-        this.socketWhatsappConfig();
+        //this.socketWhatsappConfig();
         qz.security.setCertificatePromise((resolve, reject) => {
             this.$http
                 .get("/api/qz/crt/override", {

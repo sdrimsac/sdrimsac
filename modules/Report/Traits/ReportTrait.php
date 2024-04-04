@@ -30,18 +30,22 @@ trait ReportTrait
 
         switch ($period) {
             case 'month':
+                if ($month_start == null || $month_end  == null)  break;
                 $d_start = Carbon::parse($month_start . '-01')->format('Y-m-d');
                 $d_end = Carbon::parse($month_start . '-01')->endOfMonth()->format('Y-m-d');
                 break;
             case 'between_months':
+                if ($month_start == null || $month_end  == null)  break;
                 $d_start = Carbon::parse($month_start . '-01')->format('Y-m-d');
                 $d_end = Carbon::parse($month_end . '-01')->endOfMonth()->format('Y-m-d');
                 break;
             case 'date':
+                if ($date_start == null)  break;
                 $d_start = $date_start;
                 $d_end = $date_start;
                 break;
             case 'between_dates':
+                if ($date_start == null || $date_end == null)  break;
                 $d_start = $date_start;
                 $d_end = $date_end;
                 break;

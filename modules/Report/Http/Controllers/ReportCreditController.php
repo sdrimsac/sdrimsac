@@ -46,27 +46,37 @@ class ReportCreditController extends Controller
     }
 
     public function records(Request $request)
-    {   
+    {
         $paid = $request->paid;
-
+        $status = $request->status;
         $period = $this->getDatesOfPeriod($request);
         $person_id = $request->person_id;
         $params = (object)[
             'date_start' => $period['d_start'],
             'date_end' => $period['d_end'],
         ];
+        if($status == "R"){
+            $records = SaleNote::where('status','R');
+        }else{
+            $records = SaleNote::whereHas('creditPayments');
+        }
+        if ($params->date_start && $params->date_end) {
+            $records =
+                $records->whereBetween('date_of_issue', [$params->date_start, $params->date_end]);
+        }
 
-        $records = SaleNote::whereHas('creditPayments')
-            ->whereBetween('date_of_issue', [$params->date_start, $params->date_end]);
+        if($status && $status != "R"){
+            $records = $records->where('status', $status);
+        }
 
         if ($person_id) {
             $records = $records->where('customer_id', $person_id);
         }
-        if($paid != null){
+        if ($paid != null) {
             $records = $records->where('paid', $paid);
         }
 
-        $records->orderBy('created_at', 'desc');
+        $records->orderBy('date_of_issue', 'desc');
 
         return new ReportCreditCollection($records->paginate(config('tenant.items_per_page')));
     }

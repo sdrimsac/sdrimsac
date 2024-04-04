@@ -149,7 +149,7 @@ export default {
     },
     async created() {
         this.initForm();
-        this.socketWhatsappConfig();
+        //this.socketWhatsappConfig();
         // await this.$http.get(`/${this.resource}/tables`).then(response => {
         //     this.warehouses = response.data.warehouses;
         // });

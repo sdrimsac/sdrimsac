@@ -1094,7 +1094,7 @@ export default {
 
         // this.filterSeries();
         this.loading = false;
-        this.socketWhatsappConfig();
+        //this.socketWhatsappConfig();
     },
 
     methods: {

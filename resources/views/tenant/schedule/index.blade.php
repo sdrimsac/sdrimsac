@@ -88,6 +88,17 @@
     </style>
 
 <body>
+    @if ($sale->status !== 'A' && $sale->status !== null)
+        <div class="company_logo_box"
+            style="position: absolute; text-align: center; top:30%;
+    left: 0; right: 0; margin: auto; width: 100%; height: 100px;
+    color: red; font-size: 50px; font-weight: bold; font-family: Arial, sans-serif;
+    transform: rotate(-45deg); -webkit-transform: rotate(-45deg); -moz-transform: rotate(-45deg); -o-transform: rotate(-45deg); -ms-transform: rotate(-45deg);
+    opacity: 0.3; filter: alpha(opacity=10); z-index: -1;
+">
+            SIN VALOR LEGAL
+        </div>
+    @endif
     <table width="100%" cellspacing="0" cellpadding="0">
         <tr>
             <td valign="top" class="text_header" align="center">
@@ -178,10 +189,10 @@
             $total_paid = 0;
             $has_index = false;
             $index = null;
-            if($sale->payments->count() > 0){
+            if ($sale->payments->count() > 0) {
                 $total_paid = $sale->payments->sum('payment');
             }
-
+            
             $showing_partial = false;
             $partial = 0;
             ?>
@@ -204,7 +215,7 @@
                                 $row_amount = $amount_to_paid - $total_paid;
                                 $showing_partial = true;
                             }
-                            
+
                         @endphp
                         {{ number_format($row_amount, 2) }}
 
@@ -222,7 +233,7 @@
             @endforeach
             <tr>
                 <td colspan="3" align="right" style="padding-right:20px">
-                    <b>Total a Pagar S/. {{ number_format($amount,2) }}</b>
+                    <b>Total a Pagar S/. {{ number_format($amount, 2) }}</b>
                 </td>
                 <td></td>
             </tr>

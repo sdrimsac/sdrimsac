@@ -213,7 +213,7 @@ export default {
             };
         });
         this.initForm();
-        this.socketWhatsappConfig();
+        //this.socketWhatsappConfig();
     },
 
     methods: {

@@ -146,7 +146,9 @@
             font-family: arial;
 
         }
-
+        .text-end{
+            text-align: right;
+        }
         footer {
             position: fixed;
             bottom: 10px;
@@ -236,7 +238,7 @@
             'total' => '-',
         ];
     }
-    
+
 @endphp
 @inject('roleService', 'App\Services\RoleService')
 
@@ -512,7 +514,14 @@
                                 </td>
                                 <td class="right">
                                     @php
-                                        $total_cierre = $transfer + $bank + $digital + $sales_detail['cash']['sum'] + $cash->beginning_balance + $incomes_expenses_cash['incomes']['amount'] - $incomes_expenses_cash['expenses']['amount'];
+                                        $total_cierre =
+                                            $transfer +
+                                            $bank +
+                                            $digital +
+                                            $sales_detail['cash']['sum'] +
+                                            $cash->beginning_balance +
+                                            $incomes_expenses_cash['incomes']['amount'] -
+                                            $incomes_expenses_cash['expenses']['amount'];
                                     @endphp
                                     <span class="f12">S/ {{ number_format($total_cierre, 2) }}</span>
                                 </td>
@@ -544,7 +553,7 @@
                                 <tbody>
                                     @php
                                         $t_d = 0;
-                                        
+
                                     @endphp
                                     @foreach ($anulate_documents as $document)
                                         <tr>
@@ -575,52 +584,52 @@
                             </table>
                         @endif
                         @if (count($credit_notes) > 0)
-                        <table class="border f12">
-                            <thead>
-                                <tr class="thead">
-                                    <th colspan="4">
-                                        <span class="f12">NOTAS DE CRÉDITO</span>
-                                    </th>
-                                </tr>
-                                <tr>
-                                    <th class="center">FECHA</th>
-                                    <th colspan="2" class="center">NRO DOC</th>
-                                    <th class="center">TOTAL</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @php
-                                    $t_d = 0;
-                                    
-                                @endphp
-                                @foreach ($credit_notes as $document)
+                            <table class="border f12">
+                                <thead>
+                                    <tr class="thead">
+                                        <th colspan="4">
+                                            <span class="f12">NOTAS DE CRÉDITO</span>
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <th class="center">FECHA</th>
+                                        <th colspan="2" class="center">NRO DOC</th>
+                                        <th class="center">TOTAL</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @php
+                                        $t_d = 0;
+
+                                    @endphp
+                                    @foreach ($credit_notes as $document)
+                                        <tr>
+                                            <td class="center">
+                                                <span class="f12">{{ $document['date_of_issue'] }}</span>
+                                            </td>
+                                            <td colspan="2" class="center">
+                                                <span class="f12">{{ $document['full_number'] }}</span>
+                                            </td>
+                                            @php
+                                                $t_d += $document['total'];
+                                            @endphp
+                                            <td class="right">
+                                                <span class="f12">{{ number_format($document['total'], 2) }}</span>
+                                            </td>
+                                        </tr>
+                                    @endforeach
                                     <tr>
                                         <td class="center">
-                                            <span class="f12">{{ $document['date_of_issue'] }}</span>
+                                            <span class="f12">TOTAL</span>
                                         </td>
-                                        <td colspan="2" class="center">
-                                            <span class="f12">{{ $document['full_number'] }}</span>
-                                        </td>
-                                        @php
-                                            $t_d += $document['total'];
-                                        @endphp
-                                        <td class="right">
-                                            <span class="f12">{{ number_format($document['total'], 2) }}</span>
+                                        <td colspan="3" class="right">
+                                            <span class="f12">S/ {{ number_format($t_d, 2) }}</span>
                                         </td>
                                     </tr>
-                                @endforeach
-                                <tr>
-                                    <td class="center">
-                                        <span class="f12">TOTAL</span>
-                                    </td>
-                                    <td colspan="3" class="right">
-                                        <span class="f12">S/ {{ number_format($t_d, 2) }}</span>
-                                    </td>
-                                </tr>
-                            </tbody>
+                                </tbody>
 
-                        </table>
-                    @endif
+                            </table>
+                        @endif
                         @if ($total_discount > 0)
                             <table class="border f12">
                                 <thead>
@@ -966,7 +975,7 @@
                         'value' => 'doscientos',
                     ],
                 ];
-                
+
             @endphp
             <table class="border" style="margin-top:10px;">
                 <thead>
@@ -1237,6 +1246,14 @@
                             </td>
                             <td>
                                 {{ $credit_document['number'] }}
+                                @isset($credit_document['full_number_sale_note'])
+                                    <small>
+                                        <br>
+                                        <strong>
+                                            {{ $credit_document['full_number_sale_note'] }}
+                                        </strong>
+                                    </small>
+                                @endisset
                             </td>
                             <td>
                                 {{ $credit_document['customer_number'] }}
@@ -1247,13 +1264,13 @@
                             <td>
                                 {{ $credit_document['method'] }}
                             </td>
-                            <td>
+                            <td class="text-end">
                                 {{ $credit_document['amount'] }}
                             </td>
-                            <td>
+                            <td class="text-end">
                                 {{ $credit_document['paid'] ? 'CANCELADO' : 'DEBE' }}
                             </td>
-                            <td>
+                            <td class="text-end">
                                 {{ $credit_document['paid'] ? '0.00' : $credit_document['remaining'] }}
                             </td>
                         </tr>
@@ -1369,7 +1386,7 @@
                                                 $total[$item['service']] = 0;
                                             }
                                             $total[$item['service']] += $item['quantity'];
-                                            
+
                                         @endphp
                                         {{ $item['service'] }} ({{ $item['quantity'] }})<br>
                                     @endforeach
@@ -1434,7 +1451,7 @@
                                                 $total[$name] = 0;
                                             }
                                             $total[$name] += $quantity;
-                                            
+
                                         @endphp
                                         {{ $name }} ({{ $quantity }})<br>
                                     @endforeach

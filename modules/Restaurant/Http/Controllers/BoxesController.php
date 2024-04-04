@@ -72,6 +72,8 @@ class BoxesController extends Controller
                 $customer_number = $customer->number;
                 $customer_name = $customer->name;
                 $sale_note_id = $row->sale_note_id;
+                // $sale_note = SaleNote::find($sale_note_id);
+                $full_number_sale_note =$row->sale_note->number_full;
                 $document_id = $row->document_id;
                 if ($sale_note_id) {
                     $box = Box::where('sale_note_id', $row->sale_note_id)
@@ -104,7 +106,6 @@ class BoxesController extends Controller
                         $paid = false;
                     }
                 }
-
                 return
                     [
                         "id" => $row->id,
@@ -117,6 +118,7 @@ class BoxesController extends Controller
                         "amount" => $amount,
                         "paid" => $paid,
                         "remaining" => $remaining,
+                        "full_number_sale_note" => $full_number_sale_note,
                     ];
             });
 
