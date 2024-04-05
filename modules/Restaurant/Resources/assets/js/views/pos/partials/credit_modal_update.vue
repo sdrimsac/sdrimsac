@@ -1,6 +1,6 @@
 <template>
     <el-dialog
-        title="Crédito"
+        title="Editar"
         :visible="showDialog"
         @open="open"
         @close="close"
@@ -9,6 +9,11 @@
         append-to-body
     >
         <div class="m-2">
+            <div class="row">
+                <h3>
+                    {{customerName}}
+                </h3>
+            </div>
             <div class="row">
                 <!-- <div class="col-md-6">
                     <label>
@@ -184,6 +189,7 @@ export default {
     components: { PersonForm },
     data() {
         return {
+            customerName: "",
             form: {},
             tasaInteres: 17,
             disabled_month: false,
@@ -582,6 +588,7 @@ export default {
             this.form.total = data.total;
             this.credit.type_payment = data.type_payment;
             this.credit.month = data.month;
+            this.customerName = data.customer_name;
             this.tasaInteres = data.tasa;
         },
         close() {

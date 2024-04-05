@@ -16,6 +16,8 @@ class SaleNote extends ModelTenant
     protected $with = ['user', 'soap_type', 'state_type', 'currency_type', 'items', 'document_type'];
 
     protected $fillable = [
+        'is_product',
+        'is_cash',
         'status',
         'comercial_treatment_id',
         'cash_id',
@@ -138,16 +140,18 @@ class SaleNote extends ModelTenant
 
         );
     }
-    public function sale_note_credit(){
+    public function sale_note_credit()
+    {
         return $this->hasOne(SaleNoteCredit::class);
     }
-    public function getPenalties(){
+    public function getPenalties()
+    {
         $date_now =  Carbon::now()->startOfDay();
         $sale_note_credit = $this->sale_note_credit;
         $penalty_by_day = $sale_note_credit->penalty_amount_by_day;
         $payments = $this->creditPayments
-        ->where('paid',0)
-        ->where('date_payment','<=',$date_now);
+            ->where('paid', 0)
+            ->where('date_payment', '<=', $date_now);
         $penalty_amount = 0;
         foreach ($payments as $key => $payment) {
             $days = Carbon::parse($payment->date_payment)->diffInDays($date_now);
@@ -158,7 +162,6 @@ class SaleNote extends ModelTenant
         }
 
         return $penalty_amount;
-
     }
     public function boxes()
     {

@@ -143,13 +143,32 @@
                 </div> -->
             </div>
         </div>
-        <div class="row"
-        v-if="user && user.can_accept_credit_sale_note"
-        >
-            <div class="col-md-3 col-lg-3 col-12">
+        <div class="row" v-if="configuration.sale_note_credit_confirm">
+            <div
+                class="col-md-3 col-lg-3 col-12"
+                v-if="user && user.can_accept_credit_sale_note"
+            >
                 <el-checkbox v-model="isMigration" @change="setPayment">
                     <strong>
                         Ingresar pagos anteriores
+                    </strong>
+                </el-checkbox>
+            </div>
+            <div class="col-md-3 col-lg-3 col-12 d-flex">
+                <el-checkbox
+                    v-model="credit.is_cash"
+                    @change="changeType('cash')"
+                >
+                    <strong>
+                        Efectivo
+                    </strong>
+                </el-checkbox>
+                <el-checkbox
+                    v-model="credit.is_product"
+                    @change="changeType('product')"
+                >
+                    <strong>
+                        Hogar
                     </strong>
                 </el-checkbox>
             </div>
@@ -157,8 +176,7 @@
                 <div v-for="(payment, index) in payments" :key="index">
                     <el-checkbox v-model="payment.isPrepayment">
                         Cuota N° {{ index + 1 }}
-                        </el-checkbox
-                    >
+                    </el-checkbox>
                 </div>
             </div>
         </div>
@@ -226,6 +244,13 @@ export default {
         }
     },
     methods: {
+        changeType(type) {
+            if(type == 'cash') {
+                this.credit.is_product = false;
+            } else {
+                this.credit.is_cash = false;
+            }
+        },
         setPayment() {
             if (this.isMigration) {
                 let { num_cuota, amount } = this.credit;
@@ -236,7 +261,7 @@ export default {
                         isPrepayment: false
                     });
                 }
-            }else{
+            } else {
                 this.payments = [];
             }
         },
@@ -265,6 +290,8 @@ export default {
         },
         initCredit() {
             this.credit = {
+                is_product: false,
+                is_cash: false,
                 num_cuota: 0,
                 amount: 0,
                 month: 0,
@@ -284,7 +311,6 @@ export default {
             }
         },
         calculate(advance = 0) {
-            
             // let dias = 0;
             let tasa_interes = 0;
             if (this.form.total > 0 && this.credit.month > 0) {
@@ -331,7 +357,7 @@ export default {
                 }
                 this.credit.tasadefault = tasa_interes;
             }
-            if(this.isMigration){
+            if (this.isMigration) {
                 this.payments = [];
                 this.setPayment();
             }
@@ -525,7 +551,7 @@ export default {
                 this.form = {
                     ...this.form,
                     ...this.credit,
-                    prepayments: this.payments,
+                    prepayments: this.payments
                 };
                 this.form.time_of_issue = moment().format("HH:mm:ss");
                 const response = await this.$http.post(

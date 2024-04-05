@@ -149,9 +149,9 @@
                     </el-select>
                 </div>
             </div>
-            <div class="col-lg-2 col-md-2"
-            v-if="configuration.sale_note_credit_confirm"
-                
+            <div
+                class="col-lg-2 col-md-2"
+                v-if="configuration.sale_note_credit_confirm"
             >
                 <div class="form-group">
                     <label class="w-100 control-label">
@@ -175,6 +175,108 @@
                             :key="idx"
                             :value="option.id"
                             :label="option.description"
+                        ></el-option>
+                    </el-select>
+                </div>
+            </div>
+            <div
+                class="col-lg-2 col-md-2"
+                v-if="configuration.sale_note_credit_confirm"
+            >
+                <div class="form-group">
+                    <label class="w-100 control-label">
+                        Usuario
+                    </label>
+
+                    <el-select
+                        class="w-100"
+                        v-model="form.user_id"
+                        clearable
+                        placeholder="Usuario"
+                        @change="getRecordsByFilter"
+                        :loading="loading_search"
+                    >
+                        <el-option
+                            v-for="(option, idx) in users"
+                            :key="idx"
+                            :value="option.id"
+                            :label="option.name"
+                        ></el-option>
+                    </el-select>
+                </div>
+            </div>
+            <div
+                class="col-lg-2 col-md-2"
+                v-if="configuration.sale_note_credit_confirm"
+            >
+                <div class="form-group">
+                    <label class="w-100 control-label">
+                        Tipo
+                    </label>
+
+                    <el-select
+                        class="w-100"
+                        v-model="form.type"
+                        clearable
+                        placeholder="Tipo"
+                        @change="getRecordsByFilter"
+                        :loading="loading_search"
+                    >
+                        <el-option
+                            v-for="(option, idx) in [
+                                { id: 'is_product', name: 'Hogar' },
+                                { id: 'is_cash', name: 'Efectivo' }
+                            ]"
+                            :key="idx"
+                            :value="option.id"
+                            :label="option.name"
+                        ></el-option>
+                    </el-select>
+                </div>
+            </div>
+            <div
+                class="col-lg-2 col-md-2"
+                v-if="configuration.sale_note_credit_confirm"
+            >
+                <div class="form-group">
+                    <label class="w-100 control-label">
+                        Tipo cuota
+                    </label>
+
+                    <el-select
+                        class="w-100"
+                        v-model="form.type_payment"
+                        clearable
+                        placeholder="Tipo cuota"
+                        @change="getRecordsByFilter"
+                        :loading="loading_search"
+                    >
+                        <el-option
+                            v-for="(option, idx) in [
+                                {
+                                    id: 'Diario',
+                                    name: 'Diario'
+                                },
+                                {
+                                    id: 'Semanal',
+                                    name: 'Semanal'
+                                },
+                                {
+                                    id: 'Quincenal',
+                                    name: 'Quincenal'
+                                },
+                                {
+                                    id: 'Mensual',
+                                    name: 'Mensual'
+                                },
+                                {
+                                    id: 'Unico',
+                                    name: 'Unico'
+                                }
+                            ]"
+                            :key="idx"
+                            :value="option.id"
+                            :label="option.name"
                         ></el-option>
                     </el-select>
                 </div>
@@ -227,6 +329,7 @@
                         <tr>
                             <th>#</th>
                             <th class="text-center">N/V</th>
+                            <th class="text-center">Usuario</th>
                             <th class="text-center">Fecha de emisión</th>
                             <th class="text-center">DNI</th>
                             <th class="text-center">Nombres</th>
@@ -256,6 +359,7 @@
                             <td>{{ customIndex(idx) }}</td>
 
                             <td class="text-center">{{ row.number }}</td>
+                            <td class="text-center">{{ row.user_name }}</td>
                             <td class="text-center">{{ row.date_of_issue }}</td>
                             <td class="text-center">
                                 {{ row.customer.number }}
@@ -305,14 +409,16 @@
                                             : "RECHAZADO"
                                     }}
                                     <el-tooltip
-                                    v-if="row.status == 'R' && row.observation"
-                                    :content="row.observation"
-                                    placement="top"
+                                        v-if="
+                                            row.status == 'R' && row.observation
+                                        "
+                                        :content="row.observation"
+                                        placement="top"
                                     >
-                                    <i
-                                        class="el-icon-info"
-                                        style="color:red"
-                                    ></i>
+                                        <i
+                                            class="el-icon-info"
+                                            style="color:red"
+                                        ></i>
                                     </el-tooltip>
                                 </strong>
                             </td>
@@ -324,7 +430,12 @@
                                     "
                                 >
                                     <el-dropdown
-                                        v-if="(!user.can_accept_credit_sale_note && !isAnalist) ? row.status == 'A': true "
+                                        v-if="
+                                            !user.can_accept_credit_sale_note &&
+                                            !isAnalist
+                                                ? row.status == 'A'
+                                                : true
+                                        "
                                         size="medium"
                                         split-button
                                         type="primary"
@@ -438,10 +549,13 @@
                                             <el-dropdown-item
                                                 v-if="
                                                     row.state_type_id != '11' &&
-                                                        row.can_edit && (isAnalist || user.can_edit_sale_note)
+                                                        row.can_edit &&
+                                                        (isAnalist ||
+                                                            user.can_accept_credit_sale_note)
                                                 "
                                             >
                                                 <span
+                                                    style="width:100%;display:block;"
                                                     role="button"
                                                     @click.prevent="
                                                         clickEditSaleNote(
@@ -518,6 +632,7 @@
                                                 v-if="row.state_type_id != '11'"
                                             >
                                                 <span
+                                                    style="width:100%;display:block;"
                                                     role="button"
                                                     @click.prevent="
                                                         clickEditSaleNote(
@@ -633,6 +748,7 @@ export default {
     props: ["showDialog", "configuration", "isAnalist", "user"],
     data() {
         return {
+            users: [],
             showObservationsDialog: false,
             observations: "",
             showDialogUpdate: false,
@@ -675,8 +791,16 @@ export default {
         this.$eventHub.$on("reloadData", () => {
             this.getRecords();
         });
+        this.getTables();
     },
     methods: {
+        async getTables() {
+            const response = await this.$http.get(`/${this.resource}/filter`);
+            if (response.data) {
+                this.users = response.data.users;
+                console.log("🚀 ~ getTables ~ this.users:", this.users);
+            }
+        },
         clickInitPayment(id) {
             this.recordId = id;
             this.showDialogInitPayments = true;
@@ -739,15 +863,20 @@ export default {
             window.open(`/sale-notes/schedule/${recordId}`, "_blank");
         },
         clickContract(recordId) {
-            window.open(`/sale-notes/contract/${recordId}`, "_blank");
+            if (this.configuration.sale_note_credit_confirm) {
+                window.open(`/sale-notes/contrato/${recordId}`, "_blank");
+            } else {
+                window.open(`/sale-notes/contract/${recordId}`, "_blank");
+            }
         },
         clickCreate(id = "") {
             location.href = `/${this.resource}/create/${id}`;
         },
         initForm() {
             this.form = {
-                status:null,
-                paid: null,
+                user_id: null,
+                status: null,
+                paid: 0,
                 establishment_id: null,
                 person_id: null,
                 type_person: null,
@@ -887,9 +1016,9 @@ export default {
                 .then(response => {
                     this.records = response.data.data;
                     //sort records by dues property (int) in descending order
-                    this.records.sort(function(a, b) {
-                        return b.dues - a.dues;
-                    });
+                    // this.records.sort(function(a, b) {
+                    //     return b.dues - a.dues;
+                    // });
 
                     this.pagination = response.data.meta;
                     this.pagination.per_page = parseInt(

@@ -2064,6 +2064,9 @@ export default {
         this.setMenuOptions();
         // await this.changeCustomer();
         this.loading = false;
+        if(this.configuration.credits && this.configuration.sale_note_credit_confirm){
+            this.openCredit();
+        }
         this.$eventHub.$on("reloadDataPersons", customer_id => {
             this.reloadDataCustomers(customer_id);
         });
@@ -2503,8 +2506,9 @@ export default {
                 //f4 
                 case 115:
                     event.preventDefault(); // Evita la función por defecto del navegador
-
-                    this.openCredit();
+                    if(this.configuration.credits){
+                        this.openCredit();
+                    }
                     // this.openDrawer();
                     break;
                 case 113:
@@ -5600,6 +5604,7 @@ export default {
                 }
             }
         );
+        
     }
 };
 </script>

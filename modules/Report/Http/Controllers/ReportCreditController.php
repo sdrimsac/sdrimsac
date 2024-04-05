@@ -25,7 +25,15 @@ class ReportCreditController extends Controller
     public function filter()
     {
 
-
+        $users = User::whereType('seller')
+            ->where('active', true)
+            ->get()
+            ->transform(function ($row) {
+                return [
+                    'id' => $row->id,
+                    'name' => $row->name
+                ];
+            });
         $establishments = Establishment::all()->transform(function ($row) {
             return [
                 'id' => $row->id,
@@ -35,7 +43,7 @@ class ReportCreditController extends Controller
         $sellers = $this->getSellers();
         $persons = $this->getPersons('customers');
 
-        return compact('establishments', 'sellers', 'persons');
+        return compact('establishments', 'sellers', 'persons', 'users');
     }
 
 
@@ -51,13 +59,16 @@ class ReportCreditController extends Controller
         $status = $request->status;
         $period = $this->getDatesOfPeriod($request);
         $person_id = $request->person_id;
+        $user_id = $request->user_id;
+        $type = $request->type;
+        $type_payment = $request->type_payment;
         $params = (object)[
             'date_start' => $period['d_start'],
             'date_end' => $period['d_end'],
         ];
-        if($status == "R"){
-            $records = SaleNote::where('status','R');
-        }else{
+        if ($status == "R") {
+            $records = SaleNote::where('status', 'R');
+        } else {
             $records = SaleNote::whereHas('creditPayments');
         }
         if ($params->date_start && $params->date_end) {
@@ -65,7 +76,7 @@ class ReportCreditController extends Controller
                 $records->whereBetween('date_of_issue', [$params->date_start, $params->date_end]);
         }
 
-        if($status && $status != "R"){
+        if ($status && $status != "R") {
             $records = $records->where('status', $status);
         }
 
@@ -75,7 +86,22 @@ class ReportCreditController extends Controller
         if ($paid != null) {
             $records = $records->where('paid', $paid);
         }
+        if ($type != null) {
+            if ($type == 'is_product') {
+                $records = $records->where('is_product', true);
+            }
+            if ($type == 'is_cash') {
+                $records = $records->where('is_cash', true);
+            }
+        }
+        if ($type_payment != null) {
+            $records = $records->where('type_payment', $type_payment);
+        }
 
+
+        if ($user_id) {
+            $records = $records->where('user_id', $user_id);
+        }
         $records->orderBy('date_of_issue', 'desc');
 
         return new ReportCreditCollection($records->paginate(config('tenant.items_per_page')));

@@ -11,12 +11,10 @@
             margin: 1px;
             padding: 1px;
             font-family: Arial, sans-serif;
-            font-size: 12px;
+            font-size: 14px;
             font-weight: normal;
             line-height: 1.42857143;
-            /*texto justificado */
             text-align: justify;
-
 
         }
 

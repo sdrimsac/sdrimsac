@@ -211,6 +211,8 @@ class SaleNotePaymentController extends Controller
                 $payment->save();
                 $all_payed = Payment::where('sale_note_id', $request->sale_note_id)
                     ->where('paid', 0)->count();
+                $num_cuota = Payment::where('sale_note_id', $request->sale_note_id)
+                    ->where('paid', 1)->count();
                 if ($all_payed == 0) {
                     $sale_note = SaleNote::find($request->sale_note_id);
                     $sale_note->paid = true;

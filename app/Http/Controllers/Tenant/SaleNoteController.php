@@ -605,8 +605,9 @@ class SaleNoteController extends Controller
         $advances = $sale_note->advances;
         $total = $sale_note->total;
         $type_payment = $sale_note->type_payment;
+        $customer_name = $sale_note->customer->name;
 
-        return compact('tasa', 'month', 'advances', 'total', 'type_payment');
+        return compact('tasa', 'month', 'advances', 'total', 'type_payment','customer_name');
     }
     public function record($id)
     {
@@ -656,6 +657,7 @@ class SaleNoteController extends Controller
         $sale = SaleNote::findOrFail($id);
         $establishment = Establishment::where('id', auth()->user()->establishment_id)->first();
         $payment = Payment::where('sale_note_id', $id)->get();
+        
         $recibo = PDF::loadView('tenant.contract.contrato', ['company' => $company, 'sale' => $sale, 'payment' => $payment, 'establishment' => $establishment]);
         return $recibo->setPaper('a4', 'portrait')->stream();
     }

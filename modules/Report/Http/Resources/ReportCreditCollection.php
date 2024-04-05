@@ -70,7 +70,9 @@ class ReportCreditCollection extends ResourceCollection
             if($row->status == "R"){
                 $can_edit = false;
             }
+            $user_name = $row->user->name;
             return [
+                'user_name' => $user_name,
                 'show_formats' => $show_formats,
                 'id' => $row->id,
                 'status' => $row->status,
