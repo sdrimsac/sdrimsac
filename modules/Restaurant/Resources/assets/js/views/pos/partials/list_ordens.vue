@@ -210,7 +210,7 @@
             <div :class="`p-1 bg-primary`">
                 <div class="row col-md-12 mx-1">
                     <div>
-                        <template v-if="!isAnalist">
+                        <template v-if="!configuration.sale_note_credit_confirm">
                             <template
                                 v-if="
                                     (this.quotation_stock &&
@@ -2212,6 +2212,7 @@
         </quotation-form>
 
         <credit-form
+            :users.sync="users"
             :user.sync="user"
             :showDialog.sync="showCreditForm"
             :items="localOrden"
@@ -2355,6 +2356,7 @@
         >
         </consignment-form>
         <credit-list-modal
+
             :showDialog.sync="showCreditListModal"
             :amountToAdd="creditListAmount"
             @sendOrdenToCreditList="sendOrdenToCreditList"
@@ -2462,6 +2464,7 @@ export default {
         ShowColorSizeProduct
     },
     props: [
+        "users",
         "cotIdentifier",
         "quotationId",
         "isSeller",

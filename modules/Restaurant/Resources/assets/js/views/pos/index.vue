@@ -976,9 +976,17 @@
                     </div>
                 </div>
                 <div class="col-5 col-sm-7 col-lg-6 col-md-7 col-xl-5">
-                    <div class="card-body p-2">
+                    <div
+                        class="card-body p-2"
+                        v-if="
+                            configuration.sale_note_credit_confirm
+                                ? isAnalist || user.can_accept_credit_sale_note
+                                : true
+                        "
+                    >
                         <list-orden
-                    :user.sync="user"
+                            :users.sync="users"
+                            :user.sync="user"
                             :quotationId.sync="quotationId"
                             :cotIdentifier.sync="cotIdentifier"
                             :isSeller.sync="isSeller"
@@ -1511,6 +1519,7 @@
                 </div>
                 <div class="row">
                     <list-orden
+                        :users.sync="users"
                         @sendOrdens="sendOrdens"
                         :company.sync="company"
                         :customer_variation="customer_variation"
@@ -2020,7 +2029,8 @@ export default {
             config: {},
             screenWidth: 0,
             showdialogPromocion: false,
-            timer: null
+            timer: null,
+            users:[],
         };
     },
     beforeDestroy() {
@@ -2064,7 +2074,10 @@ export default {
         this.setMenuOptions();
         // await this.changeCustomer();
         this.loading = false;
-        if(this.configuration.credits && this.configuration.sale_note_credit_confirm){
+        if (
+            this.configuration.credits &&
+            this.configuration.sale_note_credit_confirm
+        ) {
             this.openCredit();
         }
         this.$eventHub.$on("reloadDataPersons", customer_id => {
@@ -2503,10 +2516,10 @@ export default {
         handleKeydown(event) {
             let { keyCode, key } = event;
             switch (keyCode) {
-                //f4 
+                //f4
                 case 115:
                     event.preventDefault(); // Evita la función por defecto del navegador
-                    if(this.configuration.credits){
+                    if (this.configuration.credits) {
                         this.openCredit();
                     }
                     // this.openDrawer();
@@ -5001,6 +5014,8 @@ export default {
             await this.$http.get(`/${this.resource}/tables`).then(response => {
                 // this.all_items = response.data.items;
                 this.sellers = response.data.sellers;
+                this.users = response.data.users;
+                console.log("🚀 ~ awaitthis.$http.get ~ this.users:", this.users)
                 this.tablesClean = response.data.tablesClean;
                 this.tablesClean = this.tablesClean.map(t => ({
                     ...t,
@@ -5604,7 +5619,6 @@ export default {
                 }
             }
         );
-        
     }
 };
 </script>

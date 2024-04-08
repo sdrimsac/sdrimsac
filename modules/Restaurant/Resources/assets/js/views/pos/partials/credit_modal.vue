@@ -144,10 +144,7 @@
             </div>
         </div>
         <div class="row" v-if="configuration.sale_note_credit_confirm">
-            <div
-                class="col-md-3 col-lg-3 col-12"
-                v-if="user && user.can_accept_credit_sale_note"
-            >
+            <div class="col-md-3 col-lg-3 col-12">
                 <el-checkbox v-model="isMigration" @change="setPayment">
                     <strong>
                         Ingresar pagos anteriores
@@ -171,6 +168,23 @@
                         Hogar
                     </strong>
                 </el-checkbox>
+            </div>
+            <div class="col-md-3 col-lg-3 col-12">
+                <label>Usuario</label>
+                <el-select
+                    v-model="credit.user_id"
+                    filterable
+                    clearable
+                    placeholder="Seleccione un usuario"
+                >
+                    <el-option
+
+                        v-for="user in users"
+                        :key="user.id"
+                        :label="user.name"
+                        :value="user.id"
+                    ></el-option>
+                </el-select>
             </div>
             <div class="row">
                 <div v-for="(payment, index) in payments" :key="index">
@@ -218,6 +232,7 @@ export default {
     components: { PersonForm },
     data() {
         return {
+            users:[],
             payments: [],
             isMigration: false,
             form: {},
@@ -245,7 +260,7 @@ export default {
     },
     methods: {
         changeType(type) {
-            if(type == 'cash') {
+            if (type == "cash") {
                 this.credit.is_product = false;
             } else {
                 this.credit.is_cash = false;
@@ -573,7 +588,14 @@ export default {
                 this.loading = false;
             }
         },
+        async getUsers(){
+            const response = await this.$http.get(`/reports/credits/filter`);
+            if (response.data) {
+                this.users = response.data.users;
+            }
+        },
         open() {
+            this.getUsers();
             this.payments = [];
             this.isMigration = false;
             let { rates } = this.configuration;

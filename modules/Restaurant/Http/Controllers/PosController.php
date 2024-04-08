@@ -459,11 +459,20 @@ class PosController extends Controller
         $methods = PaymentMethodType::where('active', 1)->get();
         $desarrollador = Desarrollador::first();
         $item_default = null;
+        $users = User::whereType('seller')
+        ->where('active', true)
+        ->get()
+        ->transform(function ($row) {
+            return [
+                'id' => $row->id,
+                'name' => $row->name
+            ];
+        });
         $config = Configuration::first();
         if ($config->item_variation_id) {
             $item_default = Item::find($config->item_variation_id);
         }
-        return compact('gruop', 'category', 'subcategory', 'company', 'methods', 'desarrollador', 'item_default');
+        return compact('gruop','users',  'category', 'subcategory', 'company', 'methods', 'desarrollador', 'item_default');
     }
     public function columns() //buscador x campo
     {

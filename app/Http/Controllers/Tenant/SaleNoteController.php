@@ -607,7 +607,7 @@ class SaleNoteController extends Controller
         $type_payment = $sale_note->type_payment;
         $customer_name = $sale_note->customer->name;
 
-        return compact('tasa', 'month', 'advances', 'total', 'type_payment','customer_name');
+        return compact('tasa', 'month', 'advances', 'total', 'type_payment', 'customer_name');
     }
     public function record($id)
     {
@@ -657,7 +657,7 @@ class SaleNoteController extends Controller
         $sale = SaleNote::findOrFail($id);
         $establishment = Establishment::where('id', auth()->user()->establishment_id)->first();
         $payment = Payment::where('sale_note_id', $id)->get();
-        
+
         $recibo = PDF::loadView('tenant.contract.contrato', ['company' => $company, 'sale' => $sale, 'payment' => $payment, 'establishment' => $establishment]);
         return $recibo->setPaper('a4', 'portrait')->stream();
     }
@@ -706,7 +706,7 @@ class SaleNoteController extends Controller
                 $request["type_payment"]  = Functions::valueKeyInArray($request->all(), "type_payment", "Diario");
                 $request["document_type_id"] = "80";
                 $all_ordens = Functions::valueKeyInArray($request->all(), "all_ordens", false);
-
+                $user = User::find($request['user_id']);
                 $data = $this->mergeData($request);
                 $data['time_of_issue'] = date('H:i:s');
                 $this->sale_note =  SaleNote::updateOrCreate(
@@ -953,12 +953,28 @@ class SaleNoteController extends Controller
                                 $payment_->paid = true;
                                 $payment_->amount_paid = $payment_->amount;
                                 $payment_->save();
-                                SaleNotePayment::create([
+                                $sale_note_payment_ = SaleNotePayment::create([
                                     'sale_note_id' => $this->sale_note->id,
                                     // 'payment_id' => $payment_->id,
                                     'payment_method_type_id' => '01',
                                     'date_of_payment' => $date_payment,
                                     'payment' => $payment_->amount,
+                                ]);
+                                $number_receipt = str_pad(($i + 1), 7, "0", STR_PAD_LEFT);
+                                Receipt::create([
+                                    'user_id' =>$user->id,
+                                    'date_of_issue' => $date_payment,
+                                    'num_cuota' => $i + 1,
+                                    'external_id' => Str::uuid()->toString(),
+                                    'hour' => date('H:i:s'),
+                                    'establishment_id' => $user->establishment_id,
+                                    'customer_id' => $this->sale_note->customer_id,
+                                    'sale_note_id' => $this->sale_note->id,
+                                    'sale_note_payment_id' => $sale_note_payment_->id,
+                                    'detail' => 'PAGO DE NOTA DE VENTA N° ' . $this->sale_note->series . '-' . $this->sale_note->number,
+                                    'number' => $number_receipt,
+                                    'amount' => $payment_->amount,
+                                    'state' => 0,
                                 ]);
                             }
                         }

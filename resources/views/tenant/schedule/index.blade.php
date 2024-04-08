@@ -198,8 +198,8 @@
             ?>
             @foreach ($data as $row)
                 <?php
-                $amount = $amount + $row['amount'] - $row['amount_paid'];
-                $amount_to_paid = $amount_to_paid + $row['amount'];
+                $amount = $amount + $row['amount'] + $row['penalty_amount'] - $row['amount_paid'];
+                $amount_to_paid = $amount_to_paid + $row['amount'] + $row['penalty_amount'];
                 ?>
                 <tr>
                     <td align="center" class="border-bottom">
@@ -210,7 +210,7 @@
                     </td>
                     <td align="right" class="border-bottom" style="padding-right:20px">
                         @php
-                            $row_amount = $row->amount;
+                            $row_amount = $row->amount + $row->penalty_amount;
                             if ($showing_partial == false && $row->paid == false && $total_paid > 0) {
                                 $row_amount = $amount_to_paid - $total_paid;
                                 $showing_partial = true;
