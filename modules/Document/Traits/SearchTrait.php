@@ -41,7 +41,6 @@ trait SearchTrait
 
         $items = Item::query();
         if($request->input){
-
             $items = $items->where('description','like', "%{$request->input}%")
             ->orWhere(function ($subquery) use ($request){
                 $subquery->where('internal_id','like', "%{$request->input}%")

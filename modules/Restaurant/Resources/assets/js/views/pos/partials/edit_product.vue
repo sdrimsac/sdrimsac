@@ -85,7 +85,7 @@ export default {
                     .get(`/documents/search-items?${parameters}`)
                     .then(response => {
                         if (response.data) {
-                            let items = response.data.items;
+                            let items = response.data;
 
                             if (items.length > 0) {
                                 this.items = items;

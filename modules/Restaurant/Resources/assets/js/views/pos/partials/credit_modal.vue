@@ -190,6 +190,8 @@
                     ></el-option>
                 </el-select>
             </div>
+
+    
             <div class="row">
                 <div v-for="(payment, index) in payments" :key="index">
                     <el-checkbox v-model="payment.isPrepayment">

@@ -2294,6 +2294,30 @@
                                             ></el-switch>
                                         </div>
                                     </div>
+                                    <div class="col-md-6 mt-4">
+                                        <div class="form-group">
+                                            <label class="control-label w-100">
+                                                Whatsapp personalizado
+                                                <el-tooltip
+                                                    class="item"
+                                                    effect="dark"
+                                                    content="Usa su propia app de whatsapp"
+                                                    placement="top-start"
+                                                >
+                                                    <i
+                                                        class="fa fa-info-circle"
+                                                    ></i>
+                                                </el-tooltip>
+                                            </label>
+
+                                            <el-switch
+                                                v-model="form.whatsapp_client"
+                                                active-text="Si"
+                                                inactive-text="No"
+                                                @change="submit"
+                                            ></el-switch>
+                                        </div>
+                                    </div>
                                 </div>
                             </el-tab-pane>
                             <el-tab-pane label="Modos" v-if="!isArca">

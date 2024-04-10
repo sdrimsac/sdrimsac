@@ -393,15 +393,20 @@ class WhatsappController extends Controller
 
     public function sendHistorial(Request $request)
     {
+        $configuration = Configuration::first();
         $sender = $request->sender ?? 'sdrimsac';
-        if ($sender == 'tunegociofactvillacorpnet') {
-            $sender = 'sdrimsac';
-        }
-
-        if ($sender == "sdrimsac" || $sender == null) {
-            $url = "https://sdrpersonal.shop" . '/api/send-media';
+        if ($configuration->whatsapp_client && $sender != 'sdrimsac') {
+            $url = "https://" . $sender . ".sdrpersonal.shop" . '/api/send-media';
         } else {
-            $url = config('app.whatsapp_url') . '/api/send-media';
+            if ($sender == 'tunegociofactvillacorpnet') {
+                $sender = 'sdrimsac';
+            }
+
+            if ($sender == "sdrimsac" || $sender == null) {
+                $url = "https://sdrpersonal.shop" . '/api/send-media';
+            } else {
+                $url = config('app.whatsapp_url') . '/api/send-media';
+            }
         }
         // $url = 'http://localhost:3800/api/send-media';
         $resource = $request->resource;

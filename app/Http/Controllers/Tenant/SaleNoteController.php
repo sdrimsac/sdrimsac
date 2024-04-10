@@ -98,6 +98,47 @@ class SaleNoteController extends Controller
     protected $apply_change;
     protected $document;
     protected $configuration;
+
+    public function generateMessages()
+    {
+        $configuration = Configuration::first();
+        $messages = [];
+        if ($configuration->credits) {
+            $sale_notes = SaleNote::where('paid', 0)->whereHas('creditPayments')
+                ->where('type_payment', '<>', 'Diario')
+                ->get();
+            foreach ($sale_notes as $key => $row) {
+                $payment = Payment::where('sale_note_id', $row->id);
+                $payment_not_paid = $payment->where('paid', 0)
+                    ->where('date_payment', '<=', Carbon::now()->startOfDay())
+                    ->orderBy('date_payment', 'desc');
+                $last_payment =  Payment::where('sale_note_id', $row->id)
+                    ->where('paid', 0)
+                    ->orderBy('date_payment', 'asc')
+                    ->first();
+                $dues = $payment_not_paid->count();
+                $date_of_due = ($last_payment) ? $last_payment->date_payment : null;
+                $differenc_days = 0;
+                if ($date_of_due && $dues > 0) {
+                    if (is_object($date_of_due)) {
+                        $date_of_due = $date_of_due->format('Y-m-d');
+                    }
+                    $differenc_days = Carbon::parse($date_of_due)->diffInDays(Carbon::now()->startOfDay(), false);
+                }
+                if ($differenc_days > 0) {
+                    $customer_name = $row->customer->name;
+                    $customer = Person::find($row->customer_id);
+                    $telephone = $customer->telephone;
+                    $message = "Estimado Cliente \"" . $customer_name . "\", Ud. Tiene " . $differenc_days . " días de atraso, favor de tomar las consideraciones pertinentes. Si ya pago omita este mensaje.";
+                    $messages[] = [
+                        'telephone' => $telephone,
+                        'message' => $message
+                    ];
+                }
+            }
+        }
+        return $messages;
+    }
     public function getItemsFromNotesCaja(Request $request)
     {
         $request->validate([
@@ -1468,7 +1509,7 @@ class SaleNoteController extends Controller
     {
         $data = Payment::where('sale_note_id', $sale_note_id)->get();
         $tasa = $data->first()->tasa;
-        $quote = number_format($data->first()->amount,2);
+        $quote = number_format($data->first()->amount, 2);
         $days = count($data);
         $init_date = Carbon::parse($data->first()->date_payment)->format('d/m/Y');
         $end_date = Carbon::parse($data->last()->date_payment)->format('d/m/Y');

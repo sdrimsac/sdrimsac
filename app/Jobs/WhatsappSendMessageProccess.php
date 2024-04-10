@@ -26,25 +26,29 @@ class WhatsappSendMessageProccess implements ShouldQueue
     protected $website_id;
     protected $message;
     protected $number;
+    protected $subdomain;
 
 
-    public function __construct($website_id, $message, $number)
+    public function __construct($website_id, $message, $number,$subdomain = null)
     {
+
         $this->website_id = $website_id;
         $this->message = $message;
         $this->number = $number;
+        $this->subdomain = $subdomain;
     }
 
 
     public function handle()
     {
         $website = $this->findWebsite($this->website_id);
+        
         $tenancy = app(Environment::class);
         $tenancy->tenant($website);
         $number = $this->number;
         $message = $this->message;
+        $configuration = Configuration::first();
         if ($number == null) {
-            $configuration = Configuration::first();
             $number = $configuration->number_activity;
         }
 
@@ -54,11 +58,14 @@ class WhatsappSendMessageProccess implements ShouldQueue
         }
         $url = "https://sdrpersonal.shop/api/send-message";
 
-
-
+        $sender = 'sdrimsac';
+        if($this->subdomain != null && $configuration->whatsapp_client){
+            $url = "https://".$this->subdomain.".sdrpersonal.shop/api/send-message";
+            $sender = $this->subdomain;
+        }
             $response = Http::post($url, [
                 'number' => "51" . $number,
-                'sender' => 'sdrimsac',
+                'sender' => $sender,
                 'message' => $message,
             ]);
 

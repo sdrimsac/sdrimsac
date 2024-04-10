@@ -5,6 +5,7 @@ namespace App\Jobs;
 
 use App\Http\Controllers\Tenant\WhatsappController;
 use App\Models\Tenant\Company;
+use App\Models\Tenant\Configuration;
 use App\Models\Tenant\Dispatch;
 use App\Models\Tenant\Document;
 use App\Models\Tenant\Quotation;
@@ -61,6 +62,7 @@ class WhatsappSendDocumentProccess implements ShouldQueue
         $website = $this->findWebsite($this->website_id);
         $tenancy = app(Environment::class);
         $tenancy->tenant($website);
+        $configuration = Configuration::first();
         try {
             $message = $this->message;
             $url1 = "http://".$this->url;
@@ -102,7 +104,13 @@ class WhatsappSendDocumentProccess implements ShouldQueue
                 $sender = 'sdrimsac';
             }
             if ($sender == "sdrimsac") {
-                $url = "https://sdrpersonal.shop" . '/api/send-media';
+                if($configuration->whatsapp_client){
+                    $subdomain = explode(".", parse_url($url1, PHP_URL_HOST))[0];
+                    $sender = $subdomain;
+                    $url = "https://".$subdomain.".sdrpersonal.shop" . '/api/send-media';
+                }else{
+                    $url = "https://sdrpersonal.shop" . '/api/send-media';
+                }
             } else {
                 $url = config('app.whatsapp_url') . '/api/send-media';
             }

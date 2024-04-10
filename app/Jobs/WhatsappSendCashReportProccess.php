@@ -42,15 +42,20 @@ class WhatsappSendCashReportProccess implements ShouldQueue
         $website = $this->findWebsite($this->website_id);
         $tenancy = app(Environment::class);
         $tenancy->tenant($website);
+        $subdomain = explode(".", $this->fqdn)[0];
         try {
             $configuration = Configuration::first();
             $number_activity = $configuration->number_activity;
             $resource = "http://" . $this->fqdn . "/caja/report-boxes/reports_resumen_type?cash_id=" . $this->cash_id;
             Log::info("resource: " . $resource);
+            $sender = 'sdrimsac';
+            if($configuration->whatsapp_client){
+                $sender = $subdomain;
+            }
             $request = new Request(
                 [
                     'from_server' => true,
-                    'sender' => 'sdrimsac',
+                    'sender' => $sender,
                     'number' => $number_activity,
                     'resource' => $resource,
                     'file_name' => 'Reporte_Caja' . Carbon::now()->format("Y-m-d"),
