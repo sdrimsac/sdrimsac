@@ -978,11 +978,7 @@
                 <div class="col-5 col-sm-7 col-lg-6 col-md-7 col-xl-5">
                     <div
                         class="card-body p-2"
-                        v-if="
-                            configuration.sale_note_credit_confirm
-                                ? isAnalist || user.can_accept_credit_sale_note
-                                : true
-                        "
+                        
                     >
                         <list-orden
                             :users.sync="users"

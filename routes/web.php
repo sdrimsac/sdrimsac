@@ -48,6 +48,8 @@ if ($hostname) {
             Route::get('quotations/print/{external_id}/{format?}', [App\Http\Controllers\Tenant\QuotationController::class, 'toPrint']);
             Route::get('sale-notes/print/{external_id}/{format?}', [App\Http\Controllers\Tenant\SaleNoteController::class, 'toPrint']);
             Route::get('sale-notes/schedule/{sale_note_id}', [App\Http\Controllers\Tenant\SaleNoteController::class, 'schedule']);
+            Route::get('sale-notes/cash_schedule/{sale_note_id}/{page?}', [App\Http\Controllers\Tenant\SaleNoteController::class, 'cash_schedule']);
+            Route::get('sale-notes/hogar_schedule/{sale_note_id}/{page?}', [App\Http\Controllers\Tenant\SaleNoteController::class, 'hogar_schedule']);
             Route::get('receipt/print/{external_id}', [App\Http\Controllers\Tenant\ReceiptController::class, 'toPrint']);
             Route::get('getDesarrollador', [App\Http\Controllers\Tenant\UserController::class, 'getDesarrollador']);
             Route::get('getAreaPrinter', [App\Http\Controllers\Tenant\UserController::class, 'getAreaPrinter']);

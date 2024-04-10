@@ -516,18 +516,31 @@
                                                         Imprimir contrato
                                                     </span>
                                                 </el-dropdown-item>
-                                                <el-dropdown-item>
-                                                    <span
+                                                <el-dropdown-item
+                                                    v-for="(schedule,
+                                                    idx) in row.schedules"
+                                                    :key="idx"
+                                                >
+                                                    <a
                                                         role="button"
                                                         style="width:100%;display:block;"
-                                                        @click.prevent="
-                                                            clickSchedule(
-                                                                row.id
-                                                            )
-                                                        "
+                                                        target="_blank"
+                                                        :href="schedule"
                                                     >
-                                                        Cronograma de pagos
-                                                    </span>
+                                                        <template
+                                                            v-if="
+                                                                row.schedules
+                                                                    .length > 1
+                                                            "
+                                                        >
+                                                            Cronograma de pagos
+                                                            N°
+                                                            {{ idx + 1 }}
+                                                        </template>
+                                                        <template v-else>
+                                                            Cronograma de pagos
+                                                        </template>
+                                                    </a>
                                                 </el-dropdown-item>
                                             </template>
                                             <!-- <el-dropdown-item

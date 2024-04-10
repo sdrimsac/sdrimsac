@@ -144,7 +144,9 @@
             </div>
         </div>
         <div class="row" v-if="configuration.sale_note_credit_confirm">
-            <div class="col-md-3 col-lg-3 col-12">
+            <div class="col-md-3 col-lg-3 col-12"
+                v-if="user.can_accept_credit_sale_note"
+            >
                 <el-checkbox v-model="isMigration" @change="setPayment">
                     <strong>
                         Ingresar pagos anteriores
@@ -169,7 +171,9 @@
                     </strong>
                 </el-checkbox>
             </div>
-            <div class="col-md-3 col-lg-3 col-12">
+            <div class="col-md-3 col-lg-3 col-12"
+            v-if="user.can_accept_credit_sale_note"
+            >
                 <label>Usuario</label>
                 <el-select
                     v-model="credit.user_id"

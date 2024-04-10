@@ -10,6 +10,11 @@
                     data-childselector="span"
                 >
                     <button
+                        v-if="
+                            configuration.sale_note_credit_confirm
+                                ? isAnalist || user.can_accept_credit_sale_note
+                                : true
+                        "
                         class="btn p-0"
                         type="button"
                         data-bs-toggle="dropdown"
@@ -26,6 +31,19 @@
                             aria-label="Item Count"
                             >Menu De Acciones
                         </span>
+                    </button>
+                    <button
+                        v-if="
+                            cash_id &&
+                                configuration.sale_note_credit_confirm &&
+                                !isAnalist &&
+                                !user.can_accept_credit_sale_note
+                        "
+                        class="btn btn-primary"
+                        type="button"
+                        @click="trigerFunction(3)"
+                    >
+                        Cerrar caja
                     </button>
                     <button
                         v-if="!cash_id && !isSeller"
@@ -117,6 +135,11 @@
                 </div>
             </div>
             <div
+                v-if="
+                    configuration.sale_note_credit_confirm
+                        ? isAnalist || user.can_accept_credit_sale_note
+                        : true
+                "
                 class="bg-primary align-items-center rounded-top"
                 style="padding-top: 12px"
             >
@@ -207,10 +230,19 @@
                     </div>
                 </div> -->
             </div>
-            <div :class="`p-1 bg-primary`">
+            <div
+                :class="`p-1 bg-primary`"
+                v-if="
+                    configuration.sale_note_credit_confirm
+                        ? isAnalist || user.can_accept_credit_sale_note
+                        : true
+                "
+            >
                 <div class="row col-md-12 mx-1">
                     <div>
-                        <template v-if="!configuration.sale_note_credit_confirm">
+                        <template
+                            v-if="!configuration.sale_note_credit_confirm"
+                        >
                             <template
                                 v-if="
                                     (this.quotation_stock &&
@@ -568,37 +600,6 @@
                         <div class="col-md-3"></div>
                         <div class="col-md-3"></div>
                     </div>
-                    <!-- <div class="col-4">
-                        <div v-if="ordens.length > 0 || localOrden.length > 0"
-                            class="d-flex flex-column p-2 text-white">
-                            <div class="row p-r-10 ">
-                                <div class="col-12 f-w-700 text-end p-t-5">
-                                    POR ATENDER S/ {{ total.toFixed(2) }}
-                                </div>
-                                <div class="col-12 f-w-700 text-end p-t-5">
-                                    ATENDIDO S/ {{ totalOrdenItems.toFixed(2) }}
-                                </div>
-                                <div class="col-12 f-w-700 text-end p-t-5 p-b-5">
-                                    TOTAL S/
-                                    {{ (total + totalOrdenItems).toFixed(2) }}
-                                </div>
-                                <div v-if="variation" class="col-12 f-w-700 text-end text-black p-t-5 p-b-5">
-                                    <template v-if="
-                                        !isNaN(foodDefault.sale_unit_price)
-                                    ">
-                                        <strong>
-                                            VARIACION S/
-                                            {{
-                                                Number(
-                                                    foodDefault.sale_unit_price
-                                                                                        ).toFixed(2)
-                                            }}
-                                        </strong>
-                                    </template>
-                                </div>
-                            </div>
-                        </div>
-                    </div> -->
                 </div>
                 <div class="d-flex align-items-center p-1 m-2">
                     <div class="col-12">
@@ -2356,7 +2357,6 @@
         >
         </consignment-form>
         <credit-list-modal
-
             :showDialog.sync="showCreditListModal"
             :amountToAdd="creditListAmount"
             @sendOrdenToCreditList="sendOrdenToCreditList"

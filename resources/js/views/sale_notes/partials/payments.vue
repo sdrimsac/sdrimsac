@@ -41,8 +41,11 @@
         <div class="form-body">
             <div class="row">
                 <div class="col-md-12" v-if="records.length > 0">
-                    <div class="table-responsive">
-                        <table class="table">
+                    <div class="container table-responsive">
+                        <table
+                            class="table table-hover table-striped table-condensed  table-responsive"
+                            style="width: 100%; white-space: nowrap;"
+                        >
                             <thead>
                                 <tr>
                                     <th>#</th>
@@ -202,6 +205,7 @@
                                         </td>
                                         <td>
                                             <div
+                                                style="min-width: 200px;"
                                                 class="form-group mb-0"
                                                 :class="{
                                                     'has-danger':
@@ -242,6 +246,7 @@
                                         </td>
                                         <td>
                                             <div
+                                                style="min-width: 200px;"
                                                 class="form-group mb-0"
                                                 :class="{
                                                     'has-danger':
@@ -291,6 +296,7 @@
                                         </td>
                                         <td>
                                             <div
+                                                style="min-width: 200px;"
                                                 class="form-group mb-0"
                                                 :class="{
                                                     'has-danger':

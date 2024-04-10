@@ -53,12 +53,12 @@ class ReportCreditCollection extends ResourceCollection
             // $amount_due -= $advances + $payments_records;
             $payment = Payment::where('sale_note_id', $row->id);
             $int = 0;
-            if($payment->count() > 0){
+            if ($payment->count() > 0) {
                 $payment_first = $payment->first();
-              
+
                 $int = ($row->total - $advances) * ($payment_first->tasa / 100);
             }
-            $to_due =  floatval($row->total - $advances + $int)  - ( floatval($payments_records));
+            $to_due =  floatval($row->total - $advances + $int)  - (floatval($payments_records));
             $show_formats = true;
             // $user_id = auth()->user()->id;
             $user = User::find(auth()->user()->id);
@@ -67,11 +67,34 @@ class ReportCreditCollection extends ResourceCollection
                 $show_formats = false;
             }
             $can_edit = SaleNotePayment::where('sale_note_id', $row->id)->count() > 0 ? false : true;
-            if($row->status == "R"){
+            if ($row->status == "R") {
                 $can_edit = false;
             }
             $user_name = $row->user->name;
+            $schedules = [];
+            $quotes = $payment->count();
+            $quotes = $quotes / 17;
+            $quotes = round($quotes, 0, PHP_ROUND_HALF_UP);
+            if ($quotes == 0) {
+                $quotes = 1;
+            }
+            //iterar por quotes
+
+            for ($i = 0; $i < $quotes; $i++) {
+                if ($row->is_cash) {
+
+                    $schedules[] = url('/sale-notes/cash_schedule/' . $row->id . '/' . ($i + 1));
+                } else {
+                    $schedules[] = url('/sale-notes/hogar_schedule/' . $row->id . '/' . ($i + 1));
+                }
+            }
+
+
             return [
+                'quotes' => $quotes,
+                'schedules' => $schedules,
+                'is_cash' => (bool) $row->is_cash,
+                'is_product' => (bool) $row->is_product,
                 'user_name' => $user_name,
                 'show_formats' => $show_formats,
                 'id' => $row->id,
@@ -81,7 +104,7 @@ class ReportCreditCollection extends ResourceCollection
                 'customer' => ["name" => $customer->name, "number" => $customer->number],
                 'number' => $row->number_full,
                 'dues' => $dues,
-                'total' => $row->total  - $advances+ $int,
+                'total' => $row->total  - $advances + $int,
                 'advances' => $advances,
                 'payment' => $payments_records,
                 'date_of_due' => $date_of_due,

@@ -962,7 +962,7 @@ class SaleNoteController extends Controller
                                 ]);
                                 $number_receipt = str_pad(($i + 1), 7, "0", STR_PAD_LEFT);
                                 Receipt::create([
-                                    'user_id' =>$user->id,
+                                    'user_id' => $user->id,
                                     'date_of_issue' => $date_payment,
                                     'num_cuota' => $i + 1,
                                     'external_id' => Str::uuid()->toString(),
@@ -1464,7 +1464,62 @@ class SaleNoteController extends Controller
 
         return response()->file($temp);
     }
+    public function hogar_schedule($sale_note_id, $page = 1)
+    {
+        $data = Payment::where('sale_note_id', $sale_note_id)->get();
+        $tasa = $data->first()->tasa;
+        $quote = number_format($data->first()->amount,2);
+        $days = count($data);
+        $init_date = Carbon::parse($data->first()->date_payment)->format('d/m/Y');
+        $end_date = Carbon::parse($data->last()->date_payment)->format('d/m/Y');
+        $data = $data->forPage($page, 32);
+        if (count($data) > 0) {
+            $sale = SaleNote::findOrFail($data->first()->sale_note_id);
+            $company = Company::first();
+            $user = User::findOrFail($sale->user_id);
+            $establishment = Establishment::find($user->establishment_id);
+            $recibo = PDf::loadView(
+                'tenant.schedule.hogar_schedule',
+                [
+                    'days' => $days,
+                    'tasa' => $tasa,
+                    'quote' => $quote,
+                    'init_date' => $init_date,
+                    'end_date' => $end_date,
+                    'data' => $data, 'sale' => $sale, 'company' => $company, 'establishment' => $establishment, 'page' => $page
+                ]
+            );
+            return $recibo->setPaper('a5', 'portrait')->stream();
+        } else {
+            return view("tenant.schedule.notfound");
+        }
+    }
+    public function cash_schedule($sale_note_id, $page = 1)
+    {
+        $data = Payment::where('sale_note_id', $sale_note_id)->get();
+        //corta data que es una coleccion segun $page, si es 1, se muestra los primeros 17 registros, si es 2, se muestra los siguientes 17 registros
+        $data = $data->forPage($page, 17);
 
+        if (count($data) > 0) {
+            $sale = SaleNote::findOrFail($data->first()->sale_note_id);
+            $company = Company::first();
+            $user = User::findOrFail($sale->user_id);
+            $establishment = Establishment::find($user->establishment_id);
+            // return view('tenant.schedule.cash_schedule', ['data' => $data, 'sale' => $sale, 'company' => $company, 'establishment' => $establishment]);
+            $recibo = PDf::loadView('tenant.schedule.cash_schedule', ['data' => $data, 'sale' => $sale, 'company' => $company, 'establishment' => $establishment]);
+            $altura = 250;
+
+            if (count($data) == 26) {
+                $altura += (count($data)) * count($data) + 200;
+            } else {
+                $altura += 25 * count($data) + 150;
+            }
+
+            return $recibo->setPaper('a4', 'landscape')->stream();
+        } else {
+            return view("tenant.schedule.notfound");
+        }
+    }
     public function schedule($sale_note_id)
     {
         $data = Payment::where('sale_note_id', $sale_note_id)->get();
