@@ -137,6 +137,9 @@ class SaleNoteController extends Controller
                 }
             }
         }
+        foreach ($messages as $key => $row) {
+            Log::info("Mensaje enviado a: " . $row['telephone'] . " Mensaje: " . $row['message']);
+        }
         return $messages;
     }
     public function getItemsFromNotesCaja(Request $request)
