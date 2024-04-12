@@ -1542,7 +1542,7 @@ class SaleNoteController extends Controller
     {
         $data = Payment::where('sale_note_id', $sale_note_id)->get();
         //corta data que es una coleccion segun $page, si es 1, se muestra los primeros 17 registros, si es 2, se muestra los siguientes 17 registros
-        $data = $data->forPage($page, 17);
+        $data = $data->forPage($page, 26);
 
         if (count($data) > 0) {
             $sale = SaleNote::findOrFail($data->first()->sale_note_id);

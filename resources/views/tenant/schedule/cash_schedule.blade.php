@@ -39,7 +39,7 @@
 
         .celda {
             text-align: left;
-            padding: 4.5px;
+            padding: 3px;
             border: 0.1px solid #000;
             font-size: 8px;
         }
@@ -372,7 +372,7 @@
                                 <tr>
                                     <td class="celda">
                                         
-                                        {{ $loop->iteration + (($page-1) * 17) }}
+                                        {{ $loop->iteration + (($page-1) * 26) }}
                                     </td>
                                     <td class="celda">
                                         {{ $pay['date_payment'] }}
