@@ -371,7 +371,8 @@
                             @foreach ($data as $pay)
                                 <tr>
                                     <td class="celda">
-                                        {{ $loop->iteration }}
+                                        
+                                        {{ $loop->iteration + (($page-1) * 17) }}
                                     </td>
                                     <td class="celda">
                                         {{ $pay['date_payment'] }}
