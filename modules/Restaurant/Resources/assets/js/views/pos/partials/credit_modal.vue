@@ -39,7 +39,16 @@
                 </div>
                 <div class="col-md-6">
                     <label>Fecha de emisión</label>
-                    <el-date-picker class="w-100" v-model="form.date_of_issue">
+                    <el-date-picker
+                        class="w-100"
+                        v-model="form.date_of_issue"
+                        type="date"
+                        value-format="yyyy-MM-dd"
+                        :clearable="false"
+                        format="dd-MM-yyyy"
+                        :readonly="!user.can_accept_credit_sale_note"
+                        
+                    >
                     </el-date-picker>
                 </div>
                 <div class="col-md-2">
@@ -144,7 +153,8 @@
             </div>
         </div>
         <div class="row" v-if="configuration.sale_note_credit_confirm">
-            <div class="col-md-3 col-lg-3 col-12"
+            <div
+                class="col-md-3 col-lg-3 col-12"
                 v-if="user.can_accept_credit_sale_note"
             >
                 <el-checkbox v-model="isMigration" @change="setPayment">
@@ -157,6 +167,7 @@
                 <el-checkbox
                     v-model="credit.is_cash"
                     @change="changeType('cash')"
+                    :disabled="!user.can_accept_credit_sale_note"
                 >
                     <strong>
                         Efectivo
@@ -164,6 +175,7 @@
                 </el-checkbox>
                 <el-checkbox
                     v-model="credit.is_product"
+                    :disabled="!user.can_accept_credit_sale_note"
                     @change="changeType('product')"
                 >
                     <strong>
@@ -171,8 +183,9 @@
                     </strong>
                 </el-checkbox>
             </div>
-            <div class="col-md-3 col-lg-3 col-12"
-            v-if="user.can_accept_credit_sale_note"
+            <div
+                class="col-md-3 col-lg-3 col-12"
+                v-if="user.can_accept_credit_sale_note"
             >
                 <label>Usuario</label>
                 <el-select
@@ -182,7 +195,6 @@
                     placeholder="Seleccione un usuario"
                 >
                     <el-option
-
                         v-for="user in users"
                         :key="user.id"
                         :label="user.name"
@@ -191,7 +203,6 @@
                 </el-select>
             </div>
 
-    
             <div class="row">
                 <div v-for="(payment, index) in payments" :key="index">
                     <el-checkbox v-model="payment.isPrepayment">
@@ -238,7 +249,9 @@ export default {
     components: { PersonForm },
     data() {
         return {
-            users:[],
+            isService: false,
+            isProduct: false,
+            users: [],
             payments: [],
             isMigration: false,
             form: {},
@@ -251,7 +264,8 @@ export default {
             resource: "sale-notes",
             loading_search: false,
             percentage_igv: 18,
-            loading: false
+            loading: false,
+        
         };
     },
     created() {
@@ -594,13 +608,24 @@ export default {
                 this.loading = false;
             }
         },
-        async getUsers(){
+        async getUsers() {
             const response = await this.$http.get(`/reports/credits/filter`);
             if (response.data) {
                 this.users = response.data.users;
             }
         },
+        hasService() {
+            let items = this.items;
+            let hasService = items.some(
+                item => item.food.item.unit_type_id == "ZZ"
+            );
+            this.credit.is_cash = hasService;
+            this.credit.is_product = !hasService;
+        },
         open() {
+            if (!this.user.can_accept_credit_sale_note) {
+                this.hasService();
+            }
             this.getUsers();
             this.payments = [];
             this.isMigration = false;

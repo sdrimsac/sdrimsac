@@ -295,8 +295,8 @@
 
 <body>
     @php
-    $count =($page - 1) * 32;
-    
+        $count = ($page - 1) * 32;
+
     @endphp
     {{-- @if ($sale->status !== 'A' && $sale->status !== null)
         <div class="company_logo_box"
@@ -369,22 +369,39 @@
             </td>
         </tr>
     </table>
+    @php
+        $item = null;
+        if (count($sale->items) == 1) {
+            $item = $sale->items[0];
+        }
 
+    @endphp
     <table style="" class="full-width">
         <td width="40%">
             <table class="full-width">
                 <tr>
                     <td width="49%" class="text-center">
                         <strong>PRODUCTO</strong>
-                        <div class="border-rounded"><br>
-                            <br>
+                        <div class="border-rounded">
+                            @if ($item)
+                                {{ $item->item->description }}
+                            @else
+                                <br>
+                            @endif
                         </div>
                     </td>
                     <td></td>
                     <td width="49%" class="text-center">
                         <strong>MARCA</strong>
-                        <div class="border-rounded"><br>
-                            <br>
+                        <div class="border-rounded">
+                            @if (isset($item->item->brand_id) && $item->item->brand_id != null)
+                                @php
+                                    $brand = \Modules\Item\Models\Brand::find($item->item->brand_id);
+                                @endphp
+                                {{ $brand->name }}
+                            @else
+                                <br>
+                            @endif
                         </div>
                     </td>
                 </tr>
@@ -431,9 +448,9 @@
                                 <th class="celda btr">FIRMA</th>
                             </tr>
                         </thead>
-                        
+
                         <tbody>
-                            @for ($i = $count; $i <= $count+15; $i++)
+                            @for ($i = $count; $i <= $count + 15; $i++)
                                 @php
                                     $idx = $i;
                                 @endphp
@@ -444,6 +461,7 @@
                                             {{ \Carbon\Carbon::parse($data[$idx]['date_payment'])->format('d/m/y') }}
                                         </td>
                                         <td class="celda_sm">
+                                            {{ number_format($data[$idx]['amount'], 2) }}
                                         </td>
                                         <td class="celda_sm"></td>
                                         <td class="celda_sm"></td>
@@ -484,15 +502,47 @@
                 <tr>
                     <td width="49%" class="text-center">
                         <strong>MODELO</strong>
-                        <div class="border-rounded"><br>
-                            <br>
+                        <div class="border-rounded">
+                            @php
+                                $model = null;
+                                $attributes = $item->item->attributes;
+                                if (count($attributes) > 0) {
+                                    //search in array attributes the element with key 'description' 'Modelo'
+                                    foreach ($attributes as $attribute) {
+                                        if ($attribute->description == 'Modelo') {
+                                            $model = $attribute;
+                                        }
+                                    }
+                                }
+                            @endphp
+                            @if ($model)
+                                {{ $model->value }}
+                            @else
+                                <br>
+                            @endif
                         </div>
                     </td>
                     <td></td>
                     <td width="49%" class="text-center">
                         <strong>SERIE</strong>
-                        <div class="border-rounded"><br>
-                            <br>
+                        <div class="border-rounded">
+                            @php
+                                $serie = null;
+                                $lots = $item->item->lots;
+                                if (count($lots) > 0) {
+                                    foreach ($lots as $lot) {
+                                        if ($lot->selected == true) {
+                                            $serie .= $lot->series . '-';
+                                        }
+                                    }
+                                    $serie = substr($serie, 0, -1);
+                                }
+                            @endphp
+                            @if ($serie)
+                                {{ $serie }}
+                            @else
+                                <br>
+                            @endif
                         </div>
                     </td>
                 </tr>
@@ -545,7 +595,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @for ($i = $count+16; $i <= $count+31; $i++)
+                            @for ($i = $count + 16; $i <= $count + 31; $i++)
                                 @php
                                     $idx = $i;
                                 @endphp
@@ -555,7 +605,9 @@
                                         <td class="celda_sm">
                                             {{ \Carbon\Carbon::parse($data[$idx]['date_payment'])->format('d/m/y') }}
                                         </td>
-                                        <td class="celda_sm"></td>
+                                        <td class="celda_sm">
+                                            {{ number_format($data[$idx]['amount'], 2) }}
+                                        </td>
                                         <td class="celda_sm"></td>
                                         <td class="celda_sm"></td>
                                         <td class="celda_sm"></td>

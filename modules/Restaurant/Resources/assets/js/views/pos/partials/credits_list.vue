@@ -327,13 +327,14 @@
                 >
                     <thead>
                         <tr>
-                            <th>#</th>
+                            <th class="text-right">Acciones</th>
+
                             <th class="text-center">N/V</th>
                             <th class="text-center">Usuario</th>
                             <th class="text-center">Fecha de emisión</th>
                             <th class="text-center">DNI</th>
                             <th class="text-center">Nombres</th>
-                            <th class="text-center">N° Cuotas Vencidas</th>
+                            <th class="text-center">C. Vencidas</th>
                             <th class="text-center">Estado</th>
                             <th class="text-end">Fecha de cobro</th>
                             <th class="text-end">Monto</th>
@@ -351,77 +352,10 @@
                             >
                                 Aprobado
                             </th>
-                            <th class="text-end">Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr v-for="(row, idx) in records" :key="idx">
-                            <td>{{ customIndex(idx) }}</td>
-
-                            <td class="text-center">{{ row.number }}</td>
-                            <td class="text-center">{{ row.user_name }}</td>
-                            <td class="text-center">{{ row.date_of_issue }}</td>
-                            <td class="text-center">
-                                {{ row.customer.number }}
-                            </td>
-                            <td class="text-center">{{ row.customer.name }}</td>
-                            <td class="text-center">{{ row.dues }}</td>
-                            <td
-                                class="text-center"
-                                :class="
-                                    `${
-                                        row.canceled
-                                            ? 'text-success'
-                                            : 'text-danger'
-                                    }`
-                                "
-                            >
-                                {{ row.canceled ? "PAGADO" : "PENDIENTE" }}
-                            </td>
-                            <td class="text-end">{{ row.date_of_due }}</td>
-                            <td class="text-end">{{ row.amount_due }}</td>
-                            <td
-                                v-if="configuration.sale_note_credit_penalty"
-                                class="text-end"
-                            >
-                                {{ row.penalty }}
-                            </td>
-                            <td class="text-end">{{ row.differenc_days }}</td>
-                            <td
-                                v-if="configuration.sale_note_credit_confirm"
-                                class="text-end"
-                                :class="
-                                    `${
-                                        row.status == 'P'
-                                            ? 'text-warning'
-                                            : row.status == 'A'
-                                            ? 'text-success'
-                                            : 'text-danger'
-                                    }`
-                                "
-                            >
-                                <strong>
-                                    {{
-                                        row.status == "P"
-                                            ? "POR APROBAR"
-                                            : row.status == "A"
-                                            ? "ACEPTADO"
-                                            : "RECHAZADO"
-                                    }}
-                                    <el-tooltip
-                                        v-if="
-                                            row.status == 'R' && row.observation
-                                        "
-                                        :content="row.observation"
-                                        placement="top"
-                                    >
-                                        <i
-                                            class="el-icon-info"
-                                            style="color:red"
-                                        ></i>
-                                    </el-tooltip>
-                                </strong>
-                            </td>
                             <td class="text-center">
                                 <template
                                     v-if="
@@ -439,6 +373,7 @@
                                         size="medium"
                                         split-button
                                         type="primary"
+                                        trigger="click"
                                     >
                                         Acciones
                                         <el-dropdown-menu slot="dropdown">
@@ -659,6 +594,70 @@
                                         </el-dropdown-menu>
                                     </el-dropdown></template
                                 >
+                            </td>
+                            <td class="text-center">{{ row.number }}</td>
+                            <td class="text-center">{{ row.user_name }}</td>
+                            <td class="text-center">{{ row.date_of_issue }}</td>
+                            <td class="text-center">
+                                {{ row.customer.number }}
+                            </td>
+                            <td class="text-center">{{ row.customer.name }}</td>
+                            <td class="text-center">{{ row.dues }}</td>
+                            <td
+                                class="text-center"
+                                :class="
+                                    `${
+                                        row.canceled
+                                            ? 'text-success'
+                                            : 'text-danger'
+                                    }`
+                                "
+                            >
+                                {{ row.canceled ? "PAGADO" : "PENDIENTE" }}
+                            </td>
+                            <td class="text-end">{{ row.date_of_due }}</td>
+                            <td class="text-end">{{ row.amount_due }}</td>
+                            <td
+                                v-if="configuration.sale_note_credit_penalty"
+                                class="text-end"
+                            >
+                                {{ row.penalty }}
+                            </td>
+                            <td class="text-end">{{ row.differenc_days }}</td>
+                            <td
+                                v-if="configuration.sale_note_credit_confirm"
+                                class="text-end"
+                                :class="
+                                    `${
+                                        row.status == 'P'
+                                            ? 'text-warning'
+                                            : row.status == 'A'
+                                            ? 'text-success'
+                                            : 'text-danger'
+                                    }`
+                                "
+                            >
+                                <strong>
+                                    {{
+                                        row.status == "P"
+                                            ? "POR APROBAR"
+                                            : row.status == "A"
+                                            ? "ACEPTADO"
+                                            : "RECHAZADO"
+                                    }}
+                                    <el-tooltip
+                                        v-if="
+                                            row.status == 'R' && row.observation
+                                        "
+                                        :content="row.observation"
+                                        placement="top"
+                                    >
+                                        <i
+                                            class="el-icon-info"
+                                            style="color:red"
+                                        ></i>
+                                    </el-tooltip>
+                                </strong>
                             </td>
                         </tr>
                     </tbody>
@@ -945,6 +944,7 @@ export default {
             let query = queryString.stringify({
                 ...this.form
             });
+            console.log("🚀 ~ clickDownload ~ query:", query)
             window.open(`/${this.resource}/${type}/?${query}`, "_blank");
         },
         searchRemotePersons(input) {
@@ -1017,7 +1017,6 @@ export default {
         open() {
             this.initForm();
             this.getRecords();
-            console.log("🚀 ~ open ~ this.configuration:", this.configuration);
         },
         close() {
             this.$emit("update:showDialog", false);

@@ -111,20 +111,61 @@ class ReportCreditController extends Controller
 
     public function pdf(Request $request)
     {
+        $paid = $request->paid;
+        $status = $request->status;
         $period = $this->getDatesOfPeriod($request);
         $person_id = $request->person_id;
+        $user_id = $request->user_id;
+        $type = $request->type;
+        $type_payment = $request->type_payment;
         $params = (object)[
             'date_start' => $period['d_start'],
             'date_end' => $period['d_end'],
         ];
         $company = Company::first();
         $establishment = Establishment::first();
-        $records = SaleNote::whereHas('creditPayments')
-            ->whereBetween('date_of_issue', [$params->date_start, $params->date_end]);
+        // $records = SaleNote::whereHas('creditPayments')
+        //     ->whereBetween('date_of_issue', [$params->date_start, $params->date_end]);
+        // if ($person_id) {
+        //     $records = $records->where('customer_id', $person_id);
+        // }
+        $all_records = [];
+        if ($status == "R") {
+            $records = SaleNote::where('status', 'R');
+        } else {
+            $records = SaleNote::whereHas('creditPayments');
+        }
+        if ($params->date_start && $params->date_end) {
+            $records =
+                $records->whereBetween('date_of_issue', [$params->date_start, $params->date_end]);
+        }
+
+        if ($status && $status != "R") {
+            $records = $records->where('status', $status);
+        }
+
         if ($person_id) {
             $records = $records->where('customer_id', $person_id);
         }
-        $all_records = [];
+        if ($paid != null) {
+            $records = $records->where('paid', $paid);
+        }
+        if ($type != null) {
+            if ($type == 'is_product') {
+                $records = $records->where('is_product', true);
+            }
+            if ($type == 'is_cash') {
+                $records = $records->where('is_cash', true);
+            }
+        }
+        if ($type_payment != null) {
+            $records = $records->where('type_payment', $type_payment);
+        }
+
+
+        if ($user_id) {
+            $records = $records->where('user_id', $user_id);
+        }
         $records->orderBy('created_at', 'desc')->chunk(50, function ($rows) use (&$all_records) {
 
             foreach ($rows as $row) {
@@ -164,6 +205,8 @@ class ReportCreditController extends Controller
                     'number' => $row->number_full,
                     'dues' => $dues,
                     'date_of_due' => $date_of_due,
+                    'is_cash' => $row->is_cash,
+                    'is_product' => $row->is_product,
                     // 'amount_due' => number_format($amount_due, 2, ".", ""),
                     'amount_due' => number_format($amount_due, 2, ".", ""),
                     'differenc_days' => $differenc_days,
@@ -191,19 +234,61 @@ class ReportCreditController extends Controller
     {
 
         $period = $this->getDatesOfPeriod($request);
+        $paid = $request->paid;
+        $status = $request->status;
+        $period = $this->getDatesOfPeriod($request);
         $person_id = $request->person_id;
+        $user_id = $request->user_id;
+        $type = $request->type;
+        $type_payment = $request->type_payment;
         $params = (object)[
             'date_start' => $period['d_start'],
             'date_end' => $period['d_end'],
         ];
         $company = Company::first();
         $establishment = ($request->establishment_id) ? Establishment::findOrFail($request->establishment_id) : auth()->user()->establishment;
-        $records = SaleNote::whereHas('creditPayments')
-            ->whereBetween('date_of_issue', [$params->date_start, $params->date_end]);
+        // $records = SaleNote::whereHas('creditPayments')
+        //     ->whereBetween('date_of_issue', [$params->date_start, $params->date_end]);
+        // if ($person_id) {
+        //     $records = $records->where('customer_id', $person_id);
+        // }
+        $all_records = [];
+        if ($status == "R") {
+            $records = SaleNote::where('status', 'R');
+        } else {
+            $records = SaleNote::whereHas('creditPayments');
+        }
+        if ($params->date_start && $params->date_end) {
+            $records =
+                $records->whereBetween('date_of_issue', [$params->date_start, $params->date_end]);
+        }
+
+        if ($status && $status != "R") {
+            $records = $records->where('status', $status);
+        }
+
         if ($person_id) {
             $records = $records->where('customer_id', $person_id);
         }
-        $all_records = [];
+        if ($paid != null) {
+            $records = $records->where('paid', $paid);
+        }
+        if ($type != null) {
+            if ($type == 'is_product') {
+                $records = $records->where('is_product', true);
+            }
+            if ($type == 'is_cash') {
+                $records = $records->where('is_cash', true);
+            }
+        }
+        if ($type_payment != null) {
+            $records = $records->where('type_payment', $type_payment);
+        }
+
+
+        if ($user_id) {
+            $records = $records->where('user_id', $user_id);
+        }
         $records->orderBy('created_at', 'desc')->chunk(50, function ($rows) use (&$all_records) {
 
             foreach ($rows as $row) {
@@ -244,6 +329,8 @@ class ReportCreditController extends Controller
                     'number' => $row->number_full,
                     'dues' => $dues,
                     'date_of_due' => $date_of_due,
+                    'is_cash' => $row->is_cash,
+                    'is_product' => $row->is_product,
                     // 'amount_due' => number_format($amount_due, 2, ".", ""),
                     'amount_due' => number_format($amount_due, 2, ".", ""),
                     'differenc_days' => $differenc_days,

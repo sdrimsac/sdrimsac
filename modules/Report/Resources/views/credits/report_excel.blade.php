@@ -52,6 +52,11 @@
         }
     </style>
 </head>
+@php
+
+$configuration = App\Models\Tenant\Configuration::first();
+
+@endphp
 
 <body>
     <div>
@@ -79,12 +84,15 @@
         <div class="">
             <div class=" ">
                 @php
-                    
+
                 @endphp
                 <table class="">
                     <thead>
                         <tr>
                             <th>#</th>
+                            @if ($configuration->sale_note_credit_confirm)
+                                <th>Tipo</th>
+                            @endif
                             <th>Nota de Venta</th>
                             <th class="text-center">Fecha Emisión</th>
                             <th>DNI</th>
@@ -100,6 +108,16 @@
                         @foreach ($records as $key => $value)
                             <tr>
                                 <td class="celda">{{ $loop->iteration }}</td>
+                                @if ($configuration->sale_note_credit_confirm)
+                                    <td class="celda">
+                                        @if ($value['is_cash'])
+                                            Efectivo
+                                        @endif
+                                        @if ($value['is_product'])
+                                            Hogar
+                                        @endif
+                                    </td>
+                                @endif
                                 <td class="celda">
                                     {{ $value['number'] }}
                                 </td>

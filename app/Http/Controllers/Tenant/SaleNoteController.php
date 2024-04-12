@@ -129,7 +129,7 @@ class SaleNoteController extends Controller
                     $customer_name = $row->customer->name;
                     $customer = Person::find($row->customer_id);
                     $telephone = $customer->telephone;
-                    $message = "Estimado Cliente \"" . $customer_name . "\", Ud. Tiene " . $differenc_days . " días de atraso, favor de tomar las consideraciones pertinentes. Si ya pago omita este mensaje.";
+                    $message = "Estimado Cliente \"" . $customer_name . "\", Ud. Tiene " . $differenc_days . " días de atraso, *por favor* tomar las consideraciones pertinentes. Si ya *pagó* omita este mensaje.";
                     $messages[] = [
                         'telephone' => $telephone,
                         'message' => $message

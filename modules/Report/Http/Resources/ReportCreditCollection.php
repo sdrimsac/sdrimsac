@@ -72,8 +72,9 @@ class ReportCreditCollection extends ResourceCollection
             }
             $user_name = $row->user->name;
             $schedules = [];
+            $num_quotes = $row->is_cash == false ? 32 : 17;
             $quotes = $payment->count();
-            $quotes = $quotes / 17;
+            $quotes = $quotes / $num_quotes;
             $quotes = round($quotes, 0, PHP_ROUND_HALF_UP);
             if ($quotes == 0) {
                 $quotes = 1;

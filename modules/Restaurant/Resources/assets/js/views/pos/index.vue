@@ -5138,6 +5138,9 @@ export default {
             await this.calculateTotal();
             this.$refs.input_items.$el.getElementsByTagName("input")[0].focus();
             this.total_sales_pos = 0;
+            if(this.configuration.sale_note_credit_confirm){
+                
+            }
         },
         typesearch() {
             this.ordens = [];

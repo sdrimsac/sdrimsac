@@ -165,7 +165,8 @@
         </h3>
         @php
             $date_of_issue = \Carbon\Carbon::parse($sale->date_of_issue);
-
+            $items = $sale->items;
+            $count_items = count($items);
             $months = [
                 1 => 'enero',
                 2 => 'febrero',
@@ -217,9 +218,9 @@
         derechos civiles e inteligentes en el idioma castellano se da convenio al siguiente contrato de mutuo acuerdo:
     </p>
     <p>
-        <strong>PRIMERO - DESCRIPCIÓN DEL PRODUCTO -</strong> Por el presente acto KATERIN ESTEFANI ROJAS ROMAN
+        <strong>PRIMERO - DESCRIPCIÓN DEL PRODUCTO -</strong> Por el presente acto {{ $company->representative }}
         (vendedora) brinda la
-        cantidad de ___ productos las cuales describen:
+        cantidad de {{ $count_items }} productos las cuales describen:
     </p>
 
     <table>
@@ -234,13 +235,55 @@
 
         </thead>
         <tbody>
-            @foreach (range(1, 4) as $index)
+            @foreach ($items as $item)
                 <tr>
-                    <td style="height: 25px; width: 35%;"></td>
-                    <td style="height: 25px;"></td>
-                    <td style="height: 25px;"></td>
-                    <td style="height: 25px;"></td>
-                    <td style="height: 25px;"></td>
+                    <td style="height: 25px; width: 35%;">
+                        {{ $item->item->description }}</td>
+                    <td style="height: 25px;">
+                        @if (isset($item->item->brand_id) && $item->item->brand_id != null)
+                            @php
+                                $brand = \Modules\Item\Models\Brand::find($item->item->brand_id);
+                            @endphp
+                            {{ $brand->name }}
+                        @endif
+                    </td>
+                    <td style="height: 25px;">
+                        @php
+                            $model = null;
+                            $attributes = $item->item->attributes;
+                            if (count($attributes) > 0) {
+                                //search in array attributes the element with key 'description' 'Modelo'
+                                foreach ($attributes as $attribute) {
+                                    if ($attribute->description == 'Modelo') {
+                                        $model = $attribute;
+                                    }
+                                }
+                            }
+                        @endphp
+                        @if ($model)
+                            {{ $model->value }}
+                        @endif
+                    </td>
+                    <td style="height: 25px;">
+                        @php
+                            $serie = null;
+                            $lots = $item->item->lots;
+                            if (count($lots) > 0) {
+                                foreach ($lots as $lot) {
+                                    if ($lot->selected == true) {
+                                        $serie .= $lot->series . '-';
+                                    }
+                                }
+                                $serie = substr($serie, 0, -1);
+                            }
+                        @endphp
+                        @if ($serie)
+                            {{ $serie }}
+                        @endif
+                    </td>
+                    <td style="height: 25px;">
+                        {{ $item->total }}
+                    </td>
                 </tr>
             @endforeach
         </tbody>
@@ -296,24 +339,24 @@
 
     <table class="mt-2 no-border">
         <tbody>
-            <td class="no-border" width="50%">
+            <td valign="top"  class="no-border" width="50%">
                 <strong>
                     <div>___________________________</div>
                     <div>FIRMA</div>
                     <br>
-                    <div>NOMBRE</div>
-                    <div>DNI</div>
-                    <div>CELULAR</div>
+                    <div>NOMBRE: {{$sale->customer->name}}</div>
+                    <div>DNI:{{$sale->customer->number}}</div>
+                    <div>CELULAR: {{$sale->customer->telephone}}</div>
                 </strong>
             </td>
-            <td class="no-border" width="50%">
+            <td valign="top" class="no-border" width="50%">
                 <strong>
                     <div>___________________________</div>
                     <div>FIRMA</div>
                     <br>
-                    <div>NOMBRE</div>
-                    <div>DNI</div>
-                    <div>CELULAR</div>
+                    <div>NOMBRE:{{$company->representative}}</div>
+                    <div>DNI:{{$company->representative_number}}</div>
+                    {{-- <div>CELULAR:</div> --}}
                 </strong>
             </td>
         </tbody>
