@@ -43,11 +43,7 @@
             border: 0.1px solid #000;
         }
 
-        .celda_left {
-            text-align: left;
 
-            /* border: 0.1px solid #ccc; */
-        }
 
         .celda_center {
             text-align: center;
@@ -147,6 +143,7 @@
         .celda_left {
             text-align: left;
             padding: 2px;
+            font-size: 10px;
             /* border: 0.1px solid #ccc; */
         }
 
