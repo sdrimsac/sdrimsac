@@ -39,7 +39,7 @@
 
         .celda {
             text-align: left;
-            padding: 5px;
+            padding: 4.5px;
             border: 0.1px solid #000;
             font-size: 8px;
         }
