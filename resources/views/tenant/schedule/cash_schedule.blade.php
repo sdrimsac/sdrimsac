@@ -143,7 +143,7 @@
         .celda_left {
             text-align: left;
             padding: 2px;
-            font-size: 10px;
+            font-size: 8px;
             /* border: 0.1px solid #ccc; */
         }
 
