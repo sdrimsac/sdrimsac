@@ -363,7 +363,7 @@
                                     MORA
                                 </th>
                                 <th class="celda">
-                                    TOTAL
+                                    FIRMA
                                 </th>
                             </tr>
                         </thead>
