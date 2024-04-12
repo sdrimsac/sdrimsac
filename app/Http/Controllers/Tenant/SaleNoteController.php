@@ -1550,7 +1550,9 @@ class SaleNoteController extends Controller
             $user = User::findOrFail($sale->user_id);
             $establishment = Establishment::find($user->establishment_id);
             // return view('tenant.schedule.cash_schedule', ['data' => $data, 'sale' => $sale, 'company' => $company, 'establishment' => $establishment]);
-            $recibo = PDf::loadView('tenant.schedule.cash_schedule', ['data' => $data, 'sale' => $sale, 'company' => $company, 'establishment' => $establishment]);
+            $recibo = PDf::loadView('tenant.schedule.cash_schedule', [
+                'page' => $page,
+                'data' => $data, 'sale' => $sale, 'company' => $company, 'establishment' => $establishment]);
             $altura = 250;
 
             if (count($data) == 26) {
