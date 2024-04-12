@@ -146,7 +146,6 @@
 
         .celda_left {
             text-align: left;
-            padding: 2px;
             /* border: 0.1px solid #ccc; */
         }
 
