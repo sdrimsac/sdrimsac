@@ -39,8 +39,9 @@
 
         .celda {
             text-align: left;
-            padding: 5px;
+            padding: 2px;
             border: 0.1px solid #000;
+            font-size: 8px;
         }
 
 
@@ -288,10 +289,10 @@
                             <th colspan="6" class="celda_left">
                                     @if ($company->document_logo)
                                         <img src="data:{{ mime_content_type(public_path("storage/uploads/logos/{$company->document_logo}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/uploads/logos/{$company->document_logo}"))) }}"
-                                            alt="{{ $company->trade_name }}" style="max-width: 15px;">
+                                            alt="{{ $company->trade_name }}" style="max-width: 50px;">
                                     @else
                                         <img src="data:{{ mime_content_type(public_path("storage/uploads/logos/{$company->logo}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/uploads/logos/{$company->logo}"))) }}"
-                                            alt="{{ $company->trade_name }}" style="max-width: 15px;">
+                                            alt="{{ $company->trade_name }}" style="max-width: 50px;">
                                     @endif
                             </th>
                         </tr>
