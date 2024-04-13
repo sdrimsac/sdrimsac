@@ -421,7 +421,7 @@
 
                         <div class="border-rounded">
                             <div style="border-bottom: 1px solid #000;">
-                                <strong>PAGO MENSUAL</strong>
+                                <strong>PAGO {{strtoupper($sale->type_payment)}}</strong>
 
                             </div>
                             <div>
