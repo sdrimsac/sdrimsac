@@ -604,7 +604,7 @@ class SaleNoteController extends Controller
                     $date_payment = \Carbon\Carbon::parse($date->addDay($dias))->format('Y-m-d');
                     $week = date("w", strtotime($date_payment)); //date('W',strtotime($date_payment));
                     if ($week == 0) {
-                        $date_payment = \Carbon\Carbon::parse($date->addDay($dias + 1))->format('Y-m-d');
+                        $date_payment = \Carbon\Carbon::parse($date->addDay(1))->format('Y-m-d');
                     }
                     break;
                 case "Mensual":
@@ -972,9 +972,13 @@ class SaleNoteController extends Controller
                             case "Quincenal":
                                 $dias = 15;
                                 $date_payment = \Carbon\Carbon::parse($date->addDay($dias))->format('Y-m-d');
+                                dump($date_payment);
                                 $week = date("w", strtotime($date_payment)); //date('W',strtotime($date_payment));
+                                dump($week);
+                                dump($date);
                                 if ($week == 0) {
                                     $date_payment = \Carbon\Carbon::parse($date->addDay($dias + 1))->format('Y-m-d');
+                                    dump("cero " . $date_payment);
                                 }
                                 break;
                             case "Mensual":
@@ -1552,7 +1556,8 @@ class SaleNoteController extends Controller
             // return view('tenant.schedule.cash_schedule', ['data' => $data, 'sale' => $sale, 'company' => $company, 'establishment' => $establishment]);
             $recibo = PDf::loadView('tenant.schedule.cash_schedule', [
                 'page' => $page,
-                'data' => $data, 'sale' => $sale, 'company' => $company, 'establishment' => $establishment]);
+                'data' => $data, 'sale' => $sale, 'company' => $company, 'establishment' => $establishment
+            ]);
             $altura = 250;
 
             if (count($data) == 26) {
