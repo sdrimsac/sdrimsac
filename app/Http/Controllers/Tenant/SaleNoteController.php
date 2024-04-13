@@ -972,13 +972,9 @@ class SaleNoteController extends Controller
                             case "Quincenal":
                                 $dias = 15;
                                 $date_payment = \Carbon\Carbon::parse($date->addDay($dias))->format('Y-m-d');
-                                dump($date_payment);
                                 $week = date("w", strtotime($date_payment)); //date('W',strtotime($date_payment));
-                                dump($week);
-                                dump($date);
                                 if ($week == 0) {
                                     $date_payment = \Carbon\Carbon::parse($date->addDay($dias + 1))->format('Y-m-d');
-                                    dump("cero " . $date_payment);
                                 }
                                 break;
                             case "Mensual":
