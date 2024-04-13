@@ -369,7 +369,12 @@ const app = new Vue({
                 /* webpackChunkName:"js/tenant-documents-invoice" */
                 "./views/documents/invoice.vue"
             ),
-
+"tenant-documents-note-other": () =>
+            import(
+                /* webpackChunkName:"js/tenant-documents-note-other" */
+                "./views/documents/note_other.vue"
+            ),
+            
         "tenant-documents-note": () =>
             import(
                 /* webpackChunkName:"js/tenant-documents-note" */

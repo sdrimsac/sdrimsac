@@ -386,7 +386,12 @@
                             </a>
                         </li>
                     @endif
-
+                    <li>
+                        <a class="{{ $path[0] === 'documents'&&$path[1] == 'note_other' ? 'active' : '' }}"
+                            href="{{ route('tenant.documents.note_other') }}">
+                            <i class="icofont-document-folder"></i> Notas crédito/débito - Otros
+                        </a>
+                    </li>
                     @if (!$roleService->isAccountant($user->worker_type_id))
                         <li>
                             <a class="{{ $path[0] === 'quotations' ? 'active' : '' }}"

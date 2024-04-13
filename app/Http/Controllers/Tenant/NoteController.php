@@ -14,7 +14,12 @@ class NoteController extends Controller
 
         return view('tenant.documents.note', compact('document_affected', 'configuration'));
     }
+    public function createOther()
+    {
+        $configuration = Configuration::first();
 
+        return view('tenant.documents.note_other', compact('configuration'));
+    }
     public function record($document_id)
     {
         $record = Document::find($document_id);

@@ -2202,6 +2202,7 @@
         >
         </observation-form>
         <quotation-form
+        :configuration="configuration"
             :isSeller="isSeller"
             :showDialog.sync="showQuotationForm"
             :items="localOrden"
@@ -2209,6 +2210,7 @@
             @limpiarForm="limpiarForm"
             :cash_id="cash_id"
             :sellers="sellers"
+            :establishment="establishments"
         >
         </quotation-form>
 

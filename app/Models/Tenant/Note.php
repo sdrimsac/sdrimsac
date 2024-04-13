@@ -18,7 +18,7 @@ class Note extends ModelTenant
         'note_debit_type_id',
         'note_description',
         'affected_document_id',
-        // 'data_affected_document',
+        'data_affected_document',
 
     ];
 
@@ -52,4 +52,5 @@ class Note extends ModelTenant
     {
         $this->attributes['data_affected_document'] = (is_null($value)) ? null : json_encode($value);
     }
+    
 }

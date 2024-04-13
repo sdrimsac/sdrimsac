@@ -48,18 +48,13 @@
                     <el-date-picker class="w-100" v-model="form.date_of_due">
                     </el-date-picker>
                 </div>
-                 <div class="col-md-6" v-if="!isSeller">
+                <div class="col-md-6" v-if="!isSeller">
                     <label>
                         Vendedor
-                     
                     </label>
-                    <el-select
-                        v-model="form.seller_id"
-                        filterable
-
-                    >
+                    <el-select v-model="form.seller_id" filterable>
                         <el-option
-                            v-for="(option,idx) in sellers"
+                            v-for="(option, idx) in sellers"
                             :key="idx"
                             :value="option.id"
                             :label="option.name"
@@ -81,6 +76,7 @@
                 </div>
             </div>
         </div>
+
         <div slot="footer" class="dialog-footer">
             <span
                 v-if="form.total"
@@ -97,7 +93,7 @@
             :external="true"
         >
         </person-form>
-         <quotation-options
+        <quotation-options
             :showDialog.sync="showDialogOptions"
             :recordId="quotationNewId"
             :showGenerate="false"
@@ -111,12 +107,23 @@
 <script>
 import moment from "moment";
 const QuotationOptions = () =>
-    import("../../../../../../../../resources/js/views/quotations/partials/options.vue");
+    import(
+        "../../../../../../../../resources/js/views/quotations/partials/options.vue"
+    );
 const PersonForm = () =>
     import("../../../../../../../../resources/js/views/persons/form.vue");
 export default {
-    props: ["items", "cash_id", "all_customers", "showDialog","sellers","isSeller"],
-    components: { PersonForm,QuotationOptions },
+    props: [
+        "items",
+        "cash_id",
+        "all_customers",
+        "showDialog",
+        "sellers",
+        "isSeller",
+        "configuration",
+        "establishment"
+    ],
+    components: { PersonForm, QuotationOptions },
     data() {
         return {
             quotationNewId: null,
@@ -127,7 +134,7 @@ export default {
             loading_search: false,
             percentage_igv: 18,
             loading: false,
-            showDialogOptions: false,
+            showDialogOptions: false
         };
     },
     created() {
@@ -141,6 +148,29 @@ export default {
         }
     },
     methods: {
+        async directPrint(external_id) {
+            let typePrint = this.establishment.format_printer;
+
+            let url = "";
+            //colocar una condicion para cada caso desde impresira de 80mm hasta las a4 y a5
+            if (typePrint == "1") {
+                url = `/quotations/print/${external_id}/a4`;
+            }
+            if (typePrint == "2") {
+                url = `/quotations/print/${external_id}/a5`;
+            }
+            if (typePrint == "3" || typePrint == null) {
+                url = `/quotations/print/${external_id}/ticket`;
+            }
+            if (typePrint == "4") {
+                url = `/quotations/print/${external_id}/ticket_50`;
+            }
+            //console.log(config.direct_printing)
+
+            await this.$http.post(`/caja/re-print`, {
+                url
+            });
+        },
         reloadDataCustomers(customer_id) {
             this.$http
                 .get(`/documents/search/customer/${customer_id}`)
@@ -321,10 +351,15 @@ export default {
                     this.form
                 );
                 if (response.status == 200) {
-                               this.quotationNewId = response.data.data.id;
+                    this.quotationNewId = response.data.data.id;
                     this.$emit("limpiarForm");
-                              this.showDialogOptions = true;
-                    this.$toast.success('Cotizacion creada con exito');
+                    if (this.configuration.seller_quotation_cash) {
+                        this.directPrint(response.data.data.external_id);
+                        this.close();
+                    } else {
+                        this.showDialogOptions = true;
+                    }
+                    this.$toast.success("Cotizacion creada con exito");
                 }
             } catch (e) {
                 console.log(e);
@@ -335,7 +370,6 @@ export default {
             }
         },
         open() {
-    
             this.form = {
                 date_of_issue: new Date(),
                 currency_type_id: "PEN",
@@ -380,11 +414,9 @@ export default {
                 sale_opportunity_id: null
             };
             this.paymentsOrden();
-                    this.customers = this.all_customers;
-            let customer = this.customers.find(
-                c => c.number == "99999999"
-            );
-            if(customer){
+            this.customers = this.all_customers;
+            let customer = this.customers.find(c => c.number == "99999999");
+            if (customer) {
                 this.form.customer_id = customer.id;
             }
         },

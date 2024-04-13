@@ -447,6 +447,8 @@ if ($hostname) {
                 Route::post('documents/email', [App\Http\Controllers\Tenant\DocumentController::class, 'email']);
                 Route::get('documents/note/{document}', [App\Http\Controllers\Tenant\NoteController::class, 'create']);
                 Route::get('documents/note/record/{document}', [App\Http\Controllers\Tenant\NoteController::class, 'record']);
+                Route::get('documents/note_other', 'Tenant\NoteController@createOther')->name('tenant.documents.note_other');
+                ;
                 Route::get('documents/item/tables', [App\Http\Controllers\Tenant\DocumentController::class, 'item_tables']);
                 Route::get('documents/table/{table}', [App\Http\Controllers\Tenant\DocumentController::class, 'table']);
                 Route::get('documents/re_store/{document}', [App\Http\Controllers\Tenant\DocumentController::class, 'reStore']);

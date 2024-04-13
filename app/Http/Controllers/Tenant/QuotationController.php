@@ -340,6 +340,7 @@ class QuotationController extends Controller
             'data' => [
                 'id' => $this->quotation->id,
                 'number_full' => $this->quotation->number_full,
+                'external_id' => $this->quotation->external_id,
             ],
         ];
     }

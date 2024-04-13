@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Config;
 class Configuration extends ModelTenant
 {
     protected $fillable = [
+        'seller_quotation_cash',
         'whatsapp_client',
         'show_stock_cash',
         'turn_end',
@@ -172,6 +173,7 @@ class Configuration extends ModelTenant
 
     ];
     protected $casts = [
+        'seller_quotation_cash' => 'boolean',
         'whatsapp_client' => 'boolean',
         'show_stock_cash' => 'boolean',
         'automatic_principal_cash' => 'boolean',
@@ -290,6 +292,7 @@ class Configuration extends ModelTenant
         // $skins = Skin::all();
         $skins = [];
         return [
+            'seller_quotation_cash' => (bool)$this->seller_quotation_cash,
             'whatsapp_client' => (bool)$this->whatsapp_client,
             'show_stock_cash' => (bool)$this->show_stock_cash,
             'turn_end' => $this->turn_end,

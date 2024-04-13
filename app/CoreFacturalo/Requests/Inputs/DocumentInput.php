@@ -571,7 +571,8 @@ class DocumentInput
         $document_type_id = $inputs['document_type_id'];
         $note_credit_or_debit_type_id = $inputs['note_credit_or_debit_type_id'];
         $note_description = $inputs['note_description'];
-        $affected_document_id = $inputs['affected_document_id'];
+        // $affected_document_id = $inputs['affected_document_id'];
+        $affected_document_id = Functions::valueKeyInArray($inputs, 'affected_document_id');
 
         $data_affected_document = Functions::valueKeyInArray($inputs, 'data_affected_document');
 
