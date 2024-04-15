@@ -451,7 +451,10 @@
                                                         Imprimir contrato
                                                     </span>
                                                 </el-dropdown-item>
-                                                <el-dropdown-item
+                                                <template
+                                                v-if="row.status != 'R'"
+                                                >
+                                                    <el-dropdown-item
                                                     v-for="(schedule,
                                                     idx) in row.schedules"
                                                     :key="idx"
@@ -477,6 +480,7 @@
                                                         </template>
                                                     </a>
                                                 </el-dropdown-item>
+                                                </template>
                                             </template>
                                             <!-- <el-dropdown-item
                                             v-if="
@@ -498,8 +502,11 @@
                                                 v-if="
                                                     row.state_type_id != '11' &&
                                                         row.can_edit &&
-                                                        (isAnalist ||
-                                                            user.can_accept_credit_sale_note)
+                                                        (user.can_accept_credit_sale_note
+                                                            ? true
+                                                            : isAnalist
+                                                            ? row.status == 'P'
+                                                            : false)
                                                 "
                                             >
                                                 <span
@@ -512,6 +519,25 @@
                                                     "
                                                 >
                                                     Editar
+                                                </span>
+                                            </el-dropdown-item>
+                                            <el-dropdown-item
+                                                v-if="
+                                                    row.state_type_id != '11' &&
+                                                        row.can_edit &&
+                                                        user.can_accept_credit_sale_note
+                                                "
+                                            >
+                                                <span
+                                                    style="width:100%;display:block;"
+                                                    role="button"
+                                                    @click.prevent="
+                                                        clickVoidSaleNote(
+                                                            row.id
+                                                        )
+                                                    "
+                                                >
+                                                    Anular
                                                 </span>
                                             </el-dropdown-item>
                                         </el-dropdown-menu>
@@ -853,6 +879,30 @@ export default {
                 }
             } catch (e) {}
         },
+        clickVoidSaleNote(id) {
+            this.loading = true;
+            this.recordId = id;
+            this.$confirm("¿Está seguro de anular el crédito?", "Atención", {
+                confirmButtonText: "Aceptar",
+                cancelButtonText: "Cancelar",
+                type: "warning"
+            })
+                .then(() => {
+                    this.$http
+                        .get(`/sale-notes/void-credit/${this.recordId}`)
+                        .then(response => {
+                            this.getRecords();
+                            this.$message({
+                                type: "success",
+                                message: response.data.message
+                            });
+                        });
+                })
+                .catch(() => {})
+                .finally(() => {
+                    this.loading = false;
+                });
+        },
         clickEditSaleNote(id) {
             this.recordId = id;
             this.showDialogUpdate = true;
@@ -944,7 +994,7 @@ export default {
             let query = queryString.stringify({
                 ...this.form
             });
-            console.log("🚀 ~ clickDownload ~ query:", query)
+            console.log("🚀 ~ clickDownload ~ query:", query);
             window.open(`/${this.resource}/${type}/?${query}`, "_blank");
         },
         searchRemotePersons(input) {

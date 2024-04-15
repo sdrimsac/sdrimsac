@@ -99,6 +99,17 @@ class SaleNoteController extends Controller
     protected $document;
     protected $configuration;
 
+    public function voidCredit($sale_note_id){
+        $sale_note = SaleNote::find($sale_note_id);
+        // $sale_note->credit = false;
+        $sale_note->status = 'R';
+        $this->anulate($sale_note_id);
+        $sale_note->save();
+        return [
+            'success' => true,
+            'message' => 'Nota de venta actualizada',
+        ];
+    }
     public function generateMessages()
     {
         $configuration = Configuration::first();
@@ -450,12 +461,10 @@ class SaleNoteController extends Controller
         $id = $request->id;
         $status = $request->status;
         $observations = $request->observations;
-
         $sale_note = SaleNote::find($id);
         $sale_note->status = $status;
         if ($status == 'R') {
             $this->anulate($id);
-            // Receipt::where('sale_note_id', $id)->delete();
             SaleNoteCredit::where('sale_note_id', $id)->delete();
             Payment::where('sale_note_id', $id)->delete();
         }

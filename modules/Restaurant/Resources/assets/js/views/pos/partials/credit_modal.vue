@@ -47,7 +47,6 @@
                         :clearable="false"
                         format="dd-MM-yyyy"
                         :readonly="!user.can_accept_credit_sale_note"
-                        
                     >
                     </el-date-picker>
                 </div>
@@ -264,8 +263,7 @@ export default {
             resource: "sale-notes",
             loading_search: false,
             percentage_igv: 18,
-            loading: false,
-        
+            loading: false
         };
     },
     created() {
@@ -623,9 +621,6 @@ export default {
             this.credit.is_product = !hasService;
         },
         open() {
-            if (!this.user.can_accept_credit_sale_note) {
-                this.hasService();
-            }
             this.getUsers();
             this.payments = [];
             this.isMigration = false;
@@ -699,7 +694,9 @@ export default {
                 method_pay: "Efectivo"
             };
             this.paymentsOrden();
-
+            if (!this.user.can_accept_credit_sale_note) {
+                this.hasService();
+            }
             this.credit.month = 1;
             this.credit.type_payment = "Mensual";
             this.calculate();
