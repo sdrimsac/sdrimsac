@@ -268,6 +268,9 @@
                         @else
                             {!! $row->item->description !!}
                         @endif
+                        @if (isset($row->item->from_unit_type_id_desc))
+                        - {!! $row->item->from_unit_type_id_desc !!}
+                    @endif
                         @if (!empty($row->item->presentation))
                             {!! $row->item->presentation->description !!}
                         @endif

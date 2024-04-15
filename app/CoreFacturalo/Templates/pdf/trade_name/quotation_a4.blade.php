@@ -199,6 +199,9 @@
                         @else
                             {!! $row->item->description !!}
                         @endif
+                        @if (isset($row->item->from_unit_type_id_desc))
+                            - {!! $row->item->from_unit_type_id_desc !!}
+                        @endif
                         @if (!empty($row->item->presentation))
                             {!! $row->item->presentation->description !!}
                         @endif
@@ -234,7 +237,8 @@
                                 {{-- y si el archivo existe --}}
                                 @if (file_exists(public_path("storage/uploads/items/{$row->item->image}")))
                                     <img src="data:{{ mime_content_type(public_path("storage/uploads/items/{$row->item->image}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/uploads/items/{$row->item->image}"))) }}"
-                                        alt="{{ $row->item->image }}" class="img-fluid" style="width:120px;height:120px;" >
+                                        alt="{{ $row->item->image }}" class="img-fluid"
+                                        style="width:120px;height:120px;">
                                 @endif
                             @endif
                         </td>
