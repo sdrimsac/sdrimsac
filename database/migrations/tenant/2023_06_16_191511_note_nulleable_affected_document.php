@@ -14,8 +14,10 @@ class NoteNulleableAffectedDocument extends Migration
      */
     public function up()
     {
-        DB::statement("ALTER TABLE notes MODIFY COLUMN affected_document_id INT(10) UNSIGNED NULL"); 
-    }
+        Schema::table('notes', function (Blueprint $table) {
+            $table->unsignedInteger('affected_document_id')->nullable()->change();
+        });
+        }
 
     /**
      * Reverse the migrations.
@@ -24,7 +26,7 @@ class NoteNulleableAffectedDocument extends Migration
      */
     public function down()
     { 
-        DB::statement("ALTER TABLE notes MODIFY COLUMN affected_document_id INT(10) UNSIGNED NOT NULL"); 
+        
     }
 
 }
