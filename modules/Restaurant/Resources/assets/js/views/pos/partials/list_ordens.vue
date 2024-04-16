@@ -3053,6 +3053,7 @@ export default {
             this.showCreditForm = true;
         },
         openQuotation() {
+        if(this.localOrden.length > 0)
             this.showQuotationForm = true;
         },
         savePrint() {

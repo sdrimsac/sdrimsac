@@ -649,7 +649,7 @@ class QuotationController extends Controller
                         $total_taxed
                 ],
                 'margin_top' => 2,
-                'margin_right' => 2,
+                'margin_right' => 6,
                 'margin_bottom' => 0,
                 'margin_left' => 2
             ]);
