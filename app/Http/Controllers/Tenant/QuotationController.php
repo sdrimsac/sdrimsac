@@ -649,9 +649,9 @@ class QuotationController extends Controller
                         $total_taxed
                 ],
                 'margin_top' => 2,
-                'margin_right' => 5,
+                'margin_right' => 2,
                 'margin_bottom' => 0,
-                'margin_left' => 5
+                'margin_left' => 2
             ]);
         } else if ($format_pdf === 'a5') {
 

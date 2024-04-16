@@ -11,6 +11,7 @@ class Quotation extends ModelTenant
     protected $with = ['user', 'soap_type', 'state_type', 'currency_type', 'items', 'payments'];
 
     protected $fillable = [
+        'reference',
         'id',
         'user_id',
         'external_id',

@@ -19,6 +19,7 @@ class QuotationCollection extends ResourceCollection
             $btn_generate = (count($row->documents) > 0 || count($row->sale_notes) > 0)?false:true;
 
             return [
+                'reference' => $row->reference,
                 'id' => $row->id, 
                 'soap_type_id' => $row->soap_type_id,
                 'external_id' => $row->external_id,

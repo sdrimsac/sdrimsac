@@ -20,6 +20,7 @@ class QuotationCollection extends ResourceCollection
             // $btn_generate_cnt = $row->contract ?false:true;
 
             return [
+                'reference' => $row->reference,
                 'id' => $row->id,
                 'soap_type_id' => $row->soap_type_id,
                 'external_id' => $row->external_id,

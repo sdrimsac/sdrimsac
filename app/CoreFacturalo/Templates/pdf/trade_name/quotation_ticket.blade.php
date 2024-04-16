@@ -4,6 +4,7 @@
     $invoice = $document->invoice;
     //$path_style = app_path('CoreFacturalo'.DIRECTORY_SEPARATOR.'Templates'.DIRECTORY_SEPARATOR.'pdf'.DIRECTORY_SEPARATOR.'style.css');
     $accounts = \App\Models\Tenant\BankAccount::all();
+    $configuration = \App\Models\Tenant\Configuration::first();
     $tittle = $document->prefix . '-' . str_pad($document->id, 8, '0', STR_PAD_LEFT);
     
 @endphp
@@ -12,9 +13,12 @@
 <head>
     {{-- <title>{{ $tittle }}</title> --}}
     {{-- <link href="{{ $path_style }}" rel="stylesheet" /> --}}
+
 </head>
 
-<body>
+<body
+style="margin: 0px;padding:0px !important;"
+>
 
     @if ($company->logo)
         <div class="text-center company_logo_box pt-5">
@@ -268,7 +272,7 @@
                         @else
                             {!! $row->item->description !!}
                         @endif
-                        @if (isset($row->item->from_unit_type_id_desc))
+                        @if (isset($row->item->from_unit_type_id_desc) && $configuration->unit_type_pdf_quotation)
                         - {!! $row->item->from_unit_type_id_desc !!}
                     @endif
                         @if (!empty($row->item->presentation))

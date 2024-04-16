@@ -30,6 +30,7 @@ class QuotationResource2 extends JsonResource
             'total_discount' => $this->total_discount,
             'total_exportation' => $this->total_exportation,
             'total_free' => $this->total_free,
+            'reference' => $this->reference,
             'total_taxed' => $this->total_taxed,
             'total_unaffected' => $this->total_unaffected,
             'total_exonerated' => $this->total_exonerated,

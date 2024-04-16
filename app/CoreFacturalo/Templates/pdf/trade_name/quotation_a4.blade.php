@@ -199,7 +199,7 @@
                         @else
                             {!! $row->item->description !!}
                         @endif
-                        @if (isset($row->item->from_unit_type_id_desc))
+                        @if (isset($row->item->from_unit_type_id_desc) && $configuration->unit_type_pdf_quotation)
                             - {!! $row->item->from_unit_type_id_desc !!}
                         @endif
                         @if (!empty($row->item->presentation))
