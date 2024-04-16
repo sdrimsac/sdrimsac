@@ -6,7 +6,7 @@
     $accounts = \App\Models\Tenant\BankAccount::all();
     $configuration = \App\Models\Tenant\Configuration::first();
     $tittle = $document->prefix . '-' . str_pad($document->id, 8, '0', STR_PAD_LEFT);
-    
+
 @endphp
 <html>
 
@@ -16,9 +16,7 @@
 
 </head>
 
-<body
-style="margin: 0px;padding:0px !important;"
->
+<body style="margin: 0px;padding:0px !important;">
 
     @if ($company->logo)
         <div class="text-center company_logo_box pt-5">
@@ -273,8 +271,14 @@ style="margin: 0px;padding:0px !important;"
                             {!! $row->item->description !!}
                         @endif
                         @if (isset($row->item->from_unit_type_id_desc) && $configuration->unit_type_pdf_quotation)
-                        - {!! $row->item->from_unit_type_id_desc !!}
-                    @endif
+                            - {!! $row->item->from_unit_type_id_desc !!}
+                        @endif
+                        @if (isset($row->item->second_name))
+                            - {!! $row->item->second_name !!}
+                        @endif
+                        @if (isset($row->unit_desc))
+                            {!! $row->unit_desc !!}
+                        @endif
                         @if (!empty($row->item->presentation))
                             {!! $row->item->presentation->description !!}
                         @endif

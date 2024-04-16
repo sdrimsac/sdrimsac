@@ -202,6 +202,12 @@
                         @if (isset($row->item->from_unit_type_id_desc) && $configuration->unit_type_pdf_quotation)
                             - {!! $row->item->from_unit_type_id_desc !!}
                         @endif
+                        @if (isset($row->item->second_name))
+                            - {!! $row->item->second_name !!}
+                        @endif
+                        @if (isset($row->unit_desc))
+                            {!! $row->unit_desc !!}
+                        @endif
                         @if (!empty($row->item->presentation))
                             {!! $row->item->presentation->description !!}
                         @endif
