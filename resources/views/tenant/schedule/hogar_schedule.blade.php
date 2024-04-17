@@ -530,7 +530,8 @@
                         <div class="border-rounded">
                             @php
                                 $serie = null;
-                                $lots = $item->item->lots;
+                                if($item){
+                                    $lots = $item->item->lots;
                                 if (count($lots) > 0) {
                                     foreach ($lots as $lot) {
                                         if ($lot->selected == true) {
@@ -538,6 +539,7 @@
                                         }
                                     }
                                     $serie = substr($serie, 0, -1);
+                                }
                                 }
                             @endphp
                             @if ($serie)
