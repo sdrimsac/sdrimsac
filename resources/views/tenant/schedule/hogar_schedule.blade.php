@@ -421,7 +421,7 @@
 
                         <div class="border-rounded">
                             <div style="border-bottom: 1px solid #000;">
-                                <strong>PAGO {{strtoupper($sale->type_payment)}}</strong>
+                                <strong>PAGO {{ strtoupper($sale->type_payment) }}</strong>
 
                             </div>
                             <div>
@@ -505,12 +505,14 @@
                         <div class="border-rounded">
                             @php
                                 $model = null;
-                                $attributes = $item->item->attributes;
-                                if (count($attributes) > 0) {
-                                    //search in array attributes the element with key 'description' 'Modelo'
-                                    foreach ($attributes as $attribute) {
-                                        if ($attribute->description == 'Modelo') {
-                                            $model = $attribute;
+                                if ($item) {
+                                    $attributes = $item->item->attributes;
+                                    if (count($attributes) > 0) {
+                                        //search in array attributes the element with key 'description' 'Modelo'
+                                        foreach ($attributes as $attribute) {
+                                            if ($attribute->description == 'Modelo') {
+                                                $model = $attribute;
+                                            }
                                         }
                                     }
                                 }
