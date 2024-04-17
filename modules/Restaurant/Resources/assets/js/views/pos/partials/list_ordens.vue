@@ -2202,7 +2202,7 @@
         >
         </observation-form>
         <quotation-form
-        :configuration="configuration"
+            :configuration="configuration"
             :isSeller="isSeller"
             :showDialog.sync="showQuotationForm"
             :items="localOrden"
@@ -3050,11 +3050,17 @@ export default {
                 this.$toast.error("Debe abrir caja para poder dar a crédito");
                 return;
             }
+            let allHaveQuantity = this.localOrden.every(
+                o => o.quantity > 0 
+            );
+            if (!allHaveQuantity) {
+                this.$toast.error("Debe ingresar la cantidad de todos los productos");
+                return;
+            }
             this.showCreditForm = true;
         },
         openQuotation() {
-        if(this.localOrden.length > 0)
-            this.showQuotationForm = true;
+            if (this.localOrden.length > 0) this.showQuotationForm = true;
         },
         savePrint() {
             localStorage.setItem("cajaPrint", this.printing ? 1 : 0);
