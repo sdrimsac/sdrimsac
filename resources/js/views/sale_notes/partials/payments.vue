@@ -362,7 +362,7 @@
                                         TOTAL A PAGAR
                                     </td>
                                     <td class="text-end">
-                                        {{ document.total }}
+                                        {{ document.total  }}
                                     </td>
                                     <td></td>
                                 </tr>
@@ -478,7 +478,7 @@ export default {
         },
         calculateDiscountCredit() {
             this.document.total_difference_credit =
-                this.document.total_difference - this.creditDiscount;
+                this.document.total_difference - this.creditDiscount + this.document.current_payment.penalty;
 
             this.records[
                 this.records.length - 1
@@ -543,10 +543,6 @@ export default {
             await this.$http
                 .get(`/${this.resource}/document/${this.documentId}`)
                 .then(response => {
-                    console.log(
-                        "🚀 ~ file: payments.vue:508 ~ getData ~ response:",
-                        response
-                    );
                     this.document = response.data;
                     this.title =
                         "Pagos del comprobante: " +
@@ -592,19 +588,10 @@ export default {
             this.fileList = [];
         },
         async clickSubmit(index) {
-            console.log(
-                "🚀 ~ file: payments.vue:548 ~ clickSubmit ~ this.is_paying:",
-                this.is_paying
-            );
-
             let { num_schedule, amount_schedule } = this.document;
             let payment = this.records[index].payment;
             let difference = parseFloat(this.document.total_difference);
             let passLowPay = false;
-            console.log(
-                "🚀 ~ clickSubmit ~ this.configuration:",
-                this.configuration
-            );
             if (
                 this.configuration &&
                 this.configuration.sale_note_credit_low_pay
@@ -623,20 +610,20 @@ export default {
                 );
                 return;
             }
-            if (num_schedule == 1) {
-                if (
-                    this.records[index].payment <
-                    parseFloat(this.document.total_difference)
-                ) {
-                    this.$toast.error(
-                        "No se puede hacer pago parcial teniendo una sola cuota por cancelar."
-                    );
-                    return;
-                }
-            }
+            // if (num_schedule == 1) {
+            //     if (
+            //         this.records[index].payment <
+            //         parseFloat(this.document.total_difference)
+            //     ) {
+            //         this.$toast.error(
+            //             "No se puede hacer pago parcial teniendo una sola cuota por cancelar."
+            //         );
+            //         return;
+            //     }
+            // }
             if (
                 this.records[index].payment >
-                parseFloat(this.document.total_difference)
+                parseFloat(this.document.total_difference + this.document.current_payment.penalty)
             ) {
                 this.$toast.error(
                     "El monto ingresado supera al monto pendiente de pago, verifique."

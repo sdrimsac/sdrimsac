@@ -309,12 +309,20 @@
                         class="submit"
                         type="success"
                         @click.prevent="clickDownload('excel')"
-                        ><i class="fa fa-file-excel"></i> Exportal
+                        ><i class="fa fa-file-excel"></i> Exportar
                         Excel</el-button
                     >
                     <el-button class="submit" @click.prevent="clickOpenWhatsapp"
                         ><i class="fa fa-whatsapp"></i> Enviar
                         whatsapp</el-button
+                    >
+                        <el-button
+                        class="submit"
+                        v-if="form.paid"
+                        type="success"
+                        @click.prevent="clickDownload('excel_accept')"
+                        ><i class="fa fa-file-excel"></i> Exportar
+                        Excel aceptados</el-button
                     >
                 </template>
             </div>

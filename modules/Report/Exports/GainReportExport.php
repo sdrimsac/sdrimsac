@@ -17,6 +17,12 @@ class GainReportExport implements FromView, ShouldAutoSize
         return $this;
     }
 
+    public function is_service($is_service)
+    {
+        $this->is_service = $is_service;
+        return $this;
+    }
+
     public function date_end($date_end)
     {
         $this->date_end = $date_end;
@@ -65,6 +71,7 @@ class GainReportExport implements FromView, ShouldAutoSize
         return view('report::cash.report_excel_cash', [
             "establishment" => $this->establishment,
             "total" => $this->total,
+            "is_service" => $this->is_service,
             "company" => $this->company,
             "items" => $this->items,
             "date_start" => $this->date_start,

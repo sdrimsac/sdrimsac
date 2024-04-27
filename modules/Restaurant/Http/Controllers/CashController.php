@@ -165,6 +165,7 @@ class CashController extends Controller
     {
 
         $type = $type ?? 'pdf';
+        $item_id = $request->item_id;
         $categoria_id = $request->categoria_id;
         $establishment_id = $request->establishment_id;
         $establishment = null;
@@ -191,13 +192,18 @@ class CashController extends Controller
         }
 
         $recordsDocument->chunk(50, function ($documents)
-        use (&$items, &$total, &$categoria_id) {
+        use (&$items, &$total, &$categoria_id,&$item_id) {
 
             foreach ($documents as  $document) {
                 $total_items = 0;
-                $documents_items = DocumentItem::where('document_id', $document->id)->get();
-
+                // $documents_items = DocumentItem::where('document_id', $document->id)->get();
+                $documents_items = DocumentItem::where('document_id', $document->id);
+                if ($item_id) {
+                    $documents_items = $documents_items->where('item_id', $item_id);
+                }
+                $documents_items = $documents_items->get();
                 foreach ($documents_items as  $d_it) {
+                    
                     if ($categoria_id == null) {
                         $item = $d_it->item;
                         $factor = null;
@@ -345,11 +351,16 @@ class CashController extends Controller
 
         $recordsSaleNote->chunk(50, function ($sale_notes)
 
-        use (&$items, &$total, &$categoria_id) {
+        use (&$items, &$total, &$categoria_id,&$item_id) {
 
             foreach ($sale_notes as  $sale_note) {
                 $total_items = 0;
-                $sale_notes_items = SaleNoteItem::where('sale_note_id', $sale_note->id)->get();
+                $sale_notes_items = SaleNoteItem::where('sale_note_id', $sale_note->id);
+
+                if ($item_id) {
+                    $sale_notes_items = $sale_notes_items->where('item_id', $item_id);
+                }
+                $sale_notes_items = $sale_notes_items->get();
 
                 foreach ($sale_notes_items as  $d_it) {
                     if ($categoria_id == null) {
@@ -491,6 +502,12 @@ class CashController extends Controller
                 }
             }
         });
+        $is_service = false;
+        // if($)
+        if($item_id !== null){
+            $item = Item::findOrFail($item_id);
+            $is_service = $item->unit_type_id == "ZZ";
+        }
         array_multisort(array_column($items, 'count'), SORT_DESC, $items);
         if ($type == 'pdf') {
             $pdf = PDF::loadView('report::cash.report_pdf_cash', compact(
@@ -499,7 +516,8 @@ class CashController extends Controller
                 "company",
                 "items",
                 "date_start",
-                "date_end"
+                "date_end",
+                "is_service"
             ));
 
             $filename = "Reporte_POS";
@@ -513,6 +531,7 @@ class CashController extends Controller
                 ->items($items)
                 ->date_start($date_start)
                 ->date_end($date_end)
+                ->is_service($is_service)
                 ->download('ReporteDoc' . Carbon::now() . '.xlsx');
         }
     }
@@ -715,11 +734,12 @@ class CashController extends Controller
             foreach ($sale_notes as  $sale_note) {
 
                 $total_items = 0;
-                $sale_notes_items = SaleNoteItem::where('sale_note_id', $sale_note->id)->get();
+                $sale_notes_items = SaleNoteItem::where('sale_note_id', $sale_note->id);
 
                 if ($item_id) {
                     $sale_notes_items = $sale_notes_items->where('item_id', $item_id);
                 }
+                $sale_notes_items = $sale_notes_items->get();
 
                 foreach ($sale_notes_items as  $d_it) {
                     if ($categoria_id == null) {

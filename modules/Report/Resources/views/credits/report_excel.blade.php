@@ -97,6 +97,7 @@ $configuration = App\Models\Tenant\Configuration::first();
                             <th class="text-center">Fecha Emisión</th>
                             <th>DNI</th>
                             <th>Cliente</th>
+                            <th></th>
                             <th class="text-center">Cuotas vencidas</th>
                             <th class="text-center">Fecha de cobro</th>
                             <th class="text-right">Monto</th>

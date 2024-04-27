@@ -4,7 +4,7 @@
             <div class="page-header">
                 <div class="row">
                     <div class="col-sm-6">
-                        <h6><span>Reporte de ganancias</span></h6>
+                        <h6><span>Reporte de gananciassx</span></h6>
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item">
                                 <a href="/dashboard">Dashboard</a>
@@ -183,7 +183,7 @@
                                         <th>#</th>
                                         <th>Producto</th>
                                         <th>Cant. total</th>
-                                        <th>
+                                        <th v-if="!isService">
                                             P.C.
                                             <el-tooltip
                                                 class="item"
@@ -196,7 +196,7 @@
                                                 ></i>
                                             </el-tooltip>
                                         </th>
-                                        <th>
+                                        <th v-if="!isService">
                                             Total C.
                                             <el-tooltip
                                                 class="item"
@@ -210,7 +210,7 @@
                                             </el-tooltip>
                                         </th>
                                         <th>Total V.</th>
-                                        <th>Utilidad</th>
+                                        <th v-if="!isService">Utilidad</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -233,7 +233,7 @@
                                                                 <th>Cant</th>
                                                                 <th>Precio</th>
                                                                 <th>Venta</th>
-                                                                <th>Uti.</th>
+                                                                <th v-if="!isService">Uti.</th>
                                                             </tr>
                                                         </thead>
                                                         <tr
@@ -304,7 +304,7 @@
                                                                 }}</small>
                                                             </td>
 
-                                                            <td>
+                                                            <td v-if="!isService">
                                                                 <small>{{
                                                                     Number(
                                                                         prices.gain
@@ -337,7 +337,7 @@
                                                 </template>
                                             </template>
                                         </td>
-                                        <td>
+                                        <td v-if="!isService">
                                             {{
                                                 Number(
                                                     row.purchase_unit_price
@@ -347,7 +347,7 @@
                                                 })
                                             }}
                                         </td>
-                                        <td>
+                                        <td v-if="!isService">
                                             <!-- <template v-if="row.finalPrice"> -->
                                             {{
                                                 Number(
@@ -369,7 +369,7 @@
                                                 })
                                             }}
                                         </td>
-                                        <td>
+                                        <td v-if="!isService">
                                             {{
                                                 Number(row.gain).toLocaleString(
                                                     "es-PE",
@@ -410,6 +410,7 @@ export default {
     props: ["typeUser", "fromAdmin", "cajaopen"],
     data() {
         return {
+            loading_search_item:false,
             totalGeneral: null,
             totalGain: 0,
             warehouses: [],
@@ -433,7 +434,7 @@ export default {
             showWhatsappForm: false,
             loading_search:false,
             timer:null,
-
+            isService:false,
             items: [],
         };
     },
@@ -514,6 +515,10 @@ export default {
         },
 
         async getRecords() {
+            let item = this.items.find(i => i.id == this.form.item_id);
+            if (item) {
+                this.isService = item.unit_type_description == "Servicio";
+            }
             this.totalGain = 0;
             const response = await this.$http.get(
                 `/${this.resource}/records?${this.getQueryParameters()}`

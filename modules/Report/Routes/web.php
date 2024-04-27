@@ -16,6 +16,7 @@ Route::middleware(['auth', 'redirect.module', 'locked.tenant'])->group(function 
         Route::get('credits/records', [ReportCreditController::class, 'records']);
         Route::get('credits/filter', [ReportCreditController::class, 'filter']);
         Route::get('credits/excel', [ReportCreditController::class, 'excel'])->name('tenant.reports.credits.excel');
+        Route::get('credits/excel_accept', [ReportCreditController::class, 'excel_accept'])->name('tenant.reports.credits.excel');
         
         Route::get('consignment', [ReportConsignmentController::class, 'index'])->name('reports.consignment.index');
         Route::get('consignment/records', [ReportConsignmentController::class, 'records']);

@@ -983,12 +983,15 @@ class SaleNoteController extends Controller
                                 $date_payment = \Carbon\Carbon::parse($date->addDay($dias))->format('Y-m-d');
                                 $week = date("w", strtotime($date_payment)); //date('W',strtotime($date_payment));
                                 if ($week == 0) {
-                                    $date_payment = \Carbon\Carbon::parse($date->addDay($dias + 1))->format('Y-m-d');
+                                    $date_payment = \Carbon\Carbon::parse($date->addDay(1))->format('Y-m-d');
                                 }
                                 break;
                             case "Mensual":
                                 $dias = 30;
                                 $date_payment = \Carbon\Carbon::parse($date->addDay($dias))->format('Y-m-d');
+                                break;
+                            case "Unico":
+                                $date_payment = Carbon::parse($request->date_of_pay)->format('Y-m-d');
                                 break;
                         }
 
@@ -1072,6 +1075,9 @@ class SaleNoteController extends Controller
                     ]);
                     if ($configuration->sale_note_credit_penalty && $request->type_payment) {
                         $type_payment = $request->type_payment;
+                        if($type_payment == "Unico"){
+                            $type_payment = "Mensual";
+                        }
                         $penalty = DB::connection('tenant')->table('penalties_sale_note_credit')->where('type', $type_payment)->first();
                         if ($penalty) {
                             $sale_note_credit->penalty_amount_by_day = $penalty->amount_by_day;

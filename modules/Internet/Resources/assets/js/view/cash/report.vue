@@ -4,7 +4,7 @@
             <div class="page-header">
                 <div class="row">
                     <div class="col-sm-6">
-                        <h6><span>Reporte de ganancias</span></h6>
+                        <h6><span>Reporte de gananciass</span></h6>
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item">
                                 <a href="/dashboard">Dashboard</a>

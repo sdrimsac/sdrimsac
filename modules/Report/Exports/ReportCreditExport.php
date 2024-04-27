@@ -14,8 +14,14 @@ class ReportCreditExport implements FromView, ShouldAutoSize
     public $establishment;
     public $company;
     public $records;
+    public $viewR = "report::credits.report_excel";
 
+    public function viewR($viewR)
+    {
+        $this->viewR = $viewR;
 
+        return $this;
+    }
 
     public function records($records)
     {
@@ -42,7 +48,7 @@ class ReportCreditExport implements FromView, ShouldAutoSize
     public function view(): View
     {
 
-        return view('report::credits.report_excel', [
+        return view($this->viewR, [
             'records' => $this->records,
             'company' => $this->company,
             'establishment' => $this->establishment

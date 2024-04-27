@@ -199,22 +199,55 @@ class SaleNotePaymentController extends Controller
 
         $penalty_paid = 0;
 
-        //
-        $count_payment = $payment->count();
+        if ($request->paid == true) {
+            $sale_note = SaleNote::find($request->sale_note_id);
+            $sale_note->paid = true;
+            if ($credit_discount) {
+                $factor = $credit_discount / $sale_note->total;
+                $sale_note->total_discount = $credit_discount;
+                $sale_note->discounts = [
+                    "base" => $sale_note->total,
+                    "amount" => $credit_discount,
+                    "factor" => number_format($factor, 4, ".", ""),
+                    "description" => "Descuentos globales que no afectan la base imponible del IGV/IVAP",
+                    "discount_type_id" => "03"
+                ];
+                $total_after_discount = $sale_note->total - $credit_discount;
+                $sale_note->total = $total_after_discount;
+                $sale_note->total_rounded = $total_after_discount;
+                $sale_note->total_payment = $total_after_discount;
+
+                $payment = Payment::where('sale_note_id', $request->sale_note_id)
+                    ->where('paid', 1)
+                    ->first();
+                if ($payment) {
+                    $payment->paid = true;
+                    $payment->amount_paid = $request->input('payment');
+                    $payment->save();
+                }
+            }
+            Payment::where('sale_note_id', $request->sale_note_id)
+                ->update(['paid' => true]);
+            $sale_note->save();
+        }else{
+            $count_payment = $payment->count();
         if ($count_payment == 1) {
             $payment = $payment->first();
             if ($payment) {
+                $sale_note = SaleNote::find($request->sale_note_id);
+                
                 $amount_to_paid = $payment->amount;
-                $payment->paid = true;
                 $penalty_paid += $payment->penalty_amount;
-                $payment->amount_paid = $request->input('payment');
+                $payment->amount_paid += $request->input('payment');
+                if($payment->amount_paid >= $payment->amount){
+                    $payment->paid = true;
+                }
                 $payment->save();
                 $all_payed = Payment::where('sale_note_id', $request->sale_note_id)
                     ->where('paid', 0)->count();
                 $num_cuota = Payment::where('sale_note_id', $request->sale_note_id)
                     ->where('paid', 1)->count();
                 if ($all_payed == 0) {
-                    $sale_note = SaleNote::find($request->sale_note_id);
                     $sale_note->paid = true;
                     $sale_note->save();
                     Payment::where('sale_note_id', $request->sale_note_id)
@@ -275,35 +308,9 @@ class SaleNotePaymentController extends Controller
                     ->update(['amount_paid' => $amount_to_paid, 'penalty_amount' => 0]);
             }
         }
-        if ($request->paid == true) {
-            $sale_note = SaleNote::find($request->sale_note_id);
-            $sale_note->paid = true;
-            if ($credit_discount) {
-                $factor = $credit_discount / $sale_note->total;
-                $sale_note->total_discount = $credit_discount;
-                $sale_note->discounts = [
-                    "base" => $sale_note->total,
-                    "amount" => $credit_discount,
-                    "factor" => number_format($factor, 4, ".", ""),
-                    "description" => "Descuentos globales que no afectan la base imponible del IGV/IVAP",
-                    "discount_type_id" => "03"
-                ];
-                $total_after_discount = $sale_note->total - $credit_discount;
-                $sale_note->total = $total_after_discount;
-                $sale_note->total_rounded = $total_after_discount;
-                $sale_note->total_payment = $total_after_discount;
-
-                $payment = Payment::where('sale_note_id', $request->sale_note_id)
-                    ->where('paid', 1)
-                    ->first();
-                if ($payment) {
-                    $payment->paid = true;
-                    $payment->amount_paid = $request->input('payment');
-                    $payment->save();
-                }
-            }
-            $sale_note->save();
         }
+        
+    
         $receipt->num_cuota = $num_cuota;
         $receipt->penalty_paid = $penalty_paid;
         $receipt->save();

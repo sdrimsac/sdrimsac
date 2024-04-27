@@ -52,10 +52,10 @@
                 </div>
                 <div class="col-md-2">
                     <div class="form-group">
-                        <label class="control-label w-100">Tiempo (Mes)</label>
+                        <label class="control-label w-100">Tiempoa (Mes)</label>
                         <el-input-number
                             v-model="credit.month"
-                            :disabled="disabled_month"
+                            :disabled="credit.type_payment == 'Unico'"
                             :controls="false"
                             @change="calculate"
                             :min="0"
@@ -77,12 +77,15 @@
                     <el-radio-group
                         v-model="credit.type_payment"
                         size="mini"
-                        @change="calculate"
+                        @change="changeTypePayment"
                     >
                         <el-radio-button label="Diario"></el-radio-button>
                         <el-radio-button label="Semanal"></el-radio-button>
                         <el-radio-button label="Quincenal"></el-radio-button>
                         <el-radio-button label="Mensual"></el-radio-button>
+                        <el-radio-button label="Unico"
+                        v-if="configuration.sale_note_credit_confirm"
+                        ></el-radio-button>
                     </el-radio-group>
                     <small
                         class="text-danger"
@@ -137,18 +140,19 @@
                         v-text="errors.advances[0]"
                     ></small>
                 </div>
-
-                <!-- <div class="col-md-12">
-                    <label>Descripción</label>
-                    <el-input
+                <div class="col-md-3" v-if="credit.type_payment == 'Unico'">
+                    <label for="" class="control-label w-100">
+                        Fecha de Pago
+                    </label>
+                    <el-date-picker
                         class="w-100"
-                        type="textarea"
-                        :rows="2"
-                        placeholder="Descripción"
-                        v-model="form.description"
-                    >
-                    </el-input>
-                </div> -->
+                        v-model="credit.date_of_pay"
+                        type="date"
+                        value-format="yyyy-MM-dd"
+                        :clearable="false"
+                        format="dd-MM-yyyy"
+                    ></el-date-picker>
+                </div>
             </div>
         </div>
         <div class="row" v-if="configuration.sale_note_credit_confirm">
@@ -166,7 +170,7 @@
                 <el-checkbox
                     v-model="credit.is_cash"
                     @change="changeType('cash')"
-                    :disabled="!user.can_accept_credit_sale_note"
+                    :disabled="true"
                 >
                     <strong>
                         Efectivo
@@ -174,7 +178,7 @@
                 </el-checkbox>
                 <el-checkbox
                     v-model="credit.is_product"
-                    :disabled="!user.can_accept_credit_sale_note"
+                    :disabled="true"
                     @change="changeType('product')"
                 >
                     <strong>
@@ -255,7 +259,6 @@ export default {
             isMigration: false,
             form: {},
             tasaInteres: 17,
-            disabled_month: false,
             credit: {},
             showDialogNewPerson: false,
             customers: [],
@@ -276,7 +279,12 @@ export default {
             this.customers = newCustomer.filter(n => n.number != "88888888");
         }
     },
+    computed: {},
     methods: {
+        changeTypePayment() {
+            this.$forceUpdate();
+            this.calculate();
+        },
         changeType(type) {
             if (type == "cash") {
                 this.credit.is_product = false;
@@ -328,7 +336,8 @@ export default {
                 num_cuota: 0,
                 amount: 0,
                 month: 0,
-                advances: 0
+                advances: 0,
+                date_of_pay: null,
             };
         },
         advances_total() {
@@ -345,6 +354,10 @@ export default {
         },
         calculate(advance = 0) {
             // let dias = 0;
+            console.log(
+                "🚀 ~ calculate ~ this.credit.type_payment:",
+                this.credit.type_payment
+            );
             let tasa_interes = 0;
             if (this.form.total > 0 && this.credit.month > 0) {
                 switch (this.credit.type_payment) {
@@ -364,6 +377,10 @@ export default {
                     case "Mensual":
                         this.credit.num_cuota = this.credit.month;
                         // dias = 30 * this.credit.month;
+                        break;
+                    default:
+                        this.credit.month = 1;
+                        this.credit.num_cuota = 1;
                         break;
                 }
                 if (this.tasaInteres > 0) {
@@ -566,7 +583,16 @@ export default {
                 this.customers = this.all_customers;
             }
         },
+        validateUniqueTypePayment() {
+            let { type_payment, date_of_pay } = this.credit;
+            if (type_payment == "Unico" && !date_of_pay) {
+                this.$toast.error("Debe seleccionar una fecha de pago");
+                return false;
+            }
+            return true;
+        },
         async submit() {
+            if (!this.validateUniqueTypePayment()) return false;
             if (!this.validate()) return false;
             let serie = this.all_series.find(
                 serie => serie.document_type_id == "80"
@@ -694,9 +720,9 @@ export default {
                 method_pay: "Efectivo"
             };
             this.paymentsOrden();
-            if (!this.user.can_accept_credit_sale_note) {
-                this.hasService();
-            }
+            //if (!this.user.can_accept_credit_sale_note) {
+            this.hasService();
+            //}
             this.credit.month = 1;
             this.credit.type_payment = "Mensual";
             this.calculate();
