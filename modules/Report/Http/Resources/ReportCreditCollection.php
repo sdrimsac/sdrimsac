@@ -19,6 +19,7 @@ class ReportCreditCollection extends ResourceCollection
 
         return $this->collection->transform(function ($row, $key) {
             $advances  = $row->advances;
+            $paid = $row->paid;
             $payment = Payment::where('sale_note_id', $row->id);
             $payment_not_paid = $payment->where('paid', 0)
                 ->where('date_payment', '<=', Carbon::now()->startOfDay())
@@ -27,17 +28,16 @@ class ReportCreditCollection extends ResourceCollection
                 ->where('paid', 0)
                 ->orderBy('date_payment', 'asc')
                 ->first();
-            $dues = $payment_not_paid->count();
+            $dues = !$paid ? $payment_not_paid->count() : 0;
             $date_of_due = ($last_payment) ? $last_payment->date_payment : null;
             $differenc_days = 0;
-            if ($date_of_due && $dues > 0) {
+            if ($date_of_due && $dues > 0 && !$paid) {
                 if (is_object($date_of_due)) {
                     $date_of_due = $date_of_due->format('Y-m-d');
                 }
                 $differenc_days = Carbon::parse($date_of_due)->diffInDays(Carbon::now()->startOfDay(), false);
             }
 
-            $dues = $payment_not_paid->count();
             $customer = $row->customer;
             $amount_due = 0;
             $payments_records = SaleNotePayment::where('sale_note_id', $row->id)->sum('payment');
@@ -113,7 +113,7 @@ class ReportCreditCollection extends ResourceCollection
                 'payment' => $payments_records,
                 'date_of_due' => $date_of_due,
                 'canceled' => (bool) $row->paid,
-                'penalty' => $row->status ==  'A' ? $row->getPenalties() : 0,
+                'penalty' => $row->status ==  'A' && !$paid ? $row->getPenalties() : 0,
                 // 'amount_due' => number_format($amount_due, 2, ".", ""),
                 'amount_due' => number_format($to_due, 2, ".", ""),
                 'differenc_days' => $differenc_days,
