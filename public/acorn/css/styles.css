@@ -3141,6 +3141,8 @@ html[data-color='light-pink'] {
   --background-navcolor-dark: #462e3a;
   --theme-image-filter: hue-rotate(130deg) contrast(0.9); }
 
+  /* stylos para el subdominio */
+
   html[data-color='custom-sdrimsac'] {
     --primary: #073f68;
     --secondary: #195580;
@@ -3170,6 +3172,8 @@ html[data-color='light-pink'] {
     --foreground-rgb: 255, 255, 255;
     --background-theme: #f1eaee;
     --background-light: #f8f8f8;
+
+    /* para el nav */
     --gradient-1: #073f68;
     --gradient-2: #0015ff;
     --gradient-3: #073f68;
@@ -5180,6 +5184,7 @@ button {
 * Card
 *
 * Bootstrap card styles.
+para el card 
 *
 */
 .card {
@@ -11339,6 +11344,8 @@ html[data-placement='vertical'] .nav-container {
   background-size: cover;
   width: var(--nav-size);
   background-position: center;
+
+   /* consumo de colors para el nav */
   background-image: linear-gradient(10deg, var(--gradient-1), var(--gradient-1), var(--gradient-2), var(--gradient-3)); }
   html[data-placement='horizontal'] .nav-container .nav-shadow,
   html[data-placement='vertical'] .nav-container .nav-shadow {

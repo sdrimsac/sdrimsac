@@ -17,18 +17,18 @@
             <div class="form-body" style="padding-bottom: 5px">
                 <div class="form-menu">
                     <button type="button" class="form-menu-btn" value="#admin">
-                        <i class="fa fa-user"></i>ADMINISTRADOR
+                        <i class="fa fa-user"></i>   ADMINISTRADOR
                     </button>
                     <button
                         type="button"
                         class="form-menu-btn selected"
                         value="#pin"
                     >
-                        <i class="fa fa-key"></i> PIN
+                        <i class="fa fa-key"></i>   PIN DE ACCESO
                     </button>
                 </div>
                 <div id="pin" style="display: block">
-                    <p>Ingrese clave de acceso</p>
+                    <p>Ingrese PIN de acceso</p>
                     <div id="pin-container">
                         <input
                             type="hidden"
@@ -88,19 +88,21 @@
                         alt="SDRIMSAC Solutions"
                     />
                     <div class="text-white display-5">
-                        <i
-                            class="fa fa-solid fa-whatsapp"
-                            aria-hidden="true"
-                        ></i>
-                        <i
-                            class="fa fa-solid fa-facebook"
-                            aria-hidden="true"
-                        ></i>
-                        <i
-                            class="fa fa-solid fa-instagram"
-                            aria-hidden="true"
-                        ></i>
-                        <i class="fa fa-solid fa-globe" aria-hidden="true"></i>
+                        <a href="https://wa.me/51995764963" target="_blank" class="text-white me-3">
+                            <i class="fab fa-whatsapp" aria-hidden="true"></i>
+                        </a>
+
+                        <a href="https://www.facebook.com/sdrimsac" target="_blank" class="text-white me-3">
+                            <i class="fab fa-facebook" aria-hidden="true"></i>
+                        </a>
+                        
+                        <a href="https://www.instagram.com/sdrimsac" target="_blank" class="text-white me-3">
+                            <i class="fab fa-instagram" aria-hidden="true"></i>
+                        </a>
+
+                        <a href="https://www.sdrimsac.com" target="_blank" class="text-white">
+                            <i class="fas fa-globe" aria-hidden="true"></i>
+                        </a>
                     </div>
                 </div>
             </div>

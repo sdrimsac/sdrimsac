@@ -743,7 +743,7 @@
                                                     <label
                                                         for="Tarjeta"
                                                         class="radio-tile-label2"
-                                                        >No Imprimir</label
+                                                        >Pagar No Imprimir</label
                                                     >
                                                 </div>
                                             </div>

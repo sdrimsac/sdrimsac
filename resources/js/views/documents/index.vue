@@ -118,16 +118,16 @@
                     <div class="card mb-0">
                         <div class="card-header bg-primary rounded-top">
                             <h6 class="my-0  text-white">
-                                Listado de Comprobante de Pago
+                                Listado de Comprobante de Pago (Boletas y Facturas)
                             </h6>
                         </div>
                         <div class="data-table-visible-columns">
                             <el-dropdown :hide-on-click="false">
-                                <el-button type="primary">
+                                <!-- <el-button type="primary">
                                     Mostrar/Ocultar columnas<i
                                         class="el-icon-arrow-down el-icon--right"
                                     ></i>
-                                </el-button>
+                                </el-button> -->
                                 <el-dropdown-menu slot="dropdown">
                                     <el-dropdown-item
                                         v-for="(column, index) in columns"

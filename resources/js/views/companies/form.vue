@@ -2,10 +2,14 @@
     <div>
         <div class="container-fluid p-l-0 p-r-0">
             <div v-loading="loading" class="card">
-                <div class="card-header bg-primary">
-                    <h6 class="my-0 text-white">Datos de la Empresa</h6>
-                </div>
-                <div class="card-body">
+                <div class="card custom-card border-info mb-3">
+                    <h4 class="my-0">
+                        <div class="card-header bg-primary text-white">
+                            <i class="fas fa-building mr-2"></i> <!-- Icono de empresa -->
+                            Datos de la Empresa
+                        </div>
+                    </h4>
+                    <div class="card-body">
                     <form autocomplete="off">
                         <div class="form-body">
                             <div class="row">
@@ -14,16 +18,24 @@
                                         class="form-group"
                                         :class="{ 'has-danger': errors.number }"
                                     >
-                                        <label class="control-label"
-                                            >Número</label
-                                        >
+                                    <label class="control-label font-weight-bold h5">
+                                        <i class="fas fa-file-alt"></i> Número de RUC :
+                                    </label>
                                         <el-input
                                             @input="searchDocument()"
                                             v-model="form.number"
                                             :maxlength="11"
-                                            :show-word-limit="true"
-                                        >
+                                            :show-word-limit="true" >
+
+                                            <template v-slot:prepend> <!-- Para agregar un icono en el input -->
+                                            <i class="fa-id-card"></i>
+                                        </template>
+                                        <template v-slot:append> <!-- Para agregar texto al final del input -->
+                                            (Max 11 dígitos)
+                                        </template>
+                                        <input type="number" pattern="[0-9]*">
                                         </el-input>
+                                        
                                         <small
                                             class="text-danger"
                                             v-if="errors.number"
@@ -36,12 +48,9 @@
                                         class="form-group"
                                         :class="{ 'has-danger': errors.name }"
                                     >
-                                        <label class="control-label"
-                                            >Nombre
-                                            <span class="text-danger"
-                                                >*</span
-                                            ></label
-                                        >
+                                        <label class="control-label font-weight-bold h5">
+                                            <i class="fas fa-building"></i> Nombre de Empresa
+                                        </label>
 
                                         <el-input v-model="form.name" disabled>
                                         </el-input>
@@ -59,14 +68,13 @@
                                             'has-danger': errors.representative
                                         }"
                                     >
-                                        <label class="control-label"
-                                            >Representante Legal
-                                            <span class="text-danger"
-                                                >*</span
-                                            ></label
-                                        >
-                                        <el-input v-model="form.representative">
+                                    <label class="control-label font-weight-bold h5">
+                                        Representante Legal
+                                    </label>
+
+                                        <el-input v-model="form.representative" disabled>
                                         </el-input>
+
                                         <small
                                             class="text-danger"
                                             v-if="errors.representative"
@@ -82,17 +90,31 @@
                                                 errors.representative_number
                                         }"
                                     >
-                                        <label class="control-label"
-                                            >Nº DNI Representante Legal
-                                            <span class="text-danger"
-                                                >*</span
-                                            ></label
-                                        >
+                                        <label class="control-label font-weight-bold h5">
+                                            Nº DNI Representante Legal
+                                        </label>
+                                        
+                                        <el-tooltip
+                                                    content="Campo Obligatorio"
+                                                >
+                                                <span class="text-danger">
+                                                    <i class="fas fa-exclamation-circle"></i> <!-- Icono de dato obligatorio -->
+                                                </span>
+                                        </el-tooltip>
+
                                         <el-input
                                             :maxlength="8"
                                             @input="searchDocument(false)"
                                             v-model="form.representative_number"
+                                            :show-word-limit="true"
                                         >
+                                        <template v-slot:prepend> <!-- Para agregar un icono en el input -->
+                                            <i class="el-icon-user"></i>
+                                        </template>
+                                        <template v-slot:append> <!-- Para agregar texto al final del input -->
+                                            (Max 8 dígitos)
+                                        </template>
+                                        <input type="number" pattern="[0-9]*">
                                         </el-input>
                                         <small
                                             class="text-danger"
@@ -103,7 +125,7 @@
                                         ></small>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-3">
                                     <div
                                         class="form-group"
                                         :class="{
@@ -111,12 +133,9 @@
                                                 errors.representative_address
                                         }"
                                     >
-                                        <label class="control-label"
-                                            >Direccion Representante Legal
-                                            <span class="text-danger"
-                                                >*</span
-                                            ></label
-                                        >
+                                    <label class="control-label font-weight-bold h5">
+                                        <i class="fas fa-map-marker-alt"></i>  Dirección Representante Legal
+                                    </label>
                                         <el-input
                                             v-model="
                                                 form.representative_address
@@ -134,24 +153,30 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div
-                                        class="form-group"
-                                        :class="{
-                                            'has-danger': errors.trade_name
-                                        }"
+                            class="form-group"
+                            :class="{'has-danger': errors.trade_name}"
                                     >
-                                        <label class="control-label"
-                                            >Nombre comercial
-                                            <span class="text-danger"
-                                                >*</span
-                                            ></label
-                                        >
-                                        <el-input v-model="form.trade_name">
-                                        </el-input>
-                                        <small
+
+                                    <label class="control-label font-weight-bold h5">
+                                        <i class="fas fa-trademark"></i> Nombre Comercial
+                                        <el-tooltip
+                                                    content="Campo Obligatorio"
+                                                >
+                                                <span class="text-danger">
+                                                    <i class="fas fa-exclamation-circle"></i> <!-- Icono de dato obligatorio -->
+                                                </span>
+                                                </el-tooltip>
+                                       
+                                    </label>
+                                    <el-input v-model="form.trade_name">
+                                    </el-input>
+                                    <small
                                             class="text-danger"
                                             v-if="errors.trade_name"
                                             v-text="errors.trade_name[0]"
                                         ></small>
+
+                                        
                                     </div>
                                 </div>
                             </div>
@@ -163,11 +188,10 @@
                                             'has-danger': errors.eslogan
                                         }"
                                     >
-                                        <label class="control-label"
-                                            >eslogan<span class="text-danger"
-                                                >*</span
-                                            ></label
-                                        >
+                                        <label class="control-label font-weight-bold h5">
+                                            <i class="fas fa-quote-right"></i> Slogan de la Empresa
+                                        </label>
+
                                         <el-input v-model="form.eslogan">
                                         </el-input>
                                         <small
@@ -193,12 +217,11 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="card mb-3">
+                        <!-- <div class="card mb-3">
                             <div class="card-header bg-primary">
                                 <h6 class="text-white my-0 card-tittle">
-                                    Imagenes del Sistema
+                                     Imágenes del Sistema
                                 </h6>
-
                                 <div class="card-tools">
                                     <button
                                         class="btn btn-primary"
@@ -211,7 +234,26 @@
                                         <i class="fas fa-plus"></i>
                                     </button>
                                 </div>
-                            </div>
+                            </div> -->
+                            <div class="card mb-3">
+                                <div class="card-header bg-primary">
+                                    
+                                    <h6 class="text-white my-0 card-title">
+                                        <i class="fas fa-images"></i> Imágenes del Sistema
+                                    </h6>
+                                    <div class="card-tools">
+                                        <button
+                                            class="btn btn-secundary btn-lg"
+                                            type="button"
+                                            data-toggle="collapse"
+                                            data-target="#collapseExample"
+                                            aria-expanded="false"
+                                            aria-controls="collapseExample"
+                                        >
+                                            <i class="fas fa-plus"></i>
+                                        </button>
+                                    </div>
+                                </div>
                             <div
                                 class="card-body collapse"
                                 id="collapseExample"
@@ -416,11 +458,11 @@
                                                 </el-upload>
                                             </el-input>
                                             <div class="badge text-danger">
-                                                <small
+                                                <!-- <small
                                                     style="margin-right: 10px; !important"
                                                     >Se recomienda resoluciones
-                                                    700x300</small
-                                                >
+                                                    700x300</small -->
+                                                
 
                                                 <el-checkbox
                                                     @change="setConfiguration"
@@ -490,7 +532,7 @@
                         <div class="card">
                             <div class="card-header bg-primary">
                                 <h6 class="text-white my-0">
-                                    Entorno del sistema
+                                    <i class="fas fa-cogs"></i> Entorno del sistema
                                 </h6>
                             </div>
                             <div class="row">
@@ -677,10 +719,20 @@
                             </div>
                         </div>
                     </form>
+               
                 </div>
+            
+            </div>
+    
+        </div>
+    <br>
                 <div class="card">
                     <div class="card-header bg-primary">
-                        <h6 class="my-0 text-white">Guías electrónicas</h6>
+                        <h4 class="my-0 text-white">
+                            <i class="fas fa-file-alt"></i> <!-- Icono de archivo -->
+                            Guías Electrónicas
+                        </h4>
+                        <!-- <h4 class="my-0 text-white">Guías electrónicas</h4> -->
                     </div>
                     <div class="card-body">
                         <form autocomplete="off" @submit.prevent="submit">
@@ -814,6 +866,7 @@
                         </form>
                     </div>
                 </div>
+    <br>
                 <!-- <el-divider></el-divider> -->
                 <establishments-index
                     :configuration="configuration"
@@ -821,12 +874,38 @@
                 ></establishments-index>
             </div>
         </div>
-    </div>
+
 </template>
+
+
 <style>
 .no-radius.card-header {
     border-radius: 0px !important;
 }
+/* ******** gradiente */
+            .bg-gradient-custom {
+                background: radial-gradient(circle, #eeb310, #a5d8ec); /* Degradado radial de azul a celeste */
+            }
+
+            .custom-card {
+                border: none;
+                border-radius: 10px; /* Borde redondeado */
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra */
+            }
+
+            .custom-card .card-body {
+                padding: 1.5rem; /* Espaciado del contenido */
+            }
+
+            .custom-card h5 {
+                font-weight: bold;
+                font-size: 1.25rem; /* Tamaño del texto */
+            }
+
+            .custom-card i {
+                font-size: 1.25rem; /* Tamaño del icono */
+            }
+/* ****************** Fin Gradiente */
 </style>
 <script>
 // tenant-certificates-index
@@ -1009,7 +1088,7 @@ export default {
             } else {
                 this.$toast.error("Error al subir el archivo");
             }
-        }
+        },  
     }
 };
 </script>

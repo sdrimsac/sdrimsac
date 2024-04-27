@@ -747,7 +747,49 @@
 
             </li>
         @endif
+        <li>
+                <a href="#configuration" data-bs-toggle="collapse" data-role="button"
+                    aria-expanded="{{ $path[0] === 'tasks' ? true : false }} {{ $path[0] === 'configurations' && $path[1] === 'pdf_templates' ? true : false }} {{ $path[0] === 'companies' && $path[1] === 'create' ? true : false }}{{ $path[0] === 'catalogs' ? true : false }}{{ $path[0] === 'advanced' ? true : false }}{{ $path[0] === 'pdf_templates' ? true : false }}{{ $path[0] === 'series-configurations' ? true : false }}"
+                    class="{{ $path[0] === 'tasks' ? 'active' : '' }}{{ $path[0] === 'configurations' && $path[1] === 'pdf_templates' ? 'active' : '' }}{{ $path[0] === 'companies' && $path[1] === 'create' ? 'active' : '' }}{{ $path[0] === 'catalogs' ? 'active' : '' }}{{ $path[0] === 'advanced' ? 'active' : '' }}{{ $path[0] === 'pdf_templates' ? 'active' : '' }}{{ $path[0] === 'series-configurations' ? 'active' : '' }}"
+                    data-clicked="{{ $path[0] === 'tasks' ? true : false }}{{ $path[0] === 'configurations' && $path[1] === 'pdf_templates' ? true : false }}{{ $path[0] === 'companies' && $path[1] === 'create' ? true : false }}{{ $path[0] === 'catalogs' ? true : false }}{{ $path[0] === 'advanced' ? true : false }}{{ $path[0] === 'pdf_templates' ? true : false }}{{ $path[0] === 'series-configurations' ? true : false }}">
+                    <i class="icofont-ui-settings icon-parent"></i>
+                    <span class="label">RestaurantE</span>
+                </a>
+
+                <ul id="configuration" class="collapse ">
+                    
+                    
+                        
+
+        
+                        
+                        <li>
+                            <a class="{{ $path[0] === 'caja' && $path[1] === 'tables' ? 'active' : '' }}"
+                                href="{{ route('restaurant.tables') }}">
+                                <i class="icofont-dining-table"></i> Mesas
+                            </a>
+                        </li>
+                    
+
+                        <li>
+                            <a class="{{ $path[0] === 'caja' && $path[1] === 'status-orden' ? 'active' : '' }}"
+                                href="{{ route('restaurant.status_orden') }}">
+                                <i class="icofont-read-book"></i> Estados de pedidos
+                            </a>
+                        </li>
+                        <li>
+                            <a class="{{ $path[0] === 'caja' && $path[1] === 'status-tables' ? 'active' : '' }}"
+                                href="{{ route('restaurant.status_table') }}">
+                                <i class="icofont-dining-table"></i> Estados de mesas
+                            </a>
+                        </li>
+                        
+                    
+
+                </ul>
+            </li>
         @if ($user->type == 'superadmin' || ($roleService->isArca() && $config->hotels))
+
             <li>
                 <a href="#configuration" data-bs-toggle="collapse" data-role="button"
                     aria-expanded="{{ $path[0] === 'tasks' ? true : false }} {{ $path[0] === 'configurations' && $path[1] === 'pdf_templates' ? true : false }} {{ $path[0] === 'companies' && $path[1] === 'create' ? true : false }}{{ $path[0] === 'catalogs' ? true : false }}{{ $path[0] === 'advanced' ? true : false }}{{ $path[0] === 'pdf_templates' ? true : false }}{{ $path[0] === 'series-configurations' ? true : false }}"
@@ -766,18 +808,7 @@
                             </a>
                         </li>
                     @endif
-                    {{-- <li>
-            <a class="{{ $path[0] === 'establishments' ? 'active' : '' }}"
-            href="{{ route('tenant.establishments.index') }}">
-            <i class="icofont-building"></i> Establecimientos
-            </a>
-        </li> --}}
-                    {{-- <li>
-            <a class="{{ $path[0] === 'catalogs' ? 'active' : '' }}"
-                href="{{ route('tenant.catalogs.index') }}">
-                <i class="icofont-notebook"></i> Catalogos
-            </a>
-        </li> --}}
+                    
                     <li>
                         <a class="{{ $path[0] === 'advanced' ? 'active' : '' }}"
                             href="{{ route('tenant.advanced.index') }}">

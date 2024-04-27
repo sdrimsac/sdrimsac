@@ -22,7 +22,7 @@
                                 <div class="row ">
                                     <div class="  col-md-6 col-lg-5 col-sm-6">
                                         <label class="control-label"
-                                            >Comprobante de Pago
+                                            >Comprobante de Pago 123456
                                         </label>
                                         <div class="form-group">
                                             <el-radio-group

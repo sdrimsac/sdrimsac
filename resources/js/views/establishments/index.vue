@@ -60,6 +60,7 @@
             </div>
           </div> -->
         <!-- Container-fluid starts-->
+        <br>
         <div class="container-fluid p-l-0 p-r-0">
             <div class="card">
                 <div class="no-radius card-header bg-primary d-flex">
@@ -84,7 +85,11 @@
                                     <th>#</th>
                                     <th>Descripción</th>
                                     <th class="text-end">Código</th>
+                                    <th class="text-end">Factura</th>
+                                    <th class="text-end">Boleta</th>
+                                    <th class="text-end">Nota de venta</th>
                                     <th class="text-end">Acciones</th>
+                                    
                                 </tr>
                             </thead>
                             <tbody>
@@ -95,29 +100,68 @@
                                     <td>{{ index + 1 }}</td>
                                     <td>{{ row.description }}</td>
                                     <td class="text-end">{{ row.code }}</td>
+                                    <td class="text-end">{{ row.factura }}</td>
+                                    <td class="text-end">{{ row.boleta }}</td>
+                                    <td class="text-end">{{ row.nota_venta }}</td>
                                     <td class="text-end">
+                    
                                         <button
-                                            type="button"
-                                            class="btn waves-effect waves-light btn-sm btn-info"
-                                            @click.prevent="clickCreate(row.id)"
-                                        >
-                                            Editar
-                                        </button>
-                                        <button
-                                            type="button"
-                                            class="btn waves-effect waves-light btn-sm btn-danger"
-                                            v-if="typeUser != 'integrator'"
-                                            @click.prevent="clickDelete(row.id)"
-                                        >
-                                            Eliminar
-                                        </button>
-                                        <button
-                                            type="button"
-                                            class="btn waves-effect waves-light btn-sm btn-warning"
-                                            @click.prevent="clickSeries(row.id)"
-                                        >
-                                            Series
-                                        </button>
+                                                class="btn p-0"
+                                                type="button"
+                                                data-bs-toggle="dropdown"
+                                                aria-haspopup="true"
+                                                aria-expanded="false"
+                                            >
+                                                <span
+                                                    class="btn btn-primary dropdown-toggle"
+                                                    data-bs-toggle="tooltip"
+                                                    data-bs-placement="top"
+                                                    data-bs-delay="0"
+                                                    title=""
+                                                    data-bs-original-title="Item Count"
+                                                    aria-label="Item Count"
+                                                    >Acciones</span
+                                                >
+                                            </button>
+                                            <div
+                                                class="dropdown-menu dropdown-menu-end"
+                                                style=""
+                                            >
+                                                <a
+                                                    type="button"
+                                                    class="dropdown-item"
+                                                    @click.prevent="
+                                                        clickCreate(
+                                                            row.id
+                                                        )
+                                                    "
+                                                    
+                                                    >Editar
+                                                </a>
+                                                <a
+                                                    type="button"
+                                                    class="dropdown-item"
+                                                    @click.prevent="
+                                                        clickDelete(
+                                                            row.id
+                                                        )
+                                                    "
+                                                    
+                                                    >Eliminar
+                                                </a>
+                                                <a
+                                                    type="button"
+                                                    class="dropdown-item"
+                                                    @click.prevent="
+                                                        clickSeries(
+                                                            row.id
+                                                        )
+                                                    "
+                                                    
+                                                    >Series
+                                                </a>
+                                                
+                                            </div>
                                     </td>
                                 </tr>
                             </tbody>
