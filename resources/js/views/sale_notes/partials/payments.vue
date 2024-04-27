@@ -478,7 +478,7 @@ export default {
         },
         calculateDiscountCredit() {
             this.document.total_difference_credit =
-                this.document.total_difference - this.creditDiscount + this.document.current_payment.penalty;
+                this.document.total_difference - this.creditDiscount;
 
             this.records[
                 this.records.length - 1
