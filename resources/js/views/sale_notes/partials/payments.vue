@@ -16,11 +16,12 @@
             <div class="col-lg-6 col-md-6 col-12 d-flex justify-content-end">
                 <template
                     v-if="
-                        document.current_payment && document.current_payment.num
+                        document.current_payment && document.current_payment.num && document.credit_cash == 0
                     "
                 >
                     <h4>
-                        Cuota N° {{ document.current_payment.num }} de
+                        <template>
+                            Cuota N° {{ document.current_payment.num }} de
                         {{ Number(document.current_payment.amount).toFixed(2) }}
 
                         <span
@@ -34,6 +35,7 @@
                                 ).toFixed(2)
                             }}
                         </span>
+                        </template>
                     </h4>
                 </template>
             </div>
@@ -123,6 +125,7 @@
                                                 Eliminar
                                             </button> -->
                                             <button
+                                            v-if="row.receipt_link && row.receipt_link!=''"
                                                 type="button"
                                                 class="btn waves-effect waves-light btn-sm btn-primary"
                                                 @click.prevent="

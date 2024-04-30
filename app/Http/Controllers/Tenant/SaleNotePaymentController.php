@@ -49,7 +49,7 @@ class SaleNotePaymentController extends Controller
     public function document($sale_note_id)
     {
         $sale_note = SaleNote::find($sale_note_id);
-        $penalty = $sale_note->getPenalties();
+        $penalty = $sale_note->credit_cash == 0 ? $sale_note->getPenalties() : 0;
         $total_paid = round(collect($sale_note->payments)->sum('payment'), 2);
         $payment = Payment::where('sale_note_id', $sale_note_id);
         $payment_tasa = $payment->first();
@@ -98,6 +98,7 @@ class SaleNotePaymentController extends Controller
         }
         $customer_name = $sale_note->customer->name;
         return [
+            'credit_cash' => $sale_note->credit_cash,   
             'customer_name' => $customer_name,
             'current_payment' => $current_payment,
             'amount_schedule' => floatval($amount_schedule),
@@ -230,84 +231,84 @@ class SaleNotePaymentController extends Controller
                 ->update(['paid' => true]);
             $sale_note->save();
         }else{
-            $count_payment = $payment->count();
-        if ($count_payment == 1) {
-            $payment = $payment->first();
-            if ($payment) {
-                $sale_note = SaleNote::find($request->sale_note_id);
+            if($document_save->credit_cash == 1){
                 
-                $amount_to_paid = $payment->amount;
-                $penalty_paid += $payment->penalty_amount;
-                $payment->amount_paid += $request->input('payment');
-                if($payment->amount_paid >= $payment->amount){
-                    $payment->paid = true;
-                }
-                $payment->save();
-                $all_payed = Payment::where('sale_note_id', $request->sale_note_id)
-                    ->where('paid', 0)->count();
-                $num_cuota = Payment::where('sale_note_id', $request->sale_note_id)
-                    ->where('paid', 1)->count();
-                if ($all_payed == 0) {
-                    $sale_note->paid = true;
-                    $sale_note->save();
-                    Payment::where('sale_note_id', $request->sale_note_id)
-                        ->update(['amount_paid' => $amount_to_paid]);
-                }
-            }
-        } else {
-            $amount_to_paid = $payment->first()->amount;
-            $amount_payed = $request->input('payment');
-            $last_payment = Payment::where('sale_note_id', $request->sale_note_id)
-                ->where('paid', 0)
-                ->first();
-            if ($last_payment->amount_paid > 0) {
-                $amount_payed += $last_payment->amount_paid;
-            }
-
-
-            $payments = Payment::where('sale_note_id', $request->sale_note_id)
-                ->get();
-
-            $amount_payed_remain = $amount_payed;
-            foreach ($payments as $key => $value) {
-                if ($value->paid == 0) {
-                    if ($amount_payed_remain <= 0) {
-                        break; // Si no hay fondos disponibles, salir del bucle
-                    }
-
-                    if ($amount_payed_remain > 0) {
-                        // Si el índice de la cuota es menor que el número de pagos cancelados
-                        $amount_to_pay = $value->amount + $value->penalty_amount;
-
-                        if ($amount_payed_remain >= $amount_to_pay) {
-                            // Si el monto restante es suficiente para pagar la cuota completa
-                            $value->paid = true;
-                            $num_cuota = $key + 1;
-                            $penalty_paid += $value->penalty_amount;
-                            // $value->penalty_amount = 0;
-                            $value->amount_paid = $amount_to_pay;
-                            $amount_payed_remain -= $amount_to_pay;
-                        } else {
-                            // Si el monto restante no es suficiente para pagar la cuota completa
-                            $value->paid = false;
-                            $value->amount_paid = $amount_payed_remain;
-                            $amount_payed_remain = 0; // Establecer el monto restante a cero
+            }else{
+                $count_payment = $payment->count();
+                if ($count_payment == 1) {
+                    $payment = $payment->first();
+                    if ($payment) {
+                        $sale_note = SaleNote::find($request->sale_note_id);
+                        
+                        $amount_to_paid = $payment->amount;
+                        $penalty_paid += $payment->penalty_amount;
+                        $payment->amount_paid += $request->input('payment');
+                        if($payment->amount_paid >= $payment->amount){
+                            $payment->paid = true;
                         }
-
-                        $value->save();
+                        $payment->save();
+                        $all_payed = Payment::where('sale_note_id', $request->sale_note_id)
+                            ->where('paid', 0)->count();
+                        $num_cuota = Payment::where('sale_note_id', $request->sale_note_id)
+                            ->where('paid', 1)->count();
+                        if ($all_payed == 0) {
+                            $sale_note->paid = true;
+                            $sale_note->save();
+                            Payment::where('sale_note_id', $request->sale_note_id)
+                                ->update(['amount_paid' => $amount_to_paid]);
+                        }
+                    }
+                } else {
+                    $amount_to_paid = $payment->first() ? $payment->first()->amount : 0;
+                    $amount_payed = $request->input('payment');
+                    $last_payment = Payment::where('sale_note_id', $request->sale_note_id)
+                        ->where('paid', 0)
+                        ->first();
+                    if ($last_payment && $last_payment->amount_paid > 0) {
+                        $amount_payed += $last_payment->amount_paid;
+                    }
+        
+        
+                    $payments = Payment::where('sale_note_id', $request->sale_note_id)
+                        ->get();
+        
+                    $amount_payed_remain = $amount_payed;
+                    foreach ($payments as $key => $value) {
+                        if ($value->paid == 0) {
+                            if ($amount_payed_remain <= 0) {
+                                break; 
+                            }
+        
+                            if ($amount_payed_remain > 0) {
+                                $amount_to_pay = $value->amount + $value->penalty_amount;
+        
+                                if ($amount_payed_remain >= $amount_to_pay) {
+                                    $value->paid = true;
+                                    $num_cuota = $key + 1;
+                                    $penalty_paid += $value->penalty_amount;
+                                    $value->amount_paid = $amount_to_pay;
+                                    $amount_payed_remain -= $amount_to_pay;
+                                } else {
+                                    $value->paid = false;
+                                    $value->amount_paid = $amount_payed_remain;
+                                    $amount_payed_remain = 0; 
+                                }
+        
+                                $value->save();
+                            }
+                        }
+                    }
+                    $all_payed = Payment::where('sale_note_id', $request->sale_note_id)
+                        ->where('paid', 0)->count();
+                    if ($all_payed == 0) {
+                        $sale_note = SaleNote::find($request->sale_note_id);
+                        $sale_note->paid = true;
+                        $sale_note->save();
+                        Payment::where('sale_note_id', $request->sale_note_id)
+                            ->update(['amount_paid' => $amount_to_paid, 'penalty_amount' => 0]);
                     }
                 }
             }
-            $all_payed = Payment::where('sale_note_id', $request->sale_note_id)
-                ->where('paid', 0)->count();
-            if ($all_payed == 0) {
-                $sale_note = SaleNote::find($request->sale_note_id);
-                $sale_note->paid = true;
-                $sale_note->save();
-                Payment::where('sale_note_id', $request->sale_note_id)
-                    ->update(['amount_paid' => $amount_to_paid, 'penalty_amount' => 0]);
-            }
-        }
         }
         
     
