@@ -1829,6 +1829,7 @@ class DocumentController extends Controller
                 });
             });
         }
+        $records = $records->orderBy('date_of_issue', 'desc');
 
         return $records;
     }
