@@ -147,14 +147,14 @@ class FormatController extends Controller
                                         'exchange_rate_sale' => $row->exchange_rate_sale,
                                         'currency_type_symbol' => $row->currency_type->symbol,
                                         'items'=>$row->items,
-                                        'affected_document' => (in_array($row->document_type_id, ['07', '08'])) ? [
+                                        'affected_document'=>null,
+                                        // 'affected_document' => (in_array($row->document_type_id, ['07', '08'])) ? [
+                                        //     'date_of_issue' => $row->note->affected_document->date_of_issue,
+                                        //     'document_type_id' => $row->note->affected_document->document_type_id,
+                                        //     'series' => $row->note->affected_document->series,
+                                        //     'number' => $row->note->affected_document->number,
 
-                                            'date_of_issue' => $row->note->affected_document->date_of_issue,
-                                            'document_type_id' => $row->note->affected_document->document_type_id,
-                                            'series' => $row->note->affected_document->series,
-                                            'number' => $row->note->affected_document->number,
-
-                                        ] : null
+                                        // ] : null
                                     ];
             });
 
