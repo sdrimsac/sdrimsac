@@ -215,7 +215,7 @@ class HealthGlobalController
                 ->whereMonth('date_of_issue', $month)
                 ->whereYear('date_of_issue', $year)
                 ->where('document_type_id', '01')
-                ->orderBy('date_of_issue')
+                ->orderBy('number')
                 ->first();
 
             $last_ft = Document::select(['total', 'series', 'number', 'document_type_id'])
@@ -223,7 +223,7 @@ class HealthGlobalController
                 ->whereMonth('date_of_issue', $month)
                 ->whereYear('date_of_issue', $year)
                 ->where('document_type_id', '01')
-                ->orderBy('date_of_issue')
+                ->orderBy('number')
                 ->latest()
                 ->first();
 
@@ -232,7 +232,7 @@ class HealthGlobalController
                 ->whereMonth('date_of_issue', $month)
                 ->whereYear('date_of_issue', $year)
                 ->where('document_type_id', '03')
-                ->orderBy('date_of_issue')
+                ->orderBy('number')
                 ->first();
 
             $last_bv = Document::select(['total', 'series', 'number', 'document_type_id'])
@@ -240,7 +240,8 @@ class HealthGlobalController
                 ->whereMonth('date_of_issue', $month)
                 ->whereYear('date_of_issue', $year)
                 ->where('document_type_id', '03')
-                ->orderBy('date_of_issue')
+        
+                ->orderBy('number')
                 ->latest()
                 ->first();
             $has_bv_info = $first_bv || $last_bv || $bv_total || count($anulates_voided_bv) > 0;
