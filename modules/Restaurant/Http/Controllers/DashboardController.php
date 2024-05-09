@@ -36,9 +36,11 @@ class DashboardController extends Controller
         $warehouse_product_id = $user->warehouse_product_id;
         if ($warehouse_product_id) {
             $foods = $foods->whereHas('item', function ($query) use ($warehouse_product_id) {
-                $query->whereHas('warehouses', function ($query) use ($warehouse_product_id) {
-                    $query->where('warehouse_id', $warehouse_product_id);
-                });
+                $query
+                    ->where('active', 1)
+                    ->whereHas('warehouses', function ($query) use ($warehouse_product_id) {
+                        $query->where('warehouse_id', $warehouse_product_id);
+                    });
             });
         }
         if ($category_id) {
@@ -62,7 +64,7 @@ class DashboardController extends Controller
         $user = auth()->user();
         $worker_types = WorkersType::where(function ($query) {
             $searchValue = '%search_value%';
-            foreach (['CAJ', 'caj', 'VEN','ANALI','anali', 'ven'] as $value) {
+            foreach (['CAJ', 'caj', 'VEN', 'ANALI', 'anali', 'ven'] as $value) {
                 $query->orWhere('description', 'LIKE', str_replace('search_value', $value, $searchValue));
             }
         })->get();
@@ -70,7 +72,7 @@ class DashboardController extends Controller
         if (!$worker_type_ids->contains($user->worker_type_id)) {
 
             // if ($user->worker_type_id != $id) {
-                return redirect('/');
+            return redirect('/');
             // }
         }
         $user_id = $user->id;
@@ -99,7 +101,7 @@ class DashboardController extends Controller
         $cash_id = $cash ? $cash->id : 0;
         $pending_order = Orden::where('status_orden_id', '<>', 4)->count();
         $lareaId = $area_id;
-        return view('restaurant::pos.dashboard', compact('pending_order','lareaId', 'area_id', 'cash_id', 'worker', 'establishments', 'configuration', 'auth_login', 'company', 'desarrollador'));
+        return view('restaurant::pos.dashboard', compact('pending_order', 'lareaId', 'area_id', 'cash_id', 'worker', 'establishments', 'configuration', 'auth_login', 'company', 'desarrollador'));
     }
 
     public function kitchen()
