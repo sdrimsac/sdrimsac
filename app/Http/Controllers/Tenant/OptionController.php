@@ -168,7 +168,8 @@ class OptionController extends Controller
         DB::connection('tenant')->table('social_media_clients')->delete();
         DB::connection('tenant')->table('vip_clients')->delete();
         DB::connection('tenant')->table('vips')->delete();
-
+        DB::connection('tenant')->table('quotation_items')->delete();
+        DB::connection('tenant')->table('quotations')->delete();
         Summary::where('soap_type_id', '01')->delete();
         Voided::where('soap_type_id', '01')->delete();
         $this->deleteInventoryKardex(Purchase::class);

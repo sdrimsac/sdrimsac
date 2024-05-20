@@ -743,6 +743,7 @@ class ClientController extends Controller
                 'sidebars' => 'light',
                 'sidebar_theme' => 'white'
             ]),
+            'formats' => 'trade_name',
 
         ],['id']);
 
