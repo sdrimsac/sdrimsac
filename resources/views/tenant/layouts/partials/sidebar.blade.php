@@ -462,7 +462,7 @@
                                 <span class="label">Ingresos</span>
                             </a>
                         @else
-                            <a href="#">
+                            <a href="/report_closed_cash">
 
                                 <i class="icofont-money icon-parent"></i>
                                 <span class="label text-danger">
@@ -478,7 +478,7 @@
                                 <span class="label">Gastos</span>
                             </a>
                         @else
-                            <a href="#">
+                            <a href="/report_closed_cash">
 
                                 <i class="icofont-spreadsheet icon-parent"></i>
                                 <span class="label text-danger">

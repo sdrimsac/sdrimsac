@@ -13,6 +13,8 @@
 
 use Illuminate\Support\Str;
 use App\Events\MessageEvent;
+use App\Http\Controllers\Tenant\DocumentController;
+use App\Http\Controllers\Tenant\SaleNoteController;
 use App\Models\Tenant\Configuration;
 use Illuminate\Support\Facades\Route;
 use Modules\Restaurant\Http\Controllers\BoxesController;
@@ -33,11 +35,11 @@ Route::prefix('caja')->group(function () {
     Route::post('/re-print', [RestaurantController::class, 'rePrint']);
     Route::get('rooms/print_service/{id}', [TableRoomController::class, 'print_service']);
     Route::get('rooms/print_warranty/{id}', [TableRoomController::class, 'print_warranty']);
-    Route::get('sale-notes', [App\Http\Controllers\SaleNoteController::class, 'pos'])->name('pos.sale_notes.index')->middleware('redirect.level');
-    Route::get('documents', [App\Http\Controllers\DocumentController::class, 'documents'])->name('restaurant.documents.index');
-    Route::get('documents/create/{documents?}', [App\Http\Controllers\DocumentController::class, 'create_pos'])->name('tenant.documents_pos.create')->middleware(['redirect.level', 'tenant.internal.mode']);
-    Route::get('documents/data_table', [App\Http\Controllers\DocumentController::class, 'data_table']);
-    Route::get('documents/records', [App\Http\Controllers\DocumentController::class, 'records']);
+    Route::get('sale-notes', [SaleNoteController::class, 'pos'])->name('pos.sale_notes.index')->middleware('redirect.level');
+    Route::get('documents', [DocumentController::class, 'documents'])->name('restaurant.documents.index');
+    Route::get('documents/create/{documents?}', [DocumentController::class, 'create_pos'])->name('tenant.documents_pos.create')->middleware(['redirect.level', 'tenant.internal.mode']);
+    Route::get('documents/data_table', [DocumentController::class, 'data_table']);
+    Route::get('documents/records', [DocumentController::class, 'records']);
     Route::get('worker/print-ticket', 'OrdenController@printTicket');
     Route::get('worker/cash/print-report', [CashController::class, 'print_report']);
     Route::get('worker/expenses/print-box', [PosController::class, 'print_box']);

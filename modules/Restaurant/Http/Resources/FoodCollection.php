@@ -2,6 +2,8 @@
 
 namespace Modules\Restaurant\Http\Resources;
 
+use App\Http\Controllers\Tenant\StoreController;
+use App\Models\Tenant\Configuration;
 use App\Models\Tenant\ItemUnitType;
 use App\Models\Tenant\ItemWarehouse;
 use App\Models\Tenant\Warehouse;
@@ -18,7 +20,7 @@ class FoodCollection extends ResourceCollection
         parent::__construct($resource);
         $this->with_series = $with_series;
     }
-    
+
     /**
      * Transform the resource collection into an array.
      *
@@ -30,22 +32,26 @@ class FoodCollection extends ResourceCollection
         return $this->collection->transform(function ($row, $key) {
             $user = auth()->user();
             $item = $row->item;
-            if($item->lots_enabled && $item->lot_code == null){
+            $has_igv = (bool) $item->has_igv;
+            $hasAffectationIgv = $item->hasAffectationIgv();
+            // $igv = (new StoreController)->getIgvByUser();
+            if ($item->lots_enabled && $item->lot_code == null) {
                 $lot_group = ItemLotsGroup::where('item_id', $item->id)->first();
-                if($lot_group){
+                if ($lot_group) {
                     $item->lot_code = $lot_group->code;
                     $item->date_of_due = $lot_group->date_of_due;
                 }
             }
             $stock = 0;
             $price = $row->price;
+
             if (!array_key_exists($user->type, ["admin", "superadmin"])) {
                 $warehouse = Warehouse::where('establishment_id', $user->establishment_id)->first();
                 $warehouse_id = $warehouse->id;
                 $stock = ItemWarehouse::where('warehouse_id', $warehouse_id)->where('item_id', $item->id)->first();
-                if($stock){
+                if ($stock) {
                     $stock = $stock->stock;
-                }else{
+                } else {
                     $stock = 0;
                 }
                 $item->stock = $stock;
@@ -63,12 +69,29 @@ class FoodCollection extends ResourceCollection
                     $q->where('warehouse_id', $user->establishment_id)->orWhereNull('warehouse_id');
                 })->get();
             }
-            if($this->with_series){
-                $lots = ItemLot::where('item_id',$item->id)->where('warehouse_id', $user->establishment_id)
-                ->where('has_sale', false)
-                ->get();
+            if ($this->with_series) {
+                $lots = ItemLot::where('item_id', $item->id)->where('warehouse_id', $user->establishment_id)
+                    ->where('has_sale', false)
+                    ->get();
                 $stock = count($lots);
                 $item->stock = $stock;
+            }
+            $configuracion = Configuration::first();
+            //si el producto no tiene el igv incluido
+            if ($configuracion->hasAffectationIgv()) {
+                if (!$has_igv) {
+                    //si es afectado se le aumenta, sino es afectado el precio se queda igual
+                    if ($hasAffectationIgv) {
+                        $igv = (new StoreController)->getIgvByUser();
+                        $price =  $price * ($igv / 100 + 1);
+                    }
+                } else {
+                    //si no es afectado se le reduce, si es afectado el precio se queda igual
+                    $igv = (new StoreController)->getIgvByUser();
+                    if (!$hasAffectationIgv) {
+                        $price =  $price / ($igv / 100 + 1);
+                    }
+                }
             }
             return [
                 'id'                => $row->id,

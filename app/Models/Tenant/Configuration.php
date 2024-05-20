@@ -566,6 +566,10 @@ class Configuration extends ModelTenant
 
         ];
     }
+    public  function hasAffectationIgv(): ?bool{
+        $int_affectation_igv_type_id =  intval($this->affectation_igv_type_id);
+        return $int_affectation_igv_type_id < 20;
+    }
     public function isSearchItemBySeries(): ?bool
     {
         return (bool)$this->search_item_by_series;

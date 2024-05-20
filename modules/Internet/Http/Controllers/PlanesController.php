@@ -48,6 +48,8 @@ class PlanesController extends Controller
         $item_id = null;
         if ($item) {
             $item_id = $item->id;
+        }else{
+            return response()->json(['error' => 'No se encontro el item de servicio '], 400);
         }
         InternetPlan::create([
             'item_id' => $item_id,
@@ -57,7 +59,7 @@ class PlanesController extends Controller
 
         ]);
 
-        return 'create plan ';
+        return 'create plan';
     }
     public function createConcepto(Request $request)
     {

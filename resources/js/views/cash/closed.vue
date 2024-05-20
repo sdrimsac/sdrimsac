@@ -4,6 +4,30 @@
             <h6 class="my-0 text-white">Reporte de cierre de cajas</h6>
         </div>
         <div class="tab-content p-3">
+            <template v-if="!hasCash">
+                <div class="col-md- d-flex justify-content-end">
+                    <button
+                        type="button"
+                        class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto"
+                        @click.prevent="clickCreate()"
+                    >
+                        <i class="icofont-plus-circle"></i>
+                        <span>Abrir caja</span>
+                    </button>
+                </div>
+            </template>
+            <template v-else>
+                <div class="col-md- d-flex justify-content-end">
+                    <button
+                        v-if="!configuration.health_network"
+                        type="button"
+                        class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto"
+                        @click.prevent="clickClose()"
+                    >
+                        <span>Cerrar caja</span>
+                    </button>
+                </div>
+            </template>
             <form autocomplete="off" @submit.prevent="submit">
                 <div class="form-body">
                     <div class="row">
@@ -39,7 +63,10 @@
                                 </el-select>
                             </div>
                         </template>
-                        <div class="col-md 3" v-if="configuration.principal_cash">
+                        <div
+                            class="col-md 3"
+                            v-if="configuration.principal_cash"
+                        >
                             <el-checkbox
                                 v-model="form.is_principal"
                                 label="Principal"
@@ -110,7 +137,11 @@
                                                     {{ row.time_closed }}
                                                 </small>
                                             </td>
-                                            <td>{{ row.final_balance.toFixed(2) }}</td>
+                                            <td>
+                                                {{
+                                                    row.final_balance.toFixed(2)
+                                                }}
+                                            </td>
                                             <td>
                                                 <el-button
                                                     type="success"
@@ -158,14 +189,17 @@
                                                         farmacia</el-button
                                                     >
                                                 </template>
-                                                <template v-else-if="row.tab_single"
+                                                <template
+                                                    v-else-if="row.tab_single"
                                                 >
                                                     <el-button
                                                         class="submit"
                                                         type="primary"
                                                         icon="el-icon-tickets"
                                                         @click="
-                                                            openSaludSingle(row.id)
+                                                            openSaludSingle(
+                                                                row.id
+                                                            )
                                                         "
                                                         >Relacion
                                                         tabulada</el-button
@@ -322,17 +356,38 @@
                 </div>
             </form>
         </div>
+        <cash-form
+            :showDialog.sync="showDialogCash"
+            :recordId="cash_id"
+            @updateCashId="updateCashId"
+        ></cash-form>
+        <close-cash
+            :recordId.sync="cash_id"
+            :showDialogClose.sync="showDialogClose"
+            :configuration="configuration"
+            @updateCashId="updateCashId"
+        >
+        </close-cash>
     </div>
 </template>
 
 <script>
+const CashForm = () => import("./partials/form.vue");
+const CloseCash = () => import("./partials/closecash.vue");
 import moment from "moment";
 import queryString from "query-string";
 export default {
-    props: ["configuration", "users"],
-    components: {},
+    props: ["configuration", "users", "hasCash", "cashId"],
+    components: {
+        CashForm,
+        CloseCash
+    },
     data() {
         return {
+            recordId: null,
+            showDialogClose: false,
+            cash_id: null,
+            showDialogCash: false,
             infoPharmacy: [],
             showInfoPharmacy: false,
             currentCashId: null,
@@ -377,8 +432,22 @@ export default {
     },
     created() {
         this.initForm();
+            console.log("🚀 ~ created ~ this.cashId:", this.cashId)
+        if (this.cashId != null) {
+            this.cash_id = this.cashId;
+            // this.hasCash = true;
+        }
     },
     methods: {
+        clickClose() {
+            this.showDialogClose = true;
+        },
+        updateCashId(id) {
+            this.cash_id = id;
+        },
+        clickCreate() {
+            this.showDialogCash = true;
+        },
         addInfoPharmacy() {
             this.infoPharmacy.push({
                 cash_id: this.currentCashId,
@@ -393,7 +462,7 @@ export default {
                 total_ft: null
             });
         },
-        
+
         async saveInfoPharmacy() {
             const response = await this.$http.post(
                 `/caja/report-boxes/save_info_pharmacy/${this.currentCashId}`,
@@ -407,14 +476,14 @@ export default {
             this.currentCashId = id;
             this.showInfoPharmacy = true;
             let data = this.records.find(item => item.id == id);
-            if(data.pharmacy_info){
+            if (data.pharmacy_info) {
                 this.infoPharmacy = data.pharmacy_info;
             }
         },
         openSalud(id) {
             window.open(`/caja/report-boxes/cashes_salud?cash_id=${id}`);
         },
-            openSaludSingle(id) {
+        openSaludSingle(id) {
             window.open(`/caja/report-boxes/cashes_salud_single?cash_id=${id}`);
         },
         async sendWhatsapp() {

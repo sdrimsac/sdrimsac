@@ -359,7 +359,15 @@ class Item extends ModelTenant
     public function food(){
         return $this->hasOne(Food::class);
     }
-
+    public function hasAffectationIgv(){
+        $affectation_igv_type = $this->sale_affectation_igv_type_id;
+        $affectation_to_int = intval($affectation_igv_type);
+        if($affectation_to_int < 20){
+            return true;
+        }
+        return false;
+        // if()
+    }
     public function getDataWarehouses()
     {
         return collect($this->warehouses)->transform(function ($row) {

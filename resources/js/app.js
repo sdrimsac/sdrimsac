@@ -72,7 +72,6 @@ const getDesarrollador = async () => {
 };
 const getAreaPrinter = async () => {
     const { data } = await Axios.get("/getAreaPrinter");
-    console.log("🚀 ~ file: app.js:51 ~ getDesarrollador ~ data:", data);
 
     if (data == null) {
         Vue.prototype.$areaPrinter = null;

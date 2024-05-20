@@ -17,13 +17,24 @@
                     <div
                         class="col-12 col-md-6 d-flex align-items-start justify-content-end"
                     >
-                        <a
-                            :href="`/${resource}/create`"
-                            class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto"
-                        >
-                            <i class="icofont-plus-circle"></i>
-                            <span>Nuevo</span>
-                        </a>
+                        <template v-if="cashId">
+                            <a
+                                :href="`/${resource}/create`"
+                                class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto"
+                            >
+                                <i class="icofont-plus-circle"></i>
+                                <span>Nuevo</span>
+                            </a>
+                        </template>
+                        <template v-else>
+                            <a
+                                :href="`/report_closed_cash`"
+                                class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto"
+                            >
+                                <i class="icofont-plus-circle"></i>
+                                <span>Abrir caja</span>
+                            </a>
+                        </template>
                     </div>
                 </div>
             </div>
@@ -50,9 +61,7 @@
                     </el-dropdown>
                 </div>
                 <div class="card-body">
-                    <data-table :resource="resource"
-                    :sellers="sellers"
-                    >
+                    <data-table :resource="resource" :sellers="sellers">
                         <tr slot="heading">
                             <th>#</th>
                             <th class="text-end">Acciones</th>
@@ -114,61 +123,60 @@
 
                             <td class="text-end">
                                 <div class="d-flex flex-wrap">
-                                      <button
-                            
-                                    v-if="
-                                        row.state_type_id != '11' &&
-                                            row.btn_generate &&
-                                            (typeUser == 'admin' ||
-                                                typeUser == 'superadmin') &&
-                                            soapCompany != '03'
-                                    "
-                                    type="button"
-                                    class="m-1 btn waves-effect waves-light btn-sm btn-info"
-                                    @click.prevent="clickOptions(row.id)"
-                                >
-                                    Generar comprobante
-                                </button>
+                                    <button
+                                        v-if="
+                                            row.state_type_id != '11' &&
+                                                row.btn_generate &&
+                                                (typeUser == 'admin' ||
+                                                    typeUser == 'superadmin') &&
+                                                soapCompany != '03'
+                                        "
+                                        type="button"
+                                        class="m-1 btn waves-effect waves-light btn-sm btn-info"
+                                        @click.prevent="clickOptions(row.id)"
+                                    >
+                                        Generar comprobante
+                                    </button>
 
-                                <a
-                                    v-if="
-                                        row.documents.length == 0 &&
-                                            row.state_type_id != '11'
-                                    "
-                                    :href="`/${resource}/edit/${row.id}`"
-                                    type="button"
-                                    class="m-1 btn waves-effect waves-light  btn-sm btn-info"
-                                    >Editar</a
-                                >
-                                <button
-                                    v-if="
-                                        row.documents.length == 0 &&
-                                            row.state_type_id != '11'
-                                    "
-                                    type="button"
-                                    class="m-1 btn waves-effect waves-light btn-sm btn-danger"
-                                    @click.prevent="clickAnulate(row.id)"
-                                >
-                                    Anular
-                                </button>
-                                <button
-                                    @click="duplicate(row.id)"
-                                    type="button"
-                                    class="m-1 btn waves-effect waves-light btn-sm btn-info"
-                                >
-                                    Duplicar
-                                </button>
-                                <a
-                                    v-if="
-                                        row.btn_generate_cnt &&
-                                            row.state_type_id != '11'
-                                    "
-                                    :href="
-                                        `/contracts/generate-quotation/${row.id}`
-                                    "
-                                    class="m-1 btn waves-effect waves-light btn-sm btn-primary m-1__2"
-                                    >Generar contrato</a
-                                >
+                                    <a
+                                        v-if="
+                                            row.documents.length == 0 &&
+                                                row.state_type_id != '11'
+                                        "
+                                        :href="`/${resource}/edit/${row.id}`"
+                                        type="button"
+                                        class="m-1 btn waves-effect waves-light  btn-sm btn-info"
+                                        >Editar</a
+                                    >
+                                    <button
+                                        v-if="
+                                            row.documents.length == 0 &&
+                                                row.state_type_id != '11'
+                                        "
+                                        type="button"
+                                        class="m-1 btn waves-effect waves-light btn-sm btn-danger"
+                                        @click.prevent="clickAnulate(row.id)"
+                                    >
+                                        Anular
+                                    </button>
+                                    <button
+                                        @click="duplicate(row.id)"
+                                        type="button"
+                                        class="m-1 btn waves-effect waves-light btn-sm btn-info"
+                                    >
+                                        Duplicar
+                                    </button>
+                                    <a
+                                        v-if="
+                                            row.btn_generate_cnt &&
+                                                row.state_type_id != '11'
+                                        "
+                                        :href="
+                                            `/contracts/generate-quotation/${row.id}`
+                                        "
+                                        class="m-1 btn waves-effect waves-light btn-sm btn-primary m-1__2"
+                                        >Generar contrato</a
+                                    >
                                 </div>
                             </td>
                             <td class="text-center">{{ row.date_of_issue }}</td>
@@ -383,7 +391,8 @@ export default {
             showDialogOptions: false,
             showDialogOptionsPdf: false,
             state_types: [],
-            sellers:[],
+            cashId: null,
+            sellers: [],
             columns: {
                 total_exportation: {
                     title: "T.Exportación",
@@ -414,6 +423,9 @@ export default {
     },
     async created() {
         await this.filter();
+        if(this.$cashId){
+            this.cashId = this.$cashId;
+        }
     },
     methods: {
         async changeStateType(row) {

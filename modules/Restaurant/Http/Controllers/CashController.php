@@ -138,7 +138,18 @@ class CashController extends Controller
     {
         $configuration = Configuration::first();
         $users = User::where('active', 1)->get();
-        return view('tenant.cash.index_closed', compact('configuration', 'users'));
+        $user_id = auth()->user()->id;
+        $has_cash = 0 < Cash::where('user_id', $user_id)->where('state', 1)->count();
+        $cash_id = null;
+        $cash = Cash::where('user_id', auth()->user()->id)
+            ->where('state', 1)
+            ->orderBy('id', 'desc')
+            ->first();
+
+        if ($cash) {
+            $cash_id = $cash->id;
+        }
+        return view('tenant.cash.index_closed', compact('configuration', 'users', 'has_cash', 'cash_id'));
     }
     public function index_report_cash()
     {
@@ -192,7 +203,7 @@ class CashController extends Controller
         }
 
         $recordsDocument->chunk(50, function ($documents)
-        use (&$items, &$total, &$categoria_id,&$item_id) {
+        use (&$items, &$total, &$categoria_id, &$item_id) {
 
             foreach ($documents as  $document) {
                 $total_items = 0;
@@ -203,7 +214,7 @@ class CashController extends Controller
                 }
                 $documents_items = $documents_items->get();
                 foreach ($documents_items as  $d_it) {
-                    
+
                     if ($categoria_id == null) {
                         $item = $d_it->item;
                         $factor = null;
@@ -351,7 +362,7 @@ class CashController extends Controller
 
         $recordsSaleNote->chunk(50, function ($sale_notes)
 
-        use (&$items, &$total, &$categoria_id,&$item_id) {
+        use (&$items, &$total, &$categoria_id, &$item_id) {
 
             foreach ($sale_notes as  $sale_note) {
                 $total_items = 0;
@@ -504,7 +515,7 @@ class CashController extends Controller
         });
         $is_service = false;
         // if($)
-        if($item_id !== null){
+        if ($item_id !== null) {
             $item = Item::findOrFail($item_id);
             $is_service = $item->unit_type_id == "ZZ";
         }
@@ -1434,8 +1445,7 @@ class CashController extends Controller
             $records->where('principal', true);
         }
         $records->orderBy('date_opening', 'desc')
-        ->orderBy('time_opening', 'desc')
-        ;
+            ->orderBy('time_opening', 'desc');
 
         return new CashCollection($records->paginate(config('tenant.items_per_page')));
     }
@@ -1466,20 +1476,24 @@ class CashController extends Controller
         $type = $user->type;
         $users = array();
         $configuration = Configuration::select(['health_network'])
-        ->first();
-        $turnsTable = [];
+            ->first();
+        $turnsTable = Turns::where('turn_active',  1)->get();
         switch ($type) {
             case 'admin':
                 $users = User::where('type', 'seller')->get();
                 $users->push($user);
                 break;
+            case 'superadmin':
+                $users = User::query()->get();
+                // $users->push($user);
+                break;
             case 'seller':
                 $users = User::where('id', $user->id)->get();
-                $turnsTable = Turns::where('turn_active',  1)->get();
+
                 break;
         }
 
-        return compact('users','configuration', 'user', 'turnsTable');
+        return compact('users', 'configuration', 'user', 'turnsTable');
     }
 
     public function opening_cash()
@@ -1521,12 +1535,12 @@ class CashController extends Controller
         if ($configuration->automatic_principal_cash && !$tab_single && $request->input('principal') == false) {
             // if ($turn_id == $turn_principal) {
             $exist_principal_cash = Cash::where('principal', true)
-            ->whereHas('user', function ($query) use ($establishment_id,$configuration) {
-                if($configuration->health_network){
-                    $query->where('establishment_id', $establishment_id);
-                }
-            })
-            ->where('state', true)->first();
+                ->whereHas('user', function ($query) use ($establishment_id, $configuration) {
+                    if ($configuration->health_network) {
+                        $query->where('establishment_id', $establishment_id);
+                    }
+                })
+                ->where('state', true)->first();
             if (!$exist_principal_cash) {
                 $user_arca = User::getUserArca();
                 Cash::create([
@@ -1668,7 +1682,7 @@ class CashController extends Controller
 
         $id = $request->id;
         $final_balance = $request->final_balance;
-        
+
         $counter = $request->counter;
         $bill_series = $request->bill_series;
         $difference = $request->difference ?? 0.00;
@@ -1768,8 +1782,8 @@ class CashController extends Controller
         $health_network = $configuration->health_network;
         if ($principal_cash) {
             $cash_principal = Cash::where('state', 1)
-                ->whereHas('user', function ($query) use ($establishment_id,$configuration) {
-                    if($configuration->health_network){
+                ->whereHas('user', function ($query) use ($establishment_id, $configuration) {
+                    if ($configuration->health_network) {
                         $query->where('establishment_id', $establishment_id);
                     }
                 })
@@ -1805,19 +1819,19 @@ class CashController extends Controller
         if ($configuration->automatic_principal_cash && !$tab_single) {
             $turn_end = $configuration->turn_end;
             // if ($cash->turn_id == $turn_end) {
-                if($cash->cash_type_id == 2||$cash->cash_type_id == 4){
+            if ($cash->cash_type_id == 2 || $cash->cash_type_id == 4) {
                 Cash::where('principal', true)
-                ->where('state', 1)
-                ->whereHas('user', function ($query) use ($establishment_id,$configuration) {
-                    if($configuration->health_network){
-                        $query->where('establishment_id', $establishment_id);
-                    }
-                })
-                ->update([
-                    'state' => 0,
-                    'time_closed' => date('H:i:s'),
-                    'date_closed' => date('Y-m-d')
-                ]);
+                    ->where('state', 1)
+                    ->whereHas('user', function ($query) use ($establishment_id, $configuration) {
+                        if ($configuration->health_network) {
+                            $query->where('establishment_id', $establishment_id);
+                        }
+                    })
+                    ->update([
+                        'state' => 0,
+                        'time_closed' => date('H:i:s'),
+                        'date_closed' => date('Y-m-d')
+                    ]);
             }
         }
         return [

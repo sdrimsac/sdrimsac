@@ -8,6 +8,7 @@ use App\Models\Tenant\DocumentItem;
 use App\Models\Tenant\Establishment;
 use App\Models\Tenant\Quotation;
 use App\Models\Tenant\Series;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Modules\Document\Http\Resources\ItemLotCollection;
 use Modules\Inventory\Models\Warehouse as ModuleWarehouse;
@@ -117,6 +118,27 @@ class StoreController extends Controller
     {
         $establishment_id = $request->input('establishment_id');
         $date = $request->input('date');
+        $date_start = config('tenant.igv_31556_start');
+        $date_end = config('tenant.igv_31556_end');
+        $date_percentage = config('tenant.igv_31556_percentage');
+
+        $establishment = Establishment::query()
+            ->select('id', 'has_igv_31556')
+            ->find($establishment_id);
+        if ($establishment->has_igv_31556) {
+            if ($date >= $date_start && $date <= $date_end) {
+
+                return $date_percentage;
+            }
+        }
+        return 18;
+    }
+
+
+    public function getIgvByUser()
+    {
+        $establishment_id = auth()->user()->establishment_id;
+        $date = Carbon::now();
         $date_start = config('tenant.igv_31556_start');
         $date_end = config('tenant.igv_31556_end');
         $date_percentage = config('tenant.igv_31556_percentage');
