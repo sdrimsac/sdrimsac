@@ -119,6 +119,7 @@ class Table extends ModelTenant
         $table = new Table();
         $table->establishment_id = $establishment_id;
         $table->is_room = false;
+        $table->status_table_id = 1;
         $table->number = "CAJA";
         $area_id = Area::getAreaCajaId();
         if ($area_id == null) {
