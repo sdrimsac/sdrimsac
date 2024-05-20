@@ -8,15 +8,16 @@ use App\Models\Tenant\Establishment;
 use App\Models\Tenant\HotelRent;
 use App\Models\Tenant\HotelRentItem;
 use App\Traits\RegisterMovementTrait;
-  use App\Models\Tenant\ModelTenant;
+use App\Models\Tenant\ModelTenant;
 use App\Models\Tenant\NumberActivity;
+use Exception;
 use Illuminate\Http\Request;
 
 class Table extends ModelTenant
 {
- use RegisterMovementTrait;
+    use RegisterMovementTrait;
     public $timestamps = false;
-    protected $with = ["type","area", "status_table","floor"];
+    protected $with = ["type", "area", "status_table", "floor"];
     protected $fillable = [
         'enabled',
         'month_price',
@@ -42,7 +43,7 @@ class Table extends ModelTenant
     {
         parent::boot();
         static::updating(function ($model) {
-        
+
 
             // Lógica adicional utilizando la información obtenida
         });
@@ -51,23 +52,23 @@ class Table extends ModelTenant
             $request = Request::capture();
             $description = "Mesa creada";
             RegisterMovementTrait::registerCreate(
-               $table,
+                $table,
                 $request,
                 $description,
                 $table->toArray()
             );
         });
         static::updated(function ($table) {
-         
+
             ////
             $request = Request::capture();
             $description = null;
             $table_origin = Table::find($table->id);
-           
+
             $newStatus = $table_origin->status_table->description;
             $description = "Mesa actualizada: $newStatus";
             RegisterMovementTrait::registerUpdate(
-               $table,
+                $table,
                 $request,
                 $description,
                 $table->toArray()
@@ -81,7 +82,7 @@ class Table extends ModelTenant
                 $data['area_id'] = $table->area_id;
                 $data['number'] = $table->number;
                 RegisterMovementTrait::registerDelete(
-                   $table,
+                    $table,
                     $request,
                     $description,
                     $data
@@ -91,56 +92,80 @@ class Table extends ModelTenant
         );
     }
 
-    public  function maintenance(){
+    public  function maintenance()
+    {
         return $this->hasMany(TableUserMaintenance::class);
     }
-    public  function services(){
+    public  function services()
+    {
         return $this->hasMany(TableRoomService::class);
     }
-    public  function last_hotel_rent_item(){
+    public  function last_hotel_rent_item()
+    {
         return $this->hasOne(HotelRentItem::class)->latestOfMany();
     }
-    public  function hotel_rent_items(){
+    public  function hotel_rent_items()
+    {
         return $this->hasMany(HotelRentItem::class);
     }
-    public static function get_caja(){
+    public static function get_caja()
+    {
         $user = auth()->user();
         $establishment_id = $user->establishment_id;
-        $table = Table::where('establishment_id',$establishment_id)->where('is_room',false)
-        ->where('number','like','CAJA%')->first();
-        if($table) return $table->id;
-        return null;
+        $table = Table::where('establishment_id', $establishment_id)->where('is_room', false)
+            ->where('number', 'like', 'CAJA%')->first();
+        if ($table) return $table->id;
+        //crear una tabla
+        $table = new Table();
+        $table->establishment_id = $establishment_id;
+        $table->is_room = false;
+        $table->number = "CAJA";
+        $area_id = Area::getAreaCajaId();
+        if ($area_id == null) {
+            throw new Exception("No se encontro el area de la caja");
+        }
+        $table->area_id = $area_id;
+        $table->save();
+
+        return $table->id;
+
+
+        // return null;
     }
- 
-    public function establishment(){
+
+    public function establishment()
+    {
         return $this->belongsTo(Establishment::class);
     }
 
-    public function type(){
+    public function type()
+    {
         return $this->belongsTo(TableType::class, 'table_type_id');
     }
-    public function floor(){
+    public function floor()
+    {
         return $this->belongsTo(Floor::class);
     }
 
-    public function sendMessageDesocupied($word = "desocupada"){
-            if($this->is_room){
-                $number = $this->number;
-                $tower = $this->floor->tower->name;
-                $message = "La habitación $number - $tower ha sido $word";
-                $configuration = Configuration::first();
-                $number_activity = $configuration->number_activity;
-                $numbers_activity = NumberActivity::all();
-                if($number_activity){
-                    (new WhatsappController)->sendMessage($message,$number_activity);
-                }
-                foreach ($numbers_activity as $number) {
-                    (new WhatsappController)->sendMessage($message,$number->number);
-                }
-                HotelRentItem::where('table_id',$this->id)->where('active',true)->update(['active'=>false]);
+    public function sendMessageDesocupied($word = "desocupada")
+    {
+        if ($this->is_room) {
+            $number = $this->number;
+            $tower = $this->floor->tower->name;
+            $message = "La habitación $number - $tower ha sido $word";
+            $configuration = Configuration::first();
+            $number_activity = $configuration->number_activity;
+            $numbers_activity = NumberActivity::all();
+            if ($number_activity) {
+                (new WhatsappController)->sendMessage($message, $number_activity);
             }
+            foreach ($numbers_activity as $number) {
+                (new WhatsappController)->sendMessage($message, $number->number);
+            }
+            HotelRentItem::where('table_id', $this->id)->where('active', true)->update(['active' => false]);
+        }
     }
-  
+
     public function area()
     {
         return $this->belongsTo(Area::class);
@@ -150,16 +175,15 @@ class Table extends ModelTenant
         return $this->belongsTo(StatusTable::class);
     }
 
-    public  function getTableFullName(){
+    public  function getTableFullName()
+    {
         $number = $this->number;
         $floor = $this->floor;
-        if(!$floor) return $number;
+        if (!$floor) return $number;
         $tower = $floor->tower;
-        if(!$tower) return $number;
+        if (!$tower) return $number;
         $tower = $tower->name;
-        
+
         return "$number - $tower";
     }
-
-    
 }

@@ -27,6 +27,14 @@ class Area extends ModelTenant
         return $this->description == 'HOTEL';
     }
 
+    public static function getAreaCajaId(){
+        $area = Area::where('description', 'like', '%CAJA%')->first();
+        if($area){
+            return $area->id;
+        }
+        return null;
+    }
+
     public static function getCajaAreaIdByTableId($table_id)
     {
         $table = Table::find($table_id);
