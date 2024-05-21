@@ -61,7 +61,7 @@
                                     v-for="option in series"
                                     :key="option.number"
                                     :value="option.number"
-                                    :label="option.number"
+                                    :label="option.label"
                                 ></el-option>
                             </el-select>
                         </div>

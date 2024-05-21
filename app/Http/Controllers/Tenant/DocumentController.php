@@ -1874,7 +1874,16 @@ class DocumentController extends Controller
         $categories = CategoryItem::orderBy('name')->get();
         $state_types = StateType::get();
         $document_types = DocumentType::whereIn('id', ['01', '03', '07', '08'])->get();
-        $series = Series::whereIn('document_type_id', ['01', '03', '07', '08'])->get();
+        $series = Series::whereIn('document_type_id', ['01', '03', '07', '08'])->get()
+        ->transform(function ($series)
+        {
+            return [
+                'id' => $series->id,
+                'number' => $series->number,
+                'document_type_id' => $series->document_type_id,
+                'label' => $series->number.' '.$series->establishment->description
+            ];
+        });
         $establishments = Establishment::where('id', auth()->user()->establishment_id)->get(); // Establishment::all();
         $payment_conditions = PaymentCondition::all();
         return compact('customers', 'sellers', 'payment_conditions', 'document_types', 'series', 'establishments', 'state_types', 'items', 'categories');
