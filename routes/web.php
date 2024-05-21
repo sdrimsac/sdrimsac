@@ -678,11 +678,12 @@ if ($hostname) {
                 Route::get('sale-notes/table/{table}', [App\Http\Controllers\Tenant\SaleNoteController::class, 'table']);
 
 
-                Route::get('sale-notes/void-credit/{id}', [App\Http\Controllers\Tenant\SaleNoteController::class, 'voidCredit']);
+                Route::post('sale-notes/void-credit', [App\Http\Controllers\Tenant\SaleNoteController::class, 'voidCredit']);
                 Route::get('sale-notes/penalties/columns', [App\Http\Controllers\Tenant\SaleNoteController::class, 'columns_penalty']);
                 Route::get('sale-notes/penalties', [App\Http\Controllers\Tenant\SaleNoteController::class, 'index_penalty'])->name('tenant.sale_note_credit_penalty.index');
                 Route::get('sale-notes/penalties/records', [App\Http\Controllers\Tenant\SaleNoteController::class, 'records_penalty']);
                 Route::post('sale-notes/penalties', [App\Http\Controllers\Tenant\SaleNoteController::class, 'store_penalty']);
+                Route::post('sale-notes/pause-credit', [App\Http\Controllers\Tenant\SaleNoteController::class, 'pauseCredit']);
                 Route::get('sale-notes/item/tables', [App\Http\Controllers\Tenant\SaleNoteController::class, 'item_tables']);
                 Route::get('sale-notes/search/customers', [App\Http\Controllers\Tenant\SaleNoteController::class, 'searchCustomers']);
                 Route::post('sale-notes/set-status-credit', [App\Http\Controllers\Tenant\SaleNoteController::class, 'setStatusCredit']);

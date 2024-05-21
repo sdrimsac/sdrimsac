@@ -47,19 +47,19 @@ class ReportCreditCollection extends ResourceCollection
                     ->orderBy('date_payment', 'asc')
                     ->first();
                 // $amount_due = $last_paid->amount;
-            } 
+            }
             // $amount_due -= $advances + $payments_records;
             $payment = Payment::where('sale_note_id', $row->id)
-            ->where('paid', 0);
+                ->where('paid', 0);
             $int = 0;
             if ($payment->count() > 0) {
                 $payment_first = $payment->first();
 
                 $int = ($row->total - $advances) * ($payment_first->tasa / 100);
             }
-            if($row->paid == true){
+            if ($row->paid == true) {
                 $to_due = 0;
-            }else{
+            } else {
                 $to_due =  floatval($row->total + $row->total_discount - $advances + $int)  - (floatval($payments_records));
             }
             $show_formats = true;
@@ -92,9 +92,13 @@ class ReportCreditCollection extends ResourceCollection
                     $schedules[] = url('/sale-notes/hogar_schedule/' . $row->id . '/' . ($i + 1));
                 }
             }
-
-
+            $observation = $row->observation;
+            if ($row->state_type_id == '11' || $row->state === 'O') {
+                $observation_credit = $row->sale_note_credit->reason_to_anulate_credit;
+                $observation .= " " . $observation_credit;
+            }
             return [
+                'state_type_id' => $row->state_type_id,
                 'quotes' => $quotes,
                 'schedules' => $schedules,
                 'is_cash' => (bool) $row->is_cash,
@@ -118,7 +122,7 @@ class ReportCreditCollection extends ResourceCollection
                 'amount_due' => number_format($to_due, 2, ".", ""),
                 'differenc_days' => $differenc_days,
                 'is_credit' => true,
-                'observation' => $row->observation,
+                'observation' => $observation,
             ];
         });
     }

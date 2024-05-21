@@ -316,13 +316,13 @@
                         ><i class="fa fa-whatsapp"></i> Enviar
                         whatsapp</el-button
                     >
-                        <el-button
+                    <el-button
                         class="submit"
                         v-if="form.paid"
                         type="success"
                         @click.prevent="clickDownload('excel_accept')"
-                        ><i class="fa fa-file-excel"></i> Exportar
-                        Excel aceptados</el-button
+                        ><i class="fa fa-file-excel"></i> Exportar Excel
+                        aceptados</el-button
                     >
                 </template>
             </div>
@@ -460,34 +460,37 @@
                                                     </span>
                                                 </el-dropdown-item>
                                                 <template
-                                                v-if="row.status != 'R'"
+                                                    v-if="row.status != 'R'"
                                                 >
                                                     <el-dropdown-item
-                                                    v-for="(schedule,
-                                                    idx) in row.schedules"
-                                                    :key="idx"
-                                                >
-                                                    <a
-                                                        role="button"
-                                                        style="width:100%;display:block;"
-                                                        target="_blank"
-                                                        :href="schedule"
+                                                        v-for="(schedule,
+                                                        idx) in row.schedules"
+                                                        :key="idx"
                                                     >
-                                                        <template
-                                                            v-if="
-                                                                row.schedules
-                                                                    .length > 1
-                                                            "
+                                                        <a
+                                                            role="button"
+                                                            style="width:100%;display:block;"
+                                                            target="_blank"
+                                                            :href="schedule"
                                                         >
-                                                            Cronograma de pagos
-                                                            N°
-                                                            {{ idx + 1 }}
-                                                        </template>
-                                                        <template v-else>
-                                                            Cronograma de pagos
-                                                        </template>
-                                                    </a>
-                                                </el-dropdown-item>
+                                                            <template
+                                                                v-if="
+                                                                    row
+                                                                        .schedules
+                                                                        .length >
+                                                                        1
+                                                                "
+                                                            >
+                                                                Cronograma de
+                                                                pagos N°
+                                                                {{ idx + 1 }}
+                                                            </template>
+                                                            <template v-else>
+                                                                Cronograma de
+                                                                pagos
+                                                            </template>
+                                                        </a>
+                                                    </el-dropdown-item>
                                                 </template>
                                             </template>
                                             <!-- <el-dropdown-item
@@ -540,9 +543,7 @@
                                                     style="width:100%;display:block;"
                                                     role="button"
                                                     @click.prevent="
-                                                        clickVoidSaleNote(
-                                                            row.id
-                                                        )
+                                                        anulateCredit(row)
                                                     "
                                                 >
                                                     Anular
@@ -647,7 +648,12 @@
                                     }`
                                 "
                             >
-                                {{ row.canceled ? "PAGADO" : "PENDIENTE" }}
+                                <template v-if="row.state_type_id != '11'">
+                                    {{ row.canceled ? "PAGADO" : "PENDIENTE" }}
+                                </template>
+                                <template v-else>
+                                    ANULADO
+                                </template>
                             </td>
                             <td class="text-end">{{ row.date_of_due }}</td>
                             <td class="text-end">{{ row.amount_due }}</td>
@@ -677,11 +683,15 @@
                                             ? "POR APROBAR"
                                             : row.status == "A"
                                             ? "ACEPTADO"
+                                            : row.state_type_id == "11"
+                                            ? "ANULADO"
                                             : "RECHAZADO"
                                     }}
                                     <el-tooltip
                                         v-if="
-                                            row.status == 'R' && row.observation
+                                            (row.status == 'R' ||
+                                                row.state_type_id == '11') &&
+                                                row.observation
                                         "
                                         :content="row.observation"
                                         placement="top"
@@ -725,6 +735,36 @@
                 </el-dialog>
             </div>
         </div>
+
+        <el-dialog
+            :visible.sync="showAnulateDialog"
+            :title="titleVoided"
+            append-to-body
+            :close-on-click-modal="false"
+        >
+            <div class="row m-2">
+                <div class="col-md-12">
+                    <el-input
+                        type="textarea"
+                        v-model="anulateReason"
+                        placeholder="Motivo de anulación"
+                    ></el-input>
+                </div>
+            </div>
+
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="showAnulateDialog = false"
+                    >Cancelar</el-button
+                >
+                <el-button
+                    type="primary"
+                    @click="
+                        isPauseSaleNote ? clickPauseSaleNote : clickVoidSaleNote
+                    "
+                    >Anular</el-button
+                >
+            </span>
+        </el-dialog>
 
         <div>
             <el-pagination
@@ -795,6 +835,7 @@ export default {
     data() {
         return {
             users: [],
+            titleVoided: "",
             showObservationsDialog: false,
             observations: "",
             showDialogUpdate: false,
@@ -818,6 +859,8 @@ export default {
             resource: "reports/credits",
             loading: false,
             pagination: {},
+            anulateReason: "",
+            showAnulateDialog: false,
             records: [],
             form: {},
             persons: [],
@@ -829,7 +872,8 @@ export default {
             showDialogDetail: false,
             showDialogGenerate: false,
             showDialogPayments: false,
-            showDialogInitPayments: false
+            showDialogInitPayments: false,
+            isPauseSaleNote: false
         };
     },
     created() {
@@ -840,6 +884,18 @@ export default {
         this.getTables();
     },
     methods: {
+        pauseCredit(record) {
+            this.recordId = record.id;
+            this.titleVoided = "Términode crédito-" + record.number;
+            this.showAnulateDialog = true;
+            this.isPauseSaleNote = true;
+        },
+        anulateCredit(record) {
+            this.recordId = record.id;
+            this.titleVoided = "Anulación de crédito-" + record.number;
+            this.showAnulateDialog = true;
+            this.isPauseSaleNote = false;
+        },
         async getTables() {
             const response = await this.$http.get(`/${this.resource}/filter`);
             if (response.data) {
@@ -887,26 +943,53 @@ export default {
                 }
             } catch (e) {}
         },
-        clickVoidSaleNote(id) {
+
+        clickPauseSaleNote() {
+            if (this.anulateReason == "") {
+                this.$toast.error("Debe introducir una razón para anulación");
+                return;
+            }
             this.loading = true;
-            this.recordId = id;
-            this.$confirm("¿Está seguro de anular el crédito?", "Atención", {
-                confirmButtonText: "Aceptar",
-                cancelButtonText: "Cancelar",
-                type: "warning"
-            })
-                .then(() => {
-                    this.$http
-                        .get(`/sale-notes/void-credit/${this.recordId}`)
-                        .then(response => {
-                            this.getRecords();
-                            this.$message({
-                                type: "success",
-                                message: response.data.message
-                            });
-                        });
+            this.$http
+                .post(`/sale-notes/pause-credit`, {
+                    sale_note_id: this.recordId,
+                    reason_to_void: this.anulateReason
                 })
-                .catch(() => {})
+                .then(response => {
+                    this.getRecords();
+                    this.$toast.success(response.data.message);
+                    this.showAnulateDialog = false;
+                    this.anulateReason = "";
+                    this.recordId = null;
+                })
+                .catch(error => {
+                    this.$toast.error(error.response.data.message);
+                })
+                .finally(() => {
+                    this.loading = false;
+                });
+        },
+        clickVoidSaleNote() {
+            if (this.anulateReason == "") {
+                this.$toast.error("Debe introducir una razón para anulación");
+                return;
+            }
+            this.loading = true;
+            this.$http
+                .post(`/sale-notes/void-credit`, {
+                    sale_note_id: this.recordId,
+                    reason_to_void: this.anulateReason
+                })
+                .then(response => {
+                    this.getRecords();
+                    this.$toast.success(response.data.message);
+                    this.showAnulateDialog = false;
+                    this.anulateReason = "";
+                    this.recordId = null;
+                })
+                .catch(error => {
+                    this.$toast.error(error.response.data.message);
+                })
                 .finally(() => {
                     this.loading = false;
                 });

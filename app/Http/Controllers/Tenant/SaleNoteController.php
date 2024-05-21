@@ -68,6 +68,7 @@ use App\CoreFacturalo\Requests\Inputs\Common\EstablishmentInput;
 use App\CoreFacturalo\Requests\Inputs\Functions;
 use App\Exports\SaleNoteExport;
 use App\Http\Resources\Tenant\SaleNoteCreditPenaltyCollection;
+use App\Jobs\WhatsappSendMessageProccess;
 use App\Models\Tenant\BankAccount;
 use App\Models\Tenant\Cash;
 use App\Models\Tenant\CreditList;
@@ -99,10 +100,36 @@ class SaleNoteController extends Controller
     protected $document;
     protected $configuration;
 
-    public function voidCredit($sale_note_id){
+
+
+    public function pauseCredit(Request $request){
+        $sale_note_id = $request->sale_note_id;
+        $reason_to_void = $request->reason_to_void;
         $sale_note = SaleNote::find($sale_note_id);
-        // $sale_note->credit = false;
+        $sale_note_credit = SaleNoteCredit::where('sale_note_id', $sale_note_id)->first();
+        $sale_note_credit->reason_to_anulate_credit = $reason_to_void;
+        $sale_note_credit->save();
+        $sale_note->status = 'O';
+        $sale_note->save();
+
+        return [
+            'success' => true,
+            'message' => 'Crédito actualizado',
+        ];
+    }
+    public function voidCredit(Request $request)
+    {
+        $sale_note_id = $request->sale_note_id;
+        $reason_to_void = $request->reason_to_void;
+        $sale_note = SaleNote::find($sale_note_id);
+        $sale_note_credit = SaleNoteCredit::where('sale_note_id', $sale_note_id)->first();
+        $sale_note_credit->reason_to_anulate_credit = $reason_to_void;
+        $sale_note_credit->save();
         $sale_note->status = 'R';
+        $user_name = auth()->user()->name;
+        $message_base = "El crédito de la nota de venta N° " . $sale_note->series . "-" . $sale_note->number . " ha sido anulada. Por el usuario " . $user_name . " por el motivo: " . $reason_to_void;
+        // (new WhatsappSendMessageProccess())->dispatch($sale_note->website_id, $message_base, $sale_note_credit->number);
+        (new WhatsappController)->sendMessageAll($message_base);
         $this->anulate($sale_note_id);
         $sale_note->save();
         return [
@@ -1075,7 +1102,7 @@ class SaleNoteController extends Controller
                     ]);
                     if ($configuration->sale_note_credit_penalty && $request->type_payment) {
                         $type_payment = $request->type_payment;
-                        if($type_payment == "Unico"){
+                        if ($type_payment == "Unico") {
                             $type_payment = "Mensual";
                         }
                         $penalty = DB::connection('tenant')->table('penalties_sale_note_credit')->where('type', $type_payment)->first();

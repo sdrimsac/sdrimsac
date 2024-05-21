@@ -2144,7 +2144,7 @@ export default {
 
             if (is_exonerated) {
                 this.show_has_igv = false;
-                this.form.has_igv = true;
+                this.form.has_igv = false;
             } else {
                 this.show_has_igv = true;
             }
