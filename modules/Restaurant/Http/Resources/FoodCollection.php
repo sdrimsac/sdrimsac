@@ -34,7 +34,7 @@ class FoodCollection extends ResourceCollection
             $item = $row->item;
             $has_igv = (bool) $item->has_igv;
             $hasAffectationIgv = $item->hasAffectationIgv();
-            // $igv = (new StoreController)->getIgvByUser();
+             $igv = (new StoreController)->getIgvByUser();
             if ($item->lots_enabled && $item->lot_code == null) {
                 $lot_group = ItemLotsGroup::where('item_id', $item->id)->first();
                 if ($lot_group) {
@@ -85,13 +85,14 @@ class FoodCollection extends ResourceCollection
                         $igv = (new StoreController)->getIgvByUser();
                         $price =  $price * ($igv / 100 + 1);
                     }
-                } else {
-                    //si no es afectado se le reduce, si es afectado el precio se queda igual
-                    $igv = (new StoreController)->getIgvByUser();
-                    if (!$hasAffectationIgv) {
-                        $price =  $price / ($igv / 100 + 1);
-                    }
-                }
+                } 
+                // else {
+                //     //si no es afectado se le reduce, si es afectado el precio se queda igual
+                //     $igv = (new StoreController)->getIgvByUser();
+                //     if (!$hasAffectationIgv) {
+                //         $price =  $price / ($igv / 100 + 1);
+                //     }
+                // }
             }
             return [
                 'id'                => $row->id,

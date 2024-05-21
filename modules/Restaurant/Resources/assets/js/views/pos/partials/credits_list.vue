@@ -532,6 +532,23 @@
                                                     Editar
                                                 </span>
                                             </el-dropdown-item>
+                                                <el-dropdown-item
+                                                v-if="
+                                                    row.state_type_id != '11' &&
+                                                        row.can_edit &&
+                                                        user.can_accept_credit_sale_note
+                                                "
+                                            >
+                                                <span
+                                                    style="width:100%;display:block;"
+                                                    role="button"
+                                                    @click.prevent="
+                                                        pauseCredit(row)
+                                                    "
+                                                >
+                                                    Anular
+                                                </span>
+                                            </el-dropdown-item>
                                             <el-dropdown-item
                                                 v-if="
                                                     row.state_type_id != '11' &&
