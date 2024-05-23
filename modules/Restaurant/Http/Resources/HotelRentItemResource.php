@@ -151,7 +151,7 @@ class HotelRentItemResource extends JsonResource
             'advance' => $this->advances,
             'ordens' => $ordens,
             'customer' => $customer,
-            'total_room' => $this->total + $this->advances,
+            'total_room' => $this->total + $this->advances - $cancel_document,
             'total_orden' => $total_all_orden,
             'total' => $this->total + $total_all_orden - $cancel_document,
             'is_month_rent' => $this->is_month_rent,
