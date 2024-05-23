@@ -9,6 +9,7 @@ use App\Models\Tenant\Company;
 use App\Models\Tenant\Configuration;
 use App\Models\Tenant\Establishment;
 use App\Models\Tenant\HotelRent;
+use App\Models\Tenant\HotelRentDocument;
 use App\Models\Tenant\HotelRentItem;
 use App\Models\Tenant\HotelRentItemPerson;
 use App\Models\Tenant\InventoryKardex;
@@ -750,6 +751,18 @@ class TableRoomController extends Controller
         $hotel_rent = $hotel_rent_item->hotel_rent;
         $hotel_rent_id = $hotel_rent->id;
         $advance = $hotel_rent->advance;
+        $cancel_documents = 0;
+        $documents = HotelRentDocument::where('hotel_rent_id', $hotel_rent_id)
+        ->where('is_advance', false)
+        ->get();
+        foreach ($documents as $document) {
+            if($document->document){
+                $cancel_documents += $document->document->total;
+            }
+            if($document->sale_note){
+                $cancel_documents += $document->sale_note->total;
+            }
+        }
         $single_room = $hotel_rent->items->count() == 1;
         $hotel_rent_item_id = $id;
         $total =  $hotel_rent_item->total;
@@ -762,7 +775,7 @@ class TableRoomController extends Controller
             $extra_service->description = "Media tarifa";
             $extra_service->item->description = "Media tarifa";
         }
-        $service->price = $total - $advance;
+        $service->price = $total - $advance - $cancel_documents;
         $service->description = $description;
         $service->item->description = $description;
         $orden_ids  = Orden::where('hotel_rent_item_id', $id)
