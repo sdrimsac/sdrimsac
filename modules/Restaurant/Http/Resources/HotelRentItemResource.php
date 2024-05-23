@@ -22,8 +22,9 @@ class HotelRentItemResource extends JsonResource
         $hotel_rent_id = $this->hotel_rent_id;
         $has_services = $this->services->count() > 0;
         $advances_document = 0;
+        $cancel_document = 0;
         $documents = HotelRentDocument::where('hotel_rent_id', $hotel_rent_id)->get()
-            ->transform(function ($row) {
+            ->transform(function ($row) use (&$cancel_document){
                 $document = $row->document ? $row->document : $row->sale_note;
                 $is_sale_note = $row->document ? false : true;
                 $external_id = $document->external_id;
@@ -35,6 +36,9 @@ class HotelRentItemResource extends JsonResource
                 //si date_of_issue es string lo convierto a date
                 if (is_string($date_of_issue)) {
                     $date_of_issue = Carbon::parse($date_of_issue);
+                }
+                if($document->is_advance == 0){
+                    $cancel_document += $document->total;
                 }
                 return [
                     'id' => $row->id,
@@ -149,7 +153,7 @@ class HotelRentItemResource extends JsonResource
             'customer' => $customer,
             'total_room' => $this->total + $this->advances,
             'total_orden' => $total_all_orden,
-            'total' => $this->total + $total_all_orden,
+            'total' => $this->total + $total_all_orden - $cancel_document,
             'is_month_rent' => $this->is_month_rent,
         ];
     }
