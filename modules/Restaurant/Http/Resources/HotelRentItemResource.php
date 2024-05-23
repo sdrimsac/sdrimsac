@@ -128,6 +128,9 @@ class HotelRentItemResource extends JsonResource
         }
         $tes = $this->total + $this->advances;
         $table_name = $this->table->getTableFullName();
+        if($this->total == 0){
+            $cancel_document = 0;
+        }
         return [
             'active' => (bool) $this->active,
             'table_name' => $table_name,
