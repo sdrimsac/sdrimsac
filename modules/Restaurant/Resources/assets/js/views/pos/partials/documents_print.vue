@@ -460,6 +460,9 @@ export default {
         async open() {
             console.log(this.config);
             console.log(this.establishment);
+            if(this.company.soap_type_id == '03'){
+                this.activeName = 'saleNotes';
+            }
             await this.getLastDocument();
             await this.getLastDocuments();
             this.printer = this.$areaPrinter;

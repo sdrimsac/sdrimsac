@@ -28,6 +28,7 @@
                         placeholder="Escriba el nombre o número de documento del cliente"
                         :remote-method="searchRemoteCustomers"
                         :loading="loading_search"
+                        @change="changeCustomer"
                     >
                         <el-option
                             v-for="option in customers"
@@ -36,6 +37,15 @@
                             :label="option.description"
                         ></el-option>
                     </el-select>
+                    <a
+                        v-if="hasProblems"
+                        class="text-danger"
+                        href="#"
+                        @click.prevent="seeProblems"
+                    >
+                        <i class="fa fa-exclamation-triangle"></i>
+                        Cliente castigado
+                    </a>
                 </div>
                 <div class="col-md-6">
                     <label>Fecha de emisión</label>
@@ -83,8 +93,9 @@
                         <el-radio-button label="Semanal"></el-radio-button>
                         <el-radio-button label="Quincenal"></el-radio-button>
                         <el-radio-button label="Mensual"></el-radio-button>
-                        <el-radio-button label="Unico"
-                        v-if="configuration.sale_note_credit_confirm"
+                        <el-radio-button
+                            label="Unico"
+                            v-if="configuration.sale_note_credit_confirm"
                         ></el-radio-button>
                     </el-radio-group>
                     <small
@@ -266,7 +277,8 @@ export default {
             resource: "sale-notes",
             loading_search: false,
             percentage_igv: 18,
-            loading: false
+            loading: false,
+            hasProblems: false
         };
     },
     created() {
@@ -281,6 +293,21 @@ export default {
     },
     computed: {},
     methods: {
+        seeProblems() {},
+        async checkCustomerLine() {
+            const response = await this.$http.get(
+                "/sale-notes/check-customer-line/" + this.form.customer_id
+            );
+            let data = response.data;
+            if (data.has_problems) {
+                this.hasProblems = true;
+            }
+        },
+        changeCustomer() {
+            if (this.user.can_accept_credit_sale_note) {
+                this.checkCustomerLine();
+            }
+        },
         changeTypePayment() {
             this.$forceUpdate();
             this.calculate();
@@ -337,7 +364,7 @@ export default {
                 amount: 0,
                 month: 0,
                 advances: 0,
-                date_of_pay: null,
+                date_of_pay: null
             };
         },
         advances_total() {

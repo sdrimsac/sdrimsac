@@ -305,7 +305,7 @@
                                                 data.state_type_id != '11' &&
                                                     data.state_type_id != '13'
                                             "
-                                            @click="clickVoidedNote(data.id)"
+                                            @click="clickVoidedNote(data)"
                                         >
                                             Anular internamente
                                         </el-button>
@@ -711,6 +711,30 @@
             @getRecords="getRecords"
         >
         </note-modal>
+        <el-dialog
+            :visible.sync="showDialogReasonToAvoid"
+            width="50%"
+            :title="titleAvoidSaleNote"
+            :close-on-click-modal="false"
+            append-to-body
+        >
+            <div class="row m-2">
+                <el-input
+                    v-model="reasonToAvoid"
+                    type="textarea"
+                    :autosize="{ minRows: 3, maxRows: 10 }"
+                    placeholder="Motivo de anulación"
+                ></el-input>
+            </div>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="showDialogReasonToAvoid = false">
+                    Cancelar
+                </el-button>
+                <el-button type="primary" @click="clickAnulateSaleNoteCredit()">
+                    Anular
+                </el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 
@@ -762,6 +786,7 @@ export default {
     ],
     data() {
         return {
+            titleAvoidSaleNote: "Motivo de anulación",
             resourcePdf: null,
             showPrevisualitation: false,
             loading: false,
@@ -778,15 +803,42 @@ export default {
             currentType: null,
             showCreateDispatch: false,
             showDialogPayments: false,
-            showNoteModal: false
+            showNoteModal: false,
+            showDialogReasonToAvoid: false,
+            reasonToAvoid: null
         };
     },
 
     methods: {
-        clickVoidedNote(id) {
-            this.anular(`/sale-notes/anulate/${id}`).then(() =>
-                this.$emit("getRecords")
-            );
+        clickAnulateSaleNoteCredit() {
+            if (this.reasonToAvoid == null || this.reasonToAvoid == "") {
+                this.$toast.error("Debe introducir un motivo de anulación");
+                return;
+            }
+            this.anular(
+                `/sale-notes/anulate/${this.currentId}?reason_to_void=${this.reasonToAvoid}`
+            ).then(() => {
+                this.showDialogReasonToAvoid = false;
+                this.$emit("getRecords");
+            });
+        },
+        showDialogAvoid(id) {
+            this.currentId = id;
+            this.showDialogReasonToAvoid = true;
+            this.reasonToAvoid = null;
+        },
+        clickVoidedNote(data) {
+            let id = data.id;
+            let is_credit = data.is_credit;
+            if (is_credit) {
+                this.showDialogAvoid(id);
+                this.titleAvoidSaleNote =
+                    "Motivo de anulación - " + data.identifier;
+            } else {
+                this.anular(`/sale-notes/anulate/${id}`).then(() =>
+                    this.$emit("getRecords")
+                );
+            }
         },
         clickNote(id) {
             this.recordId = id;

@@ -45,4 +45,11 @@ class Receipt extends ModelTenant
     {
         return $this->belongsTo(SaleNote::class);
     }
+
+    public function sale_note_payment()
+
+    {
+        return $this->belongsTo(SaleNotePayment::class);
+    }
+
 }

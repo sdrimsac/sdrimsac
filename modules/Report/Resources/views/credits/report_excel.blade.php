@@ -7,74 +7,37 @@
     <meta http-equiv="Content-Type" content="application/pdf; charset=utf-8" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Créditos por cobrar</title>
-    <style>
-        html {
-            font-family: sans-serif;
-            font-size: 12px;
-        }
 
-        table {
-            width: 100%;
-            border-spacing: 0;
-            border: 1px solid black;
-        }
-
-        .celda {
-            text-align: center;
-            padding: 5px;
-            border: 0.1px solid black;
-        }
-
-        th {
-            padding: 5px;
-            text-align: center;
-            border-color: #409EFF;
-            border: 0.1px solid black;
-        }
-
-        .title {
-            font-weight: bold;
-            padding: 5px;
-            font-size: 20px !important;
-            text-decoration: underline;
-        }
-
-        p>strong {
-            margin-left: 5px;
-            font-size: 13px;
-        }
-
-        thead {
-            font-weight: bold;
-            background: #409EFF;
-            color: white;
-            text-align: center;
-        }
-    </style>
 </head>
 @php
 
-$configuration = App\Models\Tenant\Configuration::first();
+    $configuration = App\Models\Tenant\Configuration::first();
 
 @endphp
 
 <body>
-    <div>
-        <p align="center" class="title"><strong>Reporte Créditos por cobrar</strong></p>
-    </div>
+    <table>
+        <tr>
+            <td colspan="13" style="text-align: center;">
+    <strong>REPORTE CRÉDITOS POR CLIENTE</strong>
+
+            </td>
+        </tr>
+    </table>
+
     <div style="margin-top:20px; margin-bottom:20px;">
         <table>
             <tr>
-                <td>
+                <td colspan="6">
                     <p><strong>Empresa: </strong>{{ $company->name }}</p>
                 </td>
-                <td>
+                <td colspan="7">
                     <p><strong>Fecha: </strong>{{ date('Y-m-d') }}</p>
                 </td>
             </tr>
             <tr>
-                <td>
-                    <p><strong>Ruc: </strong>{{ $company->number }}</p>
+                <td colspan="13">
+                    <strong>Ruc: </strong>{{ $company->number }}
                 </td>
 
             </tr>
@@ -89,19 +52,21 @@ $configuration = App\Models\Tenant\Configuration::first();
                 <table class="">
                     <thead>
                         <tr>
-                            <th>#</th>
+                            <th style="background-color: silver">#</th>
                             @if ($configuration->sale_note_credit_confirm)
-                                <th>Tipo</th>
+                                <th style="background: silver">Tipo</th>
                             @endif
-                            <th>Nota de Venta</th>
-                            <th class="text-center">Fecha Emisión</th>
-                            <th>DNI</th>
-                            <th>Cliente</th>
-                            <th></th>
-                            <th class="text-center">Cuotas vencidas</th>
-                            <th class="text-center">Fecha de cobro</th>
-                            <th class="text-right">Monto</th>
-                            <th class="text-right">Dias de atraso</th>
+                            <th style="background: silver">NV-CREDITO</th>
+                            <th style="background: silver">Fecha Emisión</th>
+                            <th style="background: silver">DNI</th>
+                            <th style="background: silver">Cliente</th>
+                            <th style="background: silver">Dirección</th>
+                            <th style="background: silver">Teléfono</th>
+                            <th style="background: silver">ESTADO</th>
+                            <th style="background: silver">Cuotas vencidas</th>
+                            <th style="background: silver">Fecha de cobro</th>
+                            <th style="background: silver">Dias de atraso</th>
+                            <th style="background: silver">Monto</th>
 
                         </tr>
                     </thead>
@@ -112,10 +77,10 @@ $configuration = App\Models\Tenant\Configuration::first();
                                 @if ($configuration->sale_note_credit_confirm)
                                     <td class="celda">
                                         @if ($value['is_cash'])
-                                            Efectivo
+                                            EFECTIVO
                                         @endif
                                         @if ($value['is_product'])
-                                            Hogar
+                                            HOGAR
                                         @endif
                                     </td>
                                 @endif
@@ -132,18 +97,35 @@ $configuration = App\Models\Tenant\Configuration::first();
                                     {{ $value['customer']['name'] }}
                                 </td>
                                 <td class="celda">
+                                    {{ $value['customer']['address'] }}
+                                </td>
+                                <td class="celda">
+                                    @php
+                                        $telephone = '';
+                                        $customer_id = $value['customer_id'];
+                                        $telephone = App\Models\Tenant\Person::where('id', $customer_id)->first()
+                                            ->telephone;
+                                    @endphp
+                                    {{ $telephone }}
+                                </td>
+                                <td class="celda"
+                                style="color: {{ $value['state'] == 'PAGADO' ? 'green' : 'red' }};"
+                                >
+                                    {{ $value['state'] }}
+                                </td>
+                                <td class="celda">
                                     {{ $value['dues'] }}
                                 </td>
                                 <td class="celda">
                                     {{ $value['date_of_due'] }}
                                 </td>
-                                <td class="celda">
-                                    {{ $value['amount_due'] }}
-                                </td>
+
                                 <td class="celda">
                                     {{ $value['differenc_days'] }}
                                 </td>
-
+                                <td class="celda">
+                                    {{ $value['amount_due'] }}
+                                </td>
                             </tr>
                         @endforeach
                     </tbody>

@@ -37,6 +37,8 @@ class ReceiptController extends Controller
     public function toPrint($external_id)
     {
         $data = Receipt::where("external_id", $external_id)->first();
+        $sale_note_payment = $data->sale_note_payment;
+        $payment_method_type = $sale_note_payment->payment_method_type->description;
         // $SaleNote=SaleNote::where('id',$receipt->sale_note_id)->first();
         $interes = 0;
         if ($data->sale_note_id) {
@@ -54,9 +56,10 @@ class ReceiptController extends Controller
         if (!$data) throw new Exception("El código {$external_id} es inválido, no se encontro la cotización relacionada");
         $company = Company::first();
         $user = User::findOrFail($data->user_id);
-        $num_cuota = 0;
         $establishment = Establishment::find($user->establishment_id);
-        $recibo = PDF::loadView('tenant.receipt.index', ['data' => $data, 'company' => $company, 'interes' => $interes, 'establishment' => $establishment, "deuda" => $deuda, "payments" => $payments, "user" => $user]);
+        $recibo = PDF::loadView('tenant.receipt.index', [
+            'payment_method_type' => $payment_method_type,
+            'data' => $data, 'company' => $company, 'interes' => $interes, 'establishment' => $establishment, "deuda" => $deuda, "payments" => $payments, "user" => $user]);
         //    return view('tenant.receipt.index', ['data' => $data, 'company' => $company, 'interes' => $interes, 'establishment' => $establishment, "deuda" => $deuda, "payments" => $payments]);
         return $recibo->setPaper(array(0, 0, 249.45, 650), 'portrait')->stream();
     }

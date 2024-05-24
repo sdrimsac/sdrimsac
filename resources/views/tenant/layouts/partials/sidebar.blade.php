@@ -32,13 +32,13 @@
                     </a>
                     <ul id="restaurantComponents" class="collapse ">
                         @if ($config->sale_note_credit_penalty)
-                        <li>
-                            <a class="{{ $path[0] === 'sale-notes' && $path[1] === 'penalties' ? 'active' : '' }}"
-                                href="{{  route('tenant.sale_note_credit_penalty.index') }}">
-                                <i class="icofont-users-alt-1"></i> Penalidades - Notas de venta crédito
-                            </a>
-                        </li>
-                    @endif
+                            <li>
+                                <a class="{{ $path[0] === 'sale-notes' && $path[1] === 'penalties' ? 'active' : '' }}"
+                                    href="{{ route('tenant.sale_note_credit_penalty.index') }}">
+                                    <i class="icofont-users-alt-1"></i> Penalidades - Notas de venta crédito
+                                </a>
+                            </li>
+                        @endif
                         @if ($config->users_views)
                             <li>
                                 <a class="{{ $path[0] === 'caja' && $path[1] === 'workers' ? 'active' : '' }}"
@@ -57,14 +57,14 @@
                             </li>
                         @endif
                         @if ($config->health_network)
-                        <li>
-                            <a class="{{ $path[0] === 'principal_categories' ? 'active' : '' }}"
-                                href="{{ route('tenant.principal_categories.index') }}">
-                                <i class="fas fa-layer-group"></i>
-                                Categorias principales
-                            </a>
-                        </li>
-                    @endif
+                            <li>
+                                <a class="{{ $path[0] === 'principal_categories' ? 'active' : '' }}"
+                                    href="{{ route('tenant.principal_categories.index') }}">
+                                    <i class="fas fa-layer-group"></i>
+                                    Categorias principales
+                                </a>
+                            </li>
+                        @endif
                         <li>
                             <a class="{{ $path[0] === 'bank_accounts' && $path[1] === '' ? 'active' : '' }}"
                                 href="{{ route('tenant.bank_accounts.index') }}">
@@ -194,7 +194,6 @@
         </ul>
       </li> --}}
             @if (!$roleService->isArca())
-
                 <li>
                     <a href="#compras" data-bs-toggle="collapse" data-role="button"
                         aria-expanded="{{ $path[0] === 'purchases' ? true : false }}{{ $path[0] === 'purchases' && $path[1] === 'create' ? true : false }}"
@@ -221,30 +220,30 @@
                     </ul>
                 </li>
                 {{-- @if (!$config->college) --}}
-                @endif
-                
-                <li>
-                    <a href="#invetories" data-bs-toggle="collapse" data-role="button"
-                        aria-expanded="{{ $path[0] === 'invetories' ? true : false }}{{ $path[0] === 'invetories' && $path[1] === 'create' ? true : false }}{{ $path[0] === 'items' ? true : false }}"
-                        class="{{ $path[0] === 'invetories' ? 'active' : '' }}{{ $path[0] === 'invetories' && $path[1] === 'create' ? 'active' : '' }}{{ $path[0] === 'items' ? 'active' : '' }}"
-                        data-clicked="{{ $path[0] === 'invetories' ? true : false }}{{ $path[0] === 'invetories' && $path[1] === 'create' ? true : false }}{{ $path[0] === 'items' ? true : false }}">
-                        <i class="icofont-box icon-parent"></i>
-                        <span class="label">Inventario</span>
-                    </a>
+            @endif
 
-                    <ul id="invetories" class="collapse ">
-                        {{-- <li>
+            <li>
+                <a href="#invetories" data-bs-toggle="collapse" data-role="button"
+                    aria-expanded="{{ $path[0] === 'invetories' ? true : false }}{{ $path[0] === 'invetories' && $path[1] === 'create' ? true : false }}{{ $path[0] === 'items' ? true : false }}"
+                    class="{{ $path[0] === 'invetories' ? 'active' : '' }}{{ $path[0] === 'invetories' && $path[1] === 'create' ? 'active' : '' }}{{ $path[0] === 'items' ? 'active' : '' }}"
+                    data-clicked="{{ $path[0] === 'invetories' ? true : false }}{{ $path[0] === 'invetories' && $path[1] === 'create' ? true : false }}{{ $path[0] === 'items' ? true : false }}">
+                    <i class="icofont-box icon-parent"></i>
+                    <span class="label">Inventario</span>
+                </a>
+
+                <ul id="invetories" class="collapse ">
+                    {{-- <li>
                             <a class="{{ $path[0] === 'inventory' && $path[1] === '' ? 'active' : '' }}"
                                 href="{{ route('inventory.index') }}">Movimientos</a>
                         </li> --}}
 
-                        <li>
-                            <a class="{{ $path[0] === 'items' && $path[1] === '' ? 'active' : '' }}"
-                                href="{{ route('tenant.items.index') }}">
-                                <i class="icofont-soft-drinks"></i> Productos
-                            </a>
-                        </li>
-                        @if (!$roleService->isArca())
+                    <li>
+                        <a class="{{ $path[0] === 'items' && $path[1] === '' ? 'active' : '' }}"
+                            href="{{ route('tenant.items.index') }}">
+                            <i class="icofont-soft-drinks"></i> Productos
+                        </a>
+                    </li>
+                    @if (!$roleService->isArca())
                         @if ($config->transform_item)
                             <li>
                                 <a class="{{ $path[0] === 'manufactured' && $path[1] === '' ? 'active' : '' }}"
@@ -308,8 +307,8 @@
                                 </a>
                             </li>
                         @endif
-                        @endif
-                        {{-- @if ($has_series)
+                    @endif
+                    {{-- @if ($has_series)
                         <li>
                             <a class="{{ $path[0] === 'lotes_due' && $path[1] === '' ? 'active' : '' }}"
                                 href="{{ route('lotes') }}">
@@ -319,10 +318,10 @@
                         @endif --}}
 
 
-                    </ul>
-                </li>
-                {{-- @endif --}}
-        
+                </ul>
+            </li>
+            {{-- @endif --}}
+
 
         @endif
         {{-- consignación --}}
@@ -387,7 +386,7 @@
                         </li>
                     @endif
                     <li>
-                        <a class="{{ $path[0] === 'documents'&&$path[1] == 'note_other' ? 'active' : '' }}"
+                        <a class="{{ $path[0] === 'documents' && $path[1] == 'note_other' ? 'active' : '' }}"
                             href="{{ route('tenant.documents.note_other') }}">
                             <i class="icofont-document-folder"></i> Notas crédito/débito - Otros
                         </a>
@@ -531,17 +530,17 @@
                             </a>
                         </li>
                     @endif
-                    
-                    @if ($config->health_network )
-                    <li>
-                        <a class="{{ $path[0] === 'health-global' ? 'active' : '' }}"
-                            href="{{ route('tenant.health_global.index') }}">
-                            <i class="icofont-file-excel"></i>
 
-                            Reporte global salud
-                        </a>
-                    </li>
-                @endif
+                    @if ($config->health_network)
+                        <li>
+                            <a class="{{ $path[0] === 'health-global' ? 'active' : '' }}"
+                                href="{{ route('tenant.health_global.index') }}">
+                                <i class="icofont-file-excel"></i>
+
+                                Reporte global salud
+                            </a>
+                        </li>
+                    @endif
                     @if ($config->consignment)
                         <li>
                             <a class="{{ $path[0] === 'reports' && $path[1] === 'consignment' ? 'active' : '' }}"
@@ -559,6 +558,13 @@
                                 <i class="fas fa-window-restore"></i>
 
                                 Créditos
+                            </a>
+                        </li>
+                        <li>
+                            <a class="{{ $path[0] === 'reports' && $path[1] === 'credits' && $path[2] === 'cash_credit' ? 'active' : '' }}"
+                                href="{{ route('reports.credits.credit_index') }}">
+                                <i class="icofont-money-bag"></i>
+                                Ganancias Hogar / Efectivo
                             </a>
                         </li>
                     @endif
@@ -808,7 +814,7 @@
                             </a>
                         </li>
                     @endif
-                    
+
                     <li>
                         <a class="{{ $path[0] === 'advanced' ? 'active' : '' }}"
                             href="{{ route('tenant.advanced.index') }}">

@@ -927,11 +927,17 @@ const app = new Vue({
                 /*webpackChunkName:"tenant-quotations-edit"*/
                 "./views/quotations/form_edit.vue"
             ),
+            //report-credit-index-cash
         //report-consignment-index
         "report-consignment-index": () =>
             import(
                 /*webpackChunkName:"report-credit-index"*/
                 "../../modules/Report/Resources/assets/js/views/consignment/index.vue"
+            ),
+            "report-credit-index-cash": () =>
+            import(
+                /*webpackChunkName:"report-credit-index"*/
+                "../../modules/Report/Resources/assets/js/views/credit/index_cash.vue"
             ),
         "report-credit-index": () =>
             import(

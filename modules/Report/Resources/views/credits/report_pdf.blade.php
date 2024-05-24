@@ -92,14 +92,17 @@
                             @if ($configuration->sale_note_credit_confirm)
                                 <th>Tipo</th>
                             @endif
-                            <th>Nota de Venta</th>
+                            <th>NV-CREDITO</th>
                             <th class="text-center">Fecha Emisión</th>
                             <th>DNI</th>
                             <th>Cliente</th>
+                            <th>Direccion</th>
+                            <th>Telefono</th>
+                            <th>ESTADO</th>
                             <th class="text-center">Cuotas vencidas</th>
                             <th class="text-center">Fecha de cobro</th>
-                            <th class="text-right">Monto</th>
                             <th class="text-right">Dias de atraso</th>
+                            <th class="text-right">Monto</th>
 
                         </tr>
                     </thead>
@@ -110,10 +113,10 @@
                                 @if ($configuration->sale_note_credit_confirm)
                                     <td class="celda">
                                         @if ($value['is_cash'])
-                                            Efectivo
+                                            EFECTIVO
                                         @endif
                                         @if ($value['is_product'])
-                                            Hogar
+                                            HOGAR
                                         @endif
                                     </td>
                                 @endif
@@ -130,18 +133,33 @@
                                     {{ $value['customer']['name'] }}
                                 </td>
                                 <td class="celda">
+                                    {{ $value['customer']['address'] }}
+                                </td>
+                                <td class="celda">
+                                    @php
+                                        $telephone = '';
+                                        $customer_id = $value['customer_id'];
+                                        $telephone = App\Models\Tenant\Person::where('id', $customer_id)->first()
+                                            ->telephone;
+                                    @endphp
+                                    {{ $telephone }}
+                                </td>
+                                <td class="celda" style="color: {{ $value['state'] == 'PAGADO' ? 'green' : 'red' }};">
+                                    {{ $value['state'] }}
+                                </td>
+                                <td class="celda">
                                     {{ $value['dues'] }}
                                 </td>
                                 <td class="celda">
                                     {{ $value['date_of_due'] }}
                                 </td>
-                                <td class="celda">
-                                    {{ $value['amount_due'] }}
-                                </td>
+
                                 <td class="celda">
                                     {{ $value['differenc_days'] }}
                                 </td>
-
+                                <td class="celda">
+                                    {{ $value['amount_due'] }}
+                                </td>
                             </tr>
                         @endforeach
                         {{-- <tr>

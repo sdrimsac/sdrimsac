@@ -102,6 +102,14 @@ class SaleNoteController extends Controller
 
 
 
+    public function checkCustomerLine($customer_id){
+        $sale_notes = SaleNote::where('customer_id', $customer_id)->whereIn('status', ['R','O'])->count();
+        // return $sale_notes > 0;
+        return [
+            'success' => true,
+            'has_problems' => $sale_notes > 0
+        ];
+    }
     public function pauseCredit(Request $request){
         $sale_note_id = $request->sale_note_id;
         $reason_to_void = $request->reason_to_void;
@@ -130,7 +138,7 @@ class SaleNoteController extends Controller
         $message_base = "El crédito de la nota de venta N° " . $sale_note->series . "-" . $sale_note->number . " ha sido anulada. Por el usuario " . $user_name . " por el motivo: " . $reason_to_void;
         // (new WhatsappSendMessageProccess())->dispatch($sale_note->website_id, $message_base, $sale_note_credit->number);
         (new WhatsappController)->sendMessageAll($message_base);
-        $this->anulate($sale_note_id);
+        $this->anulate($request,$sale_note_id);
         $sale_note->save();
         return [
             'success' => true,
@@ -2017,10 +2025,10 @@ class SaleNoteController extends Controller
         ];
     }
 
-    public function anulate($id)
+    public function anulate(Request $request,$id)
     {
 
-        DB::connection('tenant')->transaction(function () use ($id) {
+        DB::connection('tenant')->transaction(function () use ($id, $request) {
 
             $obj =  SaleNote::find($id);
             $obj->state_type_id = 11;
@@ -2064,6 +2072,19 @@ class SaleNoteController extends Controller
                 //habilito las series
                 // ItemLot::where('item_id', $item->item_id )->where('warehouse_id', $warehouse->id)->update(['has_sale' => false]);
                 $this->voidedLots($item);
+                $is_credit = count($obj->credit_payments) > 0;
+                if($is_credit){
+                    $reason_to_void = $request->reason_to_void;
+                    $sale_note_credit = SaleNoteCredit::where('sale_note_id', $id)->first();
+                    $sale_note_credit->reason_to_anulate_credit = $reason_to_void;
+                    $obj->status = 'R';
+                    $obj->save();
+                    $sale_note_credit->save();
+                    $user_name = auth()->user()->name;
+                    $message_base = "El crédito de la nota de venta N° " . $obj->series . "-" . $obj->number . " ha sido anulada. Por el usuario " . $user_name . " por el motivo: " . $reason_to_void;
+                    (new WhatsappController)->sendMessageAll($message_base);
+
+                }
             }
         });
 

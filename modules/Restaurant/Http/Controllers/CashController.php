@@ -192,11 +192,13 @@ class CashController extends Controller
         $total = 0;
 
         //total venta -> jalar documentos
-        $recordsDocument = null;
-        if ($date_end) {
-            $recordsDocument = Document::whereBetween('date_of_issue', [$date_start, $date_end]);
-        } else {
-            $recordsDocument = Document::whereDate('date_of_issue', '=', $date_start);
+        $recordsDocument =  Document::where('state_type_id', '<>', 11);
+        if ($date_start) {
+            if ($date_end) {
+                $recordsDocument = $recordsDocument->whereBetween('date_of_issue', [$date_start, $date_end]);
+            } else {
+                $recordsDocument = $recordsDocument->whereDate('date_of_issue', '=', $date_start);
+            }
         }
         if ($establishment_id) {
             $recordsDocument = $recordsDocument->where('establishment_id', $establishment_id);
@@ -350,11 +352,14 @@ class CashController extends Controller
                 }
             }
         });
-        $recordsSaleNote = null;
-        if ($date_end) {
-            $recordsSaleNote = SaleNote::whereBetween('date_of_issue', [$date_start, $date_end]);
-        } else {
-            $recordsSaleNote = SaleNote::whereDate('date_of_issue', '=', $date_start);
+        // $recordsSaleNote = null;
+        $recordsSaleNote = SaleNote::where('state_type_id', '<>', 11);
+        if ($date_start) {
+            if ($date_end) {
+                $recordsSaleNote = $recordsSaleNote->whereBetween('date_of_issue', [$date_start, $date_end]);
+            } else {
+                $recordsSaleNote = $recordsSaleNote->whereDate('date_of_issue', '=', $date_start);
+            }
         }
         if ($establishment_id) {
             $recordsSaleNote = $recordsSaleNote->where('establishment_id', $establishment_id);
@@ -559,11 +564,13 @@ class CashController extends Controller
         $total = 0;
 
         //total venta -> jalar documentos
-        $recordsDocument = null;
-        if ($date_end) {
-            $recordsDocument = Document::where('state_type_id', '<>', 11)->whereBetween('date_of_issue', [$date_start, $date_end]);
-        } else {
-            $recordsDocument = Document::where('state_type_id', '<>', 11)->whereDate('date_of_issue', '=', $date_start);
+        $recordsDocument =  Document::where('state_type_id', '<>', 11);
+        if ($date_start) {
+            if ($date_end) {
+                $recordsDocument = $recordsDocument->whereBetween('date_of_issue', [$date_start, $date_end]);
+            } else {
+                $recordsDocument = $recordsDocument->whereDate('date_of_issue', '=', $date_start);
+            }
         }
         $config = Configuration::first();
         $item_id_variation = $config->item_variation_id;
@@ -727,11 +734,13 @@ class CashController extends Controller
                 }
             }
         });
-        $recordsSaleNote = null;
-        if ($date_end) {
-            $recordsSaleNote = SaleNote::where('state_type_id', '<>', 11)->whereBetween('date_of_issue', [$date_start, $date_end]);
-        } else {
-            $recordsSaleNote = SaleNote::where('state_type_id', '<>', 11)->whereDate('date_of_issue', '=', $date_start);
+        $recordsSaleNote = SaleNote::where('state_type_id', '<>', 11);
+        if ($date_start) {
+            if ($date_end) {
+                $recordsSaleNote = $recordsSaleNote->whereBetween('date_of_issue', [$date_start, $date_end]);
+            } else {
+                $recordsSaleNote = $recordsSaleNote->whereDate('date_of_issue', '=', $date_start);
+            }
         }
 
         if ($establishment_id) {

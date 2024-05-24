@@ -53,6 +53,64 @@ class ReportCreditController extends Controller
 
         return view('report::credits.index');
     }
+    public function index_cash()
+    {
+
+        return view('report::credits.index_cash');
+    }
+    public function index_cash_filter()
+    {
+        $users = User::whereType('seller')
+            ->where('active', true)
+            ->get()
+            ->transform(function ($row) {
+                return [
+                    'id' => $row->id,
+                    'name' => $row->name
+                ];
+            });
+        $establishments = Establishment::all()->transform(function ($row) {
+            return [
+                'id' => $row->id,
+                'name' => $row->description
+            ];
+        });
+        $sellers = $this->getSellers();
+        $persons = $this->getPersons('customers');
+
+        return compact('establishments', 'sellers', 'persons', 'users');
+    }
+    public function index_cash_records(Request $request)
+    {
+        $period = $this->getDatesOfPeriod($request);
+        $type = $request->credit_type;
+        $params = (object)[
+            'date_start' => $period['d_start'],
+            'date_end' => $period['d_end'],
+        ];
+        $records = SaleNote::whereHas('creditPayments');
+        if ($params->date_start && $params->date_end) {
+            $records =
+                $records->whereBetween('date_of_issue', [$params->date_start, $params->date_end]);
+        }
+        if ($type != null) {
+            if ($type == 'is_product') {
+                $records = $records->where('is_product', true);
+            }
+            if ($type == 'is_cash') {
+                $records = $records->where('is_cash', true);
+            }
+        }
+        $records->join('payments', 'sale_notes.id', '=', 'payments.sale_note_id')
+            ->select('sale_notes.*', 'payments.*');
+            
+        //agrupar 
+        $records = $records->orderBy('date_of_issue', 'desc')->get()->groupBy(['total', 'type_payment','payments.tasa']);;
+
+        return [
+            'records' => $records,
+        ];
+    }
 
     public function records(Request $request)
     {
@@ -202,12 +260,14 @@ class ReportCreditController extends Controller
                 $all_records[] = [
                     'id' => $row->id,
                     'date_of_issue' => $row->date_of_issue->format('Y-m-d'),
-                    'customer' => ["name" => $customer->name, "number" => $customer->number],
                     'number' => $row->number_full,
                     'dues' => $dues,
+                    'customer_id' => $row->customer_id,
                     'date_of_due' => $date_of_due,
                     'is_cash' => $row->is_cash,
                     'is_product' => $row->is_product,
+                    'customer' => ["name" => $customer->name, "number" => $customer->number, "address" => $customer->address],
+                    'state' => $row->canceled ? 'PAGADO' : 'PENDIENTE',
                     // 'amount_due' => number_format($amount_due, 2, ".", ""),
                     'amount_due' => number_format($amount_due, 2, ".", ""),
                     'differenc_days' => $differenc_days,
@@ -221,7 +281,8 @@ class ReportCreditController extends Controller
             return $b['dues'] <=> $a['dues'];
         });
 
-        $pdf = PDF::loadView('report::credits.report_pdf', compact("records", "company", "establishment"));
+        $pdf = PDF::loadView('report::credits.report_pdf', compact("records", "company", "establishment"))
+            ->setPaper('a4', 'landscape');
 
         $filename = 'Reporte_Crédito_' . date('YmdHis');
 
@@ -251,7 +312,7 @@ class ReportCreditController extends Controller
         $all_records = [];
 
         $records = SaleNote::whereHas('creditPayments')
-        ->where('paid', true);
+            ->where('paid', true);
         if ($params->date_start && $params->date_end) {
             $records =
                 $records->whereBetween('date_of_issue', [$params->date_start, $params->date_end]);
@@ -336,7 +397,7 @@ class ReportCreditController extends Controller
                     // 'amount_due' => number_format($amount_due, 2, ".", ""),
                     'amount_due' => number_format($amount_due, 2, ".", ""),
                     'differenc_days' => $differenc_days,
-                    'difference_payment' => $total_paid-$row->total,
+                    'difference_payment' => $total_paid - $row->total,
                     'penalties' => $total_penalties,
                 ];
             }
@@ -452,12 +513,14 @@ class ReportCreditController extends Controller
                 $all_records[] = [
                     'id' => $row->id,
                     'date_of_issue' => $row->date_of_issue->format('Y-m-d'),
-                    'customer' => ["name" => $customer->name, "number" => $customer->number],
+                    'customer' => ["name" => $customer->name, "number" => $customer->number, "address" => $customer->address],
                     'number' => $row->number_full,
+                    'customer_id' => $row->customer_id,
                     'dues' => $dues,
                     'date_of_due' => $date_of_due,
                     'is_cash' => $row->is_cash,
                     'is_product' => $row->is_product,
+                    'state' => $row->canceled ? 'PAGADO' : 'PENDIENTE',
                     // 'amount_due' => number_format($amount_due, 2, ".", ""),
                     'amount_due' => number_format($amount_due, 2, ".", ""),
                     'differenc_days' => $differenc_days,

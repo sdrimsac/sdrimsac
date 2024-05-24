@@ -679,6 +679,7 @@ if ($hostname) {
 
 
                 Route::post('sale-notes/void-credit', [App\Http\Controllers\Tenant\SaleNoteController::class, 'voidCredit']);
+                Route::get('sale-notes/check-customer-line/{customer_id}', [App\Http\Controllers\Tenant\SaleNoteController::class, 'checkCustomerLine']);
                 Route::get('sale-notes/penalties/columns', [App\Http\Controllers\Tenant\SaleNoteController::class, 'columns_penalty']);
                 Route::get('sale-notes/penalties', [App\Http\Controllers\Tenant\SaleNoteController::class, 'index_penalty'])->name('tenant.sale_note_credit_penalty.index');
                 Route::get('sale-notes/penalties/records', [App\Http\Controllers\Tenant\SaleNoteController::class, 'records_penalty']);

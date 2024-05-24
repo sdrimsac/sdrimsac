@@ -512,6 +512,7 @@
                                             <el-dropdown-item
                                                 v-if="
                                                     row.state_type_id != '11' &&
+                                                        row.status != 'O' &&
                                                         row.can_edit &&
                                                         (user.can_accept_credit_sale_note
                                                             ? true
@@ -536,7 +537,7 @@
                                                 v-if="
                                                     row.state_type_id != '11' &&
                                                         row.can_edit &&
-                                                        user.can_accept_credit_sale_note
+                                                        user.can_accept_credit_sale_note && row.status != 'O'
                                                 "
                                             >
                                                 <span
@@ -546,7 +547,7 @@
                                                         pauseCredit(row)
                                                     "
                                                 >
-                                                    Anular
+                                                    Terminar
                                                 </span>
                                             </el-dropdown-item>
                                             <el-dropdown-item
@@ -700,6 +701,8 @@
                                             ? "POR APROBAR"
                                             : row.status == "A"
                                             ? "ACEPTADO"
+                                            : row.status == "O"
+                                            ? "TERMINADO"
                                             : row.state_type_id == "11"
                                             ? "ANULADO"
                                             : "RECHAZADO"
@@ -776,9 +779,9 @@
                 <el-button
                     type="primary"
                     @click="
-                        isPauseSaleNote ? clickPauseSaleNote : clickVoidSaleNote
+                        isPauseSaleNote ? clickPauseSaleNote() : clickVoidSaleNote()
                     "
-                    >Anular</el-button
+                    >{{isPauseSaleNote ? 'Terminar' : 'Anular'}}</el-button
                 >
             </span>
         </el-dialog>
@@ -903,7 +906,7 @@ export default {
     methods: {
         pauseCredit(record) {
             this.recordId = record.id;
-            this.titleVoided = "Términode crédito-" + record.number;
+            this.titleVoided = "Término de crédito-" + record.number;
             this.showAnulateDialog = true;
             this.isPauseSaleNote = true;
         },

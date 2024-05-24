@@ -224,7 +224,7 @@
                     </tr>
                     <tr>
                         <td align="left">
-                            <div class="border_round" >
+                            <div class="border_round">
                                 <table border="0" class="full-width" border="0">
                                     <tr>
                                         <td class="negrita">Fecha : </td>
@@ -338,9 +338,14 @@
                                 </table>
                                 <table style="margin-top: 15px" border="0" class="full-width" width="100%">
                                     <tr>
+                                        <td width="50%" class="negrita">METODO DE PAGO : </td>
+                                        <td>{{ strtoupper($payment_method_type) }}</td>
+                                    </tr>
+                                    <tr>
                                         <td class="negrita">CAJERO : </td>
                                         <td>{{ strtoupper($user->name) }}</td>
                                     </tr>
+
                                 </table>
                                 {{-- <table border="0" class="full-width" width="100%">
                             <tr>
@@ -420,7 +425,11 @@
                                 </table>
                                 <table style="margin-top: 15px" border="0" class="full-width" width="100%">
                                     <tr>
-                                        <td class="negrita">CAJERO : </td>
+                                        <td class="negrita">METODO DE PAGO : </td>
+                                        <td>{{ strtoupper($payment_method_type) }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="negrita">CAJERO: </td>
                                         <td>{{ strtoupper($user->name) }}</td>
                                     </tr>
                                 </table>
