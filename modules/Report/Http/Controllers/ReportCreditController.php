@@ -13,9 +13,13 @@ use App\Models\Tenant\Document;
 use App\Models\Tenant\Company;
 use App\Models\Tenant\Payment;
 use App\Models\Tenant\SaleNote;
+use App\Models\Tenant\SaleNoteItem;
 use App\Models\Tenant\SaleNotePayment;
 use Carbon\Carbon;
 use Modules\Report\Exports\ReportCreditExport;
+use Modules\Report\Exports\ReportCreditTypeCashExport;
+use Modules\Report\Exports\ReportCreditTypeExport;
+use Modules\Report\Exports\ReportCreditTypeProductExport;
 use Modules\Report\Http\Resources\ReportCreditCollection;
 
 class ReportCreditController extends Controller
@@ -80,19 +84,154 @@ class ReportCreditController extends Controller
 
         return compact('establishments', 'sellers', 'persons', 'users');
     }
-    public function index_cash_records(Request $request)
+    // private function get_product_records($request)
+    // {
+    //     $period = $this->getDatesOfPeriod($request);
+
+    //     $type = $request->credit_type;
+    //     $params = (object)[
+    //         'date_start' => $period['d_start'],
+    //         'date_end' => $period['d_end'],
+    //     ];
+    //     // Inicializamos el query base
+    //     $records = SaleNote::whereHas('creditPayments');
+
+    //     // Filtrar por fechas
+    //     if ($params->date_start && $params->date_end) {
+    //         $records = $records->whereBetween('date_of_issue', [$params->date_start, $params->date_end]);
+    //     }
+
+    //     // Filtrar por tipo de crédito
+    //     if ($type != null) {
+    //         if ($type == 'is_product') {
+    //             $records = $records->where('is_product', true);
+    //         }
+    //         if ($type == 'is_cash') {
+    //             $records = $records->where('is_cash', true);
+    //         }
+    //     }
+
+    //     $records = $records->orderBy('date_of_issue', 'desc')->get()->groupBy(function ($saleNote) {
+    //         return $saleNote->total . '|' . $saleNote->type_payment . '|' . $saleNote->creditPayments->first()->tasa;
+    //     })->map(function ($group) {
+    //         $total_penalties = $group->sum(function ($saleNote) {
+    //             return $saleNote->creditPayments
+    //                 ->where('paid', 0)
+    //                 ->sum('penalty_amount');
+    //         });
+    //         $total_count = $group->sum('total');
+    //         $tasa = $group->first()->creditPayments->first()->tasa;
+    //         $tasa_percentage = $tasa / 100;
+    //         $gain =  $total_count * $tasa_percentage;
+    //         $gain = round($gain, 2);
+    //         $total_gain = $total_penalties + $gain;
+    //         return [
+    //             'total_penalties' => $total_penalties,
+    //             'total' => floatval($group->first()->total),
+    //             'type_payment' => $group->first()->type_payment,
+    //             'tasa' => $group->first()->creditPayments->first()->tasa,
+    //             'count' => $group->count(),
+    //             'total_count' => $group->sum('total'),
+    //             'gain' => $gain,
+    //             'total_gain' => $total_gain,
+    //         ];
+    //     });
+
+    //     return $records->values();
+    // }
+    private function get_product_records($request)
     {
         $period = $this->getDatesOfPeriod($request);
+
         $type = $request->credit_type;
         $params = (object)[
             'date_start' => $period['d_start'],
             'date_end' => $period['d_end'],
         ];
-        $records = SaleNote::whereHas('creditPayments');
+
+        // Inicializamos el query base
+        $records = SaleNoteItem::whereHas('sale_note.creditPayments');
+
+        // Filtrar por fechas
         if ($params->date_start && $params->date_end) {
-            $records =
-                $records->whereBetween('date_of_issue', [$params->date_start, $params->date_end]);
+            $records = $records->whereHas('sale_note', function ($query) use ($params) {
+                $query->whereBetween('date_of_issue', [$params->date_start, $params->date_end]);
+            });
         }
+
+        // Filtrar por tipo de crédito
+        if ($type != null) {
+            if ($type == 'is_product') {
+                $records = $records->whereHas('sale_note', function ($query) {
+                    $query->where('is_product', true);
+                });
+            }
+            if ($type == 'is_cash') {
+                $records = $records->whereHas('sale_note', function ($query) {
+                    $query->where('is_cash', true);
+                });
+            }
+        }
+
+        $records = $records->get()->groupBy(function ($saleNoteItem) {
+            return $saleNoteItem->sale_note->total . '|' . $saleNoteItem->sale_note->type_payment . '|' . $saleNoteItem->sale_note->creditPayments->first()->tasa . '|' . $saleNoteItem->item->purchase_unit_price;
+        })->map(function ($group) {
+            $total_penalties = $group->sum(function ($saleNoteItem) {
+                $saleNote = $saleNoteItem->sale_note;
+                $item_total = $saleNoteItem->total;
+                $sale_note_total = $saleNote->total;
+
+                $proportion = $item_total / $sale_note_total;
+
+                $penalty_amount = $saleNote->creditPayments
+                    ->where('paid', 0)
+                    ->sum('penalty_amount');
+
+                return $penalty_amount * $proportion;
+            });
+            $product = $group->first()->item->description;
+            $total_count = $group->sum('total');
+            $tasa = $group->first()->sale_note->creditPayments->first()->tasa;
+            $tasa_percentage = $tasa / 100;
+            $gain =  $total_count * $tasa_percentage;
+            $gain = round($gain, 2);
+            $total_gain = $total_penalties + $gain;
+            return [
+                'sale_note_id' => $group->first()->sale_note->id,
+                'product' => $product,
+                'total_penalties' => $total_penalties,
+                'total' => floatval($group->first()->total),
+                'type_payment' => $group->first()->sale_note->type_payment,
+                'tasa' => $group->first()->sale_note->creditPayments->first()->tasa,
+                'count' => $group->count(),
+                'total_count' => $group->sum('total'),
+                'purchase_unit_price' => floatval($group->first()->item->purchase_unit_price),
+                'gain' => $gain,
+                'total_gain' => $total_gain,
+            ];
+        });
+
+        return $records->values();
+    }
+
+    private function get_cash_records($request)
+    {
+        $period = $this->getDatesOfPeriod($request);
+
+        $type = $request->credit_type;
+        $params = (object)[
+            'date_start' => $period['d_start'],
+            'date_end' => $period['d_end'],
+        ];
+        // Inicializamos el query base
+        $records = SaleNote::whereHas('creditPayments');
+
+        // Filtrar por fechas
+        if ($params->date_start && $params->date_end) {
+            $records = $records->whereBetween('date_of_issue', [$params->date_start, $params->date_end]);
+        }
+
+        // Filtrar por tipo de crédito
         if ($type != null) {
             if ($type == 'is_product') {
                 $records = $records->where('is_product', true);
@@ -101,16 +240,101 @@ class ReportCreditController extends Controller
                 $records = $records->where('is_cash', true);
             }
         }
-        $records->join('payments', 'sale_notes.id', '=', 'payments.sale_note_id')
-            ->select('sale_notes.*', 'payments.*');
-            
-        //agrupar 
-        $records = $records->orderBy('date_of_issue', 'desc')->get()->groupBy(['total', 'type_payment','payments.tasa']);;
 
+        $records = $records->orderBy('date_of_issue', 'desc')->get()->groupBy(function ($saleNote) {
+            return $saleNote->total . '|' . $saleNote->type_payment . '|' . $saleNote->creditPayments->first()->tasa;
+        })->map(function ($group) {
+            $total_penalties = $group->sum(function ($saleNote) {
+                return $saleNote->creditPayments
+                    ->where('paid', 0)
+                    ->sum('penalty_amount');
+            });
+            $total_count = $group->sum('total');
+            $tasa = $group->first()->creditPayments->first()->tasa;
+            $tasa_percentage = $tasa / 100;
+            $gain =  $total_count * $tasa_percentage;
+            $gain = round($gain, 2);
+            $total_gain = $total_penalties + $gain;
+            return [
+                'total_penalties' => $total_penalties,
+                'total' => floatval($group->first()->total),
+                'type_payment' => $group->first()->type_payment,
+                'tasa' => $group->first()->creditPayments->first()->tasa,
+                'count' => $group->count(),
+                'total_count' => $group->sum('total'),
+                'gain' => $gain,
+                'total_gain' => $total_gain,
+            ];
+        });
+
+        return $records->values();
+    }
+    public function index_cash_records(Request $request)
+    {
+        $records = $this->get_cash_records($request);
         return [
             'records' => $records,
         ];
     }
+
+    public function index_cash_excel(Request $request)
+    {
+        $type = $request->credit_type;
+        $type_title = '';
+        if ($type != null) {
+            if ($type == 'is_product') {
+                $type_title = 'Hogar';
+            }
+            if ($type == 'is_cash') {
+                $type_title = 'Efectivo';
+            }
+        }
+        $records = $this->get_cash_records($request);
+        $company = Company::first();
+        $establishment = ($request->establishment_id) ? Establishment::findOrFail($request->establishment_id) : auth()->user()->establishment;
+        return (new ReportCreditTypeCashExport)
+            ->records($records)
+            ->company($company)
+            ->establishment($establishment)
+            ->download('Reporte_Crédito_' . $type_title . '_' . Carbon::now() . '.xlsx');
+    }
+    public function index_product_records(Request $request)
+    {
+        $records = $this->get_product_records($request);
+        return [
+            'records' => $records,
+        ];
+    }
+
+    public function index_product_excel(Request $request)
+    {
+        $type = $request->credit_type;
+        $type_title = '';
+        if ($type != null) {
+            if ($type == 'is_product') {
+                $type_title = 'Hogar';
+            }
+            if ($type == 'is_cash') {
+                $type_title = 'Efectivo';
+            }
+        }
+        $records = $this->get_product_records($request);
+        $company = Company::first();
+        $establishment = ($request->establishment_id) ? Establishment::findOrFail($request->establishment_id) : auth()->user()->establishment;
+        return (new ReportCreditTypeProductExport)
+            ->records($records)
+            ->company($company)
+            ->establishment($establishment)
+            ->download('Reporte_Crédito_' . $type_title . '_' . Carbon::now() . '.xlsx');
+    }
+    public function index_cash_pdf(Request $request)
+    {
+        $records = $this->get_cash_records($request);
+        return [
+            'records' => $records,
+        ];
+    }
+
 
     public function records(Request $request)
     {

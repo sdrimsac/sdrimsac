@@ -305,6 +305,7 @@ export default {
         },
         changeCustomer() {
             if (this.user.can_accept_credit_sale_note) {
+                this.hasProblems = false;
                 this.checkCustomerLine();
             }
         },
@@ -674,6 +675,7 @@ export default {
             this.credit.is_product = !hasService;
         },
         open() {
+            this.hasProblems = false;
             this.getUsers();
             this.payments = [];
             this.isMigration = false;

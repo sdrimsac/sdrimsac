@@ -4,8 +4,10 @@
             <h6 class="my-0 text-white">Crédito hogar/efectivo</h6>
         </div>
         <div class="card mb-0">
-            <div class="card-body">
-                <data-table :resource="resource">
+            <div class="card-body" v-show="type == 'is_cash'">
+                <data-table :resource="resource"
+                :type.sync="type"
+                >
                     <tr slot="heading">
                         <th>#</th>
                         <th class="text-center">CANT.</th>
@@ -20,15 +22,47 @@
                     <tr></tr>
                     <tr slot-scope="{ index, row }">
                         <td>{{ index }}</td>
-                        <td class="text-center">{{ row.number }}</td>
-                        <td class="text-center">{{ row.date_of_issue }}</td>
-                        <td class="text-center">{{ row.customer.number }}</td>
-                        <td class="text-center">{{ row.customer.name }}</td>
-                        <td class="text-center">{{ row.dues }}</td>
-                        <td class="text-end">{{ row.date_of_due }}</td>
-                        <td class="text-end">{{ row.amount_due }}</td>
+                        <td class="text-center">{{ row.count }}</td>
+                        <td class="text-center">{{ row.total }}</td>
+                        <td class="text-center">{{ row.tasa }}</td>
+                        <td class="text-center">{{ row.type_payment }}</td>
+                        <td class="text-center">{{ row.gain }}</td>
+                        <td class="text-end">{{ row.total_penalties }}</td>
+                        <td class="text-end">{{ row.total_gain }}</td>
                     </tr>
                 </data-table>
+            </div>
+            <div class="card-body" v-show="type !== 'is_cash'" >
+                    <data-table-product resource="reports/credits/cash_credit_product"
+                :type.sync="type"
+                >
+                    <tr slot="heading">
+                        <th>#</th>
+                        <th class="text-center">CANT.</th>
+                        <th class="text-center">CREDI HOGAR</th>
+                        <th class="text-center">PC</th>
+                        <th class="text-center">PRODUCTO</th>
+                        <th class="text-center">%</th>
+                        <th class="text-center">TIPO</th>
+                        <th class="text-center">GANANCIA %</th>
+                        <th class="text-end">MORA</th>
+                        <th class="text-end">UTILIDAD</th>
+                    </tr>
+
+                    <tr></tr>
+                    <tr slot-scope="{ index, row }">
+                        <td>{{ index }}</td>
+                        <td class="text-center">{{ row.count }}</td>
+                        <td class="text-center">{{ row.total }}</td>
+                        <td class="text-center">{{ row.purchase_unit_price }}</td>
+                        <td class="text-center">{{ row.product }}</td>
+                        <td class="text-center">{{ row.tasa }}</td>
+                        <td class="text-center">{{ row.type_payment }}</td>
+                        <td class="text-center">{{ row.gain }}</td>
+                        <td class="text-end">{{ row.total_penalties }}</td>
+                        <td class="text-end">{{ row.total_gain }}</td>
+                    </tr>
+                </data-table-product>
             </div>
         </div>
     </div>
@@ -36,13 +70,15 @@
 
 <script>
 import DataTable from "../../components/DataTableReportsCreditsTypes.vue";
+import DataTableProduct from "../../components/DataTableReportsCreditsTypesProduct.vue";
 
 export default {
-    components: { DataTable },
+    components: { DataTable,DataTableProduct },
     data() {
         return {
             resource: "reports/credits/cash_credit",
-            form: {}
+            form: {},
+            type: "is_cash"
         };
     },
     async created() {},

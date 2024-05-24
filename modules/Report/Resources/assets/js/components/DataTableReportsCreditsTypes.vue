@@ -2,14 +2,14 @@
     <div>
         <div class="row">
             <div class="col-md-12 col-lg-12 col-xl-12 ">
-                
                 <div class="row mt-2">
-                        <div class="col-md-3">
+                    <div class="col-md-3">
                         <label class="control-label">Tipo de crédito</label>
                         <el-select
-                            v-model="form.credit_type"
+                            v-model="credit_type"
                             clearable
                             placeholder="Seleccione"
+                            @change="changeType"
                         >
                             <el-option
                                 key="cash"
@@ -117,8 +117,6 @@
                         </div>
                     </template>
 
-            
-
                     <div class="d-flex" style="margin-top:29px">
                         <el-button
                             class="submit"
@@ -135,13 +133,13 @@
                                     resource !== 'reports/document-detractions'
                             "
                         >
-                            <el-button
+                            <!-- <el-button
                                 class="submit"
                                 type="danger"
                                 icon="el-icon-tickets"
                                 @click.prevent="clickDownload('pdf')"
                                 >Exportar PDF</el-button
-                            >
+                            > -->
 
                             <el-button
                                 class="submit"
@@ -150,12 +148,12 @@
                                 ><i class="fa fa-file-excel"></i> Exportal
                                 Excel</el-button
                             >
-                            <el-button
+                            <!-- <el-button
                                 class="submit"
                                 @click.prevent="clickOpenWhatsapp"
                                 ><i class="fa fa-whatsapp"></i> Enviar
                                 whatsapp</el-button
-                            >
+                            > -->
                         </template>
                     </div>
                 </div>
@@ -175,48 +173,25 @@
                                 :index="customIndex(index)"
                             ></slot>
                         </tbody>
-                        <tfoot
-                            v-if="
-                                resource == 'reports/sales' ||
-                                    resource == 'reports/purchases'
-                            "
-                        >
+                        <tfoot v-if="records.length > 0">
                             <tr>
-                                <td
-                                    :colspan="
-                                        resource == 'reports/sales' ? 7 : 8
-                                    "
-                                ></td>
-                                <td><strong>Totales PEN</strong></td>
-
-                                <td>{{ totals.acum_total_taxed }}</td>
-                                <td>{{ totals.acum_total_igv }}</td>
-                                <td>{{ totals.acum_total }}</td>
-                            </tr>
-                            <tr>
-                                <td
-                                    :colspan="
-                                        resource == 'reports/sales' ? 7 : 8
-                                    "
-                                ></td>
-                                <td><strong>Totales USD</strong></td>
-
-                                <td>{{ totals.acum_total_taxed_usd }}</td>
-                                <td>{{ totals.acum_total_igv_usd }}</td>
-                                <td>{{ totals.acum_total_usd }}</td>
+                                <td colspan="2">TOTALES</td>
+                                <td class="text-center">
+                                    {{ totals.acum_total }}
+                                </td>
+                                <td colspan="2"></td>
+                                <td class="text-center">
+                                    {{ totals.acum_gain }}
+                                </td>
+                                <td class="text-end">
+                                    {{ totals.acum_total_penalties }}
+                                </td>
+                                <td class="text-end">
+                                    {{ totals.acum_total_gain }}
+                                </td>
                             </tr>
                         </tfoot>
                     </table>
-                    <div>
-                        <el-pagination
-                            @current-change="getRecords"
-                            layout="total, prev, pager, next"
-                            :total="pagination.total"
-                            :current-page.sync="pagination.current_page"
-                            :page-size="pagination.per_page"
-                        >
-                        </el-pagination>
-                    </div>
                 </div>
             </div>
         </div>
@@ -240,6 +215,7 @@ import WhatsappFormReport from "../../../../../../resources/js/components/Whatsa
 export default {
     props: {
         resource: String,
+        type: String,
         applyCustomer: { type: Boolean, required: false, default: false }
     },
     components: { WhatsappFormReport },
@@ -263,7 +239,7 @@ export default {
             establishments: [],
             state_types: [],
             form: {},
-
+            credit_type: "is_cash",
             pickerOptionsDates: {
                 disabledDate: time => {
                     time = moment(time).format("YYYY-MM-DD");
@@ -301,6 +277,10 @@ export default {
             this.resource === "reports/sales" ? "customers" : "suppliers";
     },
     methods: {
+        changeType() {
+            this.$emit("update:type", 'is_product');
+            this.credit_type = "is_cash";
+        },
         clickOpenWhatsapp() {
             let query = queryString.stringify({
                 ...this.form
@@ -346,110 +326,10 @@ export default {
             // console.log(records)
 
             records.forEach(row => {
-                let signal = row.document_type_id;
-                let state = row.state_type_id;
-
-                if (row.currency_type_id == "PEN") {
-                    if (signal == "07" && state != "11") {
-                        this.totals.acum_total += parseFloat(-row.total);
-                        this.totals.acum_total_taxed += parseFloat(
-                            -row.total_taxed
-                        );
-                        this.totals.acum_total_igv += parseFloat(
-                            -row.total_igv
-                        );
-
-                        this.totals.acum_total_exonerated += parseFloat(
-                            -row.total_exonerated
-                        );
-                        this.totals.acum_total_unaffected += parseFloat(
-                            -row.total_unaffected
-                        );
-                        this.totals.acum_total_free += parseFloat(
-                            -row.total_free
-                        );
-                    } else if (signal != "07" && state == "11") {
-                        this.totals.acum_total += 0;
-                        this.totals.acum_total_taxed += 0;
-                        this.totals.acum_total_igv += 0;
-
-                        this.totals.acum_total_exonerated += 0;
-                        this.totals.acum_total_unaffected += 0;
-                        this.totals.acum_total_free += 0;
-                    } else {
-                        this.totals.acum_total += parseFloat(row.total);
-                        this.totals.acum_total_taxed += parseFloat(
-                            row.total_taxed
-                        );
-                        this.totals.acum_total_igv += parseFloat(row.total_igv);
-
-                        this.totals.acum_total_exonerated += parseFloat(
-                            row.total_exonerated
-                        );
-                        this.totals.acum_total_unaffected += parseFloat(
-                            row.total_unaffected
-                        );
-                        this.totals.acum_total_free += parseFloat(
-                            row.total_free
-                        );
-                    }
-                } else if (row.currency_type_id == "USD") {
-                    if (signal == "07" && state != "11") {
-                        this.totals.acum_total_usd += parseFloat(-row.total);
-                        this.totals.acum_total_taxed_usd += parseFloat(
-                            -row.total_taxed
-                        );
-                        this.totals.acum_total_igv_usd += parseFloat(
-                            -row.total_igv
-                        );
-                    } else if (signal != "07" && state == "11") {
-                        this.totals.acum_total_usd += 0;
-                        this.totals.acum_total_taxed_usd += 0;
-                        this.totals.acum_total_igv_usd += 0;
-                    } else {
-                        this.totals.acum_total_usd += parseFloat(row.total);
-                        this.totals.acum_total_taxed_usd += parseFloat(
-                            row.total_taxed
-                        );
-                        this.totals.acum_total_igv_usd += parseFloat(
-                            row.total_igv
-                        );
-                    }
-                }
-                this.totals.acum_total_taxed = _.round(
-                    this.totals.acum_total_taxed,
-                    2
-                );
-                this.totals.acum_total_igv = _.round(
-                    this.totals.acum_total_igv,
-                    2
-                );
-                this.totals.acum_total = _.round(this.totals.acum_total, 2);
-                this.totals.acum_total_exonerated = _.round(
-                    this.totals.acum_total_exonerated,
-                    2
-                );
-                this.totals.acum_total_unaffected = _.round(
-                    this.totals.acum_total_unaffected,
-                    2
-                );
-                this.totals.acum_total_free = _.round(
-                    this.totals.acum_total_free,
-                    2
-                );
-
-                this.totals.acum_total_taxed_usd = _.round(
-                    this.totals.acum_total_taxed_usd,
-                    2
-                );
-                this.totals.acum_total_igv_usd = _.round(
-                    this.totals.acum_total_igv_usd,
-                    2
-                );
-                this.totals.acum_total_usd = _.round(
-                    this.totals.acum_total_usd,
-                    2
-                );
+                this.totals.acum_total += row.total;
+                this.totals.acum_gain += row.gain;
+                this.totals.acum_total_penalties += row.total_penalties;
+                this.totals.acum_total_gain += row.total_gain;
             });
         },
         clickDownload(type) {
@@ -477,24 +357,14 @@ export default {
         },
         initTotals() {
             this.totals = {
-                acum_total_taxed: 0,
-                acum_total_igv: 0,
                 acum_total: 0,
-                acum_total_exonerated: 0,
-                acum_total_unaffected: 0,
-                acum_total_free: 0,
-
-                acum_total_taxed_usd: 0,
-                acum_total_igv_usd: 0,
-                acum_total_usd: 0
+                acum_gain: 0,
+                acum_total_penalties: 0,
+                acum_total_gain: 0
             };
         },
         customIndex(index) {
-            return (
-                this.pagination.per_page * (this.pagination.current_page - 1) +
-                index +
-                1
-            );
+            return index + 1;
         },
         async getRecordsByFilter() {
             this.loading_submit = await true;
@@ -505,17 +375,15 @@ export default {
             return this.$http
                 .get(`/${this.resource}/records?${this.getQueryParameters()}`)
                 .then(response => {
-                    this.records = [];
-                
+                    this.records = response.data.records;
 
-                
                     this.loading_submit = false;
-                    // this.initTotals()
-                    if (
-                        this.resource == "reports/sales" ||
-                        this.resource == "reports/purchases"
-                    )
-                        this.getTotals(response.data.data);
+                    // this.initTotals();
+
+                    this.getTotals(this.records);
+                })
+                .catch(error => {
+                    this.loading_submit = false;
                 });
         },
         getQueryParameters() {

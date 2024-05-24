@@ -16,6 +16,10 @@ Route::middleware(['auth', 'redirect.module', 'locked.tenant'])->group(function 
         Route::get('credits/cash_credit', [ReportCreditController::class, 'index_cash'])->name('reports.credits.credit_index');
         Route::get('credits/cash_credit/filter', [ReportCreditController::class, 'index_cash_filter']);
         Route::get('credits/cash_credit/records', [ReportCreditController::class, 'index_cash_records']);
+        Route::get('credits/cash_credit/excel', [ReportCreditController::class, 'index_cash_excel']);
+        Route::get('credits/cash_credit_product/filter', [ReportCreditController::class, 'index_cash_filter']);
+        Route::get('credits/cash_credit_product/records', [ReportCreditController::class, 'index_product_records']);
+        Route::get('credits/cash_credit_product/excel', [ReportCreditController::class, 'index_product_excel']);
 
         Route::get('credits/records', [ReportCreditController::class, 'records']);
         Route::get('credits/filter', [ReportCreditController::class, 'filter']);

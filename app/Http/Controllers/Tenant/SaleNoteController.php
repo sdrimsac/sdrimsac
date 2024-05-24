@@ -137,7 +137,7 @@ class SaleNoteController extends Controller
         $user_name = auth()->user()->name;
         $message_base = "El crédito de la nota de venta N° " . $sale_note->series . "-" . $sale_note->number . " ha sido anulada. Por el usuario " . $user_name . " por el motivo: " . $reason_to_void;
         // (new WhatsappSendMessageProccess())->dispatch($sale_note->website_id, $message_base, $sale_note_credit->number);
-        (new WhatsappController)->sendMessageAll($message_base);
+        // (new WhatsappController)->sendMessageAll($message_base);
         $this->anulate($request,$sale_note_id);
         $sale_note->save();
         return [
@@ -499,7 +499,7 @@ class SaleNoteController extends Controller
         $sale_note = SaleNote::find($id);
         $sale_note->status = $status;
         if ($status == 'R') {
-            $this->anulate($id);
+            $this->anulate($request,$id);
             SaleNoteCredit::where('sale_note_id', $id)->delete();
             Payment::where('sale_note_id', $id)->delete();
         }
@@ -1292,7 +1292,11 @@ class SaleNoteController extends Controller
                     }
                 }
                 $saleNoteUpdate = SaleNote::findOrFail($this->sale_note->id);
-                $saleNoteUpdate->cash_id = $request->cash_id;
+                $rq_cash_id = $request->cash_id;
+                if(!$rq_cash_id){
+                    $rq_cash_id = $cash->id;
+                }
+                $saleNoteUpdate->cash_id = $rq_cash_id;
                 if (!$paid && $configuration->sale_note_credit_cash) {
                     $saleNoteUpdate->credit_cash = true;
                 }
