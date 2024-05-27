@@ -776,6 +776,9 @@ class TableRoomController extends Controller
             $extra_service->item->description = "Media tarifa";
         }
         $service->price = $total - $advance - $cancel_documents;
+        if($service->price < 0){
+            $service->price = 0;
+        }
         $service->description = $description;
         $service->item->description = $description;
         $orden_ids  = Orden::where('hotel_rent_item_id', $id)
