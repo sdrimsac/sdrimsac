@@ -1,3 +1,4 @@
+<!-- Modulo de Notas de Venta -->
 <template>
     <div>
         <div class="container-fluid p-l-0 p-r-0">
@@ -14,59 +15,38 @@
                             </li>
                         </ol>
                     </div>
-                    <div class="col-sm-6 d-flex justify-content-end">
-                        <div class="bookmark">
-                            <button
-                                type="button"
-                                class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto"
-                                @click.prevent="clickCreate()"
-                            >
-                                <i class="icofont-plus-circle"></i>
-                                <span>Nuevo</span>
-                            </button>
-                            <button
-                                @click.prevent="onOpenModalGenerateCPE"
-                                v-if="just_sale_notes"
-                                type="button"
-                                class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto"
-                            >
-                                <span>
-                                    Generar comprobante desde múltiples Notas
-                                </span>
-                            </button>
-                            <!-- <ul>
-                                <li>
-                                    <el-tooltip
-                                        class="item"
-                                        effect="dark"
-                                        content="Nueva Nota de venta"
-                                        placement="bottom-end"
-                                    >
-                                        <a
-                                            href="javascript:void(0)"
-                                            @click.prevent="clickCreate()"
-                                            v-if="user_type == 'admin'"
-                                            data-container="body"
-                                            data-bs-toggle="popover"
-                                            data-placement="top"
-                                            data-original-title="Tables"
-                                        >
-                                            <i data-feather="plus-circle"></i>
-                                        </a>
-                                    </el-tooltip>
-                                </li>
-                            </ul> -->
-                        </div>
-                        <!-- Bookmark Ends-->
-                    </div>
+
                 </div>
             </div>
         </div>
         <!-- Container-fluid starts-->
         <div class="container-fluid p-l-0 p-r-0">
             <div class="card mb-0">
-                <!-- <div class="data-table-visible-columns"> -->
-                <div class="col-12 text-end">
+                <div class="card-header bg-primary">
+                    <h4 class="my-0 text-white">
+                        <i class="fas fa-file-alt"></i>
+                        Consulta de Nota de venta</h4>
+                </div>
+                <div class="data-table-visible-columns">
+                        <el-button 
+                                    class="" 
+                                    href="javascript:void(0)" 
+                                    @click.prevent="clickCreate()">
+                                   
+                                <i class="fas fa-file-alt fa-lg"></i>
+                                <i class="fas fa-plus"></i>
+                                Nuevo NV
+                        </el-button>
+                        <el-button  @click.prevent="onOpenModalGenerateCPE"
+                                v-if="just_sale_notes"
+                                type="button">
+                                <i class="fas fa-file-check"></i> 
+                                Generar CPE de Multiples NV
+                        </el-button>
+                </div> 
+
+
+                <!-- <div class="col-12 text-end">
                     <el-dropdown :hide-on-click="false">
                         <el-button type="primary">
                             Mostrar/Ocultar columnas<i
@@ -84,65 +64,34 @@
                             </el-dropdown-item>
                         </el-dropdown-menu>
                     </el-dropdown>
-                </div>
+                </div> -->
                 <div class="card-body">
                     <data-table :resource="resource">
-                        <tr slot="heading">
+                        <tr slot="heading" class="bg-primary">
                             <th>#</th>
-                            <th class="text-end">Acciones</th>
-                            <th class="text-center">Fecha Emisión</th>
-                            <th>Vendedor</th>
-                            <th>Cliente</th>
-                            <th>Nota de Venta</th>
-                            <th>Guia</th>
-                            <th>Estado</th>
-                            <th class="text-center">Moneda</th>
-                            <th
-                                class="text-end"
-                                v-if="columns.total_exportation.visible"
-                            >
-                                T.Exportación
-                            </th>
-                            <th
-                                class="text-end"
-                                v-if="columns.total_free.visible"
-                            >
-                                T.Gratuito
-                            </th>
-                            <th
-                                class="text-end"
-                                v-if="columns.total_unaffected.visible"
-                            >
-                                T.Inafecta
-                            </th>
-                            <th
-                                class="text-end"
-                                v-if="columns.total_exonerated.visible"
-                            >
-                                T.Exonerado
-                            </th>
-                            <th
-                                class="text-end"
-                                v-if="columns.total_taxed.visible"
-                            >
-                                T.Gravado
-                            </th>
-                            <th
-                                class="text-end"
-                                v-if="columns.total_igv.visible"
-                            >
-                                T.Igv
-                            </th>
-
-                            <th class="text-center">Adelanto</th>
-                            <th class="text-center">Metodo de pago</th>
-                            <th class="text-center">Pagado</th>
-                            <th class="text-center">Resta</th>
-                            <th class="text-end">Total</th>
-                            <th class="text-end">Tasa</th>
-                            <th class="text-center">Comprobantes</th>
-                            <th class="text-center">Estado pago</th>
-                            <th class="text-center">Acciones crédito</th>
+                            <th class="text-white text-end">Acciones</th>
+                            <th class="text-white text-center">Fecha Emisión</th>
+                            <th class="text-end text-white">Vendedor</th>
+                            <th class="text-end text-white">Cliente</th>
+                            <th class="text-end text-white">Nota de Venta</th>
+                            <th class="text-end text-white">Guia</th>
+                            <th class="text-end text-white">Estado</th>
+                            <th class="text-white text-center">Moneda</th>
+                            <th class="text-white text-end" v-if="columns.total_exportation.visible">T.Exportación</th>
+                            <th class="text-white text-end" v-if="columns.total_free.visible"> T.Gratuito</th>
+                            <th class="text-white text-end"v-if="columns.total_unaffected.visible">T.Inafecta</th>
+                            <th class="text-white ext-end" v-if="columns.total_exonerated.visible"> T.Exonerado</th>
+                            <th class="text-white text-end" v-if="columns.total_taxed.visible">T.Gravado</th>
+                            <th class="text-white text-end" v-if="columns.total_igv.visible">T.Igv</th>
+                            <th class="text-white text-center">Adelanto</th>
+                            <th class="text-white text-center">Metodo de pago</th>
+                            <th class="text-white text-center">Pagado</th>
+                            <th class="text-white text-center">Resta</th>
+                            <th class="text-white text-end">Total</th>
+                            <th class="text-white text-end">Tasa</th>
+                            <th class="text-white text-center">Comprobantes</th>
+                            <th class="text-white text-center">Estado pago</th>
+                            <th class="text-white text-center">Acciones crédito</th>
                         </tr>
 
                         <tr></tr>
@@ -152,50 +101,34 @@
                                 <div
                                     v-if="row.state_type_id != 11"
                                     class="btn-toolbar mb-2"
-                                    role="toolbar"
-                                >
+                                    role="toolbar">
                                     <div class="btn-group mb-1">
                                         <button
                                             class="btn btn-secondary btn-sm dropdown-toggle"
                                             type="button"
                                             data-bs-toggle="dropdown"
                                             aria-haspopup="true"
-                                            aria-expanded="false"
-                                        >
+                                            aria-expanded="false">
                                             <i class="fas fa-ellipsis-v"></i>
                                         </button>
                                         <div
-                                            class="dropdown-menu dropdown-menu-sm"
-                                        >
+                                            class="dropdown-menu dropdown-menu-sm">
                                             <a
                                                 href="!#"
                                                 v-if="
                                                     row.state_type_id != '11' &&
                                                         (user_type == 'admin' ||
                                                             user_type ==
-                                                                'superadmin')
-                                                "
+                                                                'superadmin')"
                                                 class="dropdown-item"
-                                                @click.prevent="
-                                                    clickDetail(row)
-                                                "
-                                                ><i class="fas fa-trash"></i>
+                                                @click.prevent="clickDetail(row)">
+                                                <i class="fas fa-trash"></i>
                                                 Ver detalle
                                             </a>
-                                            <a
-                                                :href="
-                                                    `/dispatches/create_new/sale_note/${row.id}`
-                                                "
-                                                v-if="
-                                                    row.state_type_id != '11' &&
-                                                        (user_type == 'admin' ||
-                                                            user_type ==
-                                                                'superadmin')
-                                                "
-                                                class="dropdown-item"
-                                            >
+                                            <a :href=" `/dispatches/create_new/sale_note/${row.id}`"
+                                                v-if=" row.state_type_id != '11' && (user_type == 'admin' || user_type ==
+                                                'superadmin')" class="dropdown-item">
                                                 <i class="far fa-file-alt"></i>
-
                                                 Generar guía
                                             </a>
                                             <a
@@ -430,7 +363,7 @@
                                     v-for="(document, i) in row.documents"
                                 >
                                     <label
-                                        :key="i"
+                                        ::key="i"
                                         v-text="document.number_full"
                                         class="d-block"
                                     ></label>

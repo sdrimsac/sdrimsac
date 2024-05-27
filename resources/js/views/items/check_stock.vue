@@ -1,129 +1,143 @@
 <template>
-    <div>
-        <div class="container-fluid p-l-0 p-r-0">
-            <el-button type="primary" @click="checkSeries">
-                Verificar Series
-            </el-button>
+<div>
+    <div class="container-fluid p-l-0 p-r-0">
+        <div class="page-header">
+            <div class="row">
+                <div class="col-sm-6">
+                    <h6>
+                        <span>Herramientas</span>
+                    </h6>
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a href="/dashboard">Dashboard</a>
+                        </li>
+                        <li class="breadcrumb-item active">
+                            <span class="text-muted">herramientas</span>
+                        </li>
+                    </ol>
+                </div>
+                <div class="col-sm-6 text-right">
+                    <el-tooltip class="item" effect="dark" content="Nuevo" placement="bottom-end">
+                        <!-- <button type="button" class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto m-2">
+                            <span>
+                                <i class="icofont-plus-circle"></i>
+                                Agregar nueva cuenta
+                            </span>
+                        </button> -->
+                    </el-tooltip>
+                </div>
+            </div>
         </div>
-        <div class="container-fluid p-l-0 p-r-0">
-            <div class="page-header">
-                <div class="row">
-                    <div class="col-sm-6">
-                        <h6><span>Productos</span></h6>
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item">
-                                <a href="/dashboard">Dashboard</a>
-                            </li>
-                            <li class="breadcrumb-item active">
-                                <span class="text-muted"
-                                    >Verificar stock de Productos</span
-                                >
-                            </li>
-                        </ol>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-12">
-                        <label for="link">Url</label>
-                        <el-input v-model="linkpdf"></el-input>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-4" col-12>
-                        <label for="density">Densidad</label>
-                        <el-input type="number" v-model="config.density">
-                        </el-input>
-                    </div>
-                    <div class="col-md-4 col-12">
-                        <label for="density">Impresora</label>
-                        <el-input v-model="printer"> </el-input>
-                    </div>
-                    <div class="col-md-4 col-12">
-                        <label for="orientation">Orientación</label>
-                        <el-select v-model="config.orientation">
-                            <el-option
-                                label="Vertical"
-                                value="portrait"
-                            ></el-option>
-                            <el-option
-                                label="Horizontal"
-                                value="landscape"
-                            ></el-option>
-                        </el-select>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-3 col-12">
-                        <label for="top">Arriba</label>
-                        <el-input type="number" v-model="config.margins.top">
-                        </el-input>
-                    </div>
-                    <div class="col-md-3 col-12">
-                        <label for="left">Izquierda</label>
-                        <el-input type="number" v-model="config.margins.left">
-                        </el-input>
-                    </div>
-                    <div class="col-md-3 col-12">
-                        <label for="right">Derecha</label>
-                        <el-input type="number" v-model="config.margins.right">
-                        </el-input>
-                    </div>
-                    <div class="col-md-3 col-12">
-                        <label for="bottom">Abajo</label>
-                        <el-input type="number" v-model="config.margins.bottom">
-                        </el-input>
-                    </div>
-                </div>
-                <div class="row mt-2">
-                    <div class="col-md-3 col-12">
-                        <el-button type="primary" @click="Printer('zebra')">
-                            Imprimir
-                        </el-button>
-                    </div>
-                </div>
-
-                <el-divider></el-divider>
-                <div class="container-fluid p-l-0 p-r-0">
+    </div>
+    <div class="card">
+        <div class="card-header bg-primary mt-1">
+            <h6 class="my-0 text-white">Herramientas</h6>
+        </div>
+        <div class="card-body">
+            <div class="container-fluid p-l-0 p-r-0">
+                <el-button type="primary" @click="checkSeries">
+                    Verificar Series
+                </el-button>
+            </div>
+            <br>
+            <div class="container-fluid p-l-0 p-r-0">
+                <div class="page-header">
                     <div class="row">
-                        <div class="col-md-3 col-lg-3 col-12">
-                            <label for="date_of_start">Fecha de inicio</label>
-                            <el-date-picker
-                                class="w-100"
-                                v-model="form.date_of_start"
-                                type="date"
-                                placeholder="Fecha de inicio"
-                                value-format="yyyy-MM-dd"
-                            ></el-date-picker>
+                        <div class="col-sm-6">
+                            <h6><span>Productos</span></h6>
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item">
+                                    <a href="/dashboard">Dashboard</a>
+                                </li>
+                                <li class="breadcrumb-item active">
+                                    <span class="text-muted">Verificar stock de Productos</span>
+                                </li>
+                            </ol>
                         </div>
-                        <div class="col-md-3 col-lg-3 col-12">
-                            <label for="date_of_end">Fecha de fin</label>
-                            <el-date-picker
-                                class="w-100"
-                                v-model="form.date_of_end"
-                                type="date"
-                                placeholder="Fecha de fin"
-                                value-format="yyyy-MM-dd"
-                            ></el-date-picker>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <label for="link">Url</label>
+                            <el-input v-model="linkpdf"></el-input>
                         </div>
-                        <div class="col-md-3 col-lg-3 col-12"
-                        style="margin-top: 15px;"
-                        >
-                            <label for="date_of_end">Facturas</label>
-                            <el-checkbox v-model="form.invoices"></el-checkbox
-                            ><br />
-                            <label for="date_of_end">Boletas</label>
-                            <el-checkbox v-model="form.receipts"></el-checkbox>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4" col-12>
+                            <label for="density">Densidad</label>
+                            <el-input type="number" v-model="config.density">
+                            </el-input>
                         </div>
-                        <div class="col-md-3 col-lg-3 col- text-left">
-                            <el-button type="primary" @click="getRecreate">
-                                Buscar
+                        <div class="col-md-4 col-12">
+                            <label for="density">Impresora</label>
+                            <el-input v-model="printer"> </el-input>
+                        </div>
+                        <div class="col-md-4 col-12">
+                            <label for="orientation">Orientación</label>
+                            <el-select v-model="config.orientation">
+                                <el-option label="Vertical" value="portrait"></el-option>
+                                <el-option label="Horizontal" value="landscape"></el-option>
+                            </el-select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3 col-12">
+                            <label for="top">Arriba</label>
+                            <el-input type="number" v-model="config.margins.top">
+                            </el-input>
+                        </div>
+                        <div class="col-md-3 col-12">
+                            <label for="left">Izquierda</label>
+                            <el-input type="number" v-model="config.margins.left">
+                            </el-input>
+                        </div>
+                        <div class="col-md-3 col-12">
+                            <label for="right">Derecha</label>
+                            <el-input type="number" v-model="config.margins.right">
+                            </el-input>
+                        </div>
+                        <div class="col-md-3 col-12">
+                            <label for="bottom">Abajo</label>
+                            <el-input type="number" v-model="config.margins.bottom">
+                            </el-input>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-md-3 col-12">
+                            <el-button type="primary" @click="Printer('zebra')">
+                                Imprimir
                             </el-button>
+                        </div>
+                    </div>
+
+                    <el-divider></el-divider>
+                    <div class="container-fluid p-l-0 p-r-0">
+                        <div class="row">
+                            <div class="col-md-3 col-lg-3 col-12">
+                                <label for="date_of_start">Fecha de inicio</label>
+                                <el-date-picker class="w-100" v-model="form.date_of_start" type="date" placeholder="Fecha de inicio" value-format="yyyy-MM-dd"></el-date-picker>
+                            </div>
+                            <div class="col-md-3 col-lg-3 col-12">
+                                <label for="date_of_end">Fecha de fin</label>
+                                <el-date-picker class="w-100" v-model="form.date_of_end" type="date" placeholder="Fecha de fin" value-format="yyyy-MM-dd"></el-date-picker>
+                            </div>
+                            <div class="col-md-3 col-lg-3 col-12" style="margin-top: 15px;">
+                                <label for="date_of_end">Facturas</label>
+                                <el-checkbox v-model="form.invoices"></el-checkbox><br />
+                                <label for="date_of_end">Boletas</label>
+                                <el-checkbox v-model="form.receipts"></el-checkbox>
+                            </div>
+                            <div class="col-md-3 col-lg-3 col- text-left">
+                                <el-button type="primary" @click="getRecreate">
+                                    Buscar
+                                </el-button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 </template>
 
 <script>

@@ -1,11 +1,12 @@
 <template>
-    <el-dialog :title="titleDialog" :visible="showDialog" @close="close" @open="create">
+    <el-dialog :title="titleDialog" :visible="showDialog" @close="close" @open="create" class="rounded-dialog">
         <form autocomplete="off" @submit.prevent="submit">
             <div class="form-body">
+            <br>
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group" :class="{'has-danger': errors.document_type_id}">
-                            <label class="control-label">Tipo comprobante</label>
+                            <label class="control-label fw-bold">Tipo comprobante</label>
                             <el-select v-model="form.document_type_id" filterable @change="changeDocumentType">
                                 <el-option v-for="option in document_types" :key="option.id" :value="option.id" :label="option.description"></el-option>
                             </el-select>
@@ -15,7 +16,7 @@
 
                     <div class="col-md-6">
                         <div class="form-group" :class="{'has-danger': errors.series_id}">
-                            <label class="control-label">Serie</label>
+                            <label class="control-label fw-bold">Serie</label>
                             <el-select v-model="form.series_id" filterable @change="changeSeries">
                                 <el-option v-for="option in series" :key="option.id" :value="option.id" :label="option.number"></el-option>
                             </el-select>
@@ -24,7 +25,7 @@
                     </div>
                     <div class="col-md-6">
                         <div class="form-group" :class="{'has-danger': errors.number}">
-                            <label class="control-label">Número (Correlativo a iniciar)</label>
+                            <label class="control-label fw-bold">Número (Correlativo a iniciar)</label>
                             <el-input v-model="form.number"  > <i slot="prefix" class="el-icon-edit-outline"></i></el-input>
                             <small class="form-control-feedback" v-if="errors.number" v-text="errors.number[0]"></small>
                         </div>
@@ -39,6 +40,13 @@
         </form>
     </el-dialog>
 </template>
+
+<style>
+.el-dialog {
+    border-radius: 10px; 
+    overflow: hidden; 
+  }
+</style>
 
 <script>
 

@@ -1,13 +1,21 @@
+<!-- Modal de Importar Clientes/Proveedores -->
 <template>
-    <el-dialog :title="titleDialog" :visible="showDialog" @close="close" @open="create" class="dialog-import">
+    <el-dialog  :title="titleDialog" 
+                :visible="showDialog" 
+                @close="close" 
+                @open="create" 
+                class="dialog-import"
+                width="25%"
+                >
+                <br>
         <form autocomplete="off" @submit.prevent="submit">
             <div class="form-body">
                 <div class="row">
-                    <div class="col-md-12">
-                        <a href="/formats/persons.xlsx" target="_new">Descargar formato</a>
+                    <div class="col-md-6">
+                        <a href="/formats/persons.xlsx" target="_new">Descargar formato (Excel)</a>
                     </div>
                     <div class="col-md-12 mt-4">
-                        <div class="form-group text-center" :class="{'has-danger': errors.file}">
+                        <div class="form-group text-stat" :class="{'has-danger': errors.file}">
                             <el-upload
                                     ref="upload"
                                     :headers="headers"
@@ -28,8 +36,8 @@
                 </div>
             </div>
             <div class="form-actions text-end pt-2 pb-2">
-                <el-button @click.prevent="close()">Cancelar</el-button>
-                <el-button type="primary" native-type="submit" :loading="loading_submit">Procesar</el-button>
+                <el-button icon="fas fa-times" @click.prevent="close()"> Cancelar</el-button>
+                <el-button icon="fas fa-cogs" type="primary" native-type="submit" :loading="loading_submit"> Procesar</el-button>
             </div>
         </form>
     </el-dialog>

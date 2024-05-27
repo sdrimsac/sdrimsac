@@ -218,6 +218,7 @@ if ($hostname) {
                 Route::get('expenses', [Modules\Restaurant\Http\Controllers\PosController::class, 'expenses_admin'])->name('expenses.index')->middleware('just.admin');
                 Route::get('incomes', [IncomesController::class, 'incomes_admin']);
                 Route::get('advanced', [App\Http\Controllers\Tenant\AdvancedController::class, 'index'])->name('tenant.advanced.index')->middleware('just.admin');
+
                 Route::get('tasks', [App\Http\Controllers\Tenant\TaskController::class, 'index'])->name('tenant.tasks.index')->middleware('just.admin');
                 Route::post('tasks/commands', [App\Http\Controllers\Tenant\TaskController::class, 'listsCommand']);
                 Route::post('tasks/tables', [App\Http\Controllers\Tenant\TaskController::class, 'tables']);

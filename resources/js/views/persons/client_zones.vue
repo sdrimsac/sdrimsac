@@ -1,3 +1,4 @@
+<!-- Listado de Zona de Clientes  -->
 <template>
     <el-dialog
         @open="open"
@@ -6,59 +7,74 @@
         append-to-body
         title="Zonas de cliente"
         v-loading="loading"
+        width="35%"
     >
-        <div style="margin-top:5px" class=" d-flex justify-content-end">
-            <button
-                type="button"
-                class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto"
-                @click.prevent="clickCreate()"
-            >
-                <i class="icofont-plus-circle"></i>
-                <span>Nuevo</span>
-            </button>
-        </div>
+        <div class="data-table-visible-columns">
+                <el-button type="primary" 
+                            class="" 
+                            href="javascript:void(0)" 
+                            @click.prevent="clickCreate()">
+                            <i class="icofont-plus-circle"></i>
+                        Nuevo
+                </el-button>
+        </div> 
+       
         <div class="row" v-if="zones.length != 0">
             <table class="table table-responsive table-striped">
                 <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Descripción</th>
-                        <th>Acciones</th>
+                    <tr slot="heading" class="bg-primary">
+                        <th class="text-white">#</th>
+                        <th class="text-white">Descripción</th>
+                        <th class="text-white">Estado</th>
+                        <th class="text-white text-end">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr v-for="(zone, idx) in zones" :key="idx">
                         <td>{{ idx + 1 }}</td>
                         <td>{{ zone.description }}</td>
-                        <td>
-                            <button
-                                type="button"
-                                :class="
-                                    `btn ${
-                                        zone.active
-                                            ? 'btn-danger'
-                                            : 'btn-success'
-                                    }`
-                                "
-                                @click.prevent="clickActive(zone)"
-                            >
-                                {{ zone.active ? "Desactivar" : "Activar" }}
+                        
+                            <td class="text-center">
+                                    <button class="btn" :style="{
+                                color: 'white', 
+                                backgroundColor: zone.active ? 'green' : 'red', 
+                                fontWeight: 'bold',
+                                width: '110px' 
+                            }">
+                                        {{ zone.active ? 'Activo' : 'Suspendido' }}
+                                    </button>
+                                </td>
+
+                       
+                        <td class="text-end">
+                            <button class="btn p-0" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="btn btn-primary dropdown-toggle" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-delay="0" title="" data-bs-original-title="Item Count" aria-label="Item Count">Acciones</span>
                             </button>
-                            <button
-                                type="button"
-                                class="btn btn-primary "
-                                @click.prevent="clickEdit(zone)"
-                            >
-                                Editar
-                            </button>
-                            <button
-                                type="button"
-                                class="btn btn-danger"
-                                @click.prevent="clickDelete(zone)"
-                            >
-                                Eliminar
-                            </button>
+
+                                <div class="dropdown-menu dropdown-menu-end" style="">
+                                    <a  type="button" 
+                                        class="dropdown-item text-secondary" 
+                                        @click.prevent="clickEdit(zone)"> <i class="fa fa-edit"></i> Editar
+                                    </a>
+
+                                    <a  type="button" class="dropdown-item text-danger" 
+                                        @click.prevent="clickDelete(zone)"> 
+                                        <i class="fa fa-trash"></i> Eliminar
+                                    </a>
+                                    <!-- :class="`btn ${ zone.active ? 'btn-danger' : 'btn-success'}`" -->
+                                    <a  type="button"
+                                        :class="`text-secondary dropdown-item ${ zone.active ? 'btn-danger' : 'btn-success'}`"
+                                        @click.prevent="clickActive(zone)">
+                                        <i class="fas fa-toggle-off"></i>
+                                    
+                                        {{ zone.active ? "Desactivar" : "Activar" }}
+                                </a>
+                                
+                                   
+                                </div>
+                           
                         </td>
+                        
                     </tr>
                 </tbody>
             </table>
@@ -81,7 +97,9 @@
         >
             <div class="row m-2">
                 <div class="col-12">
-                    <label>Descripción</label>
+                    <label class="control-label">
+                     <i class="fas fa-align-left"></i> Descripción
+                    </label>
                     <el-input v-model="form.description"></el-input>
                 </div>
                 <div
@@ -90,9 +108,10 @@
                 >
                     <button
                         type="button"
-                        class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto"
+                        class="btn btn-primary dropdown-toggle"
                         @click.prevent="submit"
                     >
+                    <i class="fas fa-plus-circle"></i>
                         <span> {{ form.id ? "Actualizar" : "Crear" }} </span>
                     </button>
                 </div>

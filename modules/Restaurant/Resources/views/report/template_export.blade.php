@@ -4,8 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Type"
-        content="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet; charset=utf-8" />
+    <meta http-equiv="Content-Type" content="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet; charset=utf-8" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
     <style>
@@ -115,7 +114,8 @@
             padding: 5px;
             border: 0.1px solid #ccc;
         }
-        .celda_left{
+
+        .celda_left {
             width: 30% !important;
             text-align: left;
             padding: 5px;
@@ -188,110 +188,107 @@
         }
     </style>
 </head>
+<!--  reporte de habitaciones  -->
 
 <body>
-    <div>
-        @php
-            $title = $filter_type == 1 ? 'Reporte por de habitaciones por clientes' : 'Reporte de habitaciones';
-        @endphp
-        <h3 align="center" class="title"><strong>{{ $title }}</strong></h3>
-    </div>
-    <br>
-    <div style="margin-top:5px; margin-bottom:3px;">
-        <table>
-            <tr>
-                <td>
-                    <p><b>Empresa: </b></p>
-                </td>
-                <td align="center">
-                    <p><strong>{{ $company->name }}</strong></p>
-                </td>
-                <td>
-                    <p><strong>Fecha: </strong></p>
-                </td>
-                <td align="center">
-                    <p><strong>{{ $date_start == $date_end ? $date_start : $date_start . ' - ' . $date_end }}</strong>
-                    </p>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <p><strong>Ruc: </strong></p>
-                </td>
-                <td align="center">{{ $company->number }}</td>
-            </tr>
-        </table>
-    </div>
-    <br>
-    @if (!empty($records))
+    <table>
+        <div style="margin-top:5px; margin-bottom:3px;">
+            <table>
+                <tr>
+                    <td colspan="5" style="border: 2px solid black; text-align: center; background-color: #DCDCDC; font-size: 14px;">
+                        @php
+                        $title = $filter_type == 1 ? 'Reporte por de habitaciones por clientes' : 'Reporte de habitaciones';
+                        @endphp
+                        <h3 class="title"><strong>{{ $title }}</strong></h3>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="5" style="border: 2px solid black; background-color: #DCDCDC; font-size: 12px;">
+                        <p><strong>Empresa:</strong>{{ $company->name }}</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="border: 2px solid black; background-color: #DCDCDC; font-size: 12px;">
+                        <p><strong>Ruc: </strong>{{ $company->number }}</p>
+                    </td>
+                    <td colspan="3" style="border: 2px solid black; text-align: center; background-color: #DCDCDC; font-size: 12px;">
+                        <p><strong>Fecha: </strong> {{ $date_start == $date_end ? $date_start : $date_start . ' - ' . $date_end }}</p>
+                    </td>
+
+                </tr>
+            </table>
+        </div>
+        <br>
+        @if (!empty($records))
 
         <div class="">
             <div class=" ">
-
                 <table width="100%" class="">
-                    {{-- <tr>
+                    <thead>
+                        {{-- <tr>
                             <td class="encabezado">#</td>
                             <td class="encabezado">Fecha</td>
                             <td class="encabezado">Operacion</td>
                              <td class="encabezado">Concepto</td>
                             <td class="encabezado">Monto</td>
                             <td class="encabezado">Usuario</td> --}}
-                    <tr>
-                        <td class="encabezado">#</td>
+                        <tr>
+                            <td class="encabezado" >#</td>
 
-                        @if ($filter_type == 1)
-                            <td class="encabezado">Cliente</td>
-                            <td class="encabezado">Documento</td>
-                        @else
-                            <td class="encabezado">Habitacion</td>
-                        @endif
+                            @if ($filter_type == 1)
+                            <td class="encabezado" >Cliente</td>
+                            <td class="encabezado" style="border: 2px solid black; text-align: center; background-color: #DCDCDC;">Documento</td>
+                            @else
+                            <td class="encabezado" style="border: 2px solid black; text-align: center; background-color: #DCDCDC;">Habitacion</td>
+                            @endif
 
-                        <td class="encabezado center">N° de veces</td>
-                        <td class="encabezado center">Dias de alquiler</td>
-                    </tr>
+                            <td class="encabezado center" style="border: 2px solid black; text-align: center; background-color: #DCDCDC;">N° de veces</td>
+                            <td class="encabezado center" style="border: 2px solid black; text-align: center; background-color: #DCDCDC;">Dias de alquiler</td>
+                        </tr>
+                    </thead>
                     <tbody>
                         @foreach ($records as $row)
-                            @php
-                                if ($filter_type == 1) {
-                                    $value = [
-                                        'item_count' => $row->item_count,
-                                        'customer_id' => $row->customer_id,
-                                        'customer_name' => $row->customer->name,
-                                        'customer_number' => $row->customer->number,
-                                        'total_duration' => $row->total_duration,
-                                    ];
-                                } else {
-                                    $value = [
-                                        'item_count' => $row->item_count,
-                                        'table_id' => $row->table_id,
-                                        'total_duration' => $row->total_duration,
-                                        'name' => "$row->table_name - $row->floor_name - $row->tower_name",
-                                    ];
-                                }
-                            @endphp
-                            <tr>
-                                <td class="celda_loop">{{ $loop->iteration }}</td>
-                                @if ($filter_type == 1)
-                                    <td class="celda_left">
-                                        {{ $value['customer_name'] }}</td>
-                                    <td class="celda_left">{{ $value['customer_number'] }}</td>
-                                @else
-                                    <td class="celda_left
-                                    ">{{ $value['name'] }}
-                                    </td>
-                                @endif
-                                <td class="celda_center">{{ $value['item_count'] }}</td>
-                                <td class="celda_center">{{ $value['total_duration'] }}</td>
-
-                            </tr>
+                        @php
+                        if ($filter_type == 1) {
+                        $value = [
+                        'item_count' => $row->item_count,
+                        'customer_id' => $row->customer_id,
+                        'customer_name' => $row->customer->name,
+                        'customer_number' => $row->customer->number,
+                        'total_duration' => $row->total_duration,
+                        ];
+                        } else {
+                        $value = [
+                        'item_count' => $row->item_count,
+                        'table_id' => $row->table_id,
+                        'total_duration' => $row->total_duration,
+                        'name' => "$row->table_name - $row->floor_name - $row->tower_name",
+                        ];
+                        }
+                        @endphp
+                        <tr>
+                            <td class="celda_loop" style="border: 2px solid black; text-align: center;">{{ $loop->iteration }}</td>
+                            @if ($filter_type == 1)
+                            <td class="celda_left" style="border: 2px solid black; text-align: center;">
+                                {{ $value['customer_name'] }}
+                            </td>
+                            <td class="celda_left" style="border: 2px solid black; text-align: center;">{{ $value['customer_number'] }}</td>
+                            @else
+                            <td class="celda_left
+                                    " style="border: 2px solid black; text-align: center;">{{ $value['name'] }}
+                            </td>
+                            @endif
+                            <td class="celda_center" style="border: 2px solid black; text-align: center;">{{ $value['item_count'] }}</td>
+                            <td class="celda_center" style="border: 2px solid black; text-align: center;">{{ $value['total_duration'] }}</td>
+                        </tr>
                         @endforeach
-
                     </tbody>
                 </table>
-            @else
-                <div class="callout callout-info">
-                    <p>No se encontraron registros.</p>
-                </div>
+    </table>
+    @else
+    <div class="callout callout-info">
+        <p>No se encontraron registros.</p>
+    </div>
     @endif
 </body>
 

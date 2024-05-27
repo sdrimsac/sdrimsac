@@ -4,8 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Type"
-        content="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet; charset=utf-8" />
+    <meta http-equiv="Content-Type" content="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet; charset=utf-8" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
     <style>
@@ -183,268 +182,262 @@
 </head>
 
 <body>
-    <div>
-        <h3 align="center" class="title"><strong>Reporte Global Salud</strong></h3>
-    </div>
-    <div>
-        <table>
-            <tr>
-                <td>
-                    <p><b>Empresa: </b></p>
-                </td>
-                <td align="center">
-                    <strong>{{ $company->name }}</strong>
-                </td>
-                <td>
-                    <strong>Fecha: </strong>
-                </td>
-                <td align="center">
-                    <strong>{{ date('Y-m-d') }}</strong>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <strong>Ruc: </strong>
-                </td>
-                <td align="center">{{ $company->number }}</td>
-                <td colspan="2"></td>
-            </tr>
-        </table>
-    </div>
-    <br>
-    @if (!empty($records))
+    <table>
+        <div>
+            <table>
+                <tr>
+                    <td class="text-end" colspan="11" style="border: 2px solid black; text-align: center; background-color: #DCDCDC; font-size: 15px; font-weight: bold;">
+                        <h3>Reporte Global Salud</h3>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-end" colspan="11" style="border: 2px solid black; background-color: #DCDCDC; font-size: 13px;">
+                        <p><strong>Empresa: </strong>{{ $company->name }}</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-end" colspan="6" style="border: 2px solid black; background-color: #DCDCDC; font-size: 13px;">
+                        <p><strong>Ruc: </strong>{{ $company->number }}</p>
+                    </td>
+                    <td class="text-end" colspan="5" style="border: 2px solid black; background-color: #DCDCDC; font-size: 13px;">
+                        <p><strong>Fecha: </strong>{{ date('Y-m-d') }}</p>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        @if (!empty($records))
         <div class="">
             <div class=" ">
                 @php
-                    $month = explode('-', $month);
-                    $year = $month[0];
-                    $month = $month[1];
-                    $records_service = array_filter($records, function ($record) {
-                        return $record['is_service'] == 1;
-                    });
-                    $records_medicine = array_filter($records, function ($record) {
-                        return $record['is_service'] == 0;
-                    });
-                    $total_service = array_reduce(
-                        $records_service,
-                        function ($carry, $record) {
-                            return $carry + $record['ft_total'] + $record['bv_total'];
-                        },
-                        0,
-                    );
-                    $total_medicine = array_reduce(
-                        $records_medicine,
-                        function ($carry, $record) {
-                            return $carry + $record['ft_total'] + $record['bv_total'];
-                        },
-                        0,
-                    );
+                $month = explode('-', $month);
+                $year = $month[0];
+                $month = $month[1];
+                $records_service = array_filter($records, function ($record) {
+                return $record['is_service'] == 1;
+                });
+                $records_medicine = array_filter($records, function ($record) {
+                return $record['is_service'] == 0;
+                });
+                $total_service = array_reduce(
+                $records_service,
+                function ($carry, $record) {
+                return $carry + $record['ft_total'] + $record['bv_total'];
+                },
+                0,
+                );
+                $total_medicine = array_reduce(
+                $records_medicine,
+                function ($carry, $record) {
+                return $carry + $record['ft_total'] + $record['bv_total'];
+                },
+                0,
+                );
                 @endphp
-                <table class="">
+                <table>
                     <thead>
                         <tr>
-                            <th class="celda">Rubro</th>
-                            <th class="celda">Año</th>
-                            <th class="celda">Mes</th>
-                            <th class="celda">Establecimiento</th>
-                            <th class="celda">Serie</th>
-                            <th class="celda">Nro_ini</th>
-                            <th class="celda">Nro_fin</th>
-                            <th class="celda">Anulados</th>
-                            <th class="celda">Rechazados</th>
-                            <th class="celda">Notas de crédito</th>
-                            <th class="celda_right">Importe total</th>
+                            <th class="celda" style="border: 2px solid black; background-color: #DCDCDC;">Rubro</th>
+                            <th class="celda" style="border: 2px solid black; background-color: #DCDCDC;">Año</th>
+                            <th class="celda" style="border: 2px solid black; background-color: #DCDCDC;">Mes</th>
+                            <th class="celda" style="border: 2px solid black; background-color: #DCDCDC;">Establecimiento</th>
+                            <th class="celda" style="border: 2px solid black; background-color: #DCDCDC;">Serie</th>
+                            <th class="celda" style="border: 2px solid black; background-color: #DCDCDC;">Nro_ini</th>
+                            <th class="celda" style="border: 2px solid black; background-color: #DCDCDC;">Nro_fin</th>
+                            <th class="celda" style="border: 2px solid black; background-color: #DCDCDC;">Anulados</th>
+                            <th class="celda" style="border: 2px solid black; background-color: #DCDCDC;">Rechazados</th>
+                            <th class="celda" style="border: 2px solid black; background-color: #DCDCDC;">Notas de crédito</th>
+                            <th class="celda_right" style="border: 2px solid black; background-color: #DCDCDC;">Importe total</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($records_service as $key => $record)
-                            @if ($record['has_ft_info'])
-                                @php
-                                    $serie_ft = isset($record['first_ft']->series) ? $record['first_ft']->series : '';
-                                    $nro_ini_ft = isset($record['first_ft']->number) ? $record['first_ft']->number : '';
-                                    $nro_fin_ft = isset($record['last_ft']->number) ? $record['last_ft']->number : '';
-                                    $anulates_voided_ft =
-                                        count($record['anulates_voided_ft']) > 0
-                                            ? join(',', $record['anulates_voided_ft'])
-                                            : '';
-                                    $rejected_ft =
-                                        count($record['rejected_ft']) > 0 ? join(',', $record['rejected_ft']) : '';
+                        @if ($record['has_ft_info'])
+                        @php
+                        $serie_ft = isset($record['first_ft']->series) ? $record['first_ft']->series : '';
+                        $nro_ini_ft = isset($record['first_ft']->number) ? $record['first_ft']->number : '';
+                        $nro_fin_ft = isset($record['last_ft']->number) ? $record['last_ft']->number : '';
+                        $anulates_voided_ft =
+                        count($record['anulates_voided_ft']) > 0
+                        ? join(',', $record['anulates_voided_ft'])
+                        : '';
+                        $rejected_ft =
+                        count($record['rejected_ft']) > 0 ? join(',', $record['rejected_ft']) : '';
 
-                                    $notes_ft =  count($record['notes_ft']) > 0 ? join(',', $record['notes_ft']) : '';
-                                @endphp
-                                <tr>
-                                    <td class="celda">{{ $record['is_service'] == 1 ? 'Servicios' : 'Medicamentos' }}
-                                    </td>
-                                    <td class="celda">{{ $year }}</td>
-                                    <td class="celda">{{ $month }}</td>
-                                    <td class="celda">{{ $record['establishment'] }}</td>
-                                    <td class="celda">{{ $serie_ft }}</td>
-                                    <td class="celda">{{ $nro_ini_ft }}</td>
-                                    <td class="celda">{{ $nro_fin_ft }}</td>
-                                    <td class="celda">{{ $anulates_voided_ft }}</td>
-                                    <td class="celda">{{ $rejected_ft }}</td>
-                                    <td class="celda">{{ $notes_ft }}</td>
-                                    <td class=" celda_right">{{ $record['ft_total'] }}</td>
-                                </tr>
-                            @endif
-                            @if ($record['has_bv_info'])
-                                @php
-                                    $serie_bv = isset($record['first_bv']->series) ? $record['first_bv']->series : '';
-                                    $nro_ini_bv = isset($record['first_bv']->number) ? $record['first_bv']->number : '';
-                                    $nro_fin_bv = isset($record['last_bv']->number) ? $record['last_bv']->number : '';
-                                    $anulates_voided_bv =
-                                        count($record['anulates_voided_bv']) > 0
-                                            ? join(',', $record['anulates_voided_bv'])
-                                            : '';
-                                    $rejected_bv =
-                                        count($record['rejected_bv']) > 0 ? join(',', $record['rejected_bv']) : '';
-                                    $notes_bv =  count($record['notes_bv']) > 0 ? join(',', $record['notes_bv']) : '';
-                                @endphp
-                                <tr>
-                                    <td class="celda">{{ $record['is_service'] == 1 ? 'Servicios' : 'Medicamentos' }}
-                                    </td>
-                                    <td class="celda">{{ $year }}</td>
-                                    <td class="celda">{{ $month }}</td>
-                                    <td class="celda">{{ $record['establishment'] }}</td>
-                                    <td class="celda">{{ $serie_bv }}</td>
-                                    <td class="celda">{{ $nro_ini_bv }}</td>
-                                    <td class="celda">{{ $nro_fin_bv }}</td>
-                                    <td class="celda">{{ $anulates_voided_bv }}</td>
-                                    <td class="celda">{{ $rejected_bv }}</td>
-                                    <td class="celda">{{ $notes_bv }}</td>
-                                    <td class=" celda_right">{{ $record['bv_total'] }}</td>
+                        $notes_ft = count($record['notes_ft']) > 0 ? join(',', $record['notes_ft']) : '';
+                        @endphp
+                        <tr>
+                            <td class="celda">{{ $record['is_service'] == 1 ? 'Servicios' : 'Medicamentos' }}
+                            </td>
+                            <td class="celda" style="border: 2px solid black;">{{ $year }}</td>
+                            <td class="celda" style="border: 2px solid black;">{{ $month }}</td>
+                            <td class="celda" style="border: 2px solid black;">{{ $record['establishment'] }}</td>
+                            <td class="celda" style="border: 2px solid black;">{{ $serie_ft }}</td>
+                            <td class="celda" style="border: 2px solid black;">{{ $nro_ini_ft }}</td>
+                            <td class="celda" style="border: 2px solid black;">{{ $nro_fin_ft }}</td>
+                            <td class="celda" style="border: 2px solid black;">{{ $anulates_voided_ft }}</td>
+                            <td class="celda" style="border: 2px solid black;">{{ $rejected_ft }}</td>
+                            <td class="celda" style="border: 2px solid black;">{{ $notes_ft }}</td>
+                            <td class=" celda_right" style="border: 2px solid black;">{{ $record['ft_total'] }}</td>
+                        </tr>
+                        @endif
+                        @if ($record['has_bv_info'])
+                        @php
+                        $serie_bv = isset($record['first_bv']->series) ? $record['first_bv']->series : '';
+                        $nro_ini_bv = isset($record['first_bv']->number) ? $record['first_bv']->number : '';
+                        $nro_fin_bv = isset($record['last_bv']->number) ? $record['last_bv']->number : '';
+                        $anulates_voided_bv =
+                        count($record['anulates_voided_bv']) > 0
+                        ? join(',', $record['anulates_voided_bv'])
+                        : '';
+                        $rejected_bv =
+                        count($record['rejected_bv']) > 0 ? join(',', $record['rejected_bv']) : '';
+                        $notes_bv = count($record['notes_bv']) > 0 ? join(',', $record['notes_bv']) : '';
+                        @endphp
+                        <tr>
+                            <td class="celda" style="border: 2px solid black;">{{ $record['is_service'] == 1 ? 'Servicios' : 'Medicamentos' }}
+                            </td>
+                            <td class="celda" style="border: 2px solid black;">{{ $year }}</td>
+                            <td class="celda" style="border: 2px solid black;">{{ $month }}</td>
+                            <td class="celda" style="border: 2px solid black;">{{ $record['establishment'] }}</td>
+                            <td class="celda" style="border: 2px solid black;">{{ $serie_bv }}</td>
+                            <td class="celda" style="border: 2px solid black;">{{ $nro_ini_bv }}</td>
+                            <td class="celda" style="border: 2px solid black;">{{ $nro_fin_bv }}</td>
+                            <td class="celda" style="border: 2px solid black;">{{ $anulates_voided_bv }}</td>
+                            <td class="celda" style="border: 2px solid black;">{{ $rejected_bv }}</td>
+                            <td class="celda" style="border: 2px solid black;">{{ $notes_bv }}</td>
+                            <td class=" celda_right" style="border: 2px solid black;">{{ $record['bv_total'] }}</td>
 
-                                </tr>
-                            @endif
-                            @if (!$record['has_ft_info'] && !$record['has_bv_info'])
-                                <tr>
-                                    <td class="celda">{{ $record['is_service'] == 1 ? 'Servicios' : 'Medicamentos' }}
-                                    </td>
-                                    <td class="celda">{{ $year }}</td>
-                                    <td class="celda">{{ $month }}</td>
-                                    <td class="celda">{{ $record['establishment'] }}</td>
-                                    <td class="celda">-</td>
-                                    <td class="celda">-</td>
-                                    <td class="celda">-</td>
-                                    <td class="celda"></td>
-                                    <td class="celda"></td>
-                                    <td class="celda"></td>
-                                    <td class=" celda_right">0</td>
-                                </tr>
-                            @endif
+                        </tr>
+                        @endif
+                        @if (!$record['has_ft_info'] && !$record['has_bv_info'])
+                        <tr>
+                            <td class="celda" style="border: 2px solid black;">{{ $record['is_service'] == 1 ? 'Servicios' : 'Medicamentos' }}
+                            </td>
+                            <td class="celda" style="border: 2px solid black;">{{ $year }}</td>
+                            <td class="celda" style="border: 2px solid black;">{{ $month }}</td>
+                            <td class="celda" style="border: 2px solid black;">{{ $record['establishment'] }}</td>
+                            <td class="celda" style="border: 2px solid black;">-</td>
+                            <td class="celda" style="border: 2px solid black;">-</td>
+                            <td class="celda" style="border: 2px solid black;">-</td>
+                            <td class="celda" style="border: 2px solid black;"></td>
+                            <td class="celda" style="border: 2px solid black;"></td>
+                            <td class="celda" style="border: 2px solid black;"></td>
+                            <td class=" celda_right" style="border: 2px solid black;">0</td>
+                        </tr>
+                        @endif
                         @endforeach
                         @if (count($records_service) > 0)
-                            <tr>
-                                <td class="celda" colspan="10">
-                                    <strong>
-                                        Total Servicios
-                                    </strong>
-
-                                </td>
-                                <td class="celda_right">
-                                    <strong>
-                                        {{ $total_service }}
-                                    </strong>
-                                </td>
-                            </tr>
-                        @endif
-                        @foreach ($records_medicine as $key => $record)
-                            @if ($record['has_ft_info'])
-                                @php
-                                    $serie_ft = isset($record['first_ft']->series) ? $record['first_ft']->series : '';
-                                    $nro_ini_ft = isset($record['first_ft']->number) ? $record['first_ft']->number : '';
-                                    $nro_fin_ft = isset($record['last_ft']->number) ? $record['last_ft']->number : '';
-                                    $anulates_voided_ft =
-                                        count($record['anulates_voided_ft']) > 0
-                                            ? join(',', $record['anulates_voided_ft'])
-                                            : '';
-                                    $rejected_ft =
-                                        count($record['rejected_ft']) > 0 ? join(',', $record['rejected_ft']) : '';
-                                    $notes_ft =  count($record['notes_ft']) > 0 ? join(',', $record['notes_ft']) : '';
-                                @endphp
-                                <tr>
-                                    <td class="celda">{{ $record['is_service'] == 1 ? 'Servicios' : 'Medicamentos' }}
-                                    </td>
-                                    <td class="celda">{{ $year }}</td>
-                                    <td class="celda">{{ $month }}</td>
-                                    <td class="celda">{{ $record['establishment'] }}</td>
-                                    <td class="celda">{{ $serie_ft }}</td>
-                                    <td class="celda">{{ $nro_ini_ft }}</td>
-                                    <td class="celda">{{ $nro_fin_ft }}</td>
-                                    <td class="celda">{{ $anulates_voided_ft }}</td>
-                                    <td class="celda">{{ $rejected_ft }}</td>
-                                    <td class="celda">{{ $notes_ft }}</td>
-                                    <td class=" celda_right">{{ $record['ft_total'] }}</td>
-                                </tr>
-                            @endif
-                            @if ($record['has_bv_info'])
-                                @php
-                                    $serie_bv = isset($record['first_bv']->series) ? $record['first_bv']->series : '';
-                                    $nro_ini_bv = isset($record['first_bv']->number) ? $record['first_bv']->number : '';
-                                    $nro_fin_bv = isset($record['last_bv']->number) ? $record['last_bv']->number : '';
-                                    $anulates_voided_bv =
-                                        count($record['anulates_voided_bv']) > 0
-                                            ? join(',', $record['anulates_voided_bv'])
-                                            : '';
-                                    $rejected_bv =
-                                        count($record['rejected_bv']) > 0 ? join(',', $record['rejected_bv']) : '';
-                                    $notes_bv =  count($record['notes_bv']) > 0 ? join(',', $record['notes_bv']) : '';
-                                @endphp
-                                <tr>
-                                    <td class="celda">{{ $record['is_service'] == 1 ? 'Servicios' : 'Medicamentos' }}
-                                    </td>
-                                    <td class="celda">{{ $year }}</td>
-                                    <td class="celda">{{ $month }}</td>
-                                    <td class="celda">{{ $record['establishment'] }}</td>
-                                    <td class="celda">{{ $serie_bv }}</td>
-                                    <td class="celda">{{ $nro_ini_bv }}</td>
-                                    <td class="celda">{{ $nro_fin_bv }}</td>
-                                    <td class="celda">{{ $anulates_voided_bv }}</td>
-                                    <td class="celda">{{ $rejected_bv }}</td>
-                                    <td class="celda">{{ $notes_bv }}</td>
-                                    <td class=" celda_right">{{ $record['bv_total'] }}</td>
-
-                                </tr>
-                            @endif
-                            @if (!$record['has_ft_info'] && !$record['has_bv_info'])
-                                <tr>
-                                    <td class="celda">{{ $record['is_service'] == 1 ? 'Servicios' : 'Medicamentos' }}
-                                    </td>
-                                    <td class="celda">{{ $year }}</td>
-                                    <td class="celda">{{ $month }}</td>
-                                    <td class="celda">{{ $record['establishment'] }}</td>
-                                    <td class="celda">-</td>
-                                    <td class="celda">-</td>
-                                    <td class="celda">-</td>
-                                    <td class="celda"></td>
-                                    <td class="celda"></td>
-                                    <td class="celda"></td>
-                                    <td class=" celda_right">0</td>
-                                </tr>
-                            @endif
-                        @endforeach
-                        @if (count($records_medicine) > 0)
-                            <tr>
-                                <td class="celda" colspan="10">
-                                    <strong>
-                                        Total Medicamentos
-                                    </strong>
-                                </td>
-                                <td class="celda_right">
-                                    <strong>
-                                        {{ $total_medicine }}
-                                    </strong>
-                                </td>
-                            </tr>
-                        @endif
                         <tr>
                             <td class="celda" colspan="10">
+                                <strong>
+                                    Total Servicios
+                                </strong>
+
+                            </td>
+                            <td class="celda_right" style="border: 2px solid black;">
+                                <strong>
+                                    {{ $total_service }}
+                                </strong>
+                            </td>
+                        </tr>
+                        @endif
+                        @foreach ($records_medicine as $key => $record)
+                        @if ($record['has_ft_info'])
+                        @php
+                        $serie_ft = isset($record['first_ft']->series) ? $record['first_ft']->series : '';
+                        $nro_ini_ft = isset($record['first_ft']->number) ? $record['first_ft']->number : '';
+                        $nro_fin_ft = isset($record['last_ft']->number) ? $record['last_ft']->number : '';
+                        $anulates_voided_ft =
+                        count($record['anulates_voided_ft']) > 0
+                        ? join(',', $record['anulates_voided_ft'])
+                        : '';
+                        $rejected_ft =
+                        count($record['rejected_ft']) > 0 ? join(',', $record['rejected_ft']) : '';
+                        $notes_ft = count($record['notes_ft']) > 0 ? join(',', $record['notes_ft']) : '';
+                        @endphp
+                        <tr>
+                            <td class="celda" style="border: 2px solid black;">{{ $record['is_service'] == 1 ? 'Servicios' : 'Medicamentos' }}
+                            </td>
+                            <td class="celda" style="border: 2px solid black;">{{ $year }}</td>
+                            <td class="celda" style="border: 2px solid black;" >{{ $month }}</td>
+                            <td class="celda" style="border: 2px solid black;">{{ $record['establishment'] }}</td>
+                            <td class="celda" style="border: 2px solid black;">{{ $serie_ft }}</td>
+                            <td class="celda" style="border: 2px solid black;">{{ $nro_ini_ft }}</td>
+                            <td class="celda" style="border: 2px solid black;">{{ $nro_fin_ft }}</td>
+                            <td class="celda" style="border: 2px solid black;">{{ $anulates_voided_ft }}</td>
+                            <td class="celda" style="border: 2px solid black;">{{ $rejected_ft }}</td>
+                            <td class="celda" style="border: 2px solid black;">{{ $notes_ft }}</td>
+                            <td class=" celda_right" style="border: 2px solid black;">{{ $record['ft_total'] }}</td>
+                        </tr>
+                        @endif
+                        @if ($record['has_bv_info'])
+                        @php
+                        $serie_bv = isset($record['first_bv']->series) ? $record['first_bv']->series : '';
+                        $nro_ini_bv = isset($record['first_bv']->number) ? $record['first_bv']->number : '';
+                        $nro_fin_bv = isset($record['last_bv']->number) ? $record['last_bv']->number : '';
+                        $anulates_voided_bv =
+                        count($record['anulates_voided_bv']) > 0
+                        ? join(',', $record['anulates_voided_bv'])
+                        : '';
+                        $rejected_bv =
+                        count($record['rejected_bv']) > 0 ? join(',', $record['rejected_bv']) : '';
+                        $notes_bv = count($record['notes_bv']) > 0 ? join(',', $record['notes_bv']) : '';
+                        @endphp
+                        <tr>
+                            <td class="celda" style="border: 2px solid black;">{{ $record['is_service'] == 1 ? 'Servicios' : 'Medicamentos' }}
+                            </td>
+                            <td class="celda" style="border: 2px solid black;">{{ $year }}</td>
+                            <td class="celda" style="border: 2px solid black;">{{ $month }}</td>
+                            <td class="celda" style="border: 2px solid black;">{{ $record['establishment'] }}</td>
+                            <td class="celda" style="border: 2px solid black;">{{ $serie_bv }}</td>
+                            <td class="celda" style="border: 2px solid black;">{{ $nro_ini_bv }}</td>
+                            <td class="celda" style="border: 2px solid black;">{{ $nro_fin_bv }}</td>
+                            <td class="celda" style="border: 2px solid black;">{{ $anulates_voided_bv }}</td>
+                            <td class="celda" style="border: 2px solid black;">{{ $rejected_bv }}</td>
+                            <td class="celda" style="border: 2px solid black;">{{ $notes_bv }}</td>
+                            <td class=" celda_right" style="border: 2px solid black;">{{ $record['bv_total'] }}</td>
+
+                        </tr>
+                        @endif
+                        @if (!$record['has_ft_info'] && !$record['has_bv_info'])
+                        <tr>
+                            <td class="celda" style="border: 2px solid black;">{{ $record['is_service'] == 1 ? 'Servicios' : 'Medicamentos' }}
+                            </td>
+                            <td class="celda" style="border: 2px solid black;">{{ $year }}</td>
+                            <td class="celda" style="border: 2px solid black;">{{ $month }}</td>
+                            <td class="celda" style="border: 2px solid black;">{{ $record['establishment'] }}</td>
+                            <td class="celda" style="border: 2px solid black;">-</td>
+                            <td class="celda" style="border: 2px solid black;">-</td>
+                            <td class="celda" style="border: 2px solid black;">-</td>
+                            <td class="celda" style="border: 2px solid black;"></td>
+                            <td class="celda" style="border: 2px solid black;"></td>
+                            <td class="celda" style="border: 2px solid black;"></td>
+                            <td class=" celda_right" style="border: 2px solid black;">0</td>
+                        </tr>
+                        @endif
+                        @endforeach
+                        @if (count($records_medicine) > 0)
+                        <tr>
+                            <td class="celda" colspan="10" style="border: 2px solid black; background-color: #DCDCDC;">
+                                <strong>
+                                    Total Medicamentos
+                                </strong>
+                            </td>
+                            <td class="celda_right" style="border: 2px solid black;">
+                                <strong>
+                                    {{ $total_medicine }}
+                                </strong>
+                            </td>
+                        </tr>
+                        @endif
+                        <tr>
+                            <td class="celda" colspan="10" style="border: 2px solid black; background-color: #DCDCDC;">
                                 <strong>
                                     Total General
                                 </strong>
 
                             </td>
-                            <td class="celda_right">
+                            <td class="celda_right" style="border: 2px solid black;">
                                 <strong>
                                     {{ $total_service + $total_medicine }}
                                 </strong>
@@ -454,10 +447,11 @@
                 </table>
             </div>
         </div>
+    </table>
     @else
-        <div>
-            <p>No se encontraron registros.</p>
-        </div>
+    <div>
+        <p>No se encontraron registros.</p>
+    </div>
     @endif
 </body>
 

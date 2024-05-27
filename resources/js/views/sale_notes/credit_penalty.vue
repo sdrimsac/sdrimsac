@@ -1,92 +1,109 @@
 <template>
-    <div>
-        <div class="container-fluid p-l-0 p-r-0">
-            <div class="page-header">
-                <div class="row">
-                    <div class="col-sm-6">
-                        <h6>
-                            <span>Penalidades de nota de venta crédito</span>
-                        </h6>
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item">
-                                <a href="/dashboard">Dashbodard</a>
-                            </li>
-                            <li class="breadcrumb-item active">
-                                <span class="text-muted"
-                                    >Penalidades de nota de venta crédito</span
-                                >
-                            </li>
-                        </ol>
-                    </div>
+<div>
+    <div class="container-fluid p-l-0 p-r-0">
+        <div class="page-header">
+            <div class="row">
+                <div class="col-sm-6">
+                    <h6>
+                        <span>Penalidades en Nota de Venta (crédito)</span>
+                    </h6>
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a href="/dashboard">Dashbodard</a>
+                        </li>
+                        <li class="breadcrumb-item active">
+                            <span class="text-muted">Penalidades</span>
+                        </li>
+                    </ol>
                 </div>
             </div>
         </div>
-        <!-- Container-fluid starts-->
-        <div class="container-fluid p-l-0 p-r-0">
-            <div class="card mb-0">
-                <div class="card-body">
+    </div>
+
+    <!-- Penalidades en notas de venta (creditos) -->
+
+    <div class="row d-flex justify-content-end">
+        <div class="card mb-0">
+            <!-- <div class="card-header bg-primary mt-0">
+                <h4 class="my-0 text-white"><i class="fas fa-exclamation-triangle"></i>Penalidades</h4>
+            </div> -->
+            <div class="card-header bg-primary mt-0">
+                <h4 class="my-0 text-white">
+                    <i class="fas fa-exclamation-triangle mr-2"></i> Penalidades (En Crédito)
+                </h4>
+            </div>
+            <div class="card-body d-flex">
+                <div class="col-md-12">
                     <data-table :resource="resource">
-                        <tr slot="heading">
-                            <th>#</th>
-                            <th class="text-end">Tipo</th>
-                            <th class="text-center">Monto</th>
-                            <th></th>
+                        <tr slot="heading" class="bg-primary">
+                            <th class="text-white">#</th>
+                            <th class="text-white">Tipo de Crédito</th>
+                            <th class="text-white">Monto</th>
+                            <th class="text-end text-white">Acciones</th>
                         </tr>
 
-                        <tr></tr>
                         <tr slot-scope="{ index, row }">
+
                             <td>{{ index }}</td>
-                            <td class="text-end">{{ row.type }}</td>
-                            <td class="text-center">{{ row.amount_by_day }}</td>
-                            <td>
-                                <button
-                                    class="btn btn-primary"
-                                    @click="clickEdit(row.id,row.type)"
-                                >
-                                    Editar
+                            <td>{{ row.type }}</td>
+                            <td>{{ row.amount_by_day }}</td>
+                            <td class="text-end">
+                                <button class="btn btn-primary" @click="clickEdit(row.id, row.type)">
+                                    <i class="fas fa-edit"></i> Editar
                                 </button>
                             </td>
                         </tr>
                     </data-table>
                 </div>
             </div>
-            <el-dialog
-                :title="`Actualizar penalidad ${currentPenalty}`"
-                :visible.sync="showDialogPenaltyDetail"
-                width="30%"
-                append-to-body
-            >
-                <div class="row m-2">
-                    <label class="col-12">Monto</label>
-                    <el-input
-                        v-model="form.amount_by_day"
-                        placeholder="Monto"
-                        class="col-12"
-                    ></el-input>
-                </div>
-                <span slot="footer" class="dialog-footer">
-                    <el-button @click="showDialogPenaltyDetail = false"
-                        >Cancelar</el-button
-                    >
-                    <el-button
-                        type="primary"
-                        @click="updatePenalty"
-                        >Guardar</el-button
-                    >
-                </span>
-            </el-dialog>
+
         </div>
+
+        <!-- MODAL Actualizar penalidades-->
+        <el-dialog  :title="`Actualizar penalidad ${currentPenalty}`" 
+                    :visible.sync="showDialogPenaltyDetail" 
+                    :close-on-click-modal="false" 
+                    class="rounded-dialog"
+                    width="30%"
+        >
+            <template v-slot:title>
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-edit text-white mr-0"></i>
+                    <h4 class="text-white mb-2">   Actualizar penalidad {{ currentPenalty }}</h4>
+                </div>
+            </template>
+            <div class="row m-1">
+                <label class="col-12">Monto</label>
+                <el-input v-model="form.amount_by_day" placeholder="Monto" class="col-12"></el-input>
+            </div>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="showDialogPenaltyDetail = false">
+                    <i class="fas fa-times"></i> Cancelar
+                </el-button>
+                <el-button type="primary" @click="updatePenalty">
+                    <i class="fas fa-save"></i> Guardar
+                </el-button>
+            </span>
+        </el-dialog>
     </div>
+</div>
 </template>
+
+<!-- Estilos  -->
+
 <style>
-td {
-    color: #000;
+.el-dialog {
+    border-radius: 10px;
+    overflow: hidden;
 }
 </style>
+
 <script>
 import DataTable from "../../components/DataTable.vue";
 
-import { deletable } from "../../mixins/deletable";
+import {
+    deletable
+} from "../../mixins/deletable";
 export default {
     props: [
         "just_sale_notes",
@@ -211,7 +228,7 @@ export default {
                 })
                 .then(() => {});
         },
-        clickEdit(id,penalty) {
+        clickEdit(id, penalty) {
             this.currentPenalty = penalty;
             this.recordId = id;
             this.showDialogPenaltyDetail = true;

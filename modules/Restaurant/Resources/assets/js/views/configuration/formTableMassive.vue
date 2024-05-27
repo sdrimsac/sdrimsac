@@ -6,9 +6,11 @@
         @open="create"
         append-to-body
         :close-on-click-modal="false"
+        class="rounded-dialog"
     >
         <form autocomplete="off" @submit.prevent="submit">
             <div class="form-body">
+            <br>
                 <div class="row">
                     <div
                         v-if="type !== 'caja/tables' && type !== 'caja/rooms'"
@@ -319,6 +321,13 @@
         </form>
     </el-dialog>
 </template>
+
+<style>
+.el-dialog {
+    border-radius: 10px; 
+    overflow: hidden; 
+  }
+</style>
 
 <script>
 export default {

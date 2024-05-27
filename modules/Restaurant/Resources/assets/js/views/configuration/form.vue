@@ -6,6 +6,7 @@
         @open="create"
         append-to-body
         :close-on-click-modal="false"
+        class="rounded-dialog"
     >
         <form autocomplete="off" @submit.prevent="submit">
             <div class="form-body">
@@ -20,6 +21,7 @@
                         </button>
                     </div>
                 </div> -->
+                <br>
                 <div class="row">
                     <div
                         v-if="type !== 'caja/tables' && type !== 'caja/rooms'"
@@ -431,6 +433,13 @@
         </mini-bar>
     </el-dialog>
 </template>
+
+<style>
+.el-dialog {
+    border-radius: 10px; 
+    overflow: hidden; 
+  }
+</style>
 
 <script>
 import MiniBar from "./minibar.vue";

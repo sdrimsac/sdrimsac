@@ -5,6 +5,8 @@
     @close="close"
     @open="create"
     class="dialog-import"
+    :close-on-click-modal="false" 
+
   >
     <form autocomplete="off" @submit.prevent="submit">
       <div class="form-body">
@@ -28,8 +30,8 @@
         </div>
       </div>
       <div class="form-actions text-end pt-2 pb-2">
-        <el-button @click.prevent="close()">Cancelar</el-button>
-        <el-button type="primary" native-type="submit" :loading="loading_submit">Procesar</el-button>
+        <el-button icon="fas fa-times fa-lg" @click.prevent="close()"> Cancelar</el-button>
+        <el-button icon="fas fa-sync-alt fa-lg" type="primary" native-type="submit" :loading="loading_submit"> Procesar</el-button>
       </div>
     </form>
   </el-dialog>

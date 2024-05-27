@@ -176,7 +176,7 @@
                                                 class="time font-weight-light"
                                             >
                                                 <span
-                                                    class="text-muted lead-font-weight-700"
+                                                    class="lead-font-weight-700"
                                                 >
                                                     S/
                                                     {{ data.price }}</span

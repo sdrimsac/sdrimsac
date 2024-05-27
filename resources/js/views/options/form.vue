@@ -1,51 +1,33 @@
 <template>
+<div>
     <div class="card">
         <div class="card-header bg-primary">
-            <h6 class="my-0 text-white">Otras Operaciones</h6>
+            <h6 class="my-0 text-white">Configuraciones creditos</h6>
         </div>
-        <div class="card-body">
-            <div class="form-body">
-                <div class="row">
-                    <div class="col-md-6 m-1">
-                        <el-button
-                            type="primary"
-                            native-type="submit"
-                            @click="deleteDocuments"
-                            :loading="loading_submit"
-                            >Eliminar documentos de prueba</el-button
-                        >
-                    </div>
-                    <div class="col-md-5 m-1">
-                        <el-button
-                            type="primary"
-                            @click="deleteItems"
-                            native-type="submit"
-                            :loading="loading_submitI"
-                            >Eliminar los productos</el-button
-                        >
-                    </div>
-                </div>
-            </div>
-            <!-- <br />
-            <div class="col-md-12">
-                <el-button
-                    type="primary"
-                    native-type="submit"
-                    @click="sendItemWarehouse"
-                    >Mandar stock a almacen 1</el-button
-                >
-            </div> -->
-            <!--<form autocomplete="off" @submit.prevent="consultVoided">
+        <div class="card-body pt-0 pb-5">
+            <form autocomplete="off">
                 <div class="form-body">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <el-button type="primary" native-type="submit" :loading="loading_submit_voided">Consultar documentos anulados</el-button>
+                    <el-tabs type="border-card">
+                        <div class="row">
+                            <div class="col-md-6 mt-4">
+                                <div class="form-group">
+                                    <el-button type="primary" native-type="submit" @click="deleteDocuments" :loading="loading_submit">Eliminar documentos
+                                        <span>de prueba</span>
+                                    </el-button>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mt-4">
+                                <div class="form-group">
+                                    <el-button type="primary" @click="deleteItems" native-type="submit" :loading="loading_submitI">Eliminar los productos</el-button>
+                                </div>
+                            </div>
                         </div>
-                    </div>
+                    </el-tabs>
                 </div>
-            </form> -->
+            </form>
         </div>
     </div>
+</div>
 </template>
 
 <script>
@@ -53,7 +35,7 @@ export default {
     data() {
         return {
             loading_submit: false,
-            loading_submitI: false ,
+            loading_submitI: false,
             resource: "options",
             errors: {},
             form: {},
@@ -65,8 +47,7 @@ export default {
             let confirm = await this.$confirm(
                 `El stock de los productos en el almacén que no coincidan con el stock general del producto
                         se igualarán o se crearán en el almacén si no existiesen `,
-                "Mensaje de Advertencia",
-                {
+                "Mensaje de Advertencia", {
                     confirmButtonText: "Continuar",
                     cancelButtonText: "Cancelar",
                     type: "warning"
@@ -77,7 +58,10 @@ export default {
                     "/caja/pos/update_items_warehouse"
                 );
                 if (response.status == 200) {
-                    const { updates, createds } = response.data;
+                    const {
+                        updates,
+                        createds
+                    } = response.data;
                     this.$toast.success(`
                     Actualizados:${updates} Creados:${createds}
                     `);
@@ -103,7 +87,7 @@ export default {
                     if (error.response.status === 422) {
                         this.errors = error.response.data.errors;
                     } else {
-                        
+
                         this.$toast.error(`${error.response.data.message}`);
                     }
                 })

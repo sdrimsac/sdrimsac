@@ -1,3 +1,4 @@
+<!-- Listado de Inventario -->
 <template>
     <div>
         <div class="container-fluid p-l-0 p-r-0">
@@ -16,7 +17,7 @@
                             </li>
                         </ol>
                     </div>
-                    <div class="col-6 text-end">
+                    <!-- <div class="col-6 text-end">
                         <button
                             type="button"
                             class="btn btn-success"
@@ -31,26 +32,49 @@
                         >
                             Salida
                         </button>
-                    </div>
+                    </div> -->
                 </div>
             </div>
         </div>
         <div class="container-fluid p-l-0 p-r-0">
             <div class="card mb-0">
                 <div class="card-header bg-primary">
-                    <h6 class="my-0 text-white">Listado de {{ title }}</h6>
+                    <h4 class="my-0 text-white">
+                        <i class="fas fa-clipboard-list"></i>
+                        <i class="fas fa-truck-loading"></i>
+                        Listado de {{ title }}</h4>
                 </div>
+                <div class="data-table-visible-columns">
+                        <el-button type="primary" 
+                                    class="btn btn-success button-margin" 
+                                    href="javascript:void(0)" 
+                                    @click.prevent="clickCreate()">
+                                    
+                                <i class="fa fa-arrow-circle-down fa-lg"></i>
+                               Ingreso
+                        </el-button>
+                </div> 
+                <div class="data-table-visible-columns">
+                        <el-button type="primary" 
+                                    class="" 
+                                    href="javascript:void(0)" 
+                                    @click.prevent="clickOutput()">
+                              <i class="fa fa-arrow-circle-up fa-lg"></i>
+                                Salida
+                        </el-button>
+                </div>
+
                 <div class="card-body">
                     <data-table :resource="resource" ref="dataTable">
-                        <tr slot="heading">
-                            <th class="text-center">#</th>
-                            <th class="text-left">Producto</th>
-                            <th class="text-left">Almacén</th>
-                            <th class="text-center">Stock</th>
-                            <th class="text-center">Stock real</th>
+                        <tr slot="heading" class="bg-primary">
+                            <th class="text-white text-center">#</th>
+                            <th class="text-white text-left">Producto</th>
+                            <th class="text-white text-left">Almacén</th>
+                            <th class="text-white text-center">Stock</th>
+                            <th class="text-white text-center">Stock real</th>
                         </tr>
 
-                        <tr></tr>
+                        <tr calss="text-white"></tr>
                         <tr slot-scope="{ index, row }">
                             <td class="text-center">{{ index }}</td>
                             <td class="text-left">
@@ -60,16 +84,12 @@
                                         row.series_enabled &&
                                             row.series.length != 0
                                     "
-                                >
-                                    <table class="table table-responsive ">
+                                    >
+                                    <table class="table table-responsive table-striped">
                                         <thead>
-                                            <tr>
-                                                <th>
-                                                    SERIE
-                                                </th>
-                                                <th>
-                                                    FECHA
-                                                </th>
+                                            <tr slot="heading" class="bg-primary">
+                                                <th class="text-white">SERIE</th>
+                                                <th class="text-white">FECHA</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -101,21 +121,13 @@
                                             row.color_size.length != 0
                                     "
                                 >
-                                    <table class="table table-responsive ">
+                                    <table class="table table-responsive table-striped ">
                                         <thead>
-                                            <tr>
-                                                <th>
-                                                    COLOR
-                                                </th>
-                                                <th>
-                                                    TALLA
-                                                </th>
-                                                <th>
-                                                    PRECIO
-                                                </th>
-                                                <th>
-                                                    STOCK
-                                                </th>
+                                            <tr slot="heading" class="bg-primary">
+                                                <th class="text-white">COLOR</th>
+                                                <th class="text-white">TALLA</th>
+                                                <th class="text-white">PRECIO</th>
+                                                <th class="text-white">STOCK</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -150,14 +162,16 @@
                             <td class="text-center">
                                 <div class="flex">
                                     <el-input
-                                        :disabled="
-                                            row.series_enabled ||
-                                                row.has_color_size
-                                        "
+                                        :disabled="row.series_enabled || row.has_color_size"
                                         size="mini"
                                         class="w-50"
                                         type="number"
                                         v-model="row.realStock"
+                                        :min="1"
+                                        :precision="2"
+                                        @keypress="onlyAllowNumbers"
+                                        controls-position="right"
+                                        
                                     >
                                         <el-button
                                             :disabled="
@@ -202,6 +216,12 @@
         ></inventories-remove>
     </div>
 </template>
+
+<style>
+    .button-margin {
+      margin-right: 100px; /* Ajusta este valor según sea necesario */
+    }
+  </style>
 
 <script>
 import DataTable from "../../../assets/components/DataTableValuedInventory";

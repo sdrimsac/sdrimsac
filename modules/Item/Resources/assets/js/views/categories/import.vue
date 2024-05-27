@@ -6,47 +6,38 @@
         append-to-body
     >
         <div class="row m-2">
-            <div
-                class="form-group text-center"
-                :class="{ 'has-danger': errors.file }"
-            >
-                <el-upload
-                    ref="upload"
-                    :headers="headers"
-                    action="/items/categories/import"
-                    :show-file-list="true"
-                    :auto-upload="false"
-                    :multiple="false"
-                    :on-error="errorUpload"
-                    :limit="1"
-                    :data="form"
-                    :on-success="successUpload"
-                >
-                    <el-button slot="trigger" type="primary"
-                        >Seleccione un archivo (xlsx)</el-button
+            <div class="form-group text-end" :class="{ 'has-danger': errors.file }">
+                    <el-upload
+                        ref="upload"
+                        :headers="headers"
+                        action="/items/categories/import"
+                        :show-file-list="true"
+                        :auto-upload="false"
+                        :multiple="false"
+                        :on-error="errorUpload"
+                        :limit="1"
+                        :data="form"
+                        :on-success="successUpload"
                     >
-                </el-upload>
-                <small
-                    class="form-control-feedback"
-                    v-if="errors.file"
-                    v-text="errors.file[0]"
-                ></small>
-            </div>
+                        <el-button slot="trigger" type="primary" icon="el-icon-upload" class="btn-lg">
+                            Seleccione un archivo (xlsx)
+                            <i class="el-icon-download el-icon--right"></i>
+                        </el-button>
+                    </el-upload>
+                    <small class="form-control-feedback" v-if="errors.file" v-text="errors.file[0]"></small>
+                </div>
+            
             <div class="col-md-12">
                 <a href="/formats/item_categories.xlsx" target="_new"
-                    >Descargar formato</a
+                    >Descargar formato (Excel)</a
                 >
             </div>
 
             <div class="form-actions text-right m-4">
-                <el-button @click.prevent="close()">Cancelar</el-button>
-                <el-button
-                    type="primary"
-                    :loading="loading_submit"
-                    @click.prevent="submit"
-                    >Procesar</el-button
-                >
+                <el-button @click.prevent="close()" icon="fas fa-times"> Cancelar</el-button>
+                <el-button type="primary" :loading="loading_submit" @click.prevent="submit" icon="el-icon-check"> Procesar</el-button>
             </div>
+ 
         </div>
     </el-dialog>
 </template>

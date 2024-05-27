@@ -1,7 +1,10 @@
 <template>
     <div class="card mb-0 pt-2 pt-md-0">
         <div class="card-header bg-primary">
-            <h6 class="my-0 text-white">Editar Compra</h6>
+            <h4 class="my-0 text-white">
+                <i class="fas fa-shopping-cart"></i>
+                <i class="fa fa-edit"></i>
+                Editar Compra</h4>
         </div>
         <div class="tab-content  p-3">
             <form autocomplete="off" @submit.prevent="submit">
@@ -14,9 +17,17 @@
                                     'has-danger': errors.document_type_id
                                 }"
                             >
-                                <label class="control-label"
-                                    >Tipo comprobante</label
-                                >
+                            <label class="control-label font-weight-bold"> 
+                                        <i class="fas fa-file-invoice"></i>
+                                        Tipo de Comprobante
+                                        <el-tooltip
+                                                    content="Campo Obligatorio"
+                                                >
+                                                <span class="text-danger">
+                                                    <i class="fas fa-exclamation-circle"></i> 
+                                                </span>
+                                                </el-tooltip>
+                                    </label>
                                 <el-select
                                     v-model="form.document_type_id"
                                     @change="changeDocumentType"
@@ -41,12 +52,18 @@
                                     class="form-group"
                                     :class="{ 'has-danger': errors.series }"
                                 >
-                                    <label class="control-label"
-                                        >Serie
-                                        <span class="text-danger"
-                                            >*</span
-                                        ></label
-                                    >
+                                <label class="control-label font-weight-bold"> 
+                                    <i class="fas fa-layer-group"></i>
+                                    Serie
+                                        <el-tooltip
+                                                    content="Campo Obligatorio"
+                                                >
+                                                <span class="text-danger">
+                                                    <i class="fas fa-exclamation-circle"></i> 
+                                                </span>
+                                                </el-tooltip>
+                                       
+                                    </label>
                                     <el-input
                                         v-model="form.series"
                                         :maxlength="4"
@@ -70,12 +87,18 @@
                                     class="form-group"
                                     :class="{ 'has-danger': errors.number }"
                                 >
-                                    <label class="control-label"
-                                        >Número
-                                        <span class="text-danger"
-                                            >*</span
-                                        ></label
-                                    >
+                                <label class="control-label font-weight-bold">
+                                    <i class="fas fa-list-ol"></i>
+                                    Número
+                                        <el-tooltip
+                                                    content="Campo Obligatorio"
+                                                >
+                                                <span class="text-danger">
+                                                    <i class="fas fa-exclamation-circle"></i>  
+                                                </span>
+                                                </el-tooltip>
+                                       
+                                    </label>
                                     <el-input v-model="form.number">
                                         <i
                                             slot="prefix"
@@ -97,11 +120,18 @@
                                     class="form-group"
                                     :class="{ 'has-danger': errors.series }"
                                 >
-                                    <label class="control-label"
-                                        >Serie Guia<span class="text-danger"
-                                            >*</span
-                                        ></label
-                                    >
+                                <label class="control-label font-weight-bold">
+                                    <i class="fas fa-layer-group"></i>
+                                     Serie Guía
+                                        <el-tooltip
+                                                    content="Campo Obligatorio"
+                                                >
+                                                <span class="text-danger">
+                                                    <i class="fas fa-exclamation-circle"></i> 
+                                                </span>
+                                                </el-tooltip>
+                                       
+                                    </label>
                                     <el-input
                                         v-model="form.series_guia"
                                         :maxlength="4"
@@ -125,11 +155,19 @@
                                     class="form-group"
                                     :class="{ 'has-danger': errors.number }"
                                 >
-                                    <label class="control-label"
-                                        >Número Guia<span class="text-danger"
-                                            >*</span
-                                        ></label
-                                    >
+
+                            
+                                <label class="control-label font-weight-bold">
+                                    <i class="fas fa-list-ol"></i>
+                                     Número Guía
+                                        <el-tooltip
+                                                    content="Campo Obligatorio"
+                                                >
+                                                <span class="text-danger">
+                                                    <i class="fas fa-exclamation-circle"></i> 
+                                                </span>
+                                                </el-tooltip>
+                                </label>
                                     <el-input v-model="form.number_guia">
                                         <i
                                             slot="prefix"
@@ -151,7 +189,9 @@
                                 class="form-group"
                                 :class="{ 'has-danger': errors.date_of_issue }"
                             >
-                                <label class="control-label">Fec Emisión</label>
+                            <label class="control-label">
+                                <i class="fas fa-calendar-check red-icon"></i>
+                                F. Emisión</label>
                                 <el-date-picker
                                     v-model="form.date_of_issue"
                                     type="date"
@@ -172,9 +212,9 @@
                                 class="form-group"
                                 :class="{ 'has-danger': errors.date_of_due }"
                             >
-                                <label class="control-label"
-                                    >Fec. Vencimiento</label
-                                >
+                            <label class="control-label">
+                                <i class="fas fa-calendar-check red-icon"></i>
+                                F. Vencimiento</label>
                                 <el-date-picker
                                     v-model="form.date_of_due"
                                     type="date"
@@ -195,16 +235,14 @@
                                 class="form-group"
                                 :class="{ 'has-danger': errors.supplier_id }"
                             >
-                                <label class="control-label">
-                                    Proveedor
-                                    <a
-                                        href="#"
-                                        @click.prevent="
+                            <label class="control-label">
+                                <i class="fas fa-user-cog red-icon"></i>
+                                <i class="fas fa-network-wired red-icon"></i>
+                                Proveedor
+                                <a href="#" @click.prevent="
                                             showDialogNewPerson = true
-                                        "
-                                        >[+ Nuevo]</a
-                                    >
-                                </label>
+                                        ">[+ Nuevo]</a>
+                            </label>
                                 <el-select
                                     v-model="form.supplier_id"
                                     filterable
@@ -245,7 +283,10 @@
                                     'has-danger': errors.currency_type_id
                                 }"
                             >
-                                <label class="control-label">Moneda</label>
+                            <label class="control-label">
+                                <i class="fas fa-coins red-icon"></i>
+                                Moneda
+                            </label>
                                 <el-select
                                     v-model="form.currency_type_id"
                                     @change="changeCurrencyType"
@@ -271,17 +312,14 @@
                                     'has-danger': errors.exchange_rate_sale
                                 }"
                             >
-                                <label class="control-label"
-                                    >Tipo de cambio
-                                    <el-tooltip
-                                        class="item"
-                                        effect="dark"
-                                        content="Tipo de cambio del día, extraído de SUNAT"
-                                        placement="top-end"
-                                    >
-                                        <i class="fa fa-info-circle"></i>
-                                    </el-tooltip>
-                                </label>
+                            <label class="control-label">
+                                
+                                <i class="fas fa-exchange-alt red-icon"></i>
+                                Tipo de cambio
+                                <el-tooltip class="item" effect="dark" content="Tipo de cambio del día, extraído de SUNAT" placement="top-end">
+                                    <i class="fa fa-info-circle"></i>
+                                </el-tooltip>
+                            </label>
                                 <el-input v-model="form.exchange_rate_sale">
                                     <i
                                         slot="prefix"
@@ -317,7 +355,7 @@
                                 ></small>
                             </div>
                         </div>
-                        <div class="col-md-8 mt-4">
+                        <!-- <div class="col-md-8 mt-4">
                             <div class="form-group">
                                 <el-checkbox
                                     v-model="form.has_client"
@@ -337,7 +375,7 @@
                                     compra?</el-checkbox
                                 >
                             </div>
-                        </div>
+                        </div> -->
 
                         <div class="col-lg-6 col-md-6" v-if="form.has_client">
                             <div class="form-group">
@@ -511,26 +549,26 @@
                     <div class="row" v-if="form.items.length > 0">
                         <div class="col-md-12">
                             <div class="table-responsive">
-                                <table class="table">
+                                <table class="table table-striped"">
                                     <thead>
-                                        <tr>
-                                            <th>#</th>
-                                            <th>Descripción</th>
-                                            <th>Almacén</th>
-                                            <th class="text-center">Unidad</th>
-                                            <th class="text-end">Cantidad</th>
-                                            <th class="text-end">
+                                        <tr slot="heading" class="bg-primary">
+                                            <th class="text-white">#</th>
+                                            <th class="text-white">Descripción</th>
+                                            <th class="text-white">Almacén</th>
+                                            <th class="text-white text-center">Unidad</th>
+                                            <th class="text-white text-end">Cantidad</th>
+                                            <th class="text-white text-end">
                                                 Costo Unitario
                                             </th>
                                             <th
-                                                class="text-end"
+                                                class="text-white text-end"
                                                 v-if="form.includes == false"
                                             >
                                                 IGV
                                             </th>
-                                            <th class="text-end">Descuento</th>
-                                            <th class="text-end">Cargo</th>
-                                            <th class="text-end">Total</th>
+                                            <th class="text-white text-end">Descuento</th>
+                                            <th class="text-white text-end">Cargo</th>
+                                            <th class="text-white text-end">Total</th>
                                             <th></th>
                                         </tr>
                                     </thead>
@@ -779,13 +817,14 @@
                     </div>
                 </div>
                 <div class="form-actions text-end pt-2 pb-2">
-                    <el-button @click.prevent="close()">Cancelar</el-button>
+                    <el-button icon="fas fa-times fa-lg" @click.prevent="close()"> Cancelar</el-button>
                     <el-button
                         type="primary"
+                        icon="fas fa-save fa-lg"
                         native-type="submit"
                         :loading="loading_submit"
                         v-if="form.items.length > 0 && !hide_button"
-                        >Guardar cambios</el-button
+                        > Actualizar Cambios</el-button
                     >
                 </div>
             </form>

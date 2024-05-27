@@ -34,45 +34,35 @@
                             </li>
                         </ol>
                     </div>
-                    <div
-                        class="col-12 col-md-6 d-flex align-items-start justify-content-end"
-                    >
-                        <!-- Contact Button Start -->
-
-                        <button
-                            type="button"
-                            class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto"
-                            @click.prevent="clickCreate()"
-                        >
-                            <i data-cs-icon="plus"></i>
-                            <span>Nuevo</span>
-                        </button>
-                        <!-- <button type="button" class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto" @click.prevent="clickImportSet()">
-                     <i class="fa fa-upload"></i>
-                    <span>Importar Productos compuestos</span>
-                    </button> -->
-                        <!-- Contact Button End -->
-                    </div>
+                    
                 </div>
             </div>
         </div>
         <div class="card mb-0">
-            <div class="card-header bg-secondary">
-                <h6 class="my-0 text-white">Productos compuestos</h6>
+            <div class="card-header bg-primary">
+                <h4 class="my-0 text-white">
+                    <i class="fas fa-boxes"></i>
+                    Listado de Productos compuestos</h4>
             </div>
+            <div class="data-table-visible-columns">
+                            <el-button type="primary" class="" href="javascript:void(0)" @click.prevent="clickCreate()">
+                                <i class="fas fa-plus-circle"></i>
+                                Nuevo
+                            </el-button>
+                    </div> 
             <div class="card-body">
                 <data-table ref="datatable" :resource="resource">
-                    <tr slot="heading" width="100%">
-                        <th>#</th>
-                        <th>Cód. Interno</th>
-                        <th>Unidad</th>
-                        <th>Nombre</th>
-                        <th>Descripción</th>
-                        <th>Cód. SUNAT</th>
+                    <tr slot="heading" class="bg-primary">
+                        <th class="text-white">#</th>
+                        <th class="text-white">Cód. Interno</th>
+                        <th class="text-white">Unidad</th>
+                        <th class="text-white">Nombre</th>
+                        <th class="text-white">Descripción</th>
+                        <!-- <th class="text-white">Cód. SUNAT</th> -->
                         <!-- <th  class="text-left">Stock</th> -->
-                        <th class="text-right">P.Unitario (Venta)</th>
-                        <th class="text-center">Tiene Igv</th>
-                        <th class="text-right">Acciones</th>
+                        <th class="text-white text-right">P.Unitario (Venta)</th>
+                        <th class="text-white text-center">Tiene Igv</th>
+                        <th class="text-white text-right">Acciones</th>
                     </tr>
 
                     <tr></tr>
@@ -82,39 +72,47 @@
                         <td>{{ row.unit_type_id }}</td>
                         <td>{{ row.description }}</td>
                         <td>{{ row.name }}</td>
-                        <td>{{ row.item_code }}</td>
+                        <!-- <td>{{ row.item_code }}</td> -->
                         <!-- <td>
                             <template v-if="typeUser=='seller' && row.unit_type_id !='ZZ'">{{ row.stock }}</template>
                             <template v-else-if="typeUser!='seller'&& row.unit_type_id !='ZZ'">
                                 <button type="button" class="btn waves-effect waves-light btn-xs btn-info" @click.prevent="clickWarehouseDetail(row.warehouses)"><i class="fa fa-search"></i></button>
                             </template>
-
                         </td> -->
                         <td class="text-right">{{ row.sale_unit_price }}</td>
                         <td class="text-center">
                             {{ row.has_igv_description }}
                         </td>
                         <td class="text-right">
-                            <template
-                                v-if="
-                                    typeUser === 'admin' ||
-                                        typeUser === 'superadmin'
-                                "
-                            >
-                                <button
-                                    type="button"
-                                    class="btn waves-effect waves-light btn-xs btn-info btn-sm"
-                                    @click.prevent="clickCreate(row.id)"
-                                >
-                                    Editar
+                            <template v-if=" typeUser === 'admin' || typeUser === 'superadmin'">
+                                <button class="btn p-0" 
+                                        type="button" 
+                                        data-bs-toggle="dropdown" 
+                                        aria-haspopup="true" 
+                                        aria-expanded="false">
+                                    <span   class="btn btn-primary dropdown-toggle" 
+                                            data-bs-toggle="tooltip" 
+                                            data-bs-placement="top"    
+                                            data-bs-delay="0" title="" 
+                                            data-bs-original-title="Item Count" 
+                                            aria-label="Item Count">Acciones
+                                    </span>
                                 </button>
-                                <button
-                                    type="button"
-                                    class="btn waves-effect waves-light btn-xs btn-danger btn-sm"
-                                    @click.prevent="clickDelete(row.id)"
-                                >
-                                    Eliminar
-                                </button>
+                                <div class="dropdown-menu dropdown-menu-end" style="">
+                                    <a  type="button" 
+                                        class="dropdown-item text-secondary" 
+                                        @click.prevent=" clickCreate(row.id)"> <i class="fa fa-edit"></i>
+                                         Editar
+                                    </a>
+
+                                    <a  type="button" 
+                                        class="dropdown-item text-danger" 
+                                        @click.prevent="clickDelete(row.id)"> <i class="fa fa-trash"></i> 
+                                         Eliminar
+                                    </a>
+                             
+                                </div>
+                               
                             </template>
                         </td>
                     </tr>

@@ -1,3 +1,4 @@
+<!-- Modulo de Cotizaciones -->
 <template>
     <div>
         <div class="container-fluid p-l-0 p-r-0">
@@ -41,75 +42,67 @@
         </div>
         <div class="container-fluid p-l-0 p-r-0">
             <div class="card mb-0">
+                <div class="card-header bg-primary">
+                    <h4 class="my-0 text-white">
+                        <i class="fas fa-file-alt"></i>
+                        Cotizaciones</h4>
+                </div>
+
                 <div class="data-table-visible-columns">
-                    <el-dropdown :hide-on-click="false">
-                        <el-button type="primary">
-                            Mostrar/Ocultar columnas<i
-                                class="el-icon-arrow-down el-icon--right"
-                            ></i>
-                        </el-button>
-                        <el-dropdown-menu slot="dropdown">
-                            <el-dropdown-item
-                                v-for="(column, index) in columns"
-                                :key="index"
-                            >
-                                <el-checkbox v-model="column.visible">{{
-                                    column.title
-                                }}</el-checkbox>
-                            </el-dropdown-item>
-                        </el-dropdown-menu>
-                    </el-dropdown>
+                    <a  :href="`/${resource}/create`"
+                        class="btn btn-outline-white btn-icon btn-icon-start w-100 w-md-auto">
+                        <i class="fas fa-file-alt fa-lg"></i>
+                        <i class="fa fa-plus"></i>
+                        <span>Nuevo</span>
+                    </a>
                 </div>
                 <div class="card-body">
-                    <data-table :resource="resource" :sellers="sellers">
-                        <tr slot="heading">
-                            <th>#</th>
-                            <th class="text-end">Acciones</th>
-                            <th class="text-center">Fecha Emisión</th>
-                            <th
-                                class="text-center"
-                                v-if="columns.delivery_date.visible"
-                            >
-                                Fecha Entrega
-                            </th>
-                            <th>Vendedor</th>
-                            <th>Cliente</th>
-                            <th>Estado</th>
-                            <th>Cotización</th>
-                            <th>Comprobantes</th>
-                            <th>Nota de venta</th>
-                            <th>Oportunidad Venta</th>
-                            <th v-if="columns.contract.visible">Contrato</th>
+                    <data-table :resource="resource"
+                    :sellers="sellers"
+                    >
+                        <tr slot="heading" class="bg-primary">
+                            <th class="text-white">#</th>
+                            <th class="text-white text-end">Acciones</th>
+                            <th class="text-white text-center">Fecha Emisión</th>
+                            <th class="text-white text-center" v-if="columns.delivery_date.visible">  Fecha Entrega</th>
+                            <th class="text-white">Vendedor</th>
+                            <th class="text-white">Cliente</th>
+                            <th class="text-white">Estado</th>
+                            <th class="text-white">Cotización</th>
+                            <th class="text-white">Comprobantes</th>
+                            <th class="text-white">Nota de venta</th>
+                            <th class="text-white">Oportunidad Venta</th>
+                            <th class="text-white" v-if="columns.contract.visible">Contrato</th>
                             <!-- <th>Estado</th> -->
-                            <th class="text-center">Moneda</th>
+                            <th class="text-white text-center">Moneda</th>
                             <th
-                                class="text-end"
+                                class="text-end text-white"
                                 v-if="columns.total_exportation.visible"
                             >
                                 T.Exportación
                             </th>
                             <th
-                                class="text-end"
+                                class="text-endtext-white"
                                 v-if="columns.total_free.visible"
                             >
                                 T.Gratuito
                             </th>
                             <th
-                                class="text-end"
+                                class="text-end text-white"
                                 v-if="columns.total_unaffected.visible"
                             >
                                 T.Inafecta
                             </th>
                             <th
-                                class="text-end"
+                                class="text-end text-white"
                                 v-if="columns.total_exonerated.visible"
                             >
                                 T.Exonerado
                             </th>
-                            <th class="text-end">T.Gravado</th>
-                            <th class="text-end">T.Igv</th>
-                            <th class="text-end">Total</th>
-                            <th class="text-center">PDF</th>
+                            <th class="text-end text-white">T.Gravado</th>
+                            <th class="text-end text-white">T.Igv</th>
+                            <th class="text-end text-white">Total</th>
+                            <th class="text-center text-white">PDF</th>
                         </tr>
 
                         <tr></tr>
@@ -217,7 +210,7 @@
                                     v-for="(document, i) in row.documents"
                                 >
                                     <label
-                                        :key="i"
+                                        ::key="i"
                                         v-text="document.number_full"
                                         class="d-block"
                                     ></label>
@@ -228,7 +221,7 @@
                                     v-for="(sale_note, i) in row.sale_notes"
                                 >
                                     <label
-                                        :key="i"
+                                        ::key="i"
                                         v-text="sale_note.identifier"
                                         class="d-block"
                                     ></label>

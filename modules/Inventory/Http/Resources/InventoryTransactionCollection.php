@@ -17,11 +17,14 @@ class InventoryTransactionCollection extends ResourceCollection
     public function toArray($request)
     {
         return $this->collection->transform(function ($row, $key) {
+
+            $color = $row->type == 'output' ? 'red' : 'green';
           
             return [
                 'id' => $row->id,
                 'name' => $row->name,
                 'type' => $row->type == 'output' ? 'Salida' : 'Entrada',
+                'color' => $color,
             ];
         });
     }

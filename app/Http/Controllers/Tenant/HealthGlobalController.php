@@ -49,7 +49,7 @@ class HealthGlobalController
                 'data' => $url,
             ];
         } else {
-            $pdf = PDF::loadView('tenant.health_global.report_excel', compact("records", "company", "month"))->setPaper('a4', 'landscape');
+            $pdf = PDF::loadView('tenant.health_global.report_pdf', compact("records", "company", "month"))->setPaper('a4', 'landscape');
             //  $pdf->stream('Listado_Clientes' . date('YmdHis') . '.pdf');
             //save the pdf in the storage
             //remove all files in the folder

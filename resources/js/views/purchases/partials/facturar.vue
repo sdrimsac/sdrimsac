@@ -1,10 +1,17 @@
+<!--Modal Facturar Compra -->
 <template>
-    <el-dialog :title="titleDialog" :visible="showFacturarDialog" @open="create" width="30%"
-               :close-on-click-modal="false"
-               :close-on-press-escape="false"
-               :show-close="false">
+    <el-dialog :title="titleDialog" 
+                :visible="showFacturarDialog" 
+                @open="create" width="30%"
+                :close-on-click-modal="false"
+                :close-on-press-escape="false"
+                 :show-close="false"
+                 class="rounded-dialog" >
+                
                 <form autocomplete="off" @submit.prevent="submit">
+                
                 <div class="form-body">
+                    <br>
                      <div class="row">
                          <div class="col-lg-12">
                             <div class="form-group" :class="{'has-danger': errors.document_type_id}">
@@ -26,7 +33,7 @@
                         </div>
                          <div class="col-lg-6">
                             <div class="form-group" :class="{'has-danger': errors.number}">
-                                <label class="control-label">Numero</label>
+                                <label class="control-label">Número</label>
                                  <el-input v-model="form.number"> <i slot="prefix" class="el-icon-edit-outline"></i></el-input>
  
                                 <small class="form-control-feedback" v-if="errors.number" v-text="errors.number[0]"></small>
@@ -38,13 +45,20 @@
 
         <span slot="footer" class="dialog-footer">
             <template>
-                 <el-button type="primary" @click="submit()">Guardar compra</el-button>
-                <el-button @click="clickClose">Cerrar</el-button>
+                 <el-button icon="fas fa-save fa-lg" type="primary" @click="submit()"> Guardar compra</el-button>
+                <el-button icon="fas fa-times fa-lg" @click="clickClose"> Cerrar</el-button>
             </template>
           
         </span>
     </el-dialog>
 </template>
+
+<style>
+.el-dialog {
+border-radius: 10px;
+overflow: hidden;
+}
+</style>
 
 <script>
 

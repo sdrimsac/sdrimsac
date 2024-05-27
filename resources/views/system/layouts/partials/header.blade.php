@@ -1,10 +1,10 @@
-<header class="header" style="left:0;">
+<header class="header" style="background: linear-gradient(90deg, rgba(9,9,121,1) 16%, rgba(0,116,255,1) 100%);">
     <div class="logo-container">
-        <a href="{{route('system.dashboard')}}" class="logo pt-2 pt-md-0">
+        <a href="{{route('system.dashboard')}}" class="logo">
             @if (file_exists(public_path('acorn/img/profile/store.png')))
-                <img class="uk-logo-inverse" width="100" height="auto" src="{{asset('acorn/img/profile/store.png')}}" alt="Logo"/>
+            <img class="img-fluid" width="120" height="auto" src="{{asset('acorn/img/profile/store.png')}}" alt="Logo" />
             @else
-                <i class="fa fa-circle fa-3x"></i>
+            <i class="fa fa-circle fa-3x"></i>
             @endif
         </a>
         <div class="d-md-none toggle-sidebar-left" data-toggle-class="sidebar-left-opened" data-target="html" data-fire-event="sidebar-left-opened">
@@ -18,15 +18,15 @@
             <a href="#" data-toggle="dropdown">
                 <figure class="profile-picture">
                     {{-- <img src="{{asset('img/%21logged-user.jpg')}}" alt="Joseph Doe" class="rounded-circle" data-lock-picture="img/%21logged-user.jpg" /> --}}
-                    <div class="border rounded-circle text-center" style="width: 25px;"><i class="fas fa-user"></i></div>
+                    <div class="border rounded-circle text-center bg-white" style="width: 25px;"><i class="fas fa-user"></i></div>
                 </figure>
                 <div class="profile-info" data-lock-name="{{ \Auth::getUser()->email }}" data-lock-email="{{ \Auth::getUser()->email }}">
-                    <span class="name">{{ \Auth::getUser()->name }}</span>
+                    <span class="name text-white">{{ \Auth::getUser()->name }}</span>
                     <span class="role">{{ \Auth::getUser()->role }}</span>
                 </div>
                 <i class="fa custom-caret"></i>
             </a>
-            <div class="dropdown-menu">
+            <div class="dropdown-menu" style="background: linear-gradient(90deg, rgba(9,9,121,1) 16%, rgba(0,116,255,1) 100%);">
                 <ul class="list-unstyled mb-0">
                     <li>
                         <a role="menuitem" href="{{ route('system.users.create') }}"><i class="fas fa-user"></i> Perfil</a>
@@ -41,5 +41,4 @@
             </div>
         </div>
     </div>
-    <!-- end: search & user box -->
 </header>

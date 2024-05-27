@@ -1,3 +1,5 @@
+<!-- Listado de Clientes 
+    Listado de Proveedores -->
 <template>
     <div>
         <div class="container-fluid p-l-0 p-r-0">
@@ -16,111 +18,55 @@
                             </li>
                         </ol>
                     </div>
-                    <div
-                        class="col-12 col-md-6 d-flex align-items-start justify-content-end"
-                    >
-                        <button
-                            type="button"
-                            class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto"
-                            style="margin-right: 5px;"
-                            @click.prevent="clickZones()"
-                        >
-                            <i class="icofont-location-pin"></i>
-                            <span>Zonas</span>
-                        </button>
-                        <!-- Contact Button Start -->
-                        <button
-                            type="button"
-                            class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto"
-                            @click.prevent="clickCreate()"
-                        >
-                            <i class="icofont-plus-circle"></i>
-                            <span>Nuevo</span>
-                        </button>
-                        <!-- Contact Button End -->
-
-                        <!-- Dropdown Button Start -->
-                        <div class="ms-1">
-                            <button
-                                type="button"
-                                class="btn btn-outline-primary btn-icon btn-icon-only"
-                                data-bs-offset="0,3"
-                                data-bs-toggle="dropdown"
-                                aria-haspopup="true"
-                                aria-expanded="false"
-                                data-submenu
-                            >
-                                <i data-cs-icon="more-horizontal"></i>
-                            </button>
-                            <div class="dropdown-menu dropdown-menu-end">
-                                <button
-                                    class="dropdown-item"
-                                    type="button"
-                                    @click.prevent="clickPrint()"
-                                >
-                                    <i class="icofont-printer"></i> Imprimir
-                                </button>
-                                <button
-                                    class="dropdown-item"
-                                    type="button"
-                                    @click.prevent="clickImport('excel')"
-                                >
-                                    <i class="icofont-upload-alt"></i> Importar
-                                </button>
-                            </div>
-                        </div>
-                        <!-- Dropdown Button End -->
-                    </div>
-                    <!-- <div class="col-sm-6">
-                  <div class="bookmark">
-                  <ul>
-                    <li  v-if="typeUser != 'integrator'">
-                          <el-tooltip class="item" effect="dark" content="Imprimir" placement="bottom-end">
-                            <a  href="javascript:void(0)" @click.prevent="clickPrint()" data-container="body" data-bs-toggle="popover" data-placement="top" data-original-title="Tables">
-                               <i data-feather="printer"></i>
-                            </a>
-                          </el-tooltip>
-                    </li>
-                    <li  v-if="typeUser != 'integrator'">
-                          <el-tooltip class="item" effect="dark" content="Importar" placement="bottom-end">
-                            <a  href="javascript:void(0)" @click.prevent="clickImport()" data-container="body" data-bs-toggle="popover" data-placement="top" data-original-title="Tables">
-                                <i data-feather="share"></i>
-                            </a>
-                          </el-tooltip>
-                    </li>
-                      <li  v-if="typeUser != 'integrator'">
-                          <el-tooltip class="item" effect="dark" content="Nuevo" placement="bottom-end">
-                            <a  href="javascript:void(0)" @click.prevent="clickCreate()" data-container="body" data-bs-toggle="popover" data-placement="top" data-original-title="Tables">
-                                <i data-feather="plus-circle"></i>
-                            </a>
-                          </el-tooltip>
-                    </li>
-                </ul>
-                </div>
-                </div> -->
                 </div>
             </div>
         </div>
         <div class="container-fluid p-l-0 p-r-0">
             <div class="card mb-0">
                 <div class="card-header bg-primary">
-                    <h6 class="my-0 text-white">Listado de {{ title }}</h6>
+                    <h4 class="my-0 text-white"><i class="fas fa-users"></i> Listado de {{ title }}</h4>
                 </div>
+
+                <div class="data-table-visible-columns">
+                        <el-button type="primary" 
+                                    class="" 
+                                    href="javascript:void(0)" 
+                                    @click.prevent="clickCreate()">
+                                    <i class="fas fa-users fa-lg"></i>
+                                    <i class="icofont-plus-circle"></i>
+                                Nuevo
+                        </el-button>
+                        <el-button type="primary" 
+                                    class="" 
+                                    href="javascript:void(0)" 
+                                    @click.prevent="clickZones()">
+                                    <i class="icofont-location-pin fa-lg"></i>
+                                Zonas
+                        </el-button>
+                        <el-button type="primary" 
+                                    class="" 
+                                    href="javascript:void(0)" 
+                                    @click.prevent="clickImport()">
+                                <i class="fa fa-upload"></i>
+                                Importar
+                        </el-button>
+                </div> 
                 <div class="card-body">
+                   
                     <data-table :resource="resource + `/${this.type}`">
-                        <tr slot="heading">
-                            <th>#</th>
-                            <th>Nombre</th>
-                            <th class="text-end">DNI/RUC</th>
-                            <th class="text-end">Zona</th>
-                            <th class="text-end">Telefonos</th>
-                            <th class="text-end">Acciones</th>
+                        <tr slot="heading" class="bg-primary">
+                            <th class="text-white">#</th>
+                            <th class="text-white">Nombre</th>
+                            <th class="text-end text-white">DNI/RUC</th>
+                            <th class="text-end text-white">Zona</th>
+                            <th class="text-end text-white">Telefonos</th>
+                            <th class="text-end text-white">Acciones</th>
                         </tr>
 
                         <tr></tr>
                         <tr
                             slot-scope="{ index, row }"
-                            :class="{ disable_color: !row.enabled }"
+                            :class="{ 'bg-primary': !row.enabled }"
                         >
                             <td>{{ index }}</td>
                             <td>{{ row.name }}</td>
@@ -128,7 +74,47 @@
                             <td class="text-end">{{ row.zone_description }}</td>
                             <td class="text-end">{{ row.telephone }}</td>
                             <td class="text-end">
-                                <template v-if="row.enabled">
+
+                                <!-- **** -->
+                                <button class="btn p-0" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <span class="btn btn-primary dropdown-toggle" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-delay="0" title="" data-bs-original-title="Item Count" aria-label="Item Count">Acciones</span>
+                                    </button>
+                                    
+                                    <div class="dropdown-menu dropdown-menu-end" style="">
+                                        <template v-if="row.enabled">
+                                            <a  type="button" 
+                                                class="dropdown-item text-secondary" 
+                                                @click.prevent=" clickCreate(row.id)"> 
+                                                <i class="fa fa-edit"></i> Editar
+                                            </a>
+                                        </template>
+
+                                        <template v-if="typeUser === 'admin' || typeUser === 'superadmin'">    
+                                            <a type="button" class="dropdown-item text-danger" @click.prevent="
+                                            clickDelete(row.id)"> <i class="fa fa-trash"></i> Eliminar
+                                            </a>
+                                        </template>
+
+                                    <a  type="button" 
+                                        class="dropdown-item text-warning" 
+                                        @click.prevent="clickDisable(row.id)" 
+                                        v-if="row.active"
+                                        >
+                                        Inhabilitar
+                                    </a>
+                                    <a  type="button" 
+                                        class="dropdown-item text-success" 
+                                        @click.prevent="clickEnable(row.id)" 
+                                        v-else
+                                        >
+                                        Habilitar
+                                    </a>
+                                    </div>
+
+                                    
+
+                                <!-- **** -->
+                                <!-- <template v-if="row.enabled">
                                     <button
                                         type="button"
                                         class="btn waves-effect waves-light btn-sm btn-info"
@@ -168,7 +154,7 @@
                                     >
                                         Habilitar
                                     </button>
-                                </template>
+                                </template> -->
                             </td>
                         </tr>
                     </data-table>

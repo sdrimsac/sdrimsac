@@ -1,4 +1,5 @@
 
+<!-- Salida de producto de Almacén -->
 <template>
     <el-dialog :title="titleDialog" :visible="showDialog" @close="close" @open="create">
         <form autocomplete="off" @submit.prevent="submit">

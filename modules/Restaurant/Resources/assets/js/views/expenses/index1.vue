@@ -1,7 +1,9 @@
 <template>
-    <div class="card">
+    <!-- <div class="card"> -->
+         <h4 class="my-0 text-white"><i class="fas fa-money-bill-alt"></i> Listado de cuentas bancarias</h4>
         <div class="card-header bg-primary">
-            <h6 class="my-0 text-white">Listado de cuentas bancarias</h6>
+           
+
         </div>
         <div class="card-body">
             <div class="table-responsive">
@@ -65,7 +67,7 @@
             :showDialog.sync="showDialog"
             :recordId="recordId"
         ></bank-accounts-form>
-    </div>
+    <!-- </div> -->
 </template>
 
 <script>

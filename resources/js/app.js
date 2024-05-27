@@ -355,7 +355,7 @@ const app = new Vue({
             ),
         "tenant-documents-index": () =>
             import(
-                /* webpackChunkName:"js/tenant-documents-index" */
+                /* webpackChunkName:"js/tenant-documents-index" */ 
                 "./views/documents/index.vue"
             ),
         "restaurant-documents-index": () =>

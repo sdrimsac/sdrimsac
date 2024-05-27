@@ -69,8 +69,8 @@
             </div>
         </div>
         <span slot="footer" class="dialog-footer">
-            <el-button @click="close">Cancelar</el-button>
-            <el-button type="primary" @click="addColorSize">Aceptar</el-button>
+            <el-button icon="fas fa-times" @click="close"> Cancelar</el-button>
+            <el-button icon="fas fa-save" type="primary" @click="addColorSize"> Aceptar</el-button>
         </span>
     </el-dialog>
 </template>

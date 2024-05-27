@@ -1,3 +1,4 @@
+<!-- Ajuste de Stock Productos Item -->
 <template>
     <el-dialog
         :title="titleDialog"
@@ -5,12 +6,17 @@
         append-to-body
         @close="close"
         @open="create"
+        class="rounded-dialog" 
+        :close-on-click-modal="false"
+       
     >
+    <br>
         <form autocomplete="off" @submit.prevent="submit">
             <div class="form-body">
                 <div class="row">
                     <div class="col-md-8">
                         <div class="form-group">
+                            <i class="fas fa-cube"></i>
                             <label class="control-label">Producto</label>
                             <el-input
                                 v-model="form.item_description"
@@ -21,7 +27,9 @@
                     <div class="col-md-4">
                         <div class="form-group">
                             <label class="control-label"
-                                >Stock en el sistema</label
+                                >
+                                 <i class="fas fa-clipboard-list"></i>
+                                 Stock en el sistema</label
                             >
                             <el-input
                                 v-model="form.quantity"
@@ -31,7 +39,9 @@
                     </div>
                     <div class="col-md-8">
                         <div class="form-group">
-                            <label class="control-label">Almacén</label>
+                            <label class="control-label">
+                                <i class="fas fa-warehouse"></i>
+                                Almacén</label>
                             <el-input
                                 v-model="form.warehouse_description"
                                 :readonly="true"
@@ -79,7 +89,9 @@
                     </div>
                     <div class="col-12" v-if="config && config.observation_translate">
                         <div class="form-group">
-                            <label class="control-label">Comentario</label>
+                            <label class="control-label">
+                                <i class="fas fa-comment"></i>
+                                Comentarios</label>
                             <el-input
                                 type="textarea"
                                 maxlength="191"
@@ -90,14 +102,19 @@
                 </div>
             </div>
             <div class="form-actions text-end mt-4">
-                <el-button @click.prevent="close()">Cancelar</el-button>
+                <el-button @click.prevent="close()">
+                    <i class="fas fa-times fa-lg"></i>
+                     Cancelar</el-button>
                 <el-button
                     type="primary"
                     native-type="submit"
                     :loading="loading_submit"
-                    >Aceptar</el-button
+                    > 
+                    <i class="fas fa-save fa-lg"></i>
+                     Aceptar</el-button
                 >
             </div>
+            <br>
         </form>
         <output-lots-form
             :showDialog.sync="showDialogLotsOutput"

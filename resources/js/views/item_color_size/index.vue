@@ -1,23 +1,6 @@
+<!-- Modulo de Colores y Tallas -->
 <template>
     <div>
-        <!-- <div class="page-header pr-0">
-            <h2><a href="/dashboard"><i class="fas fa-tachometer-alt"></i></a></h2>
-            <ol class="breadcrumbs">
-                <li class="active"><span>Productos</span></li>
-            </ol>
-            <div class="right-wrapper pull-right">
-                <div class="btn-group flex-wrap">
-                    <button type="button" class="btn btn-custom btn-sm  mt-2 mr-2 dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-upload"></i> Importar <span class="caret"></span></button>
-                    <div class="dropdown-menu" role="menu" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 42px, 0px);">
-                        <a class="dropdown-item text-1" href="#" @click.prevent="clickImportSet()">1. Productos compuestos</a>
-                        <a class="dropdown-item text-1" href="#" @click.prevent="clickImportSetIndividual()">2. Detalle productos compuestos</a>
-                    </div>
-                </div>
-                <template>
-                     <button type="button" class="btn btn-custom btn-sm  mt-2 mr-2" @click.prevent="clickCreate()"><i class="fa fa-plus-circle"></i> Nuevo</button>
-                </template>
-            </div>
-        </div> -->
         <div class="container-fluid p-l-0 p-r-0">
             <div class="page-header">
                 <div class="row">
@@ -35,43 +18,36 @@
                             </li>
                         </ol>
                     </div>
-                    <div
-                        class="col-12 col-md-6 d-flex align-items-start justify-content-end"
-                    >
-                        <!-- Contact Button Start -->
 
-                        <!-- <button
-                            type="button"
-                            class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto"
-                            @click.prevent="clickCreate()"
-                        >
-                            <i data-cs-icon="plus"></i>
-                            <span>Nuevo</span>
-                        </button> -->
-                        <button type="button" class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto" @click.prevent="clickImportColorSize()">
-                     <i class="fa fa-upload"></i>
-                    <span>Importar colores y  tallas</span>
-                    </button>
-                        <!-- Contact Button End -->
-                    </div>
                 </div>
             </div>
         </div>
         <div class="card mb-0">
-            <div class="card-header bg-secondary">
-                <h6 class="my-0 text-white">Colores & Tallas</h6>
+            <div class="card-header bg-primary">
+                <h4 class="my-0 text-white">
+                    <i class="fas fa-tshirt"></i>
+                    <i class="fas fa-palette"></i>
+                    Colores & Tallas</h4>
             </div>
+            <div class="data-table-visible-columns">
+                            <el-button  type="primary" 
+                                        class="btn btn-icon btn-icon-start w-100 w-md-auto" 
+                                        href="javascript:void(0)" @click.prevent="clickImportColorSize()">
+                                        <i class="fa fa-upload"></i>
+                                        Importar
+                            </el-button>
+            </div> 
             <div class="card-body">
-                <data-table ref="datatable" :resource="resource">
-                    <tr slot="heading" width="100%">
-                        <th>#</th>
-                        <th>Código</th>
-                        <th>Producto</th>
-                        <th>Color</th>
-                        <th>Talla</th>
-                        <th>Stock</th>
-
-                        <th class="text-right">Acciones</th>
+                <data-table class="table-striped" ref="datatable" :resource="resource">
+                    <tr slot="heading" width="100%" class="bg-primary">
+                        <th class="text-white">#</th>
+                        <th class="text-white">Código</th>
+                        <th class="text-white">Producto</th>
+                        <th class="text-white">Color</th>
+                        <th class="text-white">Talla</th>
+                        <th class="text-white">Stock</th>
+                        <th class="text-white">Precio</th>
+                        <th class="text-right text-white">Acciones</th>
                     </tr>
 
                     <tr></tr>
@@ -82,6 +58,7 @@
                         <td>{{ row.color }}</td>
                         <td>{{ row.size }}</td>
                         <td>{{ row.stock }}</td>
+                        <td>{{ row.price }}</td>
 
                         <td class="text-right">
                             <template
@@ -120,6 +97,14 @@
         </div>
     </div>
 </template>
+
+<style>
+
+.table-striped tr:nth-child(even) {
+background-color: #f2f2f2;
+}
+</style>
+
 <script>
 import ItemsForm from "./form.vue";
 import ImportColorSize from "./import.vue";

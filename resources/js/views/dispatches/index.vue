@@ -1,3 +1,4 @@
+<!-- Modulo de guias de remisión -->
 <template>
     <div>
         <div class="container-fluid p-l-0 p-r-0">
@@ -16,64 +17,40 @@
                             </li>
                         </ol>
                     </div>
-                    <div
-                        class="col-12 col-md-6 d-flex align-items-start justify-content-end"
-                    >
-                        <!-- Contact Button Start -->
-                        <button
-                            type="button"
-                            class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto"
-                            v-if="
-                                typeUser == 'admin' || typeUser == 'superadmin'
-                            "
-                            @click.prevent="clickNuevo()"
-                        >
-                            <i class="icofont-plus-circle"></i>
-                            <span>Nuevo</span>
-                        </button>
-                    </div>
+                    
                 </div>
             </div>
         </div>
-        <!-- <div class="page-header pr-0">
-            <h2>
-                <a href="/dashboard"><i class="fas fa-tachometer-alt"></i></a>
-            </h2>
-            <ol class="breadcrumbs">
-                <li class="active"><span>Guías de remisión</span></li>
-            </ol>
-            <div class="right-wrapper pull-right">
-                <a
-                    :href="`/${resource}/create`"
-                    class="btn btn-custom btn-sm  mt-2 mr-2"
-                    ><i class="fa fa-plus-circle"></i> Nuevo</a
-                >
-                <a
-                    href="#"
-                    @click.prevent="showModalGenerateCPE = true"
-                    class="btn btn-custom btn-sm  mt-2 mr-2"
-                    >Generar comprobante desde múltiples guías</a
-                >
-            </div>
-        </div> -->
+        
         <div class="card mb-0">
             <div class="card-header bg-primary rounded-top">
-                <h6 class="my-0  text-white">
-                    Listado de Guias de remisión
-                </h6>
+                <h4 class="my-0  text-white">
+                    <i class="fas fa-file-alt"></i>
+                    Listado de Guias de Remisión
+                </h4>
             </div>
+            <div class="data-table-visible-columns">
+                            <el-button  type="Primary"
+                                        class=""
+                                        v-if=" typeUser == 'admin' || typeUser == 'superadmin'"
+                                        @click.prevent="clickNuevo()">
+                                <i class="icofont-plus-circle"></i>
+                                <span>Nuevo</span>
+                            </el-button>
+            </div> 
             <div class="card-body">
+                
                 <data-table :resource="resource">
-                    <tr slot="heading">
-                        <th>#</th>
-                        <th class="text-center">Fecha Emisión</th>
-                        <th>Cliente</th>
-                        <th>Número</th>
-                        <th>Estado</th>
-                        <th class="text-center">Fecha Envío</th>
-                        <th class="text-center">N° Comprobante</th>
-                        <th class="text-center">Descargas</th>
-                        <th class="text-center">Acciones</th>
+                    <tr slot="heading" class="bg-primary">
+                        <th class="text-white">#</th>
+                        <th class="text-center text-white">Fecha Emisión</th>
+                        <th class="text-white">Cliente</th>
+                        <th class="text-white">Número</th>
+                        <th class="text-white">Estado</th>
+                        <th class="text-center text-white">Fecha Envío</th>
+                        <th class="text-center text-white">N° Comprobante</th>
+                        <th class="text-center text-white">Descargas</th>
+                        <th class="text-end text-white">Acciones</th>
                     </tr>
 
                     <tr></tr>

@@ -5,6 +5,7 @@
         append-to-body
         @close="close"
         @open="open"
+        class="rounded-dialog"
     >
         <div class="row m-2">
             <div class="col-md-8 col-lg-8 col-12">
@@ -101,6 +102,13 @@
         </div>
     </el-dialog>
 </template>
+
+<style>
+.el-dialog {
+    border-radius: 10px; 
+    overflow: hidden; 
+  }
+</style>
 
 <script>
 export default {

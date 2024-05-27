@@ -34,15 +34,15 @@
         <div class="container-fluid p-l-0 p-r-0">
             <div class="card mb-0">
                 <div class="card-header bg-primary">
-                    <h6 class="my-0 text-white">Listado de {{ title }}</h6>
+                    <h4 class="my-0 text-white"><i class="fas fa-retweet"></i> Listado de {{ title }}</h4>
                 </div>
                 <div class="card-body">
                     <data-table :resource="resource" @clickReport="clickReport">
-                        <tr slot="heading">
-                            <th>#</th>
-                            <th>Nombre</th>
-                            <th>Stock</th>
-                            <th class="text-end">Acciones</th>
+                        <tr slot="heading" class="bg-primary">
+                            <th class="text-white">#</th>
+                            <th class="text-white">Nombre</th>
+                            <th class="text-white">Stock</th>
+                            <th class="text-end text-white">Acciones</th>
                         </tr>
 
                         <tr></tr>

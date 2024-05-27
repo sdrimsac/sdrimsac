@@ -1,11 +1,12 @@
 <template>
-    <el-dialog :title="titleDialog" :visible="showDialog" @close="close">
+    <el-dialog :title="titleDialog" :visible="showDialog" @close="close" class="rounded-dialog">
         <form autocomplete="off" @submit.prevent="submit">
             <div class="form-body">
+            <br>
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group" :class="{'has-danger': errors.class}">
-                            <label class="control-label">Tarea</label>
+                            <label class="control-label fw-bold">Tarea</label>
                             <el-select v-model="form.class" dusk="class">
                                 <el-option v-for="option in commnads" :key="option.name" :value="option.class" :label="option.name"></el-option>
                             </el-select>
@@ -14,7 +15,7 @@
                     </div>
                     <div class="col-md-6">
                         <div class="form-group" :class="{'has-danger': errors.execution_time}">
-                            <label class="control-label w-100">Hora de ejecución</label>
+                            <label class="control-label w-100 fw-bold">Hora de ejecución</label>
                             <el-time-picker v-model="execution_time" format="HH:mm" placeholder="Seleccionar" dusk="execution_time" @change="setTime"></el-time-picker>
                             <small class="form-control-feedback" v-if="errors.execution_time" v-text="errors.execution_time[0]"></small>
                         </div>
@@ -35,6 +36,13 @@
         </form>
     </el-dialog>
 </template>
+
+<style>
+.el-dialog {
+    border-radius: 10px; 
+    overflow: hidden; 
+  }
+</style>
 
 <script>
     export default {

@@ -4,6 +4,9 @@
         :visible="showDialog"
         @close="close"
         @open="create"
+        :close-on-click-modal="false" 
+        class="rounded-dialog"
+
     >
         <form autocomplete="off" @submit.prevent="submit">
             <div class="form-body">
@@ -13,7 +16,9 @@
                             class="form-group"
                             :class="{ 'has-danger': errors.item_id }"
                         >
-                            <label class="control-label">Producto</label>
+                            <label class="control-label">
+                                
+                                Producto</label>
                             <el-select
                                 v-model="form.item_id"
                                 class="w-100"
@@ -219,6 +224,13 @@
         ></color-size>
     </el-dialog>
 </template>
+
+<style>
+.el-dialog {
+border-radius: 10px;
+overflow: hidden;
+}
+</style>
 
 <script>
 import InputLotsForm from "../../../../../../resources/js/views/items/partials/lots.vue";

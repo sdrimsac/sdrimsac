@@ -1,6 +1,7 @@
 <template>
     <el-dialog  :visible="showGenOrdenCompra" append-to-body @close="close"  width="60%"  @open="open"
         title="Generar orden de compra ">
+        <br>
         <div >
             <div class="container container table-responsive col-md-12" v-loading="loadingGenOrdenCom">
                 <table class="table table-hover table-striped table-condensed  table-responsive"   style="width:100%;     white-space: nowrap;">

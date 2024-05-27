@@ -1,85 +1,57 @@
 <template>
-    <el-dialog
-        :visible="showDialog"
-        @open="open"
-        @close="close"
-        append-to-body
-        :title="title"
-    >
-        <div class="row">
-             <div class="col-md-4">
-                <label for="document_type">Tipo de documento</label>
-                  <el-select
-                    v-model="form.document_type_id"
-                    :disabled="loading_submit"
-                >
-                    <el-option
-                        v-for="(item,idx) in document_types"
-                        :key="idx"
-                        :label="item.description"
-                        :value="item.id"
-                    ></el-option>
-                </el-select>
-            </div>
-            <div class="col-md-4">
-                <label for="document">Documento</label>
-                <el-input
-                    v-model="form.document"
-                    placeholder="Documento"
-                    :disabled="loading_submit"
-                    minlength="8"
-                >
-                    <el-button
-                        v-if="form.document_type_id == 1"
-                        @click="searchDocument"
-                        slot="prepend"
-                        icon="el-icon-search"
-                    ></el-button>
-                </el-input>
-            </div>
-            <div class="col-md-4">
-                <label for="name">Nombre</label>
-                <el-input
-                    v-model="form.name"
-                    placeholder="Nombre"
-                    :disabled="loading_submit"
-                ></el-input>
-            </div>
-
-            <div class="col-md-4">
-                <label for="establishment_id">Establecimiento</label>
-                <el-select
-                    v-model="form.establishment_id"
-                    placeholder="Establecimiento"
-                    :disabled="loading_submit"
-                >
-                    <el-option
-                        v-for="item in establishments"
-                        :key="item.id"
-                        :label="item.description"
-                        :value="item.id"
-                    ></el-option>
-                </el-select>
-            </div>
+<el-dialog :visible="showDialog" @open="open" @close="close" append-to-body :title="title" class="rounded-dialog" :close-on-click-modal="false">
+    <br>
+    <div class="row">
+        <div class="col-md-4">
+            <label for="document_type">
+                <i class="far fa-id-card"></i> Documento de identidad
+            </label>
+            <el-select v-model="form.document_type_id" :disabled="loading_submit">
+                <el-option v-for="(item,idx) in document_types" :key="idx" :label="item.description" :value="item.id"></el-option>
+            </el-select>
         </div>
-        <span slot="footer" class="dialog-footer">
-            <el-button @click="close" :disabled="loading_submit"
-                >Cancelar</el-button
-            >
-            <el-button
-                type="primary"
-                native-type="submit"
-                @click="submit"
-                :loading="loading_submit"
-                >Guardar</el-button
-            >
-        </span>
-    </el-dialog>
+        <div class="col-md-4">
+            <label for="document_number">
+                <i class="fas fa-list-ol"></i> Número de documento de identidad
+            </label>
+
+            <el-input v-model="form.document" placeholder="Documento" :disabled="loading_submit" minlength="8">
+                <el-button v-if="form.document_type_id == 1" @click="searchDocument" slot="prepend" icon="el-icon-search"></el-button>
+            </el-input>
+        </div>
+        <div class="col-md-4">
+            <label for="establishment_id">
+                <i class="fas fa-store"></i> Establecimiento
+            </label>
+            <el-select v-model="form.establishment_id" placeholder="Establecimiento" :disabled="loading_submit">
+                <el-option v-for="item in establishments" :key="item.id" :label="item.description" :value="item.id"></el-option>
+            </el-select>
+        </div>
+        <div class="col-md-12">
+            <label for="name">
+                <i class="fas fa-tag"></i> Nombre
+            </label>
+            <el-input v-model="form.name" placeholder="Nombre" :disabled="loading_submit"></el-input>
+        </div>
+
+    </div>
+    <span slot="footer" class="dialog-footer">
+        <el-button icon="fas fa-times" @click="close" :disabled="loading_submit"> Cancelar</el-button>
+        <el-button icon="fas fa-save" type="primary" native-type="submit" @click="submit" :loading="loading_submit"> Guardar</el-button>
+    </span>
+</el-dialog>
 </template>
+
+<style>
+.el-dialog {
+    border-radius: 10px;
+    overflow: hidden;
+}
+</style>
 
 <script>
 export default {
-    props: ["showDialog", "recordId", "establishments","document_types"],
+    props: ["showDialog", "recordId", "establishments", "document_types"],
     data() {
         return {
             title: null,
@@ -88,8 +60,8 @@ export default {
             form: {},
             loading_submit: false,
             loading_submitI: false,
-            timer:null,
-       
+            timer: null,
+
         };
     },
     methods: {
@@ -101,12 +73,12 @@ export default {
                 document_type_id: null,
             };
         },
-      async  searchDocument(){
-             if (this.form.document === "") {
+        async searchDocument() {
+            if (this.form.document === "") {
                 this.$message.error("Ingresar el número a buscar");
                 return;
             }
-            if(this.form.document.length != 8){
+            if (this.form.document.length != 8) {
                 this.$message.error("El número debe tener 8 dígitos");
                 return;
             }
@@ -120,17 +92,16 @@ export default {
 
                 this.form.name = data.nombre_completo;
 
-
             } else {
                 this.$message.error(response.data.message);
             }
         },
         open() {
             console.log(this.recordId);
-            if(this.recordId){
+            if (this.recordId) {
                 this.title = "Editar vendedor";
                 this.getRecord(this.recordId);
-            }else{
+            } else {
                 this.title = "Crear vendedor";
                 this.initForm();
             }
@@ -142,7 +113,7 @@ export default {
         close() {
             this.$emit('update:showDialog', false);
         },
-        async submit(){   
+        async submit() {
             const response = await this.$http.post(`/${this.resource}`, this.form);
             if (response.data.success) {
                 this.$message.success(response.data.message);

@@ -6,7 +6,7 @@
         <div class="card mb-0">
                 <div class="card-body">
                     <data-table :resource="resource" :applyCustomer="true">
-                        <tr slot="heading">
+                        <tr slot="heading" class="bg-primary">
                             <th>#</th>
                             <th class="text-center">Fecha Emisión</th>
                             <th class="">Usuario/Vendedor</th>
@@ -25,7 +25,7 @@
                             <th class="text-end">T.Gravado</th>
                             <th class="text-end">T.Igv</th>
                             <th class="text-end">Total</th>
-                        <tr>
+                        </tr>
                         <tr slot-scope="{ index, row }">
                             <td>{{ index }}</td>  
                             <td>{{row.date_of_issue}}</td>
@@ -35,12 +35,12 @@
                             <td>{{row.identifier}}</td>
                             <td>
                                 <template v-for="(doc,i) in row.documents">                                
-                                    <label class="d-block"  :key="i">{{doc.number_full}}</label>
+                                    <label class="d-block"  ::key="i">{{doc.number_full}}</label>
                                 </template>
                             </td>
                             <td>
                                 <template v-for="(s_note,i) in row.sale_notes">                                
-                                    <label class="d-block"  :key="i">{{s_note.identifier}}</label>
+                                    <label class="d-block"  ::key="i">{{s_note.identifier}}</label>
                                 </template>
                             </td>
                             <td>{{row.sale_opportunity_number_full}}</td>

@@ -7,7 +7,9 @@
         @open="open"
         v-loading="loading"
         :title="title"
+        class="rounded-dialog"
     >
+        <br>
         <div class="row m-2">
             <div class="col-12">
                 <label for="name">Nombres</label>
@@ -122,6 +124,13 @@
         </span>
     </el-dialog>
 </template>
+
+<style>
+.el-dialog {
+    border-radius: 10px; 
+    overflow: hidden; 
+  }
+</style>
 
 <script>
 export default {

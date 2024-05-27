@@ -16,9 +16,18 @@
                             </li>
                         </ol>
                     </div>
-                    <div
-                        class="col-12 col-md-6 d-flex align-items-start justify-content-end"
-                    >
+                   
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid p-l-0 p-r-0">
+            <div class="card mb-0">
+                <div class="card-header bg-primary">
+                    <h4 class="my-0 text-white"><i class="fas fa-layer-group"></i> Listado de {{ title }}</h4>
+
+                </div>
+                <div class="card-body">
+                    <div class="d-flex align-items-start justify-content-end">
                         <!-- Contact Button Start -->
                         <button
                             type="button"
@@ -29,48 +38,7 @@
                             <span>Nuevo</span>
                         </button>
                         <!-- Contact Button End -->
-
-                        <!-- Dropdown Button Start -->
-                        <div class="ms-1">
-                            <button
-                                type="button"
-                                class="btn btn-outline-primary btn-icon btn-icon-only"
-                                data-bs-offset="0,3"
-                                data-bs-toggle="dropdown"
-                                aria-haspopup="true"
-                                aria-expanded="false"
-                                data-submenu
-                            >
-                                <i data-cs-icon="more-horizontal"></i>
-                            </button>
-                            <div class="dropdown-menu dropdown-menu-end">
-                                <button
-                                    class="dropdown-item"
-                                    type="button"
-                                    @click.prevent="clickPrint()"
-                                >
-                                    <i class="icofont-printer"></i> Imprimir
-                                </button>
-                                <button
-                                    class="dropdown-item"
-                                    type="button"
-                                    @click.prevent="clickImport('excel')"
-                                >
-                                    <i class="icofont-upload-alt"></i> Importar
-                                </button>
-                            </div>
-                        </div>
-                        <!-- Dropdown Button End -->
                     </div>
-                </div>
-            </div>
-        </div>
-        <div class="container-fluid p-l-0 p-r-0">
-            <div class="card mb-0">
-                <div class="card-header bg-primary">
-                    <h6 class="my-0 text-white">Listado de {{ title }}</h6>
-                </div>
-                <div class="card-body">
                     <data-table :resource="resource">
                         <tr slot="heading">
                             <th>#</th>
@@ -103,31 +71,22 @@
                             </td>
                         
                             <td class="text-end">
-                                <template v-if="row.active">
-                                    <button
-                                        type="button"
-                                        class="btn waves-effect waves-light btn-sm btn-info"
-                                        @click.prevent="clickCreate(row.id)"
-                                    >
-                                        Editar
-                                    </button>
-                                </template>
-
-                                <template
+                                <button class="btn p-0" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <span class="btn btn-primary dropdown-toggle" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-delay="0" title="" data-bs-original-title="Item Count" aria-label="Item Count">Acciones</span>
+                                </button>
+                                <div class="dropdown-menu dropdown-menu-end" style="">
+                                    <template v-if="row.active">
+                                    <a type="button" class="dropdown-item text-secondary" @click.prevent=" clickCreate(row.id)"> <i class="fa fa-edit"></i> Editar
+                                    </a>
+                                    </template>
+                                    <template
                                     v-if="
                                         typeUser === 'admin' ||
-                                            typeUser === 'superadmin'
-                                    "
-                                >
-                                    <button
-                                        type="button"
-                                        class="btn waves-effect waves-light btn-sm btn-danger"
-                                        @click.prevent="clickDelete(row.id)"
-                                    >
-                                        Eliminar
-                                    </button>
-
+                                            typeUser === 'superadmin'">
+                                    <a type="button" class="dropdown-item text-danger" @click.prevent=" clickDelete(row.id)"> <i class="fa fa-trash"></i> Eliminar
+                                    </a>
                                 </template>
+                                </div>
                             </td>
                         </tr>
                     </data-table>

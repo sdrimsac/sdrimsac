@@ -1,259 +1,184 @@
 <template>
-    <div>
-        <div class="container-fluid p-l-0 p-r-0">
-            <div class="page-header">
-                <div class="row">
-                    <div class="col-sm-6">
-                        <h6>
-                            <span>{{ title }}</span>
-                        </h6>
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item">
-                                <a href="/dashboard">{{ title }}</a>
-                            </li>
-                            <li class="breadcrumb-item active">
-                                <!-- <span class="text-muted">Marcas</span> -->
-                            </li>
-                        </ol>
-                    </div>
-                    <div
-                        class="col-12 col-md-6 d-flex align-items-start justify-content-end"
-                    >
-                        <button
-                            v-if="resource == 'caja/rooms'"
-                            type="button"
-                            class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto m-l-5"
-                            @click.prevent="clickSeeInsumos"
-                        >
-                            <i class="icofont-plus-circle"></i>
-                            <span>Insumos</span>
-                        </button>
-                        <button
-                            v-if="resource == 'caja/rooms'"
-                            type="button"
-                            class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto m-l-5"
-                            @click.prevent="clickSeePromotions"
-                        >
-                            <i class="icofont-plus-circle"></i>
-                            <span>Promociones</span>
-                        </button>
-                        <button
-                            v-if="resource == 'caja/rooms'"
-                            type="button"
-                            class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto m-l-5"
-                            @click.prevent="clickSeeTypes()"
-                        >
-                            <i class="icofont-plus-circle"></i>
-                            <span>Tipo de habitaciones</span>
-                        </button>
-                        <button
-                            v-if="resource == 'caja/rooms'"
-                            type="button"
-                            class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto m-l-5"
-                            @click.prevent="clickSeeTowers()"
-                        >
-                            <i class="icofont-plus-circle"></i>
-                            <span>Torres</span>
-                        </button>
-                        <button
-                            v-if="resource == 'caja/rooms'"
-                            type="button"
-                            class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto m-l-5"
-                            @click.prevent="clickSeeFloors()"
-                        >
-                            <i class="icofont-plus-circle"></i>
-                            <span>Pisos</span>
-                        </button>
-                        <!-- Contact Button Start -->
-                        <button
-                            type="button"
-                            class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto"
-                            @click.prevent="clickCreate()"
-                        >
-                            <i class="icofont-plus-circle"></i>
-                            <span>Nuevo</span>
-                        </button>
-                        <button
-                            v-if="
+<div>
+    <div class="container-fluid p-l-0 p-r-0">
+        <div class="page-header">
+            <div class="row">
+                <div class="col-sm-6">
+                    <h6>
+                        <span>{{ title }}</span>
+                    </h6>
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a href="/dashboard">{{ title }}</a>
+                        </li>
+                        <li class="breadcrumb-item active">
+                            <!-- <span class="text-muted">Marcas</span> -->
+                        </li>
+                    </ol>
+                </div>
+                <div class="col-12 col-md-6 d-flex align-items-start justify-content-end">
+                    <button v-if="resource == 'caja/rooms'" type="button" class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto m-l-5" @click.prevent="clickSeeInsumos">
+                        <i class="icofont-plus-circle"></i>
+                        <span>Insumos</span>
+                    </button>
+                    <button v-if="resource == 'caja/rooms'" type="button" class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto m-l-5" @click.prevent="clickSeePromotions">
+                        <i class="icofont-plus-circle"></i>
+                        <span>Promociones</span>
+                    </button>
+                    <button v-if="resource == 'caja/rooms'" type="button" class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto m-l-5" @click.prevent="clickSeeTypes()">
+                        <i class="icofont-plus-circle"></i>
+                        <span>Tipo de habitaciones</span>
+                    </button>
+                    <button v-if="resource == 'caja/rooms'" type="button" class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto m-l-5" @click.prevent="clickSeeTowers()">
+                        <i class="icofont-plus-circle"></i>
+                        <span>Torres</span>
+                    </button>
+                    <button v-if="resource == 'caja/rooms'" type="button" class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto m-l-5" @click.prevent="clickSeeFloors()">
+                        <i class="icofont-plus-circle"></i>
+                        <span>Pisos</span>
+                    </button>
+                    <!-- Contact Button Start -->
+                    <button type="button" class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto" @click.prevent="clickCreate()">
+                        <i class="icofont-plus-circle"></i>
+                        <span>Nuevo</span>
+                    </button>
+                    <button v-if="
                                 resource == 'caja/tables' ||
                                     resource == 'caja/rooms'
-                            "
-                            type="button"
-                            class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto m-l-5"
-                            @click.prevent="clickCreateMassive()"
-                        >
-                            <i class="icofont-plus-circle"></i>
-                            <span>Crear masivamente</span>
-                        </button>
-                        <!-- Contact Button End -->
-                    </div>
+                            " type="button" class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto m-l-5" @click.prevent="clickCreateMassive()">
+                        <i class="icofont-plus-circle"></i>
+                        <span>Crear masivamente</span>
+                    </button>
+                    <!-- Contact Button End -->
                 </div>
             </div>
         </div>
-        <div class="container-fluid p-l-0 p-r-0">
-            <div class="card mb-0">
-                <div class="card-header bg-primary">
-                    <h6 class="my-0 text-white">Listado de {{ title }}</h6>
-                </div>
-                <div class="card-body">
-                    <data-table :resource="resource">
-                        <tr slot="heading">
-                            <th>#</th>
-                            <th
-                                v-if="
+    </div>
+    <div class="container-fluid p-l-0 p-r-0">
+        <div class="card mb-0">
+            <div class="card-header bg-primary">
+                <h6 class="my-0 text-white">Listado de {{ title }}</h6>
+            </div>
+            <div class="card-body">
+                <data-table :resource="resource">
+                    <tr slot="heading">
+                        <th>#</th>
+                        <th v-if="
                                     type != 'caja/tables' &&
                                         type != 'caja/rooms'
-                                "
-                            >
-                                Descripción
-                            </th>
-                            <th
-                                v-if="
+                                ">
+                            Descripción
+                        </th>
+                        <th v-if="
                                     type == 'caja/tables' ||
                                         type == 'caja/rooms'
-                                "
-                            >
-                                Número
-                            </th>
-                            <th v-if="type == 'caja/rooms'">
-                                Tipo
-                            </th>
-                            <th
-                                v-if="
+                                ">
+                            Número
+                        </th>
+                        <th v-if="type == 'caja/rooms'">
+                            Tipo
+                        </th>
+                        <th v-if="
                                     type == 'caja/tables' ||
                                         type == 'caja/rooms'
-                                "
-                            >
-                                Área
-                            </th>
-                            <th
-                                v-if="
+                                ">
+                            Área
+                        </th>
+                        <th v-if="
                                     type == 'caja/tables' ||
                                         type == 'caja/rooms'
-                                "
-                            >
-                                Establecimiento
-                            </th>
-                            <th v-if="type == 'caja/rooms'">
-                                Torre
-                            </th>
-                            <th v-if="type == 'caja/rooms'">
-                                Piso
-                            </th>
-                            <th v-if="type == 'caja/areas'">
-                                Impresora
-                            </th>
-                            <th v-if="type == 'caja/areas'">
-                                Forzar impresión
-                            </th>
-                            <th v-if="type == 'caja/rooms'">
-                                Precio
-                            </th>
-                            <th v-if="type == 'caja/rooms'">
-                                Incluye
-                            </th>
-                            <th class="text-end">Acciones</th>
-                        </tr>
+                                ">
+                            Establecimiento
+                        </th>
+                        <th v-if="type == 'caja/rooms'">
+                            Torre
+                        </th>
+                        <th v-if="type == 'caja/rooms'">
+                            Piso
+                        </th>
+                        <th v-if="type == 'caja/areas'">
+                            Impresora
+                        </th>
+                        <th v-if="type == 'caja/areas'">
+                            Forzar impresión
+                        </th>
+                        <th v-if="type == 'caja/rooms'">
+                            Precio
+                        </th>
+                        <th v-if="type == 'caja/rooms'">
+                            Incluye
+                        </th>
+                        <th class="text-end">Acciones</th>
+                    </tr>
 
-                        <tr></tr>
-                        <tr slot-scope="{ index, row }">
-                            <td>{{ index }}</td>
-                            <td
-                                v-if="
+                    <tr></tr>
+                    <tr slot-scope="{ index, row }">
+                        <td>{{ index }}</td>
+                        <td v-if="
                                     type != 'caja/tables' &&
                                         type != 'caja/rooms'
-                                "
-                            >
-                                {{ row.description }}
-                            </td>
-                            <td
-                                v-if="
+                                ">
+                            {{ row.description }}
+                        </td>
+                        <td v-if="
                                     type == 'caja/tables' ||
                                         type == 'caja/rooms'
-                                "
-                            >
-                                {{ row.number }}
-                            </td>
-                            <td v-if="type == 'caja/rooms'">
-                                {{ row.type }}
-                            </td>
-                            <td
-                                v-if="
+                                ">
+                            {{ row.number }}
+                        </td>
+                        <td v-if="type == 'caja/rooms'">
+                            {{ row.type }}
+                        </td>
+                        <td v-if="
                                     type == 'caja/tables' ||
                                         type == 'caja/rooms'
-                                "
-                            >
-                                {{ row.area.description }}
-                            </td>
-                            <td
-                                v-if="
+                                ">
+                            {{ row.area.description }}
+                        </td>
+                        <td v-if="
                                     type == 'caja/tables' ||
                                         type == 'caja/rooms'
-                                "
-                            >
-                                {{ row.establishment }}
-                            </td>
-                            <td v-if="type == 'caja/rooms'">
-                                {{ row.tower }}
-                            </td>
-                            <td v-if="type == 'caja/rooms'">
-                                {{ row.floor }}
-                            </td>
-                            <td v-if="type == 'caja/areas'">
-                                {{ row.printer }}
-                            </td>
-                            <td v-if="type == 'caja/areas'">
-                                <el-switch
-                                    v-if="row.printer == null"
-                                    @change="updateSearchPrint(row)"
-                                    v-model="row.search_print"
-                                >
-                                </el-switch>
-                            </td>
-                            <td v-if="type == 'caja/rooms'">
-                                {{ row.price }}
-                            </td>
-                            <td v-if="type == 'caja/rooms'">
-                                <template
-                                    v-if="
+                                ">
+                            {{ row.establishment }}
+                        </td>
+                        <td v-if="type == 'caja/rooms'">
+                            {{ row.tower }}
+                        </td>
+                        <td v-if="type == 'caja/rooms'">
+                            {{ row.floor }}
+                        </td>
+                        <td v-if="type == 'caja/areas'">
+                            {{ row.printer }}
+                        </td>
+                        <td v-if="type == 'caja/areas'">
+                            <el-switch v-if="row.printer == null" @change="updateSearchPrint(row)" v-model="row.search_print">
+                            </el-switch>
+                        </td>
+                        <td v-if="type == 'caja/rooms'">
+                            {{ row.price }}
+                        </td>
+                        <td v-if="type == 'caja/rooms'">
+                            <template v-if="
                                         row.description != null &&
                                             row.description != ''
-                                    "
-                                >
-                                    <el-tooltip
-                                        class="item"
-                                        effect="dark"
-                                        :content="row.description"
-                                        placement="top"
-                                    >
-                                        <!-- icono dde ojo -->
-                                        <i class="icofont-eye-alt"></i>
-                                    </el-tooltip>
-                                </template>
-                            </td>
-                            <td class="text-end">
-                                <button
-                                    type="button"
-                                    class="btn waves-effect waves-light btn-sm btn-info"
-                                    @click.prevent="clickCreate(row.id)"
-                                >
-                                    Editar
-                                </button>
-                                <button
-                                    type="button"
-                                    :class="
-                                        row.active
-                                            ? 'btn btn-danger btn-sm'
-                                            : 'btn btn-success btn-sm'
-                                    "
-                                    class="btn waves-effect waves-light btn-sm"
-                                    @click.prevent="
-                                        clickDelete(row.id, row.active)
-                                    "
-                                >
-                                    <template
-                                        v-if="type == 'caja/workers-type'"
-                                    >
+                                    ">
+                                <el-tooltip class="item" effect="dark" :content="row.description" placement="top">
+                                    <!-- icono dde ojo -->
+                                    <i class="icofont-eye-alt"></i>
+                                </el-tooltip>
+                            </template>
+                        </td>
+                        <td class="text-end">
+                            <button class="btn p-0" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="btn btn-primary dropdown-toggle" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-delay="0" title="" data-bs-original-title="Item Count" aria-label="Item Count">Acciones</span>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-end" style="">
+                                <a type="button" class="dropdown-item" @click.prevent="clickCreate(row.id)"><i class="fa fa-edit"></i> Editar</a>
+                                <a type="button" class="dropdown-item btn waves-effect waves-light btn-sm" :class="row.active
+                                ? 'btn btn-danger btn-sm'
+                                : 'btn btn-success btn-sm'
+                                " @click.prevent="clickDelete(row.id, row.active)"><i class="fa fa-delete"></i>
+                                    <template v-if="type == 'caja/workers-type'">
                                         <template v-if="row.active">
                                             Desactivar
                                         </template>
@@ -261,43 +186,26 @@
                                             Activar
                                         </template>
                                     </template>
-                                    <template v-else>
+                                    <template v-else><i class="fa fa-delete"></i>
                                         Eliminar
                                     </template>
-                                </button>
-                            </td>
-                        </tr>
-                    </data-table>
-                </div>
-
-                <create-form
-                    :types="types"
-                    :showDialog.sync="showDialog"
-                    :areas="areas"
-                    :type="type"
-                    :configurations.sync="configurations"
-                    :recordId.sync="recordId"
-                    :statusTable="statusTable"
-                    :establishments="establishments"
-                ></create-form>
-
-                <create-form-massive
-                    :types="types"
-                    :showDialog.sync="showDialogMassive"
-                    :areas="areas"
-                    :type="type"
-                    :configurations.sync="configurations"
-                    :recordId.sync="recordId"
-                    :statusTable="statusTable"
-                    :establishments="establishments"
-                ></create-form-massive>
-                <items-rooms :showDialog.sync="showItems" :type="typeItem">
-                </items-rooms>
-                <promotions :showDialog.sync="showPromotions"></promotions>
-                <insumos :showDialog.sync="showInsumos"></insumos>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                </data-table>
             </div>
+
+            <create-form :types="types" :showDialog.sync="showDialog" :areas="areas" :type="type" :configurations.sync="configurations" :recordId.sync="recordId" :statusTable="statusTable" :establishments="establishments"></create-form>
+
+            <create-form-massive :types="types" :showDialog.sync="showDialogMassive" :areas="areas" :type="type" :configurations.sync="configurations" :recordId.sync="recordId" :statusTable="statusTable" :establishments="establishments"></create-form-massive>
+            <items-rooms :showDialog.sync="showItems" :type="typeItem">
+            </items-rooms>
+            <promotions :showDialog.sync="showPromotions"></promotions>
+            <insumos :showDialog.sync="showInsumos"></insumos>
         </div>
     </div>
+</div>
 </template>
 
 <script>
@@ -307,7 +215,9 @@ import CreateForm from "./form.vue";
 import CreateFormMassive from "./formTableMassive.vue";
 import ItemsRooms from "./items_rooms.vue";
 import DataTable from "../../../../../../../resources/js/components/DataTable.vue";
-import { deletable } from "../../../../../../../resources/js/mixins/deletable";
+import {
+    deletable
+} from "../../../../../../../resources/js/mixins/deletable";
 import queryString from "query-string";
 export default {
     props: ["type", "title", "configurations"],

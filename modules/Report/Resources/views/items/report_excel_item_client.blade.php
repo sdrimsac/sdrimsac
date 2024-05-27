@@ -72,156 +72,161 @@ function format_unit($row, $uit)
 
 <body>
     @php
-        $gain_total = 0;
+    $gain_total = 0;
     @endphp
 
-    <div style="margin-top:20px; margin-bottom:20px;">
-        <table>
-            <tr>
-                <td colspan="6">
-                    <p><strong>Reporte de productos por cliente</strong></p>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="6">
-                    <p><strong>Empresa: </strong>{{ $company->name }}</p>
-                </td>
-                <td>
-                    <p><strong>Fechas: </strong>{{ $date_start }}
-                        @if ($date_end)
+    <table>
+        <div style="margin-top:20px; margin-bottom:20px;">
+            <table>
+                <tr>
+                    <td colspan="8" style="border: 2px solid black; text-align: center; background-color: #DCDCDC; font-size: 14px;">
+                        <p><strong>Reporte de productos por cliente</strong></p>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="5" style="border: 2px solid black;  background-color: #DCDCDC; font-size: 12px;">
+                        <p><strong>Empresa: </strong>{{ $company->name }}</p>
+                    </td>
+                    <td colspan="3" style="border: 2px solid black; text-align: center; background-color: #DCDCDC; font-size: 12px;">
+                        <p><strong>Fechas: </strong>{{ $date_start }}
+                            @if ($date_end)
                             - {{ $date_end }}
-                        @endif
-                    </p>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="2">
-                    <p><strong>Ruc: </strong>{{ $company->number }}</p>
-                </td>
-                @if ($establishment)
-                    <td colspan="5">
+                            @endif
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <!-- <td colspan="3">
+                        <p><strong>Ruc: </strong>{{ $company->number }}</p>
+                    </td> -->
+                    @if ($establishment)
+                    <td colspan="5" style="border: 2px solid black; background-color: #DCDCDC; font-size: 12px;">
                         <p><strong>Establecimiento: </strong>{{ $establishment->address }} -
                             {{ $establishment->department->description }} - {{ $establishment->district->description }}
                         </p>
                     </td>
-                @else
-                    <td colspan="3"></td>
-                @endif
-            </tr>
-        </table>
-    </div>
-    @if (!empty($items))
+                    @else
+                    <!-- <td colspan="3"></td> -->
+                    @endif
+                    <td colspan="3" style="border: 2px solid black; text-align: center; background-color: #DCDCDC; font-size: 12px;">
+                        <p><strong>Ruc: </strong>{{ $company->number }}</p>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        @if (!empty($items))
         <div class="">
             <div class=" ">
 
                 <table class="">
                     <thead class="thead">
                         <tr>
-                            <th class="th">#</th>
-                            <th colspan="5" class="th">Cliente</th>
-                            <th class="th">Total</th>
-                            <th class="th">Unidades</th>
+                            <th class="th" style="border: 2px solid black; text-align: center; background-color: #DCDCDC;">#</th>
+                            <th colspan="5" class="th" style="border: 2px solid black; text-align: center; background-color: #DCDCDC;">Cliente</th>
+                            <th class="th" style="border: 2px solid black; text-align: center; background-color: #DCDCDC;">Total</th>
+                            <th class="th" style="border: 2px solid black; text-align: center; background-color: #DCDCDC;">Unidades</th>
                         </tr>
                     </thead>
                     @php
-                        //items to array
-                        $items = json_decode(json_encode($items), true);
-                        //saca de $items el "customer_id" solo los diferentes, y ordena de menor a mayor
-                        $ids = array_values(array_sort(array_unique(array_column($items, 'customer_id'))));
-                        $index = 1;
-                        //filtra todos los items que tengan el mismo customer_id y agrupalos
-                        // Función de comparación para usort
-                        function sortByCustomerId($a, $b)
-                        {
-                            return $a['customer_id'] - $b['customer_id'];
-                        }
-                        
-                        // Ordenar el array por 'customer_id'
-                        usort($items, 'sortByCustomerId');
-                        
-                        // Agrupar por 'customer_id'
-                        $groupedItems = array_reduce(
-                            $items,
-                            function ($result, $item) {
-                                $customerId = $item['customer_id'];
-                                $result[$customerId][] = $item;
-                                return $result;
-                            },
-                            [],
-                        );
-                        
-                        // Reindexar el array para tener índices numéricos
-                        $items = array_values($groupedItems);
+                    //items to array
+                    $items = json_decode(json_encode($items), true);
+                    //saca de $items el "customer_id" solo los diferentes, y ordena de menor a mayor
+                    $ids = array_values(array_sort(array_unique(array_column($items, 'customer_id'))));
+                    $index = 1;
+                    //filtra todos los items que tengan el mismo customer_id y agrupalos
+                    // Función de comparación para usort
+                    function sortByCustomerId($a, $b)
+                    {
+                    return $a['customer_id'] - $b['customer_id'];
+                    }
+
+                    // Ordenar el array por 'customer_id'
+                    usort($items, 'sortByCustomerId');
+
+                    // Agrupar por 'customer_id'
+                    $groupedItems = array_reduce(
+                    $items,
+                    function ($result, $item) {
+                    $customerId = $item['customer_id'];
+                    $result[$customerId][] = $item;
+                    return $result;
+                    },
+                    [],
+                    );
+
+                    // Reindexar el array para tener índices numéricos
+                    $items = array_values($groupedItems);
                     @endphp
                     <tbody>
                         @foreach ($items as $idx => $value)
+                        @php
+
+                        $customer_name = $value[0]['customer_name'];
+                        $total = 0;
+                        $quantity = 0;
+                        foreach ($value as $key => $v) {
+                        $v_total = floatval($v['total']);
+                        $v_quantity = floatval($v['total_quantity']);
+                        $total += $v_total;
+                        $quantity += $v_quantity;
+                        }
+                        @endphp
+                        <tr>
+                            <td style="border: 2px solid black; text-align: center;">{{ $idx + 1 }}</td>
+                            <td colspan="5" style="border: 2px solid black; text-align: center;">{{ $customer_name }}</td>
+                            <td style="border: 2px solid black; text-align: center;">{{ $total }}</td>
+                            <td style="border: 2px solid black; text-align: center;">{{ $quantity }}</td>
+                        </tr>
+                        @foreach ($value as $key => $v)
+                        <tr>
+                            <td style="border: 2px solid black; text-align: center;"></td>
+                            <td style="border: 2px solid black; text-align: center;">{{ $v['total_quantity'] }}</td>
+                            <td style="border: 2px solid black; text-align: center;">{{ $v['item_description'] }}</td>
+                            <td style="border: 2px solid black; text-align: center;">{{ $v['series'] ."-". $v['number'] }}</td>
+                            <td style="border: 2px solid black; text-align: center;">{{ $v['date_of_issue'] }}</td>
+                            <td style="border: 2px solid black; text-align: center;">{{ $v['total'] }}</td>
+                            <td colspan="2" style="border: 2px solid black; text-align: center;"></td>
+                        </tr>
+                        @endforeach
+                        {{-- @foreach ($value['prices'] as $price => $count)
+                                <tr>
+                                    <td class="celda" style="border: 2px solid black; text-align: center;">{{$index}}</td>
+
+                        <td class="celda" style="text-align: left;" style="border: 2px solid black; text-align: center;">{{$value["description"]}}
+                            @if (isset($count['unit_type_name']))
+                            <span class="small2">({{$count["unit_type_name"]}})</span>
+                            @endif
+                        </td>
+                        <td class="celda" style="border: 2px solid black; text-align: center;">
+                            @if (isset($value['max_quantity_item']))
+                            {{format_unit($value,$count)}}
+                            @else
                             @php
-                                
-                                $customer_name = $value[0]['customer_name'];
-                                $total = 0;
-                                $quantity = 0;
-                                foreach ($value as $key => $v) {
-                                    $v_total = floatval($v['total']);
-                                    $v_quantity = floatval($v['total_quantity']);
-                                    $total += $v_total;
-                                    $quantity += $v_quantity;
-                                }
+                            $c = floatval($count["count"]) *(isset($count["factor"])?$count["factor"]:1);
                             @endphp
-                            <tr>
-                                <td>{{ $idx + 1 }}</td>
-                                <td colspan="5">{{ $customer_name }}</td>
-                                <td>{{ $total }}</td>
-                                <td>{{ $quantity }}</td>
-                            </tr>
-                            @foreach ($value as $key => $v)
-                                <tr>
-                                    <td></td>
-                                    <td>{{ $v['total_quantity'] }}</td>
-                                    <td>{{ $v['item_description'] }}</td>
-                                    <td>{{ $v['series'] ."-". $v['number'] }}</td>
-                                    <td>{{ $v['date_of_issue'] }}</td>
-                                    <td>{{ $v['total'] }}</td>
-                                    <td colspan="2"></td>
-                                </tr>
-                            @endforeach
-                            {{-- @foreach ($value['prices'] as $price => $count)
-                                <tr>
-                                    <td class="celda">{{$index}}</td>
-                                    
-                                    <td class="celda" style="text-align: left;">{{$value["description"]}}
-                                        @if (isset($count['unit_type_name']))
-                                        <span class="small2">({{$count["unit_type_name"]}})</span>
-                                    @endif
-                                    </td>
-                                    <td class="celda">
-                                        @if (isset($value['max_quantity_item']))
-                                        {{format_unit($value,$count)}}
-                                        @else
-                                        @php
-                                            $c = floatval($count["count"]) *(isset($count["factor"])?$count["factor"]:1);
-                                        @endphp
-                                            {{number_format($c,2)}} {{$value["unit_item"]}}
-                                        @endif
-                                    </td>
-                                    <td class="celda">{{number_format($value["purchase_unit_price"],2)}}</td>
-                                    <td class="celda">
-                                        {{number_format($price,2)}}
-                                        
-                                    </td>
-                                    <td class="celda">{{number_format($count["count"]*$price,2)}}</td>
-                                    <td class="celda">
-                                        @php
-                                        $purchase = floatval($count["count"]) *(isset($count["factor"])?$count["factor"]:1)  * floatval($value["purchase_unit_price"]) ;
-                                        $gain = floatval($count["count"]*$price) - $purchase;
-                                        $gain_total +=$gain; 
-                                       @endphp
-                                        
-                                        {{number_format($gain,2)}}</td>
-                                </tr>
-                                @php
-                                    $index++;
-                                @endphp
-                                @endforeach     --}}
+                            {{number_format($c,2)}} {{$value["unit_item"]}}
+                            @endif
+                        </td>
+                        <td class="celda" style="border: 2px solid black; text-align: center;">{{number_format($value["purchase_unit_price"],2)}}</td>
+                        <td class="celda" style="border: 2px solid black; text-align: center;">
+                            {{number_format($price,2)}}
+
+                        </td>
+                        <td class="celda" style="border: 2px solid black; text-align: center;">{{number_format($count["count"]*$price,2)}}</td>
+                        <td class="celda" style="border: 2px solid black; text-align: center;">
+                            @php
+                            $purchase = floatval($count["count"]) *(isset($count["factor"])?$count["factor"]:1) * floatval($value["purchase_unit_price"]) ;
+                            $gain = floatval($count["count"]*$price) - $purchase;
+                            $gain_total +=$gain;
+                            @endphp
+
+                            {{number_format($gain,2)}}
+                        </td>
+                        </tr>
+                        @php
+                        $index++;
+                        @endphp
+                        @endforeach --}}
                         @endforeach
 
 
@@ -229,10 +234,11 @@ function format_unit($row, $uit)
                 </table>
             </div>
         </div>
+    </table>
     @else
-        <div class="callout callout-info">
-            <p>No se encontraron registros.</p>
-        </div>
+    <div class="callout callout-info">
+        <p>No se encontraron registros.</p>
+    </div>
     @endif
 </body>
 

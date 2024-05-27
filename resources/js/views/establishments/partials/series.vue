@@ -1,5 +1,5 @@
 <template>
-    <el-dialog title="Series" :visible="showDialog" @close="close" @open="getData">
+    <el-dialog title="Series" :visible="showDialog" @close="close" @open="getData" class="rounded-dialog">
         <div class="form-body">
             <div class="row">
                 <div class="col-md-12" v-if="records.length > 0">
@@ -69,6 +69,13 @@
     </el-dialog>
 
 </template>
+
+<style>
+.el-dialog {
+    border-radius: 10px; 
+    overflow: hidden; 
+  }
+</style>
 
 <script>
 

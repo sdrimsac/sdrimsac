@@ -1,28 +1,42 @@
+<!-- Modal editar Tratamiento Comercial -->
 <template>
-    <el-dialog
-        :title="title"
-        :visible="showDialog"
-        @open="open"
-        @close="close"
-        append-to-body
-    >
-        <div class="row p-2">
-            <div class="col-md-8">
-                <label for="description">Descripción</label>
-                <el-input v-model="form.description"> </el-input>
-            </div>
-            <div class="col-md-4 d-flex align-items-end">
-                <el-checkbox v-model="form.is_amount">
-                    <span>¿Es por monto?</span>
-                </el-checkbox>
-            </div>
+<el-dialog  :title="title" 
+            :visible="showDialog" 
+            @open="open" 
+            @close="close" 
+            append-to-body 
+            class="rounded-dialog" 
+            :close-on-click-modal="false"
+            width="35%"
+            >
+            
+    <div class="row p-2">
+        <div class="col-md-8">
+            <label class="control-label">
+                <i class="fas fa-align-left"></i> Descripción
+            </label>
+            <el-input v-model="form.description"> </el-input>
         </div>
-        <span slot="footer" class="dialog-footer">
-            <el-button @click="close">Cancelar</el-button>
-            <el-button type="primary" @click="submit">Guardar</el-button>
-        </span>
-    </el-dialog>
+        <div class="col-md-4 d-flex align-items-end">
+            <el-checkbox v-model="form.is_amount">
+                <span>¿Es por monto?</span>
+            </el-checkbox>
+        </div>
+    </div>
+    <span slot="footer" class="dialog-footer">
+        <el-button @click="close" icon="fas fa-times"> Cancelar</el-button> <!-- Botón "Cancelar" con icono de cierre -->
+        <el-button type="primary" @click="submit" icon="fas fa-save"> Guardar</el-button> <!-- Botón "Guardar" con icono de marca de verificación -->
+    </span>
+    
+</el-dialog>
 </template>
+
+<style>
+.el-dialog {
+    border-radius: 10px;
+    overflow: hidden;
+}
+</style>
 
 <script>
 export default {
@@ -45,7 +59,9 @@ export default {
             };
         },
         async submit() {
-            let { description } = this.form;
+            let {
+                description
+            } = this.form;
             if (!description) {
                 this.$message.error("Debe ingresar una descripción");
                 return;
@@ -70,13 +86,15 @@ export default {
             } else {
                 this.title = "Crear tratamiento comercial";
             }
-            
+
         },
         close() {
             this.$emit("update:showDialog", false);
         },
-        getRecord(){
-            this.$http.get(`${this.resource}/record/${this.recordId}`).then(({data}) => {
+        getRecord() {
+            this.$http.get(`${this.resource}/record/${this.recordId}`).then(({
+                data
+            }) => {
                 this.form = data.data;
             });
         }

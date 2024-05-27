@@ -20,197 +20,147 @@ function format_unit($row, $uit)
     <meta http-equiv="Content-Type" content="application/pdf; charset=utf-8" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
-    <style>
-        html {
-            font-family: sans-serif;
-            font-size: 12px;
-        }
-
-        table {
-            width: 100%;
-            border-spacing: 0;
-            border: 1px solid black;
-        }
-
-        .celda {
-            text-align: center;
-            padding: 2px;
-            border: 0.1px solid black;
-        }
-
-        .th {
-            padding: 2px;
-            text-align: center;
-            border-color: #c4c4c4;
-            border: 0.1px solid black;
-        }
-
-        .title {
-            font-weight: bold;
-            padding: 5px;
-            font-size: 20px !important;
-            text-decoration: underline;
-        }
-
-        .small2 {
-            font-size: 8px;
-        }
-
-        p>strong {
-            margin-left: 5px;
-            font-size: 13px;
-        }
-
-        .thead {
-            font-weight: bold;
-            background: #c4c4c4;
-            color: black;
-            text-align: center;
-        }
-    </style>
 </head>
 
 <body>
     @php
-        $gain_total = 0;
+    $gain_total = 0;
     @endphp
+    <table>
 
-    <div style="margin-top:20px; margin-bottom:20px;">
-        <table>
+
+        <tr>
+            <td colspan="8" style="border: 2px solid black; text-align: center; background-color: #DCDCDC;">
+                <p><strong>Reporte de Ganancias</strong></p>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="5" style="border: 2px solid black; background-color: #DCDCDC;">
+                <p><strong>Empresa: </strong>{{ $company->name }}</p>
+            </td>
+            <td colspan="3" style="border: 2px solid black; text-align: center; background-color: #DCDCDC;">
+                <p><strong>Fechas: </strong>{{ $date_start }}
+                    @if ($date_end)
+                    - {{ $date_end }}
+                    @endif
+                </p>
+            </td>
+        </tr>
+        <tr>
+            @if ($establishment)
+            <td colspan="5" style="border: 2px solid black; background-color: #DCDCDC;">
+                <p><strong>Establecimiento: </strong>{{ $establishment->address }} -
+                    {{ $establishment->department->description }} - {{ $establishment->district->description }}
+                </p>
+            </td>
+            <td colspan="3" style="border: 2px solid black; background-color: #DCDCDC;">
+                <p><strong>Ruc: </strong>{{ $company->number }}</p>
+            </td>
+            @else
+            <td colspan="3"></td>
+            @endif
+        </tr>
+
+
+        @if (!empty($items))
+
+
+
+        <thead class="thead">
             <tr>
-                <td colspan="6">
-                    <p><strong>Reporte de Ganancias</strong></p>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="6">
-                    <p><strong>Empresa: </strong>{{ $company->name }}</p>
-                </td>
-                <td>
-                    <p><strong>Fechas: </strong>{{ $date_start }}
-                        @if ($date_end)
-                            - {{ $date_end }}
-                        @endif
-                    </p>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="2">
-                    <p><strong>Ruc: </strong>{{ $company->number }}</p>
-                </td>
-                @if ($establishment)
-                    <td colspan="5">
-                        <p><strong>Establecimiento: </strong>{{ $establishment->address }} -
-                            {{ $establishment->department->description }} - {{ $establishment->district->description }}
-                        </p>
-                    </td>
-                @else
-                    <td colspan="3"></td>
+                <th class="th" style="border: 2px solid black; text-align: center; background-color: #DCDCDC;">#</th>
+                <th class="th" style="border: 2px solid black; text-align: center; background-color: #DCDCDC;">Producto</th>
+                <th class="th" style="border: 2px solid black; text-align: center; background-color: #DCDCDC;">Cant. Total</th>
+                <th class="th" style="border: 2px solid black; text-align: center; background-color: #DCDCDC;">Unidad medida</th>
+                @if (!$is_service)
+                <th class="th" style="border: 2px solid black; text-align: center; background-color: #DCDCDC;">P.C.</th>
+                <th class="th" style="border: 2px solid black; text-align: center; background-color: #DCDCDC;">P.V.</th>
+                @endif
+                <th class="th" style="border: 2px solid black; text-align: center; background-color: #DCDCDC;">Total</th>
+                @if (!$is_service)
+                <th class="th" style="border: 2px solid black; text-align: center; background-color: #DCDCDC;">Utilidad</th>
                 @endif
             </tr>
-        </table>
-    </div>
-    @if (!empty($items))
-        <div class="">
-            <div class=" ">
+        </thead>
+        @php
+        $index = 1;
+        @endphp
+        <tbody>
+            @foreach ($items as $value)
+            @foreach ($value['prices'] as $price => $count)
+            <tr>
+                <td class="celda" style="border: 2px solid black; text-align: center;">{{ $index }}</td>
 
-                <table class="">
-                    <thead class="thead">
-                        <tr>
-                            <th class="th">#</th>
-                            <th class="th">Producto</th>
-                            <th class="th">Cant. Total</th>
-                            <th class="th">Unidad medida</th>
-                            @if (!$is_service)
-                                <th class="th">P.C.</th>
-                                <th class="th">P.V.</th>
-                            @endif
-                            <th class="th">Total</th>
-                            @if (!$is_service)
-                                <th class="th">Utilidad</th>
-                            @endif
-                        </tr>
-                    </thead>
+                <td class="celda" style="text-align: left; border: 2px solid black; text-align: center;">{{ $value['description'] }}
+                    @if (isset($count['unit_type_name']))
+                    <span class="small2">({{ $count['unit_type_name'] }})</span>
+                    @endif
+                </td>
+                <td class="celda" style="border: 2px solid black; text-align: center;">
+                    @if (isset($value['max_quantity_item']))
+                    {{ format_unit($value, $count) }}
+                    @else
                     @php
-                        $index = 1;
+                    $c =
+                    floatval($count['count']) *
+                    (isset($count['factor']) ? $count['factor'] : 1);
                     @endphp
-                    <tbody>
-                        @foreach ($items as $value)
-                            @foreach ($value['prices'] as $price => $count)
-                                <tr>
-                                    <td class="celda">{{ $index }}</td>
+                    {{ number_format($c, 2) }}
+                    @endif
+                </td>
+                @if (!isset($value['max_quantity_item']))
+                <td class="celda" style="border: 2px solid black; text-align: center;">
+                    {{ $value['unit_item'] }}
+                </td>
+                @endif
+                @if (!$is_service)
+                <td class="celda" style="border: 2px solid black; text-align: center;">{{ number_format($value['purchase_unit_price'], 2) }}</td>
+                <td class="celda" style="border: 2px solid black; text-align: center;">
+                    {{ number_format($price, 2) }}
 
-                                    <td class="celda" style="text-align: left;">{{ $value['description'] }}
-                                        @if (isset($count['unit_type_name']))
-                                            <span class="small2">({{ $count['unit_type_name'] }})</span>
-                                        @endif
-                                    </td>
-                                    <td class="celda">
-                                        @if (isset($value['max_quantity_item']))
-                                            {{ format_unit($value, $count) }}
-                                        @else
-                                            @php
-                                                $c =
-                                                    floatval($count['count']) *
-                                                    (isset($count['factor']) ? $count['factor'] : 1);
-                                            @endphp
-                                            {{ number_format($c, 2) }}
-                                        @endif
-                                    </td>
-                                    @if (!isset($value['max_quantity_item']))
-                                        <td class="celda">
-                                            {{ $value['unit_item'] }}
-                                        </td>
-                                    @endif
-                                    @if (!$is_service)
-                                        <td class="celda">{{ number_format($value['purchase_unit_price'], 2) }}</td>
-                                        <td class="celda">
-                                            {{ number_format($price, 2) }}
+                </td>
+                @endif
+                <td class="celda" style="border: 2px solid black; text-align: center;">{{ number_format($count['count'] * $price, 2) }}</td>
+                @if (!$is_service)
+                <td class="celda" style="border: 2px solid black; text-align: center;">
+                    @php
+                    $purchase =
+                    floatval($count['count']) *
+                    (isset($count['factor']) ? $count['factor'] : 1) *
+                    floatval($value['purchase_unit_price']);
+                    $gain = floatval($count['count'] * $price) - $purchase;
+                    $gain_total += $gain;
+                    @endphp
 
-                                        </td>
-                                    @endif
-                                    <td class="celda">{{ number_format($count['count'] * $price, 2) }}</td>
-                                    @if (!$is_service)
-                                        <td class="celda">
-                                            @php
-                                                $purchase =
-                                                    floatval($count['count']) *
-                                                    (isset($count['factor']) ? $count['factor'] : 1) *
-                                                    floatval($value['purchase_unit_price']);
-                                                $gain = floatval($count['count'] * $price) - $purchase;
-                                                $gain_total += $gain;
-                                            @endphp
+                    {{ number_format($gain, 2) }}
+                </td>
+                @endif
+            </tr>
+            @php
+            $index++;
+            @endphp
+            @endforeach
+            @endforeach
 
-                                            {{ number_format($gain, 2) }}</td>
-                                    @endif
-                                </tr>
-                                @php
-                                    $index++;
-                                @endphp
-                            @endforeach
-                        @endforeach
+            <tr>
+                @if (!$is_service)
+                <td class="celda" colspan="4"></td>
+                @else
+                <td class="celda" colspan="3"></td>
+                @endif
+                <td class="celda" style="border: 2px solid black; text-align: center; background-color: #DCDCDC;">Totales</td>
+                <td class="celda" style="border: 2px solid black; text-align: center;">{{ number_format($total, 2) }}</td>
+                @if (!$is_service)
+                <td class="celda" style="border: 2px solid black; text-align: center;">{{ number_format($gain_total, 2) }}</td>
+                @endif
 
-                        <tr>
-                            @if (!$is_service)
-                                <td class="celda" colspan="4"></td>
-                            @else
-                                <td class="celda" colspan="3"></td>
-                            @endif
-                            <td class="celda">Totales</td>
-                            <td class="celda">{{ number_format($total, 2) }}</td>
-                            @if (!$is_service)
-                                <td class="celda">{{ number_format($gain_total, 2) }}</td>
-                            @endif
-
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+            </tr>
+        </tbody>
+    </table>
     @else
-        <div class="callout callout-info">
-            <p>No se encontraron registros.</p>
-        </div>
+    <div class="callout callout-info">
+        <p>No se encontraron registros.</p>
+    </div>
     @endif
 </body>
 

@@ -40,13 +40,14 @@
             </div>
             <div class="card-body">
                 <data-table :resource="resource">
-                    <tr slot="heading">
+                    <tr slot="heading" class="bg-primary">
                         <th>#</th>
                         <th>Producto</th>
                         <th>Almacén</th>
                         <th class="text-end">Stock</th>
                         <th class="text-end">Acciones</th>
-                    <tr>
+                        <th></th>
+                    </tr>
                     <tr slot-scope="{ index, row }">
                         <td>{{ index }}</td>
                         <td>{{ row.item_fulldescription }}</td>

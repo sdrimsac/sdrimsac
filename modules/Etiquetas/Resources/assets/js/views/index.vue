@@ -10,7 +10,7 @@
                         </li>
                         <li class="breadcrumb-item active">
                             <span class="text-muted"
-                                >Preparacion de etiquetas</span
+                                >Preparación de etiquetas</span
                             >
                         </li>
                     </ol>
@@ -20,7 +20,9 @@
 
         <div class="card" v-loading="loading">
             <div class="card-header bg-primary">
-                <h6 class="my-0 text-white">Preparacion de Etiquetas</h6>
+                <h4 class="my-0 text-white">
+                    <i class="el-icon-collection-tag"></i> Preparación de Etiquetas
+                </h4>
             </div>
             <div class="card-body">
                 <div class="row">
@@ -50,11 +52,11 @@
                             />
                         </div>
                         <div v-else>
-                            <el-empty :image-size="150"></el-empty>
+                            <el-empty :image-size="250"></el-empty>
                         </div>
                         <el-button
                             class="m-2"
-                            type="success"
+                            type="primary"
                             @click="$refs.file.click()"
                         >
                             Subir imagen
@@ -65,9 +67,9 @@
                             type="danger"
                             @click="delete_image"
                         >
-                            <i class="el-icon-delete"></i>
+                            <i class="el-icon-delete"></i> Eliminar Imagen
                         </el-button>
-                        <p><em>JPG, PNG, JPEG | 150x150 </em></p>
+                        <p><em>Reconemdado JPG, PNG, JPEG | 150x150 </em></p>
                         <input
                             accept="image/png, image/jpeg, image/jpg"
                             type="file"
@@ -79,9 +81,14 @@
                     <div
                         class="col-12 col-lg-6 col-md-6 col-sm-12 d-flex flex-column align-items-center mb-2"
                     >
+                    <div>
+
+                    <label for="productSearch">Ingrese el Nombre del Producto:</label>
+                    </div>
                         <div
+                        
                             class="el-input el-input-group el-input-group--append mb-2"
-                        >
+                            >
                             <el-select
                                 v-if="!lector_barcode"
                                 v-model="product_id"
@@ -93,6 +100,7 @@
                                 :remote-method="searchRemoteItems"
                                 :loading="loading_search"
                             >
+                           
                                 <el-option
                                     v-for="option in items"
                                     :key="option.id"
@@ -108,9 +116,11 @@
                                 placeholder="Buscar producto"
                                 popper-class="el-select-items"
                             ></el-input>
-                            <el-checkbox v-model="lector_barcode">
-                                Lector de código de barras
-                            </el-checkbox>
+                            
+                                <el-checkbox v-model="lector_barcode">
+                                    Lector de código de barras
+                                </el-checkbox>
+                                
                         </div>
 
                         <div
@@ -429,7 +439,7 @@
                 <div class="d-flex justify-content-center mt-2">
                     <span class="h4">
                         <u>
-                            Tipo de papel
+                            TIPO DE PAPEL
                         </u>
                     </span>
                 </div>
@@ -469,7 +479,7 @@
                 <div class="d-flex justify-content-center mt-2">
                     <span class="h4">
                         <u>
-                            Cantidad de impresión por etiqueta (und)
+                            CANTIDAD DE IMPRESIÓN POR ETIQUETA (Und)
                         </u>
                     </span>
                 </div>

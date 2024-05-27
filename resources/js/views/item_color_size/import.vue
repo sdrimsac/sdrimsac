@@ -1,10 +1,12 @@
+
 <template>
     <el-dialog
         :title="titleDialog"
         :visible="showDialog"
         @close="close"
         @open="create"
-        class="dialog-import"
+        class="dialog-import rounded-dialog"
+        :close-on-click-modal="false" 
     >
         <form autocomplete="off" @submit.prevent="submit">
             <div class="form-body">
@@ -63,17 +65,22 @@
                 </div>
             </div>
             <div class="form-actions text-right mt-4">
-                <el-button @click.prevent="close()">Cancelar</el-button>
-                <el-button
-                    type="primary"
-                    native-type="submit"
-                    :loading="loading_submit"
-                    >Procesar</el-button
-                >
+                <el-button icon="fas fa-times fa-lg" @click.prevent=close()> Cancelar</el-button>
+                <el-button icon="fas fa-random fa-lg" type="primary"native-type="submit" :loading="loading_submit">
+                     Procesar
+                </el-button>
             </div>
+            <br>
         </form>
     </el-dialog>
 </template>
+
+<style>
+.el-dialog {
+border-radius: 10px;
+overflow: hidden;
+}
+</style>
 
 <script>
 export default {
@@ -105,7 +112,7 @@ export default {
             };
         },
         create() {
-            this.titleDialog = "Importar Productos Compuestos";
+            this.titleDialog = "Importar Colores y Tallas";
             this.getWarehouses();
         },
         async submit() {

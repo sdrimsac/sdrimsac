@@ -5,6 +5,8 @@
         v-loading="loading"
         :title="titleDialog"
         :visible="showDialog"
+        class="rounded-dialog" 
+        :close-on-click-modal="false"
     >
         <div class="row m-2">
             <div class="col-md-4">
@@ -31,11 +33,18 @@
         </div>
         <div class="row m-2"></div>
         <div slot="footer" class="dialog-footer">
-            <el-button @click="close">Cancelar</el-button>
-            <el-button type="primary" @click="submit">Guardar</el-button>
+            <el-button icon="fas fa-times fa-lg" @click="close"> Cancelar</el-button>
+            <el-button icon="fas fa-save fa-lg" type="primary" @click="submit"> Guardar</el-button>
         </div>
     </el-dialog>
 </template>
+
+<style>
+.el-dialog {
+border-radius: 10px;
+overflow: hidden;
+}
+</style>
 
 <script>
 export default {

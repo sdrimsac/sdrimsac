@@ -230,7 +230,7 @@
                                                 saveInLocalStorageSearchSeries
                                             "
                                         >
-                                            <h2 class="text-muted text-small">
+                                            <h2 class="font-weight-bold custom-text-size">
                                                 Buscar por series
                                             </h2>
                                         </el-checkbox>
@@ -238,7 +238,7 @@
                                             v-model="barcode"
                                             @change="saveInLocalStorageBarcode"
                                         >
-                                            <h2 class="text-muted text-small">
+                                            <h2 class="font-weight-bold custom-text-size">
                                                 Barcode
                                             </h2>
                                         </el-checkbox>
@@ -254,7 +254,7 @@
                                     </div>
                                     <div class="col-12 col-lg-3 p-2">
                                         <template>
-                                            <h2 class="text-muted text-small">
+                                            <h2 class="font-weight-bold custom-text-size">
                                                 Categorias
                                             </h2>
                                             <el-select
@@ -275,7 +275,7 @@
                                         </template>
                                     </div>
                                     <div class="col-12 col-lg-7 p-2">
-                                        <h2 class="text-muted text-small">
+                                        <h2 class="font-weight-bold custom-text-size">
                                             Buscar
                                         </h2>
                                         <template v-if="selectOption == 4">
@@ -1780,6 +1780,11 @@
 .warning-color {
     background-color: #ffa407 !important;
     color: #fff !important;
+    
+}
+.custom-text-size {
+    font-size: 0.8em;
+
 }
 /* .el-checkbox#barcode .el-checkbox__label {
     padding-top: 10px !important;

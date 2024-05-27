@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="sidebar-light sidebar-left-big-icons dashboard-system">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -9,7 +10,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>Facturación Electrónica</title>
+    <title>Facturacion Electronica</title>
 
     <!-- Scripts -->
 
@@ -21,6 +22,7 @@
 
     <!-- Styles -->
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800|Shadows+Into+Light" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="public/porto-light/theme.css">
 
     <link rel="stylesheet" href="{{ asset('porto-light/vendor/bootstrap/css/bootstrap.css') }}" />
     <link rel="stylesheet" href="{{ asset('porto-light/vendor/animate/animate.css') }}" />
@@ -32,7 +34,7 @@
     <link rel="stylesheet" href="{{ asset('porto-light/css/custom.css') }}" />
 
     @if (file_exists(public_path('theme/custom_styles.css')))
-        <link rel="stylesheet" href="{{ asset('theme/custom_styles.css') }}" />
+    <link rel="stylesheet" href="{{ asset('theme/custom_styles.css') }}" />
     @endif
 
     {{--<link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css" />--}}
@@ -60,18 +62,20 @@
 
     <style>
         .descarga {
-            color:black;
-            padding:5px;
+            color: black;
+            padding: 5px;
         }
-        html.sidebar-light:not(.dark) ul.nav-main > li.nav-active > a {
+
+        html.sidebar-light:not(.dark) ul.nav-main>li.nav-active>a {
             color: #0088CC;
         }
 
-        ul.nav-main > li.nav-active > a {
+        ul.nav-main>li.nav-active>a {
             box-shadow: 2px 0 0 #0088CC inset;
         }
     </style>
 </head>
+
 <body class="pr-0">
     <section class="body">
         <!-- start: header -->
@@ -82,17 +86,15 @@
             @include('system.layouts.partials.sidebar')
             <!-- end: sidebar -->
             <section role="main" class="content-body" id="main">
-              @yield('content')
+                @yield('content')
             </section>
         </div>
     </section>
-
-
     <!-- Vendor -->
     <script src="{{ asset('porto-light/vendor/jquery/jquery.js')}}"></script>
     <script src="{{ asset('porto-light/vendor/jquery-browser-mobile/jquery.browser.mobile.js')}}"></script>
     <script src="{{ asset('porto-light/vendor/jquery-cookie/jquery-cookie.js')}}"></script>
-        {{--<script src="{{asset('master/style-switcher/style.switcher.js')}}"></script>--}}
+    {{--<script src="{{asset('master/style-switcher/style.switcher.js')}}"></script>--}}
     <script src="{{ asset('porto-light/vendor/popper/umd/popper.min.js')}}"></script>
     <!-- <script src="{{ asset('porto-light/vendor/bootstrap/js/bootstrap.js')}}"></script> -->
     {{-- <script src="{{ asset('porto-light/vendor/common/common.js')}}"></script> --}}
@@ -139,6 +141,6 @@
     <script src="{{ mix('js/app.js') }}"></script>
     <!-- Theme Base, Components and Settings -->
     <script src="{{asset('porto-light/js/theme.js')}}"></script>
-    <!-- <script src="//code.tidio.co/1vliqewz9v7tfosw5wxiktpkgblrws5w.js"></script> -->
 </body>
+
 </html>

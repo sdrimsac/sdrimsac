@@ -81,8 +81,8 @@
             </div>
         </div>
         <span slot="footer" class="dialog-footer">
-            <el-button @click.prevent="close">Cerrar</el-button>
-            <el-button type="primary" @click="clickAddItem">Agregar</el-button>
+            <el-button icon="fas fa-times fa-lg" @click.prevent="close">Cerrar</el-button>
+            <el-button icon="fas fa-plus-circle fa-lg" type="primary" @click="clickAddItem">Agregar</el-button>
         </span>
 
         <item-form

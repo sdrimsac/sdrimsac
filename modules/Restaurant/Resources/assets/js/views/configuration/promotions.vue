@@ -5,6 +5,7 @@
         append-to-body
         @close="close"
         @open="open"
+        class="rounded-dialog"
     >
         <div class="row mt-2">
             <div class="col-12 text-center">
@@ -81,6 +82,13 @@
         </promotions-form>
     </el-dialog>
 </template>
+
+<style>
+.el-dialog {
+    border-radius: 10px; 
+    overflow: hidden; 
+  }
+</style>
 
 <script>
 const PromotionsForm = () => import("./promotions_form.vue");

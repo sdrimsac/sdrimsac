@@ -25,7 +25,7 @@
                                                 </el-input-number>
                                             </div>
                                         </div> -->
-                                        <div class="col-md-6 mt-4">
+                                        <div class="col-md-3 mt-4">
                                             <div class="form-group">
                                                 <label
                                                     class="control-label w-100"
@@ -40,7 +40,7 @@
                                                 </el-input-number>
                                             </div>
                                         </div>
-                                        <div class="col-md-6 mt-4">
+                                        <div class="col-md-3 mt-4">
                                             <div class="form-group">
                                                 <label
                                                     class="control-label w-100"
@@ -60,7 +60,7 @@
                                                 ></el-time-picker>
                                             </div>
                                         </div>
-                                        <div class="col-md-6 mt-4">
+                                        <div class="col-md-3 mt-4">
                                             <div class="form-group">
                                                 <label
                                                     class="control-label w-100"
@@ -81,7 +81,7 @@
                                             </div>
                                         </div>
 
-                                        <div class="col-md-6 mt-4">
+                                        <div class="col-md-3 mt-4">
                                             <div class="form-group">
                                                 <label
                                                     class="control-label w-100"
@@ -98,7 +98,7 @@
                                             </div>
                                         </div>
 
-                                        <div class="col-md-6 mt-4">
+                                        <div class="col-md-3 mt-4">
                                             <div class="form-group">
                                                 <label
                                                     class="control-label w-100"
@@ -114,7 +114,7 @@
                                                 </el-input-number>
                                             </div>
                                         </div>
-                                        <div class="col-md-6 mt-4">
+                                        <div class="col-md-3 mt-4">
                                             <div class="form-group">
                                                 <label
                                                     class="control-label w-100"
@@ -136,7 +136,7 @@
                             </el-tab-pane>
                             <el-tab-pane label="Servicios" v-if="!isArca">
                                 <div class="row">
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
                                         <label class="control-label"
                                             >Envío de comprobantes
                                             automático</label
@@ -161,7 +161,7 @@
                                         </div>
                                     </div>
                                     <div
-                                        class="col-md-4"
+                                        class="col-md-3"
                                         v-if="typeUser != 'integrator'"
                                     >
                                         <label class="control-label"
@@ -201,7 +201,7 @@
                             <el-tab-pane label="Contable" v-if="!isArca">
                                 <div class="row">
                                     <div
-                                        class="col-md-4"
+                                        class="col-md-3"
                                         v-if="typeUser != 'integrator'"
                                     >
                                         <label class="control-label"
@@ -231,7 +231,7 @@
                                     </div>
 
                                     <div
-                                        class="col-md-4"
+                                        class="col-md-3"
                                         v-if="typeUser != 'integrator'"
                                     >
                                         <label class="control-label"
@@ -268,7 +268,7 @@
                                             ></small>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <div
                                             class="form-group"
                                             :class="{
@@ -366,7 +366,7 @@
                             </el-tab-pane>
                             <el-tab-pane label="Visual" v-if="!isArca">
                                 <div class="row">
-                                    <div class="col-md-6 mt-2">
+                                    <div class="col-md-3 mt-2">
                                         <label class="control-label"
                                             >Uso de Comanda Fisica (Modulo
                                             caja)</label
@@ -393,7 +393,7 @@
                                             ></small>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mt-2">
+                                    <div class="col-md-3 mt-2">
                                         <label class="control-label"
                                             >Recrear Documento</label
                                         >
@@ -419,7 +419,7 @@
                                             ></small>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mt-2">
+                                    <div class="col-md-3 mt-2">
                                         <label class="control-label"
                                             >Eliminar Documento</label
                                         >
@@ -445,7 +445,7 @@
                                             ></small>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mt-2">
+                                    <div class="col-md-3 mt-2">
                                         <label class="control-label"
                                             >Editar Precio Venta en Caja</label
                                         >
@@ -471,7 +471,7 @@
                                             ></small>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <label class="control-label"
                                             >Editar Cantidad en Caja</label
                                         >
@@ -495,7 +495,7 @@
                                             ></small>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <label class="control-label"
                                             >Editar nombre de productos</label
                                         >
@@ -522,7 +522,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <label class="control-label"
                                             >Cambiar fecha de emisión</label
                                         >
@@ -548,7 +548,7 @@
                                             ></small>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <label class="control-label"
                                             >Restringir fecha de
                                             comprobante</label
@@ -580,7 +580,7 @@
                                             ></small>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <label class="control-label"
                                             >Días trasncurridos para emitir
                                             dcto</label
@@ -619,7 +619,7 @@
                                             ></small>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <label class="control-label"
                                             >Impuesto incluido en registro de
                                             productos</label
@@ -644,7 +644,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
                                                 >Impresión Directa</label
@@ -657,7 +657,7 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
                                                 >Multiples Caja (Usuario
@@ -671,7 +671,7 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
                                                 >Venta Rapida (Modulo
@@ -685,7 +685,7 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
                                                 >Imprimir Comanda</label
@@ -699,7 +699,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
                                                 >Vender con stock</label
@@ -715,7 +715,7 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
                                                 >Mostrar stock caja</label
@@ -731,7 +731,7 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
                                                 >Imprimir en Zona
@@ -745,7 +745,7 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
                                                 >Ingresar pin
@@ -759,7 +759,7 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
                                                 >Caja-Mozo
@@ -772,7 +772,7 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
                                                 >Editar subtotal en caja
@@ -785,7 +785,7 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
                                                 >Enviar XML por whatsapp
@@ -798,7 +798,7 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
                                                 >Mostrar politica precios ticket
@@ -813,7 +813,7 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
                                                 >Emitir dcto variacion
@@ -828,7 +828,7 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <template id="select-append">
                                             <label class="control-label w-100"
                                                 >Producto - Variacion
@@ -875,7 +875,7 @@
                                             </div>
                                         </template>
                                     </div>
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <div
                                             class="form-group"
                                             :class="{
@@ -913,7 +913,7 @@
                                             ></small>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
                                                 >(Mod. Caja) Mostrar stock
@@ -929,7 +929,7 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
                                                 >Usar número personal (whatsapp)
@@ -942,7 +942,7 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
                                                 >Recibir mercaderia (caja)
@@ -957,7 +957,7 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
                                                 >Imprimir referencia en ticket
@@ -983,7 +983,7 @@
                                             ></el-switch>
                                         </div>
                                     </div> -->
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
                                                 >% de crédito
@@ -1000,7 +1000,7 @@
                                             ></el-input-number>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
                                                 >Mostrar guías en caja
@@ -1013,7 +1013,7 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
                                                 >Mostrar cotización en caja
@@ -1026,7 +1026,7 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
                                                 >Cargo por pago con tarjeta
@@ -1039,7 +1039,7 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
                                                 >Pedir pin en caja al eliminar
@@ -1053,7 +1053,7 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
                                                 >Enviar whatsapp al eliminar
@@ -1069,7 +1069,7 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
                                                 >Números de whatsapp para enviar
@@ -1106,7 +1106,7 @@
                                             </small>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
                                                 >Categorias arrastables caja
@@ -1119,7 +1119,7 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
                                                 >Editar producto en caja
@@ -1132,7 +1132,7 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
                                                 >Imprimir gastos/ingresos
@@ -1147,7 +1147,7 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
                                                 >Ver venta diaria
@@ -1160,7 +1160,7 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
                                                 >Ver venta diaria con pin
@@ -1175,7 +1175,7 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
                                                 >Enviar whatsapp al ver venta
@@ -1191,7 +1191,7 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
                                                 >Bloquear stock inicial
@@ -1211,7 +1211,7 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
                                                 >Observación al hacer ajuste de
@@ -1235,7 +1235,7 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
                                                 >Consignación
@@ -1256,7 +1256,7 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <template id="select-append">
                                             <label class="control-label w-100"
                                                 >Producto penalidad -
@@ -1304,7 +1304,7 @@
                                             </div>
                                         </template>
                                     </div>
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
                                                 >Cambiar afectación IGV en caja
@@ -1327,7 +1327,7 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
                                                 >Traslados directos
@@ -1348,7 +1348,7 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
                                                 >Descuentos variante
@@ -1371,7 +1371,7 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
                                                 >Evitar cerrar caja sin ordenes
@@ -1393,7 +1393,7 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
                                                 >Crear productos compuestos en
@@ -1407,7 +1407,7 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
                                                 >Ver productos por vencer en
@@ -1422,7 +1422,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
                                                 >Mostrar toda la descripción del
@@ -1437,7 +1437,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
                                                 >Ordenar productos por
@@ -1452,7 +1452,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
                                                 >Visualizar administrador -
@@ -1466,7 +1466,7 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
                                                 >Permitir ajuste de stock
@@ -1479,7 +1479,7 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
                                                 >Vendedores en caja
@@ -1492,7 +1492,7 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
                                                 >Acciones en caja
@@ -1516,7 +1516,7 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
                                                 >Tratamiento comercial Categoría
@@ -1542,7 +1542,7 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
                                                 >Tratamiento comercial Producto
@@ -1568,7 +1568,7 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
                                                 >Servicio en todos los
@@ -1595,7 +1595,7 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
                                                 >Requerir número de operación
@@ -1621,7 +1621,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
                                                 >Enviar whatsapp por pagos
@@ -1648,7 +1648,7 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
                                                 >A cuenta
@@ -1663,7 +1663,7 @@
                                         </div>
                                     </div>
                                     <template v-if="form.hotels">
-                                        <div class="col-md-6 mt-4">
+                                        <div class="col-md-3 mt-4">
                                             <div class="form-group">
                                                 <label
                                                     class="control-label w-100"
@@ -1679,7 +1679,7 @@
                                                 </el-input-number>
                                             </div>
                                         </div>
-                                        <div class="col-md-6 mt-4">
+                                        <div class="col-md-3 mt-4">
                                             <div class="form-group">
                                                 <label
                                                     class="control-label w-100"
@@ -1693,7 +1693,7 @@
                                                 </el-input-number>
                                             </div>
                                         </div>
-                                        <div class="col-md-6 mt-4">
+                                        <div class="col-md-3 mt-4">
                                             <div class="form-group">
                                                 <label
                                                     class="control-label w-100"
@@ -1708,7 +1708,7 @@
                                                 </el-input-number>
                                             </div>
                                         </div>
-                                        <div class="col-md-6 mt-4">
+                                        <div class="col-md-3 mt-4">
                                             <div class="form-group">
                                                 <label
                                                     class="control-label w-100"
@@ -1728,7 +1728,7 @@
                                                 ></el-time-picker>
                                             </div>
                                         </div>
-                                        <div class="col-md-6 mt-4">
+                                        <div class="col-md-3 mt-4">
                                             <div class="form-group">
                                                 <label
                                                     class="control-label w-100"
@@ -1749,7 +1749,7 @@
                                             </div>
                                         </div>
 
-                                        <div class="col-md-6 mt-4">
+                                        <div class="col-md-3 mt-4">
                                             <div class="form-group">
                                                 <label
                                                     class="control-label w-100"
@@ -1764,7 +1764,7 @@
                                                 ></el-switch>
                                             </div>
                                         </div>
-                                        <div class="col-md-6 mt-4">
+                                        <div class="col-md-3 mt-4">
                                             <div class="form-group">
                                                 <label
                                                     class="control-label w-100"
@@ -1780,7 +1780,7 @@
                                                 </el-input-number>
                                             </div>
                                         </div>
-                                        <div class="col-md-6 mt-4">
+                                        <div class="col-md-3 mt-4">
                                             <div class="form-group">
                                                 <label
                                                     class="control-label w-100"
@@ -1797,7 +1797,7 @@
                                                 ></el-switch>
                                             </div>
                                         </div>
-                                        <div class="col-md-6 mt-4">
+                                        <div class="col-md-3 mt-4">
                                             <div class="form-group">
                                                 <label
                                                     class="control-label w-100"
@@ -1814,7 +1814,7 @@
                                             </div>
                                         </div>
 
-                                        <div class="col-md-6 mt-4">
+                                        <div class="col-md-3 mt-4">
                                             <div class="form-group">
                                                 <label
                                                     class="control-label w-100"
@@ -1832,7 +1832,7 @@
                                             </div>
                                         </div>
                                     </template>
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
                                                 >Manejo de caja principal
@@ -1846,7 +1846,7 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
                                                 >Guardar decisión de impresión
@@ -1860,7 +1860,7 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
                                                 >Mostrar gastos / ingresos en
@@ -1877,7 +1877,7 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
                                                 >Buscar por series en caja
@@ -1892,7 +1892,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
                                                 >Reporte caja - para llevar
@@ -1907,7 +1907,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
                                                 >Billetes/Monedas a recibir caja
@@ -1923,7 +1923,7 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
                                                 >Buscar por segundo nombre
@@ -1939,7 +1939,7 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
                                                 >Whatsapp en reimpresión
@@ -1954,7 +1954,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
                                                 >Productos en caja
@@ -1968,7 +1968,7 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
                                                 >Reimpresion de documentos -
@@ -1986,7 +1986,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
                                                 >Dar a crédito nota de venta
@@ -2003,7 +2003,7 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100">
                                                 Imagenes en cotizaciones
@@ -2017,7 +2017,7 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100">
                                                 Modificar cantidad de productos
@@ -2034,7 +2034,7 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100">
                                                 Transformación de producto
@@ -2049,7 +2049,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100">
                                                 Mostrar mesa "caja"
@@ -2063,7 +2063,7 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100">
                                                 Turno inicio
@@ -2093,7 +2093,7 @@
                                             </el-select>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100">
                                                 Turno final
@@ -2123,7 +2123,7 @@
                                             </el-select>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100">
                                                 Caja principal automatica
@@ -2150,7 +2150,7 @@
                                         </div>
                                     </div>
 
-                                        <div class="col-md-6 mt-4">
+                                        <div class="col-md-3 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100">
                                                 Impresión directa vendedor cotización - Caja
@@ -2168,7 +2168,7 @@
                                         </div>
                                     </div>
                                     
-                                        <div class="col-md-6 mt-4">
+                                        <div class="col-md-3 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100">
                                                 Imprimir política de precio - Cotización
@@ -2189,7 +2189,7 @@
                             </el-tab-pane>
                             <el-tab-pane label="Impresion" v-if="!isArca">
                                 <div class="row">
-                                    <div class="col-md-6 mt-2">
+                                    <div class="col-md-3 mt-2">
                                         <label class="control-label w-100">
                                             Impresoras Nuevas
                                             <el-tooltip
@@ -2211,7 +2211,7 @@
                                         ></el-switch>
                                     </div>
 
-                                    <div class="col-md-6 mt-2">
+                                    <div class="col-md-3 mt-2">
                                         <label class="control-label w-100">
                                             Orientación A5
                                         </label>
@@ -2222,7 +2222,7 @@
                                             @change="submit"
                                         ></el-switch>
                                     </div>
-                                    <div class="col-md-6 mt-2">
+                                    <div class="col-md-3 mt-2">
                                         <label class="control-label w-100">
                                             Mostrar logo en documentos
                                         </label>
@@ -2239,7 +2239,7 @@
                             </el-tab-pane>
                             <el-tab-pane label="Crédito NV" v-if="form.credits">
                                 <div class="row">
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
                                                 >Penalidades
@@ -2254,7 +2254,7 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
                                                 >Confirmación de aprobación
@@ -2269,7 +2269,7 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100">
                                                 Aceptar monto menores en la
@@ -2285,7 +2285,7 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
                                                 >Editar
@@ -2300,7 +2300,7 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
                                                 >Enviar whatsapp a clientes
@@ -2315,7 +2315,7 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
                                                 >Mostrar formatos adicionales
@@ -2330,7 +2330,7 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100">
                                                 Whatsapp personalizado
@@ -2358,7 +2358,7 @@
                             </el-tab-pane>
                             <el-tab-pane label="Modos" v-if="!isArca">
                                 <div class="row">
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
                                                 >Crédito nota de venta
@@ -2371,7 +2371,7 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
                                                 >Caja - colegio
@@ -2384,7 +2384,7 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
                                                 >Entorno Restaurant</label
@@ -2397,7 +2397,7 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
                                                 >Entorno Hotel</label
@@ -2410,7 +2410,7 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
                                                 >Entorno Internet</label
@@ -2423,7 +2423,7 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
                                                 >Entorno Peaje</label
@@ -2437,7 +2437,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100"
                                                 >Contabilidad</label
@@ -2450,7 +2450,7 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100">
                                                 Habilitar series - productos
@@ -2464,7 +2464,7 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100">
                                                 Habilitar lotes - productos
@@ -2478,7 +2478,7 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100">
                                                 Habilitar color & talla -
@@ -2496,7 +2496,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-md-6 mt-4">
+                                    <div class="col-md-3 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100">
                                                 Boticas & Hospital
@@ -2514,7 +2514,7 @@
                             </el-tab-pane>
                             <el-tab-pane label="Promociones" v-if="!isArca">
                                 <div class="row">
-                                    <div class="col-md-6">
+                                    <div class="col-md-3">
                                         <label class="control-label w-100">
                                             Modo Promociones
                                             <el-tooltip
@@ -2549,7 +2549,7 @@
                             </el-tab-pane>
                             <el-tab-pane label="Consumo" v-if="!isArca">
                                 <div class="row">
-                                    <div class="col-md-6">
+                                    <div class="col-md-3">
                                         <label class="control-label w-100">
                                             Texto en precuenta
                                             <el-tooltip
@@ -2570,8 +2570,8 @@
                                             @change="submit"
                                         ></el-switch>
                                     </div>
-                                    <div class="col-md-6"></div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-3"></div>
+                                    <div class="col-md-3">
                                         <label for="text_1">
                                             Primer texto
                                         </label>
@@ -2584,7 +2584,7 @@
                                             @input="saveSubmitDebounce"
                                         ></el-input>
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-3">
                                         <label for="text-2">
                                             Segundo texto
                                         </label>
@@ -2623,6 +2623,735 @@
                                     </div>
                                 </div>
                             </el-tab-pane>
+                            <!-- inicio de configuracion restaurant -->
+                        <el-tab-pane label="restaurant" v-if="form.restaurant">
+                            <div class="row">
+                                <div class="col-md-3 mt-4">
+                                    <div class="form-group">
+                                        <label class="control-label w-100">
+                                            Mostrar mesa "caja"
+                                        </label>
+
+                                        <el-switch v-model="form.show_caja_table" active-text="Si" inactive-text="No" @change="submit"></el-switch>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mt-4">
+                                    <div class="form-group" :class="{
+                                                'has-danger':
+                                                    errors.affectation_igv_type_id
+                                            }">
+                                        <label class="control-label">(Modulo de Mozo) Busqueda de
+                                            Producto por
+                                        </label>
+                                        <el-select v-model="form.search_type" @change="submit" filterable>
+                                            <el-option label="Buscar por Descripcion" value="0"></el-option>
+                                            <el-option label="Buscar por Codigo interno" value="1"></el-option>
+                                        </el-select>
+                                        <small class="text-danger" v-if="
+                                                    errors.affectation_igv_type_id
+                                                " v-text="
+                                                    errors
+                                                        .affectation_igv_type_id[0]
+                                                "></small>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mt-4">
+                                    <div class="form-group">
+                                        <label class="control-label w-100">Caja-Mozo
+                                        </label>
+                                        <el-switch v-model="form.box_orden" active-text="Si" inactive-text="No" @change="submit"></el-switch>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mt-4">
+                                    <div class="form-group">
+                                        <label class="control-label w-100">Ingresar pin
+                                            mozo(ordenes)</label>
+                                        <el-switch v-model="form.pin_switch" active-text="Si" inactive-text="No" @change="submit"></el-switch>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mt-4">
+                                    <div class="form-group">
+                                        <label class="control-label w-100">Imprimir en Zona
+                                            Preparación</label>
+                                        <el-switch v-model="form.print_kitchen" active-text="Si" inactive-text="No" @change="submit"></el-switch>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mt-4">
+                                    <div class="form-group">
+                                        <label class="control-label w-100">Imprimir Comanda</label>
+                                        <el-switch v-model="form.print_commands" active-text="Si" inactive-text="No" @change="submit"></el-switch>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mt-4">
+                                    <div class="form-group">
+                                        <label class="control-label w-100">Pedir pin en caja al eliminar
+                                            orden
+                                        </label>
+                                        <el-switch v-model="form.pin_orden_delete" active-text="Si" inactive-text="No" @change="submit"></el-switch>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mt-4">
+                                    <div class="form-group">
+                                        <label class="control-label w-100">Evitar cerrar caja sin ordenes
+                                            pendientes
+
+                                            <el-tooltip content="Alerta sobre las mesas pendientes al cerrar caja, es posible emitir una nota de venta por todo">
+                                                <i class="fa fa-info-circle"></i>
+                                            </el-tooltip>
+                                        </label>
+                                        <el-switch v-model="form.ordens_cash" active-text="Si" inactive-text="No" @change="submit"></el-switch>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-3 mt-4">
+                                    <label class="control-label w-100">
+                                        Texto en precuenta
+                                        <el-tooltip class="item" effect="dark" content="Permite agregar un texto en la precuenta de consumo" placement="top-start">
+                                            <i class="fa fa-info-circle"></i>
+                                        </el-tooltip>
+                                    </label>
+                                    <el-switch v-model="form.text_comanda" active-text="Si" inactive-text="No" @change="submit"></el-switch>
+                                </div>
+                                <div class="col-md-3 mt-4">
+                                    <div class="form-group">
+                                        <label class="control-label w-100">Reporte caja - para llevar
+                                        </label>
+
+                                        <el-switch v-model="form.carry_cash_report" active-text="Si" inactive-text="No" @change="submit"></el-switch>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mt-4">
+                                    <label for="text_1">
+                                        Primer texto
+                                    </label>
+                                    <el-input :disabled="!form.text_comanda" class="w-100" v-model="form.text_one" placeholder="Texto 1" size="normal" @input="saveSubmitDebounce"></el-input>
+                                </div>
+                                <div class="col-md-3 mt-4">
+                                    <label for="text-2">
+                                        Segundo texto
+                                    </label>
+                                    <el-input :disabled="!form.text_comanda" class="w-100" v-model="form.text_two" placeholder="Texto 2" size="normal" @input="saveSubmitDebounce"></el-input>
+                                </div>
+                                <div class="col-12">
+                                    <label for="text-3">
+                                        Texto pie de página
+                                        <el-tooltip class="item" effect="dark" content="Texto que va en la parte inferior de los documentos" placement="top-start">
+                                            <i class="fa fa-info-circle"></i>
+                                        </el-tooltip>
+                                    </label>
+                                    <el-input class="w-100" v-model="form.footer_text" placeholder="Pie de página" size="normal" type="textarea" rows="3" @input="saveSubmitDebounce"></el-input>
+                                </div>
+
+                            </div>
+                        </el-tab-pane>
+                        <!-- fin de configuracion restaurant -->
+
+                        <!-- inico de configuracion hotel -->
+                        <el-tab-pane label="hotel" v-if="form.hotels">
+                            <div class="row">
+                                <template v-if="form.hotels">
+                                    <div class="col-md-3 mt-4">
+                                        <div class="form-group">
+                                            <label class="control-label w-100">Tiempo de alarma de
+                                                alquileres por vencer
+                                            </label>
+
+                                            <el-input-number @change="submit" v-model="form.alarm_to_end">
+                                            </el-input-number>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3 mt-4">
+                                        <div class="form-group">
+                                            <label class="control-label w-100">Tiempo de mantenimiento
+                                            </label>
+
+                                            <el-input-number @change="submit" v-model="
+                                                        form.time_manteniment
+                                                    ">
+                                            </el-input-number>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3 mt-4">
+                                        <div class="form-group">
+                                            <label class="control-label w-100">Limite de la garantía -
+                                                frigobar
+                                            </label>
+                                            <el-input-number @change="submit" v-model="
+                                                        form.credit_line_hotel_limit
+                                                    ">
+                                            </el-input-number>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 mt-4">
+                                        <div class="form-group">
+                                            <label class="control-label w-100">Descuento aplicado por día
+                                                a cambio del servicio x
+                                                habitación
+                                            </label>
+                                            <el-input-number @change="submit" v-model="
+                                                        form.discount_amount_instead_service
+                                                    ">
+                                            </el-input-number>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 mt-4">
+                                        <div class="form-group">
+                                            <label class="control-label w-100">Tiempo para aviso de salida
+                                                de habitación
+                                            </label>
+                                            <el-input-number @change="submit" v-model="
+                                                        form.minute_close_to_leave
+                                                    ">
+                                            </el-input-number>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 mt-4">
+                                        <div class="form-group">
+                                            <label class="control-label w-100">Tiempo para limpiar la
+                                                habitación
+                                            </label>
+                                            <el-input-number @change="submit" v-model="form.time_to_clean">
+                                            </el-input-number>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 mt-4">
+                                        <div class="form-group">
+                                            <label class="control-label w-100">Tiempo para el calculo del
+                                                inicio del dia
+                                            </label>
+
+                                            <el-time-picker style="width: 100%;" value-format="HH:mm:ss" :format="'hh:mm A'" :picker-options="{
+                                                        format: 'hh:mm A' // Utiliza 'hh' para las horas en formato de 12 horas y 'A' para AM/PM
+                                                    }" timezone="America/Lima" v-model="form.time_to_enter"></el-time-picker>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 mt-4">
+                                        <div class="form-group">
+                                            <label class="control-label w-100">Tiempo para el calculo del
+                                                final del dia
+                                            </label>
+
+                                            <el-time-picker style="width: 100%;" value-format="HH:mm:ss" :format="'hh:mm A'" :picker-options="{
+                                                        format: 'hh:mm A' // Utiliza 'hh' para las horas en formato de 12 horas y 'A' para AM/PM
+                                                    }" timezone="America/Lima" v-model="form.time_to_leave"></el-time-picker>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3 mt-4">
+                                        <div class="form-group">
+                                            <label class="control-label w-100">Autorización de descuento
+                                            </label>
+
+                                            <el-switch v-model="form.auth_discount" active-text="Si" inactive-text="No" @change="submit"></el-switch>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 mt-4">
+                                        <div class="form-group">
+                                            <label class="control-label w-100">Tiempo de mantenimiento
+                                            </label>
+
+                                            <el-input-number @change="submit" v-model="
+                                                        form.time_manteniment
+                                                    ">
+                                            </el-input-number>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 mt-4">
+                                        <div class="form-group">
+                                            <label class="control-label w-100">Control de mantenimiento
+                                            </label>
+
+                                            <el-switch active-text="Si" inactive-text="No" @change="submit" v-model="
+                                                        form.maintenance_workers
+                                                    "></el-switch>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                        </el-tab-pane>
+                        <!-- fin de configuracion hotel -->
+
+                        <!-- inico de configuracion hospital & botica  -->
+                        <el-tab-pane label="Hospital &  Botica" v-if="form.health_network">
+                            <div class="row">
+                                <div class="col-md-3 mt-4">
+                                    <div class="form-group">
+                                        <label class="control-label w-100">
+                                            Turno inicio
+                                            <el-tooltip class="item" effect="dark" content="Turno elegido para agrupar las cajas" placement="top-start">
+                                                <i class="fa fa-info-circle"></i>
+                                            </el-tooltip>
+                                        </label>
+
+                                        <el-select v-model="form.turn_principal" @change="submit" clearable>
+                                            <el-option v-for="turn in turns" :key="turn.id" :label="turn.label" :value="turn.id"></el-option>
+                                        </el-select>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mt-4">
+                                    <div class="form-group">
+                                        <label class="control-label w-100">
+                                            Turno final
+                                            <el-tooltip class="item" effect="dark" content="Turno elegido para agrupar las cajas" placement="top-start">
+                                                <i class="fa fa-info-circle"></i>
+                                            </el-tooltip>
+                                        </label>
+
+                                        <el-select v-model="form.turn_end" @change="submit" clearable>
+                                            <el-option v-for="turn in turns" :key="turn.id" :label="turn.label" :value="turn.id"></el-option>
+                                        </el-select>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mt-4">
+                                    <div class="form-group">
+                                        <label class="control-label w-100">
+                                            Caja principal automatica
+                                            <el-tooltip class="item" effect="dark" content="Caja principal se cierra y abre en base al turno  inicial - final" placement="top-start">
+                                                <i class="fa fa-info-circle"></i>
+                                            </el-tooltip>
+                                        </label>
+
+                                        <el-switch v-model="
+                                                    form.automatic_principal_cash
+                                                " active-text="Si" inactive-text="No" @change="submit"></el-switch>
+                                    </div>
+                                </div>
+                            </div>
+                        </el-tab-pane>
+                        <!-- fin de configuracion hospital & botica  -->
+
+                        <!-- inico de configuracion internet -->
+                        <el-tab-pane label="Internet" v-if="form.internet">
+                            <div class="row">
+                                <div class="col-md-3 mt-2">
+                                    <label class="control-label">Recrear Documento</label>
+                                    <div class="form-group" :class="{
+                                                'has-danger':
+                                                    errors.recreat_document
+                                            }">
+                                        <el-switch v-model="form.recreat_document" active-text="Si" inactive-text="No" @change="submit"></el-switch>
+                                        <small class="text-danger" v-if="errors.recreat_document" v-text="
+                                                    errors.recreat_document[0]
+                                                "></small>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mt-4">
+                                    <label class="control-label">Cambiar fecha de emisión</label>
+                                    <div class="form-group" :class="{
+                                                'has-danger':
+                                                    errors.change_date_emit
+                                            }">
+                                        <el-switch v-model="form.change_date_emit" active-text="Si" inactive-text="No" @change="submit"></el-switch>
+                                        <small class="text-danger" v-if="errors.change_date_emit" v-text="
+                                                    errors.change_date_emit[0]
+                                                "></small>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mt-4">
+                                    <label class="control-label">Editar nombre de productos</label>
+                                    <div class="form-group" :class="{
+                                                'has-danger':
+                                                    errors.edit_name_product
+                                            }">
+                                        <el-switch v-model="form.edit_name_product" active-text="Si" inactive-text="No" @change="submit"></el-switch>
+                                        <small class="text-danger" v-if="errors.edit_name_product" v-text="
+                                                    errors.edit_name_product[0]
+                                                "></small>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mt-4">
+                                    <label class="control-label">Impuesto incluido en registro de
+                                        productos</label>
+                                    <div class="form-group" :class="{
+                                                'has-danger': errors.include_igv
+                                            }">
+                                        <el-switch v-model="form.include_igv" active-text="Si" inactive-text="No" @change="submit"></el-switch>
+                                        <small class="text-danger" v-if="errors.include_igv" v-text="errors.include_igv[0]"></small>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mt-4">
+                                    <div class="form-group">
+                                        <label class="control-label w-100">Multiples Caja (Usuario
+                                            Cajero)</label>
+                                        <el-switch v-model="form.multiple_boxes" active-text="Si" inactive-text="No" @change="submit"></el-switch>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mt-4">
+                                    <div class="form-group">
+                                        <label class="control-label w-100">Venta Rapida (Modulo
+                                            Caja)</label>
+                                        <el-switch v-model="form.sales_quick" active-text="Si" inactive-text="No" @change="submit"></el-switch>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mt-4">
+                                    <div class="form-group">
+                                        <label class="control-label w-100">Mostrar stock caja</label>
+                                        <el-switch v-model="form.show_stock_cash" active-text="Si" inactive-text="No" @change="
+                                                    submit();
+                                                    stock_control();
+                                                "></el-switch>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mt-4">
+                                    <div class="form-group">
+                                        <label class="control-label w-100">Enviar XML por whatsapp
+                                        </label>
+                                        <el-switch v-model="form.xml_whatsapp" active-text="Si" inactive-text="No" @change="submit"></el-switch>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mt-4">
+                                    <div class="form-group">
+                                        <label class="control-label w-100">Ver venta diaria
+                                        </label>
+                                        <el-switch v-model="form.view_daily_cash" active-text="Si" inactive-text="No" @change="submit"></el-switch>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mt-4">
+                                    <div class="form-group">
+                                        <label class="control-label w-100">Mostrar toda la descripción del
+                                            producto en caja
+                                        </label>
+                                        <el-switch v-model="form.trunc_txt" active-text="Si" inactive-text="No" @change="submit"></el-switch>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mt-4">
+                                    <div class="form-group">
+                                        <label class="control-label w-100">Ordenar productos por
+                                            descripción caja
+                                        </label>
+                                        <el-switch v-model="form.ord_dscp" active-text="Si" inactive-text="No" @change="submit"></el-switch>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mt-4">
+                                    <div class="form-group">
+                                        <label class="control-label w-100">Visualizar administrador -
+                                            usuarios
+                                        </label>
+                                        <el-switch v-model="form.users_views" active-text="Si" inactive-text="No" @change="submit"></el-switch>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mt-4">
+                                    <div class="form-group">
+                                        <label class="control-label w-100">Acciones en caja
+                                            <el-tooltip class="item" effect="dark" content="Acciones, como anulación de comprobantes, pagos, nota de crédito" placement="top-start">
+                                                <i class="fa fa-info-circle"></i>
+                                            </el-tooltip>
+                                        </label>
+
+                                        <el-switch v-model="form.caja_actions" active-text="Si" inactive-text="No" @change="submit"></el-switch>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mt-4">
+                                    <div class="form-group">
+                                        <label class="control-label w-100">Enviar whatsapp por pagos
+                                            YAPE/PLIN
+                                            <el-tooltip class="item" effect="dark" content="Enviar un whastapp al número del dueño por cada pago con YAPE/PLIN" placement="top-start">
+                                                <i class="fa fa-info-circle"></i>
+                                            </el-tooltip>
+                                        </label>
+
+                                        <el-switch v-model="
+                                                    form.send_whatsapp_digital_pay
+                                                " active-text="Si" inactive-text="No" @change="submit"></el-switch>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mt-4">
+                                    <div class="form-group">
+                                        <label class="control-label w-100">Mostrar gastos / ingresos en
+                                            caja
+                                        </label>
+
+                                        <el-switch v-model="
+                                                    form.show_expenses_incomes_caja
+                                                " active-text="Si" inactive-text="No" @change="submit"></el-switch>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mt-4">
+                                    <div class="form-group">
+                                        <label class="control-label w-100">Reimpresion de documentos -
+                                            caja
+                                        </label>
+
+                                        <el-switch v-model="
+                                                    form.print_document_cash
+                                                " active-text="Si" inactive-text="No" @change="submit"></el-switch>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mt-4">
+                                    <div class="form-group">
+                                        <label class="control-label w-100">
+                                            Imprimir política de precio - Cotización
+
+                                        </label>
+
+                                        <el-switch v-model="
+                                                    form.unit_type_pdf_quotation
+                                                " active-text="Si" inactive-text="No" @change="submit"></el-switch>
+                                    </div>
+                                </div>
+                            </div>
+                        </el-tab-pane>
+                        <!-- fin de configuracion internet  -->
+                        <!-- ----------------------------------------------------------- -->
+
+                        <!--  inicio de configuracion colegio -->
+                        <el-tab-pane label="Colegio" v-if="form.college">
+                            <div class="row">
+                                <div class="col-md-3 mt-4">
+                                    <label class="control-label">Editar Cantidad en Caja</label>
+                                    <div class="form-group" :class="{
+                                                'has-danger':
+                                                    errors.quantity_cash
+                                            }">
+                                        <el-switch v-model="form.quantity_cash" active-text="Si" inactive-text="No" @change="submit"></el-switch>
+                                        <small class="text-danger" v-if="errors.quantity_cash" v-text="errors.quantity_cash[0]"></small>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-3 mt-4">
+                                    <div class="form-group">
+                                        <label class="control-label w-100">Venta Rapida (Modulo
+                                            Caja)</label>
+                                        <el-switch v-model="form.sales_quick" active-text="Si" inactive-text="No" @change="submit"></el-switch>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mt-4">
+                                    <div class="form-group">
+                                        <label class="control-label w-100">Vender con stock</label>
+                                        <el-switch v-model="form.sales_stock" active-text="Si" inactive-text="No" @change="
+                                                    submit();
+                                                    stock_control();
+                                                "></el-switch>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mt-4">
+                                    <div class="form-group">
+                                        <label class="control-label w-100">Mostrar stock caja</label>
+                                        <el-switch v-model="form.show_stock_cash" active-text="Si" inactive-text="No" @change="
+                                                    submit();
+                                                    stock_control();
+                                                "></el-switch>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mt-4">
+                                    <div class="form-group">
+                                        <label class="control-label w-100">Enviar XML por whatsapp
+                                        </label>
+                                        <el-switch v-model="form.xml_whatsapp" active-text="Si" inactive-text="No" @change="submit"></el-switch>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mt-4">
+                                    <div class="form-group">
+                                        <label class="control-label w-100">Recibir mercaderia (caja)
+                                        </label>
+                                        <el-switch v-model="
+                                                    form.receive_merchandise
+                                                " active-text="Si" inactive-text="No" @change="submit"></el-switch>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mt-4">
+                                    <div class="form-group">
+                                        <label class="control-label w-100">Ver venta diaria
+                                        </label>
+                                        <el-switch v-model="form.view_daily_cash" active-text="Si" inactive-text="No" @change="submit"></el-switch>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mt-4">
+                                    <div class="form-group">
+                                        <label class="control-label w-100">Enviar whatsapp al ver venta
+                                            diaria
+                                        </label>
+                                        <el-switch v-model="
+                                                    form.send_whatsapp_daily_cash
+                                                " active-text="Si" inactive-text="No" @change="submit"></el-switch>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mt-4">
+                                    <div class="form-group">
+                                        <label class="control-label w-100">Observación al hacer ajuste de
+                                            stock
+
+                                            <el-tooltip content="Obligar a dar razón del traslado">
+                                                <i class="fa fa-info-circle"></i>
+                                            </el-tooltip>
+                                        </label>
+                                        <el-switch v-model="
+                                                    form.observation_translate
+                                                " active-text="Si" inactive-text="No" @change="submit"></el-switch>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mt-4">
+                                    <div class="form-group">
+                                        <label class="control-label w-100">Mostrar toda la descripción del
+                                            producto en caja
+                                        </label>
+                                        <el-switch v-model="form.trunc_txt" active-text="Si" inactive-text="No" @change="submit"></el-switch>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mt-4">
+                                    <div class="form-group">
+                                        <label class="control-label w-100">Ordenar productos por
+                                            descripción caja
+                                        </label>
+                                        <el-switch v-model="form.ord_dscp" active-text="Si" inactive-text="No" @change="submit"></el-switch>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mt-4">
+                                    <div class="form-group">
+                                        <label class="control-label w-100">Acciones en caja
+                                            <el-tooltip class="item" effect="dark" content="Acciones, como anulación de comprobantes, pagos, nota de crédito" placement="top-start">
+                                                <i class="fa fa-info-circle"></i>
+                                            </el-tooltip>
+                                        </label>
+
+                                        <el-switch v-model="form.caja_actions" active-text="Si" inactive-text="No" @change="submit"></el-switch>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mt-4">
+                                    <div class="form-group">
+                                        <label class="control-label w-100">Enviar whatsapp por pagos
+                                            YAPE/PLIN
+                                            <el-tooltip class="item" effect="dark" content="Enviar un whastapp al número del dueño por cada pago con YAPE/PLIN" placement="top-start">
+                                                <i class="fa fa-info-circle"></i>
+                                            </el-tooltip>
+                                        </label>
+
+                                        <el-switch v-model="
+                                                    form.send_whatsapp_digital_pay
+                                                " active-text="Si" inactive-text="No" @change="submit"></el-switch>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mt-4">
+                                    <div class="form-group">
+                                        <label class="control-label w-100">Mostrar gastos / ingresos en
+                                            caja
+                                        </label>
+
+                                        <el-switch v-model="
+                                                    form.show_expenses_incomes_caja
+                                                " active-text="Si" inactive-text="No" @change="submit"></el-switch>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mt-4">
+                                    <div class="form-group">
+                                        <label class="control-label w-100">Reimpresion de documentos -
+                                            caja
+                                        </label>
+
+                                        <el-switch v-model="
+                                                    form.print_document_cash
+                                                " active-text="Si" inactive-text="No" @change="submit"></el-switch>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mt-4">
+                                    <div class="form-group">
+                                        <label class="control-label w-100">
+                                            Imprimir política de precio - Cotización
+
+                                        </label>
+
+                                        <el-switch v-model="
+                                                    form.unit_type_pdf_quotation
+                                                " active-text="Si" inactive-text="No" @change="submit"></el-switch>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </el-tab-pane>
+                        <!-- fin de configuracion coelgio -->
+
+                        <!-- abarrotes -->
+                        <el-tab-pane label="Abarrotes  & Otros" v-if="!isArca">
+                            <div class="row">
+                                <div class="col-md-3 mt-4">
+                                    <div class="form-group">
+                                        <label class="control-label w-100">
+                                            Impresión directa vendedor cotización - Caja
+
+                                        </label>
+
+                                        <el-switch v-model="
+                                                    form.seller_quotation_cash
+                                                " active-text="Si" inactive-text="No" @change="submit"></el-switch>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mt-4">
+                                    <div class="form-group">
+                                        <label class="control-label w-100">
+                                            Imprimir política de precio - Cotización
+
+                                        </label>
+
+                                        <el-switch v-model="
+                                                    form.unit_type_pdf_quotation
+                                                " active-text="Si" inactive-text="No" @change="submit"></el-switch>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mt-4">
+                                    <div class="form-group">
+                                        <label class="control-label w-100">Vender con stock</label>
+                                        <el-switch v-model="form.sales_stock" active-text="Si" inactive-text="No" @change="
+                                                    submit();
+                                                    stock_control();
+                                                "></el-switch>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mt-4">
+                                    <div class="form-group">
+                                        <label class="control-label w-100">Mostrar stock caja</label>
+                                        <el-switch v-model="form.show_stock_cash" active-text="Si" inactive-text="No" @change="
+                                                    submit();
+                                                    stock_control();
+                                                "></el-switch>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mt-4">
+                                    <div class="form-group">
+                                        <label class="control-label w-100">Productos en caja
+                                        </label>
+
+                                        <el-switch v-model="form.product_cash" active-text="Si" inactive-text="No" @change="submit"></el-switch>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mt-4">
+                                    <div class="form-group">
+                                        <label class="control-label w-100">Reimpresion de documentos -
+                                            caja
+                                        </label>
+
+                                        <el-switch v-model="
+                                                    form.print_document_cash
+                                                " active-text="Si" inactive-text="No" @change="submit"></el-switch>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mt-4">
+                                    <div class="form-group">
+                                        <label class="control-label w-100">Buscar por segundo nombre
+                                        </label>
+
+                                        <el-switch v-model="
+                                                    form.search_by_second_name
+                                                " active-text="Si" inactive-text="No" @change="submit"></el-switch>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 mt-4">
+                                    <div class="form-group">
+                                        <label class="control-label w-100">Tratamiento comercial Producto
+                                            <el-tooltip class="item" effect="dark" content="Trato comercial" placement="top-start">
+                                                <i class="fa fa-info-circle"></i>
+                                            </el-tooltip>
+                                        </label>
+
+                                        <el-switch v-model="
+                                                    form.commercial_treatment_items
+                                                " active-text="Si" inactive-text="No" @change="submit"></el-switch>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </el-tab-pane>
                         </el-tabs>
                     </div>
                 </form>

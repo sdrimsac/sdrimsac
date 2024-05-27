@@ -1,3 +1,4 @@
+<!-- Agregar Producto/servicio COTIZACION -->
 <template>
     <el-dialog
         :title="titleDialog"
@@ -9,6 +10,7 @@
         :close-on-click-modal="false"
     >
         <form autocomplete="off">
+            <br>
             <div class="form-body">
                 <div class="row">
                     <div class="col-md-7 col-lg-7 col-xl-7 col-sm-7">
@@ -18,6 +20,7 @@
                             :class="{ 'has-danger': errors.item_id }"
                         >
                             <label class="control-label">
+                                <i class="fas fa-box fa-lg"></i>
                                 Producto/Servicio
                                 <a
                                     class="text-primary"
@@ -66,18 +69,23 @@
                                         placement="bottom"
                                         :disabled="recordItem != null"
                                     >
-                                        <div class="el-input-group__append">
+                                    <div class="el-input-group__append">
                                             <el-button
+                                                 style="display: flex; align-items: center; justify-content: center;"
                                                 :disabled="isEditItemNote"
                                                 @click.prevent="
                                                     clickWarehouseDetail()
                                                 "
-                                                ><i class="fa fa-search"></i
-                                            ></el-button>
+                                                >
+                                                <i class="fa fa-eye fa-lg" style="color: green;"></i>
+                                            </el-button>
                                         </div>
                                     </el-tooltip>
+                                    
                                 </div>
+                                
                             </template>
+                            
                             <template v-else>
                                 <div
                                     class="el-input el-input-group el-input-group--append"
@@ -145,7 +153,7 @@
                             ></small>
                         </div>
                     </div>
-                    <div class="col-md-2 col-lg-2 col-xl-2 col-sm-2">
+                    <!-- <div class="col-md-2 col-lg-2 col-xl-2 col-sm-2">
                         <div class="form-group">
                             <label class="control-label text-center"
                                 >Stock Dispo.</label
@@ -156,8 +164,8 @@
                                 </h6></b
                             >
                         </div>
-                    </div>
-                    <div class="col-md-3">
+                    </div> -->
+                    <div class="col-md-5">
                         <div
                             class="form-group"
                             :class="{
@@ -190,6 +198,7 @@
                         </div>
                     </div>
                     <div class="col-md-3 col-sm-3">
+                        <label class="control-label"></label>
                         <div
                             class="form-group"
                             :class="{ 'has-danger': errors.quantity }"
@@ -321,7 +330,7 @@
                         >
                     </div>
 
-                    <div class="col-md-12 col-sm-12">
+                    <!-- <div class="col-md-12 col-sm-12">
                         <div class="form-group">
                             <label class="control-label"
                                 >Nombre producto en PDF</label
@@ -333,7 +342,7 @@
                             >
                             </vue-ckeditor>
                         </div>
-                    </div>
+                    </div> -->
                     <template v-if="!is_client">
                         <div
                             class="col-md-12"
@@ -464,16 +473,14 @@
                             </table>
                         </div> -->
 
-                        <div class="col-md-12 mt-2">
+                        <!-- <div class="col-md-12 mt-2">
                             <el-collapse v-model="activePanel">
-                                <!-- <el-collapse-item :disabled="recordItem != null" title="Información adicional atributos UBL 2.1" name="1"> -->
                                 <el-collapse-item
                                     :disabled="recordItem != null"
                                     title="+ Agregar Descuentos/Cargos/Atributos especiales"
                                     name="1"
                                 >
-                                    <!--<div>-->
-                                    <!--<div class="row">-->
+
                                     <div v-if="discount_types.length > 0">
                                         <label class="control-label">
                                             Descuentos
@@ -741,17 +748,19 @@
                                         </table>
                                     </div>
 
-                                    <!--</div>-->
+                                    
                                 </el-collapse-item>
                             </el-collapse>
-                        </div>
+                        </div> -->
+                        
                     </template>
                 </div>
             </div>
             <div class="form-actions text-end pt-2 pb-2">
-                <el-button @click.prevent="close()">Cerrar</el-button>
+                <el-button icon="fas fa-times fa-lg" @click.prevent="close()"> Cerrar</el-button>
                 <el-button
                     class="add"
+                    icon="fas fa-save fa-lg"
                     type="primary"
                     @click="clickAddItem()"
                     v-if="agregar_item"
@@ -1051,8 +1060,8 @@ export default {
         async create() {
             this.titleDialog = this.recordItem
                 ? " Modificar Producto o Servicio"
-                : " Agregar Producto o Servicio";
-            this.titleAction = this.recordItem ? " Modificar" : "Agregar";
+                : " Agregar Producto o Servicio en Cotización";
+            this.titleAction = this.recordItem ? " Modificar" : " Agregar";
             let operation_type = await _.find(this.operation_types, {
                 id: this.operationTypeId
             });

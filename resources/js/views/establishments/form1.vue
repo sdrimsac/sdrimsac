@@ -1,19 +1,22 @@
+<!-- Nuevo y Editar Establecimiento -->
 <template>
     <el-dialog
         :title="titleDialog"
         :visible="showDialog"
         @close="close"
         @open="create"
+        class="rounded-dialog"
     >
         <form autocomplete="off" @submit.prevent="submit">
             <div class="form-body">
+                <br>
                 <div class="row">
                     <div class="col-md-8">
                         <div
                             class="form-group"
                             :class="{ 'has-danger': errors.description }"
                         >
-                            <label class="control-label">Descripción</label>
+                            <label class="control-label">Descripción del Establecimiento</label>
                             <el-input
                                 ref="inputDescription"
                                 v-model="form.description"
@@ -584,6 +587,13 @@
         </form>
     </el-dialog>
 </template>
+
+<style>
+.el-dialog {
+    border-radius: 10px; 
+    overflow: hidden; 
+  }
+</style>
 
 <script>
 export default {

@@ -23,7 +23,8 @@ class InventoryTransactionController extends Controller
         ];
     }
 
-    public function tables(Request $request){
+    public function tables(Request $request)
+    {
         $warehouses = Warehouse::all();
         return compact('warehouses');
     }
@@ -31,7 +32,7 @@ class InventoryTransactionController extends Controller
     {
         $records = InventoryTransaction::where($request->column, 'like', "%{$request->value}%")
             ->orderBy('id');
-
+        
         return new InventoryTransactionCollection($records->paginate(config('tenant.items_per_page')));
     }
     public function record($id)
@@ -44,20 +45,20 @@ class InventoryTransactionController extends Controller
         $id = $request->input('id');
         $inventory_transaction = InventoryTransaction::firstOrNew(['id' => $id]);
         $inventory_transaction->fill($request->all());
-        if(!$id){
+        if (!$id) {
             //obtén el id más alto de la tabla
             $inventory_transaction->id = InventoryTransaction::max('id') + 1;
-            
         }
         $inventory_transaction->save();
 
         return [
             'success' => true,
-            'message' => ($id)?'Transacción editada con éxito':'Transacción registrada con éxito'
+            'message' => ($id) ? 'Transacción editada con éxito' : 'Transacción registrada con éxito'
         ];
     }
 
-    public function delete($id){
+    public function delete($id)
+    {
 
         $deleted = InventoryTransaction::where('id', $id)->delete();
 
@@ -65,7 +66,5 @@ class InventoryTransactionController extends Controller
             'success' => true,
             'message' => 'Transacción eliminada con éxito'
         ];
-
-
     }
 }

@@ -1,194 +1,87 @@
+<!-- Listado de Establecimientos -->
 <template>
-    <div>
-        <!-- <div class="page-title-container mb-0">
-            <div class="row">
-                 <div class="col-12 col-md-7">
-                    <h1 class="mb-0 pb-0 display-4" id="title">Establecimiento</h1>
-                    <nav
-                        class="breadcrumb-container d-inline-block"
-                        aria-label="breadcrumb"
-                    >
-                        <ul class="breadcrumb pt-0">
-                            <li class="breadcrumb-item">
-                                <a href="/dashboard">Dashboard</a>
-                            </li>
-                            <li class="breadcrumb-item active">
-                                <span class="text-muted">Establecimiento</span>
-                            </li>
-                        </ul>
-                    </nav>
-                </div>
+<div>
+    <div class="card">
+        <div class="card-header bg-primary">
+            <h4 class="text-white my-0">
+                <i class="fas fa-warehouse fa-lg"></i> 
+                Listado de establecimientos
+            </h4>
+        </div>
+        <div class="data-table-visible-columns">
+                <el-button type="primary" 
+                            class="" 
+                            href="javascript:void(0)" 
+                            @click.prevent="clickCreate()">
+                            <i class="fas fa-warehouse fa-lg"></i>
+                            <i class="fas fa-plus"></i>
+                             Nuevo Establecimiento
+                </el-button>
+        </div> 
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr slot="heading" class="bg-primary">
+                            <th class="text-white">#</th>
+                            <th class="text-white">Descripción</th>
+                            <th class="text-white text-end">Código</th>
+                            <th class="text-white text-end">Factura</th>
+                            <th class="text-white text-end">Boleta</th>
+                            <th class="text-white text-end">Nota de venta</th>
+                            <th class="text-white text-end">Acciones</th>
 
-                <div class="col-12 col-md-5 d-flex align-items-start justify-content-end">
-                    <button
-                        type="button"
-                        class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto add-datatable"
-                        @click.prevent="clickCreate()"
-                    >
-                        <i data-cs-icon="plus"></i>
-                        <span>Nuevo</span>
-                    </button>
-                 </div>
-             </div>
-        </div> -->
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(row, index) in records" :key="index">
+                            <td>{{ index + 1 }}</td>
+                            <td>{{ row.description }}</td>
+                            <td class="text-end">{{ row.code }}</td>
+                            <td class="text-end">{{ row.factura }}</td>
+                            <td class="text-end">{{ row.boleta }}</td>
+                            <td class="text-end">{{ row.nota_venta }}</td>
+                            <td class="text-end">
 
-        <!-- <div class="container-fluid p-l-0 p-r-0">
-            <div class="page-header">
-              <div class="row">
-                <div class="col-sm-6">
-                  <h6><span>Establecimientos</span></h6>
-                  <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="/dashboard">Dashboard</a></li>
-                     <li class="breadcrumb-item active"><span class="text-muted">Establecimientos</span></li>
-                  </ol>
-                </div>
-                <div class="col-sm-6">
-                  <div class="bookmark">
-                  <ul>
-                      <li>
-                          <el-tooltip class="item" effect="dark" content="Nuevo" placement="bottom-end">
-                            <a href="javascript:void(0)" @click.prevent="clickCreate()" data-container="body" data-bs-toggle="popover" data-placement="top" data-original-title="Tables">
-                                <i data-feather="plus-circle"></i>
-                            </a>
-                          </el-tooltip>
-                      </li>
-
-                    </ul>
-                  </div>
-                 </div>
-              </div>
-            </div>
-          </div> -->
-        <!-- Container-fluid starts-->
-        <br>
-        <div class="container-fluid p-l-0 p-r-0">
-            <div class="card">
-                <div class="no-radius card-header bg-primary d-flex">
-                    <h6 class="my-0 text-white">Listado de establecimientos</h6>
-                </div>
-
-                <div class="card-body">
-                    <div class="d-flex justify-content-end">
-                        <button
-                            type="button"
-                            class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto add-datatable"
-                            @click.prevent="clickCreate()"
-                        >
-                            <i data-cs-icon="plus"></i>
-                            <span>Nuevo</span>
-                        </button>
-                    </div>
-                    <div class="table-responsive">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Descripción</th>
-                                    <th class="text-end">Código</th>
-                                    <th class="text-end">Factura</th>
-                                    <th class="text-end">Boleta</th>
-                                    <th class="text-end">Nota de venta</th>
-                                    <th class="text-end">Acciones</th>
-                                    
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr
-                                    v-for="(row, index) in records"
-                                    :key="index"
-                                >
-                                    <td>{{ index + 1 }}</td>
-                                    <td>{{ row.description }}</td>
-                                    <td class="text-end">{{ row.code }}</td>
-                                    <td class="text-end">{{ row.factura }}</td>
-                                    <td class="text-end">{{ row.boleta }}</td>
-                                    <td class="text-end">{{ row.nota_venta }}</td>
-                                    <td class="text-end">
-                    
-                                        <button
-                                                class="btn p-0"
-                                                type="button"
-                                                data-bs-toggle="dropdown"
-                                                aria-haspopup="true"
-                                                aria-expanded="false"
-                                            >
-                                                <span
-                                                    class="btn btn-primary dropdown-toggle"
-                                                    data-bs-toggle="tooltip"
-                                                    data-bs-placement="top"
-                                                    data-bs-delay="0"
-                                                    title=""
-                                                    data-bs-original-title="Item Count"
-                                                    aria-label="Item Count"
-                                                    >Acciones</span
-                                                >
-                                            </button>
-                                            <div
-                                                class="dropdown-menu dropdown-menu-end"
-                                                style=""
-                                            >
-                                                <a
-                                                    type="button"
-                                                    class="dropdown-item"
-                                                    @click.prevent="
+                                <button class="btn p-0" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <span class="btn btn-primary dropdown-toggle" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-delay="0" title="" data-bs-original-title="Item Count" aria-label="Item Count">Acciones</span>
+                                </button>
+                                <div class="dropdown-menu dropdown-menu-end" style="">
+                                    <a type="button" class="dropdown-item" @click.prevent="
                                                         clickCreate(
                                                             row.id
                                                         )
-                                                    "
-                                                    
-                                                    >Editar
-                                                </a>
-                                                <a
-                                                    type="button"
-                                                    class="dropdown-item"
-                                                    @click.prevent="
+                                                    ">Editar
+                                    </a>
+                                    <a type="button" class="dropdown-item" @click.prevent="
                                                         clickDelete(
                                                             row.id
                                                         )
-                                                    "
-                                                    
-                                                    >Eliminar
-                                                </a>
-                                                <a
-                                                    type="button"
-                                                    class="dropdown-item"
-                                                    @click.prevent="
+                                                    ">Eliminar
+                                    </a>
+                                    <a type="button" class="dropdown-item" @click.prevent="
                                                         clickSeries(
                                                             row.id
                                                         )
-                                                    "
-                                                    
-                                                    >Series
-                                                </a>
-                                                
-                                            </div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <!-- <div class="row">
+                                                    ">Series
+                                    </a>
+
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!-- <div class="row">
                         <div class="col">
                             <button type="button" class="btn btn-custom btn-sm  mt-2 mr-2" v-if="typeUser != 'integrator'" @click.prevent="clickCreate()"><i class="fa fa-plus-circle"></i> Nuevo</button>
                         </div>
                     </div> -->
-                </div>
-                <establishments-form
-                    :configuration="configuration"
-                    :seriesDefault.sync="seriesDefault"
-                    :soap_type_id="soap_type_id"
-                    :showDialog.sync="showDialog"
-                    :number.sync="number"
-                    :recordId="recordId"
-                    @generateSerie="generateSerie"
-                ></establishments-form>
-                <establishment-series
-                    :showDialog.sync="showDialogSeries"
-                    :establishmentId="recordId"
-                ></establishment-series>
-            </div>
         </div>
+        <establishments-form :configuration="configuration" :seriesDefault.sync="seriesDefault" :soap_type_id="soap_type_id" :showDialog.sync="showDialog" :number.sync="number" :recordId="recordId" @generateSerie="generateSerie"></establishments-form>
+        <establishment-series :showDialog.sync="showDialogSeries" :establishmentId="recordId"></establishment-series>
     </div>
+</div>
 </template>
 
 <script>

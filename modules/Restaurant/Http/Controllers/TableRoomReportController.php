@@ -1501,7 +1501,7 @@ class TableRoomReportController extends Controller
             $records = $rents;
 
             //pdf
-            $pdf = PDF::loadView('restaurant::report.template_export', compact(
+            $pdf = PDF::loadView('restaurant::report.template_pdf', compact(
                 "records",
                 "date_start",
                 "date_end",

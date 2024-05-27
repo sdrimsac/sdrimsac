@@ -276,7 +276,7 @@
                                     style="max-height: 45px ; max-width: 80px;"
                                 >
                                     <i
-                                        class="fas fa-money-bill-wave"
+                                        class="fas fa-money-bill-wave fw-bold"
                                         style="color: var(--primary) !important"
                                     ></i>
                                     <br />
@@ -1041,7 +1041,7 @@
                             "
                                                     >
                                                         <h3
-                                                            class="lead font-weight-light"
+                                                            class="lead font-weight-light fw-bold"
                                                         >
                                                             {{
                                                                 ord.food.description.toUpperCase()
@@ -1313,7 +1313,7 @@
                                                     >
                                                         <div class="row">
                                                             <h3
-                                                                class="lead font-weight-light"
+                                                                class="lead font-weight-light fw-bold"
                                                             >
                                                                 <template
                                                                     v-if="
@@ -1396,13 +1396,7 @@
                                                                 </el-tooltip>
                                                             </h3>
                                                             <p
-                                                                class="
-                                  badge
-                                  bg-foreground
-                                  text-uppercase
-                                  font-weight-light
-                                  p-0
-                                "
+                                                                class="badge bg-foreground text-uppercase font-weight-light p-0"
                                                             ></p>
                                                         </div>
                                                         <div class="row col-12">
@@ -1486,7 +1480,7 @@
                                                                 class="col-4 col-md-5 col-lg-4 col-xl-4"
                                                             >
                                                                 <span
-                                                                    class="text-muted"
+                                                                    class="fw-bold"
                                                                 >
                                                                     Cantidad<br />
                                                                     <div
@@ -1633,7 +1627,7 @@
                                                                     class="time font-weight-light"
                                                                 >
                                                                     <span
-                                                                        class="text-muted"
+                                                                        class="fw-bold"
                                                                     >
                                                                         Precio
                                                                         <br />

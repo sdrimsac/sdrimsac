@@ -5189,7 +5189,7 @@ para el card
 */
 .card {
   box-shadow: 0 4px 10px var(--primary) !important;
-  padding: 7px;
+  padding: 0px;
   background: var(--foreground);
   border-radius: var(--border-radius-lg);
   border: initial; }
@@ -12762,10 +12762,14 @@ html[data-show='true'] .settings-button {
 }
 .el-dialog__header {
   background-color: var(--primary) !important; 
+  border-radius: 10px;
 }
 .el-dialog__title {
   color: var(--light-text) !important;
 }
 .el-dialog__headerbtn .el-dialog__close{
   color:white !important;
+}
+.el_dialog .rounded_dialog{
+ border-radius: 10px;
 }

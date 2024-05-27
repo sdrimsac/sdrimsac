@@ -7,6 +7,7 @@
         @close="close"
         width="30%"
         :close-on-click-modal="false"
+        class="rounded-dialog"
     >
         <div class="row-m-2">
             <div class="col-12">
@@ -119,6 +120,13 @@
         </div>
     </el-dialog>
 </template>
+
+<style>
+.el-dialog {
+    border-radius: 10px; 
+    overflow: hidden; 
+  }
+</style>
 
 <script>
 export default {

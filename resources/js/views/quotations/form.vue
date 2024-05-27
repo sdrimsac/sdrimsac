@@ -1,8 +1,12 @@
+<!-- Modulo de Cotizaciones -->
 <template>
     <div class="card mb-0 pt-2 pt-md-0">
-        <!-- <div class="card-header bg-primary">
-            <h6 class="my-0">Nuevo Comprobante</h6>
-        </div> -->
+        <div class="card-header bg-primary">
+            <h4 class="my-0 text-white">
+                <i class="fas fa-clipboard-list"></i>
+                 Nueva Cotización</h4>
+        </div>
+        <div class="card-body">
         <div class="tab-content" v-if="loading_form">
             <div class="invoice">
                 <header class="clearfix">
@@ -22,9 +26,7 @@
                                 <span class="font-weight-bold d-block"
                                     >COTIZACIÓN</span
                                 >
-                                <span class="font-weight-bold d-block"
-                                    >COT-XXX</span
-                                >
+                                <!-- <span class="font-weight-bold d-block">COT-XXX</span> -->
                                 <span class="font-weight-bold">{{
                                     company.name
                                 }}</span>
@@ -58,9 +60,8 @@
                                         'has-danger': errors.customer_id
                                     }"
                                 >
-                                    <label
-                                        class="control-label font-weight-bold text-primary"
-                                    >
+                                    <label class="control-label font-weight-bold text-primary">
+                                        <i class="fas fa-user fa-lg"></i>
                                         Cliente
                                         <a
                                             href="#"
@@ -104,7 +105,9 @@
                                 >
                                     <!--<label class="control-label">Fecha de emisión</label>-->
                                     <label class="control-label"
-                                        >Fec. Emisión</label
+                                        >
+                                        <i class="fas fa-calendar-check red-icon fa-lg"></i>
+                                        Fec. Emisión</label
                                     >
                                     <el-date-picker
                                     class="w-100"
@@ -129,7 +132,9 @@
                                     }"
                                 >
                                     <label class="control-label"
-                                        >Tiempo de Validez</label
+                                        >
+                                        <i class="fas fa-calendar-check red-icon fa-lg"></i>
+                                        Tiempo de Validez</label
                                     >
                                     <el-date-picker
                                     class="w-100"
@@ -153,7 +158,9 @@
                                     }"
                                 >
                                     <label class="control-label"
-                                        >Tiempo de Entrega</label
+                                        >
+                                        <i class="fas fa-calendar-check red-icon fa-lg"></i>
+                                        Tiempo de Entrega</label
                                     >
                                     <el-date-picker
                                     class="w-100"
@@ -173,7 +180,10 @@
                             <div class="col-lg-3">
                                 <div class="form-group">
                                     <label class="control-label"
-                                        >Dirección de envío
+                                        >
+                                        <i class="fas fa-map-marker-alt fa-lg"></i>
+                                        <i class="fas fa-flag-checkered fa-lg"></i>
+                                        Dirección de envío
                                     </label>
                                     <el-input 
                                     class="w-100"
@@ -227,7 +237,9 @@
                             <div class="col-lg-3">
                                 <div class="form-group">
                                     <label class="control-label"
-                                        >Número de cuenta
+                                        >
+                                        <i class="fas fa-credit-card fa-lg"></i>
+                                        Número de cuenta
                                     </label>
                                     <el-input v-model="form.account_number">
                                         <i
@@ -277,7 +289,9 @@
                                     }"
                                 >
                                     <label class="control-label"
-                                        >Tipo de cambio
+                                        >
+                                        <i class="fas fa-exchange-alt red-icon fa-lg"></i>
+                                         Tipo de cambio
                                         <el-tooltip
                                             class="item"
                                             effect="dark"
@@ -302,10 +316,12 @@
                                     ></small>
                                 </div>
                             </div>
- <div class="col-lg-2 col-md-2">
+                            <div class="col-lg-2 col-md-2">
                                                 <div class="form-group">
                                                     <label class="control-label"
-                                                        >Vendedor</label
+                                                        >
+                                                        <i class="fas fa-user-tie fa-lg"></i>
+                                                        Vendedor</label
                                                     >
                                                     <el-select
                                                         v-model="form.seller_id"
@@ -321,7 +337,8 @@
                                                     </el-select>
                                                 </div>
                                             </div>
-                            <div class="col-lg-8 mt-2">
+
+                            <!-- <div class="col-lg-8 mt-2">
                                 <table>
                                     <thead>
                                         <tr width="100%">
@@ -453,7 +470,7 @@
                                         </tr>
                                     </tbody>
                                 </table>
-                            </div>
+                            </div> -->
 
                             <div class="col-lg-12">
                                 <div
@@ -463,7 +480,9 @@
                                     }"
                                 >
                                     <label class="control-label"
-                                        >Descripcion
+                                        >
+                                        <i class="fas fa-comment fa-lg"></i>
+                                        Observaciones
                                     </label>
                                     <el-input
                                         type="textarea"
@@ -487,41 +506,29 @@
                         <div class="row mt-3">
                             <div class="col-md-12">
                                 <div class="table-responsive">
-                                    <table class="table">
+                                    <table class="table table-striped">
                                         <thead>
-                                            <tr>
-                                                <th>#</th>
-                                                <th class="font-weight-bold">
-                                                    Descripción
-                                                </th>
-                                                <th
-                                                    class="text-center font-weight-bold"
-                                                >
-                                                    Unidad
-                                                </th>
-                                                <th
-                                                    class="text-end font-weight-bold"
-                                                >
-                                                    Cantidad
-                                                </th>
-                                                <th
-                                                    class="text-end font-weight-bold"
-                                                >
-                                                    Precio Unitario
-                                                </th>
-                                                <th
-                                                    class="text-end font-weight-bold"
-                                                >
-                                                    Subtotal
-                                                </th>
+                                            <tr slot="heading" class="bg-primary">
+                                                <th class="text-white text-white">#</th>
+                                                <th class="text-white text-white font-weight-bold">Descripción</th>
+                                                <th class="text-white text-center font-weight-bold">Unidad</th>
+                                                <th class="text-white text-end font-weight-bold">Cantidad</th>
+                                                <th class="text-white text-end font-weight-bold">Precio Unitario</th>
+                                                <th class="text-white text-end font-weight-bold">Subtotal</th>
                                                 <!--<th class="text-end font-weight-bold">Cargo</th>-->
-                                                <th
-                                                    class="text-end font-weight-bold"
-                                                >
-                                                    Total
-                                                </th>
-                                                <th></th>
-                                            </tr>
+                                                <th class="text-white text-end font-weight-bold">Total</th>
+                                                <th class="text-white text-end">
+                                                    <button
+                                                        type="button"
+                                                        class="btn waves-effect waves-light btn-outline-white"
+                                                        @click.prevent="
+                                                            showDialogAddItem = true
+                                                        "
+                                                    >
+                                                        <i class="fas fa-cart-plus fa-lg"></i>
+                                                        Agregar Producto
+                                                    </button></th>
+                                                </tr>
                                         </thead>
                                         <tbody v-if="form.items.length > 0">
                                             <tr
@@ -580,19 +587,9 @@
                                                             )
                                                         "
                                                     >
-                                                        x
+                                                    <i class="fa fa-trash fa-lg"></i>
                                                     </button>
-                                                    <button
-                                                        type="button"
-                                                        class="btn waves-effect waves-light btn-xs btn-danger"
-                                                        @click.prevent="
-                                                            clickCancel(index)
-                                                        "
-                                                    >
-                                                        <i
-                                                            class="fa fa-pencil"
-                                                        ></i>
-                                                    </button>
+                                                   
                                                 </td>
                                             </tr>
                                             <tr>
@@ -602,21 +599,7 @@
                                     </table>
                                 </div>
                             </div>
-                            <div
-                                class="col-lg-12 col-md-6 d-flex align-items-end"
-                            >
-                                <div class="form-group">
-                                    <button
-                                        type="button"
-                                        class="btn waves-effect waves-light btn-primary"
-                                        @click.prevent="
-                                            showDialogAddItem = true
-                                        "
-                                    >
-                                        + Agregar Producto
-                                    </button>
-                                </div>
-                            </div>
+   
 
                             <div class="col-md-8 mt-3"></div>
 
@@ -663,19 +646,24 @@
                     </div>
 
                     <div class="form-actions text-end pt-2 pb-2">
-                        <el-button @click.prevent="close()">Cancelar</el-button>
+                        <el-button icon="fas fa-times fa-lg" @click.prevent="close()"> Cancelar</el-button>
                         <el-button
                             class="submit"
                             type="primary"
+                            icon="fas fa-save fa-lg"
                             native-type="submit"
                             :loading="loading_submit"
                             v-if="form.items.length > 0"
-                            >Generar</el-button
+                            > Generar</el-button
                         >
                     </div>
                 </form>
             </div>
+        
         </div>
+    </div>
+        
+
 
         <quotation-form-item
             :showDialog.sync="showDialogAddItem"

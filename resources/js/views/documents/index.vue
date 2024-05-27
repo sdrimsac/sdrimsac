@@ -1,236 +1,153 @@
+<!-- Listado de Comprobante de Pago -->
 <template>
-    <div>
-        <div class="container-fluid p-l-0 p-r-0">
-            <div class="page-header">
-                <div class="row">
-                    <div class="col-sm-6">
-                        <h6><span>Comprobantes</span></h6>
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item">
-                                <a href="/dashboard">Dashboard</a>
-                            </li>
-                            <li class="breadcrumb-item active">
-                                <span class="text-muted"
-                                    >Facturas - Boletas</span
-                                >
-                            </li>
-                        </ol>
-                    </div>
-                    <div
-                        class="col-12 col-md-6 d-flex align-items-start justify-content-end"
-                    >
-                        <template v-if="configuration.health_network">
-                            <button
-                                type="button"
-                                class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto"
-                                @click.prevent="clickDocumentSalud()"
-                            >
-                                <i class="icofont-plus-circle"></i>
-                                <span>Documentos farmacia</span>
-                            </button>
-                        </template>
-                        <!-- Contact Button Start -->
-                        <button
-                            type="button"
-                            class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto"
-                            v-if="
-                                typeUser == 'admin' || typeUser == 'superadmin'
-                            "
-                            @click.prevent="clickNuevo()"
-                        >
+<div>
+    <div class="container-fluid p-l-0 p-r-0">
+        <div class="page-header">
+            <div class="row">
+                <div class="col-sm-6">
+                    <h6><span>Comprobantes</span></h6>
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item">
+                            <a href="/dashboard">Dashboard</a>
+                        </li>
+                        <li class="breadcrumb-item active">
+                            <span class="text-muted">Facturas - Boletas</span>
+                        </li>
+                    </ol>
+                </div>
+                <div class="col-12 col-md-6 d-flex align-items-start justify-content-end">
+                    <template v-if="configuration.health_network">
+                        <button type="button" class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto" @click.prevent="clickDocumentSalud()">
                             <i class="icofont-plus-circle"></i>
-                            <span>Nuevo</span>
+                            <span>Documentos farmacia</span>
                         </button>
-
-                        <!-- Contact Button End -->
-
-                        <!-- Dropdown Button Start -->
-                        <div class="ms-1">
-                            <button
-                                type="button"
-                                class="btn btn-outline-primary btn-icon btn-icon-only"
-                                data-bs-offset="0,3"
-                                data-bs-toggle="dropdown"
-                                aria-haspopup="true"
-                                aria-expanded="false"
-                                data-submenu
-                            >
-                                <i data-cs-icon="more-horizontal"></i>
-                            </button>
-                            <div class="dropdown-menu dropdown-menu-end">
-                                <button
-                                    class="dropdown-item"
-                                    type="button"
-                                    @click.prevent="clickResume()"
-                                >
-                                    Generar resumen
-                                </button>
-                                <button
-                                    class="dropdown-item"
-                                    type="button"
-                                    @click.prevent="checkResume()"
-                                >
-                                    Consultar resumen
-                                </button>
-                                <button
-                                    class="dropdown-item"
-                                    type="button"
-                                    @click.prevent="clickValidate()"
-                                >
-                                    Validar CPE
-                                </button>
-                                <button
-                                    class="dropdown-item"
-                                    type="button"
-                                    @click.prevent="
-                                        clickDownloadReportPagos('excel')
-                                    "
-                                >
-                                    Reporte de Pagos
-                                </button>
-                                <button
-                                    class="dropdown-item"
-                                    type="button"
-                                    @click.prevent="clickImport()"
-                                    v-if="import_documents == true"
-                                >
-                                    Importar Formato 1
-                                </button>
-                                <button
-                                    class="dropdown-item"
-                                    type="button"
-                                    @click.prevent="clickImportSecond()"
-                                    v-if="import_documents_second == true"
-                                >
-                                    Importar Formato 2
-                                </button>
-                            </div>
-                        </div>
-                        <!-- Dropdown Button End -->
-                    </div>
+                    </template>
                 </div>
             </div>
         </div>
-        <!-- Container-fluid starts-->
-        <div class="container-fluid p-l-0 p-r-0">
-            <div class="row">
-                <div class="col-sm-12">
-                    <div class="card mb-0">
-                        <div class="card-header bg-primary rounded-top">
-                            <h6 class="my-0  text-white">
-                                Listado de Comprobante de Pago (Boletas y Facturas)
-                            </h6>
+    </div>
+    <!-- Container-fluid starts-->
+    <div class="container-fluid p-l-0 p-r-0">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card mb-0">
+                    <div class="card-header bg-primary rounded-top">
+                        <h4 class="my-0  text-white">
+                            <i class="fas fa-file-alt"></i>
+                            Listado de Comprobante de Pago (Boletas y Facturas)
+                        </h4>
+                    </div>
+                    <div class="data-table-visible-columns">
+                        <el-button type="primary" class="" href="javascript:void(0)" @click.prevent="clickNuevo()">
+                            <i class="fas fa-file-alt fa-lg"></i>
+                            <i class="fa fa-plus"></i>
+                            Nuevo Comprobante
+                        </el-button>
+                        <el-button type="button" class="btn btn-primary btn-icon btn-icon-only" data-bs-offset="0,3" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-submenu>
+                            <i data-cs-icon="more-horizontal"></i>
+                        </el-button>
+                        <div class="dropdown-menu dropdown-menu-end">
+                            <button class="dropdown-item" type="button" @click.prevent="clickResume()">
+                                Generar resumen
+                            </button>
+                            <button class="dropdown-item" type="button" @click.prevent="checkResume()">
+                                Consultar resumen
+                            </button>
+                            <button class="dropdown-item" type="button" @click.prevent="clickValidate()">
+                                Validar CPE
+                            </button>
+                            <button class="dropdown-item" type="button" @click.prevent="clickDownloadReportPagos('excel')">
+                                Reporte de Pagos
+                            </button>
+                            <button class="dropdown-item" type="button" @click.prevent="clickImport()" v-if="import_documents == true">
+                                Importar Formato 1
+                            </button>
+                            <button class="dropdown-item" type="button" @click.prevent="clickImportSecond()" v-if="import_documents_second == true">
+                                Importar Formato 2
+                            </button>
                         </div>
-                        <div class="data-table-visible-columns">
-                            <el-dropdown :hide-on-click="false">
-                                <!-- <el-button type="primary">
+                    </div>
+                    <div class="data-table-visible-columns">
+                        <el-dropdown :hide-on-click="false">
+                            <!-- <el-button type="primary">
                                     Mostrar/Ocultar columnas<i
                                         class="el-icon-arrow-down el-icon--right"
                                     ></i>
                                 </el-button> -->
-                                <el-dropdown-menu slot="dropdown">
-                                    <el-dropdown-item
-                                        v-for="(column, index) in columns"
-                                        :key="index"
-                                    >
-                                        <el-checkbox v-model="column.visible">{{
+                            <el-dropdown-menu slot="dropdown">
+                                <el-dropdown-item v-for="(column, index) in columns" :key="index">
+                                    <el-checkbox v-model="column.visible">{{
                                             column.title
                                         }}</el-checkbox>
-                                    </el-dropdown-item>
-                                </el-dropdown-menu>
-                            </el-dropdown>
-                        </div>
-                        <div class="card-body">
-                            <data-table :resource="resource">
-                                <tr slot="heading">
-                                    <th
-                                        class="text-left"
-                                        v-if="typeUser != 'integrator'"
-                                    >
-                                        Acciones
-                                    </th>
-                                    <th>#</th>
-                                    <th>SOAP</th>
-                                    <th v-if="columns.user_name.visible">
-                                        Usuario
-                                    </th>
-                                    <th class="text-center">Fecha Emisión</th>
-                                    <th
-                                        class="text-center"
-                                        v-if="columns.date_of_due.visible"
-                                    >
-                                        Fecha Vencimiento
-                                    </th>
-                                    <th>Cliente</th>
-                                    <th>Número</th>
-                                    <th v-if="columns.sale_note.visible">
-                                        Nota de venta
-                                    </th>
-                                    <th v-if="columns.dispatch.visible">
-                                        Guía de Remisión
-                                    </th>
-                                    <th v-if="columns.notes.visible">
-                                        Notas C/D
-                                    </th>
-                                    <th>Estado</th>
-                                    <th class="text-center">Moneda</th>
-                                    <th
-                                        class="text-left"
-                                        v-if="columns.total_exportation.visible"
-                                    >
-                                        T.Exportación
-                                    </th>
-                                    <th
-                                        class="text-left"
-                                        v-if="columns.total_free.visible"
-                                    >
-                                        T.Gratuita
-                                    </th>
-                                    <th
-                                        class="text-left"
-                                        v-if="columns.total_unaffected.visible"
-                                    >
-                                        T.Inafecta
-                                    </th>
-                                    <th
-                                        class="text-left"
-                                        v-if="columns.total_exonerated.visible"
-                                    >
-                                        T.Exonerado
-                                    </th>
-                                    <th
-                                        class="text-left"
-                                        v-if="columns.total_value.visible"
-                                    >
-                                        T.Gravado
-                                    </th>
-                                    <th
-                                        class="text-left"
-                                        v-if="columns.igv.visible"
-                                    >
-                                        T.Igv
-                                    </th>
-                                    <th class="text-center">
-                                        Saldo
-                                    </th>
-                                    <!-- <th
+                                </el-dropdown-item>
+                            </el-dropdown-menu>
+                        </el-dropdown>
+                    </div>
+                    <div class="card-body">
+                        <data-table :resource="resource"  class="table-striped">
+                            <tr slot="heading" class="bg-primary">
+                                <th class="text-white text-left" v-if="typeUser != 'integrator'">
+                                    Acciones
+                                </th>
+                                <th class="text-white">#</th>
+                                <th class="text-white">SOAP</th>
+                                <th class="text-white" v-if="columns.user_name.visible">
+                                    Usuario
+                                </th>
+                                <th class="text-white text-center">Fecha Emisión</th>
+                                <th class="text-white text-center" v-if="columns.date_of_due.visible">
+                                    Fecha Vencimiento
+                                </th>
+                                <th class="text-white">Cliente</th>
+                                <th class="text-white">Número</th>
+                                <th class="text-white" v-if="columns.sale_note.visible">
+                                    Nota de venta
+                                </th>
+                                <th class="text-white" v-if="columns.dispatch.visible">
+                                    Guía de Remisión
+                                </th>
+                                <th class="text-white" v-if="columns.notes.visible">
+                                    Notas C/D
+                                </th>
+                                <th class="text-white">Estado</th>
+                                <th class="text-white text-center">Moneda</th>
+                                <th class="text-white text-left" v-if="columns.total_exportation.visible">
+                                    T.Exportación
+                                </th>
+                                <th class="text-white text-left" v-if="columns.total_free.visible">
+                                    T.Gratuita
+                                </th>
+                                <th class="text-white text-left" v-if="columns.total_unaffected.visible">
+                                    T.Inafecta
+                                </th>
+                                <th class="text-white text-left" v-if="columns.total_exonerated.visible">
+                                    T.Exonerado
+                                </th>
+                                <th class="text-white text-left" v-if="columns.total_value.visible">
+                                    T.Gravado
+                                </th>
+                                <th class="text-white text-left" v-if="columns.igv.visible">
+                                    T.Igv
+                                </th>
+                                <th class="text-white text-center">
+                                    Saldo
+                                </th>
+                                <!-- <th
                                         class="text-center"
                                         v-if="columns.boxes.visible"
                                     >
                                         Metodo de pago
                                     </th> -->
-                                    <th class="text-left">Total</th>
+                                <th class="text-white text-left">Total</th>
 
-                                    <th class="text-center">Pago</th>
+                                <th class="text-white text-center">Pago</th>
 
-                                    <th class="text-center">Descargas</th>
-                                    <!--<th class="text-center">Anulación</th>-->
-                                </tr>
+                                <th class="text-white text-center">Descargas</th>
+                                <!--<th class="text-center">Anulación</th>-->
+                            </tr>
 
-                                <tr></tr>
-                                <tr
-                                    slot-scope="{ index, row }"
-                                    :class="{
+                            <tr></tr>
+                            <tr slot-scope="{ index, row }" :class="{
                                         'text-danger':
                                             row.state_type_id === '11',
                                         'border border-secondary':
@@ -247,356 +164,207 @@
                                             row.state_type_id === '11',
                                         'border border-warnnig':
                                             row.state_type_id === '13'
-                                    }"
-                                >
-                                    <td
-                                        :class="{
+                                    }">
+                                <td :class="{
                                             'text-dark':
                                                 row.state_type_id === '11'
-                                        }"
-                                        class="text-left"
-                                        v-if="typeUser != 'integrator'"
-                                    >
-                                        <div
-                                            class="dropdown-as-select d-inline-block"
-                                            data-childselector="span"
-                                            v-if="row.state_type_id != '11'"
-                                        >
-                                            <button
-                                                class="btn p-0"
-                                                type="button"
-                                                data-bs-toggle="dropdown"
-                                                aria-haspopup="true"
-                                                aria-expanded="false"
-                                            >
-                                                <span
-                                                    class="btn btn-primary dropdown-toggle"
-                                                    data-bs-toggle="tooltip"
-                                                    data-bs-placement="top"
-                                                    data-bs-delay="0"
-                                                    title=""
-                                                    data-bs-original-title="Item Count"
-                                                    aria-label="Item Count"
-                                                    >Acciones</span
-                                                >
-                                            </button>
-                                            <div
-                                                class="dropdown-menu dropdown-menu-end"
-                                                style=""
-                                            >
-                                                <a
-                                                    type="button"
-                                                    class="dropdown-item"
-                                                    @click.prevent="
+                                        }" class="text-left" v-if="typeUser != 'integrator'">
+                                    <div class="dropdown-as-select d-inline-block" data-childselector="span" v-if="row.state_type_id != '11'">
+                                        <button class="btn p-0" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <span class="btn btn-primary dropdown-toggle" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-delay="0" title="" data-bs-original-title="Item Count" aria-label="Item Count">Acciones</span>
+                                        </button>
+                                        <div class="dropdown-menu dropdown-menu-end" style="">
+                                            <a type="button" class="dropdown-item" @click.prevent="
                                                         clickDeleteDocument(
                                                             row.id
                                                         )
-                                                    "
-                                                    v-if="
+                                                    " v-if="
                                                         row.btn_delete_doc_type_03 &&
                                                             !isAccountant
-                                                    "
-                                                    >Anulado Interno
-                                                </a>
-                                                <a
-                                                    type="button"
-                                                    class="dropdown-item"
-                                                    @click.prevent="
+                                                    ">Anulado Interno
+                                            </a>
+                                            <a type="button" class="dropdown-item" @click.prevent="
                                                         clickChangeToRegisteredStatus(
                                                             row.id
                                                         )
-                                                    "
-                                                    v-if="
+                                                    " v-if="
                                                         row.btn_change_to_registered_status
-                                                    "
-                                                    >Cambiar a estado registrado
-                                                </a>
-                                                <a
-                                                    type="button"
-                                                    class="dropdown-item"
-                                                    @click.prevent="
+                                                    ">Cambiar a estado registrado
+                                            </a>
+                                            <a type="button" class="dropdown-item" @click.prevent="
                                                         clickReStore(row.id)
-                                                    "
-                                                    >Volver a recrear
-                                                </a>
-                                                <a
-                                                    type="button"
-                                                    class="dropdown-item"
-                                                    @click.prevent="
+                                                    ">Volver a recrear
+                                            </a>
+                                            <a type="button" class="dropdown-item" @click.prevent="
                                                         clickVoided(row.id)
-                                                    "
-                                                    v-if="
+                                                    " v-if="
                                                         row.btn_voided &&
                                                             !isAccountant
-                                                    "
-                                                    >Anular Sunat</a
-                                                >
-                                                <a
-                                                    :href="
+                                                    ">Anular Sunat</a>
+                                            <a :href="
                                                         `/dispatches/create_new/document/${row.id}`
-                                                    "
-                                                    class="dropdown-item"
-                                                    v-if="
+                                                    " class="dropdown-item" v-if="
                                                         (row.btn_guide &&
                                                             typeUser ==
                                                                 'admin') ||
                                                             typeUser ==
                                                                 'superadmin'
-                                                    "
-                                                >
-                                                    Guía
-                                                </a>
-                                                <a
-                                                    type="button"
-                                                    :href="
+                                                    ">
+                                                Guía
+                                            </a>
+                                            <a type="button" :href="
                                                         `/${resource}/note/${row.id}`
-                                                    "
-                                                    class="dropdown-item"
-                                                    v-if="
+                                                    " class="dropdown-item" v-if="
                                                         row.btn_note &&
                                                             !isAccountant
-                                                    "
-                                                    >Nota de Credito</a
-                                                >
+                                                    ">Nota de Credito</a>
 
-                                                <a
-                                                    type="button"
-                                                    class="dropdown-item"
-                                                    @click.prevent="
+                                            <a type="button" class="dropdown-item" @click.prevent="
                                                         clickEdit(row.id)
-                                                    "
-                                                    v-if="
+                                                    " v-if="
                                                         (row.state_type_id ===
                                                             '01' ||
                                                             row.state_type_id ===
                                                                 '14') &&
                                                             !isAccountant
-                                                    "
-                                                    >Modificar
-                                                </a>
-                                                <a
-                                                    type="button"
-                                                    class="dropdown-item"
-                                                    v-if="
+                                                    ">Modificar
+                                            </a>
+                                            <a type="button" class="dropdown-item" v-if="
                                                         !(
                                                             row.state_type_id ==
                                                                 '13' &&
                                                             row.document_type_id ==
                                                                 '03'
                                                         )
-                                                    "
-                                                    @click.prevent="
+                                                    " @click.prevent="
                                                         clickValidarCpe(row.id)
-                                                    "
-                                                    >Validar CPE
-                                                </a>
-                                                <a
-                                                    type="button"
-                                                    class="dropdown-item"
-                                                    @click.prevent="
+                                                    ">Validar CPE
+                                            </a>
+                                            <a type="button" class="dropdown-item" @click.prevent="
                                                         clickResend(row.id)
-                                                    "
-                                                    v-if="
+                                                    " v-if="
                                                         row.btn_resend &&
                                                             !isClient &&
                                                             row.document_type_id !=
                                                                 '03'
-                                                    "
-                                                >
-                                                    Reenviar
-                                                </a>
-                                                <a
-                                                    type="button"
-                                                    class="dropdown-item"
-                                                    @click.prevent="
+                                                    ">
+                                                Reenviar
+                                            </a>
+                                            <a type="button" class="dropdown-item" @click.prevent="
                                                         clickSendOnline(row.id)
-                                                    "
-                                                    v-if="
+                                                    " v-if="
                                                         isClient &&
                                                             !row.send_server
-                                                    "
-                                                >
-                                                    Enviar Servidor
-                                                </a>
-                                                <a
-                                                    type="button"
-                                                    class="dropdown-item"
-                                                    @click.prevent="
+                                                    ">
+                                                Enviar Servidor
+                                            </a>
+                                            <a type="button" class="dropdown-item" @click.prevent="
                                                         clickCheckOnline(row.id)
-                                                    "
-                                                    v-if="
+                                                    " v-if="
                                                         isClient &&
                                                             row.send_server &&
                                                             (row.state_type_id ===
                                                                 '01' ||
                                                                 row.state_type_id ===
                                                                     '03')
-                                                    "
-                                                >
-                                                    Consultar Servidor
-                                                </a>
-                                                <a
-                                                    type="button"
-                                                    class="dropdown-item"
-                                                    @click.prevent="
+                                                    ">
+                                                Consultar Servidor
+                                            </a>
+                                            <a type="button" class="dropdown-item" @click.prevent="
                                                         clickOptions(
                                                             row.id,
                                                             false
                                                         )
-                                                    "
-                                                >
-                                                    Imprimir
-                                                </a>
+                                                    ">
+                                                Imprimir
+                                            </a>
 
-                                                <a
-                                                    v-if="row.is_credit"
-                                                    type="button"
-                                                    class="dropdown-item"
-                                                    @click.prevent="
+                                            <a v-if="row.is_credit" type="button" class="dropdown-item" @click.prevent="
                                                         clickPayment(row.id)
-                                                    "
-                                                    >Pagos</a
-                                                >
-                                            </div>
+                                                    ">Pagos</a>
                                         </div>
-                                    </td>
-                                    <td
-                                        :class="{
+                                    </div>
+                                </td>
+                                <td :class="{
                                             'text-dark':
                                                 row.state_type_id === '11'
-                                        }"
-                                    >
-                                        {{ index }}
-                                    </td>
-                                    <td
-                                        :class="{
+                                        }">
+                                    {{ index }}
+                                </td>
+                                <td :class="{
                                             'text-dark':
                                                 row.state_type_id === '11'
-                                        }"
-                                    >
-                                        {{ row.soap_type_description }}
-                                    </td>
-                                    <td
-                                        :class="{
+                                        }">
+                                    {{ row.soap_type_description }}
+                                </td>
+                                <td :class="{
                                             'text-dark':
                                                 row.state_type_id === '11'
-                                        }"
-                                        v-if="columns.user_name.visible"
-                                    >
-                                        {{ row.user_name }}
-                                        <br /><small
-                                            v-text="row.user_email"
-                                        ></small>
-                                    </td>
-                                    <td
-                                        class="text-center"
-                                        :class="{
+                                        }" v-if="columns.user_name.visible">
+                                    {{ row.user_name }}
+                                    <br /><small v-text="row.user_email"></small>
+                                </td>
+                                <td class="text-center" :class="{
                                             'text-dark':
                                                 row.state_type_id === '11'
-                                        }"
-                                    >
-                                        {{ row.date_of_issue }}
-                                    </td>
-                                    <td
-                                        class="text-center"
-                                        v-if="columns.date_of_due.visible"
-                                        :class="{
+                                        }">
+                                    {{ row.date_of_issue }}
+                                </td>
+                                <td class="text-center" v-if="columns.date_of_due.visible" :class="{
                                             'text-dark':
                                                 row.state_type_id === '11'
-                                        }"
-                                    >
-                                        {{ row.date_of_due }}
-                                    </td>
-                                    <td
-                                        :class="{
+                                        }">
+                                    {{ row.date_of_due }}
+                                </td>
+                                <td :class="{
                                             'text-dark':
                                                 row.state_type_id === '11'
-                                        }"
-                                    >
-                                        {{ row.customer_name }}<br /><small
-                                            class="badge bg-dark"
-                                            v-text="row.customer_number"
-                                        ></small>
-                                    </td>
-                                    <td
-                                        :class="{
+                                        }">
+                                    {{ row.customer_name }}<br /><small class="badge bg-dark" v-text="row.customer_number"></small>
+                                </td>
+                                <td :class="{
                                             'text-dark':
                                                 row.state_type_id === '11'
-                                        }"
-                                    >
-                                        {{ row.number }}<br />
-                                        <small
-                                            class="badge bg-dark"
-                                            v-text="
+                                        }">
+                                    {{ row.number }}<br />
+                                    <small class="badge bg-dark" v-text="
                                                 row.document_type_description
-                                            "
-                                        ></small
-                                        ><br />
-                                        <small
-                                            class="badge bg-dark"
-                                            v-if="row.affected_document"
-                                            v-text="row.affected_document"
-                                        ></small>
-                                    </td>
-                                    <td v-if="columns.sale_note.visible">
-                                        <template
-                                            v-for="(row,
-                                            index) in row.sale_note_related"
-                                        >
-                                            <small
-                                                class="d-block"
-                                                :key="index"
-                                                >{{ row.number }}</small
-                                            >
-                                        </template>
-                                    </td>
-                                    <td v-if="columns.dispatch.visible">
-                                        <template
-                                            v-for="(row,
-                                            index) in row.dispatches"
-                                        >
-                                            <small
-                                                class="d-block"
-                                                :key="index"
-                                                >{{ row.description }}</small
-                                            >
-                                        </template>
-                                    </td>
-                                    <td
-                                        :class="{
+                                            "></small><br />
+                                    <small class="badge bg-dark" v-if="row.affected_document" v-text="row.affected_document"></small>
+                                </td>
+                                <td v-if="columns.sale_note.visible">
+                                    <template v-for="(row,
+                                            index) in row.sale_note_related">
+                                        <small class="d-block" ::key="index">{{ row.number }}</small>
+                                    </template>
+                                </td>
+                                <td v-if="columns.dispatch.visible">
+                                    <template v-for="(row,
+                                            index) in row.dispatches">
+                                        <small class="d-block" ::key="index">{{ row.description }}</small>
+                                    </template>
+                                </td>
+                                <td :class="{
                                             'text-dark':
                                                 row.state_type_id === '11'
-                                        }"
-                                        v-if="columns.notes.visible"
-                                    >
-                                        <template
-                                            v-for="(row, index) in row.notes"
-                                        >
-                                            <label class="d-block" :key="index"
-                                                >{{
+                                        }" v-if="columns.notes.visible">
+                                    <template v-for="(row, index) in row.notes">
+                                        <label class="d-block" ::key="index">{{
                                                     row.note_type_description
-                                                }}: {{ row.description }}</label
-                                            >
-                                        </template>
-                                    </td>
+                                                }}: {{ row.description }}</label>
+                                    </template>
+                                </td>
 
-                                    <!-- <td>
+                                <!-- <td>
                             {{ row.document_type_id == '07' ?  row.number : ''}}
                         </td> -->
 
-                                    <td>
-                                        <el-tooltip
-                                            v-if="tooltip(row, false)"
-                                            class="item"
-                                            effect="dark"
-                                            placement="bottom"
-                                        >
-                                            <div slot="content">
-                                                {{ tooltip(row) }}
-                                            </div>
-                                            <span
-                                                class="badge"
-                                                :class="{
+                                <td>
+                                    <el-tooltip v-if="tooltip(row, false)" class="item" effect="dark" placement="bottom">
+                                        <div slot="content">
+                                            {{ tooltip(row) }}
+                                        </div>
+                                        <span class="badge" :class="{
                                                     'bg-danger':
                                                         row.state_type_id ===
                                                         '11',
@@ -618,15 +386,11 @@
                                                     'bg-dark':
                                                         row.state_type_id ===
                                                         '09'
-                                                }"
-                                            >
-                                                {{ row.state_type_description }}
-                                            </span>
-                                        </el-tooltip>
-                                        <span
-                                            v-else
-                                            class="badge"
-                                            :class="{
+                                                }">
+                                            {{ row.state_type_description }}
+                                        </span>
+                                    </el-tooltip>
+                                    <span v-else class="badge" :class="{
                                                 'bg-danger':
                                                     row.state_type_id === '11',
                                                 'badge bg-warning':
@@ -641,109 +405,71 @@
                                                     row.state_type_id === '07',
                                                 'bg-dark':
                                                     row.state_type_id === '09'
-                                            }"
-                                        >
-                                            {{ row.state_type_description }}
-                                        </span>
-                                        <template
-                                            v-if="
+                                            }">
+                                        {{ row.state_type_description }}
+                                    </span>
+                                    <template v-if="
                                                 row.regularize_shipping &&
                                                     row.state_type_id === '01'
-                                            "
-                                        >
-                                            <el-tooltip
-                                                class="item"
-                                                effect="dark"
-                                                :content="
+                                            ">
+                                        <el-tooltip class="item" effect="dark" :content="
                                                     row.message_regularize_shipping
-                                                "
-                                                placement="top-start"
-                                            >
-                                                <i
-                                                    class="fas fa-exclamation-triangle fa-lg"
-                                                    style="color: #d2322d !important"
-                                                ></i>
-                                            </el-tooltip>
-                                        </template>
-                                    </td>
+                                                " placement="top-start">
+                                            <i class="fas fa-exclamation-triangle fa-lg" style="color: #d2322d !important"></i>
+                                        </el-tooltip>
+                                    </template>
+                                </td>
 
-                                    <td
-                                        :class="{
+                                <td :class="{
                                             'text-dark':
                                                 row.state_type_id === '11'
-                                        }"
-                                        class="text-center"
-                                    >
-                                        {{ row.currency_type_id }}
-                                    </td>
-                                    <td
-                                        :class="{
+                                        }" class="text-center">
+                                    {{ row.currency_type_id }}
+                                </td>
+                                <td :class="{
                                             'text-dark':
                                                 row.state_type_id === '11'
-                                        }"
-                                        class="text-left"
-                                        v-if="columns.total_exportation.visible"
-                                    >
-                                        {{ row.total_exportation }}
-                                    </td>
+                                        }" class="text-left" v-if="columns.total_exportation.visible">
+                                    {{ row.total_exportation }}
+                                </td>
 
-                                    <td
-                                        :class="{
+                                <td :class="{
                                             'text-dark':
                                                 row.state_type_id === '11'
-                                        }"
-                                        class="text-left"
-                                        v-if="columns.total_free.visible"
-                                    >
-                                        {{ row.total_free }}
-                                    </td>
+                                        }" class="text-left" v-if="columns.total_free.visible">
+                                    {{ row.total_free }}
+                                </td>
 
-                                    <td
-                                        :class="{
+                                <td :class="{
                                             'text-dark':
                                                 row.state_type_id === '11'
-                                        }"
-                                        class="text-left"
-                                        v-if="columns.total_unaffected.visible"
-                                    >
-                                        {{ row.total_unaffected }}
-                                    </td>
-                                    <td
-                                        :class="{
+                                        }" class="text-left" v-if="columns.total_unaffected.visible">
+                                    {{ row.total_unaffected }}
+                                </td>
+                                <td :class="{
                                             'text-dark':
                                                 row.state_type_id === '11'
-                                        }"
-                                        class="text-left"
-                                        v-if="columns.total_exonerated.visible"
-                                    >
-                                        {{ row.total_exonerated }}
-                                    </td>
-                                    <td
-                                        :class="{
+                                        }" class="text-left" v-if="columns.total_exonerated.visible">
+                                    {{ row.total_exonerated }}
+                                </td>
+                                <td :class="{
                                             'text-dark':
                                                 row.state_type_id === '11'
-                                        }"
-                                        class="text-left"
-                                        v-if="columns.total_value.visible"
-                                    >
-                                        {{ row.total_taxed }}
-                                    </td>
-                                    <td
-                                        :class="{
+                                        }" class="text-left" v-if="columns.total_value.visible">
+                                    {{ row.total_taxed }}
+                                </td>
+                                <td :class="{
                                             'text-dark':
                                                 row.state_type_id === '11'
-                                        }"
-                                        class="text-left"
-                                        v-if="columns.igv.visible"
-                                    >
-                                        {{ row.total_igv }}
-                                    </td>
-                                    <td class="text-warning text-center">
-                                        <span v-if="row.remain > 0">
-                                            {{ row.remain.toFixed(2) }}
-                                        </span>
-                                    </td>
-                                    <!-- <td v-if="columns.boxes.visible">
+                                        }" class="text-left" v-if="columns.igv.visible">
+                                    {{ row.total_igv }}
+                                </td>
+                                <td class="text-warning text-center">
+                                    <span v-if="row.remain > 0">
+                                        {{ row.remain.toFixed(2) }}
+                                    </span>
+                                </td>
+                                <!-- <td v-if="columns.boxes.visible">
                                         <div
                                             class="justify-content-center d-flex flex-column"
                                         >
@@ -761,17 +487,14 @@
                                             </el-tag>
                                         </div>
                                     </td> -->
-                                    <td
-                                        :class="{
+                                <td :class="{
                                             'text-dark':
                                                 row.state_type_id === '11'
-                                        }"
-                                        class="text-left"
-                                    >
-                                        {{ row.total }}
-                                    </td>
+                                        }" class="text-left">
+                                    {{ row.total }}
+                                </td>
 
-                                    <!-- <template v-if="row.balance > 0">
+                                <!-- <template v-if="row.balance > 0">
                                         <td
                                             :class="{
                                                 'text-dark':
@@ -793,118 +516,73 @@
                                             {{ row.balance }}
                                         </td>
                                     </template> -->
-                                    <template>
-                                        <td class="text-center">
-                                            <span
-                                                v-if="row.paid"
-                                                class="badge rounded-pill bg-success text-white"
-                                                >Pagado</span
-                                            ><span
-                                                v-else
-                                                class="badge rounded-pill bg-warning text-white"
-                                            >
-                                                Pendiente
-                                            </span>
-                                        </td>
-                                    </template>
+                                <template>
+                                    <td class="text-center">
+                                        <span v-if="row.paid" class="badge rounded-pill bg-success text-white">Pagado</span><span v-else class="badge rounded-pill bg-warning text-white">
+                                            Pendiente
+                                        </span>
+                                    </td>
+                                </template>
 
-                                    <td
-                                        :class="{
+                                <td :class="{
                                             'text-dark':
                                                 row.state_type_id === '11'
-                                        }"
-                                        class="text-center"
-                                    >
-                                        <button
-                                            type="button"
-                                            style="min-width: 41px"
-                                            class="btn btn-sm btn-primary hover-outline"
-                                            @click.prevent="
+                                        }" class="text-center">
+                                    <button type="button" style="min-width: 41px" class="btn btn-sm btn-primary hover-outline" @click.prevent="
                                                 clickDownload(row.download_xml)
-                                            "
-                                            v-if="row.has_xml"
-                                        >
-                                            XML
-                                        </button>
-                                        <button
-                                            type="button"
-                                            style="min-width: 41px"
-                                            class="btn btn-sm btn-primary hover-outline"
-                                            @click.prevent="
+                                            " v-if="row.has_xml">
+                                        XML
+                                    </button>
+                                    <button type="button" style="min-width: 41px" class="btn btn-sm btn-primary hover-outline" @click.prevent="
                                                 clickDownload(row.download_pdf)
-                                            "
-                                            v-if="row.has_pdf"
-                                        >
-                                            PDF
-                                        </button>
-                                        <button
-                                            type="button"
-                                            style="min-width: 41px"
-                                            class="btn btn-sm btn-primary hover-outline"
-                                            @click.prevent="
+                                            " v-if="row.has_pdf">
+                                        PDF
+                                    </button>
+                                    <button type="button" style="min-width: 41px" class="btn btn-sm btn-primary hover-outline" @click.prevent="
                                                 clickDownload(row.download_cdr)
-                                            "
-                                            v-if="row.has_cdr"
-                                        >
-                                            CDR
-                                        </button>
-                                    </td>
-                                    <!--<td class="text-center">-->
-                                    <!--<button type="button" class="btn waves-effect waves-light btn-sm btn-danger"-->
-                                    <!--@click.prevent="clickDownload(row.download_xml_voided)"-->
-                                    <!--v-if="row.has_xml_voided">XML</button>-->
-                                    <!--<button type="button" class="btn waves-effect waves-light btn-sm btn-danger"-->
-                                    <!--@click.prevent="clickDownload(row.download_cdr_voided)"-->
-                                    <!--v-if="row.has_cdr_voided">CDR</button>-->
-                                    <!--<button type="button" class="btn waves-effect waves-light btn-sm btn-warning"-->
-                                    <!--@click.prevent="clickTicket(row.voided.id, row.group_id)"-->
-                                    <!--v-if="row.btn_ticket">Consultar</button>-->
-                                    <!--</td>-->
-                                </tr>
-                            </data-table>
-                        </div>
-
-                        <documents-voided
-                            :showDialog.sync="showDialogVoided"
-                            :recordId="recordId"
-                        ></documents-voided>
-
-                        <items-import
-                            :showDialog.sync="showImportDialog"
-                        ></items-import>
-
-                        <document-import-second
-                            :showDialog.sync="showImportSecondDialog"
-                        ></document-import-second>
-
-                        <document-options
-                            :showDialog.sync="showDialogOptions"
-                            :editDocument="editDocument"
-                            :configuration="configuration"
-                            :recordId="recordId"
-                            :print="print"
-                            :company="company"
-                            :showClose="true"
-                        ></document-options>
-                        <document-payments
-                            :showDialog.sync="showDialogPayments"
-                            :documentId="recordId"
-                        ></document-payments>
-                        <document-salud-modal
-                        :showDialog.sync="showDialogDocumentSalud"
-                        ></document-salud-modal>
-                        <report-payment
-                            :showDialog.sync="showDialogReportPayment"
-                        ></report-payment>
-                        <DocumentValidate
-                            :showDialogValidate.sync="showDialogValidate"
-                        ></DocumentValidate>
+                                            " v-if="row.has_cdr">
+                                        CDR
+                                    </button>
+                                </td>
+                                <!--<td class="text-center">-->
+                                <!--<button type="button" class="btn waves-effect waves-light btn-sm btn-danger"-->
+                                <!--@click.prevent="clickDownload(row.download_xml_voided)"-->
+                                <!--v-if="row.has_xml_voided">XML</button>-->
+                                <!--<button type="button" class="btn waves-effect waves-light btn-sm btn-danger"-->
+                                <!--@click.prevent="clickDownload(row.download_cdr_voided)"-->
+                                <!--v-if="row.has_cdr_voided">CDR</button>-->
+                                <!--<button type="button" class="btn waves-effect waves-light btn-sm btn-warning"-->
+                                <!--@click.prevent="clickTicket(row.voided.id, row.group_id)"-->
+                                <!--v-if="row.btn_ticket">Consultar</button>-->
+                                <!--</td>-->
+                            </tr>
+                        </data-table>
                     </div>
+
+                    <documents-voided :showDialog.sync="showDialogVoided" :recordId="recordId"></documents-voided>
+
+                    <items-import :showDialog.sync="showImportDialog"></items-import>
+
+                    <document-import-second :showDialog.sync="showImportSecondDialog"></document-import-second>
+
+                    <document-options :showDialog.sync="showDialogOptions" :editDocument="editDocument" :configuration="configuration" :recordId="recordId" :print="print" :company="company" :showClose="true"></document-options>
+                    <document-payments :showDialog.sync="showDialogPayments" :documentId="recordId"></document-payments>
+                    <document-salud-modal :showDialog.sync="showDialogDocumentSalud"></document-salud-modal>
+                    <report-payment :showDialog.sync="showDialogReportPayment"></report-payment>
+                    <DocumentValidate :showDialogValidate.sync="showDialogValidate"></DocumentValidate>
                 </div>
             </div>
         </div>
     </div>
+</div>
 </template>
+
+<style>
+
+.table-striped tr:nth-child(even) {
+background-color: #f2f2f2;
+}
+</style>
 
 <script>
 import DocumentSaludModal from "./partials/document_salud_modal.vue";
@@ -915,7 +593,9 @@ import DocumentPayments from "./partials/payments.vue";
 import DocumentImportSecond from "./partials/import_second.vue";
 import DataTable from "../../components/DataTableDocuments.vue";
 import ItemsImport from "./import.vue";
-import { deletable } from "../../mixins/deletable";
+import {
+    deletable
+} from "../../mixins/deletable";
 import ReportPayment from "./partials/report_payment.vue";
 
 export default {

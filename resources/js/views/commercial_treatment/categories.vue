@@ -1,62 +1,47 @@
 <template>
-    <el-dialog
-        :visible="showDialog"
-        @open="open"
-        @close="close"
-        :title="title"
-        v-loading="loading"
-    >
-        <div class="row m-1" v-if="commercialTreatment">
-            <span class="h4">
-                Tipo de afectación:
-                {{ commercialTreatment.is_amount ? "Monto" : "Porcentaje" }}
-            </span>
-        </div>
-        <div class="row">
-            <div class="col-4">
-                <label for="general"
-                    >Valor general
-                    <el-tooltip
-                        effect="dark"
-                        content="Valor que se aplicará a todas las categorias"
-                        placement="top"
-                    >
-                        <i class="el-icon-question"></i>
-                    </el-tooltip>
-                </label>
-                <el-input v-model="general"
-                type="number"
-                ></el-input>
-            </div>
-            <div class="col-3 d-flex align-items-end">
-                <el-button
-                    type="primary"
-                    icon="el-icon-plus"
-                    @click="addGeneralValue"
-                >
-                    Insertar
-                </el-button>
-            </div>
-        </div>
-        <div class="row d-flex justify-content-center">
-            <div v-for="(data, idx) in tableData" :key="idx" class="m-1 col-3">
-                <label for="desc">
-                    {{ data.name }}
-                </label>
-
-                <el-input
-                    type="number"
-                    class="w-100"
-                    v-model="data.amount"
-                ></el-input>
-            </div>
-        </div>
-
-        <span slot="footer" class="dialog-footer">
-            <el-button @click="close">Cancelar</el-button>
-            <el-button type="primary" @click="submit">Guardar</el-button>
+<el-dialog :visible="showDialog" @open="open" @close="close" :title="title" v-loading="loading">
+    <div class="row m-1" v-if="commercialTreatment">
+        <span class="h4">
+            Tipo de afectación:
+            {{ commercialTreatment.is_amount ? "Monto" : "Porcentaje" }}
         </span>
-    </el-dialog>
+    </div>
+    <div class="row">
+        <div class="col-4">
+            <label for="general">Valor general
+                <el-tooltip effect="dark" content="Valor que se aplicará a todas las categorias" placement="top">
+                    <i class="el-icon-question"></i>
+                </el-tooltip>
+            </label>
+            <el-input v-model="general" type="number"></el-input>
+        </div>
+        <div class="col-3 d-flex align-items-end">
+            <el-button type="primary" icon="el-icon-plus" @click="addGeneralValue">
+                Insertar
+            </el-button>
+        </div>
+    </div>
+    <div class="row d-flex justify-content-center">
+        <div v-for="(data, idx) in tableData" :key="idx" class="m-1 col-3">
+            <label for="desc">
+                {{ data.name }}
+            </label>
+
+            <el-input type="number" class="w-100" v-model="data.amount"></el-input>
+        </div>
+    </div>
+
+    <!-- <span slot="footer" class="dialog-footer">
+        <el-button @click="close">Cancelar</el-button>
+        <el-button type="primary" @click="submit">Guardar</el-button>
+    </span> -->
+
+    <span slot="footer" class="dialog-footer">
+        <el-button @click="close" icon="fas fa-times"> Cancelar</el-button> <!-- Botón "Cancelar" con icono de cierre -->
+        <el-button type="primary" @click="submit" icon="fas fa-save"> Guardar</el-button> <!-- Botón "Guardar" con icono de marca de verificación -->
+    </span>
+
+</el-dialog>
 </template>
 
 <script>
@@ -74,7 +59,7 @@ export default {
         };
     },
     methods: {
-        async addGeneralValue(){
+        async addGeneralValue() {
             this.tableData.forEach((item) => {
                 let general = this.general.toFixed(2);
                 item.amount = general;
@@ -95,8 +80,7 @@ export default {
             try {
                 this.loading = true;
                 const response = await this.$http.post(
-                    `${this.resource}/${this.commercialTreatment.id}`,
-                    {
+                    `${this.resource}/${this.commercialTreatment.id}`, {
                         data: this.tableData
                     }
                 );

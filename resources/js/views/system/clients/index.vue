@@ -303,7 +303,7 @@
         </div>
 
         <div id="client-list" class="card">
-            <div class="card-header bg-info">Listado de Clientes</div>
+            <div class="card-header" style="background: linear-gradient(90deg, rgba(9,9,121,1) 16%, rgba(0,116,255,1) 100%);">Listado de Clientes</div>
             <div class="card-body">
                 <div class="row">
                     <div class="col">

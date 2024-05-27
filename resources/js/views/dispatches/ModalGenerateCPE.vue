@@ -81,14 +81,14 @@
         </table>
         </div>
         <div class="text-center">
-          <el-button
+          <el-button icon="fas fa-save fa-lg"
             v-if="form.selecteds.length > 0"
             type="primary"
             :disabled="loading"
             @click="onFetchDispatchItems"
-            >Generar CPE</el-button
+            > Generar CPE</el-button
           >
-          <el-button :disabled="loading" @click="onClose">Cerrar</el-button>
+          <el-button icon="fas fa-times" :disabled="loading" @click="onClose"> Cerrar</el-button>
         </div>
       </div>
     </el-dialog>

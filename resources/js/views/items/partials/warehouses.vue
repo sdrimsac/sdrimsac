@@ -7,6 +7,8 @@
         append-to-body
         top="7vh"
         v-loading="loading"
+        :close-on-click-modal="false"
+
     >
         <form autocomplete="off" @submit.prevent="submit">
             <div class="form-body">
@@ -133,7 +135,9 @@
                 </div>
             </div>
             <div class="form-actions text-end pt-2 pb-2">
-                <el-button @click.prevent="close()">Cerrar</el-button>
+                <el-button @click.prevent="close()">
+                    <i class="fas fa-times fa-lg"></i> 
+                     Cerrar</el-button>
             </div>
         </form>
 

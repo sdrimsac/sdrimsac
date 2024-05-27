@@ -1,7 +1,11 @@
+
+<!-- Modulo de Consulta de Notas de Venta -->
 <template>
     <div class="card mb-0 pt-2 pt-md-0">
         <div class="card-header bg-primary">
-            <h6 class="my-0 text-white">Consulta de Nota de venta</h6>
+            <h4 class="my-0 text-white">
+                <i class="fas fa-file-alt"></i>
+                Consulta de Nota de venta</h4>
         </div>
         <div class="card mb-0">
                 <div class="card-body">
@@ -24,7 +28,7 @@
                             <th class="text-end">T.Gravado</th>
                             <th class="text-end">T.Igv</th>
                             <th class="text-end">Total</th>
-                        <tr>
+                        </tr>
                         <tr slot-scope="{ index, row }">
                             <td>{{ index }}</td>  
                             <td>{{row.date_of_issue}}</td>
@@ -35,7 +39,7 @@
                             <td>{{row.currency_type_id}}</td>
                             <td>
                                 <template v-for="(doc,i) in row.documents">                                
-                                    <label class="d-block"  :key="i">{{doc.number_full}}</label>
+                                    <label class="d-block"  ::key="i">{{doc.number_full}}</label>
                                 </template>
                             </td>
                             <td>{{row.quotation_number_full}}</td>

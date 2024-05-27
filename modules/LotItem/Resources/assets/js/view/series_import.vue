@@ -1,5 +1,12 @@
 <template>
-    <el-dialog :title="titleDialog" :visible="showDialog" @close="close" @open="create" class="dialog-import" v-loading="loading">
+    <el-dialog  :title="titleDialog" 
+                :visible="showDialog" 
+                @close="close" 
+                @open="create" 
+                class="dialog-import" 
+                v-loading="loading"
+                :close-on-click-modal="false"
+                >
         <form autocomplete="off" @submit.prevent="submit">
             <div class="form-body">
                 <div class="row">
@@ -36,8 +43,18 @@
                 </div>
             </div>
             <div class="form-actions text-end pt-2 pb-2">
-                <el-button @click.prevent="close()">Cancelar</el-button>
-                <el-button id=buttonProcesar type="primary" native-type="submit" :disabled="loading_submit" :loading="loading_submit">Procesar</el-button>
+                <el-button  icon="fas fa-times fa-lg" 
+                            @click.prevent="close()">
+                             Cancelar
+                </el-button>
+                <el-button  icon="fas fa-sync-alt fa-lg" 
+                            id=buttonProcesar 
+                            type="primary" 
+                            native-type="submit" 
+                            :disabled="loading_submit" 
+                            :loading="loading_submit">
+                             Procesar
+                </el-button>
             </div>
         </form>
     </el-dialog>

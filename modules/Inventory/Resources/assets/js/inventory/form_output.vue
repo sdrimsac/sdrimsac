@@ -7,13 +7,13 @@
     >
         <form autocomplete="off" @submit.prevent="submit">
             <div class="form-body">
+                <br>
                 <div class="row">
                     <div class="col-md-8">
-                        <div
-                            class="form-group"
-                            :class="{ 'has-danger': errors.item_id }"
-                        >
-                            <label class="control-label">Producto</label>
+                        <div class="form-group" :class="{ 'has-danger': errors.item_id }">
+                            <label class="control-label">
+                                <i class="fas fa-boxes fa-lg"></i>
+                                Producto</label>
                             <el-select
                                 v-model="form.item_id"
                                 class="w-100"
@@ -64,7 +64,9 @@
                             class="form-group"
                             :class="{ 'has-danger': errors.warehouse_id }"
                         >
-                            <label class="control-label">Almacén</label>
+                            <label class="control-label">
+                                <i class="fas fa-warehouse red-icon fa-lg"></i>
+                                Almacén</label>
                             <el-select
                                 v-model="form.warehouse_id"
                                 filterable
@@ -167,7 +169,10 @@
                                 'has-danger': errors.inventory_transaction_id
                             }"
                         >
-                            <label class="control-label">Motivo traslado</label>
+                            <label class="control-label">
+
+                                <i class="fas fa-exchange-alt fa-lg"></i>
+                                Motivo traslado</label>
                             <el-select
                                 v-model="form.inventory_transaction_id"
                                 filterable
@@ -189,12 +194,13 @@
                 </div>
             </div>
             <div class="form-actions text-end pt-2 pb-2">
-                <el-button @click.prevent="close()">Cancelar</el-button>
+                <el-button icon="fas fa-times fa-lg" @click.prevent="close()"> Cancelar</el-button>
                 <el-button
                     type="primary"
+                    icon="fas fa-save fa-lg"
                     native-type="submit"
                     :loading="loading_submit"
-                    >Aceptar</el-button
+                    > Aceptar</el-button
                 >
             </div>
         </form>

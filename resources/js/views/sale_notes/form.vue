@@ -1,3 +1,4 @@
+<!-- Modulo de Notas de Venta -->
 <template>
     <div
         class="card mb-0"
@@ -5,9 +6,12 @@
         :element-loading-text="text_loader"
     >
         <div class="card-header bg-primary">
-            <h6 class="my-0 text-white">Nota de Venta</h6>
+            <h4 class="my-0 text-white">
+                <i class="fas fa-file-alt"></i>
+                 Nota de Venta</h4>
         </div>
 
+        <div class="card-body"> 
         <div class="tab-content ">
             <div class="invoice" v-if="company != null">
                 <header class="clearfix">
@@ -52,18 +56,59 @@
                             <div class="col-md-12">
                                 <el-card class="box-card">
                                     <div slot="header" class="clearfix">
-                                        <span
-                                            ><i class="el-icon-document"></i>
-                                            Información de Facturación</span
-                                        >
                                     </div>
                                     <div class="text item">
                                         <div class="row">
+                                            <!-- Establecimiento  -->
+                                            <div class="col-lg-2">
+                                                <div
+                                                    class="form-group"
+                                                    :class="{
+                                                        'has-danger':
+                                                            errors.establishment_id
+                                                    }"
+                                                >
+                                                    <label class="control-label">
+                                                        <i class="fas fa-warehouse fa-lg"></i>
+                                                        Establecimiento
+                                                    </label>
+                                                    <el-select
+                                                        v-model="
+                                                            form.establishment_id
+                                                        "
+                                                        @change="
+                                                            changeEstablishment
+                                                        "
+                                                    >
+                                                        <el-option
+                                                            v-for="option in establishments"
+                                                            :key="option.id"
+                                                            :value="option.id"
+                                                            :label="
+                                                                option.description
+                                                            "
+                                                        ></el-option>
+                                                    </el-select>
+                                                    <small
+                                                        class="text-danger"
+                                                        v-if="
+                                                            errors.establishment_id
+                                                        "
+                                                        v-text="
+                                                            errors
+                                                                .establishment_id[0]
+                                                        "
+                                                    ></small>
+                                                </div>
+                                            </div>
+                                            
+                                            
                                             <div class="col-lg-2 col-md-2">
                                                 <div class="form-group">
-                                                    <label class="control-label"
-                                                        >Vendedor</label
-                                                    >
+                                                    <label class="control-label">
+                                                        <i class="fas fa-user-tie fa-lg"></i>
+                                                        Vendedor
+                                                        </label>
                                                     <el-select
                                                         v-model="form.seller_id"
                                                         filterable
@@ -86,9 +131,8 @@
                                                             errors.customer_id
                                                     }"
                                                 >
-                                                    <label
-                                                        class="control-label font-weight-bold text-primary"
-                                                    >
+                                                    <label class="control-label font-weight-bold text-primary">
+                                                        <i class="fas fa-user fa-lg"></i>
                                                         Cliente
                                                         <a
                                                             href="#"
@@ -136,46 +180,7 @@
                                                     ></small>
                                                 </div>
                                             </div>
-                                            <div class="col-lg-2">
-                                                <div
-                                                    class="form-group"
-                                                    :class="{
-                                                        'has-danger':
-                                                            errors.establishment_id
-                                                    }"
-                                                >
-                                                    <label class="control-label"
-                                                        >Establecimiento</label
-                                                    >
-                                                    <el-select
-                                                        v-model="
-                                                            form.establishment_id
-                                                        "
-                                                        @change="
-                                                            changeEstablishment
-                                                        "
-                                                    >
-                                                        <el-option
-                                                            v-for="option in establishments"
-                                                            :key="option.id"
-                                                            :value="option.id"
-                                                            :label="
-                                                                option.description
-                                                            "
-                                                        ></el-option>
-                                                    </el-select>
-                                                    <small
-                                                        class="text-danger"
-                                                        v-if="
-                                                            errors.establishment_id
-                                                        "
-                                                        v-text="
-                                                            errors
-                                                                .establishment_id[0]
-                                                        "
-                                                    ></small>
-                                                </div>
-                                            </div>
+
                                             <div class="col-lg-2">
                                                 <div
                                                     class="form-group"
@@ -185,7 +190,9 @@
                                                     }"
                                                 >
                                                     <label class="control-label"
-                                                        >Serie</label
+                                                        >
+                                                        <i class="fas fa-userfas fa-layer-group fa-lg"></i>
+                                                        Serie</label
                                                     >
                                                     <el-select
                                                         v-model="form.series_id"
@@ -208,6 +215,7 @@
                                                     ></small>
                                                 </div>
                                             </div>
+                                            <!-- Moneda -->
                                             <div class="col-lg-2">
                                                 <div
                                                     class="form-group"
@@ -216,9 +224,10 @@
                                                             errors.currency_type_id
                                                     }"
                                                 >
-                                                    <label class="control-label"
-                                                        >Moneda</label
-                                                    >
+                                                    <label class="control-label">
+                                                        <i class="fas fa-coins red-icon fa-lg"></i>
+                                                        Moneda
+                                                    </label>
                                                     <el-select
                                                         v-model="
                                                             form.currency_type_id
@@ -248,6 +257,108 @@
                                                     ></small>
                                                 </div>
                                             </div>
+                                            <!-- Fecha de emision                                              -->
+                                            <div class="col-lg-2 col-md-2">
+                                                <div
+                                                    class="form-group"
+                                                    :class="{
+                                                        'has-danger':
+                                                            errors.date_of_issue
+                                                    }"
+                                                >
+                                                    <!--<label class="control-label">Fecha de emisión</label>-->
+                                                    <label class="control-label">
+                                                        <i class="fas fa-calendar-check red-icon fa-lg"></i>
+                                                        Fec. Emisión
+                                                    </label>
+                                                    <el-date-picker
+                                                        v-model="
+                                                            form.date_of_issue
+                                                        "
+                                                        type="date"
+                                                        value-format="yyyy-MM-dd"
+                                                        :clearable="false"
+                                                        @change="
+                                                            changeDateOfIssue
+                                                        "
+                                                    ></el-date-picker>
+                                                    <small
+                                                        class="text-danger"
+                                                        v-if="
+                                                            errors.date_of_issue
+                                                        "
+                                                        v-text="
+                                                            errors
+                                                                .date_of_issue[0]
+                                                        "
+                                                    ></small>
+                                                </div>
+                                            </div>
+                                            <!-- Tipo de Cambio                                             -->
+                                            <div class="col-lg-2 col-md-2">
+                                                <div
+                                                    class="form-group"
+                                                    :class="{
+                                                        'has-danger':
+                                                            errors.exchange_rate_sale
+                                                    }"
+                                                >
+                                                    <label class="control-label">
+                                                        <i class="fas fa-exchange-alt red-icon fa-lg"></i>
+                                                        Tipo de cambio
+                                                        <el-tooltip
+                                                            class="item"
+                                                            effect="dark"
+                                                            content="Tipo de cambio del día, extraído de SUNAT"
+                                                            placement="top-end"
+                                                        >
+                                                            <i
+                                                                class="fa fa-info-circle"
+                                                            ></i>
+                                                        </el-tooltip>
+                                                    </label>
+                                                    <el-input
+                                                        v-model="
+                                                            form.exchange_rate_sale
+                                                        "
+                                                    >
+                                                        <i
+                                                            slot="prefix"
+                                                            class="el-icon-edit-outline"
+                                                        ></i
+                                                    ></el-input>
+                                                    <small
+                                                        class="text-danger"
+                                                        v-if="
+                                                            errors.exchange_rate_sale
+                                                        "
+                                                        v-text="
+                                                            errors
+                                                                .exchange_rate_sale[0]
+                                                        "
+                                                    ></small>
+                                                </div>
+                                            </div>   
+                                            <!-- Descuento Global                                             -->
+                                            <div class="col-lg-2 col-md-2">
+                                                <div class="form-group">
+                                                    <label class="control-label"
+                                                        >Descuentos</label
+                                                    >
+                                                    <el-switch
+                                                        @change="
+                                                            changeEnabledDiscount
+                                                        "
+                                                        v-model="
+                                                            enabled_discount
+                                                        "
+                                                        class="control-label font-weight-semibold m-0 text-center m-b-0"
+                                                        active-text="Descuento Global"
+                                                    ></el-switch>
+                                                </div>
+                                            </div>                                                                                     
+
+                                            <!-- Metodos de pago                                             -->
                                             <div class="col-lg-12">
                                                 <table>
                                                     <thead>
@@ -469,84 +580,7 @@
                                                     ></el-input-number>
                                                 </div>
                                             </div> -->
-                                            <div class="col-lg-2 col-md-2">
-                                                <div
-                                                    class="form-group"
-                                                    :class="{
-                                                        'has-danger':
-                                                            errors.date_of_issue
-                                                    }"
-                                                >
-                                                    <!--<label class="control-label">Fecha de emisión</label>-->
-                                                    <label class="control-label"
-                                                        >Fec. Emisión</label
-                                                    >
-                                                    <el-date-picker
-                                                        v-model="
-                                                            form.date_of_issue
-                                                        "
-                                                        type="date"
-                                                        value-format="yyyy-MM-dd"
-                                                        :clearable="false"
-                                                        @change="
-                                                            changeDateOfIssue
-                                                        "
-                                                    ></el-date-picker>
-                                                    <small
-                                                        class="text-danger"
-                                                        v-if="
-                                                            errors.date_of_issue
-                                                        "
-                                                        v-text="
-                                                            errors
-                                                                .date_of_issue[0]
-                                                        "
-                                                    ></small>
-                                                </div>
-                                            </div>
-                                            <div class="col-lg-2 col-md-2">
-                                                <div
-                                                    class="form-group"
-                                                    :class="{
-                                                        'has-danger':
-                                                            errors.exchange_rate_sale
-                                                    }"
-                                                >
-                                                    <label class="control-label"
-                                                        >Tipo de cambio
-                                                        <el-tooltip
-                                                            class="item"
-                                                            effect="dark"
-                                                            content="Tipo de cambio del día, extraído de SUNAT"
-                                                            placement="top-end"
-                                                        >
-                                                            <i
-                                                                class="fa fa-info-circle"
-                                                            ></i>
-                                                        </el-tooltip>
-                                                    </label>
-                                                    <el-input
-                                                        v-model="
-                                                            form.exchange_rate_sale
-                                                        "
-                                                    >
-                                                        <i
-                                                            slot="prefix"
-                                                            class="el-icon-edit-outline"
-                                                        ></i
-                                                    ></el-input>
-                                                    <small
-                                                        class="text-danger"
-                                                        v-if="
-                                                            errors.exchange_rate_sale
-                                                        "
-                                                        v-text="
-                                                            errors
-                                                                .exchange_rate_sale[0]
-                                                        "
-                                                    ></small>
-                                                </div>
-                                            </div>
+
                                             <div
                                                 class="col-lg-2  col-md-2"
                                                 v-if="
@@ -584,25 +618,7 @@
                                                         "
                                                     ></small>
                                                 </div>
-                                            </div>
-
-                                            <div class="col-lg-2 col-md-2">
-                                                <div class="form-group">
-                                                    <label class="control-label"
-                                                        >Descuentos</label
-                                                    >
-                                                    <el-switch
-                                                        @change="
-                                                            changeEnabledDiscount
-                                                        "
-                                                        v-model="
-                                                            enabled_discount
-                                                        "
-                                                        class="control-label font-weight-semibold m-0 text-center m-b-0"
-                                                        active-text="descuento Global"
-                                                    ></el-switch>
-                                                </div>
-                                            </div>
+                                            </div>  
                                         </div>
                                     </div>
                                 </el-card>
@@ -786,76 +802,50 @@
                                     </div>
                                 </el-card>
                             </div>
-                            <div class="col-lg-12 col-md-12">
-                                <div class="form-group">
-                                    <label class="control-label"
-                                        >Observacion</label
-                                    >
-                                    <el-input
-                                        type="textarea"
-                                        v-model="form.additional_information"
-                                    >
-                                        <i
-                                            slot="prefix"
-                                            class="el-icon-edit-outline"
-                                        ></i
-                                    ></el-input>
-                                </div>
-                            </div>
+                                
+                                    <div class="col-lg-12 col-md-12">
+                                        <div class="form-group">
+                                            <label class="control-label">
+                                                <i class="fas fa-comment"></i>
+                                                Observación
+                                            </label>
+                                            <el-input
+                                                type="textarea"
+                                                v-model="form.additional_information"
+                                                >
+                                                <i
+                                                slot="prefix"
+                                                class="el-icon-edit-outline"
+                                                ></i>
+                                            </el-input>
+                                        </div>
+                                    </div>
                         </div>
-
+                        
                         <div class="row mt-2">
                             <div class="col-md-12">
                                 <div class="table-responsive">
                                     <table class="table">
                                         <thead>
-                                            <tr>
-                                                <th width="40px">#</th>
-                                                <th
-                                                    class="text-center font-weight-bold"
-                                                >
-                                                    Afectar Stock
-                                                </th>
-                                                <th class="font-weight-bold">
-                                                    Descripción
-                                                </th>
-                                                <th
-                                                    class="text-center font-weight-bold"
-                                                >
-                                                    Unidad
-                                                </th>
-                                                <th
-                                                    class="text-end font-weight-bold"
-                                                >
-                                                    Cantidad
-                                                </th>
-                                                <th
-                                                    class="text-end font-weight-bold"
-                                                >
-                                                    Precio Unitario
-                                                </th>
-                                                <th
-                                                    class="text-end font-weight-bold"
-                                                >
-                                                    Subtotal
-                                                </th>
+                                            <tr slot="heading" class="bg-primary">
+                                                <th class="text-white"width="40px">#</th>
+                                                <th class="text-white text-center font-weight-bold"> Afectar Stock</th>
+                                                <th class="text-white font-weight-bold">Descripción</th>
+                                                <th class="text-white text-center font-weight-bold">Unidad</th>
+                                                <th class="text-white text-end font-weight-bold"> Cantidad</th>
+                                                <th class="text-white text-end font-weight-bold">Precio Unitario</th>
+                                                <th class="text-white text-end font-weight-bold">Precio Unitario</th>
+                                                <th class="text-white text-end font-weight-bold">Precio Unitario</th>
+                                                <th class="text-white text-end font-weight-bold"> Subtotal</th>
                                                 <!--<th class="text-end font-weight-bold">Cargo</th>-->
-                                                <th
-                                                    class="text-end font-weight-bold"
-                                                >
-                                                    Total
-                                                </th>
-                                                <th
-                                                    class="text-end font-weight-bold"
-                                                >
+                                                <th class="text-white text-end font-weight-bold"> Total</th>
+                                                <th class="text-white text-end font-weight-bold">
                                                     <button
                                                         type="button"
-                                                        class="btn waves-effect waves-light btn-primary btn-sm"
-                                                        @click.prevent="
-                                                            clickAddItemInvoice()
-                                                        "
-                                                    >
-                                                        + Agregar Producto
+                                                        class="btn waves-effect waves-light btn-sm btn-info waves-effect waves-light btn-sm"
+                                                        @click.prevent="clickAddItemInvoice()">
+                                                        <i class="fas fa-cart-plus fa-lg"></i>
+                                                         Agregar Producto
                                                     </button>
                                                 </th>
                                             </tr>
@@ -974,8 +964,8 @@
                                     </table>
                                 </div>
                             </div>
-
-                            <div
+                            
+                                <div
                                 class="col-md-12"
                                 style="display: flex; flex-direction: column; align-items: flex-end;"
                             >
@@ -1063,11 +1053,12 @@
                                     </h6>
                                 </template>
                             </div>
-                        </div>
+
+                            </div> 
                     </div>
 
                     <div class="form-actions text-end pt-2 pb-2">
-                        <el-button @click.prevent="close()">Cancelar</el-button>
+                        <el-button icon="" @click.prevent="close()">Cancelar</el-button>
                         <el-button
                             class="submit"
                             type="primary"
@@ -1082,6 +1073,7 @@
                     </div>
                 </form>
             </div>
+        </div>
         </div>
 
         <sale-notes-form-item

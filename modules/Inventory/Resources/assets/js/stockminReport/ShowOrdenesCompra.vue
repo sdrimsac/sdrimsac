@@ -1,6 +1,7 @@
 <template>
     <el-dialog  :visible="showdialogOrdenesCompra" append-to-body  @close="close" width="60%"    @open="open"
-        title="Listado de Ordenes de Compra ">
+        title="Listado de Ordenes de Compra " class="rounded-dialog">
+        <br>
         <div >
             <div class="container container table-responsive col-md-12" v-loading="loadingverListOrdenCom">
                 <table class="table table-hover table-striped table-condensed  table-responsive"   style="width:100%;     white-space: nowrap;">
@@ -56,6 +57,13 @@
         </span>
     </el-dialog>
 </template>
+
+<style>
+.el-dialog {
+border-radius: 10px;
+overflow: hidden;
+}
+</style>
 
 <script>
 export default {

@@ -4,6 +4,8 @@
         :visible="showDialog"
         @close="close"
         @open="create"
+        :close-on-click-modal="false" 
+        class="rounded-dialog"
     >
         <form autocomplete="off" @submit.prevent="sendItems">
             <div class="form-body">
@@ -56,8 +58,9 @@
                             class="w-100"
                             type="primary"
                             @click.prevent="addItem"
+                            icon="fas fa-plus-circle fa-lg"
                         >
-                            Agregar
+                             Agregar
                         </el-button>
                     </div>
                 </div>
@@ -83,23 +86,35 @@
                             size="mini"
                             @click.prevent="selectedItems.splice(idx, 1)"
                         >
-                            <i class="fa fa-trash"></i>
+                            <i class="fa fa-trash fa-lg"></i>
                         </el-button>
                     </div>
                 </div>
             </div>
             <div class="form-actions text-end pt-2 pb-2">
-                <el-button @click.prevent="close()">Cancelar</el-button>
+                <el-button  icon="fas fa-times fa-lg" 
+                            @click.prevent="close()">
+                            Cancelar
+                </el-button>
                 <el-button
                     type="primary"
                     native-type="submit"
                     :loading="loading_submit"
-                    >Transformar</el-button
+                >
+                <i class="fas fa-random fa-lg"></i>
+                Transformar</el-button
                 >
             </div>
         </form>
     </el-dialog>
 </template>
+
+<style>
+.el-dialog {
+border-radius: 10px;
+overflow: hidden;
+}
+</style>
 
 <script>
 export default {

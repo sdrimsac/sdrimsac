@@ -31,6 +31,9 @@
                     <div class="col-lg-12">
                         <div class="mb-2">
                             <div class="card bg-light">
+                                <div class="card-body">
+                            
+
                                 <div class="row" v-if="configuration.college">
                                     <el-checkbox
                                         @change="chageRegister"
@@ -38,9 +41,9 @@
                                         >No registrado</el-checkbox
                                     >
                                 </div>
-                                <div class="row ">
-                                    <div class="  col-md-6 col-lg-5 col-sm-6">
-                                        <label class="control-label"
+                                <div class="row">
+                                    <div class="col-md-6 col-lg-5 col-sm-6">
+                                        <label class="control-label fw-bold"
                                             >Comprobante de Pago
                                         </label>
                                         <div class="form-group">
@@ -78,7 +81,7 @@
                                     <div
                                         class="col-6 col-md-3 col-lg-3 col-xl-3"
                                     >
-                                        <label class="control-label">
+                                        <label class="control-label fw-bold">
                                             Serie
                                         </label>
                                         <div class="form-group">
@@ -100,7 +103,7 @@
 
                                     <div class="col-6 col-md-4 col-lg-4 ">
                                         <div class="form-group">
-                                            <label class="control-label"
+                                            <label class="control-label fw-bold"
                                                 >Fecha de Emisión</label
                                             >
                                             <el-date-picker
@@ -129,7 +132,7 @@
                                                     style="margin-bottom:3px;"
                                                 >
                                                     <label
-                                                        class="control-label"
+                                                        class="control-label fw-bold"
                                                         style="margin-right:3px;"
                                                         >Cliente</label
                                                     >
@@ -150,7 +153,7 @@
                                                                 notRegister
                                                         "
                                                         @click="createClient"
-                                                        >Nuevo
+                                                        class="fw-bold">Nuevo
                                                         cliente</el-button
                                                     >
                                                 </div>
@@ -225,7 +228,7 @@
                                 </div>
                                 <div class="row col-lg-12 col-xl-12">
                                     <div class="form-group">
-                                        <label class="control-label"
+                                        <label class="control-label fw-bold"
                                             >Observaciones</label
                                         >
                                         <el-input
@@ -281,7 +284,7 @@
 
                                 <template v-if="conf.show_discounts_payment">
                                     <div class="col-md-4 form-group">
-                                        <label class="control-label"
+                                        <label class="control-label fw-bold"
                                             >Monto Descuento</label
                                         >
                                         <el-input-number
@@ -299,7 +302,7 @@
                                         "
                                         class="col-md-4 form-group"
                                     >
-                                        <label class="control-label"
+                                        <label class="control-label fw-bold"
                                             >Tipo de descuento</label
                                         >
                                         <el-checkbox
@@ -314,6 +317,7 @@
                                         </el-checkbox>
                                     </div>
                                 </template>
+                            </div>
                             </div>
                         </div>
                     </div>
@@ -743,7 +747,7 @@
                                                     <label
                                                         for="Tarjeta"
                                                         class="radio-tile-label2"
-                                                        >Pagar No Imprimir</label
+                                                        >No Imprimir</label
                                                     >
                                                 </div>
                                             </div>
@@ -832,6 +836,7 @@
                     <div class="col-lg-12">
                         <div class="mb-2">
                             <div class=" card  bg-light ">
+                                <div class="card-body">
                                 <div class="row">
                                     <div
                                         class=" col-xl-4"
@@ -861,7 +866,7 @@
                                             role="group"
                                             style="padding-top: 12px"
                                         >
-                                            <label class="control-label"
+                                            <label class="control-label fw-bold"
                                                 >Ingrese monto</label
                                             >
                                             <div
@@ -871,7 +876,7 @@
                                                     class="col-3 col-lg-2 col-md-2  col-xl-2"
                                                 >
                                                     <button
-                                                        class="btn btn-outline-primary  m-2"
+                                                        class="btn btn-outline-primary  m-2 fw-bold"
                                                         @click="
                                                             setAmountCash(10)
                                                         "
@@ -883,7 +888,7 @@
                                                     class="col-3 col-lg-2 col-md-2  col-xl-2"
                                                 >
                                                     <button
-                                                        class="btn btn-outline-primary  m-2"
+                                                        class="btn btn-outline-primary  m-2 fw-bold"
                                                         @click="
                                                             setAmountCash(20)
                                                         "
@@ -895,7 +900,7 @@
                                                     class="col-3  col-lg-2 col-md-2  col-xl-2"
                                                 >
                                                     <button
-                                                        class="btn btn-outline-primary  m-2"
+                                                        class="btn btn-outline-primary  m-2 fw-bold"
                                                         @click="
                                                             setAmountCash(50)
                                                         "
@@ -907,7 +912,7 @@
                                                     class="col-3 col-lg-2 col-md-2  col-xl-2"
                                                 >
                                                     <button
-                                                        class="btn btn-outline-primary  m-2"
+                                                        class="btn btn-outline-primary  m-2 fw-bold"
                                                         @click="
                                                             setAmountCash(100)
                                                         "
@@ -919,7 +924,7 @@
                                                     class="col-3 col-lg-2 col-md-2  col-xl-2"
                                                 >
                                                     <button
-                                                        class="btn btn-outline-primary m-2"
+                                                        class="btn btn-outline-primary m-2 fw-bold"
                                                         @click="
                                                             setAmountCash(200)
                                                         "
@@ -1098,6 +1103,7 @@
                                     </div>
                                 </div>
                             </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1118,6 +1124,7 @@
                     </div>
                 </div>
             </div>
+
             <div
                 v-if="splitProducts.length != 0"
                 class="row m-1 p-2  bg-light rounded"
@@ -1233,23 +1240,22 @@
                         </div>
                     </template>
                     <div
-                        class="col-lg-4 col-md-4 col-12 d-flex align-items-end justify-content-center"
-                    >
+                        class="col-lg-4 col-md-4 col-12 d-flex align-items-end justify-content-center">
                         <div>
                             <button
                                 class="btn btn-block btn-primary"
                                 @click="sendPayment"
                                 :disabled="button_payment"
-                            >
+                                >
                                 <i class="fas fa-money-bill-alt"></i>
                                 PAGAR
                             </button>
                         </div>
+                        <br>
                         <div>
                             <button
                                 class="btn btn-block btn-dark"
-                                @click="back(false)"
-                            >
+                                @click="back(false)">
                                 <i class="fa fa-reply"></i> Cerrar
                             </button>
                         </div>

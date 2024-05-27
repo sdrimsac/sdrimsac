@@ -1,66 +1,59 @@
 <template>
-    <el-dialog
-        :title="titleDialog"
-        :visible="showDialog"
-        @close="close"
-        @open="create"
-    >
-        <form autocomplete="off" @submit.prevent="submit">
-            <div class="form-body">
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label class="control-label">Nombre</label>
-                            <el-input v-model="form.name" >
-                                <i
-                                    slot="prefix"
-                                    class="el-icon-edit-outline"
-                                ></i
-                            ></el-input>
-                        </div>
+<el-dialog  :title="titleDialog" 
+            :visible="showDialog" 
+            @close="close" 
+            @open="create" 
+            class="rounded-dialog" 
+            :close-on-click-modal="false"
+            width="40%"
+>
+<br>
+    <form autocomplete="off" @submit.prevent="submit">
+        <div class="form-body">
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="form-group">
+                        <label class="control-label">
+                            <i class="fas fa-exchange-alt"></i> Nombre
+                        </label>
+                        <el-input v-model="form.name">
+                            <i slot="prefix" class="el-icon-edit-outline"></i></el-input>
                     </div>
+                </div>
 
-                    <div class="col-md-6">
-                        <div
-                            class="form-group"
-                            :class="{
+                <div class="col-md-4">
+                    <div class="form-group" :class="{
                                 'has-danger': errors.type
-                            }"
-                        >
-                            <label class="control-label">Tipo</label>
-                            <el-select v-model="form.type">
-                                <el-option
-                                    v-for="(option, idx) in ['output', 'input']"
-                                    :key="idx"
-                                    :value="option"
-                                    :label="
+                            }">
+                        <label class="control-label">
+                            <i class="fas fa-sign-in-alt"></i> <i class="fas fa-sign-out-alt"></i> Tipo de transacción
+                        </label>
+                        <el-select v-model="form.type">
+                            <el-option v-for="(option, idx) in ['output', 'input']" :key="idx" :value="option" :label="
                                         option == 'output'
                                             ? 'Salida'
                                             : 'Entrada'
-                                    "
-                                ></el-option>
-                            </el-select>
-                            <small
-                                class="form-control-feedback"
-                                v-if="errors.type"
-                                v-text="errors.type[0]"
-                            ></small>
-                        </div>
+                                    "></el-option>
+                        </el-select>
+                        <small class="form-control-feedback" v-if="errors.type" v-text="errors.type[0]"></small>
                     </div>
                 </div>
             </div>
-            <div class="form-actions text-end pt-2 pb-2">
-                <el-button @click.prevent="close()">Cancelar</el-button>
-                <el-button
-                    type="primary"
-                    native-type="submit"
-                    :loading="loading_submit"
-                    >Guardar</el-button
-                >
-            </div>
-        </form>
-    </el-dialog>
+        </div>
+        <div class="form-actions text-end pt-2 pb-2">
+            <el-button icon="fas fa-times" @click.prevent="close()"> Cancelar</el-button>
+            <el-button icon="fas fa-save" type="primary" native-type="submit" :loading="loading_submit"> Guardar</el-button>
+        </div>
+    </form>
+</el-dialog>
 </template>
+
+<style>
+.el-dialog {
+    border-radius: 10px;
+    overflow: hidden;
+}
+</style>
 
 <script>
 export default {
@@ -95,15 +88,15 @@ export default {
             };
         },
         create() {
-            if(this.recordId){
+            if (this.recordId) {
                 this.titleDialog = "Editar tipo de transacción";
-            this.$http
-                .get(`/${this.resource}/record/${this.recordId}`)
-                .then(response => {
-                    console.log("🚀 ~ file: form.vue:102 ~ create ~ response:", response)
-                    this.form = response.data;
-                });
-            }else{
+                this.$http
+                    .get(`/${this.resource}/record/${this.recordId}`)
+                    .then(response => {
+                        console.log("🚀 ~ file: form.vue:102 ~ create ~ response:", response)
+                        this.form = response.data;
+                    });
+            } else {
                 this.titleDialog = "Crear tipo de trasancción";
             }
         },

@@ -7,51 +7,26 @@
         append-to-body
         @opened="opened"
         :close-on-click-modal="false"
+        class="rounded-dialog"
     >
+    <br>
         <form autocomplete="off" @submit.prevent="submit">
             <div class="form-body">
                 <div class="row">
-                    <!-- <div class="col-md-4">
-                        <div
-                            class="form-group"
-                            :class="{ 'has-danger': errors.seller_id }"
-                        >
-                            <label class="control-label"
-                                >Vendedor - Asesor
-                                <span class="text-danger">*</span></label
-                            >
-                            <el-select
-                                v-model="form.seller_id"
-                                filterable
-                                @change="filterProvince"
-                                popper-class="el-select-departments"
-                                dusk="department_id"
-                            >
-                                <el-option
-                                    v-for="option in all_users"
-                                    :key="option.id"
-                                    :value="option.id"
-                                    :label="option.name"
-                                ></el-option>
-                            </el-select>
-                            <small
-                                class="text-danger"
-                                v-if="errors.seller_id"
-                                v-text="errors.seller_id[0]"
-                            ></small>
-                        </div>
-                    </div> -->
-                    <div class="col-md-4">
+                   
+                    <div class="col-md-3">
                         <div
                             class="form-group"
                             :class="{
                                 'has-danger': errors.identity_document_type_id
                             }"
                         >
-                            <label class="control-label"
-                                >Tipo Doc. Identidad
-                                <span class="text-danger">*</span></label
-                            >
+                        <label class="control-label">
+                            <i class="fas fas fa-id-card"></i> Tipo Doc. Identidad
+                            <el-tooltip class="item" effect="dark" content="Este campo es obligatorio...!!!" placement="top">
+                                <i class="fas fa-info-circle text-danger"></i>
+                            </el-tooltip>
+                        </label>
                             <el-select
                                 v-model="form.identity_document_type_id"
                                 filterable
@@ -73,16 +48,20 @@
                             ></small>
                         </div>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <div
                             class="form-group"
                             :class="{ 'has-danger': errors.number }"
                         >
-                            <label class="control-label"
-                                >Número
-                                <span class="text-danger">*</span></label
-                            >
-
+                        <label class="control-label">
+                            <i class="fas fa-id-card"></i> 
+                            <i class="fas fa-hashtag"></i>
+                            Número de Doc.
+                            <el-tooltip class="item" effect="dark" content="Este campo es obligatorio...!!!" placement="top">
+                                <i class="fas fa-info-circle text-danger"></i>
+                            </el-tooltip>
+                            
+                        </label>
                             <div v-if="api_service_token != false">
                                 <x-input-service
                                     :identity_document_type_id="
@@ -129,15 +108,18 @@
                             ></small>
                         </div>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-6">
                         <div
                             class="form-group"
                             :class="{ 'has-danger': errors.name }"
                         >
-                            <label class="control-label"
-                                >Nombre
-                                <span class="text-danger">*</span></label
-                            >
+                            <label class="control-label">
+                                <i class="fas fa-tag"></i> Nombre
+                                <el-tooltip class="item" effect="dark" content="Este campo es obligatorio...!!!" placement="top">
+                                    <i class="fas fa-info-circle text-danger"></i>
+                                </el-tooltip>
+                                
+                            </label>
                             <el-input v-model="form.name" dusk="name">
                                 <i
                                     slot="prefix"
@@ -157,7 +139,11 @@
                         class="col-md-4"
                         v-if="form.identity_document_type_id !== '6'"
                     >
-                        <label for="name">Sexo</label>
+                        <label class="control-label">
+                            <i class="fas fa-mars"></i>
+                            <i class="fas fa-venus"></i>
+                             Masculino
+                        </label>
                         <el-select v-model="form.sex">
                             <el-option label="Másculino" value="M"></el-option>
                             <el-option label="Femenino" value="F"></el-option>
@@ -168,9 +154,12 @@
                             class="form-group"
                             :class="{ 'has-danger': errors.trade_name }"
                         >
-                            <label class="control-label"
-                                >Nombre comercial</label
-                            >
+                        <label class="control-label">
+                            <i class="fas fa-building"></i> Nombre Comercial
+                            <el-tooltip class="item" effect="dark" content="Este campo es obligatorio...!!!" placement="top">
+                                <i class="fas fa-info-circle text-danger"></i>
+                            </el-tooltip>
+                        </label>
                             <el-input
                                 v-model="form.trade_name"
                                 dusk="trade_name"
@@ -213,7 +202,9 @@
                             class="form-group"
                             :class="{ 'has-danger': errors.country_id }"
                         >
-                            <label class="control-label">País</label>
+                        <label class="control-label">
+                            <i class="fas fa-globe"></i> País
+                        </label>
                             <el-select
                                 v-model="form.country_id"
                                 filterable
@@ -238,7 +229,9 @@
                             class="form-group"
                             :class="{ 'has-danger': errors.department_id }"
                         >
-                            <label class="control-label">Departamento</label>
+                        <label class="control-label">
+                            <i class="fas fa-building"></i> Departamento
+                        </label>
                             <el-select
                                 v-model="form.department_id"
                                 filterable
@@ -265,7 +258,9 @@
                             class="form-group"
                             :class="{ 'has-danger': errors.province_id }"
                         >
-                            <label class="control-label">Provincia</label>
+                        <label class="control-label">
+                            <i class="fas fa-city"></i> Provincia
+                        </label>
                             <el-select
                                 v-model="form.province_id"
                                 filterable
@@ -292,7 +287,9 @@
                             class="form-group"
                             :class="{ 'has-danger': errors.province_id }"
                         >
-                            <label class="control-label">Distrito</label>
+                        <label class="control-label">
+                            <i class="fas fa-map-marker-alt"></i> Distrito
+                        </label>
                             <el-select
                                 v-model="form.district_id"
                                 filterable
@@ -320,7 +317,11 @@
                             class="form-group"
                             :class="{ 'has-danger': errors.address }"
                         >
-                            <label class="control-label">Dirección</label>
+                        <label class="control-label">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <i class="fas fa-globe"></i>
+                            Dirección
+                        </label>
                             <el-input v-model="form.address" dusk="address">
                                 <i
                                     slot="prefix"
@@ -342,7 +343,9 @@
                             class="form-group"
                             :class="{ 'has-danger': errors.client_zone_id }"
                         >
-                            <label class="control-label">Zona</label>
+                        <label class="control-label">
+                            <i class="fas fa-map-marked-alt"></i> Zona
+                        </label>
                             <el-select
                                 v-model="form.client_zone_id"
                                 filterable
@@ -367,7 +370,9 @@
                             class="form-group"
                             :class="{ 'has-danger': errors.telephone }"
                         >
-                            <label class="control-label">Teléfono</label>
+                        <label class="control-label">
+                            <i class="fab fa-whatsapp"></i> WhatsApp
+                        </label>
                             <el-input v-model="form.telephone" dusk="telephone">
                                 <i
                                     slot="prefix"
@@ -386,9 +391,9 @@
                             class="form-group"
                             :class="{ 'has-danger': errors.email }"
                         >
-                            <label class="control-label"
-                                >Correo electrónico</label
-                            >
+                        <label class="control-label">
+                            <i class="fas fa-envelope"></i> Correo electrónico
+                        </label>
                             <el-input v-model="form.email" dusk="email">
                                 <i
                                     slot="prefix"
@@ -672,18 +677,25 @@
                 </template>
             </div>
             <div class="form-actions text-end pt-2 pb-2">
-                <el-button @click.prevent="close()">Cancelar</el-button>
+                <el-button icon="fas fa-times" @click.prevent="close()"> Cancelar</el-button>
                 <el-button
+                    icon="fas fa-save"
                     type="primary"
                     native-type="submit"
                     :loading="loading_submit"
-                    >Guardar</el-button
+                    > Guardar</el-button
                 >
             </div>
         </form>
     </el-dialog>
 </template>
 
+<style>
+.el-dialog {
+border-radius: 10px;
+overflow: hidden;
+}
+</style>
 <script>
 import { serviceNumber } from "../../mixins/functions";
 

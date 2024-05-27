@@ -5,9 +5,11 @@
         @open="create"
         @close="close"
         append-to-body
+        :close-on-click-modal="false"
     >
         <form autocomplete="off" @submit.prevent="clickAddItem">
             <div class="form-body">
+                <br>
                 <div class="row">
                     <div class="col-md-8 col-lg-8 col-xl-8 col-sm-8">
                         <div
@@ -50,6 +52,9 @@
                                 class="w-100"
                                 v-model="form.quantity"
                                 :min="0.01"
+                                :precision="2"
+                                @keypress="onlyAllowNumbers"
+                                controls-position="right"
                             ></el-input-number>
                             <small
                                 class="form-control-feedback"
@@ -61,14 +66,17 @@
                 </div>
             </div>
             <div class="form-actions text-right mt-2">
-                <el-button @click.prevent="close()">Cerrar</el-button>
+                <el-button icon="fas fa-times fa-lg" @click.prevent="close()"> Cerrar</el-button>
                 <el-button
                     type="primary"
                     native-type="submit"
                     v-if="form.individual_item_id"
-                    >Agregar</el-button
+                    >
+
+                    Agregar</el-button
                 >
             </div>
+            <br>
         </form>
     </el-dialog>
 </template>
