@@ -529,6 +529,13 @@ $many_establishments = \App\Models\Tenant\Establishment::count() > 1;
                     Ganancias
                 </a>
             </li>
+                        <li>
+                            <a class="{{ $path[0] === 'reports' && $path[1] === 'credits' && $path[2] === 'daily_credit' ? 'active' : '' }}"
+                                href="{{ route('reports.credits.daily_index') }}">
+                                <i class="icofont-money-bag"></i>
+                                Reporte diario - crédito
+                            </a>
+                        </li>
             <li>
                             <a class="{{ $path[0] === 'reports' && $path[1] === 'credits' && $path[2] === 'cash_credit' ? 'active' : '' }}"
                                 href="{{ route('reports.credits.credit_index') }}">

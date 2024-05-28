@@ -939,6 +939,11 @@ const app = new Vue({
                 /*webpackChunkName:"report-credit-index"*/
                 "../../modules/Report/Resources/assets/js/views/credit/index_cash.vue"
             ),
+            "report-credit-daily-cash": () =>
+            import(
+                /*webpackChunkName:"report-credit-index"*/
+                "../../modules/Report/Resources/assets/js/views/credit/daily_cash.vue"
+            ),
         "report-credit-index": () =>
             import(
                 /*webpackChunkName:"report-credit-index"*/

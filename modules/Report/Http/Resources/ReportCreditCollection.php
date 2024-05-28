@@ -30,6 +30,7 @@ class ReportCreditCollection extends ResourceCollection
                 ->first();
             $dues = !$paid ? $payment_not_paid->count() : 0;
             $date_of_due = ($last_payment) ? $last_payment->date_payment : null;
+            $quote_payment = ($last_payment) ? $last_payment->amount : 0;
             $differenc_days = 0;
             if ($date_of_due && $dues > 0 && !$paid) {
                 if (is_object($date_of_due)) {
@@ -98,6 +99,7 @@ class ReportCreditCollection extends ResourceCollection
                 $observation .= " " . $observation_credit;
             }
             return [
+                'quote_payment' => $quote_payment,
                 'state_type_id' => $row->state_type_id,
                 'quotes' => $quotes,
                 'schedules' => $schedules,
@@ -115,6 +117,7 @@ class ReportCreditCollection extends ResourceCollection
                 'total' => $row->total   - $advances + $int,
                 'advances' => $advances,
                 'payment' => $payments_records,
+                'type_payment' => $row->type_payment,
                 'date_of_due' => $date_of_due,
                 'canceled' => (bool) $row->paid,
                 'penalty' => $row->status ==  'A' && !$paid ? $row->getPenalties() : 0,
@@ -125,5 +128,7 @@ class ReportCreditCollection extends ResourceCollection
                 'observation' => $observation,
             ];
         });
+
+
     }
 }

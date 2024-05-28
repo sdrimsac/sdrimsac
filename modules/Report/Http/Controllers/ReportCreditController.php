@@ -16,6 +16,7 @@ use App\Models\Tenant\SaleNote;
 use App\Models\Tenant\SaleNoteItem;
 use App\Models\Tenant\SaleNotePayment;
 use Carbon\Carbon;
+use Modules\Report\Exports\ReportCreditDailyExport;
 use Modules\Report\Exports\ReportCreditExport;
 use Modules\Report\Exports\ReportCreditTypeCashExport;
 use Modules\Report\Exports\ReportCreditTypeExport;
@@ -57,10 +58,180 @@ class ReportCreditController extends Controller
 
         return view('report::credits.index');
     }
+    public function daily_cash()
+    {
+
+        return view('report::credits.daily_cash');
+    }
     public function index_cash()
     {
 
         return view('report::credits.index_cash');
+    }
+
+    public function daily_cash_filter()
+    {
+        $users = User::whereType('seller')
+            ->where('active', true)
+            ->get()
+            ->transform(function ($row) {
+                return [
+                    'id' => $row->id,
+                    'name' => $row->name
+                ];
+            });
+        $establishments = Establishment::all()->transform(function ($row) {
+            return [
+                'id' => $row->id,
+                'name' => $row->description
+            ];
+        });
+        $sellers = $this->getSellers();
+        $persons = $this->getPersons('customers');
+
+        return compact('establishments', 'sellers', 'persons', 'users');
+    }
+    private function get_daily_cash_records(Request $request)
+    {
+        $date = $request->date;
+        $credits = SaleNote::whereHas(
+            'creditPayments',
+            function ($query) use ($date) {
+                $query->where('date_payment', $date)
+                    ->where('paid', 0);
+            }
+        )
+            ->with(['customer', 'user', 'sale_note_credit', 'creditPayments']); // Cargar relaciones necesarias
+        return $credits;
+    }
+    public function daily_cash_records(Request $request)
+    {
+        $records = $this->get_daily_cash_records($request);
+
+        return new ReportCreditCollection($records->paginate(config('tenant.items_per_page')));
+    }
+    public function daily_cash_excel(Request $request)
+    {
+
+        $records = $this->get_daily_cash_records($request)->get()->transform(function ($row) {
+            $advances  = $row->advances;
+            $paid = $row->paid;
+            $payment = Payment::where('sale_note_id', $row->id);
+            $payment_not_paid = $payment->where('paid', 0)
+                ->where('date_payment', '<=', Carbon::now()->startOfDay())
+                ->orderBy('date_payment', 'desc');
+            $last_payment =  Payment::where('sale_note_id', $row->id)
+                ->where('paid', 0)
+                ->orderBy('date_payment', 'asc')
+                ->first();
+            $dues = !$paid ? $payment_not_paid->count() : 0;
+            $date_of_due = ($last_payment) ? $last_payment->date_payment : null;
+            $quote_payment = ($last_payment) ? $last_payment->amount : 0;
+            $differenc_days = 0;
+            if ($date_of_due && $dues > 0 && !$paid) {
+                if (is_object($date_of_due)) {
+                    $date_of_due = $date_of_due->format('Y-m-d');
+                }
+                $differenc_days = Carbon::parse($date_of_due)->diffInDays(Carbon::now()->startOfDay(), false);
+            }
+
+            $customer = $row->customer;
+            $amount_due = 0;
+            $payments_records = SaleNotePayment::where('sale_note_id', $row->id)->sum('payment');
+            if ($last_payment == null) {
+                $last_paid =  Payment::where('sale_note_id', $row->id)
+                    ->where('paid', 1)
+                    ->orderBy('date_payment', 'asc')
+                    ->first();
+                // $amount_due = $last_paid->amount;
+            }
+            // $amount_due -= $advances + $payments_records;
+            $payment = Payment::where('sale_note_id', $row->id)
+                ->where('paid', 0);
+            $int = 0;
+            if ($payment->count() > 0) {
+                $payment_first = $payment->first();
+
+                $int = ($row->total - $advances) * ($payment_first->tasa / 100);
+            }
+            if ($row->paid == true) {
+                $to_due = 0;
+            } else {
+                $to_due =  floatval($row->total + $row->total_discount - $advances + $int)  - (floatval($payments_records));
+            }
+            $show_formats = true;
+            // $user_id = auth()->user()->id;
+            $user = User::find(auth()->user()->id);
+            $is_analist = $user->isWorkerType('analista');
+            if ($is_analist && $row->status != "A") {
+                $show_formats = false;
+            }
+            $can_edit = SaleNotePayment::where('sale_note_id', $row->id)->count() > 0 ? false : true;
+            if ($row->status == "R") {
+                $can_edit = false;
+            }
+            $user_name = $row->user->name;
+            $schedules = [];
+            $num_quotes = $row->is_cash == false ? 32 : 26;
+            $quotes = $payment->count();
+            $quotes = $quotes / $num_quotes;
+            $quotes = round($quotes, 0, PHP_ROUND_HALF_UP);
+            if ($quotes == 0) {
+                $quotes = 1;
+            }
+            //iterar por quotes
+
+            for ($i = 0; $i < $quotes; $i++) {
+                if ($row->is_cash) {
+
+                    $schedules[] = url('/sale-notes/cash_schedule/' . $row->id . '/' . ($i + 1));
+                } else {
+                    $schedules[] = url('/sale-notes/hogar_schedule/' . $row->id . '/' . ($i + 1));
+                }
+            }
+            $observation = $row->observation;
+            if ($row->state_type_id == '11' || $row->state === 'O') {
+                $observation_credit = $row->sale_note_credit->reason_to_anulate_credit;
+                $observation .= " " . $observation_credit;
+            }
+            return [
+                'quote_payment' => $quote_payment,
+                'state_type_id' => $row->state_type_id,
+                'quotes' => $quotes,
+                'schedules' => $schedules,
+                'is_cash' => (bool) $row->is_cash,
+                'is_product' => (bool) $row->is_product,
+                'user_name' => $user_name,
+                'show_formats' => $show_formats,
+                'id' => $row->id,
+                'status' => $row->status,
+                'can_edit' => $can_edit,
+                'date_of_issue' => $row->date_of_issue->format('Y-m-d'),
+                'customer' => ["name" => $customer->name, "number" => $customer->number],
+                'number' => $row->number_full,
+                'dues' => $dues,
+                'total' => $row->total   - $advances + $int,
+                'advances' => $advances,
+                'payment' => $payments_records,
+                'type_payment' => $row->type_payment,
+                'date_of_due' => $date_of_due,
+                'canceled' => (bool) $row->paid,
+                'penalty' => $row->status ==  'A' && !$paid ? $row->getPenalties() : 0,
+                // 'amount_due' => number_format($amount_due, 2, ".", ""),
+                'amount_due' => number_format($to_due, 2, ".", ""),
+                'differenc_days' => $differenc_days,
+                'is_credit' => true,
+                'observation' => $observation,
+            ];
+        });
+
+        $company = Company::first();
+        $establishment = ($request->establishment_id) ? Establishment::findOrFail($request->establishment_id) : auth()->user()->establishment;
+        return (new ReportCreditDailyExport)
+            ->records($records)
+            ->company($company)
+            ->establishment($establishment)
+            ->download('Reporte_Diario_Crédito_' . Carbon::now() . '.xlsx');
     }
     public function index_cash_filter()
     {
@@ -84,61 +255,7 @@ class ReportCreditController extends Controller
 
         return compact('establishments', 'sellers', 'persons', 'users');
     }
-    // private function get_product_records($request)
-    // {
-    //     $period = $this->getDatesOfPeriod($request);
 
-    //     $type = $request->credit_type;
-    //     $params = (object)[
-    //         'date_start' => $period['d_start'],
-    //         'date_end' => $period['d_end'],
-    //     ];
-    //     // Inicializamos el query base
-    //     $records = SaleNote::whereHas('creditPayments');
-
-    //     // Filtrar por fechas
-    //     if ($params->date_start && $params->date_end) {
-    //         $records = $records->whereBetween('date_of_issue', [$params->date_start, $params->date_end]);
-    //     }
-
-    //     // Filtrar por tipo de crédito
-    //     if ($type != null) {
-    //         if ($type == 'is_product') {
-    //             $records = $records->where('is_product', true);
-    //         }
-    //         if ($type == 'is_cash') {
-    //             $records = $records->where('is_cash', true);
-    //         }
-    //     }
-
-    //     $records = $records->orderBy('date_of_issue', 'desc')->get()->groupBy(function ($saleNote) {
-    //         return $saleNote->total . '|' . $saleNote->type_payment . '|' . $saleNote->creditPayments->first()->tasa;
-    //     })->map(function ($group) {
-    //         $total_penalties = $group->sum(function ($saleNote) {
-    //             return $saleNote->creditPayments
-    //                 ->where('paid', 0)
-    //                 ->sum('penalty_amount');
-    //         });
-    //         $total_count = $group->sum('total');
-    //         $tasa = $group->first()->creditPayments->first()->tasa;
-    //         $tasa_percentage = $tasa / 100;
-    //         $gain =  $total_count * $tasa_percentage;
-    //         $gain = round($gain, 2);
-    //         $total_gain = $total_penalties + $gain;
-    //         return [
-    //             'total_penalties' => $total_penalties,
-    //             'total' => floatval($group->first()->total),
-    //             'type_payment' => $group->first()->type_payment,
-    //             'tasa' => $group->first()->creditPayments->first()->tasa,
-    //             'count' => $group->count(),
-    //             'total_count' => $group->sum('total'),
-    //             'gain' => $gain,
-    //             'total_gain' => $total_gain,
-    //         ];
-    //     });
-
-    //     return $records->values();
-    // }
     private function get_product_records($request)
     {
         $period = $this->getDatesOfPeriod($request);
