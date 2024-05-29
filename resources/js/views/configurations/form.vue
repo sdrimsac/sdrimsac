@@ -1,8 +1,11 @@
+<!-- Configuraciones Avanzados -->
 <template>
     <div>
         <div class="card">
             <div class="card-header bg-primary">
-                <h6 class="my-0 text-white">Configuraciones</h6>
+                <h4 class="my-0 text-white">
+                    <i class="fa fa-cogs"></i>
+                    Configuraciones</h4>
             </div>
             <div class="card-body pt-0 pb-5">
                 <form autocomplete="off">
@@ -134,7 +137,7 @@
                                     </template>
                                 </div>
                             </el-tab-pane>
-                            <el-tab-pane label="Servicios" v-if="!isArca">
+                            <!-- <el-tab-pane label="Servicios" v-if="!isArca">
                                 <div class="row">
                                     <div class="col-md-3">
                                         <label class="control-label"
@@ -189,16 +192,12 @@
                                             ></small>
                                         </div>
                                     </div>
-                                    <!-- <div class="col-md-6 mt-4" v-if="typeUser != 'integrator'">
-                                    <label class="control-label">Envío de comprobantes a servidor alterno de SUNAT</label>
-                                    <div class="form-group" :class="{'has-danger': errors.sunat_alternate_server}">
-                                        <el-switch v-model="form.sunat_alternate_server" active-text="Si" inactive-text="No" @change="submit"></el-switch>
-                                        <small class="text-danger" v-if="errors.sunat_alternate_server" v-text="errors.sunat_alternate_server[0]"></small>
-                                    </div>
-                                </div> -->
+
                                 </div>
-                            </el-tab-pane>
-                            <el-tab-pane label="Contable" v-if="!isArca">
+                            </el-tab-pane> -->
+                            <el-tab-pane 
+                                
+                            label="Contable" v-if="!isArca">
                                 <div class="row">
                                     <div
                                         class="col-md-3"
@@ -315,53 +314,68 @@
                                             ></small>
                                         </div>
                                     </div>
-                                    <!-- <div class="col-md-6 mt-4">
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <label class="control-label"
+                                            >Envío de comprobantes
+                                            automático</label
+                                        >
                                         <div
                                             class="form-group"
                                             :class="{
-                                                'has-danger':
-                                                    errors.affectation_igv_type_id
+                                                'has-danger': errors.send_auto
                                             }"
                                         >
-                                            <label class="control-label"
-                                                >Tipo de afectación Compra
-                                                <el-tooltip
-                                                    class="item"
-                                                    effect="dark"
-                                                    content="Tipo de afectación predeterminada al comprar producto"
-                                                    placement="top-start"
-                                                >
-                                                    <i
-                                                        class="fa fa-info-circle"
-                                                    ></i>
-                                                </el-tooltip>
-                                            </label>
-                                            <el-select
-                                                v-model="
-                                                    form.purchase_affectation_igv_type_id
-                                                "
+                                            <el-switch
+                                                v-model="form.send_auto"
+                                                active-text="Si"
+                                                inactive-text="No"
                                                 @change="submit"
-                                                filterable
-                                            >
-                                                <el-option
-                                                    v-for="option in affectation_igv_types"
-                                                    :key="option.id"
-                                                    :value="option.id"
-                                                    :label="option.description"
-                                                ></el-option>
-                                            </el-select>
+                                            ></el-switch>
                                             <small
                                                 class="text-danger"
-                                                v-if="
-                                                    errors.affectation_igv_type_id
-                                                "
-                                                v-text="
-                                                    errors
-                                                        .affectation_igv_type_id[0]
-                                                "
+                                                v-if="errors.send_auto"
+                                                v-text="errors.send_auto[0]"
                                             ></small>
                                         </div>
-                                    </div> -->
+                                    </div>
+                                    <div
+                                        class="col-md-3"
+                                        v-if="typeUser != 'integrator'"
+                                    >
+                                        <label class="control-label"
+                                            >Crontab
+                                            <small
+                                                >Tareas Programadas</small
+                                            ></label
+                                        >
+                                        <div
+                                            class="form-group"
+                                            :class="{
+                                                'has-danger': errors.cron
+                                            }"
+                                        >
+                                            <el-switch
+                                                v-model="form.cron"
+                                                active-text="Si"
+                                                inactive-text="No"
+                                                @change="submit"
+                                            ></el-switch>
+                                            <small
+                                                class="text-danger"
+                                                v-if="errors.cron"
+                                                v-text="errors.cron[0]"
+                                            ></small>
+                                        </div>
+                                    </div>
+                                    <!-- <div class="col-md-6 mt-4" v-if="typeUser != 'integrator'">
+                                    <label class="control-label">Envío de comprobantes a servidor alterno de SUNAT</label>
+                                    <div class="form-group" :class="{'has-danger': errors.sunat_alternate_server}">
+                                        <el-switch v-model="form.sunat_alternate_server" active-text="Si" inactive-text="No" @change="submit"></el-switch>
+                                        <small class="text-danger" v-if="errors.sunat_alternate_server" v-text="errors.sunat_alternate_server[0]"></small>
+                                    </div>
+                                </div> -->
                                 </div>
                             </el-tab-pane>
                             <el-tab-pane label="Visual" v-if="!isArca">
@@ -2511,8 +2525,41 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <label class="control-label w-100">
+                                            Modo Promociones
+                                            <el-tooltip
+                                                class="item"
+                                                effect="dark"
+                                                content="Visualiza en el modulo de caja y administrativo el modulo que permite que por cada compra se pueda hacer una promocion, llegando a xs items vendidos"
+                                                placement="top-start"
+                                            >
+                                                <i
+                                                    class="fa fa-info-circle"
+                                                ></i>
+                                            </el-tooltip>
+                                        </label>
+                                        <el-switch
+                                            v-model="form.promotions_sell"
+                                            active-text="Si"
+                                            inactive-text="No"
+                                            @change="submit"
+                                        ></el-switch>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <el-input
+                                            v-model="
+                                                form.promotions_cant_purchase
+                                            "
+                                            placeholder="cantidad de ventas para acceder a la promosion "
+                                            size="normal"
+                                            @blur="submit"
+                                        ></el-input>
+                                    </div>
+                                </div>
                             </el-tab-pane>
-                            <el-tab-pane label="Promociones" v-if="!isArca">
+                            <!-- <el-tab-pane label="Promociones" v-if="!isArca">
                                 <div class="row">
                                     <div class="col-md-3">
                                         <label class="control-label w-100">
@@ -2546,7 +2593,7 @@
                                         ></el-input>
                                     </div>
                                 </div>
-                            </el-tab-pane>
+                            </el-tab-pane> -->
                             <el-tab-pane label="Consumo" v-if="!isArca">
                                 <div class="row">
                                     <div class="col-md-3">
@@ -3660,4 +3707,5 @@ export default {
         }
     }
 };
+
 </script>

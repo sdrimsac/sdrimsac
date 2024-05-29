@@ -182,7 +182,7 @@ class DocumentController extends Controller
         $fecha7Dias = Carbon::now()->subDays(7)->format('Y-m-d');
         $infoCompleta = [];
 
-        $number = [995764963,  987828697, 972053723, 927498983, 935921640, 902717302];
+        $number = [995764963,  987828697, 972053723, 927498983, 935921640];
         // $number = 
         $message = 'Reporte de sistemas que no completaron el envio de documentos ';
         $file_name = 'Tenant_Procesos_Caidos_XYZ_' . Carbon::now() . '.xlsx';

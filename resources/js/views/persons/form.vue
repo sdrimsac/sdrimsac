@@ -14,7 +14,7 @@
             <div class="form-body">
                 <div class="row">
                    
-                    <div class="col-md-3">
+                    <div class="col-12 col-lg-6 col-xl-3">
                         <div
                             class="form-group"
                             :class="{
@@ -48,7 +48,7 @@
                             ></small>
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-12 col-lg-6 col-xl-3">
                         <div
                             class="form-group"
                             :class="{ 'has-danger': errors.number }"
@@ -108,7 +108,7 @@
                             ></small>
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-12 col-lg-12 col-xl-6">
                         <div
                             class="form-group"
                             :class="{ 'has-danger': errors.name }"
@@ -197,7 +197,7 @@
                 </div> -->
 
                 <div class="row">
-                    <div class="col-md-3">
+                    <div class="col-md-6 col-lg-3">
                         <div
                             class="form-group"
                             :class="{ 'has-danger': errors.country_id }"
@@ -224,7 +224,7 @@
                             ></small>
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-6 col-lg-3">
                         <div
                             class="form-group"
                             :class="{ 'has-danger': errors.department_id }"
@@ -253,7 +253,7 @@
                             ></small>
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-6 col-lg-3">
                         <div
                             class="form-group"
                             :class="{ 'has-danger': errors.province_id }"
@@ -282,7 +282,7 @@
                             ></small>
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-6 col-lg-3">
                         <div
                             class="form-group"
                             :class="{ 'has-danger': errors.province_id }"

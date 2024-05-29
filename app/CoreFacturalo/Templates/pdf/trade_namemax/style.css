@@ -15,6 +15,9 @@ table {
     margin: 0;
     padding: 0;
 }
+.font-sm {
+    font-size: 10px;
+}
 .font-md {
     font-size: 12px;
 }

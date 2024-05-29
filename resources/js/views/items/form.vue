@@ -16,7 +16,7 @@
                     <el-tab-pane label="General">
                         <div class="row">
     
-                            <div class="col-md-3">
+                            <div class="col-lg-6 col-xl-3">
                                 <div class="form-group" :class="{
                                                 'has-danger': errors.internal_id
                                             }">
@@ -34,7 +34,7 @@
                                     <small class="text-danger" v-if="errors.internal_id" v-text="errors.internal_id[0]"></small>
                                 </div>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-lg-6 col-xl-3">
                                 <div class="form-group" :class="{ 'has-danger': errors.barcode }">
                                     <label class="control-label">Código Externo
                                         <el-tooltip class="item" effect="dark" content="Código Barra de la empresa para el control de sus productos" placement="top-start">
@@ -46,7 +46,7 @@
                                     <small class="text-danger" v-if="errors.barcode" v-text="errors.barcode[0]"></small>
                                 </div>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-lg-6 col-xl-3">
                                 <div class="form-group" :class="{
                                                 'has-danger': errors.description
                                             }">
@@ -68,7 +68,7 @@
                                     <small class="text-danger" v-if="errors.description" v-text="errors.description[0]"></small>
                                 </div>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-lg-6 col-xl-3">
                                 <div class="form-group" :class="{
                                                 'has-danger': errors.second_name
                                             }">
@@ -82,7 +82,7 @@
                                     <small class="text-danger" v-if="errors.second_name" v-text="errors.second_name[0]"></small>
                                 </div>
                             </div>
-                            <div class="col-md-2">
+                            <div class="col-xl-2 col-lg-4">
                                 <div class="form-group" :class="{
                                                 'has-danger': errors.category_id
                                             }">
@@ -116,7 +116,7 @@
                                     <small class="text-danger" v-if="errors.category_id" v-text="errors.category_id[0]"></small>
                                 </div>
                             </div>
-                            <div class="col-md-2">
+                            <div class="col-xl-2 col-lg-4">
                                 <div class="form-group" :class="{
                                                 'has-danger':
                                                     errors.sale_affectation_igv_type_id
@@ -140,15 +140,7 @@
                                     </small>
                                 </div>
                             </div>
-                            <div class="col-md-3 center-el-checkbox" v-show="show_has_igv">
-                                <div class="form-group" :class="{ 'has-danger': errors.has_igv }">
-                                    <el-checkbox v-model="form.has_igv">Incluye Igv
-                                        {{
-                                                    configuration.include_igv
-                                                }}</el-checkbox><br />
-                                    <small class="text-danger" v-if="errors.has_igv" v-text="errors.has_igv[0]"></small>
-                                </div>
-                            </div>
+                           
                             <!-- <div v-show="form.unit_type_id !='ZZ'" class="col-md-3 center-el-checkbox">
                                         <div class="form-group" :class="{'has-danger': errors.calculate_quantity}">
                                             <el-checkbox v-model="form.calculate_quantity">Calcular cantidad por precio</el-checkbox><br>
@@ -156,7 +148,7 @@
                                         </div>
                                     </div> -->
     
-                            <div class="col-md-2">
+                                    <div class="col-xl-2 col-lg-4">
                                 <div class="form-group" :class="{ 'has-danger': errors.location }">
                                     <label class="control-label">
                                         <i class="fas fa-hand-pointer"></i>
@@ -167,7 +159,7 @@
                                 </div>
                             </div>
     
-                            <div class="col-md-2">
+                            <div class="col-xl-2 col-lg-4">
                                 <div class="form-group" :class="{
                                                 'has-danger': errors.unit_type_id
                                             }">
@@ -180,7 +172,7 @@
                                     <small class="text-danger" v-if="errors.unit_type_id" v-text="errors.unit_type_id[0]"></small>
                                 </div>
                             </div>
-                            <div class="col-md-2">
+                            <div class="col-xl-2 col-lg-4">
                                 <div class="form-group" :class="{
                                                 'has-danger': errors.currency_type_id
                                             }">
@@ -193,7 +185,7 @@
                                     <small class="text-danger" v-if="errors.currency_type_id" v-text="errors.currency_type_id[0]"></small>
                                 </div>
                             </div>
-                            <div class="col-md-2">
+                            <div class="col-xl-2 col-lg-4">
                                 <div class="form-group" :class="{
                                                 'has-danger': errors.sale_unit_price
                                             }">
@@ -217,7 +209,7 @@
                                 </div>
                             </div>
     
-                            <div class="col-md-2">
+                            <div class="col-xl-2 col-lg-4">
                                 <div class="form-group" :class="{
                                                 'has-danger':
                                                     errors.sale_affectation_igv_type_id
@@ -228,16 +220,15 @@
                                                 " @change="changeAffectationIgvType">
                                         <el-option v-for="option in affectation_igv_types" :key="option.id" :value="option.id" :label="option.description"></el-option>
                                     </el-select>
-                                    <small class="text-danger" v-if="
-                                                    errors.sale_affectation_igv_type_id
-                                                " v-text="
-                                                    errors
-                                                        .sale_affectation_igv_type_id[0]
-                                                "></small>
+                                    <small v-show="show_has_igv">
+                                                <el-checkbox v-model="form.has_igv">Incluye Igv
+                                        {{
+                                                    configuration.include_igv
+                                                }}</el-checkbox></small>
                                 </div>
                             </div>
     
-                            <div class="col-md-2" v-show="
+                            <div class="col-xl-2 col-lg-4" v-show="
                                             recordId == null &&
                                                 form.unit_type_id != 'ZZ'
                                         ">
@@ -266,7 +257,7 @@
                                 </div>
                             </div> -->
     
-                            <div class="col-md-2" v-show="form.unit_type_id != 'ZZ'">
+                            <div class="col-xl-2 col-lg-4" v-show="form.unit_type_id != 'ZZ'">
                                 <div class="form-group" :class="{ 'has-danger': errors.stock_min }">
                                     <label class="control-label">Stock Mín.</label>
                                     <el-input v-model="form.stock_min">
@@ -274,7 +265,7 @@
                                     <small class="text-danger" v-if="errors.stock_min" v-text="errors.stock_min[0]"></small>
                                 </div>
                             </div>
-                            <div class="col-md-4" v-show="recordId == null">
+                            <div class="col-xl-4 col-lg-6" v-show="recordId == null">
                                 <div class="form-group" :class="{
                                                 'has-danger': errors.warehouse_id
                                             }">
@@ -309,7 +300,7 @@
                                         <small class="text-danger" v-if="errors.date_of_due" v-text="errors.date_of_due[0]"></small>
                                     </div>
                                 </div> -->
-                            <div class="col-md-2" v-show="
+                            <div class="col-xl-2 col-lg-6" v-show="
                                             form.unit_type_id != 'ZZ' &&
                                                 !form.has_color_size
                                         ">
@@ -324,7 +315,7 @@
                                                 " v-model="form.max_quantity"></el-input>
                                 </div>
                             </div>
-                            <div class="col-md-2" v-show="
+                            <div class="col-xl-2 col-lg-4" v-show="
                                             form.unit_type_id != 'ZZ' &&
                                                 !form.has_color_size
                                         ">
@@ -337,7 +328,7 @@
                                     <el-input :disabled="!form.max_quantity" v-model="form.max_quantity_description"></el-input>
                                 </div>
                             </div>
-                            <div class="col-md-2" v-show="form.unit_type_id != 'ZZ'">
+                            <div class="col-xl-2 col-lg-4" v-show="form.unit_type_id != 'ZZ'">
                                 <div class="form-group">
                                     <label class="control-label">Add. Delivery
                                         <el-tooltip class="item" effect="dark" content="Valor agregado al enviar el producto por delivery" placement="top">
@@ -350,7 +341,7 @@
     
                             <!-- **** -->
                             <div class="d-flex row" v-if="showSeries">
-                                <div class="col-md-2" v-if="configuration.series_enabled">
+                                <div class="col-xl-2 col-lg-4" v-if="configuration.series_enabled">
                                     <div v-show="form.unit_type_id != 'ZZ'" class="col-md-3 center-el-checkbox">
                                         <div class="form-group">
                                             <el-checkbox v-model="form.series_enabled" 
@@ -390,7 +381,7 @@
                                     </div>
                                 </div>
     
-                                <div class="col-md-3" v-if="configuration.lots_enabled">
+                                <div  class="col-xl-2 col-lg-4" v-if="configuration.lots_enabled">
                                     <div v-show="form.unit_type_id != 'ZZ'" class="col-md-3 center-el-checkbox">
                                         <div class="form-group">
                                             <el-checkbox v-model="form.lots_enabled" @change="changeLotsEnabled">¿Maneja lotes?</el-checkbox><br />
@@ -414,7 +405,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-2" v-if="configuration.color_size_enabled">
+                                <div  class="col-xl-2 col-lg-4" v-if="configuration.color_size_enabled">
                                     <div v-show="
                                                     form.unit_type_id != 'ZZ' &&
                                                         form.stock > 0
@@ -448,7 +439,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-2" v-if="configuration.transform_item">
+                                <div  class="col-xl-2 col-lg-4" v-if="configuration.transform_item">
                                     <div v-show="form.unit_type_id != 'ZZ'" class="col-md-3 center-el-checkbox">
                                         <div class="form-group">
                                             <el-checkbox v-model="form.is_manufactured">¿Se fabrica?
@@ -459,7 +450,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-3" v-if="configuration.promotions_sell">
+                                <div  class="col-xl-2 col-lg-4" v-if="configuration.promotions_sell">
                                     <div v-show="form.unit_type_id != 'ZZ'" class="col-md-3 center-el-checkbox">
                                         <div class="form-group">
                                             <el-checkbox v-model="form.is_promotion">¿Maneja Promoción?
@@ -470,7 +461,7 @@
                                         </div>
                                     </div>
                                     <!-- Sólo muestra este div si form.is_promotion es true -->
-                                    <div class="col-md-6" v-show="form.unit_type_id != 'ZZ' && form.is_promotion">
+                                    <div class="col-xl-6  col-lg-12" v-show="form.unit_type_id != 'ZZ' && form.is_promotion">
                                         <div class="form-group" :class="{'has-danger': errors.promotion_count}">
                                             
                                             <el-input v-model="form.promotion_count" type="number">
@@ -500,7 +491,7 @@
                                         </el-upload>
                                     </div>
                                 </div> -->
-                                <div class="col-md-4">
+                                <div class="col-12 col-lg-6 col-xl-6">
                                     <div class="form-group" :class="{
                                                         'has-danger':
                                                             errors.brand_id
@@ -548,7 +539,7 @@
                                         <small class="text-danger" v-if="errors.brand_id" v-text="errors.brand_id[0]"></small>
                                     </div>
                                 </div>
-                                <div v-if="attribute_types.length > 0" class="col-md-6">
+                                <div v-if="attribute_types.length > 0"    class="col-12 col-lg-6 col-xl-6">
                                     <h6 class="separator-title ">
                                         Atributos
                                         <el-tooltip class="item" effect="dark" content="Diferentes presentaciones para la venta del producto" placement="top">
@@ -611,7 +602,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-2">
+                                <div class="col-12">
                                     <div class="form-group">
                                         <label class="control-label">Imágen
                                             <span class="text-danger"></span></label>
