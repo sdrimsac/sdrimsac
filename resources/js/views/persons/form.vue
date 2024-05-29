@@ -14,7 +14,7 @@
             <div class="form-body">
                 <div class="row">
                    
-                    <div class="col-12 col-lg-6 col-xl-3">
+                    <div class="col-12 col-lg-6 col-xl-6">
                         <div
                             class="form-group"
                             :class="{
@@ -48,7 +48,7 @@
                             ></small>
                         </div>
                     </div>
-                    <div class="col-12 col-lg-6 col-xl-3">
+                    <div class="col-12 col-lg-6 col-xl-6">
                         <div
                             class="form-group"
                             :class="{ 'has-danger': errors.number }"
@@ -108,7 +108,7 @@
                             ></small>
                         </div>
                     </div>
-                    <div class="col-12 col-lg-12 col-xl-6">
+                    <div class="col-12 col-lg-12 col-xl-12">
                         <div
                             class="form-group"
                             :class="{ 'has-danger': errors.name }"
