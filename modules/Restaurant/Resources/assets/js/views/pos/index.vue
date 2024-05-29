@@ -230,7 +230,9 @@
                                                 saveInLocalStorageSearchSeries
                                             "
                                         >
-                                            <h2 class="font-weight-bold custom-text-size">
+                                            <h2
+                                                class="font-weight-bold custom-text-size"
+                                            >
                                                 Buscar por series
                                             </h2>
                                         </el-checkbox>
@@ -238,7 +240,9 @@
                                             v-model="barcode"
                                             @change="saveInLocalStorageBarcode"
                                         >
-                                            <h2 class="font-weight-bold custom-text-size">
+                                            <h2
+                                                class="font-weight-bold custom-text-size"
+                                            >
                                                 Barcode
                                             </h2>
                                         </el-checkbox>
@@ -254,7 +258,9 @@
                                     </div>
                                     <div class="col-12 col-lg-3 p-2">
                                         <template>
-                                            <h2 class="font-weight-bold custom-text-size">
+                                            <h2
+                                                class="font-weight-bold custom-text-size"
+                                            >
                                                 Categorias
                                             </h2>
                                             <el-select
@@ -275,7 +281,9 @@
                                         </template>
                                     </div>
                                     <div class="col-12 col-lg-7 p-2">
-                                        <h2 class="font-weight-bold custom-text-size">
+                                        <h2
+                                            class="font-weight-bold custom-text-size"
+                                        >
                                             Buscar
                                         </h2>
                                         <template v-if="selectOption == 4">
@@ -976,10 +984,7 @@
                     </div>
                 </div>
                 <div class="col-5 col-sm-7 col-lg-6 col-md-7 col-xl-5">
-                    <div
-                        class="card-body p-2"
-                        
-                    >
+                    <div class="card-body p-2">
                         <list-orden
                             :users.sync="users"
                             :user.sync="user"
@@ -1773,6 +1778,16 @@
             :showDialog.sync="showSaleNoteCreditCash"
         ></sale-note-credit-cash>
         <iframe ref="pdfFrame" style="display: none;"></iframe>
+        <el-dialog
+            class="no-header"
+            width="90%"
+            top="5vh"
+            title=""
+            :header="null"
+            :visible.sync="showDialogCreditReportDaily"
+        >
+            <x-report-credit-daily-cash></x-report-credit-daily-cash>
+        </el-dialog>
     </div>
 </template>
 
@@ -1780,11 +1795,12 @@
 .warning-color {
     background-color: #ffa407 !important;
     color: #fff !important;
-    
 }
 .custom-text-size {
     font-size: 0.8em;
-
+}
+.no-header .el-dialog__header {
+    display: none;
 }
 /* .el-checkbox#barcode .el-checkbox__label {
     padding-top: 10px !important;
@@ -2031,7 +2047,8 @@ export default {
             screenWidth: 0,
             showdialogPromocion: false,
             timer: null,
-            users:[],
+            users: [],
+            showDialogCreditReportDaily: false
         };
     },
     beforeDestroy() {
@@ -2129,6 +2146,9 @@ export default {
     sockets: {},
     computed: {},
     methods: {
+        openCreditReportDaily() {
+            this.showDialogCreditReportDaily = true;
+        },
         checkWorkerType(type) {
             if (!type) return false;
             let { worker_type } = this.worker;
@@ -2392,6 +2412,12 @@ export default {
                     title: ["Crear", "Producto compuesto"],
                     icon: "el-icon-connection",
                     visible: this.configuration.item_set_caja && !this.isSeller
+                },
+                {
+                    id: 34,
+                    title: ["Reporte", "Diario Crédito"],
+                    icon: "el-icon-connection",
+                    visible: this.configuration.sale_note_credit_confirm
                 }
 
                 // {
@@ -2960,6 +2986,9 @@ export default {
                     break;
                 case 33:
                     this.openCredit();
+                    break;
+                case 34:
+                    this.openCreditReportDaily();
                     break;
                 case 25:
                     this.openDistach();
@@ -5016,7 +5045,10 @@ export default {
                 // this.all_items = response.data.items;
                 this.sellers = response.data.sellers;
                 this.users = response.data.users;
-                console.log("🚀 ~ awaitthis.$http.get ~ this.users:", this.users)
+                console.log(
+                    "🚀 ~ awaitthis.$http.get ~ this.users:",
+                    this.users
+                );
                 this.tablesClean = response.data.tablesClean;
                 this.tablesClean = this.tablesClean.map(t => ({
                     ...t,
@@ -5143,7 +5175,7 @@ export default {
             await this.calculateTotal();
             this.$refs.input_items.$el.getElementsByTagName("input")[0].focus();
             this.total_sales_pos = 0;
-            if(this.configuration.sale_note_credit_confirm){
+            if (this.configuration.sale_note_credit_confirm) {
                 this.openCredit();
             }
         },

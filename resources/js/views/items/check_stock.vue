@@ -112,6 +112,11 @@
                     <el-divider></el-divider>
                     <div class="container-fluid p-l-0 p-r-0">
                         <div class="row">
+                            <div class="col-12">
+                                <h6>Recrear documentos</h6>
+                            </div>
+                        </div>
+                        <div class="row">
                             <div class="col-md-3 col-lg-3 col-12">
                                 <label for="date_of_start">Fecha de inicio</label>
                                 <el-date-picker class="w-100" v-model="form.date_of_start" type="date" placeholder="Fecha de inicio" value-format="yyyy-MM-dd"></el-date-picker>

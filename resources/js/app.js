@@ -173,6 +173,8 @@ Vue.component("x-input-service", require("./components/InputService.vue"));
 Vue.component("x-input-service", require("./components/InputService.vue"));
 Vue.component("x-graph", require("./components/graph/src/Graph.vue"));
 Vue.component("x-graph-line", require("./components/graph/src/GraphLine.vue"));
+Vue.component("x-report-credit-daily-cash", require(    "../../modules/Report/Resources/assets/js/views/credit/daily_cash.vue"));
+
 const app = new Vue({
     store,
     el: "#main",
