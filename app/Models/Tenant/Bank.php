@@ -9,6 +9,7 @@ class Bank extends ModelTenant
 
     protected $fillable = [
         'description',
+        'image',
     ];
 
     // protected static function boot()

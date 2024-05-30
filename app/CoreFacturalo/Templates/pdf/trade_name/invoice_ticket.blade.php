@@ -27,6 +27,15 @@
     $balance = -5;
     $hotel_rent = \App\Models\Tenant\HotelRent::where('document_id', $document->id)->first();
     $hotel_rent_advance = \App\Models\Tenant\HotelRentDocument::where('document_id', $document->id)->first();
+        
+    if (!function_exists('getUnitType')) {
+        function getUnitType($id)
+        {
+            $unit_type = \App\Models\Tenant\Catalogs\UnitType::find($id);
+            return ($unit_type && $unit_type->symbol) ? $unit_type->symbol : $id;
+
+        }
+    }
 @endphp
 <html>
 
@@ -608,7 +617,7 @@
                         @endif
                     </td>
                     <td class="text-center desc-9 align-top">
-                        {{ isset($row->item->has_unit_type) ? 'NIU' : $row->item->unit_type_id }}
+                        {{ getUnitType(isset($row->item->has_unit_type) ? 'NIU' : $row->item->unit_type_id )}}
                     </td>
                     <td class="text-left desc-9 align-top">
                         @if (isset($row->name_product_pdf))

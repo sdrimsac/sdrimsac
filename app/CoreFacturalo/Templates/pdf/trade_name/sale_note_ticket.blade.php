@@ -17,6 +17,14 @@
     $sale_note_promotion = \App\Models\Tenant\SaleNotePromotion::where('sale_note_id', $document->id)->first();
     $is_chifa_china = $company->number == '15609876309';
     $configuration = \App\Models\Tenant\Configuration::select('show_logo_in_documents')->first();
+        if (!function_exists('getUnitType')) {
+        function getUnitType($id)
+        {
+            $unit_type = \App\Models\Tenant\Catalogs\UnitType::find($id);
+            return ($unit_type && $unit_type->symbol) ? $unit_type->symbol : $id;
+
+        }
+    }
 @endphp
 <html>
 
@@ -434,7 +442,8 @@ contain"
                         @endif
                     </td>
                     <td class="text-center desc-9 align-top">
-                        {{ isset($row->item->from_unit_type_id_desc) ? 'NIU' : $row->item->unit_type_id }}
+                        
+                        {{getUnitType( isset($row->item->from_unit_type_id_desc) ? 'NIU' : $row->item->unit_type_id )}}
                     </td>
                     <td class="text-left desc-9 align-top">
                         @if (isset($row->item->descriptionInternet))

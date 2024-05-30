@@ -18,6 +18,7 @@ class BankCollection extends ResourceCollection
             return [
                 'id' => $row->id,
                 'description' => $row->description,
+                'image' => $row->image ? '/storage/banks/'.$row->image : '',
             ];
         });
     }

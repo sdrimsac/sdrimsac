@@ -373,7 +373,13 @@ class Facturalo
 
         ini_set("pcre.backtrack_limit", "5000000");
         $template = new Template();
-        $pdf = new Mpdf();
+        $pdf = new Mpdf(
+            [
+                'methods' => [
+                    'SetWatermarkText' => ['Draft'],
+                ]
+            ]
+        );
         //dd($format);
 
         //$this->actions = ($this->actions != null) ? ['format_pdf'] : $this->actions;
@@ -630,7 +636,12 @@ class Facturalo
             DIRECTORY_SEPARATOR . 'style.css');
 
         $stylesheet = file_get_contents($path_css);
-
+        $backgroud_image_document = $this->company->backgroud_image_document;
+        if ($backgroud_image_document) {
+            $url =  url('/storage/uploads/logos/' . $backgroud_image_document);
+            $pdf->SetWatermarkImage($url, 0.3);
+            $pdf->showWatermarkImage = true;
+        }
         $pdf->WriteHTML($stylesheet, HTMLParserMode::HEADER_CSS);
         $pdf->WriteHTML($html, HTMLParserMode::HTML_BODY);
 

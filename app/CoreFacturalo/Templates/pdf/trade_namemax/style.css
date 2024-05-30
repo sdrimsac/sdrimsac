@@ -465,7 +465,12 @@ p {
 .mx-5 {
     margin-left: 3rem !important;
 }
-
+.image_center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
 .p-0 {
     padding: 0 !important;
 }

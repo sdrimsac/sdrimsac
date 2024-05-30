@@ -6,7 +6,14 @@
     $left = $document->series ? $document->series : $document->prefix;
     $tittle = $left . '-' . str_pad($document->number, 8, '0', STR_PAD_LEFT);
     $payments = $document->payments;
-    
+        if (!function_exists('getUnitType')) {
+        function getUnitType($id)
+        {
+            $unit_type = \App\Models\Tenant\Catalogs\UnitType::find($id);
+            return ($unit_type && $unit_type->symbol) ? $unit_type->symbol : $id;
+
+        }
+    }
 @endphp
 <html>
 

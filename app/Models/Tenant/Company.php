@@ -10,6 +10,7 @@ class Company extends ModelTenant
 {
     protected $with = ['identity_document_type'];
     protected $fillable = [
+        'backgroud_image_document',
         'health_network_image',
         'a5_image',
         'user_id',

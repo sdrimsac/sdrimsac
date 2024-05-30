@@ -574,8 +574,10 @@ if ($hostname) {
                 //Banks
                 Route::get('banks', [App\Http\Controllers\Tenant\BankController::class, 'index'])->name('tenant.banks.index')->middleware('just.admin');
                 Route::get('banks/records', [App\Http\Controllers\Tenant\BankController::class, 'records']);
+                Route::post('banks/{bank_id}/upload-image', [App\Http\Controllers\Tenant\BankController::class, 'UploadImage']);
                 Route::get('banks/record/{bank}', [App\Http\Controllers\Tenant\BankController::class, 'record']);
                 Route::post('banks', [App\Http\Controllers\Tenant\BankController::class, 'store']);
+                Route::delete('banks/{bank_id}/delete-image', [App\Http\Controllers\Tenant\BankController::class, 'deleteImage']);
                 Route::delete('banks/{bank}', [App\Http\Controllers\Tenant\BankController::class, 'destroy']);
 
                 //Exchange Rates
