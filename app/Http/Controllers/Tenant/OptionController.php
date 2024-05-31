@@ -68,6 +68,10 @@ class OptionController extends Controller
         DB::connection('tenant')->table('boxes')->delete();
         DB::connection('tenant')->table('orden_item')->delete();
         DB::connection('tenant')->table('item_sets')->delete();
+        //internet
+        DB::connection('tenant')->table('internet_plan_variation')->delete();
+        DB::connection('tenant')->table('internet_operations')->delete();
+        DB::connection('tenant')->table('internet_plan')->delete();
 
         DB::connection('tenant')->table('ordens')->delete();
         DB::connection('tenant')->table('sale_note_items')->delete();
