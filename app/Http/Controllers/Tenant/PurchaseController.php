@@ -336,6 +336,17 @@ class PurchaseController extends Controller
         $data = self::convert($request);
         $purchase = DB::connection('tenant')->transaction(function () use ($data, &$has_error, &$message) {
             try {
+                $series = $data['series'];
+                $number = $data['number'];
+                //verificar si existe el número de serie
+                $purchase = Purchase::where('series', $series)
+                    ->where('number', $number)
+                    ->first();
+                if ($purchase) {
+                    $has_error = true;
+                    $message = "El documento {$series}-{$number} ya ha sido registrado.";
+                    throw new Exception($message);
+                }
                 $doc = Purchase::create($data);
                 foreach ($data['items'] as $row) {
                     $p_item = new PurchaseItem;
