@@ -55,6 +55,7 @@ class UserResource extends JsonResource
             'levels' => $levels,
             'locked' => (bool) $this->locked,
             'category' => $this->category,
+            'is_arca' => (bool) $this->is_arca,
         ];
     }
 }

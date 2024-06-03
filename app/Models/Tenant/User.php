@@ -24,6 +24,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
+        'is_arca',
         'establishment_table_id',
         'warehouse_product_id',
         'area_id',
@@ -54,6 +55,7 @@ class User extends Authenticatable
         'remember_token',
     ];
     protected $cast = [
+        'is_arca' => 'boolean', 
         'locked' => 'boolean',
         'active' => 'boolean',
         'can_accept_credit_sale_note' => 'boolean',

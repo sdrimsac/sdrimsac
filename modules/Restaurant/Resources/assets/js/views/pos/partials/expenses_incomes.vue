@@ -204,6 +204,7 @@ export default {
             this.time = setTimeout(async () => {
                 await this.getCashRecords();
             }, 500);
+            this.$emit("checkCashAvailable");
         },
         getQueryParameters(form = {}) {
             return queryString.stringify({

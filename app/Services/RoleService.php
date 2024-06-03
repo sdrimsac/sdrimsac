@@ -35,6 +35,10 @@ class RoleService
     }
     public function isArca()
     {
+        // $is_arca = (bool) auth()->user()->is_arca;
+        // if ($is_arca) {
+        //     return true;
+        // }
         $worker_type_id = auth()->user()->worker_type_id;
         if ($worker_type_id == null) {
             return false;

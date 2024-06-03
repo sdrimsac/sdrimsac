@@ -16,16 +16,17 @@ class WorkerRequest extends FormRequest
     public function rules()
     {
 
-        return [
-
-
+        $rules = [
             'name' => [
-                'required',
-            ],
-            'worker_type_id' => [
                 'required',
             ],
             //  'area_id' => ['required']
         ];
+    
+        if (request()->user()->type == 'seller') {
+            $rules['worker_type_id'] = ['required'];
+        }
+    
+        return $rules;
     }
 }

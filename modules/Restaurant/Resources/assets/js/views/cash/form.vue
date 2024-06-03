@@ -97,25 +97,26 @@
                                         <p>
                                             <strong>INICIO:</strong> Turno de
                                             apertura <br />
-                                            Normalmente Noche | Mañana, si no
-                                            se trabajó en la noche
+                                            Normalmente Noche | Mañana, si no se
+                                            trabajó en la noche
                                         </p>
                                         <p>
                                             <strong>INTERMEDIO:</strong> Turno
                                             intermedio <br />
-                                            Normalmente Mañana | Turno entre el inicio y el fin
-                                            
+                                            Normalmente Mañana | Turno entre el
+                                            inicio y el fin
                                         </p>
                                         <p>
                                             <strong>FIN:</strong> Turno de
                                             cierre <br />
-                                            Normalmente Tarde | Mañana, si se trabaja doble turno (Mañana - Tarde)
+                                            Normalmente Tarde | Mañana, si se
+                                            trabaja doble turno (Mañana - Tarde)
                                         </p>
                                         <p>
                                             <strong>UNICO:</strong> Turno unico
                                             <br />
-                                            Turno unico para el dia: Mañana
-                                            - Tarde (Si noche no se trabajó)
+                                            Turno unico para el dia: Mañana -
+                                            Tarde (Si noche no se trabajó)
                                         </p>
                                     </div>
                                     <i class="el-icon-info"></i>
@@ -259,7 +260,6 @@ export default {
             return cash ? true : false;
         },
         async submit() {
-            this.loading_submit = true;
             if (
                 this.configuration.health_network == 1 &&
                 this.form.cash_type_id == undefined
@@ -268,7 +268,6 @@ export default {
                     `'Tipo de Turno' no puede ser un campo vacio, por favor seleccione una opcion`
                 );
 
-                this.loading_submit = false;
                 return false;
             }
             if (this.form.turn_id == undefined) {
@@ -276,7 +275,6 @@ export default {
                     `La opcion 'Seleccionar turno de apertura' no puede ser un campo vacio, por favor seleccione una opcion`
                 );
 
-                this.loading_submit = false;
                 return false;
             }
             if (!this.recordId) {
@@ -285,11 +283,94 @@ export default {
                         "No puede crear caja, porfavor cierre caja para el usuario definido"
                     );
 
-                    this.loading_submit = false;
                     return false;
                 }
             }
 
+            if (this.configuration.health_network == 1) {
+                this.confirmAndSubmit();
+            } else {
+                this.submitForm();
+            }
+            // if(this.configuration.health_network == 1){
+            //     let cash_type = this.turnsHealthNetwork.find(
+            //         item => item.value == this.form.cash_type_id
+            //     );
+            //     await this.$confirm(
+            //         "¿Está seguro de que desea aperturar la caja con el turno " +
+            //             cash_type.description +
+            //             "?",
+            //         "Apertura de Caja",
+            //         {
+            //             confirmButtonText: "Sí",
+            //             cancelButtonText: "No",
+            //             type: "warning"
+            //         }
+            //     ).then(() => {
+            //             this.$http
+            //     .post(`/${this.resource}`, this.form)
+            //     .then(response => {
+            //         console.log(response);
+            //         if (response.data.success) {
+            //             this.$toast.success(response.data.message);
+            //             if (this.form.user_id === this.user.id)
+            //                 this.$eventHub.$emit("openCash");
+            //             this.$eventHub.$emit("reloadData");
+            //             if (this.fromBox) {
+            //                 this.$emit("updateCashId", response.data.cash_id);
+            //             }
+            //             // window.open('/pos/init')
+            //             this.close();
+            //             this.ocultarBoton();
+            //         } else {
+            //             this.$toast.error(response.data.message);
+            //         }
+            //     })
+            //     .catch(error => {
+            //         if (error.response.status === 422) {
+            //             this.errors = error.response.data;
+            //         } else {
+            //             console.log(error);
+            //         }
+            //     })
+            //     .then(() => {
+            //         this.loading_submit = false;
+            //     });
+            //     });
+            // }else{
+            //         this.$http
+            //     .post(`/${this.resource}`, this.form)
+            //     .then(response => {
+            //         console.log(response);
+            //         if (response.data.success) {
+            //             this.$toast.success(response.data.message);
+            //             if (this.form.user_id === this.user.id)
+            //                 this.$eventHub.$emit("openCash");
+            //             this.$eventHub.$emit("reloadData");
+            //             if (this.fromBox) {
+            //                 this.$emit("updateCashId", response.data.cash_id);
+            //             }
+            //             // window.open('/pos/init')
+            //             this.close();
+            //             this.ocultarBoton();
+            //         } else {
+            //             this.$toast.error(response.data.message);
+            //         }
+            //     })
+            //     .catch(error => {
+            //         if (error.response.status === 422) {
+            //             this.errors = error.response.data;
+            //         } else {
+            //             console.log(error);
+            //         }
+            //     })
+            //     .then(() => {
+            //         this.loading_submit = false;
+            //     });
+            // }
+        },
+        async submitForm() {
+            this.loading_submit = true;
             this.$http
                 .post(`/${this.resource}`, this.form)
                 .then(response => {
@@ -302,7 +383,6 @@ export default {
                         if (this.fromBox) {
                             this.$emit("updateCashId", response.data.cash_id);
                         }
-                        // window.open('/pos/init')
                         this.close();
                         this.ocultarBoton();
                     } else {
@@ -319,6 +399,27 @@ export default {
                 .then(() => {
                     this.loading_submit = false;
                 });
+        },
+        async confirmAndSubmit() {
+            let cash_type = this.turnsHealthNetwork.find(
+                item => item.value == this.form.cash_type_id
+            );
+             this.$confirm(
+                "¿Está seguro de que desea aperturar la caja con el turno " +
+                    cash_type.description +
+                    "?",
+                "Apertura de Caja",
+                {
+                    confirmButtonText: "Sí",
+                    cancelButtonText: "No",
+                    type: "warning"
+                }
+            ).then(() => this.submitForm())
+            .catch(() => {
+                this.loading_submit = false;
+            });
+        
+            
         },
         close() {
             this.$emit("update:showDialog", false);

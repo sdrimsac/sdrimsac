@@ -173,7 +173,10 @@ Vue.component("x-input-service", require("./components/InputService.vue"));
 Vue.component("x-input-service", require("./components/InputService.vue"));
 Vue.component("x-graph", require("./components/graph/src/Graph.vue"));
 Vue.component("x-graph-line", require("./components/graph/src/GraphLine.vue"));
-Vue.component("x-report-credit-daily-cash", require(    "../../modules/Report/Resources/assets/js/views/credit/daily_cash.vue"));
+Vue.component(
+    "x-report-credit-daily-cash",
+    require("../../modules/Report/Resources/assets/js/views/credit/daily_cash.vue")
+);
 
 const app = new Vue({
     store,
@@ -357,7 +360,8 @@ const app = new Vue({
             ),
         "tenant-documents-index": () =>
             import(
-                /* webpackChunkName:"js/tenant-documents-index" */ 
+                /* webpackChunkName:"js/tenant-documents-index" */
+
                 "./views/documents/index.vue"
             ),
         "restaurant-documents-index": () =>
@@ -370,12 +374,12 @@ const app = new Vue({
                 /* webpackChunkName:"js/tenant-documents-invoice" */
                 "./views/documents/invoice.vue"
             ),
-"tenant-documents-note-other": () =>
+        "tenant-documents-note-other": () =>
             import(
                 /* webpackChunkName:"js/tenant-documents-note-other" */
                 "./views/documents/note_other.vue"
             ),
-            
+
         "tenant-documents-note": () =>
             import(
                 /* webpackChunkName:"js/tenant-documents-note" */
@@ -466,6 +470,11 @@ const app = new Vue({
         "tenant-sale-notes-form": () =>
             import(
                 /* webpackChunkName:"js/tenant-sale-notes-form" */ "./views/sale_notes/form.vue"
+            ),
+        "tenant-cash-transfer-index": () =>
+            import(
+                /* webpackChunkName:"js/tenant-cash-transfer-index" */
+                "../../modules/Restaurant/Resources/assets/js/views/cash_transfer/index.vue"
             ),
 
         "tenant-cash-index": () =>
@@ -929,19 +938,19 @@ const app = new Vue({
                 /*webpackChunkName:"tenant-quotations-edit"*/
                 "./views/quotations/form_edit.vue"
             ),
-            //report-credit-index-cash
+        //report-credit-index-cash
         //report-consignment-index
         "report-consignment-index": () =>
             import(
                 /*webpackChunkName:"report-credit-index"*/
                 "../../modules/Report/Resources/assets/js/views/consignment/index.vue"
             ),
-            "report-credit-index-cash": () =>
+        "report-credit-index-cash": () =>
             import(
                 /*webpackChunkName:"report-credit-index"*/
                 "../../modules/Report/Resources/assets/js/views/credit/index_cash.vue"
             ),
-            "report-credit-daily-cash": () =>
+        "report-credit-daily-cash": () =>
             import(
                 /*webpackChunkName:"report-credit-index"*/
                 "../../modules/Report/Resources/assets/js/views/credit/daily_cash.vue"
@@ -992,7 +1001,7 @@ const app = new Vue({
             import(
                 /*webpackChunkName:"principal_categories"*/
                 "./views/principal_categories/index.vue"
-            ),        
+            ),
 
         "tenant-commercial-treatment-index": () =>
             import(

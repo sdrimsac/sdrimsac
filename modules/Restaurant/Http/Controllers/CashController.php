@@ -65,6 +65,23 @@ use NumberFormatter;
 class CashController extends Controller
 {
     use JobReportTrait;
+    public function cash_avaible($cash_id){
+        $total_credits = SaleNote::whereHas('credit_payments')
+        ->where('cash_id', $cash_id)
+        ->where('is_cash', true)
+        ->where('state_type_id', '<>' , 11)
+        ->sum('total');
+        $cash = Cash::findOrFail($cash_id);
+        $beginning_balance = $cash->beginning_balance;
+        $incomes = Box::where('cash_id', $cash_id)->where('incomes', 1)->sum('amount');
+        $expenses = Box::where('cash_id', $cash_id)->where('expenses', 1)->sum('amount');
+        $cash_available = $beginning_balance + $incomes - $expenses - $total_credits;
+        
+        return [
+            'success' => true,
+            'cash_available' => $cash_available
+        ];
+    }
     public function observ_register(Request $request)
     {
 
@@ -1535,14 +1552,11 @@ class CashController extends Controller
         $configuration = Configuration::first();
         $turn_principal = $configuration->turn_principal;
         $id = $request->input('id');
-        $cash_type = $request->input('cash_type_id');
-        $turn_id = $request->input('turn_id');
         $cash_user = User::find(auth()->user()->id);
         $establishment_id = $cash_user->establishment_id;
         $establishment = Establishment::find($establishment_id);
         $tab_single = (bool) $establishment->tab_single;
         if ($configuration->automatic_principal_cash && !$tab_single && $request->input('principal') == false) {
-            // if ($turn_id == $turn_principal) {
             $exist_principal_cash = Cash::where('principal', true)
                 ->whereHas('user', function ($query) use ($establishment_id, $configuration) {
                     if ($configuration->health_network) {
@@ -1563,7 +1577,6 @@ class CashController extends Controller
                     'reference_number' => 'ARCA-' . date('H:i:s'),
                 ]);
             }
-            // }
         }
         $cash = Cash::firstOrNew(['id' => $id]);
         $cash->fill($request->all());
@@ -1727,6 +1740,10 @@ class CashController extends Controller
         $all_cash = $all_cash->sum();
 
         $all_cash += $cash->beginning_balance;
+        $all_incomes = Box::where('cash_id', $id)->where('incomes', 1)->sum('amount');
+        $all_expenses = Box::where('cash_id', $id)->where('expenses', 1)->sum('amount');
+        $all_cash += $all_incomes;
+        $all_cash -= $all_expenses;
         $user_name = $cash->user->name;
         $website = $this->getTenantWebsite();
         $hostname =  app(Environment::class)->hostname();

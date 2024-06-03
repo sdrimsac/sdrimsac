@@ -455,7 +455,7 @@
                     <span class="label">Arqueo de Caja</span>
                 </a>
                 <ul id="boxes" class="collapse ">
-                    @if ($roleService->isArca())
+                    @if ($roleService->isArca() || $user->is_arca)
                         @if ($config->hotels)
                             <li>
                                 <a class="{{ $path[0] === 'rooms' && $path[1] === 'reports' ? 'active' : '' }}"
@@ -664,7 +664,33 @@
                 </ul>
             </li>
         @endif
+        @if($config->credits && $user->is_arca)
+        <li>
+            <a href="#compras" data-bs-toggle="collapse" data-role="button"
+                aria-expanded="{{ $path[0] === 'purchases' ? true : false }}{{ $path[0] === 'purchases' && $path[1] === 'create' ? true : false }}"
+                class="{{ $path[0] === 'purchases' ? 'active' : '' }}{{ $path[0] === 'purchases' && $path[1] === 'create' ? 'active' : '' }}"
+                data-clicked="{{ $path[0] === 'purchases' ? true : false }}{{ $path[0] === 'purchases' && $path[1] === 'create' ? true : false }}">
+                <i class="icofont-shopping-cart icon-parent"></i>
+                <span class="label">Cartera presupuestaria</span>
+            </a>
 
+            <ul id="compras" class="collapse ">
+                <li>
+                    <a class="{{ $path[0] === 'purchases' && $path[1] === '' ? 'active' : '' }}"
+                        href="{{ route('caja.cash_transfer') }}">
+                        <i class="icofont-list"></i> Traslados (desembolso de efectivo S/)
+                    </a>
+                </li>
+                <li>
+                    <a class="{{ $path[0] === 'purchases' && $path[1] === 'create' ? 'active' : '' }}"
+                        href="{{ route('caja.cash_transfer_report') }}">
+                        <i class="icofont-credit-card"></i> Reporte de traslados
+                    </a>
+                </li>
+
+            </ul>
+        </li>
+        @endif
 
         @if (!$roleService->isArca() && !$roleService->isLogistic() && $config->accounting_mode)
             <li>

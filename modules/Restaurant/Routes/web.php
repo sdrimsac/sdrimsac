@@ -88,6 +88,21 @@ Route::prefix('caja')->group(function () {
         });
 
         Route::get('report-product-warehouse', [WorkerController::class, 'report_products']);
+
+        //cash transfer
+
+        Route::prefix('cash-transfer')->group(function () {
+            Route::get('/', 'CashTransferController@index')->name('caja.cash_transfer');
+            Route::get('/report', 'CashTransferController@index')->name('caja.cash_transfer_report');
+            Route::get('/columns', 'CashTransferController@columns');
+            Route::get('available', 'CashTransferController@available');
+            Route::get('records', 'CashTransferController@records');
+            Route::get('cashes', 'CashTransferController@cashes');
+            Route::get('record/{id}', 'CashTransferController@record');
+            Route::post('', 'CashTransferController@store');
+            Route::delete('{id}', 'CashTransferController@destroy');
+        });
+
         //*** ORDENS */
         Route::get('cashes', 'BoxesController@cashes')->name('restaurant.cash');
         Route::get('ordens', 'OrdenController@index')->name('restaurant.ordens');
@@ -260,6 +275,7 @@ Route::prefix('caja')->group(function () {
 
 
 
+            Route::get('cash_available/{cash_id}', [CashController::class, 'cash_avaible']);
             Route::get('data_reports', [BoxesController::class, 'data_reports']);
             Route::post('check_pin', [PosController::class, 'check_pin']);
             Route::post('logout', 'RestaurantController@logout');

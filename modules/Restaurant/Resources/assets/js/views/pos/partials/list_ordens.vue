@@ -53,6 +53,20 @@
                     >
                         Sin caja abierta
                     </button>
+                    <button
+                        v-if="
+                            configuration.sale_note_credit_confirm &&
+                                configuration.principal_cash && cash_id 
+                        "
+                        class="btn"
+                        :class="
+                            cashAvailable < 0 ? 'btn-danger' : 'btn-primary'
+                        "
+                        type="button"
+                        @click="checkCashAvailable"
+                    >
+                        Disponible S/ {{ cashAvailable.toFixed(2) }}
+                    </button>
                     <div
                         class="dropdown-menu dropdown-menu-end col-md-2 col-1 "
                         style="width: 153px;"
@@ -2186,6 +2200,7 @@
             :company="company"
             :cash_id="cash_id"
             :establishments="establishments"
+            @checkCashAvailable="checkCashAvailable"
         >
         </expenses-incomes>
         <observation-form
@@ -2492,6 +2507,7 @@ export default {
 
     data() {
         return {
+            cashAvailable: 0,
             showColorSize: false,
             currentColorSize: null,
             loadingCommercialTreatment: false,
@@ -2615,6 +2631,7 @@ export default {
         this.ordenInBox = ordens;
     },
     async created() {
+
         let printing = localStorage.getItem("cajaPrint");
 
         this.printing = printing == 1;
@@ -2647,8 +2664,25 @@ export default {
 
         await this.getTags();
         this.getCommercialTreatments();
+        this.checkCashAvailable();
     },
     methods: {
+        checkCashAvailable() {
+            this.$http
+                .get("/caja/worker/cash_available/" + this.cash_id)
+                .then(response => {
+                    let data = response.data;
+                    this.cashAvailable = data.cash_available;
+                    // this.cashAvailable = response.data.data;
+                })
+                .catch(error => {
+                    console.log(
+                        "🚀 ~ checkCashAvailable ~ error:",
+                        error.response
+                    );
+                });
+                
+        },
         showColorSizeDialog(orden, index = null) {
             this.limitQty = orden.type_quantity ?? 0;
 
@@ -3044,14 +3078,35 @@ export default {
                 this.$toast.error("Debe abrir caja para poder dar a crédito");
                 return;
             }
-            let allHaveQuantity = this.localOrden.every(
-                o => o.quantity > 0 
-            );
+            let allHaveQuantity = this.localOrden.every(o => o.quantity > 0);
             if (!allHaveQuantity) {
-                this.$toast.error("Debe ingresar la cantidad de todos los productos");
+                this.$toast.error(
+                    "Debe ingresar la cantidad de todos los productos"
+                );
                 return;
             }
+            if(this.configuration.sale_note_credit_confirm){
+                if(!this.canGiveCash()) return;
+            }
             this.showCreditForm = true;
+        },
+            hasService() {
+            let items = this.localOrden;
+            let hasService = items.some(
+                item => item.food.item.unit_type_id == "ZZ"
+            );
+            return hasService;
+        },
+        canGiveCash(){
+            if(!this.hasService()) return true;
+
+            let total = this.localOrden.reduce((a, b) => a + Number(b.price), 0);
+
+            if(total > this.cashAvailable){
+                this.$toast.error("No tiene suficiente efectivo para realizar la operación");
+                return false;
+            }
+            return true;
         },
         openQuotation() {
             if (this.localOrden.length > 0) this.showQuotationForm = true;
@@ -3661,6 +3716,7 @@ export default {
         limpiarForm() {
             this.commercialTreatmentId = null;
             this.quotation_stock = this.isSeller;
+            this.checkCashAvailable();
             this.$emit("limpiarForm");
         },
         openApart() {
