@@ -1,10 +1,21 @@
+<!-- Modal de Importar Productos -->
 <template>
-    <el-dialog :title="titleDialog" :visible="showDialog" @close="close" @open="create" class="dialog-import" v-loading="loading">
+    <el-dialog  :title="titleDialog" 
+    :visible="showDialog" 
+    @close="close" 
+    @open="create" 
+    class="dialog-import" 
+    :close-on-click-modal="false"
+    v-loading="loading">
         <form autocomplete="off" @submit.prevent="submit">
             <div class="form-body">
                 <div class="row">
                     <div class="col-12 form-group" :class="{'has-danger': errors.warehouse_id}">
-                        <label for="warehouse">Almacén</label>
+                        <br>
+                        <label for="warehouse">
+                            
+                            Almacén
+                        </label>
                         <el-select v-model="form.warehouse_id">
                             <el-option v-for="w in warehouses" :key="w.id" :label="w.description" :value="w.id"></el-option>
                         </el-select>
@@ -23,21 +34,26 @@
                                 :limit="1"
                                 :data="form"
                                 :on-success="successUpload">
-                            <el-button slot="trigger" type="primary">Seleccione un archivo (xlsx)</el-button>
+                            <el-button slot="trigger" type="primary">
+                                <i class="fas fa-file-excel fa-lg" style="color: green; margin-right: 5px;"></i>
+                                Seleccione un archivo (xlsx)
+                            </el-button>
                         </el-upload>
                         <small class="form-control-feedback" v-if="errors.file" v-text="errors.file[0]"></small>
                     </div>
                     <div class="col-12 mt-4 mb-2">
                         <a class=" mr-auto" href="/formats/items.xlsx" target="_new">
-                            <span class="mr-2">Descargar formato de ejemplo para importar</span>
+                            <span class="mr-2">
+                                
+                                Descargar AQUI el formato</span>
                             <i class="fa fa-download"></i>
                         </a>
                     </div>
                 </div>
             </div>
             <div class="form-actions text-end pt-2 pb-2">
-                <el-button @click.prevent="close()">Cancelar</el-button>
-                <el-button id=buttonProcesar type="primary" native-type="submit" :disabled="loading_submit" :loading="loading_submit">Procesar</el-button>
+                <el-button icon="fas fa-times fa-lg" @click.prevent="close()"> Cancelar</el-button>
+                <el-button icon="fas fa-hourglass-half fa-lg" id=buttonProcesar type="primary" native-type="submit" :disabled="loading_submit" :loading="loading_submit"> Procesar</el-button>
             </div>
         </form>
     </el-dialog>

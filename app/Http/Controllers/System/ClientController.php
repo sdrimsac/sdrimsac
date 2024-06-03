@@ -39,6 +39,15 @@ class ClientController extends Controller
         return view('system.clients.form');
     }
 
+    public function columns()
+    {
+        return [
+
+            'name' => 'nombre',
+            'hostname' => 'hostname',
+        ];
+    }
+
     public function tables()
     {
 
@@ -156,7 +165,7 @@ class ClientController extends Controller
         return $module;
     }
 
-    public function records()
+    /* public function records()
     {
         $records = Client::latest()
             ->get();
@@ -225,6 +234,75 @@ class ClientController extends Controller
             $row->quantity_establishments = $this->getQuantityRecordsFromTable('establishments');
         }
 
+        return new ClientCollection($records);
+    } */
+
+    public function records(Request $request)
+    {
+        if ($request->has('column') && $request->has('value') && $request->column && $request->value) {
+            
+            $records = Client::where($request->column, 'like', "%{$request->value}%")
+                             ->latest()
+                             ->paginate(config('tenant.client_per_page'));
+        } else {
+            $records = Client::latest()->paginate(config('tenant.client_per_page'));
+        }
+    
+        foreach ($records as $row) {
+            $tenancy = app(Environment::class);
+            $tenancy->tenant($row->hostname->website);
+    
+            $row->count_doc = DB::connection('tenant')
+                ->table('configurations')
+                ->first()
+                ->quantity_documents;
+    
+            $row->soap_type = DB::connection('tenant')
+                ->table('companies')
+                ->first()
+                ->soap_type_id;
+    
+            $row->count_user = DB::connection('tenant')
+                ->table('users')
+                ->count();
+    
+            $row->count_sales_notes = 0;
+            $quantity_pending_documents = $this->getQuantityPendingDocuments();
+    
+            $row->document_not_sent = $quantity_pending_documents['document_not_sent'];
+            $row->document_to_be_canceled = $quantity_pending_documents['document_to_be_canceled'];
+            $row->monthly_sales_total = 0;
+    
+            if ($row->start_billing_cycle) {
+                $start_end_date = DocumentHelper::getStartEndDateForFilterDocument($row->start_billing_cycle);
+                $init = $start_end_date['start_date'];
+                $end = $start_end_date['end_date'];
+    
+                $row->count_doc_month = DB::connection('tenant')
+                    ->table('documents')
+                    ->whereBetween('date_of_issue', [$init, $end])
+                    ->count();
+    
+                $row->count_sales_notes_month = DB::connection('tenant')
+                    ->table('sale_notes')
+                    ->whereBetween('date_of_issue', [$init, $end])
+                    ->count();
+    
+                $row->count_sales_notes = 0;
+    
+                $client_helper = new ClientHelper();
+                $row->monthly_sales_total = $client_helper->getSalesTotal($init->format('Y-m-d'), $end->format('Y-m-d'), $row->plan);
+            }
+    
+            $row->imgClient = DB::connection('tenant')
+                ->table('companies')
+                ->select('logo')
+                ->first()
+                ->logo;
+    
+            $row->quantity_establishments = $this->getQuantityRecordsFromTable('establishments');
+        }
+    
         return new ClientCollection($records);
     }
 

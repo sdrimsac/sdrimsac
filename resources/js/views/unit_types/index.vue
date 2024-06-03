@@ -1,129 +1,89 @@
 <template>
     <div class="card card-collapsed">
         <div class="card-header bg-primary">
-            <h6 class="my-0 text-white">Listado de unidades</h6>
-            <div class="card-actions white-text">
-                <a
-                    href="#"
-                    class="card-action card-action-toggle text-white"
-                    data-card-toggle=""
-                ></a>
-                <a
-                    href="#"
-                    class="card-action card-action-dismiss text-white"
-                    data-card-dismiss=""
-                ></a>
-            </div>
+            <h4 class="my-0 text-white">
+                <i class="fas fa-sitemap"></i> Listado de Unidad de Medida
+            </h4>
+        </div>
+        <div class="data-table-visible-columns">
+            <el-button type="primary" class="" @click.prevent="clickCreate()">
+                <i class="fas fa-sitemap fa-lg"></i>
+                <i class="fa fa-plus"></i>
+                Nueva Unidad
+            </el-button>
         </div>
         <div class="card-body">
-            <div class="row">
-                <div class="col">
-                    <button
-                        type="button"
-                        class="btn btn-custom btn-sm  mt-2 mr-2"
-                        @click.prevent="clickCreate()"
-                    >
-                        <i class="fa fa-plus-circle"></i> Nuevo
-                    </button>
-                </div>
-            </div>
-            <div class="table-responsive">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Código</th>
-                            <th>Descripción</th>
-                            <th>Símbolo</th>
-                            <th class="text-center">Activo</th>
-                            <th class="text-end">Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="(row, index) in records" :key="index">
-                            <td>{{ index + 1 }}</td>
-                            <td>{{ row.id }}</td>
-                            <td>{{ row.description }}</td>
-                            <td>{{ row.symbol }}</td>
-                            <td class="text-center">{{ row.active }}</td>
-                            <td class="text-end">
-                                <button
-                                    type="button"
-                                    class="btn waves-effect waves-light btn-sm btn-info"
-                                    @click.prevent="clickCreate(row.id)"
-                                >
-                                    Editar
-                                </button>
-
-                                <template
-                                    v-if="
-                                        typeUser === 'admin' ||
-                                            typeUser === 'superadmin'
-                                    "
-                                >
-                                    <button
-                                        type="button"
-                                        class="btn waves-effect waves-light btn-sm btn-danger"
-                                        @click.prevent="clickDelete(row.id)"
-                                    >
-                                        Eliminar
-                                    </button>
-                                </template>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <!-- <div class="row">
-                <div class="col">
-                    <button type="button" class="btn btn-custom btn-sm  mt-2 mr-2" @click.prevent="clickCreate()"><i class="fa fa-plus-circle"></i> Nuevo</button>
-                </div>
-            </div> -->
+            <data-table :resource="resource" >
+    
+                <tr slot="heading" class="bg-primary">
+                    <th class="text-white">#</th>
+                    <th class="text-white">Código</th>
+                    <th class="text-white">Descripción</th>
+                    <th class="text-white">Símbolo</th>
+                    <th class="text-white text-center">Activo</th>
+                    <th class="text-white text-end">Acciones</th>
+                </tr>
+    
+                <tr slot-scope="{ index, row }">
+                    <td>{{ index }}</td>
+                    <td>{{ row.id }}</td>
+                    <td>{{ row.description }}</td>
+                    <td>{{ row.symbol }}</td>
+                    <td class="text-center">{{ row.active }}</td>
+                    <td class="text-right">
+                        <button class="btn p-0" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="btn btn-primary dropdown-toggle" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-delay="0" title="" data-bs-original-title="Item Count" aria-label="Item Count">Acciones</span>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-end" style="">
+                            <a type="button" class="dropdown-item text-secondary" @click.prevent="
+                                         clickCreate(row.id)"> <i class="fa fa-edit"></i> Editar
+                            </a>
+                            <a type="button" class="dropdown-item text-danger" @click.prevent="clickDelete(row.id)">
+                                <i class="fa fa-trash"></i>
+                                Eliminar
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+            </data-table>
         </div>
-        <unit-types-form
-            :showDialog.sync="showDialog"
-            :recordId="recordId"
-        ></unit-types-form>
+        <unit-types-form :showDialog.sync="showDialog" :recordId="recordId"></unit-types-form>
     </div>
-</template>
+    </template>
 
-<script>
-import UnitTypesForm from "./form.vue";
-import { deletable } from "../../mixins/deletable";
-
-export default {
-    mixins: [deletable],
-    props: ["typeUser"],
-    components: { UnitTypesForm },
-    data() {
-        return {
-            showDialog: false,
-            resource: "unit_types",
-            recordId: null,
-            records: []
-        };
-    },
-    created() {
-        this.$eventHub.$on("reloadData", () => {
-            this.getData();
-        });
-        this.getData();
-    },
-    methods: {
-        getData() {
-            this.$http.get(`/${this.resource}/records`).then(response => {
-                this.records = response.data.data;
-            });
+    <script>
+    import UnitTypesForm from "./form.vue";
+    import DataTable from "../../components/DataTable.vue";
+    import {
+        deletable
+    } from "../../mixins/deletable";
+    
+    export default {
+        mixins: [deletable],
+        components: {
+            DataTable,
+            UnitTypesForm
         },
-        clickCreate(recordId = null) {
-            this.recordId = recordId;
-            this.showDialog = true;
+        data() {
+            return {
+                title: null,
+                showDialog: false,
+                resource: "unit_types",
+                recordId: null,
+    
+            };
         },
-        clickDelete(id) {
-            this.destroy(`/${this.resource}/${id}`).then(() =>
-                this.$eventHub.$emit("reloadData")
-            );
+        methods: {
+            clickCreate(recordId = null) {
+                this.recordId = recordId;
+                this.showDialog = true;
+            },
+            clickDelete(id) {
+                this.destroy(`/${this.resource}/${id}`).then(() =>
+                    this.$eventHub.$emit("reloadData")
+                );
+            }
         }
-    }
-};
-</script>
+    };
+    </script>
+    

@@ -1,5 +1,11 @@
 <template>
-    <el-dialog :title="titleDialog" :visible="showDialog" @close="close" @open="create">
+    <el-dialog  :title="titleDialog" 
+                :visible="showDialog" 
+                @close="close" 
+                @open="create" 
+                class="rounded-dialog"
+                :close-on-click-modal="false"
+                >
         <form autocomplete="off" @submit.prevent="submit">
             <div class="form-body">
                 <div class="row">
@@ -34,12 +40,18 @@
                 </div>
             </div>
             <div class="form-actions text-end pt-2 pb-2">
-                <el-button @click.prevent="close()">Cancelar</el-button>
-                <el-button type="primary" native-type="submit" :loading="loading_submit">Guardar</el-button>
+                <el-button icon="fas fa-times fa-lg" @click.prevent="close()"> Cancelar</el-button>
+                <el-button icon="fas fa-save fa-lg" type="primary" native-type="submit" :loading="loading_submit"> Guardar</el-button>
             </div>
         </form>
     </el-dialog>
 </template>
+<style>
+.el-dialog {
+border-radius: 10px;
+overflow: hidden;
+}
+</style>
 
 <script>
 

@@ -227,7 +227,8 @@
             </div>
             <div class="col-md-12">
                 <div class="table-responsive">
-                    <table class="table">
+                    <br>
+                    <table class="table table-striped">
                         <thead>
                             <slot name="heading"></slot>
                         </thead>

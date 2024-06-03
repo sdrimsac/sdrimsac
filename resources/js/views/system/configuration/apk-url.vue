@@ -1,6 +1,6 @@
  <template>
     <div class="card">
-      <div class="card-header bg-info">
+      <div class="card-header bg-secondary">
         <h3 class="my-0">URL de descarga de Aplicacion móvil</h3>
       </div>
       <div class="card-body">
@@ -21,7 +21,7 @@
               </div>
           </div>
           <div class="form-actions text-right pt-2">
-            <el-button type="primary" native-type="submit" :loading="loading_submit">Guardar</el-button>
+            <el-button type="primary" native-type="submit" :loading="loading_submit" class="bg-secondary">Guardar</el-button>
           </div>
         </form>
       </div>

@@ -50,7 +50,7 @@
                                             class="btn waves-effect waves-light btn-sm btn-warning"
                                             @click.prevent="clickStock(row)"
                                         >
-                                            Ajuste
+                                            Ajuste de Stock
                                             <el-tooltip
                                                 class="item"
                                                 content="Ajuste: stock del sistema no cuadre con el stock real"

@@ -5,13 +5,15 @@
         @close="close"
         @open="create"
         class="dialog-import"
+        :close-on-click-modal="false" 
     >
         <form autocomplete="off" @submit.prevent="submit">
             <div class="form-body">
+                <br>
                 <div class="row">
                     <div class="col-md-12">
                         <a href="/formats/item_price_lists.xlsx" target="_new"
-                            >Descargar formato</a
+                            >Descargar AQUI el formato</a
                         >
                     </div>
                     <div class="col-md-12 mt-4">
@@ -31,7 +33,9 @@
                                 :on-success="successUpload"
                             >
                                 <el-button slot="trigger" type="primary"
-                                    >Seleccione un archivo (xlsx)</el-button
+                                    >
+                                    <i class="fas fa-file-excel fa-lg" style="color: green; margin-right: 5px;"></i>
+                                    Seleccione un archivo (xlsx)</el-button
                                 >
                             </el-upload>
                             <small
@@ -44,12 +48,13 @@
                 </div>
             </div>
             <div class="form-actions text-end pt-2 pb-2">
-                <el-button @click.prevent="close()">Cancelar</el-button>
+                <el-button icon="fas fa-times fa-lg" @click.prevent="close()"> Cancelar</el-button>
                 <el-button
                     type="primary"
                     native-type="submit"
+                    icon="fas fa-hourglass-half fa-lg"
                     :loading="loading_submit"
-                    >Procesar</el-button
+                    > Procesar</el-button
                 >
             </div>
         </form>

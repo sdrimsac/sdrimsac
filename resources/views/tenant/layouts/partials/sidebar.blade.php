@@ -143,6 +143,19 @@
                             </a>
                         </li>
 
+                        <li>
+                            <a class="{{ $path[0] === 'attribute_types' && $path[1] === '' ? 'active' : '' }}"
+                                href="{{ route('tenant.attribute_types.index') }}">
+                                <i class="fa fa-newspaper"></i> Atributos
+                            </a>
+                        </li>
+                        <li>
+                            <a class="{{ $path[0] === 'Unit_types' && $path[1] === '' ? 'active' : '' }}"
+                                href="{{ route('tenant.unit_types.index') }}">
+                                <i class="fa fa-solid fa-ruler"></i> Unidad de medida 
+                            </a>
+                        </li>
+
 
                         <!-- @if ($config->restaurant)
 <li>

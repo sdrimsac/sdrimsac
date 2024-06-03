@@ -1,352 +1,229 @@
 <template>
-    <div class="card mb-0 pt-2 pt-md-0">
-        <div class="card-header bg-primary">
-            <h6 class="my-0 text-white">Nuevo Traslado {{isDirect ? ' (Traslado directo)':''}}</h6>
-        </div>
-        <div class="tab-content p-3">
-            <form
-                v-loading="loading_item"
-                autocomplete="off"
-                @submit.prevent="submit"
-            >
-                <div class="form-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="control-label"
-                                    >Almacén Inicial</label
-                                >
-                                <el-select
-                                    v-model="form.warehouse_id"
-                                    @change="changeWarehouseInit"
-                                >
-                                    <el-option
-                                        v-for="option in warehouses"
-                                        :key="option.id"
-                                        :value="option.id"
-                                        :label="option.description"
-                                    ></el-option>
-                                </el-select>
-                                <small
-                                    class="form-control-feedback"
-                                    v-if="errors.warehouse_id"
-                                    v-text="errors.warehouse_id[0]"
-                                ></small>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div
-                                class="form-group"
-                                :class="{
-                                    'has-danger':
-                                        errors.warehouse_destination_id
-                                }"
-                            >
-                                <label class="control-label"
-                                    >Almacén Final</label
-                                >
-                                <el-select
-                                    v-model="form.warehouse_destination_id"
-                                >
-                                    <el-option
-                                        :disabled="
-                                            option.id == form.warehouse_id
-                                        "
-                                        v-for="option in warehouses"
-                                        :key="option.id"
-                                        :value="option.id"
-                                        :label="option.description"
-                                    ></el-option>
-                                </el-select>
-                                <small
-                                    class="form-control-feedback"
-                                    v-if="errors.warehouse_destination_id"
-                                    v-text="errors.warehouse_destination_id[0]"
-                                ></small>
-                            </div>
-                        </div>
-                        <div class="col-md-8">
-                            <div
-                                class="form-group"
-                                :class="{ 'has-danger': errors.description }"
-                            >
-                                <label class="control-label"
-                                    >Motivo de Traslado</label
-                                >
-                                <el-input
-                                    type="textarea"
-                                    :rows="3"
-                                    v-model="form.description"
-                                >
-                                    <i
-                                        slot="prefix"
-                                        class="el-icon-edit-outline"
-                                    ></i
-                                ></el-input>
-                                <small
-                                    class="form-control-feedback"
-                                    v-if="errors.description"
-                                    v-text="errors.description[0]"
-                                ></small>
-                            </div>
+<div class="card mb-0 pt-2 pt-md-0">
+    <div class="card-header bg-primary">
+        <h4 class="my-0 text-white">
+            <i class="fa fa-dolly fa-lg"></i>
+            Nuevo Traslado {{isDirect ? ' (Traslado directo)':''}}
+        </h4>
+    </div>
+    <div class="tab-content p-3">
+        <form v-loading="loading_item" autocomplete="off" @submit.prevent="submit">
+            <div class="form-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="control-label">
+                                <i class="fas fa-warehouse"></i>
+                                <i class="fa fa-map-marker fa-lg"></i>
+                                Almacén Inicial</label>
+                            <el-select v-model="form.warehouse_id" @change="changeWarehouseInit">
+                                <el-option v-for="option in warehouses" :key="option.id" :value="option.id" :label="option.description"></el-option>
+                            </el-select>
+                            <small class="form-control-feedback" v-if="errors.warehouse_id" v-text="errors.warehouse_id[0]"></small>
                         </div>
                     </div>
-                    <br />
-                    <div class="d-flex align-items-end justify-content-between">
-                            <div class="col-md-2">
-                            <div class="form-group">
-                                <label class="control-label">Buscar por</label>
-                                <el-select v-model="searchType">
-                                    <el-option
-                                        label="Descripción"
-                                        value="description"
-                                    ></el-option>
-                                    <el-option
-                                        value="serie"
-                                        label="Serie"
-                                    ></el-option>
-                                    <el-option
-                                        value="lote"
-                                        label="Lote"
-                                    ></el-option>
-                                </el-select>
-                            </div>
-                        </div>
-                        <div class="col-md-3">
-                            <div class="form-group">
-                                <label class="control-label">Producto</label>
-                                <!-- <el-input v-model="form.item_description" :readonly="true"> <i slot="prefix" class="el-icon-edit-outline"></i></el-input> -->
-                                <el-select
-                                    :disabled="!form.warehouse_id"
-                                    @change="changeItem"
-                                    v-model="form_add.item_id"
-                                    :remote-method="searchItem"
-                                    filterable
-                                    remote
-                                    :loading="loading_item"
-                                    popper-class="el-select-document_type"
-                                    class="border-left rounded-left border-info"
-                                >
-                                    <el-option
-                                        v-for="option in items"
-                                        :key="option.id"
-                                        :value="option.id"
-                                        :label="option.full_description"
-                                    ></el-option>
-                                </el-select>
-
-                                <a
-                                    v-if="
-                                        form_add.item_id &&
-                                            form_add.series_enabled
-                                    "
-                                    href="#"
-                                    class="text-center font-weight-bold text-info"
-                                    @click.prevent="clickLotcodeOutput"
-                                    >[&#10004; Seleccionar series]</a
-                                >
-                                <a
-                                    v-if="
-                                        form_add.item_id &&
-                                            form_add.lots_enabled
-                                    "
-                                    href="#"
-                                    class="text-center font-weight-bold text-info"
-                                    @click.prevent="clickLotescodeOutput"
-                                    >[&#10004; Seleccionar cantidad en lotes]</a
-                                >
-                            </div>
-                        </div>
-                    
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <label class="control-label"
-                                    >Cantidad Actual
-                                    <template v-if="currentItem && currentItem.max_quantity">
-                                        <el-tooltip
-                                            v-if="currentItem.max_quantity"
-                                            :content="
-                                                ` ${
-                                                    currentItem.unds
-                                                        ? 'Mostrando unidades'
-                                                        : 'En base a la cantidad máx. ${currentItem.max_quantity}'
-                                                }`
-                                            "
-                                        >
-                                            <i class="fa fa-info-circle"></i>
-                                        </el-tooltip>
-
-                                        <el-checkbox
-                                            @change="showUnits"
-                                            style="margin-left:10px;"
-                                            v-model="currentItem.unds"
-                                        >
-                                            Unidades
-                                        </el-checkbox>
-                                    </template>
-                                </label>
-                                <el-input
-                                    v-model="form_add.stock"
-                                    :readonly="true"
-                                >
-                                    <i
-                                        slot="prefix"
-                                        class="el-icon-edit-outline"
-                                    ></i
-                                ></el-input>
-                            </div>
-                        </div>
-
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <label class="control-label"
-                                    >Cantidad a Trasladar
-                                    <template v-if="currentItem">
-                                        <el-tooltip
-                                            v-if="currentItem.max_quantity"
-                                            :content="
-                                                `Ingrese cantidad en base a ${currentItem.max_quantity}`
-                                            "
-                                        >
-                                            <i class="fa fa-info-circle"></i>
-                                        </el-tooltip>
-                                    </template>
-                                </label>
-                                <el-input
-                                    :disabled="hasLots"
-                                    type="number"
-                                    v-model="form_add.quantity"
-                                >
-                                    <i
-                                        slot="prefix"
-                                        class="el-icon-edit-outline"
-                                    ></i
-                                ></el-input>
-                            </div>
-                        </div>
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <el-button
-                                    :disabled="form_add.item_id == null"
-                                    style="margin-top:10%;"
-                                    @click.prevent="clickAddItem"
-                                    type="primary"
-                                    >Agregar Producto</el-button
-                                >
-                            </div>
+                    <div class="col-md-6">
+                        <div class="form-group" :class="{
+                                        'has-danger':
+                                            errors.warehouse_destination_id
+                                    }">
+                            <label class="control-label">
+                                <i class="fas fa-warehouse"></i>
+                                <i class="fa fa-flag-checkered fa-lg"></i>
+                                Almacén Final</label>
+                            <el-select v-model="form.warehouse_destination_id">
+                                <el-option :disabled="
+                                                option.id == form.warehouse_id
+                                            " v-for="option in warehouses" :key="option.id" :value="option.id" :label="option.description"></el-option>
+                            </el-select>
+                            <small class="form-control-feedback" v-if="errors.warehouse_destination_id" v-text="errors.warehouse_destination_id[0]"></small>
                         </div>
                     </div>
+                    <div class="col-md-12">
+                        <div class="form-group" :class="{ 'has-danger': errors.description }">
+                            <label class="control-label">
+                                Motivo de Traslado</label>
+                            <el-input type="textarea" :rows="3" v-model="form.description">
+                                <i slot="prefix" class="el-icon-edit-outline"></i></el-input>
+                            <small class="form-control-feedback" v-if="errors.description" v-text="errors.description[0]"></small>
+                        </div>
+                    </div>
+                </div>
+                <br />
 
-                    <br />
-                    <div class="row">
-                        <div class="col-lg-6 col-md-6">
-                            <table class="table" width="100%">
-                                <thead>
-                                    <tr width="100%">
-                                        <th>#</th>
-                                        <th>Producto</th>
-                                        <th>Cantidad</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr
-                                        v-for="(row, index) in form.items"
-                                        :key="index"
-                                        width="100%"
-                                    >
-                                        <td>{{ index + 1 }}</td>
-                                        <td>{{ row.description }}</td>
-                                        <td>
-                                            <template v-if="row.max_quantity">
-                                                {{ row.max_quantity.input }}
-                                                <el-tooltip
-                                                    :content="
-                                                        `Cantidad real ${row.quantity}`
-                                                    "
-                                                >
-                                                    <i
-                                                        class="fa fa-info-circle"
-                                                    ></i>
+                <div class="card">
+                    <div clas="card-body">
+                        <div class="p-5 conteiner">
+                            <div class="row">
+                                <div class="col-12 col-lg-12 col-xl-2">
+                                    <div class="form-group">
+                                        <label class="control-label">Buscar por</label>
+                                        <el-select v-model="searchType">
+                                            <el-option label="Descripción" value="description"></el-option>
+                                            <el-option value="serie" label="Serie"></el-option>
+                                            <el-option value="lote" label="Lote"></el-option>
+                                        </el-select>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-lg-12 col-xl-4">
+                                    <div class="form-group">
+                                        <label class="control-label">Producto</label>
+                                        <!-- <el-input v-model="form.item_description" :readonly="true"> <i slot="prefix" class="el-icon-edit-outline"></i></el-input> -->
+                                        <el-select :disabled="!form.warehouse_id" @change="changeItem" v-model="form_add.item_id" :remote-method="searchItem" filterable remote :loading="loading_item" popper-class="el-select-document_type" class="border-left rounded-left border-info">
+                                            <el-option v-for="option in items" :key="option.id" :value="option.id" :label="option.full_description"></el-option>
+                                        </el-select>
+
+                                        <a v-if="
+                                            form_add.item_id &&
+                                                form_add.series_enabled
+                                        " href="#" class="text-center font-weight-bold text-info" @click.prevent="clickLotcodeOutput">[&#10004; Seleccionar series]</a>
+                                        <a v-if="
+                                            form_add.item_id &&
+                                                form_add.lots_enabled
+                                        " href="#" class="text-center font-weight-bold text-info" @click.prevent="clickLotescodeOutput">[&#10004; Seleccionar cantidad en lotes]</a>
+                                    </div>
+                                </div>
+
+                                <div class="col-12 col-lg-12 col-xl-2">
+                                    <div class="form-group">
+                                        <label class="control-label">Cantidad Actual
+                                            <template v-if="currentItem && currentItem.max_quantity">
+                                                <el-tooltip v-if="currentItem.max_quantity" :content="
+                                                    ` ${
+                                                        currentItem.unds
+                                                            ? 'Mostrando unidades'
+                                                            : 'En base a la cantidad máx. ${currentItem.max_quantity}'
+                                                    }`
+                                                ">
+                                                    <i class="fa fa-info-circle"></i>
+                                                </el-tooltip>
+
+                                                <el-checkbox @change="showUnits" style="margin-left:10px;" v-model="currentItem.unds">
+                                                    Unidades
+                                                </el-checkbox>
+                                            </template>
+                                        </label>
+                                        <el-input v-model="form_add.stock" :readonly="true">
+                                            <i slot="prefix" class="el-icon-edit-outline"></i></el-input>
+                                    </div>
+                                </div>
+
+                                <div class="col-12 col-lg-12 col-xl-2">
+                                    <div class="form-group">
+                                        <label class="control-label">Cantidad a Trasladar
+                                            <template v-if="currentItem">
+                                                <el-tooltip v-if="currentItem.max_quantity" :content="
+                                                    `Ingrese cantidad en base a ${currentItem.max_quantity}`
+                                                ">
+                                                    <i class="fa fa-info-circle"></i>
                                                 </el-tooltip>
                                             </template>
-                                            <template v-else>
-                                                {{ row.quantity }}
-                                            </template>
-                                        </td>
-                                        <td
-                                            class="series-table-actions text-center"
-                                        >
-                                            <button
-                                                type="button"
-                                                class="btn waves-effect waves-light btn-sm btn-danger"
-                                                @click.prevent="
-                                                    clickCancel(index)
-                                                "
-                                            >
-                                                <i class="fa fa-trash"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                                        </label>
+                                        <el-input :disabled="hasLots" type="number" v-model="form_add.quantity">
+                                            <i slot="prefix" class="el-icon-edit-outline"></i></el-input>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-lg-12 col-xl-2">
+                                    <div class="form-group">
+                                        <el-button :disabled="form_add.item_id == null" 
+                                                    style="margin-top:10%;" 
+                                                    @click.prevent="clickAddItem" 
+                                                    type="primary"
+                                                    icon="fas fa-plus">
+                                                
+                                                    Agregar Producto
+                                                </el-button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <div
-                    class="form-actions d-flex justify-content-end align-items-end pt-2 pb-2"
-                >
-                    <div class="col-md-4" style="margin-right:10px;">
-                        <span> Impresora: </span><br />
-                        <el-select v-model="form.printer">
-                            <el-option
-                                v-for="establishment in establishments"
-                                :key="establishment.id"
-                                :value="establishment.id"
-                                :label="
-                                    `${establishment.description} - ${establishment.printer}`
-                                "
-                            >
-                            </el-option>
-                        </el-select>
-                    </div>
-                    <el-button @click.prevent="close()">Cancelar</el-button>
-                    <el-button
-                        type="primary"
-                        native-type="submit"
-                        :loading="loading_submit"
-                        >Guardar</el-button
-                    >
-                </div>
-            </form>
-        </div>
 
-        <output-lots-form
-            :showDialog.sync="showDialogLotsOutput"
-            :lots="form_add.lots"
-            @addRowOutputLot="addRowOutputLot"
-        ></output-lots-form>
-        <output-lotes-form
-            :lotes="form_add.lotes"
-            @sumLotes="sumLotes"
-            :showDialog.sync="showDialogLotesOutput"
-            @addRowOutputLote="addRowOutputLote"
-        ></output-lotes-form>
+                    </div>
+                </div>
+
+                <br />
+                <div class="row">
+                    <div class="col-12 col-lg-12 col-xl-12">
+                        <table class="table table-striped" width="100%" >
+                            <thead>
+                                <tr width="100%" slot="heading" class="bg-primary">
+                                    <th class="text-white">#</th>
+                                    <th class="text-white">Producto</th>
+                                    <th class="text-white">Cantidad</th>
+                                    <th class="text-white">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="(row, index) in form.items" :key="index" width="100%">
+                                    <td>{{ index + 1 }}</td>
+                                    <td>{{ row.description }}</td>
+                                    <td>
+                                        <template v-if="row.max_quantity">
+                                            {{ row.max_quantity.input }}
+                                            <el-tooltip :content="
+                                                            `Cantidad real ${row.quantity}`
+                                                        ">
+                                                <i class="fa fa-info-circle"></i>
+                                            </el-tooltip>
+                                        </template>
+                                        <template v-else>
+                                            {{ row.quantity }}
+                                        </template>
+                                    </td>
+                                    <td class="series-table-actions text-center">
+                                        <button type="button" class="btn waves-effect waves-light btn-sm btn-danger" @click.prevent="
+                                                        clickCancel(index)
+                                                    ">
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-actions d-flex justify-content-end align-items-end pt-2 pb-2">
+                <div class="col-md-4" style="margin-right:10px;">
+                    <span> 
+                        <i class="fa fa-print fa-lg"></i>
+                        Impresora: </span><br />
+                    <el-select v-model="form.printer">
+                        <el-option v-for="establishment in establishments" :key="establishment.id" :value="establishment.id" :label="
+                                        `${establishment.description} - ${establishment.printer}`
+                                    ">
+                        </el-option>
+                    </el-select>
+                </div>
+                <el-button icon="fas fa-times fa-lg" @click.prevent="close()"> Cancelar</el-button>
+                <el-button icon="fas fa-save fa-lg" type="primary" native-type="submit" :loading="loading_submit"> Guardar</el-button>
+            </div>
+        </form>
     </div>
+
+    <output-lots-form :showDialog.sync="showDialogLotsOutput" :lots="form_add.lots" @addRowOutputLot="addRowOutputLot"></output-lots-form>
+    <output-lotes-form :lotes="form_add.lotes" @sumLotes="sumLotes" :showDialog.sync="showDialogLotesOutput" @addRowOutputLote="addRowOutputLote"></output-lotes-form>
+</div>
 </template>
 
+    
 <script>
 import OutputLotsForm from "./partials/lots.vue";
 import OutputLotesForm from "./partials/lotes.vue";
 
 export default {
-    props: ["establishment_id", "establishments","configuration"],
-    components: { OutputLotsForm, OutputLotesForm },
+    props: ["establishment_id", "establishments", "configuration"],
+    components: {
+        OutputLotsForm,
+        OutputLotesForm
+    },
     data() {
         return {
             sameEstablishment: false,
             hasLots: false,
             loading_item: false,
-            isDirect:false,
+            isDirect: false,
             loading_submit: false,
             titleDialog: null,
             showDialogLotsOutput: false,
@@ -411,13 +288,11 @@ export default {
                 await qz.websocket.connect(config);
             }
 
-            let data = [
-                {
-                    type: "pdf",
-                    format: "file",
-                    data: url
-                }
-            ];
+            let data = [{
+                type: "pdf",
+                format: "file",
+                data: url
+            }];
             try {
                 await qz.print(config, data);
             } catch (e) {
@@ -552,8 +427,8 @@ export default {
         },
         clickAddItem() {
             /* if (!this.form_add.item_id) {
-        return;
-      }*/
+            return;
+          }*/
 
             if (parseFloat(this.form_add.stock) < 1) {
                 return;
@@ -602,7 +477,10 @@ export default {
                 max_quantity,
                 lotes: this.form_add.lotes
                     .filter(f => f.selectedQuantity && f.selectedQuantity > 0)
-                    .map(m => ({ ...m, quantity: m.selectedQuantity }))
+                    .map(m => ({
+                        ...m,
+                        quantity: m.selectedQuantity
+                    }))
             });
 
             this.initFormAdd();
@@ -642,9 +520,13 @@ export default {
                 .then(async response => {
                     if (response.data.success) {
                         this.$toast.success(response.data.message);
-                        let { code } = response.data;
-                        let { printer } = response.data;
-                        if(this.form.printer){
+                        let {
+                            code
+                        } = response.data;
+                        let {
+                            printer
+                        } = response.data;
+                        if (this.form.printer) {
                             await this.printTransfer(code, printer);
                         }
                         this.close();

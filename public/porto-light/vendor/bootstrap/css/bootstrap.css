@@ -26,6 +26,9 @@
   --danger: #dc3545;
   --light: #f8f9fa;
   --dark: #343a40;
+  --gradient-1: #073f68;
+  --gradient-2: #0015ff;
+  --gradient-3: #073f68;
   --breakpoint-xs: 0;
   --breakpoint-sm: 576px;
   --breakpoint-md: 768px;

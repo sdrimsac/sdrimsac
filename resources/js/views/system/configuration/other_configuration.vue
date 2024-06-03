@@ -1,6 +1,6 @@
 <template>
 <div class="card">
-    <div class="card-header bg-info">
+    <div class="card-header bg-secondary">
         <h3 class="my-0">Otras configuraciones</h3>
     </div>
     <div class="card-body">

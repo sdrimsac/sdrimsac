@@ -16,47 +16,44 @@
                             </li>
                         </ol>
                     </div>
-                    <div class="col-6 d-flex justify-content-end">
-                        <div>
-                            <el-tooltip
-                                class="item"
-                                effect="dark"
-                                content="Nuevo"
-                                placement="bottom-end"
-                            >
-                                <button
-                                    type="button"
-                                    class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto"
-                                    @click.prevent="clickCreate()"
-                                >
-                                    <i class="icofont-plus-circle"></i>
-                                    <span>Nuevo</span>
-                                </button>
-                            </el-tooltip>
-                        </div>
-                    </div>
+
                 </div>
             </div>
         </div>
         <div class="container-fluid p-l-0 p-r-0">
             <div class="card mb-0">
                 <div class="card-header bg-primary">
-                    <h6 class="my-0 text-white">Listado de {{ title }}</h6>
+                    <h4 class="my-0 text-white">
+                        <i class="fa fa-crane"></i>                        
+                        <i class="fa fa-dolly"></i>
+                        Listado de {{ title }}
+                    </h4>
                 </div>
+                <div class="data-table-visible-columns">
+                        <el-button type="primary" 
+                                    class="" 
+                                    href="javascript:void(0)" 
+                                    @click.prevent="clickCreate()">
+                                    <i class="fa fa-dolly fa-lg"></i>
+                                    <i class="fa fa-plus"></i>
+
+                                    Nuevo Traslado
+                        </el-button>
+                </div> 
                 <div class="card-body">
                     <data-table :resource="resource">
-                        <tr slot="heading">
-                            <th>#</th>
-                            <th>Fecha</th>
-                            <th>Almacen Inicial</th>
+                        <tr slot="heading" class="bg-primary">
+                            <th class="text-white">#</th>
+                            <th class="text-white">Fecha</th>
+                            <th class="text-white">Almacen Inicial</th>
 
-                            <th>Almacen Destino</th>
-                            <th>Detalle</th>
-                            <th>Detalle Productos</th>
-                            <th>Cantidad Total Productos</th>
+                            <th class="text-white">Almacen Destino</th>
+                            <th class="text-white">Detalle</th>
+                            <th class="text-white">Detalle Productos</th>
+                            <th class="text-white">Cantidad Total Productos</th>
                             <!--<th class="text-end">Acciones</th> -->
                         </tr>
-                        <tr></tr>
+                        <tr class="text-white"></tr>
                         <tr slot-scope="{ index, row }">
                             <td>{{ index }}</td>
                             <td>{{ row.created_at }}</td>

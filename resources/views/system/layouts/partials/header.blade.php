@@ -1,4 +1,4 @@
-<header class="header" style="background: linear-gradient(90deg, rgba(9,9,121,1) 16%, rgba(0,116,255,1) 100%);">
+<header class="header">
     <div class="logo-container">
         <a href="{{route('system.dashboard')}}" class="logo">
             @if (file_exists(public_path('acorn/img/profile/store.png')))

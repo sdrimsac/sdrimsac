@@ -1,20 +1,47 @@
 <?php
+
 namespace App\Http\Controllers\Tenant;
 
+use Illuminate\Http\Request;
 use App\Models\Tenant\Catalogs\UnitType;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Tenant\UnitTypeRequest;
 use App\Http\Resources\Tenant\UnitTypeCollection;
 use App\Http\Resources\Tenant\UnitTypeResource;
+
 use Exception;
 
 class UnitTypeController extends Controller
 {
+    public function index()
+    {
+        return view('tenant.unit_types.index');
+    }
+
     public function records()
     {
-        $records = UnitType::all();
+        $records = UnitType::paginate(config('tenant.unit_types_per_page'));
 
         return new UnitTypeCollection($records);
+    }
+
+    
+
+    /* public function records(Request $request)
+    {
+        $records = UnitType::where($request->column, 'like', "%{$request->value}%")
+                            ->latest();
+
+        return new UnitTypeCollection($records->paginate(config('tenant.unit_types_per_page')));
+    } */
+
+
+    public function columns()
+    {
+        return [
+
+            'description' => 'descripcion',
+        ];
     }
 
     public function record($id)
@@ -33,14 +60,14 @@ class UnitTypeController extends Controller
 
         return [
             'success' => true,
-            'message' => ($id)?'Unidad editada con éxito':'Unidad registrada con éxito'
+            'message' => ($id) ? 'Unidad editada con éxito' : 'Unidad registrada con éxito',
         ];
     }
 
     public function destroy($id)
     {
         try {
-            
+
             $record = UnitType::findOrFail($id);
             $record->delete();
 
@@ -48,13 +75,9 @@ class UnitTypeController extends Controller
                 'success' => true,
                 'message' => 'Unidad eliminada con éxito'
             ];
-
         } catch (Exception $e) {
 
-            return ($e->getCode() == '23000') ? ['success' => false,'message' => 'La unidad esta siendo usada por otros registros, no puede eliminar'] : ['success' => false,'message' => 'Error inesperado, no se pudo eliminar la unidad'];
-
+            return ($e->getCode() == '23000') ? ['success' => false, 'message' => 'La unidad esta siendo usada por otros registros, no puede eliminar'] : ['success' => false, 'message' => 'Error inesperado, no se pudo eliminar la unidad'];
         }
-
-        
     }
 }

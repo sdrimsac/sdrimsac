@@ -1,7 +1,7 @@
 
  <template>
   <div class="card">
-    <div class="card-header bg-info">
+    <div class="card-header bg-secondary">
       <h3 class="my-0">Configuración global para el login de los clientes</h3>
     </div>
     <div class="card-body">
@@ -105,6 +105,7 @@
               :disabled="loading"
               @click="onSubmit"
               type="primary"
+              class="bg-secondary"
               >GUARDAR</el-button
             >
           </div>

@@ -5828,6 +5828,12 @@ html.sidebar-light:not(.dark) ul.nav-main li .nav-children li a:hover, html.side
 	border-color: #f1b257 #f1b257 #ed9c28;
 	color: #FFF;
 }
+.bg-secondary{
+	background-color: #073f68 !important;
+}
+.header{
+	background-image: linear-gradient(10deg, var(--gradient-1), var(--gradient-1), var(--gradient-2), var(--gradient-3))!important; 
+}
 
 .btn-warning:focus, .btn-warning.focus {
 	-webkit-box-shadow: 0 0 0 3px rgba(237, 156, 40, 0.5);

@@ -690,7 +690,7 @@
                 </div>
             </div>
             <div class="form-actions text-right pt-2">
-                <el-button @click.prevent="close()">
+                <el-button icon="fas fa-times fa-lg" @click.prevent="close()">
                     Cancelar
                 </el-button>
                 <el-button
@@ -698,6 +698,7 @@
                     dusk="submit"
                     native-type="submit"
                     type="primary"
+                    icon="fas fa-save fa-lg"
                 >
                     <template v-if="loading_submit">
                         {{ button_text }}

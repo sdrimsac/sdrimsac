@@ -559,10 +559,12 @@ if ($hostname) {
                 Route::post('options/delete_items', [App\Http\Controllers\Tenant\OptionController::class, 'deleteItems']);
                 Route::get('boxes', [Modules\Restaurant\Http\Controllers\BoxesController::class, 'index'])->name('boxes')->middleware('just.admin');
 
+                Route::get('unit_types', [App\Http\Controllers\Tenant\UnitTypeController::class, 'index'])->name('tenant.unit_types.index')->middleware('just.admin');
                 Route::get('unit_types/records', [App\Http\Controllers\Tenant\UnitTypeController::class, 'records']);
-                Route::get('unit_types/record/{code}', [App\Http\Controllers\Tenant\UnitTypeController::class, 'record']);
+                Route::get('unit_types/columns', [App\Http\Controllers\Tenant\UnitTypeController::class, 'columns']);
+                Route::get('unit_types/record/{id}', [App\Http\Controllers\Tenant\UnitTypeController::class, 'record']);
                 Route::post('unit_types', [App\Http\Controllers\Tenant\UnitTypeController::class, 'store']);
-                Route::delete('unit_types/{code}', [App\Http\Controllers\Tenant\UnitTypeController::class, 'destroy']);
+                Route::delete('unit_types/{id}', [App\Http\Controllers\Tenant\UnitTypeController::class, 'destroy']);
 
                 //Detractions
                 Route::get('detraction_types/records', [App\Http\Controllers\Tenant\DetractionTypeController::class, 'records']);
@@ -604,7 +606,9 @@ if ($hostname) {
 
 
                 //Tribute Concept Type
+                Route::get('tribute_concept_types', [App\Http\Controllers\Tenant\TributeConceptTypeController::class, 'index'])->name('tenant.attribute_types.index')->middleware('just.admin');
                 Route::get('tribute_concept_types/records', [App\Http\Controllers\Tenant\TributeConceptTypeController::class, 'records']);
+                Route::get('tribute_concept_types/columns', [App\Http\Controllers\Tenant\TributeConceptTypeController::class, 'columns']);
                 Route::get('tribute_concept_types/record/{id}', [App\Http\Controllers\Tenant\TributeConceptTypeController::class, 'record']);
                 Route::post('tribute_concept_types', [App\Http\Controllers\Tenant\TributeConceptTypeController::class, 'store']);
                 Route::delete('tribute_concept_types/{id}', [App\Http\Controllers\Tenant\TributeConceptTypeController::class, 'destroy']);
@@ -891,6 +895,7 @@ if ($hostname) {
             //Clients
             Route::get('clients', 'System\ClientController@index')->name('system.clients.index');
             Route::get('clients/records', 'System\ClientController@records');
+            Route::get('clients/columns',  'System\ClientController@columns');
             Route::get('clients/record/{client}', 'System\ClientController@record');
 
             Route::get('clients/create', 'System\ClientController@create');

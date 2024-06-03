@@ -12,10 +12,10 @@
                 </div>
               <div class="col-12 col-md-6 d-flex align-items-start justify-content-end">
                 <!-- Contact Button Start -->
-                  <button type="button" class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto" @click="addSeeder">
+                  <!-- <button type="button" class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto" @click="addSeeder">
                    <i class="icofont-refresh"></i>
                     <span>Actualizar</span>
-                    </button>
+                    </button> -->
                 <!-- Contact Button End -->
               </div>
               </div>
@@ -25,8 +25,18 @@
         <div class="container-fluid p-l-0 p-r-0">
         <div class="card">
             <div class="card-header bg-primary">
-                <h6 class="my-0 text-white">Selección de plantilla de impresión para comprobantes</h6>
+                <h4 class="my-0 text-white">Selección de plantilla de impresión para comprobantes</h4>
             </div>
+            <div class="data-table-visible-columns">
+                    <el-button type="primary" 
+                                class="" 
+                                href="javascript:void(0)" 
+                                @click="addSeeder">
+                                <i class="fas fa-sync-alt fa-lg green-icon fa-lg"></i>
+                            Actualizar
+                    </el-button>
+            </div> 
+
             <div class="card-body p-t-2 p-b-5">
                 <h6>Plantilla actual: <a :href="'#'+form.formats" class="text-secondary">{{form.formats}}</a></h6>
                 <div class="row">

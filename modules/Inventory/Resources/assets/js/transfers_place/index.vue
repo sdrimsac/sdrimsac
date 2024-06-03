@@ -4,9 +4,9 @@
             <div class="page-header">
                 <div class="row">
                     <div class="col-6">
-                        <h6>
+                        <h4>
                             <span>{{ title }}</span>
-                        </h6>
+                        </h4>
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item">
                                 <a href="/dashboard">Dashboard</a>
@@ -22,7 +22,7 @@
         <div class="container-fluid p-l-0 p-r-0">
             <div class="card mb-0">
                 <div class="card-header bg-primary">
-                    <h6 class="my-0 text-white">Listado de {{ title }}</h6>
+                    <h4 class="my-0 text-white">Listado de {{ title }}</h4>
                 </div>
                 <div class="card-body">
                     <data-table :resource="resource">

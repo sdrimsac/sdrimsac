@@ -22,36 +22,56 @@
     <div class="container-fluid p-l-0 p-r-0">
         <div class="card mb-0">
             <div class="card-header bg-primary">
-                <h4 class="my-0 text-white"><i class="fas fa-box"></i> Listado de productos</h4>
+                <h4 class="my-0 text-white">
+                    <i class="fas fa-box"></i> 
+                    Listado de productos
+                </h4>
 
             </div>
-            <div class="card-body">
-                <div class="d-flex align-items-start justify-content-end">
-                    <!-- Contact Button Start -->
-                    <button type="button" style="margin-right: 5px;" class="btn btn-outline-primary btn-icon btn-icon-start btn-sm" @click.prevent="clickCreate()">
-                        <i data-cs-icon="plus"></i>
-                        <span>Nuevo</span>
-                    </button>
-                    <button class="btn btn-sm btn-icon btn-icon-only btn-outline-primary align-top float-end" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">
-                        <i data-cs-icon="more-horizontal"></i>
+
+            <div class="data-table-visible-columns">
+                    <el-button type="primary" 
+                                class="" 
+                                style="margin-right: 5px;"
+                                href="javascript:void(0)" 
+                                @click.prevent="clickCreate()"
+                            >
+                                <i class="fas fa-box fa-lg"></i> 
+                                 <i class="fa fa-plus"></i>
+
+                            Nuevo Producto
+                    </el-button>
+
+                    <button class="btn btn-sm btn-icon btn-icon-only btn-outline-light align-top float-end" 
+                            style="margin-right: 5px;"
+                            type="button" data-bs-toggle="dropdown" 
+                            aria-expanded="false" aria-haspopup="true">
+                            <i data-cs-icon="more-horizontal"></i>
                     </button>
                     <div class="dropdown-menu dropdown-menu-sm dropdown-menu-end">
                         <a class="dropdown-item" href="javascript:void(0)" @click.prevent="clickImport()">
-                            <i class="fa fa-upload"></i> Importar</a>
+                            <i class="fa fa-upload"></i> Importar Productos
+                        </a>
                         <a class="dropdown-item" href="javascript:void(0)" @click.prevent="clickImportListPrice()">
-                            <i class="fa fa-upload"></i> Importar lista de
-                            precios</a>
+                            <i class="fa fa-upload"></i> Importar Politica de Precios
+                        </a>
                     </div>
 
-                </div>
+
+            </div> 
+            <div class="data-table-visible-columns">
+                   
+            </div> 
+            <div class="card-body">
+
                 <data-table :typeUser="typeUser" :resource="resource" :config="config" @clickReport="clickReport" @clickReportForImport="clickReportForImport" class="table-striped">
                     <tr slot="heading" width="100%" class="bg-primary">
-                        <th class="text-white">Acciones</th>
-                        <th class="text-white">Estado</th>
+                        <th class="text-white text-center">Acciones</th>
+                        <th class="text-white text-center">Estado</th>
                         <th class="text-white">#</th>
                         <th class="text-white">Cód. Interno</th>
-                        <th class="text-white">Unidad</th>
-                        <th class="text-white">Nombre</th>
+                        <th class="text-white text-center">Unidad</th>
+                        <th class="text-white text-center">Nombre</th>
                         <th class="text-white">Descripción</th>
                         <!-- <th class="text-white">Cód. SUNAT</th> -->
                         <th class="text-left text-white">Stock</th>
@@ -74,16 +94,16 @@
                                     <span class="btn btn-primary dropdown-toggle" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-delay="0" title="" data-bs-original-title="Item Count" aria-label="Item Count">Acciones</span>
                                 </button>
                                 <div class="dropdown-menu dropdown-menu-end" style="">
-                                    <a type="button" class="dropdown-item text-secondary" @click.prevent=" clickCreate(row.id)"> <i class="fa fa-edit"></i> Editar
+                                    <a type="button" class="dropdown-item text-secondary" @click.prevent=" clickCreate(row.id)"> <i class="fa fa-edit fa-lg"></i> Editar
                                     </a>
-                                    <a type="button" class="dropdown-item text-danger" @click.prevent="
-                                    clickDelete(row.id)"> <i class="fa fa-trash"></i> Eliminar
+                                    <a type="button" class="dropdown-item text-danger " @click.prevent="
+                                    clickDelete(row.id)"> <i class="fa fa-trash  fa-lg"></i> Eliminar
                                     </a>
                                     <a type="button" class="dropdown-item" @click.prevent="clickDisable(row.id)" v-if="row.active">
-                                        <i class="fas fa-toggle-off text-warning"></i> Inhabilitar
+                                        <i class="fas fa-toggle-off text-warning  fa-lg"></i> Inhabilitar
                                     </a>
                                     <a type="button" class="dropdown-item" @click.prevent="clickEnable(row.id)" v-else>
-                                        <i class="fas fa-toggle-on text-success"></i> Habilitar
+                                        <i class="fas fa-toggle-on text-success  fa-lg"></i> Habilitar
                                     </a>
                                     <!-- <a type="button" class="dropdown-item" @click.prevent="toggleActive(row.id)">
                                         <i :class="{'fas fa-check-circle text-success': row.active, 'fas fa-times-circle text-danger': !row.active}"></i>

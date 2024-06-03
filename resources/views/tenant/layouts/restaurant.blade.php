@@ -173,10 +173,10 @@
           <div class="container-fluid">
             <div class="row">
               <div class="col-md-6 footer-copyright">
-                <p class="mb-0">Copyright 2022 © Todos los derechos reservados.</p>
+                <p class="mb-0">Copyright 2024 © Todos los derechos reservados a Sdrimsac Solutions.</p>
               </div>
               <div class="col-md-6">
-                <p class="pull-right mb-0">Desarrollado por GRUPOPCSYSTEMS</p>
+                <p class="pull-right mb-0">Desarrollado por Sdrimsac Solutions</p>
               </div>
             </div>
           </div>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Tenant;
 
 use Illuminate\Http\Request;
+
 use App\Http\Controllers\Controller;
 use App\Models\Tenant\Catalogs\AttributeType;
 use App\Http\Resources\Tenant\TributeConceptTypeResource;
@@ -12,12 +13,33 @@ use Exception;
 
 class TributeConceptTypeController extends Controller
 {
+    public function index(){
+        return view('tenant.attribute_types.index');
+    }
+
     public function records()
+    {
+        /* $records = TributeConceptType ::paginate(config('tenant.attribute_types_per_page')); */
+        $records = AttributeType::paginate(config('tenant.attribute_types_per_page'));
+
+        return new TributeConceptTypeCollection($records);
+    }
+
+    public function columns()
+    {
+        return [
+            
+            'description' => 'descripcion',
+        ];
+    }
+
+
+    /* public function records()
     { 
         $records = new TributeConceptTypeCollection(AttributeType::all());
 
         return $records;
-    }
+    } */
 
     public function record($id)
     {

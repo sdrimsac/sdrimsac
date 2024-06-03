@@ -197,7 +197,7 @@
                 </div> -->
 
                 <div class="row">
-                    <div class="col-md-6 col-lg-3">
+                    <div class="col-12 col-lg-6 col-xl-6">
                         <div
                             class="form-group"
                             :class="{ 'has-danger': errors.country_id }"
@@ -224,7 +224,8 @@
                             ></small>
                         </div>
                     </div>
-                    <div class="col-md-6 col-lg-3">
+                    
+                    <div class="col-12 col-lg-6 col-xl-6">
                         <div
                             class="form-group"
                             :class="{ 'has-danger': errors.department_id }"
@@ -253,7 +254,7 @@
                             ></small>
                         </div>
                     </div>
-                    <div class="col-md-6 col-lg-3">
+                    <div class="col-12 col-lg-6 col-xl-6">
                         <div
                             class="form-group"
                             :class="{ 'has-danger': errors.province_id }"
@@ -282,7 +283,7 @@
                             ></small>
                         </div>
                     </div>
-                    <div class="col-md-6 col-lg-3">
+                    <div class="col-12 col-lg-6 col-xl-6">
                         <div
                             class="form-group"
                             :class="{ 'has-danger': errors.province_id }"
@@ -337,7 +338,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-12 col-lg-6 col-xl-6">
                         <!-- create a select with options of zones -->
                         <div
                             class="form-group"
@@ -365,7 +366,7 @@
                             ></small>
                         </div>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-12 col-lg-6 col-xl-6">
                         <div
                             class="form-group"
                             :class="{ 'has-danger': errors.telephone }"
@@ -386,7 +387,7 @@
                             ></small>
                         </div>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-12 col-lg-12 col-xl-12">
                         <div
                             class="form-group"
                             :class="{ 'has-danger': errors.email }"
@@ -677,9 +678,9 @@
                 </template>
             </div>
             <div class="form-actions text-end pt-2 pb-2">
-                <el-button icon="fas fa-times" @click.prevent="close()"> Cancelar</el-button>
+                <el-button icon="fas fa-times fa-lg" @click.prevent="close()"> Cancelar</el-button>
                 <el-button
-                    icon="fas fa-save"
+                    icon="fas fa-save fa-lg"
                     type="primary"
                     native-type="submit"
                     :loading="loading_submit"

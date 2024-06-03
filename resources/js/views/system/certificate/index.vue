@@ -1,6 +1,6 @@
 <template>
     <div class="card">
-        <div class="card-header bg-info">
+        <div class="card-header bg-secondary">
             <h3 class="my-0">Certificado PSE - Datos Sunat</h3>
         </div>
         <div class="card-body">
@@ -28,7 +28,7 @@
             </div>
             <div class="row pt-2" v-else>
                 <div class="col-md-12">
-                    <el-button  type="primary" @click="clickCreate">Subir Certificado .pfx</el-button>
+                    <el-button  type="primary" @click="clickCreate" class="bg-secondary">Subir Certificado .pfx</el-button>
                 </div>
             </div>
             <div class="title border-bottom">
@@ -50,7 +50,7 @@
                 </div>
                 <div class="col-md-12 py-2">
                     <div class="form-group">
-                        <el-button type="primary" native-type="submit" @click.prevent="clickSaveSoapUser">Guardar</el-button>
+                        <el-button type="primary" native-type="submit" @click.prevent="clickSaveSoapUser" class="bg-secondary">Guardar</el-button>
                     </div>
                 </div>
             </div>

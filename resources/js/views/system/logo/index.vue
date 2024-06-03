@@ -1,6 +1,6 @@
 <template>
     <div class="card">
-        <div class="card-header bg-info">
+        <div class="card-header bg-secondary">
             <h3 class="my-0">Logo de distribuidor</h3>
         </div>
         <div class="card-body">
@@ -19,6 +19,7 @@
                         size="small"
                         type="primary"
                         @click="$refs.upload.click()"
+                        class="bg-secondary"
                         >Seleccionar imagen</el-button
                     >
                 </div>
@@ -33,6 +34,7 @@
                         type="success"
                         native-type="submit"
                         @click.prevent="clickSave"
+                        class="bg-secondary"
                         >Guardar</el-button
                     >
                 </div>

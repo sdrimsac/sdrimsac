@@ -24,7 +24,9 @@
     @endif
 </head>
 
-<body>
+
+<body style="background-image: url('{{ asset('../../../../status_images/fondo.png') }}'); 
+        background-repeat: no-repeat; background-size: cover; background-position: center;">
 
     <div class="app">
         @yield('content')
