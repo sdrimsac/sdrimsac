@@ -2236,6 +2236,7 @@
                                             @change="submit"
                                         ></el-switch>
                                     </div>
+                                    
                                     <div class="col-md-3 mt-2">
                                         <label class="control-label w-100">
                                             Mostrar logo en documentos
@@ -2243,6 +2244,19 @@
                                         <el-switch
                                             v-model="
                                                 form.show_logo_in_documents
+                                            "
+                                            active-text="Si"
+                                            inactive-text="No"
+                                            @change="submit"
+                                        ></el-switch>
+                                    </div>
+                                    <div class="col-md-3 mt-2">
+                                        <label class="control-label w-100">
+                                            Mostrar código interno en productos (ticket)
+                                        </label>
+                                        <el-switch
+                                            v-model="
+                                                form.show_internal_code_ticket
                                             "
                                             active-text="Si"
                                             inactive-text="No"

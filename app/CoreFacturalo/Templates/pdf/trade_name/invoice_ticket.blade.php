@@ -21,7 +21,7 @@
     } else {
         $affected_document_number = null;
     }
-    $configuration = \App\Models\Tenant\Configuration::select('show_logo_in_documents')->first();
+    $configuration = \App\Models\Tenant\Configuration::select(['show_logo_in_documents','show_internal_code_ticket'])->first();
     $total_payment = $document->payments->sum('payment');
     //$balance = ($document->total - $total_payment) - $document->payments->sum('change');
     $balance = -5;
@@ -620,6 +620,11 @@
                         {{ getUnitType(isset($row->item->has_unit_type) ? 'NIU' : $row->item->unit_type_id )}}
                     </td>
                     <td class="text-left desc-9 align-top">
+                        @if($configuration->show_internal_code_ticket)
+                            @if (isset($row->item->internal_id))
+                                {{ $row->item->internal_id }} <br>
+                            @endif
+                        @endif
                         @if (isset($row->name_product_pdf))
                             {!! $row->name_product_pdf !!}
                         @else

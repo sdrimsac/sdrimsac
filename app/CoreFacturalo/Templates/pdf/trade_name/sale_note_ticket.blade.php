@@ -16,7 +16,7 @@
     $hotel_rent_advance = \App\Models\Tenant\HotelRentDocument::where('sale_note_id', $document->id)->first();
     $sale_note_promotion = \App\Models\Tenant\SaleNotePromotion::where('sale_note_id', $document->id)->first();
     $is_chifa_china = $company->number == '15609876309';
-    $configuration = \App\Models\Tenant\Configuration::select('show_logo_in_documents')->first();
+    $configuration = \App\Models\Tenant\Configuration::select(['show_logo_in_documents','show_internal_code_ticket'])->first();
         if (!function_exists('getUnitType')) {
         function getUnitType($id)
         {
@@ -446,6 +446,12 @@ contain"
                         {{getUnitType( isset($row->item->from_unit_type_id_desc) ? 'NIU' : $row->item->unit_type_id )}}
                     </td>
                     <td class="text-left desc-9 align-top">
+
+                        @if($configuration->show_internal_code_ticket)
+                            @if (isset($row->item->internal_id))
+                                {{ $row->item->internal_id }} <br>
+                            @endif
+                        @endif
                         @if (isset($row->item->descriptionInternet))
                             {{ $row->item->descriptionInternet }}
                         @else

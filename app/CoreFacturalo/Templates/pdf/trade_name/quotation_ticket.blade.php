@@ -265,6 +265,11 @@
                     </td>
                     <td class="text-center desc-9 align-top">{{ $row->item->unit_type_id }}</td>
                     <td class="text-left desc-9 align-top">
+                        @if ($configuration->show_internal_code_ticket)
+                            @if (isset($row->item->internal_id))
+                                {{ $row->item->internal_id }} <br>
+                            @endif
+                        @endif
                         @if (isset($row->name_product_pdf))
                             {!! $row->name_product_pdf !!}
                         @else

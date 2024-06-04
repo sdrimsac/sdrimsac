@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Config;
 class Configuration extends ModelTenant
 {
     protected $fillable = [
+        'show_internal_code_ticket',
         'unit_type_pdf_quotation',
         'seller_quotation_cash',
         'whatsapp_client',
@@ -174,6 +175,7 @@ class Configuration extends ModelTenant
 
     ];
     protected $casts = [
+        'show_internal_code_ticket' => 'boolean',
         'seller_quotation_cash' => 'boolean',
         'whatsapp_client' => 'boolean',
         'show_stock_cash' => 'boolean',
@@ -293,6 +295,7 @@ class Configuration extends ModelTenant
         // $skins = Skin::all();
         $skins = [];
         return [
+            'show_internal_code_ticket' => (bool)$this->show_internal_code_ticket,
             'unit_type_pdf_quotation' => (bool)$this->unit_type_pdf_quotation,
             'seller_quotation_cash' => (bool)$this->seller_quotation_cash,
             'whatsapp_client' => (bool)$this->whatsapp_client,
