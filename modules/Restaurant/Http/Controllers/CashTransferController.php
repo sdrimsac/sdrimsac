@@ -2,6 +2,8 @@
 
 namespace Modules\Restaurant\Http\Controllers;
 
+use App\Events\InsertCashEvent;
+use App\Http\Controllers\Tenant\WhatsappController;
 use App\Http\Resources\Tenant\CashTransferCollection;
 use App\Http\Resources\Tenant\CashTransferResource;
 use App\Models\Tenant\Box;
@@ -78,6 +80,10 @@ class CashTransferController extends Controller
             $amount = $cash_transfer->amount;
             $cash_destination_id = $cash_transfer->cash_destination_id;
             $date_of_issue = $cash_transfer->date_of_issue;
+            $cash_destination = Cash::findOrFail($cash_destination_id);
+            $user_destination = $cash_destination->user;
+            $message = "La caja principal a transferido S/. $amount a la caja $cash_destination->reference_number de $user_destination->name";
+            if($cash_transfer->observation) $message .= " con la observación: $cash_transfer->observation";
             $box = new Box;
             $box->cash_id = $cash_destination_id;
             $box->date = $date_of_issue;
@@ -94,7 +100,8 @@ class CashTransferController extends Controller
             $box->description = 'Transferencia de caja principal';
             $box->method = 'Efectivo';
             $box->save();
-
+            (new WhatsappController)->sendMessageOne($user_destination->phone, $message);
+            event(new InsertCashEvent($amount, $cash_destination_id));
             DB::connection('tenant')->commit();
             return [
                 'success' => true,

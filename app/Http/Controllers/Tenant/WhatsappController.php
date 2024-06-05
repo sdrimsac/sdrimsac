@@ -56,6 +56,18 @@ class WhatsappController extends Controller
             // $this->sendMessage($message, $value->number);
         }
     }
+    public function sendMessageOne($number,$message)
+    {
+        if(!$number) return;
+        
+        $website = $this->getTenantWebsite();
+        $company = Company::first();
+        $name = "*" . $company->name . "*: ";
+        $message = $name . $message;
+        WhatsappSendMessageProccess::dispatch($website->id, $message, $number);
+            // $this->sendMessage($message, $number_activity);
+    
+    }
     public function getNumbers()
     {
         $numbers_activity = NumberActivity::all();

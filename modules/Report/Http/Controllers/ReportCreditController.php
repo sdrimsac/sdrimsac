@@ -291,7 +291,7 @@ class ReportCreditController extends Controller
         }
 
         $records = $records->get()->groupBy(function ($saleNoteItem) {
-            return $saleNoteItem->sale_note->total . '|' . $saleNoteItem->sale_note->type_payment . '|' . $saleNoteItem->sale_note->creditPayments->first()->tasa . '|' . $saleNoteItem->item->purchase_unit_price;
+            return $saleNoteItem->sale_note->total . '|' . $saleNoteItem->sale_note->type_payment . '|' . $saleNoteItem->sale_note->creditPayments->first()->tasa . '|' . $saleNoteItem->item->purchase_unit_price .'|'.$saleNoteItem->sale_note->advances;
         })->map(function ($group) {
             $total_penalties = $group->sum(function ($saleNoteItem) {
                 $saleNote = $saleNoteItem->sale_note;
@@ -308,9 +308,10 @@ class ReportCreditController extends Controller
             });
             $product = $group->first()->item->description;
             $total_count = $group->sum('total');
+            $total_advances = $group->sum('sale_note.advances');
             $tasa = $group->first()->sale_note->creditPayments->first()->tasa;
             $tasa_percentage = $tasa / 100;
-            $gain =  $total_count * $tasa_percentage;
+            $gain =  ($total_count - $total_advances) * $tasa_percentage;
             $gain = round($gain, 2);
             $total_gain = $total_penalties + $gain;
             return [
@@ -359,7 +360,7 @@ class ReportCreditController extends Controller
         }
 
         $records = $records->orderBy('date_of_issue', 'desc')->get()->groupBy(function ($saleNote) {
-            return $saleNote->total . '|' . $saleNote->type_payment . '|' . $saleNote->creditPayments->first()->tasa;
+            return $saleNote->total . '|' . $saleNote->type_payment . '|' . $saleNote->creditPayments->first()->tasa .'|'.$saleNote->advances;
         })->map(function ($group) {
             $total_penalties = $group->sum(function ($saleNote) {
                 return $saleNote->creditPayments
@@ -367,9 +368,10 @@ class ReportCreditController extends Controller
                     ->sum('penalty_amount');
             });
             $total_count = $group->sum('total');
+            $total_advances = $group->sum('advances');
             $tasa = $group->first()->creditPayments->first()->tasa;
             $tasa_percentage = $tasa / 100;
-            $gain =  $total_count * $tasa_percentage;
+            $gain =  ($total_count - $total_advances) * $tasa_percentage;
             $gain = round($gain, 2);
             $total_gain = $total_penalties + $gain;
             return [

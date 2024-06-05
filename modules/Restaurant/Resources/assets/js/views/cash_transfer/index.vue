@@ -130,6 +130,7 @@
                 <form-cash-transfer
                     :showDialog.sync="showDialog"
                     :recordId="recordId"
+                    @updateCash="getCashAvailable"
                 ></form-cash-transfer>
             </div>
         </div>

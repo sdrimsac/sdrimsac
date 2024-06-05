@@ -26,9 +26,9 @@
                         <td class="text-center">{{ row.total }}</td>
                         <td class="text-center">{{ row.tasa }}</td>
                         <td class="text-center">{{ row.type_payment }}</td>
-                        <td class="text-center">{{ row.gain }}</td>
+                        <td class="text-center">{{ Number(row.gain).toFixed(2) }}</td>
                         <td class="text-end">{{ row.total_penalties }}</td>
-                        <td class="text-end">{{ row.total_gain }}</td>
+                        <td class="text-end">{{ Number(row.total_gain).toFixed(2) }}</td>
                     </tr>
                 </data-table>
             </div>
@@ -58,9 +58,9 @@
                         <td class="text-center">{{ row.product }}</td>
                         <td class="text-center">{{ row.tasa }}</td>
                         <td class="text-center">{{ row.type_payment }}</td>
-                        <td class="text-center">{{ row.gain }}</td>
+                        <td class="text-center">{{ Number(row.gain).toFixed(2) }}</td>
                         <td class="text-end">{{ row.total_penalties }}</td>
-                        <td class="text-end">{{ row.total_gain }}</td>
+                        <td class="text-end">{{ Number(row.total_gain).toFixed(2) }}</td>
                     </tr>
                 </data-table-product>
             </div>

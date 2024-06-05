@@ -62,7 +62,7 @@
                 </div>
                 <div class="col-md-2">
                     <div class="form-group">
-                        <label class="control-label w-100">Tiempoa (Mes)</label>
+                        <label class="control-label w-100">Tiempo (Mes)</label>
                         <el-input-number
                             v-model="credit.month"
                             :disabled="credit.type_payment == 'Unico'"
@@ -226,12 +226,25 @@
             </div>
         </div>
         <div slot="footer" class="dialog-footer">
-            <span
-                v-if="form.total"
-                style="margin-right:auto;display:inline-block"
-            >
-                <h6>S/. {{ form.total - credit.advances }}</h6>
-            </span>
+            <div v-if="form.total" class="d-flex justify-content-end">
+                <div>
+                    <strong>Monto base: </strong>
+                    <span class="h6">S/. {{ (form.total - credit.advances).toFixed(2) }}</span class="h6">
+                </div>
+                <div style="margin-left:15px;">
+                    <strong>
+                        Monto más intereses:
+                    </strong>
+                    <span class="h6">
+                        S/.
+                        {{
+                            (
+                                Number(credit.amount) * Number(credit.num_cuota)
+                            ).toFixed(2)
+                        }}
+                    </span>
+                </div>
+            </div>
             <el-button @click="close">Cancelar</el-button>
             <el-button type="primary" @click="submit">Enviar</el-button>
         </div>

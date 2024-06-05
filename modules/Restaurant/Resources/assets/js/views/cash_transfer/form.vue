@@ -134,6 +134,7 @@ export default {
                                     "Transferencia realizada con éxito"
                                 );
                                 this.$eventHub.$emit("reloadData");
+                                this.$emit("updateCash");
                                 this.close();
                             } else {
                                 this.$toast.error(response.data.message);

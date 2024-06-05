@@ -616,7 +616,7 @@
                             </a>
                         </li>
                     @endif
-                    @if (!$roleService->isLogistic())
+                    @if (!$roleService->isLogistic() && !$config->sale_note_credit_confirm)
                         <li>
                             <a class="{{ $path[0] === 'report_cash' ? 'active' : '' }}"
                                 href="{{ route('reports.cash.index') }}">

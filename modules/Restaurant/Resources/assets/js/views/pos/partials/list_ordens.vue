@@ -2629,6 +2629,18 @@ export default {
             ordens = JSON.parse(ordensSave);
         }
         this.ordenInBox = ordens;
+
+            Echo.channel("insert_cash").listen(
+            `.insert-cash-${this.configuration.socket_channel}`,
+            e => {
+                console.log("🚀 ~ mounted ~ e:", e)
+                let {amount,cash_id} = e;
+                if(this.$cashId == cash_id){
+                    // this.cashAvailable = Number(amount);
+                    this.checkCashAvailable();
+                }
+            }
+        );
     },
     async created() {
 

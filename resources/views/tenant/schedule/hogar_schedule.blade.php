@@ -413,7 +413,9 @@
 
                                 <strong>SALDO</strong>
                             </div>
-                            <br>
+                            <div>
+                                {{ $quote * count($data) }}
+                            </div>
                         </div>
                     </td>
                     <td></td>

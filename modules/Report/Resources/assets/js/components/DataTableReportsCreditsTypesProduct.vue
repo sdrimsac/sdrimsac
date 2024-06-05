@@ -185,13 +185,13 @@
                                 <td></td>
                                 <td colspan="2"></td>
                                 <td class="text-center">
-                                    {{ totals.acum_gain }}
+                                    {{ Number( totals.acum_gain ).toFixed(2)}}
                                 </td>
                                 <td class="text-end">
                                     {{ totals.acum_total_penalties }}
                                 </td>
                                 <td class="text-end">
-                                    {{ totals.acum_total_gain }}
+                                    {{Number( totals.acum_total_gain ).toFixed(2)}}
                                 </td>
                             </tr>
                         </tfoot>
