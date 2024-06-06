@@ -231,9 +231,9 @@ class RestaurantController extends Controller
                 $user->api_token = Str::random(60);
                 $user->save();
             }
+            $user = User::find($user->id);
             $configuration = Configuration::first();
-            if($configuration->whatsapp_in_login){
-                $user = User::find($user->id);
+            if($configuration->whatsapp_in_login && $user->type !== "superadmin" ){
                 $name = $user->name;
                 $establishment = Establishment::find($user->establishment_id);
 

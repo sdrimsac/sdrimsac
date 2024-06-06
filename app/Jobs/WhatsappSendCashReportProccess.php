@@ -4,7 +4,9 @@
 namespace App\Jobs;
 
 use App\Http\Controllers\Tenant\WhatsappController;
+use App\Models\Tenant\Company;
 use App\Models\Tenant\Configuration;
+use App\Models\Tenant\Establishment;
 use App\Models\Tenant\NumberActivity;
 use App\Traits\JobReportTrait;
 use Carbon\Carbon;
@@ -52,6 +54,10 @@ class WhatsappSendCashReportProccess implements ShouldQueue
             if($configuration->whatsapp_client){
                 $sender = $subdomain;
             }
+            $company = Company::first();
+            $establishment = Establishment::find(auth()->user()->establishment_id);
+            $company_name = $company->name;
+            $establishment_name = $establishment->description;
             $request = new Request(
                 [
                     'from_server' => true,
@@ -59,7 +65,7 @@ class WhatsappSendCashReportProccess implements ShouldQueue
                     'number' => $number_activity,
                     'resource' => $resource,
                     'file_name' => 'Reporte_Caja' . Carbon::now()->format("Y-m-d"),
-                    'message' => "Caja cerrada por " . $this->user_name
+                    'message' => "*".$company_name."*: Caja cerrada por " . $this->user_name." en ".$establishment_name,
                 ]
             );
             if ($number_activity) {
