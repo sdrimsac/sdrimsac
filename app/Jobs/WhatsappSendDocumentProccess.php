@@ -8,6 +8,7 @@ use App\Models\Tenant\Company;
 use App\Models\Tenant\Configuration;
 use App\Models\Tenant\Dispatch;
 use App\Models\Tenant\Document;
+use App\Models\Tenant\Establishment;
 use App\Models\Tenant\Quotation;
 use App\Models\Tenant\SaleNote;
 use App\Traits\JobReportTrait;
@@ -102,6 +103,15 @@ class WhatsappSendDocumentProccess implements ShouldQueue
             $sender = 'sdrimsac';
             if ($sender == 'tunegociofactvillacorpnet') {
                 $sender = 'sdrimsac';
+            }
+            $message .= "\n\n *Número solo para envíos de documentos*";
+            $document_establishment = null;
+            if($document->establishment_id){
+                $document_establishment = Establishment::find($document->establishment_id);
+                $establishment_telephone = $document_establishment->telephone;
+                if($establishment_telephone){
+                    $message .= "\n\n *Cualquier consulta adicional comunicarse al teléfono:* " . $establishment_telephone." 🖁🖁";
+                }
             }
             if ($sender == "sdrimsac") {
                 if ($configuration->whatsapp_client) {
