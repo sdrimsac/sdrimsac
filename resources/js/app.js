@@ -476,7 +476,11 @@ const app = new Vue({
                 /* webpackChunkName:"js/tenant-cash-transfer-index" */
                 "../../modules/Restaurant/Resources/assets/js/views/cash_transfer/index.vue"
             ),
-
+            "tenant-cash-transfer-index-report": () =>
+            import(
+                /* webpackChunkName:"js/tenant-cash-transfer-index" */
+                "../../modules/Restaurant/Resources/assets/js/views/cash_transfer/report.vue"
+            ),
         "tenant-cash-index": () =>
             import(
                 /* webpackChunkName:"js/tenant-cash-index" */

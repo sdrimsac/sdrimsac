@@ -109,7 +109,7 @@ class CashController extends Controller
         $principal_cash_id = $cash_income_principal->cash_principal_id;
         $description_cash = $cash->reference_number;
         $description = "Ingreso de la caja $description_cash del usuario $user_name del establecimiento $establishment_description";
-
+        $soap_type_id = Company::first()->soap_type_id;
         Box::create([
             'cash_id' => $principal_cash_id,
             'amount' => $amount,
@@ -120,7 +120,7 @@ class CashController extends Controller
             'group_id' => 1,
             'subcategory_id' => 1,
             'category_id' => 1,
-            'soap_type_id' => 1,
+            'soap_type_id' => $soap_type_id,
             'description' => $description,
             'state' => 1,
             'user_id' => auth()->user()->id,
@@ -145,7 +145,10 @@ class CashController extends Controller
             $cash_id = $cash->id;
             $incomes = Box::where('cash_id', $cash_id)->where('incomes', 1)->sum('amount');
             $expenses = Box::where('cash_id', $cash_id)->where('expenses', 1)->sum('amount');
-            $total = $incomes - $expenses;
+            $begging_balance = $cash->beginning_balance;
+            $cash_transfer = $cash->cash_transfers->sum('amount');
+            $total = $incomes - $expenses + $begging_balance - $cash_transfer;
+            // $total = $incomes - $expenses;
         }
         $configuration = Configuration::first();
 

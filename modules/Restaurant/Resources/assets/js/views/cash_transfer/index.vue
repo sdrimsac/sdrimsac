@@ -20,8 +20,8 @@
                     <div class="col-sm-6 d-flex justify-content-end"
                     @click="getCashAvailable"
                     >
-                        <span class="alert alert-info p-2">
-                                Dinero disponible {{ cashAvailable.toFixed(2) }}
+                        <span :class="`alert p-2 ${cashAvailable > 0 ? 'alert-info' : 'alert-danger'}`">
+                                Dinero disponible S/ {{ cashAvailable.toFixed(2) }}
                         </span>
                     </div>
                 </div>
@@ -52,6 +52,7 @@
                         :typeUser="typeUser"
                         :resource="resource"
                         :config="config"
+                        @clickDownload="clickDownload"
                         class="table-striped"
                     >
                         <tr slot="heading" width="100%" class="bg-primary">
@@ -128,6 +129,7 @@
                 </div>
 
                 <form-cash-transfer
+                    :cashAvailable="cashAvailable"
                     :showDialog.sync="showDialog"
                     :recordId="recordId"
                     @updateCash="getCashAvailable"
@@ -147,7 +149,7 @@
 import FormCashTransfer from "./form.vue";
 import DataTable from "@components/DataTable.vue";
 import { deletable } from "@mixins/deletable";
-
+import queryString from "query-string";
 export default {
     props: ["typeUser", "user", "configuration"],
     mixins: [deletable],
@@ -187,6 +189,9 @@ export default {
             });
         },
         clickCreate(recordId = null) {
+            if(this.cashAvailable <= 0) {
+                return this.$toast.error("No hay dinero disponible para realizar un traslado.");
+            }
             this.recordId = recordId;
             this.showDialog = true;
         },
@@ -205,6 +210,9 @@ export default {
             this.enable(`/${this.resource}/enable/${id}`).then(() =>
                 this.$eventHub.$emit("reloadData")
             );
+        },
+        clickDownload(query){
+            window.open(`/${this.resource}/export?${queryString.stringify(query)}`);
         },
         clickBarcode(row) {
             if (!row.internal_id) {

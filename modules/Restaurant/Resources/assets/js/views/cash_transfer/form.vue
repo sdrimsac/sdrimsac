@@ -57,6 +57,10 @@
 <script>
 export default {
     props: {
+        cashAvailable: {
+            type: Number,
+            default: 0
+        },
         showDialog: {
             type: Boolean,
             default: false
@@ -76,6 +80,10 @@ export default {
     },
     methods: {
         verifyForm() {
+            if(this.form.amount > this.cashAvailable){
+                this.$message.error("El monto a transferir no puede ser mayor al monto disponible en caja");
+                return false;
+            }
             if (!this.form.cash_destination_id) {
                 this.$message.error("Debe seleccionar una caja destino");
                 return false;

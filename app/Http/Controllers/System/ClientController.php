@@ -240,70 +240,76 @@ class ClientController extends Controller
     public function records(Request $request)
     {
         if ($request->has('column') && $request->has('value') && $request->column && $request->value) {
-            
-            $records = Client::where($request->column, 'like', "%{$request->value}%")
-                             ->latest()
-                             ->paginate(config('tenant.client_per_page'));
+            $column = $request->column;
+            $value  = $request->value;
+            if ($column == 'hostname') {
+                $records = Client::whereHas('hostname', function ($query) use ($value) {
+                    $query->where('fqdn', 'like', "%{$value}%");
+                })->latest();
+            } else {
+                $records = Client::where($request->column, 'like', "%{$request->value}%")
+                    ->latest();
+            }
         } else {
-            $records = Client::latest()->paginate(config('tenant.client_per_page'));
+            $records = Client::latest();
         }
-    
+
         foreach ($records as $row) {
             $tenancy = app(Environment::class);
             $tenancy->tenant($row->hostname->website);
-    
+
             $row->count_doc = DB::connection('tenant')
                 ->table('configurations')
                 ->first()
                 ->quantity_documents;
-    
+
             $row->soap_type = DB::connection('tenant')
                 ->table('companies')
                 ->first()
                 ->soap_type_id;
-    
+
             $row->count_user = DB::connection('tenant')
                 ->table('users')
                 ->count();
-    
+
             $row->count_sales_notes = 0;
             $quantity_pending_documents = $this->getQuantityPendingDocuments();
-    
+
             $row->document_not_sent = $quantity_pending_documents['document_not_sent'];
             $row->document_to_be_canceled = $quantity_pending_documents['document_to_be_canceled'];
             $row->monthly_sales_total = 0;
-    
+
             if ($row->start_billing_cycle) {
                 $start_end_date = DocumentHelper::getStartEndDateForFilterDocument($row->start_billing_cycle);
                 $init = $start_end_date['start_date'];
                 $end = $start_end_date['end_date'];
-    
+
                 $row->count_doc_month = DB::connection('tenant')
                     ->table('documents')
                     ->whereBetween('date_of_issue', [$init, $end])
                     ->count();
-    
+
                 $row->count_sales_notes_month = DB::connection('tenant')
                     ->table('sale_notes')
                     ->whereBetween('date_of_issue', [$init, $end])
                     ->count();
-    
+
                 $row->count_sales_notes = 0;
-    
+
                 $client_helper = new ClientHelper();
                 $row->monthly_sales_total = $client_helper->getSalesTotal($init->format('Y-m-d'), $end->format('Y-m-d'), $row->plan);
             }
-    
+
             $row->imgClient = DB::connection('tenant')
                 ->table('companies')
                 ->select('logo')
                 ->first()
                 ->logo;
-    
+
             $row->quantity_establishments = $this->getQuantityRecordsFromTable('establishments');
         }
-    
-        return new ClientCollection($records);
+
+        return new ClientCollection($records->paginate(config('tenant.items_per_page')));
     }
 
 
@@ -644,7 +650,8 @@ class ClientController extends Controller
         return ($modulo == null) ? false : true;
     }
 
-    public function store_migration(ClientRequest $request){
+    public function store_migration(ClientRequest $request)
+    {
         $subDom = strtolower($request->input('subdomain'));
         $uuid = config('tenant.prefix_database') . '_' . $subDom;
         $fqdn = $subDom . '.' . config('tenant.app_url_base');
@@ -823,10 +830,10 @@ class ClientController extends Controller
             ]),
             'formats' => 'trade_name',
 
-        ],['id']);
+        ], ['id']);
 
 
-     $establishment_id =  DB::connection('tenant')->table('establishments')->insertGetId([
+        $establishment_id =  DB::connection('tenant')->table('establishments')->insertGetId([
             'description' => 'Oficina Principal',
             'country_id' => 'PE',
             'department_id' => '15',
@@ -912,13 +919,14 @@ class ClientController extends Controller
         // }
         $this->setDefault();
         $message = 'Cliente Registrado satisfactoriamente';
-        
+
         return [
             'success' => true,
             'message' => $message
         ];
     }
-    function setDefault(){
+    function setDefault()
+    {
         DB::connection('tenant')->table('series')->insert([
             ['establishment_id' => 1, 'document_type_id' => '01', 'number' => 'F001'],
             ['establishment_id' => 1, 'document_type_id' => '03', 'number' => 'B001'],

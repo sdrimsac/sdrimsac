@@ -30,6 +30,7 @@ use App\Models\Tenant\HotelRent;
 use App\Models\Tenant\HotelRentItem;
 use App\Models\Tenant\Item;
 use App\Models\Tenant\Note;
+use App\Models\Tenant\Purchase;
 use App\Models\Tenant\Receipt;
 use App\Models\Tenant\SaleNoteCredit;
 use App\Models\Tenant\SaleNoteItem;
@@ -1581,6 +1582,11 @@ class BoxesController extends Controller
         $expenses_records = $expenses_cash->get()->transform(function ($row) {
             $id = $row->id;
             $items = BoxesDetail::where('boxes_id', $id)->count();
+            if($items == 0 && $row->purchase_id){
+                $purchase = Purchase::find($row->purchase_id);
+                $items = $purchase->items->count();
+                
+            }
             return [
                 "items" => $items,
                 "description" => $row->description,

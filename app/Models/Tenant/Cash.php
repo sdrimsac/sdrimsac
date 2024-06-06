@@ -98,6 +98,10 @@ class Cash extends ModelTenant
     {
         $this->attributes['pharmacy_info'] = (is_null($value)) ? null : json_encode($value);
     }
+    public function cash_transfers()
+    {
+        return $this->hasMany(CashTransfer::class, 'cash_principal_id','id');
+    }
     public function turn()
     {
         return $this->belongsTo(Turns::class);

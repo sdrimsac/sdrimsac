@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Config;
 class Configuration extends ModelTenant
 {
     protected $fillable = [
+        'whatsapp_in_login',
         'show_internal_code_ticket',
         'unit_type_pdf_quotation',
         'seller_quotation_cash',
@@ -175,6 +176,7 @@ class Configuration extends ModelTenant
 
     ];
     protected $casts = [
+        'whatsapp_in_login' => 'boolean',
         'show_internal_code_ticket' => 'boolean',
         'seller_quotation_cash' => 'boolean',
         'whatsapp_client' => 'boolean',
@@ -295,6 +297,7 @@ class Configuration extends ModelTenant
         // $skins = Skin::all();
         $skins = [];
         return [
+            'whatsapp_in_login' => (bool)$this->whatsapp_in_login,
             'show_internal_code_ticket' => (bool)$this->show_internal_code_ticket,
             'unit_type_pdf_quotation' => (bool)$this->unit_type_pdf_quotation,
             'seller_quotation_cash' => (bool)$this->seller_quotation_cash,

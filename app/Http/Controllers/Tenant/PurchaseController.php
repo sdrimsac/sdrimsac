@@ -41,8 +41,11 @@ use App\Http\Requests\Tenant\PurchaseFacturarRequest;
 use App\CoreFacturalo\Requests\Inputs\Common\LegendInput;
 use App\CoreFacturalo\Requests\Inputs\Common\PersonInput;
 use App\Exports\PurchaseExport;
+use App\Models\Tenant\Box;
+use App\Models\Tenant\Cash;
 use App\Models\Tenant\ItemColorSize;
 use App\Models\Tenant\ItemWarehousePrice;
+use App\Services\RoleService;
 use Exception;
 use Modules\Restaurant\Models\Food;
 
@@ -75,7 +78,13 @@ class PurchaseController extends Controller
 
     public function create($purchase_order_id = null)
     {
-        return view('tenant.purchases.form', compact('purchase_order_id'));
+        $is_arca = auth()->user()->is_arca;
+        if(!$is_arca){
+        $is_arca = RoleService::isArcaUserId(auth()->id());
+        }
+            
+
+        return view('tenant.purchases.form', compact('purchase_order_id', 'is_arca'));
     }
 
     public function columns()
@@ -175,7 +184,7 @@ class PurchaseController extends Controller
         $charge_types = ChargeDiscountType::whereType('charge')->whereLevel('item')->get();
         $company = Company::active();
         $payment_method_types = PaymentMethodType::all();
-        $payment_destinations = $this->getPaymentDestinations();
+        $payment_destinations = $this->getPaymentDestinations() ?? [];
         $customers = $this->getPersons('customers');
 
         /*  $estados=array(
@@ -431,13 +440,32 @@ class PurchaseController extends Controller
                             ]);
                         }
                     }
-
-                    
                 }
-
+                $cash = Cash::where('user_id', auth()->id())
+                    ->where('state', 1)
+                    ->latest()->first();
+                $company = Company::active();
+                $soap_type_id = $company->soap_type_id;
                 foreach ($data['payments'] as $payment) {
                     $record_payment = $doc->purchase_payments()->create($payment);
-
+                    $box = new Box;
+                    $box->cash_id = $cash->id;
+                    $box->date = $record_payment->date_of_payment;
+                    $box->amount = $record_payment->payment;
+                    $box->expenses = 1;
+                    $box->group_id = 2;
+                    $box->category_id = 2;
+                    $box->subcategory_id = 1;
+                    $box->state = 1;
+                    $box->type = 2;
+                    $box->soap_type_id = $soap_type_id;
+                    $box->user_id = auth()->id();
+                    $box->description = 'Compra ' . $doc->series . '-' . $doc->number;
+                    $payment_method_id  = $record_payment->payment_method_type_id;
+                    $payment_method = PaymentMethodType::find($payment_method_id);
+                    $box->method = $payment_method->description;
+                    $box->purchase_id = $doc->id;
+                    $box->save();
                     if (isset($payment['payment_destination_id'])) {
                         $this->createGlobalPayment($record_payment, $payment);
                     }

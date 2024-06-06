@@ -15,6 +15,7 @@ class ConfigurationResource extends JsonResource
     public function toArray($request)
     {
         return [
+            'whatsapp_in_login' => (bool) $this->whatsapp_in_login,
             'show_internal_code_ticket' => (bool) $this->show_internal_code_ticket,
             'unit_type_pdf_quotation' => (bool) $this->unit_type_pdf_quotation,
             'seller_quotation_cash' => (bool) $this->seller_quotation_cash,

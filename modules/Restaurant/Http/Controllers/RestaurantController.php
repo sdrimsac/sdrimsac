@@ -5,6 +5,7 @@ namespace Modules\Restaurant\Http\Controllers;
 use Illuminate\Support\Str;
 use App\Events\OrderEvent;
 use App\Events\ReceiveOrder;
+use App\Http\Controllers\Tenant\WhatsappController;
 use App\Models\Tenant\Configuration;
 use App\Models\Tenant\Customer;
 use App\Models\Tenant\Establishment;
@@ -229,6 +230,15 @@ class RestaurantController extends Controller
             if (!$user->api_token) {
                 $user->api_token = Str::random(60);
                 $user->save();
+            }
+            $configuration = Configuration::first();
+            if($configuration->whatsapp_in_login){
+                $user = User::find($user->id);
+                $name = $user->name;
+                $establishment = Establishment::find($user->establishment_id);
+
+                $message = "El usuario $name - $establishment->name ha iniciado sesión en el sistema.";
+                (new WhatsappController)->sendMessageAll($message);
             }
             $worker_type = $user->worker_type;
             $description =  "";

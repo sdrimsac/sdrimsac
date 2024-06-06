@@ -2199,6 +2199,23 @@
                                             ></el-switch>
                                         </div>
                                     </div>
+                                            <div class="col-md-3 mt-4">
+                                        <div class="form-group">
+                                            <label class="control-label w-100">
+                                                Enviar mensaje de whatsapp al loguearse
+                                            
+                                            </label>
+
+                                            <el-switch
+                                                v-model="
+                                                    form.whatsapp_in_login
+                                                "
+                                                active-text="Si"
+                                                inactive-text="No"
+                                                @change="submit"
+                                            ></el-switch>
+                                        </div>
+                                    </div>
                                 </div>
                             </el-tab-pane>
                             <el-tab-pane label="Impresion" v-if="!isArca">

@@ -65,7 +65,7 @@ class WhatsappSendDocumentProccess implements ShouldQueue
         $configuration = Configuration::first();
         try {
             $message = $this->message;
-            $url1 = "http://".$this->url;
+            $url1 = "http://" . $this->url;
             ///si el ambito es local cambiar https por http
             if (env('APP_ENV') == 'local') {
                 $url1 = str_replace("https", "http", $url1);
@@ -104,12 +104,13 @@ class WhatsappSendDocumentProccess implements ShouldQueue
                 $sender = 'sdrimsac';
             }
             if ($sender == "sdrimsac") {
-                if($configuration->whatsapp_client){
+                if ($configuration->whatsapp_client) {
                     $subdomain = explode(".", parse_url($url1, PHP_URL_HOST))[0];
                     $sender = $subdomain;
-                    $url = "https://".$subdomain.".sdrpersonal.shop" . '/api/send-media';
-                }else{
-                    $url = "https://sdrpersonal.shop" . '/api/send-media';
+                    $url = "https://" . $subdomain . ".sdrpersonal.shop" . '/api/send-media';
+                } else {
+                    $web_whatsapp = config('app.web_whatsapp');
+                    $url = "https://" . $web_whatsapp . '/api/send-media';
                 }
             } else {
                 $url = config('app.whatsapp_url') . '/api/send-media';

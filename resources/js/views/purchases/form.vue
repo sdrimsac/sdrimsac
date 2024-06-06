@@ -209,14 +209,14 @@
                             <el-checkbox v-model="form.has_client" @change="changeHasClient">¿Desea agregar el cliente para esta
                                 compra?</el-checkbox>
                         </div>
-                    </div>
+                    </div>-->
 
                     <div class="col-md-8 mt-2 mb-2">
                         <div class="form-group">
                             <el-checkbox v-model="form.has_payment" @change="changeHasPayment">¿Desea agregar pagos a esta
                                 compra?</el-checkbox>
                         </div>
-                    </div> -->
+                    </div> 
 
                     <div class="col-lg-6 col-md-6" v-if="form.has_client">
                         <div class="form-group">
@@ -525,7 +525,7 @@ import {
 } from "../../helpers/functions";
 
 export default {
-    props: ["purchase_order_id"],
+    props: ["purchase_order_id","is_arca"],
     components: {
         PurchaseFormItem,
         PersonForm,
@@ -579,7 +579,12 @@ export default {
             percentage_igv: null
         };
     },
-
+    mounted(){
+        if(this.is_arca){
+            this.form.has_payment = true;
+            this.clickAddPayment();
+        }
+    },
     async created() {
         //     setInterval(this.getNow, 1000);
         await this.initForm();
@@ -591,6 +596,13 @@ export default {
             this.discount_types = response.data.discount_types;
             this.payment_method_types = response.data.payment_method_types;
             this.payment_destinations = response.data.payment_destinations;
+            this.payment_destinations = this.payment_destinations.filter(
+                item => item != null
+            );
+            if(this.payment_destinations.length == 0){
+            }
+            console.log("🚀 ~ awaitthis.$http.get ~ this.payment_destinations:", this.payment_destinations)
+
             this.all_customers = response.data.customers;
             this.charges_types = response.data.charges_types;
             this.form.currency_type_id =
@@ -827,13 +839,14 @@ export default {
             this.form.payments.splice(index, 1);
         },
         clickAddPayment() {
+    
             this.form.payments.push({
                 id: null,
                 purchase_id: null,
                 date_of_payment: moment().format("YYYY-MM-DD"),
                 payment_method_type_id: "01",
                 reference: null,
-                payment_destination_id: "cash",
+                payment_destination_id: this.payment_destinations.length == 0 ? null : "cash",
                 payment: 0
             });
         },
@@ -985,7 +998,7 @@ export default {
                 has_payment: false,
                 includes: false
             };
-            this.clickAddPayment();
+            // this.clickAddPayment();
 
             this.initInputPerson();
         },

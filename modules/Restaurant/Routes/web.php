@@ -93,11 +93,18 @@ Route::prefix('caja')->group(function () {
 
         Route::prefix('cash-transfer')->group(function () {
             Route::get('/', 'CashTransferController@index')->name('caja.cash_transfer');
-            Route::get('/report', 'CashTransferController@index')->name('caja.cash_transfer_report');
+            Route::prefix('report')->group(function (){
+                Route::get('/', 'CashTransferController@index_report')->name('caja.cash_transfer_report');
+                Route::get('/columns', 'CashTransferController@columns_report');
+                Route::get('/records', 'CashTransferController@records_report');
+                Route::get('/export', 'CashTransferController@export_report');
+
+            });
             Route::get('/columns', 'CashTransferController@columns');
             Route::get('available', 'CashTransferController@available');
             Route::get('records', 'CashTransferController@records');
             Route::get('cashes', 'CashTransferController@cashes');
+            Route::get('cashes-principal', 'CashTransferController@cashes_principal');
             Route::get('record/{id}', 'CashTransferController@record');
             Route::post('', 'CashTransferController@store');
             Route::delete('{id}', 'CashTransferController@destroy');

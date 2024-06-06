@@ -3,6 +3,26 @@
         <div class="row ">
             <div class="col-md-12 col-lg-12 col-xl-12 ">
                 <div class="row" v-if="applyFilter">
+                    <div class="col-lg-3 col-md-3 col-sm-12 pb-2"
+                    v-if="resource == 'caja/cash-transfer/report'"
+                    >
+                    <label for="value">
+                        Caja principal
+                    </label>
+                    <el-select
+                        v-model="search.cash_id"
+                        @change="getRecords"
+                        placeholder="Seleccione la caja"
+                    >
+                        <el-option
+                            v-for="item in cashes"
+                            :key="item.id"
+                            :label="`${item.user_name}-${item.description}`"
+                            :value="item.id"
+                        >
+                        </el-option>
+                    </el-select>
+                    </div>
                     <div class="col-lg-3 col-md-3 col-sm-12 pb-2">
                         <label style="width:100%">
                             Filtrar por:
@@ -205,7 +225,9 @@
                         >Exportar PDF</el-button
                     >
                 </div>
-                <div class="col-md-6 d-flex">
+                <div class="col-md-6 d-flex"
+                v-if="resource !== 'caja/cash-transfer'"
+                >
                     <el-button
                         class="submit"
                         type="success"
@@ -239,9 +261,17 @@
                                 :index="customIndex(index)"
                             ></slot>
                         </tbody>
+                        <tfoot>
+                            <slot name="footer"
+                            
+                            >
+                                
+                            </slot>
+                        </tfoot>
                     </table>
                     <div>
                         <el-pagination
+                            v-if="resource !== 'caja/cash-transfer/report'"
                             @current-change="getRecords"
                             layout="total, prev, pager, next"
                             :total="pagination.total"
@@ -285,6 +315,7 @@ export default {
     },
     data() {
         return {
+            cashes:[],
             search: {
                 column: null,
                 value: null
@@ -303,6 +334,9 @@ export default {
         this.$eventHub.$on("reloadData", () => {
             this.getRecords();
         });
+        if(this.resource == "caja/cash-transfer/report"){
+            this.getCashes();
+        }
         if (this.resource == "items") {
             this.$http.get(`/warehouses/records`).then(response => {
                 this.warehouses = response.data.data;
@@ -319,9 +353,27 @@ export default {
             this.columns = response.data;
             this.search.column = _.head(Object.keys(this.columns));
         });
-        await this.getRecords();
+        if(this.resource !== "caja/cash-transfer/report"){
+            await this.getRecords();
+        }
     },
     methods: {
+        total_income(){
+            return this.records.reduce((acc, item) => acc + Number(item.income), 0);
+        },
+        total_expense(){
+            return this.records.reduce((acc, item) => acc + Number(item.expense), 0);
+        },
+        getCashes() {
+            this.$http.get(`/caja/cash-transfer/cashes-principal`).then(response => {
+                this.cashes = response.data.cashes;
+                let [cash] = this.cashes;
+                if(cash){
+                    this.search.cash_id = cash.id;
+                    this.getRecords();
+                }
+            });
+        },
         clickDownload() {
             this.$emit("clickReport", this.search);
         },
@@ -330,6 +382,10 @@ export default {
         },
 
         customIndex(index) {
+            console.log("🚀 ~ customIndex ~ index:", index)
+            if(this.resource == "caja/cash-transfer/report" ){
+                return index + 1;
+            }
             return (
                 this.pagination.per_page * (this.pagination.current_page - 1) +
                 index +
@@ -355,11 +411,16 @@ export default {
                     }/records?${this.getQueryParameters()}&fromAdmin=true`;
                 }
                 return this.$http.get(url).then(response => {
-                    this.records = response.data.data;
+                    if(this.resource !== "caja/cash-transfer/report"){
+                     this.records = response.data.data;
                     this.pagination = response.data.meta;
                     this.pagination.per_page = parseInt(
                         response.data.meta.per_page
-                    );
+                    );   
+                    }else{
+                        let data = response.data;
+                        this.records = data.data;
+                    }
                 });
             }, 350);
         },
@@ -376,6 +437,7 @@ export default {
                 limit: this.limit,
                 value: this.search.value,
                 column: this.search.column,
+                cash_id: this.search.cash_id,
                 end_date: this.search.end_date,
                 warehouse_id: this.search.warehouse_id,
                 area_id: this.search.area_id

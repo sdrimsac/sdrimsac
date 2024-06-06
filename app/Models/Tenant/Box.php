@@ -125,4 +125,9 @@ class Box extends ModelTenant
     {
         return $this->belongsTo(Cash::class);
     }
+
+    public function cash_transfer()
+    {
+        return $this->belongsTo(CashTransfer::class,'cash_transfer_id');
+    }
 }

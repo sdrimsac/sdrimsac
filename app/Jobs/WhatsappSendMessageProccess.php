@@ -62,6 +62,9 @@ class WhatsappSendMessageProccess implements ShouldQueue
         if($this->subdomain != null && $configuration->whatsapp_client){
             $url = "https://".$this->subdomain.".sdrpersonal.shop/api/send-message";
             $sender = $this->subdomain;
+        }else{
+            $web_whatsapp = config('app.web_whatsapp');
+            $url = "https://" . $web_whatsapp . '/api/send-message';
         }
             $response = Http::post($url, [
                 'number' => "51" . $number,

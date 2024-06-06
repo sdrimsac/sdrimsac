@@ -150,7 +150,8 @@ class WhatsappController extends Controller
             Log::alert("No se ha configurado el número de whatsapp para enviar notificaciones");
             return;
         }
-        $url = "https://sdrpersonal.shop/api/send-message";
+        $web_whatsapp = config('app.web_whatsapp');
+        $url = "https://".$web_whatsapp."/api/send-message";
 
 
 
@@ -348,7 +349,8 @@ class WhatsappController extends Controller
             $sender = 'sdrimsac';
         }
         if ($sender == "sdrimsac") {
-            $url = "https://sdrpersonal.shop" . '/api/send-media';
+            $web_whatsapp = config('app.web_whatsapp');
+            $url = "https://".$web_whatsapp. '/api/send-media';
         } else {
             $url = config('app.whatsapp_url') . '/api/send-media';
         }
@@ -408,14 +410,16 @@ class WhatsappController extends Controller
         $configuration = Configuration::first();
         $sender = $request->sender ?? 'sdrimsac';
         if ($configuration->whatsapp_client && $sender != 'sdrimsac') {
-            $url = "https://" . $sender . ".sdrpersonal.shop" . '/api/send-media';
+            $web_whatsapp = config('app.web_whatsapp');
+            $url = "https://" . $sender . ".".$web_whatsapp. '/api/send-media';
         } else {
             if ($sender == 'tunegociofactvillacorpnet') {
                 $sender = 'sdrimsac';
             }
 
             if ($sender == "sdrimsac" || $sender == null) {
-                $url = "https://sdrpersonal.shop" . '/api/send-media';
+                $web_whatsapp = config('app.web_whatsapp');
+                $url = "https://".$web_whatsapp . '/api/send-media';
             } else {
                 $url = config('app.whatsapp_url') . '/api/send-media';
             }
@@ -486,7 +490,8 @@ class WhatsappController extends Controller
         }
 
         if ($sender == "sdrimsac") {
-            $url = "https://sdrpersonal.shop" . '/api/send-media';
+            $web_whatsapp = config('app.web_whatsapp');
+            $url = "https://".$web_whatsapp . '/api/send-media';
         } else {
             $url = config('app.whatsapp_url') . '/api/send-media';
         }
