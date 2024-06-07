@@ -210,7 +210,7 @@ class CashTransferController extends Controller
             $box->description = 'Transferencia de caja principal';
             $box->method = 'Efectivo';
             $box->save();
-            (new WhatsappController)->sendMessageOne($user_destination->phone, $message);
+            (new WhatsappController)->sendMessageOne($user_destination->telephone, $message);
             event(new InsertCashEvent($amount, $cash_destination_id));
             DB::connection('tenant')->commit();
             return [
