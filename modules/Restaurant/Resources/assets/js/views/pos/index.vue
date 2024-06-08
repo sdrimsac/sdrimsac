@@ -1029,6 +1029,7 @@
                             @ordenDeleted="createOrden"
                             @limpiarForm="limpiarForm"
                             :clientTableData.sync="clientTableData"
+                                    @reloadProduct="search_items"
                         ></list-orden>
                     </div>
                 </div>
@@ -1546,6 +1547,7 @@
                         @ordenDeleted="createOrden"
                         :clientTableData.sync="clientTableData"
                         :categories.sync="categories"
+                        @reloadProduct="search_items"
                     ></list-orden>
                 </div>
                 <template>
@@ -4975,10 +4977,10 @@ export default {
         },
         async getFoods(query = "") {
             try {
+                this.loading = true;
                 const response = await this.$http.get(
                     `${this.resource}/foods?${query}`
                 );
-                this.loading = true;
                 if (response.status == 200) {
                     const {
                         data: { data, meta }
@@ -5002,6 +5004,8 @@ export default {
                 }
             } catch (e) {
                 console.log(e);
+                this.loading = false;
+            }finally{
                 this.loading = false;
             }
         },
@@ -5291,6 +5295,7 @@ export default {
             // );
         },
         async search() {
+            console.log("🚀 ~ this.time=setTimeout ~ this.selectOption:", this.selectOption)
             if (this.time) {
                 clearTimeout(this.time);
             }

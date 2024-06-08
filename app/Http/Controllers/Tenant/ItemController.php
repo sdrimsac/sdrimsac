@@ -46,6 +46,8 @@ use App\Models\Tenant\Catalogs\SystemIscType;
 use Modules\Item\Models\ItemLotsGroup;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Tenant\Catalogs\AffectationIgvType;
+use App\Models\Tenant\CommercialTreatment;
+use App\Models\Tenant\CommercialTreatmentItem;
 use App\Models\Tenant\InventoryKardex;
 use App\Models\Tenant\ItemColorSize;
 use App\Models\Tenant\ItemWarehousePrice;
@@ -61,6 +63,66 @@ use Modules\Report\Exports\ItemExportGeneralForImport;
 
 class ItemController extends Controller
 {
+
+    public function updatePriceUnitType(Request $request){
+        $price = $request->sale_unit_price;
+        $type_id = $request->unit_type_id;
+
+        $item_unit_type = ItemUnitType::find($type_id);
+        $item_unit_type->price2 = $price;
+        $item_unit_type->total = $price * $item_unit_type->quantity_unit;
+        $item_unit_type->save();
+        return [
+            'success' => true,
+            'message' => 'Se actualizó el precio del producto'
+        ];
+                                    
+    }
+    public function updatePriceCommercialTreatment(Request $request)
+    {
+        $commercial_treatment_id = $request->commercial_treatment_id;
+        $item_id = $request->item_id;
+        $price = $request->sale_unit_price;
+        $commercial_treatment_item = CommercialTreatmentItem::where('commercial_treatment_id', $commercial_treatment_id)
+            ->where('item_id', $item_id)
+            ->first();
+
+        if ($commercial_treatment_item) {
+            $commercial_treatment_item->price = $price;
+            $commercial_treatment_item->save();
+        } else {
+            $commercial_treatment_item = new CommercialTreatmentItem();
+            $commercial_treatment_item->commercial_treatment_id = $commercial_treatment_id;
+            $commercial_treatment_item->item_id = $item_id;
+            $commercial_treatment_item->amount = $price;
+            $commercial_treatment_item->active = true;
+            $commercial_treatment_item->save();
+        }
+
+        return [
+            'success' => true,
+            'message' => 'Se actualizó el precio del producto'
+        ];
+    }
+    public function updatePriceItem(Request $request)
+    {
+        $item = Item::findOrFail($request->item_id);
+        $item->sale_unit_price = $request->sale_unit_price;
+        $food = Food::where('item_id', $item->id)->first();
+        $food->price = $request->sale_unit_price;
+        $food->save();
+        $establishment_id = auth()->user()->establishment_id;
+        $warehouse_id = Warehouse::where('establishment_id', $establishment_id)->first()->id;
+        ItemWarehousePrice::where('item_id', $item->id)
+            ->where('warehouse_id', $warehouse_id)
+            ->update(['price' => $request->sale_unit_price]);
+
+        $item->save();
+        return [
+            'success' => true,
+            'message' => 'Se actualizó el precio del producto'
+        ];
+    }
     public function index_product_client()
     {
         return view('tenant.items.index_product_client');
@@ -75,8 +137,8 @@ class ItemController extends Controller
         $date_end = $request->date_end ? Carbon::parse($request->date_end)->format("y-m-d") : null;
 
 
-        $document_items = DocumentItem::whereIn('state_type_id',['01','03','05']);
-        $sale_note_items = SaleNoteItem::whereIn('state_type_id',['01','03','05']);
+        $document_items = DocumentItem::whereIn('state_type_id', ['01', '03', '05']);
+        $sale_note_items = SaleNoteItem::whereIn('state_type_id', ['01', '03', '05']);
 
         if ($item_id) {
             $document_items->where('item_id', $item_id);
@@ -188,9 +250,9 @@ class ItemController extends Controller
         // return new ItemClientCollection($result->paginate(50));
         $items = $result->get();
         $establishment = null;
-            if($establishment_id){
-                $establishment = Establishment::find($establishment_id);
-            }
+        if ($establishment_id) {
+            $establishment = Establishment::find($establishment_id);
+        }
         $company = Company::first();
         return (new ItemClientProductExport)
             ->establishment($establishment)
@@ -210,8 +272,8 @@ class ItemController extends Controller
         $date_end = $request->date_end ? Carbon::parse($request->date_end)->format("y-m-d") : null;
 
 
-        $document_items = DocumentItem::whereIn('state_type_id',['01','03','05']);
-        $sale_note_items = SaleNoteItem::whereIn('state_type_id',['01','03','05']);
+        $document_items = DocumentItem::whereIn('state_type_id', ['01', '03', '05']);
+        $sale_note_items = SaleNoteItem::whereIn('state_type_id', ['01', '03', '05']);
 
         if ($item_id) {
             $document_items->where('item_id', $item_id);
@@ -407,11 +469,11 @@ class ItemController extends Controller
         ], 200);
     }
 
-    public function filterByCategory(Request $request){
+    public function filterByCategory(Request $request)
+    {
         $category_id = $request->input('category_id');
         $items = Item::where('category_id', $category_id);
         return new ItemCollection($items->paginate(config('tenant.items_per_page')));
-
     }
     public function filtercategory($filtercategory)
     {
@@ -573,18 +635,7 @@ class ItemController extends Controller
         $categories = CategoryItem::all();
 
         $brands = Brand::all();
-        $configuration = Configuration::select(
-            'show_caja_table',
-            'commercial_treatment_items',
-            'series_enabled',
-            'lots_enabled',
-            'color_size_enabled',
-            'transform_item',
-            'init_stock',
-            'affectation_igv_type_id',
-            'restaurant',
-            'promotions_sell'
-        )->firstOrFail();
+        $configuration = Configuration::first();
 
 
         return compact(
@@ -977,32 +1028,33 @@ class ItemController extends Controller
             'message' =>  __('app.actions.upload.error'),
         ];
     }
-    public function excelForImport(Request $request){
+    public function excelForImport(Request $request)
+    {
         $records = $this->getRecords($request, true)
 
-        ->get();
-    $company = Company::first();
-    $warehouse_id = $request->warehouse_id;
-    $establishment = ($request->establishment_id) ? Establishment::findOrFail($request->establishment_id) : auth()->user()->establishment;
-    foreach ($records as $key => $row) {
-        if ($warehouse_id) {
-            $item_warehouse = ItemWarehouse::where([['item_id', $row->id], ['warehouse_id', $warehouse_id]])->first();
-            $row->stock = ($item_warehouse) ? $item_warehouse->stock : 0;
-        } else {
-            $item_sum_stock = ItemWarehouse::where('item_id', $row->id)->sum('stock');
-            $row->stock = $item_sum_stock;
+            ->get();
+        $company = Company::first();
+        $warehouse_id = $request->warehouse_id;
+        $establishment = ($request->establishment_id) ? Establishment::findOrFail($request->establishment_id) : auth()->user()->establishment;
+        foreach ($records as $key => $row) {
+            if ($warehouse_id) {
+                $item_warehouse = ItemWarehouse::where([['item_id', $row->id], ['warehouse_id', $warehouse_id]])->first();
+                $row->stock = ($item_warehouse) ? $item_warehouse->stock : 0;
+            } else {
+                $item_sum_stock = ItemWarehouse::where('item_id', $row->id)->sum('stock');
+                $row->stock = $item_sum_stock;
+            }
         }
-    }
-    $warehouse = Warehouse::find($warehouse_id);
-    $description_warehouse = ($warehouse) ? $warehouse->description : 'Todos';
-    $description_warehouse = str_replace('-', '', $description_warehouse);
-    $description_warehouse = str_replace(' ', '_', $description_warehouse);
-    return (new ItemExportGeneralForImport)
-        ->records($records)
-        ->company($company)
-        ->warehouse_id($warehouse_id)
-        ->establishment($establishment)
-        ->download('Productos_de_'.$description_warehouse.'_'. Carbon::now() . '.xlsx');
+        $warehouse = Warehouse::find($warehouse_id);
+        $description_warehouse = ($warehouse) ? $warehouse->description : 'Todos';
+        $description_warehouse = str_replace('-', '', $description_warehouse);
+        $description_warehouse = str_replace(' ', '_', $description_warehouse);
+        return (new ItemExportGeneralForImport)
+            ->records($records)
+            ->company($company)
+            ->warehouse_id($warehouse_id)
+            ->establishment($establishment)
+            ->download('Productos_de_' . $description_warehouse . '_' . Carbon::now() . '.xlsx');
     }
     public function excel(Request $request)
     {

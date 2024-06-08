@@ -56,7 +56,8 @@
                     <button
                         v-if="
                             configuration.sale_note_credit_confirm &&
-                                configuration.principal_cash && cash_id 
+                                configuration.principal_cash &&
+                                cash_id
                         "
                         class="btn"
                         :class="
@@ -1648,8 +1649,8 @@
                                                                         <el-input
                                                                             class="custom_input"
                                                                             :disabled="
-                                                                                order_pend.type_id !=
-                                                                                    null ||
+                                                                                (order_pend.type_id !=
+                                                                                    null && !configuration.change_price_product) ||
                                                                                     configuration.edit_price_sales ==
                                                                                         false
                                                                             "
@@ -1753,6 +1754,7 @@
                                                                             class="fas fa-edit text-primary"
                                                                         ></i>
                                                                     </el-tag>
+
                                                                     <el-tag
                                                                         v-else
                                                                         role="button"
@@ -1768,6 +1770,28 @@
                                                                         ></i>
                                                                     </el-tag>
                                                                 </template>
+                                                                <el-tooltip
+                                                                    v-if="
+                                                                        configuration.change_price_product
+                                                                    "
+                                                                    content="Guardar precio del producto"
+                                                                    effect="dark"
+                                                                >
+                                                                    <el-tag
+                                                                        @click="
+                                                                            savePriceProduct(
+                                                                                indexx
+                                                                            )
+                                                                        "
+                                                                        role="button"
+                                                                        size="medium"
+                                                                        type="success"
+                                                                    >
+                                                                        <i
+                                                                            class="fas fa-save text-primary"
+                                                                        ></i>
+                                                                    </el-tag>
+                                                                </el-tooltip>
                                                             </div>
                                                         </div>
                                                         <div
@@ -2616,6 +2640,7 @@ export default {
     },
 
     mounted() {
+        console.log("🚀 ~ mounted ~ this.configuration:", this.configuration);
         this.quotation_stock = this.isSeller;
         this.screenWidth = window.innerWidth;
         window.addEventListener("resize", this.handleResize);
@@ -2630,12 +2655,12 @@ export default {
         }
         this.ordenInBox = ordens;
 
-            Echo.channel("insert_cash").listen(
+        Echo.channel("insert_cash").listen(
             `.insert-cash-${this.configuration.socket_channel}`,
             e => {
-                console.log("🚀 ~ mounted ~ e:", e)
-                let {amount,cash_id} = e;
-                if(this.$cashId == cash_id){
+                console.log("🚀 ~ mounted ~ e:", e);
+                let { amount, cash_id } = e;
+                if (this.$cashId == cash_id) {
                     // this.cashAvailable = Number(amount);
                     this.checkCashAvailable();
                 }
@@ -2643,7 +2668,6 @@ export default {
         );
     },
     async created() {
-
         let printing = localStorage.getItem("cajaPrint");
 
         this.printing = printing == 1;
@@ -2679,6 +2703,63 @@ export default {
         this.checkCashAvailable();
     },
     methods: {
+        async savePriceProduct(idx) {
+            try {
+                await this.$confirm(
+                    "¿Está seguro de guardar el precio del producto?",
+                    "Atención",
+                    {
+                        confirmButtonText: "Aceptar",
+                        cancelButtonText: "Cancelar",
+                        type: "warning"
+                    }
+                );
+
+                let orden = this.localOrden[idx];
+                console.log("🚀 ~ savePriceProduct ~ orden:", orden);
+                // return;
+                let {
+                    price,
+                    type_id,
+                    food: {
+                        item: { id }
+                    }
+                } = orden;
+                let url = `/items/update_price_cash`;
+                let form = {
+                    sale_unit_price: price,
+                    item_id: id
+                };
+
+                if (this.commercialTreatmentId) {
+                    url = `/items/update_price_cash_commercial_treatment`;
+                    form = {
+                        sale_unit_price: price,
+                        item_id: id,
+                        commercial_treatment_id: this.commercialTreatmentId
+                    };
+                }
+                if(type_id){
+                    url = `/items/update_price_cash_unit_type`;
+                    form = {
+                        sale_unit_price: price,
+                        unit_type_id: type_id
+                    };
+                }
+
+                const response = await this.$http.post(url, form);
+                if (response.status == 200) {
+                    this.$toast.success("Precio guardado");
+                    this.$emit("reloadProduct");
+                    console.log("🚀 ~ savePriceProduct ~ reloadProduct:")
+
+                }
+            } catch (e) {
+                console.log("🚀 ~ savePriceProduct ~ e:", e);
+
+                return;
+            }
+        },
         checkCashAvailable() {
             this.$http
                 .get("/caja/worker/cash_available/" + this.cash_id)
@@ -2693,7 +2774,6 @@ export default {
                         error.response
                     );
                 });
-                
         },
         showColorSizeDialog(orden, index = null) {
             this.limitQty = orden.type_quantity ?? 0;
@@ -3097,25 +3177,30 @@ export default {
                 );
                 return;
             }
-            if(this.configuration.sale_note_credit_confirm){
-                if(!this.canGiveCash()) return;
+            if (this.configuration.sale_note_credit_confirm) {
+                if (!this.canGiveCash()) return;
             }
             this.showCreditForm = true;
         },
-            hasService() {
+        hasService() {
             let items = this.localOrden;
             let hasService = items.some(
                 item => item.food.item.unit_type_id == "ZZ"
             );
             return hasService;
         },
-        canGiveCash(){
-            if(!this.hasService()) return true;
+        canGiveCash() {
+            if (!this.hasService()) return true;
 
-            let total = this.localOrden.reduce((a, b) => a + Number(b.price), 0);
+            let total = this.localOrden.reduce(
+                (a, b) => a + Number(b.price),
+                0
+            );
 
-            if(total > this.cashAvailable){
-                this.$toast.error("No tiene suficiente efectivo para realizar la operación");
+            if (total > this.cashAvailable) {
+                this.$toast.error(
+                    "No tiene suficiente efectivo para realizar la operación"
+                );
                 return false;
             }
             return true;

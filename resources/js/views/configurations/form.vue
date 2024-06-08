@@ -2181,7 +2181,6 @@
                                             ></el-switch>
                                         </div>
                                     </div>
-                                    
                                         <div class="col-md-3 mt-4">
                                         <div class="form-group">
                                             <label class="control-label w-100">
@@ -2210,6 +2209,22 @@
                                                 v-model="
                                                     form.whatsapp_in_login
                                                 "
+                                                active-text="Si"
+                                                inactive-text="No"
+                                                @change="submit"
+                                            ></el-switch>
+                                        </div>
+                                    </div>
+
+                                                <div class="col-md-3 mt-4">
+                                        <div class="form-group">
+                                            <label class="control-label w-100">
+                                                Actualizar precio de venta de productos en caja
+                                            </label>
+                                    
+
+                                            <el-switch
+                                                v-model="form.change_price_product"
                                                 active-text="Si"
                                                 inactive-text="No"
                                                 @change="submit"
