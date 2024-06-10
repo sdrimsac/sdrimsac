@@ -353,10 +353,10 @@
         ">
         <thead>
             <tr>
-                <th class="encabezado">Código</th>
-                <th class="encabezado">Concepto</th>
-                <th class="encabezado">Subtotal</th>
-                <th class="encabezado">Total</th>
+                <th class="celda_loop encabezado">Código</th>
+                <th class="celda_descrip encabezado text-center">Concepto</th>
+                <th class="celda_loop encabezado">Subtotal</th>
+                <th class="celda_date encabezado text-end">Total</th>
             </tr>
         </thead>
     </table>
