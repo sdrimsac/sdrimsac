@@ -16,7 +16,6 @@
             font-size: 11px;
         }
 
-        table {}
 
         .table {
             border: 0.1px solid #ccc;
@@ -155,7 +154,7 @@
         }
 
         @page {
-            margin: 0cm 0.2cm 0.2cm 0.2cm;
+            margin: 0cm 0.2cm 0.2cm 0cm;
             font-family: sans-serif;
         }
 
@@ -170,7 +169,7 @@
         }
 
         body {
-            margin: 0.5cm 0.5cm 0.5cm 0.5cm;
+            margin: 0.5cm 0.5cm 0.1cm 0.5cm;
         }
 
         .text-end {
@@ -349,7 +348,9 @@
 
     </table>
     <table width="100%" cellpadding="0" cellspacing="0"
-        style="border-collapse: collapse; border:1px solid #ddd; margin-top: 10px !important;">
+        style="border-collapse: collapse; border:1px solid #ddd; margin-top: 10px !important;
+         page-break-inside: avoid;
+        ">
         <thead>
             <tr>
                 <th class="encabezado">Código</th>
@@ -358,19 +359,25 @@
                 <th class="encabezado">Total</th>
             </tr>
         </thead>
-        <tbody>
-            @php
-                $total_general = 0;
-            @endphp
-            @foreach ($items_by_category as $category => $items)
-                @php
-                    $barcode = reset($items)['barcode'];
-                    $cat = \Modules\Item\Models\PrincipalCategory::where('identifier', $barcode)->first();
-                    $is_expanded = true;
-                    if ($cat) {
-                        $is_expanded = $cat->is_expanded;
-                    }
-                @endphp
+    </table>
+
+    @php
+        $total_general = 0;
+    @endphp
+    @foreach ($items_by_category as $category => $items)
+        @php
+            $barcode = reset($items)['barcode'];
+            $cat = \Modules\Item\Models\PrincipalCategory::where('identifier', $barcode)->first();
+            $is_expanded = true;
+            if ($cat) {
+                $is_expanded = $cat->is_expanded;
+            }
+        @endphp
+        <table width="100%" cellpadding="0" cellspacing="0"
+            style="border-collapse: collapse; border:1px solid #ddd; page-break-inside: avoid; margin-top: 0px;
+        ">
+            <tbody>
+
                 <tr>
                     <td class="categoria celda">
                         {{ $barcode }}
@@ -394,8 +401,24 @@
                         </tr>
                     @endforeach
                 @endif
-            @endforeach
+            </tbody>
+        </table>
+    @endforeach
+    <table width="100%" cellpadding="0" cellspacing="0"
+        style="border-collapse: collapse; border:1px solid #ddd;page-break-inside: avoid;margin-top:0px;">
+        <tbody>
             <tr>
+                <td class="celda_loop"></td>
+                <td class="celda_descrip"></td>
+                <td class="text-end celda_loop">
+                    <strong>Total</strong>
+                </td>
+                <td class="celda_date text-end">
+                    {{ number_format($total_general, 2) }}</td>
+            </tr>
+        </tbody>
+    </table>
+    {{-- <tr>
                 <td class="celda_loop" colspan="2"></td>
                 <td class="text-end celda_loop">
                     <strong>Total General</strong>
@@ -404,9 +427,8 @@
                     ">
                     <strong>{{ number_format($total_general, 2) }}</strong>
                 </td>
-            </tr>
-        </tbody>
-    </table>
+            </tr> --}}
+
 
 </body>
 
