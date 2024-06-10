@@ -69,8 +69,8 @@ class ItemController extends Controller
         $type_id = $request->unit_type_id;
 
         $item_unit_type = ItemUnitType::find($type_id);
-        $item_unit_type->price2 = $price;
-        $item_unit_type->total = $price * $item_unit_type->quantity_unit;
+        $item_unit_type->price2 = $price / $item_unit_type->quantity_unit;
+        $item_unit_type->total = $price ;
         $item_unit_type->save();
         return [
             'success' => true,
