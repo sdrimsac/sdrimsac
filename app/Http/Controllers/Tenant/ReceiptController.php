@@ -44,7 +44,7 @@ class ReceiptController extends Controller
         if ($data->sale_note_id) {
             $data_payments = Payment::where('sale_note_id', $data->sale_note_id)->first();
             if ($data_payments != null) {
-                $interes = $data->sale_note->total * ($data_payments->tasa / 100);
+                $interes = ($data->sale_note->total-$data->sale_note->advances) * ($data_payments->tasa / 100);
             }
             $payments = SaleNotePayment::select(DB::raw('SUM(payment) as total_payment'))->where('sale_note_id', $data->sale_note_id)->first();
             $deuda = $data->sale_note->total - $data->sale_note->advances - $payments->total_payment;
