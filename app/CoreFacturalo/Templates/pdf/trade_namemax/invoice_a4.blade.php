@@ -977,7 +977,7 @@
                                     {{ number_format($document->total, 2) }}
                                 </td>
                             </tr>
-                            @if ($document->total_rounded > 0)
+                            {{-- @if ($document->total_rounded > 0)
                                 <tr>
                                     <td colspan="7"
                                         class="border-top-bottom text-center py-2 bordes  text-center desc-12">
@@ -988,7 +988,7 @@
                                         {{ number_format($document->total_rounded, 2) }}
                                     </td>
                                 </tr>
-                            @endif
+                            @endif --}}
                             @if ($document->total_payment > 0)
                                 <tr>
                                     <td colspan="7"
