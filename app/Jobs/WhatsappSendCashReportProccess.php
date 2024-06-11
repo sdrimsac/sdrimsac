@@ -4,6 +4,7 @@
 namespace App\Jobs;
 
 use App\Http\Controllers\Tenant\WhatsappController;
+use App\Models\Tenant\Cash;
 use App\Models\Tenant\Company;
 use App\Models\Tenant\Configuration;
 use App\Models\Tenant\Establishment;
@@ -55,7 +56,8 @@ class WhatsappSendCashReportProccess implements ShouldQueue
                 $sender = $subdomain;
             }
             $company = Company::first();
-            $establishment = Establishment::find(auth()->user()->establishment_id);
+            $user =  Cash::find($this->cash_id)->user;
+            $establishment = Establishment::find($user->establishment_id);
             $company_name = $company->name;
             $establishment_name = $establishment->description;
             $request = new Request(
@@ -78,8 +80,10 @@ class WhatsappSendCashReportProccess implements ShouldQueue
                 (new WhatsappController)->sendHistorial($request);
             }
         } catch (Exception $e) {
-
-            Log::error($e->getMessage());
+            $message = $e->getMessage();
+            $message .= " - " . $e->getLine();
+            $message .= " - " . $e->getFile();
+            Log::error($message);
         }
     }
 
