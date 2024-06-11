@@ -675,10 +675,16 @@
         </table>
         <table class="full-width" valign="top">
             <tr>
-                <td width="70%">
-                    <table class="full-width bordes_impuesto">
+                <td width="70%" valign="top">
+                    @if($company->account_img_trade_name_max)
+                    <img src="data:{{ mime_content_type(public_path("storage/uploads/logos/{$company->account_img_trade_name_max}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/uploads/logos/{$company->account_img_trade_name_max}"))) }}"
+                    alt="{{ $company->trade_name }}"
+                    style="width: 500px;height:140px; ">
+                    
+                                        @endif
+                    {{-- <table class="full-width bordes_impuesto"> --}}
 
-                        @php
+                        {{-- @php
                             $has_last_empty_bank = false;
                             $currencies = array_map(function ($bank) {
                                 return $bank['currency_type_id'];
@@ -828,9 +834,9 @@
 
                                 </td>
                             </tr>
-                        @endif
+                        @endif --}}
 
-                    </table>
+                    {{-- </table> --}}
                 </td>
 
 

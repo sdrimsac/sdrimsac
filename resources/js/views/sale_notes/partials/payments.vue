@@ -669,8 +669,9 @@ export default {
                 if (response.data.success) {
                     this.$toast.success(response.data.message);
                     this.getData();
-                    //this.receipt_link=response.data.pdf
+                    // this.receipt_link=response.data.pdf
                     //this.ClickPrint()
+                    // this.ClickPrint(response.data.pdf)
                     this.$eventHub.$emit("reloadData");
                     this.$emit("reloadData");
                     this.showAddButton = true;

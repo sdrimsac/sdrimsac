@@ -18,6 +18,8 @@ class Box extends ModelTenant
     protected $primarykey = "id";
     // protected $hidden = ["created_at", "updated_at"];
     protected $fillable = [
+        'currency_type_id',
+        'exchange_rate_sale',
         'operation_number',
         'bank_account_operation',
         'bank_account_id',
@@ -128,6 +130,6 @@ class Box extends ModelTenant
 
     public function cash_transfer()
     {
-        return $this->belongsTo(CashTransfer::class,'cash_transfer_id');
+        return $this->belongsTo(CashTransfer::class, 'cash_transfer_id');
     }
 }

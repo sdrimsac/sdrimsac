@@ -2284,7 +2284,7 @@ export default {
                     id: 1,
                     title: ["Comprobantes"],
                     icon: "fas fa-print ",
-                    visible: true && !this.isSeller && !this.isAnalist
+                    visible: true && !this.isSeller 
                 },
                 /* {
                     id: 2,

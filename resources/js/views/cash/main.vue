@@ -302,6 +302,13 @@ export default {
         };
     },
     methods: {
+        getAvaibleCash(){
+            this.$http("/caja/cash-transfer/available")
+            .then(response => {
+                this.total = response.data;
+                console.log("🚀 ~ getAvaibleCash ~ this.total:", this.total)
+            })
+        },
         exportRecords() {
             window.open(
                 `/cash/main_cash/records_excel?${this.getQueryParameters()}`,
@@ -355,6 +362,7 @@ export default {
                 );
                 if (response.status == 200) {
                     this.$toast.success("Se acepto el ingreso");
+                    this.getAvaibleCash();
                     this.getRecords();
                 }
             } catch (e) {

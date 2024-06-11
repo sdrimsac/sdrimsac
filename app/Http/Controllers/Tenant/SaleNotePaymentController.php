@@ -26,6 +26,7 @@ use App\Http\Requests\Tenant\SaleNotePaymentRequest;
 use App\CoreFacturalo\Helpers\Storage\StorageDocument;
 use App\Http\Resources\Tenant\SaleNotePaymentCollection;
 use App\Models\Tenant\Cash;
+use Modules\Restaurant\Events\PrintEvent;
 
 class SaleNotePaymentController extends Controller
 {
@@ -317,6 +318,9 @@ class SaleNotePaymentController extends Controller
         $receipt->save();
         //    $document_save->updateCreditsPayment();
         $this->createPdf($request->input('sale_note_id'));
+        $pdf = "/receipt/print/{$receipt->external_id}";
+        // event(new PrintEvent($receipt->id, $pdf, 'receipt', 'print'));
+        event(new PrintEvent(null, 'URL', true, null, [], false, false, $pdf));
         return response()->json([
             "success" => true,
             "message" => ($id) ? 'Pago editado con éxito' : 'Pago registrado con éxito',

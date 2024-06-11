@@ -1006,6 +1006,8 @@ class DocumentController extends Controller
                     $bank_account_operation = Functions::valueKeyInArray($currentBox, 'number_operation');
                     $box = new Box;
                     $box->group_id = 1;
+                    $box->currency_type_id = $document->currency_type_id;
+                    $box->exchange_rate_sale = $document->exchange_rate_sale;
                     $box->operation_number = $operation_number;
                     $box->method = $method;
                     if ($method == "Yape" || $method == "PLIN") {
@@ -1064,6 +1066,8 @@ class DocumentController extends Controller
                     $boxes->operation_number = $request->operation_number;
                     $boxes->category_id = 1;
                     $boxes->subcategory_id = 1;
+                    $boxes->currency_type_id = $document->currency_type_id;
+                    $boxes->exchange_rate_sale = $document->exchange_rate_sale;
                     $boxes->amount = $request->input('total_payment');
                     $boxes->date = Carbon::parse($request->input('date_of_issue'))->format('Y-m-d');
                     $boxes->type = '1';

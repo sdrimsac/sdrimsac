@@ -167,6 +167,7 @@
             $date_of_issue = \Carbon\Carbon::parse($sale->date_of_issue);
             $items = $sale->items;
             $count_items = count($items);
+            $first_payment = $payment->first();
             $months = [
                 1 => 'enero',
                 2 => 'febrero',
@@ -294,7 +295,15 @@
             SEGUNDO - GARANTIA - </strong> El comprador da la suma de S/. {{ $sale->total }}
         ({{ \App\CoreFacturalo\Helpers\Number\NumberLetter::convertToLetter($sale->total) }}) a
         <strong>CREDIHOGAR</strong> quien declara recibirla a su entera y completa satisfacción, como garantía a cuota
-        inicial.
+        inicial, con un interes del {{$first_payment->tasa}}%
+        @if($sale->advances) {{$sale->type_payment}} habiendo abonado la suma de S/. {{ number_format($sale->advances,2 )}} 
+        ({{ \App\CoreFacturalo\Helpers\Number\NumberLetter::convertToLetter($sale->advances) }})
+        como adelanto
+        @endif
+        .
+        <p>
+            
+        </p>
     </p>
     <p>
         <strong>

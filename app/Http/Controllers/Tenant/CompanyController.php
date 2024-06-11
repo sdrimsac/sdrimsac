@@ -72,6 +72,8 @@ class CompanyController extends Controller
             $file->storeAs(($type === 'a5_image') ? 'public/uploads/logos' : 'certificates', $name);
             if (($type === 'backgroud_image_document')) request()->validate(['file' => 'required|image|mimes:jpeg,png,jpg,webp,gif,svg|max:2048']);
             $file->storeAs(($type === 'backgroud_image_document') ? 'public/uploads/logos' : 'certificates', $name);
+            if (($type === 'account_img_trade_name_max')) request()->validate(['file' => 'required|image|mimes:jpeg,png,jpg,webp,gif,svg|max:2048']);
+            $file->storeAs(($type === 'account_img_trade_name_max') ? 'public/uploads/logos' : 'certificates', $name);
             $company->$type = $name;
             $company->save();
             return [

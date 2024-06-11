@@ -513,7 +513,7 @@
                                             style="  max-height: 100px;"
                                         />
                                     </div>
-                                        <div class="col-md-4">
+                                    <div class="col-md-4">
                                         <div class="form-group">
                                             <label class="control-label"
                                                 >Imagen de fondo -
@@ -554,8 +554,49 @@
                                             style="  max-height: 100px;"
                                         />
                                     </div>
+
+                                        <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label class="control-label"
+                                                >Imagen cuentas plantilla trade_name_max</label
+                                            >
+                                            <el-input
+                                                v-model="
+                                                    form.account_img_trade_name_max
+                                                "
+                                                :readonly="true"
+                                            >
+                                                <el-upload
+                                                    slot="append"
+                                                    :headers="headers"
+                                                    :data="{
+                                                        type:
+                                                            'account_img_trade_name_max'
+                                                    }"
+                                                    action="/companies/uploads"
+                                                    :show-file-list="false"
+                                                    :on-success="successUpload"
+                                                >
+                                                    <el-button
+                                                        type="primary"
+                                                        icon="el-icon-upload"
+                                                    ></el-button>
+                                                </el-upload>
+                                            </el-input>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-2">
+                                        <img
+                                            class="img-thumbnail"
+                                            :src="
+                                                `/storage/uploads/logos/${form.account_img_trade_name_max}`
+                                            "
+                                            style="  max-height: 100px;"
+                                        />
+                                    </div>
                                 </div>
-                        
+
                                 <div
                                     class="row"
                                     v-if="configuration.health_network"
