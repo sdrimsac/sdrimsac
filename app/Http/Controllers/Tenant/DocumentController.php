@@ -1309,7 +1309,8 @@ class DocumentController extends Controller
                 $facturalo->signXmlUnsigned();
                 $facturalo->updateHash();
                 $facturalo->updateQr();
-                $facturalo->updateSoap('02', $type);
+                $soap_type_id = $document->soap_type_id;
+                $facturalo->updateSoap($soap_type_id, $type);
                 $facturalo->updateState('01');
                 $facturalo->createPdf($document, $type, 'ticket');
                 //            $facturalo->senderXmlSignedBill();
