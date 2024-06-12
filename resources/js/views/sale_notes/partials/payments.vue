@@ -16,25 +16,31 @@
             <div class="col-lg-6 col-md-6 col-12 d-flex justify-content-end">
                 <template
                     v-if="
-                        document.current_payment && document.current_payment.num && document.credit_cash == 0
+                        document.current_payment &&
+                            document.current_payment.num &&
+                            document.credit_cash == 0
                     "
                 >
                     <h4>
                         <template>
                             Cuota N° {{ document.current_payment.num }} de
-                        {{ Number(document.current_payment.amount).toFixed(2) }}
-
-                        <span
-                            class="text-danger"
-                            v-if="document.current_payment.penalty > 0"
-                        >
-                            Penalidad:
                             {{
-                                Number(
-                                    document.current_payment.penalty
-                                ).toFixed(2)
+                                Number(document.current_payment.amount).toFixed(
+                                    2
+                                )
                             }}
-                        </span>
+
+                            <span
+                                class="text-danger"
+                                v-if="document.current_payment.penalty > 0"
+                            >
+                                Penalidad:
+                                {{
+                                    Number(
+                                        document.current_payment.penalty
+                                    ).toFixed(2)
+                                }}
+                            </span>
                         </template>
                     </h4>
                 </template>
@@ -125,7 +131,10 @@
                                                 Eliminar
                                             </button> -->
                                             <button
-                                            v-if="row.receipt_link && row.receipt_link!=''"
+                                                v-if="
+                                                    row.receipt_link &&
+                                                        row.receipt_link != ''
+                                                "
                                                 type="button"
                                                 class="btn waves-effect waves-light btn-sm btn-primary"
                                                 @click.prevent="
@@ -365,7 +374,7 @@
                                         TOTAL A PAGAR
                                     </td>
                                     <td class="text-end">
-                                        {{ document.total  }}
+                                        {{ document.total }}
                                     </td>
                                     <td></td>
                                 </tr>
@@ -512,7 +521,14 @@ export default {
             );
         },
         ClickPrint(receipt_link) {
-            window.open(receipt_link, "_blank");
+            console.log("🚀 ~ ClickPrint ~ this.configuration:", this.configuration)
+            if (this.configuration.print_payment_credit_sale_note) {
+                this.$http.post("/caja/re-print", {
+                    url: receipt_link
+                });
+            } else {
+                window.open(receipt_link, "_blank");
+            }
         },
         onSuccess(response, file, fileList) {
             // console.log(response, file, fileList)
@@ -626,7 +642,10 @@ export default {
             // }
             if (
                 this.records[index].payment >
-                parseFloat(this.document.total_difference + this.document.current_payment.penalty)
+                parseFloat(
+                    this.document.total_difference +
+                        this.document.current_payment.penalty
+                )
             ) {
                 this.$toast.error(
                     "El monto ingresado supera al monto pendiente de pago, verifique."

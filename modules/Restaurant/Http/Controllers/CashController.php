@@ -65,18 +65,19 @@ use NumberFormatter;
 class CashController extends Controller
 {
     use JobReportTrait;
-    public function cash_avaible($cash_id){
+    public function cash_avaible($cash_id)
+    {
         $total_credits = SaleNote::whereHas('credit_payments')
-        ->where('cash_id', $cash_id)
-        ->where('is_cash', true)
-        ->where('state_type_id', '<>' , 11)
-        ->sum('total');
+            ->where('cash_id', $cash_id)
+            ->where('is_cash', true)
+            ->where('state_type_id', '<>', 11)
+            ->sum('total');
         $cash = Cash::findOrFail($cash_id);
         $beginning_balance = $cash->beginning_balance;
         $incomes = Box::where('cash_id', $cash_id)->where('incomes', 1)->sum('amount');
         $expenses = Box::where('cash_id', $cash_id)->where('expenses', 1)->sum('amount');
         $cash_available = $beginning_balance + $incomes - $expenses - $total_credits;
-        
+
         return [
             'success' => true,
             'cash_available' => $cash_available

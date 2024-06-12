@@ -229,7 +229,10 @@
             <div v-if="form.total" class="d-flex justify-content-end">
                 <div>
                     <strong>Monto base: </strong>
-                    <span class="h6">S/. {{ (form.total - credit.advances).toFixed(2) }}</span class="h6">
+                    <span class="h6"
+                        >S/.
+                        {{ (form.total - credit.advances).toFixed(2) }}</span
+                    >
                 </div>
                 <div style="margin-left:15px;">
                     <strong>
@@ -245,6 +248,13 @@
                     </span>
                 </div>
             </div>
+
+            <!-- <el-button
+                @click="simulate"
+                type="success"
+                style="margin-right: 15px;"
+                >Simulación</el-button
+            > -->
             <el-button @click="close">Cancelar</el-button>
             <el-button type="primary" @click="submit">Enviar</el-button>
         </div>
@@ -306,6 +316,60 @@ export default {
     },
     computed: {},
     methods: {
+        createPayment(date_of_issue, num_cuota, type_payment) {
+            let date = moment(date_of_issue);
+            let payments = [];
+            for (let i = 0; i < num_cuota; i++) {
+                let dias;
+                let date_payment;
+                switch (type_payment) {
+                    case "Diario":
+                        dias = 1;
+                        date.add(dias, "days");
+                        date_payment = date.format("YYYY-MM-DD");
+                        break;
+                    case "Semanal":
+                        dias = 7;
+                        date.add(dias, "days");
+                        date_payment = date.format("YYYY-MM-DD");
+                        break;
+                    case "Quincenal":
+                        dias = 15;
+                        date.add(dias, "days");
+                        date_payment = date.format("YYYY-MM-DD");
+                        break;
+                    case "Mensual":
+                        dias = 30;
+                        date.add(dias, "days");
+                        date_payment = date.format("YYYY-MM-DD");
+                        break;
+                    case "Unico":
+                        date_payment = moment
+                            .tz(this.date_of_pay, "America/Lima")
+                            .format("YYYY-MM-DD");
+                        break;
+                }
+                if (date.day() === 0) {
+                    date.add(1, "days");
+                    date_payment = date.format("YYYY-MM-DD");
+                }
+                payments.push({
+                    day: date.day(),
+                    date_of_payment: date_payment,
+                    amount: this.credit.amount,
+                    isPrepayment: false
+                });
+            }
+            return payments;
+        },
+        simulate() {
+            let payments = this.createPayment(
+                this.form.date_of_issue,
+                this.credit.num_cuota,
+                this.credit.type_payment
+            );
+            
+        },
         seeProblems() {},
         async checkCustomerLine() {
             const response = await this.$http.get(

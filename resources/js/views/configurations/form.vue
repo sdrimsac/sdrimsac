@@ -2295,6 +2295,19 @@
                                             @change="submit"
                                         ></el-switch>
                                     </div>
+                                        <div class="col-md-3 mt-2">
+                                        <label class="control-label w-100">
+                                            Imprimir ticket al pagar - notas de venta
+                                        </label>
+                                        <el-switch
+                                            v-model="
+                                                form.print_payment_credit_sale_note
+                                            "
+                                            active-text="Si"
+                                            inactive-text="No"
+                                            @change="submit"
+                                        ></el-switch>
+                                    </div>
                                 </div>
                             </el-tab-pane>
                             <el-tab-pane label="Crédito NV" v-if="form.credits">

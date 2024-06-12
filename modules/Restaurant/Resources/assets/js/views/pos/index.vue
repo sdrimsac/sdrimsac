@@ -4589,6 +4589,10 @@ export default {
                 let print_service = linkpdf.includes("print_service");
                 isTicket = print_service;
             }
+            if(!isTicket){
+                let receipt = linkpdf.includes("receipt");
+                isTicket = receipt;
+            }
             let tipoBandejaImpresora = this.config.new_old_printer;
 
             if (isA4) {

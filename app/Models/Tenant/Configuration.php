@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Config;
 class Configuration extends ModelTenant
 {
     protected $fillable = [
+        'print_payment_credit_sale_note',
         'change_price_product',
         'whatsapp_in_login',
         'show_internal_code_ticket',
@@ -299,6 +300,7 @@ class Configuration extends ModelTenant
         // $skins = Skin::all();
         $skins = [];
         return [
+            'print_payment_credit_sale_note' => (bool)$this->print_payment_credit_sale_note,
             'change_price_product' => (bool)$this->change_price_product,
             'whatsapp_in_login' => (bool)$this->whatsapp_in_login,
             'show_internal_code_ticket' => (bool)$this->show_internal_code_ticket,
