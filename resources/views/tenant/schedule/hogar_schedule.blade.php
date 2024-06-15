@@ -414,7 +414,7 @@
                                 <strong>SALDO</strong>
                             </div>
                             <div>
-                                {{ $quote * count($data) }}
+                                {{ $quote * $sale->creditPayments->count() }}
                             </div>
                         </div>
                     </td>

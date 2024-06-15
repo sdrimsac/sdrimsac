@@ -228,7 +228,7 @@ class OrderNoteController extends Controller
 
             $this->order_note = OrderNote::firstOrNew(['id' => $request['id']]);
             $this->order_note->fill($data);
-            //$this->order_note->items()->delete();
+            $this->order_note->items()->delete();
           //  OrderNoteItem::where('order_note_id',$this->order_note->id)->delete();
             foreach ($request['items'] as $row) {
                 $item_id = isset($row['id']) ? $row['id'] : null;

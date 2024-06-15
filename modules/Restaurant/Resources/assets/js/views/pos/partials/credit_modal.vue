@@ -249,12 +249,32 @@
                 </div>
             </div>
 
-            <!-- <el-button
-                @click="simulate"
-                type="success"
-                style="margin-right: 15px;"
-                >Simulación</el-button
-            > -->
+            <template v-if="configuration.sale_note_credit_confirm">
+                <el-button
+                    class="left-button"
+                    @click="simulate"
+                    type="success"
+                    style="margin-right: 15px;"
+                    >Simulación</el-button
+                >
+
+                <el-checkbox class="left-button" v-model="simulateForm.print"
+                    >Impresión</el-checkbox
+                >
+                <el-checkbox class="left-button" v-model="simulateForm.pdf"
+                    >Pdf</el-checkbox
+                >
+                <el-checkbox class="left-button" v-model="simulateForm.whatsapp"
+                    >Whatsapp</el-checkbox
+                >
+                <el-input
+                    class="left-button"
+                    v-model="simulateForm.number"
+                    placeholder="Teléfono"
+                    style="width: 200px; margin-left:15px; "
+                    v-if="simulateForm.whatsapp"
+                ></el-input>
+            </template>
             <el-button @click="close">Cancelar</el-button>
             <el-button type="primary" @click="submit">Enviar</el-button>
         </div>
@@ -266,7 +286,11 @@
         </person-form>
     </el-dialog>
 </template>
-
+<style scoped>
+.dialog-footer .left-button {
+    float: left;
+}
+</style>
 <script>
 import moment from "moment";
 
@@ -286,6 +310,12 @@ export default {
     components: { PersonForm },
     data() {
         return {
+            simulateForm: {
+                whatsapp: false,
+                print: true,
+                pdf: false,
+                number: null
+            },
             isService: false,
             isProduct: false,
             users: [],
@@ -363,12 +393,35 @@ export default {
             return payments;
         },
         simulate() {
+            if (!this.validate()) return false;
             let payments = this.createPayment(
                 this.form.date_of_issue,
                 this.credit.num_cuota,
                 this.credit.type_payment
             );
-            
+
+            this.$http
+                .post("/sale-notes/simulate", {
+                    ...this.form,
+                    ...this.credit,
+                    prepayments: payments,
+                    tasa: this.tasaInteres,
+                    whatsapp: this.simulateForm.whatsapp,
+                    print: this.simulateForm.print,
+                    number: this.simulateForm.number
+                })
+                .then(response => {
+                    this.$toast.success("Simulación realizada correctamente");
+                    let { url, success } = response.data;
+                    if (success && this.simulateForm.pdf) {
+                        window.open(url, "_blank");
+                    }
+                    // this.$emit("limpiarForm");
+                    // this.close();
+                })
+                .catch(e => {
+                    this.$toast.error("Ocurrió un error");
+                });
         },
         seeProblems() {},
         async checkCustomerLine() {
@@ -752,6 +805,11 @@ export default {
             this.credit.is_product = !hasService;
         },
         open() {
+            this.simulateForm = {
+                whatsapp: false,
+                print: true,
+                pdf: false
+            };
             this.hasProblems = false;
             this.getUsers();
             this.payments = [];

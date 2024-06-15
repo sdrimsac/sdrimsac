@@ -79,7 +79,7 @@ class ReportCreditCollection extends ResourceCollection
             $num_quotes = $row->is_cash == false ? 32 : 26;
             $quotes = $payment->count();
             $quotes = $quotes / $num_quotes;
-            $quotes = round($quotes, 0, PHP_ROUND_HALF_UP);
+            $quotes = ceil($quotes);
             if ($quotes == 0) {
                 $quotes = 1;
             }

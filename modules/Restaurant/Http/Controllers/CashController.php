@@ -1726,23 +1726,33 @@ class CashController extends Controller
         $cash->time_closed = date('H:i:s');
         $cash->save();
         Box::where('cash_id', $id)->update(['close' => date('Y-m-d'), 'state' => 0]);
-        $all_cash = Box::select(['document_id', 'sale_note_id'])
+        $all_cash = Box::select(['document_id', 'sale_note_id','sale_note_payment_id','amount'])
             ->where('cash_id', $id)->where('method', 'Efectivo')
             ->where('expenses', 0)
             ->get();
+        
 
         $all_cash = $all_cash->map(function ($item) {
+
             if ($item->document_id) {
                 $document = Document::find($item->document_id);
                 return $document->total;
             }
-            if ($item->sale_note_id) {
+            if($item->sale_note_payment_id){
+                return $item->amount;
+            }
+            if ($item->sale_note_id && !$item->sale_note_payment_id) {
                 $sale_note = SaleNote::find($item->sale_note_id);
+                if($sale_note->sale_note_credit){
+                    return $sale_note->advances;
+                }
                 return $sale_note->total;
+                // $sale_note = SaleNote::whereDoesntHave('sale_note_credit')->find($item->sale_note_id);
+                // if (!$sale_note) return 0;
+                // return $sale_note->total - $sale_note->advances;
             }
         });
         $all_cash = $all_cash->sum();
-
         $all_cash += $cash->beginning_balance;
         $all_incomes = Box::where('cash_id', $id)->where('incomes', 1)->sum('amount');
         $all_expenses = Box::where('cash_id', $id)->where('expenses', 1)->sum('amount');
@@ -1831,10 +1841,13 @@ class CashController extends Controller
                 $user_principal = $cash_principal->user;
                 $user_principal_telephone = $user_principal->telephone;
                 $cash_id = $cash->id;
+                // $amount = 
+                $credit_cash_out = SaleNote::where('cash_id', $cash_id)->where('is_cash', 1)->where('total', '>', 0)->sum('total');
+
                 CashIncomePrincipal::create([
                     'cash_principal_id' => $cash_principal_id,
                     'cash_id' => $cash_id,
-                    'amount' => $all_cash,
+                    'amount' => $all_cash - $credit_cash_out,
                 ]);
                 $user = User::find($cash->user_id);
                 $name = $user->name;

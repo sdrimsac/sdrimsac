@@ -44,7 +44,7 @@ class ReceiptController extends Controller
         if ($data->sale_note_id) {
             $data_payments = Payment::where('sale_note_id', $data->sale_note_id)->first();
             if ($data_payments != null) {
-                $interes = ($data->sale_note->total-$data->sale_note->advances) * ($data_payments->tasa / 100);
+                $interes = ($data->sale_note->total - $data->sale_note->advances) * ($data_payments->tasa / 100);
             }
             $payments = SaleNotePayment::select(DB::raw('SUM(payment) as total_payment'))->where('sale_note_id', $data->sale_note_id)->first();
             $deuda = $data->sale_note->total - $data->sale_note->advances - $payments->total_payment;
@@ -59,7 +59,8 @@ class ReceiptController extends Controller
         $establishment = Establishment::find($user->establishment_id);
         $recibo = PDF::loadView('tenant.receipt.index', [
             'payment_method_type' => $payment_method_type,
-            'data' => $data, 'company' => $company, 'interes' => $interes, 'establishment' => $establishment, "deuda" => $deuda, "payments" => $payments, "user" => $user]);
+            'data' => $data, 'company' => $company, 'interes' => $interes, 'establishment' => $establishment, "deuda" => $deuda, "payments" => $payments, "user" => $user
+        ]);
         //    return view('tenant.receipt.index', ['data' => $data, 'company' => $company, 'interes' => $interes, 'establishment' => $establishment, "deuda" => $deuda, "payments" => $payments]);
         return $recibo->setPaper(array(0, 0, 249.45, 650), 'portrait')->stream();
     }
@@ -72,10 +73,10 @@ class ReceiptController extends Controller
         $receipt->date = Carbon::parse($request->date)->format('Y-m-d');
         $last_receipt = Receipt::orderBy('id', 'desc')->first();
         $number_receipt = null;
-        if($last_receipt){
+        if ($last_receipt) {
             $number_receipt = intval($last_receipt->number);
         }
-        
+
         if ($number_receipt !== null) {
             $number = str_pad(($number_receipt + 1), 7, "0", STR_PAD_LEFT);
         } else {

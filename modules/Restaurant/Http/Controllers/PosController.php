@@ -390,7 +390,11 @@ class PosController extends Controller
                 }
             });
             if ($only_cash) {
-
+                $cash_out = SaleNote::where('cash_id', $cash_id)
+                ->where('is_cash', 1)
+                ->where('state_type_id', '01')
+                ->sum(DB::raw('total - advances'));
+                
                 $expenses = Box::where('cash_id', $cash_id)->where('method', 'Efectivo')->where('expenses', 1)->where('incomes', 0)->chunk(50, function ($boxes) use (&$total_expenses) {
                     foreach ($boxes as $box) {
                         $amount = $box->amount;
@@ -405,7 +409,7 @@ class PosController extends Controller
                     }
                 });
             }
-            $total_sales  = $total_sales - $total_expenses + $total_incomes;
+            $total_sales  = $total_sales - $total_expenses + $total_incomes - $cash_out;
             $configuration = Configuration::first();
             if ($configuration->send_whatsapp_daily_cash && $configuration->number_activity && $send) {
                 $user_name = auth()->user()->name;

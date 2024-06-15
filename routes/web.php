@@ -50,6 +50,7 @@ if ($hostname) {
             Route::get('sale-notes/schedule/{sale_note_id}', [App\Http\Controllers\Tenant\SaleNoteController::class, 'schedule']);
             Route::get('sale-notes/cash_schedule/{sale_note_id}/{page?}', [App\Http\Controllers\Tenant\SaleNoteController::class, 'cash_schedule']);
             Route::get('sale-notes/hogar_schedule/{sale_note_id}/{page?}', [App\Http\Controllers\Tenant\SaleNoteController::class, 'hogar_schedule']);
+            Route::get('sale-notes/cash_out/{sale_note_id}', [App\Http\Controllers\Tenant\SaleNoteController::class, 'cash_out']);
             Route::get('receipt/print/{external_id}', [App\Http\Controllers\Tenant\ReceiptController::class, 'toPrint']);
             Route::get('getDesarrollador', [App\Http\Controllers\Tenant\UserController::class, 'getDesarrollador']);
             Route::get('getAreaPrinter', [App\Http\Controllers\Tenant\UserController::class, 'getAreaPrinter']);
@@ -184,6 +185,7 @@ if ($hostname) {
                 Route::get('items/tables', [App\Http\Controllers\Tenant\ItemController::class, 'tables']);
                 Route::get('documents/record/{document}', [App\Http\Controllers\Tenant\DocumentController::class, 'record']);
                 Route::get('documents/get_record/{document}', [App\Http\Controllers\Tenant\DocumentController::class, 'getRecord']);
+                Route::post('sale-notes/simulate', [App\Http\Controllers\Tenant\SaleNoteController::class, 'simulate']);
                 Route::get('sale-notes/record/{salenote}', [App\Http\Controllers\Tenant\SaleNoteController::class, 'record']);
                 Route::post('sale-notes/update-credit/{salenote}', [App\Http\Controllers\Tenant\SaleNoteController::class, 'updateCredit']);
                 Route::get('sale-notes/payments-init/{salenote}', [App\Http\Controllers\Tenant\SaleNoteController::class, 'paymentsInit']);

@@ -102,15 +102,17 @@ class SaleNoteController extends Controller
 
 
 
-    public function checkCustomerLine($customer_id){
-        $sale_notes = SaleNote::where('customer_id', $customer_id)->whereIn('status', ['R','O'])->count();
+    public function checkCustomerLine($customer_id)
+    {
+        $sale_notes = SaleNote::where('customer_id', $customer_id)->whereIn('status', ['R', 'O'])->count();
         // return $sale_notes > 0;
         return [
             'success' => true,
             'has_problems' => $sale_notes > 0
         ];
     }
-    public function pauseCredit(Request $request){
+    public function pauseCredit(Request $request)
+    {
         $sale_note_id = $request->sale_note_id;
         $reason_to_void = $request->reason_to_void;
         $sale_note = SaleNote::find($sale_note_id);
@@ -138,7 +140,7 @@ class SaleNoteController extends Controller
         $message_base = "El crédito de la nota de venta N° " . $sale_note->series . "-" . $sale_note->number . " ha sido anulada. Por el usuario " . $user_name . " por el motivo: " . $reason_to_void;
         // (new WhatsappSendMessageProccess())->dispatch($sale_note->website_id, $message_base, $sale_note_credit->number);
         // (new WhatsappController)->sendMessageAll($message_base);
-        $this->anulate($request,$sale_note_id);
+        $this->anulate($request, $sale_note_id);
         $sale_note->save();
         return [
             'success' => true,
@@ -499,7 +501,7 @@ class SaleNoteController extends Controller
         $sale_note = SaleNote::find($id);
         $sale_note->status = $status;
         if ($status == 'R') {
-            $this->anulate($request,$id);
+            $this->anulate($request, $id);
             SaleNoteCredit::where('sale_note_id', $id)->delete();
             Payment::where('sale_note_id', $id)->delete();
         }
@@ -696,6 +698,86 @@ class SaleNoteController extends Controller
         $customer_name = $sale_note->customer->name;
 
         return compact('tasa', 'month', 'advances', 'total', 'type_payment', 'customer_name');
+    }
+    public function simulate(Request $request)
+    {
+        $payments = $request->prepayments;
+
+        $customer_id = $request->customer_id;
+        $customer = Person::find($customer_id);
+        $customer_name = $customer->name;
+        $number_phone = $request->number;
+        $customer_number = $customer->number;
+        $customer_telephone = $customer->telephone;
+        if ($number_phone) {
+            $customer_telephone = $number_phone;
+        }
+        $company = Company::first();
+        $date_of_issue = $request->date_of_issue;
+        $total = $request->total;
+        $type_payment = $request->type_payment;
+        $tasa = $request->tasa;
+        $amount = $request->amount;
+        $establishment = Establishment::where('id', auth()->user()->establishment_id)->first();
+
+        $recibo = PDf::loadView('tenant.schedule.simulate_schedule', [
+            'page' => 1,
+            'establishment' => $establishment,
+            'date_of_issue' => $date_of_issue,
+            'customer_name' => $customer_name,
+            'company' => $company,
+            'customer_number' => $customer_number,
+            'total' => $total,
+            'type_payment' => $type_payment,
+            'tasa' => $tasa,
+            'data' => $payments,
+            'days' => count($payments),
+            'amount' => $amount,
+            'quote' => $amount,
+        ]);
+        $altura = 250;
+
+        if (count($payments) == 26) {
+            $altura += (count($payments)) * count($payments) + 200;
+        } else {
+            $altura += 25 * count($payments) + 150;
+        }
+        //guarda el pdf con un nombre uuid y deuelve la url
+        $name = Str::uuid();
+        $url = $this->savePDF($recibo, $name, $altura);
+        $whatsapp = $request->whatsapp;
+        $print = $request->print;
+        if ($print) {
+            event(new PrintEvent(null, 'URL', true, null, [], false, false, $url));
+        }
+        if ($whatsapp && $customer_telephone) {
+            $message = "Simulación de crédito";
+            $resource = $url;
+            // $resource = str_replace('http://', '', $resource);
+            // $resource = str_replace('https://', '', $resource);
+            $new_request = new Request();
+            $new_request->merge([
+                'message' => $message,
+                'resource' => $resource,
+                'file_name' => "Simulacion de credito",
+                'number' => $customer_telephone,
+                'from_server' => true,
+            ]);
+            (new WhatsappController)->sendHistorial($new_request);
+        }
+        return [
+            'success' => true,
+            'url' => $url,
+        ];
+    }
+    public function savePDF($recibo, $name)
+    {
+        $recibo->setPaper('a5', 'portrait');
+        if (!file_exists(storage_path('app/public/pdf_simulate'))) {
+            mkdir(storage_path('app/public/pdf_simulate'), 0777, true);
+        }
+        $recibo->save(storage_path('app/public/pdf_simulate/' . $name . '.pdf'));
+        return url('storage/pdf_simulate/' . $name . '.pdf');
     }
     public function record($id)
     {
@@ -1128,6 +1210,11 @@ class SaleNoteController extends Controller
                 if ($box) {
                     $original_cash_id = $box->cash_id;
                 }
+
+                if ($this->sale_note->is_cash) {
+                    event(new PrintEvent(null, 'URL', true, null, [], false, false, "/sale-notes/cash_out/" . $this->sale_note->id));
+                }
+
                 Box::where('sale_note_id', $this->sale_note->id)->delete();
                 $establishment = Establishment::where('id', auth()->user()->establishment_id)->first();
                 if ($request->afectar_caja == true && $request->generate != true) {
@@ -1293,7 +1380,7 @@ class SaleNoteController extends Controller
                 }
                 $saleNoteUpdate = SaleNote::findOrFail($this->sale_note->id);
                 $rq_cash_id = $request->cash_id;
-                if(!$rq_cash_id){
+                if (!$rq_cash_id) {
                     $rq_cash_id = $cash->id;
                 }
                 $saleNoteUpdate->cash_id = $rq_cash_id;
@@ -1561,6 +1648,37 @@ class SaleNoteController extends Controller
         file_put_contents($temp, $this->getStorage($sale_note->filename, 'sale_note'));
 
         return response()->file($temp);
+    }
+    public function cash_out($sale_note_id, $page = 1)
+    {
+        $data = Payment::where('sale_note_id', $sale_note_id)->get();
+        $tasa = $data->first()->tasa;
+        $quote = number_format($data->first()->amount, 2);
+        $days = count($data);
+        $init_date = Carbon::parse($data->first()->date_payment)->format('d/m/Y');
+        $end_date = Carbon::parse($data->last()->date_payment)->format('d/m/Y');
+        $data = $data->forPage($page, 32);
+        if (count($data) > 0) {
+            $sale = SaleNote::findOrFail($data->first()->sale_note_id);
+            $company = Company::first();
+            $user = User::findOrFail($sale->user_id);
+            $establishment = Establishment::find($user->establishment_id);
+            $recibo = PDf::loadView(
+                'tenant.schedule.cash_out',
+                [
+                    'days' => $days,
+                    'tasa' => $tasa,
+                    'quote' => $quote,
+                    'user' => $user,
+                    'init_date' => $init_date,
+                    'end_date' => $end_date,
+                    'data' => $data, 'sale' => $sale, 'company' => $company, 'establishment' => $establishment, 'page' => $page
+                ]
+            );
+            return $recibo->setPaper(array(0, 0, 249.45, 260), 'portrait')->stream();
+        } else {
+            return view("tenant.schedule.notfound");
+        }
     }
     public function hogar_schedule($sale_note_id, $page = 1)
     {
@@ -2029,7 +2147,7 @@ class SaleNoteController extends Controller
         ];
     }
 
-    public function anulate(Request $request,$id)
+    public function anulate(Request $request, $id)
     {
 
         DB::connection('tenant')->transaction(function () use ($id, $request) {
@@ -2077,7 +2195,7 @@ class SaleNoteController extends Controller
                 // ItemLot::where('item_id', $item->item_id )->where('warehouse_id', $warehouse->id)->update(['has_sale' => false]);
                 $this->voidedLots($item);
                 $is_credit = count($obj->credit_payments) > 0;
-                if($is_credit){
+                if ($is_credit) {
                     $reason_to_void = $request->reason_to_void;
                     $sale_note_credit = SaleNoteCredit::where('sale_note_id', $id)->first();
                     $sale_note_credit->reason_to_anulate_credit = $reason_to_void;
@@ -2087,7 +2205,6 @@ class SaleNoteController extends Controller
                     $user_name = auth()->user()->name;
                     $message_base = "El crédito de la nota de venta N° " . $obj->series . "-" . $obj->number . " ha sido anulada. Por el usuario " . $user_name . " por el motivo: " . $reason_to_void;
                     (new WhatsappController)->sendMessageAll($message_base);
-
                 }
             }
         });

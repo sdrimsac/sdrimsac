@@ -190,6 +190,7 @@ class BoxesController extends Controller
     {
         $items = [];
         $documents_credit = [];
+        $advances = 0;
         $sale_notes_credit = SaleNoteCredit::where('cash_id', $cash_id)->get();
         foreach ($sale_notes_credit as $idx => $sale_note_credit) {
             $sale_note = SaleNote::find($sale_note_credit->sale_note_id);
@@ -219,6 +220,9 @@ class BoxesController extends Controller
                     ];
                 }
             }
+            if ($sale_note->advances > 0) {
+                $advances += $sale_note->advances;
+            }
             $documents_credit[] =    [
                 "id" => $sale_note->id,
                 "number" => $sale_note->getNumberFullAttribute(),
@@ -229,6 +233,7 @@ class BoxesController extends Controller
                 "method" => "-",
                 "amount" => "-",
                 "paid" => false,
+                "advances" => $sale_note->advances,
                 "remaining" => $sale_note->total - $sale_note->advances,
             ];
         }
@@ -242,7 +247,8 @@ class BoxesController extends Controller
         });
         return [
             "items" => $grouped,
-            "documents" => $documents_credit
+            "documents" => $documents_credit,
+            "advances" => $advances
         ];
     }
     function get_category($item)
@@ -372,7 +378,11 @@ class BoxesController extends Controller
                 }
             }
             if ($box->sale_note_id && $box->sale_note_payment_id == null) {
-                $sale_note = SaleNote::find($box->sale_note_id);
+                $sale_note = SaleNote::whereDoesntHave('sale_note_credit')
+                    ->find($box->sale_note_id);
+                if(!$sale_note){
+                    continue;
+                }
                 $boxes = Box::where('sale_note_id', $box->sale_note_id)
 
                     ->get()->pluck('amount')->toArray();
@@ -1748,14 +1758,21 @@ class BoxesController extends Controller
                 ];
             }
         }
+        $credit_cash_expense = SaleNote::where('cash_id', $cash_id)->where('is_cash', 1)->where('total', '>', 0)->get()
+        ->transform(function ($row) {
+            return [
+                "description" => $row->number_full,
+                "amount" => $row->total,
+            ];
+        });
         $incomes_expenses_cash = [
             "incomes" => [
                 "quantity" => $incomes_cash_quantity,
                 "amount" => $incomes_cash_sum,
             ],
             "expenses" => [
-                "quantity" => $expenses_cash_quantity,
-                "amount" => $expenses_cash_sum,
+                "quantity" => $expenses_cash_quantity + $credit_cash_expense->count(),
+                "amount" => $expenses_cash_sum + $credit_cash_expense->sum('amount'),
             ],
         ];
 
@@ -1844,6 +1861,15 @@ class BoxesController extends Controller
         $documents_credit = $this->get_items_from_credit($cash_id);
         $all_credit_items = $documents_credit['items'];
         $credit_grouped = $documents_credit['documents'];
+        $advances_sale_note_credit = $documents_credit['advances'];
+        // $credit_grouped_count = count($credit_grouped);
+        //filtra credit_grouped y obten el numero de elementos con la propiedad "advances" mayor a 0
+        $credit_grouped_count = count(array_filter($credit_grouped, function ($item) {
+            return $item["advances"] > 0;
+        }));
+        $documents["notas"]["total"] += $advances_sale_note_credit;
+        $documents["notas"]["quantity"] += $credit_grouped_count;
+
         $array_receipts = $receipts->toArray();
         $all_credit_documents = array_merge($credit_grouped, $array_receipts);
         $invoices_credit = $this->get_invoice_credit($cash_id);
@@ -1855,6 +1881,8 @@ class BoxesController extends Controller
         ini_restore('memory_limit');
         try {
             $pdf = PDF::loadView('report::boxes.report_resumen_pdf_pos', compact(
+                "advances_sale_note_credit",
+                "credit_cash_expense",
                 "bill_series",
                 "credit_list_ordens_customers",
                 "credit_list_orden",
