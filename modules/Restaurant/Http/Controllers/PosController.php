@@ -389,6 +389,7 @@ class PosController extends Controller
                     }
                 }
             });
+            $cash_out =0;
             if ($only_cash) {
                 $cash_out = SaleNote::where('cash_id', $cash_id)
                 ->where('is_cash', 1)
