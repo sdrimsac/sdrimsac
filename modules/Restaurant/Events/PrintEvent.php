@@ -84,7 +84,13 @@ class PrintEvent implements ShouldBroadcast
                 $documentLink = $url;
                 break;
             case "URL":
-                $documentLink = url('') . $url;
+                //si $url inicia con http o https,  no se le agrega la url base
+                if (strpos($url, 'http') === 0) {
+                    $documentLink = $url;
+                } else {
+                    $documentLink = url('') . $url;
+                }
+                // $documentLink = url('') . $url;
                 break;
             case "S":
                 // $copies = 1;
