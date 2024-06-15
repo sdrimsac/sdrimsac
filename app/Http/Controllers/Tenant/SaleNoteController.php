@@ -748,7 +748,8 @@ class SaleNoteController extends Controller
         $whatsapp = $request->whatsapp;
         $print = $request->print;
         if ($print) {
-            event(new PrintEvent(null, 'URL', true, null, [], false, false, $url));
+
+            event(new PrintEvent(null, 'URL1', true, null, [], false, false, $url));
         }
         if ($whatsapp && $customer_telephone) {
             $message = "Simulación de crédito";

@@ -80,7 +80,10 @@ class PrintEvent implements ShouldBroadcast
         // $copies = 0;
         $documentLink = null;
         switch ($document_type) {
-            case "URL":
+            case "URL1":
+                $documentLink = $url;
+                break;
+            case "URL1":
                 $documentLink = url('') . $url;
                 break;
             case "S":
