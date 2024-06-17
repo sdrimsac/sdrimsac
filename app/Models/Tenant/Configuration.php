@@ -14,6 +14,7 @@ class Configuration extends ModelTenant
         'print_payment_credit_sale_note',
         'change_price_product',
         'whatsapp_in_login',
+        'configurable_impresion_ticket_categoria_caja',
         'show_internal_code_ticket',
         'unit_type_pdf_quotation',
         'seller_quotation_cash',

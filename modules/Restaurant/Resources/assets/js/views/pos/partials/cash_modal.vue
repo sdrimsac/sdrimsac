@@ -99,7 +99,28 @@
                     <td class="text-left h6">{{ form.items_detail.unds }}</td>
                 </tr>
             </table>
+            <table class="table border-bottom" v-if="categories.length > 0">
+                    <tr>
+                        <td class="text-left lead-font-weight-700 h5" colspan="2">
+                            TOTAL POR CATEGORIA
+                        </td>
+                    </tr>
+                    <tr
+                    v-for="(cat,idx) in categories" 
+                    :key="idx"
+                    >
+                <td class="text-uppercase" width="50%">{{ cat.category }}</td>
+                <td class="text-end">
+                     S/ {{ cat.total }}
 
+                </td>
+                </tr>
+                <tr>
+                    <td class="lead-font-weight-700">TOTAL</td>
+                    <td class="text-end">S/ {{totalCategory.toFixed(2)}}</td>
+                </tr>
+                </table>    
+                
             <table
                 class="table border-bottom"
                 v-if="form.incomes_expenses_cash"
@@ -287,6 +308,8 @@ export default {
     props: ["cash", "showDetail", "area_id"],
     data() {
         return {
+            categories:[],
+            totalCategory:0,
             url: "",
             loading: false,
             loadingPrint: false,
@@ -385,6 +408,7 @@ export default {
             return date + " " + time;
         },
         async open() {
+            this.categories = [];
             this.init();
             this.formatedCounter();
             try {
@@ -394,6 +418,15 @@ export default {
                 );
                 const { data } = response;
                 this.form = data;
+                let {categories} = data;
+                Object.keys(categories).forEach((catName, idx) => {
+                    this.totalCategory+=Number(categories[catName]);
+                    this.categories.push({
+                        category:catName,
+                        total:categories[catName]
+                    });
+                });
+                console.log(this.categories)
                 let { sales_detail } = data;
 
                 Object.keys(sales_detail).forEach((k, idx) => {

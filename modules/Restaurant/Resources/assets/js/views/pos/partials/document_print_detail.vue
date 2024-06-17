@@ -13,7 +13,10 @@
                             Acciones
                         </th>
                         <th
-                            v-if="configuration.restaurant && (type == 'documents'||type=='saleNotes')">N° Mesa Ref.</th>
+                        v-if="configuration.restaurant && (type == 'documents'||type=='saleNotes')"
+                        >
+                    N° Mesa
+                    </th>
                         <th>
                             Número
                         </th>

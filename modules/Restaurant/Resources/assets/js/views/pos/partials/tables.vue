@@ -1,63 +1,30 @@
 <template>
-    <el-dialog
-        :visible="showTables"
-        v-loading="loading"
-        @open="open"
-        @close="close"
-        width="70%"
-        title="ZONA DE ATENCIÓN "
-        :close-on-click-modal="false"
-        :class="{ top }"
-    >
-        <div class="card" v-if="ordens.length == 0 || hasSelectedOrdenToChange">
-            <div class="d-flex justify-content-end p-2">
-                <button
-                    type="button"
-                    :class="`btn ${isDisabling ? 'btn-danger' : 'btn-warning'}`"
-                    @click="disablingTable"
-                >
-                    {{ isDisabling ? "Cancelar" : "Deshabilitar" }}
-                </button>
-                <button
-                    v-if="hasTableOcuped"
-                    type="button"
-                    :class="
+<el-dialog :visible="showTables" v-loading="loading" @open="open" @close="close" width="70%" title="ZONA DE ATENCIÓN " :close-on-click-modal="false" :class="{ top }">
+    <div class="card" v-if="ordens.length == 0 || hasSelectedOrdenToChange">
+        <div class="d-flex justify-content-end p-2">
+            <button type="button" style="margin-left:15px;" :class="`btn ${isDisabling ? 'btn-danger' : 'btn-warning'}`" @click="disablingTable">
+                {{ isDisabling ? "Cancelar" : "Deshabilitar" }}
+            </button>
+            <button v-if="hasTableOcuped" type="button" :class="
                         `btn ${changingOrden ? 'btn-warning' : 'btn-primary'}`
-                    "
-                    @click="changeOrden"
-                >
-                    {{
+                    " @click="changeOrden">
+                {{
                         changingOrden
                             ? hasSelectedOrdenToChange
                                 ? "Seleccione a la mesa destino"
                                 : "Seleccionar mesa"
                             : "Cambiar orden"
                     }}
-                </button>
-                <button
-                    type="button"
-                    style="margin-left:15px;"
-                    :class="`btn ${addingOrden ? 'btn-danger' : 'btn-primary'}`"
-                    @click="addOrden"
-                >
-                    {{ addingOrden ? "Seleccione mesa" : "Nueva orden" }}
-                </button>
-                <button
-                    type="button"
-                    style="margin-left:15px;"
-                    class="btn btn-light"
-                    @click="close"
-                >
-                    Cerrar
-                </button>
-            </div>
-            <div
-                v-if="tables.length > 0"
-                class="d-flex flex-wrap justify-content-center"
-            >
-                <div
-                    v-for="(table, idx) in tables"
-                    :class="
+            </button>
+            <button type="button" style="margin-left:15px;" :class="`btn ${addingOrden ? 'btn-danger' : 'btn-primary'}`" @click="addOrden">
+                {{ addingOrden ? "Seleccione mesa" : "Nueva orden" }}
+            </button>
+            <button type="button" style="margin-left:15px;" class="btn btn-light" @click="close">
+                Cerrar
+            </button>
+        </div>
+        <div v-if="tables.length > 0" class="d-flex flex-wrap justify-content-center">
+            <div v-for="(table, idx) in tables" :class="
                         `${
                             table.enabled == false
                                 ? 'btn-light'
@@ -67,56 +34,40 @@
                                 ? 'btn-danger'
                                 : 'btn-warning'
                         }`
-                    "
-                    class=" col-2 btn   m-1 d-flex flex-column justify-content-center align-items-center "
-                    :key="idx"
-                    @click="selectTable(table)"
-                    style="max-height: 136px;    max-width: 135px;"
-                >
-                    <strong class="h3 text-white  ">Mesa</strong>
-                    <i class="icofont-dining-table icofont-4x"></i>
+                    " class=" col-2 btn   m-1 d-flex flex-column justify-content-center align-items-center " :key="idx" @click="selectTable(table)" style="max-height: 136px;    max-width: 135px;">
+                <strong class="h3 text-white  ">Mesa</strong>
+                <i class="icofont-dining-table icofont-4x"></i>
 
-                    <span class="h2  text-white">
-                        {{ table.number }}
-                    </span>
-                </div>
-            </div>
-            <div
-                v-else
-                class="h-25 d-flex justify-content-center align-items-center"
-            >
-                <span>Sin mesas</span>
+                <span class="h2  text-white">
+                    {{ table.number }}
+                </span>
             </div>
         </div>
-        <div
-            class="card-body p-2"
-            v-if="ordens.length > 0 && !hasSelectedOrdenToChange"
-        >
-            <div class="row" v-if="hasSelectedTableToChange">
-                <h3>Seleccione la orden a cambiar</h3>
-            </div>
-            <div class="d-flex flex-wrap justify-content-left">
-                <div class="col-3" v-for="(ord, idx) in ordens" :key="idx">
-                    <button
-                        @click="sendOrdens(ord)"
-                        type="button"
-                        class="btn btn-primary p-1 m-1 "
-                    >
-                        <span class="h3 text-white">#{{ ord.id }}</span
-                        ><br />
-                        <span class="h4 text-white">{{
+        <div v-else class="h-25 d-flex justify-content-center align-items-center">
+            <span>Sin mesas</span>
+        </div>
+    </div>
+    <div class="card-body p-2" v-if="ordens.length > 0 && !hasSelectedOrdenToChange">
+        <div class="row" v-if="hasSelectedTableToChange">
+            <h3>Seleccione la orden a cambiar</h3>
+        </div>
+        <div class="d-flex flex-wrap justify-content-left">
+            <div class="col-3" v-for="(ord, idx) in ordens" :key="idx">
+                <button @click="sendOrdens(ord)" type="button" class="btn btn-primary p-1 m-1 ">
+                    <span class="h3 text-white">#{{ ord.id }}</span><br />
+                    <span class="h4 text-white">{{
                             ord.ref ? ord.ref : "Sin referencia"
                         }}</span>
-                    </button>
-                </div>
-            </div>
-            <div class="d-flex justify-content-end">
-                <button type="button" class="btn btn-light" @click="closeOrden">
-                    Regresar
                 </button>
             </div>
         </div>
-    </el-dialog>
+        <div class="d-flex justify-content-end">
+            <button type="button" class="btn btn-light" @click="closeOrden">
+                Regresar
+            </button>
+        </div>
+    </div>
+</el-dialog>
 </template>
 
 <script>
@@ -148,16 +99,14 @@ export default {
             try {
                 await this.$confirm(
                     "¿Está seguro de deshabilitar la mesa?",
-                    "Advertencia",
-                    {
+                    "Advertencia", {
                         confirmButtonText: "Aceptar",
                         cancelButtonText: "Cancelar",
                         type: "warning"
                     }
                 );
                 const response = await this.$http.post(
-                    `/caja/tables/disabled-table`,
-                    {
+                    `/caja/tables/disabled-table`, {
                         table_id: id
                     }
                 );
@@ -173,16 +122,14 @@ export default {
             try {
                 await this.$confirm(
                     "¿Está seguro de habilitar la mesa?",
-                    "Advertencia",
-                    {
+                    "Advertencia", {
                         confirmButtonText: "Aceptar",
                         cancelButtonText: "Cancelar",
                         type: "warning"
                     }
                 );
                 const response = await this.$http.post(
-                    `/caja/tables/enabled-table`,
-                    {
+                    `/caja/tables/enabled-table`, {
                         table_id: id
                     }
                 );
@@ -297,7 +244,9 @@ export default {
                     `/caja/tables/orden/${table.id}`
                 );
                 if (response.status == 200) {
-                    const { ordens } = response.data;
+                    const {
+                        ordens
+                    } = response.data;
 
                     this.ordens = ordens;
                     if (ordens.length == 1) {
@@ -323,13 +272,17 @@ export default {
                 this.loading = true;
                 const response = await this.$http(this.resource);
                 if (response.status == 200) {
-                    const { tables } = response.data;
-                    let { show_caja_table } = this.configuration;
-                    if (!show_caja_table ) {
+                    const {
+                        tables
+                    } = response.data;
+                    let {
+                        show_caja_table
+                    } = this.configuration;
+                    if (!show_caja_table) {
                         this.tables = tables.filter(
                             f => f.number.toLowerCase() != "caja"
                         );
-                    }else{
+                    } else {
                         this.tables = tables;
                     }
                     // this.tables = tables;

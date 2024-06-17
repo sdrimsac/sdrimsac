@@ -1,3 +1,5 @@
+<!-- Listado de Mesas -->
+ <!-- Listado de Habitaciones -->
 <template>
 <div>
     <div class="container-fluid p-l-0 p-r-0">
@@ -16,29 +18,29 @@
                         </li>
                     </ol>
                 </div>
-                <div class="col-12 col-md-6 d-flex align-items-start justify-content-end">
-                    <button v-if="resource == 'caja/rooms'" type="button" class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto m-l-5" @click.prevent="clickSeeInsumos">
+                <!-- <div class="col-12 col-md-6 d-flex align-items-start justify-content-end">
+                    <button v-if="resource == 'caja/rooms'" type="primary" class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto m-l-5" @click.prevent="clickSeeInsumos">
                         <i class="icofont-plus-circle"></i>
                         <span>Insumos</span>
                     </button>
-                    <button v-if="resource == 'caja/rooms'" type="button" class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto m-l-5" @click.prevent="clickSeePromotions">
+                    <button v-if="resource == 'caja/rooms'" type="primary" class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto m-l-5" @click.prevent="clickSeePromotions">
                         <i class="icofont-plus-circle"></i>
                         <span>Promociones</span>
                     </button>
-                    <button v-if="resource == 'caja/rooms'" type="button" class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto m-l-5" @click.prevent="clickSeeTypes()">
+                    <button v-if="resource == 'caja/rooms'" type="primary" class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto m-l-5" @click.prevent="clickSeeTypes()">
                         <i class="icofont-plus-circle"></i>
                         <span>Tipo de habitaciones</span>
                     </button>
-                    <button v-if="resource == 'caja/rooms'" type="button" class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto m-l-5" @click.prevent="clickSeeTowers()">
+                    <button v-if="resource == 'caja/rooms'" type="primary" class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto m-l-5" @click.prevent="clickSeeTowers()">
                         <i class="icofont-plus-circle"></i>
                         <span>Torres</span>
                     </button>
-                    <button v-if="resource == 'caja/rooms'" type="button" class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto m-l-5" @click.prevent="clickSeeFloors()">
+                    <button v-if="resource == 'caja/rooms'" type="primary" class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto m-l-5" @click.prevent="clickSeeFloors()">
                         <i class="icofont-plus-circle"></i>
                         <span>Pisos</span>
                     </button>
-                    <!-- Contact Button Start -->
-                    <button type="button" class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto" @click.prevent="clickCreate()">
+                    
+                    <button type="primary" class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto" @click.prevent="clickCreate()">
                         <i class="icofont-plus-circle"></i>
                         <span>Nuevo</span>
                     </button>
@@ -49,66 +51,130 @@
                         <i class="icofont-plus-circle"></i>
                         <span>Crear masivamente</span>
                     </button>
-                    <!-- Contact Button End -->
-                </div>
+                    
+                </div> -->
             </div>
         </div>
     </div>
     <div class="container-fluid p-l-0 p-r-0">
         <div class="card mb-0">
-            <div class="card-header bg-primary">
-                <h6 class="my-0 text-white">Listado de {{ title }}</h6>
+            <template>
+                <div>
+                    <div class="card-header bg-primary d-flex align-items-center">
+                        <template v-if="resource == 'caja/tables'">
+                            <i class="fas fa-table text-white mr-2"></i>
+                        </template>
+                        <template v-if="resource == 'caja/rooms'">
+                            <i class="fas fa-door-open text-white mr-2"></i>
+                        </template>
+                        <h4 class="my-0 text-white">. Listado de {{ title }}</h4>
+                    </div>
+                </div>
+                </template>
+            <!-- <div class="card-header bg-primary">
+                <h4 class="my-0 text-white">Listado de {{ title }}</h4>
+            </div> -->
+            <div class="data-table-visible-columns">
+                <el-button v-if="resource == 'caja/rooms'" class="custom-button" @click.prevent="clickSeeInsumos">
+                    <i class="fas fa-boxes"></i>
+                    <span>Insumos</span>
+                </el-button>
+                <el-button v-if="resource == 'caja/rooms'" class="custom-button" @click.prevent="clickSeePromotions">
+                    <i class="fas fa-tags"></i>
+                    <span>Promociones</span>
+                </el-button>
+                <el-button v-if="resource == 'caja/rooms'" class="custom-button" @click.prevent="clickSeeTypes()">
+                    <i class="fas fa-bed"></i>
+                    <span>Tipo de habitaciones</span>
+                </el-button>
+                <el-button v-if="resource == 'caja/rooms'" class="custom-button" @click.prevent="clickSeeTowers()">
+                    <i class="fas fa-building"></i>
+                    <span>Torres</span>
+                </el-button>
+                <el-button v-if="resource == 'caja/rooms'" class="custom-button" @click.prevent="clickSeeFloors()">
+                    <i class="fas fa-layer-group"></i>
+                    <span>Pisos</span>
+                </el-button>
+                <!-- Contact Button Start -->
+                <el-button type="primary" 
+                        class="custom-button" 
+                        href="javascript:void(0)"
+                        @click.prevent="clickCreate()">
+                    <i class="fas fa-plus-circle"></i>
+                    <span>Nuevo</span>
+                </el-button>
+                <el-button 
+                        v-if="resource == 'caja/tables' || resource == 'caja/rooms'"
+                        type="primary"
+                        class="custom-button" 
+                        href="javascript:void(0)"
+                        @click.prevent="clickCreateMassive()">
+                        <i class="fas fa-plus-circle"></i>
+                        <span>Crear masivamente</span>
+                </el-button>
             </div>
+
+
+
+
             <div class="card-body">
                 <data-table :resource="resource">
-                    <tr slot="heading">
-                        <th>#</th>
-                        <th v-if="
+                    <tr slot="heading" class="bg-primary">
+                        <th class="text-white">#</th>
+                        <th class="text-white"
+                                 v-if="
                                     type != 'caja/tables' &&
                                         type != 'caja/rooms'
                                 ">
                             Descripción
                         </th>
-                        <th v-if="
+                        <th class="text-white"
+                         v-if="
                                     type == 'caja/tables' ||
                                         type == 'caja/rooms'
                                 ">
                             Número
                         </th>
-                        <th v-if="type == 'caja/rooms'">
+                        <th  class="text-white"
+                        v-if="type == 'caja/rooms'">
                             Tipo
                         </th>
-                        <th v-if="
+                        <th class="text-white"
+                        v-if="
                                     type == 'caja/tables' ||
                                         type == 'caja/rooms'
                                 ">
                             Área
                         </th>
-                        <th v-if="
+                        <th class="text-white"
+                        v-if="
                                     type == 'caja/tables' ||
                                         type == 'caja/rooms'
                                 ">
                             Establecimiento
                         </th>
-                        <th v-if="type == 'caja/rooms'">
+                        <th class="text-white"
+                        v-if="type == 'caja/rooms'">
                             Torre
                         </th>
-                        <th v-if="type == 'caja/rooms'">
+                        <th class="text-white"
+                            v-if="type == 'caja/rooms'">
                             Piso
                         </th>
-                        <th v-if="type == 'caja/areas'">
+                        <th    class="text-white"
+                        v-if="type == 'caja/areas'">
                             Impresora
                         </th>
-                        <th v-if="type == 'caja/areas'">
+                        <th class="text-white" v-if="type == 'caja/areas'">
                             Forzar impresión
                         </th>
-                        <th v-if="type == 'caja/rooms'">
+                        <th class="text-white" v-if="type == 'caja/rooms'">
                             Precio
                         </th>
-                        <th v-if="type == 'caja/rooms'">
+                        <th class="text-white" v-if="type == 'caja/rooms'">
                             Incluye
                         </th>
-                        <th class="text-end">Acciones</th>
+                        <th class="text-white text-end">Acciones</th>
                     </tr>
 
                     <tr></tr>
@@ -207,6 +273,33 @@
     </div>
 </div>
 </template>
+
+    <style scoped>
+    .custom-button {
+        border-radius: 5px; /* Redondear el botón */
+        color: white; /* Letras blancas */
+        background-color: #14385f; /* Color de fondo azul (primario) */
+        border: 1px solid #ffffff; /* Borde del mismo color que el fondo */
+        padding: 10px 20px; /* Espaciado interno */
+        transition: transform 0.2s ease, background-color 0.2s ease; /* Añadir una transición suave */
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+        cursor: pointer;
+        text-align: center;
+        text-decoration: none;
+        margin: 5px;
+    }
+
+    .custom-button:hover {
+        transform: scale(1.05); /* Aumenta ligeramente el tamaño al pasar el ratón */
+    }
+
+    .custom-button:active {
+        transform: scale(0.95); /* Reduce ligeramente el tamaño al hacer clic */
+    }
+</style>
 
 <script>
 const Promotions = () => import("./promotions.vue");

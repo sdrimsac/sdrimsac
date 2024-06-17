@@ -23,29 +23,33 @@
         <div class="container-fluid p-l-0 p-r-0">
             <div class="card mb-0">
                 <div class="card-header bg-primary">
-                    <h4 class="my-0 text-white"><i class="fas fa-layer-group"></i> Listado de {{ title }}</h4>
+                    <h4 class="my-0 text-white">
+                         <i class="fas fa-layer-group"></i>
+                         Listado de Categorías Principales
+                    </h4>
 
                 </div>
+                <div class="data-table-visible-columns">
+                        <el-button type="primary" 
+                                    class="" 
+                                    href="javascript:void(0)" 
+                                    @click.prevent="clickCreate()">
+                                    <i class="fas fa-layer-group"></i>
+                                    <i class="fa fa-plus"></i>
+                                Nueva Categoría
+                        </el-button>
+                </div> 
+                
+
                 <div class="card-body">
-                    <div class="d-flex align-items-start justify-content-end">
-                        <!-- Contact Button Start -->
-                        <button
-                            type="button"
-                            class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto"
-                            @click.prevent="clickCreate()"
-                        >
-                            <i class="icofont-plus-circle"></i>
-                            <span>Nuevo</span>
-                        </button>
-                        <!-- Contact Button End -->
-                    </div>
+                    
                     <data-table :resource="resource">
-                        <tr slot="heading">
-                            <th>#</th>
-                            <th>Nombre</th>
-                            <th class="text-end">Identificador</th>
-                            <th class="text-end">Expandir detalle reporte</th>
-                            <th class="text-end">Acciones</th>
+                        <tr slot="heading" class="bg-primary">
+                            <th class="text-white">#</th>
+                            <th class="text-white">Nombre</th>
+                            <th class="text-white text-end">Identificador</th>
+                            <th class="text-white text-end">Expandir detalle reporte</th>
+                            <th class="text-white text-end">Acciones</th>
                         </tr>
 
                         <tr></tr>

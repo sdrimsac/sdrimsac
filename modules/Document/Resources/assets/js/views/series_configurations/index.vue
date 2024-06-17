@@ -1,28 +1,35 @@
 <template>
 <div class="card">
     <div class="card-header bg-primary">
-        <h6 class="my-0 text-white">Numeración de facturación
+        <h4 class="my-0 text-white">
+            <i class="fa fa-list-ol text-white mr-2"></i>
+            Numeración de Series de Facturación
             <el-tooltip class="item" effect="dark" content="La serie iniciará desde un número correlativo personalizado" placement="top-start">
                 <i class="fa fa-info-circle"></i>
             </el-tooltip>
-        </h6>
+        </h4>
     </div>
+    <div class="data-table-visible-columns">
+         <el-button type="primary" 
+                    class="" 
+                    href="javascript:void(0)" 
+                    @click.prevent="clickCreate()">
+                    <i class="fa fa-list-ol text-white mr-2"></i>
+                    <i class="fa fa-plus"></i>
+                  Nueva Numeración
+          </el-button>
+    </div> 
     <div class="card-body">
-        <div class="row">
-            <div class="col">
-                <button type="button" class="btn btn-primary btn-sm  mt-2 mr-2" @click.prevent="clickCreate()"><i class="fa fa-plus-circle"></i> Nuevo</button>
-            </div>
-        </div>
         <div class="table-responsive">
             <table class="table table-striped">
                 <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Tipo comprobante</th>
-                        <th>Serie</th>
-                        <th class="text-center">Número a iniciar</th>
-                        <th class="text-center">Emisión inicializada</th>
-                        <th class="text-end">Acciones</th>
+                    <tr slot="heading" class="bg-primary">
+                        <th class="text-white">#</th>
+                        <th class="text-white">Tipo comprobante</th>
+                        <th class="text-white">Serie</th>
+                        <th class="text-white text-center">Número a Iniciar</th>
+                        <th class="text-white text-center">Emisión Inicializada</th>
+                        <th class="text-white text-end">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>

@@ -297,7 +297,7 @@ class BoxesController extends Controller
             "boletas" => ["total" => 0, "quantity" => 0],
             "notas" => ["total" => 0, "quantity" => 0],
         ];
-
+        $categories = [];
         $documents = [];
         foreach ($boxes as $box) {
             $total = 0;
@@ -323,6 +323,13 @@ class BoxesController extends Controller
 
                         foreach ($items as $item) {
                             $data = $item->item;
+                            $item_db = Item::find($item->item_id);
+                            $category_name = $item_db->category->name;
+                            if(array_key_exists($category_name,$categories)){
+                                $categories[$category_name] += $item->total;
+                            }else{
+                                $categories[$category_name] = $item->total;
+                            }
                             $data = (array)$data;
                             $id_exist  = false;
                             $key = $data['description'] . "-" . $item->unit_price;
@@ -402,6 +409,14 @@ class BoxesController extends Controller
 
                     foreach ($items as $item) {
                         $data = $item->item;
+                        $data = $item->item;
+                        $item_db = Item::find($item->item_id);
+                        $category_name = $item_db->category->name;
+                        if(array_key_exists($category_name,$categories)){
+                            $categories[$category_name] += $item->total;
+                        }else{
+                            $categories[$category_name] = $item->total;
+                        }
                         $data = (array)$data;
                         $id_exist  = false;
                         $key = $data['description'] . "-" . $item->unit_price;
@@ -470,8 +485,8 @@ class BoxesController extends Controller
             return $item[0]["category"] != "HABITACIONES";
         }));
 
-
         return [
+            "categories" => $categories,
             "grouped" => $grouped,
             "items" => $all_items,
             "documents" => $all_documents,
@@ -812,10 +827,12 @@ class BoxesController extends Controller
             "total" => $total_items,
         ];
         return compact(
+            'categories',
             'items_sale',
             'all_items',
             'categories',
             'items',
+            'all_items',
             'operations',
             'total_sales',
             'efectivo',
@@ -2592,8 +2609,8 @@ class BoxesController extends Controller
         $items = $info['items'];
         $documents = $info['documents'];
         $documents_info = $info['documents_info'];
-        $all_items = $info['items'];
         $categories = $info['categories'];
+        $all_items = $info['items'];
         $saldo = 0;
 
         $uniques = array_unique(array_column($items, 'description'));

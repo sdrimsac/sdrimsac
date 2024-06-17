@@ -1,12 +1,19 @@
 <template>
     <el-dialog :title="titleDialog" :visible="showDialog" @close="close" class="rounded-dialog">
+        <template v-slot:title>
+            <div class="d-flex align-items-center">
+                <i class="fas fa-tasks fa-lg text-white" style="margin-right: 10px;"></i>
+                <h4 class="text-white mb-0">Programar Tareas</h4>
+            </div>
+        </template>
         <form autocomplete="off" @submit.prevent="submit">
             <div class="form-body">
             <br>
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group" :class="{'has-danger': errors.class}">
-                            <label class="control-label fw-bold">Tarea</label>
+                            <i class="fas fa-tasks fa-lg" style="margin-right: 10px;"></i>
+                             Tarea a Programar
                             <el-select v-model="form.class" dusk="class">
                                 <el-option v-for="option in commnads" :key="option.name" :value="option.class" :label="option.name"></el-option>
                             </el-select>
@@ -15,16 +22,29 @@
                     </div>
                     <div class="col-md-6">
                         <div class="form-group" :class="{'has-danger': errors.execution_time}">
-                            <label class="control-label w-100 fw-bold">Hora de ejecución</label>
+                            <i class="fas fa-clock fa-lg" style="margin-right: 10px;"></i>
+                             Hora de Ejecución
                             <el-time-picker v-model="execution_time" format="HH:mm" placeholder="Seleccionar" dusk="execution_time" @change="setTime"></el-time-picker>
                             <small class="form-control-feedback" v-if="errors.execution_time" v-text="errors.execution_time[0]"></small>
                         </div>
                     </div>
                 </div>
             </div>
-           <div class="form-actions text-end pt-2 pb-2">
-                <el-button @click.prevent="close()">Cancelar</el-button>
-                <el-button type="primary" native-type="submit" :loading="loading_submit" dusk="submit">
+            <div class="form-actions text-end pt-2 pb-2">
+                <el-button icon="fas fa-times fa-lg" @click.prevent="close()"> Cancelar</el-button>
+                <el-button icon="fas fa-save fa-lg" type="primary" native-type="submit" :loading="loading_submit" dusk="submit">
+                    <template v-if="loading_submit">
+                        <i class="fas fa-spinner fa-spin fa-lg" style="margin-right: 10px;"></i> Creando tarea...
+                    </template>
+                    <template v-else>
+                        Guardar
+                    </template>
+                </el-button>
+            </div>
+
+           <!-- <div class="form-actions text-end pt-2 pb-2">
+                <el-button icon="fas fa-times fa-lg" @click.prevent="close()"> Cancelar</el-button>
+                <el-button icon="fas fa-save fa-lg" type="primary" native-type="submit" :loading="loading_submit" dusk="submit">
                     <template v-if="loading_submit">
                         Creando tarea...
                     </template>
@@ -32,7 +52,7 @@
                         Guardar
                     </template>
                 </el-button>
-            </div>
+            </div> -->
         </form>
     </el-dialog>
 </template>

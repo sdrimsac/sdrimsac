@@ -314,6 +314,55 @@
                                             </el-upload>
                                         </el-input>
                                     </div>
+                                    <!-- <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label class="control-label">Imagen cuentas plantilla trade_name_max</label>
+                                        <el-input v-model="
+                                                    form.account_img_trade_name_max
+                                                " :readonly="true">
+                                            <el-upload slot="append" :headers="headers" :data="{
+                                                        type:
+                                                            'account_img_trade_name_max'
+                                                    }" action="/companies/uploads" :show-file-list="false" :on-success="successUpload">
+                                                <el-button type="primary" icon="el-icon-upload"></el-button>
+                                            </el-upload>
+                                        </el-input>
+                                        <div class="badge text-danger">
+                                            <small>Se recomienda resoluciones
+                                                500x100 maximo</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <img class="img-thumbnail" :src="
+                                                `/storage/uploads/logos/${form.account_img_trade_name_max}`
+                                            " style="  max-height: 100px;" />
+                                </div>
+                                <!-- agregado para la otra imagen del trademanemax
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label class="control-label">Imagen Dolares plantilla trade_name_max </label>
+                                        <el-input v-model="
+                                                    form.file_nuevo_dolares_img
+                                                " :readonly="true">
+                                            <el-upload slot="append" :headers="headers" :data="{
+                                                        type:
+                                                            'file_nuevo_dolares_img'
+                                                    }" action="/companies/uploads" :show-file-list="false" :on-success="successUpload">
+                                                <el-button type="primary" icon="el-icon-upload"></el-button>
+                                            </el-upload>
+                                        </el-input>
+                                        <div class="badge text-danger">
+                                            <small>Se recomienda resoluciones
+                                                300x80 maximo</small>
+                                        </div>
+                                    </div>
+                                </div> -->
+                                <!-- <div class="col-md-2">
+                                    <img class="img-thumbnail" :src="
+                                                `/storage/uploads/logos/${form.file_nuevo_dolares_img}`
+                                            " style="  max-height: 100px;" />
+                                </div> -->
                                 </div>
 
                                 <div class="col-md-2">

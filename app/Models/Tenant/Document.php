@@ -108,6 +108,7 @@ class Document extends ModelTenant
         'payment',
         'dispatch_id',
         'ref'
+
   
     ];
 
@@ -173,6 +174,10 @@ class Document extends ModelTenant
         $count = Document::where('series',$serie)->where('number',$number)->where('soap_type_id',$soap_type_id)->count();
         return $count > 1;
       
+    }
+
+    public function orden(){
+            return $this->belongsTo(Orden::class);
     }
   public function comercial_treatment(){
     return $this->belongsTo(CommercialTreatment::class);

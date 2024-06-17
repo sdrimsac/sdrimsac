@@ -164,7 +164,10 @@ class SaleNote extends ModelTenant
 
         return $penalty_amount;
     }
-    
+    public function orden()
+    {
+        return $this->belongsTo(Orden::class);
+    }
     public function boxes()
     {
         return $this->hasMany(Box::class);

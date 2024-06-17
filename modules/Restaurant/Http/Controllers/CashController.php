@@ -1501,6 +1501,9 @@ class CashController extends Controller
         try {
             $pdf = PDF::loadView('restaurant::cash.ticket_cash', compact(
                 "configuration",
+                "categories",
+                "totalCategory",
+                "grouped",
                 'user',
                 'establishment',
                 "total_coins_virtual",

@@ -36,7 +36,6 @@
                                     @click.prevent="clickCreate()">
                                     <i class="fa fa-dolly fa-lg"></i>
                                     <i class="fa fa-plus"></i>
-
                                     Nuevo Traslado
                         </el-button>
                 </div> 
@@ -46,7 +45,6 @@
                             <th class="text-white">#</th>
                             <th class="text-white">Fecha</th>
                             <th class="text-white">Almacen Inicial</th>
-
                             <th class="text-white">Almacen Destino</th>
                             <th class="text-white">Detalle</th>
                             <th class="text-white">Detalle Productos</th>

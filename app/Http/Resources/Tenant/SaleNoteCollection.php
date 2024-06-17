@@ -79,7 +79,7 @@ class SaleNoteCollection extends ResourceCollection
                     'number_full' => $dispatch->number_full,
                 ];
             });
-            if($row->advances > 0){
+            if ($row->advances > 0) {
                 $pending = $row->total - $row->advances;
             }
 

@@ -466,6 +466,7 @@ export default {
             await this.getLastDocument();
             await this.getLastDocuments();
             this.printer = this.$areaPrinter;
+            console.log(this.config)
             // await this.getPrinter();
         },
         close() {

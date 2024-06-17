@@ -11,46 +11,94 @@
                             </li>
                             <li class="breadcrumb-item active">
                                 <span class="text-muted"
-                                    >Tarea Programadas</span
-                                >
+                                    >Tarea Programadas
+                                </span>
                             </li>
                         </ol>
                     </div>
-                    <div
-                        class="col-12 col-md-6 d-flex align-items-start justify-content-end"
-                    >
-                        <!-- Contact Button Start -->
-                        <button
-                            type="button"
-                            class="btn btn-outline-primary btn-icon btn-icon-start w-100 w-md-auto"
-                            @click.prevent="clickCreate()"
-                        >
-                            <i class="icofont-plus-circle"></i>
-                            <span>Nuevo</span>
-                        </button>
-                        <!-- Contact Button End -->
-                    </div>
+                    
                 </div>
             </div>
         </div>
 
         <div class="card">
             <div class="card-header bg-primary">
-                <h6 class="my-0 text-white">Tareas programadas</h6>
+                <h4 class="my-0 text-white">
+                    <i class="fas fa-tasks fa-lg" style="margin-right: 10px;"></i>
+                     Tareas Programadas
+                </h4>
             </div>
+            <div class="data-table-visible-columns">
+                    <el-button type="primary" 
+                                class="" 
+                                href="javascript:void(0)" 
+                                @click.prevent="clickCreate()">
+                                <i class="fas fa-tasks fa-lg" style="margin-right: 10px;"></i>
+                            <i class="fa fa-plus"></i>
+                            Nueva Tarea
+                    </el-button>
+            </div> 
+
             <div class="card-body">
                 <template>
                     <el-table :data="tableData" style="width: 100%">
+                        <el-table-column
+                            prop="class"
+                        >
+                            <template v-slot:header>
+                                <span style="background-color: #073f68; color: white; display: block; padding: 8px;">Clase</span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                            prop="execution_time"
+                        >
+                            <template v-slot:header>
+                                <span style="background-color: #073f68; color: white; display: block; padding: 8px;">Hora de Ejecución</span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                            prop="updated_at"
+                        >
+                            <template v-slot:header>
+                                <span style="background-color: #073f68; color: white; display: block; padding: 8px;">Última Ejecución</span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                            prop="output"
+                        >
+                            <template v-slot:header>
+                                <span style="background-color: #073f68; color: white; display: block; padding: 8px;">Log</span>
+                            </template>
+                        </el-table-column>
+                        <el-table-column
+                            fixed="right"
+                            width="120"
+                        >
+                            <template v-slot:header>
+                                <span style="background-color: #073f68; color: white; display: block; padding: 8px;">Acciones</span>
+                            </template>
+                            <template slot-scope="scope">
+                                <el-button
+                                    block
+                                    size="mini"
+                                    type="danger"
+                                    @click="handleDelete(scope.$index, scope.row)"
+                                >Eliminar</el-button>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+
+                    <!-- <el-table :data="tableData" style="width: 100%">
                         <el-table-column
                             label="Clase"
                             prop="class"
                         ></el-table-column>
                         <el-table-column
-                            label="Hora de ejecución"
+                            label="Hora de Ejecución"
                             prop="execution_time"
                         ></el-table-column>
                         <el-table-column
-                            label="Ultima ejecución"
+                            label="Ultima Ejecución"
                             prop="updated_at"
                         ></el-table-column>
                         <el-table-column
@@ -74,7 +122,7 @@
                                 >
                             </template>
                         </el-table-column>
-                    </el-table>
+                    </el-table> -->
                 </template>
             </div>
             <tenant-tasks-form
