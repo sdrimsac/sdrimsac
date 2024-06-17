@@ -201,10 +201,7 @@ class SaleNote extends ModelTenant
     {
         return $this->belongsTo(Person::class, 'customer_id');
     }
-    public function orden()
-    {
-        return $this->belongsTo(Orden::class);
-    }
+ 
     public function creditPayments()
     {
         return $this->hasMany(Payment::class);

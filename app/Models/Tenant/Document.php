@@ -176,7 +176,7 @@ class Document extends ModelTenant
       
     }
 
-
+  
   public function comercial_treatment(){
     return $this->belongsTo(CommercialTreatment::class);
   }
