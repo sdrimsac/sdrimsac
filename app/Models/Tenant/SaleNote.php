@@ -8,6 +8,7 @@ use App\Traits\RegisterMovementTrait;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use Modules\Restaurant\Models\Orden;
 
 class SaleNote extends ModelTenant
 
@@ -163,6 +164,7 @@ class SaleNote extends ModelTenant
 
         return $penalty_amount;
     }
+    
     public function boxes()
     {
         return $this->hasMany(Box::class);
@@ -195,6 +197,10 @@ class SaleNote extends ModelTenant
     public function customer()
     {
         return $this->belongsTo(Person::class, 'customer_id');
+    }
+    public function orden()
+    {
+        return $this->belongsTo(Orden::class);
     }
     public function creditPayments()
     {

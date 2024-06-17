@@ -11,6 +11,7 @@ use Hyn\Tenancy\Traits\UsesTenantConnection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Modules\BusinessTurn\Models\DocumentHotel;
+use Modules\Restaurant\Models\Orden;
 
 //use Modules\BusinessTurn\Models\DocumentHotel;
 //use Modules\BusinessTurn\Models\DocumentTransport;
@@ -106,6 +107,7 @@ class Document extends ModelTenant
         'afectar_caja',
         'payment',
         'dispatch_id',
+        'ref'
   
     ];
 
@@ -215,8 +217,10 @@ class Document extends ModelTenant
     {
         return (is_null($value)) ? null : (object) json_decode($value);
     }
-
-
+    public function orden()
+    {
+        return $this->belongsTo(Orden::class);
+    }
     public function setEstablishmentAttribute($value)
     {
         $this->attributes['establishment'] = (is_null($value)) ? null : json_encode($value);

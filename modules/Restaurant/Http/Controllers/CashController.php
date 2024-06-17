@@ -1038,7 +1038,7 @@ class CashController extends Controller
         return compact('printer');
     }
 
-    function get_items_from_box($cash_id)
+    /* function get_items_from_box($cash_id)
     {
         $boxes = Box::where('cash_id', $cash_id)->get();
         $all_items = [];
@@ -1140,7 +1140,150 @@ class CashController extends Controller
             "documents" => $all_documents,
             "documents_info" => $documents,
         ];
+    } */
+
+    function get_items_from_box($cash_id)
+    {
+        $boxes = Box::where('cash_id', $cash_id)->get();
+        $all_items = [];
+        $all_documents = [
+            "facturas" => 0,
+            "boletas" => 0,
+            "notas" => 0,
+        ];
+        $totalCategory = 0;
+        $documents = [];
+        $categories = [];
+        $grouped = []; // Inicializa el array para agrupar
+
+        foreach ($boxes as $box) {
+            if ($box->document_id) {
+                $document = Document::find($box->document_id);
+                $name_document = $document->getNumberFullAttribute();
+                $column = array_column($documents, 'name');
+                if (!in_array($name_document, $column)) {
+                    if ($document != null) {
+                        if ($document->document_type_id == '03') {
+                            $all_documents["boletas"] += $document->total;
+                        } else {
+                            $all_documents["facturas"] += $document->total;
+                        }
+                        $documents[] = [
+                            "name" => $document->getNumberFullAttribute(),
+                            "total" => $document->total,
+                        ];
+                        $items = $document->items;
+                        foreach ($items as $item) {
+                            $item_db = Item::find($item->item_id);
+                            if ($item_db->category) {
+                                $category_name = $item_db->category->name;
+                            } else {
+                                $category_name = 'Sin categoría';
+                            }
+
+                            // Verificar si el producto ya existe en el grupo
+                            if (!isset($grouped[$category_name])) {
+                                $grouped[$category_name] = [];
+                            }
+
+                            $found = false;
+                            foreach ($grouped[$category_name] as &$grouped_item) {
+                                if ($grouped_item['description'] == $item_db->description) {
+                                    $grouped_item['quantity'] += $item->quantity;
+                                    $grouped_item['total'] += $item->total;
+                                    $found = true;
+                                    break;
+                                }
+                            }
+                            if (!$found) {
+                                $grouped[$category_name][] = [
+                                    "price" => $item->unit_price,
+                                    "description" => $item_db->description,
+                                    "quantity" => $item->quantity,
+                                    "total" => $item->total
+                                ];
+                            }
+
+                            // Actualizar el total de la categoría
+                            if (array_key_exists($category_name, $categories)) {
+                                $categories[$category_name] += $item->total;
+                            } else {
+                                $categories[$category_name] = $item->total;
+                            }
+                        }
+                    }
+                }
+            }
+            if ($box->sale_note_id) {
+                $sale_note = SaleNote::find($box->sale_note_id);
+                $name_sale_note = $sale_note->getNumberFullAttribute();
+                $column = array_column($documents, 'name');
+                if (!in_array($name_sale_note, $column)) {
+                    $documents[] = [
+                        "name" => $sale_note->getNumberFullAttribute(),
+                        "total" => $sale_note->total,
+                    ];
+
+                    $items = SaleNoteItem::where("sale_note_id", $box->sale_note_id)->get();
+                    foreach ($items as $item) {
+
+                        $item_db = Item::find($item->item_id);
+                        if ($item_db->category) {
+                            $category_name = $item_db->category->name;
+                        } else {
+                            $category_name = 'Sin categoría';
+                        }
+
+                        // Verificar si el producto ya existe en el grupo
+                        if (!isset($grouped[$category_name])) {
+                            $grouped[$category_name] = [];
+                        }
+
+                        $found = false;
+                        foreach ($grouped[$category_name] as &$grouped_item) {
+                            if ($grouped_item['description'] == $item_db->description) {
+                                $grouped_item['quantity'] += $item->quantity;
+                                $grouped_item['total'] += $item->total;
+                                $found = true;
+                                break;
+                            }
+                        }
+                        if (!$found) {
+                            $grouped[$category_name][] = [
+                                "price" => $item->unit_price,
+                                "description" => $item_db->description,
+                                "quantity" => $item->quantity,
+                                "total" => $item->total
+                            ];
+                        }
+
+                        // Actualizar el total de la categoría
+                        if (array_key_exists($category_name, $categories)) {
+                            $categories[$category_name] += $item->total;
+                        } else {
+                            $categories[$category_name] = $item->total;
+                        }
+
+                        $all_documents["notas"] += $item->total;
+                    }
+                }
+            }
+        }
+
+        // Calcular el total de todas las categorías
+        $totalCategory = array_sum($categories);
+
+        return [
+            "grouped" => $grouped, // Retornar el array agrupado
+            "categories" => $categories,
+            "items" => $all_items,
+            "documents" => $all_documents,
+            "documents_info" => $documents,
+            "totalCategory" => $totalCategory,
+        ];
     }
+    /*  */
+
     public function print_report(Request $request)
     {
         $cash_id = $request->cash_id;
@@ -1229,6 +1372,9 @@ class CashController extends Controller
         $user = User::find($cash->user_id);
         //    $establishment =  auth()->user()->establishment;
         $info = $this->get_items_from_box($cash_id);
+        $grouped = $info['grouped'];
+        $categories = $info['categories'];
+        $totalCategory = $info['totalCategory'];
         $items = $info['items'];
         $documents = $info['documents'];
         $documents_info = $info['documents_info'];
@@ -1351,8 +1497,10 @@ class CashController extends Controller
         // $quantity_receipts = count($receipts);
         $total_receipts = $receipts->sum('amount');
         $documents["recibos"] = $total_receipts;
+        $configuration = Configuration::first();
         try {
             $pdf = PDF::loadView('restaurant::cash.ticket_cash', compact(
+                "configuration",
                 'user',
                 'establishment',
                 "total_coins_virtual",
@@ -1366,6 +1514,9 @@ class CashController extends Controller
                 "incomes_expenses_cash",
                 "documents",
                 "documents_info",
+                "categories",
+                "totalCategory",
+                "grouped",
                 "cash",
                 "date",
                 "time",

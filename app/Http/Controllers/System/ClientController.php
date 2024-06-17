@@ -239,20 +239,20 @@ class ClientController extends Controller
 
     public function records(Request $request)
     {
-        if ($request->has('column') && $request->has('value') && $request->column && $request->value) {
-            $column = $request->column;
-            $value  = $request->value;
-            if ($column == 'hostname') {
-                $records = Client::whereHas('hostname', function ($query) use ($value) {
-                    $query->where('fqdn', 'like', "%{$value}%");
-                })->latest();
-            } else {
-                $records = Client::where($request->column, 'like', "%{$request->value}%")
-                    ->latest();
-            }
-        } else {
-            $records = Client::latest();
+        $query = Client::query();
+
+        if ($request->has('column') && $request->column === 'name' && $request->has('value') && $request->value) {
+            $query->where('name', 'like', "%{$request->value}%");
         }
+        if ($request->has('column') && $request->column === 'hostnames' && $request->has('value') && $request->value) {
+            $query->whereHas('hostnames', function ($q) use ($request) {
+                $q->where('fqdn', 'like', "%{$request->value}%");
+            });
+        }
+
+        $records = $query->latest()->paginate(config('tenant.client_per_page'));
+
+        $totalClients = $query->count();
 
         foreach ($records as $row) {
             $tenancy = app(Environment::class);
@@ -309,7 +309,13 @@ class ClientController extends Controller
             $row->quantity_establishments = $this->getQuantityRecordsFromTable('establishments');
         }
 
-        return new ClientCollection($records->paginate(config('tenant.items_per_page')));
+        $clientCollection = new ClientCollection($records);
+
+        $clientCollection->additional([
+            'totalClients' => $totalClients
+        ]);
+
+        return $clientCollection;
     }
 
 

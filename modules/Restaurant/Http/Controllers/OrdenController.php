@@ -116,7 +116,14 @@ class OrdenController extends Controller
 
 
         // event(new PrintEvent($result->id, $result->document_type_id, true, 0));
-        return compact('document');
+        /* return compact('document'); */
+        return [
+            'success' => true,
+            'document' => $document,
+            'result' => $result,
+        ];
+
+
     }
     public function printTicket(Request $request)
     {

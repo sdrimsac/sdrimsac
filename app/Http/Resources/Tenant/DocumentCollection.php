@@ -6,6 +6,7 @@ use App\Models\Tenant\Box;
 use App\Models\Tenant\Configuration;
 use App\Models\Tenant\DocumentPayment;
 use Illuminate\Http\Resources\Json\ResourceCollection;
+use Modules\Restaurant\Models\Orden;
 
 class DocumentCollection extends ResourceCollection
 {
@@ -116,7 +117,22 @@ class DocumentCollection extends ResourceCollection
                     "number" => $sale_note->getNumberFullAttribute(),
                 ];
             });
+
+            $orden = Orden::where('document_id', $row->id)->first();
+            $ordens_ref = $orden ? $orden->ref : null;
+
+            $table_number = null;
+            $orden = $row->orden;
+            if ($orden) {
+                $table = $orden->mesa;
+                if ($table) {
+                    $table_number = $table->number;
+                }
+            }
+
             return [
+                'ordens_ref' => $ordens_ref,
+                'table_number' => $table_number,
                 'sale_note_related' => $sale_note_related,
                 'remain' => $remain,
                 'paid' => $paid,

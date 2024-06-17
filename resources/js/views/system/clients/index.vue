@@ -260,27 +260,27 @@
             <div class="card-body">
                 <data-table :resource="resource">
                     <tr slot="heading" class="bg-secondary">
-                        <th class="text-white">#</th>
-                        <th class="text-white text-center">Acciones</th>
-                        <th class="text-white text-center">Logo</th>
-                        <th class="text-white text-center">Bloquear cuenta</th>
-                        <th class="text-white text-center">Notificaciones</th>
-                        <th class="text-white">Último Registro</th>
-                        <th class="text-white">Hostname</th>
-                        <th class="text-white">Nombre</th>
-                        <th class="text-white">RUC</th>
+                        <th class="text-center border text-white"> #</th>
+                        <th class="text-white text-center border">Acciones</th>
+                        <th class="text-white text-center border">Logo</th>
+                        <th class="text-white text-center border">Bloquear cuenta</th>
+                        <th class="text-white text-center border">Notificaciones</th>
+                        <th class="text-white text-center border">Último Registro</th>
+                        <th class="text-white text-center border">Hostname</th>
+                        <th class="text-white text-center border">Nombre</th>
+                        <th class="text-white text-center border">RUC</th>
                         <!-- <th class="text-white text-right">Inicio Ciclo Facturacion</th> -->
                         <!-- <th class="text-white">Plan</th> -->
                         <!-- <th class="text-white">Correo</th> -->
-                        <th class="text-white">Entorno</th>
-                        <th class="text-white text-center">Total CPE</th>
+                        <th class="text-white text-center border">Entorno</th>
+                        <th class="text-white text-center border">Total CPE</th>
                         <!-- <th class="text-white text-center">CPE Ciclo Facturacion</th> -->
-                        <th class="text-white text-center">Usuarios</th>
-                        <th class="text-white text-center">Establecimientos</th>
-                        <th class="text-white text-center">Ventas (Mes)</th>
-                        <th class="text-white text-center">F.Creación</th>
-                        <th class="text-white text-center"> Consultas <br />API Peru</th>
-                        <th class="text-white text-center">Cant.NV</th>
+                        <th class="text-white text-center border">Usuarios</th>
+                        <th class="text-white text-center border">Establecimientos</th>
+                        <th class="text-white text-center border">Ventas (Mes)</th>
+                        <th class="text-white text-center border">F.Creación</th>
+                        <th class="text-white text-center border"> Consultas <br />API Peru</th>
+                        <th class="text-white text-center border">Cant.NV</th>
                         <!-- <th class="text-white text-center">CPE Y NV </th> -->
                     </tr>
 

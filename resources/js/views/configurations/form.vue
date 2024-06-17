@@ -2308,6 +2308,13 @@
                                             @change="submit"
                                         ></el-switch>
                                     </div>
+                                    <div class="col-md-3 mt-4">
+                                            <div class="form-group">
+                                                <label class="control-label w-100">Impresion de detalle de categorias - ticket caja
+                                                </label>
+                                                <el-switch v-model="form.configurable_impresion_ticket_categoria_caja" active-text="Si" inactive-text="No" @change="submit"></el-switch>
+                                            </div>
+                                    </div>
                                 </div>
                             </el-tab-pane>
                             <el-tab-pane label="Crédito NV" v-if="form.credits">

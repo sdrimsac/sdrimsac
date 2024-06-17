@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Config;
 class Configuration extends ModelTenant
 {
     protected $fillable = [
+        'configurable_impresion_ticket_categoria_caja',
         'print_payment_credit_sale_note',
         'change_price_product',
         'whatsapp_in_login',

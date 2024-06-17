@@ -128,6 +128,20 @@
                         ></small>
                     </div>
                 </div>
+                <div class="col-lg-4">
+                    <div
+                        class="form-group"
+                        :class="{ 'has-danger': errors.operation_type_id }"
+                    >
+                        <label class="control-label">Fecha </label>
+                        <el-input 
+                        v-model="document.date_of_issue"
+                        @change="changeOperationType"
+                        type="date">
+
+                        </el-input>
+                    </div>
+                </div>
                 <div class="col-lg-12" v-if="document.items.length > 0">
                     <div class="row mt-2">
                         <div class="col-md-12">

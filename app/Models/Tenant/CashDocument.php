@@ -15,7 +15,8 @@ class CashDocument extends ModelTenant
     protected $fillable = [
         'cash_id',
         'document_id',  
-        'sale_note_id',  
+        'sale_note_id',
+        'categories_id',  
         // 'purchase_id',  
         // 'expense_id',  
         'expense_payment_id',  

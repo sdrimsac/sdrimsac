@@ -58,7 +58,7 @@
 </table>
 <table class="full-width">
     <tr>
-        <td width="" class="pt-3"><p class="desc">F. Emisión:</p></td>
+        <td width="" class="pt-3"><p class="desc">F. Emisión: </p></td>
         <td width="" class="pt-3"><p class="desc">{{ $document->date_of_issue }}</p></td>
     </tr>
     <tr>
@@ -67,7 +67,7 @@
     </tr>
 
     <tr>
-        <td class="align-top"><p class="desc">Cliente:</p></td>
+        <td class="align-top"><p class="desc">Cliente: </p></td>
         <td><p class="desc">{{ $customer->name }}</p></td>
     </tr>
     <tr>

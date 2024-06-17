@@ -23,7 +23,8 @@ class Order extends ModelTenant
         'document',
         'status_order_id',
         'user_id',
-        'to_carry'
+        'to_carry',
+        'ref'
     ];
 
     protected $casts = [

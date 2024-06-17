@@ -5,9 +5,7 @@ use Illuminate\Http\Request;
 use App\Http\Resources\System\CompanyResource;
 use App\Models\System\Configuration;
 use App\Http\Requests\System\CompanyRequest;
-
-
-
+use App\Models\Tenant\SoapType;
 
 class CompanyController extends Controller
 {

@@ -12,6 +12,8 @@
                         <th>
                             Acciones
                         </th>
+                        <th
+                            v-if="configuration.restaurant && (type == 'documents'||type=='saleNotes')">N° Mesa Ref.</th>
                         <th>
                             Número
                         </th>
@@ -313,6 +315,7 @@
                                 </div>
                             </div>
                         </td>
+                        
                         <td
                             :class="
                                 `${(data.state_type_id == '11' ||
@@ -517,6 +520,17 @@
                                 </el-button>
                             </template>
                         </td>
+                        <td v-if="configuration.restaurant && (type == 'documents'||type=='saleNotes')">
+                            {{ data.table_number }}
+                            <br />
+                            <template>
+                                <small>
+                                    <span class="text-muted">
+                                        {{ data.ordens_ref }}
+                                    </span>
+                                </small>
+                            </template> 
+                        </td>
                         <td
                             :class="
                                 `${(data.state_type_id == '11' ||
@@ -547,6 +561,7 @@
                                 {{ data.time_of_issue }}
                             </small>
                         </td>
+                        
                         <td
                             :class="
                                 `${(data.state_type_id == '11' ||

@@ -8,6 +8,7 @@ use App\Models\Tenant\Configuration;
 use App\Models\Tenant\SaleNote;
 use App\Models\Tenant\SaleNotePayment;
 use Illuminate\Http\Resources\Json\ResourceCollection;
+use Modules\Restaurant\Models\Orden;
 
 class SaleNoteCollection extends ResourceCollection
 {
@@ -81,7 +82,21 @@ class SaleNoteCollection extends ResourceCollection
             if($row->advances > 0){
                 $pending = $row->total - $row->advances;
             }
+
+            $orden = Orden::where('sale_note_id', $row->id)->first();
+            $ordens_ref = $orden ? $orden->ref : null;
+
+            $table_number = null;
+            $orden = $row->orden;
+            if ($orden) {
+                $table = $orden->mesa;
+                if ($table) {
+                    $table_number = $table->number;
+                }
+            }
             return [
+                'ordens_ref' => $ordens_ref,
+                'table_number' => $table_number,
                 'credit_cash' => (bool) $row->credit_cash,
                 'from_consignment' => (bool) $row->from_consignment,
                 'pending' => $pending,

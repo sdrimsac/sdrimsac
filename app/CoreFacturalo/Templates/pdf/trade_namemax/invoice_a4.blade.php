@@ -37,12 +37,10 @@
         function getUnitType($id)
         {
             $unit_type = \App\Models\Tenant\Catalogs\UnitType::find($id);
-            return ($unit_type && $unit_type->symbol) ? $unit_type->symbol : $id;
-
+            return $unit_type && $unit_type->symbol ? $unit_type->symbol : $id;
         }
     }
-        
-    
+
 @endphp
 <html>
 
@@ -61,15 +59,7 @@
     @endif
     <table>
         <div
-            style="
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 0%;
-    left: 0%;
-    transform: translate(-50%, -50%);
-    text-align: center;
-">
+            style=" position: absolute; width: 100%; height: 100%; top: 0%; left: 0%; transform: translate(-50%, -50%); text-align: center;">
 
             {{-- @if ($company->backgroud_image_document)
                 <img src="data:{{ mime_content_type(public_path("storage/uploads/logos/{$company->backgroud_image_document}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/uploads/logos/{$company->backgroud_image_document}"))) }}"
@@ -77,7 +67,12 @@
             @endif --}}
         </div>
     </table>
-    <div>
+    <div
+        style="
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;">
         {{-- <div id="contenedor" class="clearfix">
             <div class="border_round text-center" id="lateral">
                 <table class="full-width text-center">
@@ -179,12 +174,10 @@
                             <div style="width: 100%; height: 20px;">
                                 @if ($stablishment->document_logo)
                                     <img src="data:{{ mime_content_type(public_path("storage/uploads/logos/{$stablishment->document_logo}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/uploads/logos/{$stablishment->document_logo}"))) }}"
-                                        alt="{{ $company->trade_name }}" class="company_logo"
-                                        >
+                                        alt="{{ $company->trade_name }}" class="company_logo">
                                 @else
                                     <img src="data:{{ mime_content_type(public_path("storage/uploads/logos/{$stablishment->logo}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/uploads/logos/{$stablishment->logo}"))) }}"
-                                        alt="{{ $company->trade_name }}" class="company_logo"
-                                        >
+                                        alt="{{ $company->trade_name }}" class="company_logo">
                                 @endif
                             </div>
                         @else
@@ -194,12 +187,10 @@
                                         <div>
                                             @if ($company->document_logo)
                                                 <img src="data:{{ mime_content_type(public_path("storage/uploads/logos/{$company->document_logo}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/uploads/logos/{$company->document_logo}"))) }}"
-                                                    alt="{{ $company->trade_name }}" 
-                                                    style="height:70px; width:100%; ">
+                                                    alt="{{ $company->trade_name }}" style="height:70px; width:100%; ">
                                             @else
                                                 <img src="data:{{ mime_content_type(public_path("storage/uploads/logos/{$company->logo}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/uploads/logos/{$company->logo}"))) }}"
-                                                    alt="{{ $company->trade_name }}" 
-                                                    style="height:70px; width:100%; ">
+                                                    alt="{{ $company->trade_name }}" style="height:70px; width:100%; ">
                                             @endif
                                         </div>
                                     </div>
@@ -213,17 +204,17 @@
                         @endif
                     @else
                     @endif
-                
+
                     {{-- <div>
                         Don. Fiscal:{{ $establishment->address !== '-' ? $establishment->address . ',' : '' }}
                         {{ $establishment->district_id !== '-' ? '' . $establishment->district->description : '' }}
                         {{ $establishment->province_id !== '-' ? ', ' . $establishment->province->description : '' }}
                         {{ $establishment->department_id !== '-' ? '- ' . $establishment->department->description : '' }}
                     </div> --}}
-                
+
                     <div style="text-align: center;">
                         <div>{{ $establishment->telephone !== '-' ? 'Cel.:' . $establishment->telephone : '' }} /
-                            {{ $establishment->email !== '-' ?  $establishment->email : '' }} </div>
+                            {{ $establishment->email !== '-' ? $establishment->email : '' }} </div>
                         <div class="font-bold">{{ $company->eslogan }}</div>
                         @isset($establishment->web_address)
                             <div>{{ $establishment->web_address !== '-' ? 'Web: ' . $establishment->web_address : '' }}
@@ -233,7 +224,7 @@
                 </div>
             </div>
             <div style="width: 40%; float: left;">
-                <div class="border_round text-center" >
+                <div class="border_round text-center">
                     <table class="full-width text-center">
                         <tr>
                             <td class="borde">
@@ -242,7 +233,8 @@
                         </tr>
                         <tr>
                             <td class="borde">
-                                <h5 class="text-center font-bold"><b>{{ $document->document_type->description }}</b></h5>
+                                <h5 class="text-center font-bold"><b>{{ $document->document_type->description }}</b>
+                                </h5>
                             </td>
                         </tr>
                         <tr>
@@ -433,12 +425,12 @@
 
             </table>
         </div>
-
-
-
-
         <!-- AQUI ENPIEZA LA TABLA  -->
-        <div class="">
+        <div class=""
+            style="min-height: 100vh;
+                            display: flex;
+                            flex-direction: column;
+                            justify-content: space-between;">
             <table border="0" class="full-width bordes_datos_clientes">
                 <thead class="">
                     <tr class="bg-grey">
@@ -494,7 +486,7 @@
                                     @if (isset($row->item->color_size))
                                         @foreach ($row->item->color_size as $color_size)
                                             <br />{!! '<strong>Color: </strong>' . $color_size->color !!} {!! ' <strong>Talla:</strong>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        ' .
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            ' .
                                                 $color_size->size !!} <strong>-
                                                 Cant:</strong> {{ $color_size->quantity }}
                                         @endforeach
@@ -523,7 +515,6 @@
                                     @endforeach
                                 @endif
 
-
                             </td>
                             <td class="text-center align-top bordes">
                                 {{ getUnitType(isset($row->item->has_unit_type) ? 'NIU' : $row->item->unit_type_id) }}
@@ -539,9 +530,6 @@
                                     @endif
                                 @endif
                             </td>
-
-
-
 
                             <td class="text-center align-top bordes">
 
@@ -597,6 +585,24 @@
                             </tr>
                         @endforeach
                     @endif
+                    @php
+                        $totalRows =
+                            count($document->items) +
+                            (isset($document->prepayments) ? count($document->prepayments) : 0);
+                        $emptyRows = 20 - $totalRows;
+                    @endphp
+                    @for ($i = 0; $i < $emptyRows; $i++)
+                        <tr class="empty-row">
+                            <td class="text-center align-top bordes desc-14">&nbsp;</td>
+                            <td class="text-center align-top bordes desc-14">&nbsp;</td>
+                            <td class="text-center align-top bordes desc-14">&nbsp;</td>
+                            <td class="text-center align-top bordes desc-14">&nbsp;</td>
+                            <td class="text-center align-top bordes desc-14">&nbsp;</td>
+                            <td class="text-center align-top bordes desc-14">&nbsp;</td>
+                            <td class="text-center align-top bordes desc-14">&nbsp;</td>
+                            <td class="text-center align-top bordes desc-14">&nbsp;</td>
+                        </tr>
+                    @endfor
                 </tbody>
             </table>
         </div>
@@ -676,170 +682,25 @@
         <table class="full-width" valign="top">
             <tr>
                 <td width="70%" valign="top">
-                    @if($company->account_img_trade_name_max)
-                    <img src="data:{{ mime_content_type(public_path("storage/uploads/logos/{$company->account_img_trade_name_max}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/uploads/logos/{$company->account_img_trade_name_max}"))) }}"
-                    alt="{{ $company->trade_name }}"
-                    style="width: 500px;height:140px; ">
-                    
-                                        @endif
-                    {{-- <table class="full-width bordes_impuesto"> --}}
-
-                        {{-- @php
-                            $has_last_empty_bank = false;
-                            $currencies = array_map(function ($bank) {
-                                return $bank['currency_type_id'];
-                            }, $accounts->toArray());
-                            $currencies_unique = array_unique($currencies);
-                            $bank_array = $accounts->toArray();
-                            $all_banks = [];
-                            foreach ($currencies_unique as $currency) {
-                                $tmp = array_filter($bank_array, function ($bk) use ($currency) {
-                                    return $bk['currency_type_id'] == $currency;
-                                });
-
-                                $all_banks[] = $tmp;
-                            }
-                            $last_key = array_key_last($all_banks);
-                            $count_key = count($all_banks[$last_key]);
-                            $has_last_empty_bank = $count_key % 2 !== 0;
-                        @endphp
-
-                        @foreach ($all_banks as $idxg => $current_currency)
-                            @php
-                                $chunks = array_chunk($current_currency, 2);
-                            @endphp
-                            @foreach ($chunks as $idx => $account_currency)
-                                @php
-                                    $currency_type =
-                                        $account_currency[0]['currency_type_id'] == 'PEN' ? 'SOLES' : 'DOLARES';
-                                    $isLastChunk = $idx === count($chunks) - 1;
-                                    $chunkSize = count($account_currency);
-                                @endphp
-                                <tr>
-                                    <td colspan="3">
-                                        <table class="full-width">
-                                            <tr>
-                                                <td width="200px" height="30px"
-                                                    class="font-sm border-top-bottom text-center py-2 bordes  text-left">
-                                                    BANCO</td>
-                                                @if (isset($account_currency[0]['bank']['image']) && $account_currency[0]['bank']['image'] != null)
-                                                    <td width="200px"
-                                                        class="font-sm border-top-bottom text-center py-2 bordes  text-left"
-                                                        style="padding:0px;">
-                                                        @php
-                                                            $bank_image = public_path(
-                                                                "/storage/banks/{$account_currency[0]['bank']['image']}",
-                                                            );
-                                                        @endphp
-                                                        <img src="data:{{ mime_content_type("{$bank_image}") }};base64, {{ base64_encode(file_get_contents("{$bank_image}")) }}"
-                                                            height="30px" width="200px" />
-
-                                                    </td>
-                                                @else
-                                                    <td width="200px"
-                                                        class="font-sm border-top-bottom text-center py-2 bordes  text-left">
-                                                        {{ $account_currency[0]['description'] }}
-                                                    </td>
-                                                @endif
-
-
-
-                                                @if ($isLastChunk && $chunkSize == 1 && $last_key == $idxg)
-                                                    @php
-                                                        $has_last_empty_bank = true;
-                                                    @endphp
-                                                    <td rowspan="3"
-                                                        class="font-sm border-top-bottom text-center py-2 bordes  text-center">
-                                                        <img src="data:image/png;base64, {{ $document->qr }}"
-                                                            style="margin-right: -10px; padding: 10px;" width="90px"
-                                                            height="90px" />
-
-                                                    </td>
-                                                @else
-                                                    @if (isset($account_currency[1]['bank']['image']) && $account_currency[1]['bank']['image'] != null)
-                                                        <td width="200px"
-                                                            class="font-sm border-top-bottom text-center py-2 bordes  text-left"
-                                                            style="padding:0px;">
-                                                            @php
-                                                                $bank_image = public_path(
-                                                                    "/storage/banks/{$account_currency[1]['bank']['image']}",
-                                                                );
-                                                            @endphp
-                                                            <img src="data:{{ mime_content_type("{$bank_image}") }};base64, {{ base64_encode(file_get_contents("{$bank_image}")) }}"
-                                                                height="30px" width="200px" />
-
-                                                        </td>
-                                                    @else
-                                                        <td width="200px"
-                                                            class="font-sm border-top-bottom text-center py-2 bordes  text-left">
-                                                            @isset($account_currency[1])
-                                                            {{ $account_currency[1]['description'] }}
-                                                            @endisset   
-                                                        </td>
-                                                    @endif
-                                                @endif
-
-
-                                            </tr>
-                                            <tr>
-                                                <td
-                                                    class="font-sm border-top-bottom text-center py-2 bordes  text-left">
-                                                    CTA CTE {{ $currency_type }} </td>
-                                                <td
-                                                    class="font-sm border-top-bottom text-center py-2 bordes  text-left">
-                                                    {{ $account_currency[0]['number'] }}
-                                                </td>
-                                                @if ($isLastChunk && $chunkSize == 1 && $last_key == $idxg)
-                                                @else
-                                                    <td
-                                                        class="font-sm border-top-bottom text-center py-2 bordes  text-left">
-                                                        @isset($account_currency[1])
-                                                            {{ $account_currency[1]['number'] }}
-                                                        @endisset
-                                                    </td>
-                                                @endif
-
-                                            </tr>
-                                            <tr>
-                                                <td
-                                                    class="font-sm border-top-bottom text-center py-2 bordes  text-left">
-                                                    CTA CTE {{ $currency_type }} CCI</td>
-                                                <td
-                                                    class="font-sm border-top-bottom text-center py-2 bordes  text-left">
-                                                    {{ $account_currency[0]['cci'] }}
-                                                </td>
-
-                                                @if ($isLastChunk && $chunkSize == 1 && $last_key == $idxg)
-                                                @else
-                                                    <td
-                                                        class="font-sm border-top-bottom text-center py-2 bordes  text-left">
-                                                        @isset($account_currency[1])
-                                                            {{ $account_currency[1]['cci'] }}
-                                                        @endisset
-                                                    </td>
-                                                @endif
-                                            </tr>
-                                        </table>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        @endforeach
-
-                        @if (!$has_last_empty_bank)
-                            <tr>
-                                <td colspan="3" class="font-sm border-top-bottom text-center py-2 bordes">
-                                    <img src="data:image/png;base64, {{ $document->qr }}"
-                                        style="margin-right: -10px; padding: 10px;" width="90px" height="90px" />
-
-
-                                </td>
-                            </tr>
-                        @endif --}}
-
-                    {{-- </table> --}}
-                </td>
-
-
+                    @if ($company->account_img_trade_name_max)
+                        <img src="data:{{ mime_content_type(public_path("storage/uploads/logos/{$company->account_img_trade_name_max}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/uploads/logos/{$company->account_img_trade_name_max}"))) }}"
+                            alt="{{ $company->trade_name }}" style="width: 500px;height:100px;">
+                    @endif
+                    <table style="margin-top: 1px;">
+                        <tr>
+                            <td valign="top">
+                                @if ($company->file_nuevo_dolares_img)
+                                    <img src="data:{{ mime_content_type(public_path("storage/uploads/logos/{$company->file_nuevo_dolares_img}")) }};base64, {{ base64_encode(file_get_contents(public_path("storage/uploads/logos/{$company->file_nuevo_dolares_img}"))) }}"
+                                        alt="{{ $company->trade_name }}" style="width: 315px;height:80px;">
+                                @endif
+                            </td>
+                            <td valign="top" style="text-align: center;">
+                                <img src="data:image/png;base64, {{ $document->qr }}"
+                                    style="margin-left: 40px; padding: 2px;" width="90px" height="90px" />
+                            </td>
+                        </tr>
+                    </table>
+                </td>               
                 <td width="30%" valign="top">
                     <table class="full-width bordes_impuesto">
                         @if ($document->total_exportation > 0)
@@ -1018,14 +879,6 @@
                     </table>
                     <!-- </div> -->
                 </td>
-            <tr>
-                <!-- <tr>
-                        <td width="30%">
-                        <img src="data:image/png;base64, {{ $document->qr }}" style="margin-right: -10px;" />
-                        <p style="font-size: 9px">Código Hash: {{ $document->hash }}</p>
-                        </td>
-                    </tr> -->
-            </tr>
         </table>
     </div>
 
@@ -1087,7 +940,7 @@
         </tr>
 @endif
 
-    </table> -->
+            </table> -->
     @endif
 </body>
 
