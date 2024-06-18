@@ -272,9 +272,7 @@ class ReportCreditController extends Controller
         // Filtrar por fechas
         if ($params->date_start && $params->date_end) {
             $records = $records->whereHas('sale_note', function ($query) use ($params) {
-                $query->whereBetween('date_of_issue', [$params->date_start, $params->date_end])
-                    ->where('status', '!=', 'R')
-                    ->where('state_type_id', '!=', '11');
+                $query->whereBetween('date_of_issue', [$params->date_start, $params->date_end]);
             });
         }
 
@@ -282,7 +280,9 @@ class ReportCreditController extends Controller
         if ($type != null) {
             if ($type == 'is_product') {
                 $records = $records->whereHas('sale_note', function ($query) {
-                    $query->where('is_product', true);
+                    $query->where('is_product', true)
+                        ->where('status','<>', 'R')
+                        ->where('state_type_id', '!=', 11);
                 });
             }
             if ($type == 'is_cash') {
