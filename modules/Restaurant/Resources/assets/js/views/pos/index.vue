@@ -2286,18 +2286,7 @@ export default {
                     icon: "fas fa-print ",
                     visible: true && !this.isSeller 
                 },
-                /* {
-                    id: 2,
-                    title: ["Abrir", "cajon"],
-                    icon: "fas fa-cash-register",
-                    visible: true
-                }, */
-                // {
-                //     id: 3,
-                //     title: ["Reabrir", "tickets"],
-                //     icon: "fas fa-folder-open",
-                //     visible: true
-                // },
+             
                 {
                     id: 3,
                     title: ["Productos"],
