@@ -272,7 +272,9 @@ class ReportCreditController extends Controller
         // Filtrar por fechas
         if ($params->date_start && $params->date_end) {
             $records = $records->whereHas('sale_note', function ($query) use ($params) {
-                $query->whereBetween('date_of_issue', [$params->date_start, $params->date_end]);
+                $query->whereBetween('date_of_issue', [$params->date_start, $params->date_end])
+                    ->where('status', '!=', 'R')
+                    ->where('state_type_id', '!=', '11');
             });
         }
 
@@ -291,7 +293,7 @@ class ReportCreditController extends Controller
         }
 
         $records = $records->get()->groupBy(function ($saleNoteItem) {
-            return $saleNoteItem->sale_note->total . '|' . $saleNoteItem->sale_note->type_payment . '|' . $saleNoteItem->sale_note->creditPayments->first()->tasa . '|' . $saleNoteItem->item->purchase_unit_price .'|'.$saleNoteItem->sale_note->advances;
+            return $saleNoteItem->sale_note->total . '|' . $saleNoteItem->sale_note->type_payment . '|' . $saleNoteItem->sale_note->creditPayments->first()->tasa . '|' . $saleNoteItem->item->purchase_unit_price . '|' . $saleNoteItem->sale_note->advances;
         })->map(function ($group) {
             $total_penalties = $group->sum(function ($saleNoteItem) {
                 $saleNote = $saleNoteItem->sale_note;
@@ -346,7 +348,9 @@ class ReportCreditController extends Controller
 
         // Filtrar por fechas
         if ($params->date_start && $params->date_end) {
-            $records = $records->whereBetween('date_of_issue', [$params->date_start, $params->date_end]);
+            $records = $records->whereBetween('date_of_issue', [$params->date_start, $params->date_end])
+                ->where('status', '!=', 'R')
+                ->where('state_type_id', '!=', '11');
         }
 
         // Filtrar por tipo de crédito
@@ -360,7 +364,7 @@ class ReportCreditController extends Controller
         }
 
         $records = $records->orderBy('date_of_issue', 'desc')->get()->groupBy(function ($saleNote) {
-            return $saleNote->total . '|' . $saleNote->type_payment . '|' . $saleNote->creditPayments->first()->tasa .'|'.$saleNote->advances;
+            return $saleNote->total . '|' . $saleNote->type_payment . '|' . $saleNote->creditPayments->first()->tasa . '|' . $saleNote->advances;
         })->map(function ($group) {
             $total_penalties = $group->sum(function ($saleNote) {
                 return $saleNote->creditPayments
