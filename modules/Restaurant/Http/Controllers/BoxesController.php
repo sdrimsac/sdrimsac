@@ -1648,13 +1648,17 @@ class BoxesController extends Controller
                         $deliveries[] = $coin;
                     }
                 }
-                if ($sale_note->total > $ringreso["amount"]) {
+                if ($ringreso["sale_note_payment_id"]) {
                     $sales_cash_sum += $ringreso["amount"];
                 } else {
-                    $sales_cash_sum += $sale_note->total;
-                }
-                if ($sale_note->total_discount) {
-                    $total_discount += $sale_note->total_discount;
+                    if ($sale_note->total > $ringreso["amount"]) {
+                        $sales_cash_sum += $ringreso["amount"];
+                    } else {
+                        $sales_cash_sum += $sale_note->total;
+                    }
+                    if ($sale_note->total_discount) {
+                        $total_discount += $sale_note->total_discount;
+                    }
                 }
             }
             if ($ringreso["document_id"]) {

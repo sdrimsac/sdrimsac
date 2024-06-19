@@ -15,6 +15,7 @@ class ConfigurationResource extends JsonResource
     public function toArray($request)
     {
         return [
+            'pass_final_balance_cash_principal' => (bool) $this->pass_final_balance_cash_principal,
             'configurable_impresion_ticket_categoria_caja' => (bool) $this->configurable_impresion_ticket_categoria_caja,
             'print_payment_credit_sale_note' => (bool) $this->print_payment_credit_sale_note,
             'change_price_product' => (bool) $this->change_price_product,
@@ -151,7 +152,7 @@ class ConfigurationResource extends JsonResource
             'reference_ticket' => (bool) $this->reference_ticket,
             'toll' => (bool) $this->toll,
             'promotions_sell' => (bool) $this->promotions_sell,
-            'promotions_cant_purchase' => (bool) $this->promotions_cant_purchase,
+            'promotions_cant_purchase' => $this->promotions_cant_purchase,
             "dispatch" => (bool) $this->dispatch,
             "quotation" => (bool) $this->quotation,
             'credit_mode' => (bool) $this->credit_mode,

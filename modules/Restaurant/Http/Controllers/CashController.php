@@ -1680,6 +1680,21 @@ class CashController extends Controller
         return compact('users', 'configuration', 'user', 'turnsTable');
     }
 
+    public function final_balance_last_principal(){
+        $user_id = auth()->user()->id;
+        $cash = Cash::where('principal', true)->where('state', 0)->where('user_id', $user_id)->latest()->first();
+        $balance = 0;
+        if($cash){
+            $cash_id = $cash->id;
+            $request = new Request();
+            $request->merge(['cash_id' => $cash_id,'only_cash'=>1]);
+            $balance = (new PosController)->total_sales($request);
+        }
+        return [
+            'success' => true,
+            'balance' => $balance
+        ];
+    }
     public function opening_cash()
     {
 

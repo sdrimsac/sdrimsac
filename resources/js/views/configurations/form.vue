@@ -13,7 +13,11 @@
                 <div id="app" class="custom-tabs">
                     <el-tabs v-model="activeTab" type="border-card">
                         <!-- Configuracion si es Arca -->
-                        <el-tab-pane label="Visual Hotel" v-if="isArca">
+                        <el-tab-pane
+                            label="Visual Hotel"
+                            v-if="isArca"
+                            name="hotel"
+                        >
                             <div class="row">
                                 <template v-if="form.hotels">
                                     <div class="col-md-3 mt-4">
@@ -117,7 +121,7 @@
                             </div>
                         </el-tab-pane>
 
-                        <el-tab-pane v-if="!isArca">
+                        <el-tab-pane v-if="!isArca" name="configuration">
                             <template #label>
                                 <div class="tab-label">
                                     <i class="fa fa-cogs tab-icon"></i>
@@ -128,7 +132,10 @@
                             </template>
                             <div class="tab-content">
                                 <!-- Tabs anidados dentro del tab de "Configuracion de entorno" -->
-                                <el-tabs type="card">
+                                <el-tabs
+                                    type="card"
+                                    v-model="activeTabConfiguration"
+                                >
                                     <!-- Modos---- -->
                                     <el-tab-pane name="modes">
                                         <template #label>
@@ -1569,6 +1576,40 @@
                                                                                         ></el-switch>
                                                                                     </div>
                                                                                 </div>
+                                                                                    <div
+                                                                                    class="col-md-4 mt-4"
+                                                                                >
+                                                                                    <div
+                                                                                        class="form-group"
+                                                                                    >
+                                                                                        <label
+                                                                                            class="control-label w-100"
+                                                                                        >
+                                                                                            <i
+                                                                                                class="fas fa-percentage tab-icon"
+                                                                                            ></i>
+                                                                                            Whatsapp al loguearse
+                                                                                            
+                                                                                            <el-tooltip
+                                                                                                content="Envia un mensaje cuando algún usuario se loguea"
+                                                                                            >
+                                                                                                <i
+                                                                                                    class="fa fa-info-circle"
+                                                                                                ></i>
+                                                                                            </el-tooltip>
+                                                                                        </label>
+                                                                                        <el-switch
+                                                                                            v-model="
+                                                                                                form.whatsapp_in_login
+                                                                                            "
+                                                                                            active-text="Si"
+                                                                                            inactive-text="No"
+                                                                                            @change="
+                                                                                                submit
+                                                                                            "
+                                                                                        ></el-switch>
+                                                                                    </div>
+                                                                                </div>
                                                                             </div>
                                                                         </div>
                                                                     </el-card>
@@ -1973,6 +2014,32 @@
                                                                                         <el-switch
                                                                                             v-model="
                                                                                                 form.print_document_cash
+                                                                                            "
+                                                                                            active-text="Si"
+                                                                                            inactive-text="No"
+                                                                                            @change="
+                                                                                                submit
+                                                                                            "
+                                                                                        ></el-switch>
+                                                                                    </div>
+                                                                                </div>
+                                                                                        <div
+                                                                                    class="col-md-4 mt-4"
+                                                                                >
+                                                                                    <div
+                                                                                        class="form-group"
+                                                                                    >
+                                                                                        <label
+                                                                                            class="control-label w-100"
+                                                                                        >
+                                                                                            <i
+                                                                                                class="fas fa-print tab-icon"
+                                                                                            ></i>
+                                                                                            Actualizar el precio de venta
+                                                                                        </label>
+                                                                                        <el-switch
+                                                                                            v-model="
+                                                                                                form.change_price_product
                                                                                             "
                                                                                             active-text="Si"
                                                                                             inactive-text="No"
@@ -2832,10 +2899,17 @@
                                             </div>
                                         </template>
                                     </el-tab-pane>
-                                    <el-tab-pane
-                                        label="Impresion"
-                                        v-if="!isArca"
-                                    >
+                                    <el-tab-pane v-if="!isArca" name="print">
+                                        <template #label>
+                                            <div class="tab-label">
+                                                <i
+                                                    class="el-icon-printer tab-icon"
+                                                ></i>
+                                                <span class="tab-text"
+                                                    >Impresión</span
+                                                >
+                                            </div>
+                                        </template>
                                         <div class="row">
                                             <div class="col-md-3 mt-2">
                                                 <label
@@ -2910,9 +2984,24 @@
                                                     @change="submit"
                                                 ></el-switch>
                                             </div>
+                                                        <div class="col-md-3 mt-2">
+                                                <label
+                                                    class="control-label w-100"
+                                                >
+                                                    Impresión directa recibo de pago
+                                                </label>
+                                                <el-switch
+                                                    v-model="
+                                                        form.print_payment_credit_sale_note
+                                                    "
+                                                    active-text="Si"
+                                                    inactive-text="No"
+                                                    @change="submit"
+                                                ></el-switch>
+                                            </div>
                                         </div>
                                     </el-tab-pane>
-                                    <el-tab-pane
+                                    <!-- <el-tab-pane
                                         label="Crédito NV"
                                         v-if="form.credits"
                                     >
@@ -3047,8 +3136,8 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </el-tab-pane>
-                                    <el-tab-pane label="Modos" v-if="!isArca">
+                                    </el-tab-pane> -->
+                                    <!-- <el-tab-pane label="Modos" v-if="!isArca">
                                         <div class="row">
                                             <div class="col-md-3 mt-4">
                                                 <div class="form-group">
@@ -3096,7 +3185,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </el-tab-pane>
+                                    </el-tab-pane> -->
 
                                     <!-- Cotización---- -->
                                     <el-tab-pane name="Cotización">
@@ -3340,6 +3429,38 @@
                                                         <el-switch
                                                             v-model="
                                                                 form.automatic_principal_cash
+                                                            "
+                                                            active-text="Si"
+                                                            inactive-text="No"
+                                                            @change="submit"
+                                                        ></el-switch>
+                                                    </div>
+                                                </div>
+
+                                                    <div class="col-md-3 mt-4">
+                                                    <div class="form-group">
+                                                        <label
+                                                            class="control-label w-100"
+                                                        >
+                                                            <i
+                                                                class="fa fa-cogs fa-lg"
+                                                            ></i>
+                                                            Caja principal
+                                                            saldo inicial
+                                                            <el-tooltip
+                                                                class="item"
+                                                                effect="dark"
+                                                                content="El saldo inicial (saldo final de la caja anterior) será ingresado al abrir caja"
+                                                                placement="top-start"
+                                                            >
+                                                                <i
+                                                                    class="fa fa-info-circle fa-lg"
+                                                                ></i>
+                                                            </el-tooltip>
+                                                        </label>
+                                                        <el-switch
+                                                            v-model="
+                                                                form.pass_final_balance_cash_principal
                                                             "
                                                             active-text="Si"
                                                             inactive-text="No"
@@ -4717,7 +4838,7 @@
                             </div>
                         </el-tab-pane>
 
-                        <el-tab-pane v-if="!isArca" name="Reset">
+                        <el-tab-pane v-if="!isArca" name="reset">
                             <template #label>
                                 <div class="tab-label">
                                     <i class="el-icon-refresh tab-icon"></i>
@@ -4914,6 +5035,7 @@ export default {
     //
     data() {
         return {
+            activeTabConfiguration: "modes",
             turns: [
                 {
                     id: 1,
@@ -4928,6 +5050,7 @@ export default {
                     label: "NOCHE"
                 }
             ],
+            activeTab: "configuration",
             showAddNumberwhatsapp: false,
             numberWhatsapp: null,
             timer: null,

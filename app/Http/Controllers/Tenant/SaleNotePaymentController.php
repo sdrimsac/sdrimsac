@@ -90,10 +90,17 @@ class SaleNotePaymentController extends Controller
                 $amount = floatval($value->amount);
                 $penalty_amount = floatval($value->penalty_amount);
                 $amount  = $amount + $penalty_amount;
+                $diff_days = 0;
+                $today = Carbon::now();
+                $date_of_payment = Carbon::parse($value->date_payment);
+                $diff_days = $today->diffInDays($date_of_payment);
                 $current_payment = [
                     'num' => $key + 1,
                     'amount' => $amount,
+                    'amount_withouth_penalty' => $value->amount,
                     'penalty' => $penalty_amount,
+                    'diff_days' => $diff_days,
+                    
                 ];
                 break;
             }
@@ -140,6 +147,7 @@ class SaleNotePaymentController extends Controller
         $id = $request->input('id');
         $document_save = SaleNote::where('id', $request->sale_note_id)->first();
         $credit_discount = $request->input('creditDiscount');
+        $creditDiscountPenalty = $request->input('creditDiscountPenalty');
         // DB::connection('tenant')->transaction(function () use ($id, $request) {
         $record = SaleNotePayment::firstOrNew(['id' => $id]);
         $record->fill($request->all());
@@ -282,7 +290,7 @@ class SaleNotePaymentController extends Controller
                         }
 
                         if ($amount_payed_remain > 0) {
-                            $amount_to_pay = $value->amount + $value->penalty_amount;
+                            $amount_to_pay = $value->amount + $value->penalty_amount - $creditDiscountPenalty;
 
                             if ($amount_payed_remain >= $amount_to_pay) {
                                 $value->paid = true;

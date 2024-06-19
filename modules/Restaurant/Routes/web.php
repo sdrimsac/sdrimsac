@@ -330,6 +330,7 @@ Route::prefix('caja')->group(function () {
             Route::get('cash/records_closed', [CashController::class, 'recordsClosed']);
             Route::get('cash/create', [CashController::class, 'create'])->name('tenant.cash_pos.create')->middleware('just.worker');;
             Route::get('cash/tables', [CashController::class, 'tables']);
+            Route::get('cash/final_balance_last_principal', [CashController::class, 'final_balance_last_principal']);
             Route::get('cash/opening_cash', [CashController::class, 'opening_cash']);
             Route::get('cash/opening_cash_check/{user_id}', [CashController::class, 'opening_cash_check']);
             Route::post('cash', [CashController::class, 'store']);

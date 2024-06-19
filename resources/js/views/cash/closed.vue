@@ -358,6 +358,7 @@
         </div>
         <cash-form
             :showDialog.sync="showDialogCash"
+            :configuration="configuration"  
             :recordId="cash_id"
             @updateCashId="updateCashId"
         ></cash-form>

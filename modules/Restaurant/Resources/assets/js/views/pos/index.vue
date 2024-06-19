@@ -1029,7 +1029,7 @@
                             @ordenDeleted="createOrden"
                             @limpiarForm="limpiarForm"
                             :clientTableData.sync="clientTableData"
-                                    @reloadProduct="search_items"
+                            @reloadProduct="search_items"
                         ></list-orden>
                     </div>
                 </div>
@@ -2284,7 +2284,7 @@ export default {
                     id: 1,
                     title: ["Comprobantes"],
                     icon: "fas fa-print ",
-                    visible: true && !this.isSeller 
+                    visible: true && !this.isSeller
                 },
                 /* {
                     id: 2,
@@ -2563,7 +2563,10 @@ export default {
                             this.openTables();
                         }
                     } else {
-                        this.openTables();
+                        if (this.configuration.restaurant) {
+                            this.openTables();
+                        }
+                        // this.openTables();
                     }
 
                     break;
@@ -4589,10 +4592,14 @@ export default {
                 let print_service = linkpdf.includes("print_service");
                 isTicket = print_service;
             }
-            if(!isTicket){
+            if (!isTicket) {
                 let receipt = linkpdf.includes("receipt");
                 isTicket = receipt;
             }
+            // if(!isTicket){
+            //     let simulate = linkpdf.includes("simulate");
+            //     isTicket = simulate;
+            // }
             let tipoBandejaImpresora = this.config.new_old_printer;
 
             if (isA4) {
@@ -5009,7 +5016,7 @@ export default {
             } catch (e) {
                 console.log(e);
                 this.loading = false;
-            }finally{
+            } finally {
                 this.loading = false;
             }
         },
@@ -5299,7 +5306,10 @@ export default {
             // );
         },
         async search() {
-            console.log("🚀 ~ this.time=setTimeout ~ this.selectOption:", this.selectOption)
+            console.log(
+                "🚀 ~ this.time=setTimeout ~ this.selectOption:",
+                this.selectOption
+            );
             if (this.time) {
                 clearTimeout(this.time);
             }

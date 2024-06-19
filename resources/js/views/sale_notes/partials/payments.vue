@@ -22,7 +22,7 @@
                     "
                 >
                     <h4>
-                        <template>
+                        <div>
                             Cuota N° {{ document.current_payment.num }} de
                             {{
                                 Number(document.current_payment.amount).toFixed(
@@ -35,13 +35,31 @@
                                 v-if="document.current_payment.penalty > 0"
                             >
                                 Penalidad:
-                                {{
-                                    Number(
-                                        document.current_payment.penalty
-                                    ).toFixed(2)
-                                }}
+                                {{ Number(document.current_payment.diff_days) }}
+                                días
                             </span>
-                        </template>
+                        </div>
+                        <div>
+                            Total a pagar:
+                            {{
+                                Number(
+                                    document.current_payment
+                                        .amount_withouth_penalty
+                                ).toFixed(2)
+                            }}
+                            +
+                            {{
+                                Number(
+                                    document.current_payment.penalty
+                                ).toFixed(2)
+                            }}
+                            =
+                            {{
+                                Number(document.current_payment.amount).toFixed(
+                                    2
+                                )
+                            }}
+                        </div>
                     </h4>
                 </template>
             </div>
@@ -391,12 +409,27 @@
                                     </td>
                                     <td></td>
                                 </tr>
-                                <tr v-if="!cancelCredit">
+                                <tr v-if="hasPenalty">
+                                    <td colspan="6" class="text-end">
+                                        DESCUENTO PENALIDAD
+                                    </td>
+                                    <td class="text-end">
+                                        <el-input-number
+                                            @input="
+                                                calculateDiscountAmountCredit
+                                            "
+                                            v-model="creditDiscountPenalty"
+                                        >
+                                        </el-input-number>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                                <tr v-if="!cancelCredit && !hasPenalty">
                                     <td colspan="6" class="text-end">
                                         PENDIENTE DE PAGO
                                     </td>
                                     <td class="text-end">
-                                        {{ document.total_difference }}
+                                        {{ Number(document.total_difference).toFixed(2) }}
                                     </td>
                                     <td></td>
                                 </tr>
@@ -405,7 +438,7 @@
                                         PENDIENTE DE PAGO
                                     </td>
                                     <td class="text-end">
-                                        {{ document.total_difference_credit }}
+                                        {{ Number(document.total_difference_credit).toFixed(2) }}
                                     </td>
                                     <td></td>
                                 </tr>
@@ -452,6 +485,7 @@ export default {
     },
     data() {
         return {
+            creditDiscountPenalty: 0,
             customerName: null,
             currentPayment: {},
             is_paying: false,
@@ -480,7 +514,20 @@ export default {
             //this.initDocumentTypes()
         });
     },
+    computed: {
+        hasPenalty() {
+            return (
+                this.configuration &&
+                this.configuration.sale_note_credit_penalty &&
+                this.document.current_payment.penalty > 0
+            );
+        }
+    },
     methods: {
+        calculateDiscountAmountCredit() {
+            this.document.total_difference_credit =
+                this.document.total_difference - this.creditDiscountPenalty;
+        },
         isImage(url) {
             return url.match(/\.(jpeg|jpg|gif|png)$/) != null;
         },
@@ -521,7 +568,10 @@ export default {
             );
         },
         ClickPrint(receipt_link) {
-            console.log("🚀 ~ ClickPrint ~ this.configuration:", this.configuration)
+            console.log(
+                "🚀 ~ ClickPrint ~ this.configuration:",
+                this.configuration
+            );
             if (this.configuration.print_payment_credit_sale_note) {
                 this.$http.post("/caja/re-print", {
                     url: receipt_link
@@ -563,6 +613,7 @@ export default {
                 .get(`/${this.resource}/document/${this.documentId}`)
                 .then(response => {
                     this.document = response.data;
+                    this.document.total_difference_credit = this.document.total_difference;
                     this.title =
                         "Pagos del comprobante: " +
                         this.document.series +
@@ -607,6 +658,16 @@ export default {
             this.fileList = [];
         },
         async clickSubmit(index) {
+            if (
+                this.creditDiscountPenalty >
+                this.document.current_payment.penalty
+            ) {
+                this.creditDiscountPenalty = this.document.current_payment.penalty;
+                this.$toast.error(
+                    "El descuento no puede ser mayor a la penalidad"
+                );
+                return;
+            }
             let { num_schedule, amount_schedule } = this.document;
             let payment = this.records[index].payment;
             let difference = parseFloat(this.document.total_difference);
@@ -675,7 +736,8 @@ export default {
                 temp_path: this.records[index].temp_path,
                 payment: this.records[index].payment,
                 paid: paid,
-                creditDiscount: this.creditDiscount
+                creditDiscount: this.creditDiscount,
+                creditDiscountPenalty: this.creditDiscountPenalty
             };
             try {
                 this.is_paying = true;

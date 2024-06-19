@@ -28,10 +28,10 @@
             :is-arca="{{json_encode($roleService->isArca())}}"
             :type-user="{{ json_encode(auth()->user()->type) }}"></tenant-configurations-form>
         </div>
-        @if(!$roleService->isArca())
+        {{-- @if(!$roleService->isArca())
         <div class="col-lg-6 col-md-12">
             <tenant-options-form></tenant-options-form>
         </div>
-        @endif
+        @endif --}}
     </div>
 @endsection

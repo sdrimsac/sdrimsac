@@ -350,6 +350,7 @@ class PosController extends Controller
 
     public function total_sales(Request  $request)
     {
+        dump($request->all());
         $cash_id = $request->cash_id;
         $only_cash = $request->only_cash;
         $send = $request->send;
@@ -369,11 +370,15 @@ class PosController extends Controller
                     if ($box->sale_note_id) {
                         $sale_note = SaleNote::find($box->sale_note_id);
                         if ($sale_note) {
-                            $total = $sale_note->total;
-                            if ($total < $amount) {
-                                $total_sales += $total;
-                            } else {
+                            if ($box->sale_note_payment_id) {
                                 $total_sales += $amount;
+                            } else {
+                                $total = $sale_note->total;
+                                if ($total < $amount) {
+                                    $total_sales += $total;
+                                } else {
+                                    $total_sales += $amount;
+                                }
                             }
                         }
                     } else if ($box->document_id) {
@@ -389,13 +394,13 @@ class PosController extends Controller
                     }
                 }
             });
-            $cash_out =0;
+            $cash_out = 0;
             if ($only_cash) {
                 $cash_out = SaleNote::where('cash_id', $cash_id)
-                ->where('is_cash', 1)
-                ->where('state_type_id', '01')
-                ->sum(DB::raw('total - advances'));
-                
+                    ->where('is_cash', 1)
+                    ->where('state_type_id', '01')
+                    ->sum(DB::raw('total - advances'));
+
                 $expenses = Box::where('cash_id', $cash_id)->where('method', 'Efectivo')->where('expenses', 1)->where('incomes', 0)->chunk(50, function ($boxes) use (&$total_expenses) {
                     foreach ($boxes as $box) {
                         $amount = $box->amount;
@@ -465,19 +470,19 @@ class PosController extends Controller
         $desarrollador = Desarrollador::first();
         $item_default = null;
         $users = User::whereType('seller')
-        ->where('active', true)
-        ->get()
-        ->transform(function ($row) {
-            return [
-                'id' => $row->id,
-                'name' => $row->name
-            ];
-        });
+            ->where('active', true)
+            ->get()
+            ->transform(function ($row) {
+                return [
+                    'id' => $row->id,
+                    'name' => $row->name
+                ];
+            });
         $config = Configuration::first();
         if ($config->item_variation_id) {
             $item_default = Item::find($config->item_variation_id);
         }
-        return compact('gruop','users',  'category', 'subcategory', 'company', 'methods', 'desarrollador', 'item_default');
+        return compact('gruop', 'users',  'category', 'subcategory', 'company', 'methods', 'desarrollador', 'item_default');
     }
     public function columns() //buscador x campo
     {

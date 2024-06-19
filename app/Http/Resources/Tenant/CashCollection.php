@@ -24,11 +24,15 @@ class CashCollection extends ResourceCollection
                 foreach ($rows as $row) {
                     $amount = $row->amount;
                     if ($row->salenote) {
-                        $total = $row->salenote->total;
-                        if ($total > $amount) {
+                        if ($row->sale_note_payment_id) {
                             $incomes += $amount;
                         } else {
-                            $incomes += $total;
+                            $total = $row->salenote->total;
+                            if ($total > $amount) {
+                                $incomes += $amount;
+                            } else {
+                                $incomes += $total;
+                            }
                         }
                     }
                     if ($row->document) {
@@ -65,7 +69,7 @@ class CashCollection extends ResourceCollection
             $tab_single =  (bool)$establishment->tab_single;
             return [
                 'tab_single' => $tab_single,
-                'pharmacy_info' => $row->pharmacy_info ? (array) $row->pharmacy_info : null, 
+                'pharmacy_info' => $row->pharmacy_info ? (array) $row->pharmacy_info : null,
                 'principal' => (bool) $row->principal,
                 'group_code' => $row->group_code,
                 'bill_series' => $row->bill_series,

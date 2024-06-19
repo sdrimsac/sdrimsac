@@ -505,6 +505,11 @@ class SaleNoteController extends Controller
             SaleNoteCredit::where('sale_note_id', $id)->delete();
             Payment::where('sale_note_id', $id)->delete();
         }
+        if ($status == 'A' && $sale_note->is_cash) {
+            $user = $sale_note->user;
+            $area_id = $user->area_id;
+            event(new PrintEvent(null, 'URL', true, $area_id, [], false, false, "/sale-notes/cash_out/" . $sale_note->id));
+        }
         $sale_note->observation = $observations;
         $sale_note->save();
 
@@ -1212,9 +1217,6 @@ class SaleNoteController extends Controller
                     $original_cash_id = $box->cash_id;
                 }
 
-                if ($this->sale_note->is_cash) {
-                    event(new PrintEvent(null, 'URL', true, null, [], false, false, "/sale-notes/cash_out/" . $this->sale_note->id));
-                }
 
                 Box::where('sale_note_id', $this->sale_note->id)->delete();
                 $establishment = Establishment::where('id', auth()->user()->establishment_id)->first();

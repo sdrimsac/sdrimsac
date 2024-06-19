@@ -28,8 +28,18 @@
                                 Listado Lotes (productos)
                             </h6>
                         </div>
+
                         <div class="data-table-visible-columns">
                             <el-dropdown :hide-on-click="false">
+                                <el-button
+                                    type="primary"
+                                    class=""
+                                    href="javascript:void(0)"
+                                    @click.prevent="clickImport()"
+                                >
+                                    <i class="fa fa-upload"></i>
+                                    Importar
+                                </el-button>
                                 <el-button type="primary">
                                     Mostrar/Ocultar columnas<i
                                         class="el-icon-arrow-down el-icon--right"
@@ -90,19 +100,28 @@
                     </div>
                 </div>
             </div>
+        <lots-group-import :showDialog.sync="showImportDialog"></lots-group-import>
+
         </div>
     </div>
 </template>
 
 <script>
+import LotsGroupImport from "./lots_group_import.vue";
 import DataTable from "../../components/Datatable.vue";
 export default {
-    components: { DataTable },
+    components: { DataTable,LotsGroupImport },
     data() {
         return {
             resource: "lotes",
-            columns: {}
+            columns: {},
+            showImportDialog:false,
         };
+    },
+    methods:{
+        clickImport(){
+                        this.showImportDialog = true;
+        },
     }
 };
 </script>
