@@ -350,7 +350,6 @@ class PosController extends Controller
 
     public function total_sales(Request  $request)
     {
-        dump($request->all());
         $cash_id = $request->cash_id;
         $only_cash = $request->only_cash;
         $send = $request->send;
