@@ -1833,13 +1833,16 @@ class SaleNoteController extends Controller
                 }
             }
             $legends = $this->document->legends != '' ? '10' : '0';
-
+            $factor_q = 8;
+            if($quantity_rows < 25){
+                $factor_q = 5;
+            }
             $pdf = new Mpdf([
                 'mode' => 'utf-8',
                 'format' => [
                     $width,
                     50 +
-                        (($quantity_rows * 8) + $extra_by_item_description) +
+                        (($quantity_rows * $factor_q) + $extra_by_item_description) +
                         ($discount_global * 3) +
                         $company_logo +
                         $company_name +
