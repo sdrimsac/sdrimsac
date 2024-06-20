@@ -708,6 +708,8 @@ class Facturalo
         $sender->setClient($this->wsClient);
         $sender->setCodeProvider(new XmlErrorCodeProvider());
         Log::info('senderXmlSigned: '.$this->endpoint);
+        Log::info('SOAPUSERNAME: '.$this->soapUsername);
+        Log::info('SOAPPASSWORD: '.$this->soapPassword);
         return $sender->send($this->document->filename, $this->xmlSigned);
     }
 
