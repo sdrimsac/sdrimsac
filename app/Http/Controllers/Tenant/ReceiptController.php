@@ -37,8 +37,13 @@ class ReceiptController extends Controller
     public function toPrint($external_id)
     {
         $data = Receipt::where("external_id", $external_id)->first();
-        $sale_note_payment = $data->sale_note_payment;
-        $payment_method_type = $sale_note_payment->payment_method_type->description;
+        $payment = null;
+        if ($data->sale_note_id) {
+            $payment = $data->sale_note_payment;
+        } else {
+            $payment = $data->document_payment;
+        }
+        $payment_method_type = $payment->payment_method_type->description;
         // $SaleNote=SaleNote::where('id',$receipt->sale_note_id)->first();
         $interes = 0;
         if ($data->sale_note_id) {
