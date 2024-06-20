@@ -52,4 +52,9 @@ class Receipt extends ModelTenant
         return $this->belongsTo(SaleNotePayment::class);
     }
 
+    public function document_payment()
+    {
+        return $this->belongsTo(DocumentPayment::class);
+    }
+
 }
