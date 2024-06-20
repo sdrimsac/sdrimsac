@@ -1699,7 +1699,7 @@ class CashController extends Controller
             $request = new Request();
             $request->merge(['cash_id' => $cash_id, 'only_cash' => 1]);
             $balance = (new PosController)->total_sales($request);
-            $balance = floatval($cash->beginning_balance) + floatval($balance);
+            $balance = floatval($cash->beginning_balance) + floatval($balance["total_sales"]);
         }
         return [
             'success' => true,
