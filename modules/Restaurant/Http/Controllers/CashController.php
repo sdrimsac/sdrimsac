@@ -1700,10 +1700,13 @@ class CashController extends Controller
             $request->merge(['cash_id' => $cash_id, 'only_cash' => 1]);
             $balance = (new PosController)->total_sales($request);
             $balance = floatval($cash->beginning_balance) + floatval($balance["total_sales"]);
+            $response = [
+                "total_sales" => $balance,
+            ];
         }
         return [
             'success' => true,
-            'balance' => $balance
+            'balance' => $response
         ];
     }
     public function opening_cash()
