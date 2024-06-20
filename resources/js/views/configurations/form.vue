@@ -1576,7 +1576,7 @@
                                                                                         ></el-switch>
                                                                                     </div>
                                                                                 </div>
-                                                                                    <div
+                                                                                <div
                                                                                     class="col-md-4 mt-4"
                                                                                 >
                                                                                     <div
@@ -1588,8 +1588,10 @@
                                                                                             <i
                                                                                                 class="fas fa-percentage tab-icon"
                                                                                             ></i>
-                                                                                            Whatsapp al loguearse
-                                                                                            
+                                                                                            Whatsapp
+                                                                                            al
+                                                                                            loguearse
+
                                                                                             <el-tooltip
                                                                                                 content="Envia un mensaje cuando algún usuario se loguea"
                                                                                             >
@@ -2023,7 +2025,7 @@
                                                                                         ></el-switch>
                                                                                     </div>
                                                                                 </div>
-                                                                                        <div
+                                                                                <div
                                                                                     class="col-md-4 mt-4"
                                                                                 >
                                                                                     <div
@@ -2035,7 +2037,11 @@
                                                                                             <i
                                                                                                 class="fas fa-print tab-icon"
                                                                                             ></i>
-                                                                                            Actualizar el precio de venta
+                                                                                            Actualizar
+                                                                                            el
+                                                                                            precio
+                                                                                            de
+                                                                                            venta
                                                                                         </label>
                                                                                         <el-switch
                                                                                             v-model="
@@ -2984,11 +2990,12 @@
                                                     @change="submit"
                                                 ></el-switch>
                                             </div>
-                                                        <div class="col-md-3 mt-2">
+                                            <div class="col-md-3 mt-2">
                                                 <label
                                                     class="control-label w-100"
                                                 >
-                                                    Impresión directa recibo de pago
+                                                    Impresión directa recibo de
+                                                    pago
                                                 </label>
                                                 <el-switch
                                                     v-model="
@@ -2998,6 +3005,30 @@
                                                     inactive-text="No"
                                                     @change="submit"
                                                 ></el-switch>
+                                            </div>
+                                            <div class="col-12">
+                                                <label for="text-3">
+                                                    Texto pie de página
+                                                    <el-tooltip
+                                                        class="item"
+                                                        effect="dark"
+                                                        content="Texto que va en la parte inferior de los documentos"
+                                                        placement="top-start"
+                                                    >
+                                                        <i
+                                                            class="fa fa-info-circle"
+                                                        ></i>
+                                                    </el-tooltip>
+                                                </label>
+                                                <el-input
+                                                    class="w-100"
+                                                    v-model="form.footer_text"
+                                                    placeholder="Pie de página"
+                                                    size="normal"
+                                                    type="textarea"
+                                                    rows="3"
+                                                    @input="saveSubmitDebounce"
+                                                ></el-input>
                                             </div>
                                         </div>
                                     </el-tab-pane>
@@ -3437,7 +3468,7 @@
                                                     </div>
                                                 </div>
 
-                                                    <div class="col-md-3 mt-4">
+                                                <div class="col-md-3 mt-4">
                                                     <div class="form-group">
                                                         <label
                                                             class="control-label w-100"
@@ -3445,8 +3476,8 @@
                                                             <i
                                                                 class="fa fa-cogs fa-lg"
                                                             ></i>
-                                                            Caja principal
-                                                            saldo inicial
+                                                            Caja principal saldo
+                                                            inicial
                                                             <el-tooltip
                                                                 class="item"
                                                                 effect="dark"
