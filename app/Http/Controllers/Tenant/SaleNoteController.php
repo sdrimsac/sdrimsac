@@ -1833,7 +1833,7 @@ class SaleNoteController extends Controller
                 }
             }
             $legends = $this->document->legends != '' ? '10' : '0';
-            $factor_q = 8;
+            $factor_q = 6;
             if($quantity_rows > 20){
                 $factor_q = 4;
             }
