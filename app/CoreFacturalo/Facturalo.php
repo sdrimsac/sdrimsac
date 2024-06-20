@@ -925,8 +925,13 @@ class Facturalo
     private function setSoapCredentials()
     {
         if ($this->isDemo) {
-            $this->soapUsername = $this->company->number . 'MODDATOS';
+            if($this->isOse){
+                $this->soapUsername = $this->company->soap_username;
+                $this->soapPassword = $this->company->soap_password;
+            }else{
+                $this->soapUsername = $this->company->number . 'MODDATOS';
             $this->soapPassword = 'moddatos';
+            }
         } else {
             $this->soapUsername = $this->company->soap_username;
             $this->soapPassword = $this->company->soap_password;
