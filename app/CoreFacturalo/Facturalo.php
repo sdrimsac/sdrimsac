@@ -707,7 +707,7 @@ class Facturalo
         $sender = in_array($this->type, ['summary', 'voided']) ? new SummarySender() : new BillSender();
         $sender->setClient($this->wsClient);
         $sender->setCodeProvider(new XmlErrorCodeProvider());
-
+        Log::info('senderXmlSigned: '.$this->endpoint);
         return $sender->send($this->document->filename, $this->xmlSigned);
     }
 
