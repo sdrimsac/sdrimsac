@@ -35,6 +35,7 @@
             :recordId="cash_id"
             @updateCashId="updateCashId"
             :principal="true"
+            :configuration="configuration"
         ></cash-form>
         <close-cash
             :recordId.sync="cash_id"
