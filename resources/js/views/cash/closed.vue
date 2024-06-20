@@ -4,7 +4,8 @@
             <h6 class="my-0 text-white">Reporte de cierre de cajas</h6>
         </div>
         <div class="tab-content p-3">
-            <template v-if="!hasCash">
+            <template v-if="canOpen">
+                <template v-if="!hasCash">
                 <div class="col-md- d-flex justify-content-end">
                     <button
                         type="button"
@@ -27,6 +28,7 @@
                         <span>Cerrar caja</span>
                     </button>
                 </div>
+            </template>
             </template>
             <form autocomplete="off" @submit.prevent="submit">
                 <div class="form-body">
@@ -378,7 +380,7 @@ const CloseCash = () => import("./partials/closecash.vue");
 import moment from "moment";
 import queryString from "query-string";
 export default {
-    props: ["configuration", "users", "hasCash", "cashId"],
+    props: ["configuration", "users", "hasCash", "cashId","canOpen"],
     components: {
         CashForm,
         CloseCash

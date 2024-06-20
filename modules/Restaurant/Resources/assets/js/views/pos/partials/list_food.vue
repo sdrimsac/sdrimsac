@@ -210,23 +210,24 @@
                                     </div>
                                 </div>
                                 <div
-                                    class="d-flex justify-content-center m-1"
+                                    class="d-flex flex-wrap justify-content-center m-1"
                                     v-if="
-                                        data.item.lots_enabled == 1 &&
-                                            data.item.date_of_due
+                                        data.item.lots_enabled == 1 
                                     "
                                 >
                                     <el-tag
+                                        v-for="(lot, idx) in data.item.lots_group"
+                                        :key="idx"
                                         :type="
                                             `${
-                                                isExpired(data.item.date_of_due)
+                                                isExpired(lot.date_of_due)
                                                     ? 'danger'
                                                     : 'primary'
                                             }`
                                         "
                                     >
-                                        {{ data.item.lot_code }} -
-                                        {{ data.item.date_of_due }}
+                                        {{ lot.code }} -
+                                        {{ lot.date_of_due }}
                                     </el-tag>
                                 </div>
                                 <div
@@ -728,6 +729,8 @@ export default {
                 type,
                 selectSerie
             );
+            console.log("🚀 ~ addFood ~ this.currentFood:", JSON.stringify(this.currentFood))
+
             this.$notify({
                 title: this.currentFood.food.description.toLowerCase(),
                 duration: 800,

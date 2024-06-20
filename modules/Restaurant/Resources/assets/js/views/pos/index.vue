@@ -5545,6 +5545,8 @@ export default {
                 price: this.selectedFood.price,
                 quantity: !!this.selectedFood.item.series_enabled ? 0 : 1
             };
+            console.log("🚀 ~ addFood ~ this.currentFood:", JSON.stringify(this.currentFood))
+
             this.insertOrden(this.currentFood, this.selectedFood.id, type);
             this.$notify({
                 title: this.currentFood.food.description.toLowerCase(),
