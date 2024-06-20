@@ -1834,8 +1834,8 @@ class SaleNoteController extends Controller
             }
             $legends = $this->document->legends != '' ? '10' : '0';
             $factor_q = 8;
-            if($quantity_rows > 25){
-                $factor_q = 5;
+            if($quantity_rows > 20){
+                $factor_q = 4;
             }
             $pdf = new Mpdf([
                 'mode' => 'utf-8',
