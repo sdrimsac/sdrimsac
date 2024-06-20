@@ -884,8 +884,17 @@ class Facturalo
     private function setPathCertificate()
     {
         if ($this->isOse) {
-            $this->pathCertificate = storage_path('app' . DIRECTORY_SEPARATOR .
-                'certificates' . DIRECTORY_SEPARATOR . $this->company->certificate);
+
+            if ($this->isDemo) {
+                $this->pathCertificate = app_path('CoreFacturalo' . DIRECTORY_SEPARATOR .
+                    'WS' . DIRECTORY_SEPARATOR .
+                    'Signed' . DIRECTORY_SEPARATOR .
+                    'Resources' . DIRECTORY_SEPARATOR .
+                    'certificate.pem');
+            } else {
+                $this->pathCertificate = storage_path('app' . DIRECTORY_SEPARATOR .
+                    'certificates' . DIRECTORY_SEPARATOR . $this->company->certificate);
+            }
         } else {
             if ($this->isDemo) {
                 $this->pathCertificate = app_path('CoreFacturalo' . DIRECTORY_SEPARATOR .
