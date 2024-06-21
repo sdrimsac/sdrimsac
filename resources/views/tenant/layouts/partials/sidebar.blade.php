@@ -551,7 +551,7 @@
             </li>
         @endif
 
-        @if (!$roleService->isArca() )
+        @if (!$roleService->isArca() || $user->is_arca) 
             <li>
                 <a href="#reporte" data-bs-toggle="collapse" data-role="button"
                     aria-expanded="{{ $path[0] === 'reports' && $path[1] === 'inventory' ? true : false }}{{ ($path[0] === 'reports' && $path[1] === 'stockmin' ? true : false && $path[1] === 'kardex') ? true : false }}"

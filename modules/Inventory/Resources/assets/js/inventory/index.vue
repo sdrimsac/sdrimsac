@@ -65,7 +65,7 @@
 
             <inventories-form
                             :showDialog.sync="showDialog"
-                            :type="typeTransaction"
+                            :type.sync="typeTransaction"
                                 ></inventories-form>
 
             <inventories-form-output
@@ -113,6 +113,7 @@
                 this.showDialogMove = true
             },
             clickCreate(type) {
+                console.log("🚀 ~ clickCreate ~ type:", type)
                 this.recordId = null
                 this.typeTransaction = type
                 this.showDialog = true

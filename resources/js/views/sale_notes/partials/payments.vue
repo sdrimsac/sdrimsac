@@ -753,6 +753,7 @@ export default {
                     // this.receipt_link=response.data.pdf
                     //this.ClickPrint()
                     // this.ClickPrint(response.data.pdf)
+                    this.creditDiscountPenalty = 0;
                     this.$eventHub.$emit("reloadData");
                     this.$emit("reloadData");
                     this.showAddButton = true;

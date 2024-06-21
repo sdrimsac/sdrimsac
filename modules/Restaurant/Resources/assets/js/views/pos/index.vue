@@ -4596,6 +4596,10 @@ export default {
                 let receipt = linkpdf.includes("receipt");
                 isTicket = receipt;
             }
+            if(!isTicket){
+                let cashOut = linkpdf.includes("cash_out");
+                isTicket = cashOut;
+            }
             // if(!isTicket){
             //     let simulate = linkpdf.includes("simulate");
             //     isTicket = simulate;

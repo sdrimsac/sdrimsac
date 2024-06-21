@@ -136,6 +136,12 @@ export default {
         create() {
             this.getRecords();
         },
+        onlyAllowNumbers(event) {
+            const charCode = event.which ? event.which : event.keyCode;
+            if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+                event.preventDefault();
+            }
+        },
         close() {
             this.initForm();
             this.$emit("update:showDialog", false);
