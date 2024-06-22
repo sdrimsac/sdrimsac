@@ -350,7 +350,7 @@ class PurchaseController extends Controller
                 //verificar si existe el número de serie
                 $purchase = Purchase::where('series', $series)
                     ->where('number', $number)
-                    ->where('document_type_id', $data['document_type_id'])
+                    ->where('document_type_id', 'NE76')
                     ->first();
                 if ($purchase) {
                     $has_error = true;
