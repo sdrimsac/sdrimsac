@@ -465,8 +465,6 @@
                                 {{ $row->item->internal_id }}
                             </td>
                             <td class="text-left align-top bordes">
-
-
                                 @if (isset($row->name_product_pdf))
                                     {{ $row->name_product_pdf }}
                                 @else

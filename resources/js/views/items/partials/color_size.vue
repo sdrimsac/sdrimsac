@@ -84,6 +84,15 @@ export default {
             loading: false
         };
     },
+    computed: {
+        totalStock() {
+            let total = 0;
+            this.colorSizes.forEach(item => {
+                total += parseInt(item.stock);
+            });
+            return total;
+        }
+    },
     methods: {
         addColorSize() {
             if (this.verifyStock()) {
@@ -107,6 +116,9 @@ export default {
             return complete;
         },
         verifyStock() {
+            if(this.stock == 0){
+                return true;
+            }
             let total = 0;
             this.colorSizes.forEach(item => {
                 total += parseInt(item.stock);
@@ -120,6 +132,10 @@ export default {
             return true;
         },
         clickAddColorSize() {
+            if(this.totalStock >= this.stock){
+                this.$toast.warning("El stock total no puede ser mayor al stock del producto");
+                return;
+            }
             this.colorSizes.push({
                 color: "",
                 size: "",
@@ -145,7 +161,7 @@ export default {
                 this.sortItems();
             }
 
-            this.titleDialog = `Color - Talla - Stock: ${this.stock}`;
+            this.titleDialog = `Color - Talla - Stock: ${this.stock} | Cantidad: ${this.totalStock}`;
         },
         close() {
             this.$emit("update:showDialog", false);

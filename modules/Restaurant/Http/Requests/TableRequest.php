@@ -21,9 +21,9 @@ class TableRequest extends FormRequest
             'number' => [
                 'required',
             ],
-            // 'area_id' => [
-            //     'required',
-            // ],
+            'area_id' => [
+                'required',
+            ],
             'status_table_id' => [
                 'required',
             ],

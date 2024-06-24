@@ -526,7 +526,7 @@ export default {
     methods: {
         calculateDiscountAmountCredit() {
             this.document.total_difference_credit =
-                this.document.total_difference - this.creditDiscountPenalty;
+                this.document.total_difference - this.creditDiscountPenalty || 0;
         },
         isImage(url) {
             return url.match(/\.(jpeg|jpg|gif|png)$/) != null;
