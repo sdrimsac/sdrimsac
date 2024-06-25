@@ -244,8 +244,8 @@ class ClientController extends Controller
         if ($request->has('column') && $request->column === 'name' && $request->has('value') && $request->value) {
             $query->where('name', 'like', "%{$request->value}%");
         }
-        if ($request->has('column') && $request->column === 'hostnames' && $request->has('value') && $request->value) {
-            $query->whereHas('hostnames', function ($q) use ($request) {
+        if ($request->has('column') && $request->column === 'hostname' && $request->has('value') && $request->value) {
+            $query->whereHas('hostname', function ($q) use ($request) {
                 $q->where('fqdn', 'like', "%{$request->value}%");
             });
         }
