@@ -1029,7 +1029,7 @@
                             @ordenDeleted="createOrden"
                             @limpiarForm="limpiarForm"
                             :clientTableData.sync="clientTableData"
-                                    @reloadProduct="search_items"
+                            @reloadProduct="search_items"
                         ></list-orden>
                     </div>
                 </div>
@@ -1906,6 +1906,7 @@ export default {
 
     data() {
         return {
+            allLocalFoods: [],
             cotIdentifier: null,
             isSeller: false,
             isAnalist: false,
@@ -2284,9 +2285,9 @@ export default {
                     id: 1,
                     title: ["Comprobantes"],
                     icon: "fas fa-print ",
-                    visible: true && !this.isSeller 
+                    visible: true && !this.isSeller
                 },
-             
+
                 {
                     id: 3,
                     title: ["Productos"],
@@ -2552,7 +2553,10 @@ export default {
                             this.openTables();
                         }
                     } else {
-                        this.openTables();
+                        if (this.configuration.restaurant) {
+                            this.openTables();
+                        }
+                        // this.openTables();
                     }
 
                     break;
@@ -3056,6 +3060,9 @@ export default {
             this.$refs.input_items.$el.getElementsByTagName("input")[0].focus();
             this.$refs.input_items.$el.getElementsByTagName("input")[0].value =
                 "";
+                if(this.configuration.all_items_pos){
+                    this.search_items();
+                }
         },
         add_customer(value) {
             this.value = value;
@@ -4578,10 +4585,18 @@ export default {
                 let print_service = linkpdf.includes("print_service");
                 isTicket = print_service;
             }
-            if(!isTicket){
+            if (!isTicket) {
                 let receipt = linkpdf.includes("receipt");
                 isTicket = receipt;
             }
+            if (!isTicket) {
+                let cashOut = linkpdf.includes("cash_out");
+                isTicket = cashOut;
+            }
+            // if(!isTicket){
+            //     let simulate = linkpdf.includes("simulate");
+            //     isTicket = simulate;
+            // }
             let tipoBandejaImpresora = this.config.new_old_printer;
 
             if (isA4) {
@@ -4979,7 +4994,7 @@ export default {
                         data: { data, meta }
                     } = response;
 
-                    this.allFoods = data.map(d => {
+                    this.allLocalFoods = data.map(d => {
                         if (d.item.lots_group.length > 0) {
                             d.item.lots_group = d.item.lots_group.filter(
                                 lt =>
@@ -4989,7 +5004,9 @@ export default {
                         }
                         return d;
                     });
-                    this.listFoods = this.allFoods;
+                    this.listFoods = this.allLocalFoods;
+                    this.allFoods = this.allLocalFoods;
+
                     this.pagination = meta;
 
                     this.selectOption = 4;
@@ -4998,7 +5015,7 @@ export default {
             } catch (e) {
                 console.log(e);
                 this.loading = false;
-            }finally{
+            } finally {
                 this.loading = false;
             }
         },
@@ -5168,7 +5185,9 @@ export default {
                 this.initFormItem();
                 await this.initForm(this.customer_default.id);
             }
-            await this.getFoods();
+            if (!this.configuration.all_items_pos) {
+                await this.getFoods();
+            }
             await this.calculateTotal();
             this.$refs.input_items.$el.getElementsByTagName("input")[0].focus();
             this.total_sales_pos = 0;
@@ -5266,19 +5285,32 @@ export default {
             this.loading = false;
         },
         async search_items(data) {
-            let inputitem = this.input_item.toLowerCase();
-            if (data == undefined) {
-                let form = {
-                    value: inputitem,
-                    category: this.category
-                };
-                await this.getFoods(this.getQueryParameters(form));
+            if (this.configuration.all_items_pos) {
+                let searchData = data;
+                if (searchData == undefined) {
+                    searchData = this.input_item;
+                }
+                searchData = searchData.toUpperCase();
+                this.allFoods = this.allLocalFoods.filter(f => {
+                    if (f.description.includes(searchData)) {
+                        return f;
+                    }
+                });
             } else {
-                let form = {
-                    value: data,
-                    category: this.category
-                };
-                await this.getFoods(this.getQueryParameters(form));
+                let inputitem = this.input_item.toLowerCase();
+                if (data == undefined) {
+                    let form = {
+                        value: inputitem,
+                        category: this.category
+                    };
+                    await this.getFoods(this.getQueryParameters(form));
+                } else {
+                    let form = {
+                        value: data,
+                        category: this.category
+                    };
+                    await this.getFoods(this.getQueryParameters(form));
+                }
             }
 
             //            this.$refs.list_foods.searchFood(inputitem, this.type_search);
@@ -5288,7 +5320,10 @@ export default {
             // );
         },
         async search() {
-            console.log("🚀 ~ this.time=setTimeout ~ this.selectOption:", this.selectOption)
+            console.log(
+                "🚀 ~ this.time=setTimeout ~ this.selectOption:",
+                this.selectOption
+            );
             if (this.time) {
                 clearTimeout(this.time);
             }
@@ -5524,6 +5559,8 @@ export default {
                 price: this.selectedFood.price,
                 quantity: !!this.selectedFood.item.series_enabled ? 0 : 1
             };
+           
+
             this.insertOrden(this.currentFood, this.selectedFood.id, type);
             this.$notify({
                 title: this.currentFood.food.description.toLowerCase(),
@@ -5541,6 +5578,10 @@ export default {
             };
             this.selectedFood = null;
             this.item = null;
+            this.input_item = null;
+            if(this.configuration.all_items_pos){
+                this.search_items(null);
+            }
             //this.setFalse();
             //this.$emit("buscarnuevo");
             //this.$forceUpdate();

@@ -124,7 +124,7 @@
                                 type == "caja/tables" ? "mesa" : "habitación"
                             }}
                         </label>
-                        <el-select v-model="form.area_id" :disabled="type == 'caja/rooms'">
+                        <el-select v-model="form.area_id" >
                             <el-option v-for="(data, index) in areas" :key="index" :label="data.description" :value="data.id"></el-option>
                         </el-select>
                         <small class="text-danger" v-if="errors.area_id" v-text="errors.area_id[0]"></small>

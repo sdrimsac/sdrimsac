@@ -343,6 +343,7 @@ export default {
             };
         },
         async create() {
+            console.log("🚀 ~ create ~ this.type:", this.type)
             this.titleDialog =
                 this.type == "input"
                     ? "Ingreso de producto al almacén"

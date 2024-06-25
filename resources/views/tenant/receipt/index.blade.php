@@ -259,12 +259,22 @@
                                                     CREDITO</b></h5>
                                         </td>
                                     </tr>
+                                    @if($data->sale_note_id)
                                     @foreach ($data->sale_note->items as $item)
                                         <tr>
                                             <td class="negrita">{{ $item->quantity }}</td>
                                             <td>{{ $item->item->description }}</td>
                                         </tr>
                                     @endforeach
+                                    @endif
+                                    @if($data->document_id)
+                                    @foreach ($data->document->items as $item)
+                                        <tr>
+                                            <td class="negrita">{{ $item->quantity }}</td>
+                                            <td>{{ $item->item->description }}</td>
+                                        </tr>
+                                    @endforeach
+                                    @endif
                                 </table>
                             </div>
                         </td>

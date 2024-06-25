@@ -191,7 +191,7 @@ function format_serie($id)
     }
 
     @page {
-        margin: 15px;
+        margin: 5px;
     }
 
     td,

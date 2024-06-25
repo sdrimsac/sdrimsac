@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\Config;
 class Configuration extends ModelTenant
 {
     protected $fillable = [
+        'all_items_pos',
+        'pass_final_balance_cash_principal',
         'configurable_impresion_ticket_categoria_caja',
         'print_payment_credit_sale_note',
         'change_price_product',
@@ -180,6 +182,8 @@ class Configuration extends ModelTenant
 
     ];
     protected $casts = [
+        'all_items_pos' => 'boolean',
+        'pass_final_balance_cash_principal' => 'boolean',
         'change_price_product' => 'boolean',
         'whatsapp_in_login' => 'boolean',
         'show_internal_code_ticket' => 'boolean',
@@ -302,6 +306,9 @@ class Configuration extends ModelTenant
         // $skins = Skin::all();
         $skins = [];
         return [
+            'promotions_cant_purchase' => $this->promotions_cant_purchase,
+            'all_items_pos' => (bool)$this->all_items_pos,
+            'pass_final_balance_cash_principal' => (bool)$this->pass_final_balance_cash_principal,
             'print_payment_credit_sale_note' => (bool)$this->print_payment_credit_sale_note,
             'change_price_product' => (bool)$this->change_price_product,
             'whatsapp_in_login' => (bool)$this->whatsapp_in_login,

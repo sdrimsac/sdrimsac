@@ -76,6 +76,10 @@ table {
 .align-top {
     vertical-align: top !important;
 }
+.centered-cell {
+    text-align: center;
+    vertical-align: middle; 
+}
 
 .full-width {
     width: 100%;

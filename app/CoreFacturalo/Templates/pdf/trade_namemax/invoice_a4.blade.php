@@ -345,16 +345,16 @@
         </table> --}}
         <table>
             <tr>
-                <td height="20px" height="20px" class="font-bold">
+                <td height="20px" height="20px" >
                     <p><strong>CLIENTE: </strong>{{ $customer->name }} </p>
                 </td>
-                <td class="font-bold">
+                <td>
                     <p><strong>{{ $customer->identity_document_type->description }} </strong>{{ $customer->number }}
                     </p>
                 </td>
             </tr>
             <tr>
-                <td class="font-bold">
+                <td>
                     <p><strong>DIRECCIÓN: </strong>{{ $customer->address }}
                         {{ $customer->district_id !== '-' ? ', ' . $customer->district->description : '' }}
                         {{ $customer->province_id !== '-' ? ', ' . $customer->province->description : '' }}
@@ -465,8 +465,6 @@
                                 {{ $row->item->internal_id }}
                             </td>
                             <td class="text-left align-top bordes">
-
-
                                 @if (isset($row->name_product_pdf))
                                     {{ $row->name_product_pdf }}
                                 @else
@@ -589,7 +587,7 @@
                         $totalRows =
                             count($document->items) +
                             (isset($document->prepayments) ? count($document->prepayments) : 0);
-                        $emptyRows = 20 - $totalRows;
+                        $emptyRows = 18 - $totalRows;
                     @endphp
                     @for ($i = 0; $i < $emptyRows; $i++)
                         <tr class="empty-row">

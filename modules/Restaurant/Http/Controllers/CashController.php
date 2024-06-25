@@ -161,6 +161,9 @@ class CashController extends Controller
         $users = User::where('active', 1)->get();
         $user_id = auth()->user()->id;
         $has_cash = 0 < Cash::where('user_id', $user_id)->where('state', 1)->count();
+        $user = User::findOrFail($user_id);
+        $can_open = $user->isWorkerType("arca") || $user->is_arca;
+        $can_open = !$can_open;
         $cash_id = null;
         $cash = Cash::where('user_id', auth()->user()->id)
             ->where('state', 1)
@@ -170,7 +173,13 @@ class CashController extends Controller
         if ($cash) {
             $cash_id = $cash->id;
         }
-        return view('tenant.cash.index_closed', compact('configuration', 'users', 'has_cash', 'cash_id'));
+        return view('tenant.cash.index_closed', compact(
+            'can_open',
+            'configuration',
+            'users',
+            'has_cash',
+            'cash_id'
+        ));
     }
     public function index_report_cash()
     {
@@ -1680,6 +1689,26 @@ class CashController extends Controller
         return compact('users', 'configuration', 'user', 'turnsTable');
     }
 
+    public function final_balance_last_principal()
+    {
+        $user_id = auth()->user()->id;
+        $cash = Cash::where('principal', true)->where('state', 0)->where('user_id', $user_id)->latest()->first();
+        $balance = 0;
+        if ($cash) {
+            $cash_id = $cash->id;
+            $request = new Request();
+            $request->merge(['cash_id' => $cash_id, 'only_cash' => 1]);
+            $balance = (new PosController)->total_sales($request);
+            $balance = floatval($cash->beginning_balance) + floatval($balance["total_sales"]);
+            $response = [
+                "total_sales" => $balance,
+            ];
+        }
+        return [
+            'success' => true,
+            'balance' => $response
+        ];
+    }
     public function opening_cash()
     {
 
@@ -1880,11 +1909,11 @@ class CashController extends Controller
         $cash->time_closed = date('H:i:s');
         $cash->save();
         Box::where('cash_id', $id)->update(['close' => date('Y-m-d'), 'state' => 0]);
-        $all_cash = Box::select(['document_id', 'sale_note_id','sale_note_payment_id','amount'])
+        $all_cash = Box::select(['document_id', 'sale_note_id', 'sale_note_payment_id', 'amount'])
             ->where('cash_id', $id)->where('method', 'Efectivo')
             ->where('expenses', 0)
             ->get();
-        
+
 
         $all_cash = $all_cash->map(function ($item) {
 
@@ -1892,12 +1921,12 @@ class CashController extends Controller
                 $document = Document::find($item->document_id);
                 return $document->total;
             }
-            if($item->sale_note_payment_id){
+            if ($item->sale_note_payment_id) {
                 return $item->amount;
             }
             if ($item->sale_note_id && !$item->sale_note_payment_id) {
                 $sale_note = SaleNote::find($item->sale_note_id);
-                if($sale_note->sale_note_credit){
+                if ($sale_note->sale_note_credit) {
                     return $sale_note->advances;
                 }
                 return $sale_note->total;

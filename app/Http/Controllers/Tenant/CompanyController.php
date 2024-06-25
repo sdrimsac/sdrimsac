@@ -59,7 +59,8 @@ class CompanyController extends Controller
             $type = $request->input('type');
             $file = $request->file('file');
             $ext = $file->getClientOriginalExtension();
-            $name = $type . '_' . $company->number . '.' . $ext;
+            $time = date('YmdHis');
+            $name = $type . '_' . $company->number. '_'.$time. '.' . $ext;
             if (($type === 'logo')) request()->validate(['file' => 'required|image|mimes:jpeg,png,jpg,webp,gif,svg|max:2048']);
             $file->storeAs(($type === 'logo') ? 'public/uploads/logos' : 'certificates', $name);
             if (($type === 'logo_store')) request()->validate(['file' => 'required|image|mimes:jpeg,png,jpg,webp,gif,svg|max:2048']);

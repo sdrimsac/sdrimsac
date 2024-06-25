@@ -82,6 +82,7 @@ use App\Models\Tenant\SaleNoteCredit;
 use App\Models\Tenant\SaleNoteCreditPenalty;
 use App\Models\Tenant\SaleNotePromotion;
 use App\Models\Tenant\Seller;
+use App\Models\Tenant\StateType;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 use Modules\Restaurant\Events\OrdenReadyEvent;
 use Modules\Restaurant\Models\Food;
@@ -409,27 +410,7 @@ class SaleNoteController extends Controller
 
     public function excel(Request $request)
     {
-        if ($request->column == 'customer_id') {
-            $records = SaleNote::where($request->column, '=', $request->value)
-                ->latest('id');
-            // dd(SaleNote::where($request->column, '=',$request->value)->toSql());
-        } else if ($request->column == 'date_of_issue') {
-            if ($request->end != null) {
-                $records = SaleNote::whereBetween($request->column, [$request->value, $request->end])->latest('id');
-            } else {
-                $records = SaleNote::where($request->column, 'like', "%{$request->value}%")->latest('id');
-            }
-        } else {
-            $records = SaleNote::where($request->column, 'like', "%{$request->value}%")->latest('id');
-        }
-
-
-
-
-        if ($request->series) {
-            $records = $records->where('series', 'like', '%' . $request->series . '%');
-        }
-        $records = $records->get();
+        $records = $this->get_records($request)->get();
         $company = Company::active();
         $establishment = Establishment::where('id', auth()->user()->establishment_id)->first();
         return (new SaleNoteExport)
@@ -437,26 +418,61 @@ class SaleNoteController extends Controller
             ->company($company)
             ->download('Reporte_Nota_de_Venta_' . Carbon::now() . '.xlsx');
     }
+    public function get_records(Request $request)
+    {
+        $customer_id = $request->customer_id;
+        $seller_id = $request->seller_id;
+        $state_type_id = $request->state_type_id;
+        $date_start = $request->date_start;
+        $date_end = $request->date_end;
+        $number = $request->number;
+        $series = $request->series;
+        $records = SaleNote::query();
+
+        if ($customer_id) {
+            $records = $records->where("customer_id", $customer_id);
+        }
+        if ($seller_id) {
+            $records = $records->where("seller_id", $seller_id);
+        }
+        if ($state_type_id) {
+            $records = $records->where("state_type_id", $state_type_id);
+        }
+        if ($number) {
+            $records = $records->where("number", $number);
+        }
+        if ($date_start || $date_end) {
+            if ($date_start && $date_end) {
+                $records = $records->whereBetween('date_of_issue', [$date_start, $date_end]);
+            } else {
+                $records = $records->where('date_of_issue', $date_start ?? $date_end);
+            }
+        }
+        if ($series) {
+            $records = $records->where('series', 'like', '%' . $series . '%');
+        }
+        return $records;
+    }
     public function records(Request $request)
     {
-        if ($request->column == 'customer_id') {
-            $records = SaleNote::where($request->column, '=', $request->value)
-                ->latest('id');
-            // dd(SaleNote::where($request->column, '=',$request->value)->toSql());
-        } else if ($request->column == 'date_of_issue') {
-            if ($request->end != null) {
-                $records = SaleNote::whereBetween($request->column, [$request->value, $request->end])->latest('id');
-            } else {
-                $records = SaleNote::where($request->column, 'like', "%{$request->value}%")->latest('id');
-            }
-        } else {
-            $records = SaleNote::where($request->column, 'like', "%{$request->value}%")->latest('id');
-        }
 
-        if ($request->series) {
-            $records = $records->where('series', 'like', '%' . $request->series . '%');
-        }
+        // if ($request->column == 'customer_id') {
+        //     $records = SaleNote::where($request->column, '=', $request->value)
+        //         ->latest('id');
+        //     // dd(SaleNote::where($request->column, '=',$request->value)->toSql());
+        // }  else if ($request->column == 'date_of_issue') {
+        //     if ($request->end != null) {
+        //         $records = SaleNote::whereBetween($request->column, [$request->value, $request->end])->latest('id');
+        //     } else {
+        //         $records = SaleNote::where($request->column, 'like', "%{$request->value}%")->latest('id');
+        //     }
+        // } else {
+        //     $records = SaleNote::where($request->column, 'like', "%{$request->value}%")->latest('id');
+        // }
 
+        $records = $this->get_records($request);
+
+        // if($request->)
         return new SaleNoteCollection($records->paginate(config('tenant.items_per_page')));
     }
     public function items($id)
@@ -505,6 +521,11 @@ class SaleNoteController extends Controller
             SaleNoteCredit::where('sale_note_id', $id)->delete();
             Payment::where('sale_note_id', $id)->delete();
         }
+        if ($status == 'A' && $sale_note->is_cash) {
+            $user = $sale_note->user;
+            $area_id = $user->area_id;
+            event(new PrintEvent(null, 'URL', true, $area_id, [], false, false, "/sale-notes/cash_out/" . $sale_note->id));
+        }
         $sale_note->observation = $observations;
         $sale_note->save();
 
@@ -547,6 +568,7 @@ class SaleNoteController extends Controller
         $configuration = Configuration::first();
         $tasa_interes = $configuration->rates;
         $company = Company::active();
+        $state_types = StateType::whereIn('id', ['01', '11'])->get();
         $payment_method_types = PaymentMethodType::where('active', 1)->get();
         $users = User::where('active', 1)->get();
         $user_select = User::select('id')->where('id', auth()->user()->id)->first();
@@ -561,8 +583,9 @@ class SaleNoteController extends Controller
             ];
         });
         $payment_destinations = $this->getPaymentDestinations();
-
+        // $state_t
         return compact(
+            'state_types',
             'sellers',
             'customers',
             'establishments',
@@ -1212,9 +1235,6 @@ class SaleNoteController extends Controller
                     $original_cash_id = $box->cash_id;
                 }
 
-                if ($this->sale_note->is_cash) {
-                    event(new PrintEvent(null, 'URL', true, null, [], false, false, "/sale-notes/cash_out/" . $this->sale_note->id));
-                }
 
                 Box::where('sale_note_id', $this->sale_note->id)->delete();
                 $establishment = Establishment::where('id', auth()->user()->establishment_id)->first();
@@ -1831,13 +1851,17 @@ class SaleNoteController extends Controller
                 }
             }
             $legends = $this->document->legends != '' ? '10' : '0';
+            $factor_q = 6;
+            if ($quantity_rows > 20) {
 
+                $factor_q = 4;
+            }
             $pdf = new Mpdf([
                 'mode' => 'utf-8',
                 'format' => [
                     $width,
                     50 +
-                        (($quantity_rows * 8) + $extra_by_item_description) +
+                        (($quantity_rows * $factor_q) + $extra_by_item_description) +
                         ($discount_global * 3) +
                         $company_logo +
                         $company_name +

@@ -707,7 +707,9 @@ class Facturalo
         $sender = in_array($this->type, ['summary', 'voided']) ? new SummarySender() : new BillSender();
         $sender->setClient($this->wsClient);
         $sender->setCodeProvider(new XmlErrorCodeProvider());
-
+        Log::info('senderXmlSigned: '.$this->endpoint);
+        Log::info('SOAPUSERNAME: '.$this->soapUsername);
+        Log::info('SOAPPASSWORD: '.$this->soapPassword);
         return $sender->send($this->document->filename, $this->xmlSigned);
     }
 
@@ -884,8 +886,17 @@ class Facturalo
     private function setPathCertificate()
     {
         if ($this->isOse) {
-            $this->pathCertificate = storage_path('app' . DIRECTORY_SEPARATOR .
-                'certificates' . DIRECTORY_SEPARATOR . $this->company->certificate);
+
+            if ($this->isDemo) {
+                $this->pathCertificate = app_path('CoreFacturalo' . DIRECTORY_SEPARATOR .
+                    'WS' . DIRECTORY_SEPARATOR .
+                    'Signed' . DIRECTORY_SEPARATOR .
+                    'Resources' . DIRECTORY_SEPARATOR .
+                    'certificate.pem');
+            } else {
+                $this->pathCertificate = storage_path('app' . DIRECTORY_SEPARATOR .
+                    'certificates' . DIRECTORY_SEPARATOR . $this->company->certificate);
+            }
         } else {
             if ($this->isDemo) {
                 $this->pathCertificate = app_path('CoreFacturalo' . DIRECTORY_SEPARATOR .
@@ -914,8 +925,13 @@ class Facturalo
     private function setSoapCredentials()
     {
         if ($this->isDemo) {
-            $this->soapUsername = $this->company->number . 'MODDATOS';
+            if($this->isOse){
+                $this->soapUsername = $this->company->soap_username;
+                $this->soapPassword = $this->company->soap_password;
+            }else{
+                $this->soapUsername = $this->company->number . 'MODDATOS';
             $this->soapPassword = 'moddatos';
+            }
         } else {
             $this->soapUsername = $this->company->soap_username;
             $this->soapPassword = $this->company->soap_password;

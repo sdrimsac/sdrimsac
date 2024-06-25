@@ -44,7 +44,9 @@ class Company extends ModelTenant
         'soap_sunat_username',
         'soap_sunat_password',
         'api_sunat_id',
-        'api_sunat_secret'
+        'api_sunat_secret',
+        'ose_user',
+        'ose_password',
 
     ];
 

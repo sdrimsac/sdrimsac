@@ -74,7 +74,7 @@ class BoxesController extends Controller
                 $customer_name = $customer->name;
                 $sale_note_id = $row->sale_note_id;
                 // $sale_note = SaleNote::find($sale_note_id);
-                $full_number_sale_note =$row->sale_note->number_full;
+                $full_number_sale_note = $row->sale_note->number_full;
                 $document_id = $row->document_id;
                 if ($sale_note_id) {
                     $box = Box::where('sale_note_id', $row->sale_note_id)
@@ -535,11 +535,13 @@ class BoxesController extends Controller
                             if ($item) {
                                 $item_db = Item::find($item->item_id);
                                 if ($item_db) {
-                                    $category_name = $item_db->category->name;
-                                    if (array_key_exists($category_name, $categories)) {
-                                        $categories[$category_name] += $item->total;
-                                    } else {
-                                        $categories[$category_name] = $item->total;
+                                    if (isset($item_db->category->name)) {
+                                        $category_name = $item_db->category->name;
+                                        if (array_key_exists($category_name, $categories)) {
+                                            $categories[$category_name] += $item->total;
+                                        } else {
+                                            $categories[$category_name] = $item->total;
+                                        }
                                     }
                                     $description_item = $item_db->description;
                                     if (mb_stripos($description_item, 'Media tarifa') !== false) {
@@ -1248,8 +1250,8 @@ class BoxesController extends Controller
         $cash = Cash::find($cash_id);
         $directory = 'public/tabulacion';
         $reference_formate = str_replace('-', '_', $cash->reference_number);
-        $reference_formate = str_replace(':','_',$reference_formate); 
-        $name = $cash->user_id . '_' . $reference_formate."_".$cash->turn_id;
+        $reference_formate = str_replace(':', '_', $reference_formate);
+        $name = $cash->user_id . '_' . $reference_formate . "_" . $cash->turn_id;
         // if(!$generate && $cash->state == 0){
         //     //buscar el archivo en la carpeta //    $pdf->save(storage_path('app/public/'.$name.'.pdf'));
         //     $path = storage_path('app/'.$directory.'/'.$name.'.pdf');
@@ -1257,11 +1259,11 @@ class BoxesController extends Controller
         //     if (file_exists($path)) {
         //         return response()->file($path);
         //     }
-            
+
         // }
         $user = $cash->user;
         $establishment = $user->establishment;
-    
+
         $company = Company::first();
         $items = [];
 
@@ -1364,7 +1366,7 @@ class BoxesController extends Controller
             });
         }
         //imprimir el totalde items_by_category
-        
+
         $info_documents = [];
         $min_01_document = null;
         if ($min_01_document_id) {
@@ -1418,8 +1420,8 @@ class BoxesController extends Controller
         $cash = Cash::find($cash_id);
         $directory = 'public/tabulacion';
         $reference_formate = str_replace('-', '_', $cash->reference_number);
-        $reference_formate = str_replace(':','_',$reference_formate); 
-        $name = $cash->user_id . '_' . $reference_formate."_".$cash->turn_id;
+        $reference_formate = str_replace(':', '_', $reference_formate);
+        $name = $cash->user_id . '_' . $reference_formate . "_" . $cash->turn_id;
         // if(!$generate && $cash->state == 0){
         //     //buscar el archivo en la carpeta //    $pdf->save(storage_path('app/public/'.$name.'.pdf'));
         //     $path = storage_path('app/'.$directory.'/'.$name.'.pdf');
@@ -1427,7 +1429,7 @@ class BoxesController extends Controller
         //     if (file_exists($path)) {
         //         return response()->file($path);
         //     }
-            
+
         // }
         $user = $cash->user;
         $establishment = $user->establishment;
@@ -1537,7 +1539,7 @@ class BoxesController extends Controller
             });
         }
         //imprimir el totalde items_by_category
-        
+
         $info_documents = [];
         $min_01_document = null;
         if ($min_01_document_id) {
@@ -1646,13 +1648,17 @@ class BoxesController extends Controller
                         $deliveries[] = $coin;
                     }
                 }
-                if ($sale_note->total > $ringreso["amount"]) {
+                if ($ringreso["sale_note_payment_id"]) {
                     $sales_cash_sum += $ringreso["amount"];
                 } else {
-                    $sales_cash_sum += $sale_note->total;
-                }
-                if ($sale_note->total_discount) {
-                    $total_discount += $sale_note->total_discount;
+                    if ($sale_note->total > $ringreso["amount"]) {
+                        $sales_cash_sum += $ringreso["amount"];
+                    } else {
+                        $sales_cash_sum += $sale_note->total;
+                    }
+                    if ($sale_note->total_discount) {
+                        $total_discount += $sale_note->total_discount;
+                    }
                 }
             }
             if ($ringreso["document_id"]) {
@@ -1785,10 +1791,9 @@ class BoxesController extends Controller
         $expenses_records = $expenses_cash->get()->transform(function ($row) {
             $id = $row->id;
             $items = BoxesDetail::where('boxes_id', $id)->count();
-            if($items == 0 && $row->purchase_id){
+            if ($items == 0 && $row->purchase_id) {
                 $purchase = Purchase::find($row->purchase_id);
                 $items = $purchase->items->count();
-                
             }
             return [
                 "items" => $items,
@@ -1952,12 +1957,12 @@ class BoxesController extends Controller
             }
         }
         $credit_cash_expense = SaleNote::where('cash_id', $cash_id)->where('is_cash', 1)->where('total', '>', 0)->get()
-        ->transform(function ($row) {
-            return [
-                "description" => $row->number_full,
-                "amount" => $row->total,
-            ];
-        });
+            ->transform(function ($row) {
+                return [
+                    "description" => $row->number_full,
+                    "amount" => $row->total,
+                ];
+            });
         $incomes_expenses_cash = [
             "incomes" => [
                 "quantity" => $incomes_cash_quantity,

@@ -54,6 +54,8 @@ class JustAdmin
             "reports/boxes/global",
             "category",
             "advanced",
+            "purchases",
+            "purchases/create",
             "sale-notes", "quotations", "summaries", "voided",
             "incomes", "expenses", "boxes", "report_closed_cash", "documents","banks"
         ];

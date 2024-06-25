@@ -424,10 +424,7 @@
                                 </div>
                             </div>
                             <div class="col-12 col-lg-6 col-xl-3" v-if="configuration.color_size_enabled">
-                                <div v-show="
-                                                    form.unit_type_id != 'ZZ' &&
-                                                        form.stock > 0
-                                                " class="col-md-4 center-el-checkbox">
+                                <div v-show="form.unit_type_id != 'ZZ'" class="col-md-4 center-el-checkbox">
                                     <div class="form-group">
                                         <el-checkbox :disabled="recordId != null" v-model="form.has_color_size">¿Maneja Color y Talla
                                             ?
@@ -652,7 +649,7 @@
                                             </th>
                                             <th class="text-white text-center">
                                                 Almacén
-                                            </th class="text-white text-center">
+                                            </th>
                                             <!-- <th class="text-center">
                                                             P. Defecto
                                                         </th> -->
@@ -1118,10 +1115,10 @@ export default {
         },
         addRowColorSize(color_sizes) {
             this.form.color_sizes = color_sizes;
-            console.log(
-                "🚀 ~ file: form.vue:1850 ~ addRowColorSize ~ this.form.color_sizes:",
-                this.form.color_sizes
-            );
+            if(this.form.stock == 0){
+                this.form.stock = color_sizes.reduce((acc, color_size) => acc + Number(color_size.stock), 0)
+            }
+
         },
         clickColorSize() {
             this.showDialogColorSize = true;

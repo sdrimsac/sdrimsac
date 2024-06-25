@@ -133,6 +133,8 @@ class TableController extends Controller
     }
     public function get_tables()
     {
+        ini_set('memory_limit', '2500M');
+
         $user = auth()->user();
         $establishment_id = $user->establishment_id;
         $this->checkTables($establishment_id);

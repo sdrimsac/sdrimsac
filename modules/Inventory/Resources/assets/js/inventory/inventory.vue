@@ -48,7 +48,7 @@
                         <el-button type="primary" 
                                     class="btn btn-success button-margin" 
                                     href="javascript:void(0)" 
-                                    @click.prevent="clickCreate()">
+                                    @click.prevent="clickCreate('input')">
                                     
                                 <i class="fa fa-arrow-circle-down fa-lg"></i>
                                Ingreso
@@ -199,7 +199,7 @@
         </div>
         <inventories-form
             :showDialog.sync="showDialog"
-            :type="typeTransaction"
+            :type.sync="typeTransaction"
         ></inventories-form>
 
         <inventories-form-output
@@ -254,6 +254,12 @@ export default {
         this.title = "Inventario";
     },
     methods: {
+        onlyAllowNumbers(event) {
+            const charCode = event.which ? event.which : event.keyCode;
+            if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+                event.preventDefault();
+            }
+        },
         async clickSetStockReal(itemId, realStock, stock, warehouse_id) {
             //inventory/stock
 
@@ -282,6 +288,7 @@ export default {
             this.showDialogMove = true;
         },
         clickCreate(type) {
+            console.log("🚀 ~ clickCreate ~ type:", type)
             this.recordId = null;
             this.typeTransaction = type;
             this.showDialog = true;

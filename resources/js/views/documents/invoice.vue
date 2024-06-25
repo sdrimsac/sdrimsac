@@ -1778,6 +1778,15 @@
                 :isContingency="is_contingency"
                 :showClose="showClose"
             ></document-options>
+                    <document-detraction
+            :currency-type-id-active="form.currency_type_id"
+            :detraction="form.detraction"
+            :exchange-rate-sale="form.exchange_rate_sale"
+            :operation-type-id="form.operation_type_id"
+            :showDialog.sync="showDialogDocumentDetraction"
+            :total="form.total"
+            @addDocumentDetraction="addDocumentDetraction"
+        ></document-detraction>
         </div>
     </div>
 </template>
@@ -1799,6 +1808,7 @@
 <script>
 import DocumentFormItem from "./partials/item.vue";
 import PersonForm from "../persons/form.vue";
+import DocumentDetraction from "../documents/partials/detraction.vue";
 import DocumentOptions from "../documents/partials/options.vue";
 import { functions, exchangeRate } from "../../mixins/functions";
 import { calculateRowItem } from "../../helpers/functions";
@@ -1807,6 +1817,7 @@ import Logo from "../companies/logo.vue";
 export default {
     props: ["id", "typeUser", "configuration", "documentinfo"],
     components: {
+        DocumentDetraction,
         DocumentFormItem,
         PersonForm,
         DocumentOptions,

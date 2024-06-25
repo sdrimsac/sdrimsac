@@ -260,7 +260,7 @@
                         <el-input readonly v-model="form.real_quantity">
                         </el-input>
                     </div>
-                    <div
+                    <!-- <div
                         class="col-md-6 mt-2"
                         v-if="form.item && form.item.lots_enabled"
                     >
@@ -273,7 +273,6 @@
                                 Código lote
                             </label>
                             <el-input v-model="lot_code">
-                                <!--<el-button slot="append" icon="el-icon-edit-outline"  @click.prevent="clickLotcode"></el-button> -->
                                 <i
                                     slot="prefix"
                                     class="el-icon-edit-outline"
@@ -311,6 +310,18 @@
                                 v-text="errors.date_of_due[0]"
                             ></small>
                         </div>
+                    </div> -->
+                    <div class="col-md-3"
+                                        v-if="form.item && form.item.lots_enabled"
+                    >
+                    <el-button
+                        style="margin-top:2%;"
+                        type="primary"
+                        icon="fas fa-sign-in-alt icon"
+                        @click.prevent="clickLotGroupCode"
+                    >
+                    Ingresar lotes
+                    </el-button>
                     </div>
                     <div v-show="form.item_id" class="col-md-3">
                         <div class="form-group" :class="{ 'has-danger': errors.has_color_size }"
@@ -525,6 +536,11 @@
             @addRowLot="addRowLot"
         >
         </lots-form>
+        <lots-group-form
+            :showDialog.sync="showDialogLotsGroup"
+            :stock="form.quantity"
+            @addRowLotGroup="addRowLotGroup"
+            ></lots-group-form>
         <color-size-form
             :showDialog.sync="showColorSize"
             :stock="form.quantity"
@@ -550,6 +566,7 @@
 import itemForm from "../../items/form.vue";
 import { calculateRowItem } from "../../../helpers/functions";
 import LotsForm from "../../items/partials/lots.vue";
+import LotsGroupForm from "../../items/partials/lots_group.vue";
 import ColorSizeForm from "../../items/partials/color_size.vue";
 import readXlsxFile from "read-excel-file";
 import WarehousesDetail from "./select_warehouse.vue";
@@ -563,9 +580,10 @@ export default {
         "includes",
         "percentage_igv"
     ],
-    components: { itemForm, LotsForm, ColorSizeForm, WarehousesDetail },
+    components: { itemForm, LotsForm, ColorSizeForm, WarehousesDetail,LotsGroupForm },
     data() {
         return {
+            showDialogLotsGroup:false,
             colorSizes: [],
             changing_name: false,
             input_barcode: null,
@@ -608,6 +626,12 @@ export default {
         });
     },
     methods: {
+        addRowLotGroup(lotsgroup){
+
+        },
+        clickLotGroupCode(){
+            this.showDialogLotsGroup = true;
+        },
         clickWarehouseDetail() {
             if (!this.form.item_id) {
                 return this.$toast.error("Seleccione un item");

@@ -135,6 +135,7 @@ class OptionController extends Controller
         Document::where('id', '<>', null)->update(['orden_id' => null, 'sale_note_id' => null]);
         SaleNote::where('id', '<>', null)->update(['orden_id' => null]);
         DB::connection('tenant')->table('credit_lists')->delete();
+        DB::connection('tenant')->table('cash_transfers')->delete();
         DB::connection('tenant')->table('invoices')->delete();
         DB::connection('tenant')->table('hotel_rent_documents')->delete();
         DB::connection('tenant')->table('hotel_rent_item_services')->delete();

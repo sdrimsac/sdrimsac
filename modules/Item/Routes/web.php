@@ -26,6 +26,7 @@ Route::middleware(['auth', 'locked.tenant'])->group(function () {
     Route::get('lotes/records', [ItemLotsGroupController::class, 'records']);
     Route::get('lotes/tables', [ItemLotsGroupController::class, 'tables']);
     Route::get('lotes/to_due', [ItemLotsGroupController::class, 'to_due']);
+    Route::post('lotes/import', [ItemLotsGroupController::class, 'import']);
     Route::get('categories/init', 'CategoryController@init');
     //->name('tenant.categories.index')
     Route::get('items/categories', 'CategoryController@index')->middleware('redirect.level');

@@ -3,7 +3,7 @@
         <div class="row ">
             <div class="col-md-12 col-lg-12 col-xl-12 ">
                 <div class="row" v-if="applyFilter">
-                    <div class="col-lg-4 col-md-4 col-sm-12 pb-2">
+                    <!-- <div class="col-lg-4 col-md-4 col-sm-12 pb-2">
                         <div class="d-flex">
                             <div style="width:100px">
                                 Filtrar por:
@@ -21,85 +21,37 @@
                                 ></el-option>
                             </el-select>
                         </div>
-                    </div>
-                    <div class="col-lg-2 col-md-2"
-                    
-                    
-                    >
-                        <div class="form-group">
-                            <el-select
-                                @change="getRecords"
-                                placeholder="Serie"
-                                v-model="search.series"
-                                filterable
-                                clearable
-                            >
-                                <el-option
-                                    v-for="option in series"
-                                    :key="option.number"
-                                    :value="option.number"
-                                    :label="option.number"
-                                ></el-option>
-                            </el-select>
-                        </div>
+                    </div> -->
+                    <div class="col-lg-2 col-md-2">
+                        <label for="serie">Serie</label>
+                        <el-select
+                            @change="getRecords"
+                            placeholder="Serie"
+                            v-model="search.series"
+                            filterable
+                            clearable
+                        >
+                            <el-option
+                                v-for="option in series"
+                                :key="option.number"
+                                :value="option.number"
+                                :label="option.number"
+                            ></el-option>
+                        </el-select>
                     </div>
                     <div class="col-lg-3 col-md-4 col-sm-12 pb-2">
-                        <template
-                            v-if="
-                                search.column == 'date_of_issue' ||
-                                    search.column == 'date_of_due' ||
-                                    search.column == 'date_of_payment'
-                            "
+                        <label for="date_start">Fecha inicial</label>
+                        <el-date-picker
+                            v-model="search.date_start"
+                            type="date"
+                            style="width: 100%;"
+                            placeholder="Fecha inicial"
+                            value-format="yyyy-MM-dd"
+                            @change="getRecords"
                         >
-                            <el-date-picker
-                                v-model="search.value"
-                                type="date"
-                                style="width: 100%;"
-                                placeholder="Fecha inicial"
-                                value-format="yyyy-MM-dd"
-                                @change="getRecords"
-                            >
-                            </el-date-picker>
-                        </template>
-                        <template v-else-if="search.column == 'seller_id'">
-                            <el-select
-                                clearable
-                                v-model="search.value"
-                                class="border-left rounded-left border-info w-100"
-                                popper-class="el-select-customers"
-                                placeholder="Seleccione un Asesor - Vendedor"
-                                @change="getRecords"
-                            >
-                                <el-option
-                                    v-for="(option,idx) in sellers"
-                                    :key="idx"
-                                    :value="option.id"
-                                    :label="option.name"
-                                ></el-option>
-                            </el-select>
-                        </template>
-                        <template v-else-if="search.column == 'customer_id'">
-                            <el-select
-                                v-model="search.value"
-                                filterable
-                                remote
-                                class="border-left rounded-left border-info"
-                                popper-class="el-select-customers"
-                                dusk="customer_id"
-                                placeholder="Escriba el nombre o número de documento del cliente"
-                                :remote-method="searchRemoteCustomers"
-                                :loading="loading_search"
-                                @change="getRecords"
-                            >
-                                <el-option
-                                    v-for="option in customers"
-                                    :key="option.id"
-                                    :value="option.id"
-                                    :label="option.description"
-                                ></el-option>
-                            </el-select>
-                        </template>
-                        <template v-else>
+                        </el-date-picker>
+
+                        <!-- <template v-else>
                             <el-input
                                 placeholder="Buscar"
                                 v-model="search.value"
@@ -108,29 +60,80 @@
                                 @input="getRecords"
                             >
                             </el-input>
-                        </template>
-                          
+                        </template> -->
                     </div>
                     <div class="col-md-2 col-lg-3">
-                         <template
-                            v-if="
-                                search.column == 'date_of_issue' ||
-                                    search.column == 'date_of_due' ||
-                                    search.column == 'date_of_payment'
-                            "
+                        <label for="date_end">Fecha final</label>
+
+                        <el-date-picker
+                            v-model="search.date_end"
+                            type="date"
+                            style="width: 100%;"
+                            placeholder="Fecha final"
+                            value-format="yyyy-MM-dd"
+                            @change="getRecords"
                         >
-                            <el-date-picker
-                                v-model="search.end"
-                                type="date"
-                                style="width: 100%;"
-                                placeholder="Fecha final"
-                                value-format="yyyy-MM-dd"
-                                @change="getRecords"
-                            >
-                            </el-date-picker>
-                        </template>
+                        </el-date-picker>
                     </div>
-                  
+                    <div class="col-md-3 col-lg-3">
+                        <label for="customer_id">Cliente</label>
+
+                        <el-select
+                            v-model="search.customer_id"
+                            filterable
+                            remote
+                            class="border-left rounded-left border-info"
+                            popper-class="el-select-customers"
+                            dusk="customer_id"
+                            placeholder="Escriba el nombre o número de documento del cliente"
+                            :remote-method="searchRemoteCustomers"
+                            :loading="loading_search"
+                            @change="getRecords"
+                        >
+                            <el-option
+                                v-for="option in customers"
+                                :key="option.id"
+                                :value="option.id"
+                                :label="option.description"
+                            ></el-option>
+                        </el-select>
+                    </div>
+                    <div class="col-md-3 col-lg-3">
+                        <label for="seller_id">Vendedor</label>
+
+                        <el-select
+                            clearable
+                            v-model="search.seller_id"
+                            class="border-left rounded-left border-info w-100"
+                            popper-class="el-select-customers"
+                            placeholder="Seleccione un Asesor - Vendedor"
+                            @change="getRecords"
+                        >
+                            <el-option
+                                v-for="(option, idx) in sellers"
+                                :key="idx"
+                                :value="option.id"
+                                :label="option.name"
+                            ></el-option>
+                        </el-select>
+                    </div>
+                    <div class="col-md-3 col-lg-3">
+                        <label for="state_type_id">Estado</label>
+
+                        <el-select
+                            clearable
+                            v-model="search.state_type_id"
+                            placeholder="Seleccione un estado"
+                            @change="getRecords"
+                        >
+                            <el-option
+                                v-for="(option, idx) in state_types"
+                                :key="idx"
+                                :value="option.id"
+                                :label="option.description"
+                            ></el-option>
+                        </el-select>
+                    </div>
                     <div class="col-md-6 col-sm-12">
                         <el-button
                             type="success"
@@ -142,7 +145,7 @@
                             Exportar
                         </el-button>
                     </div>
-                      <div class="col-md-2">
+                    <div class="col-md-2">
                         <el-tag>
                             Total por cobrar {{ saleNotesPending.toFixed(2) }}
                         </el-tag>
@@ -222,14 +225,19 @@ export default {
     },
     data() {
         return {
-            sellers:[],
+            state_types: [],
+            sellers: [],
             customers: [],
             loading_search: false,
             search: {
-                column: null,
-                value: null,
+                state_type_id: "01",
+                number: null,
+                customer_id: null,
+                date_start: null,
+                date_end: null,
+                seller_id: null,
                 series: null,
-                end:null,
+                end: null
             },
             totals: {
                 total_pen: 0,
@@ -253,8 +261,10 @@ export default {
             // this.filter_users()
         });
         this.$http.get(`/sale-notes/tables`).then(response => {
+            console.log(response);
             this.array_users = response.data.users;
             this.sellers = response.data.sellers;
+            this.state_types = response.data.state_types;
         });
     },
     async mounted() {

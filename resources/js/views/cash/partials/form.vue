@@ -95,7 +95,14 @@
 
 <script>
 export default {
-    props: ["showDialog", "recordId", "typeUser", "fromBox","principal"],
+    props: [
+        "showDialog",
+        "recordId",
+        "typeUser",
+        "fromBox",
+        "principal",
+        "configuration"
+    ],
     data() {
         return {
             loading_submit: false,
@@ -163,9 +170,28 @@ export default {
                         this.form = response.data.data;
                     });
             } else {
+                console.log(this.configuration);
+                let { pass_final_balance_cash_principal } = this.configuration;
                 this.form.user_id = this.user.id; //sesion
+                if (pass_final_balance_cash_principal) {
+                    this.getFinalBalanceLastPrincipal();
+                }
+
                 //this.form.user = this.user.name
             }
+        },
+        getFinalBalanceLastPrincipal() {
+            this.$http
+                .get(`/${this.resource}/final_balance_last_principal`)
+                .then(response => {
+                    // this.form.beginning_balance = response.data.balance;
+                    let { data } = response;
+                    let { success, balance } = data;
+                    if (success) {
+                        this.form.beginning_balance = balance.total_sales;
+                        this.$toast.success("Se ingreso el saldo anterior correctamente");
+                    }
+                });
         },
         async openingCashCkeck() {
             let response = await this.$http.get(

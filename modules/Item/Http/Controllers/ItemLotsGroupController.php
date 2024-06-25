@@ -2,6 +2,7 @@
 
 namespace Modules\Item\Http\Controllers;
 
+use App\Imports\LotGroupItemsImport;
 use App\Models\Tenant\Company;
 use App\Models\Tenant\Establishment;
 use App\Models\Tenant\Warehouse;
@@ -9,6 +10,7 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Maatwebsite\Excel\Excel;
 use Modules\Item\Http\Resources\ItemLotsGroupCollection;
 use Modules\Item\Models\Brand;
 use Modules\Item\Models\ItemLotsGroup;
@@ -16,7 +18,30 @@ use Modules\Report\Exports\ItemLotGroupExport;
 
 class ItemLotsGroupController extends Controller
 {
-
+    public function import(Request $request)
+    {
+        if ($request->hasFile('file')) {
+            try {
+                $import = new LotGroupItemsImport();
+                $import->import($request->file('file'), null, Excel::XLSX);
+                $data = $import->getData();
+                return [
+                    'success' => true,
+                    'message' =>  __('app.actions.upload.success'),
+                    'data' => $data
+                ];
+            } catch (Exception $e) {
+                return [
+                    'success' => false,
+                    'message' =>  $e->getMessage()
+                ];
+            }
+        }
+        return [
+            'success' => false,
+            'message' =>  __('app.actions.upload.error'),
+        ];
+    }
     public function index()
     {
         return view('item::item_lots_group.index');
