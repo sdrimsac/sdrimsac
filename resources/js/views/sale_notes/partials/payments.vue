@@ -670,6 +670,10 @@ export default {
             }
             let { num_schedule, amount_schedule } = this.document;
             let payment = this.records[index].payment;
+            if (payment <= 0) {
+                this.$toast.error("El monto ingresado debe ser mayor a 0.");
+                return;
+            }
             let difference = parseFloat(this.document.total_difference);
             let passLowPay = false;
             if (

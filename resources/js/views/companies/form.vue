@@ -231,6 +231,35 @@
                                         ></small>
                                     </div>
                                 </div>
+                                <div class="col-md-3">
+                                    <div
+                                        class="form-group"
+                                        :class="{
+                                            'has-danger':
+                                                errors.detraction_account
+                                        }"
+                                    >
+                                        <label
+                                            class="control-label font-weight-bold h5"
+                                        >
+                                            <i class="fas fa-file-alt"></i>
+                                            Cuenta de detracción
+                                        </label>
+
+                                        <el-input
+                                            v-model="form.detraction_account"
+                                        >
+                                        </el-input>
+                                        <small
+                                            class="text-danger"
+                                            v-if="errors.detraction_account"
+                                            v-text="
+                                                errors
+                                                    .eslogdetraction_accountan[0]
+                                            "
+                                        ></small>
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="col-md-6 mt-4" v-show="false">
@@ -839,7 +868,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <template v-if="form.soap_send_id == '02'">
+                                <!-- <template v-if="form.soap_send_id == '02'">
                                     <div class="col-md-3">
                                         <label for="soap_ose_user"
                                             >Usuario OSE</label
@@ -856,7 +885,7 @@
                                             v-model="form.ose_password"
                                         ></el-input>
                                     </div>
-                                </template>
+                                </template> -->
                             </div>
                             <template
                                 v-if="

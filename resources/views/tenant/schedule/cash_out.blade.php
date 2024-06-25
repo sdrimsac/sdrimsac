@@ -13,7 +13,7 @@
     <title>Recibo de Pago</title>
     <style>
         html {
-            margin: 3px;
+            /* margin: 3px; */
             /* padding: 5px; */
             font-family: sans-serif;
             font-size: 8px;
@@ -197,6 +197,7 @@
         }
 
         @page {
+            margin: 0cm 0cm;
             /* margin: 15px; */
         }
 
