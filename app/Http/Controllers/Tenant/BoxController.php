@@ -558,7 +558,7 @@ class BoxController extends Controller
             ->records($boxes_report)
             ->type_box($type_box)
             ->company($company)
-            ->download('Lista_de_cajas _cerradas' . Carbon::now() . '.xlsx');
+            ->download('Lista_de_cajas_cerradas' . Carbon::now() . '.xlsx');
     }
     public function reports_results_pdf(Request $request)
     {

@@ -58,30 +58,41 @@
                 </tr>
                 <tbody>
                     @foreach ($records as $row)
+
                     <?php
-                    if ($row['type'] == '1' && $row['method'] == 'Efectivo') {
-                        $ingresos = $ingresos + $row['amount'];
-                    }
-                    if ($row['type'] == '1' && $row['method'] == 'Depositos') {
-                        $depositos = $depositos + $row['amount'];
-                    }
-                    if ($row['type'] == '1' && $row['method'] == 'Transferencia') {
-                        $transferencia = $transferencia + $row['amount'];
-                    }
-
-                    if ($row['type'] == '2') {
-                        $egresos = $egresos + $row['amount'];
-                    }
-                    $date = \Carbon\Carbon::parse($row['date'])->format('d-m-Y') . " " . \Carbon\Carbon::parse($row['created_at'])->format('h:m:s');
-
+                    $amount = $row['amount'];
                     if (isset($row["document_id"]) && $row["document_id"] != null) {
                         $document = \App\Models\Tenant\Document::find($row["document_id"]);
+                        $total = $document->total;
+                        if($total < $amount){
+                            $amount = $total;
+                        }
                         $date = $document->date_of_issue . " " . $document->time_of_issue;
                     }
                     if (isset($row["sale_note_id"]) && $row["sale_note_id"] != null) {
                         $document = \App\Models\Tenant\SaleNote::find($row["sale_note_id"]);
+                        $total = $document->total;
+                        if($total < $amount){
+                            $amount = $total;
+                        }
                         $date = $document->date_of_issue->format('Y-m-d') . " " . $document->time_of_issue;
                     }
+                    if ($row['type'] == '1' && $row['method'] == 'Efectivo') {
+                        $ingresos = $ingresos + $amount;
+                    }
+                    if ($row['type'] == '1' && $row['method'] == 'Depositos') {
+                        $depositos = $depositos +  $amount;
+                    }
+                    if ($row['type'] == '1' && $row['method'] == 'Transferencia') {
+                        $transferencia = $transferencia + $amount;
+                    }
+
+                    if ($row['type'] == '2') {
+                        $egresos = $egresos +  $amount;
+                    }
+                    $date = \Carbon\Carbon::parse($row['date'])->format('d-m-Y') . " " . \Carbon\Carbon::parse($row['created_at'])->format('h:m:s');
+
+                
                     ?>
                     <tr>
                         <td class="celda_loop" style="border: 1px solid black; text-align: center;">{{ $loop->iteration }}</td>
@@ -130,7 +141,7 @@
                         @endif
                         @endif
                         <td class="celda_left" style="border: 1px solid black; text-align: center;">{{ $row['description'] }}</td>
-                        <td class="celda_date" style="border: 1px solid black; text-align: center;">{{ $row['amount'] }}</td>
+                        <td class="celda_date" style="border: 1px solid black; text-align: center;">{{ $amount}}</td>
                         <td class="celda_left" style="border: 1px solid black; text-align: center;">{{ $row['user']->name }}</td>
 
                     </tr>

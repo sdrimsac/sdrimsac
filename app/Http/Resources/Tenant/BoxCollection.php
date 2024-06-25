@@ -18,7 +18,7 @@ class BoxCollection extends ResourceCollection
     {
         return $this->collection->transform(function ($row, $key) {
             $date  = $row->created_at->format('Y-m-d H:i:s');
-
+            $amount = $row->amount;
             $customers = "";
             if ($row->type == "1") {
 
@@ -29,12 +29,21 @@ class BoxCollection extends ResourceCollection
             if ($row->type == "1") {
                 if ($row->document_id != null  && $row->type == "1") {
                     $row_document = Document::where('id', $row->document_id)->first();
+                    $total = $row_document->total;
+                    if($total < $amount){
+                        $amount = $total;
+                    }
                     $customers = ($row_document == null) ? "" : $row_document->customer->name;
                     $date = $row_document->date_of_issue."  ".$row_document->time_of_issue;
                 } else if ($row->sale_note_id != null && $row->type == "1") {
                     $row_document = SaleNote::where('id', $row->sale_note_id)->first();
+                    $total = $row_document->total;
+                    if($total < $amount){
+                        $amount = $total;
+                    }
                     $customers = ($row_document == null) ? "" : $row_document->customer->name;
                     $date = $row_document->date_of_issue->format('Y-m-d')."  ".$row_document->time_of_issue;
+
                 } else {
                     $customers = "";
                 }
@@ -59,7 +68,7 @@ class BoxCollection extends ResourceCollection
                 'reference'        => $row->cash->reference_number,
                 'category_id'       => $row->category_id,
                 'subcategory_id'    => $row->subcategory_id,
-                'amount'            => $row->amount,
+                'amount'            => $amount,
                 'method'            => $row->method,
                 // 'date'              => $row->date . " " . $row->created_at->format('h:m:s'),
                 'description'       => $row->description,

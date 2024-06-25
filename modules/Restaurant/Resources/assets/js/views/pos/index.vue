@@ -5659,6 +5659,7 @@ export default {
 
                 // let area_id = e.data.area_id;
                 let user_establishment_id = e.data.user_establishment_id;
+                let area_id = e.data.area_id;
                 let isSameEstablishment =
                     this.establishments.id == user_establishment_id;
 
@@ -5672,6 +5673,9 @@ export default {
                     }
                 }
 
+                if(area_id!=this.area_id){
+                    return;
+                }
                 if (e.data.direct_printing == true) {
                     if (e.data.printing == true && canPrint) {
                         let copies = Number(e.data.copies) || 0;

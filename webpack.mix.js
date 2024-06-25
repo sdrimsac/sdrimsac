@@ -48,16 +48,16 @@ mix.webpackConfig({
     },
     
 })
-    // .sourceMaps();
-    .sourceMaps(false, "source-map");
-    // .version();
+    .sourceMaps()
+    // .sourceMaps(false, "source-map")
+    .version();
 
-// if (mix.inProduction()) {
-//     mix.sourceMaps();
-//     mix.version();
-//     mix.webpackConfig({
-//         output: {
-//             chunkFilename: "js/[name].[chunkhash].js"
-//         }
-//     });
-// }
+if (mix.inProduction()) {
+    mix.sourceMaps();
+    mix.version();
+    mix.webpackConfig({
+        output: {
+            chunkFilename: "js/[name].[chunkhash].js"
+        }
+    });
+}
