@@ -117,7 +117,12 @@ class DocumentInput
         if ($user_id == null) {
             $user_id = User::first()->id;
         }
-
+        $total_payment =  Functions::valueKeyInArray($inputs, 'total_payment', 0.0);
+        $detraction  = self::detraction($inputs);
+        if ($detraction) {
+            $amount = $detraction['amount'];
+            $total_payment = $total_payment - $amount;
+        }
         // $from_dispatch = array_key_exists('dispatch_id', $inputs);
         return [
             'vacate' => Functions::valueKeyInArray($inputs, 'vacate', false),
@@ -189,7 +194,7 @@ class DocumentInput
             'total_value' => $inputs['total_value'],
             'total' => $inputs['total'],
             'total_rounded' => Functions::valueKeyInArray($inputs, 'total_rounded', $inputs['total']),
-            'total_payment' => Functions::valueKeyInArray($inputs, 'total_payment', 0.0),
+            'total_payment' => $total_payment,
             'observation' => $observation,
             'has_prepayment' => Functions::valueKeyInArray($inputs, 'has_prepayment', 0),
             'affectation_type_prepayment' => Functions::valueKeyInArray($inputs, 'affectation_type_prepayment'),
@@ -201,7 +206,7 @@ class DocumentInput
             'guides' => self::guides($inputs),
             'related' => self::related($inputs),
             'perception' => self::perception($inputs),
-            'detraction' => self::detraction($inputs),
+            'detraction' => $detraction,
             'invoice' => $invoice,
             'note' => $note,
             'hotel' => self::hotel($inputs),
@@ -223,9 +228,9 @@ class DocumentInput
     {
         $establishment_id = Functions::valueKeyInArray($inputs, 'establishment_id');
         $warehouse_id_default = null;
-        if($establishment_id){
+        if ($establishment_id) {
             $warehouse = Warehouse::where('establishment_id', $establishment_id)->first();
-            if($warehouse){
+            if ($warehouse) {
                 $warehouse_id_default = $warehouse->id;
             }
         }

@@ -123,7 +123,6 @@
 
                     this.detraction.percentage = detraction_type.percentage
                     this.detraction.amount = (this.currencyTypeIdActive == 'PEN') ? _.round(parseFloat(this.total) * (detraction_type.percentage/100),2): _.round((parseFloat(this.total) * this.exchangeRateSale) * (detraction_type.percentage/100),2)
-                    // console.log(detraction_type, this.form.detraction)
                 
                 }
             },

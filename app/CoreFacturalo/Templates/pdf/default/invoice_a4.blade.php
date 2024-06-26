@@ -521,6 +521,7 @@
         @if ($document->total_payment>0)
         <tr>
             <td colspan="7" class="text-right font-bold border_detalles">TOTAL A PAGAR: {{ $document->currency_type->symbol }}</td>
+                
             <td class="text-right font-bold border_detalles">{{ number_format($document->total_payment, 2) }}</td>
         </tr>
         @endif

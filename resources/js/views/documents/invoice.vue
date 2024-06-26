@@ -631,36 +631,107 @@
                             </div>
                         </div>
                         <template v-if="!is_client">
-                            <!-- <div class="row mb-3" v-if="form.operation_type_id == '1001'">
+                            <div
+                                class="row mb-3"
+                                v-if="form.operation_type_id == '1001'"
+                            >
                                 <div class="col-lg-4">
-                                    <div class="form-group" >
-                                        <label class="control-label">Bienes y servicios sujetos a detracciones<span class="text-danger"> *</span></label>
-                                        <el-select v-model="form.detraction.detraction_type_id" @change="changeDetractionType" filterable >
-                                            <el-option v-for="option in detraction_types" :key="option.id" :value="option.id" :label="`${option.description} - ${option.percentage}%`"></el-option>
+                                    <div class="form-group">
+                                        <label class="control-label"
+                                            >Bienes y servicios sujetos a
+                                            detracciones<span
+                                                class="text-danger"
+                                            >
+                                                *</span
+                                            ></label
+                                        >
+                                        <el-select
+                                            v-model="
+                                                form.detraction
+                                                    .detraction_type_id
+                                            "
+                                            @change="changeDetractionType"
+                                            filterable
+                                        >
+                                            <el-option
+                                                v-for="option in detraction_types"
+                                                :key="option.id"
+                                                :value="option.id"
+                                                :label="
+                                                    `${option.description} - ${option.percentage}%`
+                                                "
+                                            ></el-option>
                                         </el-select>
                                     </div>
                                 </div>
                                 <div class="col-lg-4">
-                                    <div class="form-group" >
-                                        <label class="control-label">Método pago - Detracción<span class="text-danger"> *</span></label>
-                                        <el-select v-model="form.detraction.payment_method_id"  filterable>
-                                            <el-option v-for="option in cat_payment_method_types" :key="option.id" :value="option.id" :label="`${option.description}`"></el-option>
+                                    <div class="form-group">
+                                        <label class="control-label"
+                                            >Método pago - Detracción<span
+                                                class="text-danger"
+                                            >
+                                                *</span
+                                            ></label
+                                        >
+                                        <el-select
+                                            v-model="
+                                                form.detraction
+                                                    .payment_method_id
+                                            "
+                                            filterable
+                                        >
+                                            <el-option
+                                                v-for="option in cat_payment_method_types"
+                                                :key="option.id"
+                                                :value="option.id"
+                                                :label="`${option.description}`"
+                                            ></el-option>
                                         </el-select>
                                     </div>
                                 </div>
                                 <div class="col-lg-2">
                                     <div class="form-group">
-                                        <label class="control-label">Cuenta bancaria<span class="text-danger"> *</span></label>
-                                        <el-input v-model="form.detraction.bank_account" readonly> <i slot="prefix" class="el-icon-edit-outline"></i></el-input>
+                                        <label class="control-label"
+                                            >Cuenta bancaria<span
+                                                class="text-danger"
+                                            >
+                                                *</span
+                                            ></label
+                                        >
+                                        <el-input
+                                            v-model="
+                                                form.detraction.bank_account
+                                            "
+                                            readonly
+                                        >
+                                            <i
+                                                slot="prefix"
+                                                class="el-icon-edit-outline"
+                                            ></i
+                                        ></el-input>
                                     </div>
                                 </div>
                                 <div class="col-lg-2">
                                     <div class="form-group">
-                                        <label class="control-label">T. Detracción<span class="text-danger"> *</span></label>
-                                        <el-input v-model="form.detraction.amount" readonly> <i slot="prefix" class="el-icon-edit-outline"></i></el-input>
+                                        <label class="control-label"
+                                            >T. Detracción<span
+                                                class="text-danger"
+                                            >
+                                                *</span
+                                            ></label
+                                        >
+                                        <el-input
+                                            v-model="form.detraction.amount"
+                                            readonly
+                                        >
+                                            <i
+                                                slot="prefix"
+                                                class="el-icon-edit-outline"
+                                            ></i
+                                        ></el-input>
                                     </div>
                                 </div>
-                            </div> -->
+                            </div>
 
                             <div class="row">
                                 <div
@@ -1534,13 +1605,21 @@
                                             ></el-input>
                                         </td>
                                     </tr>
-                                    <!-----
                                     <tr v-if="form.detraction.amount > 0">
-                                        <td>M. DETRACCIÓN</td>
-                                        <td>:</td>
-                                        <td class="text-end">{{ currency_type.symbol }} {{ form.detraction.amount }}</td>
+                                        <td
+                                            class="text-right"
+                                            style="padding-right: 20px;"
+                                        >
+                                            M. DETRACCIÓN:
+                                        </td>
+                                        <td
+                                            class="text-end"
+                                            style="padding-left: 20px;"
+                                        >
+                                            {{ currency_type.symbol }}
+                                            {{ form.detraction.amount }}
+                                        </td>
                                     </tr>
-                                    ----->
                                     <tr v-if="form.total_exportation > 0">
                                         <td
                                             class="text-right"
@@ -1673,7 +1752,13 @@
                                             {{ form.total }}
                                         </td>
                                     </tr>
-                                    <tr v-if="form.total > 0 && this.form.currency_type_id !== 'USD'">
+                                    <tr
+                                        v-if="
+                                            form.total > 0 &&
+                                                this.form.currency_type_id !==
+                                                    'USD'
+                                        "
+                                    >
                                         <td
                                             class="text-right"
                                             v-if="form.total > 0"
@@ -1701,10 +1786,21 @@
                                             class="text-end"
                                             style="padding-left: 20px;"
                                         >
-                                            <h4>
-                                                {{ currency_type.symbol }}
-                                                {{ form.total_payment }}
-                                            </h4>
+                                            {{ currency_type.symbol }}
+                                            <template v-if="form.detraction">
+                                                {{
+                                                    Number(form.total_payment) -
+                                                        Number(
+                                                            form.detraction
+                                                                .amount
+                                                        )
+                                                }}
+                                            </template>
+                                            <template v-else>
+                                                <h4>
+                                                    {{ form.total_payment }}
+                                                </h4>
+                                            </template>
                                         </td>
                                     </tr>
                                 </table>
@@ -1778,15 +1874,15 @@
                 :isContingency="is_contingency"
                 :showClose="showClose"
             ></document-options>
-                    <document-detraction
-            :currency-type-id-active="form.currency_type_id"
-            :detraction="form.detraction"
-            :exchange-rate-sale="form.exchange_rate_sale"
-            :operation-type-id="form.operation_type_id"
-            :showDialog.sync="showDialogDocumentDetraction"
-            :total="form.total"
-            @addDocumentDetraction="addDocumentDetraction"
-        ></document-detraction>
+            <document-detraction
+                :currency-type-id-active="form.currency_type_id"
+                :detraction="form.detraction"
+                :exchange-rate-sale="form.exchange_rate_sale"
+                :operation-type-id="form.operation_type_id"
+                :showDialog.sync="showDialogDocumentDetraction"
+                :total="form.total"
+                @addDocumentDetraction="addDocumentDetraction"
+            ></document-detraction>
         </div>
     </div>
 </template>
@@ -2736,7 +2832,9 @@ export default {
                 payments: [],
                 prepayments: [],
                 legends: [],
-                detraction: {},
+                detraction: {
+                    amount: 0
+                },
                 additional_information: null,
                 plate_number: null,
                 has_prepayment: false,
