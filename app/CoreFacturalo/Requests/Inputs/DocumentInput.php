@@ -501,38 +501,40 @@ class DocumentInput
 
                 // dd($inputs['detraction'],$inputs);
                 $detraction = $inputs['detraction'];
-                $detraction_type_id = $detraction['detraction_type_id'];
-                $percentage = $detraction['percentage'];
-                $amount = $detraction['amount'];
-                $payment_method_id = $detraction['payment_method_id'];
-                $bank_account = $detraction['bank_account'];
+                if (isset($detraction['detraction_type_id'])) {
+                    $detraction_type_id = $detraction['detraction_type_id'];
+                    $percentage = $detraction['percentage'];
+                    $amount = $detraction['amount'];
+                    $payment_method_id = $detraction['payment_method_id'];
+                    $bank_account = $detraction['bank_account'];
 
-                $pay_constancy = array_key_exists('pay_constancy', $detraction) ? $detraction['pay_constancy'] : null;
-                $set_image_pay_constancy = null;
-                $image_pay_constancy = array_key_exists('image_pay_constancy', $detraction) ? $detraction['image_pay_constancy'] : null;
+                    $pay_constancy = array_key_exists('pay_constancy', $detraction) ? $detraction['pay_constancy'] : null;
+                    $set_image_pay_constancy = null;
+                    $image_pay_constancy = array_key_exists('image_pay_constancy', $detraction) ? $detraction['image_pay_constancy'] : null;
 
-                if (isset($image_pay_constancy['temp_path'])) {
+                    if (isset($image_pay_constancy['temp_path'])) {
 
-                    $directory = 'public' . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'image_detractions' . DIRECTORY_SEPARATOR;
+                        $directory = 'public' . DIRECTORY_SEPARATOR . 'uploads' . DIRECTORY_SEPARATOR . 'image_detractions' . DIRECTORY_SEPARATOR;
 
-                    $file_name_old = $image_pay_constancy['image'];
-                    $file_name_old_array = explode('.', $file_name_old);
-                    $file_content = file_get_contents($image_pay_constancy['temp_path']);
-                    $datenow = date('YmdHis');
-                    $file_name =  $detraction_type_id . '-' . $bank_account . '-' . $datenow . '.' . $file_name_old_array[1];
-                    Storage::put($directory . $file_name, $file_content);
-                    $set_image_pay_constancy = $file_name;
+                        $file_name_old = $image_pay_constancy['image'];
+                        $file_name_old_array = explode('.', $file_name_old);
+                        $file_content = file_get_contents($image_pay_constancy['temp_path']);
+                        $datenow = date('YmdHis');
+                        $file_name =  $detraction_type_id . '-' . $bank_account . '-' . $datenow . '.' . $file_name_old_array[1];
+                        Storage::put($directory . $file_name, $file_content);
+                        $set_image_pay_constancy = $file_name;
+                    }
+
+                    return [
+                        'detraction_type_id' => $detraction_type_id,
+                        'percentage' => $percentage,
+                        'amount' => $amount,
+                        'payment_method_id' => $payment_method_id,
+                        'bank_account' => $bank_account,
+                        'pay_constancy' => $pay_constancy,
+                        'image_pay_constancy' => $set_image_pay_constancy,
+                    ];
                 }
-
-                return [
-                    'detraction_type_id' => $detraction_type_id,
-                    'percentage' => $percentage,
-                    'amount' => $amount,
-                    'payment_method_id' => $payment_method_id,
-                    'bank_account' => $bank_account,
-                    'pay_constancy' => $pay_constancy,
-                    'image_pay_constancy' => $set_image_pay_constancy,
-                ];
             }
         }
         return null;
