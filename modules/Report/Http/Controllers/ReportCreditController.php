@@ -94,13 +94,14 @@ class ReportCreditController extends Controller
     private function get_daily_cash_records(Request $request)
     {
         $date = $request->date;
-        $credits = SaleNote::whereHas(
-            'creditPayments',
-            function ($query) use ($date) {
-                $query->where('date_payment', $date)
-                    ->where('paid', 0);
-            }
-        )
+        $credits = SaleNote::where('state_type_id', '!=', '11')
+            ->whereHas(
+                'creditPayments',
+                function ($query) use ($date) {
+                    $query->where('date_payment', $date)
+                        ->where('paid', 0);
+                }
+            )
             ->with(['customer', 'user', 'sale_note_credit', 'creditPayments']); // Cargar relaciones necesarias
         return $credits;
     }
@@ -281,7 +282,7 @@ class ReportCreditController extends Controller
             if ($type == 'is_product') {
                 $records = $records->whereHas('sale_note', function ($query) {
                     $query->where('is_product', true)
-                        ->where('status','<>', 'R')
+                        ->where('status', '<>', 'R')
                         ->where('state_type_id', '!=', 11);
                 });
             }
