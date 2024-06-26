@@ -451,6 +451,7 @@ class SaleNoteController extends Controller
         if ($series) {
             $records = $records->where('series', 'like', '%' . $series . '%');
         }
+        $records = $records->orderBy('date_of_issue', 'desc');
         return $records;
     }
     public function records(Request $request)
