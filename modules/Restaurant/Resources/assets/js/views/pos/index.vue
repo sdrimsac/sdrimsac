@@ -5673,9 +5673,6 @@ export default {
                     }
                 }
 
-                if(area_id!=this.area_id){
-                    return;
-                }
                 if (e.data.direct_printing == true) {
                     if (e.data.printing == true && canPrint) {
                         let copies = Number(e.data.copies) || 0;
