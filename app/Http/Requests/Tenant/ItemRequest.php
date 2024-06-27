@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Tenant;
 
+use App\Models\Tenant\Configuration;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -15,24 +16,26 @@ class ItemRequest extends FormRequest
     public function rules()
     {
         $id = $this->input('id');
+        $barcodeRules = ["nullable" ];
+        $configuration = Configuration::first();
+        $health_network = (bool) $configuration->health_network;
+        if(!$health_network){
+            $barcodeRules = ["nullable", Rule::unique('tenant.items')->ignore($id)];
+        }
         return [
             'internal_id' => [
                 'nullable',
                 Rule::unique('tenant.items')->ignore($id),
             ],
-            'barcode' => [
-                'nullable',
-                Rule::unique('tenant.items')->ignore($id),
-            ],
+            'barcode' => $barcodeRules,
+            // 'barcode' => [
+            //     'nullable',
+            //     Rule::unique('tenant.items')->ignore($id),
+            // ],
             'description' => [
                 'required',
             ],
-            // 'name' => [
-            //     'required',
-            // ],
-            // 'second_name' => [
-            //     'required',
-            // ],
+
             'unit_type_id' => [
                 'required',
             ],
@@ -49,11 +52,9 @@ class ItemRequest extends FormRequest
             ],
             'stock' => [
                 'required',
-                // 'gt:0'
             ],
             'stock_min' => [
                 'required',
-                // 'gt:0'
             ],
             'sale_affectation_igv_type_id' => [
                 'required'
@@ -61,12 +62,7 @@ class ItemRequest extends FormRequest
             'purchase_affectation_igv_type_id' => [
                 'required'
             ],
-            // 'category_id' => [
-            //     'required',
-            // ],
-            // 'brand_id' => [
-            //     'required_if:is_set,false',
-            // ],
+    
 
         ];
     }
