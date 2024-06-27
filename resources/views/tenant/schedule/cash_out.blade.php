@@ -297,63 +297,65 @@
 <body>
 
 
-    <div class="text-center">
-        <p>
-            <strong class="header_title0 under_line">
-                TICKET DE DESEMBOLSO CRÉDITO EFECTIVO
-            </strong>
+    <table border="0" style="width: 80%">
+        <div class="text-center">
+            <p>
+                <strong class="header_title0 under_line">
+                    TICKET DE DESEMBOLSO CRÉDITO EFECTIVO
+                </strong>
+            </p>
+        </div>
+        <p class="description">
+            <strong>FECHA DE EMISION: </strong>{{ $sale->date_of_issue->format('Y-m-d') }}
         </p>
-    </div>
-    <p class="description">
-        <strong>FECHA DE EMISION: </strong>{{ $sale->date_of_issue->format('Y-m-d') }}
-    </p>
-    <p class="description">
-        <strong>FECHA DE DESEMBOLSO DE EFECTIVO: </strong> {{ $sale->date_of_issue->format('Y-m-d') }}
-    </p>
-    <p class="description">
-        <strong>USUARIO: </strong>{{ $user->name }}
-    </p>
-    <p class="description">
-        <strong>TIPO DE CRÉDITO: </strong>EFECTIVO
-    </p>
-    <p class="description">
-        <strong>TIPO DE CUOTA: </strong> {{ mb_strtoupper($sale->type_payment) }}
-    </p>
-    <p class="description">
-        <strong>NOMBRE DEL CLIENTE:</strong> {{ $sale->customer->name }}
-    </p>
-    <p class="description">
-        <strong>DNI DEL CLIENTE:</strong> {{ $sale->customer->number }}
-    </p>
-    <p class="description">
-        <strong>MONTO DEL CRÉDITO:</strong> {{ floatval($quote) * count($data) }}
-    </p>
-    <p>
-        <strong>MONTO A DESEMBOLSAR:</strong> <span class="description">
-            {{ $sale->total }}
-        </span>
-    </p>
-    <br><br>
-    <table>
-        <tr>
-            <td width="48%">
-                <div class="text-center">
-                    ______________________________
-                </div>
-                <div class="text-center description">
-                    USUARIO
-                </div>
+        <p class="description">
+            <strong>FECHA DE DESEMBOLSO DE EFECTIVO: </strong> {{ $sale->date_of_issue->format('Y-m-d') }}
+        </p>
+        <p class="description">
+            <strong>USUARIO: </strong>{{ $user->name }}
+        </p>
+        <p class="description">
+            <strong>TIPO DE CRÉDITO: </strong>EFECTIVO
+        </p>
+        <p class="description">
+            <strong>TIPO DE CUOTA: </strong> {{ mb_strtoupper($sale->type_payment) }}
+        </p>
+        <p class="description">
+            <strong>NOMBRE DEL CLIENTE:</strong> {{ $sale->customer->name }}
+        </p>
+        <p class="description">
+            <strong>DNI DEL CLIENTE:</strong> {{ $sale->customer->number }}
+        </p>
+        <p class="description">
+            <strong>MONTO DEL CRÉDITO:</strong> {{ floatval($quote) * count($data) }}
+        </p>
+        <p>
+            <strong>MONTO A DESEMBOLSAR:</strong> <span class="description">
+                {{ $sale->total }}
+            </span>
+        </p>
+        <br><br>
+        <table>
+            <tr>
+                <td width="48%">
+                    <div class="text-center">
+                        ______________________________
+                    </div>
+                    <div class="text-center description">
+                        USUARIO
+                    </div>
 
-            </td>
-            <td width="4%"></td>
-            <td width="48%">
-                <div class="text-center">
-                    ______________________________
-                </div>
-                <div class="text-center description">
-                    CLIENTE
-                </div>
-            </td>
-        </tr>
+                </td>
+                <td width="4%"></td>
+                <td width="48%">
+                    <div class="text-center">
+                        ______________________________
+                    </div>
+                    <div class="text-center description">
+                        CLIENTE
+                    </div>
+                </td>
+            </tr>
+        </table>
     </table>
 </body>
