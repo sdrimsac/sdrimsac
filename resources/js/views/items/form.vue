@@ -36,7 +36,7 @@
                                 <small class="text-danger" v-if="errors.internal_id" v-text="errors.internal_id[0]"></small>
                             </div>
                         </div>
-                        <div class="col-12 col-lg-6 col-xl-3">
+                        <div class="col-12 col-lg-6 col-xl-3" v-if="configuration.show_second_name_external_code">
                             <div class="form-group" :class="{ 'has-danger': errors.barcode }">
                                 <label class="control-label">Código Externo
                                     <el-tooltip class="item" effect="dark" content="Código Barra de la empresa para el control de sus productos" placement="top-start">
@@ -48,7 +48,7 @@
                                 <small class="text-danger" v-if="errors.barcode" v-text="errors.barcode[0]"></small>
                             </div>
                         </div>
-                        <div class="col-12 col-lg-6 col-xl-3">
+                        <div :class="`col-12 col-lg-6 ${configuration.show_second_name_external_code ?  'col-xl-3':'col-xl-9'}`">
                             <div class="form-group" :class="{
                                                 'has-danger': errors.description
                                             }">
@@ -68,7 +68,7 @@
                                 <small class="text-danger" v-if="errors.description" v-text="errors.description[0]"></small>
                             </div>
                         </div>
-                        <div class="col-12 col-lg-6 col-xl-3">
+                        <div class="col-12 col-lg-6 col-xl-3" v-if="configuration.show_second_name_external_code">
                             <div class="form-group" :class="{
                                                 'has-danger': errors.second_name
                                             }">

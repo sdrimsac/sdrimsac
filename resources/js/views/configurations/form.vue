@@ -1721,6 +1721,40 @@
                                                                                         </small>
                                                                                     </div>
                                                                                 </div>
+                                                                                <div
+                                                                                    class="col-md-4 mt-4"
+                                                                                >
+                                                                                    <div
+                                                                                        class="form-group"
+                                                                                    >
+                                                                                        <label
+                                                                                            class="control-label w-100"
+                                                                                        >
+                                                                                            <i
+                                                                                                class="fas fa-percentage tab-icon"
+                                                                                            ></i>
+                                                                                            Mostrar Nombre secundario - Código externo
+                                                                                            <el-tooltip
+                                                                                                content="Mostrar Nombre secundario - Código externo en el formulario de productos"
+                                                                                            >
+                                                                                                <i
+                                                                                                    class="fa fa-info-circle"
+                                                                                                ></i>
+                                                                                            </el-tooltip>
+                                                                                        </label>
+                                                                                        <el-switch
+                                                                                            v-model="
+                                                                                                form.show_second_name_external_code
+                                                                                            "
+                                                                                            active-text="Si"
+                                                                                            inactive-text="No"
+                                                                                            @change="
+                                                                                                submit
+                                                                                            "
+                                                                                        ></el-switch>
+                                                                                    </div>
+                                                                                </div>
+                                                                             
                                                                             </div>
                                                                         </div>
                                                                     </el-card>

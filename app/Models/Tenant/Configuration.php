@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Config;
 class Configuration extends ModelTenant
 {
     protected $fillable = [
+        'show_second_name_external_code',
         'all_items_pos',
         'pass_final_balance_cash_principal',
         'configurable_impresion_ticket_categoria_caja',
@@ -182,6 +183,7 @@ class Configuration extends ModelTenant
 
     ];
     protected $casts = [
+        'show_second_name_external_code' => 'boolean',
         'all_items_pos' => 'boolean',
         'pass_final_balance_cash_principal' => 'boolean',
         'change_price_product' => 'boolean',

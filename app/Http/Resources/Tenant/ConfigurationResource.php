@@ -15,6 +15,7 @@ class ConfigurationResource extends JsonResource
     public function toArray($request)
     {
         return [
+            'show_second_name_external_code' => (bool) $this->show_second_name_external_code,
             'all_items_pos' => (bool) $this->all_items_pos,
             'pass_final_balance_cash_principal' => (bool) $this->pass_final_balance_cash_principal,
             'configurable_impresion_ticket_categoria_caja' => (bool) $this->configurable_impresion_ticket_categoria_caja,
