@@ -259,7 +259,9 @@ class DocumentInput
                 $type_desc = null;
                 if ($type_id) {
                     $unit_type = ItemUnitType::find($type_id);
-                    $type_desc = $unit_type->description;
+                    if ($unit_type) {
+                        $type_desc = $unit_type->description;
+                    }
                 }
 
                 $items[] = [
