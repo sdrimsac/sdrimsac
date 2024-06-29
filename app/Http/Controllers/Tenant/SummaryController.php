@@ -50,6 +50,8 @@ class SummaryController extends Controller
     }
     
     public function documents(SummaryDocumentsRequest $request) {
+        ini_set('max_execution_time', 6000);
+        ini_set('memory_limit', '-1');
         $company = Company::active();
         $date_of_reference = $request->input('date_of_reference');
         
