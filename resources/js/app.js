@@ -188,166 +188,759 @@ Vue.component(
     require("../../modules/Report/Resources/assets/js/views/credit/daily_cash.vue")
 );
 
-Vue.component("whatsapp-index", require("../../modules/Restaurant/Resources/assets/js/views/whatsapp/index.vue").default);
-Vue.component("vip-items", require("../../modules/Vip/Resources/assets/js/views/index.vue").default);
-Vue.component("etiqueta-index", require("../../modules/Etiquetas/Resources/assets/js/views/index.vue").default);
-Vue.component("inventory-index", require("../../modules/inventory/Resources/assets/js/inventory/inventory.vue").default);
-Vue.component("restaurant-food-list", require("../../modules/Restaurant/Resources/assets/js/views/food/index.vue").default);
-Vue.component("tenant-restaurant-index", require("../../modules/Restaurant/Resources/assets/js/views/restaurant.vue").default);
-Vue.component("tenant-restaurant-kitchen", require("../../modules/Restaurant/Resources/assets/js/views/kitchen.vue").default);
-Vue.component("tenant-restaurant-items", require("../../modules/Restaurant/Resources/assets/js/views/configuration/items.vue").default);
-Vue.component("restaurant-ordens-index", require("../../modules/Restaurant/Resources/assets/js/views/ordens/index.vue").default);
-Vue.component("restaurant-worker-login", require("../../modules/Restaurant/Resources/assets/js/views/login/login.vue").default);
-Vue.component("tenant-item-color-size-index", require("./views/item_color_size/index.vue").default);
-Vue.component("tenant-item-sets-index", require("./views/item_sets/index.vue").default);
-Vue.component("restaurant-worker-dashboard", require("../../modules/Restaurant/Resources/assets/js/views/worker/dashboard.vue").default);
-Vue.component("restaurant-kitchen-dashboard", require("../../modules/Restaurant/Resources/assets/js/views/kitchen/dashboard.vue").default);
-Vue.component("tenant-restaurant-workers", require("../../modules/Restaurant/Resources/assets/js/views/workers/workers.vue").default);
-Vue.component("tenant-restaurant-pos", require("../../modules/Restaurant/Resources/assets/js/views/pos/index.vue").default);
-Vue.component("tenant-dashboard-index", require("../../modules/Dashboard/Resources/assets/js/views/index.vue").default);
-Vue.component("tenant-companies-form", require("./views/companies/form.vue").default);
-Vue.component("tenant-account-export", require("../../modules/Format/Resources/assets/js/views/account/format.vue").default);
-Vue.component("tenant-companies-logo", require("./views/companies/logo.vue").default);
-Vue.component("tenant-certificates-index", require("./views/certificates/index.vue").default);
-Vue.component("tenant-certificates-form", require("./views/certificates/form.vue").default);
-Vue.component("tenant-configurations-form", require("./views/configurations/form.vue").default);
-Vue.component("tenant-configurations-visual", require("./views/configurations/visual.vue").default);
-Vue.component("tenant-configurations-pdf", require("./views/configurations/pdf_templates.vue").default);
-Vue.component("tenant-items-client", require("./views/items/items_client.vue").default);
-Vue.component("tenant-items-index", require("./views/items/index.vue").default);
-Vue.component("tenant-persons-index", require("./views/persons/index.vue").default);
-Vue.component("tenant-users-form", require("./views/users/form.vue").default);
-Vue.component("tenant-documents-index", require("./views/documents/index.vue").default);
-Vue.component("restaurant-documents-index", require("../../modules/Restaurant/Resources/assets/js/views/documents/index.vue").default);
-Vue.component("tenant-documents-invoice", require("./views/documents/invoice.vue").default);
-Vue.component("tenant-documents-note-other", require("./views/documents/note_other.vue").default);
-Vue.component("tenant-documents-note", require("./views/documents/note.vue").default);
-Vue.component("tenant-summaries-index", require("./views/summaries/index.vue").default);
-Vue.component("tenant-voided-index", require("./views/voided/index.vue").default);
-Vue.component("tenant-options-form", require("./views/options/form.vue").default);
-Vue.component("tenant-users-index", require("./views/users/index.vue").default);
-Vue.component("tenant-banks-index", require("./views/banks/index.vue").default);
-Vue.component("tenant-unit_types-index", require("./views/unit_types/index.vue").default);
-Vue.component("tenant-establishments-index", require("./views/establishments/index.vue").default);
-Vue.component("tenant-currency-types-index", require("./views/currency_types/index.vue").default);
-Vue.component("tenant-purchases-index", require("./views/purchases/index.vue").default);
-Vue.component("tenant-purchases-form", require("./views/purchases/form.vue").default);
-Vue.component("tenant-purchases-edit", require("./views/purchases/form_edit.vue").default);
-Vue.component("tenant-attribute_types-index", require("./views/attribute_types/index.vue").default);
-Vue.component("tenant-warehouses", require("./views/components/warehouses.vue").default);
-Vue.component("tenant-arqueos-form", require("./views/arqueos/index.vue").default);
-Vue.component("tenant-tasks-lists", require("./views/tasks/lists.vue").default);
-Vue.component("tenant-tasks-form", require("./views/tasks/form.vue").default);
-Vue.component("tenant-sale-notes-credit-penalty", require("./views/sale_notes/credit_penalty.vue").default);
-Vue.component("tenant-sale-notes-index", require("./views/sale_notes/index.vue").default);
-Vue.component("tenant-sale-notes-form", require("./views/sale_notes/form.vue").default);
-Vue.component("tenant-cash-transfer-index", require("../../modules/Restaurant/Resources/assets/js/views/cash_transfer/index.vue").default);
-Vue.component("tenant-cash-transfer-index-report", require("../../modules/Restaurant/Resources/assets/js/views/cash_transfer/report.vue").default);
-Vue.component("tenant-cash-index", require("../../modules/Restaurant/Resources/assets/js/views/cash/index.vue").default);
-Vue.component("cash-index-closed", require("@views/cash/closed.vue").default);
-Vue.component("cash-index-main", require("@views/cash/main.vue").default);
-Vue.component("tenant-card-brands-index", require("./views/card_brands/index.vue").default);
-Vue.component("tenant-payment-method-index", require("./views/payment_method/index.vue").default);
-Vue.component("tenant-category-index", require("./views/category/index.vue").default);
-Vue.component("inventory-transactions-index", require("../../modules/Inventory/Resources/assets/js/transactions/index.vue").default);
-Vue.component("inventory-transfers-index", require("../../modules/Inventory/Resources/assets/js/transfers/index.vue").default);
-Vue.component("inventory-transfers-place-index", require("../../modules/Inventory/Resources/assets/js/transfers_place/index.vue").default);
-Vue.component("tenant-account-format", require("../../modules/Format/Resources/assets/js/views/account/format.vue").default);
-Vue.component("warehouses-index", require("../../modules/Inventory/Resources/assets/js/warehouses/index.vue").default);
-Vue.component("tenant-inventories-form", require("../../modules/Inventory/Resources/assets/js/config/form.vue").default);
-Vue.component("tenant-documents-not-sent", require("../../modules/Document/Resources/assets/js/views/documents/not_sent.vue").default);
-Vue.component("tenant-report-purchases-index", require("../../modules/Report/Resources/assets/js/views/purchases/index.vue").default);
-Vue.component("tenant-report-documents-index", require("../../modules/Report/Resources/assets/js/views/documents/index.vue").default);
-Vue.component("tenant-report-customers-index", require("../../modules/Report/Resources/assets/js/views/customers/index.vue").default);
-Vue.component("tenant-report-items-index", require("../../modules/Report/Resources/assets/js/views/items/index.vue").default);
-Vue.component("tenant-report-items-defeated", require("../../modules/Report/Resources/assets/js/views/items/defeated.vue").default);
-Vue.component("tenant-report-sale_notes-index", require("../../modules/Report/Resources/assets/js/views/sale_notes/index.vue").default);
-Vue.component("tenant-report-cash-index", require("../../modules/Report/Resources/assets/js/views/cash/index.vue").default);
-Vue.component("tenant-series-configurations-index", require("../../modules/Document/Resources/assets/js/views/series_configurations/index.vue").default);
-Vue.component("tenant-report-order-notes-consolidated-index", require("../../modules/Report/Resources/assets/js/views/order_notes_consolidated/index.vue").default);
-Vue.component("tenant-report-general-items-index", require("../../modules/Report/Resources/assets/js/views/general_items/index.vue").default);
-Vue.component("tenant-report-order-notes-general-index", require("../../modules/Report/Resources/assets/js/views/order_notes_general/index.vue").default);
-Vue.component("tenant-report-sales-consolidated-index", require("../../modules/Report/Resources/assets/js/views/sales_consolidated/index.vue").default);
-Vue.component("tenant-categories-index", require("../../modules/Item/Resources/assets/js/views/categories/index.vue").default);
-Vue.component("tenant-brands-index", require("../../modules/Item/Resources/assets/js/views/brands/index.vue").default);
-Vue.component("tenant-manufactured-index", require("../../modules/Item/Resources/assets/js/views/manufactured/index.vue").default);
-Vue.component("tenant-report-valued-kardex", require("../../modules/Inventory/Resources/assets/js/valued_kardex/index.vue").default);
-Vue.component("tenant-finance-global-payments-index", require("../../modules/Finance/Resources/assets/js/views/global_payments/index.vue").default);
-Vue.component("tenant-finance-balance-index", require("../../modules/Finance/Resources/assets/js/views/balance/index.vue").default);
-Vue.component("tenant-finance-payment-method-types-index", require("../../modules/Finance/Resources/assets/js/views/payment_method_types/index.vue").default);
-Vue.component("tenant-finance-unpaid-index", require("@viewsModuleFinance/unpaid/index.vue").default);
-Vue.component("tenant-finance-income-index", require("@viewsModuleFinance/income/index.vue").default);
-Vue.component("tenant-finance-income-form", require("@viewsModuleFinance/income/form.vue").default);
-Vue.component("tenant-income-types-index", require("@viewsModuleFinance/income_types/index.vue").default);
-Vue.component("tenant-income-reasons-index", require("@viewsModuleFinance/income_reasons/index.vue").default);
-Vue.component("tenant-person-types-index", require("./views/person_types/index.vue").default);
-Vue.component("x-form-group", require("./components/FormGroup.vue").default);
-Vue.component("tenant-account-payment-index", require("./views/account/payment_index.vue").default);
-Vue.component("tenant-account-configuration-index", require("./views/account/configuration.vue").default);
-Vue.component("tenant-groups-index", require("./views/groups/index.vue").default);
-Vue.component("tenant-subcategories-index", require("./views/subcategory/index.vue").default);
-Vue.component("tenant-boxes-index", require("./views/boxes/index.vue").default);
-Vue.component("tenant-boxes-expenses-index", require("../../modules/Restaurant/Resources/assets/js/views/expenses/index.vue").default);
-Vue.component("tenant-boxes-incomes-index", require("../../modules/Restaurant/Resources/assets/js/views/incomes/index.vue").default);
-Vue.component("tenant-incomes-index", require("./views/incomebox/index.vue").default);
-Vue.component("tenant-boxes-reports", require("./views/boxes/report.vue").default);
-Vue.component("tenant-boxes-reports-global", require("./views/boxes/global.vue").default);
-Vue.component("tenant-boxes-reports-pos", require("../../modules/Restaurant/Resources/assets/js/views/boxes/report.vue").default);
-Vue.component("inventory-form-masive", require("../../modules/Inventory/Resources/assets/js/transfers/form_masive.vue").default);
-Vue.component("items-lot", require("../../modules/LotItem/Resources/assets/js/view/index.vue").default);
-Vue.component("items-lot-group", require("../../modules/Item/Resources/assets/js/views/item_lots_group/index.vue").default);
-Vue.component("tenant-hotels-room-report", require("../../modules/Restaurant/Resources/assets/js/views/reports/rooms.vue").default);
-Vue.component("tenant-login-default", require("./views/login/index.vue").default);
-Vue.component("cash-report", require("../../modules/Restaurant/Resources/assets/js/views/cash/report.vue").default);
-Vue.component("toll-index", require("../../resources/js/views/toll/index.vue").default);
-Vue.component("college-persons", require("../../modules/College/Resources/assets/js/views/persons/index.vue").default);
-Vue.component("college-levels", require("../../modules/College/Resources/assets/js/views/levels/index.vue").default);
-Vue.component("college-periods", require("../../modules/College/Resources/assets/js/views/periods/index.vue").default);
-Vue.component("college-plans", require("../../modules/College/Resources/assets/js/views/plans/index.vue").default);
-Vue.component("college-registers", require("../../modules/College/Resources/assets/js/views/registers/index.vue").default);
-Vue.component("college-classrooms", require("../../modules/College/Resources/assets/js/views/classrooms/index.vue").default);
-Vue.component("college-students", require("../../modules/College/Resources/assets/js/views/students/index.vue").default);
-Vue.component("college-penalties", require("../../modules/College/Resources/assets/js/views/penalties/index.vue").default);
-Vue.component("stockmin-report", require("../../modules/Inventory/Resources/assets/js/stockminReport/report.vue").default);
-Vue.component("valued-report", require("../../modules/Inventory/Resources/assets/js/valuedReport/index.vue").default);
-Vue.component("college-schoolsupplies", require("../../modules/College/Resources/assets/js/views/schoolSuplies/index.vue").default);
-Vue.component("tenant-report-kardex-master", require("../../modules/Inventory/Resources/assets/js/kardex/index.vue").default);
-Vue.component("tenant-dispatches-index", require("./views/dispatches/index.vue").default);
-Vue.component("tenant-dispatches-form", require("./views/dispatches/form.vue").default);
-Vue.component("tenant-dispatches-create", require("./views/dispatches/create.vue").default);
-Vue.component("tenant-internet-pos", require("../../modules/Internet/Resources/assets/js/view/pos/index.vue").default);
-Vue.component("tenant-health-global-index", require("./views/health_global/index.vue").default);
-Vue.component("tenant-internet-workersadm", require("../../modules/Internet/Resources/assets/js/view/workers/index.vue").default);
-Vue.component("tenant-internet-planes", require("../../modules/Internet/Resources/assets/js/view/planes/index.vue").default);
-Vue.component("items-stock", require("./views/items/check_stock.vue").default);
-Vue.component("tenant-quotations-index", require("./views/quotations/index.vue").default);
-Vue.component("tenant-quotations-form", require("./views/quotations/form.vue").default);
-Vue.component("tenant-quotations-edit", require("./views/quotations/form_edit.vue").default);
-Vue.component("report-consignment-index", require("../../modules/Report/Resources/assets/js/views/consignment/index.vue").default);
-Vue.component("report-credit-index-cash", require("../../modules/Report/Resources/assets/js/views/credit/index_cash.vue").default);
-Vue.component("report-credit-daily-cash", require("../../modules/Report/Resources/assets/js/views/credit/daily_cash.vue").default);
-Vue.component("report-credit-index", require("../../modules/Report/Resources/assets/js/views/credit/index.vue").default);
-Vue.component("tenant-search-index", require("./views/search/index.vue").default);
-Vue.component("tenant-registers-index", require("./views/registers/index.vue").default);
-Vue.component("tenant-consignment-index", require("@viewsModuleConsignment/index.vue").default);
-Vue.component("report-series-vendidas", require("../../modules/Inventory/Resources/assets/js/series/reporteSeriesSell.vue").default);
-Vue.component("tenant-sellers-index", require("./views/sellers/index.vue").default);
-Vue.component("tenant-bank_accounts-index", require("./views/bank_accounts/index.vue").default);
-Vue.component("tenant-principal-categories-index", require("./views/principal_categories/index.vue").default);
-Vue.component("tenant-commercial-treatment-index", require("./views/commercial_treatment/index.vue").default);
-Vue.component("tenant-credit-list-index", require("./views/credit_list/index.vue").default);
-Vue.component("worker-cleaner", require("../../modules/Restaurant/Resources/assets/js/views/cleaner/index.vue").default);
-Vue.component("worker-maintenance", require("../../modules/Restaurant/Resources/assets/js/views/maintenance/index.vue").default);
-
-
 const app = new Vue({
     store,
     el: "#main",
 
     components: {
-    
+        "whatsapp-index": () =>
+            import(
+                "../../modules/Restaurant/Resources/assets/js/views/whatsapp/index.vue"
+            ),
+        "vip-items": () =>
+            import(
+
+                "../../modules/Vip/Resources/assets/js/views/index.vue"
+            ),
+            
+        "etiqueta-index": () =>
+            import(
+
+                "../../modules/Etiquetas/Resources/assets/js/views/index.vue"
+            ),
+
+        "inventory-index": () =>
+            import(
+
+                "../../modules/inventory/Resources/assets/js/inventory/inventory.vue"
+            ),
+        "restaurant-food-list": () =>
+            import(
+
+                "../../modules/Restaurant/Resources/assets/js/views/food/index.vue"
+            ),
+
+        "tenant-restaurant-index": () =>
+            import(
+
+                "../../modules/Restaurant/Resources/assets/js/views/restaurant.vue"
+            ),
+
+        "tenant-restaurant-kitchen": () =>
+            import(
+
+                "../../modules/Restaurant/Resources/assets/js/views/kitchen.vue"
+            ),
+
+        "tenant-restaurant-items": () =>
+            import(
+
+                "../../modules/Restaurant/Resources/assets/js/views/configuration/items.vue"
+            ),
+
+        "restaurant-ordens-index": () =>
+            import(
+
+                "../../modules/Restaurant/Resources/assets/js/views/ordens/index.vue"
+            ),
+
+        "restaurant-worker-login": () =>
+            import(
+
+                "../../modules/Restaurant/Resources/assets/js/views/login/login.vue"
+            ),
+
+        "tenant-item-color-size-index": () =>
+            import(
+                
+
+                "./views/item_color_size/index.vue"
+            ),
+        "tenant-item-sets-index": () =>
+            import(
+                "./views/item_sets/index.vue"
+            ),
+        "restaurant-worker-dashboard": () =>
+            import(
+                "../../modules/Restaurant/Resources/assets/js/views/worker/dashboard.vue"
+            ),
+        "restaurant-kitchen-dashboard": () =>
+            import(
+                "../../modules/Restaurant/Resources/assets/js/views/kitchen/dashboard.vue"
+            ),
+        "tenant-restaurant-workers": () =>
+            import(
+                "../../modules/Restaurant/Resources/assets/js/views/workers/workers.vue"
+            ),
+        "tenant-restaurant-pos": () =>
+            import(
+                "../../modules/Restaurant/Resources/assets/js/views/pos/index.vue"
+            ),
+        "tenant-dashboard-index": () =>
+            import(
+                "../../modules/Dashboard/Resources/assets/js/views/index.vue"
+            ),
 
     
+        "tenant-companies-form": () =>
+            import(
+                "./views/companies/form.vue"
+            ),
+        "tenant-account-export": () =>
+            import(
+                "../../modules/Format/Resources/assets/js/views/account/format.vue"
+            ),
+        "tenant-companies-logo": () =>
+            import(
+                "./views/companies/logo.vue"
+            ),
 
+        "tenant-certificates-index": () =>
+            import(
+                "./views/certificates/index.vue"
+            ),
+
+        "tenant-certificates-form": () =>
+            import(
+                "./views/certificates/form.vue"
+            ),
+        "tenant-configurations-form": () =>
+            import(
+                "./views/configurations/form.vue"
+            ),
+        "tenant-configurations-visual": () =>
+            import(
+                "./views/configurations/visual.vue"
+            ),
+        "tenant-configurations-pdf": () =>
+            import(
+                "./views/configurations/pdf_templates.vue"
+            ),
+        //
+        "tenant-items-client": () =>
+            import(
+                "./views/items/items_client.vue"
+            ),
+        "tenant-items-index": () =>
+            import(
+                "./views/items/index.vue"
+            ),
+        "tenant-persons-index": () =>
+            import(
+                "./views/persons/index.vue"
+            ),
+
+        "tenant-users-form": () =>
+            import(
+                "./views/users/form.vue"
+            ),
+        "tenant-documents-index": () =>
+            import(
+
+                "./views/documents/index.vue"
+            ),
+        "restaurant-documents-index": () =>
+            import(
+                "../../modules/Restaurant/Resources/assets/js/views/documents/index.vue"
+            ),
+        "tenant-documents-invoice": () =>
+            import(
+                "./views/documents/invoice.vue"
+            ),
+        "tenant-documents-note-other": () =>
+            import(
+                "./views/documents/note_other.vue"
+            ),
+
+        "tenant-documents-note": () =>
+            import(
+                "./views/documents/note.vue"
+            ),
+        "tenant-summaries-index": () =>
+            import(
+                "./views/summaries/index.vue"
+            ),
+        "tenant-voided-index": () =>
+            import(
+             "./views/voided/index.vue"
+            ),
+
+        "tenant-options-form": () =>
+            import(
+                "./views/options/form.vue"
+            ),
+        "tenant-users-index": () =>
+            import(
+                 "./views/users/index.vue"
+            ),
+        "tenant-banks-index": () =>
+            import(
+                 "./views/banks/index.vue"
+            ),
+
+        "tenant-unit_types-index": () =>
+            import(
+                "./views/unit_types/index.vue"
+            ),
+
+        "tenant-establishments-index": () =>
+            import(
+                "./views/establishments/index.vue"
+            ),
+
+        "tenant-currency-types-index": () =>
+            import(
+                "./views/currency_types/index.vue"
+            ),
+
+        "tenant-purchases-index": () =>
+            import(
+                "./views/purchases/index.vue"
+            ),
+        "tenant-purchases-form": () =>
+            import(
+                "./views/purchases/form.vue"
+            ),
+
+        "tenant-purchases-edit": () =>
+            import(
+                 "./views/purchases/form_edit.vue"
+            ),
+
+        "tenant-attribute_types-index": () =>
+            import(
+                 "./views/attribute_types/index.vue"
+            ),
+
+        "tenant-warehouses": () =>
+            import(
+                 "./views/components/warehouses.vue"
+            ),
+
+        "tenant-arqueos-form": () =>
+            import(
+                 "./views/arqueos/index.vue"
+            ),
+        "tenant-tasks-lists": () =>
+            import(
+                 "./views/tasks/lists.vue"
+            ),
+        "tenant-tasks-form": () =>
+            import(
+                 "./views/tasks/form.vue"
+            ),
+
+        "tenant-sale-notes-credit-penalty": () =>
+            import(
+                 "./views/sale_notes/credit_penalty.vue"
+            ),
+        "tenant-sale-notes-index": () =>
+            import(
+                 "./views/sale_notes/index.vue"
+            ),
+        "tenant-sale-notes-form": () =>
+            import(
+                 "./views/sale_notes/form.vue"
+            ),
+        "tenant-cash-transfer-index": () =>
+            import(
+                
+                "../../modules/Restaurant/Resources/assets/js/views/cash_transfer/index.vue"
+            ),
+            "tenant-cash-transfer-index-report": () =>
+            import(
+                
+                "../../modules/Restaurant/Resources/assets/js/views/cash_transfer/report.vue"
+            ),
+        "tenant-cash-index": () =>
+            import(
+                
+                "../../modules/Restaurant/Resources/assets/js/views/cash/index.vue"
+            ),
+        "cash-index-closed": () =>
+            import(
+                
+                "@views/cash/closed.vue"
+            ),
+        "cash-index-main": () =>
+            import(
+                
+                "@views/cash/main.vue"
+            ),
+        "tenant-card-brands-index": () =>
+            import(
+                 "./views/card_brands/index.vue"
+            ),
+
+        "tenant-payment-method-index": () =>
+            import(
+                 "./views/payment_method/index.vue"
+            ),
+
+        "tenant-category-index": () =>
+            import(
+                 "./views/category/index.vue"
+            ),
+
+        "inventory-transactions-index": () =>
+            import(
+
+                "../../modules/Inventory/Resources/assets/js/transactions/index.vue"
+            ),
+        "inventory-transfers-index": () =>
+            import(
+                
+                "../../modules/Inventory/Resources/assets/js/transfers/index.vue"
+            ),
+        "inventory-transfers-place-index": () =>
+            import(
+                
+                "../../modules/Inventory/Resources/assets/js/transfers_place/index.vue"
+            ),
+        "tenant-account-format": () =>
+            import(
+                
+                "../../modules/Format/Resources/assets/js/views/account/format.vue"
+            ),
+
+        "warehouses-index": () =>
+            import(
+                
+                "../../modules/Inventory/Resources/assets/js/warehouses/index.vue"
+            ),
+
+        "tenant-inventories-form": () =>
+            import(
+                
+                "../../modules/Inventory/Resources/assets/js/config/form.vue"
+            ),
+
+        "tenant-documents-not-sent": () =>
+            import(
+                
+                "../../modules/Document/Resources/assets/js/views/documents/not_sent.vue"
+            ),
+        "tenant-report-purchases-index": () =>
+            import(
+                "../../modules/Report/Resources/assets/js/views/purchases/index.vue"
+            ),
+        "tenant-report-documents-index": () =>
+            import(
+                "../../modules/Report/Resources/assets/js/views/documents/index.vue"
+            ),
+        "tenant-report-customers-index": () =>
+            import(
+                "../../modules/Report/Resources/assets/js/views/customers/index.vue"
+            ),
+        "tenant-report-items-index": () =>
+            import(
+                "../../modules/Report/Resources/assets/js/views/items/index.vue"
+            ),
+        "tenant-report-items-defeated": () =>
+            import(
+                "../../modules/Report/Resources/assets/js/views/items/defeated.vue"
+            ),
+
+        "tenant-report-sale_notes-index": () =>
+            import(
+                "../../modules/Report/Resources/assets/js/views/sale_notes/index.vue"
+            ),
+
+        "tenant-report-cash-index": () =>
+            import(
+                "../../modules/Report/Resources/assets/js/views/cash/index.vue"
+            ),
+
+        "tenant-series-configurations-index": () =>
+            import(
+                "../../modules/Document/Resources/assets/js/views/series_configurations/index.vue"
+            ),
+
+        "tenant-report-order-notes-consolidated-index": () =>
+            import(
+                "../../modules/Report/Resources/assets/js/views/order_notes_consolidated/index.vue"
+            ),
+
+        "tenant-report-general-items-index": () =>
+            import(
+                "../../modules/Report/Resources/assets/js/views/general_items/index.vue"
+            ),
+
+        "tenant-report-order-notes-general-index": () =>
+            import(
+                "../../modules/Report/Resources/assets/js/views/order_notes_general/index.vue"
+            ),
+
+        "tenant-report-sales-consolidated-index": () =>
+            import(
+                "../../modules/Report/Resources/assets/js/views/sales_consolidated/index.vue"
+            ),
+
+        "tenant-categories-index": () =>
+            import(
+                "../../modules/Item/Resources/assets/js/views/categories/index.vue"
+            ),
+
+        "tenant-brands-index": () =>
+            import(
+                "../../modules/Item/Resources/assets/js/views/brands/index.vue"
+            ),
+
+        "tenant-manufactured-index": () =>
+            import(
+                "../../modules/Item/Resources/assets/js/views/manufactured/index.vue"
+            ),
+        "tenant-report-valued-kardex": () =>
+            import(
+                "../../modules/Inventory/Resources/assets/js/valued_kardex/index.vue"
+            ),
+
+        "tenant-finance-global-payments-index": () =>
+            import(
+                "../../modules/Finance/Resources/assets/js/views/global_payments/index.vue"
+            ),
+
+        "tenant-finance-balance-index": () =>
+            import(
+                "../../modules/Finance/Resources/assets/js/views/balance/index.vue"
+            ),
+
+        "tenant-finance-payment-method-types-index": () =>
+            import(
+                "../../modules/Finance/Resources/assets/js/views/payment_method_types/index.vue"
+            ),
+
+        "tenant-finance-unpaid-index": () =>
+            import(
+                "@viewsModuleFinance/unpaid/index.vue"
+            ),
+
+        "tenant-finance-income-index": () =>
+            import(
+                "@viewsModuleFinance/income/index.vue"
+            ),
+
+        "tenant-finance-income-form": () =>
+            import(
+                "@viewsModuleFinance/income/form.vue"
+            ),
+
+        "tenant-income-types-index": () =>
+            import(
+                "@viewsModuleFinance/income_types/index.vue"
+            ),
+
+        "tenant-income-reasons-index": () =>
+            import(
+                "@viewsModuleFinance/income_reasons/index.vue"
+            ),
+
+        "tenant-person-types-index": () =>
+            import(
+                "./views/person_types/index.vue"
+            ),
+
+        "x-form-group": () =>
+            import(
+
+                "./components/FormGroup.vue"
+            ),
+
+        "tenant-account-payment-index": () =>
+            import(
+                "./views/account/payment_index.vue"
+            ),
+
+        "tenant-account-configuration-index": () =>
+            import(
+                "./views/account/configuration.vue"
+            ),
+
+        "tenant-groups-index": () =>
+            import(
+                "./views/groups/index.vue"
+            ),
+
+        "tenant-subcategories-index": () =>
+            import(
+                "./views/subcategory/index.vue"
+            ),
+
+        "tenant-boxes-index": () =>
+            import(
+                "./views/boxes/index.vue"
+            ),
+
+        "tenant-boxes-expenses-index": () =>
+            import(
+                "../../modules/Restaurant/Resources/assets/js/views/expenses/index.vue"
+            ),
+
+        "tenant-boxes-incomes-index": () =>
+            import(
+                "../../modules/Restaurant/Resources/assets/js/views/incomes/index.vue"
+            ),
+
+        "tenant-incomes-index": () =>
+            import(
+                "./views/incomebox/index.vue"
+            ),
+
+        "tenant-boxes-reports": () =>
+            import(
+                "./views/boxes/report.vue"
+            ),
+        "tenant-boxes-reports-global": () =>
+            import(
+                "./views/boxes/global.vue"
+            ),
+        "tenant-boxes-reports-pos": () =>
+            import(
+
+                "../../modules/Restaurant/Resources/assets/js/views/boxes/report.vue"
+            ),
+        "inventory-form-masive": () =>
+            import(
+
+                "../../modules/Inventory/Resources/assets/js/transfers/form_masive.vue"
+            ),
+        "items-lot": () =>
+            import(
+
+                "../../modules/LotItem/Resources/assets/js/view/index.vue"
+            ),
+        "items-lot-group": () =>
+            import(
+
+                "../../modules/Item/Resources/assets/js/views/item_lots_group/index.vue"
+            ),
+
+        "tenant-boxes-reports": () =>
+            import(
+                "./views/boxes/report.vue"
+            ),
+
+        "tenant-boxes-reports-pos": () =>
+            import(
+
+                "../../modules/Restaurant/Resources/assets/js/views/boxes/report.vue"
+            ),
+        "tenant-hotels-room-report": () =>
+            import(
+
+                "../../modules/Restaurant/Resources/assets/js/views/reports/rooms.vue"
+            ),
+        "tenant-login-default": () =>
+            import(
+                "./views/login/index.vue"
+            ),
+
+        "cash-report": () =>
+            import(
+                "../../modules/Restaurant/Resources/assets/js/views/cash/report.vue"
+            ),
+        "toll-index": () =>
+            import(
+                "../../resources/js/views/toll/index.vue"
+            ),
+
+        "college-persons": () =>
+            import(
+                "../../modules/College/Resources/assets/js/views/persons/index.vue"
+            ),
+
+        "college-levels": () =>
+            import(
+                "../../modules/College/Resources/assets/js/views/levels/index.vue"
+            ),
+
+        "college-periods": () =>
+            import(
+                "../../modules/College/Resources/assets/js/views/periods/index.vue"
+            ),
+        "college-plans": () =>
+            import(
+                "../../modules/College/Resources/assets/js/views/plans/index.vue"
+            ),
+        "college-registers": () =>
+            import(
+                "../../modules/College/Resources/assets/js/views/registers/index.vue"
+            ),
+        "college-classrooms": () =>
+            import(
+                "../../modules/College/Resources/assets/js/views/classrooms/index.vue"
+            ),
+
+        "college-students": () =>
+            import(
+                "../../modules/College/Resources/assets/js/views/students/index.vue"
+            ),
+
+        "college-penalties": () =>
+            import(
+                "../../modules/College/Resources/assets/js/views/penalties/index.vue"
+            ),
+        "stockmin-report": () =>
+            import(
+                "../../modules/Inventory/Resources/assets/js/stockminReport/report.vue"
+            ),
+        "valued-report": () =>
+            import(
+                "../../modules/Inventory/Resources/assets/js/valuedReport/index.vue"
+            ),
+        "college-schoolsupplies": () =>
+            import(
+
+                "../../modules/College/Resources/assets/js/views/schoolSuplies/index.vue"
+            ),
+        "tenant-report-kardex-master": () =>
+            import(
+
+                "../../modules/Inventory/Resources/assets/js/kardex/index.vue"
+            ),
+
+        "tenant-dispatches-index": () =>
+            import(
+
+                "./views/dispatches/index.vue"
+            ),
+        "tenant-dispatches-form": () =>
+            import(
+
+                "./views/dispatches/form.vue"
+            ),
+        "tenant-dispatches-create": () =>
+            import(
+
+                "./views/dispatches/create.vue"
+            ),
+        "tenant-internet-pos": () =>
+            import(
+                
+                "../../modules/Internet/Resources/assets/js/view/pos/index.vue"
+            ),
+        "tenant-health-global-index": () =>
+            import(
+                
+                "./views/health_global/index.vue"
+            ),
+        "tenant-internet-workersadm": () =>
+            import(
+                
+                "../../modules/Internet/Resources/assets/js/view/workers/index.vue"
+            ),
+        "tenant-internet-planes": () =>
+            import(
+                
+                "../../modules/Internet/Resources/assets/js/view/planes/index.vue"
+            ),
+        "items-stock": () =>
+            import(
+
+                "./views/items/check_stock.vue"
+            ),
+
+        "tenant-quotations-index": () =>
+            import(
+
+                "./views/quotations/index.vue"
+            ),
+
+        "tenant-quotations-form": () =>
+            import(
+
+                "./views/quotations/form.vue"
+            ),
+
+        "tenant-quotations-edit": () =>
+            import(
+
+                "./views/quotations/form_edit.vue"
+            ),
+        //report-credit-index-cash
+        //report-consignment-index
+        "report-consignment-index": () =>
+            import(
+
+                "../../modules/Report/Resources/assets/js/views/consignment/index.vue"
+            ),
+        "report-credit-index-cash": () =>
+            import(
+
+                "../../modules/Report/Resources/assets/js/views/credit/index_cash.vue"
+            ),
+        "report-credit-daily-cash": () =>
+            import(
+
+                "../../modules/Report/Resources/assets/js/views/credit/daily_cash.vue"
+            ),
+        "report-credit-index": () =>
+            import(
+
+                "../../modules/Report/Resources/assets/js/views/credit/index.vue"
+            ),
+        "tenant-search-index": () =>
+            import(
+
+                "./views/search/index.vue"
+            ),
+
+        "tenant-registers-index": () =>
+            import(
+
+                "./views/registers/index.vue"
+            ),
+
+        "tenant-consignment-index": () =>
+            import(
+
+                "@viewsModuleConsignment/index.vue"
+            ),
+        "report-series-vendidas": () =>
+            import(
+
+                "../../modules/Inventory/Resources/assets/js/series/reporteSeriesSell.vue"
+            ),
+        "tenant-sellers-index": () =>
+            import(
+
+                "./views/sellers/index.vue"
+            ),
+        "tenant-bank_accounts-index": () =>
+            import(
+
+                "./views/bank_accounts/index.vue"
+            ),
+        "tenant-banks-index": () =>
+            import(
+
+                "./views/banks/index.vue"
+            ),
+        "tenant-principal-categories-index": () =>
+            import(
+
+                "./views/principal_categories/index.vue"
+            ),
+
+        "tenant-commercial-treatment-index": () =>
+            import(
+
+                "./views/commercial_treatment/index.vue"
+            ),
+        "tenant-credit-list-index": () =>
+            import(
+
+                "./views/credit_list/index.vue"
+            ),
+        "worker-cleaner": () =>
+            import(
+
+                "../../modules/Restaurant/Resources/assets/js/views/cleaner/index.vue"
+            ),
+        "worker-maintenance": () =>
+            import(
+
+                "../../modules/Restaurant/Resources/assets/js/views/maintenance/index.vue"
+            )
     }
 });
