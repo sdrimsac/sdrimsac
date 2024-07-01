@@ -1022,7 +1022,6 @@ class CashController extends Controller
         }
 
         $documents->orderBy('date_of_issue', 'desc')->orderBy('id', 'desc');
-        dump($documents->toSql());
         $result = null;
         switch ($type_document) {
             case 'documents':
