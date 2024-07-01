@@ -16,13 +16,14 @@ class ConfigurationResource extends JsonResource
     {
         return [
             'show_second_name_external_code' => (bool) $this->show_second_name_external_code,
+            'user_series_independientes_caja' => (bool) $this->user_series_independientes_caja,
             'all_items_pos' => (bool) $this->all_items_pos,
             'pass_final_balance_cash_principal' => (bool) $this->pass_final_balance_cash_principal,
             'configurable_impresion_ticket_categoria_caja' => (bool) $this->configurable_impresion_ticket_categoria_caja,
             'print_payment_credit_sale_note' => (bool) $this->print_payment_credit_sale_note,
             'change_price_product' => (bool) $this->change_price_product,
             'whatsapp_in_login' => (bool) $this->whatsapp_in_login,
-            'configurable_impresion_ticket_categoria_caja' => (bool) $this->configurable_impresion_ticket_categoria_caja,
+            /* 'configurable_impresion_ticket_categoria_caja' => (bool) $this->configurable_impresion_ticket_categoria_caja, */
             'show_internal_code_ticket' => (bool) $this->show_internal_code_ticket,
             'unit_type_pdf_quotation' => (bool) $this->unit_type_pdf_quotation,
             'seller_quotation_cash' => (bool) $this->seller_quotation_cash,

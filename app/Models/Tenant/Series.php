@@ -32,6 +32,13 @@ class Series extends ModelTenant
     public function documents() {
         return $this->hasMany(Document::class, 'series', 'number');
     }
+    public function salenotes() {
+        return $this->hasMany(SaleNote::class, 'series', 'number');
+    }
+    public function users()
+    {
+        return $this->belongsToMany(User::class,);
+    }
 
     public function series_configurations()
     {

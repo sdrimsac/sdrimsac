@@ -21,7 +21,23 @@ class SeriesRequest extends FormRequest
             ],
             'number' => [
                 'required',
+                Rule::unique('tenant.series')->ignore($id),
             ],
         ];
     }
+
+    /* public function rules()
+    {
+        $id = $this->input('id');
+        return [
+            'description' => [
+
+                'required',
+                Rule::unique('tenant.workers_type')->ignore($id),
+            ],
+            'active' => [
+                'required',
+            ]
+        ];
+    } */
 }

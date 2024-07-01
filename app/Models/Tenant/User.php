@@ -9,6 +9,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Modules\LevelAccess\Models\ModuleLevel;
 use Modules\Restaurant\Models\Area;
 use Modules\Restaurant\Models\WorkersType;
+use App\Models\Tenant\Series;
 use Modules\Sale\Models\UserCommission;
 
 
@@ -96,6 +97,8 @@ class User extends Authenticatable
             'type' => $type,
 
             'locked' => (bool) $this->locked,
+
+            'number' => $this->number,
 
         ];
     }
@@ -245,6 +248,19 @@ class User extends Authenticatable
         return $this->belongsTo(Establishment::class);
     }
 
+    /* agregado para mostar sieres de document como boletas facturas y notas de ventas */
+    /* public function series()
+    {
+        return $this->belongsTo(Series::class);
+    } */
+    /* public function series()
+    {
+        return $this->belongsToMany(Series::class);
+    } */
+    public function series()
+    {
+        return $this->belongsToMany(Series::class, 'user_series', 'user_id', 'serie_id');
+    }
 
     public function documents()
     {

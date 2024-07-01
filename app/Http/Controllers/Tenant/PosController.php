@@ -29,6 +29,7 @@ use App\Models\Tenant\Catalogs\AffectationIgvType;
 use App\Models\Tenant\Catalogs\IdentityDocumentType;
 use App\Models\Tenant\HotelRentItem;
 use App\Models\Tenant\Seller;
+use App\Models\Tenant\UserSerie;
 use Carbon\Carbon;
 use Modules\College\Models\CollegeStudent;
 use Modules\Document\Models\SeriesConfiguration;
@@ -361,14 +362,25 @@ class PosController extends Controller
 
     public function payment_tables()
     {
-        $establishment = auth()->user()->establishment_id;
+        $user = auth()->user();
+        $establishment = $user->establishment_id;
+        $user_id = $user->id; //9
         if (!$establishment) {
             $establishment = Establishment::first()->id;
         }
-        $series = Series::whereIn('document_type_id', ['01', '03', '80'])
+        $user_series = UserSerie::where('user_id', $user_id)
+        ->pluck('serie_id')->toArray();
+        
+        if(count($user_series)>0){
+            // $series = 
+            $series = Series::whereIn('id',$user_series)->get();
+        }else{
+            $series = Series::whereIn('document_type_id', ['01', '03', '80'])
             ->where([['establishment_id', $establishment], ['contingency', false]])
             ->get();
 
+        }
+      
         $payment_method_types = PaymentMethodType::all();
         $cards_brand = CardBrand::all();
         $payment_destinations = $this->getPaymentDestinations();

@@ -12,11 +12,12 @@ use App\Models\Tenant\Company;
 use App\Models\Tenant\Configuration;
 use App\Models\Tenant\Establishment;
 use App\Models\Tenant\ItemWarehouse;
+use App\Models\Tenant\Series;
+use App\Models\Tenant\UserSerie;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Modules\Restaurant\Http\Requests\TableRequest;
 use Modules\Restaurant\Http\Requests\WorkerRequest;
-use Modules\Restaurant\Models\WorkersType;
 
 class WorkerController extends Controller
 {
@@ -26,7 +27,7 @@ class WorkerController extends Controller
     {
         $establishments = Establishment::all();
         $configuration = Configuration::first();
-        return view('restaurant::workers', compact('establishments','configuration'));
+        return view('restaurant::workers', compact('establishments', 'configuration'));
     }
     public function report_products_w(Request $request)
     {
@@ -111,15 +112,25 @@ class WorkerController extends Controller
                 $records =  $records->where('establishment_id', $establishment_id);
             }
         }
-        return new UserCollection($records->paginate(150));
+
+        return new UserCollection($records->paginate(150),);
     }
-    public function record($id)
+    public function record($id) //8
     {
         $worker = User::find($id);
-
+        // $worker->series = 12;
+        $user_serie = UserSerie::where('user_id', $id)
+            ->whereHas('seriexxx', function ($oo) {
+                $oo->where('document_type_id', '01');
+            })
+            ->first();
+        if ($user_serie){
+            $worker->series = $user_serie->serie_id;
+        }
         return [
             'success' => true,
-            'data' => $worker
+            'data' => $worker,
+            'has_series' => $user_serie ? true : false,
         ];
     }
     private function newPin()
@@ -152,8 +163,59 @@ class WorkerController extends Controller
     }
     public function store(WorkerRequest $request)
     {
+        $docs = [
+            "NV"    => "80",
+            "B"     => "03",
+            "F"     => "01",
+            "FD"    => "08",
+            "ND"    => "08",
+            "FC"    => "07",
+            "BC"    => "07",
+            "T"     => "09",
+        ];
+        $serie_id = $request->series;
         $id = $request->input('id');
+
         $user = User::firstOrNew(['id' => $id]);
+        UserSerie::where('user_id', $id)->delete();
+        //establishment_id
+        $establishment_id = $user->establishment_id; //1
+        if ($serie_id) {
+
+            $serie = Series::where('id', $serie_id)->first();
+            $number = $serie->number;
+            $prefix = substr($number, -3); //F003 003
+          
+
+            foreach ($docs as $key => $value) {
+                $prefix_serie = $key;
+                $largo = strlen($prefix_serie);
+                $prefix_to_search = null;
+                if ($largo == 1) {
+                    $prefix_to_search = $key . $prefix;
+                } else {
+                    $prefix_to_search = $key . substr($prefix, -2);
+                }
+                
+                //NV002 F002 B002
+                $serie_db = Series::where('document_type_id', $value)
+                    ->where('number', $prefix_to_search)
+                    ->where('establishment_id', $establishment_id)
+                    ->first();
+                if (!$serie_db) {
+                    $serie_db = new Series;
+                    $serie_db->document_type_id = $value;
+                    $serie_db->number = $prefix_to_search;
+                    $serie_db->establishment_id = $establishment_id;
+                    $serie_db->save();
+                }
+
+                $user_serie = new UserSerie;
+                $user_serie->user_id = $id;
+                $user_serie->serie_id = $serie_db->id;
+                $user_serie->save();
+            }
+        }
 
         //actualización
         if ($id) {
@@ -176,6 +238,7 @@ class WorkerController extends Controller
             'message' => ($id) ? 'Trabajador actualizado con éxito' : 'Trabajador creado con éxito'
         ];
     }
+
     public function active($id)
     {
         $workers = User::find($id);

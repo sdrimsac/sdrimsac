@@ -6,6 +6,7 @@ use App\Exports\CashPrincipalExport;
 use Exception;
 use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
+use App\Models\UserSerie;
 use App\Models\Tenant\Box;
 use App\Models\Tenant\Cash;
 use App\Models\Tenant\User;
@@ -967,10 +968,15 @@ class CashController extends Controller
 
         return new BoxCollection($records->paginate(20));
     }
+
     public function get_last_documents(Request $request)
     {
+        $user = auth()->user();
         $type_document = $request->typeDocument;
         $establishment_id = auth()->user()->establishment_id;
+
+        $seriesIds = $user->series()->pluck('user_id');
+         
         $model = null;
         switch ($type_document) {
             case 'documents':
@@ -985,7 +991,8 @@ class CashController extends Controller
         }
         $company = Company::active();
         $documents = $model::where('establishment_id', $establishment_id)
-            ->where('soap_type_id', $company->soap_type_id);
+            ->where('soap_type_id', $company->soap_type_id)
+            ->whereIn('user_id', $seriesIds);
         // $documents = $is_note_sale ?  SaleNote::where('establishment_id', $establishment_id) : Document::where('establishment_id', $establishment_id);
         $column = $request->column ?? "description";
         $value = $request->value;
@@ -1030,6 +1037,7 @@ class CashController extends Controller
 
         return $result;
     }
+
     public function get_printer($area_id)
     {
         $printer = null;

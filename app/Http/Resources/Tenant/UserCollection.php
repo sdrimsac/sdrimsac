@@ -3,6 +3,7 @@
 namespace App\Http\Resources\Tenant;
 
 use Illuminate\Http\Resources\Json\ResourceCollection;
+use PhpOffice\PhpSpreadsheet\Style\NumberFormat\Wizard\Number;
 
 class UserCollection extends ResourceCollection
 {

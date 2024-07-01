@@ -86,7 +86,8 @@ class SaleNote extends ModelTenant
         'total_payment',
         'additional_information',
         'orden_id',
-        'variation_document_id'
+        'variation_document_id',
+        
     ];
 
     protected $casts = [
