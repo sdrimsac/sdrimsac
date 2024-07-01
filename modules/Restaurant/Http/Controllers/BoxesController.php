@@ -1274,6 +1274,42 @@ class BoxesController extends Controller
         $total_03_document = 0;
         $min_03_document_id = null;
         $max_03_document_id = null;
+        $document_anulate = Document::where('cash_id', $cash_id)->where('state_type_id', '11')->chunk(50, function ($documents) use (
+            &$min_01_document_id,
+            &$max_01_document_id,
+            &$min_03_document_id,
+            &$max_03_document_id
+        ) {
+            foreach ($documents as $document) {
+                $document = Document::select(['id', 'document_type_id', 'total'])
+                    ->with('items')
+                    ->find($document->id);
+                if ($document->document_type_id == '01') {
+                    if ($min_01_document_id == null) {
+                        $min_01_document_id = $document->id;
+                    } else {
+                        $min_01_document_id = ($document->id < $min_01_document_id) ? $document->id : $min_01_document_id;
+                    }
+                    if ($max_01_document_id == null) {
+                        $max_01_document_id = $document->id;
+                    } else {
+                        $max_01_document_id = ($document->id > $max_01_document_id) ? $document->id : $max_01_document_id;
+                    }
+                }
+                if ($document->document_type_id == '03') {
+                    if ($min_03_document_id == null) {
+                        $min_03_document_id = $document->id;
+                    } else {
+                        $min_03_document_id = ($document->id < $min_03_document_id) ? $document->id : $min_03_document_id;
+                    }
+                    if ($max_03_document_id == null) {
+                        $max_03_document_id = $document->id;
+                    } else {
+                        $max_03_document_id = ($document->id > $max_03_document_id) ? $document->id : $max_03_document_id;
+                    }
+                }
+            }
+        });
         $boxes = Box::select(['document_id', 'sale_note_id'])
             ->where('cash_id', $cash_id)->where('incomes', 0)->where('expenses', 0)->OrderBy('date', 'asc')->chunk(50, function ($boxes) use (
                 &$items,
@@ -1447,6 +1483,44 @@ class BoxesController extends Controller
         $total_03_document = 0;
         $min_03_document_id = null;
         $max_03_document_id = null;
+        $document_with_note = Document::whereIn('cash_id', $cashes)->whereHas('document_affected_note')->chunk(50, function ($documents) use (
+            &$min_01_document_id,
+            &$max_01_document_id,
+            &$min_03_document_id,
+            &$max_03_document_id
+        ) {
+            foreach ($documents as $document) {
+                dump($document->id);
+                $document = Document::select(['id', 'document_type_id', 'total'])
+                    ->with('items')
+                    ->find($document->id);
+                if ($document->document_type_id == '01') {
+                    if ($min_01_document_id == null) {
+                        $min_01_document_id = $document->id;
+                    } else {
+                        $min_01_document_id = ($document->id < $min_01_document_id) ? $document->id : $min_01_document_id;
+                    }
+                    if ($max_01_document_id == null) {
+                        $max_01_document_id = $document->id;
+                    } else {
+                        $max_01_document_id = ($document->id > $max_01_document_id) ? $document->id : $max_01_document_id;
+                    }
+                }
+                if ($document->document_type_id == '03') {
+                    if ($min_03_document_id == null) {
+                        $min_03_document_id = $document->id;
+                    } else {
+                        $min_03_document_id = ($document->id < $min_03_document_id) ? $document->id : $min_03_document_id;
+                    }
+                    if ($max_03_document_id == null) {
+                        $max_03_document_id = $document->id;
+                    } else {
+                        $max_03_document_id = ($document->id > $max_03_document_id) ? $document->id : $max_03_document_id;
+                    }
+                }
+            }
+        });
+
         $boxes = Box::select(['document_id', 'sale_note_id'])
             ->whereIn('cash_id', $cashes)->where('incomes', 0)->where('expenses', 0)->OrderBy('date', 'asc')->chunk(50, function ($boxes) use (
                 &$items,

@@ -991,8 +991,10 @@ class CashController extends Controller
                 break;
         }
         $company = Company::active();
-        $documents = $model::where('establishment_id', $establishment_id)
-            ->where('soap_type_id', $company->soap_type_id);
+        $documents = $model::where('establishment_id', $establishment_id);
+        if($company->soap_type_id != '01') {
+            $documents = $documents->where('soap_type_id', $company->soap_type_id);
+        }
         if ($hasSeriesAssigned) {
             $documents = $documents->whereIn('user_id', $seriesIds);
         }
@@ -1020,6 +1022,7 @@ class CashController extends Controller
         }
 
         $documents->orderBy('date_of_issue', 'desc')->orderBy('id', 'desc');
+        dump($documents->toSql());
         $result = null;
         switch ($type_document) {
             case 'documents':

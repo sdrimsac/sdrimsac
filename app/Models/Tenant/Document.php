@@ -515,4 +515,9 @@ class Document extends ModelTenant
     {
         return $this->hasOne(Note::class);
     }
+
+    public function document_affected_note()
+    {
+        return $this->hasOne(Note::class, 'affected_document_id', 'id');
+    }
 }
